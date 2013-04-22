@@ -1,0 +1,8 @@
+{
+    "workflow-export" :
+	    {"directory" : "/Users/vincent/Dropbox/Alfred.alfredpreferences/workflows/alfred-spotify-mini-player/",
+		 "enable": true},
+    "source-export":
+		{"directory" : "~/Downloads",
+		 "enable": false}
+}
