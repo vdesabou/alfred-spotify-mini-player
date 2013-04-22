@@ -79,6 +79,11 @@ Download the workflow below and open in Alfred.
 
 ## History
 
+2.2:
+
+* Move code to [GitHub](https://github.com/vdesabou/alfred-spotify-mini-player)
+* Fix artworks not cached when playlist is not from the user
+
 2.1:
 
 * Display user for playlists
