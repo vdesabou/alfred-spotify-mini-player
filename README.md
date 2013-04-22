@@ -41,28 +41,32 @@ This library is a "JSON" file. In order to get a json version of your library, y
 
 You'll need to do the following steps:
 
-1. Sign up for a developer account on Spotify
-2. mkdir -p ~/Spotify
-3. cd ~/Spotify
-4. git clone git://github.com/jamesrwhite/spotify-export.git
-5. ln -s ~/Spotify/spotify-export/export ~/Spotify
+* Sign up for a developer account on Spotify
+* mkdir -p ~/Spotify
+* cd ~/Spotify
+* git clone git://github.com/jamesrwhite/spotify-export.git
+* ln -s ~/Spotify/spotify-export/export ~/Spotify
 At this point, it should looks like:
 
 ![Screenshot](http://d.pr/i/lGwN+.png)
 
 
-6. Download the latest version of Spotify and ***install*** it (I had to do it, even though I was pretty sure to already have the latest version, so please do it!)
-7. Open Spotify and type *spotify:app:export* in the search bar (restart Spotify completely in case it doesn't find the App at first) If this still doesn't work, try to logout and login again in Spotify
-8. After a brief bit of loading you should see something like this:
+* Download the latest version of Spotify and ***install*** it (I had to do it, even though I was pretty sure to already have the latest version, so please do it!)
+* Open Spotify and type *spotify:app:export* in the search bar (restart Spotify completely in case it doesn't find the App at first) If this still doesn't work, try to logout and login again in Spotify
+* After a brief bit of loading you should see something like this:
 
 ![Screenshot](http://d.pr/i/u9x1+.png)
 
-9. Click in the JSON white box: all the text will be selected in blue. Copy the text (cmd+C). At this point the JSON library is located in your clipboard.
-Type "spot_mini" to invoke Spotify Mini Player, and go in Settings section and select "Install or Update library for Spotify Mini Player" (this will paste the content of the clipboard, so the JSON library into a file called library.json in the app data directory : */Users/YOUR_USER/Library/Application Support/Alfred 2/Workflow Data/com.vdesabou.spotify.mini.player*)
+* Click in the JSON white box: all the text will be selected in blue. Copy the text (cmd+C). At this point the JSON library is located in your clipboard.
+Type "spot_mini" to invoke Spotify Mini Player, and go in Settings section and select "Install or Update library for Spotify Mini Player" 
+
+![Screenshot](http://d.pr/i/gZnb+.png)
+
+(this will paste the content of the clipboard, so the JSON library into a file called library.json in the app data directory : */Users/YOUR_USER/Library/Application Support/Alfred 2/Workflow Data/com.vdesabou.spotify.mini.player*)
 
 ## Library Update
 
-If you modify your playlists, you'll need to update the library (it takes 30 seconds). You need to do steps 7 to 10 of the "Library Installation" section
+If you modify your playlists, you'll need to update the library (*it takes litteraly 30 seconds*). You need to do last 3 steps of the "Library Installation" section
 
 ## First time use
 
@@ -74,7 +78,7 @@ I strongly recommend to use the setting "Cache all artworks for Spotify Mini Pla
 
 Download the workflow below and open in Alfred.
 
-[![Download Workflow](http://d.pr/i/L4IL+.png)](https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/SpotifyMiniPlayer.alfredworkflow)
+[Download Workflow](https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/SpotifyMiniPlayer.alfredworkflow)
 
 
 ## History
