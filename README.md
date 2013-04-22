@@ -101,7 +101,7 @@ Download the workflow below and open in Alfred.
 
 1.14:
 
-*Fixes and improvements to playlists
+* Fixes and improvements to playlists
 
 1.13:
 
