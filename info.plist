@@ -733,6 +733,6 @@ Spotify App spotify-export (https://github.com/jamesrwhite/spotify-export) must 
 		</dict>
 	</dict>
 	<key>webaddress</key>
-	<string>http://www.alfredforum.com/topic/1892-spotify-mini-player-kind-of/</string>
+	<string>https://github.com/vdesabou/alfred-spotify-mini-player</string>
 </dict>
 </plist>
