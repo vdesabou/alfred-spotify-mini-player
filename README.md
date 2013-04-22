@@ -1,0 +1,2 @@
+alfred-spotify-mini-player
+==========================
