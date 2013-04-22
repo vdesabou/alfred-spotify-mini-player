@@ -1,7 +1,4 @@
 <?php
-// Almost all of this code is from Spoticious workflow (http://www.alfredforum.com/topic/1644-spotifious-a-natural-spotify-controller-for-alfred/)
-// Thanks citelao https://github.com/citelao/Spotify-for-Alfred
-
 // Thanks Jeff Johns <http://phpfunk.me/>; this is identical to his `clear.php`
 require_once('workflows.php');
 
