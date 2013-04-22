@@ -615,9 +615,6 @@ end alfred_script</string>
 
 https://github.com/citelao/Spotify-for-Alfred
 
-Alfred forum post (http://www.alfredforum.com/topic/1644-spotifious-a-natural-spotify-controller-for-alfred/?hl=spotify)
-
-
 Spotify App spotify-export (https://github.com/jamesrwhite/spotify-export) must be installed</string>
 	<key>uidata</key>
 	<dict>
