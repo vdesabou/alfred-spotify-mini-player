@@ -1,0 +1,30 @@
+{
+	"BundleType": "Application",
+	"BundleIdentifier": "miniplayer",
+	"BundleVersion": "0.1",
+	"AcceptedLinkTypes":[
+		"album",
+		"artist",
+		"track",
+		"playlist",
+		"user"
+	],
+	"AppIcon": {
+		"18x18": "icon.png"
+	},
+	"AppName": {
+		"en": "Mini Player"
+	},
+	"AppDescription": {
+		"en": "Used by Alfred workflow Spotify Mini Player."
+	},
+	"SupportedLanguages": [
+		"en"
+	],
+	"RequiredPermissions": [
+		"https://*",
+		"http://*"
+	],
+	"RequiredInterface": "1",
+	"VendorIdentifier": "com.vdesabou.spotify.miniplayer"
+}

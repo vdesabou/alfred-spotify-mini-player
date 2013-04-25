@@ -19,53 +19,28 @@ other_action=$(echo "${QUERY}" | cut -f8 -d"|")
 
 if [ "${TYPE}" = "TRACK" ]
 then
-	applescript_command="open location \"${track_uri}\""
+if [ "-${track_uri}-" != "--" ]
+then
+osascript <<EOT
+tell application "Spotify"
+	open location "${track_uri}"
+end tell
+EOT
+fi
 elif [ "${TYPE}" = "ALBUM" ]
 then
-	#applescript_command="activate (open location \"${album_uri}\")"
 osascript <<EOT
-try
-	tell application "Spotify"
-		if the player state is playing then
-			playpause
-		end if
-	end tell
-on error error_message
-	return
-end try
-EOT
-	a=$(echo "${album_uri}" | cut -f3 -d":")
-
-osascript <<EOT
-tell application "Safari"
-	make new document
-	set URL of front document to "http://open.spotify.com/album/${a}"
-	delay 4
-	close front document
+tell application "Spotify"
+	open location "spotify:app:miniplayer:playartistoralbum:${album_uri}"
+	#open location "${album_uri}"
 end tell
 EOT
 elif [ "${TYPE}" = "ARTIST" ]
 then
-	#applescript_command="activate (open location \"${artist_uri}\")"
 osascript <<EOT
-try
-	tell application "Spotify"
-		if the player state is playing then
-			playpause
-		end if
-	end tell
-on error error_message
-	return
-end try
-EOT
-	a=$(echo "${artist_uri}" | cut -f3 -d":")
-
-osascript <<EOT
-tell application "Safari"
-	make new document
-	set URL of front document to "http://open.spotify.com/artist/${a}"
-	delay 4
-	close front document
+tell application "Spotify"
+	open location "spotify:app:miniplayer:playartistoralbum:${artist_uri}"
+	#open location "${artist_uri}"
 end tell
 EOT
 fi
@@ -74,22 +49,9 @@ fi
 if [ "-${playlist_uri}-" != "--" ]
 then
 osascript <<EOT
--- Make sure we have the spotify-application on front and in focus
 tell application "Spotify"
-	activate
-end tell
-
-open location "${playlist_uri}"
-
--- Now navigate to the song we want to play and play it
-tell application "System Events"
-	delay (1)
-	-- One times tabulator = move selection to the songs list
-	key code 48
-	-- Wait for a while the spotify app to catch up
-	delay (2)
-	-- enter key = play selected song
-	key code 36
+	open location "spotify:app:miniplayer:startplaylist:${playlist_uri}"
+	#open location "${playlist_uri}"
 end tell
 EOT
 elif [ "-${spotify_command}-" != "--" ]
@@ -166,11 +128,5 @@ elif [ "-${original_query}-" != "--" ]
 then
 osascript <<EOT
 tell application "Alfred 2" to search "spot ${original_query}"
-EOT
-else
-osascript <<EOT
-tell application "Spotify"
-	${applescript_command}
-end tell
 EOT
 fi

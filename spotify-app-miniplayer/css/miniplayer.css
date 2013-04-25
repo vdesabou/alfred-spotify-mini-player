@@ -1,0 +1,43 @@
+.clear {
+	clear:both;
+}
+.left {
+	float:left;
+}
+.main {
+	padding:20px;
+}
+#now-playing {
+	font-size:24px;
+	margin-bottom:30px;
+	line-height: 32px;
+}
+#now-playing a {
+	color:#eeeeee;
+}
+#player-image {
+	margin-right: 10px;
+	margin-bottom: 10px;
+}
+#player-image, #player-image .image {
+	float:left;
+	height:128px;
+	width:128px;
+}
+#commands {
+	margin-bottom:30px;
+}
+ul {
+	list-style: disc;
+	margin-left: 20px; 
+}
+a {
+	color:#eeeeee;
+}
+
+	
+textarea {
+width: 100%;
+height: 200px;
+}
+		
