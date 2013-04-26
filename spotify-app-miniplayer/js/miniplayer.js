@@ -1,9 +1,8 @@
 /**
- *      by @ptrwtts             
- *		https://github.com/ptrwtts/miniplayer
- *		Free to distribute under MIT and all that jazz
+ *      Largely inspired by @ptrwtts             
+ *		https://github.com/ptrwtts/kitchensink
+ *		
  */
-
 // Initialize the Spotify objects
 var sp = getSpotifyApi(1),
 	models = sp.require("sp://import/scripts/api/models"),

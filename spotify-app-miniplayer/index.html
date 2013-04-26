@@ -15,34 +15,15 @@
 		<div id="player" class="main">
 			<div id="now-playing"></div>
 			<div style="clear:both"></div>
-			<div id="commands">
-				<ul>
-					<li><a href="#" command="export">Export as JSON (click and wait for results to be displayed below)</a></li>
-<!--
-					<li><a href="#" command="togglePause">Toggle Pause</a></li>
-					<li><a href="#" command="skip">Skip</a></li>
-					<li><a href="#" command="playTrackFromUri">Play a Random Track from your Library</a></li>
-					<li><a href="spotify:artist:4Z8W4fKeB5YxbusRsdQVPb" command="playTrackFromContext" pos="0">Play Radiohead's top tracks</a></li>
-                    <li><a href="spotify:radio:artist:4Z8W4fKeB5YxbusRsdQVPb" command="launchArtistRadio">Launch Radiohead radio</a></li>
-					<li>Play a <a href="spotify:user:pitchforkmedia:playlist:4ajBV7IPKfCi87DhkofJCb">Playlist</a> from track:
-						<a href="spotify:user:pitchforkmedia:playlist:4ajBV7IPKfCi87DhkofJCb" command="playTrackFromContext" pos="1">2</a> |
-						<a href="spotify:user:pitchforkmedia:playlist:4ajBV7IPKfCi87DhkofJCb" command="playTrackFromContext" pos="4">5</a> |
-						<a href="spotify:user:pitchforkmedia:playlist:4ajBV7IPKfCi87DhkofJCb" command="playTrackFromContext" pos="17">18</a> |
-						<a href="spotify:user:pitchforkmedia:playlist:4ajBV7IPKfCi87DhkofJCb" command="playTrackFromContext" pos="22">23</a> 
-					</li>
-					<li><a href="#" id="sharer" command="showSharePopup">Show Share Popup</a></li>
--->
-				</ul>
-			</div>
-<!-- 			<div id="play-history"></div> -->
 			
 			<h1>Export</h1>
 			
+			<div id="commands">
+				<a href="#" class="button" command="export">Export as JSON (click and wait for results to be displayed below)</a>
+			</div>
+			
 			<h2>JSON</h2>
 			<textarea id="json"></textarea>
-			
-			<h2>Tracks</h2>
-			<ul id="tracks"></li>
 		</div>
 	</body>
 	

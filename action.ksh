@@ -89,7 +89,7 @@ then
 osascript <<EOT
 tell application "Spotify"
 	activate
-	open location "spotify:app:export"
+	open location "spotify:app:miniplayer"
 end tell
 EOT
 	elif [ "${other_action}" == "update_library_json" ]

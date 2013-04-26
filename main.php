@@ -15,6 +15,18 @@ if (file_exists($w->data() . "/library.json"))
 }
 
 //
+// Install Spotify App Mini Player if needed
+//
+// FIX THIS: need a way not doing it everty time
+if (!is_dir("~/Spotify/spotify-app-miniplayer"))
+{
+	exec("mkdir -p ~/Spotify");
+	//exec("cp -R '".$w->path()."/spotify-app-miniplayer' ~/Spotify");
+	exec("ln -sf '".$w->path()."/spotify-app-miniplayer' ~/Spotify");
+	//symlink($w->path() . "/spotify-app-miniplayer", '~/Spotify');
+}
+
+//
 // Get all_playlists from config
 //
 $ret = $w->get( 'all_playlists', 'settings.plist' );
@@ -115,7 +127,9 @@ if(mb_strlen($query) < 3 ||
 		}
 		else
 		{
-			$w->result( uniqid(), '', "Workflow is not configured, library.json is missing", "Go to settings to install library, please refer to documentation", './images/warning.png', 'no', '' );
+			$w->result( uniqid(), '', "Workflow is not configured, library.json is missing", "Select Open Spotify Mini Player App below, and copy json data", './images/warning.png', 'no', '' );
+			$w->result( uniqid(), "|||||||" . "open_spotify_export_app", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Install library.", './images/app_export.png', 'yes', '' );
+			$w->result( uniqid(), "|||||||" . "update_library_json", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update_library.png', 'yes', '' );
 		}
 
 		if ($is_spotifious_active == true)
@@ -150,8 +164,8 @@ if(mb_strlen($query) < 3 ||
 		{
 			$w->result( uniqid(), "|||||||" . "enable_all_playlist", "Change Search Scope", "Select to change to ALL playlists", './images/allplaylists_switch.png', 'yes', '' );
 		}
-		$w->result( uniqid(), "|||||||" . "open_spotify_export_app", "Open Spotify App <spotify:app:export>", "Once clipboard contains json data, get back here and use Install or Update library.", './images/app_export.png', 'yes', '' );
-		$w->result( uniqid(), "|||||||" . "update_library_json", "Install or Update library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:export>", './images/update_library.png', 'yes', '' );
+		$w->result( uniqid(), "|||||||" . "open_spotify_export_app", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Update library.", './images/app_export.png', 'yes', '' );
+		$w->result( uniqid(), "|||||||" . "update_library_json", "Update library", "Make sure the clipboard contains the json data from the Spotify Mini Player App <spotify:app:miniplayer>", './images/update_library.png', 'yes', '' );
 		$w->result( uniqid(), '', "Configure Max Number of Results", "Number of results displayed", './images/max_number.png', 'no', 'Settings→MaxResults→' );
 		$w->result( uniqid(), "|||||||" . "cache", "Cache All Artworks", "This is recommended to do it before using the player", './images/cache.png', 'yes', '' );
 		$w->result( uniqid(), "|||||||" . "clear", "Clear Cached Artworks", "All cached artworks will be deleted", './images/clear.png', 'yes', '' );

@@ -1,3 +1,8 @@
+/**
+ *      Largely inspired by @ptrwtts             
+ *		https://github.com/ptrwtts/kitchensink
+ *		
+ */
 function addToMiniPlayerPlaylist(args) {	
 	// args[0] = page,  args[1] = command, args[2] = value 
 	// e.g. spotify:app:miniplayer:search:play:the+cure+close+to+me
