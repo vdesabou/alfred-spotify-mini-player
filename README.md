@@ -1,5 +1,5 @@
-alfred-spotify-mini-player
-==========================
+# alfred-spotify-mini-player
+
 
 This is "Spotify Mini Player", like the alfred built-in iTunes Mini Player, but for Spotify!
 
@@ -12,11 +12,12 @@ This allows the workflow to be responsive (which is the strength of the alfred b
 
 ## Screenshots
 
-![Screenshot](http://d.pr/i/J49m+.png)
+![Screenshot](http://d.pr/i/gFYc+.png)
 
 
 
 ## Features
+
 * Hotkey to trigger the workflow
 * Direct call to Spotifious workflow
 * Insta-search (just start typing at least 3 characters)
@@ -44,38 +45,43 @@ You'll need to do the following steps:
 
 * Open Spotify Mini Player by invoking *spot_mini* or configured hotkey in Alfred, and select "Open Spotify Mini Player App":
 
-![Screenshot](http://d.pr/i/GH1O)
+![Screenshot](http://d.pr/i/GH1O+.png)
 
-* Note: If Spotify cannot open the Spotify Mini Player App, restart Spotify completely. If this still doesn't work, try to logout and login again in Spotify
-* After a brief bit of loading you should see something like this, click the RED button to generate JSON data
+**Note**: If Spotify cannot open the Spotify Mini Player App, restart Spotify completely. If this still doesn't work, try to logout and login again in Spotify
 
-![Screenshot](http://d.pr/i/ZJcN)
+* Spotify shall open the Mini Player app:
 
-* Click in the JSON white box: all the text will be selected in blue. Copy the text (cmd+C). At this point the JSON library is located in your clipboard.
+![Screenshot](http://d.pr/i/ZJcN+.png)
+
+* Click the **BLUE** button to generate JSON data
+
+* Once there is some text in JSON white box, click in the box: all the text will be selected in blue. Copy the text (cmd+C). At this point the JSON library is located in your clipboard.
 
 * Type "spot_mini" or configured hotkey to invoke Spotify Mini Player, and select "Install library" 
 
-![Screenshot](http://d.pr/i/wF47)
+![Screenshot](http://d.pr/i/wF47+.png)
 
 * Technically speaking, it will paste the content of the clipboard, so the JSON library into a file called library.json in the app data directory : */Users/YOUR_USER/Library/Application Support/Alfred 2/Workflow Data/com.vdesabou.spotify.mini.player. All After some time, you should get a notification saying that library has been created
 
-* I strongly recommend to use the setting "Cache all artworks for Spotify Mini Player" the first time. It can take a while to download all you artworks, so have a break and come back later :-)
+* I strongly recommend to use the setting "Cache all artworks for Spotify Mini Player" the first time. It can take a while to download all you artworks, so have a break and come back later :-). You'll get a notification when all artworks are cached.
 
-![Screenshot](http://d.pr/i/gZnb+.png)
+![Screenshot](http://d.pr/i/Jris+.png)
 
 
 
 ## Library Update
 
-If you modify your playlists, you'll need to update the library (*it takes litteraly 30 seconds*).
+If you modify your playlists, you'll need to update the library.
 
 * Go in Spotify Mini Player Settings
 
+![Screenshot](http://d.pr/i/kET3+.png)
+
 * Select Open Spotify Mini Player App
 
-![Screenshot](http://d.pr/i/8CD)
+![Screenshot](http://d.pr/i/8CD+.png)
 
-* Generate JSON Data by pressing red button
+* Generate JSON Data by pressing blue button
 
 * Copy JSON data in your clipboard
 
@@ -92,6 +98,12 @@ Download the workflow below and open in Alfred.
 
 
 ## History
+
+3.0:
+
+* Using own Spotify app <spotify:app:miniplayer>. Nore more need to do manual install, this is automatically done. Using this allows more control and less hacking to make it work
+* New *random* command, it will launch a random track from any of your playlists
+* New *star* command, it will star the current track 
 
 2.2:
 
@@ -187,7 +199,7 @@ Download the workflow below and open in Alfred.
 
 ## Credits
 
-* Citelao and his fabulous [Spotifious workflow](https://github.com/citelao/Spotify-for-Alfred)
+* [Spotifious workflow](https://github.com/citelao/Spotify-for-Alfred)
 * [PhpFunk](https://github.com/phpfunk/alfred-spotify-controls) 
 * [spotify-export](https://github.com/jamesrwhite/spotify-export)
 * [kitchensink](https://github.com/ptrwtts/kitchensink)
