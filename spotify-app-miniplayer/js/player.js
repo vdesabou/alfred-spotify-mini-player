@@ -29,6 +29,7 @@ function playTopList() {
     console.log(playlist);
 }
 */
+/*
 function addToAlfredPlaylist(args) {
 
 	// Get the playlist object from a URI
@@ -82,6 +83,7 @@ function clearAlfredPlaylist(args) {
 	});
 				
 }
+*/
 
 
 function playArtistOrAlbum(args) {

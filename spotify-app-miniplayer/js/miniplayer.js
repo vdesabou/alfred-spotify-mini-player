@@ -36,6 +36,7 @@ function handleArgs() {
 				playTopList();
 				break;
 */
+/*
 			case "addtoalfredplaylist":
 				if(args[8])
 				{
@@ -48,6 +49,7 @@ function handleArgs() {
 					clearAlfredPlaylist(args);
 				}
 				break;
+*/
 			case "playartistoralbum":
 				if(args[3])
 				{
@@ -78,7 +80,6 @@ function handleLinks() {
 	if(links.length) {
 		switch(links[0].split(":")[1]) {
 			case "user":
-				socialInput(links[0].split(":")[2]);
 				break;
 			default:
 				// Play the given item

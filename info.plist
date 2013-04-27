@@ -32,22 +32,6 @@
 				<key>modifiersubtext</key>
 				<string>Play artist in Spotify</string>
 			</dict>
-			<dict>
-				<key>destinationuid</key>
-				<string>1A88766E-BF4A-48F5-9BD4-D3538634422F</string>
-				<key>modifiers</key>
-				<integer>131072</integer>
-				<key>modifiersubtext</key>
-				<string>Add album to your Alfred Playlist</string>
-			</dict>
-			<dict>
-				<key>destinationuid</key>
-				<string>7918E8F7-20AE-445E-9AEA-E2E54CDE967D</string>
-				<key>modifiers</key>
-				<integer>8388608</integer>
-				<key>modifiersubtext</key>
-				<string>Add track to Alfred playlist</string>
-			</dict>
 		</array>
 		<key>22216C91-0A58-4FE1-9F28-DF023E4F4282</key>
 		<array>
@@ -347,36 +331,6 @@
 			<string>alfred.workflow.action.script</string>
 			<key>uid</key>
 			<string>9845C770-A2CC-4752-A542-D71BE1081691</string>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>escaping</key>
-				<integer>38</integer>
-				<key>script</key>
-				<string>ksh action.ksh "{query}" "ALBUM" "ADDTOPLAYLIST"</string>
-				<key>type</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>1A88766E-BF4A-48F5-9BD4-D3538634422F</string>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>escaping</key>
-				<integer>38</integer>
-				<key>script</key>
-				<string>ksh action.ksh "{query}" "TRACK" "ADDTOPLAYLIST"</string>
-				<key>type</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>7918E8F7-20AE-445E-9AEA-E2E54CDE967D</string>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -804,11 +758,6 @@ Spotify App spotify-export: https://github.com/jamesrwhite/spotify-export</strin
 			<key>ypos</key>
 			<real>10</real>
 		</dict>
-		<key>1A88766E-BF4A-48F5-9BD4-D3538634422F</key>
-		<dict>
-			<key>ypos</key>
-			<real>310</real>
-		</dict>
 		<key>22216C91-0A58-4FE1-9F28-DF023E4F4282</key>
 		<dict>
 			<key>ypos</key>
@@ -863,11 +812,6 @@ Spotify App spotify-export: https://github.com/jamesrwhite/spotify-export</strin
 		<dict>
 			<key>ypos</key>
 			<real>1350</real>
-		</dict>
-		<key>7918E8F7-20AE-445E-9AEA-E2E54CDE967D</key>
-		<dict>
-			<key>ypos</key>
-			<real>410</real>
 		</dict>
 		<key>81BA0BC2-F1CB-46DC-A715-C38A1A0E055E</key>
 		<dict>
