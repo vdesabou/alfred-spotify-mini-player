@@ -335,6 +335,77 @@
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>applescript</key>
+				<string>on alfred_script(q)
+
+    tell application "Spotify"
+		if shuffling enabled is true then
+			if shuffling is true then
+				set shuffling to false
+				return "Shuffle is disabled."
+			else
+				set shuffling to true
+				return "Shuffle is enabled."
+			end if
+		else
+			return "Shuffling is not currently enabled."
+		end if
+    end tell
+
+end alfred_script</string>
+				<key>cachescript</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.applescript</string>
+			<key>uid</key>
+			<string>CB842E97-4DDD-4663-8630-EAF7407CBA1D</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>shuffle</string>
+				<key>subtext</key>
+				<string>Activate shuffling in Spotify</string>
+				<key>text</key>
+				<string>Shuffle</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>81BA0BC2-F1CB-46DC-A715-C38A1A0E055E</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<true/>
+				<key>output</key>
+				<integer>0</integer>
+				<key>removeextension</key>
+				<false/>
+				<key>sticky</key>
+				<false/>
+				<key>text</key>
+				<string>{query}</string>
+				<key>title</key>
+				<string>Spotify Mini Player</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.notification</string>
+			<key>uid</key>
+			<string>29A1FCD7-3432-4BFF-89DB-4111B3169AD5</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
@@ -673,77 +744,6 @@ end alfred_script</string>
 			<key>uid</key>
 			<string>5EB06988-92AD-4D95-AD02-929FB6EBCD64</string>
 		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>applescript</key>
-				<string>on alfred_script(q)
-
-    tell application "Spotify"
-		if shuffling enabled is true then
-			if shuffling is true then
-				set shuffling to false
-				return "Shuffle is disabled."
-			else
-				set shuffling to true
-				return "Shuffle is enabled."
-			end if
-		else
-			return "Shuffling is not currently enabled."
-		end if
-    end tell
-
-end alfred_script</string>
-				<key>cachescript</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.applescript</string>
-			<key>uid</key>
-			<string>CB842E97-4DDD-4663-8630-EAF7407CBA1D</string>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>2</integer>
-				<key>keyword</key>
-				<string>shuffle</string>
-				<key>subtext</key>
-				<string>Activate shuffling in Spotify</string>
-				<key>text</key>
-				<string>Shuffle</string>
-				<key>withspace</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>81BA0BC2-F1CB-46DC-A715-C38A1A0E055E</string>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>lastpathcomponent</key>
-				<false/>
-				<key>onlyshowifquerypopulated</key>
-				<true/>
-				<key>output</key>
-				<integer>0</integer>
-				<key>removeextension</key>
-				<false/>
-				<key>sticky</key>
-				<false/>
-				<key>text</key>
-				<string>{query}</string>
-				<key>title</key>
-				<string>Spotify Mini Player</string>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.output.notification</string>
-			<key>uid</key>
-			<string>29A1FCD7-3432-4BFF-89DB-4111B3169AD5</string>
-		</dict>
 	</array>
 	<key>readme</key>
 	<string>Credits:
@@ -766,7 +766,7 @@ Spotify App spotify-export: https://github.com/jamesrwhite/spotify-export</strin
 		<key>29A1FCD7-3432-4BFF-89DB-4111B3169AD5</key>
 		<dict>
 			<key>ypos</key>
-			<real>1730</real>
+			<real>340</real>
 		</dict>
 		<key>2D26D8E2-52A2-4BF9-B693-0D5190C6CC23</key>
 		<dict>
@@ -816,7 +816,7 @@ Spotify App spotify-export: https://github.com/jamesrwhite/spotify-export</strin
 		<key>81BA0BC2-F1CB-46DC-A715-C38A1A0E055E</key>
 		<dict>
 			<key>ypos</key>
-			<real>1730</real>
+			<real>340</real>
 		</dict>
 		<key>8C78472B-13EB-4512-B94D-4BF92867CD92</key>
 		<dict>
@@ -856,7 +856,7 @@ Spotify App spotify-export: https://github.com/jamesrwhite/spotify-export</strin
 		<key>CB842E97-4DDD-4663-8630-EAF7407CBA1D</key>
 		<dict>
 			<key>ypos</key>
-			<real>1730</real>
+			<real>340</real>
 		</dict>
 		<key>CD9D3654-8137-49B2-80DC-095E97A58E67</key>
 		<dict>
