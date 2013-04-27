@@ -31,6 +31,23 @@ function handleArgs() {
 			case "star":
 				starCurrentTrack();
 				break;
+/*
+			case "toplist":
+				playTopList();
+				break;
+*/
+			case "addtoalfredplaylist":
+				if(args[8])
+				{
+					addToAlfredPlaylist(args);
+				}
+				break;
+			case "clearalfredplaylist":
+				if(args[5])
+				{
+					clearAlfredPlaylist(args);
+				}
+				break;
 			case "playartistoralbum":
 				if(args[3])
 				{
@@ -41,16 +58,12 @@ function handleArgs() {
 				if(args[5])
 				{
 					startPlaylist(args);
+					break;
 				}
 				else if(args[4] == 'starred' )
 				{
 					startStarredPlaylist(args);
-				}
-				break;
-			case "addtominiplayerplaylist":
-				if(args[4])
-				{
-					addToMiniPlayerPlaylist(args);
+					break;
 				}
 				break;
 		}

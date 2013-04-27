@@ -3,41 +3,94 @@
  *		https://github.com/ptrwtts/kitchensink
  *		
  */
-function addToMiniPlayerPlaylist(args) {	
-	// args[0] = page,  args[1] = command, args[2] = value 
-	// e.g. spotify:app:miniplayer:search:play:the+cure+close+to+me
-	//var query = unescape(args[2].replace(/\+/g, " ")); //clean up the search query
-	//console.log(query);
+ 
+/*
+function playTopList() {
+	var toplist = new models.Toplist();
+	toplist.toplistType = models.TOPLISTTYPE.USER;
+	toplist.matchType = models.TOPLISTMATCHES.TRACKS;
+	toplist.userName = models.TOPLISTUSER_CURRENT;
 
-	//addtominiplayerplaylist:7i105IWmto7KSH6jB27DO3
+	var playlist = new models.Playlist();
 	
-	// Create a track object from a URI
+	toplist.observe(models.EVENT.CHANGE, function() {
+	    toplist.results.forEach(function(track) {
+	        var link = '<li><a href="' + track.uri + '">' + track.name + '</a></li>';
+		    var library_track = models.Track.fromURI(track.uri);
+	      
+	        // Add the track
+	        playlist.add(library_track);
+	    });
+	});
+	 
+	toplist.run();
+
+    // Verify the song was added to the playlist
+    console.log(playlist);
+}
+*/
+function addToAlfredPlaylist(args) {
+
+	// Get the playlist object from a URI
+	var playlist = models.Playlist.fromURI(args[4]+':'+args[5]+':'+args[6]+':'+args[7]+':'+args[8]);
 	
-
-        var track = models.Track.fromURI(args[1]+':'+args[2]+':'+args[3]);
-        console.log(track);
-        // Create a playlist object from a URI
-       // var playlist = models.Playlist.fromURI('spotify:user:vdesabou:playlist:1CQlXLTaSNJmpZVbT1qJOU');
-        var playlist = new models.Playlist("Alfred Mini Player");
-        
-        playlist.data.collaborative = false;
-
-        // Add the track
-        playlist.add(track);
-
-        // Verify the song was added to the playlist
-        console.log(playlist);
+	playlist.data.collaborative = false;
+		
+	if(args[2] == 'track')
+	{
+		// Create a track object from a URI
+		var track = models.Track.fromURI(args[1]+':'+args[2]+':'+args[3]);
+			
+		// Add the track
+		playlist.add(track);
+	}
+	else if(args[2] == 'album')
+	{
+		models.Album.fromURI(args[1]+':'+args[2]+':'+args[3], function(album) {
+		    // This callback is fired when the album has loaded.
+		    // The album object has a tracks property, which is a standard array.
+		    
+		   
+			for (var i = 0, l = album.length; i < l; i++){
+	      
+					models.Track.fromURI(album.tracks[i].uri, function (track) {
+					    // Track has loaded!
+					    playlist.add(track);
+					});
+	        }
+    	});
+	}
+		
+	// Verify the song was added to the playlist
+	console.log(playlist);			
 }
 
-function playArtistOrAlbum(args) {	
+function clearAlfredPlaylist(args) {
 
+	models.Playlist.fromURI(args[1]+':'+args[2]+':'+args[3]+':'+args[4]+':'+args[5], function(playlist) {
+	    // This callback is fired when the playlist has loaded.
+	    // The playlist object has a tracks property, which is a standard array.
+	    	 
+		for (var i = 0, l = playlist.length; i < l; i++){
+
+			models.Track.fromURI(playlist.tracks[i].uri, function (track) {
+			    // Track has loaded!
+			    playlist.remove(track);
+			});
+             
+        }	
+	});
+				
+}
+
+
+function playArtistOrAlbum(args) {
 	console.log(args[1]+':'+args[2]+':'+args[3]);
 	player.play (args[1]+':'+args[2]+':'+args[3],args[1]+':'+args[2]+':'+args[3],0)
 				
 }
 
 function startPlaylist(args) {	
-	//spotify:user:vdesabou:playlist:0CioVOCvmD2DBYokAjySiz
 	console.log(args[1]+':'+args[2]+':'+args[3]+':'+args[4]+':'+args[5]);
 	player.play (args[1]+':'+args[2]+':'+args[3]+':'+args[4]+':'+args[5],args[1]+':'+args[2]+':'+args[3]+':'+args[4]+':'+args[5],0)
 				
@@ -45,7 +98,6 @@ function startPlaylist(args) {
 
 
 function startStarredPlaylist(args) {	
-	//spotify:user:vdesabou:starred
 	console.log(args[1]+':'+args[2]+':'+args[3]+':'+args[4]);
 	player.play (args[1]+':'+args[2]+':'+args[3]+':'+args[4],args[1]+':'+args[2]+':'+args[3]+':'+args[4],0)
 				
@@ -64,9 +116,6 @@ function randomTrack() {
 	// Grab a random track from your library (cause it's more fun)
 	var tracks = library.tracks;
 	var track = tracks[Math.floor(Math.random()*tracks.length)]
-	//clearPlaylist(tempPlaylist);
-	//tempPlaylist.add(track.data.uri);
-	//player.play(track.data.uri, tempPlaylist.data.uri, 0);
 	player.play(track.data.uri, track.data.uri, 0);
 }
 
@@ -88,16 +137,6 @@ $(function(){
 		
 	$("#commands a").click(function(e){
 		switch($(this).attr('command')) {
-			case "togglePause":
-				// Check if playing and reverse it
-				player.playing = !(player.playing);
-				e.preventDefault();
-				break;
-			case "skip":
-				// skip to next track
-				player.next();
-				e.preventDefault();
-				break;
 			case "export":
 				setTimeout(function() {
 					spotifyExport();
@@ -109,29 +148,6 @@ $(function(){
 				$(this).select();
 				
 				});
-				e.preventDefault();
-				break;				
-			case "playTrackFromUri":
-				// Grab a random track from your library (cause it's more fun)
-				var tracks = library.tracks;
-				var track = tracks[Math.floor(Math.random()*tracks.length)]
-				clearPlaylist(tempPlaylist);
-				tempPlaylist.add(track.data.uri);
-				player.play(track.data.uri, tempPlaylist.data.uri, 0);
-				e.preventDefault();
-				break;
-			case "playTrackFromContext":
-				// Play an item (artist, album, playlist) from a particular position
-				player.play(
-					$(this).attr('href'),				// Item to play
-					$(this).attr('href'),				// Context to use
-					parseInt($(this).attr('pos'))		// Position to play from
-				);
-				e.preventDefault();
-				break;
-			case "showSharePopup":
-				// skip to next track
-				application.showSharePopup(document.getElementById($(this).attr('id')),player.track.uri); // This will fail if you're listening to a local track :(
 				e.preventDefault();
 				break;
 		}
