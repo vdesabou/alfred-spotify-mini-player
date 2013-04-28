@@ -48,6 +48,7 @@ tell application "Spotify"
 	open location "${alfred_playlist_uri}"
 end tell
 EOT
+php -f refresh_alfred_playlist.php
 	else
 osascript <<EOT
 tell application "Spotify"
