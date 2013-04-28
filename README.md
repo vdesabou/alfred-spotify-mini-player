@@ -50,7 +50,7 @@ You'll need to do the following steps:
 
 * Spotify shall open the Mini Player app:
 
-![Screenshot](http://d.pr/i/ZJcN+.png)
+![Screenshot](http://d.pr/i/EOch+.png)
 
 * Click the **BLUE** button to generate JSON data
 
