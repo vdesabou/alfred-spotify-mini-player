@@ -29,6 +29,17 @@ EOT
 		fi
 elif [ "${TYPE}" = "ALBUM" ]
 then
+	if [ "-${ALFREDPLAYLIST}-" != "--" ]
+	then
+osascript <<EOT
+tell application "Spotify"
+	open location "spotify:app:miniplayer:addtoalfredplaylist:${album_uri}:${alfred_playlist_uri}"
+	open location "${alfred_playlist_uri}"
+end tell
+EOT
+sleep 15
+php -f refresh_alfred_playlist.php
+	else
 osascript <<EOT
 tell application "Spotify"
 	open location "spotify:app:miniplayer:playartistoralbum:${album_uri}"
@@ -84,6 +95,16 @@ then
 	elif [ "${other_action}" == "enable_spotifiuous" ]
 	then
 		php -f set_spotifious.php -- "true"
+	elif [ "${other_action}" == "clear_alfred_playlist" ]
+	then
+osascript <<EOT
+tell application "Spotify"
+	open location "spotify:app:miniplayer:clearalfredplaylist:${alfred_playlist_uri}:$(date)"
+	open location "${alfred_playlist_uri}"
+end tell
+EOT
+	sleep 15
+	php -f refresh_alfred_playlist.php
 	elif [ "${other_action}" == "open_spotify_export_app" ]
 	then
 osascript <<EOT
