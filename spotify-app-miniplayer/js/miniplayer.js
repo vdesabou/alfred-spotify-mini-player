@@ -78,7 +78,6 @@ function handleLinks() {
 	if(links.length) {
 		switch(links[0].split(":")[1]) {
 			case "user":
-				socialInput(links[0].split(":")[2]);
 				break;
 			default:
 				// Play the given item

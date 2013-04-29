@@ -5,45 +5,44 @@ This is "Spotify Mini Player", like the alfred built-in iTunes Mini Player, but 
 
 ## Description
 
-It is based on the fabulous work done for Spotifious Workflow, but has a different approach: instead of interrogating the complete Spotify Catalog (which tends to be quite slow due to Metadata Api), it only search in the user playlists (either "starred" playlist only or all playlists, this is configurable).
+Speed is the key word here: instead of using slow Spotify API, it uses a JSON library file representing the user library, including subscribed playlists. You can decide to search in your starred playlist only, or in all all your playlists. You can browse by Artist, Album or Playlist. You can control Spotify using keywords such as play/next/volmax/random/shuffle/star/etc...
 
-This allows the workflow to be responsive (which is the strength of the alfred built-in iTunes mini player) because the lookup is done locally and all artworks are cached.
+## Features
 
+* Hotkey to trigger the workflow
+* Insta-search (just start typing at least 3 characters)
+* Search for Albums, Artists or Tracks
+* Search for playlists and Start it
+* Browse by Artists, Albums or Playlists
+* Select a track with *alt* to play the album, or *cmd* to play the artist
+* Same control keywords as iTunes Mini Player: play, pause, mute, next, random, previous, volmax, volmid. And shuffle to activate shuffling.
+* Star current track
+* Direct call to [Spotifious](http://www.alfredforum.com/topic/1644-spotifious-a-natural-spotify-controller-for-alfred) workflow
+* [AlleyOop](http://www.alfredforum.com/topic/1582-alleyoop-update-alfred-workflows/) support
+
+## Settings
+
+* Configurable Search Scope: Only Starred playlist (by default) or All your playlists
+* Set max number of results
+* enable/disable Spotifious
+* Cache all artworks at once. 
+This is recommended to be done before you start using the workflow. Artworks are downloaded on the fly, but it is better to cache everything for performances reasons
+* Clear Artworks cache. Not sure why you would use it, but it's possible to do it
+* Install/Update of the library (see next section for explanations)
 
 ## Screenshots
 
 ![Screenshot](http://d.pr/i/gFYc+.png)
 
 
-
-## Features
-
-* Hotkey to trigger the workflow
-* Direct call to Spotifious workflow
-* Insta-search (just start typing at least 3 characters)
-* Search for Albums, Artists or Tracks
-* Search for playlists and Start it
-* Browse by Artists, Albums
-* Browse by Playlists
-* Select a track with "alt" to play the album, or "cmd" to play the artist in Spotify
-* Same control keywords as iTunes Mini Player: play, pause, mute, next, random, previous, volmax, volmid. And shuffle to activate shuffling.
-* Star current track
-* Settings: Configurable Search Scope: Only Starred playlist (by default) or All your playlists
-* Settings: Set max number of results
-* Settings: enable/disable Spotifious
-* Settings: Cache all artworks at once. This is recommended to be done before you start using the workflow. Artworks are downloaded on the fly, but it  is better to cache everything for performances reasons
-* Settings: Clear Artworks cache. Not sure why you would use it, but it's possible to do it
-* Settings: Install/Update of the library (see next section for explanations)
-* AlleyOop 2.0 support
-
 ## First time use
 
 You'll need to do the following steps:
 
 * Sign up for a [developer account on Spotify](https://developer.spotify.com/technologies/apps/#developer-account)
-* Download the latest version of Spotify and ***install*** it (I had to do it, even though I was pretty sure to already have the latest version, so please do it!)
+* Download the [latest version](https://www.spotify.com/fr/download/mac/) of Spotify and ***install*** it (I had to do it, even though I was pretty sure to already have the latest version, so please do it!)
 
-* Open Spotify Mini Player by invoking *spot_mini* or configured hotkey in Alfred, and select "Open Spotify Mini Player App":
+* Open Spotify Mini Player app (it is automatically installed) by invoking *spot_mini* or configured hotkey in Alfred, and select "Open Spotify Mini Player App":
 
 ![Screenshot](http://d.pr/i/GH1O+.png)
 
@@ -51,7 +50,7 @@ You'll need to do the following steps:
 
 * Spotify shall open the Mini Player app:
 
-![Screenshot](http://d.pr/i/ZJcN+.png)
+![Screenshot](http://d.pr/i/EOch+.png)
 
 * Click the **BLUE** button to generate JSON data
 
@@ -99,7 +98,7 @@ Download the workflow below and open in Alfred.
 
 ## History
 
-3.0:
+2.3:
 
 * Using own Spotify app <spotify:app:miniplayer>. Nore more need to do manual install, this is automatically done. Using this allows more control and less hacking to make it work
 * New *random* command, it will launch a random track from any of your playlists
