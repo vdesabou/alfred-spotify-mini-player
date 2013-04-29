@@ -4,8 +4,9 @@ set -x
 
 QUERY="$1"
 TYPE="$2"
+ALFREDPLAYLIST="$3"
 
-# query is csv form: track_uri|album_uri|artist_uri|playlist_uri|spotify_command|max_results|other_action
+# query is csv form: track_uri|album_uri|artist_uri|playlist_uri|spotify_command|max_results|other_action|alfred_playlist_uri
 
 track_uri=$(echo "${QUERY}" | cut -f1 -d"|")
 album_uri=$(echo "${QUERY}" | cut -f2 -d"|")
@@ -15,18 +16,28 @@ spotify_command=$(echo "${QUERY}" | cut -f5 -d"|")
 original_query=$(echo "${QUERY}" | cut -f6 -d"|")
 max_results=$(echo "${QUERY}" | cut -f7 -d"|")
 other_action=$(echo "${QUERY}" | cut -f8 -d"|")
-
+alfred_playlist_uri=$(echo "${QUERY}" | cut -f9 -d"|")
 
 if [ "${TYPE}" = "TRACK" ]
 then
 	if [ "-${track_uri}-" != "--" ]
 	then
+		if [ "-${ALFREDPLAYLIST}-" != "--" ]
+		then
+osascript <<EOT
+tell application "Spotify"
+	open location "spotify:app:miniplayer:addtoalfredplaylist:${track_uri}:${alfred_playlist_uri}"
+	open location "${alfred_playlist_uri}"
+end tell
+EOT
+		else
 osascript <<EOT
 tell application "Spotify"
 	open location "${track_uri}"
 end tell
 EOT
 		fi
+	fi
 elif [ "${TYPE}" = "ALBUM" ]
 then
 	if [ "-${ALFREDPLAYLIST}-" != "--" ]
@@ -46,6 +57,7 @@ tell application "Spotify"
 	open location "${album_uri}"
 end tell
 EOT
+	fi
 elif [ "${TYPE}" = "ARTIST" ]
 then
 osascript <<EOT
