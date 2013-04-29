@@ -30,7 +30,6 @@ function playTopList() {
 }
 */
 function addToAlfredPlaylist(args) {
-
 	// Get the playlist object from a URI
 	models.Playlist.fromURI(args[4]+':'+args[5]+':'+args[6]+':'+args[7]+':'+args[8], function(playlist) {
 	
@@ -49,14 +48,10 @@ function addToAlfredPlaylist(args) {
 			    // This callback is fired when the album has loaded.
 			    // The album object has a tracks property, which is a standard array.
 			    
-			   
 				for (var i = 0, l = album.length; i < l; i++){
 					if(album.tracks[i] != null)
-					{	      
-						var track = models.Track.fromURI(album.tracks[i].uri, function (track) {
-						    // Track has loaded!
-						    playlist.add(track);
-						});
+					{	 
+						playlist.add(album.get(i));
 					}
 		        }
 	    	});

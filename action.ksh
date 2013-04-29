@@ -48,6 +48,7 @@ tell application "Spotify"
 	open location "${alfred_playlist_uri}"
 end tell
 EOT
+sleep 15
 php -f refresh_alfred_playlist.php
 	else
 osascript <<EOT
@@ -114,6 +115,7 @@ tell application "Spotify"
 	open location "${alfred_playlist_uri}"
 end tell
 EOT
+	sleep 15
 	php -f refresh_alfred_playlist.php
 	elif [ "${other_action}" == "open_spotify_export_app" ]
 	then
