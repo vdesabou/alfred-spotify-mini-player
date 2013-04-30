@@ -259,7 +259,7 @@
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>ksh action.ksh "{query}" "TRACK"</string>
+				<string>php -f action.php -- "{query}" "TRACK"</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -324,7 +324,7 @@
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>ksh action.ksh "{query}" "ALBUM"</string>
+				<string>php -f action.php -- "{query}" "ALBUM"</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -339,7 +339,7 @@
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>ksh action.ksh "{query}" "ARTIST"</string>
+				<string>php -f action.php -- "{query}" "ARTIST"</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -354,7 +354,7 @@
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>ksh action.ksh "{query}" "ALBUM" "ADDTOPLAYLIST"</string>
+				<string>php -f action.php -- "{query}" "ALBUM" "ADDTOPLAYLIST"</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -369,7 +369,7 @@
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>ksh action.ksh "{query}" "TRACK" "ADDTOPLAYLIST"</string>
+				<string>php -f action.php -- "{query}" "TRACK" "ADDTOPLAYLIST"</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
