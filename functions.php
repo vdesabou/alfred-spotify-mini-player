@@ -40,12 +40,6 @@ function getTrackArtwork($spotifyURL,$fetchIfNotPresent) {
 				);
 				
 				$w->request( "$artwork", $options );
-				
-				if( filesize($currentArtwork) == 0 )
-				{
-					unlink($currentArtwork); 
-					return "images/default_album.png";
-				}
 			}
 		}
 		else
@@ -53,6 +47,14 @@ function getTrackArtwork($spotifyURL,$fetchIfNotPresent) {
 			return "images/default_album.png";
 		}
 	}
+	else
+	{
+		if( filesize($currentArtwork) == 0 )
+		{
+			return "images/default_album.png";
+		}		
+	}
+	
 	if(is_numeric($artwork) && $artwork == 0)
 	{
 		return "images/default_album.png";
@@ -85,15 +87,16 @@ function getArtistArtwork($artist,$fetchIfNotPresent) {
 				CURLOPT_FILE =>	$fp	
 				);		
 				$w->request( "$artwork", $options );
-				
-				if( filesize($currentArtwork) == 0 )
-				{
-					unlink($currentArtwork); 
-					return "images/default_artist.png";
-				}
 			}
 		}
 		else
+		{
+			return "images/default_artist.png";
+		}
+	}
+	else
+	{
+		if( filesize($currentArtwork) == 0 )
 		{
 			return "images/default_artist.png";
 		}
