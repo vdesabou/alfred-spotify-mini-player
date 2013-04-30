@@ -36,7 +36,7 @@ function handleArgs() {
 				playTopList();
 				break;
 */
-/*
+
 			case "addtoalfredplaylist":
 				if(args[8])
 				{
@@ -49,7 +49,6 @@ function handleArgs() {
 					clearAlfredPlaylist(args);
 				}
 				break;
-*/
 			case "playartistoralbum":
 				if(args[3])
 				{
