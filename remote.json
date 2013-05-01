@@ -1,5 +1,5 @@
 {
-    "version": 2.3,
+    "version": 2.4,
     "download_url": "https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/SpotifyMiniPlayer.alfredworkflow",
-    "description": "Using own Spotify app <spotify:app:miniplayer>.  New *random* command, it will launch a random track from any of your playlists. New *star* command, it will star the current track"
+    "description": "Introducing Alfred Playlist: control a playlist from Alfred. Add Track with *fn* or Album with *shift* to the playlist, browse it or clear it from Alfred."
 }
