@@ -67,6 +67,29 @@ else
 	$is_spotifious_active = false;
 }
 
+//
+// Get is_alfred_playlist_active from config
+//
+$ret = $w->get( 'is_alfred_playlist_active', 'settings.plist' );
+
+if ( $ret == false)
+{
+	// $is_alfred_playlist_active not set
+	// set it to default
+	$w->set( 'is_alfred_playlist_active', 'true', 'settings.plist' );
+	$ret = 'true';
+}
+
+if ($ret == 'true')
+{
+	$is_alfred_playlist_active = true;
+}
+else
+{
+	$is_alfred_playlist_active = false;
+}
+
+
 
 //
 // Get max_results from config
@@ -82,6 +105,23 @@ if ( $ret == false)
 }
 
 $max_results = $ret;
+
+//
+// Get alfred_playlist_uri from config
+//
+$ret = $w->get( 'alfred_playlist_uri', 'settings.plist' );
+
+if ( $ret == false)
+{
+	// alfred_playlist_uri not set
+	// set it to empty
+	$w->set( 'alfred_playlist_uri', '', 'settings.plist' );
+	$ret = "";
+}
+
+$alfred_playlist_uri = $ret;
+
+
 # thanks to http://www.alfredforum.com/topic/1788-prevent-flash-of-no-result
 mb_internal_encoding("UTF-8");
 if(mb_strlen($query) < 3 || 
@@ -110,9 +150,13 @@ if(mb_strlen($query) < 3 ||
 				$results = explode('→', $command_output);
 				$currentArtwork = getTrackArtwork($results[4],false);
 				$currentArtistArtwork = getArtistArtwork($results[1],false);
-				$w->result( uniqid(), '||||playpause|||', "$results[0]", "$results[2] by $results[1]", ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', '' );
+				$w->result( uniqid(), '||||playpause||||', "$results[0]", "$results[2] by $results[1]", ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', '' );
 				$w->result( uniqid(), '', "$results[1]", "More from this artist..", $currentArtistArtwork, 'no', $results[1] );
 				$w->result( uniqid(), '', "$results[2]", "More from this album..", $currentArtwork, 'no', $results[2] );
+			}
+			if ($is_alfred_playlist_active == true)
+			{
+				$w->result( uniqid(), '', "Alfred Playlist", "Control your Alfred Playlist", './images/alfred_playlist.png', 'no', 'Alfred Playlist→' );	
 			}
 			if (file_exists($w->data() . "/playlists.json"))
 			{
@@ -124,8 +168,8 @@ if(mb_strlen($query) < 3 ||
 		else
 		{
 			$w->result( uniqid(), '', "Workflow is not configured, library.json is missing", "Select Open Spotify Mini Player App below, and copy json data", './images/warning.png', 'no', '' );
-			$w->result( uniqid(), "|||||||" . "open_spotify_export_app", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Install library.", './images/app_export.png', 'yes', '' );
-			$w->result( uniqid(), "|||||||" . "update_library_json", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update_library.png', 'yes', '' );
+			$w->result( uniqid(), "||||||||" . "open_spotify_export_app", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Install library.", './images/app_miniplayer.png', 'yes', '' );
+			$w->result( uniqid(), "||||||||" . "update_library_json", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
 		}
 
 		if ($is_spotifious_active == true)
@@ -136,13 +180,21 @@ if(mb_strlen($query) < 3 ||
 		{
 			$spotifious_state = 'disabled';		
 		}
-		if ($all_playlists == true)
+		if ($is_alfred_playlist_active == true)
 		{
-			$w->result( uniqid(), '', "Settings", "Current: Search Scope=all>, Max Results=" . $max_results . ", Spotifious is " . $spotifious_state, './images/settings.png', 'no', 'Settings→' );
+			$alfred_playlist_state = 'enabled';
 		}
 		else
 		{
-			$w->result( uniqid(), '', "Settings", "Current: Search Scope=★>, Max Results=" . $max_results  . ", Spotifious is " . $spotifious_state, './images/settings.png', 'no', 'Settings→' );
+			$alfred_playlist_state = 'disabled';		
+		}
+		if ($all_playlists == true)
+		{
+			$w->result( uniqid(), '', "Settings", "Current: Search Scope=all>, Max Results=" . $max_results . ", Spotifious is " . $spotifious_state . ", Alfred Playlist is " . $alfred_playlist_state, './images/settings.png', 'no', 'Settings→' );
+		}
+		else
+		{
+			$w->result( uniqid(), '', "Settings", "Current: Search Scope=★>, Max Results=" . $max_results  . ", Spotifious is " . $spotifious_state . ", Alfred Playlist is " . $alfred_playlist_state, './images/settings.png', 'no', 'Settings→' );
 		}	
 		
 	}
@@ -154,26 +206,33 @@ if(mb_strlen($query) < 3 ||
 		if ($all_playlists == true)
 		{
 			// argument is csv form: track_uri|album_uri|artist_uri|playlist_uri|spotify_command|query|max_results|other_action
-			$w->result( uniqid(), "|||||||" . "disable_all_playlist", "Change Search Scope", "Select to change to ★ playlist only", './images/star_switch.png', 'yes', '' );
+			$w->result( uniqid(), "|||||||" . "disable_all_playlist|", "Change Search Scope", "Select to change to ★ playlist only", './images/star_switch.png', 'yes', '' );
 		}
 		else
 		{
-			$w->result( uniqid(), "|||||||" . "enable_all_playlist", "Change Search Scope", "Select to change to ALL playlists", './images/allplaylists_switch.png', 'yes', '' );
+			$w->result( uniqid(), "|||||||" . "enable_all_playlist|", "Change Search Scope", "Select to change to ALL playlists", './images/allplaylists_switch.png', 'yes', '' );
 		}
-		$w->result( uniqid(), "|||||||" . "open_spotify_export_app", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Update library.", './images/app_export.png', 'yes', '' );
-		$w->result( uniqid(), "|||||||" . "update_library_json", "Update library", "Make sure the clipboard contains the json data from the Spotify Mini Player App <spotify:app:miniplayer>", './images/update_library.png', 'yes', '' );
-		$w->result( uniqid(), '', "Configure Max Number of Results", "Number of results displayed", './images/max_number.png', 'no', 'Settings→MaxResults→' );
-		$w->result( uniqid(), "|||||||" . "cache", "Cache All Artworks", "This is recommended to do it before using the player", './images/cache.png', 'yes', '' );
-		$w->result( uniqid(), "|||||||" . "clear", "Clear Cached Artworks", "All cached artworks will be deleted", './images/clear.png', 'yes', '' );
+		$w->result( uniqid(), "|||||||" . "open_spotify_export_app|", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Update library.", './images/app_miniplayer.png', 'yes', '' );
+		$w->result( uniqid(), "|||||||" . "update_library_json|", "Update library", "Make sure the clipboard contains the json data from the Spotify Mini Player App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
+		$w->result( uniqid(), '', "Configure Max Number of Results", "Number of results displayed", './images/change_setting.png', 'no', 'Settings→MaxResults→' );
+		$w->result( uniqid(), "|||||||" . "cache|", "Cache All Artworks", "This is recommended to do it before using the player", './images/cache.png', 'yes', '' );
+		$w->result( uniqid(), "|||||||" . "clear|", "Clear Cached Artworks", "All cached artworks will be deleted", './images/clear.png', 'yes', '' );
 		if ($is_spotifious_active == true)
 		{
-			$w->result( uniqid(), "|||||||" . "disable_spotifiuous", "Disable Spotifious", "Do not display Spotifious in default results", './images/setting_spotifious.png', 'yes', '' );
+			$w->result( uniqid(), "|||||||" . "disable_spotifiuous|", "Disable Spotifious", "Do not display Spotifious in default results", './images/setting_spotifious.png', 'yes', '' );
 		}
 		else
 		{
-			$w->result( uniqid(), "|||||||" . "enable_spotifiuous", "Enable Spotifious", "Display Spotifious in default results", './images/setting_spotifious.png', 'yes', '' );
+			$w->result( uniqid(), "|||||||" . "enable_spotifiuous|", "Enable Spotifious", "Display Spotifious in default results", './images/setting_spotifious.png', 'yes', '' );
 		}
-		
+		if ($is_alfred_playlist_active == true)
+		{
+			$w->result( uniqid(), "|||||||" . "disable_alfred_playlist|", "Disable Alfred Playlist", "Do not display Alfred Playlist", './images/alfred_playlist.png', 'yes', '' );
+		}
+		else
+		{
+			$w->result( uniqid(), "|||||||" . "enable_alfred_playlist|", "Enable Alfred Playlist", "Display Alfred Playlist", './images/alfred_playlist.png', 'yes', '' );
+		}		
 	}
 } 
 else 
@@ -197,7 +256,7 @@ else
 			{				
 				if (strpos(strtolower($val),strtolower($query)) !== false)
 				{	
-					$w->result( "spotify_mini-spotify-playlist-$val", "|||" . $key . "||||", ucfirst($val), "Browse Playlist", './images/playlist.png', 'yes', '' );
+					$w->result( "spotify_mini-spotify-playlist-$val", "|||" . $key . "|||||" . $alfred_playlist_uri, ucfirst($val), "Browse Playlist", './images/playlist.png', 'yes', '' );
 				}
 			};
 		}
@@ -238,21 +297,21 @@ else
 				
 				if(checkIfResultAlreadyThere($w->results(),ucfirst($item['data']['album']['artist']['name']) . " - " . $item['data']['name']) == false)
 				{					
-					$w->result( "spotify_mini-spotify-track" . $item['data']['uri'], $item['data']['uri'] . "|" . $item['data']['album']['uri'] . "|" . $item['data']['album']['artist']['uri'] . "|||||", ucfirst($item['data']['album']['artist']['name']) . " - " . $item['data']['name'], $subtitle, getTrackArtwork($item['data']['uri'],true), 'yes', '' );
+					$w->result( "spotify_mini-spotify-track" . $item['data']['uri'], $item['data']['uri'] . "|" . $item['data']['album']['uri'] . "|" . $item['data']['album']['artist']['uri'] . "|||||"  . "|" . $alfred_playlist_uri, ucfirst($item['data']['album']['artist']['name']) . " - " . $item['data']['name'], $subtitle, getTrackArtwork($item['data']['uri'],true), 'yes', '' );
 				}
 				$currentResultNumber++;
 			}
 		};
 
-		$w->result( '', "||||activate (open location \"spotify:search:" . $query . "\")|||", "Search for " . $query . " with Spotify", "This will start a new search in Spotify", 'fileicon:/Applications/Spotify.app', 'yes', '' );
+		$w->result( '', "||||activate (open location \"spotify:search:" . $query . "\")||||", "Search for " . $query . " with Spotify", "This will start a new search in Spotify", 'fileicon:/Applications/Spotify.app', 'yes', '' );
 		if($is_spotifious_active == true)
 		{
-			$w->result( '', "|||||" . "$query" . "||", "Search for " . $query . " with Spotifious", "Spotifious workflow must be installed", './images/spotifious.png', 'yes', '' );
+			$w->result( '', "|||||" . "$query" . "|||", "Search for " . $query . " with Spotifious", "Spotifious workflow must be installed", './images/spotifious.png', 'yes', '' );
 		}
 	}
 	////////////
 	//
-	// FIRST DELIMITER: Artist→, Album→, Playlist→ or Settings→
+	// FIRST DELIMITER: Artist→, Album→, Playlist→, Alfred Playlist→ or Settings→
 	//
 	////////////
 	elseif ( substr_count( $query, '→' ) == 1 )
@@ -278,9 +337,12 @@ else
 				
 				foreach ($json as $key => $val) 
 				{	
-					$r = explode(':', $key);
-					$playlist_user = $r[2];
-					$w->result( "spotify_mini-spotify-playlist-$val", '', ucfirst($val), "by " . $playlist_user, './images/playlist.png', 'no', "Playlist→" . $val . "→" );
+					if($key != $w->get( 'alfred_playlist_uri', 'settings.plist' ))
+					{
+						$r = explode(':', $key);
+						$playlist_user = $r[2];
+						$w->result( "spotify_mini-spotify-playlist-$val", '', ucfirst($val), "by " . $playlist_user, './images/playlist.png', 'no', "Playlist→" . $val . "→" );
+					}
 				};
 			}
 			else
@@ -301,6 +363,29 @@ else
 				};
 			}
 		} // search by Playlist end	
+		elseif($kind == "Alfred Playlist")
+		{
+			//
+			// Alfred Playlist
+			//
+			$playlist=$words[1];
+						
+			if($alfred_playlist_uri == "")
+			{
+				$w->result( "spotify_mini-spotify-alfredplaylist-set", '', "Set your Alfred playlist URI", "define the URI of your Alfred playlist",'./images/alfred_playlist.png', 'no', 'Alfred Playlist→Set Alfred Playlist URI→');				
+			}
+			else
+			{
+				$w->result( "spotify_mini-spotify-alfredplaylist-browse", '', "Browse your Alfred playlist", "browse your alfred playlist",'./images/alfred_playlist.png', 'no', 'Playlist→Alfred Playlist→');
+			
+				$w->result( "spotify_mini-spotify-alfredplaylist-set", '', "Update your Alfred playlist URI", "define the URI of your Alfred playlist",'./images/change_setting.png', 'no', 'Alfred Playlist→Set Alfred Playlist URI→');
+				
+				$w->result( "spotify_mini-spotify-alfredplaylist-refresh", "|||||||" . "refresh_alfred_playlist|" . $alfred_playlist_uri, "Refresh your Alfred playlist", "this will refresh your Alfred playlist",'./images/update.png', 'yes', '');
+				
+				$w->result( "spotify_mini-spotify-alfredplaylist-clear", "|||||||" . "clear_alfred_playlist|" . $alfred_playlist_uri, "Clear your Alfred playlist", "this will clear your Alfred playlist",'./images/clear.png', 'yes', '');
+			
+			}
+		} //  Alfred Playlist end	
 		elseif($kind == "Artist")
 		{
 			if($all_playlists == false)
@@ -353,10 +438,10 @@ else
 						}
 					}			
 				};
-				$w->result( '', "||||activate (open location \"spotify:search:" . $artist . "\")|||", "Search for " . $artist . " with Spotify", "This will start a new search in Spotify", 'fileicon:/Applications/Spotify.app', 'yes', '' );
+				$w->result( '', "||||activate (open location \"spotify:search:" . $artist . "\")||||", "Search for " . $artist . " with Spotify", "This will start a new search in Spotify", 'fileicon:/Applications/Spotify.app', 'yes', '' );
 				if($is_spotifious_active == true)
 				{
-					$w->result( '', "|||||" . "$artist" . "||", "Search for " . $artist . " with Spotifious", "Spotifious workflow must be installed", './images/spotifious.png', 'yes', '' );
+					$w->result( '', "|||||" . "$artist" . "|||", "Search for " . $artist . " with Spotifious", "Spotifious workflow must be installed", './images/spotifious.png', 'yes', '' );
 				}
 			}
 		} // search by Album end
@@ -412,17 +497,17 @@ else
 						}
 					}
 				};
-				$w->result( '', "||||activate (open location \"spotify:search:" . $album . "\")|||", "Search for " . $album . " with Spotify", "This will start a new search in Spotify", 'fileicon:/Applications/Spotify.app', 'yes', '' );
+				$w->result( '', "||||activate (open location \"spotify:search:" . $album . "\")||||", "Search for " . $album . " with Spotify", "This will start a new search in Spotify", 'fileicon:/Applications/Spotify.app', 'yes', '' );
 				if($is_spotifious_active == true)
 				{
-					$w->result( '', "|||||" . "$album" . "||", "Search for " . $album . " with Spotifious", "Spotifious workflow must be installed", './images/spotifious.png', 'yes', '' );
+					$w->result( '', "||||||" . "$album" . "||", "Search for " . $album . " with Spotifious", "Spotifious workflow must be installed", './images/spotifious.png', 'yes', '' );
 				}
 			}
 		} // search by Album end
 	}
 	////////////
 	//
-	// SECOND DELIMITER: Artist→the_artist→tracks , Album→the_album→tracks, Playlist→the_playlist→tracks or Settings→MaxResults→max_numbers
+	// SECOND DELIMITER: Artist→the_artist→tracks , Album→the_album→tracks, Playlist→the_playlist→tracks or Settings→MaxResults→max_numbers, Alfred Playlist→Set Alfred Playlist URI→alfred_playlist_uri
 	//
 	////////////
 	elseif ( substr_count( $query, '→' ) == 2 )
@@ -473,7 +558,7 @@ else
 
 						if(checkIfResultAlreadyThere($w->results(),ucfirst($item['data']['album']['artist']['name']) . " - " . $item['data']['name']) == false)
 						{	
-							$w->result( "spotify_mini-spotify-track-" . $item['data']['name'], $item['data']['uri'] . "|" . $item['data']['album']['uri'] . "|" . $item['data']['album']['artist']['uri'] . "|||||", ucfirst($item['data']['album']['artist']['name']) . " - " . $item['data']['name'], $subtitle, getTrackArtwork($item['data']['uri'],true), 'yes', '' );
+							$w->result( "spotify_mini-spotify-track-" . $item['data']['name'], $item['data']['uri'] . "|" . $item['data']['album']['uri'] . "|" . $item['data']['album']['artist']['uri'] . "|||||"  . "|" . $alfred_playlist_uri, ucfirst($item['data']['album']['artist']['name']) . " - " . $item['data']['name'], $subtitle, getTrackArtwork($item['data']['uri'],true), 'yes', '' );
 						}
 						$currentResultNumber++;
 					}			
@@ -481,7 +566,7 @@ else
 				$w->result( '', "||||activate (open location \"spotify:search:" . $artist . "\")|||", "Search for " . $artist . " with Spotify", "This will start a new search in Spotify", 'fileicon:/Applications/Spotify.app', 'yes', '' );
 				if($is_spotifious_active == true)
 				{
-					$w->result( '', "|||||" . "$artist" . "||", "Search for " . $artist . " with Spotifious", "Spotifious workflow must be installed", './images/spotifious.png', 'yes', '' );
+					$w->result( '', "|||||" . "$artist" . "||"  . "|" . $alfred_playlist_uri, "Search for " . $artist . " with Spotifious", "Spotifious workflow must be installed", './images/spotifious.png', 'yes', '' );
 				}
 			}
 			else
@@ -508,15 +593,15 @@ else
 
 						if(checkIfResultAlreadyThere($w->results(),ucfirst($item['data']['album']['artist']['name']) . " - " . $item['data']['name']) == false)
 						{								
-							$w->result( "spotify_mini-spotify-track-" . $item['data']['name'], $item['data']['uri'] . "|" . $item['data']['album']['uri'] . "|" . $item['data']['album']['artist']['uri'] . "|||||", ucfirst($item['data']['album']['artist']['name']) . " - " . $item['data']['name'], $subtitle, getTrackArtwork($item['data']['uri'],true), 'yes', '' );
+							$w->result( "spotify_mini-spotify-track-" . $item['data']['name'], $item['data']['uri'] . "|" . $item['data']['album']['uri'] . "|" . $item['data']['album']['artist']['uri'] . "|||||"  . "|" . $alfred_playlist_uri, ucfirst($item['data']['album']['artist']['name']) . " - " . $item['data']['name'], $subtitle, getTrackArtwork($item['data']['uri'],true), 'yes', '' );
 						}
 						$currentResultNumber++;
 					}
 				};
-				$w->result( '', "||||activate (open location \"spotify:search:" . $track . "\")|||", "Search for " . $track . " with Spotify", "This will start a new search in Spotify", 'fileicon:/Applications/Spotify.app', 'yes', '' );
+				$w->result( '', "||||activate (open location \"spotify:search:" . $track . "\")||||", "Search for " . $track . " with Spotify", "This will start a new search in Spotify", 'fileicon:/Applications/Spotify.app', 'yes', '' );
 				if($is_spotifious_active == true)
 				{
-					$w->result( '', "|||||" . "$track" . "||", "Search for " . $track . " with Spotifious", "Spotifious workflow must be installed", './images/spotifious.png', 'yes', '' );
+					$w->result( '', "|||||" . "$track" . "|||", "Search for " . $track . " with Spotifious", "Spotifious workflow must be installed", './images/spotifious.png', 'yes', '' );
 				}
 			}
 		}// end of tracks by artist
@@ -561,15 +646,15 @@ else
 
 						if(checkIfResultAlreadyThere($w->results(),ucfirst($item['data']['album']['artist']['name']) . " - " . $item['data']['name']) == false)
 						{	
-							$w->result( "spotify_mini-spotify-track-" . $item['data']['name'], $item['data']['uri'] . "|" . $item['data']['album']['uri'] . "|" . $item['data']['album']['artist']['uri'] . "|||||", ucfirst($item['data']['album']['artist']['name']) . " - " . $item['data']['name'], $subtitle, getTrackArtwork($item['data']['uri'],true), 'yes', '' );
+							$w->result( "spotify_mini-spotify-track-" . $item['data']['name'], $item['data']['uri'] . "|" . $item['data']['album']['uri'] . "|" . $item['data']['album']['artist']['uri'] . "|||||"  . "|" . $alfred_playlist_uri, ucfirst($item['data']['album']['artist']['name']) . " - " . $item['data']['name'], $subtitle, getTrackArtwork($item['data']['uri'],true), 'yes', '' );
 						}
 						$currentResultNumber++;
 					}			
 				}
-				$w->result( '', "||||activate (open location \"spotify:search:" . $album . "\")|||", "Search for " . $album . " with Spotify", "This will start a new search in Spotify", 'fileicon:/Applications/Spotify.app', 'yes', '' );
+				$w->result( '', "||||activate (open location \"spotify:search:" . $album . "\")||||", "Search for " . $album . " with Spotify", "This will start a new search in Spotify", 'fileicon:/Applications/Spotify.app', 'yes', '' );
 				if($is_spotifious_active == true)
 				{
-					$w->result( '', "|||||" . "$album" . "||", "Search for " . $album . " with Spotifious", "Spotifious workflow must be installed", './images/spotifious.png', 'yes', '' );
+					$w->result( '', "||||||" . "$album" . "||", "Search for " . $album . " with Spotifious", "Spotifious workflow must be installed", './images/spotifious.png', 'yes', '' );
 				}
 			}
 			else
@@ -596,15 +681,15 @@ else
 
 						if(checkIfResultAlreadyThere($w->results(),ucfirst($item['data']['album']['artist']['name']) . " - " . $item['data']['name']) == false)
 						{	
-							$w->result( "spotify_mini-spotify-track-" . $item['data']['name'], $item['data']['uri'] . "|" . $item['data']['album']['uri'] . "|" . $item['data']['album']['artist']['uri'] . "|||||", ucfirst($item['data']['album']['artist']['name']) . " - " . $item['data']['name'], $subtitle, getTrackArtwork($item['data']['uri'],true), 'yes', '' );
+							$w->result( "spotify_mini-spotify-track-" . $item['data']['name'], $item['data']['uri'] . "|" . $item['data']['album']['uri'] . "|" . $item['data']['album']['artist']['uri'] . "|||||"  . "|" . $alfred_playlist_uri, ucfirst($item['data']['album']['artist']['name']) . " - " . $item['data']['name'], $subtitle, getTrackArtwork($item['data']['uri'],true), 'yes', '' );
 						}
 						$currentResultNumber++;
 					}
 				};
-				$w->result( '', "||||activate (open location \"spotify:search:" . $track . "\")|||", "Search for " . $track . " with Spotify", "This will start a new search in Spotify", 'fileicon:/Applications/Spotify.app', 'yes', '' );
+				$w->result( '', "||||activate (open location \"spotify:search:" . $track . "\")||||", "Search for " . $track . " with Spotify", "This will start a new search in Spotify", 'fileicon:/Applications/Spotify.app', 'yes', '' );
 				if($is_spotifious_active == true)
 				{
-					$w->result( '', "|||||" . "$track" . "||", "Search for " . $track . " with Spotifious", "Spotifious workflow must be installed", './images/spotifious.png', 'yes', '' );
+					$w->result( '', "||||||" . "$track" . "||", "Search for " . $track . " with Spotifious", "Spotifious workflow must be installed", './images/spotifious.png', 'yes', '' );
 				}
 			}			
 		}// end of tracks by album
@@ -640,7 +725,7 @@ else
 					$json = file_get_contents($w->data() . "/" . $playlist_file);
 					$json = json_decode($json,true);	
 
-					$w->result( "spotify_mini-spotify-playlist-$val", "|||" . $key . "||||", ucfirst($val) . " by " . $playlist_user, "Launch Playlist", './images/playlist.png', 'yes', '' );
+					$w->result( "spotify_mini-spotify-playlist-$val", "|||" . $key . "||||" . "|" . $alfred_playlist_uri, ucfirst($val) . " by " . $playlist_user, "Launch Playlist", './images/playlist.png', 'yes', '' );
 									
 					if(mb_strlen($track) < 3)
 					{
@@ -653,13 +738,13 @@ else
 							if($currentResultNumber > $max_results)
 								break;
 		
-							$w->result( "spotify_mini-spotify-" . $playlist . "-" . $item[1], $item[2] . "|||||||", ucfirst($item[0]) . " - " . $item[1], "Play track", getTrackArtwork($item[2],true), 'yes', '' );
+							$w->result( "spotify_mini-spotify-" . $playlist . "-" . $item[1], $item[2] . "|||||||" . "|" . $alfred_playlist_uri, ucfirst($item[0]) . " - " . $item[1], "Play track", getTrackArtwork($item[2],true), 'yes', '' );
 							$currentResultNumber++;		
 						}
-						$w->result( '', "||||activate (open location \"spotify:search:" . $playlist . "\")|||", "Search for " . $playlist . " with Spotify", "This will start a new search in Spotify", 'fileicon:/Applications/Spotify.app', 'yes', '' );
+						$w->result( '', "||||activate (open location \"spotify:search:" . $playlist . "\")||||", "Search for " . $playlist . " with Spotify", "This will start a new search in Spotify", 'fileicon:/Applications/Spotify.app', 'yes', '' );
 						if($is_spotifious_active == true)
 						{
-							$w->result( '', "|||||" . "$playlist" . "||", "Search for " . $playlist . " with Spotifious", "Spotifious workflow must be installed", './images/spotifious.png', 'yes', '' );
+							$w->result( '', "|||||" . "$playlist" . "|||", "Search for " . $playlist . " with Spotifious", "Spotifious workflow must be installed", './images/spotifious.png', 'yes', '' );
 						}
 
 					}
@@ -674,14 +759,14 @@ else
 							if (strpos(strtolower($item[1]),strtolower($track)) !== false ||
 								strpos(strtolower($item[0]),strtolower($track)) !== false)
 							{					
-								$w->result( "spotify_mini-spotify-" . $playlist . "-" . $item[1], $item[2] . "|||||||", ucfirst($item[0]) . " - " . $item[1], "Play track", getTrackArtwork($item[2],true), 'yes', '' );
+								$w->result( "spotify_mini-spotify-" . $playlist . "-" . $item[1], $item[2] . "|||||||" . "|" . $alfred_playlist_uri, ucfirst($item[0]) . " - " . $item[1], "Play track", getTrackArtwork($item[2],true), 'yes', '' );
 								$currentResultNumber++;
 							}	
 						};
-						$w->result( '', "||||activate (open location \"spotify:search:" . $track . "\")|||", "Search for " . $track . " with Spotify", "This will start a new search in Spotify", 'fileicon:/Applications/Spotify.app', 'yes', '' );
+						$w->result( '', "||||activate (open location \"spotify:search:" . $track . "\")||||", "Search for " . $track . " with Spotify", "This will start a new search in Spotify", 'fileicon:/Applications/Spotify.app', 'yes', '' );
 						if($is_spotifious_active == true)
 						{
-							$w->result( '', "|||||" . "$track" . "||", "Search for " . $track . " with Spotifious", "Spotifious workflow must be installed", './images/spotifious.png', 'yes', '' );	
+							$w->result( '', "|||||" . "$track" . "|||", "Search for " . $track . " with Spotifious", "Spotifious workflow must be installed", './images/spotifious.png', 'yes', '' );	
 						}
 					}									
 				}				
@@ -690,21 +775,18 @@ else
 		}// end of tracks by Playlist
 		elseif($kind == "Settings")
 		{
-			//		
-			// display tracks for selected album
-			//
 			$max_results=$words[2];
 			
 			if(mb_strlen($max_results) == 0)
 			{					
-				$w->result( uniqid(), '', "Enter the Max Results number (must be greater than 0):", "The number of results has impact on performances", './images/max_number.png', 'no', '' );
+				$w->result( uniqid(), '', "Enter the Max Results number (must be greater than 0):", "The number of results has impact on performances", './images/change_setting.png', 'no', '' );
 			}
 			else
 			{
 				// max results has been set
 				if(is_numeric($max_results) == true && $max_results > 0)
 				{
-					$w->result( '', "||||||$max_results|", "Max Results will be set to <" . $max_results . ">", "Type enter to validate the Max Results", './images/max_number.png', 'yes', '' );
+					$w->result( '', "||||||$max_results||", "Max Results will be set to <" . $max_results . ">", "Type enter to validate the Max Results", './images/change_setting.png', 'yes', '' );
 				}
 				else
 				{
@@ -712,7 +794,37 @@ else
 
 				}
 			}			
-		}// end of tracks by album
+		}// end of Settings
+		elseif($kind == "Alfred Playlist")
+		{
+			$alfred_playlist_uri=$words[2];
+			
+			if(mb_strlen($alfred_playlist_uri) == 0)
+			{					
+				$w->result( uniqid(), '', "Enter the Alfred Spotify URI:", "Create the playlist in Spotify(shall be named <Alfred Playlist>, right click on it and select copy spotify URI", './images/change_setting.png', 'no', '' );
+			}
+			else
+			{
+				// alfred_playlist_uri has been set
+				if(substr_count( $alfred_playlist_uri, ':' ) == 4)
+				{
+					$playlistName = getPlaylistName($alfred_playlist_uri);
+					if($playlistName == "Alfred Playlist")
+					{
+						$w->result( '', "||||||$alfred_playlist_uri||", "Alfred Playlist URI will be set to <" . $alfred_playlist_uri . ">", "Type enter to validate", './images/change_setting.png', 'yes', '' );
+					}
+					else
+					{
+						$w->result( uniqid(), '', "The playlist name entered <" . $playlistName . "> is not valid", "shall be <Alfred Playlist>", './images/warning.png', 'no', '' );						
+					}
+				}
+				else
+				{
+					$w->result( uniqid(), '', "The playlist URI entered is not valid", "format is spotify:user:myuser:playlist:20SZYrktr658JNa42Lt1vV", './images/warning.png', 'no', '' );
+
+				}
+			}			
+		}// end of Settings
 	}
 }
 

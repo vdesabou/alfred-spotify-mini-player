@@ -14,6 +14,7 @@ Speed is the key word here: instead of using slow Spotify API, it uses a JSON li
 * Search for Albums, Artists or Tracks
 * Search for playlists and Start it
 * Browse by Artists, Albums or Playlists
+* Alfred Playlist: manage a playlist from Alfred, add tracks or albums 
 * Select a track with *alt* to play the album, or *cmd* to play the artist
 * Same control keywords as iTunes Mini Player: play, pause, mute, next, random, previous, volmax, volmid. And shuffle to activate shuffling.
 * Star current track
@@ -24,7 +25,7 @@ Speed is the key word here: instead of using slow Spotify API, it uses a JSON li
 
 * Configurable Search Scope: Only Starred playlist (by default) or All your playlists
 * Set max number of results
-* enable/disable Spotifious
+* enable/disable Spotifious or Alfred Playlist
 * Cache all artworks at once. 
 This is recommended to be done before you start using the workflow. Artworks are downloaded on the fly, but it is better to cache everything for performances reasons
 * Clear Artworks cache. Not sure why you would use it, but it's possible to do it
@@ -88,6 +89,17 @@ If you modify your playlists, you'll need to update the library.
 
 * That's it!
 
+## Alfred Playlist
+
+* Create a playlist within Spotify and name it "Alfred Playlist"
+
+* Right click on it and copy Spotify URI
+
+* Enter copied URI in Spotify Mini Player Alfred Playlist section
+
+* To add a track to your playlist select it with *fn* modifier
+
+* To add an album to your playlist select it with *shift* modifier
 
 ## Download the workflow
 
@@ -97,6 +109,10 @@ Download the workflow below and open in Alfred.
 
 
 ## History
+
+2.4:
+
+* Introducing Alfred Playlist: control a playlist from Alfred. Add Track with *fn* or Album with *shift* to the playlist, browse it or clear it from Alfred.
 
 2.3:
 

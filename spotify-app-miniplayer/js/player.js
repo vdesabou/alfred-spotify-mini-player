@@ -29,41 +29,38 @@ function playTopList() {
     console.log(playlist);
 }
 */
-/*
-function addToAlfredPlaylist(args) {
 
+function addToAlfredPlaylist(args) {
 	// Get the playlist object from a URI
-	var playlist = models.Playlist.fromURI(args[4]+':'+args[5]+':'+args[6]+':'+args[7]+':'+args[8]);
+	models.Playlist.fromURI(args[4]+':'+args[5]+':'+args[6]+':'+args[7]+':'+args[8], function(playlist) {
 	
-	playlist.data.collaborative = false;
-		
-	if(args[2] == 'track')
-	{
-		// Create a track object from a URI
-		var track = models.Track.fromURI(args[1]+':'+args[2]+':'+args[3]);
+		playlist.data.collaborative = false;
 			
-		// Add the track
-		playlist.add(track);
-	}
-	else if(args[2] == 'album')
-	{
-		models.Album.fromURI(args[1]+':'+args[2]+':'+args[3], function(album) {
-		    // This callback is fired when the album has loaded.
-		    // The album object has a tracks property, which is a standard array.
-		    
-		   
-			for (var i = 0, l = album.length; i < l; i++){
-	      
-					models.Track.fromURI(album.tracks[i].uri, function (track) {
-					    // Track has loaded!
-					    playlist.add(track);
-					});
-	        }
-    	});
-	}
-		
-	// Verify the song was added to the playlist
-	console.log(playlist);			
+		if(args[2] == 'track')
+		{
+			models.Track.fromURI(args[1]+':'+args[2]+':'+args[3], function (track) {
+		    	// Track has loaded!
+		    	playlist.add(track);
+		    });
+		}
+		else if(args[2] == 'album')
+		{
+			var album = models.Album.fromURI(args[1]+':'+args[2]+':'+args[3], function(album) {
+			    // This callback is fired when the album has loaded.
+			    // The album object has a tracks property, which is a standard array.
+			    
+				for (var i = 0, l = album.length; i < l; i++){
+					if(album.tracks[i] != null)
+					{	 
+						playlist.add(album.get(i));
+					}
+		        }
+	    	});
+		}
+			
+		// Verify the song was added to the playlist
+		console.log(playlist);	
+	});	
 }
 
 function clearAlfredPlaylist(args) {
@@ -73,18 +70,18 @@ function clearAlfredPlaylist(args) {
 	    // The playlist object has a tracks property, which is a standard array.
 	    	 
 		for (var i = 0, l = playlist.length; i < l; i++){
-
-			models.Track.fromURI(playlist.tracks[i].uri, function (track) {
-			    // Track has loaded!
-			    playlist.remove(track);
-			});
+			if(playlist.tracks[i] != null)
+			{
+				models.Track.fromURI(playlist.tracks[i].uri, function (track) {
+			    	// Track has loaded!
+			    	playlist.remove(track);
+			    });
+			}
              
         }	
 	});
 				
 }
-*/
-
 
 function playArtistOrAlbum(args) {
 	console.log(args[1]+':'+args[2]+':'+args[3]);
