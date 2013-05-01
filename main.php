@@ -67,6 +67,29 @@ else
 	$is_spotifious_active = false;
 }
 
+//
+// Get is_alfred_playlist_active from config
+//
+$ret = $w->get( 'is_alfred_playlist_active', 'settings.plist' );
+
+if ( $ret == false)
+{
+	// $is_alfred_playlist_active not set
+	// set it to default
+	$w->set( 'is_alfred_playlist_active', 'true', 'settings.plist' );
+	$ret = 'true';
+}
+
+if ($ret == 'true')
+{
+	$is_alfred_playlist_active = true;
+}
+else
+{
+	$is_alfred_playlist_active = false;
+}
+
+
 
 //
 // Get max_results from config
@@ -91,9 +114,9 @@ $ret = $w->get( 'alfred_playlist_uri', 'settings.plist' );
 if ( $ret == false)
 {
 	// alfred_playlist_uri not set
-	// set it to default
-	$w->set( 'alfred_playlist_uri', 'spotify:user:vdesabou:playlist:20SZYrktr658JNa42Lt1vV', 'settings.plist' );
-	$ret = 'spotify:user:vdesabou:playlist:20SZYrktr658JNa42Lt1vV';
+	// set it to empty
+	$w->set( 'alfred_playlist_uri', '', 'settings.plist' );
+	$ret = "";
 }
 
 $alfred_playlist_uri = $ret;
@@ -131,7 +154,10 @@ if(mb_strlen($query) < 3 ||
 				$w->result( uniqid(), '', "$results[1]", "More from this artist..", $currentArtistArtwork, 'no', $results[1] );
 				$w->result( uniqid(), '', "$results[2]", "More from this album..", $currentArtwork, 'no', $results[2] );
 			}
-			$w->result( uniqid(), '', "Alfred Playlist", "Control your Alfred Playlist", './images/playlist.png', 'no', 'Alfred Playlist→' );	
+			if ($is_alfred_playlist_active == true)
+			{
+				$w->result( uniqid(), '', "Alfred Playlist", "Control your Alfred Playlist", './images/alfred_playlist.png', 'no', 'Alfred Playlist→' );	
+			}
 			if (file_exists($w->data() . "/playlists.json"))
 			{
 				$w->result( uniqid(), '', "Playlists", "Browse by playlist", './images/playlist.png', 'no', 'Playlist→' );
@@ -154,13 +180,21 @@ if(mb_strlen($query) < 3 ||
 		{
 			$spotifious_state = 'disabled';		
 		}
-		if ($all_playlists == true)
+		if ($is_alfred_playlist_active == true)
 		{
-			$w->result( uniqid(), '', "Settings", "Current: Search Scope=all>, Max Results=" . $max_results . ", Spotifious is " . $spotifious_state, './images/settings.png', 'no', 'Settings→' );
+			$alfred_playlist_state = 'enabled';
 		}
 		else
 		{
-			$w->result( uniqid(), '', "Settings", "Current: Search Scope=★>, Max Results=" . $max_results  . ", Spotifious is " . $spotifious_state, './images/settings.png', 'no', 'Settings→' );
+			$alfred_playlist_state = 'disabled';		
+		}
+		if ($all_playlists == true)
+		{
+			$w->result( uniqid(), '', "Settings", "Current: Search Scope=all>, Max Results=" . $max_results . ", Spotifious is " . $spotifious_state . ", Alfred Playlist is " . $alfred_playlist_state, './images/settings.png', 'no', 'Settings→' );
+		}
+		else
+		{
+			$w->result( uniqid(), '', "Settings", "Current: Search Scope=★>, Max Results=" . $max_results  . ", Spotifious is " . $spotifious_state . ", Alfred Playlist is " . $alfred_playlist_state, './images/settings.png', 'no', 'Settings→' );
 		}	
 		
 	}
@@ -191,7 +225,14 @@ if(mb_strlen($query) < 3 ||
 		{
 			$w->result( uniqid(), "|||||||" . "enable_spotifiuous|", "Enable Spotifious", "Display Spotifious in default results", './images/setting_spotifious.png', 'yes', '' );
 		}
-		
+		if ($is_alfred_playlist_active == true)
+		{
+			$w->result( uniqid(), "|||||||" . "disable_alfred_playlist|", "Disable Alfred Playlist", "Do not display Alfred Playlist", './images/alfred_playlist.png', 'yes', '' );
+		}
+		else
+		{
+			$w->result( uniqid(), "|||||||" . "enable_alfred_playlist|", "Enable Alfred Playlist", "Display Alfred Playlist", './images/alfred_playlist.png', 'yes', '' );
+		}		
 	}
 } 
 else 
@@ -296,9 +337,12 @@ else
 				
 				foreach ($json as $key => $val) 
 				{	
-					$r = explode(':', $key);
-					$playlist_user = $r[2];
-					$w->result( "spotify_mini-spotify-playlist-$val", '', ucfirst($val), "by " . $playlist_user, './images/playlist.png', 'no', "Playlist→" . $val . "→" );
+					if($key != $w->get( 'alfred_playlist_uri', 'settings.plist' ))
+					{
+						$r = explode(':', $key);
+						$playlist_user = $r[2];
+						$w->result( "spotify_mini-spotify-playlist-$val", '', ucfirst($val), "by " . $playlist_user, './images/playlist.png', 'no', "Playlist→" . $val . "→" );
+					}
 				};
 			}
 			else
@@ -325,11 +369,20 @@ else
 			// Alfred Playlist
 			//
 			$playlist=$words[1];
+						
+			if($alfred_playlist_uri == "")
+			{
+				$w->result( "spotify_mini-spotify-alfredplaylist-set", '', "Set your Alfred playlist URI", "define the URI of your Alfred playlist",'./images/alfred_playlist.png', 'no', 'Alfred Playlist→Set Alfred Playlist URI→');				
+			}
+			else
+			{
+				$w->result( "spotify_mini-spotify-alfredplaylist-browse", '', "Browse your Alfred playlist", "browse your alfred playlist",'./images/alfred_playlist.png', 'no', 'Playlist→Alfred Playlist→');
 			
-			$w->result( "spotify_mini-spotify-alfredplaylist-play", "|||" . $alfred_playlist_uri . "||||" . "|" . $alfred_playlist_uri, "Launch your Alfred playlist", "trhis wil",'./images/playlist.png', 'yes', '');
+				$w->result( "spotify_mini-spotify-alfredplaylist-set", '', "Update your Alfred playlist URI", "define the URI of your Alfred playlist",'./images/max_number.png', 'no', 'Alfred Playlist→Set Alfred Playlist URI→');
+				
+			$w->result( "spotify_mini-spotify-alfredplaylist-clear", "|||||||" . "clear_alfred_playlist|" . $alfred_playlist_uri, "Clear your Alfred playlist", "this will clear your Alfred playlist",'./images/clear.png', 'yes', '');
 			
-			$w->result( "spotify_mini-spotify-alfredplaylist-clear", "|||||||" . "clear_alfred_playlist|" . $alfred_playlist_uri, "Clear your Alfred playlist", "this will clear your Alfred playlist",'./images/playlist.png', 'yes', '');
-
+			}
 		} //  Alfred Playlist end	
 		elseif($kind == "Artist")
 		{
@@ -452,7 +505,7 @@ else
 	}
 	////////////
 	//
-	// SECOND DELIMITER: Artist→the_artist→tracks , Album→the_album→tracks, Playlist→the_playlist→tracks or Settings→MaxResults→max_numbers
+	// SECOND DELIMITER: Artist→the_artist→tracks , Album→the_album→tracks, Playlist→the_playlist→tracks or Settings→MaxResults→max_numbers, Alfred Playlist→Set Alfred Playlist URI→alfred_playlist_uri
 	//
 	////////////
 	elseif ( substr_count( $query, '→' ) == 2 )
@@ -720,9 +773,6 @@ else
 		}// end of tracks by Playlist
 		elseif($kind == "Settings")
 		{
-			//		
-			// display tracks for selected album
-			//
 			$max_results=$words[2];
 			
 			if(mb_strlen($max_results) == 0)
@@ -742,7 +792,29 @@ else
 
 				}
 			}			
-		}// end of tracks by album
+		}// end of Settings
+		elseif($kind == "Alfred Playlist")
+		{
+			$alfred_playlist_uri=$words[2];
+			
+			if(mb_strlen($alfred_playlist_uri) == 0)
+			{					
+				$w->result( uniqid(), '', "Enter the Alfred Spotify URI:", "Create the playlist in Spotify, right click on it and select copy spotify URI", './images/.png', 'no', '' );
+			}
+			else
+			{
+				// alfred_playlist_uri has been set
+				if(substr_count( $alfred_playlist_uri, ':' ) == 4)
+				{
+					$w->result( '', "||||||$alfred_playlist_uri||", "Alfred Playlist URI will be set to <" . $alfred_playlist_uri . ">", "Type enter to validate", './images/.png', 'yes', '' );
+				}
+				else
+				{
+					$w->result( uniqid(), '', "The playlist URI entered is not valid", "format is spotify:user:myuser:playlist:20SZYrktr658JNa42Lt1vV", './images/warning.png', 'no', '' );
+
+				}
+			}			
+		}// end of Settings
 	}
 }
 
