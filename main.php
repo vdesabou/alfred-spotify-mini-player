@@ -380,7 +380,9 @@ else
 			
 				$w->result( "spotify_mini-spotify-alfredplaylist-set", '', "Update your Alfred playlist URI", "define the URI of your Alfred playlist",'./images/change_setting.png', 'no', 'Alfred Playlist→Set Alfred Playlist URI→');
 				
-			$w->result( "spotify_mini-spotify-alfredplaylist-clear", "|||||||" . "clear_alfred_playlist|" . $alfred_playlist_uri, "Clear your Alfred playlist", "this will clear your Alfred playlist",'./images/clear.png', 'yes', '');
+				$w->result( "spotify_mini-spotify-alfredplaylist-refresh", "|||||||" . "refresh_alfred_playlist|" . $alfred_playlist_uri, "Refresh your Alfred playlist", "this will refresh your Alfred playlist",'./images/update_library.png', 'yes', '');
+				
+				$w->result( "spotify_mini-spotify-alfredplaylist-clear", "|||||||" . "clear_alfred_playlist|" . $alfred_playlist_uri, "Clear your Alfred playlist", "this will clear your Alfred playlist",'./images/clear.png', 'yes', '');
 			
 			}
 		} //  Alfred Playlist end	

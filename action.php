@@ -128,6 +128,11 @@ else if($other_action != "")
 		$w->set( 'is_alfred_playlist_active', 'false', 'settings.plist' );
 		echo "Alfred Playlist is now disabled";
 	}
+	else if ($other_action == "refresh_alfred_playlist")
+	{
+		refreshAlfredPlaylist();
+		echo "Alfred Playlist has been refreshed";
+	}
 	else if ($other_action == "clear_alfred_playlist")
 	{
 		exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:clearalfredplaylist:$alfred_playlist_uri:" . uniqid() . "\"'");
