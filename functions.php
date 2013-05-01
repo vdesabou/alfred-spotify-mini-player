@@ -267,7 +267,7 @@ function createPlaylists()
 		
 			if($no_match == false)
 			{
-				$playlist_array[$completeUri] = $name;
+				$playlist_array[$completeUri] = str_replace("&apos;","'",str_replace("&amp;","&",$name));
 				$w->write( $array_playlist_tracks, 'playlist_' . $playlist_name . '.json' );
 			}
 		};
