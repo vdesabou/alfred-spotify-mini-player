@@ -45,7 +45,7 @@ else if ($type == "ALBUM")
 		exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:addtoalfredplaylist:$album_uri:$alfred_playlist_uri\"'");
 		exec("osascript -e 'tell application \"Spotify\" to open location \"$alfred_playlist_uri\"'");
 		sleep(15);
-		refresh_alfred_playlist();	
+		refreshAlfredPlaylist();	
 	}
 	else
 	{
@@ -90,7 +90,7 @@ else if($other_action != "")
 {
 	if($other_action == "cache")
 	{
-		download_all_artworks();
+		downloadAllArtworks();
 	}
 	else if($other_action == "clear")
 	{
@@ -131,7 +131,7 @@ else if($other_action != "")
 		exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:clearalfredplaylist:$alfred_playlist_uri:" . uniqid() . "\"'");
 		exec("osascript -e 'tell application \"Spotify\" to open location \"$alfred_playlist_uri\"'");
 		sleep(15);	
-		refresh_alfred_playlist();	
+		refreshAlfredPlaylist();	
 	}
 	else if ($other_action == "open_spotify_export_app")
 	{
@@ -140,7 +140,7 @@ else if($other_action != "")
 	}
 	else if ($other_action == "update_library_json")
 	{
-		update_library();
+		updateLibrary();
 		if (file_exists($w->data() . "/library.json"))
 		{
 			if (file_exists($w->data() . "/library_starred_playlist.json"))
@@ -153,7 +153,7 @@ else if($other_action != "")
 				unlink($file);
      		}
      		
-     		create_playlists();
+     		createPlaylists();
      		
      		if (file_exists($w->home() . "/Spotify/spotify-app-miniplayer"))
      		{	

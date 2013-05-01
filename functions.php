@@ -134,7 +134,7 @@ function getArtistArtworkURL($artist) {
 	return $json[artist][image][1]['#text'];
 }
 
-function create_playlists()
+function createPlaylists()
 {
 	$w = new Workflows();
 	
@@ -278,7 +278,7 @@ function create_playlists()
 	}
 }
 
-function update_library()
+function updateLibrary()
 {
 	$w = new Workflows();
 	
@@ -340,7 +340,7 @@ function clear()
 }
 
 
-function download_all_artworks()
+function downloadAllArtworks()
 {
 	$w = new Workflows();
 	
@@ -416,7 +416,7 @@ function download_all_artworks()
 	}
 
 }
-function refresh_alfred_playlist()
+function refreshAlfredPlaylist()
 {
 	$w = new Workflows();
 	
