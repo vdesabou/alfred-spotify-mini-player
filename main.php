@@ -214,7 +214,7 @@ if(mb_strlen($query) < 3 ||
 		}
 		$w->result( uniqid(), "|||||||" . "open_spotify_export_app|", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Update library.", './images/app_export.png', 'yes', '' );
 		$w->result( uniqid(), "|||||||" . "update_library_json|", "Update library", "Make sure the clipboard contains the json data from the Spotify Mini Player App <spotify:app:miniplayer>", './images/update_library.png', 'yes', '' );
-		$w->result( uniqid(), '', "Configure Max Number of Results", "Number of results displayed", './images/max_number.png', 'no', 'Settings→MaxResults→' );
+		$w->result( uniqid(), '', "Configure Max Number of Results", "Number of results displayed", './images/change_setting.png', 'no', 'Settings→MaxResults→' );
 		$w->result( uniqid(), "|||||||" . "cache|", "Cache All Artworks", "This is recommended to do it before using the player", './images/cache.png', 'yes', '' );
 		$w->result( uniqid(), "|||||||" . "clear|", "Clear Cached Artworks", "All cached artworks will be deleted", './images/clear.png', 'yes', '' );
 		if ($is_spotifious_active == true)
@@ -378,7 +378,7 @@ else
 			{
 				$w->result( "spotify_mini-spotify-alfredplaylist-browse", '', "Browse your Alfred playlist", "browse your alfred playlist",'./images/alfred_playlist.png', 'no', 'Playlist→Alfred Playlist→');
 			
-				$w->result( "spotify_mini-spotify-alfredplaylist-set", '', "Update your Alfred playlist URI", "define the URI of your Alfred playlist",'./images/max_number.png', 'no', 'Alfred Playlist→Set Alfred Playlist URI→');
+				$w->result( "spotify_mini-spotify-alfredplaylist-set", '', "Update your Alfred playlist URI", "define the URI of your Alfred playlist",'./images/change_setting.png', 'no', 'Alfred Playlist→Set Alfred Playlist URI→');
 				
 			$w->result( "spotify_mini-spotify-alfredplaylist-clear", "|||||||" . "clear_alfred_playlist|" . $alfred_playlist_uri, "Clear your Alfred playlist", "this will clear your Alfred playlist",'./images/clear.png', 'yes', '');
 			
@@ -777,14 +777,14 @@ else
 			
 			if(mb_strlen($max_results) == 0)
 			{					
-				$w->result( uniqid(), '', "Enter the Max Results number (must be greater than 0):", "The number of results has impact on performances", './images/max_number.png', 'no', '' );
+				$w->result( uniqid(), '', "Enter the Max Results number (must be greater than 0):", "The number of results has impact on performances", './images/change_setting.png', 'no', '' );
 			}
 			else
 			{
 				// max results has been set
 				if(is_numeric($max_results) == true && $max_results > 0)
 				{
-					$w->result( '', "||||||$max_results||", "Max Results will be set to <" . $max_results . ">", "Type enter to validate the Max Results", './images/max_number.png', 'yes', '' );
+					$w->result( '', "||||||$max_results||", "Max Results will be set to <" . $max_results . ">", "Type enter to validate the Max Results", './images/change_setting.png', 'yes', '' );
 				}
 				else
 				{
@@ -799,7 +799,7 @@ else
 			
 			if(mb_strlen($alfred_playlist_uri) == 0)
 			{					
-				$w->result( uniqid(), '', "Enter the Alfred Spotify URI:", "Create the playlist in Spotify(shall be named <Alfred Playlist>, right click on it and select copy spotify URI", './images/.png', 'no', '' );
+				$w->result( uniqid(), '', "Enter the Alfred Spotify URI:", "Create the playlist in Spotify(shall be named <Alfred Playlist>, right click on it and select copy spotify URI", './images/change_setting.png', 'no', '' );
 			}
 			else
 			{
@@ -809,7 +809,7 @@ else
 					$playlistName = getPlaylistName($alfred_playlist_uri);
 					if($playlistName == "Alfred Playlist")
 					{
-						$w->result( '', "||||||$alfred_playlist_uri||", "Alfred Playlist URI will be set to <" . $alfred_playlist_uri . ">", "Type enter to validate", './images/.png', 'yes', '' );
+						$w->result( '', "||||||$alfred_playlist_uri||", "Alfred Playlist URI will be set to <" . $alfred_playlist_uri . ">", "Type enter to validate", './images/change_setting.png', 'yes', '' );
 					}
 					else
 					{
