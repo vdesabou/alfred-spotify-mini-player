@@ -30,7 +30,9 @@ if($type == "TRACK")
 		if($alfredplaylist != "")
 		{
 			exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:addtoalfredplaylist:$track_uri:$alfred_playlist_uri\"'");
-			exec("osascript -e 'tell application \"Spotify\" to open location \"$alfred_playlist_uri\"'");		
+			exec("osascript -e 'tell application \"Spotify\" to open location \"$alfred_playlist_uri\"'");
+			sleep(15);
+			refreshAlfredPlaylist();
 		}
 		else
 		{
