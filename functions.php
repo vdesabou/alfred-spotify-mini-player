@@ -416,6 +416,7 @@ function downloadAllArtworks()
 	}
 
 }
+
 function refreshAlfredPlaylist()
 {
 	$w = new Workflows();
@@ -476,5 +477,25 @@ function refreshAlfredPlaylist()
 
 	$w->write( $array_playlist_tracks, 'playlist_' . $playlist_name . '.json' );
 
+}
+
+function getPlaylistName($uri)
+{	
+	$name = "";
+	
+	$get_context = stream_context_create(array('http'=>array('timeout'=>5)));
+	@$get = file_get_contents('https://embed.spotify.com/?uri=' . $uri, false, $get_context);
+
+	if(!empty($get))
+	{
+		preg_match_all("'<title>(.*?)</title>'si", $get, $name);
+
+		if($name[1])
+		{
+			$name = strstr($name[1][0], ' by', true);
+		}
+	}
+
+	return $name;
 }
 ?>

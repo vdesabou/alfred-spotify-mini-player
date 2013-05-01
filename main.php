@@ -799,14 +799,22 @@ else
 			
 			if(mb_strlen($alfred_playlist_uri) == 0)
 			{					
-				$w->result( uniqid(), '', "Enter the Alfred Spotify URI:", "Create the playlist in Spotify, right click on it and select copy spotify URI", './images/.png', 'no', '' );
+				$w->result( uniqid(), '', "Enter the Alfred Spotify URI:", "Create the playlist in Spotify(shall be named <Alfred Playlist>, right click on it and select copy spotify URI", './images/.png', 'no', '' );
 			}
 			else
 			{
 				// alfred_playlist_uri has been set
 				if(substr_count( $alfred_playlist_uri, ':' ) == 4)
 				{
-					$w->result( '', "||||||$alfred_playlist_uri||", "Alfred Playlist URI will be set to <" . $alfred_playlist_uri . ">", "Type enter to validate", './images/.png', 'yes', '' );
+					$playlistName = getPlaylistName($alfred_playlist_uri);
+					if($playlistName == "Alfred Playlist")
+					{
+						$w->result( '', "||||||$alfred_playlist_uri||", "Alfred Playlist URI will be set to <" . $alfred_playlist_uri . ">", "Type enter to validate", './images/.png', 'yes', '' );
+					}
+					else
+					{
+						$w->result( uniqid(), '', "The playlist name entered <" . $playlistName . "> is not valid", "shall be <Alfred Playlist>", './images/warning.png', 'no', '' );						
+					}
 				}
 				else
 				{
