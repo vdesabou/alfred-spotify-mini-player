@@ -49,6 +49,17 @@
 				<string>Add track to Alfred playlist</string>
 			</dict>
 		</array>
+		<key>1A88766E-BF4A-48F5-9BD4-D3538634422F</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>184907DA-3265-45DA-8E0F-C8EC32ACDD94</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 		<key>22216C91-0A58-4FE1-9F28-DF023E4F4282</key>
 		<array>
 			<dict>
@@ -110,6 +121,17 @@
 		</array>
 		<key>60EA5756-7B07-4DCA-959A-C3B0E90150AC</key>
 		<array/>
+		<key>7918E8F7-20AE-445E-9AEA-E2E54CDE967D</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>A50798D9-7E2D-4D61-8119-820A56775119</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 		<key>81BA0BC2-F1CB-46DC-A715-C38A1A0E055E</key>
 		<array>
 			<dict>
@@ -366,6 +388,29 @@
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<false/>
+				<key>output</key>
+				<integer>0</integer>
+				<key>removeextension</key>
+				<false/>
+				<key>sticky</key>
+				<false/>
+				<key>text</key>
+				<string>Album has been added to Alfred Playlist</string>
+				<key>title</key>
+				<string>Spotify Mini Player</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.notification</string>
+			<key>uid</key>
+			<string>184907DA-3265-45DA-8E0F-C8EC32ACDD94</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
@@ -377,6 +422,29 @@
 			<string>alfred.workflow.action.script</string>
 			<key>uid</key>
 			<string>7918E8F7-20AE-445E-9AEA-E2E54CDE967D</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<false/>
+				<key>output</key>
+				<integer>0</integer>
+				<key>removeextension</key>
+				<false/>
+				<key>sticky</key>
+				<false/>
+				<key>text</key>
+				<string>Track has been added to Alfred Playlist</string>
+				<key>title</key>
+				<string>Spotify Mini Player</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.notification</string>
+			<key>uid</key>
+			<string>A50798D9-7E2D-4D61-8119-820A56775119</string>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -799,6 +867,11 @@ Spotifious Workflow: https://github.com/citelao/Spotify-for-Alfred
 Spotify App spotify-export: https://github.com/jamesrwhite/spotify-export</string>
 	<key>uidata</key>
 	<dict>
+		<key>184907DA-3265-45DA-8E0F-C8EC32ACDD94</key>
+		<dict>
+			<key>ypos</key>
+			<real>310</real>
+		</dict>
 		<key>18496AC4-EA42-444C-A906-642E38259C96</key>
 		<dict>
 			<key>ypos</key>
@@ -888,6 +961,11 @@ Spotify App spotify-export: https://github.com/jamesrwhite/spotify-export</strin
 		<dict>
 			<key>ypos</key>
 			<real>210</real>
+		</dict>
+		<key>A50798D9-7E2D-4D61-8119-820A56775119</key>
+		<dict>
+			<key>ypos</key>
+			<real>410</real>
 		</dict>
 		<key>AE6160D1-56EA-4416-991E-CF12B874FFD3</key>
 		<dict>
