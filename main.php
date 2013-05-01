@@ -168,8 +168,8 @@ if(mb_strlen($query) < 3 ||
 		else
 		{
 			$w->result( uniqid(), '', "Workflow is not configured, library.json is missing", "Select Open Spotify Mini Player App below, and copy json data", './images/warning.png', 'no', '' );
-			$w->result( uniqid(), "||||||||" . "open_spotify_export_app", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Install library.", './images/app_export.png', 'yes', '' );
-			$w->result( uniqid(), "||||||||" . "update_library_json", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update_library.png', 'yes', '' );
+			$w->result( uniqid(), "||||||||" . "open_spotify_export_app", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Install library.", './images/app_miniplayer.png', 'yes', '' );
+			$w->result( uniqid(), "||||||||" . "update_library_json", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
 		}
 
 		if ($is_spotifious_active == true)
@@ -212,8 +212,8 @@ if(mb_strlen($query) < 3 ||
 		{
 			$w->result( uniqid(), "|||||||" . "enable_all_playlist|", "Change Search Scope", "Select to change to ALL playlists", './images/allplaylists_switch.png', 'yes', '' );
 		}
-		$w->result( uniqid(), "|||||||" . "open_spotify_export_app|", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Update library.", './images/app_export.png', 'yes', '' );
-		$w->result( uniqid(), "|||||||" . "update_library_json|", "Update library", "Make sure the clipboard contains the json data from the Spotify Mini Player App <spotify:app:miniplayer>", './images/update_library.png', 'yes', '' );
+		$w->result( uniqid(), "|||||||" . "open_spotify_export_app|", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Update library.", './images/app_miniplayer.png', 'yes', '' );
+		$w->result( uniqid(), "|||||||" . "update_library_json|", "Update library", "Make sure the clipboard contains the json data from the Spotify Mini Player App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
 		$w->result( uniqid(), '', "Configure Max Number of Results", "Number of results displayed", './images/change_setting.png', 'no', 'Settings→MaxResults→' );
 		$w->result( uniqid(), "|||||||" . "cache|", "Cache All Artworks", "This is recommended to do it before using the player", './images/cache.png', 'yes', '' );
 		$w->result( uniqid(), "|||||||" . "clear|", "Clear Cached Artworks", "All cached artworks will be deleted", './images/clear.png', 'yes', '' );
@@ -380,7 +380,7 @@ else
 			
 				$w->result( "spotify_mini-spotify-alfredplaylist-set", '', "Update your Alfred playlist URI", "define the URI of your Alfred playlist",'./images/change_setting.png', 'no', 'Alfred Playlist→Set Alfred Playlist URI→');
 				
-				$w->result( "spotify_mini-spotify-alfredplaylist-refresh", "|||||||" . "refresh_alfred_playlist|" . $alfred_playlist_uri, "Refresh your Alfred playlist", "this will refresh your Alfred playlist",'./images/update_library.png', 'yes', '');
+				$w->result( "spotify_mini-spotify-alfredplaylist-refresh", "|||||||" . "refresh_alfred_playlist|" . $alfred_playlist_uri, "Refresh your Alfred playlist", "this will refresh your Alfred playlist",'./images/update.png', 'yes', '');
 				
 				$w->result( "spotify_mini-spotify-alfredplaylist-clear", "|||||||" . "clear_alfred_playlist|" . $alfred_playlist_uri, "Clear your Alfred playlist", "this will clear your Alfred playlist",'./images/clear.png', 'yes', '');
 			
