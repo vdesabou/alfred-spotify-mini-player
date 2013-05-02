@@ -143,7 +143,7 @@ if(mb_strlen($query) < 3 ||
 			}
 			
 			// get info on current song
-			$command_output = exec("osascript track_info.scpt");
+			$command_output = exec("osascript track_info.applescript");
 	
 			if(substr_count( $command_output, '→' ) > 0)
 			{
