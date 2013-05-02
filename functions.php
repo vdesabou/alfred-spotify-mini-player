@@ -1,6 +1,4 @@
 <?php
-// Almost all this code is from Spoticious workflow (http://www.alfredforum.com/topic/1644-spotifious-a-natural-spotify-controller-for-alfred/)
-// Thanks citelao https://github.com/citelao/Spotify-for-Alfred
 require_once('workflows.php');
 
 
