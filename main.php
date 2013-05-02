@@ -245,6 +245,32 @@ else
 	if ( substr_count( $query, '→' ) == 0 )
 	{	
 		//
+		// Search categories for fast access
+		//		
+		if (strpos(strtolower("playlist"),strtolower($query)) !== false)
+		{	
+			$w->result( uniqid(), '', "Playlists", "Browse by playlist", './images/playlist.png', 'no', 'Playlist→' );
+		}
+		else if (strpos(strtolower("album"),strtolower($query)) !== false)
+		{
+			$w->result( uniqid(), '', "Albums", "Browse by album", './images/albums.png', 'no', 'Album→' );	
+		}
+		else if (strpos(strtolower("artist"),strtolower($query)) !== false)
+		{
+			$w->result( uniqid(), '', "Artists", "Browse by artist", './images/artists.png', 'no', 'Artist→' );	
+		}
+		else if (strpos(strtolower("alfred"),strtolower($query)) !== false)
+		{
+			$w->result( uniqid(), '', "Alfred Playlist", "Control your Alfred Playlist", './images/alfred_playlist.png', 'no', 'Alfred Playlist→' );	
+		}
+		else if (strpos(strtolower("setting"),strtolower($query)) !== false)
+		{
+			$w->result( uniqid(), '', "Settings", "Go to settings", './images/settings.png', 'no', 'Settings→' );
+		}		
+		
+			
+		
+		//
 		// Search in Playlists
 		//
 		if (file_exists($w->data() . "/playlists.json"))
@@ -254,9 +280,10 @@ else
 			
 			foreach ($json as $key => $val) 
 			{				
-				if (strpos(strtolower($val),strtolower($query)) !== false)
+				if (strpos(strtolower($val),strtolower($query)) !== false &&
+					$val != "Alfred Playlist" )
 				{	
-					$w->result( "spotify_mini-spotify-playlist-$val", "|||" . $key . "|||||" . $alfred_playlist_uri, ucfirst($val), "Browse Playlist", './images/playlist.png', 'yes', '' );
+					$w->result( "spotify_mini-spotify-playlist-$val", '', ucfirst($val), "Browse Playlist", './images/playlist.png', 'no', "Playlist→" . $val . "→" );
 				}
 			};
 		}
