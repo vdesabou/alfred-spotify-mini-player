@@ -320,6 +320,10 @@ else
 				$starString = str_repeat("⭑", $stars) . str_repeat("⭒", 5 - $stars);
 					
 				$subtitle = $item['data']['album']['name'] . " - <alt> play album, <cmd> play artist";
+				if($is_alfred_playlist_active ==true)
+				{
+					$subtitle = "$subtitle ,<fn> add track to AP, <shift> add album to AP";
+				}
 				$subtitle = "$starString $subtitle";
 				
 				if(checkIfResultAlreadyThere($w->results(),ucfirst($item['data']['album']['artist']['name']) . " - " . $item['data']['name']) == false)
@@ -581,6 +585,10 @@ else
 						$starString = str_repeat("⭑", $stars) . str_repeat("⭒", 5 - $stars);
 							
 						$subtitle = $item['data']['album']['name'] . " - <alt> play album, <cmd> play artist";
+						if($is_alfred_playlist_active ==true)
+						{
+							$subtitle = "$subtitle ,<fn> add track to AP, <shift> add album to AP";
+						}
 						$subtitle = "$starString $subtitle";
 
 						if(checkIfResultAlreadyThere($w->results(),ucfirst($item['data']['album']['artist']['name']) . " - " . $item['data']['name']) == false)
@@ -616,6 +624,10 @@ else
 						$starString = str_repeat("⭑", $stars) . str_repeat("⭒", 5 - $stars);
 							
 						$subtitle = $item['data']['album']['name'] . " - <alt> play album, <cmd> play artist";
+						if($is_alfred_playlist_active ==true)
+						{
+							$subtitle = "$subtitle ,<fn> add track to AP, <shift> add album to AP";
+						}
 						$subtitle = "$starString $subtitle";
 
 						if(checkIfResultAlreadyThere($w->results(),ucfirst($item['data']['album']['artist']['name']) . " - " . $item['data']['name']) == false)
@@ -669,6 +681,10 @@ else
 						$starString = str_repeat("⭑", $stars) . str_repeat("⭒", 5 - $stars);
 							
 						$subtitle = $item['data']['album']['name'] . " - <alt> play album, <cmd> play artist";
+						if($is_alfred_playlist_active ==true)
+						{
+							$subtitle = "$subtitle ,<fn> add track to AP, <shift> add album to AP";
+						}
 						$subtitle = "$starString $subtitle";
 
 						if(checkIfResultAlreadyThere($w->results(),ucfirst($item['data']['album']['artist']['name']) . " - " . $item['data']['name']) == false)
@@ -704,6 +720,10 @@ else
 						$starString = str_repeat("⭑", $stars) . str_repeat("⭒", 5 - $stars);
 							
 						$subtitle = $item['data']['album']['name'] . " - <alt> play album, <cmd> play artist";
+						if($is_alfred_playlist_active ==true)
+						{
+							$subtitle = "$subtitle ,<fn> add track to AP, <shift> add album to AP";
+						}
 						$subtitle = "$starString $subtitle";
 
 						if(checkIfResultAlreadyThere($w->results(),ucfirst($item['data']['album']['artist']['name']) . " - " . $item['data']['name']) == false)
@@ -752,7 +772,12 @@ else
 					$json = file_get_contents($w->data() . "/" . $playlist_file);
 					$json = json_decode($json,true);	
 
-					$w->result( "spotify_mini-spotify-playlist-$val", "|||" . $key . "||||" . "|" . $alfred_playlist_uri, ucfirst($val) . " by " . $playlist_user, "Launch Playlist", './images/playlist.png', 'yes', '' );
+					$subtitle = "Launch Playlist";
+					if($is_alfred_playlist_active ==true)
+					{
+						$subtitle = "$subtitle ,<shift> add playlist to AP";
+					}
+					$w->result( "spotify_mini-spotify-playlist-$val", "|||" . $key . "||||" . "|" . $alfred_playlist_uri, ucfirst($val) . " by " . $playlist_user, $subtitle, './images/playlist.png', 'yes', '' );
 									
 					if(mb_strlen($track) < 3)
 					{
