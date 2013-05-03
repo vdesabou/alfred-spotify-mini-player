@@ -205,7 +205,7 @@ if(mb_strlen($query) < 3 ||
 	{	
 		if ($all_playlists == true)
 		{
-			// argument is csv form: track_uri|album_uri|artist_uri|playlist_uri|spotify_command|query|max_results|other_action
+			// argument is csv form: track_uri|album_uri|artist_uri|playlist_uri|spotify_command|query|other_settings|other_action
 			$w->result( uniqid(), "|||||||" . "disable_all_playlist|", "Change Search Scope", "Select to change to ★ playlist only", './images/star_switch.png', 'yes', '' );
 		}
 		else
