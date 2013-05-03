@@ -319,10 +319,10 @@ else
 				$stars = floor($popularity * 5);
 				$starString = str_repeat("⭑", $stars) . str_repeat("⭒", 5 - $stars);
 					
-				$subtitle = $item['data']['album']['name'] . " - <alt> play album, <cmd> play artist";
+				$subtitle = $item['data']['album']['name'] . " - ⌥ → ▶ album, ⌘ →▶ artist";
 				if($is_alfred_playlist_active ==true)
 				{
-					$subtitle = "$subtitle ,<fn> add track to AP, <shift> add album to AP";
+					$subtitle = "$subtitle ,fn → add track to ♫, ⇧ → add album to ♫";
 				}
 				$subtitle = "$starString $subtitle";
 				
@@ -584,10 +584,10 @@ else
 						$stars = floor($popularity * 5);
 						$starString = str_repeat("⭑", $stars) . str_repeat("⭒", 5 - $stars);
 							
-						$subtitle = $item['data']['album']['name'] . " - <alt> play album, <cmd> play artist";
+						$subtitle = $item['data']['album']['name'] . " - ⌥ → ▶ album, ⌘ →▶ artist";
 						if($is_alfred_playlist_active ==true)
 						{
-							$subtitle = "$subtitle ,<fn> add track to AP, <shift> add album to AP";
+							$subtitle = "$subtitle ,fn → add track to ♫, ⇧ → add album to ♫";
 						}
 						$subtitle = "$starString $subtitle";
 
@@ -623,10 +623,10 @@ else
 						$stars = floor($popularity * 5);
 						$starString = str_repeat("⭑", $stars) . str_repeat("⭒", 5 - $stars);
 							
-						$subtitle = $item['data']['album']['name'] . " - <alt> play album, <cmd> play artist";
+						$subtitle = $item['data']['album']['name'] . " - ⌥ → ▶ album, ⌘ →▶ artist";
 						if($is_alfred_playlist_active ==true)
 						{
-							$subtitle = "$subtitle ,<fn> add track to AP, <shift> add album to AP";
+							$subtitle = "$subtitle ,fn → add track to ♫, ⇧ → add album to ♫";
 						}
 						$subtitle = "$starString $subtitle";
 
@@ -680,10 +680,10 @@ else
 						$stars = floor($popularity * 5);
 						$starString = str_repeat("⭑", $stars) . str_repeat("⭒", 5 - $stars);
 							
-						$subtitle = $item['data']['album']['name'] . " - <alt> play album, <cmd> play artist";
+						$subtitle = $item['data']['album']['name'] . " - ⌥ → ▶ album, ⌘ →▶ artist";
 						if($is_alfred_playlist_active ==true)
 						{
-							$subtitle = "$subtitle ,<fn> add track to AP, <shift> add album to AP";
+							$subtitle = "$subtitle ,fn → add track to ♫, ⇧ → add album to ♫";
 						}
 						$subtitle = "$starString $subtitle";
 
@@ -719,10 +719,10 @@ else
 						$stars = floor($popularity * 5);
 						$starString = str_repeat("⭑", $stars) . str_repeat("⭒", 5 - $stars);
 							
-						$subtitle = $item['data']['album']['name'] . " - <alt> play album, <cmd> play artist";
+						$subtitle = $item['data']['album']['name'] . " - ⌥ → ▶ album, ⌘ →▶ artist";
 						if($is_alfred_playlist_active ==true)
 						{
-							$subtitle = "$subtitle ,<fn> add track to AP, <shift> add album to AP";
+							$subtitle = "$subtitle ,fn → add track to ♫, ⇧ → add album to ♫";
 						}
 						$subtitle = "$starString $subtitle";
 
@@ -775,7 +775,7 @@ else
 					$subtitle = "Launch Playlist";
 					if($is_alfred_playlist_active ==true)
 					{
-						$subtitle = "$subtitle ,<shift> add playlist to AP";
+						$subtitle = "$subtitle ,⇧ → add playlist to ♫";
 					}
 					$w->result( "spotify_mini-spotify-playlist-$val", "|||" . $key . "||||" . "|" . $alfred_playlist_uri, ucfirst($val) . " by " . $playlist_user, $subtitle, './images/playlist.png', 'yes', '' );
 									
@@ -790,7 +790,7 @@ else
 							if($currentResultNumber > $max_results)
 								break;
 		
-							$w->result( "spotify_mini-spotify-" . $playlist . "-" . $item[1], $item[2] . "|||||||" . "|" . $alfred_playlist_uri, ucfirst($item[0]) . " - " . $item[1], "Play track", getTrackArtwork($item[2],true), 'yes', '' );
+							$w->result( "spotify_mini-spotify-" . $playlist . "-" . $item[1], $item[2] . "|||||||" . "|" . $alfred_playlist_uri, ucfirst($item[0]) . " - " . $item[1], "▶ track", getTrackArtwork($item[2],true), 'yes', '' );
 							$currentResultNumber++;		
 						}
 						$w->result( '', "||||activate (open location \"spotify:search:" . $playlist . "\")||||", "Search for " . $playlist . " with Spotify", "This will start a new search in Spotify", 'fileicon:/Applications/Spotify.app', 'yes', '' );
@@ -811,7 +811,7 @@ else
 							if (strpos(strtolower($item[1]),strtolower($track)) !== false ||
 								strpos(strtolower($item[0]),strtolower($track)) !== false)
 							{					
-								$w->result( "spotify_mini-spotify-" . $playlist . "-" . $item[1], $item[2] . "|||||||" . "|" . $alfred_playlist_uri, ucfirst($item[0]) . " - " . $item[1], "Play track", getTrackArtwork($item[2],true), 'yes', '' );
+								$w->result( "spotify_mini-spotify-" . $playlist . "-" . $item[1], $item[2] . "|||||||" . "|" . $alfred_playlist_uri, ucfirst($item[0]) . " - " . $item[1], "▶ track", getTrackArtwork($item[2],true), 'yes', '' );
 								$currentResultNumber++;
 							}	
 						};
