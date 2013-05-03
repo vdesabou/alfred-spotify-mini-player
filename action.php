@@ -61,7 +61,8 @@ else if ($type == "ALBUM_OR_PLAYLIST")
 			exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:addplaylisttoalfredplaylist:$playlist_uri:$alfred_playlist_uri\"'");
 			exec("osascript -e 'tell application \"Spotify\" to open location \"$alfred_playlist_uri\"'");
 			sleep(15);
-			refreshAlfredPlaylist();			
+			refreshAlfredPlaylist();
+			return;			
 		}
 	}
 }
