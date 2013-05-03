@@ -43,6 +43,12 @@ function handleArgs() {
 					addToAlfredPlaylist(args);
 				}
 				break;
+			case "addplaylisttoalfredplaylist":
+				if(args[10])
+				{
+					addPlaylistToAlfredPlaylist(args);
+				}
+				break;
 			case "clearalfredplaylist":
 				if(args[5])
 				{

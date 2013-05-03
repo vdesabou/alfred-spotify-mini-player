@@ -38,7 +38,7 @@
 				<key>modifiers</key>
 				<integer>131072</integer>
 				<key>modifiersubtext</key>
-				<string>Add album to your Alfred Playlist</string>
+				<string>Add album or playlist to your Alfred Playlist</string>
 			</dict>
 			<dict>
 				<key>destinationuid</key>
@@ -376,7 +376,7 @@
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f action.php -- "{query}" "ALBUM" "ADDTOPLAYLIST"</string>
+				<string>php -f action.php -- "{query}" "ALBUM_OR_PLAYLIST" "ADDTOPLAYLIST"</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -399,7 +399,7 @@
 				<key>sticky</key>
 				<false/>
 				<key>text</key>
-				<string>Album has been added to Alfred Playlist</string>
+				<string>Album or Playlist has been added to Alfred Playlist</string>
 				<key>title</key>
 				<string>Spotify Mini Player</string>
 			</dict>

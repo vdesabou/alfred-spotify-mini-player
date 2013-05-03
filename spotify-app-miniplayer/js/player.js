@@ -63,6 +63,32 @@ function addToAlfredPlaylist(args) {
 	});	
 }
 
+function addPlaylistToAlfredPlaylist(args) {
+	// Get the playlist object from a URI
+	models.Playlist.fromURI(args[6]+':'+args[7]+':'+args[8]+':'+args[9]+':'+args[10], function(alfredplaylist) {
+	
+		alfredplaylist.data.collaborative = false;
+
+		if(args[4] == 'playlist')
+		{
+			var playlist = models.Playlist.fromURI(args[1]+':'+args[2]+':'+args[3]+':'+args[4]+':'+args[5], function(playlist) {
+			    // This callback is fired when the playlist has loaded.
+			    // The playlist object has a tracks property, which is a standard array.
+			    
+				for (var i = 0, l = playlist.length; i < l; i++){
+					if(playlist.tracks[i] != null)
+					{	 
+						alfredplaylist.add(playlist.get(i));
+					}
+		        }
+	    	});
+		}
+			
+		// Verify the song was added to the playlist
+		console.log(alfredplaylist);	
+	});	
+}
+
 function clearAlfredPlaylist(args) {
 
 	models.Playlist.fromURI(args[1]+':'+args[2]+':'+args[3]+':'+args[4]+':'+args[5], function(playlist) {
