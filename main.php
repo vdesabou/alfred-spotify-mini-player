@@ -773,7 +773,8 @@ else
 					$json = json_decode($json,true);	
 
 					$subtitle = "Launch Playlist";
-					if($is_alfred_playlist_active ==true)
+					if($is_alfred_playlist_active ==true &&
+						$val != "Alfred Playlist")
 					{
 						$subtitle = "$subtitle ,⇧ → add playlist to ♫";
 					}
