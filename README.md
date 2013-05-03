@@ -14,8 +14,8 @@ Speed is the key word here: instead of using slow Spotify API, it uses a JSON li
 * Search for Albums, Artists or Tracks
 * Search for playlists and Start it
 * Browse by Artists, Albums or Playlists
-* Alfred Playlist: manage a playlist from Alfred, add tracks or albums 
-* Select a track with *alt* to play the album, or *cmd* to play the artist
+* Alfred Playlist: manage a playlist from Alfred: add track (using fn), albums or playlist (using ⇧)
+* Select a track with ⌥ to play the album, or ⌘ to play the artist
 * Same control keywords as iTunes Mini Player: play, pause, mute, next, random, previous, volmax, volmid. And shuffle to activate shuffling.
 * Star current track
 * Direct call to [Spotifious](http://www.alfredforum.com/topic/1644-spotifious-a-natural-spotify-controller-for-alfred) workflow
@@ -109,6 +109,12 @@ Download the workflow below and open in Alfred.
 
 
 ## History
+
+2.5:
+
+* Quick access to menus, for example start typing setting and Settings menu will be selectioned
+
+* Add a playlist to Alfred Playlist using ⇧ modifier
 
 2.4:
 
