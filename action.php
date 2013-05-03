@@ -49,14 +49,14 @@ else if ($type == "ALBUM_OR_PLAYLIST")
 {
 	if($alfredplaylist != "")
 	{
-		if($track_uri != "$album_uri")
+		if($album_uri != "")
 		{
 			exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:addtoalfredplaylist:$album_uri:$alfred_playlist_uri\"'");
 			exec("osascript -e 'tell application \"Spotify\" to open location \"$alfred_playlist_uri\"'");
 			sleep(15);
 			refreshAlfredPlaylist();
 		}
-		else if($track_uri != "$playlist_uri")
+		else if($playlist_uri != "")
 		{
 			exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:addplaylisttoalfredplaylist:$playlist_uri:$alfred_playlist_uri\"'");
 			exec("osascript -e 'tell application \"Spotify\" to open location \"$alfred_playlist_uri\"'");
