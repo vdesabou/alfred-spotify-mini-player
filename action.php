@@ -33,6 +33,7 @@ if($type == "TRACK")
 			exec("osascript -e 'tell application \"Spotify\" to open location \"$alfred_playlist_uri\"'");
 			sleep(15);
 			refreshAlfredPlaylist();
+			return;
 		}
 		else
 		{
@@ -55,6 +56,7 @@ else if ($type == "ALBUM_OR_PLAYLIST")
 			exec("osascript -e 'tell application \"Spotify\" to open location \"$alfred_playlist_uri\"'");
 			sleep(15);
 			refreshAlfredPlaylist();
+			return;
 		}
 		else if($playlist_uri != "")
 		{
