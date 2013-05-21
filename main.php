@@ -168,8 +168,8 @@ if(mb_strlen($query) < 3 ||
 		else
 		{
 			$w->result( uniqid(), '', "Workflow is not configured, library.json is missing", "Select Open Spotify Mini Player App below, and copy json data", './images/warning.png', 'no', '' );
-			$w->result( uniqid(), "||||||||" . "open_spotify_export_app", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Install library.", './images/app_miniplayer.png', 'yes', '' );
-			$w->result( uniqid(), "||||||||" . "update_library_json", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
+			$w->result( uniqid(), "|||||||" . "open_spotify_export_app|", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Install library.", './images/app_miniplayer.png', 'yes', '' );
+			$w->result( uniqid(), "|||||||" . "update_library_json|", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
 		}
 
 		if ($is_spotifious_active == true)
