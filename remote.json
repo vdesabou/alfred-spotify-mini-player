@@ -1,5 +1,5 @@
 {
-    "version": 2.5,
+    "version": 2.6,
     "download_url": "https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/SpotifyMiniPlayer.alfredworkflow",
-    "description": "Quick access to menus. Ability to add a playlist to Alfred Playlist using <shift>. Various fixes."
+    "description": "Fix issue during library creation where nothing happened."
 }

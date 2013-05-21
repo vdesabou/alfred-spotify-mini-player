@@ -110,6 +110,10 @@ Download the workflow below and open in Alfred.
 
 ## History
 
+2.6:
+
+* Fix issue during library creation where nothing happened
+
 2.5:
 
 * Quick access to menus, for example start typing setting and Settings menu will be selectioned
