@@ -40,7 +40,7 @@ This is recommended to be done before you start using the workflow. Artworks are
 
 You'll need to do the following steps:
 
-* Sign up for a [developer account on Spotify](https://developer.spotify.com/technologies/apps/#developer-account)
+* Sign up for a [developer account on Spotify](https://developer.spotify.com/technologies/apps/#developer-account) (you must allow app API).
 * Download the [latest version](https://www.spotify.com/fr/download/mac/) of Spotify and ***install*** it (I had to do it, even though I was pretty sure to already have the latest version, so please do it!)
 
 * Open Spotify Mini Player app (it is automatically installed) by invoking *spot_mini* or configured hotkey in Alfred, and select "Open Spotify Mini Player App":
