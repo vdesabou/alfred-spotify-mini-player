@@ -15,12 +15,13 @@ if (file_exists($w->data() . "/library.json"))
 }
 
 //
-// Install Spotify App Mini Player if needed
+// Install spotify-app-miniplayer app if needed
+// very first time use
 //
 if (!file_exists($w->home() . "/Spotify/spotify-app-miniplayer"))
-{
+{	
 	exec("mkdir -p ~/Spotify");
-	exec("ln -s '".$w->path()."/spotify-app-miniplayer' ~/Spotify");
+	exec("cp -R '".$w->path()."/spotify-app-miniplayer' ~/Spotify");
 }
 
 //
@@ -131,7 +132,7 @@ if(mb_strlen($query) < 3 ||
 	if ( substr_count( $query, '→' ) == 0 )
 	{
 		// check for correct configuration
-		if (file_exists($w->data() . "/library.json"))
+		if (file_exists($w->data() . "/library.json") && file_exists($w->home() . "/Spotify/spotify-app-miniplayer/manifest.json"))
 		{
 			if($all_playlists == true)
 			{
@@ -167,7 +168,14 @@ if(mb_strlen($query) < 3 ||
 		}
 		else
 		{
-			$w->result( uniqid(), '', "Workflow is not configured, library.json is missing", "Select Open Spotify Mini Player App below, and copy json data", './images/warning.png', 'no', '' );
+			if(!file_exists($w->data() . "/library.json"))
+			{
+				$w->result( uniqid(), '', "Workflow is not configured, library.json is missing", "Select Open Spotify Mini Player App below, and copy json data", './images/warning.png', 'no', '' );
+			}
+			elseif(!file_exists($w->home() . "/Spotify/spotify-app-miniplayer"))
+			{
+				$w->result( uniqid(), '', "Workflow is not configured, Spotify Mini Player App is missing", "Select Install library below, and make sure ~/Spotify/spotify-app-miniplayer directory exists", './images/warning.png', 'no', '' );				
+			}
 			$w->result( uniqid(), "|||||||" . "open_spotify_export_app|", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Install library.", './images/app_miniplayer.png', 'yes', '' );
 			$w->result( uniqid(), "|||||||" . "update_library_json|", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
 		}

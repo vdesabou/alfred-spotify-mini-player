@@ -110,6 +110,10 @@ Download the workflow below and open in Alfred.
 
 ## History
 
+2.7:
+
+* Attempt to better detect problems with spotify-app-miniplayer app
+
 2.6:
 
 * Fix issue during library creation where nothing happened

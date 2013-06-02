@@ -1,5 +1,5 @@
 {
-    "version": 2.6,
+    "version": 2.7,
     "download_url": "https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/SpotifyMiniPlayer.alfredworkflow",
-    "description": "Fix issue during library creation where nothing happened."
+    "description": "Attempt to better detect problems with spotify-app-miniplayer app."
 }

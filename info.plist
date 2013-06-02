@@ -249,7 +249,7 @@
 	<key>disabled</key>
 	<false/>
 	<key>name</key>
-	<string>Spotify Mini Player 2.6</string>
+	<string>Spotify Mini Player 2.7</string>
 	<key>objects</key>
 	<array>
 		<dict>
@@ -274,6 +274,8 @@
 			<string>alfred.workflow.output.notification</string>
 			<key>uid</key>
 			<string>BD7525EE-BFFD-4CB1-B617-A7A9492B39C0</string>
+			<key>version</key>
+			<integer>0</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -289,6 +291,8 @@
 			<string>alfred.workflow.action.script</string>
 			<key>uid</key>
 			<string>5F3AF2C8-064F-4C10-8D99-22E212825BFE</string>
+			<key>version</key>
+			<integer>0</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -316,6 +320,8 @@
 			<string>alfred.workflow.input.scriptfilter</string>
 			<key>uid</key>
 			<string>18496AC4-EA42-444C-A906-642E38259C96</string>
+			<key>version</key>
+			<integer>0</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -339,6 +345,8 @@
 			<string>alfred.workflow.trigger.hotkey</string>
 			<key>uid</key>
 			<string>AE6160D1-56EA-4416-991E-CF12B874FFD3</string>
+			<key>version</key>
+			<integer>0</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -354,6 +362,8 @@
 			<string>alfred.workflow.action.script</string>
 			<key>uid</key>
 			<string>8DF18F9A-B3A5-4B14-8360-AD850CF5C143</string>
+			<key>version</key>
+			<integer>0</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -369,6 +379,8 @@
 			<string>alfred.workflow.action.script</string>
 			<key>uid</key>
 			<string>9845C770-A2CC-4752-A542-D71BE1081691</string>
+			<key>version</key>
+			<integer>0</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -384,6 +396,8 @@
 			<string>alfred.workflow.action.script</string>
 			<key>uid</key>
 			<string>1A88766E-BF4A-48F5-9BD4-D3538634422F</string>
+			<key>version</key>
+			<integer>0</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -407,6 +421,8 @@
 			<string>alfred.workflow.output.notification</string>
 			<key>uid</key>
 			<string>184907DA-3265-45DA-8E0F-C8EC32ACDD94</string>
+			<key>version</key>
+			<integer>0</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -422,6 +438,8 @@
 			<string>alfred.workflow.action.script</string>
 			<key>uid</key>
 			<string>7918E8F7-20AE-445E-9AEA-E2E54CDE967D</string>
+			<key>version</key>
+			<integer>0</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -445,6 +463,8 @@
 			<string>alfred.workflow.output.notification</string>
 			<key>uid</key>
 			<string>A50798D9-7E2D-4D61-8119-820A56775119</string>
+			<key>version</key>
+			<integer>0</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -464,6 +484,8 @@
 			<string>alfred.workflow.input.keyword</string>
 			<key>uid</key>
 			<string>4EB5FB5E-6472-4757-A479-B206B6080036</string>
+			<key>version</key>
+			<integer>0</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -479,6 +501,8 @@
 			<string>alfred.workflow.action.applescript</string>
 			<key>uid</key>
 			<string>DA0A3B7F-B5F1-4F92-9013-217E6F17C588</string>
+			<key>version</key>
+			<integer>0</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -494,6 +518,8 @@
 			<string>alfred.workflow.action.applescript</string>
 			<key>uid</key>
 			<string>4367DDDE-C360-4642-908E-EB1F916727CC</string>
+			<key>version</key>
+			<integer>0</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -513,6 +539,8 @@
 			<string>alfred.workflow.input.keyword</string>
 			<key>uid</key>
 			<string>CD9D3654-8137-49B2-80DC-095E97A58E67</string>
+			<key>version</key>
+			<integer>0</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -532,6 +560,8 @@
 			<string>alfred.workflow.input.keyword</string>
 			<key>uid</key>
 			<string>5AF7EEEC-2E55-482C-8750-4CE6AD752683</string>
+			<key>version</key>
+			<integer>0</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -547,6 +577,8 @@
 			<string>alfred.workflow.action.applescript</string>
 			<key>uid</key>
 			<string>60EA5756-7B07-4DCA-959A-C3B0E90150AC</string>
+			<key>version</key>
+			<integer>0</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -566,6 +598,8 @@
 			<string>alfred.workflow.input.keyword</string>
 			<key>uid</key>
 			<string>F4382654-9318-4849-82E4-550AC235148C</string>
+			<key>version</key>
+			<integer>0</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -585,6 +619,8 @@
 			<string>alfred.workflow.input.keyword</string>
 			<key>uid</key>
 			<string>C7CFF014-DBC8-4663-A0AB-219C57A427EE</string>
+			<key>version</key>
+			<integer>0</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -608,6 +644,8 @@ end alfred_script</string>
 			<string>alfred.workflow.action.applescript</string>
 			<key>uid</key>
 			<string>F7D7D2CE-77EE-45C4-ADAA-1B45A6577FFF</string>
+			<key>version</key>
+			<integer>0</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -627,6 +665,8 @@ end alfred_script</string>
 			<string>alfred.workflow.input.keyword</string>
 			<key>uid</key>
 			<string>D4442911-E17B-49CC-8F7F-EAC1830B11CD</string>
+			<key>version</key>
+			<integer>0</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -646,6 +686,8 @@ end alfred_script</string>
 			<string>alfred.workflow.action.applescript</string>
 			<key>uid</key>
 			<string>E3215F64-F5B9-4639-93D1-1D643339E2E7</string>
+			<key>version</key>
+			<integer>0</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -665,6 +707,8 @@ end alfred_script</string>
 			<string>alfred.workflow.input.keyword</string>
 			<key>uid</key>
 			<string>F250A59C-0B2D-4A08-9085-9CA0A2FB2DCC</string>
+			<key>version</key>
+			<integer>0</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -684,6 +728,8 @@ end alfred_script</string>
 			<string>alfred.workflow.action.applescript</string>
 			<key>uid</key>
 			<string>2D26D8E2-52A2-4BF9-B693-0D5190C6CC23</string>
+			<key>version</key>
+			<integer>0</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -703,6 +749,8 @@ end alfred_script</string>
 			<string>alfred.workflow.input.keyword</string>
 			<key>uid</key>
 			<string>8C78472B-13EB-4512-B94D-4BF92867CD92</string>
+			<key>version</key>
+			<integer>0</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -720,6 +768,8 @@ end alfred_script</string>
 			<string>alfred.workflow.action.applescript</string>
 			<key>uid</key>
 			<string>64AF8526-B1B0-415C-97C1-2787A835A605</string>
+			<key>version</key>
+			<integer>0</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -739,6 +789,8 @@ end alfred_script</string>
 			<string>alfred.workflow.input.keyword</string>
 			<key>uid</key>
 			<string>22216C91-0A58-4FE1-9F28-DF023E4F4282</string>
+			<key>version</key>
+			<integer>0</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -754,6 +806,8 @@ end alfred_script</string>
 			<string>alfred.workflow.action.applescript</string>
 			<key>uid</key>
 			<string>626E477C-213B-4F72-B62C-328E21E9C882</string>
+			<key>version</key>
+			<integer>0</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -769,6 +823,8 @@ end alfred_script</string>
 			<string>alfred.workflow.action.applescript</string>
 			<key>uid</key>
 			<string>B5121E0F-240A-4739-A58B-0DB78E6D5CC4</string>
+			<key>version</key>
+			<integer>0</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -786,6 +842,8 @@ end alfred_script</string>
 			<string>alfred.workflow.input.keyword</string>
 			<key>uid</key>
 			<string>5EB06988-92AD-4D95-AD02-929FB6EBCD64</string>
+			<key>version</key>
+			<integer>0</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -815,6 +873,8 @@ end alfred_script</string>
 			<string>alfred.workflow.action.applescript</string>
 			<key>uid</key>
 			<string>CB842E97-4DDD-4663-8630-EAF7407CBA1D</string>
+			<key>version</key>
+			<integer>0</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -834,6 +894,8 @@ end alfred_script</string>
 			<string>alfred.workflow.input.keyword</string>
 			<key>uid</key>
 			<string>81BA0BC2-F1CB-46DC-A715-C38A1A0E055E</string>
+			<key>version</key>
+			<integer>0</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -857,6 +919,8 @@ end alfred_script</string>
 			<string>alfred.workflow.output.notification</string>
 			<key>uid</key>
 			<string>29A1FCD7-3432-4BFF-89DB-4111B3169AD5</string>
+			<key>version</key>
+			<integer>0</integer>
 		</dict>
 	</array>
 	<key>readme</key>

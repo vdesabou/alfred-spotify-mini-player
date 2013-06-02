@@ -177,7 +177,9 @@ else if($other_action != "")
      		if (file_exists($w->home() . "/Spotify/spotify-app-miniplayer"))
      		{	
      			exec("rm -rf " . $w->home() . "/Spotify/spotify-app-miniplayer");
-     		}	
+     		}
+			exec("mkdir -p ~/Spotify");
+			exec("cp -R '".$w->path()."/spotify-app-miniplayer' ~/Spotify");
 		}
 	}
 }
