@@ -198,8 +198,6 @@ else if($other_action != "")
      		{	
      			exec("rm -rf " . $w->home() . "/Spotify/spotify-app-miniplayer");
      		}
-	 		mkdir($w->home() . "/Spotify");
-	 		symlink($w->path() . "/spotify-app-miniplayer", $w->home() . "/Spotify/spotify-app-miniplayer");
 		}
 	}
 }
