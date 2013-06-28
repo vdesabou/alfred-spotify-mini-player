@@ -26,6 +26,8 @@ Speed is the key word here: instead of using slow Spotify API, it uses a JSON li
 * Configurable Search Scope: Only Starred playlist (by default) or All your playlists
 * Set max number of results
 * enable/disable Spotifious or Alfred Playlist
+* Hide/Display artworks
+* Hide Display ***More from this artist/album***
 * Cache all artworks at once. 
 This is recommended to be done before you start using the workflow. Artworks are downloaded on the fly, but it is better to cache everything for performances reasons
 * Clear Artworks cache. Not sure why you would use it, but it's possible to do it
@@ -33,7 +35,7 @@ This is recommended to be done before you start using the workflow. Artworks are
 
 ## Screenshots
 
-![Screenshot](http://d.pr/i/gFYc+.png)
+![Screenshot](http://d.pr/i/ZHeK+.png)
 
 
 ## First time use
@@ -45,7 +47,7 @@ You'll need to do the following steps:
 
 * Open Spotify Mini Player app (it is automatically installed) by invoking *spot_mini* or configured hotkey in Alfred, and select "Open Spotify Mini Player App":
 
-![Screenshot](http://d.pr/i/GH1O+.png)
+![Screenshot](http://d.pr/i/U3Va+.png)
 
 **Note**: If Spotify cannot open the Spotify Mini Player App, restart Spotify completely. If this still doesn't work, try to logout and login again in Spotify
 
@@ -59,13 +61,13 @@ You'll need to do the following steps:
 
 * Type "spot_mini" or configured hotkey to invoke Spotify Mini Player, and select "Install library" 
 
-![Screenshot](http://d.pr/i/wF47+.png)
+![Screenshot](http://d.pr/i/LuC1+.png)
 
 * Technically speaking, it will paste the content of the clipboard, so the JSON library into a file called library.json in the app data directory : */Users/YOUR_USER/Library/Application Support/Alfred 2/Workflow Data/com.vdesabou.spotify.mini.player. All After some time, you should get a notification saying that library has been created
 
 * I strongly recommend to use the setting "Cache all artworks for Spotify Mini Player" the first time. It can take a while to download all you artworks, so have a break and come back later :-). You'll get a notification when all artworks are cached.
 
-![Screenshot](http://d.pr/i/Jris+.png)
+![Screenshot](http://d.pr/i/fOSq+.png)
 
 
 
@@ -75,11 +77,7 @@ If you modify your playlists, you'll need to update the library.
 
 * Go in Spotify Mini Player Settings
 
-![Screenshot](http://d.pr/i/kET3+.png)
-
 * Select Open Spotify Mini Player App
-
-![Screenshot](http://d.pr/i/8CD+.png)
 
 * Generate JSON Data by pressing blue button
 
@@ -109,6 +107,15 @@ Download the workflow below and open in Alfred.
 
 
 ## History
+
+2.8:
+
+* New icons
+
+* Option to enable/disable artworks
+
+* Option to enable/disable ***More from this artist/album***
+
 
 2.7:
 
