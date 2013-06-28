@@ -299,9 +299,27 @@ function updateLibrary()
 	ini_set('memory_limit', '512M' );
 	
 	//try to decode it 
-	$json = json_decode(exec('pbpaste'));
+	$json = json_decode(exec('pbpaste'),true);
 	if (json_last_error() === JSON_ERROR_NONE) 
-	{ 
+	{ 		
+		$array_light_library_items = array();
+		foreach ($json as $item) 
+		{	
+			$light_item = array();
+			$light_item['data']['album']['artist']['name'] = $item['data']['album']['artist']['name'];
+			$light_item['data']['album']['name'] = $item['data']['album']['name'];
+			$light_item['data']['name'] = $item['data']['name'];
+			$light_item['data']['album']['artist']['uri'] = $item['data']['album']['artist']['uri'];
+			$light_item['data']['album']['uri'] = $item['data']['album']['uri'];
+			$light_item['data']['uri'] = $item['data']['uri'];
+			$light_item['data']['popularity'] = $item['data']['popularity'];
+			$light_item['data']['starred'] = $item['data']['starred'];
+
+			array_push( $array_light_library_items, $light_item );
+		}
+		
+		$w->write( $array_light_library_items, 'library.json' );
+		
 		$fp = fopen ($w->data() . "/library.json", 'w+');
 		fwrite($fp, str_replace("&apos;","'",str_replace("&amp;","&",exec('pbpaste'))));
 		fclose($fp);
