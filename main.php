@@ -438,12 +438,9 @@ else
 				
 				foreach ($json as $key => $val) 
 				{	
-					if($key != $w->get( 'alfred_playlist_uri', 'settings.plist' ))
-					{
-						$r = explode(':', $key);
-						$playlist_user = $r[2];
-						$w->result( "spotify_mini-spotify-playlist-$val", '', ucfirst($val), "by " . $playlist_user, './images/playlists.png', 'no', "Playlist→" . $val . "→" );
-					}
+					$r = explode(':', $key);
+					$playlist_user = $r[2];
+					$w->result( "spotify_mini-spotify-playlist-$val", '', ucfirst($val), "by " . $playlist_user, './images/playlists.png', 'no', "Playlist→" . $val . "→" );
 				};
 			}
 			else
