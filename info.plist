@@ -333,7 +333,7 @@
 				<key>hotkey</key>
 				<integer>36</integer>
 				<key>hotmod</key>
-				<integer>1310720</integer>
+				<integer>786432</integer>
 				<key>hotstring</key>
 				<string>↩</string>
 				<key>leftcursor</key>
