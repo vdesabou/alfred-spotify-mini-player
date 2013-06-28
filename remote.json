@@ -1,5 +1,5 @@
 {
-    "version": 2.7,
+    "version": 2.8,
     "download_url": "https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/SpotifyMiniPlayer.alfredworkflow",
-    "description": "Attempt to better detect problems with spotify-app-miniplayer app."
+    "description": "New icons. Option to enable/disable artworks. Option to enable/disable More from this artist/album."
 }

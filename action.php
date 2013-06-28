@@ -130,6 +130,26 @@ else if($other_action != "")
 		$w->set( 'is_spotifious_active', 'false', 'settings.plist' );
 		echo "Spotifious is now disabled";
 	}
+	else if ($other_action == "enable_artworks")
+	{
+		$w->set( 'is_artworks_active', 'true', 'settings.plist' );
+		echo "Artworks are now enabled";
+	}
+	else if ($other_action == "disable_artworks")
+	{
+		$w->set( 'is_artworks_active', 'false', 'settings.plist' );
+		echo "Artworks are now disabled";
+	}
+	else if ($other_action == "enable_displaymorefrom")
+	{
+		$w->set( 'is_displaymorefrom_active', 'true', 'settings.plist' );
+		echo "\"More from this artist/album\" is now enabled";
+	}
+	else if ($other_action == "disable_displaymorefrom")
+	{
+		$w->set( 'is_displaymorefrom_active', 'false', 'settings.plist' );
+		echo "\"More from this artist/album\" is now disabled";
+	}
 	else if ($other_action == "enable_alfred_playlist")
 	{
 		$w->set( 'is_alfred_playlist_active', 'true', 'settings.plist' );
