@@ -13,7 +13,11 @@ function checkIfResultAlreadyThere($results,$title) {
 	return false;
 }
 
-function getTrackArtwork($spotifyURL,$fetchIfNotPresent) {
+function getTrackArtwork($is_artworks_active,$spotifyURL,$fetchIfNotPresent) {
+
+	if($is_artworks_active == false)
+		return "images/default_track.png";
+		
 	$hrefs = explode(':', $spotifyURL);
 	$w = new Workflows();
 
@@ -42,20 +46,20 @@ function getTrackArtwork($spotifyURL,$fetchIfNotPresent) {
 		}
 		else
 		{
-			return "images/default_album.png";
+			return "images/default_track.png";
 		}
 	}
 	else
 	{
 		if( filesize($currentArtwork) == 0 )
 		{
-			return "images/default_album.png";
+			return "images/default_track.png";
 		}		
 	}
 	
 	if(is_numeric($artwork) && $artwork == 0)
 	{
-		return "images/default_album.png";
+		return "images/default_track.png";
 	}
 	else
 	{
@@ -63,7 +67,11 @@ function getTrackArtwork($spotifyURL,$fetchIfNotPresent) {
 	}
 }
 
-function getArtistArtwork($artist,$fetchIfNotPresent) {
+function getArtistArtwork($is_artworks_active,$artist,$fetchIfNotPresent) {
+	
+	if($is_artworks_active == false)
+		return "images/default_artist.png";
+		
 	$parsedArtist = urlencode($artist);
 	$w = new Workflows();
 
