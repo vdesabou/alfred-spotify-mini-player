@@ -161,7 +161,7 @@ if(mb_strlen($query) < 3 ||
 			}
 			if (file_exists($w->data() . "/playlists.json"))
 			{
-				$w->result( '', '', "Playlists", "Browse by playlist", './images/playlist.png', 'no', 'Playlist→' );
+				$w->result( '', '', "Playlists", "Browse by playlist", './images/playlists.png', 'no', 'Playlist→' );
 			}
 			$w->result( '', '', "Artists", "Browse by artist", './images/artists.png', 'no', 'Artist→' );
 			$w->result( '', '', "Albums", "Browse by album", './images/albums.png', 'no', 'Album→' );			
@@ -214,32 +214,32 @@ if(mb_strlen($query) < 3 ||
 		if ($all_playlists == true)
 		{
 			// argument is csv form: track_uri|album_uri|artist_uri|playlist_uri|spotify_command|query|other_settings|other_action
-			$w->result( '', "|||||||" . "disable_all_playlist|", "Change Search Scope", "Select to change to ★ playlist only", './images/star_switch.png', 'yes', '' );
+			$w->result( '', "|||||||" . "disable_all_playlist|", "Change Search Scope", "Select to change to ★ playlist only", './images/search.png', 'yes', '' );
 		}
 		else
 		{
-			$w->result( '', "|||||||" . "enable_all_playlist|", "Change Search Scope", "Select to change to ALL playlists", './images/allplaylists_switch.png', 'yes', '' );
+			$w->result( '', "|||||||" . "enable_all_playlist|", "Change Search Scope", "Select to change to ALL playlists", './images/search.png', 'yes', '' );
 		}
 		$w->result( '', "|||||||" . "open_spotify_export_app|", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Update library.", './images/app_miniplayer.png', 'yes', '' );
 		$w->result( '', "|||||||" . "update_library_json|", "Update library", "Make sure the clipboard contains the json data from the Spotify Mini Player App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
-		$w->result( '', '', "Configure Max Number of Results", "Number of results displayed", './images/change_setting.png', 'no', 'Settings→MaxResults→' );
+		$w->result( '', '', "Configure Max Number of Results", "Number of results displayed", './images/numbers.png', 'no', 'Settings→MaxResults→' );
 		$w->result( '', "|||||||" . "cache|", "Cache All Artworks", "This is recommended to do it before using the player", './images/cache.png', 'yes', '' );
-		$w->result( '', "|||||||" . "clear|", "Clear Cached Artworks", "All cached artworks will be deleted", './images/clear.png', 'yes', '' );
+		$w->result( '', "|||||||" . "clear|", "Clear Cached Artworks", "All cached artworks will be deleted", './images/uncheck.png', 'yes', '' );
 		if ($is_spotifious_active == true)
 		{
-			$w->result( '', "|||||||" . "disable_spotifiuous|", "Disable Spotifious", "Do not display Spotifious in default results", './images/setting_spotifious.png', 'yes', '' );
+			$w->result( '', "|||||||" . "disable_spotifiuous|", "Disable Spotifious", "Do not display Spotifious in default results", './images/uncheck.png', 'yes', '' );
 		}
 		else
 		{
-			$w->result( '', "|||||||" . "enable_spotifiuous|", "Enable Spotifious", "Display Spotifious in default results", './images/setting_spotifious.png', 'yes', '' );
+			$w->result( '', "|||||||" . "enable_spotifiuous|", "Enable Spotifious", "Display Spotifious in default results", './images/check.png', 'yes', '' );
 		}
 		if ($is_alfred_playlist_active == true)
 		{
-			$w->result( '', "|||||||" . "disable_alfred_playlist|", "Disable Alfred Playlist", "Do not display Alfred Playlist", './images/alfred_playlist.png', 'yes', '' );
+			$w->result( '', "|||||||" . "disable_alfred_playlist|", "Disable Alfred Playlist", "Do not display Alfred Playlist", './images/uncheck.png', 'yes', '' );
 		}
 		else
 		{
-			$w->result( '', "|||||||" . "enable_alfred_playlist|", "Enable Alfred Playlist", "Display Alfred Playlist", './images/alfred_playlist.png', 'yes', '' );
+			$w->result( '', "|||||||" . "enable_alfred_playlist|", "Enable Alfred Playlist", "Display Alfred Playlist", './images/check.png', 'yes', '' );
 		}		
 	}
 } 
@@ -257,7 +257,7 @@ else
 		//		
 		if (strpos(strtolower("playlist"),strtolower($query)) !== false)
 		{	
-			$w->result( '', '', "Playlists", "Browse by playlist", './images/playlist.png', 'no', 'Playlist→' );
+			$w->result( '', '', "Playlists", "Browse by playlist", './images/playlists.png', 'no', 'Playlist→' );
 		}
 		else if (strpos(strtolower("album"),strtolower($query)) !== false)
 		{
@@ -291,7 +291,7 @@ else
 				if (strpos(strtolower($val),strtolower($query)) !== false &&
 					$val != "Alfred Playlist" )
 				{	
-					$w->result( "spotify_mini-spotify-playlist-$val", '', ucfirst($val), "Browse Playlist", './images/playlist.png', 'no', "Playlist→" . $val . "→" );
+					$w->result( "spotify_mini-spotify-playlist-$val", '', ucfirst($val), "Browse Playlist", './images/playlists.png', 'no', "Playlist→" . $val . "→" );
 				}
 			};
 		}
@@ -380,7 +380,7 @@ else
 					{
 						$r = explode(':', $key);
 						$playlist_user = $r[2];
-						$w->result( "spotify_mini-spotify-playlist-$val", '', ucfirst($val), "by " . $playlist_user, './images/playlist.png', 'no', "Playlist→" . $val . "→" );
+						$w->result( "spotify_mini-spotify-playlist-$val", '', ucfirst($val), "by " . $playlist_user, './images/playlists.png', 'no', "Playlist→" . $val . "→" );
 					}
 				};
 			}
@@ -397,7 +397,7 @@ else
 					if (strpos(strtolower($val),strtolower($playlist)) !== false ||
 						strpos(strtolower($playlist_user),strtolower($playlist)) !== false )
 					{	
-						$w->result( "spotify_mini-spotify-playlist-$val", '', ucfirst($val), "by " . $playlist_user, './images/playlist.png', 'no', "Playlist→" . $val . "→" );
+						$w->result( "spotify_mini-spotify-playlist-$val", '', ucfirst($val), "by " . $playlist_user, './images/playlists.png', 'no', "Playlist→" . $val . "→" );
 					}
 				};
 			}
@@ -417,11 +417,11 @@ else
 			{
 				$w->result( "spotify_mini-spotify-alfredplaylist-browse", '', "Browse your Alfred playlist", "browse your alfred playlist",'./images/alfred_playlist.png', 'no', 'Playlist→Alfred Playlist→');
 			
-				$w->result( "spotify_mini-spotify-alfredplaylist-set", '', "Update your Alfred playlist URI", "define the URI of your Alfred playlist",'./images/change_setting.png', 'no', 'Alfred Playlist→Set Alfred Playlist URI→');
+				$w->result( "spotify_mini-spotify-alfredplaylist-set", '', "Update your Alfred playlist URI", "define the URI of your Alfred playlist",'./images/settings.png', 'no', 'Alfred Playlist→Set Alfred Playlist URI→');
 				
 				$w->result( "spotify_mini-spotify-alfredplaylist-refresh", "|||||||" . "refresh_alfred_playlist|" . $alfred_playlist_uri, "Refresh your Alfred playlist", "this will refresh your Alfred playlist",'./images/update.png', 'yes', '');
 				
-				$w->result( "spotify_mini-spotify-alfredplaylist-clear", "|||||||" . "clear_alfred_playlist|" . $alfred_playlist_uri, "Clear your Alfred playlist", "this will clear your Alfred playlist",'./images/clear.png', 'yes', '');
+				$w->result( "spotify_mini-spotify-alfredplaylist-clear", "|||||||" . "clear_alfred_playlist|" . $alfred_playlist_uri, "Clear your Alfred playlist", "this will clear your Alfred playlist",'./images/uncheck.png', 'yes', '');
 			
 			}
 		} //  Alfred Playlist end	
@@ -792,7 +792,7 @@ else
 					{
 						$subtitle = "$subtitle ,⇧ → add playlist to ♫";
 					}
-					$w->result( "spotify_mini-spotify-playlist-$val", "|||" . $key . "||||" . "|" . $alfred_playlist_uri, ucfirst($val) . " by " . $playlist_user, $subtitle, './images/playlist.png', 'yes', '' );
+					$w->result( "spotify_mini-spotify-playlist-$val", "|||" . $key . "||||" . "|" . $alfred_playlist_uri, ucfirst($val) . " by " . $playlist_user, $subtitle, './images/playlists.png', 'yes', '' );
 									
 					if(mb_strlen($track) < 3)
 					{
@@ -846,14 +846,14 @@ else
 			
 			if(mb_strlen($max_results) == 0)
 			{					
-				$w->result( '', '', "Enter the Max Results number (must be greater than 0):", "The number of results has impact on performances", './images/change_setting.png', 'no', '' );
+				$w->result( '', '', "Enter the Max Results number (must be greater than 0):", "The number of results has impact on performances", './images/settings.png', 'no', '' );
 			}
 			else
 			{
 				// max results has been set
 				if(is_numeric($max_results) == true && $max_results > 0)
 				{
-					$w->result( '', "||||||$max_results||", "Max Results will be set to <" . $max_results . ">", "Type enter to validate the Max Results", './images/change_setting.png', 'yes', '' );
+					$w->result( '', "||||||$max_results||", "Max Results will be set to <" . $max_results . ">", "Type enter to validate the Max Results", './images/settings.png', 'yes', '' );
 				}
 				else
 				{
@@ -868,7 +868,7 @@ else
 			
 			if(mb_strlen($alfred_playlist_uri) == 0)
 			{					
-				$w->result( '', '', "Enter the Alfred Spotify URI:", "Create the playlist in Spotify(shall be named <Alfred Playlist>, right click on it and select copy spotify URI", './images/change_setting.png', 'no', '' );
+				$w->result( '', '', "Enter the Alfred Spotify URI:", "Create the playlist in Spotify(shall be named <Alfred Playlist>, right click on it and select copy spotify URI", './images/settings.png', 'no', '' );
 			}
 			else
 			{
@@ -878,7 +878,7 @@ else
 					$playlistName = getPlaylistName($alfred_playlist_uri);
 					if($playlistName == "Alfred Playlist")
 					{
-						$w->result( '', "||||||$alfred_playlist_uri||", "Alfred Playlist URI will be set to <" . $alfred_playlist_uri . ">", "Type enter to validate", './images/change_setting.png', 'yes', '' );
+						$w->result( '', "||||||$alfred_playlist_uri||", "Alfred Playlist URI will be set to <" . $alfred_playlist_uri . ">", "Type enter to validate", './images/settings.png', 'yes', '' );
 					}
 					else
 					{
