@@ -112,6 +112,28 @@ else
 	$is_artworks_active = false;
 }
 
+//
+// Get is_displaymorefrom_active from config
+//
+$ret = $w->get( 'is_displaymorefrom_active', 'settings.plist' );
+
+if ( $ret == false)
+{
+	// is_displaymorefrom_active not set
+	// set it to default
+	$w->set( 'is_displaymorefrom_active', 'true', 'settings.plist' );
+	$ret = 'true';
+}
+
+if ($ret == 'true')
+{
+	$is_displaymorefrom_active = true;
+}
+else
+{
+	$is_displaymorefrom_active = false;
+}
+
 
 //
 // Get max_results from config
@@ -164,17 +186,20 @@ if(mb_strlen($query) < 3 ||
 				$w->result( '', '', "Search for music in your ★ playlist", "Begin typing to search (at least 3 characters)", './images/star.png', 'no', '' );
 			}
 			
-			// get info on current song
-			$command_output = exec("./track_info.sh");
-	
-			if(substr_count( $command_output, '→' ) > 0)
-			{
-				$results = explode('→', $command_output);
-				$currentArtwork = getTrackArtwork($is_artworks_active,$results[4],false);
-				$currentArtistArtwork = getArtistArtwork($is_artworks_active,$results[1],false);
-				$w->result( '', '||||playpause||||', "$results[0]", "$results[2] by $results[1]", ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', '' );
-				$w->result( '', '', "$results[1]", "More from this artist..", $currentArtistArtwork, 'no', $results[1] );
-				$w->result( '', '', "$results[2]", "More from this album..", $currentArtwork, 'no', $results[2] );
+			if($is_displaymorefrom_active == true)
+			{	
+				// get info on current song
+				$command_output = exec("./track_info.sh");
+		
+				if(substr_count( $command_output, '→' ) > 0)
+				{
+					$results = explode('→', $command_output);
+					$currentArtwork = getTrackArtwork($is_artworks_active,$results[4],false);
+					$currentArtistArtwork = getArtistArtwork($is_artworks_active,$results[1],false);
+					$w->result( '', '||||playpause||||', "$results[0]", "$results[2] by $results[1]", ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', '' );
+					$w->result( '', '', "$results[1]", "More from this artist..", $currentArtistArtwork, 'no', $results[1] );
+					$w->result( '', '', "$results[2]", "More from this album..", $currentArtwork, 'no', $results[2] );
+				}
 			}
 			if ($is_alfred_playlist_active == true)
 			{
@@ -269,6 +294,14 @@ if(mb_strlen($query) < 3 ||
 		else
 		{
 			$w->result( '', "|||||||" . "enable_artworks|", "Enable artworks", "Display artworks", './images/check.png', 'yes', '' );
+		}	
+		if ($is_displaymorefrom_active == true)
+		{
+			$w->result( '', "|||||||" . "disable_displaymorefrom|", "Disable \"More from this artist/album\"", "Disable the option which displays more tracks from current artist/album", './images/uncheck.png', 'yes', '' );
+		}
+		else
+		{
+			$w->result( '', "|||||||" . "enable_displaymorefrom|", "Enable \"More from this artist/album\"", "Enable the option which displays more tracks from current artist/album", './images/check.png', 'yes', '' );
 		}			
 	}
 } 
