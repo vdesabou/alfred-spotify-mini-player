@@ -20,7 +20,7 @@ if (file_exists($w->data() . "/library.json"))
 //
 if (!file_exists($w->home() . "/Spotify/spotify-app-miniplayer"))
 {	
-	mkdir($w->home() . "/Spotify");
+	exec("mkdir -p ~/Spotify");
 	symlink($w->path() . "/spotify-app-miniplayer", $w->home() . "/Spotify/spotify-app-miniplayer");
 }
 
