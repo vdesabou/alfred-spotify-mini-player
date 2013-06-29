@@ -147,29 +147,6 @@ function createPlaylists()
 	ini_set('memory_limit', '512M' );
 	
 	//
-	// Create the library_starred_playlist.json
-	//
-	if(!file_exists($w->data() . "/library_starred_playlist.json"))
-	{
-		$array_starred_items = array();
-			
-		if (file_exists($w->data() . "/library.json"))
-		{
-			$json = file_get_contents($w->data() . "/library.json");	
-			$json = json_decode($json,true);
-			
-			foreach ($json as $item) 
-			{	
-				if ( $item['data']['starred'] == true )
-				{
-					array_push( $array_starred_items, $item );
-				}
-			}
-			$w->write( $array_starred_items, 'library_starred_playlist.json' );
-		}
-	}
-
-	//
 	// Create the playlists.json
 	//
 	if(!file_exists($w->data() . "/playlists-tmp.json"))
@@ -288,12 +265,6 @@ function updateLibrary()
 {
 	$w = new Workflows();
 	
-	$created = false;
-	if (file_exists($w->data() . "/library.json"))
-	{
-		$created = true;
-	}
-	
 	putenv('LANG=fr_FR.UTF-8');
 	
 	ini_set('memory_limit', '512M' );
@@ -301,42 +272,34 @@ function updateLibrary()
 	//try to decode it 
 	$json = json_decode(exec('pbpaste'),true);
 	if (json_last_error() === JSON_ERROR_NONE) 
-	{ 		
-		$array_light_library_items = array();
+	{
+		touch($w->data() . "/library.db");
+		
+		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table tracks (starred boolean, popularity int, uri text, album_uri text, artist_uri text, track_name text, album_name text, artist_name text, album_year text)"';
+		exec($sql);
+		$count = 0;
 		foreach ($json as $item) 
-		{	
-			$light_item = array();
-			$light_item['data']['album']['artist']['name'] = str_replace("&apos;","'",str_replace("&amp;","&",$item['data']['album']['artist']['name']));
-			$light_item['data']['album']['name'] = str_replace("&apos;","'",str_replace("&amp;","&",$item['data']['album']['name']));
-			$light_item['data']['name'] = str_replace("&apos;","'",str_replace("&amp;","&",$item['data']['name']));
-			$light_item['data']['album']['artist']['uri'] = $item['data']['album']['artist']['uri'];
-			$light_item['data']['album']['uri'] = $item['data']['album']['uri'];
-			$light_item['data']['uri'] = $item['data']['uri'];
-			$light_item['data']['popularity'] = $item['data']['popularity'];
-			$light_item['data']['starred'] = $item['data']['starred'];
-
-			array_push( $array_light_library_items, $light_item );
+		{				
+			if( $item['data']['starred'] == true )
+			{
+				$starred = 1;
+			}
+			else
+			{
+				$starred = 0;				
+			}
+			
+			$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into tracks values ('. $starred .','.$item['data']['popularity'].',\"'.$item['data']['uri'].'\",\"'.$item['data']['album']['uri'].'\",\"'.$item['data']['album']['artist']['uri'].'\",\"'.str_replace("&apos;","'",str_replace("&amp;","&",$item['data']['name'])).'\",\"'.str_replace("&apos;","'",str_replace("&amp;","&",$item['data']['album']['name'])).'\",\"'.str_replace("&apos;","'",str_replace("&amp;","&",$item['data']['album']['artist']['name'])).'\"'.','.$item['data']['album']['year'].')"';
+			exec($sql);
+			$count++;	
 		}
 		
-		$w->write( $array_light_library_items, $w->data() . "/library.json" );
-		
-		if($created == true)
-		{
-			echo "Library has been updated";
-		}
-		else
-		{
-			echo "Library has been created";
-		}
+		echo "Library has been created (" . $count . " tracks)";
 	} 
 	else 
 	{ 
 	    //it's not JSON. Log error
 	    echo "ERROR: JSON data is not valid!";
-	    if(file_exists($w->data() . "/library.json"))
-	    {
-	    	unlink($w->data() . "/library.json");
-	    }
 	}	
 }
 function clear()
@@ -377,22 +340,32 @@ function downloadAllArtworks()
 	# increase memory_limit
 	ini_set('memory_limit', '512M' );
 		
-	if (file_exists($w->data() . "/library.json"))
+	if (file_exists($w->data() . "/library.db"))
 	{
 	
-		$json = file_get_contents($w->data() . "/library.json");	
-		$json = json_decode($json,true);
+		if($all_playlists == false)
+		{
+			$getTracks = "select * from tracks where starred=1";
+		}
+		else
+		{
+			$getTracks = "select * from tracks where starred=0";
+		}
 		
-		foreach ($json as $item) 
-		{	
-			if ( ($all_playlists == false && $item['data']['starred'] == true) ||
-				$all_playlists == true )
-			{
-				getTrackArtwork($item['data']['uri'],true);
-				getArtistArtwork($item['data']['album']['artist']['name'],true);
-				getTrackArtwork($item['data']['album']['uri'],true);
-			}
-		};
+		
+		$dbfile = $w->data() . "/library.db";
+		exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\"", $tracks);
+	
+		foreach($tracks as $track):
+			if($currentResultNumber > $max_results)
+				break;
+			$track = explode("	",$track);
+
+			getTrackArtwork(true,$track[2],true);
+			getArtistArtwork(true,$track[7],true);
+			getTrackArtwork(true,$track[3],true);
+
+		endforeach;
 	}
 	
 	//		
@@ -419,7 +392,7 @@ function downloadAllArtworks()
 					
 				foreach ($json_playlist as $item) 
 				{	
-					getTrackArtwork($item[2],true);
+					getTrackArtwork(true,$item[2],true);
 				}						
 			}	
 		}
