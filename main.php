@@ -374,6 +374,7 @@ else
 				break;
 			$track = explode("	",$track);
 			
+/*
 			// Figure out search rank
 			$popularity = $track[1];
 			$popularity/=100;
@@ -381,13 +382,14 @@ else
 			// Convert popularity to stars
 			$stars = floor($popularity * 5);
 			$starString = str_repeat("⭑", $stars) . str_repeat("⭒", 5 - $stars);
+*/
 				
 			$subtitle = $track[6] . "  ⌥ (play album) ⌘ (play artist)";
 			if($is_alfred_playlist_active ==true)
 			{
 				$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
 			}
-			$subtitle = "$starString $subtitle";
+/* 			$subtitle = "$starString $subtitle"; */
 			
 			if(checkIfResultAlreadyThere($w->results(),ucfirst($track[7]) . " - " . $track[5]) == false)
 			{					
@@ -668,6 +670,7 @@ else
 						break;
 					$track = explode("	",$track);
 					
+/*
 					// Figure out search rank
 					$popularity = $track[1];
 					$popularity/=100;
@@ -675,13 +678,14 @@ else
 					// Convert popularity to stars
 					$stars = floor($popularity * 5);
 					$starString = str_repeat("⭑", $stars) . str_repeat("⭒", 5 - $stars);
+*/
 						
 					$subtitle = $track[6] . "  ⌥ (play album) ⌘ (play artist)";
 					if($is_alfred_playlist_active ==true)
 					{
 						$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
 					}
-					$subtitle = "$starString $subtitle";
+/* 					$subtitle = "$starString $subtitle"; */
 
 					if(checkIfResultAlreadyThere($w->results(),ucfirst($track[7]) . " - " . $track[5]) == false)
 					{	
@@ -719,6 +723,7 @@ else
 						break;
 					$track = explode("	",$track);
 					
+/*
 					// Figure out search rank
 					$popularity = $track[1];
 					$popularity/=100;
@@ -726,13 +731,14 @@ else
 					// Convert popularity to stars
 					$stars = floor($popularity * 5);
 					$starString = str_repeat("⭑", $stars) . str_repeat("⭒", 5 - $stars);
+*/
 						
 					$subtitle = $track[6] . "  ⌥ (play album) ⌘ (play artist)";
 					if($is_alfred_playlist_active ==true)
 					{
 						$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
 					}
-					$subtitle = "$starString $subtitle";
+/* 					$subtitle = "$starString $subtitle"; */
 
 					if(checkIfResultAlreadyThere($w->results(),ucfirst($track[7]) . " - " . $track[5]) == false)
 					{								
@@ -780,6 +786,7 @@ else
 						break;
 					$track = explode("	",$track);
 					
+/*
 					// Figure out search rank
 					$popularity = $track[1];
 					$popularity/=100;
@@ -787,13 +794,14 @@ else
 					// Convert popularity to stars
 					$stars = floor($popularity * 5);
 					$starString = str_repeat("⭑", $stars) . str_repeat("⭒", 5 - $stars);
+*/
 						
 					$subtitle = $track[6] . "  ⌥ (play album) ⌘ (play artist)";
 					if($is_alfred_playlist_active ==true)
 					{
 						$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
 					}
-					$subtitle = "$starString $subtitle";
+/* 					$subtitle = "$starString $subtitle"; */
 
 					if(checkIfResultAlreadyThere($w->results(),ucfirst($track[7]) . " - " . $track[5]) == false)
 					{	
@@ -831,6 +839,7 @@ else
 						break;
 					$track = explode("	",$track);
 					
+/*
 					// Figure out search rank
 					$popularity = $track[1];
 					$popularity/=100;
@@ -838,13 +847,14 @@ else
 					// Convert popularity to stars
 					$stars = floor($popularity * 5);
 					$starString = str_repeat("⭑", $stars) . str_repeat("⭒", 5 - $stars);
+*/
 						
 					$subtitle = $track[6] . "  ⌥ (play album) ⌘ (play artist)";
 					if($is_alfred_playlist_active ==true)
 					{
 						$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
 					}
-					$subtitle = "$starString $subtitle";
+/* 					$subtitle = "$starString $subtitle"; */
 
 					if(checkIfResultAlreadyThere($w->results(),ucfirst($track[7]) . " - " . $track[5]) == false)
 					{	
@@ -919,6 +929,7 @@ else
 								break;
 							$track = explode("	",$track);
 							
+/*
 							// Figure out search rank
 							$popularity = $track[1];
 							$popularity/=100;
@@ -926,13 +937,14 @@ else
 							// Convert popularity to stars
 							$stars = floor($popularity * 5);
 							$starString = str_repeat("⭑", $stars) . str_repeat("⭒", 5 - $stars);
+*/
 								
 							$subtitle = $track[6] . "  ⌥ (play album) ⌘ (play artist)";
 							if($is_alfred_playlist_active ==true)
 							{
 								$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
 							}
-							$subtitle = "$starString $subtitle";
+/* 							$subtitle = "$starString $subtitle"; */
 		
 							if(checkIfResultAlreadyThere($w->results(),ucfirst($track[7]) . " - " . $track[5]) == false)
 							{	
@@ -954,6 +966,7 @@ else
 								break;
 							$track = explode("	",$track);
 							
+/*
 							// Figure out search rank
 							$popularity = $track[1];
 							$popularity/=100;
@@ -961,13 +974,14 @@ else
 							// Convert popularity to stars
 							$stars = floor($popularity * 5);
 							$starString = str_repeat("⭑", $stars) . str_repeat("⭒", 5 - $stars);
+*/
 								
 							$subtitle = $track[6] . "  ⌥ (play album) ⌘ (play artist)";
 							if($is_alfred_playlist_active ==true)
 							{
 								$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
 							}
-							$subtitle = "$starString $subtitle";
+/* 							$subtitle = "$starString $subtitle"; */
 		
 							if(checkIfResultAlreadyThere($w->results(),ucfirst($track[7]) . " - " . $track[5]) == false)
 							{	
