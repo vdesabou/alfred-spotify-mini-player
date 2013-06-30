@@ -382,10 +382,10 @@ else
 			$stars = floor($popularity * 5);
 			$starString = str_repeat("⭑", $stars) . str_repeat("⭒", 5 - $stars);
 				
-			$subtitle = $track[6] . " - ⌥ → ▶ album, ⌘ →▶ artist";
+			$subtitle = $track[6] . "  ⌥ (play album) ⌘ (play artist)";
 			if($is_alfred_playlist_active ==true)
 			{
-				$subtitle = "$subtitle ,fn → add track to ♫, ⇧ → add album to ♫";
+				$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
 			}
 			$subtitle = "$starString $subtitle";
 			
@@ -581,7 +581,7 @@ else
 					
 					if(checkIfResultAlreadyThere($w->results(),ucfirst($track[6])) == false)
 					{						
-						$w->result( "spotify_mini-spotify-album" . $track[6], '', ucfirst($track[6]), "by " . $track[7] . " (" . $track[8] . ")", getTrackArtwork($w,$is_artworks_active,$track[3],true), 'no', "Album→" . $track[6] . "→" );
+						$w->result( "spotify_mini-spotify-album" . $track[6], '', ucfirst($track[6]), "by " . $track[7] . " (" . $track[8] . ")", getAlbumArtwork($w,$is_artworks_active,$track[3],true), 'no', "Album→" . $track[6] . "→" );
 						
 						$currentResultNumber++;
 					}
@@ -591,11 +591,11 @@ else
 			{
 				if($all_playlists == false)
 				{
-					$getTracks = "select * from tracks where starred=1 and album_name like '%".$album."%'"." limit ".$max_results." limit ".$max_results;
+					$getTracks = "select * from tracks where starred=1 and album_name like '%".$album."%'"." limit ".$max_results;
 				}
 				else
 				{
-					$getTracks = "select * from tracks where album_name like '%".$album."%'"." limit ".$max_results." limit ".$max_results;
+					$getTracks = "select * from tracks where album_name like '%".$album."%'"." limit ".$max_results;
 				}
 				
 				
@@ -610,7 +610,7 @@ else
 					
 					if(checkIfResultAlreadyThere($w->results(),ucfirst($track[6])) == false)
 					{								
-						$w->result( "spotify_mini-spotify-album" . $track[6], '', ucfirst($track[6]), "by " . $track[7] . " (" . $track[8] . ")", getTrackArtwork($w,$is_artworks_active,$track[3],true), 'no', "Album→" . $track[6] . "→" );
+						$w->result( "spotify_mini-spotify-album" . $track[6], '', ucfirst($track[6]), "by " . $track[7] . " (" . $track[8] . ")", getAlbumArtwork($w,$is_artworks_active,$track[3],true), 'no', "Album→" . $track[6] . "→" );
 						
 						$currentResultNumber++;
 					}
@@ -676,10 +676,10 @@ else
 					$stars = floor($popularity * 5);
 					$starString = str_repeat("⭑", $stars) . str_repeat("⭒", 5 - $stars);
 						
-					$subtitle = $track[6] . " - ⌥ → ▶ album, ⌘ →▶ artist";
+					$subtitle = $track[6] . "  ⌥ (play album) ⌘ (play artist)";
 					if($is_alfred_playlist_active ==true)
 					{
-						$subtitle = "$subtitle ,fn → add track to ♫, ⇧ → add album to ♫";
+						$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
 					}
 					$subtitle = "$starString $subtitle";
 
@@ -727,10 +727,10 @@ else
 					$stars = floor($popularity * 5);
 					$starString = str_repeat("⭑", $stars) . str_repeat("⭒", 5 - $stars);
 						
-					$subtitle = $track[6] . " - ⌥ → ▶ album, ⌘ →▶ artist";
+					$subtitle = $track[6] . "  ⌥ (play album) ⌘ (play artist)";
 					if($is_alfred_playlist_active ==true)
 					{
-						$subtitle = "$subtitle ,fn → add track to ♫, ⇧ → add album to ♫";
+						$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
 					}
 					$subtitle = "$starString $subtitle";
 
@@ -788,10 +788,10 @@ else
 					$stars = floor($popularity * 5);
 					$starString = str_repeat("⭑", $stars) . str_repeat("⭒", 5 - $stars);
 						
-					$subtitle = $track[6] . " - ⌥ → ▶ album, ⌘ →▶ artist";
+					$subtitle = $track[6] . "  ⌥ (play album) ⌘ (play artist)";
 					if($is_alfred_playlist_active ==true)
 					{
-						$subtitle = "$subtitle ,fn → add track to ♫, ⇧ → add album to ♫";
+						$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
 					}
 					$subtitle = "$starString $subtitle";
 
@@ -839,10 +839,10 @@ else
 					$stars = floor($popularity * 5);
 					$starString = str_repeat("⭑", $stars) . str_repeat("⭒", 5 - $stars);
 						
-					$subtitle = $track[6] . " - ⌥ → ▶ album, ⌘ →▶ artist";
+					$subtitle = $track[6] . "  ⌥ (play album) ⌘ (play artist)";
 					if($is_alfred_playlist_active ==true)
 					{
-						$subtitle = "$subtitle ,fn → add track to ♫, ⇧ → add album to ♫";
+						$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
 					}
 					$subtitle = "$starString $subtitle";
 
@@ -927,10 +927,10 @@ else
 							$stars = floor($popularity * 5);
 							$starString = str_repeat("⭑", $stars) . str_repeat("⭒", 5 - $stars);
 								
-							$subtitle = $track[6] . " - ⌥ → ▶ album, ⌘ →▶ artist";
+							$subtitle = $track[6] . "  ⌥ (play album) ⌘ (play artist)";
 							if($is_alfred_playlist_active ==true)
 							{
-								$subtitle = "$subtitle ,fn → add track to ♫, ⇧ → add album to ♫";
+								$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
 							}
 							$subtitle = "$starString $subtitle";
 		
@@ -962,10 +962,10 @@ else
 							$stars = floor($popularity * 5);
 							$starString = str_repeat("⭑", $stars) . str_repeat("⭒", 5 - $stars);
 								
-							$subtitle = $track[6] . " - ⌥ → ▶ album, ⌘ →▶ artist";
+							$subtitle = $track[6] . "  ⌥ (play album) ⌘ (play artist)";
 							if($is_alfred_playlist_active ==true)
 							{
-								$subtitle = "$subtitle ,fn → add track to ♫, ⇧ → add album to ♫";
+								$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
 							}
 							$subtitle = "$starString $subtitle";
 		
