@@ -13,26 +13,24 @@ function checkIfResultAlreadyThere($results,$title) {
 	return false;
 }
 
-function getTrackArtwork($is_artworks_active,$spotifyURL,$fetchIfNotPresent) {
+function getTrackArtwork($w,$is_artworks_active,$spotifyURL,$fetchIfNotPresent) {
 
 	if($is_artworks_active == false)
 		return "images/default_track.png";
 		
 	$hrefs = explode(':', $spotifyURL);
-	$w = new Workflows();
 
 	if ( !file_exists( $w->data() . "/artwork" ) ):
 		exec("mkdir '".$w->data()."/artwork'");
 	endif;
 				
 	$currentArtwork = $w->data() . "/artwork/$hrefs[2].png";
-	
-	
-	if (!file_exists($currentArtwork)) 
+	 	
+	if (!is_file($currentArtwork)) 
 	{
 		if($fetchIfNotPresent == true)
 		{
-			$artwork = getTrackArtworkURL($hrefs[1], $hrefs[2]);
+			$artwork = getTrackArtworkURL($w,$hrefs[1], $hrefs[2]);
 
 			// if return 0, it is a 404 error, no need to fetch
 			if (!empty($artwork) || (is_numeric($artwork) && $artwork != 0)) {
@@ -67,13 +65,12 @@ function getTrackArtwork($is_artworks_active,$spotifyURL,$fetchIfNotPresent) {
 	}
 }
 
-function getArtistArtwork($is_artworks_active,$artist,$fetchIfNotPresent) {
+function getArtistArtwork($w,$is_artworks_active,$artist,$fetchIfNotPresent) {
 	
 	if($is_artworks_active == false)
 		return "images/default_artist.png";
 		
 	$parsedArtist = urlencode($artist);
-	$w = new Workflows();
 
 	if ( !file_exists( $w->data() . "/artwork" ) ):
 		exec("mkdir '".$w->data()."/artwork'");
@@ -81,11 +78,13 @@ function getArtistArtwork($is_artworks_active,$artist,$fetchIfNotPresent) {
 		
 	$currentArtwork = $w->data() . "/artwork/$parsedArtist.png";
 	
-	if (!file_exists($currentArtwork)) 
+	return $currentArtwork;
+	
+	if (!is_file($currentArtwork)) 
 	{
 		if($fetchIfNotPresent == true)
 		{
-			$artwork = getArtistArtworkURL($artist);
+			$artwork = getArtistArtworkURL($w,$artist);
 			// if return 0, it is a 404 error, no need to fetch
 			if (!empty($artwork) || (is_numeric($artwork) && $artwork != 0)) {
 				$fp = fopen ($currentArtwork, 'w+');
@@ -118,7 +117,7 @@ function getArtistArtwork($is_artworks_active,$artist,$fetchIfNotPresent) {
 	}
 }
 
-function getTrackArtworkURL($type, $id)
+function getTrackArtworkURL($w,$type, $id)
 {
 	$w = new Workflows();
 	$html = $w->request( "http://open.spotify.com/$type/$id" );
@@ -131,7 +130,7 @@ function getTrackArtworkURL($type, $id)
 	return 0;
 }
 
-function getArtistArtworkURL($artist) {
+function getArtistArtworkURL($w,$artist) {
 	$parsedArtist = urlencode($artist);
 	$w = new Workflows();
 	$html = $w->request( "http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&api_key=49d58890a60114e8fdfc63cbcf75d6c5&artist=$parsedArtist&format=json");
@@ -207,11 +206,25 @@ function createPlaylists()
 			$completeUri = $uri;
 			
 			$results = explode(':', $uri);
-			$playlist_name = $results[4];
-			$get_context = stream_context_create(array('http'=>array('timeout'=>5)));
+			
+			if($results[4])
+			{
+				$playlist_name = $results[4];
+				
+			}elseif ($results[3] == "starred")
+			{
+				$playlist_name = "starred";
+			}
+			else
+			{
+				continue;
+			}
+
+			$get_context = stream_context_create(array('http'=>array('timeout'=>15)));
 			@$get = file_get_contents('https://embed.spotify.com/?uri=' . $uri, false, $get_context);
 		
-			$array_playlist_tracks = array();
+			$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table \"playlist_' . $playlist_name . '\" (starred boolean, popularity int, uri text, album_uri text, artist_uri text, track_name text, album_name text, artist_name text, album_year text)"';
+			exec($sql);
 			
 			if(empty($get))
 			{
@@ -225,20 +238,31 @@ function createPlaylists()
 				preg_match_all("'<li \b[^>]* data-track=\"(.*?)\" \b[^>]*>'si", $get, $uris);
 		
 				if($name[1] && $artists[1] && $titles[1] && $uris[1])
-				{
+				{					
 					$name = strstr($name[1][0], ' by', true);
 					
 					$n = 0;
 		
 					foreach($uris[1] as $uri)
 					{
-						$artist = $artists[1][$n];
-						$title = ltrim(substr($titles[1][$n], strpos($titles[1][$n], ' ')));
 						$uri = 'spotify:track:' . $uri;
 						
-						$item = array ($artist,$title,$uri);
-						array_push( $array_playlist_tracks, $item );
-		
+						$artist = $artists[1][$n];
+						$title = ltrim(substr($titles[1][$n], strpos($titles[1][$n], ' ')));						
+
+						$getTrack = "select * from tracks where uri='".$uri."'";				
+						$dbfile = $w->data() . "/library.db";
+						$tracks = array();
+						exec("sqlite3 -separator '	' \"$dbfile\" \"$getTrack\"", $tracks);
+						
+						foreach($tracks as $track):
+							$track = explode("	",$track);
+
+							$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into \"playlist_' . $playlist_name . '\" values ('. $track[0] .','.$track[1] .',\"'.$track[2] .'\",\"'.$track[3] .'\",\"'.$track[4] .'\",\"'.$track[5] .'\",\"'.$track[6] .'\",\"'.$track[7] .'\",'.$track[8] .')"';
+
+							exec($sql);
+						endforeach;
+			
 						$n++;
 					}
 				}
@@ -251,7 +275,6 @@ function createPlaylists()
 			if($no_match == false)
 			{
 				$playlist_array[$completeUri] = str_replace("&apos;","'",str_replace("&amp;","&",$name));
-				$w->write( $array_playlist_tracks, 'playlist_' . $playlist_name . '.json' );
 			}
 		};
 		
@@ -289,7 +312,7 @@ function updateLibrary()
 				$starred = 0;				
 			}
 			
-			$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into tracks values ('. $starred .','.$item['data']['popularity'].',\"'.$item['data']['uri'].'\",\"'.$item['data']['album']['uri'].'\",\"'.$item['data']['album']['artist']['uri'].'\",\"'.str_replace("&apos;","'",str_replace("&amp;","&",$item['data']['name'])).'\",\"'.str_replace("&apos;","'",str_replace("&amp;","&",$item['data']['album']['name'])).'\",\"'.str_replace("&apos;","'",str_replace("&amp;","&",$item['data']['album']['artist']['name'])).'\"'.','.$item['data']['album']['year'].')"';
+			$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into tracks values ('. $starred .','.$item['data']['popularity'].',\"'.$item['data']['uri'].'\",\"'.$item['data']['album']['uri'].'\",\"'.$item['data']['album']['artist']['uri'].'\",\"'.str_replace("`","\`",str_replace("&apos;","'",str_replace("&amp;","&",$item['data']['name']))).'\",\"'.str_replace("`","\`",str_replace("&apos;","'",str_replace("&amp;","&",$item['data']['album']['name']))).'\",\"'.str_replace("`","\`",str_replace("&apos;","'",str_replace("&amp;","&",$item['data']['album']['artist']['name']))).'\"'.','.$item['data']['album']['year'].')"';
 			exec($sql);
 			$count++;	
 		}
@@ -336,9 +359,6 @@ function downloadAllArtworks()
 	{
 		$all_playlists = false;
 	}
-	
-	# increase memory_limit
-	ini_set('memory_limit', '512M' );
 		
 	if (file_exists($w->data() . "/library.db"))
 	{
@@ -349,7 +369,7 @@ function downloadAllArtworks()
 		}
 		else
 		{
-			$getTracks = "select * from tracks where starred=0";
+			$getTracks = "select * from tracks";
 		}
 		
 		
@@ -378,23 +398,33 @@ function downloadAllArtworks()
 		$json = file_get_contents($w->data() . "/playlists.json");
 		$json = json_decode($json,true);
 		
-		$playlist_file = "nonexistant";
 		foreach ($json as $key => $val) 
 		{
-			$res = explode(':', $key);
-			$playlist_name = $res[4];
-			$playlist_file = 'playlist_' . $playlist_name . '.json';
-			
-			if(file_exists($w->data() . "/" . $playlist_file))
+			$results = explode(':', $key);
+
+			if($results[4])
 			{
-				$json_playlist = file_get_contents($w->data() . "/" . $playlist_file);
-				$json_playlist = json_decode($json_playlist,true);	
-					
-				foreach ($json_playlist as $item) 
-				{	
-					getTrackArtwork(true,$item[2],true);
-				}						
-			}	
+				$playlist_name = $results[4];
+				
+			}elseif ($results[3] == "starred")
+			{
+				$playlist_name = "starred";
+			}
+			else
+			{
+				continue;
+			}
+			
+			$getTracks = "select * from \"playlist_" . $playlist_name . "\"";
+			
+			$dbfile = $w->data() . "/library.db";
+			exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\"", $tracks);
+			
+			foreach($tracks as $track):
+				$track = explode("	",$track);
+				
+				getTrackArtwork(true,$track[2],true);
+			endforeach;
 		}
 	}			
 	

@@ -188,8 +188,8 @@ if(mb_strlen($query) < 3 ||
 				if(substr_count( $command_output, '→' ) > 0)
 				{
 					$results = explode('→', $command_output);
-					$currentArtwork = getTrackArtwork($is_artworks_active,$results[4],false);
-					$currentArtistArtwork = getArtistArtwork($is_artworks_active,$results[1],false);
+					$currentArtwork = getTrackArtwork($w,$is_artworks_active,$results[4],false);
+					$currentArtistArtwork = getArtistArtwork($w,$is_artworks_active,$results[1],false);
 					$w->result( '', '||||playpause||||', "$results[0]", "$results[2] by $results[1]", ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', '' );
 					$w->result( '', '', "$results[1]", "More from this artist..", $currentArtistArtwork, 'no', $results[1] );
 					$w->result( '', '', "$results[2]", "More from this album..", $currentArtwork, 'no', $results[2] );
@@ -361,7 +361,7 @@ else
 		}
 		else
 		{
-			$getTracks = "select * from tracks where starred=0 and (artist_name like '%".$query."%' or album_name like '%".$query."%' or track_name like '%".$query."%')";
+			$getTracks = "select * from tracks where artist_name like '%".$query."%' or album_name like '%".$query."%' or track_name like '%".$query."%'";
 		}
 		
 		
@@ -391,7 +391,7 @@ else
 			
 			if(checkIfResultAlreadyThere($w->results(),ucfirst($track[7]) . " - " . $track[5]) == false)
 			{					
-				$w->result( "spotify_mini-spotify-track" . $track[2], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri, ucfirst($track[7]) . " - " . $track[5], $subtitle, getTrackArtwork($is_artworks_active,$track[2],true), 'yes', '' );
+				$w->result( "spotify_mini-spotify-track" . $track[2], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri, ucfirst($track[7]) . " - " . $track[5], $subtitle, getTrackArtwork($w,$is_artworks_active,$track[2],true), 'yes', '' );
 			}
 			$currentResultNumber++;
 		endforeach;
@@ -492,7 +492,7 @@ else
 				}
 				else
 				{
-					$getTracks = "select * from tracks where starred=0";
+					$getTracks = "select * from tracks";
 				}
 				
 				
@@ -508,7 +508,7 @@ else
 					
 					if(checkIfResultAlreadyThere($w->results(),ucfirst($track[7])) == false)
 					{													
-						$w->result( "spotify_mini-spotify-artist-" . $track[7], '', ucfirst($track[7]), "Get tracks from this artist", getArtistArtwork($is_artworks_active,$track[7],true), 'no', "Artist→" . $track[7] . "→" );
+						$w->result( "spotify_mini-spotify-artist-" . $track[7], '', ucfirst($track[7]), "Get tracks from this artist", getArtistArtwork($w,$is_artworks_active,$track[7],true), 'no', "Artist→" . $track[7] . "→" );
 						
 						$currentResultNumber++;
 					}
@@ -522,7 +522,7 @@ else
 				}
 				else
 				{
-					$getTracks = "select * from tracks where starred=0 and artist_name like '%".$artist."%'";
+					$getTracks = "select * from tracks where artist_name like '%".$artist."%'";
 				}
 				
 				
@@ -537,7 +537,7 @@ else
 					
 					if(checkIfResultAlreadyThere($w->results(),ucfirst($track[7])) == false)
 					{									
-						$w->result( "spotify_mini-spotify-artist-" . $track[7], '', ucfirst($track[7]), "Get tracks from this artist", getArtistArtwork($is_artworks_active,$track[7],true), 'no', "Artist→" . $track[7] . "→" );
+						$w->result( "spotify_mini-spotify-artist-" . $track[7], '', ucfirst($track[7]), "Get tracks from this artist", getArtistArtwork($w,$is_artworks_active,$track[7],true), 'no', "Artist→" . $track[7] . "→" );
 						
 						$currentResultNumber++;
 					}
@@ -565,7 +565,7 @@ else
 				}
 				else
 				{
-					$getTracks = "select * from tracks where starred=0";
+					$getTracks = "select * from tracks";
 				}
 				
 				
@@ -581,7 +581,7 @@ else
 					
 					if(checkIfResultAlreadyThere($w->results(),ucfirst($track[6])) == false)
 					{						
-						$w->result( "spotify_mini-spotify-album" . $track[6], '', ucfirst($track[6]), "by " . $track[7] . " (" . $track[8] . ")", getTrackArtwork($is_artworks_active,$track[3],true), 'no', "Album→" . $track[6] . "→" );
+						$w->result( "spotify_mini-spotify-album" . $track[6], '', ucfirst($track[6]), "by " . $track[7] . " (" . $track[8] . ")", getTrackArtwork($w,$is_artworks_active,$track[3],true), 'no', "Album→" . $track[6] . "→" );
 						
 						$currentResultNumber++;
 					}
@@ -595,7 +595,7 @@ else
 				}
 				else
 				{
-					$getTracks = "select * from tracks where starred=0 and album_name like '%".$album."%'";
+					$getTracks = "select * from tracks where album_name like '%".$album."%'";
 				}
 				
 				
@@ -610,7 +610,7 @@ else
 					
 					if(checkIfResultAlreadyThere($w->results(),ucfirst($track[6])) == false)
 					{								
-						$w->result( "spotify_mini-spotify-album" . $track[6], '', ucfirst($track[6]), "by " . $track[7] . " (" . $track[8] . ")", getTrackArtwork($is_artworks_active,$track[3],true), 'no', "Album→" . $track[6] . "→" );
+						$w->result( "spotify_mini-spotify-album" . $track[6], '', ucfirst($track[6]), "by " . $track[7] . " (" . $track[8] . ")", getTrackArtwork($w,$is_artworks_active,$track[3],true), 'no', "Album→" . $track[6] . "→" );
 						
 						$currentResultNumber++;
 					}
@@ -655,7 +655,7 @@ else
 				}
 				else
 				{
-					$getTracks = "select * from tracks where starred=0 and artist_name='".$artist."'";
+					$getTracks = "select * from tracks where artist_name='".$artist."'";
 				}
 				
 				
@@ -685,7 +685,7 @@ else
 
 					if(checkIfResultAlreadyThere($w->results(),ucfirst($track[7]) . " - " . $track[5]) == false)
 					{	
-						$w->result( "spotify_mini-spotify-track-" . $track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri, ucfirst($track[7]) . " - " . $track[5], $subtitle, getTrackArtwork($is_artworks_active,$track[2],true), 'yes', '' );
+						$w->result( "spotify_mini-spotify-track-" . $track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri, ucfirst($track[7]) . " - " . $track[5], $subtitle, getTrackArtwork($w,$is_artworks_active,$track[2],true), 'yes', '' );
 					}
 					if($artist_uri == "")
 						$artist_uri = $track[4];
@@ -706,7 +706,7 @@ else
 				}
 				else
 				{
-					$getTracks = "select * from tracks where starred=0 and (artist_name='".$artist."' and track_name like '%".$track."%')";
+					$getTracks = "select * from tracks where artist_name='".$artist."' and track_name like '%".$track."%'";
 				}
 				
 				
@@ -736,7 +736,7 @@ else
 
 					if(checkIfResultAlreadyThere($w->results(),ucfirst($track[7]) . " - " . $track[5]) == false)
 					{								
-						$w->result( "spotify_mini-spotify-track-" . $track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri, ucfirst($track[7]) . " - " . $track[5], $subtitle, getTrackArtwork($is_artworks_active,$track[2],true), 'yes', '' );
+						$w->result( "spotify_mini-spotify-track-" . $track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri, ucfirst($track[7]) . " - " . $track[5], $subtitle, getTrackArtwork($w,$is_artworks_active,$track[2],true), 'yes', '' );
 					}
 					$currentResultNumber++;
 				endforeach;
@@ -767,7 +767,7 @@ else
 				}
 				else
 				{
-					$getTracks = "select * from tracks where starred=0 and album_name='".$album."'";
+					$getTracks = "select * from tracks where album_name='".$album."'";
 				}
 				
 				
@@ -797,7 +797,7 @@ else
 
 					if(checkIfResultAlreadyThere($w->results(),ucfirst($track[7]) . " - " . $track[5]) == false)
 					{	
-						$w->result( "spotify_mini-spotify-track-" . $track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri, ucfirst($track[7]) . " - " . $track[5], $subtitle, getTrackArtwork($is_artworks_active,$track[2],true), 'yes', '' );
+						$w->result( "spotify_mini-spotify-track-" . $track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri, ucfirst($track[7]) . " - " . $track[5], $subtitle, getTrackArtwork($w,$is_artworks_active,$track[2],true), 'yes', '' );
 					}
 					if($album_uri == "")
 						$album_uri = $track[3];
@@ -818,7 +818,7 @@ else
 				}
 				else
 				{
-					$getTracks = "select * from tracks where starred=0 and (album_name='".$album."' and track_name like '%".$track."%')";
+					$getTracks = "select * from tracks where album_name='".$album."' and track_name like '%".$track."%'";
 				}
 				
 				
@@ -848,7 +848,7 @@ else
 
 					if(checkIfResultAlreadyThere($w->results(),ucfirst($track[7]) . " - " . $track[5]) == false)
 					{	
-						$w->result( "spotify_mini-spotify-track-" . $track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri, ucfirst($track[7]) . " - " . $track[5], $subtitle, getTrackArtwork($is_artworks_active,$track[2],true), 'yes', '' );
+						$w->result( "spotify_mini-spotify-track-" . $track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri, ucfirst($track[7]) . " - " . $track[5], $subtitle, getTrackArtwork($w,$is_artworks_active,$track[2],true), 'yes', '' );
 					}
 					$currentResultNumber++;
 				endforeach;
@@ -867,7 +867,7 @@ else
 			// display tracks for selected playlist
 			//
 			$playlist=$words[1];
-			$track=$words[2];
+			$thetrack=$words[2];
 			
 			// retrieve playlist uri from playlist name
 			if(file_exists($w->data() . "/playlists.json"))
@@ -875,7 +875,6 @@ else
 				$json = file_get_contents($w->data() . "/playlists.json");
 				$json = json_decode($json,true);
 				
-				$playlist_file = "nonexistant";
 				foreach ($json as $key => $val) 
 				{
 					if (strpos(str_replace(")","\)",str_replace("(","\(",strtolower($val))),strtolower($playlist)) !== false)
@@ -883,16 +882,19 @@ else
 						$res = explode(':', $key);
 						$playlist_name = $res[4];
 						$playlist_user = $res[2];
-						$playlist_file = 'playlist_' . $playlist_name . '.json';
+						if($res[4])
+						{
+							$playlist_name = $res[4];
+						}elseif ($res[3] == "starred")
+						{
+							$playlist_name = "starred";
+						}
 						break;
 					}
 				}
 				
-				if(file_exists($w->data() . "/" . $playlist_file))
-				{
-					$json = file_get_contents($w->data() . "/" . $playlist_file);
-					$json = json_decode($json,true);	
-
+				if($playlist_name)
+				{	
 					$subtitle = "Launch Playlist";
 					if($is_alfred_playlist_active ==true &&
 						$val != "Alfred Playlist")
@@ -901,46 +903,83 @@ else
 					}
 					$w->result( "spotify_mini-spotify-playlist-$val", "|||" . $key . "||||" . "|" . $alfred_playlist_uri, ucfirst($val) . " by " . $playlist_user, $subtitle, './images/playlists.png', 'yes', '' );
 									
-					if(mb_strlen($track) < 3)
+					if(mb_strlen($thetrack) < 3)
 					{
 						//
 						// display all tracks from playlist
 						//
+						$getTracks = "select * from \"playlist_" . $playlist_name . "\"";
+						
+						$dbfile = $w->data() . "/library.db";
+						exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\"", $tracks);
+						
 						$currentResultNumber = 1;
-						foreach ($json as $item) 
-						{	
+						foreach($tracks as $track):
 							if($currentResultNumber > $max_results)
 								break;
+							$track = explode("	",$track);
+							
+							// Figure out search rank
+							$popularity = $track[1];
+							$popularity/=100;
+							
+							// Convert popularity to stars
+							$stars = floor($popularity * 5);
+							$starString = str_repeat("⭑", $stars) . str_repeat("⭒", 5 - $stars);
+								
+							$subtitle = $track[6] . " - ⌥ → ▶ album, ⌘ →▶ artist";
+							if($is_alfred_playlist_active ==true)
+							{
+								$subtitle = "$subtitle ,fn → add track to ♫, ⇧ → add album to ♫";
+							}
+							$subtitle = "$starString $subtitle";
 		
-							$w->result( "spotify_mini-spotify-" . $playlist . "-" . $item[1], $item[2] . "|||||||" . "|" . $alfred_playlist_uri, ucfirst($item[0]) . " - " . $item[1], "▶ track", getTrackArtwork($is_artworks_active,$item[2],true), 'yes', '' );
-							$currentResultNumber++;		
-						}
-						$w->result( '', "||||activate (open location \"spotify:search:" . $playlist . "\")||||", "Search for " . $playlist . " with Spotify", "This will start a new search in Spotify", 'fileicon:/Applications/Spotify.app', 'yes', '' );
-						if($is_spotifious_active == true)
-						{
-							$w->result( '', "|||||" . "$playlist" . "|||", "Search for " . $playlist . " with Spotifious", "Spotifious workflow must be installed", './images/spotifious.png', 'yes', '' );
-						}
-
+							if(checkIfResultAlreadyThere($w->results(),ucfirst($track[7]) . " - " . $track[5]) == false)
+							{	
+								$w->result( "spotify_mini-spotify-playlist-track-" . $playlist_name . "-" .$track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri, ucfirst($track[7]) . " - " . $track[5], $subtitle, getTrackArtwork($w,$is_artworks_active,$track[2],true), 'yes', '' );
+							}
+							$currentResultNumber++;
+						endforeach;
 					}
 					else
 					{
+						$getTracks = "select * from \"playlist_" . $playlist_name . "\" where track_name like '%".$thetrack."%'";
+						
+						$dbfile = $w->data() . "/library.db";
+						exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\"", $tracks);
+						
 						$currentResultNumber = 1;
-						foreach ($json as $item) 
-						{	
+						foreach($tracks as $track):
 							if($currentResultNumber > $max_results)
 								break;
-										
-							if (strpos(strtolower($item[1]),strtolower($track)) !== false ||
-								strpos(strtolower($item[0]),strtolower($track)) !== false)
-							{					
-								$w->result( "spotify_mini-spotify-" . $playlist . "-" . $item[1], $item[2] . "|||||||" . "|" . $alfred_playlist_uri, ucfirst($item[0]) . " - " . $item[1], "▶ track", getTrackArtwork($is_artworks_active,$item[2],true), 'yes', '' );
-								$currentResultNumber++;
-							}	
-						};
-						$w->result( '', "||||activate (open location \"spotify:search:" . $track . "\")||||", "Search for " . $track . " with Spotify", "This will start a new search in Spotify", 'fileicon:/Applications/Spotify.app', 'yes', '' );
+							$track = explode("	",$track);
+							
+							// Figure out search rank
+							$popularity = $track[1];
+							$popularity/=100;
+							
+							// Convert popularity to stars
+							$stars = floor($popularity * 5);
+							$starString = str_repeat("⭑", $stars) . str_repeat("⭒", 5 - $stars);
+								
+							$subtitle = $track[6] . " - ⌥ → ▶ album, ⌘ →▶ artist";
+							if($is_alfred_playlist_active ==true)
+							{
+								$subtitle = "$subtitle ,fn → add track to ♫, ⇧ → add album to ♫";
+							}
+							$subtitle = "$starString $subtitle";
+		
+							if(checkIfResultAlreadyThere($w->results(),ucfirst($track[7]) . " - " . $track[5]) == false)
+							{	
+								$w->result( "spotify_mini-spotify-playlist-track-" . $playlist_name . "-" .$track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri, ucfirst($track[7]) . " - " . $track[5], $subtitle, getTrackArtwork($w,$is_artworks_active,$track[2],true), 'yes', '' );
+							}
+							$currentResultNumber++;
+						endforeach;
+
+						$w->result( '', "||||activate (open location \"spotify:search:" . $thetrack . "\")||||", "Search for " . $thetrack . " with Spotify", "This will start a new search in Spotify", 'fileicon:/Applications/Spotify.app', 'yes', '' );
 						if($is_spotifious_active == true)
 						{
-							$w->result( '', "|||||" . "$track" . "|||", "Search for " . $track . " with Spotifious", "Spotifious workflow must be installed", './images/spotifious.png', 'yes', '' );	
+							$w->result( '', "|||||" . "$thetrack" . "|||", "Search for " . $thetrack . " with Spotifious", "Spotifious workflow must be installed", './images/spotifious.png', 'yes', '' );	
 						}
 					}									
 				}				
