@@ -12,6 +12,12 @@ $alfredplaylist = $argv[3];
 
 $results = explode('|', $query);
 
+if(count($results)!=10)
+{
+	echo "ERROR: bad csv format in action.php, please report to workflow author";
+	return;
+}
+
 $track_uri=$results[0];
 $album_uri=$results[1];
 $artist_uri=$results[2];
