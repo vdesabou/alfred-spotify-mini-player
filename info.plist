@@ -283,7 +283,7 @@
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f action.php -- "{query}" "TRACK"</string>
+				<string>php -f action.php -- "{query}" "TRACK" 2&gt;&amp;1 | tee output_action.log</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
