@@ -19,145 +19,38 @@ if (!file_exists($w->home() . "/Spotify/spotify-app-miniplayer"))
 }
 
 //
-// Get all_playlists from config
+// Create settings.db with default values if needed
 //
-$ret = $w->get( 'all_playlists', 'settings.plist' );
-
-if ( $ret == false)
+if(!file_exists($w->data() . "/settings.db"))
 {
-	// all_playlists not set
-	// set it to default
-	$w->set( 'all_playlists', 'false', 'settings.plist' );
-	$ret = 'false';
-}
-
-if ($ret == 'true')
-{
-	$all_playlists = true;
-}
-else
-{
-	$all_playlists = false;
+	touch($w->data() . "/settings.db");
+	
+	$sql = 'sqlite3 "' . $w->data() . '/settings.db" ' . ' "create table settings (all_playlists boolean, is_spotifious_active boolean, is_alfred_playlist_active boolean, is_artworks_active boolean, is_displaymorefrom_active boolean, max_results int, alfred_playlist_uri text)"';
+	exec($sql);
+	
+	$sql = 'sqlite3 "' . $w->data() . '/settings.db" ' . '"insert into settings values (0,1,1,0,1,15,\"\")"';
+	exec($sql);
 }
 
 //
-// Get is_spotifious_active from config
+// Read settings from DB
 //
-$ret = $w->get( 'is_spotifious_active', 'settings.plist' );
+$getSettings = "select * from settings";
+$dbfile = $w->data() . "/settings.db";
+exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\"", $settings);
 
-if ( $ret == false)
-{
-	// is_spotifious_active not set
-	// set it to default
-	$w->set( 'is_spotifious_active', 'false', 'settings.plist' );
-	$ret = 'false';
-}
+foreach($settings as $setting):
 
-if ($ret == 'true')
-{
-	$is_spotifious_active = true;
-}
-else
-{
-	$is_spotifious_active = false;
-}
-
-//
-// Get is_alfred_playlist_active from config
-//
-$ret = $w->get( 'is_alfred_playlist_active', 'settings.plist' );
-
-if ( $ret == false)
-{
-	// $is_alfred_playlist_active not set
-	// set it to default
-	$w->set( 'is_alfred_playlist_active', 'true', 'settings.plist' );
-	$ret = 'true';
-}
-
-if ($ret == 'true')
-{
-	$is_alfred_playlist_active = true;
-}
-else
-{
-	$is_alfred_playlist_active = false;
-}
-
-//
-// Get is_artworks_active from config
-//
-$ret = $w->get( 'is_artworks_active', 'settings.plist' );
-
-if ( $ret == false)
-{
-	// is_display_images_active not set
-	// set it to default
-	$w->set( 'is_artworks_active', 'true', 'settings.plist' );
-	$ret = 'true';
-}
-
-if ($ret == 'true')
-{
-	$is_artworks_active = true;
-}
-else
-{
-	$is_artworks_active = false;
-}
-
-//
-// Get is_displaymorefrom_active from config
-//
-$ret = $w->get( 'is_displaymorefrom_active', 'settings.plist' );
-
-if ( $ret == false)
-{
-	// is_displaymorefrom_active not set
-	// set it to default
-	$w->set( 'is_displaymorefrom_active', 'true', 'settings.plist' );
-	$ret = 'true';
-}
-
-if ($ret == 'true')
-{
-	$is_displaymorefrom_active = true;
-}
-else
-{
-	$is_displaymorefrom_active = false;
-}
-
-
-//
-// Get max_results from config
-//
-$ret = $w->get( 'max_results', 'settings.plist' );
-
-if ( $ret == false)
-{
-	// all_playlists not set
-	// set it to default
-	$w->set( 'max_results', '10', 'settings.plist' );
-	$ret = '10';
-}
-
-$max_results = $ret;
-
-//
-// Get alfred_playlist_uri from config
-//
-$ret = $w->get( 'alfred_playlist_uri', 'settings.plist' );
-
-if ( $ret == false)
-{
-	// alfred_playlist_uri not set
-	// set it to empty
-	$w->set( 'alfred_playlist_uri', '', 'settings.plist' );
-	$ret = "";
-}
-
-$alfred_playlist_uri = $ret;
+	$setting = explode("	",$setting);
+	
+	$all_playlists = $setting[0];
+	$is_spotifious_active = $setting[1];
+	$is_alfred_playlist_active = $setting[2];
+	$is_artworks_active = $setting[3];
+	$is_displaymorefrom_active = $setting[4];
+	$max_results = $setting[5];
+	$alfred_playlist_uri = $setting[6];
+endforeach;
 
 
 # thanks to http://www.alfredforum.com/topic/1788-prevent-flash-of-no-result

@@ -87,12 +87,16 @@ else if($other_settings != "")
 {
 	if(is_numeric($other_settings))
 	{
-		$w->set( 'max_results', $other_settings, 'settings.plist' );
+		$setSettings = "update settings set max_results=".$other_settings;
+		$dbfile = $w->data() . "/settings.db";
+		exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 		echo "Max results has been set to $other_settings";
 	}
 	else
 	{
-		$w->set( 'alfred_playlist_uri', $other_settings, 'settings.plist' );
+		$setSettings = "update settings set alfred_playlist_uri=".$other_settings;
+		$dbfile = $w->data() . "/settings.db";
+		exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 		echo "Alfred Playlist URI has been set to $other_settings";
 	}
 }
@@ -112,52 +116,72 @@ else if($other_action != "")
 	}
 	else if ($other_action == "disable_all_playlist")
 	{
-		$w->set( 'all_playlists', 'false', 'settings.plist' );
+		$setSettings = "update settings set all_playlists=0";
+		$dbfile = $w->data() . "/settings.db";
+		exec("sqlite3 \"$dbfile\" \"$setSettings\"");	
 		echo "Search scope set to starred playlist";
 	}
 	else if ($other_action == "enable_all_playlist")
 	{
-		$w->set( 'all_playlists', 'true', 'settings.plist' );
+		$setSettings = "update settings set all_playlists=1";
+		$dbfile = $w->data() . "/settings.db";
+		exec("sqlite3 \"$dbfile\" \"$setSettings\"");	
 		echo "Search scope set to all playlists";
 	}
 	else if ($other_action == "enable_spotifiuous")
 	{
-		$w->set( 'is_spotifious_active', 'true', 'settings.plist' );
+		$setSettings = "update settings set is_spotifious_active=1";
+		$dbfile = $w->data() . "/settings.db";
+		exec("sqlite3 \"$dbfile\" \"$setSettings\"");	
 		echo "Spotifious is now enabled";
 	}
 	else if ($other_action == "disable_spotifiuous")
 	{
-		$w->set( 'is_spotifious_active', 'false', 'settings.plist' );
+		$setSettings = "update settings set is_spotifious_active=0";
+		$dbfile = $w->data() . "/settings.db";
+		exec("sqlite3 \"$dbfile\" \"$setSettings\"");	
 		echo "Spotifious is now disabled";
 	}
 	else if ($other_action == "enable_artworks")
 	{
-		$w->set( 'is_artworks_active', 'true', 'settings.plist' );
+		$setSettings = "update settings set is_artworks_active=1";
+		$dbfile = $w->data() . "/settings.db";
+		exec("sqlite3 \"$dbfile\" \"$setSettings\"");	
 		echo "Artworks are now enabled";
 	}
 	else if ($other_action == "disable_artworks")
 	{
-		$w->set( 'is_artworks_active', 'false', 'settings.plist' );
+		$setSettings = "update settings set is_artworks_active=0";
+		$dbfile = $w->data() . "/settings.db";
+		exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 		echo "Artworks are now disabled";
 	}
 	else if ($other_action == "enable_displaymorefrom")
 	{
-		$w->set( 'is_displaymorefrom_active', 'true', 'settings.plist' );
+		$setSettings = "update settings set is_displaymorefrom_active=1";
+		$dbfile = $w->data() . "/settings.db";
+		exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 		echo "\"More from this artist/album\" is now enabled";
 	}
 	else if ($other_action == "disable_displaymorefrom")
 	{
-		$w->set( 'is_displaymorefrom_active', 'false', 'settings.plist' );
+		$setSettings = "update settings set is_displaymorefrom_active=0";
+		$dbfile = $w->data() . "/settings.db";
+		exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 		echo "\"More from this artist/album\" is now disabled";
 	}
 	else if ($other_action == "enable_alfred_playlist")
 	{
-		$w->set( 'is_alfred_playlist_active', 'true', 'settings.plist' );
+		$setSettings = "update settings set is_alfred_playlist_active=1";
+		$dbfile = $w->data() . "/settings.db";
+		exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 		echo "Alfred Playlist is now enabled";
 	}
 	else if ($other_action == "disable_alfred_playlist")
 	{
-		$w->set( 'is_alfred_playlist_active', 'false', 'settings.plist' );
+		$setSettings = "update settings set is_alfred_playlist_active=0";
+		$dbfile = $w->data() . "/settings.db";
+		exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 		echo "Alfred Playlist is now disabled";
 	}
 	else if ($other_action == "refresh_alfred_playlist")
