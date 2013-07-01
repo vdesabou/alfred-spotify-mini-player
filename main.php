@@ -188,7 +188,7 @@ if(mb_strlen($query) < 3 ||
 				if(substr_count( $command_output, '→' ) > 0)
 				{
 					$results = explode('→', $command_output);
-					$currentArtwork = getTrackArtwork($w,$is_artworks_active,$results[4],false);
+					$currentArtwork = getTrackOrAlbumArtwork($w,$is_artworks_active,$results[4],false);
 					$currentArtistArtwork = getArtistArtwork($w,$is_artworks_active,$results[1],false);
 					$w->result( '', '||||playpause||||', "$results[0]", "$results[2] by $results[1]", ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', '' );
 					$w->result( '', '', "$results[1]", "More from this artist..", $currentArtistArtwork, 'no', $results[1] );
@@ -393,7 +393,7 @@ else
 			
 			if(checkIfResultAlreadyThere($w->results(),ucfirst($track[7]) . " - " . $track[5]) == false)
 			{					
-				$w->result( "spotify_mini-spotify-track" . $track[2], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri, ucfirst($track[7]) . " - " . $track[5], $subtitle, getTrackArtwork($w,$is_artworks_active,$track[2],true), 'yes', '' );
+				$w->result( "spotify_mini-spotify-track" . $track[2], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri, ucfirst($track[7]) . " - " . $track[5], $subtitle, getTrackOrAlbumArtwork($w,$is_artworks_active,$track[2],true), 'yes', '' );
 			}
 			$currentResultNumber++;
 		endforeach;
@@ -583,7 +583,7 @@ else
 					
 					if(checkIfResultAlreadyThere($w->results(),ucfirst($track[6])) == false)
 					{						
-						$w->result( "spotify_mini-spotify-album" . $track[6], '', ucfirst($track[6]), "by " . $track[7] . " (" . $track[8] . ")", getAlbumArtwork($w,$is_artworks_active,$track[3],true), 'no', "Album→" . $track[6] . "→" );
+						$w->result( "spotify_mini-spotify-album" . $track[6], '', ucfirst($track[6]), "by " . $track[7] . " (" . $track[8] . ")", getTrackOrAlbumArtwork($w,$is_artworks_active,$track[3],true), 'no', "Album→" . $track[6] . "→" );
 						
 						$currentResultNumber++;
 					}
@@ -612,7 +612,7 @@ else
 					
 					if(checkIfResultAlreadyThere($w->results(),ucfirst($track[6])) == false)
 					{								
-						$w->result( "spotify_mini-spotify-album" . $track[6], '', ucfirst($track[6]), "by " . $track[7] . " (" . $track[8] . ")", getAlbumArtwork($w,$is_artworks_active,$track[3],true), 'no', "Album→" . $track[6] . "→" );
+						$w->result( "spotify_mini-spotify-album" . $track[6], '', ucfirst($track[6]), "by " . $track[7] . " (" . $track[8] . ")", getTrackOrAlbumArtwork($w,$is_artworks_active,$track[3],true), 'no', "Album→" . $track[6] . "→" );
 						
 						$currentResultNumber++;
 					}
@@ -689,7 +689,7 @@ else
 
 					if(checkIfResultAlreadyThere($w->results(),ucfirst($track[7]) . " - " . $track[5]) == false)
 					{	
-						$w->result( "spotify_mini-spotify-track-" . $track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri, ucfirst($track[7]) . " - " . $track[5], $subtitle, getTrackArtwork($w,$is_artworks_active,$track[2],true), 'yes', '' );
+						$w->result( "spotify_mini-spotify-track-" . $track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri, ucfirst($track[7]) . " - " . $track[5], $subtitle, getTrackOrAlbumArtwork($w,$is_artworks_active,$track[2],true), 'yes', '' );
 					}
 					if($artist_uri == "")
 						$artist_uri = $track[4];
@@ -742,7 +742,7 @@ else
 
 					if(checkIfResultAlreadyThere($w->results(),ucfirst($track[7]) . " - " . $track[5]) == false)
 					{								
-						$w->result( "spotify_mini-spotify-track-" . $track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri, ucfirst($track[7]) . " - " . $track[5], $subtitle, getTrackArtwork($w,$is_artworks_active,$track[2],true), 'yes', '' );
+						$w->result( "spotify_mini-spotify-track-" . $track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri, ucfirst($track[7]) . " - " . $track[5], $subtitle, getTrackOrAlbumArtwork($w,$is_artworks_active,$track[2],true), 'yes', '' );
 					}
 					$currentResultNumber++;
 				endforeach;
@@ -805,7 +805,7 @@ else
 
 					if(checkIfResultAlreadyThere($w->results(),ucfirst($track[7]) . " - " . $track[5]) == false)
 					{	
-						$w->result( "spotify_mini-spotify-track-" . $track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri, ucfirst($track[7]) . " - " . $track[5], $subtitle, getTrackArtwork($w,$is_artworks_active,$track[2],true), 'yes', '' );
+						$w->result( "spotify_mini-spotify-track-" . $track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri, ucfirst($track[7]) . " - " . $track[5], $subtitle, getTrackOrAlbumArtwork($w,$is_artworks_active,$track[2],true), 'yes', '' );
 					}
 					if($album_uri == "")
 						$album_uri = $track[3];
@@ -858,7 +858,7 @@ else
 
 					if(checkIfResultAlreadyThere($w->results(),ucfirst($track[7]) . " - " . $track[5]) == false)
 					{	
-						$w->result( "spotify_mini-spotify-track-" . $track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri, ucfirst($track[7]) . " - " . $track[5], $subtitle, getTrackArtwork($w,$is_artworks_active,$track[2],true), 'yes', '' );
+						$w->result( "spotify_mini-spotify-track-" . $track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri, ucfirst($track[7]) . " - " . $track[5], $subtitle, getTrackOrAlbumArtwork($w,$is_artworks_active,$track[2],true), 'yes', '' );
 					}
 					$currentResultNumber++;
 				endforeach;
@@ -942,7 +942,7 @@ else
 		
 							if(checkIfResultAlreadyThere($w->results(),ucfirst($track[7]) . " - " . $track[5]) == false)
 							{	
-								$w->result( "spotify_mini-spotify-playlist-track-" . $playlist_name . "-" .$track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri, ucfirst($track[7]) . " - " . $track[5], "Play track", getTrackArtwork($w,$is_artworks_active,$track[2],true), 'yes', '' );
+								$w->result( "spotify_mini-spotify-playlist-track-" . $playlist_name . "-" .$track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri, ucfirst($track[7]) . " - " . $track[5], "Play track", getTrackOrAlbumArtwork($w,$is_artworks_active,$track[2],true), 'yes', '' );
 							}
 							$currentResultNumber++;
 						endforeach;
@@ -979,7 +979,7 @@ else
 		
 							if(checkIfResultAlreadyThere($w->results(),ucfirst($track[7]) . " - " . $track[5]) == false)
 							{	
-								$w->result( "spotify_mini-spotify-playlist-track-" . $playlist_name . "-" .$track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri, ucfirst($track[7]) . " - " . $track[5], $subtitle, getTrackArtwork($w,$is_artworks_active,$track[2],true), 'yes', '' );
+								$w->result( "spotify_mini-spotify-playlist-track-" . $playlist_name . "-" .$track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri, ucfirst($track[7]) . " - " . $track[5], $subtitle, getTrackOrAlbumArtwork($w,$is_artworks_active,$track[2],true), 'yes', '' );
 							}
 							$currentResultNumber++;
 						endforeach;
