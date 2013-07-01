@@ -939,16 +939,10 @@ else
 							$starString = str_repeat("⭑", $stars) . str_repeat("⭒", 5 - $stars);
 */
 								
-							$subtitle = $track[6] . "  ⌥ (play album) ⌘ (play artist)";
-							if($is_alfred_playlist_active ==true)
-							{
-								$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
-							}
-/* 							$subtitle = "$starString $subtitle"; */
 		
 							if(checkIfResultAlreadyThere($w->results(),ucfirst($track[7]) . " - " . $track[5]) == false)
 							{	
-								$w->result( "spotify_mini-spotify-playlist-track-" . $playlist_name . "-" .$track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri, ucfirst($track[7]) . " - " . $track[5], $subtitle, getTrackArtwork($w,$is_artworks_active,$track[2],true), 'yes', '' );
+								$w->result( "spotify_mini-spotify-playlist-track-" . $playlist_name . "-" .$track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri, ucfirst($track[7]) . " - " . $track[5], "Play track", getTrackArtwork($w,$is_artworks_active,$track[2],true), 'yes', '' );
 							}
 							$currentResultNumber++;
 						endforeach;

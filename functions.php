@@ -296,22 +296,12 @@ function createPlaylists()
 					foreach($uris[1] as $uri)
 					{
 						$uri = 'spotify:track:' . $uri;
-						
 						$artist = $artists[1][$n];
 						$title = ltrim(substr($titles[1][$n], strpos($titles[1][$n], ' ')));						
 
-						$getTrack = "select * from tracks where uri='".$uri."'";				
-						$dbfile = $w->data() . "/library.db";
-						$tracks = array();
-						exec("sqlite3 -separator '	' \"$dbfile\" \"$getTrack\"", $tracks);
-						
-						foreach($tracks as $track):
-							$track = explode("	",$track);
 
-							$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into \"playlist_' . $playlist_name . '\" values ('. $track[0] .','.$track[1] .',\"'.$track[2] .'\",\"'.$track[3] .'\",\"'.$track[4] .'\",\"'.$track[5] .'\",\"'.$track[6] .'\",\"'.$track[7] .'\",'.$track[8] .')"';
-
-							exec($sql);
-						endforeach;
+						$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into \"playlist_' . $playlist_name . '\" values (0,0,\"'. $uri .'\",\"\",\"\",\"'.$title .'\",\"\",\"'. $artist .'\",\"\")"';
+						exec($sql);
 			
 						$n++;
 					}
