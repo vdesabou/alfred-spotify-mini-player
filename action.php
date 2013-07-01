@@ -8,7 +8,7 @@ $query = $argv[1];
 $type = $argv[2];
 $alfredplaylist = $argv[3];
 
-// query is csv form: track_uri|album_uri|artist_uri|playlist_uri|spotify_command|other_settings|other_action|alfred_playlist_uri
+// query is csv form: track_uri|album_uri|artist_uri|playlist_uri|spotify_command|other_settings|other_action|alfred_playlist_uri|artist_name
 
 $results = explode('|', $query);
 
@@ -21,6 +21,7 @@ $original_query=$results[5];
 $other_settings=$results[6];
 $other_action=$results[7];
 $alfred_playlist_uri=$results[8];
+$artist_name=$results[9];
 
 
 if($type == "TRACK")
@@ -45,6 +46,10 @@ else if ($type == "ALBUM")
 {
 	exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:playartistoralbum:$album_uri\"'");
 	exec("osascript -e 'tell application \"Spotify\" to open location \"$album_uri\"'");
+}
+else if ($type == "ONLINE")
+{
+	exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online→$artist_uri@$artist_name\"'");
 }
 else if ($type == "ALBUM_OR_PLAYLIST")
 {
