@@ -94,7 +94,7 @@ else if($other_settings != "")
 	}
 	else
 	{
-		$setSettings = "update settings set alfred_playlist_uri=".$other_settings;
+		$setSettings = 'update settings set alfred_playlist_uri=\"'.$other_settings.'\"';
 		$dbfile = $w->data() . "/settings.db";
 		exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 		echo "Alfred Playlist URI has been set to $other_settings";
