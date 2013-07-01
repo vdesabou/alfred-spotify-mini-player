@@ -374,15 +374,15 @@ function downloadAllArtworks()
 {
 	$w = new Workflows();
 	
-	$ret = $w->get( 'all_playlists', 'settings.plist' );
-	if ($ret == 'true')
-	{
-		$all_playlists = true;
-	}
-	else
-	{
-		$all_playlists = false;
-	}
+	$getSettings = "select all_playlists from settings";
+	$dbfile = $w->data() . "/settings.db";
+	exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\"", $settings);
+	
+	foreach($settings as $setting):
+		$setting = explode("	",$setting);
+		$all_playlists = $setting[0];
+	endforeach;
+
 		
 	if (file_exists($w->data() . "/library.db"))
 	{
@@ -468,23 +468,37 @@ function refreshAlfredPlaylist()
 {
 	$w = new Workflows();
 	
-	ini_set('memory_limit', '512M' );
-	
 	//
 	// Get alfred_playlist_uri from config
 	//
-	$ret = $w->get( 'alfred_playlist_uri', 'settings.plist' );
+		
+	$getSettings = "select alfred_playlist_uri from settings";
+	$dbfile = $w->data() . "/settings.db";
+	exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\"", $settings);
 	
+	foreach($settings as $setting):
+		$setting = explode("	",$setting);
+		$alfred_playlist_uri = $setting[0];
+	endforeach;
+
+
 	$no_match = false;		
-	$uri = $ret;
+	$uri = $alfred_playlist_uri;
 	$completeUri = $uri;
 	
 	$results = explode(':', $uri);
-	$playlist_name = $results[4];
-	$get_context = stream_context_create(array('http'=>array('timeout'=>5)));
+	
+	if($results[4])
+	{
+		$playlist_name = $results[4];
+		
+	}elseif ($results[3] == "starred")
+	{
+		$playlist_name = "starred";
+	}
+			
+	$get_context = stream_context_create(array('http'=>array('timeout'=>10)));
 	@$get = file_get_contents('https://embed.spotify.com/?uri=' . $uri, false, $get_context);
-
-	$array_playlist_tracks = array();
 	
 	if(empty($get))
 	{
@@ -497,6 +511,12 @@ function refreshAlfredPlaylist()
 		preg_match_all("'<li class=\"track-title \b[^>]*>(.*?)</li>'si", $get, $titles);
 		preg_match_all("'<li \b[^>]* data-track=\"(.*?)\" \b[^>]*>'si", $get, $uris);
 
+		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"drop table \"playlist_' . $playlist_name . '\""';
+		exec($sql);
+
+		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table \"playlist_' . $playlist_name . '\" (starred boolean, popularity int, uri text, album_uri text, artist_uri text, track_name text, album_name text, artist_name text, album_year text)"';
+		exec($sql);
+			
 		if($name[1] && $artists[1] && $titles[1] && $uris[1])
 		{
 			$name = strstr($name[1][0], ' by', true);
@@ -505,12 +525,12 @@ function refreshAlfredPlaylist()
 
 			foreach($uris[1] as $uri)
 			{
+				$uri = 'spotify:track:' . $uri;
 				$artist = $artists[1][$n];
 				$title = ltrim(substr($titles[1][$n], strpos($titles[1][$n], ' ')));
-				$uri = 'spotify:track:' . $uri;
 				
-				$item = array ($artist,$title,$uri);
-				array_push( $array_playlist_tracks, $item );
+				$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into \"playlist_' . $playlist_name . '\" values (0,0,\"'. $uri .'\",\"\",\"\",\"'.$title .'\",\"\",\"'. $artist .'\",\"\")"';
+				exec($sql);
 
 				$n++;
 			}
@@ -520,10 +540,6 @@ function refreshAlfredPlaylist()
 			$no_match = true;
 		}
 	}
-
-
-	$w->write( $array_playlist_tracks, 'playlist_' . $playlist_name . '.json' );
-
 }
 
 function getPlaylistName($uri)
