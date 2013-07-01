@@ -131,11 +131,11 @@ if(mb_strlen($query) < 3 ||
 		}
 		if ($all_playlists == true)
 		{
-			$w->result( '', '', "Settings", "Current: Search Scope=<all>, Max Results=" . $max_results . ", Spotifious is " . $spotifious_state . ", Alfred Playlist is " . $alfred_playlist_state, './images/settings.png', 'no', 'Settings→' );
+			$w->result( '', '', "Settings", "Search scope=<all>, Max results=<" . $max_results . ">, Spotifious is <" . $spotifious_state . ">, Alfred Playlist is <" . $alfred_playlist_state . ">", './images/settings.png', 'no', 'Settings→' );
 		}
 		else
 		{
-			$w->result( '', '', "Settings", "Current: Search Scope=<only ★>, Max Results=" . $max_results  . ", Spotifious is " . $spotifious_state . ", Alfred Playlist is " . $alfred_playlist_state, './images/settings.png', 'no', 'Settings→' );
+			$w->result( '', '', "Settings", "Search scope=<only ★>, Max results=<" . $max_results  . ">, Spotifious is <" . $spotifious_state . ">, Alfred Playlist is <" . $alfred_playlist_state . ">", './images/settings.png', 'no', 'Settings→' );
 		}	
 		
 	}
