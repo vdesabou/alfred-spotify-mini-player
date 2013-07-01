@@ -171,7 +171,6 @@ function getArtistArtwork($w,$is_artworks_active,$artist,$fetchIfNotPresent) {
 
 function getTrackArtworkURL($w,$type, $id)
 {
-	$w = new Workflows();
 	$html = $w->request( "http://open.spotify.com/$type/$id" );
 	
 	if (!empty($html)) {
@@ -184,7 +183,6 @@ function getTrackArtworkURL($w,$type, $id)
 
 function getArtistArtworkURL($w,$artist) {
 	$parsedArtist = urlencode($artist);
-	$w = new Workflows();
 	$html = $w->request( "http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&api_key=49d58890a60114e8fdfc63cbcf75d6c5&artist=$parsedArtist&format=json");
 	$json = json_decode($html, true);
 	
