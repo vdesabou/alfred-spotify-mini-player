@@ -39,7 +39,7 @@ function getTrackOrAlbumArtwork($w,$is_artworks_active,$spotifyURL,$fetchIfNotPr
 		exec("mkdir '".$w->data()."/artwork'");
 	endif;
 				
-	$currentArtwork = $w->data() . "/artwork/$hrefs[2].png";
+	$currentArtwork = $w->data() . "/artwork/" . hash('md5',$hrefs[2] . ".png") . "/" . "$hrefs[2].png";
 	 	
 	if (!is_file($currentArtwork)) 
 	{
@@ -49,6 +49,9 @@ function getTrackOrAlbumArtwork($w,$is_artworks_active,$spotifyURL,$fetchIfNotPr
 
 			// if return 0, it is a 404 error, no need to fetch
 			if (!empty($artwork) || (is_numeric($artwork) && $artwork != 0)) {
+				if ( !file_exists( $w->data() . "/artwork/" . hash('md5',$hrefs[2] . ".png") ) ):
+					exec("mkdir '".$w->data()."/artwork/".hash('md5',$hrefs[2] . ".png")."'");
+				endif;
 				$fp = fopen ($currentArtwork, 'w+');
 				$options = array(
 				CURLOPT_FILE =>	$fp
@@ -111,11 +114,9 @@ function getArtistArtwork($w,$is_artworks_active,$artist,$fetchIfNotPresent) {
 	if ( !file_exists( $w->data() . "/artwork" ) ):
 		exec("mkdir '".$w->data()."/artwork'");
 	endif;
+			
+	$currentArtwork = $w->data() . "/artwork/" . hash('md5',$parsedArtist . ".png") . "/" . "$parsedArtist.png";
 		
-	$currentArtwork = $w->data() . "/artwork/$parsedArtist.png";
-	
-	return $currentArtwork;
-	
 	if (!is_file($currentArtwork)) 
 	{
 		if($fetchIfNotPresent == true)
@@ -123,6 +124,9 @@ function getArtistArtwork($w,$is_artworks_active,$artist,$fetchIfNotPresent) {
 			$artwork = getArtistArtworkURL($w,$artist);
 			// if return 0, it is a 404 error, no need to fetch
 			if (!empty($artwork) || (is_numeric($artwork) && $artwork != 0)) {
+				if ( !file_exists( $w->data() . "/artwork/" . hash('md5',$parsedArtist . ".png") ) ):
+					exec("mkdir '".$w->data()."/artwork/".hash('md5',$parsedArtist . ".png")."'");
+				endif;
 				$fp = fopen ($currentArtwork, 'w+');
 				$options = array(
 				CURLOPT_FILE =>	$fp	
@@ -373,6 +377,24 @@ function clear()
 function downloadAllArtworks()
 {
 	$w = new Workflows();
+	
+	//
+	// move files in hash directories if existing
+	//
+	$folder   = $w->data() . "/artwork";
+	$bytes    = 0;
+	$total    = 0;
+	if ($handle = opendir($folder)) {
+	
+		while (false !== ($file = readdir($handle))) {
+			if (stristr($file, '.png')) {
+				exec("mkdir '".$w->data()."/artwork/".hash('md5',$file)."'");
+				rename($folder . '/' . $file,$folder . '/' . hash('md5',$file) . '/' . $file);
+			}
+		}
+	
+		closedir($handle);
+	}
 	
 	$getSettings = "select all_playlists from settings";
 	$dbfile = $w->data() . "/settings.db";
