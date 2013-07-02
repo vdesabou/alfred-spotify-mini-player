@@ -63,14 +63,22 @@ if(mb_strlen($query) < 3 ||
 	{
 		// check for correct configuration
 		if (file_exists($w->data() . "/library.db") && file_exists($w->home() . "/Spotify/spotify-app-miniplayer/manifest.json"))
-		{
+		{		
 			if($all_playlists == true)
 			{
-				$w->result( '', '', "Search for music in all your playlists", "Begin typing to search (at least 3 characters)", './images/allplaylists.png', 'no', '' );
+				$getCount = "select count(*) from tracks";
+				
+				$dbfile = $w->data() . "/library.db";
+				exec("sqlite3 \"$dbfile\" \"$getCount\"", $n);			
+				$w->result( '', '', "Search for music in all your playlists" . " (" . $n[0] . " tracks)", "Begin typing to search (at least 3 characters)", './images/allplaylists.png', 'no', '' );
 			}
 			else
 			{
-				$w->result( '', '', "Search for music in your ★ playlist", "Begin typing to search (at least 3 characters)", './images/star.png', 'no', '' );
+				$getCount = "select count(*) from tracks where starred=1";
+				
+				$dbfile = $w->data() . "/library.db";
+				exec("sqlite3 \"$dbfile\" \"$getCount\"", $n);
+				$w->result( '', '', "Search for music in your ★ playlist" . " (" . $n[0] . " tracks)", "Begin typing to search (at least 3 characters)", './images/star.png', 'no', '' );
 			}
 			
 			if($is_displaymorefrom_active == true)
