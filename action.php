@@ -121,10 +121,6 @@ else if($other_action != "")
 	{
 		downloadAllArtworks();
 	}
-	else if($other_action == "clear")
-	{
-		clear();
-	}
 	else if ($other_action == "disable_all_playlist")
 	{
 		$setSettings = "update settings set all_playlists=0";
