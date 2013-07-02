@@ -405,9 +405,9 @@ function downloadAllArtworks()
 				break;
 			$track = explode("	",$track);
 
-			getTrackOrAlbumArtwork(true,$track[2],true);
-			getArtistArtwork(true,$track[7],true);
-			getTrackOrAlbumArtwork(true,$track[3],true);
+			getTrackOrAlbumArtwork($w,true,$track[2],true);
+			getArtistArtwork($w,true,$track[7],true);
+			getTrackOrAlbumArtwork($w,true,$track[3],true);
 
 		endforeach;
 	}
@@ -447,7 +447,7 @@ function downloadAllArtworks()
 			foreach($tracks as $track):
 				$track = explode("	",$track);
 				
-				getTrackOrAlbumArtwork(true,$track[2],true);
+				getTrackOrAlbumArtwork($w,true,$track[2],true);
 			endforeach;
 		}
 	}			
