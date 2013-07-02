@@ -261,10 +261,7 @@ else
 		$dbfile = $w->data() . "/library.db";
 		exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\"", $tracks);
 	
-		$currentResultNumber = 1;
 		foreach($tracks as $track):
-			if($currentResultNumber > $max_results)
-				break;
 			$track = explode("	",$track);
 							
 			$subtitle = $track[6] . "  ⌥ (play album) ⌘ (play artist)";
@@ -277,7 +274,6 @@ else
 			{					
 				$w->result( "spotify_mini-spotify-track" . $track[2], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri . "|" . $track[7], ucfirst($track[7]) . " - " . $track[5], $subtitle, getTrackOrAlbumArtwork($w,$is_artworks_active,$track[2],true), 'yes', '' );
 			}
-			$currentResultNumber++;
 		endforeach;
 		
 		$w->result( '', "||||activate (open location \"spotify:search:" . $query . "\")|||||", "Search for " . $query . " with Spotify", "This will start a new search in Spotify", 'fileicon:/Applications/Spotify.app', 'yes', '' );
@@ -384,17 +380,12 @@ else
 				exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\"", $tracks);
 				
 				// display all artists
-				$currentResultNumber = 1;
 				foreach($tracks as $track):
-					if($currentResultNumber > $max_results)
-						break;
 					$track = explode("	",$track);
 					
 					if(checkIfResultAlreadyThere($w->results(),ucfirst($track[7])) == false)
 					{													
 						$w->result( "spotify_mini-spotify-artist-" . $track[7], '', ucfirst($track[7]), "Get tracks from this artist", getArtistArtwork($w,$is_artworks_active,$track[7],true), 'no', "Artist→" . $track[7] . "→" );
-						
-						$currentResultNumber++;
 					}
 				endforeach;
 			}
@@ -413,17 +404,12 @@ else
 				$dbfile = $w->data() . "/library.db";
 				exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\"", $tracks);
 				
-				$currentResultNumber = 1;
 				foreach($tracks as $track):
-					if($currentResultNumber > $max_results)
-						break;
 					$track = explode("	",$track);
 					
 					if(checkIfResultAlreadyThere($w->results(),ucfirst($track[7])) == false)
 					{									
 						$w->result( "spotify_mini-spotify-artist-" . $track[7], '', ucfirst($track[7]), "Get tracks from this artist", getArtistArtwork($w,$is_artworks_active,$track[7],true), 'no', "Artist→" . $track[7] . "→" );
-						
-						$currentResultNumber++;
 					}
 				endforeach;
 				
@@ -457,17 +443,12 @@ else
 				exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\"", $tracks);
 				
 				// display all albums
-				$currentResultNumber = 1;
 				foreach($tracks as $track):
-					if($currentResultNumber > $max_results)
-						break;
 					$track = explode("	",$track);
 					
 					if(checkIfResultAlreadyThere($w->results(),ucfirst($track[6])) == false)
 					{						
 						$w->result( "spotify_mini-spotify-album" . $track[6], '', ucfirst($track[6]), "by " . $track[7] . " (" . $track[8] . ")", getTrackOrAlbumArtwork($w,$is_artworks_active,$track[3],true), 'no', "Album→" . $track[6] . "→" );
-						
-						$currentResultNumber++;
 					}
 				endforeach;
 			}
@@ -486,17 +467,12 @@ else
 				$dbfile = $w->data() . "/library.db";
 				exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\"", $tracks);
 				
-				$currentResultNumber = 1;
 				foreach($tracks as $track):
-					if($currentResultNumber > $max_results)
-						break;
 					$track = explode("	",$track);
 					
 					if(checkIfResultAlreadyThere($w->results(),ucfirst($track[6])) == false)
 					{								
 						$w->result( "spotify_mini-spotify-album" . $track[6], '', ucfirst($track[6]), "by " . $track[7] . " (" . $track[8] . ")", getTrackOrAlbumArtwork($w,$is_artworks_active,$track[3],true), 'no', "Album→" . $track[6] . "→" );
-						
-						$currentResultNumber++;
 					}
 				endforeach;
 				
@@ -628,10 +604,7 @@ else
 				$dbfile = $w->data() . "/library.db";
 				exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\"", $tracks);
 				
-				$currentResultNumber = 1;
 				foreach($tracks as $track):
-					if($currentResultNumber > $max_results)
-						break;
 					$track = explode("	",$track);
 						
 					$subtitle = $track[6] . "  ⌥ (play album) ⌘ (play artist)";
@@ -646,7 +619,6 @@ else
 					}
 					if($artist_uri == "")
 						$artist_uri = $track[4];
-					$currentResultNumber++;
 				endforeach;
 				
 				$w->result( '', "||||activate (open location \"spotify:search:" . $artist . "\")||||", "Search for " . $artist . " with Spotify", "This will start a new search in Spotify", 'fileicon:/Applications/Spotify.app', 'yes', '' );
@@ -670,10 +642,7 @@ else
 				$dbfile = $w->data() . "/library.db";
 				exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\"", $tracks);
 				
-				$currentResultNumber = 1;
 				foreach($tracks as $track):
-					if($currentResultNumber > $max_results)
-						break;
 					$track = explode("	",$track);
 						
 					$subtitle = $track[6] . "  ⌥ (play album) ⌘ (play artist)";
@@ -686,7 +655,6 @@ else
 					{								
 						$w->result( "spotify_mini-spotify-track-" . $track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri, ucfirst($track[7]) . " - " . $track[5], $subtitle, getTrackOrAlbumArtwork($w,$is_artworks_active,$track[2],true), 'yes', '' );
 					}
-					$currentResultNumber++;
 				endforeach;
 
 				$w->result( '', "||||activate (open location \"spotify:search:" . $track . "\")|||||", "Search for " . $track . " with Spotify", "This will start a new search in Spotify", 'fileicon:/Applications/Spotify.app', 'yes', '' );
@@ -706,7 +674,6 @@ else
 			
 			if(mb_strlen($track) < 3)
 			{
-				$currentResultNumber = 1;
 				$album_uri = "";
 				
 				if($all_playlists == false)
@@ -722,10 +689,7 @@ else
 				$dbfile = $w->data() . "/library.db";
 				exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\"", $tracks);
 				
-				$currentResultNumber = 1;
 				foreach($tracks as $track):
-					if($currentResultNumber > $max_results)
-						break;
 					$track = explode("	",$track);
 						
 					$subtitle = $track[6] . "  ⌥ (play album) ⌘ (play artist)";
@@ -740,7 +704,6 @@ else
 					}
 					if($album_uri == "")
 						$album_uri = $track[3];
-					$currentResultNumber++;
 				endforeach;
 
 				$w->result( '', "||||activate (open location \"spotify:search:" . $album . "\")|||||", "Search for " . $album . " with Spotify", "This will start a new search in Spotify", 'fileicon:/Applications/Spotify.app', 'yes', '' );
@@ -764,10 +727,7 @@ else
 				$dbfile = $w->data() . "/library.db";
 				exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\"", $tracks);
 				
-				$currentResultNumber = 1;
 				foreach($tracks as $track):
-					if($currentResultNumber > $max_results)
-						break;
 					$track = explode("	",$track);
 						
 					$subtitle = $track[6] . "  ⌥ (play album) ⌘ (play artist)";
@@ -780,7 +740,6 @@ else
 					{	
 						$w->result( "spotify_mini-spotify-track-" . $track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri . "|" . $track[7], ucfirst($track[7]) . " - " . $track[5], $subtitle, getTrackOrAlbumArtwork($w,$is_artworks_active,$track[2],true), 'yes', '' );
 					}
-					$currentResultNumber++;
 				endforeach;
 
 
@@ -843,17 +802,13 @@ else
 						$dbfile = $w->data() . "/library.db";
 						exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\"", $tracks);
 						
-						$currentResultNumber = 1;
 						foreach($tracks as $track):
-							if($currentResultNumber > $max_results)
-								break;
 							$track = explode("	",$track);	
 		
 							if(checkIfResultAlreadyThere($w->results(),ucfirst($track[7]) . " - " . $track[5]) == false)
 							{	
 								$w->result( "spotify_mini-spotify-playlist-track-" . $playlist_name . "-" .$track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri . "|" . $track[7], ucfirst($track[7]) . " - " . $track[5], "Play track", getTrackOrAlbumArtwork($w,$is_artworks_active,$track[2],true), 'yes', '' );
 							}
-							$currentResultNumber++;
 						endforeach;
 					}
 					else
@@ -863,10 +818,7 @@ else
 						$dbfile = $w->data() . "/library.db";
 						exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\"", $tracks);
 						
-						$currentResultNumber = 1;
 						foreach($tracks as $track):
-							if($currentResultNumber > $max_results)
-								break;
 							$track = explode("	",$track);
 															
 							$subtitle = $track[6] . "  ⌥ (play album) ⌘ (play artist)";
@@ -879,7 +831,6 @@ else
 							{	
 								$w->result( "spotify_mini-spotify-playlist-track-" . $playlist_name . "-" .$track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri . "|" . $track[7], ucfirst($track[7]) . " - " . $track[5], $subtitle, getTrackOrAlbumArtwork($w,$is_artworks_active,$track[2],true), 'yes', '' );
 							}
-							$currentResultNumber++;
 						endforeach;
 
 						$w->result( '', "||||activate (open location \"spotify:search:" . $thetrack . "\")|||||", "Search for " . $thetrack . " with Spotify", "This will start a new search in Spotify", 'fileicon:/Applications/Spotify.app', 'yes', '' );
