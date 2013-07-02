@@ -83,7 +83,7 @@ if(mb_strlen($query) < 3 ||
 					$results = explode('→', $command_output);
 					$currentArtwork = getTrackOrAlbumArtwork($w,$is_artworks_active,$results[4],false);
 					$currentArtistArtwork = getArtistArtwork($w,$is_artworks_active,$results[1],false);
-					$w->result( '', '||||playpause||||', "$results[0]", "$results[2] by $results[1]", ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', '' );
+					$w->result( '', '||||playpause|||||', "$results[0]", "$results[2] by $results[1]", ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', '' );
 					$w->result( '', '', "$results[1]", "More from this artist..", $currentArtistArtwork, 'no', $results[1] );
 					$w->result( '', '', "$results[2]", "More from this album..", $currentArtwork, 'no', $results[2] );
 				}
