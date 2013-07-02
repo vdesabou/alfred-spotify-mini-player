@@ -513,12 +513,9 @@ function refreshAlfredPlaylist()
 		preg_match_all("'<li class=\"track-title \b[^>]*>(.*?)</li>'si", $get, $titles);
 		preg_match_all("'<li \b[^>]* data-track=\"(.*?)\" \b[^>]*>'si", $get, $uris);
 
-		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"drop table \"playlist_' . $playlist_name . '\""';
+		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"delete from \"playlist_' . $playlist_name . '\""';
 		exec($sql);
 
-		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table \"playlist_' . $playlist_name . '\" (starred boolean, popularity int, uri text, album_uri text, artist_uri text, track_name text, album_name text, artist_name text, album_year text)"';
-		exec($sql);
-			
 		if($name[1] && $artists[1] && $titles[1] && $uris[1])
 		{
 			$name = strstr($name[1][0], ' by', true);
