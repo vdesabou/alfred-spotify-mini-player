@@ -232,7 +232,8 @@ function createPlaylists()
 		$json = file_get_contents($w->data() . "/playlists-tmp.json");
 		$json = json_decode($json,true);
 		
-		$playlist_array = array();
+		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table playlists (uri text, name text, nb_tracks int, author text)"';
+		exec($sql);
 		
 		foreach ($json as $key) 
 		{
@@ -302,11 +303,11 @@ function createPlaylists()
 		
 			if($no_match == false)
 			{
-				$playlist_array[$completeUri] = str_replace("&apos;","'",str_replace("&amp;","&",$name));
+				$r = explode(':', $completeUri);
+				$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into playlists values (\"'. $completeUri .'\",\"'. str_replace("&apos;","'",str_replace("&amp;","&",$name)) .'\",'. $n .',\"'. $r[2] .'\")"';
+				exec($sql);
 			}
 		};
-		
-		$w->write( $playlist_array, 'playlists.json' );
 		
 		unlink($w->data() . "/playlists-tmp.json");	
 	}
@@ -353,6 +354,7 @@ function updateLibrary()
 	    echo "ERROR: JSON data is not valid!";
 	}	
 }
+
 
 function downloadAllArtworks()
 {
@@ -419,42 +421,41 @@ function downloadAllArtworks()
 	//
 	
 	// retrieve playlist uri from playlist name
-	if(file_exists($w->data() . "/playlists.json"))
-	{
-		$json = file_get_contents($w->data() . "/playlists.json");
-		$json = json_decode($json,true);
-		
-		foreach ($json as $key => $val) 
-		{
-			$results = explode(':', $key);
+	$getPlaylists = "select * from playlists where name like '%".$theplaylist."%'";
+	
+	$dbfile = $w->data() . "/library.db";
+	exec("sqlite3 -separator '	' \"$dbfile\" \"$getPlaylists\"", $playlists);
 
-			if($results[4])
-			{
-				$playlist_name = $results[4];
-				
-			}elseif ($results[3] == "starred")
-			{
-				$playlist_name = "starred";
-			}
-			else
-			{
-				continue;
-			}
-			
-			$getTracks = "select * from \"playlist_" . $playlist_name . "\"";
-			
-			$dbfile = $w->data() . "/library.db";
-			exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\"", $tracks);
-			
-			foreach($tracks as $track):
-				$track = explode("	",$track);
-				
-				getTrackOrAlbumArtwork($w,true,$track[2],true);
-			endforeach;
+	foreach($playlists as $playlist):
+		$playlist = explode("	",$playlist);
+
+		$res = explode(':', $playlist[0]);
+		$playlist_name = $res[4];
+		$playlist_user = $res[2];
+		if($res[4])
+		{
+			$playlist_name = $res[4];
+		}elseif ($res[3] == "starred")
+		{
+			$playlist_name = "starred";
 		}
-	}			
-	
-	
+		else
+		{
+			continue;
+		}						
+		
+		$getTracks = "select * from \"playlist_" . $playlist_name . "\"";
+		
+		$dbfile = $w->data() . "/library.db";
+		exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\"", $tracks);
+		
+		foreach($tracks as $track):
+			$track = explode("	",$track);
+			
+			getTrackOrAlbumArtwork($w,true,$track[2],true);
+		endforeach;
+	endforeach;
+			
 	if($all_playlists == true)
 	{
 		echo "All Artworks for all playlists were cached";

@@ -92,10 +92,7 @@ if(mb_strlen($query) < 3 ||
 			{
 				$w->result( '', '', "Alfred Playlist", "Control your Alfred Playlist", './images/alfred_playlist.png', 'no', 'Alfred Playlist→' );	
 			}
-			if (file_exists($w->data() . "/playlists.json"))
-			{
-				$w->result( '', '', "Playlists", "Browse by playlist", './images/playlists.png', 'no', 'Playlist→' );
-			}
+			$w->result( '', '', "Playlists", "Browse by playlist", './images/playlists.png', 'no', 'Playlist→' );
 			$w->result( '', '', "Artists", "Browse by artist", './images/artists.png', 'no', 'Artist→' );
 			$w->result( '', '', "Albums", "Browse by album", './images/albums.png', 'no', 'Album→' );			
 		}
@@ -297,39 +294,36 @@ else
 			//
 			// Search playlists
 			//
-			$playlist=$words[1];
+			$theplaylist=$words[1];
 			
-			if(mb_strlen($playlist) < 3)
+			if(mb_strlen($theplaylist) < 3)
 			{
 				//
 				// Display all playlists
 				//
-				$json = file_get_contents($w->data() . "/playlists.json");
-				$json = json_decode($json,true);
+				$getPlaylists = "select * from playlists";
 				
-				foreach ($json as $key => $val) 
-				{	
-					$r = explode(':', $key);
-					$playlist_user = $r[2];
-					$w->result( "spotify_mini-spotify-playlist-$val", '', ucfirst($val), "by " . $playlist_user, './images/playlists.png', 'no', "Playlist→" . $val . "→" );
-				};
+				$dbfile = $w->data() . "/library.db";
+				exec("sqlite3 -separator '	' \"$dbfile\" \"$getPlaylists\"", $playlists);
+
+				foreach($playlists as $playlist):
+					$playlist = explode("	",$playlist);
+									
+					$w->result( "spotify_mini-spotify-playlist-$playlist[1]", '', ucfirst($playlist[1]), "by " . $playlist[3]  . " (" . $playlist[2] . " tracks)", './images/playlists.png', 'no', "Playlist→" . $playlist[1] . "→" );
+				endforeach;
 			}
 			else
-			{
-				$json = file_get_contents($w->data() . "/playlists.json");
-				$json = json_decode($json,true);
+			{				
+				$getPlaylists = "select * from playlists where ( name like '%".$theplaylist."%' or author like '%".$theplaylist."%')";
 				
-				foreach ($json as $key => $val) 
-				{
-					$r = explode(':', $key);
-					$playlist_user = $r[2];
-								
-					if (strpos(strtolower($val),strtolower($playlist)) !== false ||
-						strpos(strtolower($playlist_user),strtolower($playlist)) !== false )
-					{	
-						$w->result( "spotify_mini-spotify-playlist-$val", '', ucfirst($val), "by " . $playlist_user, './images/playlists.png', 'no', "Playlist→" . $val . "→" );
-					}
-				};
+				$dbfile = $w->data() . "/library.db";
+				exec("sqlite3 -separator '	' \"$dbfile\" \"$getPlaylists\"", $playlists);
+
+				foreach($playlists as $playlist):
+					$playlist = explode("	",$playlist);
+														
+				$w->result( "spotify_mini-spotify-playlist-$playlist[1]", '', ucfirst($playlist[1]), "by " . $playlist[3]  . " (" . $playlist[2] . " tracks)", './images/playlists.png', 'no', "Playlist→" . $playlist[1] . "→" );
+				endforeach;
 			}
 		} // search by Playlist end	
 		elseif($kind == "Alfred Playlist")
@@ -495,36 +489,50 @@ else
 				$artist_uri=$words[0];
 				$artist_name=$words[1];
 		
-				$json = $w->request( "http://ws.spotify.com/lookup/1/.json?uri=$artist_uri&extras=albumdetail" );
+				$json = $w->request( "http://ws.spotify.com/lookup/1/.json?uri=" . trim($artist_uri) . "&extras=albumdetail" );
 				
-				$json = json_decode($json);
-				if (json_last_error() === JSON_ERROR_NONE && !empty($json))
+				if(empty($json))
 				{
-					foreach ($json->artist->albums as $key => $value)
-					{
-						$album = array();
-						$album = $value->album;
-						
-						// only display albums from the artist
-						if(strpos($album->artist,$artist_name) !== false )
+					$w->result( '', '', "Error: Spotify Metadata API returned empty result", "http://ws.spotify.com/lookup/1/.json?uri=" . $artist_uri . "&extras=albumdetail" , './images/warning.png', 'no', '' );
+					echo $w->toxml();
+					return;
+				}
+					
+				$json = json_decode($json);
+				switch(json_last_error())
+				{
+				    case JSON_ERROR_DEPTH:
+				    	$w->result( '', '', "There was an error when retrieving online information", "Maximum stack depth exceeded", './images/warning.png', 'no', '' );
+				        break;
+				    case JSON_ERROR_CTRL_CHAR:
+				    	$w->result( '', '', "There was an error when retrieving online information", "Unexpected control character found", './images/warning.png', 'no', '' );
+				        break;
+				    case JSON_ERROR_SYNTAX:
+				    	$w->result( '', '', "There was an error when retrieving online information", "Syntax error, malformed JSON", './images/warning.png', 'no', '' );
+				        break;
+				    case JSON_ERROR_NONE:
+						foreach ($json->artist->albums as $key => $value)
 						{
-							$availability = array();
-							$availability = $album->availability;
+							$album = array();
+							$album = $value->album;
 							
-							if(empty($availability->territories)/* ||
-								strpos($availability->territories,"FR") !== false */)
-							{						
-								if(checkIfResultAlreadyThere($w->results(),ucfirst($album->name)) == false)
-								{	
-									$w->result( "spotify_mini-spotify-online-album" . $album->name, '', ucfirst($album->name), "by " . $album->artist . " (" . $album->released . ")", getTrackOrAlbumArtwork($w,$is_artworks_active,$album->href,false), 'no', "Online→" . $artist_uri . "@" . $album->artist . "@" . $album->href . "@" . $album->name);
+							// only display albums from the artist
+							if(strpos($album->artist,$artist_name) !== false )
+							{
+								$availability = array();
+								$availability = $album->availability;
+								
+								if(empty($availability->territories)/* ||
+									strpos($availability->territories,"FR") !== false */)
+								{						
+									if(checkIfResultAlreadyThere($w->results(),ucfirst($album->name)) == false)
+									{	
+										$w->result( "spotify_mini-spotify-online-album" . $album->name, '', ucfirst($album->name), "by " . $album->artist . " (" . $album->released . ")", getTrackOrAlbumArtwork($w,$is_artworks_active,$album->href,false), 'no', "Online→" . $artist_uri . "@" . $album->artist . "@" . $album->href . "@" . $album->name);
+									}
 								}
 							}
 						}
-					}			
-				}
-				else
-				{
-					$w->result( '', '', "There was an error when retrieving online information", "Please retry later", './images/warning.png', 'no', '' );
+						break;
 				}
 			}
 			elseif( substr_count( $query, '@' ) == 3 )
@@ -541,26 +549,40 @@ else
 
 				$json = $w->request( "http://ws.spotify.com/lookup/1/.json?uri=$album_uri&extras=trackdetail" );
 
-				$json = json_decode($json);
-				if (json_last_error() === JSON_ERROR_NONE && !empty($json))
+				if(empty($json))
 				{
-					foreach ($json->album->tracks as $key => $value)
-					{						
-						$subtitle = $album_name . "  ⌥ (play album) ⌘ (play artist)";
-						if($is_alfred_playlist_active ==true)
-						{
-							$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
-						}
-	
-						if(checkIfResultAlreadyThere($w->results(),ucfirst($artist_name) . " - " . $value->name) == false)
-						{	
-							$w->result( "spotify_mini-spotify-online-track-" . $value->name, $value->href . "|" . $album_uri . "|" . $artist_uri . "|||||"  . "|" . $alfred_playlist_uri . "|" . $track[7], ucfirst($artist_name) . " - " . $value->name, $subtitle, getTrackOrAlbumArtwork($w,$is_artworks_active,$value->href,false), 'yes', '' );
-						}
-					}			
+					$w->result( '', '', "Error: Spotify Metadata API returned empty result", "http://ws.spotify.com/lookup/1/.json?uri=" . $artist_uri . "&extras=albumdetail" , './images/warning.png', 'no', '' );
+					echo $w->toxml();
+					return;
 				}
-				else
+				
+				$json = json_decode($json);
+				switch(json_last_error())
 				{
-					$w->result( '', '', "There was an error when retrieving online information", "Please retry later", './images/warning.png', 'no', '' );
+				    case JSON_ERROR_DEPTH:
+				    	$w->result( '', '', "There was an error when retrieving online information", "Maximum stack depth exceeded", './images/warning.png', 'no', '' );
+				        break;
+				    case JSON_ERROR_CTRL_CHAR:
+				    	$w->result( '', '', "There was an error when retrieving online information", "Unexpected control character found", './images/warning.png', 'no', '' );
+				        break;
+				    case JSON_ERROR_SYNTAX:
+				    	$w->result( '', '', "There was an error when retrieving online information", "Syntax error, malformed JSON", './images/warning.png', 'no', '' );
+				        break;
+				    case JSON_ERROR_NONE:
+						foreach ($json->album->tracks as $key => $value)
+						{						
+							$subtitle = $album_name . "  ⌥ (play album) ⌘ (play artist)";
+							if($is_alfred_playlist_active ==true)
+							{
+								$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
+							}
+		
+							if(checkIfResultAlreadyThere($w->results(),ucfirst($artist_name) . " - " . $value->name) == false)
+							{	
+								$w->result( "spotify_mini-spotify-online-track-" . $value->name, $value->href . "|" . $album_uri . "|" . $artist_uri . "|||||"  . "|" . $alfred_playlist_uri . "|" . $track[7], ucfirst($artist_name) . " - " . $value->name, $subtitle, getTrackOrAlbumArtwork($w,$is_artworks_active,$value->href,false), 'yes', '' );
+							}
+						}
+						break;
 				}
 			}
 			
@@ -754,92 +776,89 @@ else
 			//		
 			// display tracks for selected playlist
 			//
-			$playlist=$words[1];
+			$theplaylist=$words[1];
 			$thetrack=$words[2];
 			
 			// retrieve playlist uri from playlist name
-			if(file_exists($w->data() . "/playlists.json"))
-			{
-				$json = file_get_contents($w->data() . "/playlists.json");
-				$json = json_decode($json,true);
-				
-				foreach ($json as $key => $val) 
-				{
-					if (strpos(str_replace(")","\)",str_replace("(","\(",strtolower($val))),strtolower($playlist)) !== false)
-					{
-						$res = explode(':', $key);
-						$playlist_name = $res[4];
-						$playlist_user = $res[2];
-						if($res[4])
-						{
-							$playlist_name = $res[4];
-						}elseif ($res[3] == "starred")
-						{
-							$playlist_name = "starred";
-						}
-						break;
-					}
-				}
-				
-				if($playlist_name)
-				{	
-					$subtitle = "Launch Playlist";
-					if($is_alfred_playlist_active ==true &&
-						$val != "Alfred Playlist")
-					{
-						$subtitle = "$subtitle ,⇧ → add playlist to ♫";
-					}
-					$w->result( "spotify_mini-spotify-playlist-$val", "|||" . $key . "||||" . "||" . $alfred_playlist_uri, ucfirst($val) . " by " . $playlist_user, $subtitle, './images/playlists.png', 'yes', '' );
-									
-					if(mb_strlen($thetrack) < 3)
-					{
-						//
-						// display all tracks from playlist
-						//
-						$getTracks = "select * from \"playlist_" . $playlist_name . "\""." limit ".$max_results;
-						
-						$dbfile = $w->data() . "/library.db";
-						exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\"", $tracks);
-						
-						foreach($tracks as $track):
-							$track = explode("	",$track);	
-		
-							if(checkIfResultAlreadyThere($w->results(),ucfirst($track[7]) . " - " . $track[5]) == false)
-							{	
-								$w->result( "spotify_mini-spotify-playlist-track-" . $playlist_name . "-" .$track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri . "|" . $track[7], ucfirst($track[7]) . " - " . $track[5], "Play track", getTrackOrAlbumArtwork($w,$is_artworks_active,$track[2],true), 'yes', '' );
-							}
-						endforeach;
-					}
-					else
-					{
-						$getTracks = "select * from \"playlist_" . $playlist_name . "\" where track_name like '%".$thetrack."%'"." limit ".$max_results;
-						
-						$dbfile = $w->data() . "/library.db";
-						exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\"", $tracks);
-						
-						foreach($tracks as $track):
-							$track = explode("	",$track);
-															
-							$subtitle = $track[6] . "  ⌥ (play album) ⌘ (play artist)";
-							if($is_alfred_playlist_active ==true)
-							{
-								$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
-							}
-		
-							if(checkIfResultAlreadyThere($w->results(),ucfirst($track[7]) . " - " . $track[5]) == false)
-							{	
-								$w->result( "spotify_mini-spotify-playlist-track-" . $playlist_name . "-" .$track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri . "|" . $track[7], ucfirst($track[7]) . " - " . $track[5], $subtitle, getTrackOrAlbumArtwork($w,$is_artworks_active,$track[2],true), 'yes', '' );
-							}
-						endforeach;
+			$getPlaylists = "select * from playlists where name like '%".$theplaylist."%'";
+			
+			$dbfile = $w->data() . "/library.db";
+			exec("sqlite3 -separator '	' \"$dbfile\" \"$getPlaylists\"", $playlists);
 
-						$w->result( '', "||||activate (open location \"spotify:search:" . $thetrack . "\")|||||", "Search for " . $thetrack . " with Spotify", "This will start a new search in Spotify", 'fileicon:/Applications/Spotify.app', 'yes', '' );
-						if($is_spotifious_active == true)
-						{
-							$w->result( '', "|||||" . "$thetrack" . "||||", "Search for " . $thetrack . " with Spotifious", "Spotifious workflow must be installed", './images/spotifious.png', 'yes', '' );	
-						}
-					}									
-				}				
+			foreach($playlists as $playlist):
+				$playlist = explode("	",$playlist);
+	
+				$res = explode(':', $playlist[0]);
+				$playlist_name = $res[4];
+				$playlist_user = $res[2];
+				if($res[4])
+				{
+					$playlist_name = $res[4];
+				}elseif ($res[3] == "starred")
+				{
+					$playlist_name = "starred";
+				}
+				break;							
 				
+			endforeach;
+				
+			if($playlist_name)
+			{	
+				$subtitle = "Launch Playlist";
+				if($is_alfred_playlist_active ==true &&
+					$playlist[1] != "Alfred Playlist")
+				{
+					$subtitle = "$subtitle ,⇧ → add playlist to ♫";
+				}
+				$w->result( "spotify_mini-spotify-playlist-$playlist[1]", "|||" . $playlist[0] . "||||" . "||" . $alfred_playlist_uri, ucfirst($playlist[1]) . " by " . $playlist_user . " (" . $playlist[2] . " tracks)", $subtitle, './images/playlists.png', 'yes', '' );
+								
+				if(mb_strlen($thetrack) < 3)
+				{
+					//
+					// display all tracks from playlist
+					//
+					$getTracks = "select * from \"playlist_" . $playlist_name . "\""." limit ".$max_results;
+					
+					$dbfile = $w->data() . "/library.db";
+					exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\"", $tracks);
+					
+					foreach($tracks as $track):
+						$track = explode("	",$track);	
+	
+						if(checkIfResultAlreadyThere($w->results(),ucfirst($track[7]) . " - " . $track[5]) == false)
+						{	
+							$w->result( "spotify_mini-spotify-playlist-track-" . $playlist_name . "-" .$track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri . "|" . $track[7], ucfirst($track[7]) . " - " . $track[5], "Play track", getTrackOrAlbumArtwork($w,$is_artworks_active,$track[2],true), 'yes', '' );
+						}
+					endforeach;
+				}
+				else
+				{
+					$getTracks = "select * from \"playlist_" . $playlist_name . "\" where track_name like '%".$thetrack."%'"." limit ".$max_results;
+					
+					$dbfile = $w->data() . "/library.db";
+					exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\"", $tracks);
+					
+					foreach($tracks as $track):
+						$track = explode("	",$track);
+														
+						$subtitle = $track[6] . "  ⌥ (play album) ⌘ (play artist)";
+						if($is_alfred_playlist_active ==true)
+						{
+							$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
+						}
+	
+						if(checkIfResultAlreadyThere($w->results(),ucfirst($track[7]) . " - " . $track[5]) == false)
+						{	
+							$w->result( "spotify_mini-spotify-playlist-track-" . $playlist_name . "-" .$track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri . "|" . $track[7], ucfirst($track[7]) . " - " . $track[5], $subtitle, getTrackOrAlbumArtwork($w,$is_artworks_active,$track[2],true), 'yes', '' );
+						}
+					endforeach;
+
+					$w->result( '', "||||activate (open location \"spotify:search:" . $thetrack . "\")|||||", "Search for " . $thetrack . " with Spotify", "This will start a new search in Spotify", 'fileicon:/Applications/Spotify.app', 'yes', '' );
+					if($is_spotifious_active == true)
+					{
+						$w->result( '', "|||||" . "$thetrack" . "||||", "Search for " . $thetrack . " with Spotifious", "Spotifious workflow must be installed", './images/spotifious.png', 'yes', '' );	
+					}
+				}									
 			}			
 		}// end of tracks by Playlist
 		elseif($kind == "Settings")
