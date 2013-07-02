@@ -485,7 +485,8 @@ function refreshAlfredPlaylist()
 	endforeach;
 
 
-	$no_match = false;		
+	$no_match = false;
+	$n = 0;	
 	$uri = $alfred_playlist_uri;
 	$completeUri = $uri;
 	
@@ -539,6 +540,10 @@ function refreshAlfredPlaylist()
 		{
 			$no_match = true;
 		}
+		
+		// update playlists table for nb_tracks
+		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"update playlists set nb_tracks='. $n .' where uri=\"' . $alfred_playlist_uri . '\""';
+		exec($sql);
 	}
 }
 
