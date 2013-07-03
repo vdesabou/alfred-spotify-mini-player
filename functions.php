@@ -13,7 +13,7 @@ function checkIfResultAlreadyThere($results,$title) {
 	return false;
 }
 
-function getTrackOrAlbumArtwork($w,$is_artworks_active,$spotifyURL,$fetchIfNotPresent) {
+function getTrackOrAlbumArtwork($w,$spotifyURL,$fetchIfNotPresent) {
 
 	$hrefs = explode(':', $spotifyURL);
 	
@@ -21,19 +21,7 @@ function getTrackOrAlbumArtwork($w,$is_artworks_active,$spotifyURL,$fetchIfNotPr
 	if($hrefs[1] == "album")
 	{
 		$isAlbum = true;
-	}
-		
-	if($is_artworks_active == false)
-	{
-		if($isAlbum)
-		{
-			return "images/default_album.png";
-		}
-		else
-		{
-			return "images/default_track.png";
-		}
-	}		
+	}	
 
 	if ( !file_exists( $w->data() . "/artwork" ) ):
 		exec("mkdir '".$w->data()."/artwork'");
@@ -104,7 +92,7 @@ function getTrackOrAlbumArtwork($w,$is_artworks_active,$spotifyURL,$fetchIfNotPr
 	}
 }
 
-function getArtistArtwork($w,$is_artworks_active,$artist,$fetchIfNotPresent) {
+function getArtistArtwork($w,$artist,$fetchIfNotPresent) {
 	
 	if($is_artworks_active == false)
 		return "images/default_artist.png";

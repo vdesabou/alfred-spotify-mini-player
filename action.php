@@ -145,20 +145,6 @@ else if($other_action != "")
 		exec("sqlite3 \"$dbfile\" \"$setSettings\"");	
 		echo "Spotifious is now disabled";
 	}
-	else if ($other_action == "enable_artworks")
-	{
-		$setSettings = "update settings set is_artworks_active=1";
-		$dbfile = $w->data() . "/settings.db";
-		exec("sqlite3 \"$dbfile\" \"$setSettings\"");	
-		echo "Artworks are now enabled";
-	}
-	else if ($other_action == "disable_artworks")
-	{
-		$setSettings = "update settings set is_artworks_active=0";
-		$dbfile = $w->data() . "/settings.db";
-		exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-		echo "Artworks are now disabled";
-	}
 	else if ($other_action == "enable_displaymorefrom")
 	{
 		$setSettings = "update settings set is_displaymorefrom_active=1";

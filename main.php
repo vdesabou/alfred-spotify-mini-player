@@ -25,10 +25,10 @@ if(!file_exists($w->data() . "/settings.db"))
 {
 	touch($w->data() . "/settings.db");
 	
-	$sql = 'sqlite3 "' . $w->data() . '/settings.db" ' . ' "create table settings (all_playlists boolean, is_spotifious_active boolean, is_alfred_playlist_active boolean, is_artworks_active boolean, is_displaymorefrom_active boolean, max_results int, alfred_playlist_uri text)"';
+	$sql = 'sqlite3 "' . $w->data() . '/settings.db" ' . ' "create table settings (all_playlists boolean, is_spotifious_active boolean, is_alfred_playlist_active boolean, is_displaymorefrom_active boolean, max_results int, alfred_playlist_uri text)"';
 	exec($sql);
 	
-	$sql = 'sqlite3 "' . $w->data() . '/settings.db" ' . '"insert into settings values (0,1,1,0,1,15,\"\")"';
+	$sql = 'sqlite3 "' . $w->data() . '/settings.db" ' . '"insert into settings values (0,1,1,1,50,\"\")"';
 	exec($sql);
 }
 
@@ -46,10 +46,9 @@ foreach($settings as $setting):
 	$all_playlists = $setting[0];
 	$is_spotifious_active = $setting[1];
 	$is_alfred_playlist_active = $setting[2];
-	$is_artworks_active = $setting[3];
-	$is_displaymorefrom_active = $setting[4];
-	$max_results = $setting[5];
-	$alfred_playlist_uri = $setting[6];
+	$is_displaymorefrom_active = $setting[3];
+	$max_results = $setting[4];
+	$alfred_playlist_uri = $setting[5];
 endforeach;
 
 
@@ -102,8 +101,8 @@ if(mb_strlen($query) < 3 ||
 				if(substr_count( $command_output, '→' ) > 0)
 				{
 					$results = explode('→', $command_output);
-					$currentArtwork = getTrackOrAlbumArtwork($w,$is_artworks_active,$results[4],false);
-					$currentArtistArtwork = getArtistArtwork($w,$is_artworks_active,$results[1],false);
+					$currentArtwork = getTrackOrAlbumArtwork($w,$results[4],false);
+					$currentArtistArtwork = getArtistArtwork($w,$results[1],false);
 					$w->result( '', '||||playpause|||||', "$results[0]", "$results[2] by $results[1]", ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', '' );
 					$w->result( '', '', "$results[1]", "More from this artist..", $currentArtistArtwork, 'no', $results[1] );
 					$w->result( '', '', "$results[2]", "More from this album..", $currentArtwork, 'no', $results[2] );
@@ -199,14 +198,6 @@ if(mb_strlen($query) < 3 ||
 		{
 			$w->result( '', "|||||||" . "enable_alfred_playlist||", "Enable Alfred Playlist", "Display Alfred Playlist", './images/check.png', 'yes', '' );
 		}
-		if ($is_artworks_active == true)
-		{
-			$w->result( '', "|||||||" . "disable_artworks||", "Disable artworks", "Do not display artworks", './images/uncheck.png', 'yes', '' );
-		}
-		else
-		{
-			$w->result( '', "|||||||" . "enable_artworks||", "Enable artworks", "Display artworks", './images/check.png', 'yes', '' );
-		}	
 		if ($is_displaymorefrom_active == true)
 		{
 			$w->result( '', "|||||||" . "disable_displaymorefrom||", "Disable \"More from this artist/album\"", "Disable the option which displays more tracks from current artist/album", './images/uncheck.png', 'yes', '' );
@@ -557,7 +548,7 @@ else
 								{						
 									if(checkIfResultAlreadyThere($w->results(),ucfirst($album->name)) == false)
 									{	
-										$w->result( "spotify_mini-spotify-online-album" . $album->name, '', ucfirst($album->name), "by " . $album->artist . " (" . $album->released . ")", getTrackOrAlbumArtwork($w,$is_artworks_active,$album->href,false), 'no', "Online→" . $artist_uri . "@" . $album->artist . "@" . $album->href . "@" . $album->name);
+										$w->result( "spotify_mini-spotify-online-album" . $album->name, '', ucfirst($album->name), "by " . $album->artist . " (" . $album->released . ")", getTrackOrAlbumArtwork($w,$album->href,false), 'no', "Online→" . $artist_uri . "@" . $album->artist . "@" . $album->href . "@" . $album->name);
 									}
 								}
 							}
@@ -609,7 +600,7 @@ else
 		
 							if(checkIfResultAlreadyThere($w->results(),ucfirst($artist_name) . " - " . $value->name) == false)
 							{	
-								$w->result( "spotify_mini-spotify-online-track-" . $value->name, $value->href . "|" . $album_uri . "|" . $artist_uri . "|||||"  . "|" . $alfred_playlist_uri . "|" . $track[7], ucfirst($artist_name) . " - " . $value->name, $subtitle, getTrackOrAlbumArtwork($w,$is_artworks_active,$value->href,false), 'yes', '' );
+								$w->result( "spotify_mini-spotify-online-track-" . $value->name, $value->href . "|" . $album_uri . "|" . $artist_uri . "|||||"  . "|" . $alfred_playlist_uri . "|" . $track[7], ucfirst($artist_name) . " - " . $value->name, $subtitle, getTrackOrAlbumArtwork($w,$value->href,false), 'yes', '' );
 							}
 						}
 						break;
