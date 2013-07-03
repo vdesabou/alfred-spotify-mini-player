@@ -308,7 +308,15 @@ function createPlaylists()
 				exec($sql);
 			}
 		};
-		
+
+		$getCount = "select count(*) from playlists";
+		$dbfile = $w->data() . "/library.db";
+		exec("sqlite3 \"$dbfile\" \"$getCount\"", $playlists);
+	
+		// update countersfor playlists
+		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"update counters set playlists='. $playlists[0] .'"';
+		exec($sql);
+				
 		unlink($w->data() . "/playlists-tmp.json");	
 	}
 }
@@ -329,7 +337,9 @@ function updateLibrary()
 		
 		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table tracks (starred boolean, popularity int, uri text, album_uri text, artist_uri text, track_name text, album_name text, artist_name text, album_year text)"';
 		exec($sql);
-		$count = 0;
+		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table counters (all_tracks int, starred_tracks int, all_artists int, starred_artists int, all_albums int, starred_albums int, playlists int)"';
+		exec($sql);
+
 		foreach ($json as $item) 
 		{				
 			if( $item['data']['starred'] == true )
@@ -343,10 +353,36 @@ function updateLibrary()
 			
 			$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into tracks values ('. $starred .','.$item['data']['popularity'].',\"'.$item['data']['uri'].'\",\"'.$item['data']['album']['uri'].'\",\"'.$item['data']['album']['artist']['uri'].'\",\"'.str_replace("`","\`",str_replace("&apos;","'",str_replace("&amp;","&",$item['data']['name']))).'\",\"'.str_replace("`","\`",str_replace("&apos;","'",str_replace("&amp;","&",$item['data']['album']['name']))).'\",\"'.str_replace("`","\`",str_replace("&apos;","'",str_replace("&amp;","&",$item['data']['album']['artist']['name']))).'\"'.','.$item['data']['album']['year'].')"';
 			exec($sql);
-			$count++;	
 		}
 		
-		echo "Library has been created (" . $count . " tracks)";
+		$getCount = "select count(*) from tracks";
+		$dbfile = $w->data() . "/library.db";
+		exec("sqlite3 \"$dbfile\" \"$getCount\"", $all_tracks);	
+
+		$getCount = "select count(*) from tracks where starred=1";
+		$dbfile = $w->data() . "/library.db";
+		exec("sqlite3 \"$dbfile\" \"$getCount\"", $starred_tracks);	
+
+		$getCount = "select count(distinct artist_name) from tracks";
+		$dbfile = $w->data() . "/library.db";
+		exec("sqlite3 \"$dbfile\" \"$getCount\"", $all_artists);
+		
+		$getCount = "select count(distinct artist_name) from tracks where starred=1";
+		$dbfile = $w->data() . "/library.db";
+		exec("sqlite3 \"$dbfile\" \"$getCount\"", $starred_artists);
+
+		$getCount = "select count(distinct album_name) from tracks";
+		$dbfile = $w->data() . "/library.db";
+		exec("sqlite3 \"$dbfile\" \"$getCount\"", $all_albums);
+		
+		$getCount = "select count(distinct album_name) from tracks where starred=1";
+		$dbfile = $w->data() . "/library.db";
+		exec("sqlite3 \"$dbfile\" \"$getCount\"", $starred_albums);
+	
+		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into counters values ('. $all_tracks[0] .','. $starred_tracks[0] .','. $all_artists[0] .','. $starred_artists[0] .','. $all_albums[0] .','. $starred_albums[0] .','. '\"\"' .')"';
+		exec($sql);
+				
+		echo "Library has been created (" . $all_tracks[0] . " tracks)";								
 	} 
 	else 
 	{ 
@@ -540,10 +576,6 @@ function refreshAlfredPlaylist()
 		{
 			$no_match = true;
 		}
-		
-		// update playlists table for nb_tracks
-		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"update playlists set nb_tracks='. $n .' where uri=\"' . $alfred_playlist_uri . '\""';
-		exec($sql);
 	}
 }
 

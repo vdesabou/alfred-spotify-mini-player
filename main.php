@@ -63,14 +63,27 @@ if(mb_strlen($query) < 3 ||
 	{
 		// check for correct configuration
 		if (file_exists($w->data() . "/library.db") && file_exists($w->home() . "/Spotify/spotify-app-miniplayer/manifest.json"))
-		{		
-			if($all_playlists == true)
-			{
-				$getCount = "select count(*) from tracks";
+		{	
+			$getCounters = "select * from counters";
+			$dbfile = $w->data() . "/library.db";
+			exec("sqlite3 -separator '	' \"$dbfile\" \"$getCounters\"", $counters);
+			
+			foreach($counters as $counter):
+			
+				$counter = explode("	",$counter);
 				
-				$dbfile = $w->data() . "/library.db";
-				exec("sqlite3 \"$dbfile\" \"$getCount\"", $n);			
-				$w->result( '', '', "Search for music in all your playlists" . " (" . $n[0] . " tracks)", "Begin typing to search (at least 3 characters)", './images/allplaylists.png', 'no', '' );
+				$all_tracks = $counter[0];
+				$starred_tracks = $counter[1];
+				$all_artists = $counter[2];
+				$starred_artists = $counter[3];
+				$all_albums = $counter[4];
+				$starred_albums = $counter[5];
+				$nb_playlists = $counter[6];
+			endforeach;
+			
+			if($all_playlists == true)
+			{		
+				$w->result( '', '', "Search for music in all your playlists", "Begin typing at least 3 characters to start search" . " (" . $all_tracks . " tracks)", './images/allplaylists.png', 'no', '' );
 			}
 			else
 			{
@@ -78,7 +91,7 @@ if(mb_strlen($query) < 3 ||
 				
 				$dbfile = $w->data() . "/library.db";
 				exec("sqlite3 \"$dbfile\" \"$getCount\"", $n);
-				$w->result( '', '', "Search for music in your ★ playlist" . " (" . $n[0] . " tracks)", "Begin typing to search (at least 3 characters)", './images/star.png', 'no', '' );
+				$w->result( '', '', "Search for music in your ★ playlist", "Begin typing at least 3 characters to start search" . " (" . $starred_tracks . " tracks)", './images/star.png', 'no', '' );
 			}
 			
 			if($is_displaymorefrom_active == true)
@@ -100,9 +113,17 @@ if(mb_strlen($query) < 3 ||
 			{
 				$w->result( '', '', "Alfred Playlist", "Control your Alfred Playlist", './images/alfred_playlist.png', 'no', 'Alfred Playlist→' );	
 			}
-			$w->result( '', '', "Playlists", "Browse by playlist", './images/playlists.png', 'no', 'Playlist→' );
-			$w->result( '', '', "Artists", "Browse by artist", './images/artists.png', 'no', 'Artist→' );
-			$w->result( '', '', "Albums", "Browse by album", './images/albums.png', 'no', 'Album→' );			
+			$w->result( '', '', "Playlists", "Browse by playlist". " (" . $nb_playlists . " playlists)", './images/playlists.png', 'no', 'Playlist→' );
+			if($all_playlists == true)
+			{
+				$w->result( '', '', "Artists", "Browse by artist" . " (" . $all_artists . " artists)", './images/artists.png', 'no', 'Artist→' );
+				$w->result( '', '', "Albums", "Browse by album" . " (" . $all_albums . " albums)", './images/albums.png', 'no', 'Album→' );
+			}
+			else
+			{
+				$w->result( '', '', "Artists", "Browse by artist" . " (" . $starred_artists . " artists)", './images/artists.png', 'no', 'Artist→' );
+				$w->result( '', '', "Albums", "Browse by album" . " (" . $starred_albums . " albums)", './images/albums.png', 'no', 'Album→' );
+			}
 		}
 		else
 		{
