@@ -177,6 +177,100 @@ function getArtistArtworkURL($w,$artist) {
 	return $json[artist][image][1]['#text'];
 }
 
+function updateLibrary()
+{
+	$w = new Workflows();
+	
+	//
+	// move files in hash directories if existing
+	//
+	$folder   = $w->data() . "/artwork";
+	$bytes    = 0;
+	$total    = 0;
+	if ($handle = opendir($folder)) {
+	
+		while (false !== ($file = readdir($handle))) {
+			if (stristr($file, '.png')) {
+				exec("mkdir '".$w->data()."/artwork/".hash('md5',$file)."'");
+				rename($folder . '/' . $file,$folder . '/' . hash('md5',$file) . '/' . $file);
+			}
+		}
+	
+		closedir($handle);
+	}
+	
+	putenv('LANG=fr_FR.UTF-8');
+	
+	ini_set('memory_limit', '512M' );
+	
+	//try to decode it 
+	$json = json_decode(exec('pbpaste'),true);
+	if (json_last_error() === JSON_ERROR_NONE) 
+	{
+		touch($w->data() . "/library.db");
+		
+		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table tracks (starred boolean, popularity int, uri text, album_uri text, artist_uri text, track_name text, album_name text, artist_name text, album_year text, track_artwork_path text, artist_artwork_path text, album_artwork_path text)"';
+		exec($sql);
+		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table counters (all_tracks int, starred_tracks int, all_artists int, starred_artists int, all_albums int, starred_albums int, playlists int)"';
+		exec($sql);
+
+		foreach ($json as $item) 
+		{				
+			if( $item['data']['starred'] == true )
+			{
+				$starred = 1;
+			}
+			else
+			{
+				$starred = 0;				
+			}
+			
+			//
+			// Download artworks
+			$track_artwork_path = getTrackOrAlbumArtwork($w,true,$item['data']['uri'],true);
+			$artist_artwork_path = getArtistArtwork($w,true,$item['data']['album']['artist']['name'],true);
+			$album_artwork_path = getTrackOrAlbumArtwork($w,true,$item['data']['album']['uri'],true);
+			
+			$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into tracks values ('. $starred .','.$item['data']['popularity'].',\"'.$item['data']['uri'].'\",\"'.$item['data']['album']['uri'].'\",\"'.$item['data']['album']['artist']['uri'].'\",\"'.str_replace("`","\`",str_replace("&apos;","'",str_replace("&amp;","&",$item['data']['name']))).'\",\"'.str_replace("`","\`",str_replace("&apos;","'",str_replace("&amp;","&",$item['data']['album']['name']))).'\",\"'.str_replace("`","\`",str_replace("&apos;","'",str_replace("&amp;","&",$item['data']['album']['artist']['name']))).'\"'.','.$item['data']['album']['year'].',\"'.$track_artwork_path.'\"'.',\"'.$artist_artwork_path.'\"'.',\"'.$album_artwork_path.'\"'.')"';
+			exec($sql);
+		}
+		
+		$getCount = "select count(*) from tracks";
+		$dbfile = $w->data() . "/library.db";
+		exec("sqlite3 \"$dbfile\" \"$getCount\"", $all_tracks);	
+
+		$getCount = "select count(*) from tracks where starred=1";
+		$dbfile = $w->data() . "/library.db";
+		exec("sqlite3 \"$dbfile\" \"$getCount\"", $starred_tracks);	
+
+		$getCount = "select count(distinct artist_name) from tracks";
+		$dbfile = $w->data() . "/library.db";
+		exec("sqlite3 \"$dbfile\" \"$getCount\"", $all_artists);
+		
+		$getCount = "select count(distinct artist_name) from tracks where starred=1";
+		$dbfile = $w->data() . "/library.db";
+		exec("sqlite3 \"$dbfile\" \"$getCount\"", $starred_artists);
+
+		$getCount = "select count(distinct album_name) from tracks";
+		$dbfile = $w->data() . "/library.db";
+		exec("sqlite3 \"$dbfile\" \"$getCount\"", $all_albums);
+		
+		$getCount = "select count(distinct album_name) from tracks where starred=1";
+		$dbfile = $w->data() . "/library.db";
+		exec("sqlite3 \"$dbfile\" \"$getCount\"", $starred_albums);
+	
+		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into counters values ('. $all_tracks[0] .','. $starred_tracks[0] .','. $all_artists[0] .','. $starred_artists[0] .','. $all_albums[0] .','. $starred_albums[0] .','. '\"\"' .')"';
+		exec($sql);
+				
+		echo "Library has been created (" . $all_tracks[0] . " tracks)";								
+	} 
+	else 
+	{ 
+	    //it's not JSON. Log error
+	    echo "ERROR: JSON data is not valid!";
+	}	
+}
+
 function createPlaylists()
 {
 	$w = new Workflows();
@@ -262,7 +356,7 @@ function createPlaylists()
 			$get_context = stream_context_create(array('http'=>array('timeout'=>15)));
 			@$get = file_get_contents('https://embed.spotify.com/?uri=' . $uri, false, $get_context);
 		
-			$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table \"playlist_' . $playlist_name . '\" (starred boolean, popularity int, uri text, album_uri text, artist_uri text, track_name text, album_name text, artist_name text, album_year text)"';
+			$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table \"playlist_' . $playlist_name . '\" (starred boolean, popularity int, uri text, album_uri text, artist_uri text, track_name text, album_name text, artist_name text, album_year text, track_artwork_path text, artist_artwork_path text, album_artwork_path text)"';
 			exec($sql);
 			
 			if(empty($get))
@@ -288,8 +382,12 @@ function createPlaylists()
 						$artist = $artists[1][$n];
 						$title = ltrim(substr($titles[1][$n], strpos($titles[1][$n], ' ')));						
 
-
-						$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into \"playlist_' . $playlist_name . '\" values (0,0,\"'. $uri .'\",\"\",\"\",\"'.$title .'\",\"\",\"'. $artist .'\",\"\")"';
+						//
+						// Download artworks
+						$track_artwork_path = getTrackOrAlbumArtwork($w,true,$uri,true);
+						$artist_artwork_path = getArtistArtwork($w,true,$artist,true);
+						
+						$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into \"playlist_' . $playlist_name . '\" values (0,0,\"'. $uri .'\",\"\",\"\",\"'.$title .'\",\"\",\"'. $artist .'\",\"\"'.',\"'.$track_artwork_path.'\"'.',\"'.$artist_artwork_path.'\"'.',\"'.$album_artwork_path.'\"'.')"';
 						exec($sql);
 			
 						$n++;
@@ -313,7 +411,7 @@ function createPlaylists()
 		$dbfile = $w->data() . "/library.db";
 		exec("sqlite3 \"$dbfile\" \"$getCount\"", $playlists);
 	
-		// update countersfor playlists
+		// update counters for playlists
 		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"update counters set playlists='. $playlists[0] .'"';
 		exec($sql);
 				
@@ -321,99 +419,10 @@ function createPlaylists()
 	}
 }
 
-function updateLibrary()
-{
-	$w = new Workflows();
-	
-	putenv('LANG=fr_FR.UTF-8');
-	
-	ini_set('memory_limit', '512M' );
-	
-	//try to decode it 
-	$json = json_decode(exec('pbpaste'),true);
-	if (json_last_error() === JSON_ERROR_NONE) 
-	{
-		touch($w->data() . "/library.db");
-		
-		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table tracks (starred boolean, popularity int, uri text, album_uri text, artist_uri text, track_name text, album_name text, artist_name text, album_year text)"';
-		exec($sql);
-		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table counters (all_tracks int, starred_tracks int, all_artists int, starred_artists int, all_albums int, starred_albums int, playlists int)"';
-		exec($sql);
-
-		foreach ($json as $item) 
-		{				
-			if( $item['data']['starred'] == true )
-			{
-				$starred = 1;
-			}
-			else
-			{
-				$starred = 0;				
-			}
-			
-			$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into tracks values ('. $starred .','.$item['data']['popularity'].',\"'.$item['data']['uri'].'\",\"'.$item['data']['album']['uri'].'\",\"'.$item['data']['album']['artist']['uri'].'\",\"'.str_replace("`","\`",str_replace("&apos;","'",str_replace("&amp;","&",$item['data']['name']))).'\",\"'.str_replace("`","\`",str_replace("&apos;","'",str_replace("&amp;","&",$item['data']['album']['name']))).'\",\"'.str_replace("`","\`",str_replace("&apos;","'",str_replace("&amp;","&",$item['data']['album']['artist']['name']))).'\"'.','.$item['data']['album']['year'].')"';
-			exec($sql);
-		}
-		
-		$getCount = "select count(*) from tracks";
-		$dbfile = $w->data() . "/library.db";
-		exec("sqlite3 \"$dbfile\" \"$getCount\"", $all_tracks);	
-
-		$getCount = "select count(*) from tracks where starred=1";
-		$dbfile = $w->data() . "/library.db";
-		exec("sqlite3 \"$dbfile\" \"$getCount\"", $starred_tracks);	
-
-		$getCount = "select count(distinct artist_name) from tracks";
-		$dbfile = $w->data() . "/library.db";
-		exec("sqlite3 \"$dbfile\" \"$getCount\"", $all_artists);
-		
-		$getCount = "select count(distinct artist_name) from tracks where starred=1";
-		$dbfile = $w->data() . "/library.db";
-		exec("sqlite3 \"$dbfile\" \"$getCount\"", $starred_artists);
-
-		$getCount = "select count(distinct album_name) from tracks";
-		$dbfile = $w->data() . "/library.db";
-		exec("sqlite3 \"$dbfile\" \"$getCount\"", $all_albums);
-		
-		$getCount = "select count(distinct album_name) from tracks where starred=1";
-		$dbfile = $w->data() . "/library.db";
-		exec("sqlite3 \"$dbfile\" \"$getCount\"", $starred_albums);
-	
-		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into counters values ('. $all_tracks[0] .','. $starred_tracks[0] .','. $all_artists[0] .','. $starred_artists[0] .','. $all_albums[0] .','. $starred_albums[0] .','. '\"\"' .')"';
-		exec($sql);
-				
-		echo "Library has been created (" . $all_tracks[0] . " tracks)";								
-	} 
-	else 
-	{ 
-	    //it's not JSON. Log error
-	    echo "ERROR: JSON data is not valid!";
-	}	
-}
-
-
 function downloadAllArtworks()
 {
 	$w = new Workflows();
-	
-	//
-	// move files in hash directories if existing
-	//
-	$folder   = $w->data() . "/artwork";
-	$bytes    = 0;
-	$total    = 0;
-	if ($handle = opendir($folder)) {
-	
-		while (false !== ($file = readdir($handle))) {
-			if (stristr($file, '.png')) {
-				exec("mkdir '".$w->data()."/artwork/".hash('md5',$file)."'");
-				rename($folder . '/' . $file,$folder . '/' . hash('md5',$file) . '/' . $file);
-			}
-		}
-	
-		closedir($handle);
-	}
-	
+		
 	$getSettings = "select all_playlists from settings";
 	$dbfile = $w->data() . "/settings.db";
 	exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\"", $settings);
