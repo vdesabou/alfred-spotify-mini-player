@@ -182,7 +182,7 @@ if(mb_strlen($query) < 3 ||
 		$w->result( '', "|||||||" . "open_spotify_export_app||", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Update library.", './images/app_miniplayer.png', 'yes', '' );
 		$w->result( '', "|||||||" . "update_library_json||", "Update library", "Make sure the clipboard contains the json data from the Spotify Mini Player App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
 		$w->result( '', '', "Configure Max Number of Results", "Number of results displayed. (it doesn't apply to your playlist list)", './images/numbers.png', 'no', 'Settings→MaxResults→' );
-		$w->result( '', "|||||||" . "cache||", "Cache All Artworks", "This is recommended to do it before using the player", './images/cache.png', 'yes', '' );
+
 		if ($is_spotifious_active == true)
 		{
 			$w->result( '', "|||||||" . "disable_spotifiuous||", "Disable Spotifious", "Do not display Spotifious in default results", './images/uncheck.png', 'yes', '' );

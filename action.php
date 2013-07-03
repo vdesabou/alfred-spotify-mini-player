@@ -117,11 +117,7 @@ else if($original_query != "")
 }
 else if($other_action != "")
 {
-	if($other_action == "cache")
-	{
-		downloadAllArtworks();
-	}
-	else if ($other_action == "disable_all_playlist")
+	if ($other_action == "disable_all_playlist")
 	{
 		$setSettings = "update settings set all_playlists=0";
 		$dbfile = $w->data() . "/settings.db";
