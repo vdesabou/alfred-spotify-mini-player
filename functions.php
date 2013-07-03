@@ -470,7 +470,12 @@ function refreshAlfredPlaylist()
 				$artist = $artists[1][$n];
 				$title = ltrim(substr($titles[1][$n], strpos($titles[1][$n], ' ')));
 				
-				$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into \"playlist_' . $playlist_name . '\" values (0,0,\"'. $uri .'\",\"\",\"\",\"'.$title .'\",\"\",\"'. $artist .'\",\"\")"';
+				//
+				// Download artworks
+				$track_artwork_path = getTrackOrAlbumArtwork($w,true,$uri,true);
+				$artist_artwork_path = getArtistArtwork($w,true,$artist,true);
+				
+				$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into \"playlist_' . $playlist_name . '\" values (0,0,\"'. $uri .'\",\"\",\"\",\"'.$title .'\",\"\",\"'. $artist .'\",\"\"'.',\"'.$track_artwork_path.'\"'.',\"'.$artist_artwork_path.'\"'.',\"'.$album_artwork_path.'\"'.')"';
 				exec($sql);
 
 				$n++;
