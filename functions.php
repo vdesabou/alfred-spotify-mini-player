@@ -215,9 +215,9 @@ function updateLibrary()
 			
 			//
 			// Download artworks
-			$track_artwork_path = getTrackOrAlbumArtwork($w,true,$item['data']['uri'],true);
-			$artist_artwork_path = getArtistArtwork($w,true,$item['data']['album']['artist']['name'],true);
-			$album_artwork_path = getTrackOrAlbumArtwork($w,true,$item['data']['album']['uri'],true);
+			$track_artwork_path = getTrackOrAlbumArtwork($w,$item['data']['uri'],true);
+			$artist_artwork_path = getArtistArtwork($w,$item['data']['album']['artist']['name'],true);
+			$album_artwork_path = getTrackOrAlbumArtwork($w,$item['data']['album']['uri'],true);
 			
 			$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into tracks values ('. $starred .','.$item['data']['popularity'].',\"'.$item['data']['uri'].'\",\"'.$item['data']['album']['uri'].'\",\"'.$item['data']['album']['artist']['uri'].'\",\"'.str_replace("`","\`",str_replace("&apos;","'",str_replace("&amp;","&",$item['data']['name']))).'\",\"'.str_replace("`","\`",str_replace("&apos;","'",str_replace("&amp;","&",$item['data']['album']['name']))).'\",\"'.str_replace("`","\`",str_replace("&apos;","'",str_replace("&amp;","&",$item['data']['album']['artist']['name']))).'\"'.','.$item['data']['album']['year'].',\"'.$track_artwork_path.'\"'.',\"'.$artist_artwork_path.'\"'.',\"'.$album_artwork_path.'\"'.')"';
 			exec($sql);
@@ -372,8 +372,8 @@ function createPlaylists()
 
 						//
 						// Download artworks
-						$track_artwork_path = getTrackOrAlbumArtwork($w,true,$uri,true);
-						$artist_artwork_path = getArtistArtwork($w,true,$artist,true);
+						$track_artwork_path = getTrackOrAlbumArtwork($w,$uri,true);
+						$artist_artwork_path = getArtistArtwork($w,$artist,true);
 						
 						$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into \"playlist_' . $playlist_name . '\" values (0,0,\"'. $uri .'\",\"\",\"\",\"'.$title .'\",\"\",\"'. $artist .'\",\"\"'.',\"'.$track_artwork_path.'\"'.',\"'.$artist_artwork_path.'\"'.',\"'.$album_artwork_path.'\"'.')"';
 						exec($sql);
@@ -472,8 +472,8 @@ function refreshAlfredPlaylist()
 				
 				//
 				// Download artworks
-				$track_artwork_path = getTrackOrAlbumArtwork($w,true,$uri,true);
-				$artist_artwork_path = getArtistArtwork($w,true,$artist,true);
+				$track_artwork_path = getTrackOrAlbumArtwork($w,$uri,true);
+				$artist_artwork_path = getArtistArtwork($w,$artist,true);
 				
 				$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into \"playlist_' . $playlist_name . '\" values (0,0,\"'. $uri .'\",\"\",\"\",\"'.$title .'\",\"\",\"'. $artist .'\",\"\"'.',\"'.$track_artwork_path.'\"'.',\"'.$artist_artwork_path.'\"'.',\"'.$album_artwork_path.'\"'.')"';
 				exec($sql);
@@ -485,6 +485,12 @@ function refreshAlfredPlaylist()
 		{
 			$no_match = true;
 		}
+	}
+	
+	if($no_match == false)
+	{
+		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"update playlists set nb_tracks='.$n.' where uri=\"'. $completeUri .'\""';
+		exec($sql);
 	}
 }
 
