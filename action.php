@@ -40,6 +40,7 @@ if($type == "TRACK")
 			exec("osascript -e 'tell application \"Spotify\" to open location \"$alfred_playlist_uri\"'");
 			sleep(15);
 			refreshAlfredPlaylist();
+			echo "Alfred Playlist has been refreshed";
 			return;
 		}
 		else
@@ -67,6 +68,7 @@ else if ($type == "ALBUM_OR_PLAYLIST")
 			exec("osascript -e 'tell application \"Spotify\" to open location \"$alfred_playlist_uri\"'");
 			sleep(15);
 			refreshAlfredPlaylist();
+			echo "Alfred Playlist has been refreshed";
 			return;
 		}
 		else if($playlist_uri != "")
@@ -75,6 +77,7 @@ else if ($type == "ALBUM_OR_PLAYLIST")
 			exec("osascript -e 'tell application \"Spotify\" to open location \"$alfred_playlist_uri\"'");
 			sleep(15);
 			refreshAlfredPlaylist();
+			echo "Alfred Playlist has been refreshed";
 			return;			
 		}
 	}
@@ -183,7 +186,8 @@ else if($other_action != "")
 		exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:clearalfredplaylist:$alfred_playlist_uri:" . uniqid() . "\"'");
 		exec("osascript -e 'tell application \"Spotify\" to open location \"$alfred_playlist_uri\"'");
 		sleep(15);	
-		refreshAlfredPlaylist();	
+		refreshAlfredPlaylist();
+		echo "Alfred Playlist has been refreshed";
 	}
 	else if ($other_action == "open_spotify_export_app")
 	{

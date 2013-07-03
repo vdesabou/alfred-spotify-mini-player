@@ -487,11 +487,9 @@ function refreshAlfredPlaylist()
 		}
 	}
 	
-	if($no_match == false)
-	{
-		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"update playlists set nb_tracks='.$n.' where uri=\"'. $completeUri .'\""';
-		exec($sql);
-	}
+
+	$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"update playlists set nb_tracks='.$n.' where uri=\"'. $completeUri .'\""';
+	exec($sql);
 }
 
 function getPlaylistName($uri)
