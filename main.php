@@ -277,15 +277,20 @@ else
 		$dbfile = $w->data() . "/library.db";
 		exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\"", $tracks);
 	
+		if(count($tracks) > 0)
+		{
+			$subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (search online)";
+			if($is_alfred_playlist_active ==true)
+			{
+				$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
+			}	
+			$w->result( 'help', 'help', "Select a track to play it", $subtitle, './images/info.png', 'no', '' );
+		}
 		foreach($tracks as $track):
 			$track = explode("	",$track);
 							
 			$subtitle = ($track[0] == true) ? "★ " : "";
-			$subtitle = $subtitle . $track[6] . "  ⌥ (play album) ⌘ (play artist)";
-			if($is_alfred_playlist_active ==true)
-			{
-				$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
-			}
+			$subtitle = $subtitle . $track[6];
 			
 			if(checkIfResultAlreadyThere($w->results(),ucfirst($track[7]) . " - " . $track[5]) == false)
 			{					
@@ -646,15 +651,21 @@ else
 				$dbfile = $w->data() . "/library.db";
 				exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\"", $tracks);
 				
+				if(count($tracks) > 0)
+				{
+					$subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (search online)";
+					if($is_alfred_playlist_active ==true)
+					{
+						$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
+					}	
+					$w->result( 'help', 'help', "Select a track to play it", $subtitle, './images/info.png', 'no', '' );
+				}
+		
 				foreach($tracks as $track):
 					$track = explode("	",$track);
 
 					$subtitle = ($track[0] == true) ? "★ " : "";
-					$subtitle = $subtitle . $track[6] . "  ⌥ (play album) ⌘ (play artist)";
-					if($is_alfred_playlist_active ==true)
-					{
-						$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
-					}
+					$subtitle = $subtitle . $track[6];
 
 					if(checkIfResultAlreadyThere($w->results(),ucfirst($track[7]) . " - " . $track[5]) == false)
 					{	
@@ -685,15 +696,21 @@ else
 				$dbfile = $w->data() . "/library.db";
 				exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\"", $tracks);
 				
+				if(count($tracks) > 0)
+				{
+					$subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (search online)";
+					if($is_alfred_playlist_active ==true)
+					{
+						$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
+					}	
+					$w->result( 'help', 'help', "Select a track to play it", $subtitle, './images/info.png', 'no', '' );
+				}
+		
 				foreach($tracks as $track):
 					$track = explode("	",$track);
 					
 					$subtitle = ($track[0] == true) ? "★ " : "";
-					$subtitle = $subtitle  . $track[6] . "  ⌥ (play album) ⌘ (play artist)";
-					if($is_alfred_playlist_active ==true)
-					{
-						$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
-					}
+					$subtitle = $subtitle  . $track[6];
 
 					if(checkIfResultAlreadyThere($w->results(),ucfirst($track[7]) . " - " . $track[5]) == false)
 					{								
@@ -733,15 +750,21 @@ else
 				$dbfile = $w->data() . "/library.db";
 				exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\"", $tracks);
 				
+				if(count($tracks) > 0)
+				{
+					$subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (search online)";
+					if($is_alfred_playlist_active ==true)
+					{
+						$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
+					}	
+					$w->result( 'help', 'help', "Select a track to play it", $subtitle, './images/info.png', 'no', '' );
+				}
+		
 				foreach($tracks as $track):
 					$track = explode("	",$track);
 						
 					$subtitle = ($track[0] == true) ? "★ " : "";
-					$subtitle = $subtitle . $track[6] . "  ⌥ (play album) ⌘ (play artist)";
-					if($is_alfred_playlist_active ==true)
-					{
-						$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
-					}
+					$subtitle = $subtitle . $track[6];
 
 					if(checkIfResultAlreadyThere($w->results(),ucfirst($track[7]) . " - " . $track[5]) == false)
 					{	
@@ -772,15 +795,21 @@ else
 				$dbfile = $w->data() . "/library.db";
 				exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\"", $tracks);
 				
+				if(count($tracks) > 0)
+				{
+					$subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (search online)";
+					if($is_alfred_playlist_active ==true)
+					{
+						$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
+					}	
+					$w->result( 'help', 'help', "Select a track to play it", $subtitle, './images/info.png', 'no', '' );
+				}
+		
 				foreach($tracks as $track):
 					$track = explode("	",$track);
 						
 					$subtitle = ($track[0] == true) ? "★ " : "";
-					$subtitle = $subtitle  . $track[6] . "  ⌥ (play album) ⌘ (play artist)";
-					if($is_alfred_playlist_active ==true)
-					{
-						$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
-					}
+					$subtitle = $subtitle  . $track[6];
 
 					if(checkIfResultAlreadyThere($w->results(),ucfirst($track[7]) . " - " . $track[5]) == false)
 					{	
@@ -847,6 +876,12 @@ else
 					$dbfile = $w->data() . "/library.db";
 					exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\"", $tracks);
 					
+					if(count($tracks) > 0)
+					{
+						$subtitle = "playing the track is the only possible option here";
+						$w->result( 'help', 'help', "Select a track to play it", $subtitle, './images/info.png', 'no', '' );
+					}
+		
 					foreach($tracks as $track):
 						$track = explode("	",$track);	
 	
@@ -863,6 +898,12 @@ else
 					$dbfile = $w->data() . "/library.db";
 					exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\"", $tracks);
 					
+					if(count($tracks) > 0)
+					{
+						$subtitle = "playing the track is the only possible option here";
+						$w->result( 'help', 'help', "Select a track to play it", $subtitle, './images/info.png', 'no', '' );
+					}
+					
 					foreach($tracks as $track):
 						$track = explode("	",$track);
 														
@@ -874,7 +915,7 @@ else
 	
 						if(checkIfResultAlreadyThere($w->results(),ucfirst($track[7]) . " - " . $track[5]) == false)
 						{	
-							$w->result( "spotify_mini-spotify-playlist-track-" . $playlist_name . "-" .$track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri . "|" . $track[7], ucfirst($track[7]) . " - " . $track[5], $subtitle, $track[9], 'yes', '' );
+							$w->result( "spotify_mini-spotify-playlist-track-" . $playlist_name . "-" .$track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri . "|" . $track[7], ucfirst($track[7]) . " - " . $track[5], "Play track", $track[9], 'yes', '' );
 						}
 					endforeach;
 
