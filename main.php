@@ -965,7 +965,7 @@ else
 					$playlistName = getPlaylistName($alfred_playlist_uri);
 					if($playlistName == "Alfred Playlist")
 					{
-						$w->result( '', "||||||$alfred_playlist_uri||", "Alfred Playlist URI will be set to <" . $alfred_playlist_uri . ">", "Type enter to validate", './images/settings.png', 'yes', '' );
+						$w->result( '', "||||||$alfred_playlist_uri|||", "Alfred Playlist URI will be set to <" . $alfred_playlist_uri . ">", "Type enter to validate", './images/settings.png', 'yes', '' );
 					}
 					else
 					{
