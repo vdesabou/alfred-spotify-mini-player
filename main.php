@@ -857,15 +857,7 @@ else
 			endforeach;
 				
 			if($playlist_name)
-			{	
-				$subtitle = "Launch Playlist";
-				if($is_alfred_playlist_active ==true &&
-					$playlist[1] != "Alfred Playlist")
-				{
-					$subtitle = "$subtitle ,⇧ → add playlist to ♫";
-				}
-				$w->result( "spotify_mini-spotify-playlist-$playlist[1]", "|||" . $playlist[0] . "||||" . "||" . $alfred_playlist_uri, ucfirst($playlist[1]) . " by " . $playlist_user . " (" . $playlist[2] . " tracks)", $subtitle, './images/playlists.png', 'yes', '' );
-								
+			{									
 				if(mb_strlen($thetrack) < 3)
 				{
 					//
@@ -881,6 +873,14 @@ else
 						$subtitle = "playing the track is the only possible option here";
 						$w->result( 'help', 'help', "Select a track to play it", $subtitle, './images/info.png', 'no', '' );
 					}
+					
+					$subtitle = "Launch Playlist";
+					if($is_alfred_playlist_active ==true &&
+						$playlist[1] != "Alfred Playlist")
+					{
+						$subtitle = "$subtitle ,⇧ → add playlist to ♫";
+					}
+					$w->result( "spotify_mini-spotify-playlist-$playlist[1]", "|||" . $playlist[0] . "||||" . "||" . $alfred_playlist_uri, ucfirst($playlist[1]) . " by " . $playlist_user . " (" . $playlist[2] . " tracks)", $subtitle, './images/playlists.png', 'yes', '' );
 		
 					foreach($tracks as $track):
 						$track = explode("	",$track);	
@@ -904,6 +904,14 @@ else
 						$w->result( 'help', 'help', "Select a track to play it", $subtitle, './images/info.png', 'no', '' );
 					}
 					
+					$subtitle = "Launch Playlist";
+					if($is_alfred_playlist_active ==true &&
+						$playlist[1] != "Alfred Playlist")
+					{
+						$subtitle = "$subtitle ,⇧ → add playlist to ♫";
+					}
+					$w->result( "spotify_mini-spotify-playlist-$playlist[1]", "|||" . $playlist[0] . "||||" . "||" . $alfred_playlist_uri, ucfirst($playlist[1]) . " by " . $playlist_user . " (" . $playlist[2] . " tracks)", $subtitle, './images/playlists.png', 'yes', '' );
+				
 					foreach($tracks as $track):
 						$track = explode("	",$track);
 														
