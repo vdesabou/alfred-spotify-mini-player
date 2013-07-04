@@ -1,6 +1,14 @@
 <?php
 require_once('workflows.php');
 
+function escapeQuery($text) {
+	$text = str_replace("'", "’", $text);
+	$text = str_replace('"', "’", $text);
+	$text = str_replace("&apos;", "’", $text);
+	$text = str_replace("`", "’", $text);
+	$text = str_replace("&amp;", "&", $text);
+	return $text;
+}
 
 function checkIfResultAlreadyThere($results,$title) {
 	foreach($results as $result) {
@@ -219,7 +227,7 @@ function updateLibrary()
 			$artist_artwork_path = getArtistArtwork($w,$item['data']['album']['artist']['name'],true);
 			$album_artwork_path = getTrackOrAlbumArtwork($w,$item['data']['album']['uri'],true);
 			
-			$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into tracks values ('. $starred .','.$item['data']['popularity'].',\"'.$item['data']['uri'].'\",\"'.$item['data']['album']['uri'].'\",\"'.$item['data']['album']['artist']['uri'].'\",\"'.str_replace("`","\`",str_replace("&apos;","'",str_replace("&amp;","&",$item['data']['name']))).'\",\"'.str_replace("`","\`",str_replace("&apos;","'",str_replace("&amp;","&",$item['data']['album']['name']))).'\",\"'.str_replace("`","\`",str_replace("&apos;","'",str_replace("&amp;","&",$item['data']['album']['artist']['name']))).'\"'.','.$item['data']['album']['year'].',\"'.$track_artwork_path.'\"'.',\"'.$artist_artwork_path.'\"'.',\"'.$album_artwork_path.'\"'.')"';
+			$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into tracks values ('. $starred .','.$item['data']['popularity'].',\"'.$item['data']['uri'].'\",\"'.$item['data']['album']['uri'].'\",\"'.$item['data']['album']['artist']['uri'].'\",\"'.escapeQuery($item['data']['name']).'\",\"'.escapeQuery($item['data']['album']['name']).'\",\"'.escapeQuery($item['data']['album']['artist']['name']).'\"'.','.$item['data']['album']['year'].',\"'.$track_artwork_path.'\"'.',\"'.$artist_artwork_path.'\"'.',\"'.$album_artwork_path.'\"'.')"';
 			exec($sql);
 		}
 		
@@ -375,7 +383,7 @@ function createPlaylists()
 						$track_artwork_path = getTrackOrAlbumArtwork($w,$uri,true);
 						$artist_artwork_path = getArtistArtwork($w,$artist,true);
 						
-						$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into \"playlist_' . $playlist_name . '\" values (0,0,\"'. $uri .'\",\"\",\"\",\"'.$title .'\",\"\",\"'. $artist .'\",\"\"'.',\"'.$track_artwork_path.'\"'.',\"'.$artist_artwork_path.'\"'.',\"'.$album_artwork_path.'\"'.')"';
+						$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into \"playlist_' . $playlist_name . '\" values (0,0,\"'. $uri .'\",\"\",\"\",\"'.escapeQuery($title) .'\",\"\",\"'. escapeQuery($artist) .'\",\"\"'.',\"'.$track_artwork_path.'\"'.',\"'.$artist_artwork_path.'\"'.',\"'.$album_artwork_path.'\"'.')"';
 						exec($sql);
 			
 						$n++;
@@ -390,7 +398,7 @@ function createPlaylists()
 			if($no_match == false)
 			{
 				$r = explode(':', $completeUri);
-				$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into playlists values (\"'. $completeUri .'\",\"'. str_replace("&apos;","'",str_replace("&amp;","&",$name)) .'\",'. $n .',\"'. $r[2] .'\")"';
+				$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into playlists values (\"'. $completeUri .'\",\"'. escapeQuery($name) .'\",'. $n .',\"'. $r[2] .'\")"';
 				exec($sql);
 			}
 		};
@@ -475,7 +483,7 @@ function refreshAlfredPlaylist()
 				$track_artwork_path = getTrackOrAlbumArtwork($w,$uri,true);
 				$artist_artwork_path = getArtistArtwork($w,$artist,true);
 				
-				$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into \"playlist_' . $playlist_name . '\" values (0,0,\"'. $uri .'\",\"\",\"\",\"'.$title .'\",\"\",\"'. $artist .'\",\"\"'.',\"'.$track_artwork_path.'\"'.',\"'.$artist_artwork_path.'\"'.',\"'.$album_artwork_path.'\"'.')"';
+				$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into \"playlist_' . $playlist_name . '\" values (0,0,\"'. $uri .'\",\"\",\"\",\"'.escapeQuery($title) .'\",\"\",\"'. escapeQuery($artist) .'\",\"\"'.',\"'.$track_artwork_path.'\"'.',\"'.$artist_artwork_path.'\"'.',\"'.$album_artwork_path.'\"'.')"';
 				exec($sql);
 
 				$n++;

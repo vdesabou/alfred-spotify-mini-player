@@ -2,7 +2,7 @@
 include_once('functions.php');
 require_once('workflows.php');
 
-$query = $argv[1];
+$query = escapeQuery($argv[1]);
 # thanks to http://www.alfredforum.com/topic/1788-prevent-flash-of-no-result
 $query = iconv("UTF-8-MAC", "UTF-8", $query);
 
@@ -904,13 +904,6 @@ else
 						$w->result( 'help', 'help', "Select a track to play it", $subtitle, './images/info.png', 'no', '' );
 					}
 					
-					$subtitle = "Launch Playlist";
-					if($is_alfred_playlist_active ==true &&
-						$playlist[1] != "Alfred Playlist")
-					{
-						$subtitle = "$subtitle ,⇧ → add playlist to ♫";
-					}
-					$w->result( "spotify_mini-spotify-playlist-$playlist[1]", "|||" . $playlist[0] . "||||" . "||" . $alfred_playlist_uri, ucfirst($playlist[1]) . " by " . $playlist_user . " (" . $playlist[2] . " tracks)", $subtitle, './images/playlists.png', 'yes', '' );
 				
 					foreach($tracks as $track):
 						$track = explode("	",$track);

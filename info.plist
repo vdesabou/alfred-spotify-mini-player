@@ -277,7 +277,7 @@
 				<key>argumenttype</key>
 				<integer>1</integer>
 				<key>escaping</key>
-				<integer>62</integer>
+				<integer>38</integer>
 				<key>keyword</key>
 				<string>spot_mini</string>
 				<key>runningsubtext</key>
