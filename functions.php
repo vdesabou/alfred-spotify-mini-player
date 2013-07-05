@@ -101,10 +101,6 @@ function getTrackOrAlbumArtwork($w,$spotifyURL,$fetchIfNotPresent) {
 }
 
 function getArtistArtwork($w,$artist,$fetchIfNotPresent) {
-	
-	if($is_artworks_active == false)
-		return "images/default_artist.png";
-		
 	$parsedArtist = urlencode($artist);
 
 	if ( !file_exists( $w->data() . "/artwork" ) ):
