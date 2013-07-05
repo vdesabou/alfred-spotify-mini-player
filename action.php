@@ -177,6 +177,10 @@ else if($other_action != "")
 		exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:clearalfredplaylist:$alfred_playlist_uri:" . uniqid() . "\"'");
 		exec("osascript -e 'tell application \"Spotify\" to open location \"$alfred_playlist_uri\"'");
 	}
+	else if ($other_action == "play_top_list")
+	{
+		exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:toplist" . uniqid() . "\"'");
+	}
 	else if ($other_action == "open_spotify_export_app")
 	{
 		exec("osascript -e 'tell application \"Spotify\" to activate'");

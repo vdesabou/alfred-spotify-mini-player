@@ -4,31 +4,35 @@
  *		
  */
  
-/*
+
 function playTopList() {
+
 	var toplist = new models.Toplist();
-	toplist.toplistType = models.TOPLISTTYPE.USER;
-	toplist.matchType = models.TOPLISTMATCHES.TRACKS;
-	toplist.userName = models.TOPLISTUSER_CURRENT;
+    toplist.toplistType = models.TOPLISTTYPE.REGION;
+    toplist.userName = models.TOPLISTUSER_CURRENT;
+    toplist.matchType = models.TOPLISTMATCHES.TRACKS;
 
 	var playlist = new models.Playlist();
 	
-	toplist.observe(models.EVENT.CHANGE, function() {
-	    toplist.results.forEach(function(track) {
-	        var link = '<li><a href="' + track.uri + '">' + track.name + '</a></li>';
-		    var library_track = models.Track.fromURI(track.uri);
-	      
-	        // Add the track
-	        playlist.add(library_track);
-	    });
-	});
-	 
-	toplist.run();
+        toplist.observe(models.EVENT.CHANGE, function() {
+            var results = toplist.results;
+            for (var i=0; i<results.length; i++) {
+                
+			models.Track.fromURI(results[i].uri, function (track2) {
+		    	// Track has loaded!
+		    	playlist.add(track2);
+		    });
+            }
+        });
+
+        toplist.run();
+    
 
     // Verify the song was added to the playlist
     console.log(playlist);
+    models.player.play(playlist.uri, playlist.uri, 0);
 }
-*/
+
 
 function addToAlfredPlaylist(args) {
 	// Get the playlist object from a URI

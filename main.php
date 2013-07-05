@@ -322,6 +322,8 @@ else
 			//
 			$theplaylist=$words[1];
 			
+			$w->result( "spotify_mini-spotify-playlist-topplaylist", "|||||||" . "play_top_list||", "Your Top List", "Launch you Top list", './images/star.png', 'yes', "" );
+				
 			if(mb_strlen($theplaylist) < 3)
 			{
 				//
