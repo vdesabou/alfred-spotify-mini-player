@@ -373,7 +373,7 @@
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f action.php -- "{query}" "ALBUM"</string>
+				<string>php -f action.php -- "{query}" "ALBUM" 2&gt;&amp;1 | tee output_action.log</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -390,7 +390,7 @@
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f action.php -- "{query}" "ARTIST"</string>
+				<string>php -f action.php -- "{query}" "ARTIST" 2&gt;&amp;1 | tee output_action.log</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -432,7 +432,7 @@
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f action.php -- "{query}" "ALBUM_OR_PLAYLIST" "ADDTOPLAYLIST"</string>
+				<string>php -f action.php -- "{query}" "ALBUM_OR_PLAYLIST" "ADDTOPLAYLIST" 2&gt;&amp;1 | tee output_action.log</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -449,7 +449,7 @@
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f action.php -- "{query}" "TRACK" "ADDTOPLAYLIST"</string>
+				<string>php -f action.php -- "{query}" "TRACK" "ADDTOPLAYLIST" 2&gt;&amp;1 | tee output_action.log</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -491,7 +491,7 @@
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f action.php -- "{query}" "ONLINE" "ONLINE"</string>
+				<string>php -f action.php -- "{query}" "ONLINE" "ONLINE" 2&gt;&amp;1 | tee output_action.log</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
