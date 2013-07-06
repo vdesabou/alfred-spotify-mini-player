@@ -895,7 +895,7 @@ else
 				}
 				else
 				{
-					$getTracks = "select * from \"playlist_" . $playlist_name . "\" where track_name like '%".$thetrack."%'"." limit ".$max_results;
+					$getTracks = "select * from \"playlist_" . $playlist_name . "\" where (track_name like '%".$thetrack."%' or artist_name like '%".$thetrack."%')"." limit ".$max_results;
 					
 					$dbfile = $w->data() . "/library.db";
 					exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\"", $tracks);
