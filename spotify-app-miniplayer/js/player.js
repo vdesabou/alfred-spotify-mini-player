@@ -8,8 +8,9 @@
 function playTopList() {
 
 	var toplist = new models.Toplist();
-    toplist.toplistType = models.TOPLISTTYPE.REGION;
+    toplist.toplistType = models.TOPLISTTYPE.USER;
     toplist.userName = models.TOPLISTUSER_CURRENT;
+    //toplist.region = "FR";
     toplist.matchType = models.TOPLISTMATCHES.TRACKS;
 
 	var playlist = new models.Playlist();
