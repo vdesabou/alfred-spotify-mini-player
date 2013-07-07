@@ -551,11 +551,8 @@ else
 								
 								if(empty($availability->territories)/* ||
 									strpos($availability->territories,"FR") !== false */)
-								{						
-									if(checkIfResultAlreadyThere($w->results(),ucfirst($album->name)) == false)
-									{	
-										$w->result( "spotify_mini-spotify-online-album" . $album->name, '', ucfirst($album->name), "by " . $album->artist . " (" . $album->released . ")", getTrackOrAlbumArtwork($w,$album->href,false), 'no', "Online→" . $artist_uri . "@" . $album->artist . "@" . $album->href . "@" . $album->name);
-									}
+								{							
+									$w->result( "spotify_mini-spotify-online-album" . $album->name, '', ucfirst($album->name), "by " . $album->artist . " (" . $album->released . ")", getTrackOrAlbumArtwork($w,$album->href,false), 'no', "Online→" . $artist_uri . "@" . $album->artist . "@" . $album->href . "@" . $album->name);
 								}
 							}
 						}
@@ -604,10 +601,7 @@ else
 						$w->result( 'help', 'help', "Select a track to play it", $subtitle, './images/info.png', 'no', '' );
 						foreach ($json->album->tracks as $key => $value)
 						{						
-							if(checkIfResultAlreadyThere($w->results(),ucfirst($artist_name) . " - " . $value->name) == false)
-							{	
-								$w->result( "spotify_mini-spotify-online-track-" . $value->name, $value->href . "|" . $album_uri . "|" . $artist_uri . "|||||"  . "|" . $alfred_playlist_uri . "|" . $artist_name, ucfirst($artist_name) . " - " . $value->name, $album_name . " (" .$json->album->released . ")", getTrackOrAlbumArtwork($w,$value->href,false), 'yes', '' );
-							}
+							$w->result( "spotify_mini-spotify-online-track-" . $value->name, $value->href . "|" . $album_uri . "|" . $artist_uri . "|||||"  . "|" . $alfred_playlist_uri . "|" . $artist_name, ucfirst($artist_name) . " - " . $value->name, $album_name . " (" .$json->album->released . ")", getTrackOrAlbumArtwork($w,$value->href,false), 'yes', '' );
 						}
 						break;
 				}
