@@ -549,10 +549,13 @@ else
 								$availability = array();
 								$availability = $album->availability;
 								
-								if(empty($availability->territories)/* ||
-									strpos($availability->territories,"FR") !== false */)
-								{							
-									$w->result( "spotify_mini-spotify-online-album" . $album->name, '', ucfirst($album->name), "by " . $album->artist . " (" . $album->released . ")", getTrackOrAlbumArtwork($w,$album->href,false), 'no', "Online→" . $artist_uri . "@" . $album->artist . "@" . $album->href . "@" . $album->name);
+								if(empty($availability->territories) ||
+									strpos($availability->territories,"FR") !== false ) // TODO add it configurable use https://raw.github.com/johannesl/Internationalization/master/countrycodes.json
+								{						
+									if(checkIfResultAlreadyThere($w->results(),ucfirst($album->name)) == false)
+									{	
+										$w->result( "spotify_mini-spotify-online-album" . $album->name, '', ucfirst($album->name), "by " . $album->artist . " (" . $album->released . ")", getTrackOrAlbumArtwork($w,$album->href,false), 'no', "Online→" . $artist_uri . "@" . $album->artist . "@" . $album->href . "@" . $album->name);
+									}
 								}
 							}
 						}
@@ -602,6 +605,7 @@ else
 						foreach ($json->album->tracks as $key => $value)
 						{						
 							$w->result( "spotify_mini-spotify-online-track-" . $value->name, $value->href . "|" . $album_uri . "|" . $artist_uri . "|||||"  . "|" . $alfred_playlist_uri . "|" . $artist_name, ucfirst($artist_name) . " - " . $value->name, $album_name . " (" .$json->album->released . ")", getTrackOrAlbumArtwork($w,$value->href,false), 'yes', '' );
+							
 						}
 						break;
 				}
