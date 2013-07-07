@@ -161,6 +161,18 @@ function getTrackArtworkURL($w,$type, $id)
 	return 0;
 }
 
+function getArtistURLFromTrack($w, $id)
+{
+	$html = $w->request( "http://open.spotify.com/track/$id" );
+	
+	if (!empty($html)) {
+	 	preg_match_all('/.*?music:musician.*?content="(.*?)">.*?/is', $html, $m);
+	 	return (isset($m[1][0])) ? $m[1][0] : 0;
+	}
+	
+	return 0;
+}
+
 function getArtistArtworkURL($w,$artist) {
 	$parsedArtist = urlencode($artist);
 	$html = $w->request( "http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&api_key=49d58890a60114e8fdfc63cbcf75d6c5&artist=$parsedArtist&format=json");

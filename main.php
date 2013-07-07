@@ -104,8 +104,7 @@ if(mb_strlen($query) < 3 ||
 					$currentArtwork = getTrackOrAlbumArtwork($w,$results[4],false);
 					$currentArtistArtwork = getArtistArtwork($w,$results[1],false);
 					$w->result( '', '||||playpause|||||', "$results[0]", "$results[2] by $results[1]", ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', '' );
-					$w->result( '', '', "$results[1]", "More from this artist..", $currentArtistArtwork, 'no', $results[1] );
-					$w->result( '', '', "$results[2]", "More from this album..", $currentArtwork, 'no', $results[2] );
+					$w->result( '', "$results[4]|||||||" . "morefromthisartist||$results[1]", "$results[1]", "More from this artist online..", $currentArtistArtwork, 'yes', '' );
 				}
 			}
 			if ($is_alfred_playlist_active == true)
@@ -200,11 +199,11 @@ if(mb_strlen($query) < 3 ||
 		}
 		if ($is_displaymorefrom_active == true)
 		{
-			$w->result( '', "|||||||" . "disable_displaymorefrom||", "Disable \"More from this artist/album\"", "Disable the option which displays more tracks from current artist/album", './images/uncheck.png', 'yes', '' );
+			$w->result( '', "|||||||" . "disable_displaymorefrom||", "Disable \"More from this artist\"", "Disable the option which displays more tracks from current artist with online results", './images/uncheck.png', 'yes', '' );
 		}
 		else
 		{
-			$w->result( '', "|||||||" . "enable_displaymorefrom||", "Enable \"More from this artist/album\"", "Enable the option which displays more tracks from current artist/album", './images/check.png', 'yes', '' );
+			$w->result( '', "|||||||" . "enable_displaymorefrom||", "Enable \"More from this artist\"", "Enable the option which displays more tracks from current artist with online results", './images/check.png', 'yes', '' );
 		}			
 	}
 } 

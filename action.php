@@ -42,7 +42,8 @@ if($type == "TRACK")
 		}
 		else
 		{
-			exec("osascript -e 'tell application \"Spotify\" to open location \"$track_uri\"'");
+			if($other_action == "")
+				exec("osascript -e 'tell application \"Spotify\" to open location \"$track_uri\"'");
 		}
 	}
 }
@@ -185,6 +186,13 @@ else if($other_action != "")
 	{
 		exec("osascript -e 'tell application \"Spotify\" to activate'");
 		exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer\"'");
+	}
+	else if ($other_action == "morefromthisartist")
+	{
+		$t = explode(':', $track_uri);
+		$completeurl = getArtistURLFromTrack($w,$t[2]);
+		$a = explode('/', $completeurl);
+		exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online→spotify:artist:$a[4]@$artist_name\"'");
 	}
 	else if ($other_action == "update_library_json")
 	{
