@@ -579,7 +579,7 @@ else
 
 				if(empty($json))
 				{
-					$w->result( '', '', "Error: Spotify Metadata API returned empty result", "http://ws.spotify.com/lookup/1/.json?uri=" . $artist_uri . "&extras=albumdetail" , './images/warning.png', 'no', '' );
+					$w->result( '', '', "Error: Spotify Metadata API returned empty result", "http://ws.spotify.com/lookup/1/.json?uri=" . $album_uri . "&extras=trackdetail" , './images/warning.png', 'no', '' );
 					echo $w->toxml();
 					return;
 				}
@@ -597,17 +597,17 @@ else
 				    	$w->result( '', '', "There was an error when retrieving online information", "Syntax error, malformed JSON", './images/warning.png', 'no', '' );
 				        break;
 				    case JSON_ERROR_NONE:
+						$subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (search online)";
+						if($is_alfred_playlist_active ==true)
+						{
+							$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
+						}	
+						$w->result( 'help', 'help', "Select a track to play it", $subtitle, './images/info.png', 'no', '' );
 						foreach ($json->album->tracks as $key => $value)
 						{						
-							$subtitle = $album_name . "  ⌥ (play album) ⌘ (play artist)";
-							if($is_alfred_playlist_active ==true)
-							{
-								$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
-							}
-		
 							if(checkIfResultAlreadyThere($w->results(),ucfirst($artist_name) . " - " . $value->name) == false)
 							{	
-								$w->result( "spotify_mini-spotify-online-track-" . $value->name, $value->href . "|" . $album_uri . "|" . $artist_uri . "|||||"  . "|" . $alfred_playlist_uri . "|" . $artist_name, ucfirst($artist_name) . " - " . $value->name, $subtitle, getTrackOrAlbumArtwork($w,$value->href,false), 'yes', '' );
+								$w->result( "spotify_mini-spotify-online-track-" . $value->name, $value->href . "|" . $album_uri . "|" . $artist_uri . "|||||"  . "|" . $alfred_playlist_uri . "|" . $artist_name, ucfirst($artist_name) . " - " . $value->name, $album_name . " (" .$json->album->released . ")", getTrackOrAlbumArtwork($w,$value->href,false), 'yes', '' );
 							}
 						}
 						break;
