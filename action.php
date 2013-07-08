@@ -208,8 +208,6 @@ else if($other_action != "")
 				unlink($file);
      		}
      		
-     		createPlaylists();
-     		
      		if (file_exists($w->home() . "/Spotify/spotify-app-miniplayer"))
      		{	
      			exec("rm -rf " . $w->home() . "/Spotify/spotify-app-miniplayer");
