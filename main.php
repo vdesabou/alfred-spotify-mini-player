@@ -187,7 +187,7 @@ if(mb_strlen($query) < 3 ||
 		$w->result( '', "|||||||" . "open_spotify_export_app||", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Update library.", './images/app_miniplayer.png', 'yes', '' );
 		$w->result( '', "|||||||" . "update_library_json||", "Update library", "Make sure the clipboard contains the json data from the Spotify Mini Player App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
 		$w->result( '', '', "Configure Max Number of Results", "Number of results displayed. (it doesn't apply to your playlist list)", './images/numbers.png', 'no', 'Settings→MaxResults→' );
-		$w->result( '', '', "Configure your country", "This is needed to get avalaible results when doing online lookups", './images/settings.png', 'no', 'Settings→Country→' );
+		$w->result( '', '', "Configure your country code", "This is needed to get available results when doing online lookups", './images/settings.png', 'no', 'Settings→Country→' );
 
 		if ($is_spotifious_active == true)
 		{
@@ -524,6 +524,14 @@ else
 				$artist_uri=$words[0];
 				$artist_name=$words[1];
 		
+				if($country_code == "")
+				{
+					$w->result( '', '', "Country code is not configured", "Configure it now", './images/warning.png', 'no', '' );
+					$w->result( '', '', "Configure your country code", "This is needed to get availaible results when doing online lookups", './images/settings.png', 'no', 'Settings→Country→' );
+					echo $w->toxml();
+					return;	
+				}
+
 				$json = $w->request( "http://ws.spotify.com/lookup/1/.json?uri=" . trim($artist_uri) . "&extras=albumdetail" );
 				
 				if(empty($json))
