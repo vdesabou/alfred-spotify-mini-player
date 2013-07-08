@@ -108,10 +108,9 @@ if(mb_strlen($query) < 3 ||
 				if(substr_count( $command_output, '→' ) > 0)
 				{
 					$results = explode('→', $command_output);
-					$currentArtwork = getTrackOrAlbumArtwork($w,$results[4],false);
 					$currentArtistArtwork = getArtistArtwork($w,$results[1],false);
 					$w->result( '', '||||playpause|||||', "$results[0]", "$results[2] by $results[1]", ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', '' );
-					$w->result( '', "$results[4]|||||||" . "morefromthisartist||$results[1]", "$results[1]", "More from this artist online..", $currentArtistArtwork, 'yes', '' );
+					$w->result( '', "$results[4]|||||||" . "morefromthisartist||$results[1]", "$results[1]", "Lookup this artist online..", $currentArtistArtwork, 'yes', '' );
 				}
 			}
 			if ($is_alfred_playlist_active == true)
