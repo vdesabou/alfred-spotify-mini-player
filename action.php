@@ -91,19 +91,27 @@ else if($spotify_command != "")
 }
 else if($other_settings != "")
 {
-	if(is_numeric($other_settings))
+	$setting = explode('→', $other_settings);
+	if($setting[0] == "MAX_RESULTS")
 	{
-		$setSettings = "update settings set max_results=".$other_settings;
+		$setSettings = "update settings set max_results=".$setting[1];
 		$dbfile = $w->data() . "/settings.db";
 		exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-		echo "Max results has been set to $other_settings";
+		echo "Max results has been set to $setting[1]";
 	}
-	else
+	else if($setting[0] == "ALFRED_PLAYLIST")
 	{
-		$setSettings = 'update settings set alfred_playlist_uri=\"'.$other_settings.'\"';
+		$setSettings = 'update settings set alfred_playlist_uri=\"'.$setting[1].'\"';
 		$dbfile = $w->data() . "/settings.db";
 		exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-		echo "Alfred Playlist URI has been set to $other_settings";
+		echo "Alfred Playlist URI has been set to $setting[1]";
+	}
+	else if($setting[0] == "COUNTRY")
+	{
+		$setSettings = 'update settings set country_code=\"'.$setting[1].'\"';
+		$dbfile = $w->data() . "/settings.db";
+		exec("sqlite3 \"$dbfile\" \"$setSettings\"");
+		echo "Country Code has been set to $setting[1]";
 	}
 }
 else if($original_query != "")

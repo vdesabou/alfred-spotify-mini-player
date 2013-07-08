@@ -34,10 +34,10 @@ if(!file_exists($w->data() . "/settings.db"))
 {
 	touch($w->data() . "/settings.db");
 	
-	$sql = 'sqlite3 "' . $w->data() . '/settings.db" ' . ' "create table settings (all_playlists boolean, is_spotifious_active boolean, is_alfred_playlist_active boolean, is_displaymorefrom_active boolean, max_results int, alfred_playlist_uri text)"';
+	$sql = 'sqlite3 "' . $w->data() . '/settings.db" ' . ' "create table settings (all_playlists boolean, is_spotifious_active boolean, is_alfred_playlist_active boolean, is_displaymorefrom_active boolean, max_results int, alfred_playlist_uri text, country_code text)"';
 	exec($sql);
 	
-	$sql = 'sqlite3 "' . $w->data() . '/settings.db" ' . '"insert into settings values (0,1,1,1,50,\"\")"';
+	$sql = 'sqlite3 "' . $w->data() . '/settings.db" ' . '"insert into settings values (0,1,1,1,50,\"\",\"\")"';
 	exec($sql);
 }
 
@@ -58,10 +58,11 @@ foreach($settings as $setting):
 	$is_displaymorefrom_active = $setting[3];
 	$max_results = $setting[4];
 	$alfred_playlist_uri = $setting[5];
+	$country_code = $setting[6];
 endforeach;
 
-
-# thanks to http://www.alfredforum.com/topic/1788-prevent-flash-of-no-result
+			
+// thanks to http://www.alfredforum.com/topic/1788-prevent-flash-of-no-result
 mb_internal_encoding("UTF-8");
 if(mb_strlen($query) < 3 || 
 	((substr_count( $query, '→' ) == 1) && (strpos("Settings→",$query) !== false))
@@ -70,7 +71,8 @@ if(mb_strlen($query) < 3 ||
 	if ( substr_count( $query, '→' ) == 0 )
 	{
 		// check for correct configuration
-		if (file_exists($w->data() . "/library.db") && file_exists($w->home() . "/Spotify/spotify-app-miniplayer/manifest.json"))
+		if (file_exists($w->data() . "/library.db") && 
+			file_exists($w->home() . "/Spotify/spotify-app-miniplayer/manifest.json"))
 		{	
 			$getCounters = "select * from counters";
 			$dbfile = $w->data() . "/library.db";
@@ -95,10 +97,6 @@ if(mb_strlen($query) < 3 ||
 			}
 			else
 			{
-				$getCount = "select count(*) from tracks where starred=1";
-				
-				$dbfile = $w->data() . "/library.db";
-				exec("sqlite3 \"$dbfile\" \"$getCount\"", $n);
 				$w->result( '', '', "Search for music in your ★ playlist", "Begin typing at least 3 characters to start search" . " (" . $starred_tracks . " tracks)", './images/star.png', 'no', '' );
 			}
 			
@@ -189,6 +187,7 @@ if(mb_strlen($query) < 3 ||
 		$w->result( '', "|||||||" . "open_spotify_export_app||", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Update library.", './images/app_miniplayer.png', 'yes', '' );
 		$w->result( '', "|||||||" . "update_library_json||", "Update library", "Make sure the clipboard contains the json data from the Spotify Mini Player App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
 		$w->result( '', '', "Configure Max Number of Results", "Number of results displayed. (it doesn't apply to your playlist list)", './images/numbers.png', 'no', 'Settings→MaxResults→' );
+		$w->result( '', '', "Configure your country", "This is needed to get avalaible results when doing online lookups", './images/settings.png', 'no', 'Settings→Country→' );
 
 		if ($is_spotifious_active == true)
 		{
@@ -559,7 +558,7 @@ else
 								$availability = $album->availability;
 								
 								if(empty($availability->territories) ||
-									strpos($availability->territories,"FR") !== false ) // TODO add it configurable use https://raw.github.com/johannesl/Internationalization/master/countrycodes.json
+									strpos($availability->territories,$country_code) !== false )
 								{						
 									if(checkIfResultAlreadyThere($w->results(),ucfirst($album->name)) == false)
 									{	
@@ -624,7 +623,7 @@ else
 	}
 	////////////
 	//
-	// SECOND DELIMITER: Artist→the_artist→tracks , Album→the_album→tracks, Playlist→the_playlist→tracks or Settings→MaxResults→max_numbers, Alfred Playlist→Set Alfred Playlist URI→alfred_playlist_uri
+	// SECOND DELIMITER: Artist→the_artist→tracks , Album→the_album→tracks, Playlist→the_playlist→tracks,Settings→Country→country or Settings→MaxResults→max_numbers, Alfred Playlist→Set Alfred Playlist URI→alfred_playlist_uri
 	//
 	////////////
 	elseif ( substr_count( $query, '→' ) == 2 )
@@ -938,25 +937,75 @@ else
 		}// end of tracks by Playlist
 		elseif($kind == "Settings")
 		{
-			$max_results=$words[2];
+			$setting_kind=$words[1];
+			$the_query=$words[2];
 			
-			if(mb_strlen($max_results) == 0)
-			{					
-				$w->result( '', '', "Enter the Max Results number (must be greater than 0):", "The number of results has impact on performances", './images/settings.png', 'no', '' );
-			}
-			else
+			if($setting_kind == "MaxResults")
 			{
-				// max results has been set
-				if(is_numeric($max_results) == true && $max_results > 0)
-				{
-					$w->result( '', "||||||$max_results|||", "Max Results will be set to <" . $max_results . ">", "Type enter to validate the Max Results", './images/settings.png', 'yes', '' );
+				if(mb_strlen($the_query) == 0)
+				{					
+					$w->result( '', '', "Enter the Max Results number (must be greater than 0):", "Recommendation is between 50 to 100", './images/settings.png', 'no', '' );
 				}
 				else
 				{
-					$w->result( '', '', "The Max Results value entered is not valid", "Please fix it", './images/warning.png', 'no', '' );
-
+					// max results has been set
+					if(is_numeric($the_query) == true && $the_query > 0)
+					{
+						$w->result( '', "||||||" . "MAX_RESULTS→" . $the_query. "|||", "Max Results will be set to <" . $the_query . ">", "Type enter to validate the Max Results", './images/settings.png', 'yes', '' );
+					}
+					else
+					{
+						$w->result( '', '', "The Max Results value entered is not valid", "Please fix it", './images/warning.png', 'no', '' );
+	
+					}
+				}	
+			}
+			else if($setting_kind == "Country")
+			{
+			
+				$json = $w->request( "https://raw.github.com/johannesl/Internationalization/master/countrycodes.json" );
+				
+				if(empty($json))
+				{
+					$w->result( '', '', "Error: retrieving country code list", "url is https://raw.github.com/johannesl/Internationalization/master/countrycodes.json" , './images/warning.png', 'no', '' );
+					echo $w->toxml();
+					return;
 				}
-			}			
+					
+				$json = json_decode($json);
+				switch(json_last_error())
+				{
+				    case JSON_ERROR_DEPTH:
+				    	$w->result( '', '', "There was an error when retrieving online information", "Maximum stack depth exceeded", './images/warning.png', 'no', '' );
+				        break;
+				    case JSON_ERROR_CTRL_CHAR:
+				    	$w->result( '', '', "There was an error when retrieving online information", "Unexpected control character found", './images/warning.png', 'no', '' );
+				        break;
+				    case JSON_ERROR_SYNTAX:
+				    	$w->result( '', '', "There was an error when retrieving online information", "Syntax error, malformed JSON", './images/warning.png', 'no', '' );
+				        break;
+				    case JSON_ERROR_NONE:
+						if(mb_strlen($the_query) == 0)
+						{					
+							$w->result( '', '', "Select your country:", "This is needed to get accurate results from online spotify lookups ", './images/settings.png', 'no', '' );
+							foreach ($json as $key => $value)
+							{
+								$w->result( '', "||||||" . "COUNTRY→" . $value . "|||", ucfirst($key), $value, './images/settings.png' , 'yes', '');
+							}
+						}
+						else
+						{
+							foreach ($json as $key => $value)
+							{
+								if(strpos(strtolower($key),strtolower($the_query)) !== false )
+								{
+									$w->result( '', "||||||" . "COUNTRY→" . $value . "|||", ucfirst($key), $value, './images/settings.png' , 'yes', '');
+								}
+							}
+						}
+						break;
+				}
+			}
 		}// end of Settings
 		elseif($kind == "Alfred Playlist")
 		{
@@ -974,7 +1023,7 @@ else
 					$playlistName = getPlaylistName($alfred_playlist_uri);
 					if($playlistName == "Alfred Playlist")
 					{
-						$w->result( '', "||||||$alfred_playlist_uri|||", "Alfred Playlist URI will be set to <" . $alfred_playlist_uri . ">", "Type enter to validate", './images/settings.png', 'yes', '' );
+						$w->result( '', "||||||" . "ALFRED_PLAYLIST→" . $alfred_playlist_uri . "|||", "Alfred Playlist URI will be set to <" . $alfred_playlist_uri . ">", "Type enter to validate", './images/settings.png', 'yes', '' );
 					}
 					else
 					{
