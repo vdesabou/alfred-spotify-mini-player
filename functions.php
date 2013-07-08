@@ -186,7 +186,7 @@ function updateLibrary()
 	$w = new Workflows();
 	
 	//
-	// move files in hash directories if existing
+	// move legacy artwork files in hash directories if needed
 	//
 	$folder   = $w->data() . "/artwork";
 	$bytes    = 0;
@@ -211,6 +211,7 @@ function updateLibrary()
 	$json = json_decode(exec('pbpaste'),true);
 	if (json_last_error() === JSON_ERROR_NONE) 
 	{
+		touch($w->data() . "/update_library_in_progress");
 		touch($w->data() . "/library.db");
 		
 		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table tracks (starred boolean, popularity int, uri text, album_uri text, artist_uri text, track_name text, album_name text, artist_name text, album_year text, track_artwork_path text, artist_artwork_path text, album_artwork_path text)"';
@@ -406,7 +407,8 @@ function updateLibrary()
 			$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"update counters set playlists='. $playlists[0] .'"';
 			exec($sql);
 					
-			unlink($w->data() . "/playlists-tmp.json");	
+			unlink($w->data() . "/playlists-tmp.json");
+			unlink($w->data() . "/update_library_in_progress");
 		}
 							
 	} 

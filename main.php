@@ -9,6 +9,15 @@ $query = iconv("UTF-8-MAC", "UTF-8", $query);
 $w = new Workflows();
 
 //
+// check for library update in progress
+if (file_exists($w->data() . "/update_library_in_progress"))
+{
+	$w->result( '', $w->data() . "/update_library_in_progress", "Library update in progress", "Please come back later", './images/warning.png', 'no', '' );
+	echo $w->toxml();
+	return;	
+}
+
+//
 // Install spotify-app-miniplayer app if needed
 // very first time use
 //
