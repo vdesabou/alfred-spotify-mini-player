@@ -183,10 +183,10 @@ if(mb_strlen($query) < 3 ||
 		{
 			$w->result( '', "|||||||" . "enable_all_playlist||", "Change Search Scope", "Select to change to ALL playlists", './images/search.png', 'yes', '' );
 		}
-		$w->result( '', "|||||||" . "open_spotify_export_app||", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Update library.", './images/app_miniplayer.png', 'yes', '' );
-		$w->result( '', "|||||||" . "update_library_json||", "Update library", "Make sure the clipboard contains the json data from the Spotify Mini Player App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
+		$w->result( '', "|||||||" . "open_spotify_export_app||", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Update Library.", './images/app_miniplayer.png', 'yes', '' );
+		$w->result( '', "|||||||" . "update_library_json||", "Update Library", "Make sure the clipboard contains the json data from the Spotify Mini Player App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
 		$w->result( '', '', "Configure Max Number of Results", "Number of results displayed. (it doesn't apply to your playlist list)", './images/numbers.png', 'no', 'Settings→MaxResults→' );
-		$w->result( '', '', "Configure your country code", "This is needed to get available results when doing online lookups", './images/settings.png', 'no', 'Settings→Country→' );
+		$w->result( '', '', "Configure your Country Code", "This is needed to get available results when doing online lookups", './images/settings.png', 'no', 'Settings→Country→' );
 
 		if ($is_spotifious_active == true)
 		{
@@ -522,7 +522,8 @@ else
 				if($country_code == "")
 				{
 					$w->result( '', '', "Country code is not configured", "Configure it now", './images/warning.png', 'no', '' );
-					$w->result( '', '', "Configure your country code", "This is needed to get available results when doing online lookups", './images/settings.png', 'no', 'Settings→Country→' );
+					$w->result( '', '', "Configure your Country Code", "This is needed to get available results when doing online lookups", './images/settings.png', 'no', 'Settings→Country→' );
+
 					echo $w->toxml();
 					return;	
 				}
