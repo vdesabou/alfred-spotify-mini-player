@@ -204,10 +204,6 @@ else if($other_action != "")
 	}
 	else if ($other_action == "update_library_json")
 	{
-		if (file_exists($w->data() . "/library.db"))
-		{			
-			unlink($w->data() . "/library.db");
-		}
 		updateLibrary();
 		if (file_exists($w->data() . "/library.db"))
 		{			

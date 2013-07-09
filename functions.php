@@ -211,6 +211,11 @@ function updateLibrary()
 	$json = json_decode(exec('pbpaste'),true);
 	if (json_last_error() === JSON_ERROR_NONE) 
 	{
+		if (file_exists($w->data() . "/library.db"))
+		{			
+			unlink($w->data() . "/library.db");
+		}
+			
 		touch($w->data() . "/update_library_in_progress");
 		touch($w->data() . "/library.db");
 		
