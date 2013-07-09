@@ -200,7 +200,14 @@ else if($other_action != "")
 		$t = explode(':', $track_uri);
 		$completeurl = getArtistURLFromTrack($w,$t[2]);
 		$a = explode('/', $completeurl);
-		exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online→spotify:artist:$a[4]@$artist_name\"'");
+		if($a[4] != "")
+		{
+			exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online→spotify:artist:$a[4]@$artist_name\"'");
+		}
+		else
+		{
+			echo "Error: Could no retrieve the artist";
+		}
 	}
 	else if ($other_action == "update_library_json")
 	{
