@@ -522,7 +522,7 @@ else
 				if($country_code == "")
 				{
 					$w->result( '', '', "Country code is not configured", "Configure it now", './images/warning.png', 'no', '' );
-					$w->result( '', '', "Configure your country code", "This is needed to get availaible results when doing online lookups", './images/settings.png', 'no', 'Settings→Country→' );
+					$w->result( '', '', "Configure your country code", "This is needed to get available results when doing online lookups", './images/settings.png', 'no', 'Settings→Country→' );
 					echo $w->toxml();
 					return;	
 				}
