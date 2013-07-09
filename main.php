@@ -206,11 +206,11 @@ if(mb_strlen($query) < 3 ||
 		}
 		if ($is_displaymorefrom_active == true)
 		{
-			$w->result( '', "|||||||" . "disable_displaymorefrom||", "Disable \"More from this artist\"", "Disable the option which displays more tracks from current artist with online results", './images/uncheck.png', 'yes', '' );
+			$w->result( '', "|||||||" . "disable_displaymorefrom||", "Disable \"Lookup this artist online\"", "Disable the option which displays more albums from current artist with online results", './images/uncheck.png', 'yes', '' );
 		}
 		else
 		{
-			$w->result( '', "|||||||" . "enable_displaymorefrom||", "Enable \"More from this artist\"", "Enable the option which displays more tracks from current artist with online results", './images/check.png', 'yes', '' );
+			$w->result( '', "|||||||" . "enable_displaymorefrom||", "Enable \"Lookup this artist online\"", "Enable the option which displays more albums from current artist with online results", './images/check.png', 'yes', '' );
 		}			
 	}
 } 
@@ -247,25 +247,21 @@ else
 			$w->result( '', '', "Settings", "Go to settings", './images/settings.png', 'no', 'Settings→' );
 		}		
 		
-			
-		
+
 		//
 		// Search in Playlists
 		//
-		if (file_exists($w->data() . "/playlists.json"))
-		{		
-			$json = file_get_contents($w->data() . "/playlists.json");
-			$json = json_decode($json,true);
-			
-			foreach ($json as $key => $val) 
-			{				
-				if (strpos(strtolower($val),strtolower($query)) !== false &&
-					$val != "Alfred Playlist" )
-				{	
-					$w->result( "spotify_mini-spotify-playlist-$val", '', ucfirst($val), "Browse Playlist", './images/playlists.png', 'no', "Playlist→" . $val . "→" );
-				}
-			};
-		}
+		$getPlaylists = "select * from playlists where name like '%".$query."%'";
+		
+		$dbfile = $w->data() . "/library.db";
+		exec("sqlite3 -separator '	' \"$dbfile\" \"$getPlaylists\"", $playlists);
+
+		foreach($playlists as $playlist):
+			$playlist = explode("	",$playlist);
+							
+			$w->result( "spotify_mini-spotify-playlist-$playlist[1]", '', ucfirst($playlist[1]), "by " . $playlist[3]  . " (" . $playlist[2] . " tracks)", './images/playlists.png', 'no', "Playlist→" . $playlist[1] . "→" );
+		endforeach;		
+		
 
 		//
 		// Search everything
@@ -285,7 +281,7 @@ else
 	
 		if(count($tracks) > 0)
 		{
-			$subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (search online)";
+			$subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup artist online)";
 			if($is_alfred_playlist_active ==true)
 			{
 				$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
@@ -611,7 +607,7 @@ else
 				    	$w->result( '', '', "There was an error when retrieving online information", "Syntax error, malformed JSON", './images/warning.png', 'no', '' );
 				        break;
 				    case JSON_ERROR_NONE:
-						$subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (search online)";
+						$subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup artist online)";
 						if($is_alfred_playlist_active ==true)
 						{
 							$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
@@ -667,7 +663,7 @@ else
 				
 				if(count($tracks) > 0)
 				{
-					$subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (search online)";
+					$subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup artist online)";
 					if($is_alfred_playlist_active ==true)
 					{
 						$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
@@ -712,7 +708,7 @@ else
 				
 				if(count($tracks) > 0)
 				{
-					$subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (search online)";
+					$subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup artist online)";
 					if($is_alfred_playlist_active ==true)
 					{
 						$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
@@ -766,7 +762,7 @@ else
 				
 				if(count($tracks) > 0)
 				{
-					$subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (search online)";
+					$subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup artist online)";
 					if($is_alfred_playlist_active ==true)
 					{
 						$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
@@ -811,7 +807,7 @@ else
 				
 				if(count($tracks) > 0)
 				{
-					$subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (search online)";
+					$subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup artist online)";
 					if($is_alfred_playlist_active ==true)
 					{
 						$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
