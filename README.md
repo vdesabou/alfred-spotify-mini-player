@@ -13,6 +13,7 @@ Speed is the key word here: instead of using slow Spotify API, it uses a local v
 * Search for Albums, Artists or Tracks
 * Search for playlists and launch it
 * Browse by Artists, Albums or Playlists
+* Lookup artist online by using ctrl key on a track
 * Launch your Top List
 * Alfred Playlist: manage a playlist from Alfred: add track (using fn), albums or playlist (using ⇧)
 * Select a track with ⌥ to play the album, or ⌘ to play the artist
