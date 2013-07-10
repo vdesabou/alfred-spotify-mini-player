@@ -60,11 +60,11 @@ function getTrackOrAlbumArtwork($w,$spotifyURL,$fetchIfNotPresent) {
 		{
 			if($isAlbum)
 			{
-				return "images/default_album.png";
+				return "images/albums.png";
 			}
 			else
 			{
-				return "images/default_track.png";
+				return "images/tracks.png";
 			}
 		}
 	}
@@ -74,11 +74,11 @@ function getTrackOrAlbumArtwork($w,$spotifyURL,$fetchIfNotPresent) {
 		{
 			if($isAlbum)
 			{
-				return "images/default_album.png";
+				return "images/albums.png";
 			}
 			else
 			{
-				return "images/default_track.png";
+				return "images/tracks.png";
 			}
 		}		
 	}
@@ -87,11 +87,11 @@ function getTrackOrAlbumArtwork($w,$spotifyURL,$fetchIfNotPresent) {
 	{
 		if($isAlbum)
 		{
-			return "images/default_album.png";
+			return "images/albums.png";
 		}
 		else
 		{
-			return "images/default_track.png";
+			return "images/tracks.png";
 		}
 	}
 	else
@@ -128,20 +128,20 @@ function getArtistArtwork($w,$artist,$fetchIfNotPresent) {
 		}
 		else
 		{
-			return "images/default_artist.png";
+			return "images/artists.png";
 		}
 	}
 	else
 	{
 		if( filesize($currentArtwork) == 0 )
 		{
-			return "images/default_artist.png";
+			return "images/artists.png";
 		}
 	}
 	
 	if(is_numeric($artwork) && $artwork == 0)
 	{
-		return "images/default_artist.png";
+		return "images/artists.png";
 	}
 	else
 	{
