@@ -251,6 +251,7 @@ else
 		//
 		// Search in Playlists
 		//
+
 		$getPlaylists = "select * from playlists where name like '%".$query."%'";
 		
 		$dbfile = $w->data() . "/library.db";
@@ -260,7 +261,8 @@ else
 			$playlist = explode("	",$playlist);
 							
 			$w->result( "spotify_mini-spotify-playlist-$playlist[1]", '', ucfirst($playlist[1]), "by " . $playlist[3]  . " (" . $playlist[2] . " tracks)", './images/playlists.png', 'no', "Playlist→" . $playlist[1] . "→" );
-		endforeach;		
+		endforeach;	
+	
 		
 
 		//
@@ -556,7 +558,7 @@ else
 							$album = $value->album;
 							
 							// only display albums from the artist
-							if(strpos($album->artist,$artist_name) !== false )
+							if(strpos($album->{"artist-id"},$artist_uri) !== false )
 							{
 								$availability = array();
 								$availability = $album->availability;

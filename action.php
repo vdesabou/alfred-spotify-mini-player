@@ -202,7 +202,7 @@ else if($other_action != "")
 		$a = explode('/', $completeurl);
 		if($a[4] != "")
 		{
-			exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online→spotify:artist:$a[4]@$artist_name\"'");
+			exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online→spotify:artist:$a[4]@" . escapeQuery($artist_name) . "\"'");
 		}
 		else
 		{
