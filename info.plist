@@ -281,7 +281,7 @@
 				<key>keyword</key>
 				<string>spot_mini</string>
 				<key>runningsubtext</key>
-				<string>Please wait...</string>
+				<string>Wait for it...</string>
 				<key>script</key>
 				<string>php -f main.php -- "{query}" 2&gt;&amp;1 | tee output.log</string>
 				<key>subtext</key>
