@@ -31,12 +31,9 @@ function handleArgs() {
 			case "star":
 				starCurrentTrack();
 				break;
-/*
 			case "toplist":
 				playTopList();
 				break;
-*/
-
 			case "addtoalfredplaylist":
 				if(args[8])
 				{
