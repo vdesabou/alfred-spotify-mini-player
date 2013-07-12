@@ -1,5 +1,18 @@
 ## History
 
+3.0:
+
+* Major update!!
+
+* Major speed improvements. Using a library with 18000 tracks, search scope set to ALL, with artworks displayed, it takes 150ms to return 50 results
+
+* Launch your top list
+
+* Online mode: Lookup for artist online and then browse all albums and tracks
+
+* Many more improvements
+
+
 2.8:
 
 * New icons
