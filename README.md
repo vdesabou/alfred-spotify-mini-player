@@ -2,10 +2,22 @@
 
 
 This is "Spotify Mini Player", like the alfred built-in iTunes Mini Player, but for Spotify!
+See related topic on [alfredforum](http://www.alfredforum.com/topic/1892-spotify-mini-player-version-28)
 
 ## Description
 
 Speed is the key word here: instead of using slow Spotify API, it uses a local version of your library stored in a SQL database(it includes your starred tracks, your playlists and playlists that you subscribed to). You can decide to search in your starred playlist only, or in all all your playlists. You can browse by Artist, Album or Playlist. You can also lookup for artists online. You can also control Spotify using keywords such as play/next/volmax/random/shuffle/star/etc...
+
+## Performances with version 3.x
+
+Using a library with 18000 tracks, search scope set to ALL, with artworks displayed, I get:
+
+* 150ms to return 50 results
+* 200ms to return 100 results
+
+Hope you will appreciate the performance bump as I do :-)
+
+See it in action in this [video](https://vimeo.com/70175318) 
 
 ## Features
 
@@ -13,12 +25,12 @@ Speed is the key word here: instead of using slow Spotify API, it uses a local v
 * Search for Albums, Artists or Tracks
 * Search for playlists and launch it
 * Browse by Artists, Albums or Playlists
-* Lookup artist online by using ctrl key on a track
-* Launch your Top List
-* Alfred Playlist: manage a playlist from Alfred: add track (using fn), albums or playlist (using ⇧)
+* **Lookup artist online** by using ctrl key on a track
+* Launch your **Top List**
+* **Alfred Playlist** manage a playlist from Alfred: add track (using fn), albums or playlist (using ⇧)
 * Select a track with ⌥ to play the album, or ⌘ to play the artist
 * Same control keywords as iTunes Mini Player: play, pause, mute, next, random, previous, volmax, volmid. And shuffle to activate shuffling.
-* Star current track
+* Star currently played track with keyword *start*
 * Direct call to [Spotifious](http://www.alfredforum.com/topic/1644-spotifious-a-natural-spotify-controller-for-alfred) workflow
 * [AlleyOop](http://www.alfredforum.com/topic/1582-alleyoop-update-alfred-workflows/) support
 
@@ -32,7 +44,7 @@ Speed is the key word here: instead of using slow Spotify API, it uses a local v
 
 ## Screenshots
 
-![Screenshot](http://d.pr/i/ZcrY+.png)
+![Screenshot](http://d.pr/i/7xFz+.png)
 
 
 ## First time use
@@ -44,7 +56,7 @@ You'll need to do the following steps:
 
 * Open Spotify Mini Player app (it is automatically installed) by invoking *spot_mini* or configured hotkey in Alfred, and select "Open Spotify Mini Player App":
 
-![Screenshot](http://d.pr/i/U3Va+.png)
+![Screenshot](http://d.pr/i/tiqZ+.png)
 
 **Note**: If Spotify cannot open the Spotify Mini Player App, restart Spotify completely. If this still doesn't work, try to logout and login again in Spotify
 
@@ -58,9 +70,11 @@ You'll need to do the following steps:
 
 * Type "spot_mini" or configured hotkey to invoke Spotify Mini Player, and select "Install library" 
 
-![Screenshot](http://d.pr/i/LuC1+.png)
+![Screenshot](http://d.pr/i/Bsdc+.png)
 
-* After some time, you should get a notification saying that library has been created. Note that the first time the library is created, all artworks are downloaded, so it can take a while.
+* After some time, you should get a notification saying that library has been created.
+
+**Note that the first time the library is created, all artworks are downloaded, so it can take a while!**
 
 
 
@@ -90,7 +104,7 @@ If you modify your playlists, you'll need to update the library.
 
 * To add a track to your playlist select it with *fn* modifier
 
-* To add an album to your playlist select it with *shift* modifier
+* To add an album or another playlist to your playlist select it with *shift* modifier
 
 ## Download the workflow
 
