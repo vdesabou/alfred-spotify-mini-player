@@ -177,7 +177,10 @@ function getArtistArtworkURL($w,$artist) {
 	$parsedArtist = urlencode($artist);
 	$html = $w->request( "http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&api_key=49d58890a60114e8fdfc63cbcf75d6c5&artist=$parsedArtist&format=json");
 	$json = json_decode($html, true);
-	
+	// make more resilient to empty json responses
+	if (!is_array($json) || empty($json['artist']['image'][1]['#text'])) {
+        return '';
+    }
 	return $json[artist][image][1]['#text'];
 }
 
