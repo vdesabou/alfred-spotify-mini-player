@@ -177,11 +177,33 @@
 		<array/>
 		<key>9845C770-A2CC-4752-A542-D71BE1081691</key>
 		<array/>
+		<key>AAD23EA5-B70A-4745-AA38-3466587F1383</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>BA445478-FB43-4549-89BE-C7AFF6980C70</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 		<key>AE6160D1-56EA-4416-991E-CF12B874FFD3</key>
 		<array>
 			<dict>
 				<key>destinationuid</key>
 				<string>18496AC4-EA42-444C-A906-642E38259C96</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>AF906669-674E-4C54-B744-85B1428EF7BD</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>AAD23EA5-B70A-4745-AA38-3466587F1383</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -958,6 +980,69 @@ end alfred_script</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>127</integer>
+				<key>script</key>
+				<string>php -f debug.php  2&gt;&amp;1 | tee output_debug.log</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>AAD23EA5-B70A-4745-AA38-3466587F1383</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<false/>
+				<key>output</key>
+				<integer>0</integer>
+				<key>removeextension</key>
+				<false/>
+				<key>sticky</key>
+				<false/>
+				<key>text</key>
+				<string>{query}</string>
+				<key>title</key>
+				<string>Spotify Mini Player</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.notification</string>
+			<key>uid</key>
+			<string>BA445478-FB43-4549-89BE-C7AFF6980C70</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>spot_mini_debug</string>
+				<key>subtext</key>
+				<string>it will be copied in ~/Downloads/spot_mini.tgz folder</string>
+				<key>text</key>
+				<string>Prepare a tgz file for debugging</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>AF906669-674E-4C54-B744-85B1428EF7BD</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string>Credits:
@@ -1072,15 +1157,30 @@ Spotify App spotify-export: https://github.com/jamesrwhite/spotify-export</strin
 			<key>ypos</key>
 			<real>410</real>
 		</dict>
+		<key>AAD23EA5-B70A-4745-AA38-3466587F1383</key>
+		<dict>
+			<key>ypos</key>
+			<real>1990</real>
+		</dict>
 		<key>AE6160D1-56EA-4416-991E-CF12B874FFD3</key>
 		<dict>
 			<key>ypos</key>
 			<real>10</real>
 		</dict>
+		<key>AF906669-674E-4C54-B744-85B1428EF7BD</key>
+		<dict>
+			<key>ypos</key>
+			<real>1990</real>
+		</dict>
 		<key>B5121E0F-240A-4739-A58B-0DB78E6D5CC4</key>
 		<dict>
 			<key>ypos</key>
 			<real>1590</real>
+		</dict>
+		<key>BA445478-FB43-4549-89BE-C7AFF6980C70</key>
+		<dict>
+			<key>ypos</key>
+			<real>1990</real>
 		</dict>
 		<key>BD7525EE-BFFD-4CB1-B617-A7A9492B39C0</key>
 		<dict>
