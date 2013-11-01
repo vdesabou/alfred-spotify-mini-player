@@ -1,4 +1,8 @@
 <?php
+
+// Turn off all error reporting
+error_reporting(0);
+
 require_once('workflows.php');
 include_once('functions.php');
 
@@ -181,14 +185,13 @@ else if($other_action != "")
 		refreshAlfredPlaylist();
 		echo "Alfred Playlist has been refreshed";
 	}
-	else if ($other_action == "clear_alfred_playlist")
-	{
-		exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:clearalfredplaylist:$alfred_playlist_uri:" . uniqid() . "\"'");
-		exec("osascript -e 'tell application \"Spotify\" to open location \"$alfred_playlist_uri\"'");
-	}
 	else if ($other_action == "play_top_list")
 	{
 		exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:toplist:" . uniqid() . "\"'");
+	}
+	else if ($other_action == "delete_update_library_in_progress")
+	{
+		unlink($w->data() . "/update_library_in_progress");
 	}
 	else if ($other_action == "open_spotify_export_app")
 	{

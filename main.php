@@ -1,4 +1,8 @@
 <?php
+
+// Turn off all error reporting
+error_reporting(0);
+
 include_once('functions.php');
 require_once('workflows.php');
 
@@ -13,6 +17,7 @@ $w = new Workflows();
 if (file_exists($w->data() . "/update_library_in_progress"))
 {
 	$w->result( '', $w->data() . "/update_library_in_progress", "Library update in progress", "Please come back later", './images/warning.png', 'no', '' );
+	$w->result( '', "|||||||" . "delete_update_library_in_progress||", "Force library update to stop", "use it if the library update seems stuck (several hours)", './images/settings.png', 'yes', "" );
 	echo $w->toxml();
 	return;	
 }
@@ -46,7 +51,17 @@ if(!file_exists($w->data() . "/settings.db"))
 //
 $getSettings = "select * from settings";
 $dbfile = $w->data() . "/settings.db";
-exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\"", $settings);
+exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
+
+if($returnValue != 0)
+{
+	$w->result( '', '', "There is a problem with the library, try to update it.", "Select Open Spotify Mini Player App below, and copy json data", './images/warning.png', 'no', '' );
+	$w->result( '', "|||||||" . "open_spotify_export_app||", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Install library.", './images/app_miniplayer.png', 'yes', '' );
+	$w->result( '', "|||||||" . "update_library_json||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
+	
+	echo $w->toxml();
+	return;
+}
 
 foreach($settings as $setting):
 
@@ -76,7 +91,17 @@ if(mb_strlen($query) < 3 ||
 		{	
 			$getCounters = "select * from counters";
 			$dbfile = $w->data() . "/library.db";
-			exec("sqlite3 -separator '	' \"$dbfile\" \"$getCounters\"", $counters);
+			exec("sqlite3 -separator '	' \"$dbfile\" \"$getCounters\" 2>&1", $counters, $returnValue);
+			
+			if($returnValue != 0)
+			{
+				$w->result( '', '', "There is a problem with the library, try to update it.", "Select Open Spotify Mini Player App below, and copy json data", './images/warning.png', 'no', '' );
+				$w->result( '', "|||||||" . "open_spotify_export_app||", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Install library.", './images/app_miniplayer.png', 'yes', '' );
+				$w->result( '', "|||||||" . "update_library_json||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
+				
+				echo $w->toxml();
+				return;
+			}
 			
 			foreach($counters as $counter):
 			
@@ -103,7 +128,7 @@ if(mb_strlen($query) < 3 ||
 			if($is_displaymorefrom_active == true)
 			{	
 				// get info on current song
-				$command_output = exec("./track_info.sh");
+				$command_output = exec("./track_info.sh 2>&1");
 		
 				if(substr_count( $command_output, '→' ) > 0)
 				{
@@ -141,6 +166,9 @@ if(mb_strlen($query) < 3 ||
 			}
 			$w->result( '', "|||||||" . "open_spotify_export_app||", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Install library.", './images/app_miniplayer.png', 'yes', '' );
 			$w->result( '', "|||||||" . "update_library_json||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
+			
+			echo $w->toxml();
+			return;
 		}
 
 		if ($is_spotifious_active == true)
@@ -255,8 +283,18 @@ else
 		$getPlaylists = "select * from playlists where name like '%".$query."%'";
 		
 		$dbfile = $w->data() . "/library.db";
-		exec("sqlite3 -separator '	' \"$dbfile\" \"$getPlaylists\"", $playlists);
-
+		exec("sqlite3 -separator '	' \"$dbfile\" \"$getPlaylists\" 2>&1", $playlists, $returnValue);
+		
+		if($returnValue != 0)
+		{
+			$w->result( '', '', "There is a problem with the library, try to update it.", "Select Open Spotify Mini Player App below, and copy json data", './images/warning.png', 'no', '' );
+			$w->result( '', "|||||||" . "open_spotify_export_app||", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Install library.", './images/app_miniplayer.png', 'yes', '' );
+			$w->result( '', "|||||||" . "update_library_json||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
+			
+			echo $w->toxml();
+			return;
+		}
+			
 		foreach($playlists as $playlist):
 			$playlist = explode("	",$playlist);
 							
@@ -279,8 +317,18 @@ else
 		
 		
 		$dbfile = $w->data() . "/library.db";
-		exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\"", $tracks);
-	
+		exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
+		
+		if($returnValue != 0)
+		{
+			$w->result( '', '', "There is a problem with the library, try to update it.", "Select Open Spotify Mini Player App below, and copy json data", './images/warning.png', 'no', '' );
+			$w->result( '', "|||||||" . "open_spotify_export_app||", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Install library.", './images/app_miniplayer.png', 'yes', '' );
+			$w->result( '', "|||||||" . "update_library_json||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
+			
+			echo $w->toxml();
+			return;
+		}
+		
 		if(count($tracks) > 0)
 		{
 			$subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup artist online)";
@@ -336,8 +384,19 @@ else
 				$getPlaylists = "select * from playlists";
 				
 				$dbfile = $w->data() . "/library.db";
-				exec("sqlite3 -separator '	' \"$dbfile\" \"$getPlaylists\"", $playlists);
 
+				exec("sqlite3 -separator '	' \"$dbfile\" \"$getPlaylists\" 2>&1", $playlists, $returnValue);
+				
+				if($returnValue != 0)
+				{
+					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Open Spotify Mini Player App below, and copy json data", './images/warning.png', 'no', '' );
+					$w->result( '', "|||||||" . "open_spotify_export_app||", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Install library.", './images/app_miniplayer.png', 'yes', '' );
+					$w->result( '', "|||||||" . "update_library_json||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
+					
+					echo $w->toxml();
+					return;
+				}
+		
 				foreach($playlists as $playlist):
 					$playlist = explode("	",$playlist);
 									
@@ -349,8 +408,19 @@ else
 				$getPlaylists = "select * from playlists where ( name like '%".$theplaylist."%' or author like '%".$theplaylist."%')";
 				
 				$dbfile = $w->data() . "/library.db";
-				exec("sqlite3 -separator '	' \"$dbfile\" \"$getPlaylists\"", $playlists);
 
+				exec("sqlite3 -separator '	' \"$dbfile\" \"$getPlaylists\" 2>&1", $playlists, $returnValue);
+				
+				if($returnValue != 0)
+				{
+					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Open Spotify Mini Player App below, and copy json data", './images/warning.png', 'no', '' );
+					$w->result( '', "|||||||" . "open_spotify_export_app||", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Install library.", './images/app_miniplayer.png', 'yes', '' );
+					$w->result( '', "|||||||" . "update_library_json||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
+					
+					echo $w->toxml();
+					return;
+				}
+				
 				foreach($playlists as $playlist):
 					$playlist = explode("	",$playlist);
 														
@@ -377,7 +447,6 @@ else
 				
 				$w->result( "spotify_mini-spotify-alfredplaylist-refresh", "|||||||" . "refresh_alfred_playlist|" . $alfred_playlist_uri . "|", "Refresh your Alfred playlist", "this will refresh your Alfred playlist",'./images/update.png', 'yes', '');
 				
-				$w->result( "spotify_mini-spotify-alfredplaylist-clear", "|||||||" . "clear_alfred_playlist|" . $alfred_playlist_uri . "|", "Clear your Alfred playlist", "this will clear your Alfred playlist",'./images/uncheck.png', 'yes', '');
 			
 			}
 		} //  Alfred Playlist end	
@@ -393,24 +462,40 @@ else
 			{
 				if($all_playlists == false)
 				{
-					$getTracks = "select * from tracks where starred=1"." limit ".$max_results;
+					$getTracks = "select * from tracks where starred=1";
 				}
 				else
 				{
-					$getTracks = "select * from tracks"." limit ".$max_results;
+					$getTracks = "select * from tracks";
 				}
 				
 				
-				$dbfile = $w->data() . "/library.db";
-				exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\"", $tracks);
+				$dbfile = $w->data() . "/library.db";				
+				exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
 				
+				if($returnValue != 0)
+				{
+					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Open Spotify Mini Player App below, and copy json data", './images/warning.png', 'no', '' );
+					$w->result( '', "|||||||" . "open_spotify_export_app||", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Install library.", './images/app_miniplayer.png', 'yes', '' );
+					$w->result( '', "|||||||" . "update_library_json||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
+					
+					echo $w->toxml();
+					return;
+				}
+		
 				// display all artists
+				$currentResultNumber = 1;
 				foreach($tracks as $track):
 					$track = explode("	",$track);
 					
+
 					if(checkIfResultAlreadyThere($w->results(),ucfirst($track[7])) == false)
-					{													
+					{	
+						if($currentResultNumber > $max_results)
+										continue;		
+																			
 						$w->result( "spotify_mini-spotify-artist-" . $track[7], '', ucfirst($track[7]), "Get tracks from this artist", $track[10], 'no', "Artist→" . $track[7] . "→" );
+						$currentResultNumber++;
 					}
 				endforeach;
 			}
@@ -418,23 +503,37 @@ else
 			{
 				if($all_playlists == false)
 				{
-					$getTracks = "select * from tracks where starred=1 and artist_name like '%".$artist."%'"." limit ".$max_results;
+					$getTracks = "select * from tracks where starred=1 and artist_name like '%".$artist."%'";
 				}
 				else
 				{
-					$getTracks = "select * from tracks where artist_name like '%".$artist."%'"." limit ".$max_results;
+					$getTracks = "select * from tracks where artist_name like '%".$artist."%'";
 				}
 				
 				
 				$dbfile = $w->data() . "/library.db";
-				exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\"", $tracks);
+				exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
 				
+				if($returnValue != 0)
+				{
+					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Open Spotify Mini Player App below, and copy json data", './images/warning.png', 'no', '' );
+					$w->result( '', "|||||||" . "open_spotify_export_app||", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Install library.", './images/app_miniplayer.png', 'yes', '' );
+					$w->result( '', "|||||||" . "update_library_json||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
+					
+					echo $w->toxml();
+					return;
+				}
+						
+				$currentResultNumber = 1;
 				foreach($tracks as $track):
 					$track = explode("	",$track);
 					
 					if(checkIfResultAlreadyThere($w->results(),ucfirst($track[7])) == false)
-					{									
+					{	
+						if($currentResultNumber > $max_results)
+										continue;									
 						$w->result( "spotify_mini-spotify-artist-" . $track[7], '', ucfirst($track[7]), "Get tracks from this artist", $track[10], 'no', "Artist→" . $track[7] . "→" );
+						$currentResultNumber++;
 					}
 				endforeach;
 				
@@ -456,24 +555,38 @@ else
 			{
 				if($all_playlists == false)
 				{
-					$getTracks = "select * from tracks where starred=1"." limit ".$max_results;
+					$getTracks = "select * from tracks where starred=1";
 				}
 				else
 				{
-					$getTracks = "select * from tracks"." limit ".$max_results;
+					$getTracks = "select * from tracks";
 				}
 				
 				
 				$dbfile = $w->data() . "/library.db";
-				exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\"", $tracks);
+				exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
 				
+				if($returnValue != 0)
+				{
+					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Open Spotify Mini Player App below, and copy json data", './images/warning.png', 'no', '' );
+					$w->result( '', "|||||||" . "open_spotify_export_app||", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Install library.", './images/app_miniplayer.png', 'yes', '' );
+					$w->result( '', "|||||||" . "update_library_json||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
+					
+					echo $w->toxml();
+					return;
+				}
+						
 				// display all albums
+				$currentResultNumber = 1;
 				foreach($tracks as $track):
 					$track = explode("	",$track);
 					
 					if(checkIfResultAlreadyThere($w->results(),ucfirst($track[6])) == false)
-					{						
-						$w->result( "spotify_mini-spotify-album" . $track[6], '', ucfirst($track[6]), "by " . $track[7] . " (" . $track[8] . ")", $track[11], 'no', "Album→" . $track[6] . "→" );
+					{	
+						if($currentResultNumber > $max_results)
+										continue;						
+						$w->result( "spotify_mini-spotify-album" . $track[6], '', ucfirst($track[6]), "by " . $track[7] , $track[11], 'no', "Album→" . $track[6] . "→" );
+						$currentResultNumber++;
 					}
 				endforeach;
 			}
@@ -481,23 +594,37 @@ else
 			{
 				if($all_playlists == false)
 				{
-					$getTracks = "select * from tracks where starred=1 and album_name like '%".$album."%'"." limit ".$max_results;
+					$getTracks = "select * from tracks where starred=1 and album_name like '%".$album."%'";
 				}
 				else
 				{
-					$getTracks = "select * from tracks where album_name like '%".$album."%'"." limit ".$max_results;
+					$getTracks = "select * from tracks where album_name like '%".$album."%'";
 				}
 				
 				
 				$dbfile = $w->data() . "/library.db";
-				exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\"", $tracks);
+				exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
 				
+				if($returnValue != 0)
+				{
+					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Open Spotify Mini Player App below, and copy json data", './images/warning.png', 'no', '' );
+					$w->result( '', "|||||||" . "open_spotify_export_app||", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Install library.", './images/app_miniplayer.png', 'yes', '' );
+					$w->result( '', "|||||||" . "update_library_json||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
+					
+					echo $w->toxml();
+					return;
+				}
+						
+				$currentResultNumber = 1;
 				foreach($tracks as $track):
 					$track = explode("	",$track);
 					
 					if(checkIfResultAlreadyThere($w->results(),ucfirst($track[6])) == false)
-					{								
-						$w->result( "spotify_mini-spotify-album" . $track[6], '', ucfirst($track[6]), "by " . $track[7] . " (" . $track[8] . ")", $track[11], 'no', "Album→" . $track[6] . "→" );
+					{	
+						if($currentResultNumber > $max_results)
+										continue;								
+						$w->result( "spotify_mini-spotify-album" . $track[6], '', ucfirst($track[6]), "by " . $track[7], $track[11], 'no', "Album→" . $track[6] . "→" );
+						$currentResultNumber++;
 					}
 				endforeach;
 				
@@ -662,8 +789,18 @@ else
 				
 				
 				$dbfile = $w->data() . "/library.db";
-				exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\"", $tracks);
+				exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
 				
+				if($returnValue != 0)
+				{
+					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Open Spotify Mini Player App below, and copy json data", './images/warning.png', 'no', '' );
+					$w->result( '', "|||||||" . "open_spotify_export_app||", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Install library.", './images/app_miniplayer.png', 'yes', '' );
+					$w->result( '', "|||||||" . "update_library_json||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
+					
+					echo $w->toxml();
+					return;
+				}
+						
 				if(count($tracks) > 0)
 				{
 					$subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup artist online)";
@@ -707,7 +844,17 @@ else
 				
 				
 				$dbfile = $w->data() . "/library.db";
-				exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\"", $tracks);
+				exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
+				
+				if($returnValue != 0)
+				{
+					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Open Spotify Mini Player App below, and copy json data", './images/warning.png', 'no', '' );
+					$w->result( '', "|||||||" . "open_spotify_export_app||", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Install library.", './images/app_miniplayer.png', 'yes', '' );
+					$w->result( '', "|||||||" . "update_library_json||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
+					
+					echo $w->toxml();
+					return;
+				}
 				
 				if(count($tracks) > 0)
 				{
@@ -761,7 +908,17 @@ else
 				
 				
 				$dbfile = $w->data() . "/library.db";
-				exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\"", $tracks);
+				exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
+				
+				if($returnValue != 0)
+				{
+					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Open Spotify Mini Player App below, and copy json data", './images/warning.png', 'no', '' );
+					$w->result( '', "|||||||" . "open_spotify_export_app||", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Install library.", './images/app_miniplayer.png', 'yes', '' );
+					$w->result( '', "|||||||" . "update_library_json||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
+					
+					echo $w->toxml();
+					return;
+				}
 				
 				if(count($tracks) > 0)
 				{
@@ -806,7 +963,17 @@ else
 				
 				
 				$dbfile = $w->data() . "/library.db";
-				exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\"", $tracks);
+				exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
+				
+				if($returnValue != 0)
+				{
+					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Open Spotify Mini Player App below, and copy json data", './images/warning.png', 'no', '' );
+					$w->result( '', "|||||||" . "open_spotify_export_app||", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Install library.", './images/app_miniplayer.png', 'yes', '' );
+					$w->result( '', "|||||||" . "update_library_json||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
+					
+					echo $w->toxml();
+					return;
+				}
 				
 				if(count($tracks) > 0)
 				{
@@ -850,8 +1017,18 @@ else
 			$getPlaylists = "select * from playlists where name like '%".$theplaylist."%'";
 			
 			$dbfile = $w->data() . "/library.db";
-			exec("sqlite3 -separator '	' \"$dbfile\" \"$getPlaylists\"", $playlists);
-
+			exec("sqlite3 -separator '	' \"$dbfile\" \"$getPlaylists\" 2>&1", $playlists, $returnValue);
+			
+			if($returnValue != 0)
+			{
+				$w->result( '', '', "There is a problem with the library, try to update it.", "Select Open Spotify Mini Player App below, and copy json data", './images/warning.png', 'no', '' );
+				$w->result( '', "|||||||" . "open_spotify_export_app||", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Install library.", './images/app_miniplayer.png', 'yes', '' );
+				$w->result( '', "|||||||" . "update_library_json||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
+				
+				echo $w->toxml();
+				return;
+			}
+		
 			foreach($playlists as $playlist):
 				$playlist = explode("	",$playlist);
 	
@@ -879,11 +1056,24 @@ else
 					$getTracks = "select * from \"playlist_" . $playlist_name . "\""." limit ".$max_results;
 					
 					$dbfile = $w->data() . "/library.db";
-					exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\"", $tracks);
+					exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
 					
+					if($returnValue != 0)
+					{
+						$w->result( '', '', "There is a problem with the library, try to update it.", "Select Open Spotify Mini Player App below, and copy json data", './images/warning.png', 'no', '' );
+						$w->result( '', "|||||||" . "open_spotify_export_app||", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Install library.", './images/app_miniplayer.png', 'yes', '' );
+						$w->result( '', "|||||||" . "update_library_json||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
+						
+						echo $w->toxml();
+						return;
+					}					
 					if(count($tracks) > 0)
 					{
-						$subtitle = "playing the track is the only possible option here";
+						$subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup artist online)";
+						if($is_alfred_playlist_active ==true)
+						{
+							$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
+						}	
 						$w->result( 'help', 'help', "Select a track to play it", $subtitle, './images/info.png', 'no', '' );
 					}
 					
@@ -893,14 +1083,16 @@ else
 					{
 						$subtitle = "$subtitle ,⇧ → add playlist to ♫";
 					}
-					$w->result( "spotify_mini-spotify-playlist-$playlist[1]", "|||" . $playlist[0] . "||||" . "||" . $alfred_playlist_uri, ucfirst($playlist[1]) . " by " . $playlist_user . " (" . $playlist[2] . " tracks)", $subtitle, './images/playlists.png', 'yes', '' );
+					$w->result( "spotify_mini-spotify-playlist-$playlist[1]", "|||" . $playlist[0] . "||||" . "|" . $alfred_playlist_uri . "|", ucfirst($playlist[1]) . " by " . $playlist_user . " (" . $playlist[2] . " tracks)", $subtitle, './images/playlists.png', 'yes', '' );
 		
 					foreach($tracks as $track):
 						$track = explode("	",$track);	
 	
 						if(checkIfResultAlreadyThere($w->results(),ucfirst($track[7]) . " - " . $track[5]) == false)
 						{	
-							$w->result( "spotify_mini-spotify-playlist-track-" . $playlist_name . "-" .$track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri . "|" . $track[7], ucfirst($track[7]) . " - " . $track[5], "Play track", $track[9], 'yes', '' );
+							$subtitle = ($track[0] == true) ? "★ " : "";
+							$subtitle = $subtitle . $track[6];
+							$w->result( "spotify_mini-spotify-playlist-track-" . $playlist_name . "-" .$track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri . "|" . $track[7], ucfirst($track[7]) . " - " . $track[5], $subtitle, $track[9], 'yes', '' );
 						}
 					endforeach;
 				}
@@ -909,11 +1101,24 @@ else
 					$getTracks = "select * from \"playlist_" . $playlist_name . "\" where (track_name like '%".$thetrack."%' or artist_name like '%".$thetrack."%')"." limit ".$max_results;
 					
 					$dbfile = $w->data() . "/library.db";
-					exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\"", $tracks);
+					exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
 					
+					if($returnValue != 0)
+					{
+						$w->result( '', '', "There is a problem with the library, try to update it.", "Select Open Spotify Mini Player App below, and copy json data", './images/warning.png', 'no', '' );
+						$w->result( '', "|||||||" . "open_spotify_export_app||", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Install library.", './images/app_miniplayer.png', 'yes', '' );
+						$w->result( '', "|||||||" . "update_library_json||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
+						
+						echo $w->toxml();
+						return;
+					}					
 					if(count($tracks) > 0)
 					{
-						$subtitle = "playing the track is the only possible option here";
+						$subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup artist online)";
+						if($is_alfred_playlist_active ==true)
+						{
+							$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
+						}	
 						$w->result( 'help', 'help', "Select a track to play it", $subtitle, './images/info.png', 'no', '' );
 					}
 					
@@ -929,7 +1134,9 @@ else
 	
 						if(checkIfResultAlreadyThere($w->results(),ucfirst($track[7]) . " - " . $track[5]) == false)
 						{	
-							$w->result( "spotify_mini-spotify-playlist-track-" . $playlist_name . "-" .$track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri . "|" . $track[7], ucfirst($track[7]) . " - " . $track[5], "Play track", $track[9], 'yes', '' );
+							$subtitle = ($track[0] == true) ? "★ " : "";
+							$subtitle = $subtitle . $track[6];
+							$w->result( "spotify_mini-spotify-playlist-track-" . $playlist_name . "-" .$track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri . "|" . $track[7], ucfirst($track[7]) . " - " . $track[5], $subtitle, $track[9], 'yes', '' );
 						}
 					endforeach;
 

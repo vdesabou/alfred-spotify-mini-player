@@ -21,9 +21,14 @@
 	"SupportedLanguages": [
 		"en"
 	],
+	 "Dependencies": {
+	      "api": "1.30.0",
+	      "views": "1.18.1"
+    },
 	"RequiredPermissions": [
 		"https://*",
-		"http://*"
+		"http://*",
+		"http://www.google-analytics.com"
 	],
 	"RequiredInterface": "1",
 	"VendorIdentifier": "com.vdesabou.spotify.miniplayer"
