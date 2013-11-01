@@ -1,5 +1,13 @@
 ## History
 
+3.1:
+
+* Moving to spotify API 1.x: no more 200 tracks limitation on playlists
+
+* Added spot_mini_debug command to help troubleshooting
+
+* Improved robustness and error detections
+
 3.0:
 
 * Major update!!
