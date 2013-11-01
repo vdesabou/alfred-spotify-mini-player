@@ -112,6 +112,13 @@ Download the workflow below and open in Alfred.
 
 [Download Workflow](https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/SpotifyMiniPlayer.alfredworkflow)
 
+## Troubleshooting
+
+If you experience an issue with the workflow, use the "spot_mini_debug" command, it will generate a spot_mini_debug.tgz file in your Downloads directory. Then send this file to me.
+
+![Screenshot](http://d.pr/i/4zSE+.png)
+
+
 ## Credits
 
 * [Spotifious workflow](https://github.com/citelao/Spotify-for-Alfred)
