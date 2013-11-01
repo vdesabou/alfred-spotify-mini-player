@@ -221,6 +221,17 @@
 				<string></string>
 			</dict>
 		</array>
+		<key>CEF36AB9-7CC2-4765-BF84-751E88B69023</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>F005BD44-180A-4A9A-9339-BE457D1E207F</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 		<key>D4442911-E17B-49CC-8F7F-EAC1830B11CD</key>
 		<array>
 			<dict>
@@ -268,7 +279,7 @@
 	<key>disabled</key>
 	<false/>
 	<key>name</key>
-	<string>Spotify Mini Player 3.0</string>
+	<string>Spotify Mini Player 3.1</string>
 	<key>objects</key>
 	<array>
 		<dict>
@@ -506,9 +517,13 @@
 			<key>config</key>
 			<dict>
 				<key>applescript</key>
-				<string>on alfred_script(q)		tell application "Spotify"
+				<string>on alfred_script(q)
+	
+	tell application "Spotify"
 		previous track
-	end tell	end alfred_script</string>
+	end tell
+	
+end alfred_script</string>
 				<key>cachescript</key>
 				<true/>
 			</dict>
@@ -544,9 +559,13 @@
 			<key>config</key>
 			<dict>
 				<key>applescript</key>
-				<string>on alfred_script(q)		tell application "Spotify"		playpause
+				<string>on alfred_script(q)
+	
+	tell application "Spotify"
+		playpause
 	end tell
-end alfred_script</string>
+
+end alfred_script</string>
 				<key>cachescript</key>
 				<true/>
 			</dict>
@@ -756,7 +775,10 @@ end alfred_script</string>
 				<key>applescript</key>
 				<string>on alfred_script(q)
 
-tell application "Spotify"	set timestamp to (do shell script "date +%s") as integer	open location "spotify:app:miniplayer:random:" &amp; timestampend tell
+tell application "Spotify"
+	set timestamp to (do shell script "date +%s") as integer
+	open location "spotify:app:miniplayer:random:" &amp; timestamp
+end tell
 
 end alfred_script</string>
 				<key>cachescript</key>
@@ -795,7 +817,10 @@ end alfred_script</string>
 			<dict>
 				<key>applescript</key>
 				<string>on alfred_script(q)
-	tell application "Spotify"		set timestamp to (do shell script "date +%s") as integer		open location "spotify:app:miniplayer:star:" &amp; timestamp	end tell
+	tell application "Spotify"
+		set timestamp to (do shell script "date +%s") as integer
+		open location "spotify:app:miniplayer:star:" &amp; timestamp
+	end tell
 end alfred_script</string>
 				<key>cachescript</key>
 				<true/>
@@ -831,7 +856,10 @@ end alfred_script</string>
 			<dict>
 				<key>applescript</key>
 				<string>on alfred_script(q)
-	tell application "Spotify"		set timestamp to (do shell script "date +%s") as integer		open location "spotify:app:miniplayer:toplist:" &amp; timestamp	end tell
+	tell application "Spotify"
+		set timestamp to (do shell script "date +%s") as integer
+		open location "spotify:app:miniplayer:toplist:" &amp; timestamp
+	end tell
 end alfred_script</string>
 				<key>cachescript</key>
 				<true/>
@@ -945,9 +973,13 @@ end alfred_script</string>
 			<key>config</key>
 			<dict>
 				<key>applescript</key>
-				<string>on alfred_script(q)		tell application "Spotify"
+				<string>on alfred_script(q)
+	
+	tell application "Spotify"
 		next track
-	end tell	end alfred_script</string>
+	end tell
+	
+end alfred_script</string>
 				<key>cachescript</key>
 				<true/>
 			</dict>
@@ -955,6 +987,45 @@ end alfred_script</string>
 			<string>alfred.workflow.action.applescript</string>
 			<key>uid</key>
 			<string>DA0A3B7F-B5F1-4F92-9013-217E6F17C588</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>escaping</key>
+				<integer>127</integer>
+				<key>keyword</key>
+				<string>spot_mini_debug</string>
+				<key>runningsubtext</key>
+				<string>Wait for it...</string>
+				<key>script</key>
+				<string>php -f debug.php  2&gt;&amp;1 | tee output_debug.log</string>
+				<key>subtext</key>
+				<string>Send the generated tgz file to the workflow author</string>
+				<key>title</key>
+				<string>Debug tools for Spotify Mini Player</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>CEF36AB9-7CC2-4765-BF84-751E88B69023</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict/>
+			<key>type</key>
+			<string>alfred.workflow.action.browseinalfred</string>
+			<key>uid</key>
+			<string>F005BD44-180A-4A9A-9339-BE457D1E207F</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -1102,6 +1173,11 @@ Spotify App spotify-export: https://github.com/jamesrwhite/spotify-export</strin
 			<key>ypos</key>
 			<real>630</real>
 		</dict>
+		<key>CEF36AB9-7CC2-4765-BF84-751E88B69023</key>
+		<dict>
+			<key>ypos</key>
+			<real>2010</real>
+		</dict>
 		<key>D4442911-E17B-49CC-8F7F-EAC1830B11CD</key>
 		<dict>
 			<key>ypos</key>
@@ -1116,6 +1192,11 @@ Spotify App spotify-export: https://github.com/jamesrwhite/spotify-export</strin
 		<dict>
 			<key>ypos</key>
 			<real>1110</real>
+		</dict>
+		<key>F005BD44-180A-4A9A-9339-BE457D1E207F</key>
+		<dict>
+			<key>ypos</key>
+			<real>2010</real>
 		</dict>
 		<key>F250A59C-0B2D-4A08-9085-9CA0A2FB2DCC</key>
 		<dict>
