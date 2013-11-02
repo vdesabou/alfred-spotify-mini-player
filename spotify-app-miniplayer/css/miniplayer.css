@@ -34,7 +34,10 @@ ul {
 a {
 	color:#eeeeee;
 }
-	
+
+#drop-box {border:4px dashed #FFF;width:50%;height:200px;padding:10px;}
+#drop-box.over {opacity:0.8;border-color:#74c043;}
+    	
 textarea {
 width: 50%;
 height: 100px;
