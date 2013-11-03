@@ -56,7 +56,7 @@ You'll need to do the following steps:
 
 * Type "spot_mini" or configured hotkey to invoke Spotify Mini Player, and select "Install library" 
 
-![Screenshot](http://d.pr/i/Bsdc+.png)
+![Screenshot](http://d.pr/i/4hcP+.png)
 
 * After some time, you should get a notification saying that library has been created.
 
