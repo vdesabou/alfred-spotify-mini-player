@@ -99,11 +99,19 @@ function handleArgs() {
 				getAll(function(matchedAll) {
 					console.log("update_library finished", matchedAll);
 	
-					var conn = new WebSocket('ws://localhost:8080');
+					var conn = new WebSocket('ws://localhost:17693');
 					conn.onopen = function(e) {
 					    console.log("Connection established!");
 					    conn.send(JSON.stringify(matchedAll));
 					};
+					
+					conn.onerror = function(e) {
+						console.log("Error: ",e.data);
+					} 
+					
+					conn.onclose = function(e){
+						console.log("On Close: ",e.reason);
+					}
 					
 					conn.onmessage = function(e) {
 					    console.log("Received response: ",e.data);

@@ -417,6 +417,19 @@ function updateLibrary($jsonData)
 		
 		unlink($w->data() . "/playlists-tmp.json");
 		unlink($w->data() . "/update_library_in_progress");
+		
+		if (file_exists($w->data() . "/library.db"))
+		{			
+			foreach(glob($w->data() . "/playlist*.json") as $file)
+			{
+				unlink($file);
+     		}
+     		
+     		if (file_exists($w->home() . "/Spotify/spotify-app-miniplayer"))
+     		{	
+     			exec("rm -rf " . $w->home() . "/Spotify/spotify-app-miniplayer");
+     		}
+		}
 									
 	} 
 	else 

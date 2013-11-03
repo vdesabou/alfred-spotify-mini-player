@@ -219,51 +219,28 @@ else if($other_action != "")
 			echo "Error: Could no retrieve the artist";
 		}
 	}
+/*
 	else if ($other_action == "update_library_json")
 	{
 		updateLibrary(exec('pbpaste'));
-		if (file_exists($w->data() . "/library.db"))
-		{			
-			foreach(glob($w->data() . "/playlist*.json") as $file)
-			{
-				unlink($file);
-     		}
-     		
-     		if (file_exists($w->home() . "/Spotify/spotify-app-miniplayer"))
-     		{	
-     			exec("rm -rf " . $w->home() . "/Spotify/spotify-app-miniplayer");
-     		}
-		}
 	}
+*/
 	else if ($other_action == "update_library")
 	{
-		echo "start";
 		exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:update_library:" . uniqid() . "\"'");
+
 	    $server = IoServer::factory(
 	        new HttpServer(
 	            new WsServer(
 	                new MiniPlayer()
 	            )
 	        ),
-	        8080
+	        17693
 	    );
-	
+		// FIX THIS: server will exit when done 
+		// Did not find a way to set a timeout
 	    $server->run();
-		echo "end";
-		if (file_exists($w->data() . "/library.db"))
-		{			
-			foreach(glob($w->data() . "/playlist*.json") as $file)
-			{
-				unlink($file);
-     		}
-     		
-     		if (file_exists($w->home() . "/Spotify/spotify-app-miniplayer"))
-     		{	
-     			exec("rm -rf " . $w->home() . "/Spotify/spotify-app-miniplayer");
-     		}
-		}
-	}	
-	
+	}		
 }
 
 ?>

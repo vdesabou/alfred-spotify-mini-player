@@ -25,13 +25,10 @@ class MiniPlayer implements MessageComponentInterface {
         echo sprintf('Connection %d sending message "%s" to %d other connection%s' . "\n"
             , $from->resourceId, '$msg', $numRecv, $numRecv == 1 ? '' : 's');
 
-		//updateLibrary($msg);
+		updateLibrary($msg);
 		
         foreach ($this->clients as $client) {
-            if ($from !== $client) {
-                // The sender is not the receiver, send to each client connected
                 $client->send("DONE");
-            }
         }
     }
 
@@ -40,12 +37,18 @@ class MiniPlayer implements MessageComponentInterface {
         $this->clients->detach($conn);
 
         echo "Connection {$conn->resourceId} has disconnected\n";
+        
+        $conn->close();
+                
+        exit(0);
     }
 
     public function onError(ConnectionInterface $conn, \Exception $e) {
         echo "An error has occurred: {$e->getMessage()}\n";
 
         $conn->close();
+        
+        exit(0);
     }
 }
 
