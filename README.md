@@ -102,6 +102,6 @@ If you experience an issue with the workflow, use the "spot_mini_debug" command,
 ## Credits
 
 * [Spotifious workflow](https://github.com/citelao/Spotify-for-Alfred)
-* [PhpFunk](https://github.com/phpfunk/alfred-spotify-controls) 
-* [spotify-export](https://github.com/jamesrwhite/spotify-export)
-* [kitchensink](https://github.com/ptrwtts/kitchensink)
+* [Ratchet](http://socketo.me)
+
+
