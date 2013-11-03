@@ -6,6 +6,13 @@ error_reporting(0);
 require_once('workflows.php');
 include_once('functions.php');
 
+use Ratchet\Server\IoServer;
+use Ratchet\Http\HttpServer;
+use Ratchet\WebSocket\WsServer;
+use MyApp\MiniPlayer;
+
+require_once('./vendor/autoload.php');
+
 $w = new Workflows();
 
 $query = $argv[1];
@@ -214,7 +221,7 @@ else if($other_action != "")
 	}
 	else if ($other_action == "update_library_json")
 	{
-		updateLibrary();
+		updateLibrary(exec('pbpaste'));
 		if (file_exists($w->data() . "/library.db"))
 		{			
 			foreach(glob($w->data() . "/playlist*.json") as $file)
@@ -228,6 +235,35 @@ else if($other_action != "")
      		}
 		}
 	}
+	else if ($other_action == "update_library")
+	{
+		echo "start";
+		exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:update_library:" . uniqid() . "\"'");
+	    $server = IoServer::factory(
+	        new HttpServer(
+	            new WsServer(
+	                new MiniPlayer()
+	            )
+	        ),
+	        8080
+	    );
+	
+	    $server->run();
+		echo "end";
+		if (file_exists($w->data() . "/library.db"))
+		{			
+			foreach(glob($w->data() . "/playlist*.json") as $file)
+			{
+				unlink($file);
+     		}
+     		
+     		if (file_exists($w->home() . "/Spotify/spotify-app-miniplayer"))
+     		{	
+     			exec("rm -rf " . $w->home() . "/Spotify/spotify-app-miniplayer");
+     		}
+		}
+	}	
+	
 }
 
 ?>

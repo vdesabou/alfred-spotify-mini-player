@@ -106,7 +106,8 @@ function handleArgs() {
 					};
 					
 					conn.onmessage = function(e) {
-					    console.log("Received something: ",e.data);
+					    console.log("Received response: ",e.data);
+					    conn.close();
 					};
 				});
 				break;				

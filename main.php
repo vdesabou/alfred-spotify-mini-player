@@ -57,7 +57,7 @@ if($returnValue != 0)
 {
 	$w->result( '', '', "There is a problem with the library, try to update it.", "Select Open Spotify Mini Player App below, and copy json data", './images/warning.png', 'no', '' );
 	$w->result( '', "|||||||" . "open_spotify_export_app||", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Install library.", './images/app_miniplayer.png', 'yes', '' );
-	$w->result( '', "|||||||" . "update_library_json||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
+	$w->result( '', "|||||||" . "update_library||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
 	
 	echo $w->toxml();
 	return;
@@ -97,7 +97,7 @@ if(mb_strlen($query) < 3 ||
 			{
 				$w->result( '', '', "There is a problem with the library, try to update it.", "Select Open Spotify Mini Player App below, and copy json data", './images/warning.png', 'no', '' );
 				$w->result( '', "|||||||" . "open_spotify_export_app||", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Install library.", './images/app_miniplayer.png', 'yes', '' );
-				$w->result( '', "|||||||" . "update_library_json||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
+				$w->result( '', "|||||||" . "update_library||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
 				
 				echo $w->toxml();
 				return;
@@ -165,7 +165,7 @@ if(mb_strlen($query) < 3 ||
 				$w->result( '', '', "Workflow is not configured, Spotify Mini Player App is missing", "Select Install library below, and make sure ~/Spotify/spotify-app-miniplayer directory exists", './images/warning.png', 'no', '' );				
 			}
 			$w->result( '', "|||||||" . "open_spotify_export_app||", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Install library.", './images/app_miniplayer.png', 'yes', '' );
-			$w->result( '', "|||||||" . "update_library_json||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
+			$w->result( '', "|||||||" . "update_library||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
 			
 			echo $w->toxml();
 			return;
@@ -212,7 +212,7 @@ if(mb_strlen($query) < 3 ||
 			$w->result( '', "|||||||" . "enable_all_playlist||", "Change Search Scope", "Select to change to ALL playlists", './images/search.png', 'yes', '' );
 		}
 		$w->result( '', "|||||||" . "open_spotify_export_app||", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Update Library.", './images/app_miniplayer.png', 'yes', '' );
-		$w->result( '', "|||||||" . "update_library_json||", "Update Library", "Make sure the clipboard contains the json data from the Spotify Mini Player App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
+		$w->result( '', "|||||||" . "update_library||", "Update Library", "Make sure the clipboard contains the json data from the Spotify Mini Player App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
 		$w->result( '', '', "Configure Max Number of Results", "Number of results displayed. (it doesn't apply to your playlist list)", './images/numbers.png', 'no', 'Settings→MaxResults→' );
 		$w->result( '', '', "Configure your Country Code", "This is needed to get available results when doing online lookups", './images/country.png', 'no', 'Settings→Country→' );
 
@@ -289,7 +289,7 @@ else
 		{
 			$w->result( '', '', "There is a problem with the library, try to update it.", "Select Open Spotify Mini Player App below, and copy json data", './images/warning.png', 'no', '' );
 			$w->result( '', "|||||||" . "open_spotify_export_app||", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Install library.", './images/app_miniplayer.png', 'yes', '' );
-			$w->result( '', "|||||||" . "update_library_json||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
+			$w->result( '', "|||||||" . "update_library|", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
 			
 			echo $w->toxml();
 			return;
@@ -323,7 +323,7 @@ else
 		{
 			$w->result( '', '', "There is a problem with the library, try to update it.", "Select Open Spotify Mini Player App below, and copy json data", './images/warning.png', 'no', '' );
 			$w->result( '', "|||||||" . "open_spotify_export_app||", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Install library.", './images/app_miniplayer.png', 'yes', '' );
-			$w->result( '', "|||||||" . "update_library_json||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
+			$w->result( '', "|||||||" . "update_library||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
 			
 			echo $w->toxml();
 			return;
@@ -391,7 +391,7 @@ else
 				{
 					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Open Spotify Mini Player App below, and copy json data", './images/warning.png', 'no', '' );
 					$w->result( '', "|||||||" . "open_spotify_export_app||", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Install library.", './images/app_miniplayer.png', 'yes', '' );
-					$w->result( '', "|||||||" . "update_library_json||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
+					$w->result( '', "|||||||" . "update_library||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
 					
 					echo $w->toxml();
 					return;
@@ -415,7 +415,7 @@ else
 				{
 					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Open Spotify Mini Player App below, and copy json data", './images/warning.png', 'no', '' );
 					$w->result( '', "|||||||" . "open_spotify_export_app||", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Install library.", './images/app_miniplayer.png', 'yes', '' );
-					$w->result( '', "|||||||" . "update_library_json||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
+					$w->result( '', "|||||||" . "update_library||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
 					
 					echo $w->toxml();
 					return;
@@ -477,7 +477,7 @@ else
 				{
 					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Open Spotify Mini Player App below, and copy json data", './images/warning.png', 'no', '' );
 					$w->result( '', "|||||||" . "open_spotify_export_app||", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Install library.", './images/app_miniplayer.png', 'yes', '' );
-					$w->result( '', "|||||||" . "update_library_json||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
+					$w->result( '', "|||||||" . "update_library||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
 					
 					echo $w->toxml();
 					return;
@@ -518,7 +518,7 @@ else
 				{
 					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Open Spotify Mini Player App below, and copy json data", './images/warning.png', 'no', '' );
 					$w->result( '', "|||||||" . "open_spotify_export_app||", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Install library.", './images/app_miniplayer.png', 'yes', '' );
-					$w->result( '', "|||||||" . "update_library_json||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
+					$w->result( '', "|||||||" . "update_library||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
 					
 					echo $w->toxml();
 					return;
@@ -570,7 +570,7 @@ else
 				{
 					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Open Spotify Mini Player App below, and copy json data", './images/warning.png', 'no', '' );
 					$w->result( '', "|||||||" . "open_spotify_export_app||", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Install library.", './images/app_miniplayer.png', 'yes', '' );
-					$w->result( '', "|||||||" . "update_library_json||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
+					$w->result( '', "|||||||" . "update_library||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
 					
 					echo $w->toxml();
 					return;
@@ -609,7 +609,7 @@ else
 				{
 					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Open Spotify Mini Player App below, and copy json data", './images/warning.png', 'no', '' );
 					$w->result( '', "|||||||" . "open_spotify_export_app||", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Install library.", './images/app_miniplayer.png', 'yes', '' );
-					$w->result( '', "|||||||" . "update_library_json||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
+					$w->result( '', "|||||||" . "update_library||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
 					
 					echo $w->toxml();
 					return;
@@ -795,7 +795,7 @@ else
 				{
 					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Open Spotify Mini Player App below, and copy json data", './images/warning.png', 'no', '' );
 					$w->result( '', "|||||||" . "open_spotify_export_app||", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Install library.", './images/app_miniplayer.png', 'yes', '' );
-					$w->result( '', "|||||||" . "update_library_json||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
+					$w->result( '', "|||||||" . "update_library||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
 					
 					echo $w->toxml();
 					return;
@@ -850,7 +850,7 @@ else
 				{
 					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Open Spotify Mini Player App below, and copy json data", './images/warning.png', 'no', '' );
 					$w->result( '', "|||||||" . "open_spotify_export_app||", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Install library.", './images/app_miniplayer.png', 'yes', '' );
-					$w->result( '', "|||||||" . "update_library_json||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
+					$w->result( '', "|||||||" . "update_library||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
 					
 					echo $w->toxml();
 					return;
@@ -914,7 +914,7 @@ else
 				{
 					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Open Spotify Mini Player App below, and copy json data", './images/warning.png', 'no', '' );
 					$w->result( '', "|||||||" . "open_spotify_export_app||", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Install library.", './images/app_miniplayer.png', 'yes', '' );
-					$w->result( '', "|||||||" . "update_library_json||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
+					$w->result( '', "|||||||" . "update_library||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
 					
 					echo $w->toxml();
 					return;
@@ -969,7 +969,7 @@ else
 				{
 					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Open Spotify Mini Player App below, and copy json data", './images/warning.png', 'no', '' );
 					$w->result( '', "|||||||" . "open_spotify_export_app||", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Install library.", './images/app_miniplayer.png', 'yes', '' );
-					$w->result( '', "|||||||" . "update_library_json||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
+					$w->result( '', "|||||||" . "update_library||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
 					
 					echo $w->toxml();
 					return;
@@ -1023,7 +1023,7 @@ else
 			{
 				$w->result( '', '', "There is a problem with the library, try to update it.", "Select Open Spotify Mini Player App below, and copy json data", './images/warning.png', 'no', '' );
 				$w->result( '', "|||||||" . "open_spotify_export_app||", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Install library.", './images/app_miniplayer.png', 'yes', '' );
-				$w->result( '', "|||||||" . "update_library_json||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
+				$w->result( '', "|||||||" . "update_library||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
 				
 				echo $w->toxml();
 				return;
@@ -1062,7 +1062,7 @@ else
 					{
 						$w->result( '', '', "There is a problem with the library, try to update it.", "Select Open Spotify Mini Player App below, and copy json data", './images/warning.png', 'no', '' );
 						$w->result( '', "|||||||" . "open_spotify_export_app||", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Install library.", './images/app_miniplayer.png', 'yes', '' );
-						$w->result( '', "|||||||" . "update_library_json||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
+						$w->result( '', "|||||||" . "update_library||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
 						
 						echo $w->toxml();
 						return;
@@ -1107,7 +1107,7 @@ else
 					{
 						$w->result( '', '', "There is a problem with the library, try to update it.", "Select Open Spotify Mini Player App below, and copy json data", './images/warning.png', 'no', '' );
 						$w->result( '', "|||||||" . "open_spotify_export_app||", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Once clipboard contains json data, get back here and use Install library.", './images/app_miniplayer.png', 'yes', '' );
-						$w->result( '', "|||||||" . "update_library_json||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
+						$w->result( '', "|||||||" . "update_library||", "Install library", "Make sure the clipboard contains the json data from the Spotify App <spotify:app:miniplayer>", './images/update.png', 'yes', '' );
 						
 						echo $w->toxml();
 						return;

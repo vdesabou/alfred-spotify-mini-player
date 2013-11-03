@@ -185,7 +185,7 @@ function getArtistArtworkURL($w,$artist) {
 	return $json[artist][image][1]['#text'];
 }
 
-function updateLibrary()
+function updateLibrary($jsonData)
 {
 	$w = new Workflows();
 		
@@ -215,7 +215,8 @@ function updateLibrary()
 	ini_set('memory_limit', '512M' );
 	
 	//try to decode it 
-	$json = json_decode(exec('pbpaste'),true);
+	//$json = json_decode(exec('pbpaste'),true);
+	$json = json_decode($jsonData,true);
 	if (json_last_error() === JSON_ERROR_NONE) 
 	{
 		if (file_exists($w->data() . "/playlists-tmp.json"))
