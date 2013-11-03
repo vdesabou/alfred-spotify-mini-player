@@ -155,7 +155,7 @@ if(mb_strlen($query) < 3 ||
 		{
 			if(!file_exists($w->data() . "/library.db"))
 			{
-				$w->result( '', '', "Workflow is not configured, library.db is missing", "Select Open Spotify Mini Player App below, and copy json data", './images/warning.png', 'no', '' );
+				$w->result( '', '', "Workflow is not configured, library.db is missing", "Select Install library below", './images/warning.png', 'no', '' );
 			}
 			elseif(!file_exists($w->home() . "/Spotify/spotify-app-miniplayer"))
 			{
