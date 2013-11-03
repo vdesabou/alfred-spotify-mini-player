@@ -54,23 +54,9 @@ You'll need to do the following steps:
 * Sign up for a [developer account on Spotify](https://developer.spotify.com/technologies/apps/#developer-account) (you must allow app API).
 * Download the [latest version](https://www.spotify.com/fr/download/mac/) of Spotify and ***install*** it (I had to do it, even though I was pretty sure to already have the latest version, so please do it!)
 
-* Open Spotify Mini Player app (it is automatically installed) by invoking *spot_mini* or configured hotkey in Alfred, and select "Open Spotify Mini Player App":
-
-![Screenshot](http://d.pr/i/tiqZ+.png)
-
-**Note**: If Spotify cannot open the Spotify Mini Player App, restart Spotify completely. If this still doesn't work, try to logout and login again in Spotify
-
-* Spotify shall open the Mini Player app:
-
-![Screenshot](http://d.pr/i/EOch+.png)
-
-* Click the **BLUE** button to generate JSON data
-
-* Once there is some text in JSON white box, click in the box: all the text will be selected in blue. Copy the text (cmd+C). At this point the JSON library is located in your clipboard.
-
 * Type "spot_mini" or configured hotkey to invoke Spotify Mini Player, and select "Install library" 
 
-![Screenshot](http://d.pr/i/Bsdc+.png)
+![Screenshot](http://d.pr/i/4hcP+.png)
 
 * After some time, you should get a notification saying that library has been created.
 
@@ -83,12 +69,6 @@ You'll need to do the following steps:
 If you modify your playlists, you'll need to update the library.
 
 * Go in Spotify Mini Player Settings
-
-* Select Open Spotify Mini Player App
-
-* Generate JSON Data by pressing blue button
-
-* Copy JSON data in your clipboard
 
 * Select Update library
 
@@ -118,10 +98,14 @@ If you experience an issue with the workflow, use the "spot_mini_debug" command,
 
 ![Screenshot](http://d.pr/i/4zSE+.png)
 
+If the update library is stuck (be aware the first time, it can take hours as all artworks are downloaded, next times it shall not exceed 10 minutes), you can kill it by invoking "spot_mini_kill" command:
+
+![Screenshot](http://d.pr/i/q8Rs+.png)
+
 
 ## Credits
 
 * [Spotifious workflow](https://github.com/citelao/Spotify-for-Alfred)
-* [PhpFunk](https://github.com/phpfunk/alfred-spotify-controls) 
-* [spotify-export](https://github.com/jamesrwhite/spotify-export)
-* [kitchensink](https://github.com/ptrwtts/kitchensink)
+* [Ratchet](http://socketo.me)
+
+

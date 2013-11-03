@@ -20,7 +20,63 @@ require([
     // When arguments change, run handleArgs function
     models.application.addEventListener('arguments', handleArgs);
 
+    // Drag content into an HTML element from Spotify
+    var dropBox = document.querySelector('#drop-box');
+    dropBox.addEventListener('dragstart', function(e){
+        e.dataTransfer.setData('text/html', this.innerHTML);
+        e.dataTransfer.effectAllowed = 'copy';
+    }, false);
+
+    dropBox.addEventListener('dragenter', function(e){
+        if (e.preventDefault) e.preventDefault();
+        e.dataTransfer.dropEffect = 'copy';
+        this.classList.add('over');
+    }, false);
+
+    dropBox.addEventListener('dragover', function(e){
+        if (e.preventDefault) e.preventDefault();
+        e.dataTransfer.dropEffect = 'copy';
+        return false;
+    }, false);
+
+    dropBox.addEventListener('drop', function(e){
+        if (e.preventDefault) e.preventDefault();
+        var drop = models.Playlist.fromURI(e.dataTransfer.getData('text'));
+        console.log(drop);
+        this.classList.remove('over');
+        var success_message = document.createElement('p');
+        success_message.innerHTML = 'Playlist successfully dropped: ' + drop.uri;
+       	 
+        var array_results = [];
+		drop.load('tracks','name','uri').done(function() {
+			console.log("drop loaded");
+			getPlaylistTracks(drop.uri,drop.name,function(matchedPlaylistTracks) {
 	
+				array_results.push(matchedPlaylistTracks);	
+	
+				console.log("Drop playlist finished", array_results);
+		
+				$("#json").text(JSON.stringify(array_results));	
+				$("textarea").on("click", function() {
+				
+				$(this).select();
+				
+				});
+			});	
+				
+	        
+		});	
+		this.appendChild(success_message);
+
+    }, false);
+    
+    // Drag content into the sidebar
+    models.application.addEventListener('dropped', function(){
+        console.log(models.application.dropped);
+    });
+    
+    
+    	
 function handleArgs() {
 	var args = models.application.arguments;
 	console.log(args);
@@ -39,6 +95,30 @@ function handleArgs() {
 			case "toplist":
 				playTopList();
 				break;
+			case "update_library":
+				getAll(function(matchedAll) {
+					console.log("update_library finished", matchedAll);
+	
+					var conn = new WebSocket('ws://localhost:17693');
+					conn.onopen = function(e) {
+					    console.log("Connection established!");
+					    conn.send(JSON.stringify(matchedAll));
+					};
+					
+					conn.onerror = function(e) {
+						console.log("Error: ",e.data);
+					} 
+					
+					conn.onclose = function(e){
+						console.log("On Close: ",e.reason);
+					}
+					
+					conn.onmessage = function(e) {
+					    console.log("Received response: ",e.data);
+					    conn.close();
+					};
+				});
+				break;				
 			case "addtoalfredplaylist":
 				if(args[8])
 				{

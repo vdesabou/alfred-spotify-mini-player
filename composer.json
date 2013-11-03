@@ -1,0 +1,11 @@
+{
+    "autoload": {
+        "psr-0": {
+            "MyApp": "src"
+        }
+    },
+    "require": {
+        "cboden/Ratchet": "0.3.*"
+    }
+}
+

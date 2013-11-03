@@ -6,6 +6,13 @@ error_reporting(0);
 require_once('workflows.php');
 include_once('functions.php');
 
+use Ratchet\Server\IoServer;
+use Ratchet\Http\HttpServer;
+use Ratchet\WebSocket\WsServer;
+use MyApp\MiniPlayer;
+
+require_once('./vendor/autoload.php');
+
 $w = new Workflows();
 
 $query = $argv[1];
@@ -189,10 +196,6 @@ else if($other_action != "")
 	{
 		exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:toplist:" . uniqid() . "\"'");
 	}
-	else if ($other_action == "delete_update_library_in_progress")
-	{
-		unlink($w->data() . "/update_library_in_progress");
-	}
 	else if ($other_action == "open_spotify_export_app")
 	{
 		exec("osascript -e 'tell application \"Spotify\" to activate'");
@@ -212,22 +215,28 @@ else if($other_action != "")
 			echo "Error: Could no retrieve the artist";
 		}
 	}
+/*
 	else if ($other_action == "update_library_json")
 	{
-		updateLibrary();
-		if (file_exists($w->data() . "/library.db"))
-		{			
-			foreach(glob($w->data() . "/playlist*.json") as $file)
-			{
-				unlink($file);
-     		}
-     		
-     		if (file_exists($w->home() . "/Spotify/spotify-app-miniplayer"))
-     		{	
-     			exec("rm -rf " . $w->home() . "/Spotify/spotify-app-miniplayer");
-     		}
-		}
+		updateLibrary(exec('pbpaste'));
 	}
+*/
+	else if ($other_action == "update_library")
+	{
+		exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:update_library:" . uniqid() . "\"'");
+
+	    $server = IoServer::factory(
+	        new HttpServer(
+	            new WsServer(
+	                new MiniPlayer()
+	            )
+	        ),
+	        17693
+	    );
+		// FIX THIS: server will exit when done 
+		// Did not find a way to set a timeout
+	    $server->run();
+	}		
 }
 
 ?>
