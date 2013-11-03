@@ -20,7 +20,6 @@ require([
     // When arguments change, run handleArgs function
     models.application.addEventListener('arguments', handleArgs);
 
-
     // Drag content into an HTML element from Spotify
     var dropBox = document.querySelector('#drop-box');
     dropBox.addEventListener('dragstart', function(e){
@@ -96,6 +95,21 @@ function handleArgs() {
 			case "toplist":
 				playTopList();
 				break;
+			case "update_library":
+				getAll(function(matchedAll) {
+					console.log("update_library finished", matchedAll);
+	
+					var conn = new WebSocket('ws://localhost:8080');
+					conn.onopen = function(e) {
+					    console.log("Connection established!");
+					    conn.send(JSON.stringify(matchedAll));
+					};
+					
+					conn.onmessage = function(e) {
+					    console.log("Received something: ",e.data);
+					};
+				});
+				break;				
 			case "addtoalfredplaylist":
 				if(args[8])
 				{

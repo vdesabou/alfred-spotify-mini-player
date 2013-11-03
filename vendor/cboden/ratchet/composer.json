@@ -1,0 +1,33 @@
+{
+    "name": "cboden/Ratchet"
+  , "type": "library"
+  , "description": "PHP WebSocket library"
+  , "keywords": ["WebSockets", "Server", "Ratchet", "Sockets"]
+  , "homepage": "http://socketo.me"
+  , "repository": "https://github.com/cboden/Ratchet"
+  , "license": "MIT"
+  , "authors": [
+        {
+            "name": "Chris Boden"
+          , "email": "cboden@gmail.com"
+          , "role": "Developer"
+        }
+    ]
+  , "support": {
+        "forum":  "https://groups.google.com/forum/#!forum/ratchet-php"
+      , "issues": "https://github.com/cboden/Ratchet/issues"
+      , "irc":    "irc://irc.freenode.org/reactphp"
+    }
+  , "autoload": {
+        "psr-0": {
+            "Ratchet": "src"
+        }
+    }
+  , "require": {
+        "php": ">=5.3.9"
+      , "react/socket": "0.3.*"
+      , "guzzle/http": ">=3.6.0,<3.8.0-dev"
+      , "symfony/http-foundation": "~2.2"
+      , "symfony/routing": "~2.2"
+    }
+}
