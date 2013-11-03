@@ -215,7 +215,6 @@ function updateLibrary($jsonData)
 	ini_set('memory_limit', '512M' );
 	
 	//try to decode it 
-	//$json = json_decode(exec('pbpaste'),true);
 	$json = json_decode($jsonData,true);
 	if (json_last_error() === JSON_ERROR_NONE) 
 	{

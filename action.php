@@ -40,6 +40,27 @@ $other_action=$results[7];
 $alfred_playlist_uri=$results[8];
 $artist_name=$results[9];
 
+if ($other_action == "update_playlist" && $playlist_uri != "")
+{
+	exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:update_playlist:" . $playlist_uri . ":" . uniqid() . "\"'");
+
+
+    $server = IoServer::factory(
+        new HttpServer(
+            new WsServer(
+                new MiniPlayer()
+            )
+        ),
+        17693
+    );
+	// FIX THIS: server will exit when done 
+	// Did not find a way to set a timeout
+    $server->run();
+
+    
+    return;
+}
+	
 
 if($type == "TRACK")
 {

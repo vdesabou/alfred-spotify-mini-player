@@ -1068,6 +1068,8 @@ else
 					}
 					$w->result( "spotify_mini-spotify-playlist-$playlist[1]", "|||" . $playlist[0] . "||||" . "|" . $alfred_playlist_uri . "|", ucfirst($playlist[1]) . " by " . $playlist_user . " (" . $playlist[2] . " tracks)", $subtitle, './images/playlists.png', 'yes', '' );
 		
+					$w->result( "spotify_mini-spotify-update-$playlist[1]", "|||" . $playlist[0] . "||||" . update_playlist . "||", "Update playlist " . ucfirst($playlist[1]) . " by " . $playlist_user, "After some time, you should get a notification saying that playlist has been updated", './images/update.png', 'yes', '' );
+													
 					foreach($tracks as $track):
 						$track = explode("	",$track);	
 	

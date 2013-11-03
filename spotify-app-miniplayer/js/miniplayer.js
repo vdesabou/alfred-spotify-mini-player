@@ -120,6 +120,41 @@ function handleArgs() {
 					};
 				});
 				break;				
+			case "update_playlist":
+				sleep(1000);
+				var array_results = [];
+				var pl = models.Playlist.fromURI(args[1]+':'+args[2]+':'+args[3]+':'+args[4]+':'+args[5]);
+
+				pl.load('name','uri').done(function() {
+					getPlaylistTracks(pl.uri,pl.name,function(matchedPlaylistTracks) {
+			
+						array_results.push(matchedPlaylistTracks);	
+			
+						console.log("update_playlist finished", array_results);
+				
+						var conn = new WebSocket('ws://localhost:17693');
+						conn.onopen = function(e) {
+						    console.log("Connection established!");
+						    conn.send(JSON.stringify(array_results));
+						};
+						
+						conn.onerror = function(e) {
+							console.log("Error: ",e.data);
+						} 
+						
+						conn.onclose = function(e){
+							console.log("On Close: ",e.reason);
+						}
+						
+						conn.onmessage = function(e) {
+						    console.log("Received response: ",e.data);
+						    conn.close();
+						};
+					});	
+						
+			        
+				});	
+				break;				
 			case "addtoalfredplaylist":
 				if(args[8])
 				{
