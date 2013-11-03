@@ -90,7 +90,8 @@ If you modify your playlists, you'll need to update the library.
 
 Download the workflow below and open in Alfred.
 
-[Download Workflow](https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/SpotifyMiniPlayer.alfredworkflow)
+[![Download Workflow](https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/images/alfred-workflow-icon.png)](https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/SpotifyMiniPlayer.alfredworkflow)
+
 
 ## Troubleshooting
 
