@@ -1,5 +1,11 @@
 ## History
 
+3.2:
+
+* No more need to copy JSON data! Just click on "Update library"
+
+* Added spot_mini_kill command to kill update library if it is stuck
+
 3.1:
 
 * Moving to spotify API 1.x: no more 200 tracks limitation on playlists

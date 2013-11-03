@@ -1,5 +1,5 @@
 {
-    "version": 3.1,
+    "version": 3.2,
     "download_url": "https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/SpotifyMiniPlayer.alfredworkflow",
-    "description": "Moving to spotify API 1.x. Added spot_mini_debug command to help troubleshooting. Improved robustness and error detections"
+    "description": "No more need to copy JSON data! Added spot_mini_kill command to kill update library if it is stuck"
 }
