@@ -340,6 +340,7 @@ function getPlaylists(matchedPlaylistsCallback) {
 		for (var i = 0, l = snapshot.length; i < l; i++) 
 		{
 			var myplaylist = snapshot.get(i);
+
 			if(myplaylist != null) 
 			{			
 				objplaylist={};
@@ -347,19 +348,15 @@ function getPlaylists(matchedPlaylistsCallback) {
 				objplaylist.name=myplaylist.name;
 				objplaylist.uri=myplaylist.uri;
 				array_results.push(objplaylist);
-				
-				if(i==(l-1))
-				{
-					// Add starred playlist at the end
-					objstarredplaylist={};
-					objstarredplaylist.name="Starred";
-					objstarredplaylist.uri=Library.forCurrentUser().starred.uri;
-					array_results.push(objstarredplaylist);
-					
-					matchedPlaylistsCallback(array_results);
-				}
 			}
 		}
+		// Add starred playlist at the end
+		objstarredplaylist={};
+		objstarredplaylist.name="Starred";
+		objstarredplaylist.uri=Library.forCurrentUser().starred.uri;
+		array_results.push(objstarredplaylist);
+		
+		matchedPlaylistsCallback(array_results);
     });
 		
 }
