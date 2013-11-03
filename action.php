@@ -196,10 +196,6 @@ else if($other_action != "")
 	{
 		exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:toplist:" . uniqid() . "\"'");
 	}
-	else if ($other_action == "delete_update_library_in_progress")
-	{
-		unlink($w->data() . "/update_library_in_progress");
-	}
 	else if ($other_action == "open_spotify_export_app")
 	{
 		exec("osascript -e 'tell application \"Spotify\" to activate'");

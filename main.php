@@ -16,8 +16,7 @@ $w = new Workflows();
 // check for library update in progress
 if (file_exists($w->data() . "/update_library_in_progress"))
 {
-	$w->result( '', $w->data() . "/update_library_in_progress", "Library update in progress", "Please come back later", './images/warning.png', 'no', '' );
-	$w->result( '', "|||||||" . "delete_update_library_in_progress||", "Force library update to stop", "use it if the library update seems stuck (several hours)", './images/settings.png', 'yes', "" );
+	$w->result( '', $w->data() . "/update_library_in_progress", "Library update in progress", "Please come back later (if you want to kill it, use spot_mini_kill_update command)", './images/warning.png', 'no', '' );
 	echo $w->toxml();
 	return;	
 }

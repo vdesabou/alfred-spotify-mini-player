@@ -6,6 +6,17 @@
 	<string>com.vdesabou.spotify.mini.player</string>
 	<key>connections</key>
 	<dict>
+		<key>05F86AA1-D3EE-4409-9A58-898B36FFE503</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>19215BE5-986E-4AC9-9166-C80872C51DBE</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 		<key>18496AC4-EA42-444C-A906-642E38259C96</key>
 		<array>
 			<dict>
@@ -55,6 +66,17 @@
 				<integer>262144</integer>
 				<key>modifiersubtext</key>
 				<string>Search artist online</string>
+			</dict>
+		</array>
+		<key>19215BE5-986E-4AC9-9166-C80872C51DBE</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>C0402AEB-638A-43F4-A4E3-17EC788F526E</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
 			</dict>
 		</array>
 		<key>1A88766E-BF4A-48F5-9BD4-D3538634422F</key>
@@ -1002,7 +1024,7 @@ end alfred_script</string>
 				<key>runningsubtext</key>
 				<string>Wait for it...</string>
 				<key>script</key>
-				<string>php -f debug.php  2&gt;&amp;1 | tee output_debug.log</string>
+				<string>php -f debug.php</string>
 				<key>subtext</key>
 				<string>Send the generated tgz file to the workflow author</string>
 				<key>title</key>
@@ -1029,6 +1051,69 @@ end alfred_script</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>127</integer>
+				<key>script</key>
+				<string>php -f kill_update.php</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>19215BE5-986E-4AC9-9166-C80872C51DBE</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>spot_mini_kill_update</string>
+				<key>subtext</key>
+				<string>use it if the library update seems stuck (several hours)</string>
+				<key>text</key>
+				<string>Kill update library</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>05F86AA1-D3EE-4409-9A58-898B36FFE503</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<false/>
+				<key>output</key>
+				<integer>0</integer>
+				<key>removeextension</key>
+				<false/>
+				<key>sticky</key>
+				<false/>
+				<key>text</key>
+				<string>{query}</string>
+				<key>title</key>
+				<string>Spotify Mini Player</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.notification</string>
+			<key>uid</key>
+			<string>C0402AEB-638A-43F4-A4E3-17EC788F526E</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string>Credits:
@@ -1038,6 +1123,11 @@ Spotifious Workflow: https://github.com/citelao/Spotify-for-Alfred
 Spotify App spotify-export: https://github.com/jamesrwhite/spotify-export</string>
 	<key>uidata</key>
 	<dict>
+		<key>05F86AA1-D3EE-4409-9A58-898B36FFE503</key>
+		<dict>
+			<key>ypos</key>
+			<real>2130</real>
+		</dict>
 		<key>184907DA-3265-45DA-8E0F-C8EC32ACDD94</key>
 		<dict>
 			<key>ypos</key>
@@ -1047,6 +1137,11 @@ Spotify App spotify-export: https://github.com/jamesrwhite/spotify-export</strin
 		<dict>
 			<key>ypos</key>
 			<real>10</real>
+		</dict>
+		<key>19215BE5-986E-4AC9-9166-C80872C51DBE</key>
+		<dict>
+			<key>ypos</key>
+			<real>2130</real>
 		</dict>
 		<key>1A88766E-BF4A-48F5-9BD4-D3538634422F</key>
 		<dict>
@@ -1157,6 +1252,11 @@ Spotify App spotify-export: https://github.com/jamesrwhite/spotify-export</strin
 		<dict>
 			<key>ypos</key>
 			<real>10</real>
+		</dict>
+		<key>C0402AEB-638A-43F4-A4E3-17EC788F526E</key>
+		<dict>
+			<key>ypos</key>
+			<real>2130</real>
 		</dict>
 		<key>C7CFF014-DBC8-4663-A0AB-219C57A427EE</key>
 		<dict>
