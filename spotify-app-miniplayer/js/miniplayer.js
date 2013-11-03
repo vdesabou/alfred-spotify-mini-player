@@ -96,6 +96,7 @@ function handleArgs() {
 				playTopList();
 				break;
 			case "update_library":
+				sleep(1000);
 				getAll(function(matchedAll) {
 					console.log("update_library finished", matchedAll);
 	
@@ -249,6 +250,15 @@ function starCurrentTrack() {
 	if (track != null) {
 		models.Track.fromURI(track.uri).star();
 	} 
+}
+
+function sleep(milliseconds) {
+  var start = new Date().getTime();
+  for (var i = 0; i < 1e7; i++) {
+    if ((new Date().getTime() - start) > milliseconds){
+      break;
+    }
+  }
 }
 
 function randomTrack() {
