@@ -98,6 +98,10 @@ If you experience an issue with the workflow, use the "spot_mini_debug" command,
 
 ![Screenshot](http://d.pr/i/4zSE+.png)
 
+If the update library is stuck (be aware the first time, it can take hours as all artworks are downloaded, next times it shall not exceed 10 minutes), you can kill it by invoking "spot_mini_kill" command:
+
+![Screenshot](http://d.pr/i/q8Rs+.png)
+
 
 ## Credits
 
