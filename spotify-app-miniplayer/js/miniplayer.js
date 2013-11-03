@@ -304,6 +304,18 @@ function getPlaylistTracks(uri,name,matchedPlaylistTracksCallback) {
 	var playlist = models.Playlist.fromURI(uri);
 	playlist.load('tracks','name','uri').done(function() {
 	  playlist.tracks.snapshot().done(function(snapshot) {
+	  
+	  	//check for empty playlists
+		if(snapshot.length == 0)
+		{
+			p={};
+			p.name=name;
+			p.uri=uri;
+			p.tracks=array_tracks; 
+
+			matchedPlaylistTracksCallback(p);
+		}
+		
 	    snapshot.loadAll('name','popularity','starred','artists').each(function(track) {
 	    
 		getAlbum(track.album.uri,function(matchedAlbum) {
