@@ -369,12 +369,10 @@ function getPlaylistTracks(uri,name,matchedPlaylistTracksCallback) {
 			matchedPlaylistTracksCallback(p);
 		}
 		
-	    snapshot.loadAll('name','popularity','starred','artists').each(function(track) {
+	    snapshot.loadAll('name','popularity','starred','artists','availability','playable').each(function(track) {
 	    
 		getAlbum(track.album.uri,function(matchedAlbum) {
-				//console.log("getAlbum finished", matchedAlbum);
-	
-	
+
 				objtrack={};
 				objtrack.playlist_name=playlist.name;
 				objtrack.playlist_uri=playlist.uri;
@@ -386,7 +384,8 @@ function getPlaylistTracks(uri,name,matchedPlaylistTracksCallback) {
 				objtrack.artist_uri=track.artists[0].uri;
 				objtrack.album_name=matchedAlbum.name;
 				objtrack.album_uri=matchedAlbum.uri;
-				//console.log(playlist.name,playlist.uri,track.uri,track.name,matchedAlbum.name,matchedAlbum.uri);
+				objtrack.availability=track.availability;
+				objtrack.playable=track.playable;
 				array_tracks.push(objtrack);
 				
 				if(snapshot.length == array_tracks.length)
