@@ -96,17 +96,14 @@ function handleArgs() {
 				playTopList();
 				break;
 			case "update_library":
-				sleep(1000);
+				sleep(3000);
 				getAll(function(matchedAll) {
 					console.log("update_library finished", matchedAll);
 	
 					var conn = new WebSocket('ws://localhost:17693');
 					conn.onopen = function(e) {
 					    console.log("Connection established!");
-					    var array_websocket = [];
-					    array_websocket.push("update_library");
-					    array_websocket.push(matchedAll);
-					    conn.send(JSON.stringify(array_websocket));
+					    conn.send('update_library→' + JSON.stringify(matchedAll));
 					};
 					
 					conn.onerror = function(e) {
@@ -124,9 +121,17 @@ function handleArgs() {
 				});
 				break;				
 			case "update_playlist":
-				sleep(1000);
+				sleep(3000);
 				var array_results = [];
-				var pl = models.Playlist.fromURI(args[1]+':'+args[2]+':'+args[3]+':'+args[4]+':'+args[5]);
+				if(args[6])
+				{
+					var pl = models.Playlist.fromURI(args[1]+':'+args[2]+':'+args[3]+':'+args[4]+':'+args[5]);
+				}
+				else if(args[4] == 'starred' )
+				{
+					var pl = models.Playlist.fromURI(args[1]+':'+args[2]+':'+args[3]+':'+args[4]);
+				}
+				
 
 				pl.load('name','uri').done(function() {
 					getPlaylistTracks(pl.uri,pl.name,function(matchedPlaylistTracks) {
@@ -138,10 +143,7 @@ function handleArgs() {
 						var conn = new WebSocket('ws://localhost:17693');
 						conn.onopen = function(e) {
 						    console.log("Connection established!");
-						    var array_websocket = [];
-						    array_websocket.push("update_playlist");
-						    array_websocket.push(array_results);
-						    conn.send(JSON.stringify(array_websocket));
+						    conn.send('update_playlist→' + JSON.stringify(array_results))
 						};
 						
 						conn.onerror = function(e) {

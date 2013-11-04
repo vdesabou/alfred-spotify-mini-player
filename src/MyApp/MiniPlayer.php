@@ -26,36 +26,28 @@ class MiniPlayer implements MessageComponentInterface {
         echo sprintf('Connection %d sending message "%s" to %d other connection%s' . "\n"
             , $from->resourceId, $msg, $numRecv, $numRecv == 1 ? '' : 's');
 */
-		echo "$msg";
-		$json = json_decode($msg,true);
-		if (json_last_error() === JSON_ERROR_NONE) 
+		$tmp = explode('→', $msg);
+		$command=$tmp[0];
+		$json=$tmp[1];
+		if($command=="update_library")
 		{
-			if($json[0]=="update_library")
-			{
-				updateLibrary($json[1]);
-		        foreach ($this->clients as $client) {
-		                $client->send("UPDATE LIBRARY SUCCESS");
-		        }		
-			}
-			else if($json[0]=="update_playlist")
-			{
-				updatePlaylist($json[1]);
-		        foreach ($this->clients as $client) {
-		                $client->send("UPDATE PLAYLIST SUCCESS");
-		        }		
-			}
-			else
-			{
-		        foreach ($this->clients as $client) {
-		                $client->send("ERROR UNKNOWN COMMAND");
-		        }					
-			}
+			updateLibrary($json);
+	        foreach ($this->clients as $client) {
+	                $client->send("UPDATE LIBRARY SUCCESS");
+	        }		
+		}
+		else if($command=="update_playlist")
+		{
+			updatePlaylist($json);
+	        foreach ($this->clients as $client) {
+	                $client->send("UPDATE PLAYLIST SUCCESS");
+	        }		
 		}
 		else
 		{
 	        foreach ($this->clients as $client) {
-	                $client->send("ERROR DECODING JSON");
-	        }			
+	                $client->send("ERROR UNKNOWN COMMAND");
+	        }					
 		}
     }
 
