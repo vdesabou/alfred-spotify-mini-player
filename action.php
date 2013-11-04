@@ -231,12 +231,6 @@ else if($other_action != "")
 			echo "Error: Could no retrieve the artist";
 		}
 	}
-/*
-	else if ($other_action == "update_library_json")
-	{
-		updateLibrary(exec('pbpaste'));
-	}
-*/
 	else if ($other_action == "update_library")
 	{
 		exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:update_library:" . uniqid() . "\"'");
