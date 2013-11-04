@@ -1,7 +1,7 @@
 <?php
 
 // Turn off all error reporting
-error_reporting(0);
+//error_reporting(0);
 
 require_once('workflows.php');
 include_once('functions.php');
@@ -207,11 +207,6 @@ else if($other_action != "")
 		$dbfile = $w->data() . "/settings.db";
 		exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 		echo "Alfred Playlist is now disabled";
-	}
-	else if ($other_action == "refresh_alfred_playlist")
-	{
-		refreshAlfredPlaylist();
-		echo "Alfred Playlist has been refreshed";
 	}
 	else if ($other_action == "play_top_list")
 	{

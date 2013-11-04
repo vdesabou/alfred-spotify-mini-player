@@ -1,7 +1,7 @@
 <?php
 
 // Turn off all error reporting
-error_reporting(0);
+//error_reporting(0);
 
 include_once('functions.php');
 require_once('workflows.php');
@@ -437,9 +437,8 @@ else
 				$w->result( "spotify_mini-spotify-alfredplaylist-browse", '', "Browse your Alfred playlist", "browse your alfred playlist",'./images/alfred_playlist.png', 'no', 'Playlist→Alfred Playlist→');
 			
 				$w->result( "spotify_mini-spotify-alfredplaylist-set", '', "Update your Alfred playlist URI", "define the URI of your Alfred playlist",'./images/settings.png', 'no', 'Alfred Playlist→Set Alfred Playlist URI→');
-				
-				$w->result( "spotify_mini-spotify-alfredplaylist-refresh", "|||||||" . "refresh_alfred_playlist|" . $alfred_playlist_uri . "|", "Refresh your Alfred playlist", "this will refresh your Alfred playlist",'./images/update.png', 'yes', '');
-				
+
+				$w->result( "spotify_mini-spotify-alfredplaylist-refresh", "|||" . $alfred_playlist_uri . "||||" . update_playlist . "||", "Update your Alfred Playlist", "After some time, you should get a notification saying that playlist has been updated", './images/update.png', 'yes', '' );				
 			
 			}
 		} //  Alfred Playlist end	
