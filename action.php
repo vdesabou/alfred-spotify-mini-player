@@ -43,7 +43,7 @@ $artist_name=$results[9];
 if ($other_action == "update_playlist" && $playlist_uri != "")
 {
 	exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:update_playlist:" . $playlist_uri . ":" . uniqid() . "\"'");
-
+	exec("osascript -e 'tell application \"Spotify\" to open location \"$playlist_uri\"'");
 
     $server = IoServer::factory(
         new HttpServer(
