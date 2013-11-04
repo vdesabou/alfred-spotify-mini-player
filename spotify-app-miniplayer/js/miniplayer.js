@@ -103,7 +103,10 @@ function handleArgs() {
 					var conn = new WebSocket('ws://localhost:17693');
 					conn.onopen = function(e) {
 					    console.log("Connection established!");
-					    conn.send(JSON.stringify(matchedAll));
+					    var array_websocket = [];
+					    array_websocket.push("update_library");
+					    array_websocket.push(matchedAll);
+					    conn.send(JSON.stringify(array_websocket));
 					};
 					
 					conn.onerror = function(e) {
@@ -135,7 +138,10 @@ function handleArgs() {
 						var conn = new WebSocket('ws://localhost:17693');
 						conn.onopen = function(e) {
 						    console.log("Connection established!");
-						    conn.send(JSON.stringify(array_results));
+						    var array_websocket = [];
+						    array_websocket.push("update_playlist");
+						    array_websocket.push(array_results);
+						    conn.send(JSON.stringify(array_websocket));
 						};
 						
 						conn.onerror = function(e) {
