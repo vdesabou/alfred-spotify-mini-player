@@ -96,7 +96,7 @@ function handleArgs() {
 				playTopList();
 				break;
 			case "update_library":
-				sleep(3000);
+				sleep(1000);
 				getAll(function(matchedAll) {
 					console.log("update_library finished", matchedAll);
 	
@@ -121,7 +121,7 @@ function handleArgs() {
 				});
 				break;				
 			case "update_playlist":
-				sleep(3000);
+				sleep(1000);
 				var array_results = [];
 				if(args[6])
 				{
