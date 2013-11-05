@@ -24,14 +24,31 @@ class MiniPlayer implements MessageComponentInterface {
         
 /*
         echo sprintf('Connection %d sending message "%s" to %d other connection%s' . "\n"
-            , $from->resourceId, '$msg', $numRecv, $numRecv == 1 ? '' : 's');
+            , $from->resourceId, $msg, $numRecv, $numRecv == 1 ? '' : 's');
 */
-
-		updateLibrary($msg);
-		
-        foreach ($this->clients as $client) {
-                $client->send("DONE");
-        }
+		$tmp = explode('→', $msg);
+		$command=$tmp[0];
+		$json=$tmp[1];
+		if($command=="update_library")
+		{
+			updateLibrary($json);
+	        foreach ($this->clients as $client) {
+	                $client->send("UPDATE LIBRARY SUCCESS");
+	        }		
+		}
+		else if($command=="update_playlist")
+		{
+			updatePlaylist($json);
+	        foreach ($this->clients as $client) {
+	                $client->send("UPDATE PLAYLIST SUCCESS");
+	        }		
+		}
+		else
+		{
+	        foreach ($this->clients as $client) {
+	                $client->send("ERROR UNKNOWN COMMAND");
+	        }					
+		}
     }
 
     public function onClose(ConnectionInterface $conn) {

@@ -1,7 +1,7 @@
 <?php
 
 // Turn off all error reporting
-error_reporting(0);
+//error_reporting(0);
 
 require_once('workflows.php');
 include_once('functions.php');
@@ -40,6 +40,29 @@ $other_action=$results[7];
 $alfred_playlist_uri=$results[8];
 $artist_name=$results[9];
 
+if ($other_action == "update_playlist" && $playlist_uri != "")
+{
+	touch($w->data() . "/update_library_in_progress");
+	
+	exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:update_playlist:" . $playlist_uri . ":" . uniqid() . "\"'");
+	exec("osascript -e 'tell application \"Spotify\" to open location \"$playlist_uri\"'");
+
+    $server = IoServer::factory(
+        new HttpServer(
+            new WsServer(
+                new MiniPlayer()
+            )
+        ),
+        17693
+    );
+	// FIX THIS: server will exit when done 
+	// Did not find a way to set a timeout
+    $server->run();
+
+    
+    return;
+}
+	
 
 if($type == "TRACK")
 {
@@ -187,11 +210,6 @@ else if($other_action != "")
 		exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 		echo "Alfred Playlist is now disabled";
 	}
-	else if ($other_action == "refresh_alfred_playlist")
-	{
-		refreshAlfredPlaylist();
-		echo "Alfred Playlist has been refreshed";
-	}
 	else if ($other_action == "play_top_list")
 	{
 		exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:toplist:" . uniqid() . "\"'");
@@ -215,14 +233,10 @@ else if($other_action != "")
 			echo "Error: Could no retrieve the artist";
 		}
 	}
-/*
-	else if ($other_action == "update_library_json")
-	{
-		updateLibrary(exec('pbpaste'));
-	}
-*/
 	else if ($other_action == "update_library")
 	{
+		touch($w->data() . "/update_library_in_progress");
+		
 		exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:update_library:" . uniqid() . "\"'");
 
 	    $server = IoServer::factory(

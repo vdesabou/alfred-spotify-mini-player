@@ -16,7 +16,28 @@ $w = new Workflows();
 // check for library update in progress
 if (file_exists($w->data() . "/update_library_in_progress"))
 {
-	$w->result( '', $w->data() . "/update_library_in_progress", "Library update in progress", "Please come back later (if you want to kill it, use spot_mini_kill_update command)", './images/warning.png', 'no', '' );
+	if (file_exists($w->data() . "/library.db"))
+	{	
+		$in_progress_data = $w->read('update_library_in_progress');
+		
+		if ( substr_count( $in_progress_data, '→' ) == 2 )
+		{
+			$words = explode('→', $in_progress_data);
+			
+			
+			$w->result( '', $w->data() . "/update_library_in_progress", $words[0] . " update in progress: " . floatToSquares(intval($words[1])/intval($words[2])),  $words[1] . "/" . $words[2] . " tracks processed so far (if no progress, use spot_mini_kill_update command to stop it)", './images/update.png', 'no', '' );	
+		}
+		else
+		{
+			$w->result( '', $w->data() . "/update_library_in_progress", "Update in progress: " . floatToSquares(0), "0 tracks processed so far (if no progress, use spot_mini_kill_update command to stop it)", './images/update.png', 'no', '' );				
+		}
+	}
+	else
+	{
+		$w->result( '', $w->data() . "/update_library_in_progress", "Library update seems broken", "You can kill it by using spot_mini_kill_update command", './images/warning.png', 'no', '' );
+	}
+	
+	
 	echo $w->toxml();
 	return;	
 }
@@ -55,7 +76,7 @@ exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $ret
 if($returnValue != 0)
 {
 	$w->result( '', '', "There is a problem with the library, try to update it.", "Select Install library below", './images/warning.png', 'no', '' );
-	$w->result( '', "|||||||" . "update_library||", "Install library", "After some time, you should get a notification saying that library has been created/updated", './images/update.png', 'yes', '' );
+	$w->result( '', "|||||||" . "update_library||", "Install library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
 	
 	echo $w->toxml();
 	return;
@@ -94,7 +115,7 @@ if(mb_strlen($query) < 3 ||
 			if($returnValue != 0)
 			{
 				$w->result( '', '', "There is a problem with the library, try to update it.", "Select Install library below", './images/warning.png', 'no', '' );
-				$w->result( '', "|||||||" . "update_library||", "Install library", "After some time, you should get a notification saying that library has been created/updated", './images/update.png', 'yes', '' );
+				$w->result( '', "|||||||" . "update_library||", "Install library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
 				
 				echo $w->toxml();
 				return;
@@ -161,7 +182,7 @@ if(mb_strlen($query) < 3 ||
 			{
 				$w->result( '', '', "Workflow is not configured, Spotify Mini Player App is missing", "Select Install library below, and make sure ~/Spotify/spotify-app-miniplayer directory exists", './images/warning.png', 'no', '' );				
 			}
-			$w->result( '', "|||||||" . "update_library||", "Install library", "After some time, you should get a notification saying that library has been created/updated", './images/update.png', 'yes', '' );
+			$w->result( '', "|||||||" . "update_library||", "Install library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
 			
 			echo $w->toxml();
 			return;
@@ -207,7 +228,7 @@ if(mb_strlen($query) < 3 ||
 		{
 			$w->result( '', "|||||||" . "enable_all_playlist||", "Change Search Scope", "Select to change to ALL playlists", './images/search.png', 'yes', '' );
 		}
-		$w->result( '', "|||||||" . "update_library||", "Update Library", "After some time, you should get a notification saying that library has been created/updated", './images/update.png', 'yes', '' );
+		$w->result( '', "|||||||" . "update_library||", "Update Library", "When done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
 		$w->result( '', '', "Configure Max Number of Results", "Number of results displayed. (it doesn't apply to your playlist list)", './images/numbers.png', 'no', 'Settings→MaxResults→' );
 		$w->result( '', '', "Configure your Country Code", "This is needed to get available results when doing online lookups", './images/country.png', 'no', 'Settings→Country→' );
 
@@ -285,7 +306,7 @@ else
 		if($returnValue != 0)
 		{
 			$w->result( '', '', "There is a problem with the library, try to update it.", "Select Install library below", './images/warning.png', 'no', '' );
-			$w->result( '', "|||||||" . "update_library|", "Install library", "After some time, you should get a notification saying that library has been created/updated", './images/update.png', 'yes', '' );
+			$w->result( '', "|||||||" . "update_library|", "Install library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
 			
 			echo $w->toxml();
 			return;
@@ -318,7 +339,7 @@ else
 		if($returnValue != 0)
 		{
 			$w->result( '', '', "There is a problem with the library, try to update it.", "Select Install library below", './images/warning.png', 'no', '' );
-			$w->result( '', "|||||||" . "update_library||", "Install library", "After some time, you should get a notification saying that library has been created/updated", './images/update.png', 'yes', '' );
+			$w->result( '', "|||||||" . "update_library||", "Install library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
 			
 			echo $w->toxml();
 			return;
@@ -385,7 +406,7 @@ else
 				if($returnValue != 0)
 				{
 					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Install library below", './images/warning.png', 'no', '' );
-					$w->result( '', "|||||||" . "update_library||", "Install library", "After some time, you should get a notification saying that library has been created/updated", './images/update.png', 'yes', '' );
+					$w->result( '', "|||||||" . "update_library||", "Install library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
 					
 					echo $w->toxml();
 					return;
@@ -408,7 +429,7 @@ else
 				if($returnValue != 0)
 				{
 					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Install library below", './images/warning.png', 'no', '' );
-					$w->result( '', "|||||||" . "update_library||", "Install library", "After some time, you should get a notification saying that library has been created/updated", './images/update.png', 'yes', '' );
+					$w->result( '', "|||||||" . "update_library||", "Install library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
 					
 					echo $w->toxml();
 					return;
@@ -437,9 +458,8 @@ else
 				$w->result( "spotify_mini-spotify-alfredplaylist-browse", '', "Browse your Alfred playlist", "browse your alfred playlist",'./images/alfred_playlist.png', 'no', 'Playlist→Alfred Playlist→');
 			
 				$w->result( "spotify_mini-spotify-alfredplaylist-set", '', "Update your Alfred playlist URI", "define the URI of your Alfred playlist",'./images/settings.png', 'no', 'Alfred Playlist→Set Alfred Playlist URI→');
-				
-				$w->result( "spotify_mini-spotify-alfredplaylist-refresh", "|||||||" . "refresh_alfred_playlist|" . $alfred_playlist_uri . "|", "Refresh your Alfred playlist", "this will refresh your Alfred playlist",'./images/update.png', 'yes', '');
-				
+
+				$w->result( "spotify_mini-spotify-alfredplaylist-refresh", "|||" . $alfred_playlist_uri . "||||" . update_playlist . "||", "Update your Alfred Playlist", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );				
 			
 			}
 		} //  Alfred Playlist end	
@@ -469,7 +489,7 @@ else
 				if($returnValue != 0)
 				{
 					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Install library below", './images/warning.png', 'no', '' );
-					$w->result( '', "|||||||" . "update_library||", "Install library", "After some time, you should get a notification saying that library has been created/updated", './images/update.png', 'yes', '' );
+					$w->result( '', "|||||||" . "update_library||", "Install library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
 					
 					echo $w->toxml();
 					return;
@@ -509,7 +529,7 @@ else
 				if($returnValue != 0)
 				{
 					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Install library below", './images/warning.png', 'no', '' );
-					$w->result( '', "|||||||" . "update_library||", "Install library", "After some time, you should get a notification saying that library has been created/updated", './images/update.png', 'yes', '' );
+					$w->result( '', "|||||||" . "update_library||", "Install library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
 					
 					echo $w->toxml();
 					return;
@@ -560,7 +580,7 @@ else
 				if($returnValue != 0)
 				{
 					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Install library below", './images/warning.png', 'no', '' );
-					$w->result( '', "|||||||" . "update_library||", "Install library", "After some time, you should get a notification saying that library has been created/updated", './images/update.png', 'yes', '' );
+					$w->result( '', "|||||||" . "update_library||", "Install library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
 					
 					echo $w->toxml();
 					return;
@@ -598,7 +618,7 @@ else
 				if($returnValue != 0)
 				{
 					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Install library below", './images/warning.png', 'no', '' );
-					$w->result( '', "|||||||" . "update_library||", "Install library", "After some time, you should get a notification saying that library has been created/updated", './images/update.png', 'yes', '' );
+					$w->result( '', "|||||||" . "update_library||", "Install library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
 					
 					echo $w->toxml();
 					return;
@@ -783,7 +803,7 @@ else
 				if($returnValue != 0)
 				{
 					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Install library below", './images/warning.png', 'no', '' );
-					$w->result( '', "|||||||" . "update_library||", "Install library", "After some time, you should get a notification saying that library has been created/updated", './images/update.png', 'yes', '' );
+					$w->result( '', "|||||||" . "update_library||", "Install library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
 					
 					echo $w->toxml();
 					return;
@@ -837,7 +857,7 @@ else
 				if($returnValue != 0)
 				{
 					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Install library below", './images/warning.png', 'no', '' );
-					$w->result( '', "|||||||" . "update_library||", "Install library", "After some time, you should get a notification saying that library has been created/updated", './images/update.png', 'yes', '' );
+					$w->result( '', "|||||||" . "update_library||", "Install library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
 					
 					echo $w->toxml();
 					return;
@@ -900,7 +920,7 @@ else
 				if($returnValue != 0)
 				{
 					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Install library below", './images/warning.png', 'no', '' );
-					$w->result( '', "|||||||" . "update_library||", "Install library", "After some time, you should get a notification saying that library has been created/updated", './images/update.png', 'yes', '' );
+					$w->result( '', "|||||||" . "update_library||", "Install library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
 					
 					echo $w->toxml();
 					return;
@@ -954,7 +974,7 @@ else
 				if($returnValue != 0)
 				{
 					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Install library below", './images/warning.png', 'no', '' );
-					$w->result( '', "|||||||" . "update_library||", "Install library", "After some time, you should get a notification saying that library has been created/updated", './images/update.png', 'yes', '' );
+					$w->result( '', "|||||||" . "update_library||", "Install library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
 					
 					echo $w->toxml();
 					return;
@@ -1007,7 +1027,7 @@ else
 			if($returnValue != 0)
 			{
 				$w->result( '', '', "There is a problem with the library, try to update it.", "Select Install library below", './images/warning.png', 'no', '' );
-				$w->result( '', "|||||||" . "update_library||", "Install library", "After some time, you should get a notification saying that library has been created/updated", './images/update.png', 'yes', '' );
+				$w->result( '', "|||||||" . "update_library||", "Install library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
 				
 				echo $w->toxml();
 				return;
@@ -1045,7 +1065,7 @@ else
 					if($returnValue != 0)
 					{
 						$w->result( '', '', "There is a problem with the library, try to update it.", "Select Install library below", './images/warning.png', 'no', '' );
-						$w->result( '', "|||||||" . "update_library||", "Install library", "After some time, you should get a notification saying that library has been created/updated", './images/update.png', 'yes', '' );
+						$w->result( '', "|||||||" . "update_library||", "Install library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
 						
 						echo $w->toxml();
 						return;
@@ -1068,6 +1088,8 @@ else
 					}
 					$w->result( "spotify_mini-spotify-playlist-$playlist[1]", "|||" . $playlist[0] . "||||" . "|" . $alfred_playlist_uri . "|", ucfirst($playlist[1]) . " by " . $playlist_user . " (" . $playlist[2] . " tracks)", $subtitle, './images/playlists.png', 'yes', '' );
 		
+					$w->result( "spotify_mini-spotify-update-$playlist[1]", "|||" . $playlist[0] . "||||" . update_playlist . "||", "Update playlist " . ucfirst($playlist[1]) . " by " . $playlist_user, "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
+													
 					foreach($tracks as $track):
 						$track = explode("	",$track);	
 	
@@ -1089,7 +1111,7 @@ else
 					if($returnValue != 0)
 					{
 						$w->result( '', '', "There is a problem with the library, try to update it.", "Select Install library below", './images/warning.png', 'no', '' );
-						$w->result( '', "|||||||" . "update_library||", "Install library", "After some time, you should get a notification saying that library has been created/updated", './images/update.png', 'yes', '' );
+						$w->result( '', "|||||||" . "update_library||", "Install library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
 						
 						echo $w->toxml();
 						return;

@@ -103,7 +103,7 @@ function handleArgs() {
 					var conn = new WebSocket('ws://localhost:17693');
 					conn.onopen = function(e) {
 					    console.log("Connection established!");
-					    conn.send(JSON.stringify(matchedAll));
+					    conn.send('update_library→' + JSON.stringify(matchedAll));
 					};
 					
 					conn.onerror = function(e) {
@@ -119,6 +119,49 @@ function handleArgs() {
 					    conn.close();
 					};
 				});
+				break;				
+			case "update_playlist":
+				sleep(1000);
+				var array_results = [];
+				if(args[6])
+				{
+					var pl = models.Playlist.fromURI(args[1]+':'+args[2]+':'+args[3]+':'+args[4]+':'+args[5]);
+				}
+				else if(args[4] == 'starred' )
+				{
+					var pl = models.Playlist.fromURI(args[1]+':'+args[2]+':'+args[3]+':'+args[4]);
+				}
+				
+
+				pl.load('name','uri').done(function() {
+					getPlaylistTracks(pl.uri,pl.name,function(matchedPlaylistTracks) {
+			
+						array_results.push(matchedPlaylistTracks);	
+			
+						console.log("update_playlist finished", array_results);
+				
+						var conn = new WebSocket('ws://localhost:17693');
+						conn.onopen = function(e) {
+						    console.log("Connection established!");
+						    conn.send('update_playlist→' + JSON.stringify(array_results))
+						};
+						
+						conn.onerror = function(e) {
+							console.log("Error: ",e.data);
+						} 
+						
+						conn.onclose = function(e){
+							console.log("On Close: ",e.reason);
+						}
+						
+						conn.onmessage = function(e) {
+						    console.log("Received response: ",e.data);
+						    conn.close();
+						};
+					});	
+						
+			        
+				});	
 				break;				
 			case "addtoalfredplaylist":
 				if(args[8])
@@ -326,12 +369,10 @@ function getPlaylistTracks(uri,name,matchedPlaylistTracksCallback) {
 			matchedPlaylistTracksCallback(p);
 		}
 		
-	    snapshot.loadAll('name','popularity','starred','artists').each(function(track) {
+	    snapshot.loadAll('name','popularity','starred','artists','availability','playable').each(function(track) {
 	    
 		getAlbum(track.album.uri,function(matchedAlbum) {
-				//console.log("getAlbum finished", matchedAlbum);
-	
-	
+
 				objtrack={};
 				objtrack.playlist_name=playlist.name;
 				objtrack.playlist_uri=playlist.uri;
@@ -343,7 +384,8 @@ function getPlaylistTracks(uri,name,matchedPlaylistTracksCallback) {
 				objtrack.artist_uri=track.artists[0].uri;
 				objtrack.album_name=matchedAlbum.name;
 				objtrack.album_uri=matchedAlbum.uri;
-				//console.log(playlist.name,playlist.uri,track.uri,track.name,matchedAlbum.name,matchedAlbum.uri);
+				objtrack.availability=track.availability;
+				objtrack.playable=track.playable;
 				array_tracks.push(objtrack);
 				
 				if(snapshot.length == array_tracks.length)
@@ -366,7 +408,13 @@ function getPlaylistTracks(uri,name,matchedPlaylistTracksCallback) {
 function getPlaylists(matchedPlaylistsCallback) {
 		
 	var array_results = [];
-						
+
+	// Add starred playlist at the start
+	objstarredplaylist={};
+	objstarredplaylist.name="Starred";
+	objstarredplaylist.uri=Library.forCurrentUser().starred.uri;
+	array_results.push(objstarredplaylist);
+								
     Library.forCurrentUser().playlists.snapshot().done(function(snapshot){
 		for (var i = 0, l = snapshot.length; i < l; i++) 
 		{
@@ -381,11 +429,6 @@ function getPlaylists(matchedPlaylistsCallback) {
 				array_results.push(objplaylist);
 			}
 		}
-		// Add starred playlist at the end
-		objstarredplaylist={};
-		objstarredplaylist.name="Starred";
-		objstarredplaylist.uri=Library.forCurrentUser().starred.uri;
-		array_results.push(objstarredplaylist);
 		
 		matchedPlaylistsCallback(array_results);
     });
