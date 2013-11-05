@@ -230,14 +230,14 @@ function updateLibrary($jsonData)
 		touch($w->data() . "/library.db");
 					
 		touch($w->data() . "/update_library_in_progress");			
-		$nb_tracks = 0;
+		$nb_tracktotal = 0;
 		foreach ($json as $playlist) 
 		{	
 	
-			$nb_tracks+=count($playlist['tracks']);
+			$nb_tracktotal+=count($playlist['tracks']);
 
 		}
-		$w->write( 'library→' . $nb_tracks, 'update_library_in_progress' );
+		$w->write( 'Library→0→' . $nb_tracktotal, 'update_library_in_progress' );
 		
 		
 
@@ -290,6 +290,8 @@ function updateLibrary($jsonData)
 					
 		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table playlists (uri text, name text, nb_tracks int, author text)"';
 		exec($sql);
+		
+		$nb_track = 0;
 			
 		foreach ($json as $playlist) 
 		{	
@@ -384,6 +386,12 @@ function updateLibrary($jsonData)
 				$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into \"playlist_' . $playlist_name . '\" values ('. $starred .','.$track['popularity'].',\"'.$track['uri'].'\",\"'.$track['album_uri'].'\",\"'.$track['artist_uri'].'\",\"'.escapeQuery($track['name']).'\",\"'.escapeQuery($track['album_name']).'\",\"'.escapeQuery($track['artist_name']).'\"'.','.$album_year.',\"'.$track_artwork_path.'\"'.',\"'.$artist_artwork_path.'\"'.',\"'.$album_artwork_path.'\"'.',\"'.escapeQuery($track['playlist_name']).'\"'.',\"'.$track['playlist_uri'].'\"'.')"';
 									
 				exec($sql);
+				
+				$nb_track++;
+				if($nb_track%10===0)
+				{
+					$w->write( 'Library→' . $nb_track . '→' . $nb_tracktotal, 'update_library_in_progress' );
+				}
 			}
 		}
 		
@@ -466,14 +474,14 @@ function updatePlaylist($jsonData)
 		}	
 			
 		touch($w->data() . "/update_library_in_progress");			
-		$nb_tracks = 0;
+		$nb_tracktotal = 0;
 		foreach ($json as $playlist) 
 		{	
 	
-			$nb_tracks+=count($playlist['tracks']);
+			$nb_tracktotal+=count($playlist['tracks']);
 
 		}
-		$w->write( 'playlist→' . $playlist['uri'] . '→' . $nb_tracks, 'update_library_in_progress' );
+		$w->write( 'Playlist→0→' . $nb_tracktotal, 'update_library_in_progress' );
 		
 		//
 		// Create the playlists.json
@@ -520,6 +528,7 @@ function updatePlaylist($jsonData)
 		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table counters (all_tracks int, starred_tracks int, all_artists int, starred_artists int, all_albums int, starred_albums int, playlists int)"';
 		exec($sql);
 
+		$nb_track = 0;
 			
 		foreach ($json as $playlist) 
 		{	
@@ -623,6 +632,12 @@ function updatePlaylist($jsonData)
 				$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into \"playlist_' . $playlist_name . '\" values ('. $starred .','.$track['popularity'].',\"'.$track['uri'].'\",\"'.$track['album_uri'].'\",\"'.$track['artist_uri'].'\",\"'.escapeQuery($track['name']).'\",\"'.escapeQuery($track['album_name']).'\",\"'.escapeQuery($track['artist_name']).'\"'.','.$album_year.',\"'.$track_artwork_path.'\"'.',\"'.$artist_artwork_path.'\"'.',\"'.$album_artwork_path.'\"'.',\"'.escapeQuery($track['playlist_name']).'\"'.',\"'.$track['playlist_uri'].'\"'.')"';
 									
 				exec($sql);
+				
+				$nb_track++;
+				if($nb_track%10===0)
+				{
+					$w->write( 'Playlist→' . $nb_track . '→' . $nb_tracktotal, 'update_library_in_progress' );
+				}
 			}
 		}
 		

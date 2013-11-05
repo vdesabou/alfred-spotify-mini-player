@@ -23,43 +23,14 @@ if (file_exists($w->data() . "/update_library_in_progress"))
 		if ( substr_count( $in_progress_data, '→' ) == 2 )
 		{
 			$words = explode('→', $in_progress_data);
-			$results = explode(':', $words[1]);
 			
-			if($results[4])
-			{
-				$playlist_name = $results[4];
-			}elseif ($results[3] == "starred")
-			{
-				$playlist_name = "starred";
-			}
-			else
-			{
-				$playlist_name = "ERROR";
-			}
-	
-			$getCount = "select count(*) from playlist_" . $playlist_name;
-			$dbfile = $w->data() . "/library.db";
-			exec("sqlite3 \"$dbfile\" \"$getCount\"", $playlists_count);			
-			
-	
-			// playlist
-			$w->result( '', $w->data() . "/update_library_in_progress", "Playlist update in progress:", $playlists_count[0] . "/" . $words[2] . " tracks processed so far (if no progress, use spot_mini_kill_update command to stop it)", './images/warning.png', 'no', '' );
-		}
-		else if ( substr_count( $in_progress_data, '→' ) == 1 )
-		{
-			$words = explode('→', $in_progress_data);
-			
-			$getCount = "select count(*) from tracks";
-			$dbfile = $w->data() . "/library.db";
-			exec("sqlite3 \"$dbfile\" \"$getCount\"", $tracks_count);
-			
-			// library
-			$w->result( '', $w->data() . "/update_library_in_progress", "Library update in progress:", $tracks_count[0] . "/" . $words[1] . " tracks processed so far (if no progress, use spot_mini_kill_update command to stop it)", './images/warning.png', 'no', '' );	
+
+			$w->result( '', $w->data() . "/update_library_in_progress", $words[0] . " update in progress:", $words[1] . "/" . $words[2] . " tracks processed so far (if no progress, use spot_mini_kill_update command to stop it)", './images/update.png', 'no', '' );	
 		}
 	}
 	else
 	{
-		$w->result( '', $w->data() . "/update_library_in_progress", "Library update seems broken", "You can kill it, use spot_mini_kill_update command", './images/warning.png', 'no', '' );
+		$w->result( '', $w->data() . "/update_library_in_progress", "Library update seems broken", "You can kill it by using spot_mini_kill_update command", './images/warning.png', 'no', '' );
 	}
 	
 	
