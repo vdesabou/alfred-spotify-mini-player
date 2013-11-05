@@ -1,5 +1,11 @@
 ## History
 
+3.3:
+
+* Added progress indicator during update of library and playlists
+
+* Added possibility to update playlists directly from the workflow!
+
 3.2:
 
 * No more need to copy JSON data! Just click on "Update library"

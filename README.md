@@ -22,6 +22,7 @@ See it in action in this [video](https://vimeo.com/70175318)
 ## Features
 
 * Hotkey to trigger the workflow
+* Update of playlists directly from the workflow!
 * Search for Albums, Artists or Tracks
 * Search for playlists and launch it
 * Browse by Artists, Albums or Playlists

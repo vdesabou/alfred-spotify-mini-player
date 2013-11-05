@@ -1,5 +1,5 @@
 {
-    "version": 3.2,
+    "version": 3.3,
     "download_url": "https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/SpotifyMiniPlayer.alfredworkflow",
-    "description": "No more need to copy JSON data! Added spot_mini_kill command to kill update library if it is stuck"
+    "description": "Added progress indicator during update of library and playlists. Added possibility to update playlists directly from the workflow!"
 }
