@@ -42,6 +42,8 @@ $artist_name=$results[9];
 
 if ($other_action == "update_playlist" && $playlist_uri != "")
 {
+	touch($w->data() . "/update_library_in_progress");
+	
 	exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:update_playlist:" . $playlist_uri . ":" . uniqid() . "\"'");
 	exec("osascript -e 'tell application \"Spotify\" to open location \"$playlist_uri\"'");
 
@@ -233,6 +235,8 @@ else if($other_action != "")
 	}
 	else if ($other_action == "update_library")
 	{
+		touch($w->data() . "/update_library_in_progress");
+		
 		exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:update_library:" . uniqid() . "\"'");
 
 	    $server = IoServer::factory(

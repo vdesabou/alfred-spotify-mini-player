@@ -228,8 +228,7 @@ function updateLibrary($jsonData)
 			unlink($w->data() . "/library.db");
 		}
 		touch($w->data() . "/library.db");
-					
-		touch($w->data() . "/update_library_in_progress");			
+								
 		$nb_tracktotal = 0;
 		foreach ($json as $playlist) 
 		{	
@@ -239,9 +238,6 @@ function updateLibrary($jsonData)
 		}
 		$w->write( 'Library→0→' . $nb_tracktotal, 'update_library_in_progress' );
 		
-		
-
-
 		//
 		// Create the playlists.json
 		//		
@@ -472,8 +468,7 @@ function updatePlaylist($jsonData)
 		{			
 			unlink($w->data() . "/playlists-tmp.json");
 		}	
-			
-		touch($w->data() . "/update_library_in_progress");			
+						
 		$nb_tracktotal = 0;
 		foreach ($json as $playlist) 
 		{	

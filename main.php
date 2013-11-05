@@ -27,6 +27,10 @@ if (file_exists($w->data() . "/update_library_in_progress"))
 			
 			$w->result( '', $w->data() . "/update_library_in_progress", $words[0] . " update in progress: " . floatToSquares(intval($words[1])/intval($words[2])),  $words[1] . "/" . $words[2] . " tracks processed so far (if no progress, use spot_mini_kill_update command to stop it)", './images/update.png', 'no', '' );	
 		}
+		else
+		{
+			$w->result( '', $w->data() . "/update_library_in_progress", "Update in progress: " . floatToSquares(0), "0 tracks processed so far (if no progress, use spot_mini_kill_update command to stop it)", './images/update.png', 'no', '' );				
+		}
 	}
 	else
 	{
