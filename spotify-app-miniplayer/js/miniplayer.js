@@ -408,7 +408,13 @@ function getPlaylistTracks(uri,name,matchedPlaylistTracksCallback) {
 function getPlaylists(matchedPlaylistsCallback) {
 		
 	var array_results = [];
-						
+
+	// Add starred playlist at the start
+	objstarredplaylist={};
+	objstarredplaylist.name="Starred";
+	objstarredplaylist.uri=Library.forCurrentUser().starred.uri;
+	array_results.push(objstarredplaylist);
+								
     Library.forCurrentUser().playlists.snapshot().done(function(snapshot){
 		for (var i = 0, l = snapshot.length; i < l; i++) 
 		{
@@ -423,11 +429,6 @@ function getPlaylists(matchedPlaylistsCallback) {
 				array_results.push(objplaylist);
 			}
 		}
-		// Add starred playlist at the end
-		objstarredplaylist={};
-		objstarredplaylist.name="Starred";
-		objstarredplaylist.uri=Library.forCurrentUser().starred.uri;
-		array_results.push(objstarredplaylist);
 		
 		matchedPlaylistsCallback(array_results);
     });
