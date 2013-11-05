@@ -688,6 +688,11 @@ function updatePlaylist($jsonData)
 	}	
 }
 
+function floatToSquares($decimal) {
+	$squares = ($decimal < 1) ? floor($decimal * 10) : 10;
+	return str_repeat("◼︎", $squares) . str_repeat("◻︎", 10 - $squares);
+}
+
 function getPlaylistName($uri)
 {	
 	$name = "";
