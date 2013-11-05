@@ -226,10 +226,20 @@ function updateLibrary($jsonData)
 		if (file_exists($w->data() . "/library.db"))
 		{			
 			unlink($w->data() . "/library.db");
-		}			
-			
-		touch($w->data() . "/update_library_in_progress");
+		}
 		touch($w->data() . "/library.db");
+					
+		touch($w->data() . "/update_library_in_progress");			
+		$nb_tracks = 0;
+		foreach ($json as $playlist) 
+		{	
+	
+			$nb_tracks+=count($playlist['tracks']);
+
+		}
+		$w->write( 'library→' . $nb_tracks, 'update_library_in_progress' );
+		
+		
 
 
 		//
@@ -455,8 +465,16 @@ function updatePlaylist($jsonData)
 			unlink($w->data() . "/playlists-tmp.json");
 		}	
 			
-		touch($w->data() . "/update_library_in_progress");
+		touch($w->data() . "/update_library_in_progress");			
+		$nb_tracks = 0;
+		foreach ($json as $playlist) 
+		{	
+	
+			$nb_tracks+=count($playlist['tracks']);
 
+		}
+		$w->write( 'playlist→' . $playlist['uri'] . '→' . $nb_tracks, 'update_library_in_progress' );
+		
 		//
 		// Create the playlists.json
 		//		
