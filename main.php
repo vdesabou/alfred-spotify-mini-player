@@ -52,6 +52,23 @@ if (!file_exists($w->home() . "/Spotify/spotify-app-miniplayer"))
 	symlink($w->path() . "/spotify-app-miniplayer", $w->home() . "/Spotify/spotify-app-miniplayer");
 }
 
+
+//
+// Read settings from DB
+//
+$getSettings = "select * from settings";
+$dbfile = $w->data() . "/settings.db";
+exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
+
+if($returnValue != 0)
+{
+	if(file_exists($w->data() . "/settings.db"))
+	{
+		unlink($w->data() . "/settings.db");
+	}
+}
+
+
 //
 // Create settings.db with default values if needed
 //
@@ -66,21 +83,7 @@ if(!file_exists($w->data() . "/settings.db"))
 	exec($sql);
 }
 
-//
-// Read settings from DB
-//
-$getSettings = "select * from settings";
-$dbfile = $w->data() . "/settings.db";
-exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
 
-if($returnValue != 0)
-{
-	$w->result( '', '', "There is a problem with the library, try to update it.", "Select Install library below", './images/warning.png', 'no', '' );
-	$w->result( '', "|||||||" . "update_library||", "Install library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
-	
-	echo $w->toxml();
-	return;
-}
 
 foreach($settings as $setting):
 
@@ -1224,7 +1227,11 @@ else
 					$playlistName = getPlaylistName($alfred_playlist_uri);
 					if($playlistName == "Alfred Playlist")
 					{
-						$w->result( '', "||||||" . "ALFRED_PLAYLIST→" . $alfred_playlist_uri . "|||", "Alfred Playlist URI will be set to <" . $alfred_playlist_uri . ">", "Type enter to validate", './images/settings.png', 'yes', '' );
+						// internally, the user is replaced by @
+						$words = explode(':', $alfred_playlist_uri);
+												
+						
+						$w->result( '', "||||||" . "ALFRED_PLAYLIST→" . $words[0].":".$words[1].":@:".$words[3].":".$words[4] . "|||", "Alfred Playlist URI will be set to <" . $alfred_playlist_uri . ">", "Type enter to validate", './images/settings.png', 'yes', '' );
 					}
 					else
 					{
