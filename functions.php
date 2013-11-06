@@ -366,10 +366,13 @@ function updatePlaylist($jsonData)
 		exec($sql);
 
 		$nb_track = 0;
-			
+		
+
+		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"delete from tracks where playlist_uri=\"'.$track['playlist_uri'].'\""';
+		exec($sql);
+	
 		foreach ($json as $playlist) 
 		{	
-			$r = explode(':', $playlist_uri);
 			$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "update playlists set nb_tracks=' . count($playlist['tracks']) . ' where uri=\"' . $playlist['uri'] . '\""';
 			exec($sql);
 				
@@ -393,12 +396,7 @@ function updatePlaylist($jsonData)
 				$album_artwork_path = getTrackOrAlbumArtwork($w,$track['album_uri'],true);
 				
 				$album_year = 1995;
-				//echo "$track[name]\n";
-				
-
-				$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"delete from tracks where playlist_uri=\"'.$track['playlist_uri'].'\""';
-				exec($sql);
-								
+				//echo "$track[name]\n";								
 				
 				$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into tracks values ('. $starred .','.$track['popularity'].',\"'.$track['uri'].'\",\"'.$track['album_uri'].'\",\"'.$track['artist_uri'].'\",\"'.escapeQuery($track['name']).'\",\"'.escapeQuery($track['album_name']).'\",\"'.escapeQuery($track['artist_name']).'\"'.','.$album_year.',\"'.$track_artwork_path.'\"'.',\"'.$artist_artwork_path.'\"'.',\"'.$album_artwork_path.'\"'.',\"'.escapeQuery($track['playlist_name']).'\"'.',\"'.$track['playlist_uri'].'\"'.')"';
 									
