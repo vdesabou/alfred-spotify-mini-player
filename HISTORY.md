@@ -1,5 +1,9 @@
 ## History
 
+3.4:
+
+* Some fixes and improvements on Playlists
+
 3.3:
 
 * Added progress indicator during update of library and playlists
