@@ -365,8 +365,9 @@ function getPlaylistTracks(uri,name,matchedPlaylistTracksCallback) {
 			if(snapshot.length == 0)
 			{
 				p={};
-				p.name=name;
-				p.uri=uri;
+				
+				p.name=playlist.name;
+				p.uri=playlist.uri;
 				p.owner=owner.name;
 				p.username=owner.username;
 				p.tracks=array_tracks; 
@@ -396,8 +397,8 @@ function getPlaylistTracks(uri,name,matchedPlaylistTracksCallback) {
 					if(snapshot.length == array_tracks.length)
 					{
 						p={};
-						p.name=name;
-						p.uri=uri;
+						p.name=playlist.name;
+						p.uri=playlist.uri;
 						p.owner=owner.name;
 						p.username=owner.username;
 						p.tracks=array_tracks; 
