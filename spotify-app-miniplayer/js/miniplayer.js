@@ -355,52 +355,59 @@ function getPlaylistTracks(uri,name,matchedPlaylistTracksCallback) {
 		
 	var array_tracks = [];	
 	var playlist = models.Playlist.fromURI(uri);
-	playlist.load('tracks','name','uri').done(function() {
-	  playlist.tracks.snapshot().done(function(snapshot) {
-	  
-	  	//check for empty playlists
-		if(snapshot.length == 0)
-		{
-			p={};
-			p.name=name;
-			p.uri=uri;
-			p.tracks=array_tracks; 
-
-			matchedPlaylistTracksCallback(p);
-		}
-		
-	    snapshot.loadAll('name','popularity','starred','artists','availability','playable').each(function(track) {
-	    
-		getAlbum(track.album.uri,function(matchedAlbum) {
-
-				objtrack={};
-				objtrack.playlist_name=playlist.name;
-				objtrack.playlist_uri=playlist.uri;
-				objtrack.name=track.name;
-				objtrack.uri=track.uri;
-				objtrack.popularity=track.popularity;
-				objtrack.starred=track.starred;
-				objtrack.artist_name=track.artists[0].name;
-				objtrack.artist_uri=track.artists[0].uri;
-				objtrack.album_name=matchedAlbum.name;
-				objtrack.album_uri=matchedAlbum.uri;
-				objtrack.availability=track.availability;
-				objtrack.playable=track.playable;
-				array_tracks.push(objtrack);
-				
-				if(snapshot.length == array_tracks.length)
-				{
-					p={};
-					p.name=name;
-					p.uri=uri;
-					p.tracks=array_tracks; 
-
-					matchedPlaylistTracksCallback(p);
-				}
+	playlist.load('tracks','name','uri','owner').done(function() {
+	
+	  playlist.owner.load('name','username').done(function (owner) {
+	
+		  playlist.tracks.snapshot().done(function(snapshot) {
+		  
+		  	//check for empty playlists
+			if(snapshot.length == 0)
+			{
+				p={};
+				p.name=name;
+				p.uri=uri;
+				p.owner=owner.name;
+				p.username=owner.username;
+				p.tracks=array_tracks; 
+	
+				matchedPlaylistTracksCallback(p);
+			}
 			
-			});	    
+		    snapshot.loadAll('name','popularity','starred','artists','availability','playable').each(function(track) {
+		    
+			getAlbum(track.album.uri,function(matchedAlbum) {
+	
+					objtrack={};
+					objtrack.playlist_name=playlist.name;
+					objtrack.playlist_uri=playlist.uri;
+					objtrack.name=track.name;
+					objtrack.uri=track.uri;
+					objtrack.popularity=track.popularity;
+					objtrack.starred=track.starred;
+					objtrack.artist_name=track.artists[0].name;
+					objtrack.artist_uri=track.artists[0].uri;
+					objtrack.album_name=matchedAlbum.name;
+					objtrack.album_uri=matchedAlbum.uri;
+					objtrack.availability=track.availability;
+					objtrack.playable=track.playable;
+					array_tracks.push(objtrack);
+					
+					if(snapshot.length == array_tracks.length)
+					{
+						p={};
+						p.name=name;
+						p.uri=uri;
+						p.owner=owner.name;
+						p.username=owner.username;
+						p.tracks=array_tracks; 
+	
+						matchedPlaylistTracksCallback(p);
+					}
+				
+				});	    
+		    });
 	    });
-	    
 	  });
 	});			
 }
