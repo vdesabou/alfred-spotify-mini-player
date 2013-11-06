@@ -1,7 +1,7 @@
 <?php
 
 // Turn off all error reporting
-//error_reporting(0);
+error_reporting(0);
 
 require_once('workflows.php');
 include_once('functions.php');
