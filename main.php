@@ -315,7 +315,7 @@ else
 		foreach($playlists as $playlist):
 			$playlist = explode("	",$playlist);
 							
-			$w->result( "spotify_mini-spotify-playlist-$playlist[1]", '', ucfirst($playlist[1]), "by " . $playlist[3]  . " (" . $playlist[2] . " tracks)", './images/playlists.png', 'no', "Playlist→" . $playlist[1] . "→" );
+			$w->result( "spotify_mini-spotify-playlist-$playlist[1]", '', ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", './images/playlists.png', 'no', "Playlist→" . $playlist[1] . "→" );
 		endforeach;	
 	
 		
@@ -415,7 +415,7 @@ else
 				foreach($playlists as $playlist):
 					$playlist = explode("	",$playlist);
 									
-					$w->result( "spotify_mini-spotify-playlist-$playlist[1]", '', ucfirst($playlist[1]), "by " . $playlist[3]  . " (" . $playlist[2] . " tracks)", './images/playlists.png', 'no', "Playlist→" . $playlist[1] . "→" );
+					$w->result( "spotify_mini-spotify-playlist-$playlist[1]", '', ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", './images/playlists.png', 'no', "Playlist→" . $playlist[0] . "→" );
 				endforeach;
 			}
 			else
@@ -438,7 +438,7 @@ else
 				foreach($playlists as $playlist):
 					$playlist = explode("	",$playlist);
 														
-				$w->result( "spotify_mini-spotify-playlist-$playlist[1]", '', ucfirst($playlist[1]), "by " . $playlist[3]  . " (" . $playlist[2] . " tracks)", './images/playlists.png', 'no', "Playlist→" . $playlist[1] . "→" );
+				$w->result( "spotify_mini-spotify-playlist-$playlist[1]", '', ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", './images/playlists.png', 'no', "Playlist→" . $playlist[0] . "→" );
 				endforeach;
 			}
 		} // search by Playlist end	
@@ -455,7 +455,7 @@ else
 			}
 			else
 			{
-				$w->result( "spotify_mini-spotify-alfredplaylist-browse", '', "Browse your Alfred playlist", "browse your alfred playlist",'./images/alfred_playlist.png', 'no', 'Playlist→Alfred Playlist→');
+				$w->result( "spotify_mini-spotify-alfredplaylist-browse", '', "Browse your Alfred playlist", "browse your alfred playlist",'./images/alfred_playlist.png', 'no', 'Playlist→'.$alfred_playlist_uri.'→');
 			
 				$w->result( "spotify_mini-spotify-alfredplaylist-set", '', "Update your Alfred playlist URI", "define the URI of your Alfred playlist",'./images/settings.png', 'no', 'Alfred Playlist→Set Alfred Playlist URI→');
 
@@ -1015,12 +1015,11 @@ else
 			//		
 			// display tracks for selected playlist
 			//
-			$theplaylist=$words[1];
+			$theplaylisturi=$words[1];
 			$thetrack=$words[2];
 			
 			// retrieve playlist uri from playlist name
-			$getPlaylists = "select * from playlists where name like '%".$theplaylist."%'";
-			
+			$getPlaylists = "select * from playlists where uri='".$theplaylisturi."'";
 			$dbfile = $w->data() . "/library.db";
 			exec("sqlite3 -separator '	' \"$dbfile\" \"$getPlaylists\" 2>&1", $playlists, $returnValue);
 			
@@ -1033,31 +1032,16 @@ else
 				return;
 			}
 		
-			foreach($playlists as $playlist):
+			if(count($playlists) > 0)
+			{
+				$playlist = $playlists[0];
 				$playlist = explode("	",$playlist);
-	
-				$res = explode(':', $playlist[0]);
-				$playlist_name = $res[4];
-				$playlist_user = $res[2];
-				if($res[4])
-				{
-					$playlist_name = $res[4];
-				}elseif ($res[3] == "starred")
-				{
-					$playlist_name = "starred";
-				}
-				break;							
-				
-			endforeach;
-				
-			if($playlist_name)
-			{									
 				if(mb_strlen($thetrack) < 3)
 				{
 					//
 					// display all tracks from playlist
 					//
-					$getTracks = "select * from \"playlist_" . $playlist_name . "\""." limit ".$max_results;
+					$getTracks = "select * from tracks where playlist_uri='".$theplaylisturi."' limit ".$max_results;
 					
 					$dbfile = $w->data() . "/library.db";
 					exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
@@ -1086,9 +1070,9 @@ else
 					{
 						$subtitle = "$subtitle ,⇧ → add playlist to ♫";
 					}
-					$w->result( "spotify_mini-spotify-playlist-$playlist[1]", "|||" . $playlist[0] . "||||" . "|" . $alfred_playlist_uri . "|", ucfirst($playlist[1]) . " by " . $playlist_user . " (" . $playlist[2] . " tracks)", $subtitle, './images/playlists.png', 'yes', '' );
+					$w->result( "spotify_mini-spotify-playlist-$playlist[1]", "|||" . $playlist[0] . "||||" . "|" . $alfred_playlist_uri . "|", ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks), by " . $playlist[3] . " (" . $playlist[4] . ")", $subtitle, './images/playlists.png', 'yes', '' );
 		
-					$w->result( "spotify_mini-spotify-update-$playlist[1]", "|||" . $playlist[0] . "||||" . update_playlist . "||", "Update playlist " . ucfirst($playlist[1]) . " by " . $playlist_user, "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
+					$w->result( "spotify_mini-spotify-update-$playlist[1]", "|||" . $playlist[0] . "||||" . update_playlist . "||", "Update playlist " . ucfirst($playlist[1]) . " by " . $playlist[3], "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
 													
 					foreach($tracks as $track):
 						$track = explode("	",$track);	
@@ -1097,14 +1081,14 @@ else
 						{	
 							$subtitle = ($track[0] == true) ? "★ " : "";
 							$subtitle = $subtitle . $track[6];
-							$w->result( "spotify_mini-spotify-playlist-track-" . $playlist_name . "-" .$track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri . "|" . $track[7], ucfirst($track[7]) . " - " . $track[5], $subtitle, $track[9], 'yes', '' );
+							$w->result( "spotify_mini-spotify-playlist-track-" . $playlist[1] . "-" .$track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri . "|" . $track[7], ucfirst($track[7]) . " - " . $track[5], $subtitle, $track[9], 'yes', '' );
 						}
 					endforeach;
 				}
 				else
 				{
-					$getTracks = "select * from \"playlist_" . $playlist_name . "\" where (track_name like '%".$thetrack."%' or artist_name like '%".$thetrack."%')"." limit ".$max_results;
-					
+					$getTracks = "select * from tracks where playlist_uri='".$theplaylisturi."' and track_name like '%".$thetrack."%' limit ".$max_results;
+
 					$dbfile = $w->data() . "/library.db";
 					exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
 					
@@ -1140,7 +1124,7 @@ else
 						{	
 							$subtitle = ($track[0] == true) ? "★ " : "";
 							$subtitle = $subtitle . $track[6];
-							$w->result( "spotify_mini-spotify-playlist-track-" . $playlist_name . "-" .$track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri . "|" . $track[7], ucfirst($track[7]) . " - " . $track[5], $subtitle, $track[9], 'yes', '' );
+							$w->result( "spotify_mini-spotify-playlist-track-" . $playlist[1] . "-" .$track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri . "|" . $track[7], ucfirst($track[7]) . " - " . $track[5], $subtitle, $track[9], 'yes', '' );
 						}
 					endforeach;
 
@@ -1149,8 +1133,8 @@ else
 					{
 						$w->result( '', "|||||" . "$thetrack" . "||||", "Search for " . $thetrack . " with Spotifious", "Spotifious workflow must be installed", './images/spotifious.png', 'yes', '' );	
 					}
-				}									
-			}			
+				}		
+			}										
 		}// end of tracks by Playlist
 		elseif($kind == "Settings")
 		{
