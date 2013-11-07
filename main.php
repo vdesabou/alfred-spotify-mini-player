@@ -702,8 +702,7 @@ else
 								$availability = array();
 								$availability = $album->availability;
 								
-								if(empty($availability->territories) ||
-									strpos($availability->territories,$country_code) !== false )
+								if(strpos($availability->territories,$country_code) !== false )
 								{						
 									if(checkIfResultAlreadyThere($w->results(),ucfirst($album->name)) == false)
 									{	
