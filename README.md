@@ -63,6 +63,9 @@ You'll need to do the following steps:
 
 **Note that the first time the library is created, all artworks are downloaded, so it can take a while!**
 
+You can check progress by invoking the workflow again:-
+
+![Screenshot](http://d.pr/i/8yDg+.png)
 
 
 ## Library Update
