@@ -1,5 +1,9 @@
 ## History
 
+3.5:
+
+* Added artworks to playlists! Please update your library to enjoy this new feature
+
 3.4:
 
 * Some fixes and improvements on Playlists

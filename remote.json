@@ -1,5 +1,5 @@
 {
-    "version": 3.4,
+    "version": 3.5,
     "download_url": "https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/SpotifyMiniPlayer.alfredworkflow",
-    "description": "Reworked and fixed playlists"
+    "description": "Added artworks to playlists! Please update your library to enjoy this new feature"
 }
