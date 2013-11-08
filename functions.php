@@ -100,6 +100,85 @@ function getTrackOrAlbumArtwork($w,$spotifyURL,$fetchIfNotPresent) {
 	}
 }
 
+function getPlaylistArtwork($w,$playlistURI,$username,$fetchIfNotPresent) {
+
+	$hrefs = explode(':', $playlistURI);
+	
+	if ( !file_exists( $w->data() . "/artwork" ) ):
+		exec("mkdir '".$w->data()."/artwork'");
+	endif;
+	
+	// exmaples of playlists URI
+	// spotify:user:@:playlist:20SZYrktr658JNa42Lt1vV
+	// spotify:user:@cf86d5f3b8f0b11bc0e70d7fa3661dc8:playlist:3vxotOnOGDlZXyzJPLFnm2
+	
+	// need to translate to http://open.spotify.com/user/xxxxusernamexxx/playlist/6orFdd91Cb0fwB2kyUFCKX
+	
+	
+	// spotify:user:@:starred
+	// spotify:user:117875373:starred
+	
+	// need to translate to http://open.spotify.com/user/xxxxusernamexxx/starred
+	
+	
+	if(count($hrefs)==5)
+	{
+		$filename = "" . $username . "_" . $hrefs[4];
+		$url = "http://open.spotify.com/user/" . $username . "/playlist/" . $hrefs[4];
+	}
+	else
+	{
+		//starred playlist
+		$filename = "" . $username . "_" . $hrefs[3];
+		$url = "http://open.spotify.com/user/" . $username . "/" . $hrefs[3];
+	}
+	
+				
+	$currentArtwork = $w->data() . "/artwork/" . hash('md5',$filename . ".png") . "/" . "$filename.png";
+	 	
+	if (!is_file($currentArtwork)) 
+	{
+		if($fetchIfNotPresent == true)
+		{
+			$artwork = getPlaylistArtworkURL($w,$url);
+
+			// if return 0, it is a 404 error, no need to fetch
+			if (!empty($artwork) || (is_numeric($artwork) && $artwork != 0)) {
+				if ( !file_exists( $w->data() . "/artwork/" . hash('md5',$filename . ".png") ) ):
+					exec("mkdir '".$w->data()."/artwork/".hash('md5',$filename . ".png")."'");
+				endif;
+				$fp = fopen ($currentArtwork, 'w+');
+				$options = array(
+				CURLOPT_FILE =>	$fp
+				);
+				
+				$w->request( "$artwork", $options );
+			}
+		}
+		else
+		{
+
+			return "images/playlists.png";
+		}
+	}
+	else
+	{
+		if( filesize($currentArtwork) == 0 )
+		{
+			return "images/playlists.png";
+		}		
+	}
+	
+	if(is_numeric($artwork) && $artwork == 0)
+	{
+		return "images/playlists.png";
+	}
+	else
+	{
+		return $currentArtwork;
+	}
+}
+
 function getArtistArtwork($w,$artist,$fetchIfNotPresent) {
 	$parsedArtist = urlencode($artist);
 
@@ -153,6 +232,18 @@ function getArtistArtwork($w,$artist,$fetchIfNotPresent) {
 function getTrackArtworkURL($w,$type, $id)
 {
 	$html = $w->request( "http://open.spotify.com/$type/$id" );
+	
+	if (!empty($html)) {
+	 	preg_match_all('/.*?og:image.*?content="(.*?)">.*?/is', $html, $m);
+	 	return (isset($m[1][0])) ? $m[1][0] : 0;
+	}
+	
+	return 0;
+}
+
+function getPlaylistArtworkURL($w,$url)
+{
+	$html = $w->request( $url );
 	
 	if (!empty($html)) {
 	 	preg_match_all('/.*?og:image.*?content="(.*?)">.*?/is', $html, $m);
@@ -239,15 +330,16 @@ function updateLibrary($jsonData)
 		exec($sql);
 		
 					
-		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table playlists (uri text, name text, nb_tracks int, author text, username text)"';
+		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table playlists (uri text, name text, nb_tracks int, author text, username text, playlist_artwork_path text)"';
 		exec($sql);
 		
 		$nb_track = 0;
 			
 		foreach ($json as $playlist) 
-		{				
-			$r = explode(':', $playlist_uri);
-			$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into playlists values (\"'. $playlist['uri'] .'\",\"'. escapeQuery($playlist['name']) .'\",'. count($playlist['tracks']) .',\"'. $playlist['owner'] .'\",\"'. $playlist['username'] .'\")"';
+		{	
+			$playlist_artwork_path = getPlaylistArtwork($w,$playlist['uri'],$playlist['username'],true);
+						
+			$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into playlists values (\"'. $playlist['uri'] .'\",\"'. escapeQuery($playlist['name']) .'\",'. count($playlist['tracks']) .',\"'. $playlist['owner'] .'\",\"'. $playlist['username'] .'\",\"'. $playlist_artwork_path .'\")"';
 			exec($sql);
 				
 			foreach ($playlist['tracks'] as $track) 
@@ -269,7 +361,6 @@ function updateLibrary($jsonData)
 				$album_artwork_path = getTrackOrAlbumArtwork($w,$track['album_uri'],true);
 				
 				$album_year = 1995;
-				//echo "$track[name]\n";
 				
 				$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into tracks values ('. $starred .','.$track['popularity'].',\"'.$track['uri'].'\",\"'.$track['album_uri'].'\",\"'.$track['artist_uri'].'\",\"'.escapeQuery($track['name']).'\",\"'.escapeQuery($track['album_name']).'\",\"'.escapeQuery($track['artist_name']).'\"'.','.$album_year.',\"'.$track_artwork_path.'\"'.',\"'.$artist_artwork_path.'\"'.',\"'.$album_artwork_path.'\"'.',\"'.escapeQuery($track['playlist_name']).'\"'.',\"'.$track['playlist_uri'].'\"'.')"';
 									

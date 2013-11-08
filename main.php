@@ -318,7 +318,7 @@ else
 		foreach($playlists as $playlist):
 			$playlist = explode("	",$playlist);
 							
-			$w->result( "spotify_mini-spotify-playlist-$playlist[1]", '', ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", './images/playlists.png', 'no', "Playlist→" . $playlist[1] . "→" );
+			$w->result( "spotify_mini-spotify-playlist-$playlist[1]", '', ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", getPlaylistArtwork($w,$playlist[0],$playlist[4],false), 'no', "Playlist→" . $playlist[1] . "→" );
 		endforeach;	
 	
 		
@@ -418,7 +418,7 @@ else
 				foreach($playlists as $playlist):
 					$playlist = explode("	",$playlist);
 									
-					$w->result( "spotify_mini-spotify-playlist-$playlist[1]", '', ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", './images/playlists.png', 'no', "Playlist→" . $playlist[0] . "→" );
+					$w->result( "spotify_mini-spotify-playlist-$playlist[1]", '', ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", getPlaylistArtwork($w,$playlist[0],$playlist[4],false), 'no', "Playlist→" . $playlist[0] . "→" );
 				endforeach;
 			}
 			else
@@ -441,7 +441,7 @@ else
 				foreach($playlists as $playlist):
 					$playlist = explode("	",$playlist);
 														
-				$w->result( "spotify_mini-spotify-playlist-$playlist[1]", '', ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", './images/playlists.png', 'no', "Playlist→" . $playlist[0] . "→" );
+				$w->result( "spotify_mini-spotify-playlist-$playlist[1]", '', ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", getPlaylistArtwork($w,$playlist[0],$playlist[4],false), 'no', "Playlist→" . $playlist[0] . "→" );
 				endforeach;
 			}
 		} // search by Playlist end	
@@ -1072,7 +1072,7 @@ else
 					{
 						$subtitle = "$subtitle ,⇧ → add playlist to ♫";
 					}
-					$w->result( "spotify_mini-spotify-playlist-$playlist[1]", "|||" . $playlist[0] . "||||" . "|" . $alfred_playlist_uri . "|", ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks), by " . $playlist[3] . " (" . $playlist[4] . ")", $subtitle, './images/playlists.png', 'yes', '' );
+					$w->result( "spotify_mini-spotify-playlist-$playlist[1]", "|||" . $playlist[0] . "||||" . "|" . $alfred_playlist_uri . "|", ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks), by " . $playlist[3] . " (" . $playlist[4] . ")", $subtitle, getPlaylistArtwork($w,$playlist[0],$playlist[4],false), 'yes', '' );
 		
 					$w->result( "spotify_mini-spotify-update-$playlist[1]", "|||" . $playlist[0] . "||||" . update_playlist . "||", "Update playlist " . ucfirst($playlist[1]) . " by " . $playlist[3], "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
 													
