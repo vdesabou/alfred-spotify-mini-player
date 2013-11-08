@@ -458,7 +458,9 @@ else
 			}
 			else
 			{
-				$w->result( "spotify_mini-spotify-alfredplaylist-browse", '', "Browse your Alfred playlist", "browse your alfred playlist",'./images/alfred_playlist.png', 'no', 'Playlist→'.$alfred_playlist_uri.'→');
+				$r = explode(':', $alfred_playlist_uri);
+				
+				$w->result( "spotify_mini-spotify-alfredplaylist-browse", '', "Browse your Alfred playlist", "browse your alfred playlist",getPlaylistArtwork($w,$alfred_playlist_uri,$r[2],false), 'no', 'Playlist→'.$alfred_playlist_uri.'→');
 			
 				$w->result( "spotify_mini-spotify-alfredplaylist-set", '', "Update your Alfred playlist URI", "define the URI of your Alfred playlist",'./images/settings.png', 'no', 'Alfred Playlist→Set Alfred Playlist URI→');
 
@@ -1020,7 +1022,6 @@ else
 			$theplaylisturi=$words[1];
 			$thetrack=$words[2];
 			
-			// retrieve playlist uri from playlist name
 			$getPlaylists = "select * from playlists where uri='".$theplaylisturi."'";
 			$dbfile = $w->data() . "/library.db";
 			exec("sqlite3 -separator '	' \"$dbfile\" \"$getPlaylists\" 2>&1", $playlists, $returnValue);
