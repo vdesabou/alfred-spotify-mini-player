@@ -50,7 +50,7 @@ require([
         var array_results = [];
 		drop.load('tracks','name','uri').done(function() {
 			console.log("drop loaded");
-			getPlaylistTracks(drop.uri,drop.name,function(matchedPlaylistTracks) {
+			getPlaylistTracks(drop.uri,function(matchedPlaylistTracks) {
 	
 				array_results.push(matchedPlaylistTracks);	
 	
@@ -134,7 +134,7 @@ function handleArgs() {
 				
 
 				pl.load('name','uri').done(function() {
-					getPlaylistTracks(pl.uri,pl.name,function(matchedPlaylistTracks) {
+					getPlaylistTracks(pl.uri,function(matchedPlaylistTracks) {
 			
 						array_results.push(matchedPlaylistTracks);	
 			
@@ -351,7 +351,7 @@ function getAlbum(uri,matchedAlbumCallback) {
 		});	
 }
 
-function getPlaylistTracks(uri,name,matchedPlaylistTracksCallback) {
+function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {
 		
 	var array_tracks = [];	
 	var playlist = models.Playlist.fromURI(uri);
@@ -452,7 +452,7 @@ function getAll(matchedAllCallback) {
 
 		for (var i = 0, l = matchedPlaylists.length; i < l; i++) 
 		{
-			getPlaylistTracks(matchedPlaylists[i].uri,matchedPlaylists[i].name,function(matchedPlaylistTracks) {
+			getPlaylistTracks(matchedPlaylists[i].uri,function(matchedPlaylistTracks) {
 
 				array_results.push(matchedPlaylistTracks);	
 
