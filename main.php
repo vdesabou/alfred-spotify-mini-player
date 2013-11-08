@@ -1090,8 +1090,9 @@ else
 				}
 				else
 				{
-					$getTracks = "select * from tracks where playlist_uri='".$theplaylisturi."' and track_name like '%".$thetrack."%' limit ".$max_results;
-
+					$getTracks = "select * from tracks where playlist_uri='".$theplaylisturi."' and (artist_name like '%".$thetrack."%' or album_name like '%".$thetrack."%' or track_name like '%".$thetrack."%')"." limit ".$max_results;
+					
+					
 					$dbfile = $w->data() . "/library.db";
 					exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
 					
