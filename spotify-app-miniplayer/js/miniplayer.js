@@ -92,9 +92,6 @@ function handleArgs() {
 			case "star":
 				starCurrentTrack();
 				break;
-			case "toplist":
-				playTopList();
-				break;
 			case "update_library":
 				sleep(1000);
 				getAll(function(matchedAll) {
@@ -206,16 +203,7 @@ function handleArgs() {
 				}
 				break;
 			case "startplaylist":
-				if(args[5])
-				{
-					startPlaylist(args);
-					break;
-				}
-				else if(args[4] == 'starred' )
-				{
-					startStarredPlaylist(args);
-					break;
-				}
+				startPlaylist(args);
 				break;
 		}
 	}		
@@ -300,16 +288,6 @@ function startPlaylist(args) {
 	  models.player.playContext(playlist);
 	});						
 }
-
-
-function startStarredPlaylist(args) {	
-	models.Playlist.fromURI(Library.forCurrentUser().starred.uri).load('name').done(function(playlist) {
-	  console.log(Library.forCurrentUser().starred.uri + ': ' + playlist.name.decodeForText());
-	  models.player.playContext(playlist);
-	});	
-				
-}
-
 
 function starCurrentTrack() {
 	var track = models.player.track;

@@ -210,10 +210,6 @@ else if($other_action != "")
 		exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 		echo "Alfred Playlist is now disabled";
 	}
-	else if ($other_action == "play_top_list")
-	{
-		exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:toplist:" . uniqid() . "\"'");
-	}
 	else if ($other_action == "open_spotify_export_app")
 	{
 		exec("osascript -e 'tell application \"Spotify\" to activate'");
