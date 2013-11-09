@@ -400,7 +400,6 @@ else
 			//
 			$theplaylist=$words[1];
 			
-			$w->result( "spotify_mini-spotify-playlist-topplaylist", "|||||||" . "play_top_list||", "Your Top List", "Launch you Top list", './images/numbers.png', 'yes', "" );
 			$w->result( '', "|||||||" . "update_playlist_list||", "Update Playlist List (use it when you have added or removed a playlist)", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
 				
 			if(mb_strlen($theplaylist) < 3)

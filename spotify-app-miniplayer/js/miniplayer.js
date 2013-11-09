@@ -152,12 +152,11 @@ function handleArgs() {
 				{
 					var pl = models.Playlist.fromURI(args[1]+':'+args[2]+':'+args[3]+':'+args[4]+':'+args[5]);
 				}
-				else if(args[4] == 'starred' )
+				else if(args[4] == 'starred' || args[4] == 'toplist' )
 				{
 					var pl = models.Playlist.fromURI(args[1]+':'+args[2]+':'+args[3]+':'+args[4]);
 				}
 				
-
 				pl.load('name','uri').done(function() {
 					getPlaylistTracks(pl.uri,function(matchedPlaylistTracks) {
 			
@@ -447,7 +446,12 @@ function getPlaylists(matchedPlaylistsCallback) {
 	objstarredplaylist.name="Starred";
 	objstarredplaylist.uri=Library.forCurrentUser().starred.uri;
 	array_results.push(objstarredplaylist);
-								
+
+	objtoplistplaylist={};
+	objtoplistplaylist.name="Top List";
+	objtoplistplaylist.uri=Library.forCurrentUser().toplist.uri;
+	array_results.push(objtoplistplaylist);
+									
     Library.forCurrentUser().playlists.snapshot().done(function(snapshot){
 		for (var i = 0, l = snapshot.length; i < l; i++) 
 		{

@@ -108,8 +108,8 @@ function getPlaylistArtwork($w,$playlistURI,$username,$fetchIfNotPresent) {
 		exec("mkdir '".$w->data()."/artwork'");
 	endif;
 	
-	// exmaples of playlists URI
-	// spotify:user:@:playlist:20SZYrktr658JNa42Lt1vV
+	// examples of playlists URI
+	// spotify:user:@:playlist:20SZdrktr658JNa42Lt1vV
 	// spotify:user:@cf86d5f3b8f0b11bc0e70d7fa3661dc8:playlist:3vxotOnOGDlZXyzJPLFnm2
 	
 	// need to translate to http://open.spotify.com/user/xxxxusernamexxx/playlist/6orFdd91Cb0fwB2kyUFCKX
