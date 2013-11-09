@@ -324,7 +324,7 @@ function updateLibrary($jsonData)
 		}
 		$w->write( 'Library→0→' . $nb_tracktotal, 'update_library_in_progress' );
 		
-		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table tracks (starred boolean, popularity int, uri text, album_uri text, artist_uri text, track_name text, album_name text, artist_name text, album_year text, track_artwork_path text, artist_artwork_path text, album_artwork_path text, playlist_name text, playlist_uri text)"';
+		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table tracks (starred boolean, popularity int, uri text, album_uri text, artist_uri text, track_name text, album_name text, artist_name text, album_year text, track_artwork_path text, artist_artwork_path text, album_artwork_path text, playlist_name text, playlist_uri text, playable boolean, availability text)"';
 		exec($sql);
 		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table counters (all_tracks int, starred_tracks int, all_artists int, starred_artists int, all_albums int, starred_albums int, playlists int)"';
 		exec($sql);
@@ -354,6 +354,15 @@ function updateLibrary($jsonData)
 					$starred = 0;				
 				}
 				
+				if( $track['playable'] == true )
+				{
+					$playable = 1;
+				}
+				else
+				{
+					$playable = 0;				
+				}
+				
 				//
 				// Download artworks
 				$track_artwork_path = getTrackOrAlbumArtwork($w,$track['uri'],true);
@@ -362,7 +371,7 @@ function updateLibrary($jsonData)
 				
 				$album_year = 1995;
 				
-				$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into tracks values ('. $starred .','.$track['popularity'].',\"'.$track['uri'].'\",\"'.$track['album_uri'].'\",\"'.$track['artist_uri'].'\",\"'.escapeQuery($track['name']).'\",\"'.escapeQuery($track['album_name']).'\",\"'.escapeQuery($track['artist_name']).'\"'.','.$album_year.',\"'.$track_artwork_path.'\"'.',\"'.$artist_artwork_path.'\"'.',\"'.$album_artwork_path.'\"'.',\"'.escapeQuery($track['playlist_name']).'\"'.',\"'.$track['playlist_uri'].'\"'.')"';
+				$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into tracks values ('. $starred .','.$track['popularity'].',\"'.$track['uri'].'\",\"'.$track['album_uri'].'\",\"'.$track['artist_uri'].'\",\"'.escapeQuery($track['name']).'\",\"'.escapeQuery($track['album_name']).'\",\"'.escapeQuery($track['artist_name']).'\"'.','.$album_year.',\"'.$track_artwork_path.'\"'.',\"'.$artist_artwork_path.'\"'.',\"'.$album_artwork_path.'\"'.',\"'.escapeQuery($track['playlist_name']).'\"'.',\"'.$track['playlist_uri'].'\"'.','.$playable.',\"'.$track['availability'].'\"'.')"';
 									
 				exec($sql);
 				
@@ -479,6 +488,15 @@ function updatePlaylist($jsonData)
 					$starred = 0;				
 				}
 				
+				if( $track['playable'] == true )
+				{
+					$playable = 1;
+				}
+				else
+				{
+					$playable = 0;				
+				}
+				
 				//
 				// Download artworks
 				$track_artwork_path = getTrackOrAlbumArtwork($w,$track['uri'],true);
@@ -488,7 +506,7 @@ function updatePlaylist($jsonData)
 				$album_year = 1995;
 				//echo "$track[name]\n";								
 				
-				$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into tracks values ('. $starred .','.$track['popularity'].',\"'.$track['uri'].'\",\"'.$track['album_uri'].'\",\"'.$track['artist_uri'].'\",\"'.escapeQuery($track['name']).'\",\"'.escapeQuery($track['album_name']).'\",\"'.escapeQuery($track['artist_name']).'\"'.','.$album_year.',\"'.$track_artwork_path.'\"'.',\"'.$artist_artwork_path.'\"'.',\"'.$album_artwork_path.'\"'.',\"'.escapeQuery($track['playlist_name']).'\"'.',\"'.$track['playlist_uri'].'\"'.')"';
+				$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into tracks values ('. $starred .','.$track['popularity'].',\"'.$track['uri'].'\",\"'.$track['album_uri'].'\",\"'.$track['artist_uri'].'\",\"'.escapeQuery($track['name']).'\",\"'.escapeQuery($track['album_name']).'\",\"'.escapeQuery($track['artist_name']).'\"'.','.$album_year.',\"'.$track_artwork_path.'\"'.',\"'.$artist_artwork_path.'\"'.',\"'.$album_artwork_path.'\"'.',\"'.escapeQuery($track['playlist_name']).'\"'.',\"'.$track['playlist_uri'].'\"'.','.$playable.',\"'.$track['availability'].'\"'.')"';
 									
 				exec($sql);
 				
@@ -608,6 +626,15 @@ function updatePlaylistList($jsonData)
 						$starred = 0;				
 					}
 					
+					if( $track['playable'] == true )
+					{
+						$playable = 1;
+					}
+					else
+					{
+						$playable = 0;				
+					}
+				
 					//
 					// Download artworks
 					$track_artwork_path = getTrackOrAlbumArtwork($w,$track['uri'],true);
@@ -616,7 +643,7 @@ function updatePlaylistList($jsonData)
 					
 					$album_year = 1995;
 					
-					$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into tracks values ('. $starred .','.$track['popularity'].',\"'.$track['uri'].'\",\"'.$track['album_uri'].'\",\"'.$track['artist_uri'].'\",\"'.escapeQuery($track['name']).'\",\"'.escapeQuery($track['album_name']).'\",\"'.escapeQuery($track['artist_name']).'\"'.','.$album_year.',\"'.$track_artwork_path.'\"'.',\"'.$artist_artwork_path.'\"'.',\"'.$album_artwork_path.'\"'.',\"'.escapeQuery($track['playlist_name']).'\"'.',\"'.$track['playlist_uri'].'\"'.')"';
+					$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into tracks values ('. $starred .','.$track['popularity'].',\"'.$track['uri'].'\",\"'.$track['album_uri'].'\",\"'.$track['artist_uri'].'\",\"'.escapeQuery($track['name']).'\",\"'.escapeQuery($track['album_name']).'\",\"'.escapeQuery($track['artist_name']).'\"'.','.$album_year.',\"'.$track_artwork_path.'\"'.',\"'.$artist_artwork_path.'\"'.',\"'.$album_artwork_path.'\"'.',\"'.escapeQuery($track['playlist_name']).'\"'.',\"'.$track['playlist_uri'].'\"'.','.$playable.',\"'.$track['availability'].'\"'.')"';
 										
 					exec($sql);
 				}

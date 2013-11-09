@@ -335,11 +335,11 @@ else
 		//
 		if($all_playlists == false)
 		{
-			$getTracks = "select * from tracks where starred=1 and (artist_name like '%".$query."%' or album_name like '%".$query."%' or track_name like '%".$query."%')"." limit ".$max_results;
+			$getTracks = "select * from tracks where playable=1 and starred=1 and (artist_name like '%".$query."%' or album_name like '%".$query."%' or track_name like '%".$query."%')"." limit ".$max_results;
 		}
 		else
 		{
-			$getTracks = "select * from tracks where artist_name like '%".$query."%' or album_name like '%".$query."%' or track_name like '%".$query."%'"." limit ".$max_results;
+			$getTracks = "select * from tracks where playable=1 and (artist_name like '%".$query."%' or album_name like '%".$query."%' or track_name like '%".$query."%')"." limit ".$max_results;
 		}
 		
 		
@@ -487,11 +487,11 @@ else
 			{
 				if($all_playlists == false)
 				{
-					$getTracks = "select * from tracks where starred=1";
+					$getTracks = "select * from tracks where playable=1 and starred=1";
 				}
 				else
 				{
-					$getTracks = "select * from tracks";
+					$getTracks = "select * from tracks where playable=1";
 				}
 				
 				
@@ -527,11 +527,11 @@ else
 			{
 				if($all_playlists == false)
 				{
-					$getTracks = "select * from tracks where starred=1 and artist_name like '%".$artist."%'";
+					$getTracks = "select * from tracks where playable=1 and starred=1 and artist_name like '%".$artist."%'";
 				}
 				else
 				{
-					$getTracks = "select * from tracks where artist_name like '%".$artist."%'";
+					$getTracks = "select * from tracks where playable=1 and artist_name like '%".$artist."%'";
 				}
 				
 				
@@ -578,11 +578,11 @@ else
 			{
 				if($all_playlists == false)
 				{
-					$getTracks = "select * from tracks where starred=1";
+					$getTracks = "select * from tracks where playable=1 and starred=1";
 				}
 				else
 				{
-					$getTracks = "select * from tracks";
+					$getTracks = "select * from tracks where playable=1";
 				}
 				
 				
@@ -616,11 +616,11 @@ else
 			{
 				if($all_playlists == false)
 				{
-					$getTracks = "select * from tracks where starred=1 and album_name like '%".$album."%'";
+					$getTracks = "select * from tracks where playable=1 and starred=1 and album_name like '%".$album."%'";
 				}
 				else
 				{
-					$getTracks = "select * from tracks where album_name like '%".$album."%'";
+					$getTracks = "select * from tracks where playable=1 and album_name like '%".$album."%'";
 				}
 				
 				
@@ -800,11 +800,11 @@ else
 			{
 				if($all_playlists == false)
 				{
-					$getTracks = "select * from tracks where starred=1 and artist_name='".$artist."'"." limit ".$max_results;
+					$getTracks = "select * from tracks where playable=1 and starred=1 and artist_name='".$artist."'"." limit ".$max_results;
 				}
 				else
 				{
-					$getTracks = "select * from tracks where artist_name='".$artist."'"." limit ".$max_results;
+					$getTracks = "select * from tracks where playable=1 and artist_name='".$artist."'"." limit ".$max_results;
 				}
 				
 				
@@ -854,11 +854,11 @@ else
 			{
 				if($all_playlists == false)
 				{
-					$getTracks = "select * from tracks where starred=1 and (artist_name='".$artist."' and track_name like '%".$track."%')"." limit ".$max_results;
+					$getTracks = "select * from tracks where playable=1 and starred=1 and (artist_name='".$artist."' and track_name like '%".$track."%')"." limit ".$max_results;
 				}
 				else
 				{
-					$getTracks = "select * from tracks where artist_name='".$artist."' and track_name like '%".$track."%'"." limit ".$max_results;
+					$getTracks = "select * from tracks where playable=1 and artist_name='".$artist."' and track_name like '%".$track."%'"." limit ".$max_results;
 				}
 				
 				
@@ -917,11 +917,11 @@ else
 				
 				if($all_playlists == false)
 				{
-					$getTracks = "select * from tracks where starred=1 and album_name='".$album."'"." limit ".$max_results;
+					$getTracks = "select * from tracks where playable=1 and starred=1 and album_name='".$album."'"." limit ".$max_results;
 				}
 				else
 				{
-					$getTracks = "select * from tracks where album_name='".$album."'"." limit ".$max_results;
+					$getTracks = "select * from tracks where playable=1 and album_name='".$album."'"." limit ".$max_results;
 				}
 				
 				
@@ -971,11 +971,11 @@ else
 			{
 				if($all_playlists == false)
 				{
-					$getTracks = "select * from tracks where starred=1 and (album_name='".$album."' and track_name like '%".$track."%')"." limit ".$max_results;
+					$getTracks = "select * from tracks where playable=1 and starred=1 and (album_name='".$album."' and track_name like '%".$track."%')"." limit ".$max_results;
 				}
 				else
 				{
-					$getTracks = "select * from tracks where album_name='".$album."' and track_name like '%".$track."%'"." limit ".$max_results;
+					$getTracks = "select * from tracks where playable=1 and album_name='".$album."' and track_name like '%".$track."%'"." limit ".$max_results;
 				}
 				
 				
@@ -1051,7 +1051,7 @@ else
 					//
 					// display all tracks from playlist
 					//
-					$getTracks = "select * from tracks where playlist_uri='".$theplaylisturi."' limit ".$max_results;
+					$getTracks = "select * from tracks where playable=1 and playlist_uri='".$theplaylisturi."' limit ".$max_results;
 					
 					$dbfile = $w->data() . "/library.db";
 					exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
@@ -1097,7 +1097,7 @@ else
 				}
 				else
 				{
-					$getTracks = "select * from tracks where playlist_uri='".$theplaylisturi."' and (artist_name like '%".$thetrack."%' or album_name like '%".$thetrack."%' or track_name like '%".$thetrack."%')"." limit ".$max_results;
+					$getTracks = "select * from tracks where playable=1 and playlist_uri='".$theplaylisturi."' and (artist_name like '%".$thetrack."%' or album_name like '%".$thetrack."%' or track_name like '%".$thetrack."%')"." limit ".$max_results;
 					
 					
 					$dbfile = $w->data() . "/library.db";
