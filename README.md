@@ -68,15 +68,9 @@ You can check progress by invoking the workflow again:-
 ![Screenshot](http://d.pr/i/8yDg+.png)
 
 
-## Library Update
+## Library/Playlist Update
 
-If you modify your playlists, you'll need to update the library.
-
-* Go in Spotify Mini Player Settings
-
-* Select Update library
-
-* That's it!
+You can now update your entire library and/or only one specific playlist directly from the Spotify Mini Player!
 
 ## Alfred Playlist
 
