@@ -8,9 +8,9 @@ require_once('workflows.php');
 $w = new Workflows();
 
 unlink($w->data() . "/update_library_in_progress");
-exec("kill -9 $(ps -efx | grep \"|||||||update_library||\" | awk '{print $2}')");    
+exec("kill -9 $(ps -efx | grep \"php\" | grep \"update_\" | awk '{print $2}')");    
 
 
-echo "Update library was killed!";
+echo "Update library/playlist was killed!";
 
 ?>
