@@ -457,9 +457,8 @@ function updatePlaylist($jsonData)
 		exec($sql);
 
 		$nb_track = 0;
-		
 
-		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"delete from tracks where playlist_uri=\"'.$track['playlist_uri'].'\""';
+		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"delete from tracks where playlist_uri=\"'.$playlist['uri'].'\""';
 		exec($sql);
 	
 		foreach ($json as $playlist) 
