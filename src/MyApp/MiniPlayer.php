@@ -43,6 +43,13 @@ class MiniPlayer implements MessageComponentInterface {
 	                $client->send("UPDATE PLAYLIST SUCCESS");
 	        }		
 		}
+		else if($command=="update_playlist_list")
+		{
+			updatePlaylistList($json);
+	        foreach ($this->clients as $client) {
+	                $client->send("UPDATE PLAYLIST LIST SUCCESS");
+	        }		
+		}
 		else
 		{
 	        foreach ($this->clients as $client) {

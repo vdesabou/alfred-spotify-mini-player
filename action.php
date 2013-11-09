@@ -250,6 +250,24 @@ else if($other_action != "")
 		// FIX THIS: server will exit when done 
 		// Did not find a way to set a timeout
 	    $server->run();
+	}
+	else if ($other_action == "update_playlist_list")
+	{
+		touch($w->data() . "/update_library_in_progress");
+		
+		exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:update_playlist_list:" . uniqid() . "\"'");
+
+	    $server = IoServer::factory(
+	        new HttpServer(
+	            new WsServer(
+	                new MiniPlayer()
+	            )
+	        ),
+	        17693
+	    );
+		// FIX THIS: server will exit when done 
+		// Did not find a way to set a timeout
+	    $server->run();
 	}		
 }
 

@@ -24,8 +24,15 @@ if (file_exists($w->data() . "/update_library_in_progress"))
 		{
 			$words = explode('→', $in_progress_data);
 			
-			
-			$w->result( '', $w->data() . "/update_library_in_progress", $words[0] . " update in progress: " . floatToSquares(intval($words[1])/intval($words[2])),  $words[1] . "/" . $words[2] . " tracks processed so far (if no progress, use spot_mini_kill_update command to stop it)", './images/update.png', 'no', '' );	
+			if($words[0] == "Playlist List")
+			{
+				$type = 'playlists';		
+			}
+			else
+			{
+				$type = 'tracks';
+			}
+			$w->result( '', $w->data() . "/update_library_in_progress", $words[0] . " update in progress: " . floatToSquares(intval($words[1])/intval($words[2])),  $words[1] . "/" . $words[2] . " " . $type . " processed so far (if no progress, use spot_mini_kill_update command to stop it)", './images/update.png', 'no', '' );	
 		}
 		else
 		{
@@ -394,6 +401,7 @@ else
 			$theplaylist=$words[1];
 			
 			$w->result( "spotify_mini-spotify-playlist-topplaylist", "|||||||" . "play_top_list||", "Your Top List", "Launch you Top list", './images/numbers.png', 'yes', "" );
+			$w->result( '', "|||||||" . "update_playlist_list||", "Update Playlist List (use it when you have added or removed a playlist)", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
 				
 			if(mb_strlen($theplaylist) < 3)
 			{

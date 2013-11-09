@@ -119,7 +119,32 @@ function handleArgs() {
 					    conn.close();
 					};
 				});
-				break;				
+				break;
+			case "update_playlist_list":
+				sleep(1000);
+				getAll(function(matchedAll) {
+					console.log("update_playlist_list finished", matchedAll);
+	
+					var conn = new WebSocket('ws://localhost:17693');
+					conn.onopen = function(e) {
+					    console.log("Connection established!");
+					    conn.send('update_playlist_list→' + JSON.stringify(matchedAll));
+					};
+					
+					conn.onerror = function(e) {
+						console.log("Error: ",e.data);
+					} 
+					
+					conn.onclose = function(e){
+						console.log("On Close: ",e.reason);
+					}
+					
+					conn.onmessage = function(e) {
+					    console.log("Received response: ",e.data);
+					    conn.close();
+					};
+				});
+				break;					
 			case "update_playlist":
 				sleep(1000);
 				var array_results = [];
