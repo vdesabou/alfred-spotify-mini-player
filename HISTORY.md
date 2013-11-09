@@ -1,5 +1,9 @@
 ## History
 
+3.6:
+
+* Added Update Playlist list(use it when you have added or removed a playlist). Various fixes.
+
 3.5:
 
 * Added artworks to playlists! Please update your library to enjoy this new feature
