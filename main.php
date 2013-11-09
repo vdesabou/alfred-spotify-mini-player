@@ -325,7 +325,7 @@ else
 		foreach($playlists as $playlist):
 			$playlist = explode("	",$playlist);
 							
-			$w->result( "spotify_mini-spotify-playlist-$playlist[1]", '', ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", $playlist[5], 'no', "Playlist→" . $playlist[1] . "→" );
+			$w->result( "spotify_mini-spotify-playlist-$playlist[1]", '', ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", $playlist[5], 'no', "Playlist→" . $playlist[0] . "→" );
 		endforeach;	
 	
 		
