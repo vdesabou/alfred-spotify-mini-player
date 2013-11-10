@@ -1,5 +1,5 @@
 {
-    "version": 3.7,
+    "version": 3.71,
     "download_url": "https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/SpotifyMiniPlayer.alfredworkflow",
     "description": "Top list is now a playlist like any others. Now check if track is playable before displaying it."
 }
