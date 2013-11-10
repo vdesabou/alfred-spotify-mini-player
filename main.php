@@ -124,8 +124,8 @@ if(mb_strlen($query) < 3 ||
 			
 			if($returnValue != 0)
 			{
-				$w->result( '', '', "There is a problem with the library, try to update it.", "Select Install library below", './images/warning.png', 'no', '' );
-				$w->result( '', "|||||||" . "update_library||", "Install library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
+				$w->result( '', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '' );
+				$w->result( '', "|||||||" . "update_library||", "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
 				
 				echo $w->toxml();
 				return;
@@ -315,8 +315,8 @@ else
 		
 		if($returnValue != 0)
 		{
-			$w->result( '', '', "There is a problem with the library, try to update it.", "Select Install library below", './images/warning.png', 'no', '' );
-			$w->result( '', "|||||||" . "update_library|", "Install library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
+			$w->result( '', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '' );
+			$w->result( '', "|||||||" . "update_library|", "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
 			
 			echo $w->toxml();
 			return;
@@ -348,8 +348,8 @@ else
 		
 		if($returnValue != 0)
 		{
-			$w->result( '', '', "There is a problem with the library, try to update it.", "Select Install library below", './images/warning.png', 'no', '' );
-			$w->result( '', "|||||||" . "update_library||", "Install library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
+			$w->result( '', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '' );
+			$w->result( '', "|||||||" . "update_library||", "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
 			
 			echo $w->toxml();
 			return;
@@ -415,8 +415,8 @@ else
 				
 				if($returnValue != 0)
 				{
-					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Install library below", './images/warning.png', 'no', '' );
-					$w->result( '', "|||||||" . "update_library||", "Install library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
+					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '' );
+					$w->result( '', "|||||||" . "update_library||", "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
 					
 					echo $w->toxml();
 					return;
@@ -438,8 +438,8 @@ else
 				
 				if($returnValue != 0)
 				{
-					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Install library below", './images/warning.png', 'no', '' );
-					$w->result( '', "|||||||" . "update_library||", "Install library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
+					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '' );
+					$w->result( '', "|||||||" . "update_library||", "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
 					
 					echo $w->toxml();
 					return;
@@ -500,8 +500,8 @@ else
 				
 				if($returnValue != 0)
 				{
-					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Install library below", './images/warning.png', 'no', '' );
-					$w->result( '', "|||||||" . "update_library||", "Install library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
+					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '' );
+					$w->result( '', "|||||||" . "update_library||", "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
 					
 					echo $w->toxml();
 					return;
@@ -540,8 +540,8 @@ else
 				
 				if($returnValue != 0)
 				{
-					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Install library below", './images/warning.png', 'no', '' );
-					$w->result( '', "|||||||" . "update_library||", "Install library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
+					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '' );
+					$w->result( '', "|||||||" . "update_library||", "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
 					
 					echo $w->toxml();
 					return;
@@ -591,8 +591,8 @@ else
 				
 				if($returnValue != 0)
 				{
-					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Install library below", './images/warning.png', 'no', '' );
-					$w->result( '', "|||||||" . "update_library||", "Install library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
+					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '' );
+					$w->result( '', "|||||||" . "update_library||", "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
 					
 					echo $w->toxml();
 					return;
@@ -629,8 +629,8 @@ else
 				
 				if($returnValue != 0)
 				{
-					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Install library below", './images/warning.png', 'no', '' );
-					$w->result( '', "|||||||" . "update_library||", "Install library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
+					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '' );
+					$w->result( '', "|||||||" . "update_library||", "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
 					
 					echo $w->toxml();
 					return;
@@ -813,8 +813,8 @@ else
 				
 				if($returnValue != 0)
 				{
-					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Install library below", './images/warning.png', 'no', '' );
-					$w->result( '', "|||||||" . "update_library||", "Install library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
+					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '' );
+					$w->result( '', "|||||||" . "update_library||", "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
 					
 					echo $w->toxml();
 					return;
@@ -867,8 +867,8 @@ else
 				
 				if($returnValue != 0)
 				{
-					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Install library below", './images/warning.png', 'no', '' );
-					$w->result( '', "|||||||" . "update_library||", "Install library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
+					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '' );
+					$w->result( '', "|||||||" . "update_library||", "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
 					
 					echo $w->toxml();
 					return;
@@ -930,8 +930,8 @@ else
 				
 				if($returnValue != 0)
 				{
-					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Install library below", './images/warning.png', 'no', '' );
-					$w->result( '', "|||||||" . "update_library||", "Install library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
+					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '' );
+					$w->result( '', "|||||||" . "update_library||", "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
 					
 					echo $w->toxml();
 					return;
@@ -984,8 +984,8 @@ else
 				
 				if($returnValue != 0)
 				{
-					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Install library below", './images/warning.png', 'no', '' );
-					$w->result( '', "|||||||" . "update_library||", "Install library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
+					$w->result( '', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '' );
+					$w->result( '', "|||||||" . "update_library||", "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
 					
 					echo $w->toxml();
 					return;
@@ -1035,8 +1035,8 @@ else
 			
 			if($returnValue != 0)
 			{
-				$w->result( '', '', "There is a problem with the library, try to update it.", "Select Install library below", './images/warning.png', 'no', '' );
-				$w->result( '', "|||||||" . "update_library||", "Install library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
+				$w->result( '', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '' );
+				$w->result( '', "|||||||" . "update_library||", "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
 				
 				echo $w->toxml();
 				return;
@@ -1058,8 +1058,8 @@ else
 					
 					if($returnValue != 0)
 					{
-						$w->result( '', '', "There is a problem with the library, try to update it.", "Select Install library below", './images/warning.png', 'no', '' );
-						$w->result( '', "|||||||" . "update_library||", "Install library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
+						$w->result( '', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '' );
+						$w->result( '', "|||||||" . "update_library||", "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
 						
 						echo $w->toxml();
 						return;
@@ -1105,8 +1105,8 @@ else
 					
 					if($returnValue != 0)
 					{
-						$w->result( '', '', "There is a problem with the library, try to update it.", "Select Install library below", './images/warning.png', 'no', '' );
-						$w->result( '', "|||||||" . "update_library||", "Install library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
+						$w->result( '', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '' );
+						$w->result( '', "|||||||" . "update_library||", "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
 						
 						echo $w->toxml();
 						return;
