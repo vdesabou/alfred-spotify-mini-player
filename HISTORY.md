@@ -1,5 +1,11 @@
 ## History
 
+3.7;
+
+* Top list is now a playlist like any others. 
+
+* Now check if track is playable before displaying it
+
 3.6:
 
 * Added Update Playlist list(use it when you have added or removed a playlist). Various fixes.

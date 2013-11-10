@@ -1,5 +1,5 @@
 {
-    "version": 3.6,
+    "version": 3.7,
     "download_url": "https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/SpotifyMiniPlayer.alfredworkflow",
-    "description": "Added Update Playlist list(use it when you have added or removed a playlist). Various fixes."
+    "description": "Top list is now a playlist like any others. Now check if track is playable before displaying it."
 }
