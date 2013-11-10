@@ -1,22 +1,22 @@
 <?php
 
 // Turn off all error reporting
-error_reporting(0);
+//error_reporting(0);
 
 require('functions.php');
 require_once('workflows.php');
 
 $query = escapeQuery($argv[1]);
 # thanks to http://www.alfredforum.com/topic/1788-prevent-flash-of-no-result
-$query = iconv("UTF-8-MAC", "UTF-8", $query);
+$query = iconv('UTF-8-MAC', 'UTF-8', $query);
 
 $w = new Workflows();
 
 //
 // check for library update in progress
-if (file_exists($w->data() . "/update_library_in_progress"))
+if (file_exists($w->data() . '/update_library_in_progress'))
 {
-	if (file_exists($w->data() . "/library.db"))
+	if (file_exists($w->data() . '/library.db'))
 	{	
 		$in_progress_data = $w->read('update_library_in_progress');
 		
@@ -24,7 +24,7 @@ if (file_exists($w->data() . "/update_library_in_progress"))
 		{
 			$words = explode('→', $in_progress_data);
 			
-			if($words[0] == "Playlist List")
+			if($words[0] == 'Playlist List')
 			{
 				$type = 'playlists';		
 			}
@@ -32,16 +32,16 @@ if (file_exists($w->data() . "/update_library_in_progress"))
 			{
 				$type = 'tracks';
 			}
-			$w->result( '', $w->data() . "/update_library_in_progress", $words[0] . " update in progress: " . floatToSquares(intval($words[1])/intval($words[2])),  $words[1] . "/" . $words[2] . " " . $type . " processed so far (if no progress, use spot_mini_kill_update command to stop it)", './images/update.png', 'no', '' );	
+			$w->result( '', $w->data() . '/update_library_in_progress', $words[0] . ' update in progress: ' . floatToSquares(intval($words[1])/intval($words[2])),  $words[1] . '/' . $words[2] . ' ' . $type . ' processed so far (if no progress, use spot_mini_kill_update command to stop it)', './images/update.png', 'no', '' );	
 		}
 		else
 		{
-			$w->result( '', $w->data() . "/update_library_in_progress", "Update in progress: " . floatToSquares(0), "0 tracks processed so far (if no progress, use spot_mini_kill_update command to stop it)", './images/update.png', 'no', '' );				
+			$w->result( '', $w->data() . '/update_library_in_progress', 'Update in progress: ' . floatToSquares(0), '0 tracks processed so far (if no progress, use spot_mini_kill_update command to stop it)', './images/update.png', 'no', '' );				
 		}
 	}
 	else
 	{
-		$w->result( '', $w->data() . "/update_library_in_progress", "Library update seems broken", "You can kill it by using spot_mini_kill_update command", './images/warning.png', 'no', '' );
+		$w->result( '', $w->data() . '/update_library_in_progress', 'Library update seems broken', 'You can kill it by using spot_mini_kill_update command', './images/warning.png', 'no', '' );
 	}
 	
 	
@@ -53,25 +53,25 @@ if (file_exists($w->data() . "/update_library_in_progress"))
 // Install spotify-app-miniplayer app if needed
 // very first time use
 //
-if (!file_exists($w->home() . "/Spotify/spotify-app-miniplayer"))
+if (!file_exists($w->home() . '/Spotify/spotify-app-miniplayer'))
 {	
-	exec("mkdir -p ~/Spotify");
-	symlink($w->path() . "/spotify-app-miniplayer", $w->home() . "/Spotify/spotify-app-miniplayer");
+	exec('mkdir -p ~/Spotify');
+	symlink($w->path() . '/spotify-app-miniplayer', $w->home() . '/Spotify/spotify-app-miniplayer');
 }
 
 
 //
 // Read settings from DB
 //
-$getSettings = "select * from settings";
-$dbfile = $w->data() . "/settings.db";
+$getSettings = 'select * from settings';
+$dbfile = $w->data() . '/settings.db';
 exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
 
 if($returnValue != 0)
 {
-	if(file_exists($w->data() . "/settings.db"))
+	if(file_exists($w->data() . '/settings.db'))
 	{
-		unlink($w->data() . "/settings.db");
+		unlink($w->data() . '/settings.db');
 	}
 }
 
@@ -79,9 +79,9 @@ if($returnValue != 0)
 //
 // Create settings.db with default values if needed
 //
-if(!file_exists($w->data() . "/settings.db"))
+if(!file_exists($w->data() . '/settings.db'))
 {
-	touch($w->data() . "/settings.db");
+	touch($w->data() . '/settings.db');
 	
 	$sql = 'sqlite3 "' . $w->data() . '/settings.db" ' . ' "create table settings (all_playlists boolean, is_spotifious_active boolean, is_alfred_playlist_active boolean, is_displaymorefrom_active boolean, max_results int, alfred_playlist_uri text, country_code text)"';
 	exec($sql);
@@ -107,24 +107,24 @@ endforeach;
 
 			
 // thanks to http://www.alfredforum.com/topic/1788-prevent-flash-of-no-result
-mb_internal_encoding("UTF-8");
+mb_internal_encoding('UTF-8');
 if(mb_strlen($query) < 3 || 
-	((substr_count( $query, '→' ) == 1) && (strpos("Settings→",$query) !== false))
+	((substr_count( $query, '→' ) == 1) && (strpos('Settings→',$query) !== false))
 )
 {					
 	if ( substr_count( $query, '→' ) == 0 )
 	{
 		// check for correct configuration
-		if (file_exists($w->data() . "/library.db") && 
-			file_exists($w->home() . "/Spotify/spotify-app-miniplayer/manifest.json"))
+		if (file_exists($w->data() . '/library.db') && 
+			file_exists($w->home() . '/Spotify/spotify-app-miniplayer/manifest.json'))
 		{	
-			$getCounters = "select * from counters";
-			$dbfile = $w->data() . "/library.db";
+			$getCounters = 'select * from counters';
+			$dbfile = $w->data() . '/library.db';
 			exec("sqlite3 -separator '	' \"$dbfile\" \"$getCounters\" 2>&1", $counters, $returnValue);
 			
 			if($returnValue != 0)
 			{
-				$w->result( '', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '' );
+				$w->result( '', '', 'There is a problem with the library, try to update it.', 'Select Update library below', './images/warning.png', 'no', '' );
 				$w->result( '', "|||||||" . "update_library||", "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
 				
 				echo $w->toxml();
@@ -146,11 +146,11 @@ if(mb_strlen($query) < 3 ||
 			
 			if($all_playlists == true)
 			{		
-				$w->result( '', '', "Search for music in all your playlists", "Begin typing at least 3 characters to start search" . " (" . $all_tracks . " tracks)", './images/allplaylists.png', 'no', '' );
+				$w->result( '', '', 'Search for music in all your playlists', 'Begin typing at least 3 characters to start search' . ' (' . $all_tracks . ' tracks)', './images/allplaylists.png', 'no', '' );
 			}
 			else
 			{
-				$w->result( '', '', "Search for music in your ★ playlist", "Begin typing at least 3 characters to start search" . " (" . $starred_tracks . " tracks)", './images/star.png', 'no', '' );
+				$w->result( '', '', 'Search for music in your ★ playlist', 'Begin typing at least 3 characters to start search' . ' (' . $starred_tracks . ' tracks)', './images/star.png', 'no', '' );
 			}
 			
 			if($is_displaymorefrom_active == true)
@@ -162,37 +162,37 @@ if(mb_strlen($query) < 3 ||
 				{
 					$results = explode('→', $command_output);
 					$currentArtistArtwork = getArtistArtwork($w,$results[1],false);
-					$w->result( '', '||||playpause|||||', "$results[0]", "$results[2] by $results[1]", ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', '' );
-					$w->result( '', "$results[4]|||||||" . "morefromthisartist||$results[1]", "$results[1]", "Lookup this artist online..", $currentArtistArtwork, 'yes', '' );
+					$w->result( '', '||||playpause|||||', $results[0], $results[2] . 'by' . $results[1], ($results[3] == "playing") ? './images/pause.png' : './images/play.png', 'yes', '' );
+					$w->result( '', "$results[4]|||||||" . "morefromthisartist||$results[1]", $results[1], 'Lookup this artist online..', $currentArtistArtwork, 'yes', '' );
 				}
 			}
 			if ($is_alfred_playlist_active == true)
 			{
-				$w->result( '', '', "Alfred Playlist", "Control your Alfred Playlist", './images/alfred_playlist.png', 'no', 'Alfred Playlist→' );	
+				$w->result( '', '', 'Alfred Playlist', 'Control your Alfred Playlist', './images/alfred_playlist.png', 'no', 'Alfred Playlist→' );	
 			}
-			$w->result( '', '', "Playlists", "Browse by playlist". " (" . $nb_playlists . " playlists)", './images/playlists.png', 'no', 'Playlist→' );
+			$w->result( '', '', 'Playlists', 'Browse by playlist'. ' (' . $nb_playlists . ' playlists)', './images/playlists.png', 'no', 'Playlist→' );
 			if($all_playlists == true)
 			{
-				$w->result( '', '', "Artists", "Browse by artist" . " (" . $all_artists . " artists)", './images/artists.png', 'no', 'Artist→' );
-				$w->result( '', '', "Albums", "Browse by album" . " (" . $all_albums . " albums)", './images/albums.png', 'no', 'Album→' );
+				$w->result( '', '', 'Artists', 'Browse by artist' . ' (' . $all_artists . ' artists)', './images/artists.png', 'no', 'Artist→' );
+				$w->result( '', '', 'Albums', 'Browse by album' . ' (' . $all_albums . ' albums)', './images/albums.png', 'no', 'Album→' );
 			}
 			else
 			{
-				$w->result( '', '', "Artists", "Browse by artist" . " (" . $starred_artists . " artists)", './images/artists.png', 'no', 'Artist→' );
-				$w->result( '', '', "Albums", "Browse by album" . " (" . $starred_albums . " albums)", './images/albums.png', 'no', 'Album→' );
+				$w->result( '', '', 'Artists', 'Browse by artist' . ' (' . $starred_artists . ' artists)', './images/artists.png', 'no', 'Artist→' );
+				$w->result( '', '', 'Albums', 'Browse by album' . ' (' . $starred_albums . ' albums)', './images/albums.png', 'no', 'Album→' );
 			}
 		}
 		else
 		{
-			if(!file_exists($w->data() . "/library.db"))
+			if(!file_exists($w->data() . '/library.db'))
 			{
-				$w->result( '', '', "Workflow is not configured, library.db is missing", "Select Install library below", './images/warning.png', 'no', '' );
+				$w->result( '', '', 'Workflow is not configured, library.db is missing', 'Select Install library below', './images/warning.png', 'no', '' );
 			}
-			elseif(!file_exists($w->home() . "/Spotify/spotify-app-miniplayer"))
+			elseif(!file_exists($w->home() . '/Spotify/spotify-app-miniplayer'))
 			{
-				$w->result( '', '', "Workflow is not configured, Spotify Mini Player App is missing", "Select Install library below, and make sure ~/Spotify/spotify-app-miniplayer directory exists", './images/warning.png', 'no', '' );				
+				$w->result( '', '', 'Workflow is not configured, Spotify Mini Player App is missing', 'Select Install library below, and make sure ~/Spotify/spotify-app-miniplayer directory exists', './images/warning.png', 'no', '' );				
 			}
-			$w->result( '', "|||||||" . "update_library||", "Install library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
+			$w->result( '', "|||||||" . "update_library||", 'Install library', "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
 			
 			echo $w->toxml();
 			return;
@@ -216,11 +216,11 @@ if(mb_strlen($query) < 3 ||
 		}
 		if ($all_playlists == true)
 		{
-			$w->result( '', '', "Settings", "Search scope=<all>, Max results=<" . $max_results . ">, Spotifious is <" . $spotifious_state . ">, Alfred Playlist is <" . $alfred_playlist_state . ">", './images/settings.png', 'no', 'Settings→' );
+			$w->result( '', '', 'Settings', 'Search scope=<all>, Max results=<' . $max_results . '>, Spotifious is <' . $spotifious_state . '>, Alfred Playlist is <' . $alfred_playlist_state . '>', './images/settings.png', 'no', 'Settings→' );
 		}
 		else
 		{
-			$w->result( '', '', "Settings", "Search scope=<only ★>, Max results=<" . $max_results  . ">, Spotifious is <" . $spotifious_state . ">, Alfred Playlist is <" . $alfred_playlist_state . ">", './images/settings.png', 'no', 'Settings→' );
+			$w->result( '', '', 'Settings', 'Search scope=<only ★>, Max results=<' . $max_results  . '>, Spotifious is <' . $spotifious_state . '>, Alfred Playlist is <' . $alfred_playlist_state . '>', './images/settings.png', 'no', 'Settings→' );
 		}	
 		
 	}
@@ -232,13 +232,13 @@ if(mb_strlen($query) < 3 ||
 		if ($all_playlists == true)
 		{
 			// argument is csv form: track_uri|album_uri|artist_uri|playlist_uri|spotify_command|query|other_settings|other_action|alfred_playlist_uri|artist_name
-			$w->result( '', "|||||||" . "disable_all_playlist||", "Change Search Scope", "Select to change to ★ playlist only", './images/search.png', 'yes', '' );
+			$w->result( '', "|||||||" . "disable_all_playlist||", 'Change Search Scope', 'Select to change to ★ playlist only', './images/search.png', 'yes', '' );
 		}
 		else
 		{
-			$w->result( '', "|||||||" . "enable_all_playlist||", "Change Search Scope", "Select to change to ALL playlists", './images/search.png', 'yes', '' );
+			$w->result( '', "|||||||" . "enable_all_playlist||", 'Change Search Scope', 'Select to change to ALL playlists', './images/search.png', 'yes', '' );
 		}
-		$w->result( '', "|||||||" . "update_library||", "Update Library", "When done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
+		$w->result( '', "|||||||" . "update_library||", 'Update Library', "When done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '' );
 		$w->result( '', '', "Configure Max Number of Results", "Number of results displayed. (it doesn't apply to your playlist list)", './images/numbers.png', 'no', 'Settings→MaxResults→' );
 		$w->result( '', '', "Configure your Country Code", "This is needed to get available results when doing online lookups", './images/country.png', 'no', 'Settings→Country→' );
 
@@ -282,25 +282,25 @@ else
 		//
 		// Search categories for fast access
 		//		
-		if (strpos(strtolower("playlist"),strtolower($query)) !== false)
+		if (strpos(strtolower('playlist'),strtolower($query)) !== false)
 		{	
-			$w->result( '', '', "Playlists", "Browse by playlist", './images/playlists.png', 'no', 'Playlist→' );
+			$w->result( '', '', 'Playlists', 'Browse by playlist', './images/playlists.png', 'no', 'Playlist→' );
 		}
-		else if (strpos(strtolower("album"),strtolower($query)) !== false)
+		else if (strpos(strtolower('album'),strtolower($query)) !== false)
 		{
-			$w->result( '', '', "Albums", "Browse by album", './images/albums.png', 'no', 'Album→' );	
+			$w->result( '', '', 'Albums', 'Browse by album', './images/albums.png', 'no', 'Album→' );	
 		}
-		else if (strpos(strtolower("artist"),strtolower($query)) !== false)
+		else if (strpos(strtolower('artist'),strtolower($query)) !== false)
 		{
-			$w->result( '', '', "Artists", "Browse by artist", './images/artists.png', 'no', 'Artist→' );	
+			$w->result( '', '', 'Artists', 'Browse by artist', './images/artists.png', 'no', 'Artist→' );	
 		}
-		else if (strpos(strtolower("alfred"),strtolower($query)) !== false)
+		else if (strpos(strtolower('alfred'),strtolower($query)) !== false)
 		{
-			$w->result( '', '', "Alfred Playlist", "Control your Alfred Playlist", './images/alfred_playlist.png', 'no', 'Alfred Playlist→' );	
+			$w->result( '', '', 'Alfred Playlist', 'Control your Alfred Playlist', './images/alfred_playlist.png', 'no', 'Alfred Playlist→' );	
 		}
-		else if (strpos(strtolower("setting"),strtolower($query)) !== false)
+		else if (strpos(strtolower('setting'),strtolower($query)) !== false)
 		{
-			$w->result( '', '', "Settings", "Go to settings", './images/settings.png', 'no', 'Settings→' );
+			$w->result( '', '', 'Settings', 'Go to settings', './images/settings.png', 'no', 'Settings→' );
 		}		
 		
 
