@@ -4,8 +4,8 @@
 * Description: 	This PHP class object provides several useful functions for retrieving, parsing,
 * 				and formatting data to be used with Alfred 2 Workflows.
 * Author: 		David Ferguson (@jdfwarrior)
-* Revised: 		2/9/2013
-* Version:		0.3
+* Revised: 		6/6/2013
+* Version:		0.3.3
 */
 class Workflows {
 
@@ -28,7 +28,7 @@ class Workflows {
 	function __construct( $bundleid=null )
 	{
 		$this->path = exec('pwd');
-		$this->home = exec('printf $HOME');
+		$this->home = exec('printf "$HOME"');
 
 		if ( file_exists( 'info.plist' ) ):
 			$this->bundle = $this->get( 'bundleid', 'info.plist' );
@@ -184,9 +184,14 @@ class Workflows {
 			$c_keys = array_keys( $b );						// Grab all the keys for that item
 			foreach( $c_keys as $key ):						// For each of those keys
 				if ( $key == 'uid' ):
-					$c->addAttribute( 'uid', $b[$key] );
+					if ( $b[$key] === null || $b[$key] === '' ):
+						continue;
+					else:
+						$c->addAttribute( 'uid', $b[$key] );
+					endif;
 				elseif ( $key == 'arg' ):
 					$c->addAttribute( 'arg', $b[$key] );
+					$c->$key = $b[$key];
 				elseif ( $key == 'type' ):
 					$c->addAttribute( 'type', $b[$key] );
 				elseif ( $key == 'valid' ):
@@ -194,7 +199,11 @@ class Workflows {
 						$c->addAttribute( 'valid', $b[$key] );
 					endif;
 				elseif ( $key == 'autocomplete' ):
-					$c->addAttribute( 'autocomplete', $b[$key] );
+					if ( $b[$key] === null || $b[$key] === '' ):
+						continue;
+					else:
+						$c->addAttribute( 'autocomplete', $b[$key] );
+					endif;
 				elseif ( $key == 'icon' ):
 					if ( substr( $b[$key], 0, 9 ) == 'fileicon:' ):
 						$val = substr( $b[$key], 9 );
@@ -411,7 +420,7 @@ class Workflows {
 	* @return false if the file cannot be found, the file data if found. If the file
 	*			format is json encoded, then a json object is returned.
 	*/
-	public function read( $a )
+	public function read( $a, $array = false )
 	{
 		if ( file_exists( $a ) ):
 			if ( file_exists( $this->path.'/'.$a ) ):
@@ -426,8 +435,10 @@ class Workflows {
 		endif;
 
 		$out = file_get_contents( $a );
-		if ( !is_null( json_decode( $out ) ) ):
+		if ( !is_null( json_decode( $out ) ) && !$array ):
 			$out = json_decode( $out );
+		elseif ( !is_null( json_decode( $out ) ) && !$array ):
+			$out = json_decode( $out, true );
 		endif;
 
 		return $out;
