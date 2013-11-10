@@ -3,7 +3,7 @@
 // Turn off all error reporting
 error_reporting(0);
 
-include_once('functions.php');
+require('functions.php');
 require_once('workflows.php');
 
 $query = escapeQuery($argv[1]);

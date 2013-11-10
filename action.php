@@ -4,7 +4,7 @@
 error_reporting(0);
 
 require_once('workflows.php');
-include_once('functions.php');
+require('functions.php');
 
 use Ratchet\Server\IoServer;
 use Ratchet\Http\HttpServer;
