@@ -1,6 +1,6 @@
 ## History
 
-3.7;
+3.7:
 
 * Top list is now a playlist like any others. 
 
