@@ -891,8 +891,8 @@ else
 					$subtitle = $subtitle  . $track[6];
 
 					if(checkIfResultAlreadyThere($w->results(),ucfirst($track[7]) . " - " . $track[5]) == false)
-					{								
-						$w->result( "spotify_mini-spotify-track-" . $track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri, ucfirst($track[7]) . " - " . $track[5], $subtitle, $track[9], 'yes', '' );
+					{					
+						$w->result( "spotify_mini-spotify-track-" . $track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||"  . "|" . $alfred_playlist_uri . '|' . $track[7], ucfirst($track[7]) . " - " . $track[5], $subtitle, $track[9], 'yes', '' );
 					}
 				endforeach;
 
