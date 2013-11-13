@@ -162,7 +162,7 @@ if(mb_strlen($query) < 3 ||
 				{
 					$results = explode('→', $command_output);
 					$currentArtistArtwork = getArtistArtwork($w,$results[1],false);
-					$w->result( '', '||||playpause|||||', $results[0], $results[2] . 'by' . $results[1], ($results[3] == "playing") ? './images/pause.png' : './images/play.png', 'yes', '' );
+					$w->result( '', '||||playpause|||||', $results[0], $results[2] . ' by ' . $results[1], ($results[3] == "playing") ? './images/pause.png' : './images/play.png', 'yes', '' );
 					$w->result( '', "$results[4]|||||||" . "morefromthisartist||$results[1]", $results[1], 'Lookup this artist online..', $currentArtistArtwork, 'yes', '' );
 				}
 			}
