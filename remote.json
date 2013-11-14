@@ -1,5 +1,5 @@
 {
-    "version": 3.72,
+    "version": 3.73,
     "download_url": "https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/SpotifyMiniPlayer.alfredworkflow",
-    "description": "Minor Fixes."
+    "description": "Fixed problem when antislash is in album,track,artist name"
 }

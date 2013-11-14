@@ -1,5 +1,9 @@
 ## History
 
+3.7.3:
+
+* Fixed problem when antislash is in album,track,artist name
+
 3.7.2:
 
 * Minor Fixes.
