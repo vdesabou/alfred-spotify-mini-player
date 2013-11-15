@@ -554,7 +554,7 @@ function updatePlaylist($jsonData)
 		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"update counters set playlists='. $playlists_count[0] .'"';
 		exec($sql);
 			
-		echo "Library has been updated (" . $all_tracks[0] . " tracks)";
+		echo "Playlist has been updated (" . $nb_track . " tracks)";
 		
 		unlink($w->data() . "/update_library_in_progress");									
 	} 
@@ -656,7 +656,7 @@ function updatePlaylistList($jsonData)
 		}
 		
 		// check for deleted playlists
-		$playlists = "";
+		$playlists = array();
 		
 		$getPlaylists = "select * from playlists";
 		
@@ -728,7 +728,7 @@ function updatePlaylistList($jsonData)
 		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"update counters set playlists='. $playlists_count[0] .'"';
 		exec($sql);
 			
-		echo "Library has been created (" . $all_tracks[0] . " tracks)";
+		echo "Playlist list has been updated";
 		
 		unlink($w->data() . "/update_library_in_progress");									
 	} 
