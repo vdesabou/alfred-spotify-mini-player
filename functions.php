@@ -589,7 +589,7 @@ function updatePlaylistList($jsonData)
 				
 		foreach ($json as $playlist) 
 		{				
-			$playlists = "";
+			$playlists = array();
 			$getPlaylists = "select * from playlists where uri='".$playlist['uri']."'";
 			$dbfile = $w->data() . "/library.db";
 			exec("sqlite3 -separator '	' \"$dbfile\" \"$getPlaylists\" 2>&1", $playlists, $returnValue);
