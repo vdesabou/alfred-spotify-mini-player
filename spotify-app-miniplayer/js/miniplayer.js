@@ -103,13 +103,13 @@ function handleArgs() {
 					    conn.send('update_library→' + JSON.stringify(matchedAll));
 					};
 					
-					conn.onerror = function(e) {
-						console.log("Error: ",e.data);
-					} 
+					conn.onerror = function (e) {
+                        console.log("Error: ", e.data);
+                    };
 					
-					conn.onclose = function(e){
-						console.log("On Close: ",e.reason);
-					}
+					conn.onclose = function (e) {
+                        console.log("On Close: ", e.reason);
+                    };
 					
 					conn.onmessage = function(e) {
 					    console.log("Received response: ",e.data);
@@ -128,13 +128,13 @@ function handleArgs() {
 					    conn.send('update_playlist_list→' + JSON.stringify(matchedAll));
 					};
 					
-					conn.onerror = function(e) {
-						console.log("Error: ",e.data);
-					} 
+					conn.onerror = function (e) {
+                        console.log("Error: ", e.data);
+                    };
 					
-					conn.onclose = function(e){
-						console.log("On Close: ",e.reason);
-					}
+					conn.onclose = function (e) {
+                        console.log("On Close: ", e.reason);
+                    };
 					
 					conn.onmessage = function(e) {
 					    console.log("Received response: ",e.data);
@@ -167,13 +167,13 @@ function handleArgs() {
 						    conn.send('update_playlist→' + JSON.stringify(array_results))
 						};
 						
-						conn.onerror = function(e) {
-							console.log("Error: ",e.data);
-						} 
+						conn.onerror = function (e) {
+                            console.log("Error: ", e.data);
+                        };
 						
-						conn.onclose = function(e){
-							console.log("On Close: ",e.reason);
-						}
+						conn.onclose = function (e) {
+                            console.log("On Close: ", e.reason);
+                        };
 						
 						conn.onmessage = function(e) {
 						    console.log("Received response: ",e.data);
@@ -207,11 +207,6 @@ function handleArgs() {
 				break;
 		}
 	}		
-}
-
-function playTopList() {
-
-    models.player.playContext(Toplist.forCurrentUser());
 }
 
 function addToAlfredPlaylist(args) {
