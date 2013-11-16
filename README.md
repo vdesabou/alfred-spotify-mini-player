@@ -6,18 +6,29 @@ See related topic on [alfredforum](http://www.alfredforum.com/topic/1892-spotify
 
 ## Description
 
-Speed is the key word here: instead of using slow Spotify API, it uses a local version of your library stored in a SQL database(it includes your starred tracks, your playlists and playlists that you subscribed to). You can decide to search in your starred playlist only, or in all all your playlists. You can browse by Artist, Album or Playlist. You can also lookup for artists online. You can also control Spotify using keywords such as play/next/volmax/random/shuffle/star/etc...
+Speed is the key word here: instead of using slow Spotify API, it uses a local version of your library stored in a database(it includes your starred tracks, your playlists and playlists that you subscribed to). You can decide to search in your starred playlist only, or in all all your playlists. You can browse by Artist, Album or Playlist. You can also lookup for artists online. You can also control Spotify using keywords such as play/next/volmax/random/shuffle/star/etc...
 
-## Performances with version 3.x
+## Screenshots
 
-Using a library with 18000 tracks, search scope set to ALL, with artworks displayed, I get:
+* Search in all your playlists
 
-* 150ms to return 50 results
-* 200ms to return 100 results
+![Screenshot](http://d.pr/i/MeWd+.gif)
 
-Hope you will appreciate the performance bump as I do :-)
+* Browse and launch your playlists
 
-See it in action in this [video](https://vimeo.com/70175318) 
+![Screenshot](http://d.pr/i/ECCf+.gif)
+
+* Update your playlist and see progress
+
+![Screenshot](http://d.pr/i/uSB4+.gif)
+
+* Browse by artist
+
+![Screenshot](http://d.pr/i/QJU1+.gif)
+
+* Lookup artist "online"
+
+![Screenshot](http://d.pr/i/y1Wb+.gif)
 
 ## Features
 
@@ -42,10 +53,6 @@ See it in action in this [video](https://vimeo.com/70175318)
 * enable/disable Spotifious or Alfred Playlist
 * enable/disable ***Lookup this artist online***
 * Install/Update of the library (see next section for explanations)
-
-## Screenshots
-
-![Screenshot](http://d.pr/i/MeWd+.gif)
 
 ## First time use
 
@@ -83,11 +90,7 @@ You can now update your entire library and/or only one specific playlist directl
 
 * To add an album or another playlist to your playlist select it with *shift* modifier
 
-## Download the workflow
 
-Download the workflow below and open in Alfred.
-
-[Download Workflow](https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/SpotifyMiniPlayer.alfredworkflow)
 
 ## Troubleshooting
 
@@ -100,9 +103,23 @@ If the update library is stuck (be aware the first time, it can take hours as al
 ![Screenshot](http://d.pr/i/q8Rs+.png)
 
 
+## Performances with version 3.x
+
+Using a library with 18000 tracks, search scope set to ALL, with artworks displayed, I get:
+
+* 150ms to return 50 results
+* 200ms to return 100 results
+
 ## Credits
 
 * [Spotifious workflow](https://github.com/citelao/Spotify-for-Alfred)
 * [Ratchet](http://socketo.me)
+
+
+## Download the workflow
+
+Download the workflow below and open in Alfred.
+
+[Download Workflow](https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/SpotifyMiniPlayer.alfredworkflow)
 
 
