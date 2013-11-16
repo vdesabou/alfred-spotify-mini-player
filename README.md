@@ -45,8 +45,7 @@ See it in action in this [video](https://vimeo.com/70175318)
 
 ## Screenshots
 
-![Screenshot](http://d.pr/i/7xFz+.png)
-
+![Screenshot](http://d.pr/i/MeWd+.gif)
 
 ## First time use
 
