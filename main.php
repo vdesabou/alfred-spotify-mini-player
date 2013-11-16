@@ -12,6 +12,7 @@ $query = iconv('UTF-8-MAC', 'UTF-8', $query);
 
 $w = new Workflows();
 
+
 //
 // check for library update in progress
 if (file_exists($w->data() . '/update_library_in_progress')) {
@@ -382,7 +383,7 @@ if (mb_strlen($query) < 3 ||
 
                 $w->result("spotify_mini-spotify-alfredplaylist-set", '', "Update your Alfred playlist URI", "define the URI of your Alfred playlist", './images/settings.png', 'no', 'Alfred Playlist→Set Alfred Playlist URI→');
 
-                $w->result("spotify_mini-spotify-alfredplaylist-refresh", "|||" . $alfred_playlist_uri . "||||" . update_playlist . "||", "Update your Alfred Playlist", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
+                $w->result("spotify_mini-spotify-alfredplaylist-refresh", "|||" . $alfred_playlist_uri . "||||" . 'update_playlist' . "||", "Update your Alfred Playlist", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
 
             }
         } //  Alfred Playlist end
@@ -899,7 +900,7 @@ if (mb_strlen($query) < 3 ||
                     }
                     $w->result("spotify_mini-spotify-playlist-$playlist[1]", "|||" . $playlist[0] . "||||" . "|" . $alfred_playlist_uri . "|", ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks), by " . $playlist[3] . " (" . $playlist[4] . ")", $subtitle, $playlist[5], 'yes', '');
 
-                    $w->result("spotify_mini-spotify-update-$playlist[1]", "|||" . $playlist[0] . "||||" . update_playlist . "||", "Update playlist " . ucfirst($playlist[1]) . " by " . $playlist[3], "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
+                    $w->result("spotify_mini-spotify-update-$playlist[1]", "|||" . $playlist[0] . "||||" . 'update_playlist' . "||", "Update playlist " . ucfirst($playlist[1]) . " by " . $playlist[3], "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
 
                     foreach ($tracks as $track):
                         $track = explode("	", $track);

@@ -249,8 +249,6 @@ function updateLibrary($jsonData)
     //
     if (file_exists($w->data() . "/artwork")) {
         $folder = $w->data() . "/artwork";
-        $bytes = 0;
-        $total = 0;
         if ($handle = opendir($folder)) {
 
             while (false !== ($file = readdir($handle))) {
