@@ -2,7 +2,6 @@
 
 
 This is "Spotify Mini Player", like the alfred built-in iTunes Mini Player, but for Spotify!
-See related topic on [alfredforum](http://www.alfredforum.com/topic/1892-spotify-mini-player-version-28)
 
 ## Description
 
@@ -35,14 +34,13 @@ Speed is the key word here: instead of using slow Spotify API, it uses a local v
 * Hotkey to trigger the workflow
 * Update of playlists directly from the workflow!
 * Search for Albums, Artists or Tracks
-* Search for playlists and launch it
+* Search for playlists (including your Top List), browse them and launch them
 * Browse by Artists, Albums or Playlists
 * **Lookup artist online** by using ctrl key on a track
-* Launch your **Top List**
 * **Alfred Playlist** manage a playlist from Alfred: add track (using fn), albums or playlist (using ⇧)
 * Select a track with ⌥ to play the album, or ⌘ to play the artist
 * Same control keywords as iTunes Mini Player: play, pause, mute, next, random, previous, volmax, volmid. And shuffle to activate shuffling.
-* Star currently played track with keyword *start*
+* Star currently played track with keyword *star*
 * Direct call to [Spotifious](http://www.alfredforum.com/topic/1644-spotifious-a-natural-spotify-controller-for-alfred) workflow
 * [AlleyOop](http://www.alfredforum.com/topic/1582-alleyoop-update-alfred-workflows/) support
 
