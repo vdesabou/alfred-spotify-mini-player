@@ -519,7 +519,7 @@ function updatePlaylistList($jsonData)
 
         foreach ($json as $playlist) {
             $playlists = array();
-            $getPlaylists = "select * from playlists where uri='" . $playlist['uri'] . "'";
+            $getPlaylists = "select * from playlists where name='" . $playlist['name'] . "'" . " and username='" . $playlist['username'] . "'";
             $dbfile = $w->data() . "/library.db";
             exec("sqlite3 -separator '	' \"$dbfile\" \"$getPlaylists\" 2>&1", $playlists, $returnValue);
 
@@ -589,7 +589,7 @@ function updatePlaylistList($jsonData)
 
                 $found = 0;
                 foreach ($json as $playlist) {
-                    if ($playlist['uri'] == $pl[0]) {
+                    if ($playlist['name'] == $pl[1] && $playlist['username'] == $pl[4]) {
                         $found = 1;
                         break;
                     }
