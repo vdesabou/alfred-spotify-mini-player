@@ -1,5 +1,9 @@
 ## History
 
+3.7.4:
+
+* Fixed output for update playlist and update playlists list
+
 3.7.3:
 
 * Fixed problem when antislash is in album,track,artist name

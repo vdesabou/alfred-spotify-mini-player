@@ -301,7 +301,7 @@
 	<key>disabled</key>
 	<false/>
 	<key>name</key>
-	<string>Spotify Mini Player 3.7.3</string>
+	<string>Spotify Mini Player 3.7.4</string>
 	<key>objects</key>
 	<array>
 		<dict>
@@ -1116,11 +1116,7 @@ end alfred_script</string>
 		</dict>
 	</array>
 	<key>readme</key>
-	<string>Credits:
-
-Spotifious Workflow: https://github.com/citelao/Spotify-for-Alfred
-
-Spotify App spotify-export: https://github.com/jamesrwhite/spotify-export</string>
+	<string></string>
 	<key>uidata</key>
 	<dict>
 		<key>05F86AA1-D3EE-4409-9A58-898B36FFE503</key>
@@ -1315,6 +1311,6 @@ Spotify App spotify-export: https://github.com/jamesrwhite/spotify-export</strin
 		</dict>
 	</dict>
 	<key>webaddress</key>
-	<string>https://github.com/vdesabou/alfred-spotify-mini-player</string>
+	<string>http://vdesabou.github.io/alfred-spotify-mini-player/</string>
 </dict>
 </plist>
