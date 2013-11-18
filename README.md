@@ -42,7 +42,7 @@ Speed is the key word here: instead of using slow Spotify API, it uses a local v
 * Same control keywords as iTunes Mini Player: play, pause, mute, next, random, previous, volmax, volmid. And shuffle to activate shuffling.
 * Star currently played track with keyword *star*
 * Direct call to [Spotifious](http://www.alfredforum.com/topic/1644-spotifious-a-natural-spotify-controller-for-alfred) workflow
-* [AlleyOop](http://www.alfredforum.com/topic/1582-alleyoop-update-alfred-workflows/) support
+* [AlleyOop/Monkey Patch](http://www.alfredforum.com/topic/2218-monkey-patch-update-alfred-workflows-via-alleyoop) support
 
 ## Settings
 
