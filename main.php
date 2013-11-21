@@ -141,7 +141,7 @@ if (mb_strlen($query) < 3 ||
                     $results = explode('→', $command_output);
                     $currentArtistArtwork = getArtistArtwork($w, $results[1], false);
                     $w->result('', '||||playpause|||||', $results[0], $results[2] . ' by ' . $results[1], ($results[3] == "playing") ? './images/pause.png' : './images/play.png', 'yes', '');
-                    $w->result('', "$results[4]|||||||" . "morefromthisartist||$results[1]", $results[1], 'Lookup this artist online..', $currentArtistArtwork, 'yes', '');
+                    $w->result('', "$results[4]|||||||" . "morefromthisartist||$results[1]", $results[1], 'Find all albums/tracks from this artist..', $currentArtistArtwork, 'yes', '');
                 }
             }
             if ($is_alfred_playlist_active == true) {
@@ -195,7 +195,7 @@ if (mb_strlen($query) < 3 ||
         }
         $w->result('', "|||||||" . "update_library||", 'Update Library', "When done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
         $w->result('', '', "Configure Max Number of Results", "Number of results displayed. (it doesn't apply to your playlist list)", './images/numbers.png', 'no', 'Settings→MaxResults→');
-        $w->result('', '', "Configure your Country Code", "This is needed to get available results when doing online lookups", './images/country.png', 'no', 'Settings→Country→');
+        $w->result('', '', "Configure your Country Code", "This is needed to get available results when finding all albums/tracks from an artist", './images/country.png', 'no', 'Settings→Country→');
 
         if ($is_spotifious_active == true) {
             $w->result('', "|||||||" . "disable_spotifiuous||", "Disable Spotifious", "Do not display Spotifious in default results", './images/uncheck.png', 'yes', '');
@@ -208,9 +208,9 @@ if (mb_strlen($query) < 3 ||
             $w->result('', "|||||||" . "enable_alfred_playlist||", "Enable Alfred Playlist", "Display Alfred Playlist", './images/check.png', 'yes', '');
         }
         if ($is_displaymorefrom_active == true) {
-            $w->result('', "|||||||" . "disable_displaymorefrom||", "Disable \"Lookup this artist online\"", "Disable the option which displays more albums from current artist with online results", './images/uncheck.png', 'yes', '');
+            $w->result('', "|||||||" . "disable_displaymorefrom||", "Disable \"Find all albums/tracks from this artist\"", "Disable the option which displays all albums and tracks from current artist", './images/uncheck.png', 'yes', '');
         } else {
-            $w->result('', "|||||||" . "enable_displaymorefrom||", "Enable \"Lookup this artist online\"", "Enable the option which displays more albums from current artist with online results", './images/check.png', 'yes', '');
+            $w->result('', "|||||||" . "enable_displaymorefrom||", "Enable \"Find all albums/tracks from this artist\"", "Enable the option which  displays all albums and tracks from current artist", './images/check.png', 'yes', '');
         }
 
         $w->result('', "|||||||" . "open_spotify_export_app||", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Go to the Spotify Mini Player App in Spotify.", './images/app_miniplayer.png', 'yes', '');
@@ -284,7 +284,7 @@ if (mb_strlen($query) < 3 ||
         }
 
         if (count($tracks) > 0) {
-            $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup artist online)";
+            $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (find all from artist)";
             if ($is_alfred_playlist_active == true) {
                 $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
             }
@@ -626,7 +626,7 @@ if (mb_strlen($query) < 3 ||
                         $w->result('', '', "There was an error when retrieving online information", "Syntax error, malformed JSON", './images/warning.png', 'no', '');
                         break;
                     case JSON_ERROR_NONE:
-                        $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup artist online)";
+                        $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (find all from artist)";
                         if ($is_alfred_playlist_active == true) {
                             $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
                         }
@@ -680,7 +680,7 @@ if (mb_strlen($query) < 3 ||
                 }
 
                 if (count($tracks) > 0) {
-                    $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup artist online)";
+                    $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (find all from artist)";
                     if ($is_alfred_playlist_active == true) {
                         $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
                     }
@@ -724,7 +724,7 @@ if (mb_strlen($query) < 3 ||
                 }
 
                 if (count($tracks) > 0) {
-                    $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup artist online)";
+                    $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (find all from artist)";
                     if ($is_alfred_playlist_active == true) {
                         $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
                     }
@@ -777,7 +777,7 @@ if (mb_strlen($query) < 3 ||
                 }
 
                 if (count($tracks) > 0) {
-                    $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup artist online)";
+                    $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (find all from artist)";
                     if ($is_alfred_playlist_active == true) {
                         $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
                     }
@@ -821,7 +821,7 @@ if (mb_strlen($query) < 3 ||
                 }
 
                 if (count($tracks) > 0) {
-                    $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup artist online)";
+                    $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (find all from artist)";
                     if ($is_alfred_playlist_active == true) {
                         $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
                     }
@@ -885,7 +885,7 @@ if (mb_strlen($query) < 3 ||
                         return;
                     }
                     if (count($tracks) > 0) {
-                        $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup artist online)";
+                        $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (find all from artist)";
                         if ($is_alfred_playlist_active == true) {
                             $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
                         }
@@ -926,7 +926,7 @@ if (mb_strlen($query) < 3 ||
                         return;
                     }
                     if (count($tracks) > 0) {
-                        $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup artist online)";
+                        $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (find all from artist)";
                         if ($is_alfred_playlist_active == true) {
                             $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
                         }
