@@ -12,18 +12,6 @@ function escapeQuery($text)
     return $text;
 }
 
-function checkIfResultAlreadyThere($results, $title)
-{
-    foreach ($results as $result) {
-        if ($result[title]) {
-            if ($result[title] == $title) {
-                return true;
-            }
-        }
-    }
-    return false;
-}
-
 function getTrackOrAlbumArtwork($w, $spotifyURL, $fetchIfNotPresent)
 {
 
