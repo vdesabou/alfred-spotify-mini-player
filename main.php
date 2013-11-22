@@ -396,9 +396,9 @@ if (mb_strlen($query) < 3 ||
 
             if (mb_strlen($artist) < 3) {
                 if ($all_playlists == false) {
-                    $getTracks = "select * from tracks where playable=1 and starred=1";
+                    $getTracks = "select * from tracks where playable=1 and starred=1 group by artist_name" . " limit " . $max_results;
                 } else {
-                    $getTracks = "select * from tracks where playable=1";
+                    $getTracks = "select * from tracks where playable=1 group by artist_name" . " limit " . $max_results;
                 }
 
 
@@ -414,24 +414,18 @@ if (mb_strlen($query) < 3 ||
                 }
 
                 // display all artists
-                $currentResultNumber = 1;
                 foreach ($tracks as $track):
                     $track = explode("	", $track);
 
-
                     if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7])) == false) {
-                        if ($currentResultNumber > $max_results)
-                            continue;
-
                         $w->result("spotify_mini-spotify-artist-" . $track[7], '', ucfirst($track[7]), "Get tracks from this artist", $track[10], 'no', "Artist→" . $track[7] . "→");
-                        $currentResultNumber++;
                     }
                 endforeach;
             } else {
                 if ($all_playlists == false) {
-                    $getTracks = "select * from tracks where playable=1 and starred=1 and artist_name like '%" . $artist . "%'";
+                    $getTracks = "select * from tracks where playable=1 and starred=1 and artist_name like '%" . $artist . "%'" . " limit " . $max_results;
                 } else {
-                    $getTracks = "select * from tracks where playable=1 and artist_name like '%" . $artist . "%'";
+                    $getTracks = "select * from tracks where playable=1 and artist_name like '%" . $artist . "%'" . " limit " . $max_results;
                 }
 
 
@@ -446,15 +440,11 @@ if (mb_strlen($query) < 3 ||
                     return;
                 }
 
-                $currentResultNumber = 1;
                 foreach ($tracks as $track):
                     $track = explode("	", $track);
 
                     if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7])) == false) {
-                        if ($currentResultNumber > $max_results)
-                            continue;
                         $w->result("spotify_mini-spotify-artist-" . $track[7], '', ucfirst($track[7]), "Get tracks from this artist", $track[10], 'no', "Artist→" . $track[7] . "→");
-                        $currentResultNumber++;
                     }
                 endforeach;
 
@@ -472,9 +462,9 @@ if (mb_strlen($query) < 3 ||
 
             if (mb_strlen($album) < 3) {
                 if ($all_playlists == false) {
-                    $getTracks = "select * from tracks where playable=1 and starred=1";
+                    $getTracks = "select * from tracks where playable=1 and starred=1 group by album_name" . " limit " . $max_results;
                 } else {
-                    $getTracks = "select * from tracks where playable=1";
+                    $getTracks = "select * from tracks where playable=1 group by album_name" . " limit " . $max_results;
                 }
 
 
@@ -490,22 +480,18 @@ if (mb_strlen($query) < 3 ||
                 }
 
                 // display all albums
-                $currentResultNumber = 1;
                 foreach ($tracks as $track):
                     $track = explode("	", $track);
 
                     if (checkIfResultAlreadyThere($w->results(), ucfirst($track[6])) == false) {
-                        if ($currentResultNumber > $max_results)
-                            continue;
                         $w->result("spotify_mini-spotify-album" . $track[6], '', ucfirst($track[6]), "by " . $track[7], $track[11], 'no', "Album→" . $track[6] . "→");
-                        $currentResultNumber++;
                     }
                 endforeach;
             } else {
                 if ($all_playlists == false) {
-                    $getTracks = "select * from tracks where playable=1 and starred=1 and album_name like '%" . $album . "%'";
+                    $getTracks = "select * from tracks where playable=1 and starred=1 and album_name like '%" . $album . "%'" . " limit " . $max_results;
                 } else {
-                    $getTracks = "select * from tracks where playable=1 and album_name like '%" . $album . "%'";
+                    $getTracks = "select * from tracks where playable=1 and album_name like '%" . $album . "%'" . " limit " . $max_results;
                 }
 
 
@@ -520,15 +506,11 @@ if (mb_strlen($query) < 3 ||
                     return;
                 }
 
-                $currentResultNumber = 1;
                 foreach ($tracks as $track):
                     $track = explode("	", $track);
 
                     if (checkIfResultAlreadyThere($w->results(), ucfirst($track[6])) == false) {
-                        if ($currentResultNumber > $max_results)
-                            continue;
                         $w->result("spotify_mini-spotify-album" . $track[6], '', ucfirst($track[6]), "by " . $track[7], $track[11], 'no', "Album→" . $track[6] . "→");
-                        $currentResultNumber++;
                     }
                 endforeach;
 
