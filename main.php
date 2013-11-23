@@ -296,7 +296,7 @@ if (mb_strlen($query) < 3 ||
             $subtitle = ($track[0] == true) ? "★ " : "";
             $subtitle = $subtitle . $track[6];
 
-            if (in_array(ucfirst($track[7],$w->results()) . " - " . $track[5]) == false) {
+            if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " - " . $track[5]) == false) {
                 $w->result("spotify_mini-spotify-track" . $track[2], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||" . "|" . $alfred_playlist_uri . "|" . $track[7], ucfirst($track[7]) . " - " . $track[5], $subtitle, $track[9], 'yes', '');
             }
         endforeach;
@@ -417,7 +417,7 @@ if (mb_strlen($query) < 3 ||
                 foreach ($tracks as $track):
                     $track = explode("	", $track);
 
-                    if (in_array(ucfirst($track[7]),$w->results()) == false) {
+                    if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7])) == false) {
                         $w->result("spotify_mini-spotify-artist-" . $track[7], '', ucfirst($track[7]), "Get tracks from this artist", $track[10], 'no', "Artist→" . $track[7] . "→");
                     }
                 endforeach;
@@ -443,7 +443,7 @@ if (mb_strlen($query) < 3 ||
                 foreach ($tracks as $track):
                     $track = explode("	", $track);
 
-                    if (in_array(ucfirst($track[7]),$w->results()) == false) {
+                    if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7])) == false) {
                         $w->result("spotify_mini-spotify-artist-" . $track[7], '', ucfirst($track[7]), "Get tracks from this artist", $track[10], 'no', "Artist→" . $track[7] . "→");
                     }
                 endforeach;
@@ -483,7 +483,7 @@ if (mb_strlen($query) < 3 ||
                 foreach ($tracks as $track):
                     $track = explode("	", $track);
 
-                    if (in_array(ucfirst($track[6]),$w->results()) == false) {
+                    if (checkIfResultAlreadyThere($w->results(), ucfirst($track[6])) == false) {
                         $w->result("spotify_mini-spotify-album" . $track[6], '', ucfirst($track[6]), "by " . $track[7], $track[11], 'no', "Album→" . $track[6] . "→");
                     }
                 endforeach;
@@ -509,7 +509,7 @@ if (mb_strlen($query) < 3 ||
                 foreach ($tracks as $track):
                     $track = explode("	", $track);
 
-                    if (in_array(ucfirst($track[6]),$w->results()) == false) {
+                    if (checkIfResultAlreadyThere($w->results(), ucfirst($track[6])) == false) {
                         $w->result("spotify_mini-spotify-album" . $track[6], '', ucfirst($track[6]), "by " . $track[7], $track[11], 'no', "Album→" . $track[6] . "→");
                     }
                 endforeach;
@@ -569,7 +569,7 @@ if (mb_strlen($query) < 3 ||
                                 $availability = $album->availability;
 
                                 if (strpos($availability->territories, $country_code) !== false) {
-                                    if (in_array(ucfirst($album->name), $w->results()) == false) {
+                                    if (checkIfResultAlreadyThere($w->results(), ucfirst($album->name)) == false) {
                                         $w->result("spotify_mini-spotify-online-album" . $album->name, '', ucfirst($album->name), "by " . $album->artist . " (" . $album->released . ")", getTrackOrAlbumArtwork($w, $album->href, false), 'no', "Online→" . $artist_uri . "@" . $album->artist . "@" . $album->href . "@" . $album->name);
                                     }
                                 }
@@ -675,7 +675,7 @@ if (mb_strlen($query) < 3 ||
                     $subtitle = ($track[0] == true) ? "★ " : "";
                     $subtitle = $subtitle . $track[6];
 
-                    if (in_array(ucfirst($track[7],$w->results()) . " - " . $track[5]) == false) {
+                    if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " - " . $track[5]) == false) {
                         $w->result("spotify_mini-spotify-track-" . $track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||" . "|" . $alfred_playlist_uri . "|" . $track[7], ucfirst($track[7]) . " - " . $track[5], $subtitle, $track[9], 'yes', '');
                     }
                     if ($artist_uri == "")
@@ -719,7 +719,7 @@ if (mb_strlen($query) < 3 ||
                     $subtitle = ($track[0] == true) ? "★ " : "";
                     $subtitle = $subtitle . $track[6];
 
-                    if (in_array(ucfirst($track[7],$w->results()) . " - " . $track[5]) == false) {
+                    if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " - " . $track[5]) == false) {
                         $w->result("spotify_mini-spotify-track-" . $track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||" . "|" . $alfred_playlist_uri . '|' . $track[7], ucfirst($track[7]) . " - " . $track[5], $subtitle, $track[9], 'yes', '');
                     }
                 endforeach;
@@ -772,7 +772,7 @@ if (mb_strlen($query) < 3 ||
                     $subtitle = ($track[0] == true) ? "★ " : "";
                     $subtitle = $subtitle . $track[6];
 
-                    if (in_array(ucfirst($track[7],$w->results()) . " - " . $track[5]) == false) {
+                    if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " - " . $track[5]) == false) {
                         $w->result("spotify_mini-spotify-track-" . $track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||" . "|" . $alfred_playlist_uri . "|" . $track[7], ucfirst($track[7]) . " - " . $track[5], $subtitle, $track[9], 'yes', '');
                     }
                     if ($album_uri == "")
@@ -816,7 +816,7 @@ if (mb_strlen($query) < 3 ||
                     $subtitle = ($track[0] == true) ? "★ " : "";
                     $subtitle = $subtitle . $track[6];
 
-                    if (in_array(ucfirst($track[7],$w->results()) . " - " . $track[5]) == false) {
+                    if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " - " . $track[5]) == false) {
                         $w->result("spotify_mini-spotify-track-" . $track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||" . "|" . $alfred_playlist_uri . "|" . $track[7], ucfirst($track[7]) . " - " . $track[5], $subtitle, $track[9], 'yes', '');
                     }
                 endforeach;
@@ -887,7 +887,7 @@ if (mb_strlen($query) < 3 ||
                     foreach ($tracks as $track):
                         $track = explode("	", $track);
 
-                        if (in_array(ucfirst($track[7],$w->results()) . " - " . $track[5]) == false) {
+                        if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " - " . $track[5]) == false) {
                             $subtitle = ($track[0] == true) ? "★ " : "";
                             $subtitle = $subtitle . $track[6];
                             $w->result("spotify_mini-spotify-playlist-track-" . $playlist[1] . "-" . $track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||" . "|" . $alfred_playlist_uri . "|" . $track[7], ucfirst($track[7]) . " - " . $track[5], $subtitle, $track[9], 'yes', '');
@@ -924,7 +924,7 @@ if (mb_strlen($query) < 3 ||
                             $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
                         }
 
-                        if (in_array(ucfirst($track[7],$w->results()) . " - " . $track[5]) == false) {
+                        if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " - " . $track[5]) == false) {
                             $subtitle = ($track[0] == true) ? "★ " : "";
                             $subtitle = $subtitle . $track[6];
                             $w->result("spotify_mini-spotify-playlist-track-" . $playlist[1] . "-" . $track[5], $track[2] . "|" . $track[3] . "|" . $track[4] . "|||||" . "|" . $alfred_playlist_uri . "|" . $track[7], ucfirst($track[7]) . " - " . $track[5], $subtitle, $track[9], 'yes', '');
