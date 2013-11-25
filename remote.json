@@ -1,5 +1,5 @@
 {
-    "version": 3.74,
+    "version": 3.75,
     "download_url": "https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/SpotifyMiniPlayer.alfredworkflow",
-    "description": "Fixed output for update playlist and update playlists list"
+    "description": "Fix: Browse by Artist and by Album is very slow for big libraries (>30K tracks)"
 }
