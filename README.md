@@ -7,7 +7,7 @@ This is "Spotify Mini Player", like the alfred built-in iTunes Mini Player, but 
 
 Speed is the key word here: instead of using slow Spotify API, it uses a local version of your library stored in a database(it includes your starred tracks, your playlists and playlists that you subscribed to). You can decide to search in your starred playlist only, or in all all your playlists. You can browse by Artist, Album or Playlist. You can also lookup for artists online. You can also control Spotify using keywords such as play/next/volmax/random/shuffle/star/etc...
 
-## Screenshots
+## Animated Gifs
 
 * Search in all your playlists
 
@@ -118,6 +118,5 @@ Using a library with 18000 tracks, search scope set to ALL, with artworks displa
 
 Download the workflow below and open in Alfred.
 
-[Download Workflow](https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/SpotifyMiniPlayer.alfredworkflow)
-
+[![Download Workflow](https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/images/alfred-workflow-icon.png)](https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/SpotifyMiniPlayer.alfredworkflow)
 
