@@ -191,7 +191,11 @@ function handleArgs() {
 				}
 				break;
 			case "addplaylisttoalfredplaylist":
-				if(args[10])
+				if(args[9])
+				{
+					addTopListToAlfredPlaylist(args);
+				}
+				else if(args[10])
 				{
 					addPlaylistToAlfredPlaylist(args);
 				}
@@ -242,11 +246,40 @@ function addToAlfredPlaylist(args) {
 	});	
 }
 
+function addTopListToAlfredPlaylist(args) {
+	// Get the playlist object from a URI
+
+	models.Playlist.fromURI(args[5]+':'+args[6]+':'+args[7]+':'+args[8]+':'+args[9]).load('tracks').done(function(alfredplaylist) {
+		
+		if(args[4] == 'toplist')
+		{
+			console.log(addTopListToAlfredPlaylist + args);
+			models.Playlist.fromURI(args[1]+':'+args[2]+':'+args[3]+':'+args[4]).load('tracks').done(function(p) {
+			    // This callback is fired when the playlist has loaded.
+			    // The playlist object has a tracks property, which is a standard array.
+							
+				p.tracks.snapshot().done(function(t){
+								
+				                var tracks = t.toArray();
+				                for(i=0;i<tracks.length;i++){
+				                	console.log(t.get(i).name);
+				                    alfredplaylist.tracks.add(tracks[i]);
+				                }
+				            });
+	    	});
+		}
+			
+		// Verify the song was added to the playlist
+		console.log(alfredplaylist);	
+	});	
+}
+
+
 function addPlaylistToAlfredPlaylist(args) {
 	// Get the playlist object from a URI
 
 	models.Playlist.fromURI(args[6]+':'+args[7]+':'+args[8]+':'+args[9]+':'+args[10]).load('tracks').done(function(alfredplaylist) {
-	
+		
 		if(args[4] == 'playlist')
 		{
 			models.Playlist.fromURI(args[1]+':'+args[2]+':'+args[3]+':'+args[4]+':'+args[5]).load('tracks').done(function(p) {
@@ -470,6 +503,58 @@ function getAll(matchedAllCallback) {
 		}
 	});
 }
+
+/*
+function doGetTopTrack(artist, num, callback) {
+    var artistTopList = Toplist.forArtist(artist);
+
+    artistTopList.tracks.snapshot(0,num).done(function (snapshot) { //only get the number of tracks we need
+
+        snapshot.loadAll('name').done(function (tracks) {
+            var i, num_toptracks;
+            num_toptracks = num; //this probably should be minimum of num and tracks.length
+
+            for (i = 0; i < num_toptracks; i++) {
+                callback(artist, tracks[i]);
+            }
+        });
+    });
+};
+
+function showRelated(artist_uri) {
+    var artist_properties = ['name', 'popularity', 'related', 'uri'];
+
+    models.Artist
+      .fromURI(artist_uri)
+      .load(artist_properties)
+      .done(function (artist) {
+
+          artist.related.snapshot().done(function (snapshot) {
+              snapshot.loadAll('name').done(function (artists) {
+
+                  for (var i = 0; i < artists.length; i++) {
+                      // am I missing something here?
+                      doGetTopTrack(artists[i], 1, function (artist, toptrack) {
+                              console.log("top track: " + toptrack.name);
+
+                              var p = artist.popularity;
+                              var n = artist.name;
+                              var u = artist.uri;
+
+                              //listItem = document.createElement("li");
+                              console.log("<strong>Name</strong>: " + n.decodeForText() + " | <strong>Popularity: </strong> " + p + " | <strong>Top Track: </strong>" + toptrack.name);
+
+                              //// undefined name
+                              //$('#artistsContainer').append(listItem);
+                      });
+                  }
+              });
+
+          });
+      });
+};
+showRelated('spotify:artist:2nszamLjZFgu3Yx77mKxuC');
+*/
 
 
 $(function(){
