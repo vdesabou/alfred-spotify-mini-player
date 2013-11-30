@@ -2,7 +2,7 @@
 
 3.8:
 
-* Added playlists in now playing
+* Added playlists in now playing section
 
 3.7.5:
 
