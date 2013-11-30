@@ -327,7 +327,7 @@ if (mb_strlen($query) < 3 ||
         }
 
         if (count($tracks) > 0) {
-            $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (find all from artist)";
+            $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
             if ($is_alfred_playlist_active == true) {
                 $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
             }
@@ -651,7 +651,7 @@ if (mb_strlen($query) < 3 ||
                         $w->result('', '', "There was an error when retrieving online information", "Syntax error, malformed JSON", './images/warning.png', 'no', '');
                         break;
                     case JSON_ERROR_NONE:
-                        $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (find all from artist)";
+                        $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
                         if ($is_alfred_playlist_active == true) {
                             $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
                         }
@@ -705,7 +705,7 @@ if (mb_strlen($query) < 3 ||
                 }
 
                 if (count($tracks) > 0) {
-                    $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (find all from artist)";
+                    $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
                     if ($is_alfred_playlist_active == true) {
                         $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
                     }
@@ -749,7 +749,7 @@ if (mb_strlen($query) < 3 ||
                 }
 
                 if (count($tracks) > 0) {
-                    $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (find all from artist)";
+                    $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
                     if ($is_alfred_playlist_active == true) {
                         $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
                     }
@@ -802,7 +802,7 @@ if (mb_strlen($query) < 3 ||
                 }
 
                 if (count($tracks) > 0) {
-                    $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (find all from artist)";
+                    $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
                     if ($is_alfred_playlist_active == true) {
                         $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
                     }
@@ -846,7 +846,7 @@ if (mb_strlen($query) < 3 ||
                 }
 
                 if (count($tracks) > 0) {
-                    $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (find all from artist)";
+                    $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
                     if ($is_alfred_playlist_active == true) {
                         $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
                     }
@@ -910,7 +910,7 @@ if (mb_strlen($query) < 3 ||
                         return;
                     }
                     if (count($tracks) > 0) {
-                        $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (find all from artist)";
+                        $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
                         if ($is_alfred_playlist_active == true) {
                             $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
                         }
@@ -951,7 +951,7 @@ if (mb_strlen($query) < 3 ||
                         return;
                     }
                     if (count($tracks) > 0) {
-                        $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (find all from artist)";
+                        $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
                         if ($is_alfred_playlist_active == true) {
                             $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
                         }
