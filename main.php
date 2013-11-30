@@ -140,8 +140,51 @@ if (mb_strlen($query) < 3 ||
                 if (substr_count($command_output, '→') > 0) {
                     $results = explode('→', $command_output);
                     $currentArtistArtwork = getArtistArtwork($w, $results[1], false);
-                    $w->result('', '||||playpause|||||', $results[0], $results[2] . ' by ' . $results[1], ($results[3] == "playing") ? './images/pause.png' : './images/play.png', 'yes', '');
-                    $w->result('', "$results[4]|||||||" . "morefromthisartist||$results[1]", $results[1], 'Find all albums/tracks from this artist..', $currentArtistArtwork, 'yes', '');
+                    $w->result('', '||||playpause|||||', "🔈 " . $results[0], $results[2] . ' by ' . $results[1], ($results[3] == "playing") ? './images/pause.png' : './images/play.png', 'yes', '');
+                    $w->result('', "$results[4]|||||||" . "morefromthisartist||$results[1]", "👤 " . $results[1], 'Find all albums/tracks from this artist..', $currentArtistArtwork, 'yes', '');
+                    
+                    
+	                $getTracks = "select * from tracks where playable=1 and uri='" . $results[4] . "'" . " limit " . $max_results;
+
+	
+	                $dbfile = $w->data() . "/library.db";
+	                exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
+	
+	                if ($returnValue != 0) {
+	                    $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
+	                    $w->result('', "|||||||" . "update_library||", "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
+	
+	                    echo $w->toxml();
+	                    return;
+	                }
+	
+			        foreach ($tracks as $track):
+			            $track = explode("	", $track);
+						            
+				        $getPlaylists = "select * from playlists where uri='" . $track[13] . "'";
+				
+				        $dbfile = $w->data() . "/library.db";
+				        exec("sqlite3 -separator '	' \"$dbfile\" \"$getPlaylists\" 2>&1", $playlists, $returnValue);
+				
+				        if ($returnValue != 0) {
+				            $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
+				            $w->result('', "|||||||" . "update_library|", "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
+				
+				            echo $w->toxml();
+				            return;
+				        }
+				
+				        foreach ($playlists as $playlist):
+				            $playlist = explode("	", $playlist);
+							
+							if (checkIfResultAlreadyThere($w->results(), "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)") == false) {
+				            	$w->result("spotify_mini-spotify-inplaylist-$playlist[1]", '', "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", $playlist[5], 'no', "Playlist→" . $playlist[0] . "→");
+				            }
+				        endforeach;
+			        endforeach;
+
+                    
+
                 }
             }
             if ($is_alfred_playlist_active == true) {
