@@ -1,5 +1,9 @@
 ## History
 
+3.8:
+
+* Added playlists in now playing
+
 3.7.5:
 
 * Fix: Browse by Artist and by Album is very slow for big libraries (>30K tracks)
