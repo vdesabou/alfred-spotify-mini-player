@@ -424,9 +424,9 @@ if (mb_strlen($query) < 3 ||
 
                 $w->result("spotify_mini-spotify-alfredplaylist-browse", '', "Browse your Alfred playlist", "browse your alfred playlist", getPlaylistArtwork($w, $alfred_playlist_uri, $r[2], false), 'no', 'Playlist→' . $alfred_playlist_uri . '→');
 
-                $w->result("spotify_mini-spotify-alfredplaylist-set", '', "Update your Alfred playlist URI", "define the URI of your Alfred playlist", './images/settings.png', 'no', 'Alfred Playlist→Set Alfred Playlist URI→');
-
                 $w->result("spotify_mini-spotify-alfredplaylist-refresh", "|||" . $alfred_playlist_uri . "||||" . 'update_playlist' . "||", "Update your Alfred Playlist", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
+                
+                $w->result("spotify_mini-spotify-alfredplaylist-set", '', "Update your Alfred playlist URI", "define the URI of your Alfred playlist", './images/settings.png', 'no', 'Alfred Playlist→Set Alfred Playlist URI→');
 
             }
         } //  Alfred Playlist end
