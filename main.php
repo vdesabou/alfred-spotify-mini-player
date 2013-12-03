@@ -141,7 +141,7 @@ if (mb_strlen($query) < 3 ||
                     $results = explode('→', $command_output);
                     $currentArtistArtwork = getArtistArtwork($w, $results[1], false);
                     $w->result('', '||||playpause|||||', "🔈 " . $results[0], $results[2] . ' by ' . $results[1], ($results[3] == "playing") ? './images/pause.png' : './images/play.png', 'yes', '');
-                    $w->result('', "$results[4]|||||||" . "morefromthisartist||$results[1]", "👤 " . $results[1], 'Find all albums/tracks from this artist online..', $currentArtistArtwork, 'yes', '');
+                    $w->result('', "$results[4]|||||||" . "morefromthisartist||$results[1]", "👤 " . $results[1], 'Query all albums/tracks from this artist online..', $currentArtistArtwork, 'yes', '');
                     
                     
 	                $getTracks = "select * from tracks where playable=1 and uri='" . $results[4] . "'" . " limit " . $max_results;
@@ -251,9 +251,9 @@ if (mb_strlen($query) < 3 ||
             $w->result('', "|||||||" . "enable_alfred_playlist||", "Enable Alfred Playlist", "Display Alfred Playlist", './images/check.png', 'yes', '');
         }
         if ($is_displaymorefrom_active == true) {
-            $w->result('', "|||||||" . "disable_displaymorefrom||", "Disable \"Find all albums/tracks from this artist\"", "Disable the option which displays all albums and tracks from current artist", './images/uncheck.png', 'yes', '');
+            $w->result('', "|||||||" . "disable_displaymorefrom||", "Disable \"Query all albums/tracks from this artist\"", "Disable the option which displays all albums and tracks from current artist", './images/uncheck.png', 'yes', '');
         } else {
-            $w->result('', "|||||||" . "enable_displaymorefrom||", "Enable \"Find all albums/tracks from this artist\"", "Enable the option which  displays all albums and tracks from current artist", './images/check.png', 'yes', '');
+            $w->result('', "|||||||" . "enable_displaymorefrom||", "Enable \"Query all albums/tracks from this artist\"", "Enable the option which  displays all albums and tracks from current artist", './images/check.png', 'yes', '');
         }
 
         $w->result('', "|||||||" . "open_spotify_export_app||", "Open Spotify Mini Player App <spotify:app:miniplayer>", "Go to the Spotify Mini Player App in Spotify.", './images/app_miniplayer.png', 'yes', '');
