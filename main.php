@@ -203,9 +203,10 @@ if (mb_strlen($query) < 3 ||
 				$w->result('', '', 'Workflow is corrupted, Spotify Mini Player App is missing (~/Spotify/spotify-app-miniplayer)', 'Select Install library below, and make sure ~/Spotify/spotify-app-miniplayer directory exists and is valid.', './images/warning.png', 'no', '');
 			}        
             else if (!file_exists($w->data() . '/library.db')) {
-                $w->result('', '', 'Workflow is not configured, library.db is missing', 'Select Install library below', './images/warning.png', 'no', '');
+                $w->result('', '', 'Workflow is not configured', '1/ Select Open Spotify Mini Player App below and make sure it works 2/ Then select Install library below', './images/warning.png', 'no', '');
+				$w->result('', "|||||||" . "open_spotify_export_app||", "1/ Open Spotify Mini Player App <spotify:app:miniplayer>", "If it doesn't work, restart Spotify multiple times and make sure you have a developer account", './images/app_miniplayer.png', 'yes', '');
             } 
-			$w->result('', "|||||||" . "update_library||", 'Install library', "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
+			$w->result('', "|||||||" . "update_library||", '2/ Install library', "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
             echo $w->toxml();
             return;
         }
