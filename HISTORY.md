@@ -1,5 +1,9 @@
 ## History
 
+3.82:
+
+* Reworked failure detection for first time use
+
 3.8:
 
 * Added playlists in now playing section

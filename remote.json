@@ -1,5 +1,5 @@
 {
-    "version": 3.81,
+    "version": 3.82,
     "download_url": "https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/SpotifyMiniPlayer.alfredworkflow",
-    "description": "Added playlists in now playing section"
+    "description": "Reworked failure detection for first time use"
 }
