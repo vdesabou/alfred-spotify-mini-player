@@ -57,11 +57,27 @@ Speed is the key word here: instead of using slow Spotify API, it uses a local v
 You'll need to do the following steps:
 
 * Sign up for a [developer account on Spotify](https://developer.spotify.com/technologies/apps/#developer-account) (you must allow app API).
+
 * Download the [latest version](https://www.spotify.com/fr/download/mac/) of Spotify and ***install*** it (I had to do it, even though I was pretty sure to already have the latest version, so please do it!)
 
-* Type "spot_mini" or configured hotkey to invoke Spotify Mini Player, and select "Install library" 
+* Type "spot_mini" or configured hotkey to invoke Spotify Mini Player, and select "1/ Open Spotify Mini Player App <spotify:app:miniplayer>" 
 
-![Screenshot](http://d.pr/i/4hcP+.png)
+![Screenshot](http://d.pr/i/ssf0+.png)
+
+* If it doesn't work (Spotify indicates "Failed to load application miniplayer."):
+
+  * try to restart Spotify multiple times
+  
+  * try to logout/login
+  
+  * make sure you see in [Developer Account](https://developer.spotify.com/technologies/apps/):
+
+```  
+Developer Account
+Your account has already been enabled to use the Spotify Apps API. Happy hacking!
+```
+
+* If it works, invoke the Spotify Mini Player workflow again and select "2/ Install library"
 
 * After some time, you should get a notification saying that library has been created.
 
