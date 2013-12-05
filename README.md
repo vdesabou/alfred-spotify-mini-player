@@ -125,6 +125,12 @@ The Alfred Playlist is a playlist where tracks, albums and even playlists can be
 
 ## Commands
 
+* Modifer keys
+
+![Screenshot](http://d.pr/i/RBqX+.png)
+
+* Other commands
+
 ![Screenshot](http://d.pr/i/DVSn+.png)
 
 
