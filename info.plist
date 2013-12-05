@@ -127,17 +127,6 @@
 				<string></string>
 			</dict>
 		</array>
-		<key>5EB06988-92AD-4D95-AD02-929FB6EBCD64</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>B5121E0F-240A-4739-A58B-0DB78E6D5CC4</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-			</dict>
-		</array>
 		<key>5F3AF2C8-064F-4C10-8D99-22E212825BFE</key>
 		<array>
 			<dict>
@@ -857,45 +846,6 @@ end alfred_script</string>
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>argumenttype</key>
-				<integer>2</integer>
-				<key>keyword</key>
-				<string>toplist</string>
-				<key>text</key>
-				<string>toplist</string>
-				<key>withspace</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>5EB06988-92AD-4D95-AD02-929FB6EBCD64</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>applescript</key>
-				<string>on alfred_script(q)
-	tell application "Spotify"
-		set timestamp to (do shell script "date +%s") as integer
-		open location "spotify:app:miniplayer:toplist:" &amp; timestamp
-	end tell
-end alfred_script</string>
-				<key>cachescript</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.applescript</string>
-			<key>uid</key>
-			<string>B5121E0F-240A-4739-A58B-0DB78E6D5CC4</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>lastpathcomponent</key>
 				<false/>
 				<key>onlyshowifquerypopulated</key>
@@ -1174,11 +1124,6 @@ end alfred_script</string>
 			<key>ypos</key>
 			<real>750</real>
 		</dict>
-		<key>5EB06988-92AD-4D95-AD02-929FB6EBCD64</key>
-		<dict>
-			<key>ypos</key>
-			<real>1590</real>
-		</dict>
 		<key>5F3AF2C8-064F-4C10-8D99-22E212825BFE</key>
 		<dict>
 			<key>ypos</key>
@@ -1238,11 +1183,6 @@ end alfred_script</string>
 		<dict>
 			<key>ypos</key>
 			<real>10</real>
-		</dict>
-		<key>B5121E0F-240A-4739-A58B-0DB78E6D5CC4</key>
-		<dict>
-			<key>ypos</key>
-			<real>1590</real>
 		</dict>
 		<key>BD7525EE-BFFD-4CB1-B617-A7A9492B39C0</key>
 		<dict>
