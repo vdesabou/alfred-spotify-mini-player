@@ -92,17 +92,40 @@ You can check progress by invoking the workflow again:-
 
 You can now update your entire library and/or only one specific playlist directly from the Spotify Mini Player!
 
+For example:
+
+![Screenshot](http://d.pr/i/TcpN+.png)
+
 ## Alfred Playlist
+
+The Alfred Playlist is a playlist where tracks, albums and even playlists can be added from within the workflow.
 
 * Create a playlist within Spotify and name it "Alfred Playlist"
 
+![Screenshot](http://d.pr/i/A0vQ+.png)
+
 * Right click on it and copy Spotify URI
+
+![Screenshot](http://d.pr/i/BjPA+.png)
 
 * Enter copied URI in Spotify Mini Player Alfred Playlist section
 
+![Screenshot](http://d.pr/i/aWFZ+.png)
+
 * To add a track to your playlist select it with *fn* modifier
 
+![Screenshot](http://d.pr/i/9TZ0+.png)
+
 * To add an album or another playlist to your playlist select it with *shift* modifier
+
+![Screenshot](http://d.pr/i/Zmow+.png)
+
+![Screenshot](http://d.pr/i/nJGw+.png)
+
+
+## Commands
+
+![Screenshot](http://d.pr/i/DVSn+.png)
 
 
 
