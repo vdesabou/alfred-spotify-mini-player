@@ -44,9 +44,11 @@ if (file_exists($w->data() . '/update_library_in_progress')) {
 // Install spotify-app-miniplayer app if needed
 // very first time use
 //
-if (!file_exists($w->home() . '/Spotify/spotify-app-miniplayer')) {
-    exec('mkdir -p ~/Spotify');
-    symlink($w->path() . '/spotify-app-miniplayer', $w->home() . '/Spotify/spotify-app-miniplayer');
+if(!installSpotifyAppIfNeeded($w))
+{
+	$w->result('', '', 'Unable to install properly Spotify Mini Player App in ~/Spotify/spotify-app-miniplayer', 'Report to the author (use spot_mini_debug command to generate a tgz file)', './images/warning.png', 'no', '');
+    echo $w->toxml();
+    return;
 }
 
 
@@ -99,9 +101,7 @@ if (mb_strlen($query) < 3 ||
 ) {
     if (substr_count($query, '→') == 0) {
         // check for correct configuration
-        if (file_exists($w->data() . '/library.db') &&
-            file_exists($w->home() . '/Spotify/spotify-app-miniplayer/manifest.json')
-        ) {
+        if (file_exists($w->data() . '/library.db')) {
             $getCounters = 'select * from counters';
             $dbfile = $w->data() . '/library.db';
             exec("sqlite3 -separator '	' \"$dbfile\" \"$getCounters\" 2>&1", $counters, $returnValue);
@@ -199,10 +199,7 @@ if (mb_strlen($query) < 3 ||
                 $w->result('', '', 'Albums', 'Browse by album' . ' (' . $starred_albums . ' albums)', './images/albums.png', 'no', 'Album→');
             }
         } else {
-			if (!file_exists($w->home() . '/Spotify/spotify-app-miniplayer/manifest.json')) {
-				$w->result('', '', 'Workflow is corrupted, Spotify Mini Player App is missing (~/Spotify/spotify-app-miniplayer)', 'Select Install library below, and make sure ~/Spotify/spotify-app-miniplayer directory exists and is valid.', './images/warning.png', 'no', '');
-			}        
-            else if (!file_exists($w->data() . '/library.db')) {
+			if (!file_exists($w->data() . '/library.db')) {
                 $w->result('', '', 'Workflow is not configured', '1/ Select Open Spotify Mini Player App below and make sure it works 2/ Then select Install library below', './images/warning.png', 'no', '');
 				$w->result('', "|||||||" . "open_spotify_export_app||", "1/ Open Spotify Mini Player App <spotify:app:miniplayer>", "If it doesn't work, restart Spotify multiple times and make sure you have a developer account", './images/app_miniplayer.png', 'yes', '');
             } 

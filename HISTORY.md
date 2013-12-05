@@ -1,6 +1,10 @@
 ## History
 
-3.82:
+3.8.3:
+
+* Atempt to fix corrupted spotify app directories
+
+3.8.2:
 
 * Reworked failure detection for first time use
 

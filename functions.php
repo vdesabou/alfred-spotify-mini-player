@@ -1,6 +1,25 @@
 <?php
 require_once('workflows.php');
 
+function installSpotifyAppIfNeeded($w)
+{
+	if (!file_exists($w->home() . '/Spotify/spotify-app-miniplayer')) {
+	    exec('mkdir -p ~/Spotify');
+	    symlink($w->path() . '/spotify-app-miniplayer', $w->home() . '/Spotify/spotify-app-miniplayer');
+	}
+	
+	if (!file_exists($w->home() . '/Spotify/spotify-app-miniplayer/manifest.json')) {
+		exec("rm -rf " . $w->home() . "/Spotify/spotify-app-miniplayer");
+		symlink($w->path() . '/spotify-app-miniplayer', $w->home() . '/Spotify/spotify-app-miniplayer');
+	}
+	
+	if (!file_exists($w->home() . '/Spotify/spotify-app-miniplayer/manifest.json'))
+	{
+		return false;
+	}
+	return true;
+}
+
 function escapeQuery($text)
 {
     $text = str_replace("'", "’", $text);

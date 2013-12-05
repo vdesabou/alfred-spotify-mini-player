@@ -68,7 +68,7 @@ You'll need to do the following steps:
 
   * try to restart Spotify multiple times
   
-  * try to logout/login
+  * try to logout from Spotify and login again
   
   * make sure you see in [Developer Account](https://developer.spotify.com/technologies/apps/):
 
