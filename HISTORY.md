@@ -1,5 +1,9 @@
 ## History
 
+3.8.4:
+
+* Added more error checks when setting Alfred Playlist URL
+
 3.8.3:
 
 * Atempt to fix corrupted spotify app directories
