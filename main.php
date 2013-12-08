@@ -1040,19 +1040,57 @@ if (mb_strlen($query) < 3 ||
                 $w->result('', '', "Enter the Alfred Spotify URI:", "Create the playlist in Spotify(shall be named <Alfred Playlist>, right click on it and select copy spotify URI", './images/settings.png', 'no', '');
             } else {
                 // alfred_playlist_uri has been set
+                               
+                
                 if (substr_count($alfred_playlist_uri, ':') == 4) {
-                    $playlistName = getPlaylistName($alfred_playlist_uri);
-                    if ($playlistName == "Alfred Playlist") {
+                
+					// get name of user by searching for spotify:user:@:starred playlist
+					
+					$getPlaylists = "select * from playlists where uri='" . "spotify:user:@:starred" . "'";
+					
+	                $dbfile = $w->data() . "/library.db";
+	
+	                exec("sqlite3 -separator '	' \"$dbfile\" \"$getPlaylists\" 2>&1", $playlists, $returnValue);
+	
+	                if ($returnValue != 0) {
+	                    $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
+	                    $w->result('', "|||||||" . "update_library||", "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
+	
+	                    echo $w->toxml();
+	                    return;
+	                }
+	                
+			        foreach ($playlists as $playlist):
+			            $playlist = explode("	", $playlist);
+						
+						$user_name = $playlist[4];
+			        endforeach;
+                
+                    list($playlistName,$wrong_user,$real_user) = validateAlfredPlaylist($alfred_playlist_uri,$user_name);
+                    if ($playlistName == "Alfred Playlist" &&
+                    	$wrong_user == false) {
                         // internally, the user is replaced by @
                         $words = explode(':', $alfred_playlist_uri);
 
 
                         $w->result('', "||||||" . "ALFRED_PLAYLIST→" . $words[0] . ":" . $words[1] . ":@:" . $words[3] . ":" . $words[4] . "|||", "Alfred Playlist URI will be set to <" . $alfred_playlist_uri . ">", "Type enter to validate", './images/settings.png', 'yes', '');
                     } else {
-                        $w->result('', '', "The playlist name entered <" . $playlistName . "> is not valid", "shall be <Alfred Playlist>", './images/warning.png', 'no', '');
+                    	if($playlistName == "")
+                    	{
+                        	$w->result('', '', 'The playlist is not valid', 'if you have just created it, allow some time to the playlist to be synchronized to spotify servers' , './images/warning.png', 'no', '');
+                        }
+                        else if($playlistName != "Alfred Playlist")
+                    	{
+                        	$w->result('', '', 'The playlist entered <' . $playlistName . '>is not valid', 'shall be <Alfred Playlist>', './images/warning.png', 'no', '');
+                        }
+                        else if($wrong_user)
+                        {
+	                        $w->result('', '', 'The playlist entered does not belong to you', 'it shall be created by ' . $user_name . ' but it has been created' . $real_user, './images/warning.png', 'no', '');
+                        }
                     }
+                    
                 } else {
-                    $w->result('', '', "The playlist URI entered is not valid", "format is spotify:user:myuser:playlist:20SZYrktr658JNa42Lt1vV", './images/warning.png', 'no', '');
+                    $w->result('', '', "The playlist URI format entered is not valid", "format is spotify:user:myuser:playlist:20SZYrktr658JNa429t1vV", './images/warning.png', 'no', '');
 
                 }
             }

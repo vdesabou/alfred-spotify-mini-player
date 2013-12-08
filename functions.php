@@ -674,10 +674,12 @@ function floatToSquares($decimal)
     return str_repeat("◼︎", $squares) . str_repeat("◻︎", 10 - $squares);
 }
 
-function getPlaylistName($uri)
+function validateAlfredPlaylist($uri,$user_name)
 {
     $name = "";
-
+    $playlistName = "";
+	$wrong_user = true;
+	
     $get_context = stream_context_create(array('http' => array('timeout' => 5)));
     @$get = file_get_contents('https://embed.spotify.com/?uri=' . $uri, false, $get_context);
 
@@ -685,11 +687,21 @@ function getPlaylistName($uri)
         preg_match_all("'<title>(.*?)</title>'si", $get, $name);
 
         if ($name[1]) {
-            $name = strstr($name[1][0], ' by', true);
+        	$result=$name[1][0];
+            $playlistName = strstr($result, ' by', true);
+            $username = strstr($result, ' by');
+			
+			
+			if($username == (' by ' . $user_name))
+			{
+				$wrong_user = false;
+			}
+                        
         }
+        
     }
 
-    return $name;
+    return array($playlistName, $wrong_user, $username);
 }
 
 ?>
