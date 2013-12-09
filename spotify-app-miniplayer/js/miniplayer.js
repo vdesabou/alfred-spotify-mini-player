@@ -383,7 +383,8 @@ function getAlbum(uri,matchedAlbumCallback) {
 
 function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {
 		
-	var array_tracks = [];	
+	var array_tracks = [];
+	var array_tmp_tracks = [];	
 	var playlist = models.Playlist.fromURI(uri);
 	playlist.load('tracks','name','uri','owner').done(function() {
 	
@@ -406,38 +407,50 @@ function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {
 			}
 			
 		    snapshot.loadAll('name','popularity','starred','artists','availability','playable').each(function(track) {
-		    
-			getAlbum(track.album.uri,function(matchedAlbum) {
-	
-					objtrack={};
-					objtrack.playlist_name=playlist.name;
-					objtrack.playlist_uri=playlist.uri;
-					objtrack.name=track.name;
-					objtrack.uri=track.uri;
-					objtrack.popularity=track.popularity;
-					objtrack.starred=track.starred;
-					objtrack.artist_name=track.artists[0].name;
-					objtrack.artist_uri=track.artists[0].uri;
-					objtrack.album_name=matchedAlbum.name;
-					objtrack.album_uri=matchedAlbum.uri;
-					objtrack.availability=track.availability;
-					objtrack.playable=track.playable;
-					array_tracks.push(objtrack);
-					
-					if(snapshot.length == array_tracks.length)
-					{
-						p={};
-						p.name=playlist.name;
-						p.uri=playlist.uri;
-						p.owner=owner.name;
-						p.username=owner.username;
-						p.tracks=array_tracks; 
-	
-						matchedPlaylistTracksCallback(p);
-					}
-				
-				});	    
+		    	// workaround for http://stackoverflow.com/questions/20440664/incorrect-snapshot-length-returned-for-a-specific-playlist
+		    	// use tmp array to get the real snapshot length
+		    	array_tmp_tracks.push(track);
+		        
 		    });
+		    
+			for (var i = 0, l = array_tmp_tracks.length; i < l; i++) 
+			{
+				var t = array_tmp_tracks[i];
+	
+				if(t != null) 
+				{			
+					getAlbum(t.album.uri,function(matchedAlbum) {
+			
+							objtrack={};
+							objtrack.playlist_name=playlist.name;
+							objtrack.playlist_uri=playlist.uri;
+							objtrack.name=t.name;
+							objtrack.uri=t.uri;
+							objtrack.popularity=t.popularity;
+							objtrack.starred=t.starred;
+							objtrack.artist_name=t.artists[0].name;
+							objtrack.artist_uri=t.artists[0].uri;
+							objtrack.album_name=matchedAlbum.name;
+							objtrack.album_uri=matchedAlbum.uri;
+							objtrack.availability=t.availability;
+							objtrack.playable=t.playable;
+							array_tracks.push(objtrack);
+							
+							if(array_tmp_tracks.length == array_tracks.length)
+							{
+								p={};
+								p.name=playlist.name;
+								p.uri=playlist.uri;
+								p.owner=owner.name;
+								p.username=owner.username;
+								p.tracks=array_tracks; 
+			
+								matchedPlaylistTracksCallback(p);
+							}
+						
+						});	
+				}
+			}
 	    });
 	  });
 	});			
