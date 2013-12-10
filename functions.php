@@ -506,7 +506,7 @@ function updatePlaylist($jsonData)
         $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"update counters set playlists=' . $playlists_count[0] . '"';
         exec($sql);
 
-        echo "Playlist has been updated (" . $nb_track . " tracks)";
+        echo "\nPlaylist has been updated (" . $nb_track . " tracks)";
 
         unlink($w->data() . "/update_library_in_progress");
     } else {
@@ -538,7 +538,7 @@ function updatePlaylistList($jsonData)
 
         foreach ($json as $playlist) {
             $playlists = array();
-            $getPlaylists = "select * from playlists where name='" . $playlist['name'] . "'" . " and username='" . $playlist['username'] . "'";
+            $getPlaylists = "select * from playlists where name='" . escapeQuery($playlist['name']) . "'" . " and username='" . $playlist['username'] . "'";
             $dbfile = $w->data() . "/library.db";
             exec("sqlite3 -separator '	' \"$dbfile\" \"$getPlaylists\" 2>&1", $playlists, $returnValue);
 
@@ -548,7 +548,7 @@ function updatePlaylistList($jsonData)
             }
 
             if ($returnValue != 0) {
-                echo "ERROR: when processing playlist" . $playlist['name'] . " with uri " . $playlist['uri'] . "\n";
+                echo "ERROR: when processing playlist" . escapeQuery($playlist['name']) . " with uri " . $playlist['uri'] . "\n";
                 continue;
             }
 
@@ -608,13 +608,13 @@ function updatePlaylistList($jsonData)
 
                 $found = 0;
                 foreach ($json as $playlist) {
-                    if ($playlist['name'] == $pl[1] && $playlist['username'] == $pl[4]) {
+                    if (escapeQuery($playlist['name']) == escapeQuery($pl[1]) && $playlist['username'] == $pl[4]) {
                         $found = 1;
                         break;
                     }
                 }
                 if ($found != 1) {
-                    echo "Playlist " . $pl[1] . " was removed" . "\n";
+                    echo "Playlist " . escapeQuery($pl[1]) . " was removed" . "\n";
                     $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"delete from playlists where uri=\"' . $pl[0] . '\""';
                     exec($sql);
                     $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"delete from tracks where playlist_uri=\"' . $pl[0] . '\""';
