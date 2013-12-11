@@ -304,6 +304,36 @@ if (mb_strlen($query) < 3 ||
 
 
         //
+        // Search artists
+        //
+        if ($all_playlists == false) {
+            $getTracks = "select * from tracks where playable=1 and starred=1 and artist_name like '%" . $query . "%'" . " limit " . $max_results;
+        } else {
+            $getTracks = "select * from tracks where playable=1 and artist_name like '%" . $query . "%'" . " limit " . $max_results;
+        }
+
+
+        $dbfile = $w->data() . "/library.db";
+        exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
+
+        if ($returnValue != 0) {
+            $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
+            $w->result('', "|||||||" . "update_library||", "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
+
+            echo $w->toxml();
+            return;
+        }
+
+        foreach ($tracks as $track):
+            $track = explode("	", $track);
+
+            if (checkIfResultAlreadyThere($w->results(), "👤 " . ucfirst($track[7])) == false) {
+                $w->result("spotify_mini-spotify-artist-" . $track[7], '', "👤 " . ucfirst($track[7]), "Get tracks from this artist", $track[10], 'no', "Artist→" . $track[7] . "→");
+            }
+        endforeach;
+
+
+        //
         // Search everything
         //
         if ($all_playlists == false) {
@@ -458,8 +488,8 @@ if (mb_strlen($query) < 3 ||
                 foreach ($tracks as $track):
                     $track = explode("	", $track);
 
-                    if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7])) == false) {
-                        $w->result("spotify_mini-spotify-artist-" . $track[7], '', ucfirst($track[7]), "Get tracks from this artist", $track[10], 'no', "Artist→" . $track[7] . "→");
+                    if (checkIfResultAlreadyThere($w->results(), "👤 " . ucfirst($track[7])) == false) {
+                        $w->result("spotify_mini-spotify-artist-" . $track[7], '', "👤 " . ucfirst($track[7]), "Get tracks from this artist", $track[10], 'no', "Artist→" . $track[7] . "→");
                     }
                 endforeach;
             } else {
@@ -484,8 +514,8 @@ if (mb_strlen($query) < 3 ||
                 foreach ($tracks as $track):
                     $track = explode("	", $track);
 
-                    if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7])) == false) {
-                        $w->result("spotify_mini-spotify-artist-" . $track[7], '', ucfirst($track[7]), "Get tracks from this artist", $track[10], 'no', "Artist→" . $track[7] . "→");
+                    if (checkIfResultAlreadyThere($w->results(), "👤 " . ucfirst($track[7])) == false) {
+                        $w->result("spotify_mini-spotify-artist-" . $track[7], '', "👤 " . ucfirst($track[7]), "Get tracks from this artist", $track[10], 'no', "Artist→" . $track[7] . "→");
                     }
                 endforeach;
 
