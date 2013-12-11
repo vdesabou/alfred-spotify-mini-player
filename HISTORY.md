@@ -1,5 +1,7 @@
 ## History
 
+[![Download Workflow](https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/images/alfred-workflow-icon.png)](https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/SpotifyMiniPlayer.alfredworkflow)
+
 3.8.5:
 
 * Fix issue with some weird playlists with some kind of corrupted tracks
