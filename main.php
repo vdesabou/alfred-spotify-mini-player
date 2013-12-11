@@ -141,7 +141,7 @@ if (mb_strlen($query) < 3 ||
                     $results = explode('→', $command_output);
                     $currentArtistArtwork = getArtistArtwork($w, $results[1], false);
                     $w->result('', '||||playpause|||||', "🔈 " . $results[0], $results[2] . ' by ' . $results[1], ($results[3] == "playing") ? './images/pause.png' : './images/play.png', 'yes', '');
-                    $w->result('', "$results[4]|||||||" . "morefromthisartist||$results[1]", "👤 " . $results[1], 'Query all albums/tracks from this artist online..', $currentArtistArtwork, 'yes', '');
+                    $w->result('', "$results[4]|||||||" . "morefromthisartist||$results[1]", "🔈👤 " . $results[1], 'Query all albums/tracks from this artist online..', $currentArtistArtwork, 'yes', '');
                     
                     
 	                $getTracks = "select * from tracks where playable=1 and uri='" . $results[4] . "'" . " limit " . $max_results;
@@ -177,8 +177,8 @@ if (mb_strlen($query) < 3 ||
 				        foreach ($playlists as $playlist):
 				            $playlist = explode("	", $playlist);
 							
-							if (checkIfResultAlreadyThere($w->results(), "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)") == false) {
-				            	$w->result("spotify_mini-spotify-inplaylist-$playlist[1]", '', "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", $playlist[5], 'no', "Playlist→" . $playlist[0] . "→");
+							if (checkIfResultAlreadyThere($w->results(), "🔈🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)") == false) {
+				            	$w->result("spotify_mini-spotify-inplaylist-$playlist[1]", '', "🔈🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", $playlist[5], 'no', "Playlist→" . $playlist[0] . "→");
 				            }
 				        endforeach;
 			        endforeach;
@@ -299,7 +299,7 @@ if (mb_strlen($query) < 3 ||
         foreach ($playlists as $playlist):
             $playlist = explode("	", $playlist);
 
-            $w->result("spotify_mini-spotify-playlist-$playlist[1]", '', ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", $playlist[5], 'no', "Playlist→" . $playlist[0] . "→");
+            $w->result("spotify_mini-spotify-playlist-$playlist[1]", '', "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", $playlist[5], 'no', "Playlist→" . $playlist[0] . "→");
         endforeach;
 
 
@@ -415,7 +415,7 @@ if (mb_strlen($query) < 3 ||
                 foreach ($playlists as $playlist):
                     $playlist = explode("	", $playlist);
 
-                    $w->result("spotify_mini-spotify-playlist-$playlist[1]", '', ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", $playlist[5], 'no', "Playlist→" . $playlist[0] . "→");
+                    $w->result("spotify_mini-spotify-playlist-$playlist[1]", '', "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", $playlist[5], 'no', "Playlist→" . $playlist[0] . "→");
                 endforeach;
             } else {
                 $getPlaylists = "select * from playlists where ( name like '%" . $theplaylist . "%' or author like '%" . $theplaylist . "%')";
@@ -435,7 +435,7 @@ if (mb_strlen($query) < 3 ||
                 foreach ($playlists as $playlist):
                     $playlist = explode("	", $playlist);
 
-                    $w->result("spotify_mini-spotify-playlist-$playlist[1]", '', ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", $playlist[5], 'no', "Playlist→" . $playlist[0] . "→");
+                    $w->result("spotify_mini-spotify-playlist-$playlist[1]", '', "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", $playlist[5], 'no', "Playlist→" . $playlist[0] . "→");
                 endforeach;
             }
         } // search by Playlist end
@@ -951,7 +951,7 @@ if (mb_strlen($query) < 3 ||
                     ) {
                         $subtitle = "$subtitle ,⇧ → add playlist to ♫";
                     }
-                    $w->result("spotify_mini-spotify-playlist-$playlist[1]", "|||" . $playlist[0] . "||||" . "|" . $alfred_playlist_uri . "|", ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks), by " . $playlist[3] . " (" . $playlist[4] . ")", $subtitle, $playlist[5], 'yes', '');
+                    $w->result("spotify_mini-spotify-playlist-$playlist[1]", "|||" . $playlist[0] . "||||" . "|" . $alfred_playlist_uri . "|", "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks), by " . $playlist[3] . " (" . $playlist[4] . ")", $subtitle, $playlist[5], 'yes', '');
 
                     $w->result("spotify_mini-spotify-update-$playlist[1]", "|||" . $playlist[0] . "||||" . 'update_playlist' . "||", "Update playlist " . ucfirst($playlist[1]) . " by " . $playlist[3], "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
 
