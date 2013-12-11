@@ -19,25 +19,20 @@ $query = $argv[1];
 $type = $argv[2];
 $alfredplaylist = $argv[3];
 
-// query is csv form: track_uri|album_uri|artist_uri|playlist_uri|spotify_command|other_settings|other_action|alfred_playlist_uri|artist_name
 
-$results = explode('|', $query);
+$arg = unserialize($query);
 
-if (count($results) != 10) {
-    echo "ERROR: bad csv format in action.php, please report to workflow author";
-    return;
-}
 
-$track_uri = $results[0];
-$album_uri = $results[1];
-$artist_uri = $results[2];
-$playlist_uri = $results[3];
-$spotify_command = $results[4];
-$original_query = $results[5];
-$other_settings = $results[6];
-$other_action = $results[7];
-$alfred_playlist_uri = $results[8];
-$artist_name = $results[9];
+$track_uri = $arg[0];
+$album_uri = $arg[1];
+$artist_uri = $arg[2];
+$playlist_uri = $arg[3];
+$spotify_command = $arg[4];
+$original_query = $arg[5];
+$other_settings = $arg[6];
+$other_action = $arg[7];
+$alfred_playlist_uri = $arg[8];
+$artist_name = $arg[9];
 
 if ($other_action == "update_playlist" && $playlist_uri != "") {
     touch($w->data() . "/update_library_in_progress");
