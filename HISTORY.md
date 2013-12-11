@@ -1,5 +1,9 @@
 ## History
 
+3.8.5:
+
+* Fix issue with some weird playlists with some kind of corrupted tracks
+
 3.8.4:
 
 * Added more error checks when setting Alfred Playlist URL

@@ -1,5 +1,5 @@
 {
-    "version": 3.84,
+    "version": 3.85,
     "download_url": "https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/SpotifyMiniPlayer.alfredworkflow",
-    "description": "Added more error checks when setting Alfred Playlist URL"
+    "description": "Fix issue with some weird playlists with some kind of corrupted tracks"
 }
