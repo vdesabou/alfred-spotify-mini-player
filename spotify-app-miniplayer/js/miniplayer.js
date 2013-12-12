@@ -381,6 +381,86 @@ function getAlbum(uri,matchedAlbumCallback) {
 		});	
 }
 
+function doGetTopTrack(artist, num, callback) {
+    var artistTopList = Toplist.forArtist(artist);
+
+    artistTopList.tracks.snapshot(0,num).done(function (snapshot) { //only get the number of tracks we need
+
+        snapshot.loadAll('name').done(function (tracks) {
+            var i, num_toptracks;
+            num_toptracks = num; //this probably should be minimum of num and tracks.length
+
+            for (i = 0; i < num_toptracks; i++) {
+                callback(artist, tracks[i]);
+            }
+        });
+    });
+};
+
+function getRelatedArtists(artistUri,matchedRelatedArtistsCallback) {
+	
+	var array_artists= [];
+	var array_tmp_artists = [];
+		
+    models.Artist.fromURI(artistUri).load('name', 'related', 'uri').done(function (theartist) {
+		
+          theartist.related.snapshot().done(function(snapshot) {
+          
+			if(snapshot.length == 0)
+			{
+				matchedRelatedArtistsCallback(array_artists);
+			}
+			
+            snapshot.loadAll('name').each(function(artist) {
+		    	// workaround for http://stackoverflow.com/questions/20440664/incorrect-snapshot-length-returned-for-a-specific-playlist
+		    	// use tmp array to get the real snapshot length
+				array_tmp_artists.push(artist);
+            });
+              		    	
+              for (var i = 0; i < array_tmp_artists.length; i++) {
+
+				var a = array_tmp_artists[i];
+	
+				if(a != null) 
+				{
+					objartist={};
+					objartist.name=a.name;
+					objartist.uri=a.uri;
+					array_artists.push(objartist);
+					
+					if(array_tmp_artists.length == array_artists.length)
+					{	
+						matchedRelatedArtistsCallback(array_artists);
+					}
+												
+/*
+					doGetTopTrack(a, 1, function (artist, toptrack) {
+					      
+							objartist={};
+							objartist.name=artist.name;
+							objartist.uri=artist.uri;
+							objartist.toptrack=toptrack.name;
+							array_artists.push(objartist);
+							
+							if(array_tmp_artists.length == array_artists.length)
+							{
+			
+								matchedRelatedArtistsCallback(array_artists);
+							}
+					
+					});	
+*/		
+				
+				}
+
+              }
+
+
+          });
+      });
+     
+}
+
 function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {
 		
 	var array_tracks = [];
@@ -389,9 +469,8 @@ function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {
 	playlist.load('tracks','name','uri','owner').done(function() {
 	
 	  playlist.owner.load('name','username').done(function (owner) {
-	
+		  console.log("getPlaylistTracks started",playlist.name);
 		  playlist.tracks.snapshot().done(function(snapshot) {
-		  
 		  	//check for empty playlists
 			if(snapshot.length == 0)
 			{
@@ -405,49 +484,58 @@ function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {
 	
 				matchedPlaylistTracksCallback(p);
 			}
-			
+						
 		    snapshot.loadAll('name','popularity','starred','artists','availability','playable').each(function(track) {
 		    	// workaround for http://stackoverflow.com/questions/20440664/incorrect-snapshot-length-returned-for-a-specific-playlist
 		    	// use tmp array to get the real snapshot length
-		    	array_tmp_tracks.push(track);
-		        
+		    	// ignore local tracks
+		    	if(playlist.name == "Top titres")
+		    	{
+		    		console.log(track);
+		    	}
+		    	if(track.album.name != "" && track.artists[0].name != "")
+		    	{
+					array_tmp_tracks.push(track);
+				}
 		    });
 		    
 			for (var i = 0, l = array_tmp_tracks.length; i < l; i++) 
 			{
 				var t = array_tmp_tracks[i];
 	
-				if(t != null) 
+				if(t != null && t.album.name != "" && t.artists[0].name != "") 
 				{			
 					getAlbum(t.album.uri,function(matchedAlbum) {
-			
-							objtrack={};
-							objtrack.playlist_name=playlist.name;
-							objtrack.playlist_uri=playlist.uri;
-							objtrack.name=t.name;
-							objtrack.uri=t.uri;
-							objtrack.popularity=t.popularity;
-							objtrack.starred=t.starred;
-							objtrack.artist_name=t.artists[0].name;
-							objtrack.artist_uri=t.artists[0].uri;
-							objtrack.album_name=matchedAlbum.name;
-							objtrack.album_uri=matchedAlbum.uri;
-							objtrack.availability=t.availability;
-							objtrack.playable=t.playable;
-							array_tracks.push(objtrack);
-							
-							if(array_tmp_tracks.length == array_tracks.length)
-							{
-								p={};
-								p.name=playlist.name;
-								p.uri=playlist.uri;
-								p.owner=owner.name;
-								p.username=owner.username;
-								p.tracks=array_tracks; 
-			
-								matchedPlaylistTracksCallback(p);
-							}
-						
+
+						getRelatedArtists(t.artists[0].uri,function(matchedRelatedArtists) {
+				
+								objtrack={};
+								objtrack.playlist_name=playlist.name;
+								objtrack.playlist_uri=playlist.uri;
+								objtrack.name=t.name;
+								objtrack.uri=t.uri;
+								objtrack.popularity=t.popularity;
+								objtrack.starred=t.starred;
+								objtrack.artist_name=t.artists[0].name;
+								objtrack.artist_uri=t.artists[0].uri;
+								objtrack.album_name=matchedAlbum.name;
+								objtrack.album_uri=matchedAlbum.uri;
+								objtrack.availability=t.availability;
+								objtrack.playable=t.playable;
+								objtrack.related=matchedRelatedArtists;
+								array_tracks.push(objtrack);
+								if(array_tmp_tracks.length == array_tracks.length)
+								{
+									console.log("getPlaylistTracks ended",playlist.name);
+									p={};
+									p.name=playlist.name;
+									p.uri=playlist.uri;
+									p.owner=owner.name;
+									p.username=owner.username;
+									p.tracks=array_tracks; 
+									matchedPlaylistTracksCallback(p);
+								}							
+							});							
 						});	
 				}
 			}
@@ -503,7 +591,6 @@ function getAll(matchedAllCallback) {
 			getPlaylistTracks(matchedPlaylists[i].uri,function(matchedPlaylistTracks) {
 
 				array_results.push(matchedPlaylistTracks);	
-
 				if(array_results.length==matchedPlaylists.length)
 				{
 					// it's over Michael
@@ -570,12 +657,16 @@ showRelated('spotify:artist:2nszamLjZFgu3Yx77mKxuC');
 */
 
 
+						
+						
+
 $(function(){
 		
 	$("#commands a").click(function(e){
 		switch($(this).attr('command')) {
 			case "export":
 		
+						
 				getAll(function(matchedAll) {
 					console.log("getAll finished", matchedAll);
 	
