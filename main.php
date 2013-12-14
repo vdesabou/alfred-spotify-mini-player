@@ -373,7 +373,7 @@ if (mb_strlen($query) < 3 ||
             $track = explode("	", $track);
 
             if (checkIfResultAlreadyThere($w->results(), "👤 " . ucfirst($track[7])) == false) {
-                $w->result("spotify_mini-spotify-artist-" . $track[7], '', "👤 " . ucfirst($track[7]), "Get tracks from this artist", $track[10], 'no', "Artist→" . $track[7] . "→");
+                $w->result("spotify_mini-spotify-artist-" . $track[7], '', "👤 " . ucfirst($track[7]), "Browse this artist", $track[10], 'no', "Artist→" . $track[7] . "→");
             }
         endforeach;
 
@@ -527,7 +527,7 @@ if (mb_strlen($query) < 3 ||
                 $track = explode("	", $track);
 
                 if (checkIfResultAlreadyThere($w->results(), "👤 " . ucfirst($track[7])) == false) {
-                    $w->result("spotify_mini-spotify-artist-" . $track[7], '', "👤 " . ucfirst($track[7]), "Get tracks from this artist", $track[10], 'no', "Artist→" . $track[7] . "→");
+                    $w->result("spotify_mini-spotify-artist-" . $track[7], '', "👤 " . ucfirst($track[7]), "Browse this artist", $track[10], 'no', "Artist→" . $track[7] . "→");
                 }
             endforeach;
         } // search by Artist end
