@@ -374,7 +374,7 @@ function getAlbum(objtrack,matchedAlbumCallback) {
 			objtrack.album_name=album.name;
 			
 			matchedAlbumCallback(objtrack);
-		}).fail(function(album,error) 
+		}).fail(function() 
           	 { 
           	 	console.log("Failed to get album name for " + objtrack.album_uri);
           	 	objtrack.album_name = ""; 
@@ -469,26 +469,36 @@ function getRelatedArtists(objtrack,matchedRelatedArtistsCallback) {
               }
 
 
-          }).fail(function(theartist,error) 
+          }).fail(function() 
           	 { 
           	 	console.log("Failed to get related artists for " + objtrack.artist_name);
           	 	objtrack.related=array_artists; 
 		  	 	matchedRelatedArtistsCallback(objtrack);
 		  	 	return;
 			 });
-      });
+      }).fail(function() 
+          	 { 
+          	 	console.log("Failed to load artists for " + objtrack.artist_name);
+          	 	objtrack.related=array_artists; 
+		  	 	matchedRelatedArtistsCallback(objtrack);
+		  	 	return;
+			 });
 }
+
 
 function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {	
 	var array_tracks = [];
 	var array_tmp_tracks = [];	
 	var playlist = models.Playlist.fromURI(uri);
-	playlist.load('tracks','name','owner').done(function() {
 	
+	
+	playlist.load('tracks','name','owner').done(function() {
+	  console.log("getPlaylistTracks started ",playlist.name);	
 	  playlist.owner.load('name','username').done(function (owner) {
 		  
 		  playlist.tracks.snapshot().done(function(snapshot) {
-		  		 
+
+		  console.log("getPlaylistTracks started 2",playlist.name);		  		 
 		  	//check for empty playlists
 			if(snapshot.length == 0)
 			{
@@ -526,6 +536,7 @@ function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {
 					    
 			for (var i = 0, l = array_tmp_tracks.length; i < l; i++) 
 			{
+/* 				console.log("getPlaylistTracks processing ",array_tmp_tracks[i]); */
 				var t = array_tmp_tracks[i];
 	
 				if(t != null) 
@@ -551,6 +562,7 @@ function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {
 								
 								if(array_tmp_tracks.length == array_tracks.length)
 								{
+									console.log("getPlaylistTracks ended ",playlist.name);
 									p={};
 									p.name=playlist.name;
 									p.uri=playlist.uri;
@@ -563,9 +575,48 @@ function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {
 						});	
 				}
 			}
-	    });
-	  });
-	});			
+	    }).fail(function() 
+          	 { 
+          	 	console.log("Failed to load tracks for playlist " + uri);
+				p={};
+				
+				p.name=playlist.name;
+				p.uri=playlist.uri;
+				p.owner=owner.name;
+				p.username=owner.username;
+				p.tracks=array_tracks; 
+	
+				matchedPlaylistTracksCallback(p);
+		  	 	return;
+			 });
+	  }).fail(function() 
+          	 { 
+          	 	console.log("Failed to load owner of playlist " + uri);
+				p={};
+				
+				p.name=playlist.name;
+				p.uri=playlist.uri;
+				p.owner="unknown";
+				p.username="unknown";
+				p.tracks=array_tracks; 
+	
+				matchedPlaylistTracksCallback(p);
+		  	 	return;
+			 });
+	}).fail(function() 
+          	 { 
+          	 	console.log("Failed to load playlist " + uri);
+				p={};
+				
+				p.name=playlist.name;
+				p.uri=playlist.uri;
+				p.owner="unknown";
+				p.username="unknown";
+				p.tracks=array_tracks; 
+	
+				matchedPlaylistTracksCallback(p);
+		  	 	return;
+			 });			
 }
 
 
@@ -575,12 +626,10 @@ function getPlaylists(matchedPlaylistsCallback) {
 
 	// Add starred playlist at the start
 	objstarredplaylist={};
-	objstarredplaylist.name="Starred";
 	objstarredplaylist.uri=Library.forCurrentUser().starred.uri;
 	array_results.push(objstarredplaylist);
 
 	objtoplistplaylist={};
-	objtoplistplaylist.name="Top List";
 	objtoplistplaylist.uri=Library.forCurrentUser().toplist.uri;
 	array_results.push(objtoplistplaylist);
 									
@@ -593,14 +642,18 @@ function getPlaylists(matchedPlaylistsCallback) {
 			{			
 				objplaylist={};
 	
-				objplaylist.name=myplaylist.name;
 				objplaylist.uri=myplaylist.uri;
 				array_results.push(objplaylist);
 			}
 		}
 		
 		matchedPlaylistsCallback(array_results);
-    });
+		return;
+    }).fail(function() 
+          	 { 
+          	 	console.log("Failed to get playlists for current user");
+				matchedPlaylistsCallback(array_results);
+			 });	
 		
 }
 
@@ -635,7 +688,17 @@ $(function(){
 	$("#commands a").click(function(e){
 		switch($(this).attr('command')) {
 			case "export":
-						
+
+
+/*
+				getPlaylistTracks("spotify:user:@:toplist",function(matchedAll) {
+					console.log("getPlaylistTracks finished", matchedAll);
+	
+					$("#json").text(JSON.stringify(matchedAll));
+				
+				});
+*/
+										
 				getAll(function(matchedAll) {
 					console.log("getAll finished", matchedAll);
 	
