@@ -249,7 +249,7 @@ if (mb_strlen($query) < 3 ||
         $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), 'Update Library', "When done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
         $w->result('', '', "Configure Max Number of Results", "Number of results displayed. (it doesn't apply to your playlist list)", './images/' . $theme . '/' . 'numbers.png', 'no', 'Settings→MaxResults→');
         $w->result('', '', "Configure your Country Code", "This is needed to get available results when finding all albums/tracks from an artist", './images/' . $theme . '/' . 'country.png', 'no', 'Settings→Country→');
-        $w->result('', '', "Configure the theme", "Current available colors for icons: green or black", './images/' . $theme . '/' . 'settings.png', 'no', 'Settings→Theme→');
+        $w->result('', '', "Configure the theme", "Current available colors for icons: green or black", './images/' . $theme . '/' . 'theme.png', 'no', 'Settings→Theme→');
         
         if ($is_spotifious_active == true) {
             $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'disable_spotifiuous' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Disable Spotifious", "Do not display Spotifious in default results", './images/' . $theme . '/' . 'uncheck.png', 'yes', '');
@@ -955,9 +955,9 @@ if (mb_strlen($query) < 3 ||
             }
 			else if ($setting_kind == "Theme") {
 
-            	$w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'set_theme_to_black' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Set theme to black", "will set icons to black color", './images/' . 'black' . '/' . 'settings.png', 'yes', '');
+            	$w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'set_theme_to_black' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Set theme to black", "will set icons to black color", './images/' . 'black' . '/' . 'theme.png', 'yes', '');
 
-            	$w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'set_theme_to_green' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Set theme to black", "will set icons to black color", './images/' . 'green' . '/' . 'settings.png', 'yes', '');
+            	$w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'set_theme_to_green' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Set theme to black", "will set icons to black color", './images/' . 'green' . '/' . 'theme.png', 'yes', '');
             	
             }
         } // end of Settings
