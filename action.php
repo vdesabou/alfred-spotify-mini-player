@@ -168,7 +168,10 @@ if ($playlist_uri != "") {
         } else {
             echo "Error: Could no retrieve the artist";
         }
-    } else if ($other_action == "update_library") {
+    } else if ($other_action == "morefromthirelatedartist") {
+        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online→" . $artist_uri . "@" . escapeQuery($artist_name) . "\"'");
+    }
+     else if ($other_action == "update_library") {
         touch($w->data() . "/update_library_in_progress");
 
         exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:update_library:" . uniqid() . "\"'");

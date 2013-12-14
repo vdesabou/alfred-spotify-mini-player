@@ -739,6 +739,8 @@ if (mb_strlen($query) < 3 ||
             $artist = $words[1];
             $track = $words[2];
 
+            $w->result('', '', 'Related Artists', 'Browse related artists', './images/related.png', 'no', $query . 'Related→');
+            
             if (mb_strlen($track) < 3) {
                 if ($all_playlists == false) {
                     $getTracks = "select * from tracks where playable=1 and starred=1 and artist_name='" . $artist . "'" . " limit " . $max_results;
@@ -1173,6 +1175,56 @@ if (mb_strlen($query) < 3 ||
             }
         }
         // end of Settings
+    }
+    elseif (substr_count($query, '→') == 3) {
+
+        //
+        // Get all related artists for selected artist
+        //
+
+        $words = explode('→', $query);
+		
+		$artist_name = $words[1];
+        $kind = $words[2];
+
+        
+        if ($kind == "Related") {
+        
+ 	        $theartist = $words[3];
+        
+			if (mb_strlen($theartist) < 3) {
+        		$getRelateds = "select * from related where artist_name='" . $artist_name . "'";	
+        	}
+        	else
+        	{
+				$getRelateds = "select * from related where artist_name='" . $artist_name . "'" . " and related_artist_name like '%" . $theartist . "%'";
+        	}
+        	
+	        $dbfile = $w->data() . "/library.db";
+	        exec("sqlite3 -separator '	' \"$dbfile\" \"$getRelateds\" 2>&1", $relateds, $returnValue);
+	
+	        if ($returnValue != 0) {
+	            $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
+	
+	            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
+	
+	            echo $w->toxml();
+	            return;
+	        }
+
+	        if (count($relateds) == 0) {
+	            $w->result('help', 'help', "There is no related artist for this artist", $subtitle, './images/warning.png', 'no', '');
+	        }
+        	
+	        foreach ($relateds as $related):
+	            $related = explode("	", $related);
+	
+	            if (checkIfResultAlreadyThere($w->results(), "👤 " . ucfirst($related[1])) == false) {
+                    $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ , $related[2] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'morefromthirelatedartist' /* other_action */ ,'' /* alfred_playlist_uri */ ,$related[1]  /* artist_name */)), "👤 " . ucfirst($related[1]), 'Query all albums/tracks from this artist online..', $related[3], 'yes', '');
+	            }
+	        endforeach;
+        }   
+    
     }
 }
 
