@@ -26,7 +26,7 @@ class MiniPlayer implements MessageComponentInterface {
         echo sprintf('Connection %d sending message "%s" to %d other connection%s' . "\n"
             , $from->resourceId, $msg, $numRecv, $numRecv == 1 ? '' : 's');
 */
-		$tmp = explode('→', $msg);
+		$tmp = explode('⇾', $msg);
 		$command=$tmp[0];
 		$json=$tmp[1];
 		if($command=="update_library")

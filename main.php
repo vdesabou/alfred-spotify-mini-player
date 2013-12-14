@@ -19,8 +19,8 @@ if (file_exists($w->data() . '/update_library_in_progress')) {
     if (file_exists($w->data() . '/library.db')) {
         $in_progress_data = $w->read('update_library_in_progress');
 
-        if (substr_count($in_progress_data, '→') == 2) {
-            $words = explode('→', $in_progress_data);
+        if (substr_count($in_progress_data, '⇾') == 2) {
+            $words = explode('⇾', $in_progress_data);
 
             if ($words[0] == 'Playlist List') {
                 $type = 'playlists';
@@ -98,9 +98,9 @@ endforeach;
 // thanks to http://www.alfredforum.com/topic/1788-prevent-flash-of-no-result
 mb_internal_encoding('UTF-8');
 if (mb_strlen($query) < 3 ||
-    ((substr_count($query, '→') == 1) && (strpos('Settings→', $query) !== false))
+    ((substr_count($query, '⇾') == 1) && (strpos('Settings⇾', $query) !== false))
 ) {
-    if (substr_count($query, '→') == 0) {
+    if (substr_count($query, '⇾') == 0) {
         // check for correct configuration
         if (file_exists($w->data() . '/library.db')) {
             $getCounters = 'select * from counters';
@@ -139,8 +139,8 @@ if (mb_strlen($query) < 3 ||
                 // get info on current song
                 $command_output = exec("./track_info.sh 2>&1");
 
-                if (substr_count($command_output, '→') > 0) {
-                    $results = explode('→', $command_output);
+                if (substr_count($command_output, '⇾') > 0) {
+                    $results = explode('⇾', $command_output);
                     $currentArtistArtwork = getArtistArtwork($w, $results[1], false);
                     $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'playpause' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "🔈 " . $results[0], $results[2] . ' by ' . $results[1], ($results[3] == "playing") ? './images/' . $theme . '/' . 'pause.png' : './images/' . $theme . '/' . 'play.png', 'yes', '');
                     
@@ -184,7 +184,7 @@ if (mb_strlen($query) < 3 ||
 				            $playlist = explode("	", $playlist);
 							
 							if (checkIfResultAlreadyThere($w->results(), "🔈🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)") == false) {
-				            	$w->result("spotify_mini-spotify-inplaylist-$playlist[1]", '', "🔈🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", $playlist[5], 'no', "Playlist→" . $playlist[0] . "→");
+				            	$w->result("spotify_mini-spotify-inplaylist-$playlist[1]", '', "🔈🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", $playlist[5], 'no', "Playlist⇾" . $playlist[0] . "⇾");
 				            }
 				        endforeach;
 			        endforeach;
@@ -194,15 +194,15 @@ if (mb_strlen($query) < 3 ||
                 }
             }
             if ($is_alfred_playlist_active == true) {
-                $w->result('', '', 'Alfred Playlist', 'Control your Alfred Playlist', './images/' . $theme . '/' . 'alfred_playlist.png', 'no', 'Alfred Playlist→');
+                $w->result('', '', 'Alfred Playlist', 'Control your Alfred Playlist', './images/' . $theme . '/' . 'alfred_playlist.png', 'no', 'Alfred Playlist⇾');
             }
-            $w->result('', '', 'Playlists', 'Browse by playlist' . ' (' . $nb_playlists . ' playlists)', './images/' . $theme . '/' . 'playlists.png', 'no', 'Playlist→');
+            $w->result('', '', 'Playlists', 'Browse by playlist' . ' (' . $nb_playlists . ' playlists)', './images/' . $theme . '/' . 'playlists.png', 'no', 'Playlist⇾');
             if ($all_playlists == true) {
-                $w->result('', '', 'Artists', 'Browse by artist' . ' (' . $all_artists . ' artists)', './images/' . $theme . '/' . 'artists.png', 'no', 'Artist→');
-                $w->result('', '', 'Albums', 'Browse by album' . ' (' . $all_albums . ' albums)', './images/' . $theme . '/' . 'albums.png', 'no', 'Album→');
+                $w->result('', '', 'Artists', 'Browse by artist' . ' (' . $all_artists . ' artists)', './images/' . $theme . '/' . 'artists.png', 'no', 'Artist⇾');
+                $w->result('', '', 'Albums', 'Browse by album' . ' (' . $all_albums . ' albums)', './images/' . $theme . '/' . 'albums.png', 'no', 'Album⇾');
             } else {
-                $w->result('', '', 'Artists', 'Browse by artist' . ' (' . $starred_artists . ' artists)', './images/' . $theme . '/' . 'artists.png', 'no', 'Artist→');
-                $w->result('', '', 'Albums', 'Browse by album' . ' (' . $starred_albums . ' albums)', './images/' . $theme . '/' . 'albums.png', 'no', 'Album→');
+                $w->result('', '', 'Artists', 'Browse by artist' . ' (' . $starred_artists . ' artists)', './images/' . $theme . '/' . 'artists.png', 'no', 'Artist⇾');
+                $w->result('', '', 'Albums', 'Browse by album' . ' (' . $starred_albums . ' albums)', './images/' . $theme . '/' . 'albums.png', 'no', 'Album⇾');
             }
         } else {
 			if (!file_exists($w->data() . '/library.db')) {
@@ -229,15 +229,15 @@ if (mb_strlen($query) < 3 ||
             $alfred_playlist_state = 'disabled';
         }
         if ($all_playlists == true) {
-            $w->result('', '', 'Settings', 'Search scope=<all>, Max results=<' . $max_results . '>, Spotifious is <' . $spotifious_state . '>, Alfred Playlist is <' . $alfred_playlist_state . '>', './images/' . $theme . '/' . 'settings.png', 'no', 'Settings→');
+            $w->result('', '', 'Settings', 'Search scope=<all>, Max results=<' . $max_results . '>, Spotifious is <' . $spotifious_state . '>, Alfred Playlist is <' . $alfred_playlist_state . '>', './images/' . $theme . '/' . 'settings.png', 'no', 'Settings⇾');
         } else {
-            $w->result('', '', 'Settings', 'Search scope=<only ★>, Max results=<' . $max_results . '>, Spotifious is <' . $spotifious_state . '>, Alfred Playlist is <' . $alfred_playlist_state . '>', './images/' . $theme . '/' . 'settings.png', 'no', 'Settings→');
+            $w->result('', '', 'Settings', 'Search scope=<only ★>, Max results=<' . $max_results . '>, Spotifious is <' . $spotifious_state . '>, Alfred Playlist is <' . $alfred_playlist_state . '>', './images/' . $theme . '/' . 'settings.png', 'no', 'Settings⇾');
         }
 
     } //
     // Settings
     //
-    elseif (substr_count($query, '→') == 1) {
+    elseif (substr_count($query, '⇾') == 1) {
         if ($all_playlists == true) {
             // argument is csv form: track_uri|album_uri|artist_uri|playlist_uri|spotify_command|query|other_settings|other_action|alfred_playlist_uri|artist_name
             $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'disable_all_playlist' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), 'Change Search Scope', 'Select to change to ★ playlist only', './images/' . $theme . '/' . 'search.png', 'yes', '');
@@ -247,9 +247,9 @@ if (mb_strlen($query) < 3 ||
         }
 
         $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), 'Update Library', "When done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
-        $w->result('', '', "Configure Max Number of Results", "Number of results displayed. (it doesn't apply to your playlist list)", './images/' . $theme . '/' . 'numbers.png', 'no', 'Settings→MaxResults→');
-        $w->result('', '', "Configure your Country Code", "This is needed to get available results when finding all albums/tracks from an artist", './images/' . $theme . '/' . 'country.png', 'no', 'Settings→Country→');
-        $w->result('', '', "Configure the theme", "Current available colors for icons: green or black", './images/' . $theme . '/' . 'theme.png', 'no', 'Settings→Theme→');
+        $w->result('', '', "Configure Max Number of Results", "Number of results displayed. (it doesn't apply to your playlist list)", './images/' . $theme . '/' . 'numbers.png', 'no', 'Settings⇾MaxResults⇾');
+        $w->result('', '', "Configure your Country Code", "This is needed to get available results when finding all albums/tracks from an artist", './images/' . $theme . '/' . 'country.png', 'no', 'Settings⇾Country⇾');
+        $w->result('', '', "Configure the theme", "Current available colors for icons: green or black", './images/' . $theme . '/' . 'theme.png', 'no', 'Settings⇾Theme⇾');
         
         if ($is_spotifious_active == true) {
             $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'disable_spotifiuous' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Disable Spotifious", "Do not display Spotifious in default results", './images/' . $theme . '/' . 'uncheck.png', 'yes', '');
@@ -275,20 +275,20 @@ if (mb_strlen($query) < 3 ||
     // NO DELIMITER
     //
     ////////////
-    if (substr_count($query, '→') == 0) {
+    if (substr_count($query, '⇾') == 0) {
         //
         // Search categories for fast access
         //
         if (strpos(strtolower('playlist'), strtolower($query)) !== false) {
-            $w->result('', '', 'Playlists', 'Browse by playlist', './images/' . $theme . '/' . 'playlists.png', 'no', 'Playlist→');
+            $w->result('', '', 'Playlists', 'Browse by playlist', './images/' . $theme . '/' . 'playlists.png', 'no', 'Playlist⇾');
         } else if (strpos(strtolower('album'), strtolower($query)) !== false) {
-            $w->result('', '', 'Albums', 'Browse by album', './images/' . $theme . '/' . 'albums.png', 'no', 'Album→');
+            $w->result('', '', 'Albums', 'Browse by album', './images/' . $theme . '/' . 'albums.png', 'no', 'Album⇾');
         } else if (strpos(strtolower('artist'), strtolower($query)) !== false) {
-            $w->result('', '', 'Artists', 'Browse by artist', './images/' . $theme . '/' . 'artists.png', 'no', 'Artist→');
+            $w->result('', '', 'Artists', 'Browse by artist', './images/' . $theme . '/' . 'artists.png', 'no', 'Artist⇾');
         } else if (strpos(strtolower('alfred'), strtolower($query)) !== false) {
-            $w->result('', '', 'Alfred Playlist', 'Control your Alfred Playlist', './images/' . $theme . '/' . 'alfred_playlist.png', 'no', 'Alfred Playlist→');
+            $w->result('', '', 'Alfred Playlist', 'Control your Alfred Playlist', './images/' . $theme . '/' . 'alfred_playlist.png', 'no', 'Alfred Playlist⇾');
         } else if (strpos(strtolower('setting'), strtolower($query)) !== false) {
-            $w->result('', '', 'Settings', 'Go to settings', './images/' . $theme . '/' . 'settings.png', 'no', 'Settings→');
+            $w->result('', '', 'Settings', 'Go to settings', './images/' . $theme . '/' . 'settings.png', 'no', 'Settings⇾');
         }
 
         //
@@ -345,7 +345,7 @@ if (mb_strlen($query) < 3 ||
         foreach ($playlists as $playlist):
             $playlist = explode("	", $playlist);
 
-            $w->result("spotify_mini-spotify-playlist-$playlist[1]", '', "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", $playlist[5], 'no', "Playlist→" . $playlist[0] . "→");
+            $w->result("spotify_mini-spotify-playlist-$playlist[1]", '', "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", $playlist[5], 'no', "Playlist⇾" . $playlist[0] . "⇾");
         endforeach;
 
 
@@ -375,7 +375,7 @@ if (mb_strlen($query) < 3 ||
             $track = explode("	", $track);
 
             if (checkIfResultAlreadyThere($w->results(), "👤 " . ucfirst($track[7])) == false) {
-                $w->result("spotify_mini-spotify-artist-" . $track[7], '', "👤 " . ucfirst($track[7]), "Browse this artist", $track[10], 'no', "Artist→" . $track[7] . "→");
+                $w->result("spotify_mini-spotify-artist-" . $track[7], '', "👤 " . ucfirst($track[7]), "Browse this artist", $track[10], 'no', "Artist⇾" . $track[7] . "⇾");
             }
         endforeach;
 
@@ -428,11 +428,11 @@ if (mb_strlen($query) < 3 ||
         }
     } ////////////
     //
-    // FIRST DELIMITER: Artist→, Album→, Playlist→, Alfred Playlist→, Settings→ or Online→artist uri
+    // FIRST DELIMITER: Artist⇾, Album⇾, Playlist⇾, Alfred Playlist⇾, Settings⇾ or Online⇾artist uri
     //
     ////////////
-    elseif (substr_count($query, '→') == 1) {
-        $words = explode('→', $query);
+    elseif (substr_count($query, '⇾') == 1) {
+        $words = explode('⇾', $query);
 
         $kind = $words[0];
 
@@ -468,7 +468,7 @@ if (mb_strlen($query) < 3 ||
             foreach ($playlists as $playlist):
                 $playlist = explode("	", $playlist);
 
-                $w->result("spotify_mini-spotify-playlist-$playlist[1]", '', "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", $playlist[5], 'no', "Playlist→" . $playlist[0] . "→");
+                $w->result("spotify_mini-spotify-playlist-$playlist[1]", '', "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", $playlist[5], 'no', "Playlist⇾" . $playlist[0] . "⇾");
             endforeach;
         } // search by Playlist end
         elseif ($kind == "Alfred Playlist") {
@@ -478,15 +478,15 @@ if (mb_strlen($query) < 3 ||
             $playlist = $words[1];
 
             if ($alfred_playlist_uri == "") {
-                $w->result("spotify_mini-spotify-alfredplaylist-set", '', "Set your Alfred playlist URI", "define the URI of your Alfred playlist", './images/' . $theme . '/' . 'alfred_playlist.png', 'no', 'Alfred Playlist→Set Alfred Playlist URI→');
+                $w->result("spotify_mini-spotify-alfredplaylist-set", '', "Set your Alfred playlist URI", "define the URI of your Alfred playlist", './images/' . $theme . '/' . 'alfred_playlist.png', 'no', 'Alfred Playlist⇾Set Alfred Playlist URI⇾');
             } else {
                 $r = explode(':', $alfred_playlist_uri);
 
-                $w->result("spotify_mini-spotify-alfredplaylist-browse", '', "Browse your Alfred playlist", "browse your alfred playlist", getPlaylistArtwork($w, $alfred_playlist_uri, $r[2], false), 'no', 'Playlist→' . $alfred_playlist_uri . '→');
+                $w->result("spotify_mini-spotify-alfredplaylist-browse", '', "Browse your Alfred playlist", "browse your alfred playlist", getPlaylistArtwork($w, $alfred_playlist_uri, $r[2], false), 'no', 'Playlist⇾' . $alfred_playlist_uri . '⇾');
 
                 $w->result("spotify_mini-spotify-alfredplaylist-refresh", serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,$alfred_playlist_uri /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_playlist' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update your Alfred Playlist", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
                 
-                $w->result("spotify_mini-spotify-alfredplaylist-set", '', "Update your Alfred playlist URI", "define the URI of your Alfred playlist", './images/' . $theme . '/' . 'settings.png', 'no', 'Alfred Playlist→Set Alfred Playlist URI→');
+                $w->result("spotify_mini-spotify-alfredplaylist-set", '', "Update your Alfred playlist URI", "define the URI of your Alfred playlist", './images/' . $theme . '/' . 'settings.png', 'no', 'Alfred Playlist⇾Set Alfred Playlist URI⇾');
 
             }
         } //  Alfred Playlist end
@@ -529,7 +529,7 @@ if (mb_strlen($query) < 3 ||
                 $track = explode("	", $track);
 
                 if (checkIfResultAlreadyThere($w->results(), "👤 " . ucfirst($track[7])) == false) {
-                    $w->result("spotify_mini-spotify-artist-" . $track[7], '', "👤 " . ucfirst($track[7]), "Browse this artist", $track[10], 'no', "Artist→" . $track[7] . "→");
+                    $w->result("spotify_mini-spotify-artist-" . $track[7], '', "👤 " . ucfirst($track[7]), "Browse this artist", $track[10], 'no', "Artist⇾" . $track[7] . "⇾");
                 }
             endforeach;
         } // search by Artist end
@@ -572,7 +572,7 @@ if (mb_strlen($query) < 3 ||
                 $track = explode("	", $track);
 
                 if (checkIfResultAlreadyThere($w->results(), ucfirst($track[6])) == false) {
-                    $w->result("spotify_mini-spotify-album" . $track[6], '', ucfirst($track[6]), "by " . $track[7], $track[11], 'no', "Album→" . $track[6] . "→");
+                    $w->result("spotify_mini-spotify-album" . $track[6], '', ucfirst($track[6]), "by " . $track[7], $track[11], 'no', "Album⇾" . $track[6] . "⇾");
                 }
             endforeach;
 
@@ -589,7 +589,7 @@ if (mb_strlen($query) < 3 ||
 
                 if ($country_code == "") {
                     $w->result('', '', "Country code is not configured", "Configure it now", './images/warning.png', 'no', '');
-                    $w->result('', '', "Configure your Country Code", "This is needed to get available results when doing online lookups", './images/' . $theme . '/' . 'country.png', 'no', 'Settings→Country→');
+                    $w->result('', '', "Configure your Country Code", "This is needed to get available results when doing online lookups", './images/' . $theme . '/' . 'country.png', 'no', 'Settings⇾Country⇾');
 
                     echo $w->toxml();
                     return;
@@ -626,7 +626,7 @@ if (mb_strlen($query) < 3 ||
 
                                 if (strpos($availability->territories, $country_code) !== false) {
                                     if (checkIfResultAlreadyThere($w->results(), ucfirst($album->name)) == false) {
-                                        $w->result("spotify_mini-spotify-online-album" . $album->name, '', ucfirst($album->name), "by " . $album->artist . " (" . $album->released . ")", getTrackOrAlbumArtwork($w, $album->href, false), 'no', "Online→" . $artist_uri . "@" . $album->artist . "@" . $album->href . "@" . $album->name);
+                                        $w->result("spotify_mini-spotify-online-album" . $album->name, '', ucfirst($album->name), "by " . $album->artist . " (" . $album->released . ")", getTrackOrAlbumArtwork($w, $album->href, false), 'no', "Online⇾" . $artist_uri . "@" . $album->artist . "@" . $album->href . "@" . $album->name);
                                     }
                                 }
                             }
@@ -681,15 +681,15 @@ if (mb_strlen($query) < 3 ||
         } // Online mode end
     } ////////////
     //
-    // SECOND DELIMITER: Artist→the_artist→tracks , Album→the_album→tracks, Playlist→the_playlist→tracks,Settings→Country→country,Settings→Theme→color or Settings→MaxResults→max_numbers, Alfred Playlist→Set Alfred Playlist URI→alfred_playlist_uri
+    // SECOND DELIMITER: Artist⇾the_artist⇾tracks , Album⇾the_album⇾tracks, Playlist⇾the_playlist⇾tracks,Settings⇾Country⇾country,Settings⇾Theme⇾color or Settings⇾MaxResults⇾max_numbers, Alfred Playlist⇾Set Alfred Playlist URI⇾alfred_playlist_uri
     //
     ////////////
-    elseif (substr_count($query, '→') == 2) {
+    elseif (substr_count($query, '⇾') == 2) {
         //
         // Get all songs for selected artist
         //
 
-        $words = explode('→', $query);
+        $words = explode('⇾', $query);
 
         $kind = $words[0];
         if ($kind == "Artist") {
@@ -699,7 +699,7 @@ if (mb_strlen($query) < 3 ||
             $artist = $words[1];
             $track = $words[2];
 
-            $w->result('', '', 'Related Artists', 'Browse related artists', './images/' . $theme . '/' . 'related.png', 'no', $query . 'Related→');
+            $w->result('', '', 'Related Artists', 'Browse related artists', './images/' . $theme . '/' . 'related.png', 'no', $query . 'Related⇾');
             
             if (mb_strlen($track) < 3) {
                 if ($all_playlists == false) {
@@ -876,7 +876,7 @@ if (mb_strlen($query) < 3 ||
                 if ($is_alfred_playlist_active == true &&
                     $playlist[1] != "Alfred Playlist"
                 ) {
-                    $subtitle = "$subtitle ,⇧ → add playlist to ♫";
+                    $subtitle = "$subtitle ,⇧ ⇾ add playlist to ♫";
                 }
                 $w->result("spotify_mini-spotify-playlist-$playlist[1]", serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,$playlist[0] /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,''  /* artist_name */)), "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks), by " . $playlist[3] . " (" . $playlist[4] . ")", $subtitle, $playlist[5], 'yes', '');
                 
@@ -910,7 +910,7 @@ if (mb_strlen($query) < 3 ||
                 } else {
                     // max results has been set
                     if (is_numeric($the_query) == true && $the_query > 0) {
-                        $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'MAX_RESULTS→' . $the_query /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Max Results will be set to <" . $the_query . ">", "Type enter to validate the Max Results", './images/' . $theme . '/' . 'settings.png', 'yes', '');
+                        $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'MAX_RESULTS⇾' . $the_query /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Max Results will be set to <" . $the_query . ">", "Type enter to validate the Max Results", './images/' . $theme . '/' . 'settings.png', 'yes', '');
                     } else {
                         $w->result('', '', "The Max Results value entered is not valid", "Please fix it", './images/warning.png', 'no', '');
 
@@ -941,12 +941,12 @@ if (mb_strlen($query) < 3 ||
                         if (mb_strlen($the_query) == 0) {
                             $w->result('', '', "Select your country:", "This is needed to get accurate results from online spotify lookups ", './images/country.png', 'no', '');
                             foreach ($json as $key => $value) {
-                                $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ , 'COUNTRY→' . $value /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), ucfirst($key), $value, './images/' . $theme . '/' . 'country.png', 'yes', '');
+                                $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ , 'COUNTRY⇾' . $value /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), ucfirst($key), $value, './images/' . $theme . '/' . 'country.png', 'yes', '');
                             }
                         } else {
                             foreach ($json as $key => $value) {
                                 if (strpos(strtolower($key), strtolower($the_query)) !== false) {
-                                    $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ , 'COUNTRY→' . $value /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), ucfirst($key), $value, './images/' . $theme . '/' . 'country.png', 'yes', '');
+                                    $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ , 'COUNTRY⇾' . $value /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), ucfirst($key), $value, './images/' . $theme . '/' . 'country.png', 'yes', '');
                                 }
                             }
                         }
@@ -1003,7 +1003,7 @@ if (mb_strlen($query) < 3 ||
                         $words = explode(':', $alfred_playlist_uri);
 
 
-                        $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'ALFRED_PLAYLIST→' . $words[0] . ':' . $words[1] . ':@:' . $words[3] . ':' . $words[4] /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Alfred Playlist URI will be set to <" . $alfred_playlist_uri . ">", "Type enter to validate", './images/' . $theme . '/' . 'settings.png', 'yes', '');
+                        $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'ALFRED_PLAYLIST⇾' . $words[0] . ':' . $words[1] . ':@:' . $words[3] . ':' . $words[4] /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Alfred Playlist URI will be set to <" . $alfred_playlist_uri . ">", "Type enter to validate", './images/' . $theme . '/' . 'settings.png', 'yes', '');
                     } else {
                     	if($playlistName == "")
                     	{
@@ -1027,13 +1027,13 @@ if (mb_strlen($query) < 3 ||
         }
         // end of Settings
     }
-    elseif (substr_count($query, '→') == 3) {
+    elseif (substr_count($query, '⇾') == 3) {
 
         //
         // Get all related artists for selected artist
         //
 
-        $words = explode('→', $query);
+        $words = explode('⇾', $query);
 		
 		$artist_name = $words[1];
         $kind = $words[2];

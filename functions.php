@@ -299,7 +299,7 @@ function updateLibrary($jsonData)
             $nb_tracktotal += count($playlist['tracks']);
 
         }
-        $w->write('Library→0→' . $nb_tracktotal, 'update_library_in_progress');
+        $w->write('Library⇾0⇾' . $nb_tracktotal, 'update_library_in_progress');
 
         $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table tracks (starred boolean, popularity int, uri text, album_uri text, artist_uri text, track_name text, album_name text, artist_name text, album_year text, track_artwork_path text, artist_artwork_path text, album_artwork_path text, playlist_name text, playlist_uri text, playable boolean, availability text)"';
         exec($sql);
@@ -358,7 +358,7 @@ function updateLibrary($jsonData)
 				
                 $nb_track++;
                 if ($nb_track % 10 === 0) {
-                    $w->write('Library→' . $nb_track . '→' . $nb_tracktotal, 'update_library_in_progress');
+                    $w->write('Library⇾' . $nb_track . '⇾' . $nb_tracktotal, 'update_library_in_progress');
                 }
             }
         }
@@ -431,7 +431,7 @@ function updatePlaylist($jsonData)
             $nb_tracktotal += count($playlist['tracks']);
 
         }
-        $w->write('Playlist→0→' . $nb_tracktotal, 'update_library_in_progress');
+        $w->write('Playlist⇾0⇾' . $nb_tracktotal, 'update_library_in_progress');
 
         $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "drop table counters"';
         exec($sql);
@@ -487,7 +487,7 @@ function updatePlaylist($jsonData)
 				
                 $nb_track++;
                 if ($nb_track % 10 === 0) {
-                    $w->write('Playlist→' . $nb_track . '→' . $nb_tracktotal, 'update_library_in_progress');
+                    $w->write('Playlist⇾' . $nb_track . '⇾' . $nb_tracktotal, 'update_library_in_progress');
                 }
             }
         }
@@ -549,7 +549,7 @@ function updatePlaylistList($jsonData)
     if (json_last_error() === JSON_ERROR_NONE) {
         $nb_playlist_total = count($json);
 
-        $w->write('Playlist List→0→' . $nb_playlist_total, 'update_library_in_progress');
+        $w->write('Playlist List⇾0⇾' . $nb_playlist_total, 'update_library_in_progress');
 
         $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "drop table counters"';
         exec($sql);
@@ -565,7 +565,7 @@ function updatePlaylistList($jsonData)
 
             $nb_playlist++;
             if ($nb_playlist % 4 === 0) {
-                $w->write('Playlist List→' . $nb_playlist . '→' . $nb_playlist_total, 'update_library_in_progress');
+                $w->write('Playlist List⇾' . $nb_playlist . '⇾' . $nb_playlist_total, 'update_library_in_progress');
             }
 
             if ($returnValue != 0) {

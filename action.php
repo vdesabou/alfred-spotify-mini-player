@@ -72,7 +72,7 @@ if ($type == "TRACK") {
     exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:playartistoralbum:$album_uri\"'");
     exec("osascript -e 'tell application \"Spotify\" to open location \"$album_uri\"'");
 } else if ($type == "ONLINE") {
-    exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online→$artist_uri@$artist_name\"'");
+    exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online⇾$artist_uri@$artist_name\"'");
 } else if ($type == "ALBUM_OR_PLAYLIST") {
     if ($alfredplaylist != "") {
         if ($album_uri != "") {
@@ -96,7 +96,7 @@ if ($playlist_uri != "") {
 } else if ($spotify_command != "") {
     exec("osascript -e 'tell application \"Spotify\" to $spotify_command'");
 } else if ($other_settings != "") {
-    $setting = explode('→', $other_settings);
+    $setting = explode('⇾', $other_settings);
     if ($setting[0] == "MAX_RESULTS") {
         $setSettings = "update settings set max_results=" . $setting[1];
         $dbfile = $w->data() . "/settings.db";
@@ -180,12 +180,12 @@ if ($playlist_uri != "") {
         $completeurl = getArtistURLFromTrack($w, $t[2]);
         $a = explode('/', $completeurl);
         if ($a[4] != "") {
-            exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online→spotify:artist:$a[4]@" . escapeQuery($artist_name) . "\"'");
+            exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online⇾spotify:artist:$a[4]@" . escapeQuery($artist_name) . "\"'");
         } else {
             echo "Error: Could no retrieve the artist";
         }
     } else if ($other_action == "morefromthirelatedartist") {
-        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online→" . $artist_uri . "@" . escapeQuery($artist_name) . "\"'");
+        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online⇾" . $artist_uri . "@" . escapeQuery($artist_name) . "\"'");
     }
      else if ($other_action == "update_library") {
         touch($w->data() . "/update_library_in_progress");

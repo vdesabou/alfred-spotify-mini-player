@@ -13,7 +13,7 @@ try
 		else
 			set theResult to "playing"
 		end if
-		return name of current track & "→" & artist of current track & "→" & album of current track & "→" & theResult & "→" & spotify url of current track
+		return name of current track & "⇾" & artist of current track & "⇾" & album of current track & "⇾" & theResult & "⇾" & spotify url of current track
 	end tell
 on error error_message
 	return
