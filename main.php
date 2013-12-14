@@ -413,52 +413,30 @@ if (mb_strlen($query) < 3 ||
             
 
             if (mb_strlen($theplaylist) < 3) {
-                //
-                // Display all playlists
-                //
                 $getPlaylists = "select * from playlists";
-
-                $dbfile = $w->data() . "/library.db";
-
-                exec("sqlite3 -separator '	' \"$dbfile\" \"$getPlaylists\" 2>&1", $playlists, $returnValue);
-
-                if ($returnValue != 0) {
-                    $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
-
-		            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
-
-                    echo $w->toxml();
-                    return;
-                }
-
-                foreach ($playlists as $playlist):
-                    $playlist = explode("	", $playlist);
-
-                    $w->result("spotify_mini-spotify-playlist-$playlist[1]", '', "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", $playlist[5], 'no', "Playlist→" . $playlist[0] . "→");
-                endforeach;
-            } else {
-                $getPlaylists = "select * from playlists where ( name like '%" . $theplaylist . "%' or author like '%" . $theplaylist . "%')";
-
-                $dbfile = $w->data() . "/library.db";
-
-                exec("sqlite3 -separator '	' \"$dbfile\" \"$getPlaylists\" 2>&1", $playlists, $returnValue);
-
-                if ($returnValue != 0) {
-                    $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
-                    $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
-
-		            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
-
-                    echo $w->toxml();
-                    return;
-                }
-
-                foreach ($playlists as $playlist):
-                    $playlist = explode("	", $playlist);
-
-                    $w->result("spotify_mini-spotify-playlist-$playlist[1]", '', "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", $playlist[5], 'no', "Playlist→" . $playlist[0] . "→");
-                endforeach;
             }
+            else {
+            	$getPlaylists = "select * from playlists where ( name like '%" . $theplaylist . "%' or author like '%" . $theplaylist . "%')";
+            }
+
+            $dbfile = $w->data() . "/library.db";
+
+            exec("sqlite3 -separator '	' \"$dbfile\" \"$getPlaylists\" 2>&1", $playlists, $returnValue);
+
+            if ($returnValue != 0) {
+                $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
+
+	            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
+
+                echo $w->toxml();
+                return;
+            }
+
+            foreach ($playlists as $playlist):
+                $playlist = explode("	", $playlist);
+
+                $w->result("spotify_mini-spotify-playlist-$playlist[1]", '', "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", $playlist[5], 'no', "Playlist→" . $playlist[0] . "→");
+            endforeach;
         } // search by Playlist end
         elseif ($kind == "Alfred Playlist") {
             //
@@ -491,62 +469,36 @@ if (mb_strlen($query) < 3 ||
                     $getTracks = "select * from tracks where playable=1 and starred=1 group by artist_name" . " limit " . $max_results;
                 } else {
                     $getTracks = "select * from tracks where playable=1 group by artist_name" . " limit " . $max_results;
-                }
-
-
-                $dbfile = $w->data() . "/library.db";
-                exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
-
-                if ($returnValue != 0) {
-                    $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
-
-		            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
-
-                    echo $w->toxml();
-                    return;
-                }
-
-                // display all artists
-                foreach ($tracks as $track):
-                    $track = explode("	", $track);
-
-                    if (checkIfResultAlreadyThere($w->results(), "👤 " . ucfirst($track[7])) == false) {
-                        $w->result("spotify_mini-spotify-artist-" . $track[7], '', "👤 " . ucfirst($track[7]), "Get tracks from this artist", $track[10], 'no', "Artist→" . $track[7] . "→");
-                    }
-                endforeach;
-            } else {
+                }   
+            }
+            else {
                 if ($all_playlists == false) {
                     $getTracks = "select * from tracks where playable=1 and starred=1 and artist_name like '%" . $artist . "%'" . " limit " . $max_results;
                 } else {
                     $getTracks = "select * from tracks where playable=1 and artist_name like '%" . $artist . "%'" . " limit " . $max_results;
-                }
-
-
-                $dbfile = $w->data() . "/library.db";
-                exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
-
-                if ($returnValue != 0) {
-                    $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
-
-		            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
-
-                    echo $w->toxml();
-                    return;
-                }
-
-                foreach ($tracks as $track):
-                    $track = explode("	", $track);
-
-                    if (checkIfResultAlreadyThere($w->results(), "👤 " . ucfirst($track[7])) == false) {
-                        $w->result("spotify_mini-spotify-artist-" . $track[7], '', "👤 " . ucfirst($track[7]), "Get tracks from this artist", $track[10], 'no', "Artist→" . $track[7] . "→");
-                    }
-                endforeach;
-
-                $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,"activate (open location \"spotify:search:" . $artist . "\")" /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Search for " . $artist . " with Spotify", "This will start a new search in Spotify", 'fileicon:/Applications/Spotify.app', 'yes', '');
-                if ($is_spotifious_active == true) {
-                    $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,$artist /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Search for " . $artist . " with Spotifious", "Spotifious workflow must be installed", './images/spotifious.png', 'yes', '');
-                }
+                }            
             }
+
+            $dbfile = $w->data() . "/library.db";
+            exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
+
+            if ($returnValue != 0) {
+                $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
+
+	            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
+
+                echo $w->toxml();
+                return;
+            }
+
+            // display all artists
+            foreach ($tracks as $track):
+                $track = explode("	", $track);
+
+                if (checkIfResultAlreadyThere($w->results(), "👤 " . ucfirst($track[7])) == false) {
+                    $w->result("spotify_mini-spotify-artist-" . $track[7], '', "👤 " . ucfirst($track[7]), "Get tracks from this artist", $track[10], 'no', "Artist→" . $track[7] . "→");
+                }
+            endforeach;
         } // search by Artist end
         elseif ($kind == "Album") {
             //
@@ -560,62 +512,37 @@ if (mb_strlen($query) < 3 ||
                 } else {
                     $getTracks = "select * from tracks where playable=1 group by album_name" . " limit " . $max_results;
                 }
-
-
-                $dbfile = $w->data() . "/library.db";
-                exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
-
-                if ($returnValue != 0) {
-                    $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
-
-		            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
-
-                    echo $w->toxml();
-                    return;
-                }
-
-                // display all albums
-                foreach ($tracks as $track):
-                    $track = explode("	", $track);
-
-                    if (checkIfResultAlreadyThere($w->results(), ucfirst($track[6])) == false) {
-                        $w->result("spotify_mini-spotify-album" . $track[6], '', ucfirst($track[6]), "by " . $track[7], $track[11], 'no', "Album→" . $track[6] . "→");
-                    }
-                endforeach;
-            } else {
+            }
+            else {
                 if ($all_playlists == false) {
                     $getTracks = "select * from tracks where playable=1 and starred=1 and album_name like '%" . $album . "%'" . " limit " . $max_results;
                 } else {
                     $getTracks = "select * from tracks where playable=1 and album_name like '%" . $album . "%'" . " limit " . $max_results;
-                }
-
-
-                $dbfile = $w->data() . "/library.db";
-                exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
-
-                if ($returnValue != 0) {
-                    $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
-
-		            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
-
-                    echo $w->toxml();
-                    return;
-                }
-
-                foreach ($tracks as $track):
-                    $track = explode("	", $track);
-
-                    if (checkIfResultAlreadyThere($w->results(), ucfirst($track[6])) == false) {
-                        $w->result("spotify_mini-spotify-album" . $track[6], '', ucfirst($track[6]), "by " . $track[7], $track[11], 'no', "Album→" . $track[6] . "→");
-                    }
-                endforeach;
-
-
-                $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,"activate (open location \"spotify:search:" . $album . "\")" /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Search for " . $album . " with Spotify", "This will start a new search in Spotify", 'fileicon:/Applications/Spotify.app', 'yes', '');
-                if ($is_spotifious_active == true) {
-                    $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,$album /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Search for " . $album . " with Spotifious", "Spotifious workflow must be installed", './images/spotifious.png', 'yes', '');
-                }
+                }            
             }
+
+
+            $dbfile = $w->data() . "/library.db";
+            exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
+
+            if ($returnValue != 0) {
+                $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
+
+	            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
+
+                echo $w->toxml();
+                return;
+            }
+
+            // display all albums
+            foreach ($tracks as $track):
+                $track = explode("	", $track);
+
+                if (checkIfResultAlreadyThere($w->results(), ucfirst($track[6])) == false) {
+                    $w->result("spotify_mini-spotify-album" . $track[6], '', ucfirst($track[6]), "by " . $track[7], $track[11], 'no', "Album→" . $track[6] . "→");
+                }
+            endforeach;
+
         } // search by Album end
         elseif ($kind == "Online") {
             if (substr_count($query, '@') == 1) {
@@ -747,91 +674,54 @@ if (mb_strlen($query) < 3 ||
                 } else {
                     $getTracks = "select * from tracks where playable=1 and artist_name='" . $artist . "'" . " limit " . $max_results;
                 }
-
-
-                $dbfile = $w->data() . "/library.db";
-                exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
-
-                if ($returnValue != 0) {
-                    $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
-
-		            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
-
-                    echo $w->toxml();
-                    return;
-                }
-
-                if (count($tracks) > 0) {
-                    $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-                    if ($is_alfred_playlist_active == true) {
-                        $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
-                    }
-                    $w->result('help', 'help', "Select a track to play it", $subtitle, './images/info.png', 'no', '');
-                }
-
-                foreach ($tracks as $track):
-                    $track = explode("	", $track);
-
-                    $subtitle = ($track[0] == true) ? "★ " : "";
-                    $subtitle = $subtitle . $track[6];
-
-                    if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " - " . $track[5]) == false) {
-                        $w->result("spotify_mini-spotify-track-" . $track[5], serialize(array($track[2] /*track_uri*/ ,$track[3] /* album_uri */ ,$track[4] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,$track[7]  /* artist_name */)), ucfirst($track[7]) . " - " . $track[5], $subtitle, $track[9], 'yes', '');
-                    }
-                    if ($artist_uri == "")
-                        $artist_uri = $track[4];
-                endforeach;
-
-                $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,"activate (open location \"spotify:search:" . $artist . "\")" /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Search for " . $artist . " with Spotify", "This will start a new search in Spotify", 'fileicon:/Applications/Spotify.app', 'yes', '');
-                if ($is_spotifious_active == true) {
-                    $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,$artist_uri . " ► " . $artist . " ►" /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Search for " . $artist . " with Spotifious", "Spotifious workflow must be installed", './images/spotifious.png', 'yes', '');
-                }
-            } else {
+            }
+            else {
                 if ($all_playlists == false) {
                     $getTracks = "select * from tracks where playable=1 and starred=1 and (artist_name='" . $artist . "' and track_name like '%" . $track . "%')" . " limit " . $max_results;
                 } else {
                     $getTracks = "select * from tracks where playable=1 and artist_name='" . $artist . "' and track_name like '%" . $track . "%'" . " limit " . $max_results;
-                }
-
-
-                $dbfile = $w->data() . "/library.db";
-                exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
-
-                if ($returnValue != 0) {
-                    $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
-
-		            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
-
-
-                    echo $w->toxml();
-                    return;
-                }
-
-                if (count($tracks) > 0) {
-                    $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-                    if ($is_alfred_playlist_active == true) {
-                        $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
-                    }
-                    $w->result('help', 'help', "Select a track to play it", $subtitle, './images/info.png', 'no', '');
-                }
-
-                foreach ($tracks as $track):
-                    $track = explode("	", $track);
-
-                    $subtitle = ($track[0] == true) ? "★ " : "";
-                    $subtitle = $subtitle . $track[6];
-
-                    if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " - " . $track[5]) == false) {
-                        $w->result("spotify_mini-spotify-track-" . $track[5], serialize(array($track[2] /*track_uri*/ ,$track[3] /* album_uri */ ,$track[4] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,$track[7]  /* artist_name */)), ucfirst($track[7]) . " - " . $track[5], $subtitle, $track[9], 'yes', '');
-                    }
-                endforeach;
-
-                $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,"activate (open location \"spotify:search:" . $track . "\")" /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Search for " . $track . " with Spotify", "This will start a new search in Spotify", 'fileicon:/Applications/Spotify.app', 'yes', '');
-                if ($is_spotifious_active == true) {
-                    $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,$track /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Search for " . $track . " with Spotifious", "Spotifious workflow must be installed", './images/spotifious.png', 'yes', '');
-                }
-                
+                }            
             }
+
+
+            $dbfile = $w->data() . "/library.db";
+            exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
+
+            if ($returnValue != 0) {
+                $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
+
+	            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
+
+                echo $w->toxml();
+                return;
+            }
+
+            if (count($tracks) > 0) {
+                $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
+                if ($is_alfred_playlist_active == true) {
+                    $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
+                }
+                $w->result('help', 'help', "Select a track to play it", $subtitle, './images/info.png', 'no', '');
+            }
+
+            foreach ($tracks as $track):
+                $track = explode("	", $track);
+
+                $subtitle = ($track[0] == true) ? "★ " : "";
+                $subtitle = $subtitle . $track[6];
+
+                if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " - " . $track[5]) == false) {
+                    $w->result("spotify_mini-spotify-track-" . $track[5], serialize(array($track[2] /*track_uri*/ ,$track[3] /* album_uri */ ,$track[4] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,$track[7]  /* artist_name */)), ucfirst($track[7]) . " - " . $track[5], $subtitle, $track[9], 'yes', '');
+                }
+                if ($artist_uri == "")
+                    $artist_uri = $track[4];
+            endforeach;
+
+            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,"activate (open location \"spotify:search:" . $artist . "\")" /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Search for " . $artist . " with Spotify", "This will start a new search in Spotify", 'fileicon:/Applications/Spotify.app', 'yes', '');
+            if ($is_spotifious_active == true) {
+                $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,$artist_uri . " ► " . $artist . " ►" /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Search for " . $artist . " with Spotifious", "Spotifious workflow must be installed", './images/spotifious.png', 'yes', '');
+            }
+
         } // end of tracks by artist
         elseif ($kind == "Album") {
             //
@@ -848,95 +738,55 @@ if (mb_strlen($query) < 3 ||
                 } else {
                     $getTracks = "select * from tracks where playable=1 and album_name='" . $album . "'" . " limit " . $max_results;
                 }
-
-
-                $dbfile = $w->data() . "/library.db";
-                exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
-
-                if ($returnValue != 0) {
-                    $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
-
-		            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
-
-
-                    echo $w->toxml();
-                    return;
-                }
-
-                if (count($tracks) > 0) {
-                    $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-                    if ($is_alfred_playlist_active == true) {
-                        $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
-                    }
-                    $w->result('help', 'help', "Select a track to play it", $subtitle, './images/info.png', 'no', '');
-                }
-
-                foreach ($tracks as $track):
-                    $track = explode("	", $track);
-
-                    $subtitle = ($track[0] == true) ? "★ " : "";
-                    $subtitle = $subtitle . $track[6];
-
-                    if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " - " . $track[5]) == false) {
-                        $w->result("spotify_mini-spotify-track-" . $track[5], serialize(array($track[2] /*track_uri*/ ,$track[3] /* album_uri */ ,$track[4] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,$track[7]  /* artist_name */)), ucfirst($track[7]) . " - " . $track[5], $subtitle, $track[9], 'yes', '');
-                    }
-                    if ($album_uri == "")
-                        $album_uri = $track[3];
-                endforeach;
-
-                $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,"activate (open location \"spotify:search:" . $album . "\")" /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Search for " . $album . " with Spotify", "This will start a new search in Spotify", 'fileicon:/Applications/Spotify.app', 'yes', '');
-                if ($is_spotifious_active == true) {
-                    $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,$album_uri . " ► " . $album . " ►"/* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Search for " . $album . " with Spotifious", "Spotifious workflow must be installed", './images/spotifious.png', 'yes', '');
-                }
-                
-            } else {
+            }
+            else {
                 if ($all_playlists == false) {
                     $getTracks = "select * from tracks where playable=1 and starred=1 and (album_name='" . $album . "' and track_name like '%" . $track . "%')" . " limit " . $max_results;
                 } else {
                     $getTracks = "select * from tracks where playable=1 and album_name='" . $album . "' and track_name like '%" . $track . "%'" . " limit " . $max_results;
-                }
-
-
-                $dbfile = $w->data() . "/library.db";
-                exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
-
-                if ($returnValue != 0) {
-                    $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
-
-		            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
-
-
-                    echo $w->toxml();
-                    return;
-                }
-
-                if (count($tracks) > 0) {
-                    $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-                    if ($is_alfred_playlist_active == true) {
-                        $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
-                    }
-                    $w->result('help', 'help', "Select a track to play it", $subtitle, './images/info.png', 'no', '');
-                }
-
-                foreach ($tracks as $track):
-                    $track = explode("	", $track);
-
-                    $subtitle = ($track[0] == true) ? "★ " : "";
-                    $subtitle = $subtitle . $track[6];
-
-                    if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " - " . $track[5]) == false) {
-                        $w->result("spotify_mini-spotify-track-" . $track[5], serialize(array($track[2] /*track_uri*/ ,$track[3] /* album_uri */ ,$track[4] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,$track[7]  /* artist_name */)), ucfirst($track[7]) . " - " . $track[5], $subtitle, $track[9], 'yes', '');
-                    }
-                endforeach;
-
-
-                $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,"activate (open location \"spotify:search:" . $track . "\")" /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Search for " . $track . " with Spotify", "This will start a new search in Spotify", 'fileicon:/Applications/Spotify.app', 'yes', '');
-                if ($is_spotifious_active == true) {
-                    $w->result('',  serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,$track /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Search for " . $track . " with Spotifious", "Spotifious workflow must be installed", './images/spotifious.png', 'yes', '');
-                }
-                
-               
+                }            
             }
+
+
+            $dbfile = $w->data() . "/library.db";
+            exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
+
+            if ($returnValue != 0) {
+                $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
+
+	            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
+
+
+                echo $w->toxml();
+                return;
+            }
+
+            if (count($tracks) > 0) {
+                $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
+                if ($is_alfred_playlist_active == true) {
+                    $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
+                }
+                $w->result('help', 'help', "Select a track to play it", $subtitle, './images/info.png', 'no', '');
+            }
+
+            foreach ($tracks as $track):
+                $track = explode("	", $track);
+
+                $subtitle = ($track[0] == true) ? "★ " : "";
+                $subtitle = $subtitle . $track[6];
+
+                if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " - " . $track[5]) == false) {
+                    $w->result("spotify_mini-spotify-track-" . $track[5], serialize(array($track[2] /*track_uri*/ ,$track[3] /* album_uri */ ,$track[4] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,$track[7]  /* artist_name */)), ucfirst($track[7]) . " - " . $track[5], $subtitle, $track[9], 'yes', '');
+                }
+                if ($album_uri == "")
+                    $album_uri = $track[3];
+            endforeach;
+
+            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,"activate (open location \"spotify:search:" . $album . "\")" /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Search for " . $album . " with Spotify", "This will start a new search in Spotify", 'fileicon:/Applications/Spotify.app', 'yes', '');
+            if ($is_spotifious_active == true) {
+                $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,$album_uri . " ► " . $album . " ►"/* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Search for " . $album . " with Spotifious", "Spotifious workflow must be installed", './images/spotifious.png', 'yes', '');
+            }
+                
         } // end of tracks by album
         elseif ($kind == "Playlist") {
             //
@@ -963,98 +813,59 @@ if (mb_strlen($query) < 3 ||
                 $playlist = $playlists[0];
                 $playlist = explode("	", $playlist);
                 if (mb_strlen($thetrack) < 3) {
-                    //
-                    // display all tracks from playlist
-                    //
                     $getTracks = "select * from tracks where playable=1 and playlist_uri='" . $theplaylisturi . "' limit " . $max_results;
-
-                    $dbfile = $w->data() . "/library.db";
-                    exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
-
-                    if ($returnValue != 0) {
-                        $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
-
-			            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
-
-
-                        echo $w->toxml();
-                        return;
-                    }
-                    if (count($tracks) > 0) {
-                        $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-                        if ($is_alfred_playlist_active == true) {
-                            $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
-                        }
-                        $w->result('help', 'help', "Select a track to play it", $subtitle, './images/info.png', 'no', '');
-                    }
-
-                    $subtitle = "Launch Playlist";
-                    if ($is_alfred_playlist_active == true &&
-                        $playlist[1] != "Alfred Playlist"
-                    ) {
-                        $subtitle = "$subtitle ,⇧ → add playlist to ♫";
-                    }
-                    $w->result("spotify_mini-spotify-playlist-$playlist[1]", serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,$playlist[0] /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,''  /* artist_name */)), "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks), by " . $playlist[3] . " (" . $playlist[4] . ")", $subtitle, $playlist[5], 'yes', '');
-                    
-                    
-
-                    $w->result("spotify_mini-spotify-update-$playlist[1]", serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,$playlist[0] /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_playlist' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update playlist " . ucfirst($playlist[1]) . " by " . $playlist[3], "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
-                    
-                    foreach ($tracks as $track):
-                        $track = explode("	", $track);
-
-                        if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " - " . $track[5]) == false) {
-                            $subtitle = ($track[0] == true) ? "★ " : "";
-                            $subtitle = $subtitle . $track[6];
-                            $w->result("spotify_mini-spotify-playlist-track-" . $playlist[1] . "-" . $track[5], serialize(array($track[2] /*track_uri*/ ,$track[3] /* album_uri */ ,$track[4] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,$track[7]  /* artist_name */)), ucfirst($track[7]) . " - " . $track[5], $subtitle, $track[9], 'yes', '');
-                        }
-                    endforeach;
-                } else {
-                    $getTracks = "select * from tracks where playable=1 and playlist_uri='" . $theplaylisturi . "' and (artist_name like '%" . $thetrack . "%' or album_name like '%" . $thetrack . "%' or track_name like '%" . $thetrack . "%')" . " limit " . $max_results;
-
-
-                    $dbfile = $w->data() . "/library.db";
-                    exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
-
-                    if ($returnValue != 0) {
-                        $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
-
-			            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
-
-
-                        echo $w->toxml();
-                        return;
-                    }
-                    if (count($tracks) > 0) {
-                        $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-                        if ($is_alfred_playlist_active == true) {
-                            $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
-                        }
-                        $w->result('help', 'help', "Select a track to play it", $subtitle, './images/info.png', 'no', '');
-                    }
-
-
-                    foreach ($tracks as $track):
-                        $track = explode("	", $track);
-
-                        $subtitle = $track[6] . "  ⌥ (play album) ⌘ (play artist)";
-                        if ($is_alfred_playlist_active == true) {
-                            $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
-                        }
-
-                        if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " - " . $track[5]) == false) {
-                            $subtitle = ($track[0] == true) ? "★ " : "";
-                            $subtitle = $subtitle . $track[6];
-                            $w->result("spotify_mini-spotify-playlist-track-" . $playlist[1] . "-" . $track[5], serialize(array($track[2] /*track_uri*/ ,$track[3] /* album_uri */ ,$track[4] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,$track[7]  /* artist_name */)), ucfirst($track[7]) . " - " . $track[5], $subtitle, $track[9], 'yes', '');
-                        }
-                    endforeach;
-
-                    $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,"activate (open location \"spotify:search:" . $thetrack . "\")" /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Search for " . $thetrack . " with Spotify", "This will start a new search in Spotify", 'fileicon:/Applications/Spotify.app', 'yes', '');
-                    if ($is_spotifious_active == true) {
-                        $w->result('',  serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,$thetrack /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Search for " . $thetrack . " with Spotifious", "Spotifious workflow must be installed", './images/spotifious.png', 'yes', '');
-                    }
                 }
-            }
+                else {
+                    $getTracks = "select * from tracks where playable=1 and playlist_uri='" . $theplaylisturi . "' and (artist_name like '%" . $thetrack . "%' or album_name like '%" . $thetrack . "%' or track_name like '%" . $thetrack . "%')" . " limit " . $max_results;                
+                }
+
+                $dbfile = $w->data() . "/library.db";
+                exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
+
+                if ($returnValue != 0) {
+                    $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
+
+		            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
+
+
+                    echo $w->toxml();
+                    return;
+                }
+                if (count($tracks) > 0) {
+                    $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
+                    if ($is_alfred_playlist_active == true) {
+                        $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
+                    }
+                    $w->result('help', 'help', "Select a track to play it", $subtitle, './images/info.png', 'no', '');
+                }
+
+                $subtitle = "Launch Playlist";
+                if ($is_alfred_playlist_active == true &&
+                    $playlist[1] != "Alfred Playlist"
+                ) {
+                    $subtitle = "$subtitle ,⇧ → add playlist to ♫";
+                }
+                $w->result("spotify_mini-spotify-playlist-$playlist[1]", serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,$playlist[0] /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,''  /* artist_name */)), "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks), by " . $playlist[3] . " (" . $playlist[4] . ")", $subtitle, $playlist[5], 'yes', '');
+                
+                
+
+                $w->result("spotify_mini-spotify-update-$playlist[1]", serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,$playlist[0] /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_playlist' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update playlist " . ucfirst($playlist[1]) . " by " . $playlist[3], "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
+                
+                foreach ($tracks as $track):
+                    $track = explode("	", $track);
+
+                    if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " - " . $track[5]) == false) {
+                        $subtitle = ($track[0] == true) ? "★ " : "";
+                        $subtitle = $subtitle . $track[6];
+                        $w->result("spotify_mini-spotify-playlist-track-" . $playlist[1] . "-" . $track[5], serialize(array($track[2] /*track_uri*/ ,$track[3] /* album_uri */ ,$track[4] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,$track[7]  /* artist_name */)), ucfirst($track[7]) . " - " . $track[5], $subtitle, $track[9], 'yes', '');
+                    }
+                endforeach;
+
+                $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,"activate (open location \"spotify:search:" . $thetrack . "\")" /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Search for " . $thetrack . " with Spotify", "This will start a new search in Spotify", 'fileicon:/Applications/Spotify.app', 'yes', '');
+                if ($is_spotifious_active == true) {
+                    $w->result('',  serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,$thetrack /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Search for " . $thetrack . " with Spotifious", "Spotifious workflow must be installed", './images/spotifious.png', 'yes', '');
+                }
+            }        
         } // end of tracks by Playlist
         elseif ($kind == "Settings") {
             $setting_kind = $words[1];
