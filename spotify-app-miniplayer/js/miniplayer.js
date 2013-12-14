@@ -366,19 +366,21 @@ function updateCurrentTrack(){
 }
     
 
-function getAlbum(uri,matchedAlbumCallback) {
+function getAlbum(objtrack,matchedAlbumCallback) {
 	
-
-	models.Album.fromURI(uri).load('name','uri').done(function(album) {
+	models.Album.fromURI(objtrack.album_uri).load('name','uri').done(function(album) {
 			// This callback is fired when the album has loaded.
 			// The album object has a tracks property, which is a standard array.
-
-			objalbum={};
-			objalbum.name=album.name;
-			objalbum.uri=album.uri;
+			objtrack.album_name=album.name;
 			
-			matchedAlbumCallback(objalbum);
-		});	
+			matchedAlbumCallback(objtrack);
+		}).fail(function(album,error) 
+          	 { 
+          	 	console.log("Failed to get album name for " + objtrack.album_uri);
+          	 	objtrack.album_name = ""; 
+		  	 	matchedAlbumCallback(objtrack);
+		  	 	return;
+			 });	
 }
 
 function doGetTopTrack(artist, num, callback) {
@@ -397,18 +399,20 @@ function doGetTopTrack(artist, num, callback) {
     });
 };
 
-function getRelatedArtists(artistUri,matchedRelatedArtistsCallback) {
+function getRelatedArtists(objtrack,matchedRelatedArtistsCallback) {
 	
 	var array_artists= [];
 	var array_tmp_artists = [];
 		
-    models.Artist.fromURI(artistUri).load('name', 'related', 'uri').done(function (theartist) {
+    models.Artist.fromURI(objtrack.artist_uri).load('name', 'related', 'uri').done(function (theartist) {
 		
           theartist.related.snapshot().done(function(snapshot) {
           
 			if(snapshot.length == 0)
 			{
-				matchedRelatedArtistsCallback(array_artists);
+				objtrack.related=array_artists;
+				matchedRelatedArtistsCallback(objtrack);
+				return;
 			}
 			
             snapshot.loadAll('name').each(function(artist) {
@@ -416,7 +420,14 @@ function getRelatedArtists(artistUri,matchedRelatedArtistsCallback) {
 		    	// use tmp array to get the real snapshot length
 				array_tmp_artists.push(artist);
             });
-              		    	
+
+			if(array_tmp_artists.length == 0)
+			{	
+				objtrack.related=array_artists;
+				matchedRelatedArtistsCallback(objtrack);
+				return;
+			}
+					              		    	
               for (var i = 0; i < array_tmp_artists.length; i++) {
 
 				var a = array_tmp_artists[i];
@@ -430,7 +441,9 @@ function getRelatedArtists(artistUri,matchedRelatedArtistsCallback) {
 					
 					if(array_tmp_artists.length == array_artists.length)
 					{	
-						matchedRelatedArtistsCallback(array_artists);
+						objtrack.related=array_artists;
+						matchedRelatedArtistsCallback(objtrack);
+						return;
 					}
 												
 /*
@@ -456,21 +469,26 @@ function getRelatedArtists(artistUri,matchedRelatedArtistsCallback) {
               }
 
 
-          });
+          }).fail(function(theartist,error) 
+          	 { 
+          	 	console.log("Failed to get related artists for " + objtrack.artist_name);
+          	 	objtrack.related=array_artists; 
+		  	 	matchedRelatedArtistsCallback(objtrack);
+		  	 	return;
+			 });
       });
-     
 }
 
-function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {
-		
+function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {	
 	var array_tracks = [];
 	var array_tmp_tracks = [];	
 	var playlist = models.Playlist.fromURI(uri);
-	playlist.load('tracks','name','uri','owner').done(function() {
+	playlist.load('tracks','name','owner').done(function() {
 	
 	  playlist.owner.load('name','username').done(function (owner) {
-		  console.log("getPlaylistTracks started",playlist.name);
+		  
 		  playlist.tracks.snapshot().done(function(snapshot) {
+		  		 
 		  	//check for empty playlists
 			if(snapshot.length == 0)
 			{
@@ -483,50 +501,56 @@ function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {
 				p.tracks=array_tracks; 
 	
 				matchedPlaylistTracksCallback(p);
+				return;
 			}
 						
 		    snapshot.loadAll('name','popularity','starred','artists','availability','playable').each(function(track) {
 		    	// workaround for http://stackoverflow.com/questions/20440664/incorrect-snapshot-length-returned-for-a-specific-playlist
 		    	// use tmp array to get the real snapshot length
-		    	// ignore local tracks
-		    	if(playlist.name == "Top titres")
-		    	{
-		    		console.log(track);
-		    	}
-		    	if(track.album.name != "" && track.artists[0].name != "")
-		    	{
-					array_tmp_tracks.push(track);
-				}
+				array_tmp_tracks.push(track);
 		    });
 		    
+			if(array_tmp_tracks.length == 0)
+			{
+				p={};
+				
+				p.name=playlist.name;
+				p.uri=playlist.uri;
+				p.owner=owner.name;
+				p.username=owner.username;
+				p.tracks=array_tracks; 
+	
+				matchedPlaylistTracksCallback(p);
+				return;
+			}
+					    
 			for (var i = 0, l = array_tmp_tracks.length; i < l; i++) 
 			{
 				var t = array_tmp_tracks[i];
 	
-				if(t != null && t.album.name != "" && t.artists[0].name != "") 
-				{			
-					getAlbum(t.album.uri,function(matchedAlbum) {
+				if(t != null) 
+				{
+					objtrack={};
+					objtrack.playlist_name=playlist.name;
+					objtrack.playlist_uri=playlist.uri;
+					objtrack.name=t.name;
+					objtrack.uri=t.uri;
+					objtrack.popularity=t.popularity;
+					objtrack.starred=t.starred;
+					objtrack.artist_name=t.artists[0].name;
+					objtrack.artist_uri=t.artists[0].uri;
+					objtrack.album_uri=t.album.uri;
+					objtrack.availability=t.availability;
+					objtrack.playable=t.playable;
 
-						getRelatedArtists(t.artists[0].uri,function(matchedRelatedArtists) {
-				
-								objtrack={};
-								objtrack.playlist_name=playlist.name;
-								objtrack.playlist_uri=playlist.uri;
-								objtrack.name=t.name;
-								objtrack.uri=t.uri;
-								objtrack.popularity=t.popularity;
-								objtrack.starred=t.starred;
-								objtrack.artist_name=t.artists[0].name;
-								objtrack.artist_uri=t.artists[0].uri;
-								objtrack.album_name=matchedAlbum.name;
-								objtrack.album_uri=matchedAlbum.uri;
-								objtrack.availability=t.availability;
-								objtrack.playable=t.playable;
-								objtrack.related=matchedRelatedArtists;
-								array_tracks.push(objtrack);
+					getAlbum(objtrack,function(matchedAlbum) {
+											
+						getRelatedArtists(matchedAlbum,function(matchedRelatedArtists) {
+
+								array_tracks.push(matchedRelatedArtists);
+								
 								if(array_tmp_tracks.length == array_tracks.length)
 								{
-									console.log("getPlaylistTracks ended",playlist.name);
 									p={};
 									p.name=playlist.name;
 									p.uri=playlist.uri;
@@ -543,6 +567,7 @@ function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {
 	  });
 	});			
 }
+
 
 function getPlaylists(matchedPlaylistsCallback) {
 		
@@ -603,69 +628,13 @@ function getAll(matchedAllCallback) {
 		}
 	});
 }
-
-/*
-function doGetTopTrack(artist, num, callback) {
-    var artistTopList = Toplist.forArtist(artist);
-
-    artistTopList.tracks.snapshot(0,num).done(function (snapshot) { //only get the number of tracks we need
-
-        snapshot.loadAll('name').done(function (tracks) {
-            var i, num_toptracks;
-            num_toptracks = num; //this probably should be minimum of num and tracks.length
-
-            for (i = 0; i < num_toptracks; i++) {
-                callback(artist, tracks[i]);
-            }
-        });
-    });
-};
-
-function showRelated(artist_uri) {
-    var artist_properties = ['name', 'popularity', 'related', 'uri'];
-
-    models.Artist
-      .fromURI(artist_uri)
-      .load(artist_properties)
-      .done(function (artist) {
-
-          artist.related.snapshot().done(function (snapshot) {
-              snapshot.loadAll('name').done(function (artists) {
-
-                  for (var i = 0; i < artists.length; i++) {
-                      // am I missing something here?
-                      doGetTopTrack(artists[i], 1, function (artist, toptrack) {
-                              console.log("top track: " + toptrack.name);
-
-                              var p = artist.popularity;
-                              var n = artist.name;
-                              var u = artist.uri;
-
-                              //listItem = document.createElement("li");
-                              console.log("<strong>Name</strong>: " + n.decodeForText() + " | <strong>Popularity: </strong> " + p + " | <strong>Top Track: </strong>" + toptrack.name);
-
-                              //// undefined name
-                              //$('#artistsContainer').append(listItem);
-                      });
-                  }
-              });
-
-          });
-      });
-};
-showRelated('spotify:artist:2nszamLjZFgu3Yx77mKxuC');
-*/
-
-
-						
-						
+											
 
 $(function(){
 		
 	$("#commands a").click(function(e){
 		switch($(this).attr('command')) {
 			case "export":
-		
 						
 				getAll(function(matchedAll) {
 					console.log("getAll finished", matchedAll);
