@@ -27,9 +27,9 @@ if (file_exists($w->data() . '/update_library_in_progress')) {
             } else {
                 $type = 'tracks';
             }
-            $w->result('', $w->data() . '/update_library_in_progress', $words[0] . ' update in progress: ' . floatToSquares(intval($words[1]) / intval($words[2])), $words[1] . '/' . $words[2] . ' ' . $type . ' processed so far (if no progress, use spot_mini_kill_update command to stop it)', './images/update.png', 'no', '');
+            $w->result('', $w->data() . '/update_library_in_progress', $words[0] . ' update in progress: ' . floatToSquares(intval($words[1]) / intval($words[2])), $words[1] . '/' . $words[2] . ' ' . $type . ' processed so far (if no progress, use spot_mini_kill_update command to stop it)', './images/' . $theme . '/' . 'update.png', 'no', '');
         } else {
-            $w->result('', $w->data() . '/update_library_in_progress', 'Update in progress: ' . floatToSquares(0), '0 tracks processed so far (if no progress, use spot_mini_kill_update command to stop it)', './images/update.png', 'no', '');
+            $w->result('', $w->data() . '/update_library_in_progress', 'Update in progress: ' . floatToSquares(0), '0 tracks processed so far (if no progress, use spot_mini_kill_update command to stop it)', './images/' . $theme . '/' . 'update.png', 'no', '');
         }
     } else {
         $w->result('', $w->data() . '/update_library_in_progress', 'Library update seems broken', 'You can kill it by using spot_mini_kill_update command', './images/warning.png', 'no', '');
@@ -55,7 +55,7 @@ if(!installSpotifyAppIfNeeded($w))
 //
 // Read settings from DB
 //
-$getSettings = 'select * from settings';
+$getSettings = 'select all_playlists,is_spotifious_active,is_alfred_playlist_active,is_displaymorefrom_active,max_results, alfred_playlist_uri,country_code,theme from settings';
 $dbfile = $w->data() . '/settings.db';
 exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
 
@@ -72,10 +72,10 @@ if ($returnValue != 0) {
 if (!file_exists($w->data() . '/settings.db')) {
     touch($w->data() . '/settings.db');
 
-    $sql = 'sqlite3 "' . $w->data() . '/settings.db" ' . ' "create table settings (all_playlists boolean, is_spotifious_active boolean, is_alfred_playlist_active boolean, is_displaymorefrom_active boolean, max_results int, alfred_playlist_uri text, country_code text)"';
+    $sql = 'sqlite3 "' . $w->data() . '/settings.db" ' . ' "create table settings (all_playlists boolean, is_spotifious_active boolean, is_alfred_playlist_active boolean, is_displaymorefrom_active boolean, max_results int, alfred_playlist_uri text, country_code text, theme text)"';
     exec($sql);
 
-    $sql = 'sqlite3 "' . $w->data() . '/settings.db" ' . '"insert into settings values (0,1,1,1,50,\"\",\"\")"';
+    $sql = 'sqlite3 "' . $w->data() . '/settings.db" ' . '"insert into settings values (1,1,1,1,50,\"\",\"\",\"black\")"';
     exec($sql);
 }
 
@@ -91,6 +91,7 @@ foreach ($settings as $setting):
     $max_results = $setting[4];
     $alfred_playlist_uri = $setting[5];
     $country_code = $setting[6];
+    $theme = $setting[7];
 endforeach;
 
 
@@ -109,7 +110,7 @@ if (mb_strlen($query) < 3 ||
             if ($returnValue != 0) {
                 $w->result('', '', 'There is a problem with the library, try to update it.', 'Select Update library below', './images/warning.png', 'no', '');
 
-                $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
+                $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
 
                 echo $w->toxml();
                 return;
@@ -129,9 +130,9 @@ if (mb_strlen($query) < 3 ||
             endforeach;
 
             if ($all_playlists == true) {
-                $w->result('', '', 'Search for music in all your playlists', 'Begin typing at least 3 characters to start search' . ' (' . $all_tracks . ' tracks)', './images/allplaylists.png', 'no', '');
+                $w->result('', '', 'Search for music in all your playlists', 'Begin typing at least 3 characters to start search' . ' (' . $all_tracks . ' tracks)', './images/' . $theme . '/' . 'allplaylists.png', 'no', '');
             } else {
-                $w->result('', '', 'Search for music in your ★ playlist', 'Begin typing at least 3 characters to start search' . ' (' . $starred_tracks . ' tracks)', './images/star.png', 'no', '');
+                $w->result('', '', 'Search for music in your ★ playlist', 'Begin typing at least 3 characters to start search' . ' (' . $starred_tracks . ' tracks)', './images/' . $theme . '/' . 'star.png', 'no', '');
             }
 
             if ($is_displaymorefrom_active == true) {
@@ -141,7 +142,7 @@ if (mb_strlen($query) < 3 ||
                 if (substr_count($command_output, '→') > 0) {
                     $results = explode('→', $command_output);
                     $currentArtistArtwork = getArtistArtwork($w, $results[1], false);
-                    $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'playpause' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "🔈 " . $results[0], $results[2] . ' by ' . $results[1], ($results[3] == "playing") ? './images/pause.png' : './images/play.png', 'yes', '');
+                    $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'playpause' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "🔈 " . $results[0], $results[2] . ' by ' . $results[1], ($results[3] == "playing") ? './images/' . $theme . '/' . 'pause.png' : './images/' . $theme . '/' . 'play.png', 'yes', '');
                     
                     $w->result('', serialize(array($results[4] /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'morefromthisartist' /* other_action */ ,'' /* alfred_playlist_uri */ ,$results[1]  /* artist_name */)), "🔈👤 " . $results[1], 'Query all albums/tracks from this artist online..', $currentArtistArtwork, 'yes', '');
                     
@@ -156,7 +157,7 @@ if (mb_strlen($query) < 3 ||
 	                if ($returnValue != 0) {
 	                    $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
                  
-	                    $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
+	                    $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
 	
 	                    echo $w->toxml();
 	                    return;
@@ -173,7 +174,7 @@ if (mb_strlen($query) < 3 ||
 				        if ($returnValue != 0) {
 				            $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
 				            
-				            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
+				            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
 				
 				            echo $w->toxml();
 				            return;
@@ -193,26 +194,26 @@ if (mb_strlen($query) < 3 ||
                 }
             }
             if ($is_alfred_playlist_active == true) {
-                $w->result('', '', 'Alfred Playlist', 'Control your Alfred Playlist', './images/alfred_playlist.png', 'no', 'Alfred Playlist→');
+                $w->result('', '', 'Alfred Playlist', 'Control your Alfred Playlist', './images/' . $theme . '/' . 'alfred_playlist.png', 'no', 'Alfred Playlist→');
             }
-            $w->result('', '', 'Playlists', 'Browse by playlist' . ' (' . $nb_playlists . ' playlists)', './images/playlists.png', 'no', 'Playlist→');
+            $w->result('', '', 'Playlists', 'Browse by playlist' . ' (' . $nb_playlists . ' playlists)', './images/' . $theme . '/' . 'playlists.png', 'no', 'Playlist→');
             if ($all_playlists == true) {
-                $w->result('', '', 'Artists', 'Browse by artist' . ' (' . $all_artists . ' artists)', './images/artists.png', 'no', 'Artist→');
-                $w->result('', '', 'Albums', 'Browse by album' . ' (' . $all_albums . ' albums)', './images/albums.png', 'no', 'Album→');
+                $w->result('', '', 'Artists', 'Browse by artist' . ' (' . $all_artists . ' artists)', './images/' . $theme . '/' . 'artists.png', 'no', 'Artist→');
+                $w->result('', '', 'Albums', 'Browse by album' . ' (' . $all_albums . ' albums)', './images/' . $theme . '/' . 'albums.png', 'no', 'Album→');
             } else {
-                $w->result('', '', 'Artists', 'Browse by artist' . ' (' . $starred_artists . ' artists)', './images/artists.png', 'no', 'Artist→');
-                $w->result('', '', 'Albums', 'Browse by album' . ' (' . $starred_albums . ' albums)', './images/albums.png', 'no', 'Album→');
+                $w->result('', '', 'Artists', 'Browse by artist' . ' (' . $starred_artists . ' artists)', './images/' . $theme . '/' . 'artists.png', 'no', 'Artist→');
+                $w->result('', '', 'Albums', 'Browse by album' . ' (' . $starred_albums . ' albums)', './images/' . $theme . '/' . 'albums.png', 'no', 'Album→');
             }
         } else {
 			if (!file_exists($w->data() . '/library.db')) {
                 $w->result('', '', 'Workflow is not configured', '1/ Select Open Spotify Mini Player App below and make sure it works 2/ Then select Install library below', './images/warning.png', 'no', '');
 				
-				$w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'open_spotify_export_app' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "1/ Open Spotify Mini Player App <spotify:app:miniplayer>", "If it doesn't work, restart Spotify multiple times and make sure you have a developer account", './images/app_miniplayer.png', 'yes', '');
+				$w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'open_spotify_export_app' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "1/ Open Spotify Mini Player App <spotify:app:miniplayer>", "If it doesn't work, restart Spotify multiple times and make sure you have a developer account", './images/' . $theme . '/' . 'app_miniplayer.png', 'yes', '');
 				
 				
             }
 
-			$w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), '2/ Install library', "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
+			$w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), '2/ Install library', "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
             echo $w->toxml();
             return;
         }
@@ -228,9 +229,9 @@ if (mb_strlen($query) < 3 ||
             $alfred_playlist_state = 'disabled';
         }
         if ($all_playlists == true) {
-            $w->result('', '', 'Settings', 'Search scope=<all>, Max results=<' . $max_results . '>, Spotifious is <' . $spotifious_state . '>, Alfred Playlist is <' . $alfred_playlist_state . '>', './images/settings.png', 'no', 'Settings→');
+            $w->result('', '', 'Settings', 'Search scope=<all>, Max results=<' . $max_results . '>, Spotifious is <' . $spotifious_state . '>, Alfred Playlist is <' . $alfred_playlist_state . '>', './images/' . $theme . '/' . 'settings.png', 'no', 'Settings→');
         } else {
-            $w->result('', '', 'Settings', 'Search scope=<only ★>, Max results=<' . $max_results . '>, Spotifious is <' . $spotifious_state . '>, Alfred Playlist is <' . $alfred_playlist_state . '>', './images/settings.png', 'no', 'Settings→');
+            $w->result('', '', 'Settings', 'Search scope=<only ★>, Max results=<' . $max_results . '>, Spotifious is <' . $spotifious_state . '>, Alfred Playlist is <' . $alfred_playlist_state . '>', './images/' . $theme . '/' . 'settings.png', 'no', 'Settings→');
         }
 
     } //
@@ -239,33 +240,33 @@ if (mb_strlen($query) < 3 ||
     elseif (substr_count($query, '→') == 1) {
         if ($all_playlists == true) {
             // argument is csv form: track_uri|album_uri|artist_uri|playlist_uri|spotify_command|query|other_settings|other_action|alfred_playlist_uri|artist_name
-            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'disable_all_playlist' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), 'Change Search Scope', 'Select to change to ★ playlist only', './images/search.png', 'yes', '');
+            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'disable_all_playlist' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), 'Change Search Scope', 'Select to change to ★ playlist only', './images/' . $theme . '/' . 'search.png', 'yes', '');
             
         } else {
-            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'enable_all_playlist' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), 'Change Search Scope', 'Select to change to ALL playlists', './images/search.png', 'yes', '');
+            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'enable_all_playlist' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), 'Change Search Scope', 'Select to change to ALL playlists', './images/' . $theme . '/' . 'search.png', 'yes', '');
         }
 
-        $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), 'Update Library', "When done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
-        $w->result('', '', "Configure Max Number of Results", "Number of results displayed. (it doesn't apply to your playlist list)", './images/numbers.png', 'no', 'Settings→MaxResults→');
-        $w->result('', '', "Configure your Country Code", "This is needed to get available results when finding all albums/tracks from an artist", './images/country.png', 'no', 'Settings→Country→');
+        $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), 'Update Library', "When done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
+        $w->result('', '', "Configure Max Number of Results", "Number of results displayed. (it doesn't apply to your playlist list)", './images/' . $theme . '/' . 'numbers.png', 'no', 'Settings→MaxResults→');
+        $w->result('', '', "Configure your Country Code", "This is needed to get available results when finding all albums/tracks from an artist", './images/' . $theme . '/' . 'country.png', 'no', 'Settings→Country→');
 
         if ($is_spotifious_active == true) {
-            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'disable_spotifiuous' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Disable Spotifious", "Do not display Spotifious in default results", './images/uncheck.png', 'yes', '');
+            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'disable_spotifiuous' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Disable Spotifious", "Do not display Spotifious in default results", './images/' . $theme . '/' . 'uncheck.png', 'yes', '');
         } else {
-            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'enable_spotifiuous' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Enable Spotifious", "Display Spotifious in default results", './images/check.png', 'yes', '');
+            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'enable_spotifiuous' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Enable Spotifious", "Display Spotifious in default results", './images/' . $theme . '/' . 'check.png', 'yes', '');
         }
         if ($is_alfred_playlist_active == true) {
-            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'disable_alfred_playlist' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Disable Alfred Playlist", "Do not display Alfred Playlist", './images/uncheck.png', 'yes', '');
+            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'disable_alfred_playlist' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Disable Alfred Playlist", "Do not display Alfred Playlist", './images/' . $theme . '/' . 'uncheck.png', 'yes', '');
         } else {
-            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'enable_alfred_playlist' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Enable Alfred Playlist", "Display Alfred Playlist", './images/check.png', 'yes', '');
+            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'enable_alfred_playlist' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Enable Alfred Playlist", "Display Alfred Playlist", './images/' . $theme . '/' . 'check.png', 'yes', '');
         }
         if ($is_displaymorefrom_active == true) {
-            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'disable_displaymorefrom' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Disable \"Query all albums/tracks from this artist\"", "Disable the option which displays all albums and tracks from current artist", './images/uncheck.png', 'yes', '');
+            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'disable_displaymorefrom' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Disable \"Query all albums/tracks from this artist\"", "Disable the option which displays all albums and tracks from current artist", './images/' . $theme . '/' . 'uncheck.png', 'yes', '');
         } else {
-            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'enable_displaymorefrom' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Enable \"Query all albums/tracks from this artist\"", "Enable the option which  displays all albums and tracks from current artist", './images/check.png', 'yes', '');
+            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'enable_displaymorefrom' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Enable \"Query all albums/tracks from this artist\"", "Enable the option which  displays all albums and tracks from current artist", './images/' . $theme . '/' . 'check.png', 'yes', '');
         }
 
-        $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'open_spotify_export_app' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Open Spotify Mini Player App <spotify:app:miniplayer>", "Go to the Spotify Mini Player App in Spotify.", './images/app_miniplayer.png', 'yes', '');
+        $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'open_spotify_export_app' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Open Spotify Mini Player App <spotify:app:miniplayer>", "Go to the Spotify Mini Player App in Spotify.", './images/' . $theme . '/' . 'app_miniplayer.png', 'yes', '');
     }
 } else {
     ////////////
@@ -278,15 +279,15 @@ if (mb_strlen($query) < 3 ||
         // Search categories for fast access
         //
         if (strpos(strtolower('playlist'), strtolower($query)) !== false) {
-            $w->result('', '', 'Playlists', 'Browse by playlist', './images/playlists.png', 'no', 'Playlist→');
+            $w->result('', '', 'Playlists', 'Browse by playlist', './images/' . $theme . '/' . 'playlists.png', 'no', 'Playlist→');
         } else if (strpos(strtolower('album'), strtolower($query)) !== false) {
-            $w->result('', '', 'Albums', 'Browse by album', './images/albums.png', 'no', 'Album→');
+            $w->result('', '', 'Albums', 'Browse by album', './images/' . $theme . '/' . 'albums.png', 'no', 'Album→');
         } else if (strpos(strtolower('artist'), strtolower($query)) !== false) {
-            $w->result('', '', 'Artists', 'Browse by artist', './images/artists.png', 'no', 'Artist→');
+            $w->result('', '', 'Artists', 'Browse by artist', './images/' . $theme . '/' . 'artists.png', 'no', 'Artist→');
         } else if (strpos(strtolower('alfred'), strtolower($query)) !== false) {
-            $w->result('', '', 'Alfred Playlist', 'Control your Alfred Playlist', './images/alfred_playlist.png', 'no', 'Alfred Playlist→');
+            $w->result('', '', 'Alfred Playlist', 'Control your Alfred Playlist', './images/' . $theme . '/' . 'alfred_playlist.png', 'no', 'Alfred Playlist→');
         } else if (strpos(strtolower('setting'), strtolower($query)) !== false) {
-            $w->result('', '', 'Settings', 'Go to settings', './images/settings.png', 'no', 'Settings→');
+            $w->result('', '', 'Settings', 'Go to settings', './images/' . $theme . '/' . 'settings.png', 'no', 'Settings→');
         }
 
         //
@@ -334,7 +335,7 @@ if (mb_strlen($query) < 3 ||
             $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
 
            
-            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
+            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
 
             echo $w->toxml();
             return;
@@ -363,7 +364,7 @@ if (mb_strlen($query) < 3 ||
         if ($returnValue != 0) {
             $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
 
-            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
+            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
 
             echo $w->toxml();
             return;
@@ -394,7 +395,7 @@ if (mb_strlen($query) < 3 ||
         if ($returnValue != 0) {
             $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
 
-            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
+            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
 
             echo $w->toxml();
             return;
@@ -405,7 +406,7 @@ if (mb_strlen($query) < 3 ||
             if ($is_alfred_playlist_active == true) {
                 $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
             }
-            $w->result('help', 'help', "Select a track to play it", $subtitle, './images/info.png', 'no', '');
+            $w->result('help', 'help', "Select a track to play it", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', '');
         }
         foreach ($tracks as $track):
             $track = explode("	", $track);
@@ -440,7 +441,7 @@ if (mb_strlen($query) < 3 ||
             //
             $theplaylist = $words[1];
 
-            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_playlist_list' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update Playlist List (use it when you have added or removed a playlist)", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
+            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_playlist_list' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update Playlist List (use it when you have added or removed a playlist)", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
             
 
             if (mb_strlen($theplaylist) < 3) {
@@ -457,7 +458,7 @@ if (mb_strlen($query) < 3 ||
             if ($returnValue != 0) {
                 $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
 
-	            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
+	            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
 
                 echo $w->toxml();
                 return;
@@ -476,15 +477,15 @@ if (mb_strlen($query) < 3 ||
             $playlist = $words[1];
 
             if ($alfred_playlist_uri == "") {
-                $w->result("spotify_mini-spotify-alfredplaylist-set", '', "Set your Alfred playlist URI", "define the URI of your Alfred playlist", './images/alfred_playlist.png', 'no', 'Alfred Playlist→Set Alfred Playlist URI→');
+                $w->result("spotify_mini-spotify-alfredplaylist-set", '', "Set your Alfred playlist URI", "define the URI of your Alfred playlist", './images/' . $theme . '/' . 'alfred_playlist.png', 'no', 'Alfred Playlist→Set Alfred Playlist URI→');
             } else {
                 $r = explode(':', $alfred_playlist_uri);
 
                 $w->result("spotify_mini-spotify-alfredplaylist-browse", '', "Browse your Alfred playlist", "browse your alfred playlist", getPlaylistArtwork($w, $alfred_playlist_uri, $r[2], false), 'no', 'Playlist→' . $alfred_playlist_uri . '→');
 
-                $w->result("spotify_mini-spotify-alfredplaylist-refresh", serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,$alfred_playlist_uri /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_playlist' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update your Alfred Playlist", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
+                $w->result("spotify_mini-spotify-alfredplaylist-refresh", serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,$alfred_playlist_uri /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_playlist' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update your Alfred Playlist", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
                 
-                $w->result("spotify_mini-spotify-alfredplaylist-set", '', "Update your Alfred playlist URI", "define the URI of your Alfred playlist", './images/settings.png', 'no', 'Alfred Playlist→Set Alfred Playlist URI→');
+                $w->result("spotify_mini-spotify-alfredplaylist-set", '', "Update your Alfred playlist URI", "define the URI of your Alfred playlist", './images/' . $theme . '/' . 'settings.png', 'no', 'Alfred Playlist→Set Alfred Playlist URI→');
 
             }
         } //  Alfred Playlist end
@@ -516,7 +517,7 @@ if (mb_strlen($query) < 3 ||
             if ($returnValue != 0) {
                 $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
 
-	            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
+	            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
 
                 echo $w->toxml();
                 return;
@@ -559,7 +560,7 @@ if (mb_strlen($query) < 3 ||
             if ($returnValue != 0) {
                 $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
 
-	            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
+	            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
 
                 echo $w->toxml();
                 return;
@@ -587,7 +588,7 @@ if (mb_strlen($query) < 3 ||
 
                 if ($country_code == "") {
                     $w->result('', '', "Country code is not configured", "Configure it now", './images/warning.png', 'no', '');
-                    $w->result('', '', "Configure your Country Code", "This is needed to get available results when doing online lookups", './images/country.png', 'no', 'Settings→Country→');
+                    $w->result('', '', "Configure your Country Code", "This is needed to get available results when doing online lookups", './images/' . $theme . '/' . 'country.png', 'no', 'Settings→Country→');
 
                     echo $w->toxml();
                     return;
@@ -666,7 +667,7 @@ if (mb_strlen($query) < 3 ||
                         if ($is_alfred_playlist_active == true) {
                             $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
                         }
-                        $w->result('help', 'help', "Select a track to play it", $subtitle, './images/info.png', 'no', '');
+                        $w->result('help', 'help', "Select a track to play it", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', '');
                         foreach ($json->album->tracks as $key => $value) {
                             $w->result("spotify_mini-spotify-online-track-" . $value->name, serialize(array($value->href /*track_uri*/ ,$album_uri /* album_uri */ ,$artist_uri /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,$artist_name  /* artist_name */)), ucfirst($artist_name) . " - " . $value->name, $album_name . " (" . $json->album->released . ")", getTrackOrAlbumArtwork($w, $value->href, false), 'yes', '');
 
@@ -697,7 +698,7 @@ if (mb_strlen($query) < 3 ||
             $artist = $words[1];
             $track = $words[2];
 
-            $w->result('', '', 'Related Artists', 'Browse related artists', './images/related.png', 'no', $query . 'Related→');
+            $w->result('', '', 'Related Artists', 'Browse related artists', './images/' . $theme . '/' . 'related.png', 'no', $query . 'Related→');
             
             if (mb_strlen($track) < 3) {
                 if ($all_playlists == false) {
@@ -721,7 +722,7 @@ if (mb_strlen($query) < 3 ||
             if ($returnValue != 0) {
                 $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
 
-	            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
+	            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
 
                 echo $w->toxml();
                 return;
@@ -732,7 +733,7 @@ if (mb_strlen($query) < 3 ||
                 if ($is_alfred_playlist_active == true) {
                     $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
                 }
-                $w->result('help', 'help', "Select a track to play it", $subtitle, './images/info.png', 'no', '');
+                $w->result('help', 'help', "Select a track to play it", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', '');
             }
 
             foreach ($tracks as $track):
@@ -785,7 +786,7 @@ if (mb_strlen($query) < 3 ||
             if ($returnValue != 0) {
                 $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
 
-	            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
+	            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
 
 
                 echo $w->toxml();
@@ -797,7 +798,7 @@ if (mb_strlen($query) < 3 ||
                 if ($is_alfred_playlist_active == true) {
                     $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
                 }
-                $w->result('help', 'help', "Select a track to play it", $subtitle, './images/info.png', 'no', '');
+                $w->result('help', 'help', "Select a track to play it", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', '');
             }
 
             foreach ($tracks as $track):
@@ -833,7 +834,7 @@ if (mb_strlen($query) < 3 ||
             if ($returnValue != 0) {
                 $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
 
-	            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
+	            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
 
 
                 echo $w->toxml();
@@ -856,7 +857,7 @@ if (mb_strlen($query) < 3 ||
                 if ($returnValue != 0) {
                     $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
 
-		            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
+		            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
 
 
                     echo $w->toxml();
@@ -867,7 +868,7 @@ if (mb_strlen($query) < 3 ||
                     if ($is_alfred_playlist_active == true) {
                         $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
                     }
-                    $w->result('help', 'help', "Select a track to play it", $subtitle, './images/info.png', 'no', '');
+                    $w->result('help', 'help', "Select a track to play it", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', '');
                 }
 
                 $subtitle = "Launch Playlist";
@@ -880,7 +881,7 @@ if (mb_strlen($query) < 3 ||
                 
                 
 
-                $w->result("spotify_mini-spotify-update-$playlist[1]", serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,$playlist[0] /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_playlist' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update playlist " . ucfirst($playlist[1]) . " by " . $playlist[3], "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
+                $w->result("spotify_mini-spotify-update-$playlist[1]", serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,$playlist[0] /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_playlist' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update playlist " . ucfirst($playlist[1]) . " by " . $playlist[3], "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
                 
                 foreach ($tracks as $track):
                     $track = explode("	", $track);
@@ -904,11 +905,11 @@ if (mb_strlen($query) < 3 ||
 
             if ($setting_kind == "MaxResults") {
                 if (mb_strlen($the_query) == 0) {
-                    $w->result('', '', "Enter the Max Results number (must be greater than 0):", "Recommendation is between 50 to 100", './images/settings.png', 'no', '');
+                    $w->result('', '', "Enter the Max Results number (must be greater than 0):", "Recommendation is between 50 to 100", './images/' . $theme . '/' . 'settings.png', 'no', '');
                 } else {
                     // max results has been set
                     if (is_numeric($the_query) == true && $the_query > 0) {
-                        $w->result('', "||||||" . "MAX_RESULTS→" . $the_query . "|||", "Max Results will be set to <" . $the_query . ">", "Type enter to validate the Max Results", './images/settings.png', 'yes', '');
+                        $w->result('', "||||||" . "MAX_RESULTS→" . $the_query . "|||", "Max Results will be set to <" . $the_query . ">", "Type enter to validate the Max Results", './images/' . $theme . '/' . 'settings.png', 'yes', '');
                     } else {
                         $w->result('', '', "The Max Results value entered is not valid", "Please fix it", './images/warning.png', 'no', '');
 
@@ -944,7 +945,7 @@ if (mb_strlen($query) < 3 ||
                         } else {
                             foreach ($json as $key => $value) {
                                 if (strpos(strtolower($key), strtolower($the_query)) !== false) {
-                                    $w->result('', "||||||" . "COUNTRY→" . $value . "|||", ucfirst($key), $value, './images/country.png', 'yes', '');
+                                    $w->result('', "||||||" . "COUNTRY→" . $value . "|||", ucfirst($key), $value, './images/' . $theme . '/' . 'country.png', 'yes', '');
                                 }
                             }
                         }
@@ -956,7 +957,7 @@ if (mb_strlen($query) < 3 ||
             $alfred_playlist_uri = $words[2];
 
             if (mb_strlen($alfred_playlist_uri) == 0) {
-                $w->result('', '', "Enter the Alfred Spotify URI:", "Create the playlist in Spotify(shall be named <Alfred Playlist>, right click on it and select copy spotify URI", './images/settings.png', 'no', '');
+                $w->result('', '', "Enter the Alfred Spotify URI:", "Create the playlist in Spotify(shall be named <Alfred Playlist>, right click on it and select copy spotify URI", './images/' . $theme . '/' . 'settings.png', 'no', '');
             } else {
                 // alfred_playlist_uri has been set
                                
@@ -974,7 +975,7 @@ if (mb_strlen($query) < 3 ||
 	                if ($returnValue != 0) {
 	                    $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
 
-			            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
+			            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
 
 	
 	                    echo $w->toxml();
@@ -994,7 +995,7 @@ if (mb_strlen($query) < 3 ||
                         $words = explode(':', $alfred_playlist_uri);
 
 
-                        $w->result('', "||||||" . "ALFRED_PLAYLIST→" . $words[0] . ":" . $words[1] . ":@:" . $words[3] . ":" . $words[4] . "|||", "Alfred Playlist URI will be set to <" . $alfred_playlist_uri . ">", "Type enter to validate", './images/settings.png', 'yes', '');
+                        $w->result('', "||||||" . "ALFRED_PLAYLIST→" . $words[0] . ":" . $words[1] . ":@:" . $words[3] . ":" . $words[4] . "|||", "Alfred Playlist URI will be set to <" . $alfred_playlist_uri . ">", "Type enter to validate", './images/' . $theme . '/' . 'settings.png', 'yes', '');
                     } else {
                     	if($playlistName == "")
                     	{
@@ -1048,7 +1049,7 @@ if (mb_strlen($query) < 3 ||
 	        if ($returnValue != 0) {
 	            $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
 	
-	            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', '');
+	            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
 	
 	            echo $w->toxml();
 	            return;
