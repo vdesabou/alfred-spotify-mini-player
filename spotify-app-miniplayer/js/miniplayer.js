@@ -629,9 +629,11 @@ function getPlaylists(matchedPlaylistsCallback) {
 	objstarredplaylist.uri=Library.forCurrentUser().starred.uri;
 	array_results.push(objstarredplaylist);
 
+/*
 	objtoplistplaylist={};
 	objtoplistplaylist.uri=Library.forCurrentUser().toplist.uri;
 	array_results.push(objtoplistplaylist);
+*/
 									
     Library.forCurrentUser().playlists.snapshot().done(function(snapshot){
 		for (var i = 0, l = snapshot.length; i < l; i++) 
