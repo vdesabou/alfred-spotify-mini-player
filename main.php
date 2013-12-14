@@ -955,9 +955,9 @@ if (mb_strlen($query) < 3 ||
             }
 			else if ($setting_kind == "Theme") {
 
-            	$w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'set_theme_to_black' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Set theme to black", "will set icons to black color", './images/' . 'black' . '/' . 'theme.png', 'yes', '');
+            	$w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'set_theme_to_black' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Set theme to Black", "will set icons to black color", './images/' . 'black' . '/' . 'theme.png', 'yes', '');
 
-            	$w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'set_theme_to_green' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Set theme to black", "will set icons to black color", './images/' . 'green' . '/' . 'theme.png', 'yes', '');
+            	$w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'set_theme_to_green' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Set theme to Green", "will set icons to green color", './images/' . 'green' . '/' . 'theme.png', 'yes', '');
             	
             }
         } // end of Settings
