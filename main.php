@@ -289,6 +289,37 @@ if (mb_strlen($query) < 3 ||
             $w->result('', '', 'Settings', 'Go to settings', './images/settings.png', 'no', 'Settings→');
         }
 
+        //
+        // Search commands for fast access
+        //
+        if (strpos(strtolower('next'), strtolower($query)) !== false) {
+              $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'next track' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), 'Next Track', 'Play the next track in Spotify', 'icon.png','yes', '');
+        } else if (strpos(strtolower('previous'), strtolower($query)) !== false) {
+              $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'previous track' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), 'Previous Track', 'Play the previous track in Spotify', 'icon.png','yes', '');
+        } else if (strpos(strtolower('play'), strtolower($query)) !== false) {
+              $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'playpause' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), 'Play / Pause', 'Play / Pause the current Spotify track', 'icon.png','yes', '');
+        } else if (strpos(strtolower('pause'), strtolower($query)) !== false) {
+              $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'playpause' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), 'Play / Pause', 'Play / Pause the current Spotify track', 'icon.png','yes', '');
+        } else if (strpos(strtolower('mute'), strtolower($query)) !== false) {
+              $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'playpause' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), 'Mute Spotify Volume', 'Mute Spotify', 'icon.png','yes', '');
+        } else if (strpos(strtolower('star'), strtolower($query)) !== false) {
+              $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'star' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), 'Star Track', 'Star current track', 'icon.png','yes', '');
+        } else if (strpos(strtolower('rand'), strtolower($query)) !== false) {
+              $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'random' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), 'Random Track', 'Play random track', 'icon.png','yes', '');
+        } else if (strpos(strtolower('mut'), strtolower($query)) !== false) {
+        	  $osascript_command = 'if sound volume is less than or equal to 0 then
+										set sound volume to 100
+									else
+										set sound volume to 0
+									end if';
+              $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,$osascript_command /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), 'Mute Spotify Volume', 'Mute Spotify', 'icon.png','yes', '');
+        } else if (strpos(strtolower('volmi'), strtolower($query)) !== false) {
+        	  $osascript_command = 'set sound volume to 50';
+              $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,$osascript_command /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), 'Set Spotify Volume to 50%', 'Set the Spotify Volume to 50%', 'icon.png','yes', '');
+        } else if (strpos(strtolower('volma'), strtolower($query)) !== false) {
+        	  $osascript_command = 'set sound volume to 100';
+              $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,$osascript_command /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), 'Set Spotify Volume to Maximum', 'Set the Spotify Volume to Maximum', 'icon.png','yes', '');
+        } 
 
         //
         // Search in Playlists

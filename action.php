@@ -159,7 +159,12 @@ if ($playlist_uri != "") {
     } else if ($other_action == "open_spotify_export_app") {
         exec("osascript -e 'tell application \"Spotify\" to activate'");
         exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer\"'");
-    } else if ($other_action == "morefromthisartist") {
+    } else if ($other_action == "star") {
+        exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:star:" . uniqid() . "\"'");
+    } else if ($other_action == "random") {
+        exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:random:" . uniqid() . "\"'");
+    } 
+    else if ($other_action == "morefromthisartist") {
         $t = explode(':', $track_uri);
         $completeurl = getArtistURLFromTrack($w, $t[2]);
         $a = explode('/', $completeurl);
