@@ -626,7 +626,7 @@ if (mb_strlen($query) < 3 ||
 
                                 if (strpos($availability->territories, $country_code) !== false) {
                                     if (checkIfResultAlreadyThere($w->results(), ucfirst($album->name)) == false) {
-                                        $w->result("spotify_mini-spotify-online-album" . $album->name, '', ucfirst($album->name), "by " . $album->artist . " (" . $album->released . ")", getTrackOrAlbumArtwork($w, $album->href, false), 'no', "Online⇾" . $artist_uri . "@" . $album->artist . "@" . $album->href . "@" . $album->name);
+                                        $w->result("spotify_mini-spotify-online-album" . $album->name, '', ucfirst($album->name), "by " . $album->artist . " (" . $album->released . ")", getTrackOrAlbumArtwork($w,$theme, $album->href, false), 'no', "Online⇾" . $artist_uri . "@" . $album->artist . "@" . $album->href . "@" . $album->name);
                                     }
                                 }
                             }
@@ -670,7 +670,7 @@ if (mb_strlen($query) < 3 ||
                         }
                         $w->result('help', 'help', "Select a track to play it", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', '');
                         foreach ($json->album->tracks as $key => $value) {
-                            $w->result("spotify_mini-spotify-online-track-" . $value->name, serialize(array($value->href /*track_uri*/ ,$album_uri /* album_uri */ ,$artist_uri /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,$artist_name  /* artist_name */)), ucfirst($artist_name) . " - " . $value->name, $album_name . " (" . $json->album->released . ")", getTrackOrAlbumArtwork($w, $value->href, false), 'yes', '');
+                            $w->result("spotify_mini-spotify-online-track-" . $value->name, serialize(array($value->href /*track_uri*/ ,$album_uri /* album_uri */ ,$artist_uri /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,$artist_name  /* artist_name */)), ucfirst($artist_name) . " - " . $value->name, $album_name . " (" . $json->album->released . ")", getTrackOrAlbumArtwork($w,$theme, $value->href, false), 'yes', '');
 
 
                         }

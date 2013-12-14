@@ -43,7 +43,7 @@ function checkIfResultAlreadyThere($results, $title)
     return false;
 }
 
-function getTrackOrAlbumArtwork($w, $spotifyURL, $fetchIfNotPresent)
+function getTrackOrAlbumArtwork($w,$theme, $spotifyURL, $fetchIfNotPresent)
 {
 
     $hrefs = explode(':', $spotifyURL);
@@ -77,26 +77,26 @@ function getTrackOrAlbumArtwork($w, $spotifyURL, $fetchIfNotPresent)
             }
         } else {
             if ($isAlbum) {
-                return "images/albums.png";
+                return "images/" . $theme . "/albums.png";
             } else {
-                return "images/tracks.png";
+                return "images/" . $theme . "/tracks.png";
             }
         }
     } else {
         if (filesize($currentArtwork) == 0) {
             if ($isAlbum) {
-                return "images/albums.png";
+                return "images/" . $theme . "/albums.png";
             } else {
-                return "images/tracks.png";
+                return "images/" . $theme . "/tracks.png";
             }
         }
     }
 
     if (is_numeric($artwork) && $artwork == 0) {
         if ($isAlbum) {
-            return "images/albums.png";
+            return "images/" . $theme . "/albums.png";
         } else {
-            return "images/tracks.png";
+            return "images/" . $theme . "/tracks.png";
         }
     } else {
         return $currentArtwork;
@@ -155,16 +155,16 @@ function getPlaylistArtwork($w, $playlistURI, $username, $fetchIfNotPresent)
             }
         } else {
 
-            return "images/playlists.png";
+            return "images/" . $theme . "/playlists.png";
         }
     } else {
         if (filesize($currentArtwork) == 0) {
-            return "images/playlists.png";
+            return "images/" . $theme . "/playlists.png";
         }
     }
 
     if (is_numeric($artwork) && $artwork == 0) {
-        return "images/playlists.png";
+        return "images/" . $theme . "/playlists.png";
     } else {
         return $currentArtwork;
     }
@@ -196,16 +196,16 @@ function getArtistArtwork($w, $artist, $fetchIfNotPresent)
                 $w->request("$artwork", $options);
             }
         } else {
-            return "images/artists.png";
+            return "images/" . $theme . "/artists.png";
         }
     } else {
         if (filesize($currentArtwork) == 0) {
-            return "images/artists.png";
+            return "images/" . $theme . "/artists.png";
         }
     }
 
     if (is_numeric($artwork) && $artwork == 0) {
-        return "images/artists.png";
+        return "images/" . $theme . "/artists.png";
     } else {
         return $currentArtwork;
     }
@@ -337,9 +337,9 @@ function updateLibrary($jsonData)
 
                 //
                 // Download artworks
-                $track_artwork_path = getTrackOrAlbumArtwork($w, $track['uri'], true);
+                $track_artwork_path = getTrackOrAlbumArtwork($w,$theme, $track['uri'], true);
                 $artist_artwork_path = getArtistArtwork($w, $track['artist_name'], true);
-                $album_artwork_path = getTrackOrAlbumArtwork($w, $track['album_uri'], true);
+                $album_artwork_path = getTrackOrAlbumArtwork($w,$theme, $track['album_uri'], true);
 
                 $album_year = 1995;
 
@@ -465,9 +465,9 @@ function updatePlaylist($jsonData)
 
                 //
                 // Download artworks
-                $track_artwork_path = getTrackOrAlbumArtwork($w, $track['uri'], true);
+                $track_artwork_path = getTrackOrAlbumArtwork($w,$theme, $track['uri'], true);
                 $artist_artwork_path = getArtistArtwork($w, $track['artist_name'], true);
-                $album_artwork_path = getTrackOrAlbumArtwork($w, $track['album_uri'], true);
+                $album_artwork_path = getTrackOrAlbumArtwork($w,$theme, $track['album_uri'], true);
 
                 $album_year = 1995;
                 //echo "$track[name]\n";
@@ -597,9 +597,9 @@ function updatePlaylistList($jsonData)
 
                     //
                     // Download artworks
-                    $track_artwork_path = getTrackOrAlbumArtwork($w, $track['uri'], true);
+                    $track_artwork_path = getTrackOrAlbumArtwork($w,$theme, $track['uri'], true);
                     $artist_artwork_path = getArtistArtwork($w, $track['artist_name'], true);
-                    $album_artwork_path = getTrackOrAlbumArtwork($w, $track['album_uri'], true);
+                    $album_artwork_path = getTrackOrAlbumArtwork($w,$theme, $track['album_uri'], true);
 
                     $album_year = 1995;
 
