@@ -310,6 +310,9 @@ function updateLibrary($jsonData)
         $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table playlists (uri text, name text, nb_tracks int, author text, username text, playlist_artwork_path text)"';
         exec($sql);
 
+        $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table related (artist_name text, related_artist_name text, related_artist_uri text, related_artist_artwork_path text, PRIMARY KEY (artist_name, related_artist_name))"';
+        exec($sql);
+        
         $nb_track = 0;
 
         foreach ($json as $playlist) {
@@ -344,6 +347,15 @@ function updateLibrary($jsonData)
 
                 exec($sql);
 
+				// handle related artists here
+				foreach ($track['related'] as $related) {
+				
+					$related_artist_artwork_path = getArtistArtwork($w, $related['name'], true);
+				    
+		            $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert or ignore into related values (\"' . escapeQuery($track['artist_name']) . '\",\"' . escapeQuery($related['name']) . '\",\"' . $related['uri'] . '\",\"' . $related_artist_artwork_path . '\")"';
+		            exec($sql);				
+				}
+				
                 $nb_track++;
                 if ($nb_track % 10 === 0) {
                     $w->write('Library→' . $nb_track . '→' . $nb_tracktotal, 'update_library_in_progress');
@@ -464,6 +476,15 @@ function updatePlaylist($jsonData)
 
                 exec($sql);
 
+				// handle related artists here
+				foreach ($track['related'] as $related) {
+				
+					$related_artist_artwork_path = getArtistArtwork($w, $related['name'], true);
+				    
+		            $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert or ignore into related values (\"' . escapeQuery($track['artist_name']) . '\",\"' . escapeQuery($related['name']) . '\",\"' . $related['uri'] . '\",\"' . $related_artist_artwork_path . '\")"';
+		            exec($sql);				
+				}
+				
                 $nb_track++;
                 if ($nb_track % 10 === 0) {
                     $w->write('Playlist→' . $nb_track . '→' . $nb_tracktotal, 'update_library_in_progress');
@@ -585,6 +606,15 @@ function updatePlaylistList($jsonData)
                     $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into tracks values (' . $starred . ',' . $track['popularity'] . ',\"' . $track['uri'] . '\",\"' . $track['album_uri'] . '\",\"' . $track['artist_uri'] . '\",\"' . escapeQuery($track['name']) . '\",\"' . escapeQuery($track['album_name']) . '\",\"' . escapeQuery($track['artist_name']) . '\"' . ',' . $album_year . ',\"' . $track_artwork_path . '\"' . ',\"' . $artist_artwork_path . '\"' . ',\"' . $album_artwork_path . '\"' . ',\"' . escapeQuery($track['playlist_name']) . '\"' . ',\"' . $track['playlist_uri'] . '\"' . ',' . $playable . ',\"' . $track['availability'] . '\"' . ')"';
 
                     exec($sql);
+                    
+					// handle related artists here
+					foreach ($track['related'] as $related) {
+					
+						$related_artist_artwork_path = getArtistArtwork($w, $related['name'], true);
+					    
+			            $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert or ignore into related values (\"' . escapeQuery($track['artist_name']) . '\",\"' . escapeQuery($related['name']) . '\",\"' . $related['uri'] . '\",\"' . $related_artist_artwork_path . '\")"';
+			            exec($sql);				
+					}
                 }
             } else {
                 continue;
