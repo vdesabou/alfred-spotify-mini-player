@@ -910,7 +910,7 @@ if (mb_strlen($query) < 3 ||
                 } else {
                     // max results has been set
                     if (is_numeric($the_query) == true && $the_query > 0) {
-                        $w->result('', "||||||" . "MAX_RESULTS→" . $the_query . "|||", "Max Results will be set to <" . $the_query . ">", "Type enter to validate the Max Results", './images/' . $theme . '/' . 'settings.png', 'yes', '');
+                        $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'MAX_RESULTS→' . $the_query /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Max Results will be set to <" . $the_query . ">", "Type enter to validate the Max Results", './images/' . $theme . '/' . 'settings.png', 'yes', '');
                     } else {
                         $w->result('', '', "The Max Results value entered is not valid", "Please fix it", './images/warning.png', 'no', '');
 
@@ -941,12 +941,12 @@ if (mb_strlen($query) < 3 ||
                         if (mb_strlen($the_query) == 0) {
                             $w->result('', '', "Select your country:", "This is needed to get accurate results from online spotify lookups ", './images/country.png', 'no', '');
                             foreach ($json as $key => $value) {
-                                $w->result('', "||||||" . "COUNTRY→" . $value . "|||", ucfirst($key), $value, './images/country.png', 'yes', '');
+                                $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ , 'COUNTRY→' . $value /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), ucfirst($key), $value, './images/' . $theme . '/' . 'country.png', 'yes', '');
                             }
                         } else {
                             foreach ($json as $key => $value) {
                                 if (strpos(strtolower($key), strtolower($the_query)) !== false) {
-                                    $w->result('', "||||||" . "COUNTRY→" . $value . "|||", ucfirst($key), $value, './images/' . $theme . '/' . 'country.png', 'yes', '');
+                                    $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ , 'COUNTRY→' . $value /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), ucfirst($key), $value, './images/' . $theme . '/' . 'country.png', 'yes', '');
                                 }
                             }
                         }
@@ -1003,7 +1003,7 @@ if (mb_strlen($query) < 3 ||
                         $words = explode(':', $alfred_playlist_uri);
 
 
-                        $w->result('', "||||||" . "ALFRED_PLAYLIST→" . $words[0] . ":" . $words[1] . ":@:" . $words[3] . ":" . $words[4] . "|||", "Alfred Playlist URI will be set to <" . $alfred_playlist_uri . ">", "Type enter to validate", './images/' . $theme . '/' . 'settings.png', 'yes', '');
+                        $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'ALFRED_PLAYLIST→' . $words[0] . ':' . $words[1] . ':@:' . $words[3] . ':' . $words[4] /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Alfred Playlist URI will be set to <" . $alfred_playlist_uri . ">", "Type enter to validate", './images/' . $theme . '/' . 'settings.png', 'yes', '');
                     } else {
                     	if($playlistName == "")
                     	{
@@ -1011,7 +1011,7 @@ if (mb_strlen($query) < 3 ||
                         }
                         else if($playlistName != "Alfred Playlist")
                     	{
-                        	$w->result('', '', 'The playlist entered <' . $playlistName . '>is not valid', 'shall be <Alfred Playlist>', './images/warning.png', 'no', '');
+                        	$w->result('', '', 'The playlist entered <' . $playlistName . '> is not valid', 'shall be <Alfred Playlist>', './images/warning.png', 'no', '');
                         }
                         else if($wrong_user)
                         {
