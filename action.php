@@ -136,7 +136,18 @@ if ($playlist_uri != "") {
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
         echo "Spotifious is now disabled";
-    } else if ($other_action == "enable_displaymorefrom") {
+    } else if ($other_action == "set_theme_to_black") {
+        $setSettings = "update settings set theme='black'";
+        $dbfile = $w->data() . "/settings.db";
+        exec("sqlite3 \"$dbfile\" \"$setSettings\"");
+        echo "Theme has been set to black";
+    } else if ($other_action == "set_theme_to_green") {
+        $setSettings = "update settings set theme='green'";
+        $dbfile = $w->data() . "/settings.db";
+        exec("sqlite3 \"$dbfile\" \"$setSettings\"");
+        echo "Theme has been set to green";
+    }
+    else if ($other_action == "enable_displaymorefrom") {
         $setSettings = "update settings set is_displaymorefrom_active=1";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
