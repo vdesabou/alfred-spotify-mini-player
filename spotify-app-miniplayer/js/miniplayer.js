@@ -490,9 +490,9 @@ function getExternalPlaylistUri(uri,username) {
 	var words = uri.split(":");
 	
 	if(words.length == 5) {
-		return words[0] + ":" + words[1] + ":" + owner + ":" + words[3] + ":" + words[4];
+		return words[0] + ":" + words[1] + ":" + username + ":" + words[3] + ":" + words[4];
 	} else if (words.length == 4) {
-		return words[0] + ":" + words[1] + ":" + owner + ":" + words[3];
+		return words[0] + ":" + words[1] + ":" + username + ":" + words[3];
 	}
 }
 
