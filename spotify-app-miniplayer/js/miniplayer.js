@@ -485,6 +485,12 @@ function getRelatedArtists(objtrack,matchedRelatedArtistsCallback) {
 			 });
 }
 
+function getExternalPlaylistUri(uri,username) {
+	var playlist_uri = "";
+	var words = uri.split(":");
+	
+	return words[0] + ":" + words[1] + ":" + username + ":" + words[3] + ":" + words[4];
+}
 
 function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {	
 	var array_tracks = [];
@@ -505,7 +511,7 @@ function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {
 				p={};
 				
 				p.name=playlist.name;
-				p.uri=playlist.uri;
+				p.uri=getExternalPlaylistUri(playlist.uri,owner.username);
 				p.owner=owner.name;
 				p.username=owner.username;
 				p.tracks=array_tracks; 
@@ -525,7 +531,7 @@ function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {
 				p={};
 				
 				p.name=playlist.name;
-				p.uri=playlist.uri;
+				p.uri=getExternalPlaylistUri(playlist.uri,owner.username);
 				p.owner=owner.name;
 				p.username=owner.username;
 				p.tracks=array_tracks; 
@@ -543,7 +549,7 @@ function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {
 				{
 					objtrack={};
 					objtrack.playlist_name=playlist.name;
-					objtrack.playlist_uri=playlist.uri;
+					objtrack.playlist_uri=getExternalPlaylistUri(playlist.uri,owner.username);
 					objtrack.name=t.name;
 					objtrack.uri=t.uri;
 					objtrack.popularity=t.popularity;
@@ -565,7 +571,7 @@ function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {
 									console.log("getPlaylistTracks ended ",playlist.name);
 									p={};
 									p.name=playlist.name;
-									p.uri=playlist.uri;
+									p.uri=getExternalPlaylistUri(playlist.uri,owner.username);
 									p.owner=owner.name;
 									p.username=owner.username;
 									p.tracks=array_tracks; 
@@ -581,7 +587,7 @@ function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {
 				p={};
 				
 				p.name=playlist.name;
-				p.uri=playlist.uri;
+				p.uri=getExternalPlaylistUri(playlist.uri,owner.username);;
 				p.owner=owner.name;
 				p.username=owner.username;
 				p.tracks=array_tracks; 
