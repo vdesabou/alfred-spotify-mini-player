@@ -489,7 +489,11 @@ function getExternalPlaylistUri(uri,username) {
 	var playlist_uri = "";
 	var words = uri.split(":");
 	
-	return words[0] + ":" + words[1] + ":" + username + ":" + words[3] + ":" + words[4];
+	if(words.length == 5) {
+		return words[0] + ":" + words[1] + ":" + owner + ":" + words[3] + ":" + words[4];
+	} else if (words.length == 4) {
+		return words[0] + ":" + words[1] + ":" + owner + ":" + words[3];
+	}
 }
 
 function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {	
