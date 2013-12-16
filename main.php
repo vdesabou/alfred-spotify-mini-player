@@ -111,11 +111,7 @@ if (mb_strlen($query) < 3 ||
             exec("sqlite3 -separator '	' \"$dbfile\" \"$getCounters\" 2>&1", $counters, $returnValue);
 
             if ($returnValue != 0) {
-                $w->result('', '', 'There is a problem with the library, try to update it.', 'Select Update library below', './images/warning.png', 'no', '');
-
-                $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
-
-                echo $w->toxml();
+                handleDbIssue($theme);
                 return;
             }
 
@@ -153,16 +149,11 @@ if (mb_strlen($query) < 3 ||
                     
 	                $getTracks = "select * from tracks where playable=1 and uri='" . $results[4] . "'" . " limit " . $max_results;
 
-	
 	                $dbfile = $w->data() . "/library.db";
 	                exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
 	
 	                if ($returnValue != 0) {
-	                    $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
-                 
-	                    $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
-	
-	                    echo $w->toxml();
+	                    handleDbIssue($theme);
 	                    return;
 	                }
 	
@@ -175,11 +166,7 @@ if (mb_strlen($query) < 3 ||
 				        exec("sqlite3 -separator '	' \"$dbfile\" \"$getPlaylists\" 2>&1", $playlists, $returnValue);
 				
 				        if ($returnValue != 0) {
-				            $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
-				            
-				            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
-				
-				            echo $w->toxml();
+				            handleDbIssue($theme);
 				            return;
 				        }
 				
@@ -336,12 +323,7 @@ if (mb_strlen($query) < 3 ||
         exec("sqlite3 -separator '	' \"$dbfile\" \"$getPlaylists\" 2>&1", $playlists, $returnValue);
 
         if ($returnValue != 0) {
-            $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
-
-           
-            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
-
-            echo $w->toxml();
+            handleDbIssue($theme);
             return;
         }
 
@@ -366,11 +348,7 @@ if (mb_strlen($query) < 3 ||
         exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
 
         if ($returnValue != 0) {
-            $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
-
-            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
-
-            echo $w->toxml();
+            handleDbIssue($theme);
             return;
         }
 
@@ -397,14 +375,10 @@ if (mb_strlen($query) < 3 ||
         exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
 
         if ($returnValue != 0) {
-            $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
-
-            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
-
-            echo $w->toxml();
-            return;
-        }
-
+            handleDbIssue($theme);
+            return;            
+		}
+		
         if (count($tracks) > 0) {
             $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
             if ($is_alfred_playlist_active == true) {
@@ -460,11 +434,7 @@ if (mb_strlen($query) < 3 ||
             exec("sqlite3 -separator '	' \"$dbfile\" \"$getPlaylists\" 2>&1", $playlists, $returnValue);
 
             if ($returnValue != 0) {
-                $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
-
-	            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
-
-                echo $w->toxml();
+                handleDbIssue($theme);
                 return;
             }
 
@@ -519,11 +489,7 @@ if (mb_strlen($query) < 3 ||
             exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
 
             if ($returnValue != 0) {
-                $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
-
-	            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
-
-                echo $w->toxml();
+                handleDbIssue($theme);
                 return;
             }
 
@@ -562,11 +528,7 @@ if (mb_strlen($query) < 3 ||
             exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
 
             if ($returnValue != 0) {
-                $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
-
-	            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
-
-                echo $w->toxml();
+                handleDbIssue($theme);
                 return;
             }
 
@@ -724,11 +686,7 @@ if (mb_strlen($query) < 3 ||
             exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
 
             if ($returnValue != 0) {
-                $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
-
-	            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
-
-                echo $w->toxml();
+                handleDbIssue($theme);
                 return;
             }
 
@@ -788,12 +746,7 @@ if (mb_strlen($query) < 3 ||
             exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
 
             if ($returnValue != 0) {
-                $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
-
-	            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
-
-
-                echo $w->toxml();
+                handleDbIssue($theme);
                 return;
             }
 
@@ -836,12 +789,7 @@ if (mb_strlen($query) < 3 ||
             exec("sqlite3 -separator '	' \"$dbfile\" \"$getPlaylists\" 2>&1", $playlists, $returnValue);
 
             if ($returnValue != 0) {
-                $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
-
-	            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
-
-
-                echo $w->toxml();
+                handleDbIssue($theme);
                 return;
             }
 
@@ -859,12 +807,7 @@ if (mb_strlen($query) < 3 ||
                 exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
 
                 if ($returnValue != 0) {
-                    $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
-
-		            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
-
-
-                    echo $w->toxml();
+                    $handleDbIssue($theme);
                     return;
                 }
                 if (count($tracks) > 0) {
@@ -984,12 +927,7 @@ if (mb_strlen($query) < 3 ||
 	                exec("sqlite3 -separator '	' \"$dbfile\" \"$getUser\" 2>&1", $users, $returnValue);
 	
 	                if ($returnValue != 0) {
-	                    $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
-
-			            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
-
-	
-	                    echo $w->toxml();
+	                    handleDbIssue($theme);
 	                    return;
 	                }
 	                
@@ -1055,11 +993,7 @@ if (mb_strlen($query) < 3 ||
 	        exec("sqlite3 -separator '	' \"$dbfile\" \"$getRelateds\" 2>&1", $relateds, $returnValue);
 	
 	        if ($returnValue != 0) {
-	            $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
-	
-	            $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
-	
-	            echo $w->toxml();
+	            handleDbIssue($theme);
 	            return;
 	        }
 
