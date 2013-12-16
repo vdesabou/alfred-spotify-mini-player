@@ -101,17 +101,17 @@ if ($playlist_uri != "") {
         $setSettings = "update settings set max_results=" . $setting[1];
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        echo "Max results has been set to $setting[1]";
+        echo "Max results set to $setting[1]";
     } else if ($setting[0] == "ALFRED_PLAYLIST") {
-        $setSettings = 'update settings set alfred_playlist_uri=\"' . $setting[1] . '\"';
+        $setSettings = 'update settings set alfred_playlist_uri=\"' . $setting[1] . '\"' . ',alfred_playlist_name=\"' . $setting[2] . '\"';
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        echo "Alfred Playlist URI has been set to $setting[1]";
+        echo "Alfred Playlist set to $setting[2]";
     } else if ($setting[0] == "COUNTRY") {
         $setSettings = 'update settings set country_code=\"' . $setting[1] . '\"';
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        echo "Country Code has been set to $setting[1]";
+        echo "Country Code set to $setting[1]";
     }
 } else if ($original_query != "") {
     exec("osascript -e 'tell application \"Alfred 2\" to search \"spot $original_query\"'");
@@ -140,12 +140,12 @@ if ($playlist_uri != "") {
         $setSettings = "update settings set theme='black'";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        echo "Theme has been set to black";
+        echo "Theme set to black";
     } else if ($other_action == "set_theme_to_green") {
         $setSettings = "update settings set theme='green'";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        echo "Theme has been set to green";
+        echo "Theme set to green";
     }
     else if ($other_action == "enable_displaymorefrom") {
         $setSettings = "update settings set is_displaymorefrom_active=1";
