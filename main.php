@@ -977,11 +977,11 @@ if (mb_strlen($query) < 3 ||
                 
 					// get name of user by searching for spotify:user:@:starred playlist
 					
-					$getPlaylists = "select * from playlists where uri='" . "spotify:user:@:starred" . "'";
+					$getUser = "select username from user";
 					
 	                $dbfile = $w->data() . "/library.db";
 	
-	                exec("sqlite3 -separator '	' \"$dbfile\" \"$getPlaylists\" 2>&1", $playlists, $returnValue);
+	                exec("sqlite3 -separator '	' \"$dbfile\" \"$getUser\" 2>&1", $users, $returnValue);
 	
 	                if ($returnValue != 0) {
 	                    $w->result('', '', "There is a problem with the library, try to update it.", "Select Update library below", './images/warning.png', 'no', '');
@@ -993,20 +993,17 @@ if (mb_strlen($query) < 3 ||
 	                    return;
 	                }
 	                
-			        foreach ($playlists as $playlist):
-			            $playlist = explode("	", $playlist);
+			        foreach ($users as $user):
+			            $user = explode("	", $user);
 						
-						$user_name = $playlist[4];
+						$user_name = $user[0];
 			        endforeach;
                 
                     list($playlistName,$wrong_user,$real_user) = validateAlfredPlaylist($alfred_playlist_uri,$user_name);
                     if ($playlistName == "Alfred Playlist" &&
                     	$wrong_user == false) {
-                        // internally, the user is replaced by @
-                        $words = explode(':', $alfred_playlist_uri);
 
-
-                        $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'ALFRED_PLAYLIST⇾' . $words[0] . ':' . $words[1] . ':@:' . $words[3] . ':' . $words[4] /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Alfred Playlist URI will be set to <" . $alfred_playlist_uri . ">", "Type enter to validate", './images/' . $theme . '/' . 'settings.png', 'yes', '');
+                        $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'ALFRED_PLAYLIST⇾' .  $alfred_playlist_uri /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Alfred Playlist URI will be set to <" . $alfred_playlist_uri . ">", "Type enter to validate", './images/' . $theme . '/' . 'settings.png', 'yes', '');
                     } else {
                     	if($playlistName == "")
                     	{
