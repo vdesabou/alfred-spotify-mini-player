@@ -299,11 +299,12 @@ function updateLibrary($jsonData)
         $playlists = $json['playlists'];
         
         foreach ($playlists as $playlist) {
-
             $nb_tracktotal += count($playlist['tracks']);
-
         }
-        $w->write('Library⇾0⇾' . $nb_tracktotal, 'update_library_in_progress');
+        
+        // get artists 
+        $artists = $json['artists'];
+        $w->write('Related Artists⇾0⇾' . count($artists), 'update_library_in_progress');
 
         $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table tracks (starred boolean, popularity int, uri text, album_uri text, artist_uri text, track_name text, album_name text, artist_name text, album_year text, track_artwork_path text, artist_artwork_path text, album_artwork_path text, playlist_name text, playlist_uri text, playable boolean, availability text)"';
         exec($sql);
@@ -319,15 +320,15 @@ function updateLibrary($jsonData)
         $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table related (artist_name text, related_artist_name text, related_artist_uri text, related_artist_artwork_path text, PRIMARY KEY (artist_name, related_artist_name))"';
         exec($sql);
         
-        $nb_track = 0;
+        
 
-		// user
+		// Handle user
         $user = $json['user'];
         $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into user values (\"' . $user['uri'] . '\",\"' . escapeQuery($user['username']) . '\",\"' . escapeQuery($user['name']) . '\",\"' . $user['image'] . '\"' . ')"';
         exec($sql);
 
-		// handle related artists here
-		$artists = $json['artists'];
+		// Handle related artists
+		$nb_artists = 0;
 		foreach ($artists as $artist) {
 
 			$relateds = $artist['related'];			
@@ -335,11 +336,21 @@ function updateLibrary($jsonData)
 
 				$related_artist_artwork_path = getArtistArtwork($w, $related['name'], true);
 				
-				$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert or ignore into related values (\"' . escapeQuery($artist['artist_name']) . '\",\"' . escapeQuery($related['name']) . '\",\"' . $related['uri'] . '\",\"' . $related_artist_artwork_path . '\")"';
+				$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into related values (\"' . escapeQuery($artist['artist_name']) . '\",\"' . escapeQuery($related['name']) . '\",\"' . $related['uri'] . '\",\"' . $related_artist_artwork_path . '\")"';
 				exec($sql);
-			}				
+			}
+			$nb_artists++;
+            if ($nb_artists % 2 === 0) {
+                $w->write('Related Artists⇾' . $nb_artists . '⇾' . count($artists), 'update_library_in_progress');
+            }				
 		}
-				
+		
+		
+		// Handle playlists
+		$w->write('Library⇾0⇾' . $nb_tracktotal, 'update_library_in_progress');
+			
+		$nb_track = 0;
+			
         foreach ($playlists as $playlist) {
             $playlist_artwork_path = getPlaylistArtwork($w, $playlist['uri'], $playlist['username'], true);
 

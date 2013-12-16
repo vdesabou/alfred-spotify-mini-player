@@ -24,7 +24,10 @@ if (file_exists($w->data() . '/update_library_in_progress')) {
 
             if ($words[0] == 'Playlist List') {
                 $type = 'playlists';
-            } else {
+            } else if ($words[0] == 'Related Artists') {
+                $type = 'related artists';
+            } 
+            else {
                 $type = 'tracks';
             }
             $w->result('', $w->data() . '/update_library_in_progress', $words[0] . ' update in progress: ' . floatToSquares(intval($words[1]) / intval($words[2])), $words[1] . '/' . $words[2] . ' ' . $type . ' processed so far (if no progress, use spot_mini_kill_update command to stop it)', './images/update_in_progress.png', 'no', '');
