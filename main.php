@@ -78,7 +78,7 @@ if (!file_exists($w->data() . '/settings.db')) {
     $sql = 'sqlite3 "' . $w->data() . '/settings.db" ' . ' "create table settings (all_playlists boolean, is_spotifious_active boolean, is_alfred_playlist_active boolean, is_displaymorefrom_active boolean, max_results int, alfred_playlist_uri text, country_code text, theme text)"';
     exec($sql);
 
-    $sql = 'sqlite3 "' . $w->data() . '/settings.db" ' . '"insert into settings values (1,1,1,1,50,\"\",\"\",\"black\")"';
+    $sql = 'sqlite3 "' . $w->data() . '/settings.db" ' . '"insert into settings values (1,1,1,1,50,\"\",\"\",\"green\")"';
     exec($sql);
 }
 
