@@ -294,7 +294,11 @@ function updateLibrary($jsonData)
         touch($w->data() . "/library.db");
 
         $nb_tracktotal = 0;
-        foreach ($json as $playlist) {
+        
+        // get playlists
+        $playlists = $json['playlists'];
+        
+        foreach ($playlists as $playlist) {
 
             $nb_tracktotal += count($playlist['tracks']);
 
@@ -306,7 +310,9 @@ function updateLibrary($jsonData)
         $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table counters (all_tracks int, starred_tracks int, all_artists int, starred_artists int, all_albums int, starred_albums int, playlists int)"';
         exec($sql);
 
-
+        $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table user (uri text, username text, name text, image text)"';
+        exec($sql);
+        
         $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table playlists (uri text, name text, nb_tracks int, author text, username text, playlist_artwork_path text)"';
         exec($sql);
 
@@ -315,7 +321,26 @@ function updateLibrary($jsonData)
         
         $nb_track = 0;
 
-        foreach ($json as $playlist) {
+		// user
+        $user = $json['user'];
+        $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into user values (\"' . $user['uri'] . '\",\"' . escapeQuery($user['username']) . '\",\"' . escapeQuery($user['name']) . '\",\"' . $user['image'] . '\"' . ')"';
+        exec($sql);
+
+		// handle related artists here
+		$artists = $json['artists'];
+		foreach ($artists as $artist) {
+
+			$relateds = $artist['related'];			
+			foreach ($relateds as $related) {
+
+				$related_artist_artwork_path = getArtistArtwork($w, $related['name'], true);
+				
+				$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert or ignore into related values (\"' . escapeQuery($artist['artist_name']) . '\",\"' . escapeQuery($related['name']) . '\",\"' . $related['uri'] . '\",\"' . $related_artist_artwork_path . '\")"';
+				exec($sql);
+			}				
+		}
+				
+        foreach ($playlists as $playlist) {
             $playlist_artwork_path = getPlaylistArtwork($w, $playlist['uri'], $playlist['username'], true);
 
             $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into playlists values (\"' . $playlist['uri'] . '\",\"' . escapeQuery($playlist['name']) . '\",' . count($playlist['tracks']) . ',\"' . $playlist['owner'] . '\",\"' . $playlist['username'] . '\",\"' . $playlist_artwork_path . '\")"';
@@ -346,23 +371,14 @@ function updateLibrary($jsonData)
                 $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into tracks values (' . $starred . ',' . $track['popularity'] . ',\"' . $track['uri'] . '\",\"' . $track['album_uri'] . '\",\"' . $track['artist_uri'] . '\",\"' . escapeQuery($track['name']) . '\",\"' . escapeQuery($track['album_name']) . '\",\"' . escapeQuery($track['artist_name']) . '\"' . ',' . $album_year . ',\"' . $track_artwork_path . '\"' . ',\"' . $artist_artwork_path . '\"' . ',\"' . $album_artwork_path . '\"' . ',\"' . escapeQuery($track['playlist_name']) . '\"' . ',\"' . $track['playlist_uri'] . '\"' . ',' . $playable . ',\"' . $track['availability'] . '\"' . ')"';
 
                 exec($sql);
-
-				// handle related artists here
-				foreach ($track['related'] as $related) {
-				
-					$related_artist_artwork_path = getArtistArtwork($w, $related['name'], true);
-				    
-		            $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert or ignore into related values (\"' . escapeQuery($track['artist_name']) . '\",\"' . escapeQuery($related['name']) . '\",\"' . $related['uri'] . '\",\"' . $related_artist_artwork_path . '\")"';
-		            exec($sql);				
-				}
 				
                 $nb_track++;
                 if ($nb_track % 10 === 0) {
                     $w->write('Library⇾' . $nb_track . '⇾' . $nb_tracktotal, 'update_library_in_progress');
                 }
             }
-        }
-
+        }// end playlists
+        
         $getCount = "select count(*) from tracks";
         $dbfile = $w->data() . "/library.db";
         exec("sqlite3 \"$dbfile\" \"$getCount\"", $all_tracks);
@@ -475,15 +491,6 @@ function updatePlaylist($jsonData)
                 $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into tracks values (' . $starred . ',' . $track['popularity'] . ',\"' . $track['uri'] . '\",\"' . $track['album_uri'] . '\",\"' . $track['artist_uri'] . '\",\"' . escapeQuery($track['name']) . '\",\"' . escapeQuery($track['album_name']) . '\",\"' . escapeQuery($track['artist_name']) . '\"' . ',' . $album_year . ',\"' . $track_artwork_path . '\"' . ',\"' . $artist_artwork_path . '\"' . ',\"' . $album_artwork_path . '\"' . ',\"' . escapeQuery($track['playlist_name']) . '\"' . ',\"' . $track['playlist_uri'] . '\"' . ',' . $playable . ',\"' . $track['availability'] . '\"' . ')"';
 
                 exec($sql);
-
-				// handle related artists here
-				foreach ($track['related'] as $related) {
-				
-					$related_artist_artwork_path = getArtistArtwork($w, $related['name'], true);
-				    
-		            $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert or ignore into related values (\"' . escapeQuery($track['artist_name']) . '\",\"' . escapeQuery($related['name']) . '\",\"' . $related['uri'] . '\",\"' . $related_artist_artwork_path . '\")"';
-		            exec($sql);				
-				}
 				
                 $nb_track++;
                 if ($nb_track % 10 === 0) {
@@ -607,14 +614,6 @@ function updatePlaylistList($jsonData)
 
                     exec($sql);
                     
-					// handle related artists here
-					foreach ($track['related'] as $related) {
-					
-						$related_artist_artwork_path = getArtistArtwork($w, $related['name'], true);
-					    
-			            $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert or ignore into related values (\"' . escapeQuery($track['artist_name']) . '\",\"' . escapeQuery($related['name']) . '\",\"' . $related['uri'] . '\",\"' . $related_artist_artwork_path . '\")"';
-			            exec($sql);				
-					}
                 }
             } else {
                 continue;

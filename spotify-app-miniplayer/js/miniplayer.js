@@ -5,14 +5,10 @@
  */
 require([
         '$api/models',
-        '$api/location#Location',
-        '$api/search#Search',
         '$api/toplists#Toplist',
-        '$views/buttons',
-        '$views/list#List',
         '$views/image#Image',
         '$api/library#Library'
-        ], function(models, Location, Search, Toplist, buttons, List, Image, Library) {
+        ], function(models, Toplist, Image, Library) {
 
     // When application has loaded, run handleArgs function
     models.application.load('arguments').done(handleArgs);
@@ -119,7 +115,7 @@ function handleArgs() {
 				break;
 			case "update_playlist_list":
 				sleep(1000);
-				getAll(function(matchedAll) {
+				getAllPlaylists(function(matchedAll) {
 					console.log("update_playlist_list finished", matchedAll);
 	
 					var conn = new WebSocket('ws://localhost:17693');
@@ -382,6 +378,7 @@ function getAlbum(objtrack,matchedAlbumCallback) {
 		  	 	return;
 			 });	
 }
+/*
 
 function doGetTopTrack(artist, num, callback) {
     var artistTopList = Toplist.forArtist(artist);
@@ -398,19 +395,20 @@ function doGetTopTrack(artist, num, callback) {
         });
     });
 };
+*/
 
-function getRelatedArtists(objtrack,matchedRelatedArtistsCallback) {
+function getRelatedArtists(objartist,matchedRelatedArtistsCallback) {
 	
 	var array_artists= [];
 	var array_tmp_artists = [];
 		
-    models.Artist.fromURI(objtrack.artist_uri).load('name', 'related', 'uri').done(function (theartist) {
+    models.Artist.fromURI(objartist.artist_uri).load('name', 'related', 'uri').done(function (theartist) {
 		
           theartist.related.snapshot().done(function(snapshot) {
           
 			if(snapshot.length == 0)
 			{
-				objtrack.related=array_artists;
+				objartist.related=array_artists;
 				matchedRelatedArtistsCallback(objtrack);
 				return;
 			}
@@ -423,7 +421,7 @@ function getRelatedArtists(objtrack,matchedRelatedArtistsCallback) {
 
 			if(array_tmp_artists.length == 0)
 			{	
-				objtrack.related=array_artists;
+				objartist.related=array_artists;
 				matchedRelatedArtistsCallback(objtrack);
 				return;
 			}
@@ -434,15 +432,15 @@ function getRelatedArtists(objtrack,matchedRelatedArtistsCallback) {
 	
 				if(a != null) 
 				{
-					objartist={};
-					objartist.name=a.name;
-					objartist.uri=a.uri;
-					array_artists.push(objartist);
+					objrelatedartist={};
+					objrelatedartist.name=a.name;
+					objrelatedartist.uri=a.uri;
+					array_artists.push(objrelatedartist);
 					
 					if(array_tmp_artists.length == array_artists.length)
 					{	
-						objtrack.related=array_artists;
-						matchedRelatedArtistsCallback(objtrack);
+						objartist.related=array_artists;
+						matchedRelatedArtistsCallback(objartist);
 						return;
 					}
 												
@@ -471,16 +469,16 @@ function getRelatedArtists(objtrack,matchedRelatedArtistsCallback) {
 
           }).fail(function() 
           	 { 
-          	 	console.log("Failed to get related artists for " + objtrack.artist_name);
-          	 	objtrack.related=array_artists; 
+          	 	console.log("Failed to get related artists for " + objartist.artist_name);
+          	 	objartist.related=array_artists; 
 		  	 	matchedRelatedArtistsCallback(objtrack);
 		  	 	return;
 			 });
       }).fail(function() 
           	 { 
-          	 	console.log("Failed to load artists for " + objtrack.artist_name);
-          	 	objtrack.related=array_artists; 
-		  	 	matchedRelatedArtistsCallback(objtrack);
+          	 	console.log("Failed to load artists for " + objartist.artist_name);
+          	 	objartist.related=array_artists; 
+		  	 	matchedRelatedArtistsCallback(objartist);
 		  	 	return;
 			 });
 }
@@ -498,6 +496,7 @@ function getExternalPlaylistUri(uri,username) {
 
 function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {	
 	var array_tracks = [];
+	var array_artists = [];
 	var array_tmp_tracks = [];	
 	var playlist = models.Playlist.fromURI(uri);
 	
@@ -507,8 +506,7 @@ function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {
 	  playlist.owner.load('name','username').done(function (owner) {
 		  
 		  playlist.tracks.snapshot().done(function(snapshot) {
-
-		  console.log("getPlaylistTracks started 2",playlist.name);		  		 
+		  		 
 		  	//check for empty playlists
 			if(snapshot.length == 0)
 			{
@@ -518,7 +516,8 @@ function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {
 				p.uri=getExternalPlaylistUri(playlist.uri,owner.username);
 				p.owner=owner.name;
 				p.username=owner.username;
-				p.tracks=array_tracks; 
+				p.tracks=array_tracks;
+				p.artists=array_artists;
 	
 				matchedPlaylistTracksCallback(p);
 				return;
@@ -538,7 +537,8 @@ function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {
 				p.uri=getExternalPlaylistUri(playlist.uri,owner.username);
 				p.owner=owner.name;
 				p.username=owner.username;
-				p.tracks=array_tracks; 
+				p.tracks=array_tracks;
+				p.artists=array_artists; 
 	
 				matchedPlaylistTracksCallback(p);
 				return;
@@ -546,7 +546,6 @@ function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {
 					    
 			for (var i = 0, l = array_tmp_tracks.length; i < l; i++) 
 			{
-/* 				console.log("getPlaylistTracks processing ",array_tmp_tracks[i]); */
 				var t = array_tmp_tracks[i];
 	
 				if(t != null) 
@@ -564,11 +563,14 @@ function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {
 					objtrack.availability=t.availability;
 					objtrack.playable=t.playable;
 
+					objartist={};
+					objartist.artist_name=t.artists[0].name;
+					objartist.artist_uri=t.artists[0].uri;
+					array_artists.push(objartist);
+					
 					getAlbum(objtrack,function(matchedAlbum) {
-											
-						getRelatedArtists(matchedAlbum,function(matchedRelatedArtists) {
 
-								array_tracks.push(matchedRelatedArtists);
+								array_tracks.push(matchedAlbum);
 								
 								if(array_tmp_tracks.length == array_tracks.length)
 								{
@@ -578,10 +580,10 @@ function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {
 									p.uri=getExternalPlaylistUri(playlist.uri,owner.username);
 									p.owner=owner.name;
 									p.username=owner.username;
-									p.tracks=array_tracks; 
+									p.tracks=array_tracks;
+									p.artists=array_artists;
 									matchedPlaylistTracksCallback(p);
-								}							
-							});							
+								}					
 						});	
 				}
 			}
@@ -594,7 +596,8 @@ function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {
 				p.uri=getExternalPlaylistUri(playlist.uri,owner.username);;
 				p.owner=owner.name;
 				p.username=owner.username;
-				p.tracks=array_tracks; 
+				p.tracks=array_tracks;
+				p.artists=array_artists;
 	
 				matchedPlaylistTracksCallback(p);
 		  	 	return;
@@ -608,7 +611,8 @@ function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {
 				p.uri=playlist.uri;
 				p.owner="unknown";
 				p.username="unknown";
-				p.tracks=array_tracks; 
+				p.tracks=array_tracks;
+				p.artists=array_artists; 
 	
 				matchedPlaylistTracksCallback(p);
 		  	 	return;
@@ -622,7 +626,8 @@ function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {
 				p.uri=playlist.uri;
 				p.owner="unknown";
 				p.username="unknown";
-				p.tracks=array_tracks; 
+				p.tracks=array_tracks;
+				p.artists=array_artists; 
 	
 				matchedPlaylistTracksCallback(p);
 		  	 	return;
@@ -639,11 +644,13 @@ function getPlaylists(matchedPlaylistsCallback) {
 	objstarredplaylist.uri=Library.forCurrentUser().starred.uri;
 	array_results.push(objstarredplaylist);
 
+
 /*
 	objtoplistplaylist={};
 	objtoplistplaylist.uri=Library.forCurrentUser().toplist.uri;
 	array_results.push(objtoplistplaylist);
 */
+
 									
     Library.forCurrentUser().playlists.snapshot().done(function(snapshot){
 		for (var i = 0, l = snapshot.length; i < l; i++) 
@@ -670,7 +677,7 @@ function getPlaylists(matchedPlaylistsCallback) {
 }
 
 
-function getAll(matchedAllCallback) {
+function getAllPlaylists(matchedAllCallback) {
 
 	var array_results = [];
 	getPlaylists(function(matchedPlaylists) {
@@ -693,7 +700,78 @@ function getAll(matchedAllCallback) {
 		}
 	});
 }
-											
+
+function getAllRelatedArtists(allplaylists,matchedAllRelatedArtistsCallback)
+{
+	var array_artists= [];
+	var nb_artists_total=0;
+	var nb_artists= 0;
+	
+	for (var i = 0, l = allplaylists.length; i < l; i++) 
+	{
+		var playlist = allplaylists[i];
+		
+		for (var j = 0, k = playlist.artists.length; j < k; j++) 
+		{
+			nb_artists_total+=1;
+			var a = playlist.artists[j];
+			
+			objartist={};
+			objartist.artist_name=a.artist_name;
+			objartist.artist_uri=a.artist_uri;
+	
+			getRelatedArtists(objartist,function(matchedRelatedArtists) {
+	
+						var found = 0;
+						for(m=0;m<array_artists.length;m++){
+						    if(array_artists[m].artist_name == matchedRelatedArtists.artist_name){
+						        ++found; // value was found
+						        break;
+						    }
+						}
+						if(found==0)
+							array_artists.push(matchedRelatedArtists);
+						
+						nb_artists+=1;
+
+						if(nb_artists == nb_artists_total)
+						{
+							console.log("getAllRelatedArtists ended "); 
+							matchedAllRelatedArtistsCallback(array_artists);
+						}					
+				});		
+		
+		}
+
+	}
+
+
+
+}
+
+
+function getAll(matchedAll) {
+
+	console.log("getAll started");
+	results={};
+	
+	results.user=Library.forCurrentUser().owner;
+    					
+	getAllPlaylists(function(matchedAllPlaylists) {
+		results.playlists=matchedAllPlaylists;
+		
+		console.log("getAllPlaylists finished", results);
+		
+		getAllRelatedArtists(results.playlists,function(matchedAllRelatedArtists) {
+
+			results.artists=matchedAllRelatedArtists;
+			console.log("getAllRelatedArtists finished", results);
+			
+			matchedAll(results);
+		});			
+	});	
+	
+}											
 
 $(function(){
 		
@@ -710,13 +788,14 @@ $(function(){
 				
 				});
 */
-										
 				getAll(function(matchedAll) {
 					console.log("getAll finished", matchedAll);
 	
 					$("#json").text(JSON.stringify(matchedAll));
 				
 				});
+								
+//				$("#json").text(JSON.stringify(results));
 				
 				$("textarea").on("click", function() {
 				
