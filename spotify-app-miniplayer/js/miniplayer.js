@@ -225,9 +225,18 @@ function handleArgs() {
 			case "startplaylist":
 				startPlaylist(args);
 				break;
+			case "clearplaylist":
+				// make sure playlist is not starred or top list
+				if(args[5])
+				{
+					clearPlaylist(args);
+				}
+				break;				
 		}
 	}		
 }
+
+
 
 function starTrackOrAlbum(args) {
 		if(args[2] == 'track')
@@ -253,6 +262,17 @@ function starTrackOrAlbum(args) {
 		}
 }
 
+function clearPlaylist(args) {
+	// Get the playlist object from a URI
+	models.Playlist.fromURI(args[1]+':'+args[2]+':'+args[3]+':'+args[4]+':'+args[5]).load('tracks').done(function(playlist) {
+
+			
+	    playlist.tracks.clear();
+			
+		// Verify the song was added to the playlist
+		console.log(playlist);	
+	});	
+}
 
 function addToAlfredPlaylist(args) {
 	// Get the playlist object from a URI
@@ -883,12 +903,16 @@ $(function(){
 				
 				});
 */
+/*
 				getAll(function(matchedAll) {
 					console.log("getAll finished", matchedAll);
 	
 					$("#json").text(JSON.stringify(matchedAll));
 				
 				});
+*/
+
+				clearPlaylist("bla:spotify:user:vdesabou:playlist:1tJ9geQYhCosv4wcupoLmE");
 								
 //				$("#json").text(JSON.stringify(results));
 				

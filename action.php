@@ -108,6 +108,10 @@ if ($playlist_uri != "") {
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
         echo "Alfred Playlist set to $setting[2]";
+    } else if ($setting[0] == "CLEAR_ALFRED_PLAYLIST") {
+		exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:clearplaylist:$setting[1]:" . uniqid() . "\"'");
+	    exec("osascript -e 'tell application \"Spotify\" to open location \"$setting[1]\"'");
+        echo "Alfred Playlist $setting[2] was cleared";
     } else if ($setting[0] == "COUNTRY") {
         $setSettings = 'update settings set country_code=\"' . $setting[1] . '\"';
         $dbfile = $w->data() . "/settings.db";

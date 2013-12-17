@@ -452,13 +452,18 @@ if (mb_strlen($query) < 3 ||
             $playlist = $words[1];
 
             if ($alfred_playlist_uri == "") {
-                $w->result("spotify_mini-spotify-alfredplaylist-set", '', "Set your Alfred playlist", "Select one of your playlists below as your Alfred playlist", './images/' . $theme . '/' . 'settings.png', 'no', 'Alfred Playlist⇾Set Alfred Playlist⇾');
+                $w->result('', '', "Set your Alfred playlist", "Select one of your playlists below as your Alfred playlist", './images/' . $theme . '/' . 'settings.png', 'no', 'Alfred Playlist⇾Set Alfred Playlist⇾');
             } else {
                 $r = explode(':', $alfred_playlist_uri);
 
-                $w->result("spotify_mini-spotify-alfredplaylist-browse", '', "Browse your Alfred playlist (" . $alfred_playlist_name . ")" , "You can change the playlist by selecting Set your Alfred playlist below", getPlaylistArtwork($w, $alfred_playlist_uri, $r[2], false), 'no', 'Playlist⇾' . $alfred_playlist_uri . '⇾');
+                $w->result('', '', "Browse your Alfred playlist (" . $alfred_playlist_name . ")" , "You can change the playlist by selecting Set your Alfred playlist below", getPlaylistArtwork($w, $alfred_playlist_uri, $r[2], false), 'no', 'Playlist⇾' . $alfred_playlist_uri . '⇾');
                 
-                $w->result("spotify_mini-spotify-alfredplaylist-set", '', "Set your Alfred playlist", "Select one of your playlists below as your Alfred playlist", './images/' . $theme . '/' . 'settings.png', 'no', 'Alfred Playlist⇾Set Alfred Playlist⇾');
+                $w->result('', '', "Change your Alfred playlist", "Select one of your playlists below as your Alfred playlist", './images/' . $theme . '/' . 'settings.png', 'no', 'Alfred Playlist⇾Set Alfred Playlist⇾');
+                
+                if($r[3] != 'starred')
+                {
+                	$w->result('', '', "Clear your Alfred Playlist", "This will remove all the tracks in your current Alfred Playlist", './images/' . $theme . '/' . 'uncheck.png', 'no', 'Alfred Playlist⇾Confirm Clear Alfred Playlist⇾');	             
+                }
                 
                 $w->result("spotify_mini-spotify-alfredplaylist-refresh", serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,$alfred_playlist_uri /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_playlist' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update your Alfred Playlist", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
 
@@ -647,7 +652,7 @@ if (mb_strlen($query) < 3 ||
         } // Online mode end
     } ////////////
     //
-    // SECOND DELIMITER: Artist⇾the_artist⇾tracks , Album⇾the_album⇾tracks, Playlist⇾the_playlist⇾tracks,Settings⇾Country⇾country,Settings⇾Theme⇾color or Settings⇾MaxResults⇾max_numbers, Alfred Playlist⇾Set Alfred Playlist⇾alfred_playlist_uri
+    // SECOND DELIMITER: Artist⇾the_artist⇾tracks , Album⇾the_album⇾tracks, Playlist⇾the_playlist⇾tracks,Settings⇾Country⇾country,Settings⇾Theme⇾color or Settings⇾MaxResults⇾max_numbers, Alfred Playlist⇾Set Alfred Playlist⇾alfred_playlist, Alfred Playlist⇾Clear Alfred Playlist⇾yes or no
     //
     ////////////
     elseif (substr_count($query, '⇾') == 2) {
@@ -909,33 +914,43 @@ if (mb_strlen($query) < 3 ||
             }
         } // end of Settings
         elseif ($kind == "Alfred Playlist") {
-
-            $theplaylist = $words[2];
-			        
-            $w->result('', '', "Set your Alfred playlist", "Select one of your playlists below as your Alfred playlist", './images/' . $theme . '/' . 'settings.png', 'no', '');
+				$setting_kind = $words[1];
+	            $theplaylist = $words[2];
+				
+				if ($setting_kind == "Set Alfred Playlist") {        
+	            $w->result('', '', "Set your Alfred playlist", "Select one of your playlists below as your Alfred playlist", './images/' . $theme . '/' . 'settings.png', 'no', '');
+	            
+	
+	            if (mb_strlen($theplaylist) < 3) {
+	                $getPlaylists = "select * from playlists where ownedbyuser=1";
+	            }
+	            else {
+	            	$getPlaylists = "select * from playlists where ownedbyuser=1 and ( name like '%" . $theplaylist . "%' or author like '%" . $theplaylist . "%')";
+	            }
+	
+	            $dbfile = $w->data() . "/library.db";
+	
+	            exec("sqlite3 -separator '	' \"$dbfile\" \"$getPlaylists\" 2>&1", $playlists, $returnValue);
+	
+	            if ($returnValue != 0) {
+	                handleDbIssue($theme);
+	                return;
+	            }
+	
+	            foreach ($playlists as $playlist):
+	                $playlist = explode("	", $playlist);
+	                
+	                $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'ALFRED_PLAYLIST⇾' .  $playlist[0] . '⇾' . $playlist[1] /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "Select the playlist to set it as your Alfred Playlist", $playlist[5], 'yes', '');
+	            endforeach; 
+            } elseif ($setting_kind == "Confirm Clear Alfred Playlist") {
             
+            	$w->result('', '', "Are you sure?", "This will remove all the tracks in your current Alfred Playlist.", './images/warning.png', 'no', '');
+            	
+            	$w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'CLEAR_ALFRED_PLAYLIST⇾' .  $alfred_playlist_uri . '⇾' . $alfred_playlist_name /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Yes, go ahead", "This is not undoable", './images/' . $theme . '/' . 'check.png', 'yes', '');
 
-            if (mb_strlen($theplaylist) < 3) {
-                $getPlaylists = "select * from playlists where ownedbyuser=1";
-            }
-            else {
-            	$getPlaylists = "select * from playlists where ownedbyuser=1 and ( name like '%" . $theplaylist . "%' or author like '%" . $theplaylist . "%')";
-            }
-
-            $dbfile = $w->data() . "/library.db";
-
-            exec("sqlite3 -separator '	' \"$dbfile\" \"$getPlaylists\" 2>&1", $playlists, $returnValue);
-
-            if ($returnValue != 0) {
-                handleDbIssue($theme);
-                return;
-            }
-
-            foreach ($playlists as $playlist):
-                $playlist = explode("	", $playlist);
-                
-                $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'ALFRED_PLAYLIST⇾' .  $playlist[0] . '⇾' . $playlist[1] /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "Select the playlist to set it as your Alfred Playlist", $playlist[5], 'yes', '');
-            endforeach;           
+            	$w->result('', '', "No, cancel", "Return to Alfred Playlist", './images/' . $theme . '/' . 'uncheck.png', 'no', 'Alfred Playlist⇾');            	
+            
+            }          
         }
         // end of Settings
     }
