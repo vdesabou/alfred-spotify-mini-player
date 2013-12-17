@@ -181,20 +181,40 @@ function handleArgs() {
 				});	
 				break;				
 			case "addtoalfredplaylist":
-				if(args[8])
+				if(args[7] == 'starred')
+				{
+					starTrackOrAlbum(args);
+				}
+				else if(args[8])
 				{
 					addToAlfredPlaylist(args);
 				}
 				break;
 			case "addplaylisttoalfredplaylist":
-				if(args[9])
-				{
-					addTopListToAlfredPlaylist(args);
-				}
-				else if(args[10])
-				{
+				if(args[10])
+				{					
 					addPlaylistToAlfredPlaylist(args);
 				}
+				else if(args[9])
+				{
+					if(args[9] == 'starred')
+					{
+						starPlaylist(args);
+					}
+					else
+					{
+						addTopListToAlfredPlaylist(args);
+					}
+
+				}
+				else if(args[8])
+				{
+					if(args[8] == 'starred')
+					{
+						starTopList(args);
+					}					
+				}
+
 				break;
 			case "playartistoralbum":
 				if(args[3])
@@ -208,6 +228,31 @@ function handleArgs() {
 		}
 	}		
 }
+
+function starTrackOrAlbum(args) {
+		if(args[2] == 'track')
+		{
+	        models.Track.fromURI(args[1]+':'+args[2]+':'+args[3]).star();
+		}
+		else if(args[2] == 'album')
+		{
+			
+			models.Album.fromURI(args[1]+':'+args[2]+':'+args[3]).load('tracks').done(function(a) {
+			    // This callback is fired when the album has loaded.
+			    // The album object has a tracks property, which is a standard array.
+							
+				a.tracks.snapshot().done(function(t){
+								
+				                var tracks = t.toArray();
+				                for(i=0;i<tracks.length;i++){
+				                	console.log(t.get(i).name);
+				                    tracks[i].star();
+				                }
+				            });
+	    	});
+		}
+}
+
 
 function addToAlfredPlaylist(args) {
 	// Get the playlist object from a URI
@@ -239,6 +284,34 @@ function addToAlfredPlaylist(args) {
 			
 		// Verify the song was added to the playlist
 		console.log(playlist);	
+	});	
+}
+
+function starTopList(args) {
+	// Get the playlist object from a URI
+
+	models.Playlist.fromURI(args[5]+':'+args[6]+':'+args[7]+':'+args[8]).load('tracks').done(function(alfredplaylist) {
+		
+		if(args[4] == 'toplist')
+		{
+			console.log(addTopListToAlfredPlaylist + args);
+			models.Playlist.fromURI(args[1]+':'+args[2]+':'+args[3]+':'+args[4]).load('tracks').done(function(p) {
+			    // This callback is fired when the playlist has loaded.
+			    // The playlist object has a tracks property, which is a standard array.
+							
+				p.tracks.snapshot().done(function(t){
+								
+				                var tracks = t.toArray();
+				                for(i=0;i<tracks.length;i++){
+				                	console.log(t.get(i).name);
+				                    tracks[i].star();
+				                }
+				            });
+	    	});
+		}
+			
+		// Verify the song was added to the playlist
+		console.log(alfredplaylist);	
 	});	
 }
 
@@ -298,6 +371,22 @@ function addPlaylistToAlfredPlaylist(args) {
 	});	
 }
 
+function starPlaylist(args) {
+
+		models.Playlist.fromURI(args[1]+':'+args[2]+':'+args[3]+':'+args[4]+':'+args[5]).load('tracks').done(function(p) {
+		    // This callback is fired when the playlist has loaded.
+		    // The playlist object has a tracks property, which is a standard array.
+						
+			p.tracks.snapshot().done(function(t){
+							
+			                var tracks = t.toArray();
+			                for(i=0;i<tracks.length;i++){
+			                	console.log(t.get(i).name);
+			                    tracks[i].star();
+			                }
+			            });
+    	});
+}
 
 function playArtistOrAlbum(args) {
 	console.log(args[1]+':'+args[2]+':'+args[3]);
