@@ -13,6 +13,7 @@ use MyApp\MiniPlayer;
 
 require_once('./vendor/autoload.php');
 
+
 $w = new Workflows();
 
 $query = $argv[1];
@@ -20,7 +21,7 @@ $type = $argv[2];
 $alfredplaylist = $argv[3];
 
 
-$arg = unserialize($query);
+$arg = mb_unserialize($query);
 
 
 $track_uri = $arg[0];

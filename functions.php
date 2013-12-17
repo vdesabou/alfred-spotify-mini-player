@@ -734,4 +734,20 @@ function floatToSquares($decimal)
     return str_repeat("◼︎", $squares) . str_repeat("◻︎", 10 - $squares);
 }
 
+/**
+ * Mulit-byte Unserialize
+ *
+ * UTF-8 will screw up a serialized string
+ *
+ * @access private
+ * @param string
+ * @return string
+ */
+ // thanks to http://stackoverflow.com/questions/2853454/php-unserialize-fails-with-non-encoded-characters
+function mb_unserialize($string) {
+    $string = preg_replace('!s:(\d+):"(.*?)";!se', "'s:'.strlen('$2').':\"$2\";'", $string);
+    return unserialize($string);
+}
+
+
 ?>
