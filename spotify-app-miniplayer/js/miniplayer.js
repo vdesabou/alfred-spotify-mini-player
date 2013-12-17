@@ -503,7 +503,7 @@ function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {
 	
 	playlist.load('tracks','name','owner').done(function() {
 	  console.log("getPlaylistTracks started ",playlist.name);	
-	  playlist.owner.load('name','username').done(function (owner) {
+	  playlist.owner.load('name','username','currentUser').done(function (owner) {
 		  
 		  playlist.tracks.snapshot().done(function(snapshot) {
 		  		 
@@ -513,6 +513,7 @@ function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {
 				p={};
 				
 				p.name=playlist.name;
+				p.ownedbyuser=owner.currentUser;
 				p.uri=getExternalPlaylistUri(playlist.uri,owner.username);
 				p.owner=owner.name;
 				p.username=owner.username;
@@ -534,6 +535,7 @@ function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {
 				p={};
 				
 				p.name=playlist.name;
+				p.ownedbyuser=owner.currentUser;
 				p.uri=getExternalPlaylistUri(playlist.uri,owner.username);
 				p.owner=owner.name;
 				p.username=owner.username;
@@ -577,6 +579,7 @@ function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {
 									console.log("getPlaylistTracks ended ",playlist.name);
 									p={};
 									p.name=playlist.name;
+									p.ownedbyuser=owner.currentUser;
 									p.uri=getExternalPlaylistUri(playlist.uri,owner.username);
 									p.owner=owner.name;
 									p.username=owner.username;
@@ -593,6 +596,7 @@ function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {
 				p={};
 				
 				p.name=playlist.name;
+				p.ownedbyuser=owner.currentUser;
 				p.uri=getExternalPlaylistUri(playlist.uri,owner.username);;
 				p.owner=owner.name;
 				p.username=owner.username;
@@ -608,6 +612,7 @@ function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {
 				p={};
 				
 				p.name=playlist.name;
+				p.ownedbyuser=false;
 				p.uri=playlist.uri;
 				p.owner="unknown";
 				p.username="unknown";
@@ -623,6 +628,7 @@ function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {
 				p={};
 				
 				p.name=playlist.name;
+				p.ownedbyuser=false;
 				p.uri=playlist.uri;
 				p.owner="unknown";
 				p.username="unknown";

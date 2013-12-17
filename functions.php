@@ -314,7 +314,7 @@ function updateLibrary($jsonData)
         $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table user (uri text, username text, name text, image text)"';
         exec($sql);
         
-        $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table playlists (uri text, name text, nb_tracks int, author text, username text, playlist_artwork_path text)"';
+        $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table playlists (uri text, name text, nb_tracks int, author text, username text, playlist_artwork_path text, ownedbyuser boolean)"';
         exec($sql);
 
         $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table related (artist_name text, related_artist_name text, related_artist_uri text, related_artist_artwork_path text, PRIMARY KEY (artist_name, related_artist_name))"';
@@ -354,7 +354,13 @@ function updateLibrary($jsonData)
         foreach ($playlists as $playlist) {
             $playlist_artwork_path = getPlaylistArtwork($w, $playlist['uri'], $playlist['username'], true);
 
-            $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into playlists values (\"' . $playlist['uri'] . '\",\"' . escapeQuery($playlist['name']) . '\",' . count($playlist['tracks']) . ',\"' . $playlist['owner'] . '\",\"' . $playlist['username'] . '\",\"' . $playlist_artwork_path . '\")"';
+            if ($playlist['ownedbyuser'] == true) {
+                $ownedbyuser = 1;
+            } else {
+                $ownedbyuser = 0;
+            }
+                
+            $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into playlists values (\"' . $playlist['uri'] . '\",\"' . escapeQuery($playlist['name']) . '\",' . count($playlist['tracks']) . ',\"' . $playlist['owner'] . '\",\"' . $playlist['username'] . '\",\"' . $playlist_artwork_path . '\",' . $ownedbyuser . ')"';
             exec($sql);
 
             foreach ($playlist['tracks'] as $track) {
@@ -596,7 +602,13 @@ function updatePlaylistList($jsonData)
                 echo "Added playlist " . $playlist['name'] . "\n";
                 $playlist_artwork_path = getPlaylistArtwork($w, $playlist['uri'], $playlist['username'], true);
 
-                $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into playlists values (\"' . $playlist['uri'] . '\",\"' . escapeQuery($playlist['name']) . '\",' . count($playlist['tracks']) . ',\"' . $playlist['owner'] . '\",\"' . $playlist['username'] . '\",\"' . $playlist_artwork_path . '\")"';
+	            if ($playlist['ownedbyuser'] == true) {
+	                $ownedbyuser = 1;
+	            } else {
+	                $ownedbyuser = 0;
+	            }
+            
+                $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into playlists values (\"' . $playlist['uri'] . '\",\"' . escapeQuery($playlist['name']) . '\",' . count($playlist['tracks']) . ',\"' . $playlist['owner'] . '\",\"' . $playlist['username'] . '\",\"' . $playlist_artwork_path . '\",' . $ownedbyuser . ')"';
                 exec($sql);
 
                 foreach ($playlist['tracks'] as $track) {
@@ -720,36 +732,6 @@ function floatToSquares($decimal)
 {
     $squares = ($decimal < 1) ? floor($decimal * 10) : 10;
     return str_repeat("◼︎", $squares) . str_repeat("◻︎", 10 - $squares);
-}
-
-function validateAlfredPlaylist($uri,$user_name)
-{
-    $name = "";
-    $playlistName = "";
-	$wrong_user = true;
-	
-    $get_context = stream_context_create(array('http' => array('timeout' => 5)));
-    @$get = file_get_contents('https://embed.spotify.com/?uri=' . $uri, false, $get_context);
-
-    if (!empty($get)) {
-        preg_match_all("'<title>(.*?)</title>'si", $get, $name);
-
-        if ($name[1]) {
-        	$result=$name[1][0];
-            $playlistName = strstr($result, ' by', true);
-            $username = strstr($result, ' by');
-			
-			
-			if($username == (' by ' . $user_name))
-			{
-				$wrong_user = false;
-			}
-                        
-        }
-        
-    }
-
-    return array($playlistName, $wrong_user, $username);
 }
 
 ?>

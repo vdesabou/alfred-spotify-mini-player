@@ -911,34 +911,15 @@ if (mb_strlen($query) < 3 ||
         elseif ($kind == "Alfred Playlist") {
 
             $theplaylist = $words[2];
-
-			// get name of user
-			
-			$getUser = "select username from user";
-			
-            $dbfile = $w->data() . "/library.db";
-
-            exec("sqlite3 -separator '	' \"$dbfile\" \"$getUser\" 2>&1", $users, $returnValue);
-
-            if ($returnValue != 0) {
-                handleDbIssue($theme);
-                return;
-            }
-            
-	        foreach ($users as $user):
-	            $user = explode("	", $user);
-				
-				$user_name = $user[0];
-	        endforeach;
 			        
             $w->result('', '', "Set your Alfred playlist", "Select one of your playlists below as your Alfred playlist", './images/' . $theme . '/' . 'settings.png', 'no', '');
             
 
             if (mb_strlen($theplaylist) < 3) {
-                $getPlaylists = "select * from playlists where username='" . $user_name . "'";
+                $getPlaylists = "select * from playlists where ownedbyuser=1";
             }
             else {
-            	$getPlaylists = "select * from playlists where username='" . $user_name . "'" . "and ( name like '%" . $theplaylist . "%' or author like '%" . $theplaylist . "%')";
+            	$getPlaylists = "select * from playlists where ownedbyuser=1 and ( name like '%" . $theplaylist . "%' or author like '%" . $theplaylist . "%')";
             }
 
             $dbfile = $w->data() . "/library.db";
