@@ -203,7 +203,7 @@ function handleArgs() {
 					}
 					else
 					{
-						addTopListToAlfredPlaylist(args);
+						addTopOrStarredListToAlfredPlaylist(args);
 					}
 
 				}
@@ -314,7 +314,7 @@ function starTopList(args) {
 		
 		if(args[4] == 'toplist')
 		{
-			console.log(addTopListToAlfredPlaylist + args);
+			console.log(starTopList + args);
 			models.Playlist.fromURI(args[1]+':'+args[2]+':'+args[3]+':'+args[4]).load('tracks').done(function(p) {
 			    // This callback is fired when the playlist has loaded.
 			    // The playlist object has a tracks property, which is a standard array.
@@ -335,14 +335,14 @@ function starTopList(args) {
 	});	
 }
 
-function addTopListToAlfredPlaylist(args) {
+function addTopOrStarredListToAlfredPlaylist(args) {
 	// Get the playlist object from a URI
 
 	models.Playlist.fromURI(args[5]+':'+args[6]+':'+args[7]+':'+args[8]+':'+args[9]).load('tracks').done(function(alfredplaylist) {
 		
-		if(args[4] == 'toplist')
+		if(args[4] == 'toplist' || args[4] == 'starred')
 		{
-			console.log(addTopListToAlfredPlaylist + args);
+			console.log(addTopOrStarredListToAlfredPlaylist + args);
 			models.Playlist.fromURI(args[1]+':'+args[2]+':'+args[3]+':'+args[4]).load('tracks').done(function(p) {
 			    // This callback is fired when the playlist has loaded.
 			    // The playlist object has a tracks property, which is a standard array.
