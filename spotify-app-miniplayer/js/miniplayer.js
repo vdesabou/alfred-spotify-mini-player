@@ -1,8 +1,3 @@
-/**
- *      Largely inspired by @ptrwtts             
- *		https://github.com/ptrwtts/kitchensink
- *		
- */
 require([
         '$api/models',
         '$api/toplists#Toplist',
@@ -903,18 +898,12 @@ $(function(){
 				
 				});
 */
-/*
 				getAll(function(matchedAll) {
 					console.log("getAll finished", matchedAll);
 	
 					$("#json").text(JSON.stringify(matchedAll));
 				
 				});
-*/
-
-				clearPlaylist("bla:spotify:user:vdesabou:playlist:1tJ9geQYhCosv4wcupoLmE");
-								
-//				$("#json").text(JSON.stringify(results));
 				
 				$("textarea").on("click", function() {
 				
