@@ -1,0 +1,6 @@
+<?php
+
+define("TUNEWIKI_BASE_URL", "http://twapi.tunewiki.com/");
+
+define("TUNEWIKI_API_KEY", "");
+define("TUNEWIKI_API_SECRET", "");
