@@ -203,7 +203,8 @@ if ($playlist_uri != "") {
 
             if($biography[0] != "")
             {
-	            echo "$biography[0]";
+            	$output=strip_tags($biography[0]);
+	            echo "$output";
 	            return;
             }
             else
