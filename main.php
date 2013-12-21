@@ -672,6 +672,8 @@ if (mb_strlen($query) < 3 ||
 
             $w->result('', '', 'Related Artists', 'Browse related artists', './images/' . $theme . '/' . 'related.png', 'no', $query . 'Related⇾');
             
+            $w->result('', '', 'Display biography', 'This will display the artist biography', './images/' . $theme . '/' . '.png', 'yes', '');
+            
             if (mb_strlen($track) < 3) {
                 if ($all_playlists == false) {
                     $getTracks = "select * from tracks where playable=1 and starred=1 and artist_name='" . $artist . "'" . " limit " . $max_results;
