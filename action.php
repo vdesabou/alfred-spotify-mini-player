@@ -95,6 +95,8 @@ if ($playlist_uri != "") {
     exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:startplaylist:$playlist_uri\"'");
     exec("osascript -e 'tell application \"Spotify\" to open location \"$playlist_uri\"'");
 } else if ($spotify_command != "") {
+
+	$spotify_command = str_replace("\\", "", $spotify_command);
     exec("osascript -e 'tell application \"Spotify\" to $spotify_command'");
 } else if ($other_settings != "") {
     $setting = explode('⇾', $other_settings);
