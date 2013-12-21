@@ -450,14 +450,17 @@ function getRelatedArtists(objartist,matchedRelatedArtistsCallback) {
 	var array_artists= [];
 	var array_tmp_artists = [];
 		
-    models.Artist.fromURI(objartist.artist_uri).load('name', 'related', 'uri').done(function (theartist) {
+    models.Artist.fromURI(objartist.artist_uri).load('name', 'related', 'uri', 'biography', 'popularity', 'years').done(function (theartist) {
 		
           theartist.related.snapshot().done(function(snapshot) {
           
 			if(snapshot.length == 0)
 			{
 				objartist.related=array_artists;
-				matchedRelatedArtistsCallback(objtrack);
+				objartist.biography=theartist.biography;
+				objartist.popularity=theartist.popularity;
+				objartist.years=theartist.years;
+				matchedRelatedArtistsCallback(objartist);
 				return;
 			}
 			
@@ -470,7 +473,10 @@ function getRelatedArtists(objartist,matchedRelatedArtistsCallback) {
 			if(array_tmp_artists.length == 0)
 			{	
 				objartist.related=array_artists;
-				matchedRelatedArtistsCallback(objtrack);
+				objartist.biography=theartist.biography;
+				objartist.popularity=theartist.popularity;
+				objartist.years=theartist.years;
+				matchedRelatedArtistsCallback(objartist);
 				return;
 			}
 					              		    	
@@ -488,6 +494,9 @@ function getRelatedArtists(objartist,matchedRelatedArtistsCallback) {
 					if(array_tmp_artists.length == array_artists.length)
 					{	
 						objartist.related=array_artists;
+						objartist.biography=theartist.biography;
+						objartist.popularity=theartist.popularity;
+						objartist.years=theartist.years;
 						matchedRelatedArtistsCallback(objartist);
 						return;
 					}
@@ -518,14 +527,20 @@ function getRelatedArtists(objartist,matchedRelatedArtistsCallback) {
           }).fail(function() 
           	 { 
           	 	console.log("Failed to get related artists for " + objartist.artist_name);
-          	 	objartist.related=array_artists; 
-		  	 	matchedRelatedArtistsCallback(objtrack);
+          	 	objartist.related=array_artists;
+				objartist.biography=theartist.biography;
+				objartist.popularity=theartist.popularity;
+				objartist.years=theartist.years; 
+		  	 	matchedRelatedArtistsCallback(objartist);
 		  	 	return;
 			 });
       }).fail(function() 
           	 { 
           	 	console.log("Failed to load artists for " + objartist.artist_name);
-          	 	objartist.related=array_artists; 
+          	 	objartist.related=array_artists;
+				objartist.biography="";
+				objartist.popularity=0;
+				//objartist.years=theartist.years;
 		  	 	matchedRelatedArtistsCallback(objartist);
 		  	 	return;
 			 });
