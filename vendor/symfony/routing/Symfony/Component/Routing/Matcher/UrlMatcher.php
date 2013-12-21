@@ -16,8 +16,6 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Route;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 /**
  * UrlMatcher matches URL based on a set of routes.
@@ -26,7 +24,7 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
  *
  * @api
  */
-class UrlMatcher implements UrlMatcherInterface, RequestMatcherInterface
+class UrlMatcher implements UrlMatcherInterface
 {
     const REQUIREMENT_MATCH     = 0;
     const REQUIREMENT_MISMATCH  = 1;
@@ -46,9 +44,6 @@ class UrlMatcher implements UrlMatcherInterface, RequestMatcherInterface
      * @var RouteCollection
      */
     protected $routes;
-
-    protected $request;
-    protected $expressionLanguage;
 
     /**
      * Constructor.
@@ -94,20 +89,6 @@ class UrlMatcher implements UrlMatcherInterface, RequestMatcherInterface
         throw 0 < count($this->allow)
             ? new MethodNotAllowedException(array_unique(array_map('strtoupper', $this->allow)))
             : new ResourceNotFoundException();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function matchRequest(Request $request)
-    {
-        $this->request = $request;
-
-        $ret = $this->match($request->getPathInfo());
-
-        $this->request = null;
-
-        return $ret;
     }
 
     /**
@@ -199,18 +180,11 @@ class UrlMatcher implements UrlMatcherInterface, RequestMatcherInterface
      */
     protected function handleRouteRequirements($pathinfo, $name, Route $route)
     {
-        // expression condition
-        if ($route->getCondition() && !$this->getExpressionLanguage()->evaluate($route->getCondition(), array('context' => $this->context, 'request' => $this->request))) {
-            return array(self::REQUIREMENT_MISMATCH, null);
-        }
-
         // check HTTP scheme requirement
         $scheme = $route->getRequirement('_scheme');
-        if ($scheme && $scheme !== $this->context->getScheme()) {
-            return array(self::REQUIREMENT_MISMATCH, null);
-        }
+        $status = $scheme && $scheme !== $this->context->getScheme() ? self::REQUIREMENT_MISMATCH : self::REQUIREMENT_MATCH;
 
-        return array(self::REQUIREMENT_MATCH, null);
+        return array($status, null);
     }
 
     /**
@@ -230,17 +204,5 @@ class UrlMatcher implements UrlMatcherInterface, RequestMatcherInterface
         }
 
         return $defaults;
-    }
-
-    protected function getExpressionLanguage()
-    {
-        if (null === $this->expressionLanguage) {
-            if (!class_exists('Symfony\Component\ExpressionLanguage\ExpressionLanguage')) {
-                throw new \RuntimeException('Unable to use expressions as the Symfony ExpressionLanguage component is not installed.');
-            }
-            $this->expressionLanguage = new ExpressionLanguage();
-        }
-
-        return $this->expressionLanguage;
     }
 }

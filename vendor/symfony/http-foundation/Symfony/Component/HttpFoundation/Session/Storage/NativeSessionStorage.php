@@ -163,7 +163,7 @@ class NativeSessionStorage implements SessionStorageInterface
      */
     public function getId()
     {
-        if (!$this->started && !$this->closed) {
+        if (!$this->started) {
             return ''; // returning empty is consistent with session_id() behaviour
         }
 
@@ -239,7 +239,6 @@ class NativeSessionStorage implements SessionStorageInterface
         }
 
         $this->closed = true;
-        $this->started = false;
     }
 
     /**
