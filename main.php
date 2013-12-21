@@ -672,7 +672,7 @@ if (mb_strlen($query) < 3 ||
 
             $w->result('', '', 'Related Artists', 'Browse related artists', './images/' . $theme . '/' . 'related.png', 'no', $query . 'Related⇾');
             
-            $w->result('display-biography', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'display_biography' /* other_action */ ,'' /* alfred_playlist_uri */ ,$artist  /* artist_name */)), 'Display biography', 'This will display the artist biography', './images/' . $theme . '/' . '.png', 'yes', '');
+            $w->result('display-biography', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'display_biography' /* other_action */ ,'' /* alfred_playlist_uri */ ,$artist  /* artist_name */)), 'Display biography', 'This will display the artist biography', './images/' . $theme . '/' . 'biography.png', 'yes', '');
             
             if (mb_strlen($track) < 3) {
                 if ($all_playlists == false) {
