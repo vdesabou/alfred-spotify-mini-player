@@ -457,7 +457,12 @@ function getRelatedArtists(objartist,matchedRelatedArtistsCallback) {
 			if(snapshot.length == 0)
 			{
 				objartist.related=array_artists;
-				objartist.biography=theartist.biography;
+				if(theartist.biography != null) {
+					objartist.biography=theartist.biography.decodeForText();
+				}
+				else {
+					objartist.biography="";
+				}
 				objartist.popularity=theartist.popularity;
 				objartist.years=theartist.years;
 				matchedRelatedArtistsCallback(objartist);
@@ -473,7 +478,12 @@ function getRelatedArtists(objartist,matchedRelatedArtistsCallback) {
 			if(array_tmp_artists.length == 0)
 			{	
 				objartist.related=array_artists;
-				objartist.biography=theartist.biography;
+				if(theartist.biography != null) {
+					objartist.biography=theartist.biography.decodeForText();
+				}
+				else {
+					objartist.biography="";
+				}
 				objartist.popularity=theartist.popularity;
 				objartist.years=theartist.years;
 				matchedRelatedArtistsCallback(objartist);
@@ -494,7 +504,12 @@ function getRelatedArtists(objartist,matchedRelatedArtistsCallback) {
 					if(array_tmp_artists.length == array_artists.length)
 					{	
 						objartist.related=array_artists;
-						objartist.biography=theartist.biography;
+						if(theartist.biography != null) {
+							objartist.biography=theartist.biography.decodeForText();
+						}
+						else {
+							objartist.biography="";
+						}
 						objartist.popularity=theartist.popularity;
 						objartist.years=theartist.years;
 						matchedRelatedArtistsCallback(objartist);
@@ -528,7 +543,12 @@ function getRelatedArtists(objartist,matchedRelatedArtistsCallback) {
           	 { 
           	 	console.log("Failed to get related artists for " + objartist.artist_name);
           	 	objartist.related=array_artists;
-				objartist.biography=theartist.biography;
+				if(theartist.biography != null) {
+					objartist.biography=theartist.biography.decodeForText();
+				}
+				else {
+					objartist.biography="";
+				}
 				objartist.popularity=theartist.popularity;
 				objartist.years=theartist.years; 
 		  	 	matchedRelatedArtistsCallback(objartist);
