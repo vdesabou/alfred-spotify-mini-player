@@ -43,6 +43,11 @@ function checkIfResultAlreadyThere($results, $title)
     return false;
 }
 
+function displayNotification($output)
+{
+	exec('./terminal-notifier.app/Contents/MacOS/terminal-notifier -title "Spotify Mini Player" -sender com.runningwithcrayons.Alfred-2  -message "' .  $output . '"');
+}
+
 function getTrackOrAlbumArtwork($w,$theme, $spotifyURL, $fetchIfNotPresent)
 {
 
@@ -430,8 +435,8 @@ function updateLibrary($jsonData)
         // update counters for playlists
         $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"update counters set playlists=' . $playlists_count[0] . '"';
         exec($sql);
-
-        echo "Library has been created (" . $all_tracks[0] . " tracks)";
+        
+        displayNotification("Library has been created (" . $all_tracks[0] . " tracks)");
 
         unlink($w->data() . "/update_library_in_progress");
 
@@ -443,7 +448,7 @@ function updateLibrary($jsonData)
 
     } else {
         //it's not JSON. Log error
-        echo "ERROR: JSON data is not valid!";
+        displayNotification("ERROR: JSON data is not valid!");
     }
 }
 
@@ -503,7 +508,6 @@ function updatePlaylist($jsonData)
                 $album_artwork_path = getTrackOrAlbumArtwork($w,$theme, $track['album_uri'], true);
 
                 $album_year = 1995;
-                //echo "$track[name]\n";
 
                 $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into tracks values (' . $starred . ',' . $track['popularity'] . ',\"' . $track['uri'] . '\",\"' . $track['album_uri'] . '\",\"' . $track['artist_uri'] . '\",\"' . escapeQuery($track['name']) . '\",\"' . escapeQuery($track['album_name']) . '\",\"' . escapeQuery($track['artist_name']) . '\"' . ',' . $album_year . ',\"' . $track_artwork_path . '\"' . ',\"' . $artist_artwork_path . '\"' . ',\"' . $album_artwork_path . '\"' . ',\"' . escapeQuery($track['playlist_name']) . '\"' . ',\"' . $track['playlist_uri'] . '\"' . ',' . $playable . ',\"' . $track['availability'] . '\"' . ')"';
 
@@ -550,13 +554,13 @@ function updatePlaylist($jsonData)
         // update counters for playlists
         $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"update counters set playlists=' . $playlists_count[0] . '"';
         exec($sql);
-
-        echo "\nPlaylist has been updated (" . $nb_track . " tracks)";
+		
+		displayNotification("\nPlaylist has been updated (" . $nb_track . " tracks)");
 
         unlink($w->data() . "/update_library_in_progress");
     } else {
         //it's not JSON. Log error
-        echo "ERROR: JSON data is not valid!";
+        displayNotification("ERROR: JSON data is not valid!");
     }
 }
 
@@ -593,13 +597,13 @@ function updatePlaylistList($jsonData)
             }
 
             if ($returnValue != 0) {
-                echo "ERROR: when processing playlist" . escapeQuery($playlist['name']) . " with uri " . $playlist['uri'] . "\n";
+                displayNotification("ERROR: when processing playlist" . escapeQuery($playlist['name']) . " with uri " . $playlist['uri'] . "\n");
                 continue;
             }
 
             // Add the new playlist
             if (count($playlists) == 0) {
-                echo "Added playlist " . $playlist['name'] . "\n";
+                displayNotification("Added playlist " . $playlist['name'] . "\n");
                 $playlist_artwork_path = getPlaylistArtwork($w, $playlist['uri'], $playlist['username'], true);
 
 	            if ($playlist['ownedbyuser'] == true) {
@@ -653,7 +657,7 @@ function updatePlaylistList($jsonData)
         exec("sqlite3 -separator '	' \"$dbfile\" \"$getPlaylists\" 2>&1", $playlists, $returnValue);
 
         if ($returnValue != 0) {
-            echo "ERROR: when checking deleted playlist";
+            displayNotification("ERROR: when checking deleted playlist");
         } else {
             foreach ($playlists as $pl):
                 $pl = explode("	", $pl);
@@ -666,7 +670,7 @@ function updatePlaylistList($jsonData)
                     }
                 }
                 if ($found != 1) {
-                    echo "Playlist " . escapeQuery($pl[1]) . " was removed" . "\n";
+                    displayNotification("Playlist " . escapeQuery($pl[1]) . " was removed" . "\n");
                     $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"delete from playlists where uri=\"' . $pl[0] . '\""';
                     exec($sql);
                     $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"delete from tracks where playlist_uri=\"' . $pl[0] . '\""';
@@ -710,12 +714,12 @@ function updatePlaylistList($jsonData)
         $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"update counters set playlists=' . $playlists_count[0] . '"';
         exec($sql);
 
-        echo "Playlist list has been updated";
+        displayNotification("Playlist list has been updated");
 
         unlink($w->data() . "/update_library_in_progress");
     } else {
         //it's not JSON. Log error
-        echo "ERROR: JSON data is not valid!";
+        displayNotification("ERROR: JSON data is not valid!");
     }
 }
 

@@ -104,21 +104,21 @@ if ($playlist_uri != "") {
         $setSettings = "update settings set max_results=" . $setting[1];
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        echo "Max results set to $setting[1]";
+        displayNotification("Max results set to $setting[1]");
     } else if ($setting[0] == "ALFRED_PLAYLIST") {
         $setSettings = 'update settings set alfred_playlist_uri=\"' . $setting[1] . '\"' . ',alfred_playlist_name=\"' . $setting[2] . '\"';
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        echo "Alfred Playlist set to $setting[2]";
+        displayNotification("Alfred Playlist set to $setting[2]");
     } else if ($setting[0] == "CLEAR_ALFRED_PLAYLIST") {
 		exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:clearplaylist:$setting[1]:" . uniqid() . "\"'");
 	    exec("osascript -e 'tell application \"Spotify\" to open location \"$setting[1]\"'");
-        echo "Alfred Playlist $setting[2] was cleared";
+	    displayNotification("Alfred Playlist $setting[2] was cleared");
     } else if ($setting[0] == "COUNTRY") {
         $setSettings = 'update settings set country_code=\"' . $setting[1] . '\"';
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        echo "Country Code set to $setting[1]";
+	    displayNotification("Country Code set to $setting[1]");
     }
 } else if ($original_query != "") {
     exec("osascript -e 'tell application \"Alfred 2\" to search \"spot $original_query\"'");
@@ -127,53 +127,53 @@ if ($playlist_uri != "") {
         $setSettings = "update settings set all_playlists=0";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        echo "Search scope set to starred playlist";
+	    displayNotification("Search scope set to starred playlist");
     } else if ($other_action == "enable_all_playlist") {
         $setSettings = "update settings set all_playlists=1";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        echo "Search scope set to all playlists";
+        displayNotification("Search scope set to all playlists");
     } else if ($other_action == "enable_spotifiuous") {
         $setSettings = "update settings set is_spotifious_active=1";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        echo "Spotifious is now enabled";
+	    displayNotification("Spotifious is now enabled");
     } else if ($other_action == "disable_spotifiuous") {
         $setSettings = "update settings set is_spotifious_active=0";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        echo "Spotifious is now disabled";
+	    displayNotification("Spotifious is now disabled");
     } else if ($other_action == "set_theme_to_black") {
         $setSettings = "update settings set theme='black'";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        echo "Theme set to black";
+	    displayNotification("Theme set to black");
     } else if ($other_action == "set_theme_to_green") {
         $setSettings = "update settings set theme='green'";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        echo "Theme set to green";
+	    displayNotification("Theme set to green");
     }
     else if ($other_action == "enable_displaymorefrom") {
         $setSettings = "update settings set is_displaymorefrom_active=1";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        echo "\"More from this artist/album\" is now enabled";
+	    displayNotification("\"More from this artist/album\" is now enabled");
     } else if ($other_action == "disable_displaymorefrom") {
         $setSettings = "update settings set is_displaymorefrom_active=0";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        echo "\"More from this artist/album\" is now disabled";
+	    displayNotification("\"More from this artist/album\" is now disabled");
     } else if ($other_action == "enable_alfred_playlist") {
         $setSettings = "update settings set is_alfred_playlist_active=1";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        echo "Alfred Playlist is now enabled";
+	    displayNotification("Alfred Playlist is now enabled");
     } else if ($other_action == "disable_alfred_playlist") {
         $setSettings = "update settings set is_alfred_playlist_active=0";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        echo "Alfred Playlist is now disabled";
+	    displayNotification("Alfred Playlist is now disabled");
     } else if ($other_action == "open_spotify_export_app") {
         exec("osascript -e 'tell application \"Spotify\" to activate'");
         exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer\"'");
@@ -189,7 +189,7 @@ if ($playlist_uri != "") {
         if ($a[4] != "") {
             exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online⇾spotify:artist:$a[4]@" . escapeQuery($artist_name) . "\"'");
         } else {
-            echo "Error: Could no retrieve the artist";
+        	displayNotification("Error: Could no retrieve the artist");
         }
     } else if ($other_action == "morefromthirelatedartist") {
         exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online⇾" . $artist_uri . "@" . escapeQuery($artist_name) . "\"'");
