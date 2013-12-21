@@ -317,7 +317,7 @@ function updateLibrary($jsonData)
         $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table playlists (uri text, name text, nb_tracks int, author text, username text, playlist_artwork_path text, ownedbyuser boolean)"';
         exec($sql);
 
-        $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table related (artist_name text, related_artist_name text, related_artist_uri text, related_artist_artwork_path text, PRIMARY KEY (artist_name, related_artist_name))"';
+        $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table artists (artist_name text, artist_uri text, artist_biography text, artist_popularity int, artist_years_from text, artist_years_to text, related_artist_name text, related_artist_uri text, related_artist_artwork_path text, PRIMARY KEY (artist_name, related_artist_name))"';
         exec($sql);
         
         
@@ -336,7 +336,7 @@ function updateLibrary($jsonData)
 
 				$related_artist_artwork_path = getArtistArtwork($w, $related['name'], true);
 				
-				$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into related values (\"' . escapeQuery($artist['artist_name']) . '\",\"' . escapeQuery($related['name']) . '\",\"' . $related['uri'] . '\",\"' . $related_artist_artwork_path . '\")"';
+				$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert or ignore into artists values (\"' . escapeQuery($artist['artist_name']) . '\",\"' . $artist['artist_uri'] . '\",\"' . escapeQuery($artist['biography']) . '\",' . $artist['popularity']  . ',\"' . $artist['years']['from'] . '\",\"' . $artist['years']['to'] . '\",\"' . escapeQuery($related['name']) . '\",\"' . $related['uri'] . '\",\"' . $related_artist_artwork_path . '\")"';
 				exec($sql);
 			}
 			$nb_artists++;

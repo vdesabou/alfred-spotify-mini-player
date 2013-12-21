@@ -971,11 +971,11 @@ if (mb_strlen($query) < 3 ||
  	        $theartist = $words[3];
         
 			if (mb_strlen($theartist) < 3) {
-        		$getRelateds = "select * from related where artist_name='" . $artist_name . "'";	
+        		$getRelateds = "select related_artist_name,related_artist_uri,related_artist_artwork_path from artists where artist_name='" . $artist_name . "'";	
         	}
         	else
         	{
-				$getRelateds = "select * from related where artist_name='" . $artist_name . "'" . " and related_artist_name like '%" . $theartist . "%'";
+				$getRelateds = "select related_artist_name,related_artist_uri,related_artist_artwork_path from artists where artist_name='" . $artist_name . "'" . " and related_artist_name like '%" . $theartist . "%'";
         	}
         	
 	        $dbfile = $w->data() . "/library.db";
@@ -993,8 +993,8 @@ if (mb_strlen($query) < 3 ||
 	        foreach ($relateds as $related):
 	            $related = explode("	", $related);
 	
-	            if (checkIfResultAlreadyThere($w->results(), "👤 " . ucfirst($related[1])) == false) {
-                    $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ , $related[2] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'morefromthirelatedartist' /* other_action */ ,'' /* alfred_playlist_uri */ ,$related[1]  /* artist_name */)), "👤 " . ucfirst($related[1]), 'Query all albums/tracks from this artist online..', $related[3], 'yes', '');
+	            if (checkIfResultAlreadyThere($w->results(), "👤 " . ucfirst($related[0])) == false) {
+                    $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ , $related[1] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'morefromthirelatedartist' /* other_action */ ,'' /* alfred_playlist_uri */ ,$related[0]  /* artist_name */)), "👤 " . ucfirst($related[0]), 'Query all albums/tracks from this artist online..', $related[2], 'yes', '');
 	            }
 	        endforeach;
         }   
