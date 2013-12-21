@@ -181,6 +181,38 @@ if ($playlist_uri != "") {
         exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:star:" . uniqid() . "\"'");
     } else if ($other_action == "random") {
         exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:random:" . uniqid() . "\"'");
+    }
+	else if ($other_action == "display_biography") {
+       	$getBiography = "select artist_biography from artists where artist_name='" . $artist_name . "'";	
+	    
+        $dbfile = $w->data() . "/library.db";
+        exec("sqlite3 -separator '	' \"$dbfile\" \"$getBiography\" 2>&1", $biographs, $returnValue);
+
+        if ($returnValue != 0) {
+            handleDbIssue('green');
+            return;
+        }
+
+        if (count($biographs) == 0) {
+            displayNotification("No biography found");
+            return;
+        }
+    	
+        foreach ($biographs as $biography):
+            $biography = explode("	", $biography);
+
+            if($biography[0] != "")
+            {
+	            echo "$biography[0]";
+	            return;
+            }
+            else
+            {
+	            displayNotification("No biography found");
+	            return;
+            }
+        endforeach;
+	    
     } 
     else if ($other_action == "morefromthisartist") {
         $t = explode(':', $track_uri);
