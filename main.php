@@ -695,7 +695,7 @@ if (mb_strlen($query) < 3 ||
 	        if (count($artists) > 0) {
 	        	
 	        	$theartist = explode("	", $artists[0]);
-	        	$w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,$theartist[0] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'morefromthisartist' /* other_action */ ,'' /* alfred_playlist_uri */ ,$artist  /* artist_name */)), "👤 " . $artist, 'Query all albums/tracks from this artist online..', $theartist[1], 'yes', '');           
+	        	$w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,$theartist[0] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'morefromthisartist' /* other_action */ ,'' /* alfred_playlist_uri */ ,$artist  /* artist_name */)), "👤 " . $artist, '☁︎ Query all albums/tracks from this artist online..', $theartist[1], 'yes', '');           
 	        }
         
                     
@@ -1029,7 +1029,7 @@ if (mb_strlen($query) < 3 ||
 	            $related = explode("	", $related);
 	
 	            if (checkIfResultAlreadyThere($w->results(), "👤 " . ucfirst($related[0])) == false) {
-                    $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ , $related[1] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'morefromthisartist' /* other_action */ ,'' /* alfred_playlist_uri */ ,$related[0]  /* artist_name */)), "👤 " . ucfirst($related[0]), 'Query all albums/tracks from this artist online..', $related[2], 'yes', '');
+                    $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ , $related[1] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'morefromthisartist' /* other_action */ ,'' /* alfred_playlist_uri */ ,$related[0]  /* artist_name */)), "👤 " . ucfirst($related[0]), '☁︎ Query all albums/tracks from this artist online..', $related[2], 'yes', '');
 	            }
 	        endforeach;
         }   
