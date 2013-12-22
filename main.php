@@ -912,7 +912,7 @@ if (mb_strlen($query) < 3 ||
                         break;
                     case JSON_ERROR_NONE:
                         if (mb_strlen($the_query) == 0) {
-                            $w->result('', '', "Select your country:", "This is needed to get accurate results from online spotify lookups ", './images/country.png', 'no', '');
+                            $w->result('', '', "Select your country:", "This is needed to get accurate results from online spotify lookups ", './images/' . $theme . '/' . 'info.png', 'no', '');
                             foreach ($json as $key => $value) {
                                 $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ , 'COUNTRY⇾' . $value /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), ucfirst($key), $value, './images/' . $theme . '/' . 'country.png', 'yes', '');
                             }
