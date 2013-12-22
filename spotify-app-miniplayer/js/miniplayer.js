@@ -285,8 +285,10 @@ function addTopOrStarredListToAlfredPlaylist(args) {
 			models.Playlist.fromURI(args[1]+':'+args[2]+':'+args[3]+':'+args[4]).load('tracks').done(function(p) {
 			    // This callback is fired when the playlist has loaded.
 			    // The playlist object has a tracks property, which is a standard array.
-							
-				p.tracks.snapshot().done(function(t){
+				
+				var sorted = p.tracks.sort('addTime', 'desc');
+						
+				sorted.snapshot().done(function(t){
 								
 				                var tracks = t.toArray();
 				                for(i=0;i<tracks.length;i++){
@@ -313,8 +315,10 @@ function addPlaylistToAlfredPlaylist(args) {
 			models.Playlist.fromURI(args[1]+':'+args[2]+':'+args[3]+':'+args[4]+':'+args[5]).load('tracks').done(function(p) {
 			    // This callback is fired when the playlist has loaded.
 			    // The playlist object has a tracks property, which is a standard array.
+				
+				var sorted = p.tracks.sort('addTime', 'desc');
 							
-				p.tracks.snapshot().done(function(t){
+				sorted.snapshot().done(function(t){
 								
 				                var tracks = t.toArray();
 				                for(i=0;i<tracks.length;i++){
@@ -596,7 +600,9 @@ function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {
 	  console.log("getPlaylistTracks started ",playlist.name);	
 	  playlist.owner.load('name','username','currentUser').done(function (owner) {
 		  
-		  playlist.tracks.snapshot().done(function(snapshot) {
+		  var sorted = playlist.tracks.sort('addTime', 'desc');
+		  
+		  sorted.snapshot().done(function(snapshot) {
 		  		 
 		  	//check for empty playlists
 			if(snapshot.length == 0)
