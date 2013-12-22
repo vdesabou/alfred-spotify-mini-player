@@ -114,7 +114,10 @@ if ($playlist_uri != "") {
 		exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:clearplaylist:$setting[1]:" . uniqid() . "\"'");
 	    exec("osascript -e 'tell application \"Spotify\" to open location \"$setting[1]\"'");
 	    displayNotification("Alfred Playlist $setting[2] was cleared");
-    } else if ($setting[0] == "COUNTRY") {
+    } else if ($setting[0] == "GET_LYRICS") {
+		getLyrics($w,$setting[1],$setting[2]);
+    } 
+    else if ($setting[0] == "COUNTRY") {
         $setSettings = 'update settings set country_code=\"' . $setting[1] . '\"';
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");

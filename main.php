@@ -12,7 +12,6 @@ $query = iconv('UTF-8-MAC', 'UTF-8', $query);
 
 $w = new Workflows();
 
-
 //
 // check for library update in progress
 if (file_exists($w->data() . '/update_library_in_progress')) {
@@ -145,7 +144,9 @@ if (mb_strlen($query) < 3 ||
                     $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'playpause' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "🔈 " . $results[0], $results[2] . ' by ' . $results[1], ($results[3] == "playing") ? './images/' . $theme . '/' . 'pause.png' : './images/' . $theme . '/' . 'play.png', 'yes', '');
                     
                     $w->result('', serialize(array($results[4] /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'morefromthisartist' /* other_action */ ,'' /* alfred_playlist_uri */ ,$results[1]  /* artist_name */)), "🔈👤 " . $results[1], 'Query all albums/tracks from this artist online..', $currentArtistArtwork, 'yes', '');
-                    
+
+                    $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'GET_LYRICS⇾' . $results[1] . '⇾' . $results[0] /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,'' /* artist_name */)), "🔈🎼 Get Lyrics for track " . $results[0], 'This will fetch lyrics on lyrics.com', './images/' . $theme . '/' . 'search.png', 'yes', '');
+                                       
                     
                     
 	                $getTracks = "select * from tracks where playable=1 and uri='" . $results[4] . "'" . " limit " . $max_results;
