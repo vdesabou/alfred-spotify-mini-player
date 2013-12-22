@@ -682,7 +682,7 @@ if (mb_strlen($query) < 3 ||
             $track = $words[2];
 
 
-        	$getArtists = "select artist_uri,artist_artwork_path text from artists where artist_name='" . $artist . "'";	
+        	$getArtists = "select artist_uri,artist_artwork_path,artist_biography from artists where artist_name='" . $artist . "'";	
         	
 	        $dbfile = $w->data() . "/library.db";
 	        exec("sqlite3 -separator '	' \"$dbfile\" \"$getArtists\" 2>&1", $artists, $returnValue);
@@ -695,14 +695,16 @@ if (mb_strlen($query) < 3 ||
 	        if (count($artists) > 0) {
 	        	
 	        	$theartist = explode("	", $artists[0]);
-	        	$w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,$theartist[0] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'morefromthisartist' /* other_action */ ,'' /* alfred_playlist_uri */ ,$artist  /* artist_name */)), "👤 " . $artist, '☁︎ Query all albums/tracks from this artist online..', $theartist[1], 'yes', '');           
+	        	$w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,$theartist[0] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'morefromthisartist' /* other_action */ ,'' /* alfred_playlist_uri */ ,$artist  /* artist_name */)), "👤 " . $artist, '☁︎ Query all albums/tracks from this artist online..', $theartist[1], 'yes', '');
+	        	
+	            if($theartist[2] != "") {
+	            	$w->result('display-biography', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'display_biography' /* other_action */ ,'' /* alfred_playlist_uri */ ,$artist  /* artist_name */)), 'Display biography', 'This will display the artist biography', './images/' . $theme . '/' . 'biography.png', 'yes', ''); 
+	            }         
 	        }
         
                     
             $w->result('', '', 'Related Artists', 'Browse related artists', './images/' . $theme . '/' . 'related.png', 'no', $query . 'Related⇾');
-            
-            $w->result('display-biography', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'display_biography' /* other_action */ ,'' /* alfred_playlist_uri */ ,$artist  /* artist_name */)), 'Display biography', 'This will display the artist biography', './images/' . $theme . '/' . 'biography.png', 'yes', '');
-            
+                        
             if (mb_strlen($track) < 3) {
                 if ($all_playlists == false) {
                     $getTracks = "select * from tracks where playable=1 and starred=1 and artist_name='" . $artist . "'" . " limit " . $max_results;
