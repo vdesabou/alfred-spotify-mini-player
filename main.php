@@ -456,7 +456,7 @@ if (mb_strlen($query) < 3 ||
             } else {
                 $r = explode(':', $alfred_playlist_uri);
 
-                $w->result('', '', "Browse your Alfred playlist (" . $alfred_playlist_name . ")" , "You can change the playlist by selecting Set your Alfred playlist below", getPlaylistArtwork($w, $alfred_playlist_uri, $r[2], false), 'no', 'Playlist⇾' . $alfred_playlist_uri . '⇾');
+                $w->result('', '', "Browse your Alfred playlist (" . $alfred_playlist_name . " by " . $r[2] . ")" , "You can change the playlist by selecting Change your Alfred playlist below", getPlaylistArtwork($w, $alfred_playlist_uri, $r[2], false), 'no', 'Playlist⇾' . $alfred_playlist_uri . '⇾');
                 
                 $w->result('', '', "Change your Alfred playlist", "Select one of your playlists below as your Alfred playlist", './images/' . $theme . '/' . 'settings.png', 'no', 'Alfred Playlist⇾Set Alfred Playlist⇾');
                 
@@ -948,9 +948,9 @@ if (mb_strlen($query) < 3 ||
             
             	$w->result('', '', "Are you sure?", "This will remove all the tracks in your current Alfred Playlist.", './images/warning.png', 'no', '');
             	
+            	$w->result('', '', "No, cancel", "Return to Alfred Playlist", './images/' . $theme . '/' . 'uncheck.png', 'no', 'Alfred Playlist⇾');
+            	
             	$w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'CLEAR_ALFRED_PLAYLIST⇾' .  $alfred_playlist_uri . '⇾' . $alfred_playlist_name /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Yes, go ahead", "This is not undoable", './images/' . $theme . '/' . 'check.png', 'yes', '');
-
-            	$w->result('', '', "No, cancel", "Return to Alfred Playlist", './images/' . $theme . '/' . 'uncheck.png', 'no', 'Alfred Playlist⇾');            	
             
             }          
         }
