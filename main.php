@@ -397,7 +397,7 @@ if (mb_strlen($query) < 3 ||
             if ($is_alfred_playlist_active == true) {
                 $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
             }
-            $w->result('help', 'help', "Select a track to play it", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', '');
+            $w->result('help', 'help', "Select a track below to play it", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', '');
         }
         foreach ($tracks as $track):
             $track = explode("	", $track);
@@ -651,7 +651,7 @@ if (mb_strlen($query) < 3 ||
                         if ($is_alfred_playlist_active == true) {
                             $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
                         }
-                        $w->result('help', 'help', "Select a track to play it", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', '');
+                        $w->result('help', 'help', "Select a track below to play it", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', '');
                         foreach ($json->album->tracks as $key => $value) {
                             $w->result("spotify_mini-spotify-online-track-" . $value->name, serialize(array($value->href /*track_uri*/ ,$album_uri /* album_uri */ ,$artist_uri /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,$artist_name  /* artist_name */)), ucfirst($artist_name) . " - " . $value->name, $album_name . " (" . $json->album->released . ")", getTrackOrAlbumArtwork($w,$theme, $value->href, false), 'yes', '');
 
@@ -734,7 +734,7 @@ if (mb_strlen($query) < 3 ||
                 if ($is_alfred_playlist_active == true) {
                     $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
                 }
-                $w->result('help', 'help', "Select a track to play it", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', '');
+                $w->result('help', 'help', "Select a track below to play it", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', '');
             }
 
             foreach ($tracks as $track):
@@ -794,7 +794,7 @@ if (mb_strlen($query) < 3 ||
                 if ($is_alfred_playlist_active == true) {
                     $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
                 }
-                $w->result('help', 'help', "Select a track to play it", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', '');
+                $w->result('help', 'help', "Select a track below to play it", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', '');
             }
 
             foreach ($tracks as $track):
@@ -854,7 +854,7 @@ if (mb_strlen($query) < 3 ||
                     if ($is_alfred_playlist_active == true) {
                         $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
                     }
-                    $w->result('help', 'help', "Select a track to play it", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', '');
+                    $w->result('help', 'help', "Select a track below to play it", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', '');
                 }
 
                 $subtitle = "Launch Playlist";
