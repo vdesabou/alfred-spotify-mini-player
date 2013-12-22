@@ -889,7 +889,7 @@ function getLyrics($w,$artist,$title) {
 			}
 			else
 			{
-				echo "$title by $artist\n---------------------------\n$lyrics";
+				echo "🎤 $title by $artist\n---------------------------\n$lyrics";
 			}
 	}
 }

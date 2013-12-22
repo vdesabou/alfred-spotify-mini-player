@@ -207,7 +207,7 @@ if ($playlist_uri != "") {
             if($biography[0] != "")
             {
             	$output=strip_tags($biography[0]);
-            	echo "$artist_name\n---------------------------\n$output";
+            	echo "🎓 $artist_name\n---------------------------\n$output";
 	            return;
             }
             else
