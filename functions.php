@@ -28,6 +28,7 @@ function escapeQuery($text)
     $text = str_replace("`", "’", $text);
     $text = str_replace("&amp;", "&", $text);
     $text = str_replace("\\", " ", $text);
+    $text = str_replace("$", "\\$", $text);
     return $text;
 }
 
@@ -505,9 +506,9 @@ function updatePlaylist($jsonData)
                 $album_year = 1995;
 
                 $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into tracks values (' . $starred . ',' . $track['popularity'] . ',\"' . $track['uri'] . '\",\"' . $track['album_uri'] . '\",\"' . $track['artist_uri'] . '\",\"' . escapeQuery($track['name']) . '\",\"' . escapeQuery($track['album_name']) . '\",\"' . escapeQuery($track['artist_name']) . '\"' . ',' . $album_year . ',\"' . $track_artwork_path . '\"' . ',\"' . $artist_artwork_path . '\"' . ',\"' . $album_artwork_path . '\"' . ',\"' . escapeQuery($track['playlist_name']) . '\"' . ',\"' . $track['playlist_uri'] . '\"' . ',' . $playable . ',\"' . $track['availability'] . '\"' . ')"';
-
                 exec($sql);
-				
+                
+                echo $sql;
                 $nb_track++;
                 if ($nb_track % 10 === 0) {
                     $w->write('Playlist⇾' . $nb_track . '⇾' . $nb_tracktotal . '⇾' . $start_time, 'update_library_in_progress');
