@@ -182,6 +182,7 @@ if ($playlist_uri != "") {
         exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer\"'");
     } else if ($other_action == "star") {
         exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:star:" . uniqid() . "\"'");
+        displayNotification("⭐️ Track has been starred");
     } else if ($other_action == "random") {
         exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:random:" . uniqid() . "\"'");
     }
