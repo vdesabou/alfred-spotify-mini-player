@@ -256,6 +256,8 @@ function updateLibrary($jsonData)
 {
     $w = new Workflows();
 
+	$start_time = time();
+	
     //
     // move legacy artwork files in hash directories if needed
     //
@@ -335,8 +337,8 @@ function updateLibrary($jsonData)
 				exec($sql);
 			}
 			$nb_artists++;
-            if ($nb_artists % 2 === 0) {
-                $w->write('Related Artists⇾' . $nb_artists . '⇾' . count($artists), 'update_library_in_progress');
+            if ($nb_artists % 10 === 0) {
+                $w->write('Related Artists⇾' . $nb_artists . '⇾' . count($artists) . '⇾' . $start_time, 'update_library_in_progress');
             }				
 		}
 		
@@ -386,7 +388,7 @@ function updateLibrary($jsonData)
 				
                 $nb_track++;
                 if ($nb_track % 10 === 0) {
-                    $w->write('Library⇾' . $nb_track . '⇾' . $nb_tracktotal, 'update_library_in_progress');
+                    $w->write('Library⇾' . $nb_track . '⇾' . $nb_tracktotal . '⇾' . $start_time, 'update_library_in_progress');
                 }
             }
         }// end playlists
@@ -426,7 +428,8 @@ function updateLibrary($jsonData)
         $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"update counters set playlists=' . $playlists_count[0] . '"';
         exec($sql);
         
-        displayNotification("Library has been created (" . $all_tracks[0] . " tracks)");
+        $elapsed_time = time() - $start_time;
+        displayNotification("Library has been created (" . $all_tracks[0] . " tracks) - it took " . beautifyTime($elapsed_time));
 
         unlink($w->data() . "/update_library_in_progress");
 
@@ -445,7 +448,9 @@ function updateLibrary($jsonData)
 function updatePlaylist($jsonData)
 {
     $w = new Workflows();
-
+	
+	$start_time = time();
+	
     putenv('LANG=fr_FR.UTF-8');
 
     ini_set('memory_limit', '512M');
@@ -505,7 +510,7 @@ function updatePlaylist($jsonData)
 				
                 $nb_track++;
                 if ($nb_track % 10 === 0) {
-                    $w->write('Playlist⇾' . $nb_track . '⇾' . $nb_tracktotal, 'update_library_in_progress');
+                    $w->write('Playlist⇾' . $nb_track . '⇾' . $nb_tracktotal . '⇾' . $start_time, 'update_library_in_progress');
                 }
             }
         }
@@ -545,8 +550,9 @@ function updatePlaylist($jsonData)
         $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"update counters set playlists=' . $playlists_count[0] . '"';
         exec($sql);
 		
-		displayNotification("\nPlaylist has been updated (" . $nb_track . " tracks)");
-
+		$elapsed_time = time() - $start_time;
+		displayNotification("\nPlaylist has been updated (" . $nb_track . " tracks) - it took " . beautifyTime($elapsed_time));
+        
         unlink($w->data() . "/update_library_in_progress");
     } else {
         //it's not JSON. Log error
@@ -558,6 +564,8 @@ function updatePlaylistList($jsonData)
 {
     $w = new Workflows();
 
+	$start_time = time();
+	
     putenv('LANG=fr_FR.UTF-8');
 
     ini_set('memory_limit', '512M');
@@ -583,7 +591,7 @@ function updatePlaylistList($jsonData)
 
             $nb_playlist++;
             if ($nb_playlist % 4 === 0) {
-                $w->write('Playlist List⇾' . $nb_playlist . '⇾' . $nb_playlist_total, 'update_library_in_progress');
+                $w->write('Playlist List⇾' . $nb_playlist . '⇾' . $nb_playlist_total . '⇾' . $start_time, 'update_library_in_progress');
             }
 
             if ($returnValue != 0) {
@@ -704,7 +712,8 @@ function updatePlaylistList($jsonData)
         $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"update counters set playlists=' . $playlists_count[0] . '"';
         exec($sql);
 
-        displayNotification("Playlist list has been updated");
+		$elapsed_time = time() - $start_time;
+        displayNotification("Playlist list has been updated - it took " . beautifyTime($elapsed_time));
 
         unlink($w->data() . "/update_library_in_progress");
     } else {
@@ -948,6 +957,16 @@ function checkForUpdate($w,$last_check_update_time) {
 	}
 }
 
-
+/* 
+	Thanks to Spotifious code 
+	
+	https://github.com/citelao/Spotify-for-Alfred
+*/
+function beautifyTime($seconds) {
+	$m = floor($seconds / 60);
+	$s = $seconds % 60;
+	$s = ($s < 10) ? "0$s" : "$s";
+	return  $m . "m" . $s . "s";
+}
 
 ?>

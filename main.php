@@ -18,7 +18,7 @@ if (file_exists($w->data() . '/update_library_in_progress')) {
     if (file_exists($w->data() . '/library.db')) {
         $in_progress_data = $w->read('update_library_in_progress');
 
-        if (substr_count($in_progress_data, '⇾') == 2) {
+        if (substr_count($in_progress_data, '⇾') == 3) {
             $words = explode('⇾', $in_progress_data);
 
             if ($words[0] == 'Playlist List') {
@@ -29,9 +29,10 @@ if (file_exists($w->data() . '/update_library_in_progress')) {
             else {
                 $type = 'tracks';
             }
-            $w->result('', $w->data() . '/update_library_in_progress', $words[0] . ' update in progress: ' . floatToSquares(intval($words[1]) / intval($words[2])), $words[1] . '/' . $words[2] . ' ' . $type . ' processed so far (if no progress, use spot_mini_kill_update command to stop it)', './images/update_in_progress.png', 'no', '');
+            $elapsed_time = time() - $words[3];
+            $w->result('', $w->data() . '/update_library_in_progress', $words[0] . ' update in progress since ' . beautifyTime($elapsed_time) . ' : '  . floatToSquares(intval($words[1]) / intval($words[2])), $words[1] . '/' . $words[2] . ' ' . $type . ' processed so far (if no progress, use spot_mini_kill_update command to stop it)', './images/update_in_progress.png', 'no', '');
         } else {
-            $w->result('', $w->data() . '/update_library_in_progress', 'Update in progress: ' . floatToSquares(0), '0 tracks processed so far (if no progress, use spot_mini_kill_update command to stop it)', './images/update_in_progress.png', 'no', '');
+            $w->result('', $w->data() . '/update_library_in_progress', 'Update in progress: ' . floatToSquares(0), 'waiting for Spotify Mini Player app to return required data (if no progress, use spot_mini_kill_update command to stop it)', './images/update_in_progress.png', 'no', '');
         }
     } else {
         $w->result('', $w->data() . '/update_library_in_progress', 'Library update seems broken', 'You can kill it by using spot_mini_kill_update command', './images/warning.png', 'no', '');
