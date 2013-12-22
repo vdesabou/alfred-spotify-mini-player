@@ -155,7 +155,7 @@ if (mb_strlen($query) < 3 ||
                                         
 					$w->result('', '', "🔈👤 " . ucfirst($results[1]), "Browse this artist", $currentArtistArtwork, 'no', "Artist⇾" . $results[1] . "⇾");
 
-                    $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'GET_LYRICS⇾' . $results[1] . '⇾' . $results[0] /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,'' /* artist_name */)), "🔈🎤 Get Lyrics for track " . $results[0], 'This will fetch lyrics on lyrics.com', './images/' . $theme . '/' . 'lyrics.png', 'yes', '');
+                    $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'GET_LYRICS⇾' . $results[1] . '⇾' . $results[0] /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,'' /* artist_name */)), "🔈🎤 Get Lyrics for track " . $results[0], 'This will fetch lyrics on lyrics.com', getTrackOrAlbumArtwork($w,$theme,$results[4],false), 'yes', '');
                                        
                     
                     
