@@ -891,13 +891,15 @@ function getLyrics($w,$artist,$title) {
 	{
 			$lyrics = strip_tags($lyrics);
 			
+			$lyrics = (strlen($lyrics) > 1303) ? substr($lyrics,0,1300).'...' : $lyrics;
+			
 			if($lyrics=="")
 			{
 				displayNotification("Sorry there is no match for this track");
 			}
 			else
 			{
-				echo "$lyrics";
+				echo "$title by $artist\n---------------------------\n$lyrics";
 			}
 	}
 }
