@@ -197,7 +197,7 @@ if (mb_strlen($query) < 3 ||
                 }
             }
             if ($is_alfred_playlist_active == true) {
-                $w->result('', '', 'Alfred Playlist', 'Choose one of your playlists and add tracks, album, playlist to it directly from the workflow', './images/' . $theme . '/' . 'alfred_playlist.png', 'no', 'Alfred Playlist⇾');
+                $w->result('', '', 'Alfred Playlist (currently set to <' . $alfred_playlist_name . '>)' , 'Choose one of your playlists and add tracks, album, playlist to it directly from the workflow', './images/' . $theme . '/' . 'alfred_playlist.png', 'no', 'Alfred Playlist⇾');
             }
             $w->result('', '', 'Playlists', 'Browse by playlist' . ' (' . $nb_playlists . ' playlists)', './images/' . $theme . '/' . 'playlists.png', 'no', 'Playlist⇾');
             if ($all_playlists == true) {
@@ -289,7 +289,7 @@ if (mb_strlen($query) < 3 ||
         } else if (strpos(strtolower('artist'), strtolower($query)) !== false) {
             $w->result('', '', 'Artists', 'Browse by artist', './images/' . $theme . '/' . 'artists.png', 'no', 'Artist⇾');
         } else if (strpos(strtolower('alfred'), strtolower($query)) !== false) {
-            $w->result('', '', 'Alfred Playlist', 'Choose one of your playlists and add tracks, album, playlist to it directly from the workflow', './images/' . $theme . '/' . 'alfred_playlist.png', 'no', 'Alfred Playlist⇾');
+            $w->result('', '', 'Alfred Playlist (currently set to <' . $alfred_playlist_name . '>)' , 'Choose one of your playlists and add tracks, album, playlist to it directly from the workflow', './images/' . $theme . '/' . 'alfred_playlist.png', 'no', 'Alfred Playlist⇾');
         } else if (strpos(strtolower('setting'), strtolower($query)) !== false) {
             $w->result('', '', 'Settings', 'Go to settings', './images/' . $theme . '/' . 'settings.png', 'no', 'Settings⇾');
         }
