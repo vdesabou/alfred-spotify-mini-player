@@ -189,7 +189,7 @@ if ($playlist_uri != "") {
         exec("sqlite3 -separator '	' \"$dbfile\" \"$getBiography\" 2>&1", $biographs, $returnValue);
 
         if ($returnValue != 0) {
-            handleDbIssue('green');
+            displayNotification("There is a problem with the library, try to update it");
             return;
         }
 
