@@ -142,10 +142,10 @@ if (mb_strlen($query) < 3 ||
                     $results = explode('⇾', $command_output);
                     $currentArtistArtwork = getArtistArtwork($w, $results[1], false);
                     $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'playpause' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "🔈 " . $results[0], $results[2] . ' by ' . $results[1], ($results[3] == "playing") ? './images/' . $theme . '/' . 'pause.png' : './images/' . $theme . '/' . 'play.png', 'yes', '');
-                    
-                    $w->result('', serialize(array($results[4] /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'morefromthisartist' /* other_action */ ,'' /* alfred_playlist_uri */ ,$results[1]  /* artist_name */)), "🔈👤 " . $results[1], 'Query all albums/tracks from this artist online..', $currentArtistArtwork, 'yes', '');
+                                        
+					$w->result('', '', "🔈👤 " . ucfirst($results[1]), "Browse this artist", $currentArtistArtwork, 'no', "Artist⇾" . $results[1] . "⇾");
 
-                    $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'GET_LYRICS⇾' . $results[1] . '⇾' . $results[0] /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,'' /* artist_name */)), "🔈🎼 Get Lyrics for track " . $results[0], 'This will fetch lyrics on lyrics.com', './images/' . $theme . '/' . 'search.png', 'yes', '');
+                    $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'GET_LYRICS⇾' . $results[1] . '⇾' . $results[0] /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,'' /* artist_name */)), "🔈🎼 Get Lyrics for track " . $results[0], 'This will fetch lyrics on lyrics.com', './images/' . $theme . '/' . 'lyrics.png', 'yes', '');
                                        
                     
                     
@@ -671,6 +671,24 @@ if (mb_strlen($query) < 3 ||
             $artist = $words[1];
             $track = $words[2];
 
+
+        	$getArtists = "select artist_uri,artist_artwork_path text from artists where artist_name='" . $artist . "'";	
+        	
+	        $dbfile = $w->data() . "/library.db";
+	        exec("sqlite3 -separator '	' \"$dbfile\" \"$getArtists\" 2>&1", $artists, $returnValue);
+	
+	        if ($returnValue != 0) {
+	            handleDbIssue($theme);
+	            return;
+	        }
+
+	        if (count($artists) > 0) {
+	        	
+	        	$theartist = explode("	", $artists[0]);
+	        	$w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,$theartist[0] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'morefromthisartist' /* other_action */ ,'' /* alfred_playlist_uri */ ,$artist  /* artist_name */)), "👤 " . $artist, 'Query all albums/tracks from this artist online..', $theartist[1], 'yes', '');           
+	        }
+        
+                    
             $w->result('', '', 'Related Artists', 'Browse related artists', './images/' . $theme . '/' . 'related.png', 'no', $query . 'Related⇾');
             
             $w->result('display-biography', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'display_biography' /* other_action */ ,'' /* alfred_playlist_uri */ ,$artist  /* artist_name */)), 'Display biography', 'This will display the artist biography', './images/' . $theme . '/' . 'biography.png', 'yes', '');
@@ -1001,7 +1019,7 @@ if (mb_strlen($query) < 3 ||
 	            $related = explode("	", $related);
 	
 	            if (checkIfResultAlreadyThere($w->results(), "👤 " . ucfirst($related[0])) == false) {
-                    $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ , $related[1] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'morefromthirelatedartist' /* other_action */ ,'' /* alfred_playlist_uri */ ,$related[0]  /* artist_name */)), "👤 " . ucfirst($related[0]), 'Query all albums/tracks from this artist online..', $related[2], 'yes', '');
+                    $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ , $related[1] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'morefromthisartist' /* other_action */ ,'' /* alfred_playlist_uri */ ,$related[0]  /* artist_name */)), "👤 " . ucfirst($related[0]), 'Query all albums/tracks from this artist online..', $related[2], 'yes', '');
 	            }
 	        endforeach;
         }   

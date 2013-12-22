@@ -240,18 +240,6 @@ function getPlaylistArtworkURL($w, $url)
     return 0;
 }
 
-function getArtistURLFromTrack($w, $id)
-{
-    $html = $w->request("http://open.spotify.com/track/$id");
-
-    if (!empty($html)) {
-        preg_match_all('/.*?music:musician.*?content="(.*?)">.*?/is', $html, $m);
-        return (isset($m[1][0])) ? $m[1][0] : 0;
-    }
-
-    return 0;
-}
-
 function getArtistArtworkURL($w, $artist)
 {
     $parsedArtist = urlencode($artist);
@@ -322,7 +310,7 @@ function updateLibrary($jsonData)
         $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table playlists (uri text, name text, nb_tracks int, author text, username text, playlist_artwork_path text, ownedbyuser boolean)"';
         exec($sql);
 
-        $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table artists (artist_name text, artist_uri text, artist_biography text, artist_popularity int, artist_years_from text, artist_years_to text, related_artist_name text, related_artist_uri text, related_artist_artwork_path text, PRIMARY KEY (artist_name, related_artist_name))"';
+        $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table artists (artist_name text, artist_uri text, artist_artwork_path text, artist_biography text, artist_popularity int, artist_years_from text, artist_years_to text, related_artist_name text, related_artist_uri text, related_artist_artwork_path text, PRIMARY KEY (artist_name, related_artist_name))"';
         exec($sql);
         
         
@@ -336,12 +324,14 @@ function updateLibrary($jsonData)
 		$nb_artists = 0;
 		foreach ($artists as $artist) {
 
+			$artist_artwork_path = getArtistArtwork($w, $artist['artist_name'], true);
+			
 			$relateds = $artist['related'];			
 			foreach ($relateds as $related) {
 
 				$related_artist_artwork_path = getArtistArtwork($w, $related['name'], true);
 				
-				$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert or ignore into artists values (\"' . escapeQuery($artist['artist_name']) . '\",\"' . $artist['artist_uri'] . '\",\"' . escapeQuery($artist['biography']) . '\",' . $artist['popularity']  . ',\"' . $artist['years']['from'] . '\",\"' . $artist['years']['to'] . '\",\"' . escapeQuery($related['name']) . '\",\"' . $related['uri'] . '\",\"' . $related_artist_artwork_path . '\")"';
+				$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert or ignore into artists values (\"' . escapeQuery($artist['artist_name']) . '\",\"' . $artist['artist_uri'] . '\",\"' . $related_artist_artwork_path . '\",\"' . escapeQuery($artist['biography']) . '\",' . $artist['popularity']  . ',\"' . $artist['years']['from'] . '\",\"' . $artist['years']['to'] . '\",\"' . escapeQuery($related['name']) . '\",\"' . $related['uri'] . '\",\"' . $related_artist_artwork_path . '\")"';
 				exec($sql);
 			}
 			$nb_artists++;

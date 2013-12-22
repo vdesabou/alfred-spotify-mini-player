@@ -218,16 +218,7 @@ if ($playlist_uri != "") {
         endforeach;
 	    
     } 
-    else if ($other_action == "morefromthisartist") {
-        $t = explode(':', $track_uri);
-        $completeurl = getArtistURLFromTrack($w, $t[2]);
-        $a = explode('/', $completeurl);
-        if ($a[4] != "") {
-            exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online⇾spotify:artist:$a[4]@" . escapeQuery($artist_name) . "\"'");
-        } else {
-        	displayNotification("Error: Could no retrieve the artist");
-        }
-    } else if ($other_action == "morefromthirelatedartist") {
+	else if ($other_action == "morefromthisartist") {
         exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online⇾" . $artist_uri . "@" . escapeQuery($artist_name) . "\"'");
     }
      else if ($other_action == "update_library") {
