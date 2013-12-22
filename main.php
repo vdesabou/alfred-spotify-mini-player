@@ -270,6 +270,8 @@ if (mb_strlen($query) < 3 ||
             $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'enable_displaymorefrom' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Enable \"Query all albums/tracks from this artist\"", "Enable the option which  displays all albums and tracks from current artist", './images/' . $theme . '/' . 'check.png', 'yes', '');
         }
 
+        $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'check_for_update' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), 'Check for workflow update', "Note this is automatically done otherwise once per day", './images/' . $theme . '/' . 'check_update.png', 'yes', '');
+        
         $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'open_spotify_export_app' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Open Spotify Mini Player App <spotify:app:miniplayer>", "Go to the Spotify Mini Player App in Spotify.", './images/' . $theme . '/' . 'app_miniplayer.png', 'yes', '');
     }
 } else {

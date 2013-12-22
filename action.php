@@ -180,6 +180,15 @@ if ($playlist_uri != "") {
     } else if ($other_action == "open_spotify_export_app") {
         exec("osascript -e 'tell application \"Spotify\" to activate'");
         exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer\"'");
+    } else if ($other_action == "check_for_update") {
+		$check_results = checkForUpdate($w,0);
+		if($check_results != null && is_array($check_results)) {
+			displayNotification('New version ' . $check_results[0] . ' is available in Downloads directory ');
+		}
+		else {
+			displayNotification('No update available');
+		}
+		
     } else if ($other_action == "star") {
         exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:star:" . uniqid() . "\"'");
         displayNotification("⭐️ Track has been starred");
