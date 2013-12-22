@@ -453,7 +453,7 @@ if (mb_strlen($query) < 3 ||
             $playlist = $words[1];
 
             if ($alfred_playlist_uri == "") {
-                $w->result('', '', "Set your Alfred playlist", "Select one of your playlists below as your Alfred playlist", './images/' . $theme . '/' . 'settings.png', 'no', 'Alfred Playlist⇾Set Alfred Playlist⇾');
+                $w->result('', '', "Alfred playlist is not set", "Click to select one of your playlists below as your Alfred playlist", './images/' . $theme . '/' . 'settings.png', 'no', 'Alfred Playlist⇾Set Alfred Playlist⇾');
             } else {
                 $r = explode(':', $alfred_playlist_uri);
 
