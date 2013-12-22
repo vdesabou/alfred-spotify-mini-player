@@ -45,7 +45,7 @@ function checkIfResultAlreadyThere($results, $title)
 
 function displayNotification($output)
 {
-	exec('./terminal-notifier.app/Contents/MacOS/terminal-notifier -title "Spotify Mini Player" -sender com.runningwithcrayons.Alfred-2  -message "' .  $output . '"');
+	exec('./terminal-notifier.app/Contents/MacOS/terminal-notifier -title "Spotify Mini Player" -sender com.spotify.miniplayer -message "' .  $output . '"');
 }
 
 function getTrackOrAlbumArtwork($w,$theme, $spotifyURL, $fetchIfNotPresent)
