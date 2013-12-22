@@ -899,5 +899,55 @@ function strip_string($string)
         return preg_replace('/[^a-zA-Z0-9-\s]/', '', $string);
 }
 
+function checkForUpdate($w,$last_check_update_time) {
+	
+	if(time()-$last_check_update_time > 86400)
+	{
+		// update last_check_update_time	
+	    $setSettings = "update settings set last_check_update_time=" . time();
+	    $dbfile = $w->data() . "/settings.db";
+	    exec("sqlite3 \"$dbfile\" \"$setSettings\"");
+
+		// get local information		
+		$json = $w->read('update.json');
+    	$local_version = $json->version;
+    	$remote_json = $json->remote_json; 
+
+		// get remote information
+        $jsonDataRemote = $w->request($remote_json);
+
+        if (empty($jsonDataRemote)) {
+            displayNotification("Error: the export.json " . $remote_json . " file cannot be found");
+            return;
+        }
+
+        $json = json_decode($jsonDataRemote,true);
+        if (json_last_error() === JSON_ERROR_NONE) {
+        	$download_url = $json['download_url'];
+        	$remote_version = $json['version'];
+        	$description = $json['description'];
+        	
+        	if($local_version < $remote_version) {
+	        	displayNotification("An update is available");
+				
+				$workflow_file_name = $w->home() . '/Downloads/spotify-app-miniplayer-' . $remote_version . '.alfredworkflow';
+                $fp = fopen($workflow_file_name , 'w+');
+                $options = array(
+                    CURLOPT_FILE => $fp
+                );
+                $w->request("$download_url", $options);
+                
+                return array($remote_version,$workflow_file_name,$description);	        	
+        	}
+        	
+        }
+        else {
+			displayNotification("Error: check for update failed: remote.json error");	        
+        }	
+
+	}
+}
+
+
 
 ?>

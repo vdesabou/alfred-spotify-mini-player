@@ -57,7 +57,7 @@ if(!installSpotifyAppIfNeeded($w))
 //
 // Read settings from DB
 //
-$getSettings = 'select all_playlists,is_spotifious_active,is_alfred_playlist_active,is_displaymorefrom_active,max_results, alfred_playlist_uri,alfred_playlist_name,country_code,theme from settings';
+$getSettings = 'select all_playlists,is_spotifious_active,is_alfred_playlist_active,is_displaymorefrom_active,max_results, alfred_playlist_uri,alfred_playlist_name,country_code,theme,last_check_update_time from settings';
 $dbfile = $w->data() . '/settings.db';
 exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
 
@@ -74,10 +74,10 @@ if ($returnValue != 0) {
 if (!file_exists($w->data() . '/settings.db')) {
     touch($w->data() . '/settings.db');
 
-    $sql = 'sqlite3 "' . $w->data() . '/settings.db" ' . ' "create table settings (all_playlists boolean, is_spotifious_active boolean, is_alfred_playlist_active boolean, is_displaymorefrom_active boolean, max_results int, alfred_playlist_uri text, alfred_playlist_name text, country_code text, theme text)"';
+    $sql = 'sqlite3 "' . $w->data() . '/settings.db" ' . ' "create table settings (all_playlists boolean, is_spotifious_active boolean, is_alfred_playlist_active boolean, is_displaymorefrom_active boolean, max_results int, alfred_playlist_uri text, alfred_playlist_name text, country_code text, theme text, last_check_update_time int)"';
     exec($sql);
 
-    $sql = 'sqlite3 "' . $w->data() . '/settings.db" ' . '"insert into settings values (1,1,1,1,50,\"\",\"\",\"\",\"green\")"';
+    $sql = 'sqlite3 "' . $w->data() . '/settings.db" ' . '"insert into settings values (1,1,1,1,50,\"\",\"\",\"\",\"green\",0)"';
     exec($sql);
 }
 
@@ -95,8 +95,18 @@ foreach ($settings as $setting):
     $alfred_playlist_name = $setting[6];
     $country_code = $setting[7];
     $theme = $setting[8];
+    $last_check_update_time = $setting[9];
 endforeach;
 
+$check_results = checkForUpdate($w,$last_check_update_time);
+if($check_results != null && is_array($check_results))
+{
+	$w->result('', '', 'New version ' . $check_results[0] . ' is available', $check_results[2], './images/' . $theme . '/' . 'info.png', 'no', '');
+	$w->result('', '', 'Please install the new version in Downloads directory', $check_results[1], 'fileicon:'.$check_results[1], 'no', '' );	
+	
+	echo $w->toxml();
+	return;
+}
 
 // thanks to http://www.alfredforum.com/topic/1788-prevent-flash-of-no-result
 mb_internal_encoding('UTF-8');
