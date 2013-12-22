@@ -580,8 +580,16 @@ function getExternalPlaylistUri(uri,username) {
 function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {	
 	var array_tracks = [];
 	var array_artists = [];
-	var array_tmp_tracks = [];	
-	var playlist = models.Playlist.fromURI(uri);
+	var array_tmp_tracks = [];
+	
+	if(uri == 'spotify:user:@:toplist')
+	{
+		var playlist = Library.forCurrentUser().toplist;
+	}
+	else
+	{	
+		var playlist = models.Playlist.fromURI(uri);
+	}
 	
 	
 	playlist.load('tracks','name','owner').done(function() {
@@ -734,11 +742,9 @@ function getPlaylists(matchedPlaylistsCallback) {
 	array_results.push(objstarredplaylist);
 
 
-/*
 	objtoplistplaylist={};
 	objtoplistplaylist.uri=Library.forCurrentUser().toplist.uri;
 	array_results.push(objtoplistplaylist);
-*/
 
 									
     Library.forCurrentUser().playlists.snapshot().done(function(snapshot){
