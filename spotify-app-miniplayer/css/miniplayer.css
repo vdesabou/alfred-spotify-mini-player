@@ -8,25 +8,12 @@
 	padding:20px;
 }
 #now-playing {
-	font-size:24px;
+	font-size:18px;
 	margin-bottom:30px;
 	line-height: 32px;
+	color:#41c826;
 }
-#now-playing a {
-	color:#eeeeee;
-}
-#player-image {
-	margin-right: 10px;
-	margin-bottom: 10px;
-}
-#player-image, #player-image .image {
-	float:left;
-	height:128px;
-	width:128px;
-}
-#commands {
-	margin-bottom:30px;
-}
+
 ul {
 	list-style: disc;
 	margin-left: 20px; 
@@ -34,12 +21,12 @@ ul {
 a {
 	color:#eeeeee;
 }
-
-#drop-box {border:4px dashed #FFF;width:50%;height:200px;padding:10px;}
-#drop-box.over {opacity:0.8;border-color:#74c043;}
-    	
-textarea {
-width: 50%;
-height: 100px;
+h2 {
+color:#41c826;
+}   	
+#debug_area {
+width: 90%;
+height: 900px;
+overflow-y: auto;
 }
 		

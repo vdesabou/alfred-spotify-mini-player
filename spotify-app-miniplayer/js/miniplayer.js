@@ -14,11 +14,11 @@ require([
     	
 function handleArgs() {
 	var args = models.application.arguments;
-	console.log(args);
 	
 	// If there are multiple arguments, handle them accordingly
 	if(args[0]) 
-	{		
+	{	
+		appendText("\nnew command received: <" + args + "> \n==================");	
 		switch(args[0]) 
 		{
 			case "random":
@@ -30,24 +30,24 @@ function handleArgs() {
 			case "update_library":
 				sleep(1000);
 				getAll(function(matchedAll) {
-					console.log("update_library finished", matchedAll);
+					appendText("update_library finished");
 	
 					var conn = new WebSocket('ws://localhost:17693');
 					conn.onopen = function(e) {
-					    console.log("Connection established!");
+					    appendText("Connection established!");
 					    conn.send('update_library⇾' + JSON.stringify(matchedAll));
 					};
 					
 					conn.onerror = function (e) {
-                        console.log("Error: ", e.data);
+                        appendText("Error: " + e.data);
                     };
 					
 					conn.onclose = function (e) {
-                        console.log("On Close: ", e.reason);
+                        appendText("On Close: " + e.reason);
                     };
 					
 					conn.onmessage = function(e) {
-					    console.log("Received response: ",e.data);
+					    appendText("Received response: " + e.data);
 					    conn.close();
 					};
 				});
@@ -55,24 +55,24 @@ function handleArgs() {
 			case "update_playlist_list":
 				sleep(1000);
 				getAllPlaylists(function(matchedAll) {
-					console.log("update_playlist_list finished", matchedAll);
+					appendText("update_playlist_list finished");
 	
 					var conn = new WebSocket('ws://localhost:17693');
 					conn.onopen = function(e) {
-					    console.log("Connection established!");
+					    appendText("Connection established!");
 					    conn.send('update_playlist_list⇾' + JSON.stringify(matchedAll));
 					};
 					
 					conn.onerror = function (e) {
-                        console.log("Error: ", e.data);
+                        appendText("Error: " + e.data);
                     };
 					
 					conn.onclose = function (e) {
-                        console.log("On Close: ", e.reason);
+                        appendText("On Close: " + e.reason);
                     };
 					
 					conn.onmessage = function(e) {
-					    console.log("Received response: ",e.data);
+					    appendText("Received response: " + e.data);
 					    conn.close();
 					};
 				});
@@ -94,24 +94,24 @@ function handleArgs() {
 			
 						array_results.push(matchedPlaylistTracks);	
 			
-						console.log("update_playlist finished", array_results);
+						appendText("update_playlist finished");
 				
 						var conn = new WebSocket('ws://localhost:17693');
 						conn.onopen = function(e) {
-						    console.log("Connection established!");
+						    appendText("Connection established!");
 						    conn.send('update_playlist⇾' + JSON.stringify(array_results))
 						};
 						
 						conn.onerror = function (e) {
-                            console.log("Error: ", e.data);
+                            appendText("Error: " + e.data);
                         };
 						
 						conn.onclose = function (e) {
-                            console.log("On Close: ", e.reason);
+                            appendText("On Close: " + e.reason);
                         };
 						
 						conn.onmessage = function(e) {
-						    console.log("Received response: ",e.data);
+						    appendText("Received response: " + e.data);
 						    conn.close();
 						};
 					});	
@@ -193,7 +193,7 @@ function starTrackOrAlbum(args) {
 								
 				                var tracks = t.toArray();
 				                for(i=0;i<tracks.length;i++){
-				                	console.log(t.get(i).name);
+				                	//console.log(t.get(i).name);
 				                    tracks[i].star();
 				                }
 				            });
@@ -209,7 +209,7 @@ function clearPlaylist(args) {
 	    playlist.tracks.clear();
 			
 		// Verify the song was added to the playlist
-		console.log(playlist);	
+		//console.log(playlist);	
 	});	
 }
 
@@ -573,7 +573,7 @@ function getRelatedArtists(objartist,matchedRelatedArtistsCallback) {
 
           }).fail(function() 
           	 { 
-          	 	console.log("Failed to get related artists for " + objartist.artist_name);
+          	 	appendText("Failed to get related artists for " + objartist.artist_name);
           	 	objartist.related=array_artists;
 				if(theartist.biography != null) {
 					objartist.biography=theartist.biography.decodeForText();
@@ -629,7 +629,7 @@ function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {
 	
 	
 	playlist.load('tracks','name','owner').done(function() {
-	  console.log("getPlaylistTracks started ",playlist.name);	
+	  appendText("getPlaylistTracks started " + playlist.name);	
 	  playlist.owner.load('name','username','currentUser').done(function (owner) {
 		  
 		  var sorted = playlist.tracks.sort('addTime', 'desc');
@@ -705,7 +705,7 @@ function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {
 								
 								if(array_tmp_tracks.length == array_tracks.length)
 								{
-									console.log("getPlaylistTracks ended ",playlist.name);
+									appendText("getPlaylistTracks ended " + playlist.name);
 									p={};
 									p.name=playlist.name;
 									p.ownedbyuser=owner.currentUser;
@@ -721,7 +721,7 @@ function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {
 			}
 	    }).fail(function() 
           	 { 
-          	 	console.log("Failed to load tracks for playlist " + uri);
+          	 	appendText("Failed to load tracks for playlist " + uri);
 				p={};
 				
 				p.name=playlist.name;
@@ -737,7 +737,7 @@ function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {
 			 });
 	  }).fail(function() 
           	 { 
-          	 	console.log("Failed to load owner of playlist " + uri);
+          	 	appendText("Failed to load owner of playlist " + uri);
 				p={};
 				
 				p.name=playlist.name;
@@ -753,7 +753,7 @@ function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {
 			 });
 	}).fail(function() 
           	 { 
-          	 	console.log("Failed to load playlist " + uri);
+          	 	appendText("Failed to load playlist " + uri);
 				p={};
 				
 				p.name=playlist.name;
@@ -803,7 +803,7 @@ function getPlaylists(matchedPlaylistsCallback) {
 		return;
     }).fail(function() 
           	 { 
-          	 	console.log("Failed to get playlists for current user");
+          	 	appendText("Failed to get playlists for current user");
 				matchedPlaylistsCallback(array_results);
 			 });	
 		
@@ -814,7 +814,7 @@ function getAllPlaylists(matchedAllCallback) {
 
 	var array_results = [];
 	getPlaylists(function(matchedPlaylists) {
-	    console.log("getPlaylists finished", matchedPlaylists);
+	    appendText("getPlaylists finished");
 
 		for (var i = 0, l = matchedPlaylists.length; i < l; i++) 
 		{
@@ -824,7 +824,7 @@ function getAllPlaylists(matchedAllCallback) {
 				if(array_results.length==matchedPlaylists.length)
 				{
 					// it's over Michael
-					console.log("it's over Michael",array_results);						
+					appendText("it's over Michael");						
 					matchedAllCallback(array_results);
 				}
 
@@ -869,7 +869,7 @@ function getAllRelatedArtists(allplaylists,matchedAllRelatedArtistsCallback)
 
 						if(nb_artists == nb_artists_total)
 						{
-							console.log("getAllRelatedArtists ended "); 
+							appendText("getAllRelatedArtists ended"); 
 							matchedAllRelatedArtistsCallback(array_artists);
 						}					
 				});		
@@ -882,10 +882,15 @@ function getAllRelatedArtists(allplaylists,matchedAllRelatedArtistsCallback)
 
 }
 
+function appendText(myVar) {
+	var myTextArea = document.getElementById('debug_area');
+	myTextArea.innerHTML += myVar;
+	myTextArea.innerHTML += '\n';	
+}
 
 function getAll(matchedAll) {
 
-	console.log("getAll started");
+	appendText("getAll started");
 	results={};
 	
 	results.user=Library.forCurrentUser().owner;
@@ -893,12 +898,12 @@ function getAll(matchedAll) {
 	getAllPlaylists(function(matchedAllPlaylists) {
 		results.playlists=matchedAllPlaylists;
 		
-		console.log("getAllPlaylists finished", results);
+		appendText("getAllPlaylists finished");
 		
 		getAllRelatedArtists(results.playlists,function(matchedAllRelatedArtists) {
 
 			results.artists=matchedAllRelatedArtists;
-			console.log("getAllRelatedArtists finished", results);
+			appendText("getAllRelatedArtists finished", results);
 			
 			matchedAll(results);
 		});			
@@ -913,9 +918,9 @@ $(function(){
 			case "export":
 
 				getAll(function(matchedAll) {
-					console.log("getAll finished", matchedAll);
+					appendText("getAll finished");
 	
-					$("#json").text(JSON.stringify(matchedAll));
+					//$("#debug_area").text(JSON.stringify(matchedAll));
 				
 				});				
 				$("textarea").on("click", function() {
