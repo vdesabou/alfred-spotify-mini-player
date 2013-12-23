@@ -161,12 +161,12 @@ if ($playlist_uri != "") {
         $setSettings = "update settings set is_displaymorefrom_active=1";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-	    displayNotification("\"More from this artist/album\" is now enabled");
+	    displayNotification("Now Playing is now enabled");
     } else if ($other_action == "disable_displaymorefrom") {
         $setSettings = "update settings set is_displaymorefrom_active=0";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-	    displayNotification("\"More from this artist/album\" is now disabled");
+	    displayNotification("Now Playing is now disabled");
     } else if ($other_action == "enable_alfred_playlist") {
         $setSettings = "update settings set is_alfred_playlist_active=1";
         $dbfile = $w->data() . "/settings.db";
