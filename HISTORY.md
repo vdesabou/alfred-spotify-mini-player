@@ -2,6 +2,10 @@
 
 [![Download Workflow](https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/images/alfred-workflow-icon.png)](https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/SpotifyMiniPlayer.alfredworkflow)
 
+4.0.2:
+
+* Added debug area in Spotify App, this will help debugging issues with library update, if any
+
 4.0.1:
 
 * Fixed a problem where notifications are not working 
