@@ -12,6 +12,8 @@
 
 * Display current track lyrics
 
+![Screenshot](http://d.pr/i/j8nb+.png)
+
 * Use any of your playlists (including the starred playlist) as the Alfred Playlist
 
 * Clear your Alfred Playlist (exluding the starred playlist)
