@@ -70,7 +70,7 @@ if ($type == "TRACK") {
         }
     }
 } else if ($type == "ALBUM") {
-    exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:playartistoralbum:$album_uri\"'");
+    exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:playartistoralbum:$album_uri:" . uniqid() . "\"'");
     exec("osascript -e 'tell application \"Spotify\" to open location \"$album_uri\"'");
 } else if ($type == "ONLINE") {
     exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online⇾$artist_uri@$artist_name\"'");
@@ -87,7 +87,7 @@ if ($type == "TRACK") {
         }
     }
 } else if ($type == "ARTIST") {
-    exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:playartistoralbum:$artist_uri\"'");
+    exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:playartistoralbum:$artist_uri:" . uniqid() . "\"'");
     exec("osascript -e 'tell application \"Spotify\" to open location \"$artist_uri\"'");
 }
 
