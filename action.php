@@ -191,6 +191,21 @@ if ($playlist_uri != "") {
 		
     } else if ($other_action == "star") {
         exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:star:" . uniqid() . "\"'");
+        
+        $getUser = 'select username from user';
+        $dbfile = $w->data() . '/library.db';
+        exec("sqlite3 -separator '	' \"$dbfile\" \"$getUser\" 2>&1", $users, $returnValue);
+
+        if ($returnValue != 0) {
+            displayNotification('An error happened with user database');
+            return;
+        }
+
+        foreach ($users as $user):
+            $user = explode("	", $user);
+            $username = $user[0];
+        endforeach;
+        exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:user:$username:starred\"'");
         displayNotification("⭐️ Track has been starred");
     } else if ($other_action == "random") {
         exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:random:" . uniqid() . "\"'");
