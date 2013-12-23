@@ -1,11 +1,12 @@
-# alfred-spotify-mini-player
+# Alfred Spotify Mini Player
 
 
 This is "Spotify Mini Player", like the alfred built-in iTunes Mini Player, but for Spotify!
 
 ## Description
 
-Speed is the key word here: instead of using slow Spotify API, it uses a local version of your library stored in a database(it includes your starred tracks, your playlists and playlists that you subscribed to). You can decide to search in your starred playlist only, or in all all your playlists. You can browse by Artist, Album or Playlist. You can also lookup for artists online. You can also control Spotify using keywords such as play/next/volmax/random/shuffle/star/etc...
+Speed is the key word here: instead of using slow Spotify API, it uses a local version of your library stored in a database(it includes all the playlists you created and playlists that you're subscribed to). You can decide to search in your starred playlist only, or in all all your playlists. You can browse by Artist, Album or Playlist. You can also lookup for artists online, search for lyrics, get related artists, display biography, etc..
+You can also control Spotify using keywords such as play/next/volmax/random/shuffle/star/etc...
 
 ## Animated Gifs
 
@@ -41,8 +42,13 @@ Speed is the key word here: instead of using slow Spotify API, it uses a local v
 * Select a track with ⌥ to play the album, or ⌘ to play the artist
 * Same control keywords as iTunes Mini Player: play, pause, mute, next, random, previous, volmax, volmid. And shuffle to activate shuffling.
 * Star currently played track with keyword *star*
-* Direct call to [Spotifious](http://www.alfredforum.com/topic/1644-spotifious-a-natural-spotify-controller-for-alfred) workflow
+* Display artist bigraphy
+* Browse Related artists
+* Display current track lyrics
+* Two themes available: black and green
+* Auto-Updater: it checks once per day and download automatically the new version
 * [AlleyOop/Monkey Patch](http://www.alfredforum.com/topic/2218-monkey-patch-update-alfred-workflows-via-alleyoop) support
+* Direct call to [Spotifious](http://www.alfredforum.com/topic/1644-spotifious-a-natural-spotify-controller-for-alfred) workflow
 
 ## Settings
 
@@ -50,6 +56,8 @@ Speed is the key word here: instead of using slow Spotify API, it uses a local v
 * Set max number of results. 50 by default
 * enable/disable Spotifious or Alfred Playlist
 * enable/disable ***Lookup this artist online***
+* Check for workflow update
+* Choose workflow theme: ***black*** or ***green***
 * Install/Update of the library (see next section for explanations)
 
 ## First time use
@@ -85,7 +93,7 @@ Your account has already been enabled to use the Spotify Apps API. Happy hacking
 
 You can check progress by invoking the workflow again:-
 
-![Screenshot](http://d.pr/i/8yDg+.png)
+![Screenshot](http://d.pr/i/5wQt+.png)
 
 
 ## Library/Playlist Update
@@ -98,19 +106,11 @@ For example:
 
 ## Alfred Playlist
 
-The Alfred Playlist is a playlist where tracks, albums and even playlists can be added from within the workflow.
+The Alfred Playlist is one of your playlists where tracks, albums and even playlists can be added from within the workflow.
 
-* Create a playlist within Spotify and name it "Alfred Playlist"
+* Simply choose one of your playlists as the current "Alfred Playlist" (you can even choose your starred playlist)
 
-![Screenshot](http://d.pr/i/A0vQ+.png)
-
-* Right click on it and copy Spotify URI
-
-![Screenshot](http://d.pr/i/BjPA+.png)
-
-* Enter copied URI in Spotify Mini Player Alfred Playlist section
-
-![Screenshot](http://d.pr/i/aWFZ+.png)
+![Screenshot](http://d.pr/i/1lVo+.png)
 
 * To add a track to your playlist select it with *fn* modifier
 
@@ -122,6 +122,18 @@ The Alfred Playlist is a playlist where tracks, albums and even playlists can be
 
 ![Screenshot](http://d.pr/i/nJGw+.png)
 
+* You can also clear all tracks from your Alfred Playlist (for security, you cannot do it if your starred playlist is the Alfred Playlist), be careful when doing it. 
+
+A confirmation will be asked:
+
+![Screenshot](http://d.pr/i/xUFE+.png)
+
+
+## Now Playing
+
+This is an option to diplay various options based on the current track (play/pause, browse artist, display lyrics, show playlists where the track belongs)
+
+![Screenshot](http://d.pr/i/ldgN+.png)
 
 ## Commands
 
@@ -131,8 +143,18 @@ The Alfred Playlist is a playlist where tracks, albums and even playlists can be
 
 * Other commands
 
+Note: These commands can also be triggered from the main workflow window
+
 ![Screenshot](http://d.pr/i/DVSn+.png)
 
+
+## Auto-Update
+
+The workflow checks for update once per day, if an update is available, it will download the new version in your Downloads folder and you'll get:
+
+![Screenshot](http://d.pr/i/yLGp+.png)
+
+Note that you can also force a check for update in Settings section
 
 
 ## Troubleshooting
@@ -145,13 +167,6 @@ If the update library is stuck (be aware the first time, it can take hours as al
 
 ![Screenshot](http://d.pr/i/q8Rs+.png)
 
-
-## Performances with version 3.x
-
-Using a library with 18000 tracks, search scope set to ALL, with artworks displayed, I get:
-
-* 150ms to return 50 results
-* 200ms to return 100 results
 
 ## Credits
 

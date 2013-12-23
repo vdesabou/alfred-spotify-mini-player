@@ -2,6 +2,26 @@
 
 [![Download Workflow](https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/images/alfred-workflow-icon.png)](https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/SpotifyMiniPlayer.alfredworkflow)
 
+4.0:
+
+* Choose workflow themes: green or black
+
+* Display and browse Related Artists
+
+* Display Artist biography
+
+* Display current track lyrics
+
+* Use any of your playlists (including the starred playlist) as the Alfred Playlist
+
+* Clear your Alfred Playlist (exluding the starred playlist)
+
+* Auto-Updater: check for update once per day
+
+* Check for update in Settings
+
+* Various enhancements 
+
 3.8.5:
 
 * Fix issue with some weird playlists with some kind of corrupted tracks
