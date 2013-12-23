@@ -588,7 +588,11 @@ function getRelatedArtists(objartist,matchedRelatedArtistsCallback) {
 			 });
       }).fail(function() 
           	 { 
-          	 	console.log("Failed to load artists for " + objartist.artist_name);
+          	 	// this happens when it is from a local track
+          	 	// artist uri is then spotify:local:Damien+Rice
+          	 	//console.log("Failed to load artists for " + objartist.artist_name  + " " + objartist.artist_uri);
+          	 	// ignore it by setting artist_name to unknown artist
+          	 	objartist.artist_name="unknown artist";
           	 	objartist.related=array_artists;
 				objartist.biography="";
 				objartist.popularity=0;
@@ -908,22 +912,12 @@ $(function(){
 		switch($(this).attr('command')) {
 			case "export":
 
-
-/*
-				getPlaylistTracks("spotify:user:@:toplist",function(matchedAll) {
-					console.log("getPlaylistTracks finished", matchedAll);
-	
-					$("#json").text(JSON.stringify(matchedAll));
-				
-				});
-*/
 				getAll(function(matchedAll) {
 					console.log("getAll finished", matchedAll);
 	
 					$("#json").text(JSON.stringify(matchedAll));
 				
-				});
-				
+				});				
 				$("textarea").on("click", function() {
 				
 				$(this).select();
