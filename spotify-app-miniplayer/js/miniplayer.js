@@ -281,7 +281,6 @@ function addTopOrStarredListToAlfredPlaylist(args) {
 		
 		if(args[4] == 'toplist' || args[4] == 'starred')
 		{
-			console.log(addTopOrStarredListToAlfredPlaylist + args);
 			models.Playlist.fromURI(args[1]+':'+args[2]+':'+args[3]+':'+args[4]).load('tracks').done(function(p) {
 			    // This callback is fired when the playlist has loaded.
 			    // The playlist object has a tracks property, which is a standard array.
@@ -359,10 +358,39 @@ function playArtistOrAlbum(args) {
 }
 
 function startPlaylist(args) {	
-	models.Playlist.fromURI(args[1]+':'+args[2]+':'+args[3]+':'+args[4]+':'+args[5]).load('name').done(function(playlist) {
-	  console.log(playlist.uri + ': ' + playlist.name.decodeForText());
-	  models.player.playContext(playlist);
-	});						
+
+		var playlistName = "I'm a test playlist"; 
+	 
+		models.Playlist.createTemporary(playlistName).done(function(playlist) {
+			playlist.load("tracks").done(function(playlist) {
+				// Clearing playlist. If there's a temporary playlist with the
+				// same name, previously added tracks may be on the playlist.
+				playlist.tracks.clear().done(function(emptyCollection) {
+				
+				 	var orginalplaylist = models.Playlist.fromURI(args[1]+':'+args[2]+':'+args[3]+':'+args[4]+':'+args[5]);
+				 	orginalplaylist.load('name','tracks').done(function() {
+				 	
+				 		var sorted = orginalplaylist.tracks.sort('addTime', 'desc');
+				 		sorted.snapshot().done(function(t) {
+				 			var tracks = t.toArray();
+				 			
+							playlist.tracks.add(tracks).done(function(addedTracks) {
+								playlist.tracks.snapshot().done(function(snapshot) {
+
+	/*
+								for (var i = 0; i < snapshot.length; i++) {
+										console.log("#" + i + " In array: " + tracks[i] + " -  In Playlist: " + snapshot.get(i).uri);
+									}
+*/
+									models.player.playContext(playlist);
+								});
+							});
+						});
+					});
+				});
+			});
+		});
+						
 }
 
 function starCurrentTrack() {

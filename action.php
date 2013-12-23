@@ -92,7 +92,7 @@ if ($type == "TRACK") {
 }
 
 if ($playlist_uri != "") {
-    exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:startplaylist:$playlist_uri\"'");
+    exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:startplaylist:$playlist_uri:" . uniqid() . "\"'");
     exec("osascript -e 'tell application \"Spotify\" to open location \"$playlist_uri\"'");
 } else if ($spotify_command != "") {
 
