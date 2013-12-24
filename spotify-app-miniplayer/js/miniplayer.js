@@ -921,6 +921,7 @@ $(function(){
 			case "simulate_update_library":
 			
 			appendText("Simulate update library");
+			
 			getAll(function(matchedAll) {
 				appendText("Success!!");
 
@@ -929,9 +930,7 @@ $(function(){
 			});	
 		
 			$("textarea").on("click", function() {
-			
-			$(this).select();
-			
+				$(this).select();
 			});
 			e.preventDefault();
 			break;
