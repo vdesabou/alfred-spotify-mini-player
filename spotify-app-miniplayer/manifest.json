@@ -22,8 +22,8 @@
 		"en"
 	],
 	 "Dependencies": {
-	      "api": "1.30.0",
-	      "views": "1.18.1"
+	    "api": "1.38.0",
+	    "views": "1.18.1"
     },
 	"RequiredPermissions": [
 		"https://*",
