@@ -18,7 +18,7 @@ function handleArgs() {
 	// If there are multiple arguments, handle them accordingly
 	if(args[0]) 
 	{	
-		appendText("\nnew command received: <" + args + "> \n==================");	
+		appendText("\nNew command received: <" + args + "> \n==================");	
 		switch(args[0]) 
 		{
 			case "random":
@@ -34,20 +34,20 @@ function handleArgs() {
 	
 					var conn = new WebSocket('ws://localhost:17693');
 					conn.onopen = function(e) {
-					    appendText("Connection established!");
+					    appendText("Connection established with Spotify Mini Player workflow.Transmitting data..");
 					    conn.send('update_library⇾' + JSON.stringify(matchedAll));
 					};
 					
 					conn.onerror = function (e) {
-                        appendText("Error: " + e.data);
+                        appendText("Error received: " + e.data);
                     };
 					
 					conn.onclose = function (e) {
-                        appendText("On Close: " + e.reason);
+                        appendText("Workflow closed connection: " + e.reason);
                     };
 					
 					conn.onmessage = function(e) {
-					    appendText("Received response: " + e.data);
+					    appendText("Received response from workflow: " + e.data);
 					    conn.close();
 					};
 				});
@@ -59,20 +59,20 @@ function handleArgs() {
 	
 					var conn = new WebSocket('ws://localhost:17693');
 					conn.onopen = function(e) {
-					    appendText("Connection established!");
+					    appendText("Connection established with Spotify Mini Player workflow.Transmitting data..");
 					    conn.send('update_playlist_list⇾' + JSON.stringify(matchedAll));
 					};
 					
 					conn.onerror = function (e) {
-                        appendText("Error: " + e.data);
+                        appendText("Error received: " + e.data);
                     };
 					
 					conn.onclose = function (e) {
-                        appendText("On Close: " + e.reason);
+                        appendText("Workflow closed connection: " + e.reason);
                     };
 					
 					conn.onmessage = function(e) {
-					    appendText("Received response: " + e.data);
+					    appendText("Received response from workflow: " + e.data);
 					    conn.close();
 					};
 				});
@@ -98,20 +98,20 @@ function handleArgs() {
 				
 						var conn = new WebSocket('ws://localhost:17693');
 						conn.onopen = function(e) {
-						    appendText("Connection established!");
+						    appendText("Connection established with Spotify Mini Player workflow.Transmitting data..");
 						    conn.send('update_playlist⇾' + JSON.stringify(array_results))
 						};
 						
 						conn.onerror = function (e) {
-                            appendText("Error: " + e.data);
+                            appendText("Error received: " + e.data);
                         };
 						
 						conn.onclose = function (e) {
-                            appendText("On Close: " + e.reason);
+                            appendText("Workflow closed connection: " + e.reason);
                         };
 						
 						conn.onmessage = function(e) {
-						    appendText("Received response: " + e.data);
+						    appendText("Received response from workflow: " + e.data);
 						    conn.close();
 						};
 					});	
@@ -822,9 +822,7 @@ function getAllPlaylists(matchedAllCallback) {
 
 				array_results.push(matchedPlaylistTracks);	
 				if(array_results.length==matchedPlaylists.length)
-				{
-					// it's over Michael
-					appendText("it's over Michael");						
+				{						
 					matchedAllCallback(array_results);
 				}
 
@@ -869,7 +867,6 @@ function getAllRelatedArtists(allplaylists,matchedAllRelatedArtistsCallback)
 
 						if(nb_artists == nb_artists_total)
 						{
-							appendText("getAllRelatedArtists ended"); 
 							matchedAllRelatedArtistsCallback(array_artists);
 						}					
 				});		
