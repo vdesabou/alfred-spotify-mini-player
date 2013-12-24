@@ -908,6 +908,8 @@ function getAll(matchedAll) {
 
 function appendText(myVar) {
 	var myTextArea = document.getElementById('debug_area');
+	d = new Date();
+	myTextArea.innerHTML += d.toLocaleTimeString() + ": ";
 	myTextArea.innerHTML += myVar;
 	myTextArea.innerHTML += '\n';	
 }
