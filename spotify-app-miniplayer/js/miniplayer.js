@@ -1,9 +1,12 @@
 require([
         '$api/models',
         '$api/toplists#Toplist',
+        '$api/models#Session',
         '$views/image#Image',
-        '$api/library#Library'
-        ], function(models, Toplist, Image, Library) {
+        '$api/library#Library',
+        '$api/offline#Offline',
+        '$views/buttons#Button'
+        ], function(models, Toplist, Session, Image, Library, Offline, Button) {
 
     // When application has loaded, run handleArgs function
     models.application.load('arguments').done(handleArgs);
@@ -629,7 +632,7 @@ function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {
 	
 	
 	playlist.load('tracks','name','owner').done(function() {
-	  appendText("getPlaylistTracks started " + playlist.name);	
+	  appendText("Starting to retrive all tracks for playlist " + playlist.name);	
 	  playlist.owner.load('name','username','currentUser').done(function (owner) {
 		  
 		  var sorted = playlist.tracks.sort('addTime', 'desc');
@@ -705,7 +708,7 @@ function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {
 								
 								if(array_tmp_tracks.length == array_tracks.length)
 								{
-									appendText("getPlaylistTracks ended " + playlist.name);
+									appendText("All tracks for playlist " + playlist.name + " have been retrieved");
 									p={};
 									p.name=playlist.name;
 									p.ownedbyuser=owner.currentUser;
@@ -810,28 +813,6 @@ function getPlaylists(matchedPlaylistsCallback) {
 }
 
 
-function getAllPlaylists(matchedAllCallback) {
-
-	var array_results = [];
-	getPlaylists(function(matchedPlaylists) {
-	    appendText("getPlaylists finished");
-
-		for (var i = 0, l = matchedPlaylists.length; i < l; i++) 
-		{
-			getPlaylistTracks(matchedPlaylists[i].uri,function(matchedPlaylistTracks) {
-
-				array_results.push(matchedPlaylistTracks);	
-				if(array_results.length==matchedPlaylists.length)
-				{						
-					matchedAllCallback(array_results);
-				}
-
-			});					
-
-		}
-	});
-}
-
 function getAllRelatedArtists(allplaylists,matchedAllRelatedArtistsCallback)
 {
 	var array_artists= [];
@@ -879,15 +860,32 @@ function getAllRelatedArtists(allplaylists,matchedAllRelatedArtistsCallback)
 
 }
 
-function appendText(myVar) {
-	var myTextArea = document.getElementById('debug_area');
-	myTextArea.innerHTML += myVar;
-	myTextArea.innerHTML += '\n';	
+
+
+function getAllPlaylists(matchedAllCallback) {
+
+	var array_results = [];
+	getPlaylists(function(matchedPlaylists) {
+	    appendText("The list of the playlists has been retrieved");
+
+		for (var i = 0, l = matchedPlaylists.length; i < l; i++) 
+		{
+			getPlaylistTracks(matchedPlaylists[i].uri,function(matchedPlaylistTracks) {
+
+				array_results.push(matchedPlaylistTracks);	
+				if(array_results.length==matchedPlaylists.length)
+				{						
+					matchedAllCallback(array_results);
+				}
+
+			});					
+
+		}
+	});
 }
 
 function getAll(matchedAll) {
 
-	appendText("getAll started");
 	results={};
 	
 	results.user=Library.forCurrentUser().owner;
@@ -895,12 +893,12 @@ function getAll(matchedAll) {
 	getAllPlaylists(function(matchedAllPlaylists) {
 		results.playlists=matchedAllPlaylists;
 		
-		appendText("getAllPlaylists finished");
-		
+		appendText("All playlists have been processed");
+		appendText("Starting retrieval of all related artists");
 		getAllRelatedArtists(results.playlists,function(matchedAllRelatedArtists) {
 
 			results.artists=matchedAllRelatedArtists;
-			appendText("getAllRelatedArtists finished", results);
+			appendText("Ended retrieval of all related artists");
 			
 			matchedAll(results);
 		});			
@@ -908,25 +906,33 @@ function getAll(matchedAll) {
 	
 }											
 
+function appendText(myVar) {
+	var myTextArea = document.getElementById('debug_area');
+	myTextArea.innerHTML += myVar;
+	myTextArea.innerHTML += '\n';	
+}
+
 $(function(){
 		
 	$("#commands a").click(function(e){
 		switch($(this).attr('command')) {
-			case "export":
+			case "simulate_update_library":
+			
+			appendText("Simulate update library");
+			getAll(function(matchedAll) {
+				appendText("Success!!");
 
-				getAll(function(matchedAll) {
-					appendText("getAll finished");
-	
-					//$("#debug_area").text(JSON.stringify(matchedAll));
-				
-				});				
-				$("textarea").on("click", function() {
-				
-				$(this).select();
-				
-				});
-				e.preventDefault();
-				break;
+				//$("#debug_area").text(JSON.stringify(matchedAll));
+			
+			});	
+		
+			$("textarea").on("click", function() {
+			
+			$(this).select();
+			
+			});
+			e.preventDefault();
+			break;
 		}
 	});
 	
