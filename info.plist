@@ -101,10 +101,32 @@
 				<string></string>
 			</dict>
 		</array>
+		<key>2A12337B-B18B-4159-966E-7B8BC308F05A</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>A3EB4F73-2F67-44E8-A87A-80C400ABF1AE</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 		<key>2D26D8E2-52A2-4BF9-B693-0D5190C6CC23</key>
 		<array/>
 		<key>4367DDDE-C360-4642-908E-EB1F916727CC</key>
 		<array/>
+		<key>44AF5C5A-254F-4206-BBD7-BE9BA7831628</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>A3EB4F73-2F67-44E8-A87A-80C400ABF1AE</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 		<key>4EB5FB5E-6472-4757-A479-B206B6080036</key>
 		<array>
 			<dict>
@@ -1038,6 +1060,74 @@ end alfred_script</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>spot_mini_app</string>
+				<key>subtext</key>
+				<string>&lt;spotify:app:miniplaayer&gt;</string>
+				<key>text</key>
+				<string>Go to Spotify App Mini Player</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>44AF5C5A-254F-4206-BBD7-BE9BA7831628</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>applescript</key>
+				<string>on alfred_script(q)
+
+    tell application "Spotify"
+		open location "spotify:app:miniplayer"
+		activate
+    end tell
+
+end alfred_script</string>
+				<key>cachescript</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.applescript</string>
+			<key>uid</key>
+			<string>A3EB4F73-2F67-44E8-A87A-80C400ABF1AE</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>0</integer>
+				<key>hotkey</key>
+				<integer>35</integer>
+				<key>hotmod</key>
+				<integer>1310720</integer>
+				<key>hotstring</key>
+				<string>P</string>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>2A12337B-B18B-4159-966E-7B8BC308F05A</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string></string>
@@ -1078,6 +1168,11 @@ end alfred_script</string>
 			<key>ypos</key>
 			<real>1730</real>
 		</dict>
+		<key>2A12337B-B18B-4159-966E-7B8BC308F05A</key>
+		<dict>
+			<key>ypos</key>
+			<real>2320</real>
+		</dict>
 		<key>2D26D8E2-52A2-4BF9-B693-0D5190C6CC23</key>
 		<dict>
 			<key>ypos</key>
@@ -1087,6 +1182,11 @@ end alfred_script</string>
 		<dict>
 			<key>ypos</key>
 			<real>630</real>
+		</dict>
+		<key>44AF5C5A-254F-4206-BBD7-BE9BA7831628</key>
+		<dict>
+			<key>ypos</key>
+			<real>2250</real>
 		</dict>
 		<key>4EB5FB5E-6472-4757-A479-B206B6080036</key>
 		<dict>
@@ -1152,6 +1252,11 @@ end alfred_script</string>
 		<dict>
 			<key>ypos</key>
 			<real>210</real>
+		</dict>
+		<key>A3EB4F73-2F67-44E8-A87A-80C400ABF1AE</key>
+		<dict>
+			<key>ypos</key>
+			<real>2250</real>
 		</dict>
 		<key>A50798D9-7E2D-4D61-8119-820A56775119</key>
 		<dict>
