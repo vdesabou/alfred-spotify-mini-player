@@ -37,6 +37,7 @@ $artist_name = $arg[9];
 
 if ($other_action == "update_playlist" && $playlist_uri != "") {
     touch($w->data() . "/update_library_in_progress");
+    $w->write('InitPlaylist⇾' . 0 . '⇾' . 0 . '⇾' . time(), 'update_library_in_progress');
 
     exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:update_playlist:" . $playlist_uri . ":" . uniqid() . "\"'");
     exec("osascript -e 'tell application \"Spotify\" to open location \"$playlist_uri\"'");
@@ -116,12 +117,6 @@ if ($playlist_uri != "") {
 	    displayNotification("Alfred Playlist $setting[2] was cleared");
     } else if ($setting[0] == "GET_LYRICS") {
 		getLyrics($w,$setting[1],$setting[2]);
-    } 
-    else if ($setting[0] == "COUNTRY") {
-        $setSettings = 'update settings set country_code=\"' . $setting[1] . '\"';
-        $dbfile = $w->data() . "/settings.db";
-        exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-	    displayNotification("Country Code set to $setting[1]");
     }
 } else if ($original_query != "") {
     exec("osascript -e 'tell application \"Alfred 2\" to search \"spot $original_query\"'");
@@ -248,6 +243,7 @@ if ($playlist_uri != "") {
     }
      else if ($other_action == "update_library") {
         touch($w->data() . "/update_library_in_progress");
+        $w->write('InitLibrary⇾' . 0 . '⇾' . 0 . '⇾' . time(), 'update_library_in_progress');
 
         exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:update_library:" . uniqid() . "\"'");
 
@@ -264,6 +260,7 @@ if ($playlist_uri != "") {
         $server->run();
     } else if ($other_action == "update_playlist_list") {
         touch($w->data() . "/update_library_in_progress");
+        $w->write('InitPlaylistList⇾' . 0 . '⇾' . 0 . '⇾' . time(), 'update_library_in_progress');
 
         exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:update_playlist_list:" . uniqid() . "\"'");
 

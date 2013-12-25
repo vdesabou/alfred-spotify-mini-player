@@ -257,8 +257,10 @@ function updateLibrary($jsonData)
 {
     $w = new Workflows();
 
-	$start_time = time();
-	
+    $in_progress_data = $w->read('update_library_in_progress');
+
+    $words = explode('⇾', $in_progress_data);
+    	
     //
     // move legacy artwork files in hash directories if needed
     //
@@ -280,7 +282,7 @@ function updateLibrary($jsonData)
     putenv('LANG=fr_FR.UTF-8');
 
     ini_set('memory_limit', '512M');
-
+                
     //try to decode it
     $json = json_decode($jsonData, true);
     if (json_last_error() === JSON_ERROR_NONE) {
@@ -300,7 +302,7 @@ function updateLibrary($jsonData)
         
         // get artists 
         $artists = $json['artists'];
-        $w->write('Related Artists⇾0⇾' . count($artists), 'update_library_in_progress');
+        $w->write('Related Artists⇾0⇾' . count($artists) . '⇾' . $words[3], 'update_library_in_progress');
 
         $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table tracks (starred boolean, popularity int, uri text, album_uri text, artist_uri text, track_name text, album_name text, artist_name text, album_year text, track_artwork_path text, artist_artwork_path text, album_artwork_path text, playlist_name text, playlist_uri text, playable boolean, availability text)"';
         exec($sql);
@@ -323,6 +325,12 @@ function updateLibrary($jsonData)
         $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into user values (\"' . $user['uri'] . '\",\"' . escapeQuery($user['username']) . '\",\"' . escapeQuery($user['name']) . '\",\"' . $user['image'] . '\"' . ')"';
         exec($sql);
 
+		// Handle country
+        $country = $json['country'];
+        $setSettings = 'update settings set country_code=\"' . $country . '\"';
+        $dbfile = $w->data() . "/settings.db";
+        exec("sqlite3 \"$dbfile\" \"$setSettings\"");
+        
 		// Handle related artists
 		$nb_artists = 0;
 		foreach ($artists as $artist) {
@@ -339,13 +347,13 @@ function updateLibrary($jsonData)
 			}
 			$nb_artists++;
             if ($nb_artists % 10 === 0) {
-                $w->write('Related Artists⇾' . $nb_artists . '⇾' . count($artists) . '⇾' . $start_time, 'update_library_in_progress');
+                $w->write('Related Artists⇾' . $nb_artists . '⇾' . count($artists) . '⇾' . $words[3], 'update_library_in_progress');
             }				
 		}
 		
 		
 		// Handle playlists
-		$w->write('Library⇾0⇾' . $nb_tracktotal, 'update_library_in_progress');
+		$w->write('Library⇾0⇾' . $nb_tracktotal . '⇾' . $words[3], 'update_library_in_progress');
 			
 		$nb_track = 0;
 			
@@ -389,7 +397,7 @@ function updateLibrary($jsonData)
 				
                 $nb_track++;
                 if ($nb_track % 10 === 0) {
-                    $w->write('Library⇾' . $nb_track . '⇾' . $nb_tracktotal . '⇾' . $start_time, 'update_library_in_progress');
+                    $w->write('Library⇾' . $nb_track . '⇾' . $nb_tracktotal . '⇾' . $words[3], 'update_library_in_progress');
                 }
             }
         }// end playlists
@@ -429,7 +437,7 @@ function updateLibrary($jsonData)
         $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"update counters set playlists=' . $playlists_count[0] . '"';
         exec($sql);
         
-        $elapsed_time = time() - $start_time;
+        $elapsed_time = time() - $words[3];
         displayNotification("Library has been created (" . $all_tracks[0] . " tracks) - it took " . beautifyTime($elapsed_time));
 
         unlink($w->data() . "/update_library_in_progress");
@@ -450,7 +458,9 @@ function updatePlaylist($jsonData)
 {
     $w = new Workflows();
 	
-	$start_time = time();
+    $in_progress_data = $w->read('update_library_in_progress');
+
+    $words = explode('⇾', $in_progress_data);
 	
     putenv('LANG=fr_FR.UTF-8');
 
@@ -465,7 +475,7 @@ function updatePlaylist($jsonData)
             $nb_tracktotal += count($playlist['tracks']);
 
         }
-        $w->write('Playlist⇾0⇾' . $nb_tracktotal, 'update_library_in_progress');
+        $w->write('Playlist⇾0⇾' . $nb_tracktotal . '⇾' . $words[3], 'update_library_in_progress');
 
         $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "drop table counters"';
         exec($sql);
@@ -510,7 +520,7 @@ function updatePlaylist($jsonData)
 
                 $nb_track++;
                 if ($nb_track % 10 === 0) {
-                    $w->write('Playlist⇾' . $nb_track . '⇾' . $nb_tracktotal . '⇾' . $start_time, 'update_library_in_progress');
+                    $w->write('Playlist⇾' . $nb_track . '⇾' . $nb_tracktotal . '⇾' . $words[3], 'update_library_in_progress');
                 }
             }
         }
@@ -550,7 +560,7 @@ function updatePlaylist($jsonData)
         $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"update counters set playlists=' . $playlists_count[0] . '"';
         exec($sql);
 		
-		$elapsed_time = time() - $start_time;
+		$elapsed_time = time() - $words[3];
 		displayNotification("\nPlaylist has been updated (" . $nb_track . " tracks) - it took " . beautifyTime($elapsed_time));
         
         unlink($w->data() . "/update_library_in_progress");
@@ -564,7 +574,9 @@ function updatePlaylistList($jsonData)
 {
     $w = new Workflows();
 
-	$start_time = time();
+    $in_progress_data = $w->read('update_library_in_progress');
+
+    $words = explode('⇾', $in_progress_data);
 	
     putenv('LANG=fr_FR.UTF-8');
 
@@ -575,7 +587,7 @@ function updatePlaylistList($jsonData)
     if (json_last_error() === JSON_ERROR_NONE) {
         $nb_playlist_total = count($json);
 
-        $w->write('Playlist List⇾0⇾' . $nb_playlist_total, 'update_library_in_progress');
+        $w->write('Playlist List⇾0⇾' . $nb_playlist_total . '⇾' . $words[3], 'update_library_in_progress');
 
         $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "drop table counters"';
         exec($sql);
@@ -591,7 +603,7 @@ function updatePlaylistList($jsonData)
 
             $nb_playlist++;
             if ($nb_playlist % 4 === 0) {
-                $w->write('Playlist List⇾' . $nb_playlist . '⇾' . $nb_playlist_total . '⇾' . $start_time, 'update_library_in_progress');
+                $w->write('Playlist List⇾' . $nb_playlist . '⇾' . $nb_playlist_total . '⇾' . $words[3], 'update_library_in_progress');
             }
 
             if ($returnValue != 0) {
@@ -712,7 +724,7 @@ function updatePlaylistList($jsonData)
         $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"update counters set playlists=' . $playlists_count[0] . '"';
         exec($sql);
 
-		$elapsed_time = time() - $start_time;
+		$elapsed_time = time() - $words[3];
         displayNotification("Playlist list has been updated - it took " . beautifyTime($elapsed_time));
 
         unlink($w->data() . "/update_library_in_progress");
@@ -967,6 +979,10 @@ function beautifyTime($seconds) {
 	$s = $seconds % 60;
 	$s = ($s < 10) ? "0$s" : "$s";
 	return  $m . "m" . $s . "s";
+}
+
+function startswith($haystack, $needle) {
+    return substr($haystack, 0, strlen($needle)) === $needle;
 }
 
 ?>
