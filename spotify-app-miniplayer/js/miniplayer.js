@@ -1,12 +1,9 @@
 require([
         '$api/models',
         '$api/toplists#Toplist',
-        '$api/models#Session',
-        '$views/image#Image',
         '$api/library#Library',
-        '$api/offline#Offline',
         '$views/buttons#Button'
-        ], function(models, Toplist, Session, Image, Library, Offline, Button) {
+        ], function(models, Toplist, Library, Button) {
 
     // When application has loaded, run handleArgs function
     models.application.load('arguments').done(handleArgs);
@@ -889,21 +886,27 @@ function getAll(matchedAll) {
 	results={};
 	
 	results.user=Library.forCurrentUser().owner;
-    					
-	getAllPlaylists(function(matchedAllPlaylists) {
-		results.playlists=matchedAllPlaylists;
-		
-		appendText("All playlists have been processed");
-		appendText("Starting retrieval of all related artists");
-		getAllRelatedArtists(results.playlists,function(matchedAllRelatedArtists) {
-
-			results.artists=matchedAllRelatedArtists;
-			appendText("Ended retrieval of all related artists");
-			
-			matchedAll(results);
-		});			
-	});	
 	
+	var session = models.session;
+	session.load("country").done(function() {
+	    results.country=session.country;
+	    
+	    appendText("Country is set to " + session.country);
+	    
+		getAllPlaylists(function(matchedAllPlaylists) {
+			results.playlists=matchedAllPlaylists;
+			
+			appendText("All playlists have been processed");
+			appendText("Starting retrieval of all related artists");
+			getAllRelatedArtists(results.playlists,function(matchedAllRelatedArtists) {
+	
+				results.artists=matchedAllRelatedArtists;
+				appendText("Ended retrieval of all related artists");
+				
+				matchedAll(results);
+			});			
+		});	
+	  });	
 }											
 
 function appendText(myVar) {
@@ -921,7 +924,7 @@ $(function(){
 			case "simulate_update_library":
 			
 			appendText("Simulate update library");
-			
+  			
 			getAll(function(matchedAll) {
 				appendText("Success!!");
 

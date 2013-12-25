@@ -323,6 +323,12 @@ function updateLibrary($jsonData)
         $sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into user values (\"' . $user['uri'] . '\",\"' . escapeQuery($user['username']) . '\",\"' . escapeQuery($user['name']) . '\",\"' . $user['image'] . '\"' . ')"';
         exec($sql);
 
+		// Handle country
+        $country = $json['country'];
+        $setSettings = 'update settings set country_code=\"' . $country . '\"';
+        $dbfile = $w->data() . "/settings.db";
+        exec("sqlite3 \"$dbfile\" \"$setSettings\"");
+        
 		// Handle related artists
 		$nb_artists = 0;
 		foreach ($artists as $artist) {

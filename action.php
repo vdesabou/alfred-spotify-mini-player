@@ -116,12 +116,6 @@ if ($playlist_uri != "") {
 	    displayNotification("Alfred Playlist $setting[2] was cleared");
     } else if ($setting[0] == "GET_LYRICS") {
 		getLyrics($w,$setting[1],$setting[2]);
-    } 
-    else if ($setting[0] == "COUNTRY") {
-        $setSettings = 'update settings set country_code=\"' . $setting[1] . '\"';
-        $dbfile = $w->data() . "/settings.db";
-        exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-	    displayNotification("Country Code set to $setting[1]");
     }
 } else if ($original_query != "") {
     exec("osascript -e 'tell application \"Alfred 2\" to search \"spot $original_query\"'");

@@ -251,7 +251,6 @@ if (mb_strlen($query) < 3 ||
 
         $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), 'Update Library', "When done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
         $w->result('', '', "Configure Max Number of Results", "Number of results displayed. (it doesn't apply to your playlist list)", './images/' . $theme . '/' . 'numbers.png', 'no', 'Settings⇾MaxResults⇾');
-        $w->result('', '', "Configure your Country Code", "This is needed to get available results when finding all albums/tracks from an artist", './images/' . $theme . '/' . 'country.png', 'no', 'Settings⇾Country⇾');
         $w->result('', '', "Configure the Theme", "Current available colors for icons: green or black", './images/' . $theme . '/' . 'theme.png', 'no', 'Settings⇾Theme⇾');
         
         if ($is_spotifious_active == true) {
@@ -573,8 +572,9 @@ if (mb_strlen($query) < 3 ||
                 $artist_name = $words[1];
 
                 if ($country_code == "") {
-                    $w->result('', '', "Country code is not configured", "Configure it now", './images/warning.png', 'no', '');
-                    $w->result('', '', "Configure your Country Code", "This is needed to get available results when doing online lookups", './images/' . $theme . '/' . 'country.png', 'no', 'Settings⇾Country⇾');
+				    $w->result('', '', 'Country code is not set.', 'Select Update library below', './images/warning.png', 'no', '');
+				
+				    $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
 
                     echo $w->toxml();
                     return;
@@ -666,7 +666,7 @@ if (mb_strlen($query) < 3 ||
         } // Online mode end
     } ////////////
     //
-    // SECOND DELIMITER: Artist⇾the_artist⇾tracks , Album⇾the_album⇾tracks, Playlist⇾the_playlist⇾tracks,Settings⇾Country⇾country,Settings⇾Theme⇾color or Settings⇾MaxResults⇾max_numbers, Alfred Playlist⇾Set Alfred Playlist⇾alfred_playlist, Alfred Playlist⇾Clear Alfred Playlist⇾yes or no
+    // SECOND DELIMITER: Artist⇾the_artist⇾tracks , Album⇾the_album⇾tracks, Playlist⇾the_playlist⇾tracks,Settings⇾Theme⇾color or Settings⇾MaxResults⇾max_numbers, Alfred Playlist⇾Set Alfred Playlist⇾alfred_playlist, Alfred Playlist⇾Clear Alfred Playlist⇾yes or no
     //
     ////////////
     elseif (substr_count($query, '⇾') == 2) {
@@ -902,42 +902,6 @@ if (mb_strlen($query) < 3 ||
                         $w->result('', '', "The Max Results value entered is not valid", "Please fix it", './images/warning.png', 'no', '');
 
                     }
-                }
-            } else if ($setting_kind == "Country") {
-
-                $json = $w->request("https://raw.github.com/johannesl/Internationalization/master/countrycodes.json");
-
-                if (empty($json)) {
-                    $w->result('', '', "Error: retrieving country code list", "url is https://raw.github.com/johannesl/Internationalization/master/countrycodes.json", './images/warning.png', 'no', '');
-                    echo $w->toxml();
-                    return;
-                }
-
-                $json = json_decode($json);
-                switch (json_last_error()) {
-                    case JSON_ERROR_DEPTH:
-                        $w->result('', '', "There was an error when retrieving online information", "Maximum stack depth exceeded", './images/warning.png', 'no', '');
-                        break;
-                    case JSON_ERROR_CTRL_CHAR:
-                        $w->result('', '', "There was an error when retrieving online information", "Unexpected control character found", './images/warning.png', 'no', '');
-                        break;
-                    case JSON_ERROR_SYNTAX:
-                        $w->result('', '', "There was an error when retrieving online information", "Syntax error, malformed JSON", './images/warning.png', 'no', '');
-                        break;
-                    case JSON_ERROR_NONE:
-                        if (mb_strlen($the_query) == 0) {
-                            $w->result('', '', "Select your country:", "This is needed to get accurate results from online spotify lookups ", './images/' . $theme . '/' . 'info.png', 'no', '');
-                            foreach ($json as $key => $value) {
-                                $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ , 'COUNTRY⇾' . $value /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), ucfirst($key), $value, './images/' . $theme . '/' . 'country.png', 'yes', '');
-                            }
-                        } else {
-                            foreach ($json as $key => $value) {
-                                if (strpos(strtolower($key), strtolower($the_query)) !== false) {
-                                    $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ , 'COUNTRY⇾' . $value /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), ucfirst($key), $value, './images/' . $theme . '/' . 'country.png', 'yes', '');
-                                }
-                            }
-                        }
-                        break;
                 }
             }
 			else if ($setting_kind == "Theme") {
