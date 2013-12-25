@@ -17,25 +17,41 @@ $w = new Workflows();
 if (file_exists($w->data() . '/update_library_in_progress')) {
     if (file_exists($w->data() . '/library.db')) {
         $in_progress_data = $w->read('update_library_in_progress');
+        $words = explode('⇾', $in_progress_data);
+		
+		$elapsed_time = time() - $words[3];
+		
+		if (startsWith($words[0],'Init'))
+		{
+			if($elapsed_time < 300) {			
+       	 		$w->result('', $w->data() . '/update_library_in_progress', 'Initialization phase since ' . beautifyTime($elapsed_time) . ' : ' . floatToSquares(0), 'waiting for Spotify Mini Player app to return required data', './images/update_in_progress.png', 'no', '');
+       	 	}
+       	 	else {
+       	 		$w->result('', '', 'There is a problem, the initialization phase last more than 5 minutes', 'Follow the steps below:', './images/warning.png', 'no', '');
+       	 		
+	   	 		$w->result('', '', "1/ Kill update library", "You can kill it by using spot_mini_kill_update command", '05F86AA1-D3EE-4409-9A58-898B36FFE503.png', 'no', '');
+	   	 		
+	   	 		$w->result('', '', "2/ Open Spotify Mini Player App <spotify:app:miniplayer>", "Go to the Spotify Mini Player App in Spotify.", './images/' . 'green' . '/' . 'app_miniplayer.png', 'no', '');
 
-        if (substr_count($in_progress_data, '⇾') == 3) {
-            $words = explode('⇾', $in_progress_data);
+       	 		$w->result('', '', '3/ Copy paste the Debug output and provide it to the author', 'Also provide a tgz file with spot_mini_debug command', 'CEF36AB9-7CC2-4765-BF84-751E88B69023.png', 'no', '');      	 	
+       	 	}			
+		}
+        else {
+			if ($words[0] == 'Playlist List') {
+			    $type = 'playlists';
+			} else if ($words[0] == 'Related Artists') {
+			    $type = 'related artists';
+			} 
+			else {
+			    $type = 'tracks';
+			}	
+			
+			$w->result('', $w->data() . '/update_library_in_progress', $words[0] . ' update in progress since ' . beautifyTime($elapsed_time) . ' : '  . floatToSquares(intval($words[1]) / intval($words[2])), $words[1] . '/' . $words[2] . ' ' . $type . ' processed so far (if no progress, use spot_mini_kill_update command to stop it)', './images/update_in_progress.png', 'no', '');        
+        } 
+       
 
-            if ($words[0] == 'Playlist List') {
-                $type = 'playlists';
-            } else if ($words[0] == 'Related Artists') {
-                $type = 'related artists';
-            } 
-            else {
-                $type = 'tracks';
-            }
-            $elapsed_time = time() - $words[3];
-            $w->result('', $w->data() . '/update_library_in_progress', $words[0] . ' update in progress since ' . beautifyTime($elapsed_time) . ' : '  . floatToSquares(intval($words[1]) / intval($words[2])), $words[1] . '/' . $words[2] . ' ' . $type . ' processed so far (if no progress, use spot_mini_kill_update command to stop it)', './images/update_in_progress.png', 'no', '');
-        } else {
-            $w->result('', $w->data() . '/update_library_in_progress', 'Update in progress: ' . floatToSquares(0), 'waiting for Spotify Mini Player app to return required data (if no progress, use spot_mini_kill_update command to stop it)', './images/update_in_progress.png', 'no', '');
-        }
     } else {
-        $w->result('', $w->data() . '/update_library_in_progress', 'Library update seems broken', 'You can kill it by using spot_mini_kill_update command', './images/warning.png', 'no', '');
+        $w->result('', '', 'Library update seems broken', 'You can kill it by using spot_mini_kill_update command', './images/warning.png', 'no', '');
     }
 
 

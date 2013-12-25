@@ -1022,7 +1022,7 @@ end alfred_script</string>
 				<key>keyword</key>
 				<string>spot_mini_kill_update</string>
 				<key>subtext</key>
-				<string>use it if the library update seems stuck (several hours)</string>
+				<string>use it if the library update seems stuck</string>
 				<key>text</key>
 				<string>Kill update library</string>
 				<key>withspace</key>
