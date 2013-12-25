@@ -436,7 +436,7 @@ function updateCurrentTrack(){
         for(i=0;i<artists.length;i++) {
             artists_array.push(artists[i].name);
         }
-        currentHTML.innerHTML = 'Now playing: ' + artists_array.join(', ');
+        currentHTML.innerHTML = '' + artists_array.join(', ');
         currentHTML.innerHTML += ' - ' + models.player.track.name;
     }
 }
