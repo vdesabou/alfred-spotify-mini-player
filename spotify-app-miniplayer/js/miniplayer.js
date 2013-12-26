@@ -1,9 +1,8 @@
 require([
         '$api/models',
         '$api/toplists#Toplist',
-        '$api/library#Library',
-        '$views/buttons#Button'
-        ], function(models, Toplist, Library, Button) {
+        '$api/library#Library'
+        ], function(models, Toplist, Library) {
 
     // When application has loaded, run handleArgs function
     models.application.load('arguments').done(handleArgs);
