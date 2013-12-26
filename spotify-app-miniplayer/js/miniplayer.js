@@ -628,7 +628,7 @@ function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {
 	
 	
 	playlist.load('tracks','name','owner').done(function() {
-	  appendText("Starting to retrive all tracks for playlist " + playlist.name);	
+	  appendText("Starting to retrieve all tracks for playlist " + playlist.name);	
 	  playlist.owner.load('name','username','currentUser').done(function (owner) {
 		  
 		  var sorted = playlist.tracks.sort('addTime', 'desc');
