@@ -39,7 +39,8 @@ if ($other_action == "update_playlist" && $playlist_uri != "") {
     touch($w->data() . "/update_library_in_progress");
     $w->write('InitPlaylist⇾' . 0 . '⇾' . 0 . '⇾' . time(), 'update_library_in_progress');
 
-    exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:update_playlist:" . $playlist_uri . ":" . uniqid() . "\"'");
+	$tcpport = getFreeTcpPort();
+    exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:update_playlist:" . $playlist_uri . ":" . $tcpport . ":" . uniqid() . "\"'");
     exec("osascript -e 'tell application \"Spotify\" to open location \"$playlist_uri\"'");
 
     $server = IoServer::factory(
@@ -48,7 +49,7 @@ if ($other_action == "update_playlist" && $playlist_uri != "") {
                 new MiniPlayer()
             )
         ),
-        17693
+        $tcpport
     );
     // FIX THIS: server will exit when done
     // Did not find a way to set a timeout
@@ -245,7 +246,8 @@ if ($playlist_uri != "") {
         touch($w->data() . "/update_library_in_progress");
         $w->write('InitLibrary⇾' . 0 . '⇾' . 0 . '⇾' . time(), 'update_library_in_progress');
 
-        exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:update_library:" . uniqid() . "\"'");
+		$tcpport = getFreeTcpPort();
+        exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:update_library:" . $tcpport . ":" . uniqid() . "\"'");
 
         $server = IoServer::factory(
             new HttpServer(
@@ -253,7 +255,7 @@ if ($playlist_uri != "") {
                     new MiniPlayer()
                 )
             ),
-            17693
+            $tcpport
         );
         // FIX THIS: server will exit when done
         // Did not find a way to set a timeout
@@ -261,8 +263,9 @@ if ($playlist_uri != "") {
     } else if ($other_action == "update_playlist_list") {
         touch($w->data() . "/update_library_in_progress");
         $w->write('InitPlaylistList⇾' . 0 . '⇾' . 0 . '⇾' . time(), 'update_library_in_progress');
-
-        exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:update_playlist_list:" . uniqid() . "\"'");
+		
+		$tcpport = getFreeTcpPort();
+        exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:update_playlist_list:" . $tcpport . ":" . uniqid() . "\"'");
 
         $server = IoServer::factory(
             new HttpServer(
@@ -270,7 +273,7 @@ if ($playlist_uri != "") {
                     new MiniPlayer()
                 )
             ),
-            17693
+            $tcpport
         );
         // FIX THIS: server will exit when done
         // Did not find a way to set a timeout

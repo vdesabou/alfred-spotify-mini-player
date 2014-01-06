@@ -30,10 +30,10 @@ function handleArgs() {
 				sleep(1000);
 				getAll(function(matchedAll) {
 					appendText("update_library finished");
-	
-					var conn = new WebSocket('ws://localhost:17693');
+					
+					var conn = new WebSocket('ws://localhost:' + args[1]);
 					conn.onopen = function(e) {
-					    appendText("Connection established with Spotify Mini Player workflow.Transmitting data..");
+						appendText("Connection established with Spotify Mini Player workflow on port " + args[1] + ". Transmitting data..");
 					    conn.send('update_library⇾' + JSON.stringify(matchedAll));
 					};
 					
@@ -56,9 +56,9 @@ function handleArgs() {
 				getAllPlaylists(function(matchedAll) {
 					appendText("update_playlist_list finished");
 	
-					var conn = new WebSocket('ws://localhost:17693');
+					var conn = new WebSocket('ws://localhost:' + args[1]);
 					conn.onopen = function(e) {
-					    appendText("Connection established with Spotify Mini Player workflow.Transmitting data..");
+						appendText("Connection established with Spotify Mini Player workflow on port " + args[1] + ". Transmitting data..");
 					    conn.send('update_playlist_list⇾' + JSON.stringify(matchedAll));
 					};
 					
@@ -79,13 +79,15 @@ function handleArgs() {
 			case "update_playlist":
 				sleep(1000);
 				var array_results = [];
-				if(args[6])
+				if(args[7])
 				{
 					var pl = models.Playlist.fromURI(args[1]+':'+args[2]+':'+args[3]+':'+args[4]+':'+args[5]);
+					var tcpport = args[6];
 				}
 				else if(args[4] == 'starred' || args[4] == 'toplist' )
 				{
 					var pl = models.Playlist.fromURI(args[1]+':'+args[2]+':'+args[3]+':'+args[4]);
+					var tcpport = args[5];
 				}
 				
 				pl.load('name','uri').done(function() {
@@ -95,9 +97,10 @@ function handleArgs() {
 			
 						appendText("update_playlist finished");
 				
-						var conn = new WebSocket('ws://localhost:17693');
+						var conn = new WebSocket('ws://localhost:' + tcpport);
+
 						conn.onopen = function(e) {
-						    appendText("Connection established with Spotify Mini Player workflow.Transmitting data..");
+						    appendText("Connection established with Spotify Mini Player workflow on port " + tcpport + ". Transmitting data..");
 						    conn.send('update_playlist⇾' + JSON.stringify(array_results))
 						};
 						
