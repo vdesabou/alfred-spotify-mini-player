@@ -903,7 +903,7 @@ function getAll(matchedAll) {
 			getAllRelatedArtists(results.playlists,function(matchedAllRelatedArtists) {
 	
 				results.artists=matchedAllRelatedArtists;
-				appendText("Ended retrieval of all related artists");
+				appendText("Ended retrieval of all related artists. Found " + matchedAllRelatedArtists.length + " results.");
 				
 				matchedAll(results);
 			});			
