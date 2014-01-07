@@ -22,7 +22,7 @@ function installSpotifyAppIfNeeded($w)
 
 function getFreeTcpPort()
 {
-	//avoid warnings like this PHP Warning:  fsockopen(): unable to connect to 192.168.1.2:83 (Connection refused) in /var/www/blog/port_scanner.php on line 10
+	//avoid warnings like this PHP Warning:  fsockopen(): unable to connect to localhost (Connection refused) 
 	error_reporting(~E_ALL);
 	
 	$from = 10000;
