@@ -175,6 +175,17 @@
 				<string></string>
 			</dict>
 		</array>
+		<key>794A76A7-BB98-4A83-92BE-386A56875120</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>899AC4D2-88FA-474F-A075-AFA12F361E2B</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 		<key>81BA0BC2-F1CB-46DC-A715-C38A1A0E055E</key>
 		<array>
 			<dict>
@@ -303,7 +314,7 @@
 	<key>disabled</key>
 	<false/>
 	<key>name</key>
-	<string>Spotify Mini Player 4.1.1</string>
+	<string>Spotify Mini Player 4.1.2</string>
 	<key>objects</key>
 	<array>
 		<dict>
@@ -1128,6 +1139,59 @@ end alfred_script</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>8B98CE52-60F3-49B3-8CB5-CE3E3438F58A</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>plusspaces</key>
+				<false/>
+				<key>url</key>
+				<string>https://github.com/vdesabou/alfred-spotify-mini-player/issues/new</string>
+				<key>utf8</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.openurl</string>
+			<key>uid</key>
+			<string>899AC4D2-88FA-474F-A075-AFA12F361E2B</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>spot_mini_issue</string>
+				<key>subtext</key>
+				<string>This will open the GitHub page</string>
+				<key>text</key>
+				<string>Report an issue or propose an enhancement</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>794A76A7-BB98-4A83-92BE-386A56875120</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string></string>
@@ -1228,6 +1292,11 @@ end alfred_script</string>
 			<key>ypos</key>
 			<real>410</real>
 		</dict>
+		<key>794A76A7-BB98-4A83-92BE-386A56875120</key>
+		<dict>
+			<key>ypos</key>
+			<real>2490</real>
+		</dict>
 		<key>81BA0BC2-F1CB-46DC-A715-C38A1A0E055E</key>
 		<dict>
 			<key>ypos</key>
@@ -1237,6 +1306,16 @@ end alfred_script</string>
 		<dict>
 			<key>ypos</key>
 			<real>10</real>
+		</dict>
+		<key>899AC4D2-88FA-474F-A075-AFA12F361E2B</key>
+		<dict>
+			<key>ypos</key>
+			<real>2490</real>
+		</dict>
+		<key>8B98CE52-60F3-49B3-8CB5-CE3E3438F58A</key>
+		<dict>
+			<key>ypos</key>
+			<real>2370</real>
 		</dict>
 		<key>8C78472B-13EB-4512-B94D-4BF92867CD92</key>
 		<dict>
