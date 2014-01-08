@@ -2,6 +2,12 @@
 
 [![Download Workflow](https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/images/alfred-workflow-icon.png)](https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/SpotifyMiniPlayer.alfredworkflow)
 
+4.1.2:
+
+* Add spot_mini_issue command to report a bug or propose enhancement. 
+
+* Fix a potential issue with Library update.
+
 4.1.1:
 
 * Now use free TCP port for communication between workflow and Spotify App Helper.

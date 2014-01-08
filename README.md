@@ -167,6 +167,7 @@ If the update library is stuck (be aware the first time, it can take hours as al
 
 ![Screenshot](http://d.pr/i/q8Rs+.png)
 
+If you want to report an issue or propose an enhancement, use the "spot_mini_issue" command.
 
 ## Credits
 
