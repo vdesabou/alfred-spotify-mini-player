@@ -30,19 +30,20 @@ function handleArgs() {
 				sleep(1000);
 				getAll(function(matchedAll) {
 					appendText("update_library finished");
+					appendText("Trying to connect with Spotify Mini Player workflow on port " + args[1] + ".");
 					
-					var conn = new WebSocket('ws://localhost:' + args[1]);
+					var conn = new WebSocket('ws://127.0.0.1:' + args[1]);
 					conn.onopen = function(e) {
 						appendText("Connection established with Spotify Mini Player workflow on port " + args[1] + ". Transmitting data..");
 					    conn.send('update_library⇾' + JSON.stringify(matchedAll));
 					};
 					
 					conn.onerror = function (e) {
-                        appendText("Error received: " + e.data);
+                        appendText("Error received");
                     };
 					
 					conn.onclose = function (e) {
-                        appendText("Workflow closed connection: " + e.reason);
+                        appendText("Workflow closed connection " + e.reason);
                     };
 					
 					conn.onmessage = function(e) {
@@ -55,19 +56,20 @@ function handleArgs() {
 				sleep(1000);
 				getAllPlaylists(function(matchedAll) {
 					appendText("update_playlist_list finished");
+					appendText("Trying to connect with Spotify Mini Player workflow on port " + args[1] + ".");
 	
-					var conn = new WebSocket('ws://localhost:' + args[1]);
+					var conn = new WebSocket('ws://127.0.0.1:' + args[1]);
 					conn.onopen = function(e) {
 						appendText("Connection established with Spotify Mini Player workflow on port " + args[1] + ". Transmitting data..");
 					    conn.send('update_playlist_list⇾' + JSON.stringify(matchedAll));
 					};
 					
 					conn.onerror = function (e) {
-                        appendText("Error received: " + e.data);
+                        appendText("Error received");
                     };
 					
 					conn.onclose = function (e) {
-                        appendText("Workflow closed connection: " + e.reason);
+                        appendText("Workflow closed connection " + e.reason);
                     };
 					
 					conn.onmessage = function(e) {
@@ -96,8 +98,9 @@ function handleArgs() {
 						array_results.push(matchedPlaylistTracks);	
 			
 						appendText("update_playlist finished");
-				
-						var conn = new WebSocket('ws://localhost:' + tcpport);
+						appendText("Trying to connect with Spotify Mini Player workflow on port " + tcpport + ".");
+						
+						var conn = new WebSocket('ws://127.0.0.1:' + tcpport);
 
 						conn.onopen = function(e) {
 						    appendText("Connection established with Spotify Mini Player workflow on port " + tcpport + ". Transmitting data..");
@@ -105,11 +108,11 @@ function handleArgs() {
 						};
 						
 						conn.onerror = function (e) {
-                            appendText("Error received: " + e.data);
+                            appendText("Error received");
                         };
 						
 						conn.onclose = function (e) {
-                            appendText("Workflow closed connection: " + e.reason);
+                            appendText("Workflow closed connection " + e.reason);
                         };
 						
 						conn.onmessage = function(e) {
