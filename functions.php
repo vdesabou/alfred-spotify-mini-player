@@ -22,9 +22,6 @@ function installSpotifyAppIfNeeded($w)
 
 function getFreeTcpPort()
 {
-	//avoid warnings like this PHP Warning:  fsockopen(): unable to connect to localhost (Connection refused) 
-	error_reporting(~E_ALL);
-	
 	$from = 10000;
 	$to = 20000;
 	 
@@ -33,7 +30,8 @@ function getFreeTcpPort()
 	 
 	for($port = $from; $port <= $to ; $port++)
 	{
-	  $fp = fsockopen($host , $port);
+	  //avoid warnings like this PHP Warning:  fsockopen(): unable to connect to localhost (Connection refused) 
+	  $fp = @fsockopen($host , $port);
 		if (!$fp)
 		{
 			//port is free
