@@ -134,6 +134,9 @@ function handleArgs() {
 					addToAlfredPlaylist(args);
 				}
 				break;
+			case "playtrackwithplaylistcontext":
+					playTrackWithPlaylistContext(args);
+				break;
 			case "addplaylisttoalfredplaylist":
 				if(args[10])
 				{					
@@ -362,9 +365,64 @@ function playArtistOrAlbum(args) {
 	models.player.playContext(album);				
 }
 
+
+function playTrackWithPlaylistContext(args) {	
+
+		var playlistName = "Temp playlist for playTrackWithPlaylistContext"; 
+	 
+		models.Playlist.createTemporary(playlistName).done(function(playlist) {
+			playlist.load("tracks").done(function(playlist) {
+				// Clearing playlist. If there's a temporary playlist with the
+				// same name, previously added tracks may be on the playlist.
+				playlist.tracks.clear().done(function(emptyCollection) {
+				
+				 	var orginalplaylist = models.Playlist.fromURI(args[4]+':'+args[5]+':'+args[6]+':'+args[7]+':'+args[8]);
+				 	orginalplaylist.load('name','tracks').done(function() {
+				 	
+				 		var sorted = orginalplaylist.tracks.sort('addTime', 'desc');
+				 		sorted.snapshot().done(function(t) {
+				 			var tracks = t.toArray();
+
+				 			var tracksNew = [];
+							for (var i = 0; i < tracks.length; i++) {
+								
+									
+									if(tracks[i].uri != args[1]+':'+args[2]+':'+args[3])
+									{
+										tracksNew.push(tracks[i]);
+									}
+									else
+									{
+										console.log("playTrackWithPlaylistContext: track has been skipped " + args[1]+':'+args[2]+':'+args[3]);
+									}
+								}
+													 			
+				 			playlist.tracks.add(models.Track.fromURI(args[1]+':'+args[2]+':'+args[3]));
+							playlist.tracks.add(tracksNew).done(function(addedTracks) {
+								playlist.tracks.snapshot().done(function(snapshot) {
+
+	
+			/*
+					for (var i = 0; i < snapshot.length; i++) {
+										console.log("#" + i + " In array: " + tracks[i] + " -  In Playlist: " + snapshot.get(i).uri);
+									}
+*/
+
+									models.player.playContext(playlist);
+								});
+							});
+						});
+					});
+				});
+			});
+		});
+						
+}
+
+
 function startPlaylist(args) {	
 
-		var playlistName = "I'm a test playlist"; 
+		var playlistName = "Temp playlist for startPlaylist"; 
 	 
 		models.Playlist.createTemporary(playlistName).done(function(playlist) {
 			playlist.load("tracks").done(function(playlist) {

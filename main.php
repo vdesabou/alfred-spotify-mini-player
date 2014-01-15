@@ -893,7 +893,7 @@ if (mb_strlen($query) < 3 ||
                     if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " - " . $track[5]) == false) {
                         $subtitle = ($track[0] == true) ? "★ " : "";
                         $subtitle = $subtitle . $track[6];
-                        $w->result("spotify_mini-spotify-playlist-track-" . $playlist[1] . "-" . $track[5], serialize(array($track[2] /*track_uri*/ ,$track[3] /* album_uri */ ,$track[4] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,$track[7]  /* artist_name */)), ucfirst($track[7]) . " - " . $track[5], $subtitle, $track[9], 'yes', '');
+                        $w->result("spotify_mini-spotify-playlist-track-" . $playlist[1] . "-" . $track[5], serialize(array($track[2] /*track_uri*/ ,$track[3] /* album_uri */ ,$track[4] /* artist_uri */ ,$track[13] /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,$track[7]  /* artist_name */)), ucfirst($track[7]) . " - " . $track[5], $subtitle, $track[9], 'yes', '');
                     }
                 endforeach;
 

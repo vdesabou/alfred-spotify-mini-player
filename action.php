@@ -66,7 +66,12 @@ if ($type == "TRACK") {
             exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:addtoalfredplaylist:$track_uri:$alfred_playlist_uri\"'");
             exec("osascript -e 'tell application \"Spotify\" to open location \"$alfred_playlist_uri\"'");
             return;
-        } else {
+        } else if ($playlist_uri != "") {
+            exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:playtrackwithplaylistcontext:$track_uri:$playlist_uri\"'");
+            exec("osascript -e 'tell application \"Spotify\" to open location \"$playlist_uri\"'");
+            return;
+        }  
+        else {
             if ($other_action == "")
                 exec("osascript -e 'tell application \"Spotify\" to open location \"$track_uri\"'");
         }
