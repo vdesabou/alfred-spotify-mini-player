@@ -2,6 +2,10 @@
 
 [![Download Workflow](https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/images/alfred-workflow-icon.png)](https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/SpotifyMiniPlayer.alfredworkflow)
 
+4.2:
+
+* Implemented suggestions described in https://github.com/vdesabou/alfred-spotify-mini-player/issues/14
+
 4.1.2:
 
 * Add spot_mini_issue command to report a bug or propose enhancement. 

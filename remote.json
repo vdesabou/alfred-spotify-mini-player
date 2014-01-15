@@ -1,5 +1,5 @@
 {
-    "version": 4.12,
+    "version": 4.2,
     "download_url": "https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/SpotifyMiniPlayer.alfredworkflow",
-    "description": "Add spot_mini_issue command to report a bug or propose enhancement. Fix a potential issue with Library update."
+    "description": "Implemented suggestions described in https://github.com/vdesabou/alfred-spotify-mini-player/issues/14"
 }
