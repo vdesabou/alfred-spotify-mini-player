@@ -1142,21 +1142,6 @@ end alfred_script</string>
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>8B98CE52-60F3-49B3-8CB5-CE3E3438F58A</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>plusspaces</key>
 				<false/>
 				<key>url</key>
@@ -1311,11 +1296,6 @@ end alfred_script</string>
 		<dict>
 			<key>ypos</key>
 			<real>2490</real>
-		</dict>
-		<key>8B98CE52-60F3-49B3-8CB5-CE3E3438F58A</key>
-		<dict>
-			<key>ypos</key>
-			<real>2370</real>
 		</dict>
 		<key>8C78472B-13EB-4512-B94D-4BF92867CD92</key>
 		<dict>
