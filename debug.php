@@ -69,8 +69,11 @@ else
 
 
 $output = $output . exec("uname -a");
-$output =  $output . "\n";
+$output = $output . "\n";
 $output = $output . exec("sw_vers -productVersion");
+$output = $output . "\n";
+$output = $output . exec("sysctl hw.memsize");
+$output = $output . "\n";
 
 
 file_put_contents($w->home() . "/Downloads/spot_mini_debug/debug.log",$output);
