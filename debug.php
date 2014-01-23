@@ -69,6 +69,9 @@ else
 
 
 $output = $output . exec("uname -a");
+$output =  $output . "\n";
+$output = $output . exec("sw_vers -productVersion");
+
 
 file_put_contents($w->home() . "/Downloads/spot_mini_debug/debug.log",$output);
 
