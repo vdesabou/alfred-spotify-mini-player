@@ -4,6 +4,8 @@
 <dict>
 	<key>bundleid</key>
 	<string>com.vdesabou.spotify.mini.player</string>
+	<key>category</key>
+	<string>Tools</string>
 	<key>connections</key>
 	<dict>
 		<key>05F86AA1-D3EE-4409-9A58-898B36FFE503</key>
