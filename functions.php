@@ -959,9 +959,14 @@ function checkForUpdate($w,$last_check_update_time) {
 	    exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 
 		// get local information		
-		$json = $w->read('update.json');
-    	$local_version = $json->version;
-    	$remote_json = $json->remote_json; 
+		if (!file_exists('./packal/package.xml')) {
+            displayNotification("Error: the package.xml file cannot be found");
+            return;
+		}
+		$xml = $w->read('./packal/package.xml');
+		$workflow= new SimpleXMLElement($xml);
+    	$local_version = $workflow->version;
+    	$remote_json = "https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/remote.json"; 
 
 		// get remote information
         $jsonDataRemote = $w->request($remote_json);
@@ -978,7 +983,7 @@ function checkForUpdate($w,$last_check_update_time) {
         	$description = $json['description'];
         	
         	if($local_version < $remote_version) {
-	        	//displayNotification("An update is available");
+	        	displayNotification("An update is available");
 				
 				$workflow_file_name = $w->home() . '/Downloads/spotify-app-miniplayer-' . $remote_version . '.alfredworkflow';
                 $fp = fopen($workflow_file_name , 'w+');

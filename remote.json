@@ -1,5 +1,5 @@
 {
-    "version": 4.2,
-    "download_url": "https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/SpotifyMiniPlayer.alfredworkflow",
-    "description": "Implemented suggestions described in https://github.com/vdesabou/alfred-spotify-mini-player/issues/14"
+    "version": 4.21,
+    "download_url": "https://github.com/packal/repository/raw/master/com.vdesabou.spotify.mini.player/spotifyminiplayer.alfredworkflow",
+    "description": "Packal friendly"
 }
