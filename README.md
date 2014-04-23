@@ -12,23 +12,23 @@ You can also control Spotify using keywords such as play/next/volmax/random/shuf
 
 * Search in all your playlists
 
-![Screenshot](http://d.pr/i/MeWd+.gif)
+![Screenshot](https://i.cloudup.com/pKTGG2faiC.gif)
 
 * Browse and launch your playlists
 
-![Screenshot](http://d.pr/i/ECCf+.gif)
+![Screenshot](https://i.cloudup.com/A9tePlpX1S.gif)
 
 * Update your playlist and see progress
 
-![Screenshot](http://d.pr/i/uSB4+.gif)
+![Screenshot](https://i.cloudup.com/tx8lqblTEu.gif)
 
 * Browse by artist
 
-![Screenshot](http://d.pr/i/QJU1+.gif)
+![Screenshot](https://i.cloudup.com/UKMug-dWQV.gif)
 
 * Lookup artist "online"
 
-![Screenshot](http://d.pr/i/y1Wb+.gif)
+![Screenshot](https://i.cloudup.com/zbv6NCInTi.gif)
 
 ## Features
 
@@ -69,7 +69,7 @@ You'll need to do the following steps:
 
 * Type "spot_mini" or configured hotkey to invoke Spotify Mini Player, and select "1/ Open Spotify Mini Player App <spotify:app:miniplayer>" 
 
-![Screenshot](http://d.pr/i/ssf0+.png)
+![Screenshot](https://i.cloudup.com/QVFwkPR7V7.png)
 
 * If it doesn't work (Spotify indicates "Failed to load application miniplayer."):
 
@@ -92,7 +92,7 @@ Your account has already been enabled to use the Spotify Apps API. Happy hacking
 
 You can check progress by invoking the workflow again:-
 
-![Screenshot](http://d.pr/i/5wQt+.png)
+![Screenshot](https://i.cloudup.com/NajHMexvb7.png)
 
 
 ## Library/Playlist Update
@@ -101,7 +101,7 @@ You can now update your entire library and/or only one specific playlist directl
 
 For example:
 
-![Screenshot](http://d.pr/i/TcpN+.png)
+![Screenshot](https://i.cloudup.com/QER69TlaZa.png)
 
 ## Alfred Playlist
 
@@ -109,49 +109,46 @@ The Alfred Playlist is one of your playlists where tracks, albums and even playl
 
 * Simply choose one of your playlists as the current "Alfred Playlist" (you can even choose your starred playlist)
 
-![Screenshot](http://d.pr/i/1lVo+.png)
+![Screenshot](https://i.cloudup.com/CkEfC9emQI.png)
 
 * To add a track to your playlist select it with *fn* modifier
 
-![Screenshot](http://d.pr/i/9TZ0+.png)
+![Screenshot](https://i.cloudup.com/O9I8lqCvl3.png)
 
 * To add an album or another playlist to your playlist select it with *shift* modifier
 
-![Screenshot](http://d.pr/i/Zmow+.png)
+![Screenshot](https://i.cloudup.com/I6zvg23d39.png)
 
-![Screenshot](http://d.pr/i/nJGw+.png)
 
 * You can also clear all tracks from your Alfred Playlist (for security, you cannot do it if your starred playlist is the Alfred Playlist), be careful when doing it. 
 
 A confirmation will be asked:
 
-![Screenshot](http://d.pr/i/xUFE+.png)
+![Screenshot](https://i.cloudup.com/y6qlZZaGaK.png)
 
 
 ## Now Playing
 
 This is an option to diplay various options based on the current track (play/pause, browse artist, display lyrics, show playlists where the track belongs)
 
-![Screenshot](http://d.pr/i/ldgN+.png)
+![Screenshot](https://i.cloudup.com/PZrDLRlLwb.png)
 
 ## Commands
 
 * Modifer keys
 
-![Screenshot](http://d.pr/i/RBqX+.png)
+![Screenshot](https://i.cloudup.com/8TSup8JB2l.png)
 
 * Other commands
 
 Note: These commands can also be triggered from the main workflow window
 
-![Screenshot](http://d.pr/i/DVSn+.png)
+![Screenshot](https://i.cloudup.com/nGQOVeLbdr.png)
 
 
 ## Auto-Update
 
-The workflow checks for update once per day, if an update is available, it will download the new version in your Downloads folder and you'll get:
-
-![Screenshot](http://d.pr/i/yLGp+.png)
+The workflow checks for update once per day, if an update is available, it will download the new version in your Downloads folder.
 
 Note that you can also force a check for update in Settings section
 
@@ -160,11 +157,11 @@ Note that you can also force a check for update in Settings section
 
 If you experience an issue with the workflow, use the "spot_mini_debug" command, it will generate a spot_mini_debug.tgz file in your Downloads directory. Then send this file to me.
 
-![Screenshot](http://d.pr/i/4zSE+.png)
+![Screenshot](https://i.cloudup.com/rkqaeTehJK.png)
 
 If the update library is stuck (be aware the first time, it can take hours as all artworks are downloaded, next times it shall not exceed 10 minutes), you can kill it by invoking "spot_mini_kill" command:
 
-![Screenshot](http://d.pr/i/q8Rs+.png)
+![Screenshot](https://i.cloudup.com/rusuJc78Wg.png)
 
 If you want to report an issue or propose an enhancement, use the "spot_mini_issue" command.
 
