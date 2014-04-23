@@ -47,7 +47,6 @@ You can also control Spotify using keywords such as play/next/volmax/random/shuf
 * Display current track lyrics
 * Two themes available: black and green
 * Auto-Updater: it checks once per day and download automatically the new version
-* [AlleyOop/Monkey Patch](http://www.alfredforum.com/topic/2218-monkey-patch-update-alfred-workflows-via-alleyoop) support
 * Direct call to [Spotifious](http://www.alfredforum.com/topic/1644-spotifious-a-natural-spotify-controller-for-alfred) workflow
 
 ## Settings
