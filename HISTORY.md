@@ -2,6 +2,14 @@
 
 [![Download Workflow](https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/images/alfred-workflow-icon.png)](https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/SpotifyMiniPlayer.alfredworkflow)
 
+4.2.1:
+
+* Fix a problem with local files in playlist
+
+* Updated to Packal
+
+* Updated to new Spotifious version
+
 4.2:
 
 * Implemented suggestions described in https://github.com/vdesabou/alfred-spotify-mini-player/issues/14
