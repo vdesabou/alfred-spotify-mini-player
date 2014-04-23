@@ -316,7 +316,7 @@
 	<key>disabled</key>
 	<false/>
 	<key>name</key>
-	<string>Spotify Mini Player 4.2</string>
+	<string>Spotify Mini Player 4.2.1</string>
 	<key>objects</key>
 	<array>
 		<dict>
@@ -1391,6 +1391,6 @@ end alfred_script</string>
 		</dict>
 	</dict>
 	<key>webaddress</key>
-	<string>http://vdesabou.github.io/alfred-spotify-mini-player/</string>
+	<string>http://www.packal.org/workflow/spotify-mini-player</string>
 </dict>
 </plist>
