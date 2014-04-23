@@ -368,6 +368,17 @@ function playArtistOrAlbum(args) {
 
 function playTrackWithPlaylistContext(args) {	
 
+		if(args[2] == 'track')
+		{
+	        var orginalplaylistUri = args[4]+':'+args[5]+':'+args[6]+':'+args[7]+':'+args[8];
+	        var trackUri = args[1]+':'+args[2]+':'+args[3];
+		}
+		else if(args[2] == 'local')
+		{
+			var orginalplaylistUri = args[7]+':'+args[8]+':'+args[9]+':'+args[10]+':'+args[11];
+			var trackUri = args[1]+':'+args[2]+':'+args[3]+':'+args[4]+':'+args[5]+':'+args[6];
+		}
+		
 		var playlistName = "Temp playlist for playTrackWithPlaylistContext"; 
 	 
 		models.Playlist.createTemporary(playlistName).done(function(playlist) {
@@ -376,7 +387,7 @@ function playTrackWithPlaylistContext(args) {
 				// same name, previously added tracks may be on the playlist.
 				playlist.tracks.clear().done(function(emptyCollection) {
 				
-				 	var orginalplaylist = models.Playlist.fromURI(args[4]+':'+args[5]+':'+args[6]+':'+args[7]+':'+args[8]);
+				 	var orginalplaylist = models.Playlist.fromURI(orginalplaylistUri);
 				 	orginalplaylist.load('name','tracks').done(function() {
 				 	
 				 		var sorted = orginalplaylist.tracks.sort('addTime', 'desc');
@@ -397,7 +408,7 @@ function playTrackWithPlaylistContext(args) {
 									}
 								}
 													 			
-				 			playlist.tracks.add(models.Track.fromURI(args[1]+':'+args[2]+':'+args[3]));
+				 			playlist.tracks.add(models.Track.fromURI(trackUri));
 							playlist.tracks.add(tracksNew).done(function(addedTracks) {
 								playlist.tracks.snapshot().done(function(snapshot) {
 
