@@ -177,5 +177,5 @@ If you want to report an issue or propose an enhancement, use the "spot_mini_iss
 
 Download the workflow below and open in Alfred.
 
-[![Download Workflow](https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/images/alfred-workflow-icon.png)](https://github.com/packal/repository/raw/master/com.vdesabou.spotify.mini.player/spotifyminiplayer.alfredworkflow)
+[![Download Workflow](https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/images/alfred-workflow-icon.png)](https://raw.githubusercontent.com/packal/repository/master/com.vdesabou.spotify.mini.player/spotifyminiplayer.alfredworkflow)
 
