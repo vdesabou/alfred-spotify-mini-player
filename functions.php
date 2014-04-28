@@ -966,7 +966,7 @@ function checkForUpdate($w,$last_check_update_time) {
 		$xml = $w->read('./packal/package.xml');
 		$workflow= new SimpleXMLElement($xml);
     	$local_version = $workflow->version;
-    	$remote_json = "https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/remote.json"; 
+    	$remote_json = "https://raw.githubusercontent.com/vdesabou/alfred-spotify-mini-player/master/remote.json"; 
 
 		// get remote information
         $jsonDataRemote = $w->request($remote_json);
