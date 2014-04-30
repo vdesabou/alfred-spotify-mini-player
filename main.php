@@ -878,13 +878,6 @@ if (mb_strlen($query) < 3 ||
                     $handleDbIssue($theme);
                     return;
                 }
-                if (count($tracks) > 0) {
-                    $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-                    if ($is_alfred_playlist_active == true) {
-                        $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
-                    }
-                    $w->result('help', 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', '');
-                }
 
                 $subtitle = "Launch Playlist";
                 if ($is_alfred_playlist_active == true &&
