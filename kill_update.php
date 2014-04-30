@@ -3,9 +3,13 @@
 // Turn off all error reporting
 error_reporting(0);
 
-require_once('workflows.php');
+// Require the bundler.
+require_once('alfred.bundler.php');
 
-$w = new Workflows();
+
+// Load and use David Ferguson's Workflows.php class
+$files = __load( "Workflows" );
+$w = new Workflows;
 
 unlink($w->data() . "/update_library_in_progress");
 exec("kill -9 $(ps -efx | grep \"php\" | grep \"update_\" | awk '{print $2}')");    
