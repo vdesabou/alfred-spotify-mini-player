@@ -214,7 +214,7 @@ if (mb_strlen($query) < 3 ||
 				            $playlist = explode("	", $playlist);
 							
 							if (checkIfResultAlreadyThere($w->results(), "🔈🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)") == false) {
-				            	$w->result("spotify_mini-spotify-inplaylist-$playlist[1]", '', "🔈🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", $playlist[5], 'no', "Playlist⇾" . $playlist[0] . "⇾");
+				            	$w->result('', '', "🔈🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", $playlist[5], 'no', "Playlist⇾" . $playlist[0] . "⇾");
 				            }
 				        endforeach;
 			        endforeach;
@@ -371,7 +371,7 @@ if (mb_strlen($query) < 3 ||
         foreach ($playlists as $playlist):
             $playlist = explode("	", $playlist);
 
-            $w->result("spotify_mini-spotify-playlist-$playlist[1]", '', "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", $playlist[5], 'no', "Playlist⇾" . $playlist[0] . "⇾");
+            $w->result('', '', "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", $playlist[5], 'no', "Playlist⇾" . $playlist[0] . "⇾");
         endforeach;
 
 
@@ -397,7 +397,7 @@ if (mb_strlen($query) < 3 ||
             $track = explode("	", $track);
 
             if (checkIfResultAlreadyThere($w->results(), "👤 " . ucfirst($track[7])) == false) {
-                $w->result("spotify_mini-spotify-artist-" . $track[7], '', "👤 " . ucfirst($track[7]), "Browse this artist", $track[10], 'no', "Artist⇾" . $track[7] . "⇾");
+                $w->result('', '', "👤 " . ucfirst($track[7]), "Browse this artist", $track[10], 'no', "Artist⇾" . $track[7] . "⇾");
             }
         endforeach;
 
@@ -425,7 +425,7 @@ if (mb_strlen($query) < 3 ||
             if ($is_alfred_playlist_active == true) {
                 $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
             }
-            $w->result('help', 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', '');
+            $w->result('', 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', '');
         }
         foreach ($tracks as $track):
             $track = explode("	", $track);
@@ -434,7 +434,7 @@ if (mb_strlen($query) < 3 ||
             $subtitle = $subtitle . $track[6];
 
             if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " - " . $track[5]) == false) {
-                $w->result("spotify_mini-spotify-track" . $track[2], serialize(array($track[2] /*track_uri*/ ,$track[3] /* album_uri */ ,$track[4] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,$track[7]  /* artist_name */)), ucfirst($track[7]) . " - " . $track[5], $subtitle, $track[9], 'yes', '');
+                $w->result('', serialize(array($track[2] /*track_uri*/ ,$track[3] /* album_uri */ ,$track[4] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,$track[7]  /* artist_name */)), ucfirst($track[7]) . " - " . $track[5], $subtitle, $track[9], 'yes', '');
                 
             }
         endforeach;
@@ -482,7 +482,7 @@ if (mb_strlen($query) < 3 ||
             foreach ($playlists as $playlist):
                 $playlist = explode("	", $playlist);
 
-                $w->result("spotify_mini-spotify-playlist-$playlist[1]", '', "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", $playlist[5], 'no', "Playlist⇾" . $playlist[0] . "⇾");
+                $w->result('', '', "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", $playlist[5], 'no', "Playlist⇾" . $playlist[0] . "⇾");
             endforeach;
         } // search by Playlist end
         elseif ($kind == "Alfred Playlist") {
@@ -505,7 +505,7 @@ if (mb_strlen($query) < 3 ||
                 	$w->result('', '', "Clear your Alfred Playlist", "This will remove all the tracks in your current Alfred Playlist", './images/' . $theme . '/' . 'uncheck.png', 'no', 'Alfred Playlist⇾Confirm Clear Alfred Playlist⇾');	             
                 }
                 
-                $w->result("spotify_mini-spotify-alfredplaylist-refresh", serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,$alfred_playlist_uri /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_playlist' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update your Alfred Playlist", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
+                $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,$alfred_playlist_uri /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_playlist' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update your Alfred Playlist", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
 
             }
         } //  Alfred Playlist end
@@ -544,7 +544,7 @@ if (mb_strlen($query) < 3 ||
                 $track = explode("	", $track);
 
                 if (checkIfResultAlreadyThere($w->results(), "👤 " . ucfirst($track[7])) == false) {
-                    $w->result("spotify_mini-spotify-artist-" . $track[7], '', "👤 " . ucfirst($track[7]), "Browse this artist", $track[10], 'no', "Artist⇾" . $track[7] . "⇾");
+                    $w->result('', '', "👤 " . ucfirst($track[7]), "Browse this artist", $track[10], 'no', "Artist⇾" . $track[7] . "⇾");
                 }
             endforeach;
         } // search by Artist end
@@ -583,7 +583,7 @@ if (mb_strlen($query) < 3 ||
                 $track = explode("	", $track);
 
                 if (checkIfResultAlreadyThere($w->results(), ucfirst($track[6])) == false) {
-                    $w->result("spotify_mini-spotify-album" . $track[6], '', ucfirst($track[6]), "by " . $track[7], $track[11], 'no', "Album⇾" . $track[6] . "⇾");
+                    $w->result('', '', ucfirst($track[6]), "by " . $track[7], $track[11], 'no', "Album⇾" . $track[6] . "⇾");
                 }
             endforeach;
 
@@ -638,7 +638,7 @@ if (mb_strlen($query) < 3 ||
 
                                 if (strpos($availability->territories, $country_code) !== false) {
                                     if (checkIfResultAlreadyThere($w->results(), ucfirst($album->name)) == false) {
-                                        $w->result("spotify_mini-spotify-online-album" . $album->name, '', ucfirst($album->name), "by " . $album->artist . " (" . $album->released . ")", getTrackOrAlbumArtwork($w,$theme, $album->href, false), 'no', "Online⇾" . $artist_uri . "@" . $album->artist . "@" . $album->href . "@" . $album->name);
+                                        $w->result('', '', ucfirst($album->name), "by " . $album->artist . " (" . $album->released . ")", getTrackOrAlbumArtwork($w,$theme, $album->href, false), 'no', "Online⇾" . $artist_uri . "@" . $album->artist . "@" . $album->href . "@" . $album->name);
                                     }
                                 }
                             }
@@ -680,9 +680,9 @@ if (mb_strlen($query) < 3 ||
                         if ($is_alfred_playlist_active == true) {
                             $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
                         }
-                        $w->result('help', 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', '');
+                        $w->result('', 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', '');
                         foreach ($json->album->tracks as $key => $value) {
-                            $w->result("spotify_mini-spotify-online-track-" . $value->name, serialize(array($value->href /*track_uri*/ ,$album_uri /* album_uri */ ,$artist_uri /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,$artist_name  /* artist_name */)), ucfirst($artist_name) . " - " . $value->name, $album_name . " (" . $json->album->released . ")", getTrackOrAlbumArtwork($w,$theme, $value->href, false), 'yes', '');
+                            $w->result('', serialize(array($value->href /*track_uri*/ ,$album_uri /* album_uri */ ,$artist_uri /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,$artist_name  /* artist_name */)), ucfirst($artist_name) . " - " . $value->name, $album_name . " (" . $json->album->released . ")", getTrackOrAlbumArtwork($w,$theme, $value->href, false), 'yes', '');
 
 
                         }
@@ -763,7 +763,7 @@ if (mb_strlen($query) < 3 ||
                 if ($is_alfred_playlist_active == true) {
                     $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
                 }
-                $w->result('help', 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', '');
+                $w->result('', 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', '');
             }
 
             foreach ($tracks as $track):
@@ -773,7 +773,7 @@ if (mb_strlen($query) < 3 ||
                 $subtitle = $subtitle . $track[6];
 
                 if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " - " . $track[5]) == false) {
-                    $w->result("spotify_mini-spotify-track-" . $track[5], serialize(array($track[2] /*track_uri*/ ,$track[3] /* album_uri */ ,$track[4] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,$track[7]  /* artist_name */)), ucfirst($track[7]) . " - " . $track[5], $subtitle, $track[9], 'yes', '');
+                    $w->result('', serialize(array($track[2] /*track_uri*/ ,$track[3] /* album_uri */ ,$track[4] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,$track[7]  /* artist_name */)), ucfirst($track[7]) . " - " . $track[5], $subtitle, $track[9], 'yes', '');
                 }
                 if ($artist_uri == "")
                     $artist_uri = $track[4];
@@ -823,7 +823,7 @@ if (mb_strlen($query) < 3 ||
                 if ($is_alfred_playlist_active == true) {
                     $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
                 }
-                $w->result('help', 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', '');
+                $w->result('', 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', '');
             }
 
             foreach ($tracks as $track):
@@ -833,7 +833,7 @@ if (mb_strlen($query) < 3 ||
                 $subtitle = $subtitle . $track[6];
 
                 if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " - " . $track[5]) == false) {
-                    $w->result("spotify_mini-spotify-track-" . $track[5], serialize(array($track[2] /*track_uri*/ ,$track[3] /* album_uri */ ,$track[4] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,$track[7]  /* artist_name */)), ucfirst($track[7]) . " - " . $track[5], $subtitle, $track[9], 'yes', '');
+                    $w->result('', serialize(array($track[2] /*track_uri*/ ,$track[3] /* album_uri */ ,$track[4] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,$track[7]  /* artist_name */)), ucfirst($track[7]) . " - " . $track[5], $subtitle, $track[9], 'yes', '');
                 }
                 if ($album_uri == "")
                     $album_uri = $track[3];
@@ -885,19 +885,19 @@ if (mb_strlen($query) < 3 ||
                 ) {
                     $subtitle = "$subtitle ,⇧ ⇾ add playlist to ♫";
                 }
-                $w->result("spotify_mini-spotify-playlist-$playlist[1]", serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,$playlist[0] /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,''  /* artist_name */)), "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks), by " . $playlist[3] . " (" . $playlist[4] . ")", $subtitle, $playlist[5], 'yes', '');
+                $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,$playlist[0] /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,''  /* artist_name */)), "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks), by " . $playlist[3] . " (" . $playlist[4] . ")", $subtitle, $playlist[5], 'yes', '');
                 
                 $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'activate (open location "' . $playlist[0] . '")' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Open playlist " . $playlist[1] . " in Spotify", "This will open the playlist in Spotify", 'fileicon:/Applications/Spotify.app', 'yes', '');
             } 
 
-                $w->result("spotify_mini-spotify-update-$playlist[1]", serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,$playlist[0] /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_playlist' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update playlist " . ucfirst($playlist[1]) . " by " . $playlist[3], "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
+                $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,$playlist[0] /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_playlist' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update playlist " . ucfirst($playlist[1]) . " by " . $playlist[3], "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
 
                 if (count($tracks) > 0) {
                     $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
                     if ($is_alfred_playlist_active == true) {
                         $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
                     }
-                    $w->result('help', 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', '');
+                    $w->result('', 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', '');
                 }
                                 
                 foreach ($tracks as $track):
@@ -906,7 +906,7 @@ if (mb_strlen($query) < 3 ||
                     if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " - " . $track[5]) == false) {
                         $subtitle = ($track[0] == true) ? "★ " : "";
                         $subtitle = $subtitle . $track[6];
-                        $w->result("spotify_mini-spotify-playlist-track-" . $playlist[1] . "-" . $track[5], serialize(array($track[2] /*track_uri*/ ,$track[3] /* album_uri */ ,$track[4] /* artist_uri */ ,$track[13] /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,$track[7]  /* artist_name */)), ucfirst($track[7]) . " - " . $track[5], $subtitle, $track[9], 'yes', '');
+                        $w->result('', serialize(array($track[2] /*track_uri*/ ,$track[3] /* album_uri */ ,$track[4] /* artist_uri */ ,$track[13] /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,$track[7]  /* artist_name */)), ucfirst($track[7]) . " - " . $track[5], $subtitle, $track[9], 'yes', '');
                     }
                 endforeach;       
         } // end of tracks by Playlist
@@ -1013,7 +1013,7 @@ if (mb_strlen($query) < 3 ||
 	        }
 
 	        if (count($relateds) == 0) {
-	            $w->result('help', 'help', "There is no related artist for this artist", $subtitle, './images/warning.png', 'no', '');
+	            $w->result('', 'help', "There is no related artist for this artist", $subtitle, './images/warning.png', 'no', '');
 	        }
         	
 	        foreach ($relateds as $related):
