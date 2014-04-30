@@ -3,13 +3,9 @@
 // Turn off all error reporting
 error_reporting(0);
 
-// Require the bundler.
-require_once('alfred.bundler.php');
+require_once('workflows.php');
 
-
-// Load and use David Ferguson's Workflows.php class
-$files = __load( "Workflows" );
-$w = new Workflows;
+$w = new Workflows();
 
 
 exec("mkdir -p ~/Downloads/spot_mini_debug");
