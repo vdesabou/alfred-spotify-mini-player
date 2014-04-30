@@ -3,7 +3,6 @@
 // Turn off all error reporting
 error_reporting(0);
 
-require_once('workflows.php');
 require('functions.php');
 
 use Ratchet\Server\IoServer;
@@ -14,7 +13,9 @@ use MyApp\MiniPlayer;
 require_once('./vendor/autoload.php');
 
 
-$w = new Workflows();
+// Load and use David Ferguson's Workflows.php class
+$files = __load( "Workflows" );
+$w = new Workflows;
 
 $query = $argv[1];
 $type = $argv[2];

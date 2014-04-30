@@ -2,3 +2,4 @@ output.log
 *.log
 
 packal/package.xml
+alfred.bundler.php

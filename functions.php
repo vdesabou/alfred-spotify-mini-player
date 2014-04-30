@@ -1,5 +1,7 @@
 <?php
-require_once('workflows.php');
+
+// Require the bundler.
+require_once('alfred.bundler.php');
 
 function installSpotifyAppIfNeeded($w)
 {
@@ -75,7 +77,9 @@ function checkIfResultAlreadyThere($results, $title)
 
 function displayNotification($output)
 {
-	exec('./terminal-notifier.app/Contents/MacOS/terminal-notifier -title "Spotify Mini Player" -sender com.spotify.miniplayer -message "' .  $output . '"');
+	// Load and use Terminal Notifier, a "helper" utility
+	$tn = __load('terminal-notifier' , 'default' , 'utility' );
+	exec( "$tn -title 'Spotify Mini Player' -sender 'com.spotify.miniplayer' -message '" . $output . "'" );
 }
 
 function getTrackOrAlbumArtwork($w,$theme, $spotifyURL, $fetchIfNotPresent)

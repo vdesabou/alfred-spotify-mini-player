@@ -316,7 +316,7 @@
 	<key>disabled</key>
 	<false/>
 	<key>name</key>
-	<string>Spotify Mini Player 4.2.2</string>
+	<string>Spotify Mini Player 4.2.3</string>
 	<key>objects</key>
 	<array>
 		<dict>
@@ -365,13 +365,15 @@
 				<false/>
 				<key>modsmode</key>
 				<integer>2</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.hotkey</string>
 			<key>uid</key>
 			<string>AE6160D1-56EA-4416-991E-CF12B874FFD3</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -1133,13 +1135,15 @@ end alfred_script</string>
 				<false/>
 				<key>modsmode</key>
 				<integer>0</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.hotkey</string>
 			<key>uid</key>
 			<string>2A12337B-B18B-4159-966E-7B8BC308F05A</string>
 			<key>version</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>

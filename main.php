@@ -3,14 +3,25 @@
 // Turn off all error reporting
 error_reporting(0);
 
+if ( ! file_exists('alfred.bundler.php') ) 
+  exec( 'curl -sL "https://raw.githubusercontent.com/shawnrice/alfred-bundler/aries/wrappers/alfred.bundler.php" > "alfred.bundler.php"' );
+
+// Require the bundler.
+require_once('alfred.bundler.php');
+
+
+// Load and use David Ferguson's Workflows.php class
+$files = __load( "Workflows" );
+$w = new Workflows;
+
+
+
 require('functions.php');
-require_once('workflows.php');
+
 
 $query = escapeQuery($argv[1]);
 # thanks to http://www.alfredforum.com/topic/1788-prevent-flash-of-no-result
 $query = iconv('UTF-8-MAC', 'UTF-8', $query);
-
-$w = new Workflows();
 
 //
 // check for library update in progress
