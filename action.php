@@ -38,6 +38,11 @@ $alfred_playlist_uri = $arg[8];
 $artist_name = $arg[9];
 
 if ($other_action == "update_playlist" && $playlist_uri != "") {
+	  if(! $w->internet()) {
+        displayNotification("Error: No internet connection");
+        return;
+	  }
+  
     touch($w->data() . "/update_library_in_progress");
     $w->write('InitPlaylist⇾' . 0 . '⇾' . 0 . '⇾' . time(), 'update_library_in_progress');
 
@@ -184,6 +189,10 @@ if ($playlist_uri != "") {
         exec("osascript -e 'tell application \"Spotify\" to activate'");
         exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer\"'");
     } else if ($other_action == "check_for_update") {
+	    if(! $w->internet()) {
+        	displayNotification("Error: No internet connection");
+        	return;
+	    }
 		$check_results = checkForUpdate($w,0);
 		if($check_results != null && is_array($check_results)) {
 			displayNotification('New version ' . $check_results[0] . ' is available in Downloads directory ');
@@ -250,6 +259,10 @@ if ($playlist_uri != "") {
         exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online⇾" . $artist_uri . "@" . escapeQuery($artist_name) . "\"'");
     }
      else if ($other_action == "update_library") {
+	    if(! $w->internet()) {
+        	displayNotification("Error: No internet connection");
+        	return;
+	    }
         touch($w->data() . "/update_library_in_progress");
         $w->write('InitLibrary⇾' . 0 . '⇾' . 0 . '⇾' . time(), 'update_library_in_progress');
 
@@ -268,6 +281,10 @@ if ($playlist_uri != "") {
         // Did not find a way to set a timeout
         $server->run();
     } else if ($other_action == "update_playlist_list") {
+	    if(! $w->internet()) {
+        	displayNotification("Error: No internet connection");
+        	return;
+	    }
         touch($w->data() . "/update_library_in_progress");
         $w->write('InitPlaylistList⇾' . 0 . '⇾' . 0 . '⇾' . time(), 'update_library_in_progress');
 		
