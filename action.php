@@ -129,6 +129,10 @@ if ($playlist_uri != "") {
 	    exec("osascript -e 'tell application \"Spotify\" to open location \"$setting[1]\"'");
 	    displayNotification("Alfred Playlist $setting[2] was cleared");
     } else if ($setting[0] == "GET_LYRICS") {
+	    if(! $w->internet()) {
+        	displayNotification("Error: No internet connection");
+        	return;
+	    }
 		getLyrics($w,$setting[1],$setting[2]);
     }
 } else if ($original_query != "") {
