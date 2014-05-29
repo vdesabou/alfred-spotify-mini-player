@@ -21,7 +21,7 @@ $output = "DEBUG: ";
 // check for library update in progress
 if (file_exists($w->data() . "/update_library_in_progress"))
 {
-	$w->result( '', '', "Library update in progress", "", 'fileicon:'.$w->data() . '/update_library_in_progress', 'no', '' );
+	$w->result( '', '', "Library update in progress", "", 'fileicon:'.$w->data() . '/update_library_in_progress', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), '' );
 	$output = $output . "Library update in progress: " . "the file" . $w->data() . "/update_library_in_progress is present\n";
 }
 

@@ -36,16 +36,16 @@ if (file_exists($w->data() . '/update_library_in_progress')) {
 		if (startsWith($words[0],'Init'))
 		{
 			if($elapsed_time < 300) {			
-       	 		$w->result('', $w->data() . '/update_library_in_progress', 'Initialization phase since ' . beautifyTime($elapsed_time) . ' : ' . floatToSquares(0), 'waiting for Spotify Mini Player app to return required data', './images/update_in_progress.png', 'no', '');
+       	 		$w->result('', $w->data() . '/update_library_in_progress', 'Initialization phase since ' . beautifyTime($elapsed_time) . ' : ' . floatToSquares(0), 'waiting for Spotify Mini Player app to return required data', './images/update_in_progress.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), '');
        	 	}
        	 	else {
-       	 		$w->result('', '', 'There is a problem, the initialization phase last more than 5 minutes', 'Follow the steps below:', './images/warning.png', 'no', '');
+       	 		$w->result('', '', 'There is a problem, the initialization phase last more than 5 minutes', 'Follow the steps below:', './images/warning.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), '');
        	 		
-	   	 		$w->result('', '', "1/ Kill update library", "You can kill it by using spot_mini_kill_update command", '05F86AA1-D3EE-4409-9A58-898B36FFE503.png', 'no', '');
+	   	 		$w->result('', '', "1/ Kill update library", "You can kill it by using spot_mini_kill_update command", '05F86AA1-D3EE-4409-9A58-898B36FFE503.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), '');
 	   	 		
-	   	 		$w->result('', '', "2/ Open Spotify Mini Player App <spotify:app:miniplayer>", "Go to the Spotify Mini Player App in Spotify.", './images/' . 'green' . '/' . 'app_miniplayer.png', 'no', '');
+	   	 		$w->result('', '', "2/ Open Spotify Mini Player App <spotify:app:miniplayer>", "Go to the Spotify Mini Player App in Spotify.", './images/' . 'green' . '/' . 'app_miniplayer.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), '');
 
-       	 		$w->result('', '', '3/ Copy paste the Debug output and provide it to the author', 'Also provide a tgz file with spot_mini_debug command', 'CEF36AB9-7CC2-4765-BF84-751E88B69023.png', 'no', '');      	 	
+       	 		$w->result('', '', '3/ Copy paste the Debug output and provide it to the author', 'Also provide a tgz file with spot_mini_debug command', 'CEF36AB9-7CC2-4765-BF84-751E88B69023.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), '');      	 	
        	 	}			
 		}
         else {
@@ -58,12 +58,12 @@ if (file_exists($w->data() . '/update_library_in_progress')) {
 			    $type = 'tracks';
 			}	
 			
-			$w->result('', $w->data() . '/update_library_in_progress', $words[0] . ' update in progress since ' . beautifyTime($elapsed_time) . ' : '  . floatToSquares(intval($words[1]) / intval($words[2])), $words[1] . '/' . $words[2] . ' ' . $type . ' processed so far (if no progress, use spot_mini_kill_update command to stop it)', './images/update_in_progress.png', 'no', '');        
+			$w->result('', $w->data() . '/update_library_in_progress', $words[0] . ' update in progress since ' . beautifyTime($elapsed_time) . ' : '  . floatToSquares(intval($words[1]) / intval($words[2])), $words[1] . '/' . $words[2] . ' ' . $type . ' processed so far (if no progress, use spot_mini_kill_update command to stop it)', './images/update_in_progress.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), '');        
         } 
        
 
     } else {
-        $w->result('', '', 'Library update seems broken', 'You can kill it by using spot_mini_kill_update command', './images/warning.png', 'no', '');
+        $w->result('', '', 'Library update seems broken', 'You can kill it by using spot_mini_kill_update command', './images/warning.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), '');
     }
 
 
@@ -77,7 +77,7 @@ if (file_exists($w->data() . '/update_library_in_progress')) {
 //
 if(!installSpotifyAppIfNeeded($w))
 {
-	$w->result('', '', 'Unable to install properly Spotify Mini Player App in ~/Spotify/spotify-app-miniplayer', 'Report to the author (use spot_mini_debug command to generate a tgz file)', './images/warning.png', 'no', '');
+	$w->result('', '', 'Unable to install properly Spotify Mini Player App in ~/Spotify/spotify-app-miniplayer', 'Report to the author (use spot_mini_debug command to generate a tgz file)', './images/warning.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), '');
     echo $w->toxml();
     return;
 }
@@ -130,8 +130,8 @@ endforeach;
 $check_results = checkForUpdate($w,$last_check_update_time);
 if($check_results != null && is_array($check_results))
 {
-	$w->result('', '', 'New version ' . $check_results[0] . ' is available', $check_results[2], './images/' . $theme . '/' . 'info.png', 'no', '');
-	$w->result('', '', 'Please install the new version in Downloads directory', $check_results[1], 'fileicon:'.$check_results[1], 'no', '' );	
+	$w->result('', '', 'New version ' . $check_results[0] . ' is available', $check_results[2], './images/' . $theme . '/' . 'info.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), '');
+	$w->result('', '', 'Please install the new version in Downloads directory', $check_results[1], 'fileicon:'.$check_results[1], 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), '' );	
 	
 	echo $w->toxml();
 	return;
@@ -168,9 +168,9 @@ if (mb_strlen($query) < 3 ||
             endforeach;
 
             if ($all_playlists == true) {
-                $w->result('', '', 'Search for music in all your playlists', 'Begin typing at least 3 characters to start search' . ' (' . $all_tracks . ' tracks)', './images/' . $theme . '/' . 'allplaylists.png', 'no', '');
+                $w->result('', '', 'Search for music in all your playlists', 'Begin typing at least 3 characters to start search' . ' (' . $all_tracks . ' tracks)', './images/' . $theme . '/' . 'allplaylists.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), '');
             } else {
-                $w->result('', '', 'Search for music in your ★ playlist', 'Begin typing at least 3 characters to start search' . ' (' . $starred_tracks . ' tracks)', './images/' . $theme . '/' . 'star.png', 'no', '');
+                $w->result('', '', 'Search for music in your ★ playlist', 'Begin typing at least 3 characters to start search' . ' (' . $starred_tracks . ' tracks)', './images/' . $theme . '/' . 'star.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), '');
             }
 
             if ($is_displaymorefrom_active == true) {
@@ -182,7 +182,7 @@ if (mb_strlen($query) < 3 ||
                     $currentArtistArtwork = getArtistArtwork($w, $results[1], false);
                     $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'playpause' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "🔈 " . $results[0], $results[2] . ' by ' . $results[1], ($results[3] == "playing") ? './images/' . $theme . '/' . 'pause.png' : './images/' . $theme . '/' . 'play.png', 'yes', '');
                                         
-					$w->result('', '', "🔈👤 " . ucfirst($results[1]), "Browse this artist", $currentArtistArtwork, 'no', "Artist⇾" . $results[1] . "⇾");
+					$w->result('', '', "🔈👤 " . ucfirst($results[1]), "Browse this artist", $currentArtistArtwork, 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), "Artist⇾" . $results[1] . "⇾");
 
                     $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'GET_LYRICS⇾' . $results[1] . '⇾' . $results[0] /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,'' /* artist_name */)), "🔈🎤 Get Lyrics for track " . $results[0], 'This will fetch lyrics on lyrics.com', getTrackOrAlbumArtwork($w,$theme,$results[4],false), 'yes', '');
                                        
@@ -215,7 +215,7 @@ if (mb_strlen($query) < 3 ||
 				            $playlist = explode("	", $playlist);
 							
 							if (checkIfResultAlreadyThere($w->results(), "🔈🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)") == false) {
-				            	$w->result('', '', "🔈🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", $playlist[5], 'no', "Playlist⇾" . $playlist[0] . "⇾");
+				            	$w->result('', '', "🔈🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", $playlist[5], 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), "Playlist⇾" . $playlist[0] . "⇾");
 				            }
 				        endforeach;
 			        endforeach;
@@ -225,19 +225,19 @@ if (mb_strlen($query) < 3 ||
                 }
             }
             if ($is_alfred_playlist_active == true) {
-                $w->result('', '', 'Alfred Playlist (currently set to <' . $alfred_playlist_name . '>)' , 'Choose one of your playlists and add tracks, album, playlist to it directly from the workflow', './images/' . $theme . '/' . 'alfred_playlist.png', 'no', 'Alfred Playlist⇾');
+                $w->result('', '', 'Alfred Playlist (currently set to <' . $alfred_playlist_name . '>)' , 'Choose one of your playlists and add tracks, album, playlist to it directly from the workflow', './images/' . $theme . '/' . 'alfred_playlist.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), 'Alfred Playlist⇾');
             }
-            $w->result('', '', 'Playlists', 'Browse by playlist' . ' (' . $nb_playlists . ' playlists)', './images/' . $theme . '/' . 'playlists.png', 'no', 'Playlist⇾');
+            $w->result('', '', 'Playlists', 'Browse by playlist' . ' (' . $nb_playlists . ' playlists)', './images/' . $theme . '/' . 'playlists.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), 'Playlist⇾');
             if ($all_playlists == true) {
-                $w->result('', '', 'Artists', 'Browse by artist' . ' (' . $all_artists . ' artists)', './images/' . $theme . '/' . 'artists.png', 'no', 'Artist⇾');
-                $w->result('', '', 'Albums', 'Browse by album' . ' (' . $all_albums . ' albums)', './images/' . $theme . '/' . 'albums.png', 'no', 'Album⇾');
+                $w->result('', '', 'Artists', 'Browse by artist' . ' (' . $all_artists . ' artists)', './images/' . $theme . '/' . 'artists.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), 'Artist⇾');
+                $w->result('', '', 'Albums', 'Browse by album' . ' (' . $all_albums . ' albums)', './images/' . $theme . '/' . 'albums.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), 'Album⇾');
             } else {
-                $w->result('', '', 'Artists', 'Browse by artist' . ' (' . $starred_artists . ' artists)', './images/' . $theme . '/' . 'artists.png', 'no', 'Artist⇾');
-                $w->result('', '', 'Albums', 'Browse by album' . ' (' . $starred_albums . ' albums)', './images/' . $theme . '/' . 'albums.png', 'no', 'Album⇾');
+                $w->result('', '', 'Artists', 'Browse by artist' . ' (' . $starred_artists . ' artists)', './images/' . $theme . '/' . 'artists.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), 'Artist⇾');
+                $w->result('', '', 'Albums', 'Browse by album' . ' (' . $starred_albums . ' albums)', './images/' . $theme . '/' . 'albums.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), 'Album⇾');
             }
         } else {
 			if (!file_exists($w->data() . '/library.db')) {
-                $w->result('', '', 'Workflow is not configured', '1/ Select Open Spotify Mini Player App below and make sure it works 2/ Then select Install library below', './images/warning.png', 'no', '');
+                $w->result('', '', 'Workflow is not configured', '1/ Select Open Spotify Mini Player App below and make sure it works 2/ Then select Install library below', './images/warning.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), '');
 				
 				$w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'open_spotify_export_app' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "1/ Open Spotify Mini Player App <spotify:app:miniplayer>", "If it doesn't work, restart Spotify multiple times and make sure you have a developer account", './images/' . $theme . '/' . 'app_miniplayer.png', 'yes', '');
 				
@@ -260,9 +260,9 @@ if (mb_strlen($query) < 3 ||
             $alfred_playlist_state = 'disabled';
         }
         if ($all_playlists == true) {
-            $w->result('', '', 'Settings', 'Search scope=<all>, Max results=<' . $max_results . '>, Spotifious is <' . $spotifious_state . '>, Alfred Playlist is <' . $alfred_playlist_state . '>', './images/' . $theme . '/' . 'settings.png', 'no', 'Settings⇾');
+            $w->result('', '', 'Settings', 'Search scope=<all>, Max results=<' . $max_results . '>, Spotifious is <' . $spotifious_state . '>, Alfred Playlist is <' . $alfred_playlist_state . '>', './images/' . $theme . '/' . 'settings.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), 'Settings⇾');
         } else {
-            $w->result('', '', 'Settings', 'Search scope=<only ★>, Max results=<' . $max_results . '>, Spotifious is <' . $spotifious_state . '>, Alfred Playlist is <' . $alfred_playlist_state . '>', './images/' . $theme . '/' . 'settings.png', 'no', 'Settings⇾');
+            $w->result('', '', 'Settings', 'Search scope=<only ★>, Max results=<' . $max_results . '>, Spotifious is <' . $spotifious_state . '>, Alfred Playlist is <' . $alfred_playlist_state . '>', './images/' . $theme . '/' . 'settings.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), 'Settings⇾');
         }
 
     } //
@@ -278,8 +278,8 @@ if (mb_strlen($query) < 3 ||
         }
 
         $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), 'Update Library', "When done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
-        $w->result('', '', "Configure Max Number of Results", "Number of results displayed. (it doesn't apply to your playlist list)", './images/' . $theme . '/' . 'numbers.png', 'no', 'Settings⇾MaxResults⇾');
-        $w->result('', '', "Configure the Theme", "Current available colors for icons: green or black", './images/' . $theme . '/' . 'theme.png', 'no', 'Settings⇾Theme⇾');
+        $w->result('', '', "Configure Max Number of Results", "Number of results displayed. (it doesn't apply to your playlist list)", './images/' . $theme . '/' . 'numbers.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), 'Settings⇾MaxResults⇾');
+        $w->result('', '', "Configure the Theme", "Current available colors for icons: green or black", './images/' . $theme . '/' . 'theme.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), 'Settings⇾Theme⇾');
         
         if ($is_spotifious_active == true) {
             $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'disable_spotifiuous' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Disable Spotifious", "Do not display Spotifious in default results", './images/' . $theme . '/' . 'uncheck.png', 'yes', '');
@@ -312,15 +312,15 @@ if (mb_strlen($query) < 3 ||
         // Search categories for fast access
         //
         if (strpos(strtolower('playlist'), strtolower($query)) !== false) {
-            $w->result('', '', 'Playlists', 'Browse by playlist', './images/' . $theme . '/' . 'playlists.png', 'no', 'Playlist⇾');
+            $w->result('', '', 'Playlists', 'Browse by playlist', './images/' . $theme . '/' . 'playlists.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), 'Playlist⇾');
         } else if (strpos(strtolower('album'), strtolower($query)) !== false) {
-            $w->result('', '', 'Albums', 'Browse by album', './images/' . $theme . '/' . 'albums.png', 'no', 'Album⇾');
+            $w->result('', '', 'Albums', 'Browse by album', './images/' . $theme . '/' . 'albums.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), 'Album⇾');
         } else if (strpos(strtolower('artist'), strtolower($query)) !== false) {
-            $w->result('', '', 'Artists', 'Browse by artist', './images/' . $theme . '/' . 'artists.png', 'no', 'Artist⇾');
+            $w->result('', '', 'Artists', 'Browse by artist', './images/' . $theme . '/' . 'artists.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), 'Artist⇾');
         } else if (strpos(strtolower('alfred'), strtolower($query)) !== false) {
-            $w->result('', '', 'Alfred Playlist (currently set to <' . $alfred_playlist_name . '>)' , 'Choose one of your playlists and add tracks, album, playlist to it directly from the workflow', './images/' . $theme . '/' . 'alfred_playlist.png', 'no', 'Alfred Playlist⇾');
+            $w->result('', '', 'Alfred Playlist (currently set to <' . $alfred_playlist_name . '>)' , 'Choose one of your playlists and add tracks, album, playlist to it directly from the workflow', './images/' . $theme . '/' . 'alfred_playlist.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), 'Alfred Playlist⇾');
         } else if (strpos(strtolower('setting'), strtolower($query)) !== false) {
-            $w->result('', '', 'Settings', 'Go to settings', './images/' . $theme . '/' . 'settings.png', 'no', 'Settings⇾');
+            $w->result('', '', 'Settings', 'Go to settings', './images/' . $theme . '/' . 'settings.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), 'Settings⇾');
         }
 
         //
@@ -372,7 +372,7 @@ if (mb_strlen($query) < 3 ||
         foreach ($playlists as $playlist):
             $playlist = explode("	", $playlist);
 
-            $w->result('', '', "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", $playlist[5], 'no', "Playlist⇾" . $playlist[0] . "⇾");
+            $w->result('', '', "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", $playlist[5], 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), "Playlist⇾" . $playlist[0] . "⇾");
         endforeach;
 
 
@@ -398,7 +398,7 @@ if (mb_strlen($query) < 3 ||
             $track = explode("	", $track);
 
             if (checkIfResultAlreadyThere($w->results(), "👤 " . ucfirst($track[7])) == false) {
-                $w->result('', '', "👤 " . ucfirst($track[7]), "Browse this artist", $track[10], 'no', "Artist⇾" . $track[7] . "⇾");
+                $w->result('', '', "👤 " . ucfirst($track[7]), "Browse this artist", $track[10], 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), "Artist⇾" . $track[7] . "⇾");
             }
         endforeach;
 
@@ -426,7 +426,7 @@ if (mb_strlen($query) < 3 ||
             if ($is_alfred_playlist_active == true) {
                 $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
             }
-            $w->result('', 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', '');
+            $w->result('', 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), '');
         }
         foreach ($tracks as $track):
             $track = explode("	", $track);
@@ -483,7 +483,7 @@ if (mb_strlen($query) < 3 ||
             foreach ($playlists as $playlist):
                 $playlist = explode("	", $playlist);
 
-                $w->result('', '', "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", $playlist[5], 'no', "Playlist⇾" . $playlist[0] . "⇾");
+                $w->result('', '', "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", $playlist[5], 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), "Playlist⇾" . $playlist[0] . "⇾");
             endforeach;
         } // search by Playlist end
         elseif ($kind == "Alfred Playlist") {
@@ -493,17 +493,17 @@ if (mb_strlen($query) < 3 ||
             $playlist = $words[1];
 
             if ($alfred_playlist_uri == "") {
-                $w->result('', '', "Alfred playlist is not set", "Click to select one of your playlists below as your Alfred playlist", './images/' . $theme . '/' . 'settings.png', 'no', 'Alfred Playlist⇾Set Alfred Playlist⇾');
+                $w->result('', '', "Alfred playlist is not set", "Click to select one of your playlists below as your Alfred playlist", './images/' . $theme . '/' . 'settings.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), 'Alfred Playlist⇾Set Alfred Playlist⇾');
             } else {
                 $r = explode(':', $alfred_playlist_uri);
 
-                $w->result('', '', "Browse your Alfred playlist (" . $alfred_playlist_name . " by " . $r[2] . ")" , "You can change the playlist by selecting Change your Alfred playlist below", getPlaylistArtwork($w, $alfred_playlist_uri, $r[2], false), 'no', 'Playlist⇾' . $alfred_playlist_uri . '⇾');
+                $w->result('', '', "Browse your Alfred playlist (" . $alfred_playlist_name . " by " . $r[2] . ")" , "You can change the playlist by selecting Change your Alfred playlist below", getPlaylistArtwork($w, $alfred_playlist_uri, $r[2], false), 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), 'Playlist⇾' . $alfred_playlist_uri . '⇾');
                 
-                $w->result('', '', "Change your Alfred playlist", "Select one of your playlists below as your Alfred playlist", './images/' . $theme . '/' . 'settings.png', 'no', 'Alfred Playlist⇾Set Alfred Playlist⇾');
+                $w->result('', '', "Change your Alfred playlist", "Select one of your playlists below as your Alfred playlist", './images/' . $theme . '/' . 'settings.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), 'Alfred Playlist⇾Set Alfred Playlist⇾');
                 
                 if($r[3] != 'starred')
                 {
-                	$w->result('', '', "Clear your Alfred Playlist", "This will remove all the tracks in your current Alfred Playlist", './images/' . $theme . '/' . 'uncheck.png', 'no', 'Alfred Playlist⇾Confirm Clear Alfred Playlist⇾');	             
+                	$w->result('', '', "Clear your Alfred Playlist", "This will remove all the tracks in your current Alfred Playlist", './images/' . $theme . '/' . 'uncheck.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), 'Alfred Playlist⇾Confirm Clear Alfred Playlist⇾');	             
                 }
                 
                 $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,$alfred_playlist_uri /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_playlist' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update your Alfred Playlist", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
@@ -545,7 +545,7 @@ if (mb_strlen($query) < 3 ||
                 $track = explode("	", $track);
 
                 if (checkIfResultAlreadyThere($w->results(), "👤 " . ucfirst($track[7])) == false) {
-                    $w->result('', '', "👤 " . ucfirst($track[7]), "Browse this artist", $track[10], 'no', "Artist⇾" . $track[7] . "⇾");
+                    $w->result('', '', "👤 " . ucfirst($track[7]), "Browse this artist", $track[10], 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), "Artist⇾" . $track[7] . "⇾");
                 }
             endforeach;
         } // search by Artist end
@@ -584,7 +584,7 @@ if (mb_strlen($query) < 3 ||
                 $track = explode("	", $track);
 
                 if (checkIfResultAlreadyThere($w->results(), ucfirst($track[6])) == false) {
-                    $w->result('', '', ucfirst($track[6]), "by " . $track[7], $track[11], 'no', "Album⇾" . $track[6] . "⇾");
+                    $w->result('', '', ucfirst($track[6]), "by " . $track[7], $track[11], 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), "Album⇾" . $track[6] . "⇾");
                 }
             endforeach;
 
@@ -600,7 +600,7 @@ if (mb_strlen($query) < 3 ||
                 $artist_name = $words[1];
 
                 if ($country_code == "") {
-				    $w->result('', '', 'Country code is not set.', 'Select Update library below', './images/warning.png', 'no', '');
+				    $w->result('', '', 'Country code is not set.', 'Select Update library below', './images/warning.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), '');
 				
 				    $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
 
@@ -611,7 +611,7 @@ if (mb_strlen($query) < 3 ||
                 $json = $w->request("http://ws.spotify.com/lookup/1/.json?uri=" . trim($artist_uri) . "&extras=albumdetail");
 
                 if (empty($json)) {
-                    $w->result('', '', "Error: Spotify Metadata API returned empty result", "http://ws.spotify.com/lookup/1/.json?uri=" . $artist_uri . "&extras=albumdetail", './images/warning.png', 'no', '');
+                    $w->result('', '', "Error: Spotify Metadata API returned empty result", "http://ws.spotify.com/lookup/1/.json?uri=" . $artist_uri . "&extras=albumdetail", './images/warning.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), '');
                     echo $w->toxml();
                     return;
                 }
@@ -619,13 +619,13 @@ if (mb_strlen($query) < 3 ||
                 $json = json_decode($json);
                 switch (json_last_error()) {
                     case JSON_ERROR_DEPTH:
-                        $w->result('', '', "There was an error when retrieving online information", "Maximum stack depth exceeded", './images/warning.png', 'no', '');
+                        $w->result('', '', "There was an error when retrieving online information", "Maximum stack depth exceeded", './images/warning.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), '');
                         break;
                     case JSON_ERROR_CTRL_CHAR:
-                        $w->result('', '', "There was an error when retrieving online information", "Unexpected control character found", './images/warning.png', 'no', '');
+                        $w->result('', '', "There was an error when retrieving online information", "Unexpected control character found", './images/warning.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), '');
                         break;
                     case JSON_ERROR_SYNTAX:
-                        $w->result('', '', "There was an error when retrieving online information", "Syntax error, malformed JSON", './images/warning.png', 'no', '');
+                        $w->result('', '', "There was an error when retrieving online information", "Syntax error, malformed JSON", './images/warning.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), '');
                         break;
                     case JSON_ERROR_NONE:
                         foreach ($json->artist->albums as $key => $value) {
@@ -639,7 +639,7 @@ if (mb_strlen($query) < 3 ||
 
                                 if (strpos($availability->territories, $country_code) !== false) {
                                     if (checkIfResultAlreadyThere($w->results(), ucfirst($album->name)) == false) {
-                                        $w->result('', '', ucfirst($album->name), "by " . $album->artist . " (" . $album->released . ")", getTrackOrAlbumArtwork($w,$theme, $album->href, false), 'no', "Online⇾" . $artist_uri . "@" . $album->artist . "@" . $album->href . "@" . $album->name);
+                                        $w->result('', '', ucfirst($album->name), "by " . $album->artist . " (" . $album->released . ")", getTrackOrAlbumArtwork($w,$theme, $album->href, false), 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), "Online⇾" . $artist_uri . "@" . $album->artist . "@" . $album->href . "@" . $album->name);
                                     }
                                 }
                             }
@@ -660,7 +660,7 @@ if (mb_strlen($query) < 3 ||
                 $json = $w->request("http://ws.spotify.com/lookup/1/.json?uri=$album_uri&extras=trackdetail");
 
                 if (empty($json)) {
-                    $w->result('', '', "Error: Spotify Metadata API returned empty result", "http://ws.spotify.com/lookup/1/.json?uri=" . $album_uri . "&extras=trackdetail", './images/warning.png', 'no', '');
+                    $w->result('', '', "Error: Spotify Metadata API returned empty result", "http://ws.spotify.com/lookup/1/.json?uri=" . $album_uri . "&extras=trackdetail", './images/warning.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), '');
                     echo $w->toxml();
                     return;
                 }
@@ -668,20 +668,20 @@ if (mb_strlen($query) < 3 ||
                 $json = json_decode($json);
                 switch (json_last_error()) {
                     case JSON_ERROR_DEPTH:
-                        $w->result('', '', "There was an error when retrieving online information", "Maximum stack depth exceeded", './images/warning.png', 'no', '');
+                        $w->result('', '', "There was an error when retrieving online information", "Maximum stack depth exceeded", './images/warning.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), '');
                         break;
                     case JSON_ERROR_CTRL_CHAR:
-                        $w->result('', '', "There was an error when retrieving online information", "Unexpected control character found", './images/warning.png', 'no', '');
+                        $w->result('', '', "There was an error when retrieving online information", "Unexpected control character found", './images/warning.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), '');
                         break;
                     case JSON_ERROR_SYNTAX:
-                        $w->result('', '', "There was an error when retrieving online information", "Syntax error, malformed JSON", './images/warning.png', 'no', '');
+                        $w->result('', '', "There was an error when retrieving online information", "Syntax error, malformed JSON", './images/warning.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), '');
                         break;
                     case JSON_ERROR_NONE:
                         $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
                         if ($is_alfred_playlist_active == true) {
                             $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
                         }
-                        $w->result('', 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', '');
+                        $w->result('', 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), '');
                         foreach ($json->album->tracks as $key => $value) {
                             $w->result('', serialize(array($value->href /*track_uri*/ ,$album_uri /* album_uri */ ,$artist_uri /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,$artist_name  /* artist_name */)), ucfirst($artist_name) . " - " . $value->name, $album_name . " (" . $json->album->released . ")", getTrackOrAlbumArtwork($w,$theme, $value->href, false), 'yes', '');
 
@@ -732,7 +732,7 @@ if (mb_strlen($query) < 3 ||
 	            	$w->result('display-biography', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'display_biography' /* other_action */ ,'' /* alfred_playlist_uri */ ,$artist  /* artist_name */)), 'Display biography', 'This will display the artist biography', './images/' . $theme . '/' . 'biography.png', 'yes', ''); 
 	            }
 	            
-	            $w->result('', '', 'Related Artists', 'Browse related artists', './images/' . $theme . '/' . 'related.png', 'no', $query . 'Related⇾');         
+	            $w->result('', '', 'Related Artists', 'Browse related artists', './images/' . $theme . '/' . 'related.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), $query . 'Related⇾');         
 	        } 
                         
             if (mb_strlen($track) < 3) {
@@ -764,7 +764,7 @@ if (mb_strlen($query) < 3 ||
                 if ($is_alfred_playlist_active == true) {
                     $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
                 }
-                $w->result('', 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', '');
+                $w->result('', 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), '');
             }
 
             foreach ($tracks as $track):
@@ -824,7 +824,7 @@ if (mb_strlen($query) < 3 ||
                 if ($is_alfred_playlist_active == true) {
                     $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
                 }
-                $w->result('', 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', '');
+                $w->result('', 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), '');
             }
 
             foreach ($tracks as $track):
@@ -898,7 +898,7 @@ if (mb_strlen($query) < 3 ||
                     if ($is_alfred_playlist_active == true) {
                         $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
                     }
-                    $w->result('', 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', '');
+                    $w->result('', 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), '');
                 }
                                 
                 foreach ($tracks as $track):
@@ -917,13 +917,13 @@ if (mb_strlen($query) < 3 ||
 
             if ($setting_kind == "MaxResults") {
                 if (mb_strlen($the_query) == 0) {
-                    $w->result('', '', "Enter the Max Results number (must be greater than 0):", "Recommendation is between 50 to 100", './images/' . $theme . '/' . 'settings.png', 'no', '');
+                    $w->result('', '', "Enter the Max Results number (must be greater than 0):", "Recommendation is between 50 to 100", './images/' . $theme . '/' . 'settings.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), '');
                 } else {
                     // max results has been set
                     if (is_numeric($the_query) == true && $the_query > 0) {
                         $w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'MAX_RESULTS⇾' . $the_query /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Max Results will be set to <" . $the_query . ">", "Type enter to validate the Max Results", './images/' . $theme . '/' . 'settings.png', 'yes', '');
                     } else {
-                        $w->result('', '', "The Max Results value entered is not valid", "Please fix it", './images/warning.png', 'no', '');
+                        $w->result('', '', "The Max Results value entered is not valid", "Please fix it", './images/warning.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), '');
 
                     }
                 }
@@ -941,7 +941,7 @@ if (mb_strlen($query) < 3 ||
 	            $theplaylist = $words[2];
 				
 				if ($setting_kind == "Set Alfred Playlist") {        
-	            $w->result('', '', "Set your Alfred playlist", "Select one of your playlists below as your Alfred playlist", './images/' . $theme . '/' . 'settings.png', 'no', '');
+	            $w->result('', '', "Set your Alfred playlist", "Select one of your playlists below as your Alfred playlist", './images/' . $theme . '/' . 'settings.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), '');
 	            
 	
 	            if (mb_strlen($theplaylist) < 3) {
@@ -971,9 +971,9 @@ if (mb_strlen($query) < 3 ||
 	            endforeach; 
             } elseif ($setting_kind == "Confirm Clear Alfred Playlist") {
             
-            	$w->result('', '', "Are you sure?", "This will remove all the tracks in your current Alfred Playlist.", './images/warning.png', 'no', '');
+            	$w->result('', '', "Are you sure?", "This will remove all the tracks in your current Alfred Playlist.", './images/warning.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), '');
             	
-            	$w->result('', '', "No, cancel", "Return to Alfred Playlist", './images/' . $theme . '/' . 'uncheck.png', 'no', 'Alfred Playlist⇾');
+            	$w->result('', '', "No, cancel", "Return to Alfred Playlist", './images/' . $theme . '/' . 'uncheck.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), 'Alfred Playlist⇾');
             	
             	$w->result('', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'CLEAR_ALFRED_PLAYLIST⇾' .  $alfred_playlist_uri . '⇾' . $alfred_playlist_name /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Yes, go ahead", "This is not undoable", './images/' . $theme . '/' . 'check.png', 'yes', '');
             
@@ -1014,7 +1014,7 @@ if (mb_strlen($query) < 3 ||
 	        }
 
 	        if (count($relateds) == 0) {
-	            $w->result('', 'help', "There is no related artist for this artist", $subtitle, './images/warning.png', 'no', '');
+	            $w->result('', 'help', "There is no related artist for this artist", $subtitle, './images/warning.png', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), '');
 	        }
         	
 	        foreach ($relateds as $related):
