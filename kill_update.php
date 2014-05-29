@@ -8,8 +8,7 @@ require_once('alfred.bundler.php');
 
 
 // Load and use David Ferguson's Workflows.php class
-//$files = __load( "Workflows" );
-require_once('workflows.php');
+$files = __load( "Workflows" );
 $w = new Workflows;
 
 unlink($w->data() . "/update_library_in_progress");

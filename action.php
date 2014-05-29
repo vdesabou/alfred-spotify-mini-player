@@ -14,8 +14,7 @@ require_once('./vendor/autoload.php');
 
 
 // Load and use David Ferguson's Workflows.php class
-//$files = __load( "Workflows" );
-require_once('workflows.php');
+$files = __load( "Workflows" );
 $w = new Workflows;
 
 $query = $argv[1];
@@ -38,7 +37,7 @@ $alfred_playlist_uri = $arg[8];
 $artist_name = $arg[9];
 
 if ($other_action == "update_playlist" && $playlist_uri != "") {
-	  if(! $w->internet()) {
+	  if(! internet()) {
         displayNotification("Error: No internet connection");
         return;
 	  }
@@ -129,7 +128,7 @@ if ($playlist_uri != "") {
 	    exec("osascript -e 'tell application \"Spotify\" to open location \"$setting[1]\"'");
 	    displayNotification("Alfred Playlist $setting[2] was cleared");
     } else if ($setting[0] == "GET_LYRICS") {
-	    if(! $w->internet()) {
+	    if(! internet()) {
         	displayNotification("Error: No internet connection");
         	return;
 	    }
@@ -202,7 +201,7 @@ if ($playlist_uri != "") {
         exec("osascript -e 'tell application \"Spotify\" to activate'");
         exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer\"'");
     } else if ($other_action == "check_for_update") {
-	    if(! $w->internet()) {
+	    if(! internet()) {
         	displayNotification("Error: No internet connection");
         	return;
 	    }
@@ -272,7 +271,7 @@ if ($playlist_uri != "") {
         exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online⇾" . $artist_uri . "@" . escapeQuery($artist_name) . "\"'");
     }
      else if ($other_action == "update_library") {
-	    if(! $w->internet()) {
+	    if(! internet()) {
         	displayNotification("Error: No internet connection");
         	return;
 	    }
@@ -294,7 +293,7 @@ if ($playlist_uri != "") {
         // Did not find a way to set a timeout
         $server->run();
     } else if ($other_action == "update_playlist_list") {
-	    if(! $w->internet()) {
+	    if(! internet()) {
         	displayNotification("Error: No internet connection");
         	return;
 	    }
