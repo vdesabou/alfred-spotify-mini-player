@@ -14,7 +14,8 @@ require_once('./vendor/autoload.php');
 
 
 // Load and use David Ferguson's Workflows.php class
-$files = __load( "Workflows" );
+//$files = __load( "Workflows" );
+require_once('workflows.php');
 $w = new Workflows;
 
 $query = $argv[1];
