@@ -168,8 +168,7 @@ if ($playlist_uri != "") {
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 	    displayNotification("Theme set to green");
-    }
-    else if ($other_action == "enable_displaymorefrom") {
+    } else if ($other_action == "enable_displaymorefrom") {
         $setSettings = "update settings set is_displaymorefrom_active=1";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
@@ -179,6 +178,16 @@ if ($playlist_uri != "") {
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 	    displayNotification("Now Playing is now disabled");
+    } else if ($other_action == "enable_lyrics") {
+        $setSettings = "update settings set is_lyrics_active=1";
+        $dbfile = $w->data() . "/settings.db";
+        exec("sqlite3 \"$dbfile\" \"$setSettings\"");
+	    displayNotification("Get Lyrics is now enabled");
+    } else if ($other_action == "disable_lyrics") {
+        $setSettings = "update settings set is_lyrics_active=0";
+        $dbfile = $w->data() . "/settings.db";
+        exec("sqlite3 \"$dbfile\" \"$setSettings\"");
+	    displayNotification("Get Lyrics is now disabled");
     } else if ($other_action == "enable_alfred_playlist") {
         $setSettings = "update settings set is_alfred_playlist_active=1";
         $dbfile = $w->data() . "/settings.db";

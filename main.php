@@ -86,7 +86,7 @@ if(!installSpotifyAppIfNeeded($w))
 //
 // Read settings from DB
 //
-$getSettings = 'select all_playlists,is_spotifious_active,is_alfred_playlist_active,is_displaymorefrom_active,max_results, alfred_playlist_uri,alfred_playlist_name,country_code,theme,last_check_update_time from settings';
+$getSettings = 'select all_playlists,is_spotifious_active,is_alfred_playlist_active,is_displaymorefrom_active,is_lyrics_active,max_results, alfred_playlist_uri,alfred_playlist_name,country_code,theme,last_check_update_time from settings';
 $dbfile = $w->data() . '/settings.db';
 exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
 
@@ -103,10 +103,10 @@ if ($returnValue != 0) {
 if (!file_exists($w->data() . '/settings.db')) {
     touch($w->data() . '/settings.db');
 
-    $sql = 'sqlite3 "' . $w->data() . '/settings.db" ' . ' "create table settings (all_playlists boolean, is_spotifious_active boolean, is_alfred_playlist_active boolean, is_displaymorefrom_active boolean, max_results int, alfred_playlist_uri text, alfred_playlist_name text, country_code text, theme text, last_check_update_time int)"';
+    $sql = 'sqlite3 "' . $w->data() . '/settings.db" ' . ' "create table settings (all_playlists boolean, is_spotifious_active boolean, is_alfred_playlist_active boolean, is_displaymorefrom_active boolean, is_lyrics_active boolean, max_results int, alfred_playlist_uri text, alfred_playlist_name text, country_code text, theme text, last_check_update_time int)"';
     exec($sql);
 
-    $sql = 'sqlite3 "' . $w->data() . '/settings.db" ' . '"insert into settings values (1,1,1,1,50,\"\",\"\",\"\",\"green\",0)"';
+    $sql = 'sqlite3 "' . $w->data() . '/settings.db" ' . '"insert into settings values (1,1,1,1,1,50,\"\",\"\",\"\",\"green\",0)"';
     exec($sql);
 }
 
@@ -119,12 +119,13 @@ foreach ($settings as $setting):
     $is_spotifious_active = $setting[1];
     $is_alfred_playlist_active = $setting[2];
     $is_displaymorefrom_active = $setting[3];
-    $max_results = $setting[4];
-    $alfred_playlist_uri = $setting[5];
-    $alfred_playlist_name = $setting[6];
-    $country_code = $setting[7];
-    $theme = $setting[8];
-    $last_check_update_time = $setting[9];
+    $is_lyrics_active = $setting[4];
+    $max_results = $setting[5];
+    $alfred_playlist_uri = $setting[6];
+    $alfred_playlist_name = $setting[7];
+    $country_code = $setting[8];
+    $theme = $setting[9];
+    $last_check_update_time = $setting[10];
 endforeach;
 
 $check_results = checkForUpdate($w,$last_check_update_time);
@@ -184,7 +185,9 @@ if (mb_strlen($query) < 3 ||
                                         
 					$w->result(uniqid(), '', "🔈👤 " . ucfirst($results[1]), "Browse this artist", $currentArtistArtwork, 'no', null, "Artist⇾" . $results[1] . "⇾");
 
-                    $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'GET_LYRICS⇾' . $results[1] . '⇾' . $results[0] /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,'' /* artist_name */)), "🔈🎤 Get Lyrics for track " . $results[0], 'This will fetch lyrics on lyrics.com', getTrackOrAlbumArtwork($w,$theme,$results[4],false), 'yes', null, '');
+					if($is_lyrics_active == true) {
+                    	$w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'GET_LYRICS⇾' . $results[1] . '⇾' . $results[0] /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,'' /* artist_name */)), "🔈🎤 Get Lyrics for track " . $results[0], 'This will fetch lyrics on lyrics.com', getTrackOrAlbumArtwork($w,$theme,$results[4],false), 'yes', null, '');
+                    }
                                        
                     
                     
@@ -290,6 +293,11 @@ if (mb_strlen($query) < 3 ||
             $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'disable_alfred_playlist' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Disable Alfred Playlist", "Do not display Alfred Playlist", './images/' . $theme . '/' . 'uncheck.png', 'yes', null, '');
         } else {
             $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'enable_alfred_playlist' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Enable Alfred Playlist", "Display Alfred Playlist", './images/' . $theme . '/' . 'check.png', 'yes', null, '');
+        }
+        if ($is_lyrics_active == true) {
+            $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'disable_lyrics' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Disable Get Lyrics", "Do not display Get Lyrics", './images/' . $theme . '/' . 'uncheck.png', 'yes', null, '');
+        } else {
+            $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'enable_lyrics' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Enable Get Lyrics", "Display Get Lyrics", './images/' . $theme . '/' . 'check.png', 'yes', null, '');
         }
         if ($is_displaymorefrom_active == true) {
             $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'disable_displaymorefrom' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Disable \"Now Playing\"", "Disable display of various options based on current track", './images/' . $theme . '/' . 'uncheck.png', 'yes', null, '');
