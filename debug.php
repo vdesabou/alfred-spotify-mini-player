@@ -21,7 +21,7 @@ $output = "DEBUG: ";
 // check for library update in progress
 if (file_exists($w->data() . "/update_library_in_progress"))
 {
-	$w->result( '', '', "Library update in progress", "", 'fileicon:'.$w->data() . '/update_library_in_progress', 'no', array('copy' => 'Copy value','largetype' => 'Largetype value'), '' );
+	$w->result( '', '', "Library update in progress", "", 'fileicon:'.$w->data() . '/update_library_in_progress', 'no', null, '' );
 	$output = $output . "Library update in progress: " . "the file" . $w->data() . "/update_library_in_progress is present\n";
 }
 
@@ -87,15 +87,15 @@ exec("cd ~/Downloads;tar cfz spot_mini_debug.tgz spot_mini_debug");
 
 $val=$w->home() . '/Downloads/spot_mini_debug.tgz';
 
-$w->result( uniqid(), $val, 'Browse to generated tgz file', $val, 'fileicon:'.$val, 'yes', 'file' );
+$w->result( uniqid(), $val, 'Browse to generated tgz file', $val, 'fileicon:'.$val, 'yes', null, 'file' );
 
 $val=$w->data();
 
-$w->result( uniqid(), $val, 'Browse to App Support Folder', $val, 'fileicon:'.$val, 'yes', 'file' );
+$w->result( uniqid(), $val, 'Browse to App Support Folder', $val, 'fileicon:'.$val, 'yes', null, 'file' );
 
 $val=$w->path();
 
-$w->result( uniqid(), $val, 'Browse to Alfred workflow folder', $val, 'fileicon:'.$val, 'yes', 'file' );
+$w->result( uniqid(), $val, 'Browse to Alfred workflow folder', $val, 'fileicon:'.$val, 'yes', null, 'file' );
 
 echo $w->toxml();
 function copy_directory( $source, $destination ) {
