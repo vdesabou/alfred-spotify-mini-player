@@ -2,6 +2,11 @@
 
 [![Download Workflow](https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/images/alfred-workflow-icon.png)](https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/SpotifyMiniPlayer.alfredworkflow)
 
+4.2.3:
+
+* Option to disable Get Lyrics
+
+
 4.2.1:
 
 * Fix a problem with local files in playlist
