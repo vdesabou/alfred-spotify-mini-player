@@ -63,7 +63,7 @@ You can also control Spotify using keywords such as play/next/volmax/random/shuf
 
 You'll need to do the following steps:
 
-* Sign up for a [developer account on Spotify](https://developer.spotify.com/technologies/apps/#developer-account) (you must allow app API).
+* Sign up for a [developer account on Spotify](https://devaccount.spotify.com/my-account/) (this is for both free and premium users).
 
 * Download the [latest version](https://www.spotify.com/fr/download/mac/) of Spotify and ***install*** it (I had to do it, even though I was pretty sure to already have the latest version, so please do it!)
 
