@@ -133,6 +133,10 @@ function handleArgs() {
 				{
 					addToAlfredPlaylist(args);
 				}
+				else if(args[11])
+				{
+					addToAlfredPlaylist(args);
+				}
 				break;
 			case "playtrackwithplaylistcontext":
 					playTrackWithPlaylistContext(args);
@@ -222,13 +226,25 @@ function clearPlaylist(args) {
 }
 
 function addToAlfredPlaylist(args) {
+
+	if(args[2] == 'track')
+	{
+        var orginalplaylistUri = args[4]+':'+args[5]+':'+args[6]+':'+args[7]+':'+args[8];
+        var trackUri = args[1]+':'+args[2]+':'+args[3];
+	}
+	else if(args[2] == 'local')
+	{
+		var orginalplaylistUri = args[7]+':'+args[8]+':'+args[9]+':'+args[10]+':'+args[11];
+		var trackUri = args[1]+':'+args[2]+':'+args[3]+':'+args[4]+':'+args[5]+':'+args[6];
+	}
+		
 	// Get the playlist object from a URI
-	models.Playlist.fromURI(args[4]+':'+args[5]+':'+args[6]+':'+args[7]+':'+args[8]).load('tracks').done(function(playlist) {
+	models.Playlist.fromURI(orginalplaylistUri).load('tracks').done(function(playlist) {
 
 			
-		if(args[2] == 'track')
+		if(args[2] == 'track' || args[2] == 'local')
 		{
-	        track = models.Track.fromURI(args[1]+':'+args[2]+':'+args[3]);
+	        track = models.Track.fromURI(trackUri);
 	        playlist.tracks.add(track);
 		}
 		else if(args[2] == 'album')
