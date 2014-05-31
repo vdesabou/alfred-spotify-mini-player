@@ -77,11 +77,10 @@ You'll need to do the following steps:
   
   * try to logout from Spotify and login again
   
-  * make sure you see in [Developer Account](https://developer.spotify.com/technologies/apps/):
+  * make sure you see in [Developer Account](https://devaccount.spotify.com/my-account/):
 
 ```  
-Developer Account
-Your account has already been enabled to use the Spotify Apps API. Happy hacking!
+You are successfully registered with us as a Spotify apps developer.
 ```
 
 * If it works, invoke the Spotify Mini Player workflow again and select "2/ Install library"
