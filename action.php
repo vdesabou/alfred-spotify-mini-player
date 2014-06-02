@@ -268,6 +268,10 @@ if ($playlist_uri != "") {
 	    
     } 
 	else if ($other_action == "morefromthisartist") {
+	    if(! internet()) {
+        	displayNotification("Error: No internet connection");
+        	return;
+	    }	
         exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online⇾" . $artist_uri . "@" . escapeQuery($artist_name) . "\"'");
     }
      else if ($other_action == "update_library") {
