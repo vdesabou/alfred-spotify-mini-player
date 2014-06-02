@@ -116,6 +116,17 @@
 		</array>
 		<key>2D26D8E2-52A2-4BF9-B693-0D5190C6CC23</key>
 		<array/>
+		<key>3F85747B-FC44-4B07-AA6E-3645F0CC0DF7</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>ECC53637-75AD-4FD2-9605-8E038D04C4BF</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 		<key>4367DDDE-C360-4642-908E-EB1F916727CC</key>
 		<array/>
 		<key>44AF5C5A-254F-4206-BBD7-BE9BA7831628</key>
@@ -284,6 +295,8 @@
 		<array/>
 		<key>E3215F64-F5B9-4639-93D1-1D643339E2E7</key>
 		<array/>
+		<key>ECC53637-75AD-4FD2-9605-8E038D04C4BF</key>
+		<array/>
 		<key>F250A59C-0B2D-4A08-9085-9CA0A2FB2DCC</key>
 		<array>
 			<dict>
@@ -316,7 +329,7 @@
 	<key>disabled</key>
 	<false/>
 	<key>name</key>
-	<string>Spotify Mini Player 4.2.3</string>
+	<string>Spotify Mini Player 4.2.4</string>
 	<key>objects</key>
 	<array>
 		<dict>
@@ -1183,6 +1196,44 @@ end alfred_script</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>spot_mini_add_to_alfred_playlist</string>
+				<key>subtext</key>
+				<string>Current track will be added to Alfred Playlist</string>
+				<key>text</key>
+				<string>Add track to Alfred Playlist</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>3F85747B-FC44-4B07-AA6E-3645F0CC0DF7</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>php -n -f add_to_alfred_playlist.php</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>ECC53637-75AD-4FD2-9605-8E038D04C4BF</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string></string>
@@ -1232,6 +1283,11 @@ end alfred_script</string>
 		<dict>
 			<key>ypos</key>
 			<real>1230</real>
+		</dict>
+		<key>3F85747B-FC44-4B07-AA6E-3645F0CC0DF7</key>
+		<dict>
+			<key>ypos</key>
+			<real>2530</real>
 		</dict>
 		<key>4367DDDE-C360-4642-908E-EB1F916727CC</key>
 		<dict>
@@ -1286,7 +1342,7 @@ end alfred_script</string>
 		<key>794A76A7-BB98-4A83-92BE-386A56875120</key>
 		<dict>
 			<key>ypos</key>
-			<real>2490</real>
+			<real>2410</real>
 		</dict>
 		<key>81BA0BC2-F1CB-46DC-A715-C38A1A0E055E</key>
 		<dict>
@@ -1301,7 +1357,7 @@ end alfred_script</string>
 		<key>899AC4D2-88FA-474F-A075-AFA12F361E2B</key>
 		<dict>
 			<key>ypos</key>
-			<real>2490</real>
+			<real>2410</real>
 		</dict>
 		<key>8C78472B-13EB-4512-B94D-4BF92867CD92</key>
 		<dict>
@@ -1372,6 +1428,11 @@ end alfred_script</string>
 		<dict>
 			<key>ypos</key>
 			<real>1110</real>
+		</dict>
+		<key>ECC53637-75AD-4FD2-9605-8E038D04C4BF</key>
+		<dict>
+			<key>ypos</key>
+			<real>2530</real>
 		</dict>
 		<key>F005BD44-180A-4A9A-9339-BE457D1E207F</key>
 		<dict>
