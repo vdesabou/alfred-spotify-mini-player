@@ -769,9 +769,9 @@ function updatePlaylistList($jsonData)
 
 function handleDbIssue($theme) {
 	$w = new Workflows();
-    $w->result(uniqid(), '', 'There is a problem with the library, try to update it.', 'Select Update library below', './images/warning.png', 'no', '');
+    $w->result(uniqid(), '', 'There is a problem with the library, try to update it.', 'Select Update library below', './images/warning.png', 'no', null, '');
 
-    $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', '');
+    $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', null, '');
 
     echo $w->toxml();
 }
@@ -1007,20 +1007,6 @@ function checkForUpdate($w,$last_check_update_time) {
 	}
 }
 
-/*
-	Thanks to TylerEich https://github.com/jdfwarrior/Workflows/pull/6
-*/
-function internet()
-{
-	$internet = @fsockopen("www.google.com",80);
-	if($internet):
-		fclose($internet);
-		return true;
-	else:
-		return false;
-	endif;
-}
-	
 /* 
 	Thanks to Spotifious code 
 	
