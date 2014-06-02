@@ -43,7 +43,13 @@ if (file_exists($w->data() . '/update_library_in_progress')) {
        	 		
 	   	 		$w->result(uniqid(), '', "1/ Kill update library", "You can kill it by using spot_mini_kill_update command", '05F86AA1-D3EE-4409-9A58-898B36FFE503.png', 'no', null, '');
 	   	 		
-	   	 		$w->result(uniqid(), '', "2/ Open Spotify Mini Player App <spotify:app:miniplayer>", "Go to the Spotify Mini Player App in Spotify.", './images/' . 'green' . '/' . 'app_miniplayer.png', 'no', null, '');
+	   	 		$w->result(uniqid(), '', "2/ Open Spotify Mini Player App <spotify:app:miniplayer>", array(
+  "Go to the Spotify Mini Player App in Spotify.",
+  'alt' => 'Not Available',
+  'cmd' => 'Not Available',
+  'shift' => 'Not Available',
+  'fn' => 'Not Available',
+  'ctrl' => 'Not Available'), './images/' . 'green' . '/' . 'app_miniplayer.png', 'no', null, '');
 
        	 		$w->result(uniqid(), '', '3/ Copy paste the Debug output and provide it to the author', 'Also provide a tgz file with spot_mini_debug command', 'CEF36AB9-7CC2-4765-BF84-751E88B69023.png', 'no', null, '');      	 	
        	 	}			
@@ -181,12 +187,29 @@ if (mb_strlen($query) < 3 ||
                 if (substr_count($command_output, '⇾') > 0) {
                     $results = explode('⇾', $command_output);
                     $currentArtistArtwork = getArtistArtwork($w, $results[1], false);
-                    $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'playpause' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "🔈 " . $results[0], $results[2] . ' by ' . $results[1], ($results[3] == "playing") ? './images/' . $theme . '/' . 'pause.png' : './images/' . $theme . '/' . 'play.png', 'yes', null, '');
+                    
+                    $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'playpause' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "🔈 " . $results[0], 
+array(
+  $results[2] . ' by ' . $results[1],
+  'alt' => 'Not Available',
+  'cmd' => 'Not Available',
+  'shift' => 'Not Available',
+  'fn' => 'Not Available',
+  'ctrl' => 'Not Available') 
+, ($results[3] == "playing") ? './images/' . $theme . '/' . 'pause.png' : './images/' . $theme . '/' . 'play.png', 'yes', null, '');
                                         
 					$w->result(uniqid(), '', "🔈👤 " . ucfirst($results[1]), "Browse this artist", $currentArtistArtwork, 'no', null, "Artist⇾" . $results[1] . "⇾");
 
 					if($is_lyrics_active == true) {
-                    	$w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'GET_LYRICS⇾' . $results[1] . '⇾' . $results[0] /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,'' /* artist_name */)), "🔈🎤 Get Lyrics for track " . $results[0], 'This will fetch lyrics on lyrics.com', getTrackOrAlbumArtwork($w,$theme,$results[4],false), 'yes', null, '');
+                    	$w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'GET_LYRICS⇾' . $results[1] . '⇾' . $results[0] /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,'' /* artist_name */)), "🔈🎤 Get Lyrics for track " . $results[0], 
+array(
+  'This will fetch lyrics on lyrics.com',
+  'alt' => 'Not Available',
+  'cmd' => 'Not Available',
+  'shift' => 'Not Available',
+  'fn' => 'Not Available',
+  'ctrl' => 'Not Available')
+, getTrackOrAlbumArtwork($w,$theme,$results[4],false), 'yes', null, '');
                     }
                                        
                     
@@ -274,10 +297,22 @@ if (mb_strlen($query) < 3 ||
     elseif (substr_count($query, '⇾') == 1) {
         if ($all_playlists == true) {
             // argument is csv form: track_uri|album_uri|artist_uri|playlist_uri|spotify_command|query|other_settings|other_action|alfred_playlist_uri|artist_name
-            $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'disable_all_playlist' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), 'Change Search Scope', 'Select to change to ★ playlist only', './images/' . $theme . '/' . 'search.png', 'yes', null, '');
+            $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'disable_all_playlist' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), 'Change Search Scope', array(
+  'Select to change to ★ playlist only',
+  'alt' => 'Not Available',
+  'cmd' => 'Not Available',
+  'shift' => 'Not Available',
+  'fn' => 'Not Available',
+  'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'search.png', 'yes', null, '');
             
         } else {
-            $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'enable_all_playlist' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), 'Change Search Scope', 'Select to change to ALL playlists', './images/' . $theme . '/' . 'search.png', 'yes', null, '');
+            $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'enable_all_playlist' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), 'Change Search Scope', array(
+  'Select to change to ALL playlists',
+  'alt' => 'Not Available',
+  'cmd' => 'Not Available',
+  'shift' => 'Not Available',
+  'fn' => 'Not Available',
+  'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'search.png', 'yes', null, '');
         }
 
         $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), 'Update Library', "When done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', null, '');
@@ -285,29 +320,89 @@ if (mb_strlen($query) < 3 ||
         $w->result(uniqid(), '', "Configure the Theme", "Current available colors for icons: green or black", './images/' . $theme . '/' . 'theme.png', 'no', null, 'Settings⇾Theme⇾');
         
         if ($is_spotifious_active == true) {
-            $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'disable_spotifiuous' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Disable Spotifious", "Do not display Spotifious in default results", './images/' . $theme . '/' . 'uncheck.png', 'yes', null, '');
+            $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'disable_spotifiuous' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Disable Spotifious", array(
+  "Do not display Spotifious in default results",
+  'alt' => 'Not Available',
+  'cmd' => 'Not Available',
+  'shift' => 'Not Available',
+  'fn' => 'Not Available',
+  'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'uncheck.png', 'yes', null, '');
         } else {
-            $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'enable_spotifiuous' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Enable Spotifious", "Display Spotifious in default results", './images/' . $theme . '/' . 'check.png', 'yes', null, '');
+            $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'enable_spotifiuous' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Enable Spotifious", array(
+  "Display Spotifious in default results",
+  'alt' => 'Not Available',
+  'cmd' => 'Not Available',
+  'shift' => 'Not Available',
+  'fn' => 'Not Available',
+  'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'check.png', 'yes', null, '');
         }
         if ($is_alfred_playlist_active == true) {
-            $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'disable_alfred_playlist' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Disable Alfred Playlist", "Do not display Alfred Playlist", './images/' . $theme . '/' . 'uncheck.png', 'yes', null, '');
+            $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'disable_alfred_playlist' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Disable Alfred Playlist", array(
+  "Do not display Alfred Playlist",
+  'alt' => 'Not Available',
+  'cmd' => 'Not Available',
+  'shift' => 'Not Available',
+  'fn' => 'Not Available',
+  'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'uncheck.png', 'yes', null, '');
         } else {
-            $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'enable_alfred_playlist' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Enable Alfred Playlist", "Display Alfred Playlist", './images/' . $theme . '/' . 'check.png', 'yes', null, '');
+            $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'enable_alfred_playlist' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Enable Alfred Playlist", array(
+  "Display Alfred Playlist",
+  'alt' => 'Not Available',
+  'cmd' => 'Not Available',
+  'shift' => 'Not Available',
+  'fn' => 'Not Available',
+  'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'check.png', 'yes', null, '');
         }
         if ($is_lyrics_active == true) {
-            $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'disable_lyrics' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Disable Get Lyrics", "Do not display Get Lyrics", './images/' . $theme . '/' . 'uncheck.png', 'yes', null, '');
+            $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'disable_lyrics' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Disable Get Lyrics", array(
+  "Do not display Get Lyrics",
+  'alt' => 'Not Available',
+  'cmd' => 'Not Available',
+  'shift' => 'Not Available',
+  'fn' => 'Not Available',
+  'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'uncheck.png', 'yes', null, '');
         } else {
-            $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'enable_lyrics' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Enable Get Lyrics", "Display Get Lyrics", './images/' . $theme . '/' . 'check.png', 'yes', null, '');
+            $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'enable_lyrics' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Enable Get Lyrics", array(
+  "Display Get Lyrics",
+  'alt' => 'Not Available',
+  'cmd' => 'Not Available',
+  'shift' => 'Not Available',
+  'fn' => 'Not Available',
+  'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'check.png', 'yes', null, '');
         }
         if ($is_displaymorefrom_active == true) {
-            $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'disable_displaymorefrom' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Disable \"Now Playing\"", "Disable display of various options based on current track", './images/' . $theme . '/' . 'uncheck.png', 'yes', null, '');
+            $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'disable_displaymorefrom' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Disable \"Now Playing\"", array(
+  "Disable display of various options based on current track",
+  'alt' => 'Not Available',
+  'cmd' => 'Not Available',
+  'shift' => 'Not Available',
+  'fn' => 'Not Available',
+  'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'uncheck.png', 'yes', null, '');
         } else {
-            $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'enable_displaymorefrom' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Enable \"Now Playing\"", "Enable display of various options based on current track", './images/' . $theme . '/' . 'check.png', 'yes', null, '');
+            $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'enable_displaymorefrom' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Enable \"Now Playing\"", array(
+  "Enable display of various options based on current track",
+  'alt' => 'Not Available',
+  'cmd' => 'Not Available',
+  'shift' => 'Not Available',
+  'fn' => 'Not Available',
+  'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'check.png', 'yes', null, '');
         }
 
-        $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'check_for_update' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), 'Check for workflow update', "Note this is automatically done otherwise once per day", './images/' . $theme . '/' . 'check_update.png', 'yes', null, '');
+        $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'check_for_update' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), 'Check for workflow update', array(
+  "Note this is automatically done otherwise once per day",
+  'alt' => 'Not Available',
+  'cmd' => 'Not Available',
+  'shift' => 'Not Available',
+  'fn' => 'Not Available',
+  'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'check_update.png', 'yes', null, '');
         
-        $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'open_spotify_export_app' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Open Spotify Mini Player App <spotify:app:miniplayer>", "Go to the Spotify Mini Player App in Spotify.", './images/' . $theme . '/' . 'app_miniplayer.png', 'yes', null, '');
+        $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'open_spotify_export_app' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Open Spotify Mini Player App <spotify:app:miniplayer>", array(
+  "Go to the Spotify Mini Player App in Spotify.",
+  'alt' => 'Not Available',
+  'cmd' => 'Not Available',
+  'shift' => 'Not Available',
+  'fn' => 'Not Available',
+  'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'app_miniplayer.png', 'yes', null, '');
     }
 } else {
     ////////////
@@ -448,10 +543,22 @@ if (mb_strlen($query) < 3 ||
             }
         endforeach;
 
-        $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'activate (open location "spotify:search:' . $query . '")' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Search for " . $query . " with Spotify", "This will start a new search in Spotify", 'fileicon:/Applications/Spotify.app', 'yes', null, '');
+        $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'activate (open location "spotify:search:' . $query . '")' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Search for " . $query . " with Spotify", array(
+  'This will start a new search in Spotify',
+  'alt' => 'Not Available',
+  'cmd' => 'Not Available',
+  'shift' => 'Not Available',
+  'fn' => 'Not Available',
+  'ctrl' => 'Not Available'), 'fileicon:/Applications/Spotify.app', 'yes', null, '');
         
         if ($is_spotifious_active == true) {
-            $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,$query /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Search for " . $query . " with Spotifious", "Spotifious workflow must be installed", './images/spotifious.png', 'yes', null, '');
+            $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,$query /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Search for " . $query . " with Spotifious", array(
+  'Spotifious workflow must be installed',
+  'alt' => 'Not Available',
+  'cmd' => 'Not Available',
+  'shift' => 'Not Available',
+  'fn' => 'Not Available',
+  'ctrl' => 'Not Available'), './images/spotifious.png', 'yes', null, '');
         }
     } ////////////
     //
@@ -788,9 +895,21 @@ if (mb_strlen($query) < 3 ||
                     $artist_uri = $track[4];
             endforeach;
 
-            $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'activate (open location "spotify:search:' . $artist . '")' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Search for " . $artist . " with Spotify", "This will start a new search in Spotify", 'fileicon:/Applications/Spotify.app', 'yes', null, '');
+            $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'activate (open location "spotify:search:' . $artist . '")' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Search for " . $artist . " with Spotify", array(
+  'This will start a new search in Spotify',
+  'alt' => 'Not Available',
+  'cmd' => 'Not Available',
+  'shift' => 'Not Available',
+  'fn' => 'Not Available',
+  'ctrl' => 'Not Available'), 'fileicon:/Applications/Spotify.app', 'yes', null, '');
             if ($is_spotifious_active == true) {
-                $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,$artist_uri . " ⟩ " . $artist . " ►" /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Search for " . $artist . " with Spotifious", "Spotifious workflow must be installed", './images/spotifious.png', 'yes', null, '');
+                $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,$artist_uri . " ⟩ " . $artist . " ►" /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Search for " . $artist . " with Spotifious", array(
+  'Spotifious workflow must be installed',
+  'alt' => 'Not Available',
+  'cmd' => 'Not Available',
+  'shift' => 'Not Available',
+  'fn' => 'Not Available',
+  'ctrl' => 'Not Available'), './images/spotifious.png', 'yes', null, '');
             }
 
         } // end of tracks by artist
@@ -848,9 +967,21 @@ if (mb_strlen($query) < 3 ||
                     $album_uri = $track[3];
             endforeach;
 
-            $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'activate (open location "spotify:search:' . $album . '")' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Search for " . $album . " with Spotify", "This will start a new search in Spotify", 'fileicon:/Applications/Spotify.app', 'yes', null, '');
+            $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'activate (open location "spotify:search:' . $album . '")' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Search for " . $album . " with Spotify", array(
+  'This will start a new search in Spotify',
+  'alt' => 'Not Available',
+  'cmd' => 'Not Available',
+  'shift' => 'Not Available',
+  'fn' => 'Not Available',
+  'ctrl' => 'Not Available'), 'fileicon:/Applications/Spotify.app', 'yes', null, '');
             if ($is_spotifious_active == true) {
-                $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,$album_uri . " ⟩ " . $album . " ►"/* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Search for " . $album . " with Spotifious", "Spotifious workflow must be installed", './images/spotifious.png', 'yes', null, '');
+                $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,$album_uri . " ⟩ " . $album . " ►"/* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "Search for " . $album . " with Spotifious", array(
+  'Spotifious workflow must be installed',
+  'alt' => 'Not Available',
+  'cmd' => 'Not Available',
+  'shift' => 'Not Available',
+  'fn' => 'Not Available',
+  'ctrl' => 'Not Available'), './images/spotifious.png', 'yes', null, '');
             }
                 
         } // end of tracks by album
