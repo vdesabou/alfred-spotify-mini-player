@@ -188,13 +188,12 @@ if (mb_strlen($query) < 3 ||
                     $results = explode('⇾', $command_output);
                     $currentArtistArtwork = getArtistArtwork($w, $results[1], false);
                     
-                    $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'playpause' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */)), "🔈 " . $results[0], 
+                    $w->result(uniqid(), serialize(array($results[4] /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'playpause' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ , $alfred_playlist_uri /* alfred_playlist_uri */ ,'' /* artist_name */, $results[0] /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "🔈 " . $results[0], 
 array(
   $results[2] . ' by ' . $results[1],
   'alt' => 'Not Available',
   'cmd' => 'Not Available',
   'shift' => 'Not Available',
-  'fn' => 'Not Available',
   'ctrl' => 'Not Available') 
 , ($results[3] == "playing") ? './images/' . $theme . '/' . 'pause.png' : './images/' . $theme . '/' . 'play.png', 'yes', null, '');
                                         
