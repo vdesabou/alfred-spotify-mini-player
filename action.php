@@ -101,7 +101,18 @@ if ($type == "TRACK") {
     exec("osascript -e 'tell application \"Spotify\" to open location \"$album_uri\"'");
 	displayNotificationWithArtwork('🔈 Album ' . $album_name . ' by ' . ucfirst($artist_name),$album_artwork_path);
 } else if ($type == "ONLINE") {
+	echo "before $artist_uri";
+	if($artist_uri == "") {
+		// case of current song with ctrl
+		$artist_uri = getArtistUriFromName($w,'black',$artist_name);
+	}
+	
+	if($artist_uri == "") {
+    	displayNotification("Error: cannot get artist uri");
+    	return;
+	}
     exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online⇾$artist_uri@$artist_name\"'");
+    return;
 } else if ($type == "ALBUM_OR_PLAYLIST") {
     if ($alfredplaylist != "") {
         if ($album_name != "") {
@@ -125,6 +136,7 @@ if ($type == "TRACK") {
 } else if ($type == "ARTIST") {
 
 	if($artist_uri == "") {
+		// case of current song with cmd
 		$artist_uri = getArtistUriFromName($w,'black',$artist_name);
 	}
     exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:playartistoralbum:$artist_uri:" . uniqid() . "\"'");
@@ -302,7 +314,7 @@ if ($playlist_uri != "") {
 	    if(! $w->internet()) {
         	displayNotification("Error: No internet connection");
         	return;
-	    }	
+	    }
         exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online⇾" . $artist_uri . "@" . escapeQuery($artist_name) . "\"'");
     }
      else if ($other_action == "update_library") {

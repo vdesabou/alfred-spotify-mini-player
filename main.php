@@ -191,8 +191,7 @@ if (mb_strlen($query) < 3 ||
                     $w->result(uniqid(), serialize(array($results[4] /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'playpause' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ , $alfred_playlist_uri /* alfred_playlist_uri */ , $results[1] /* artist_name */, $results[0] /* track_name */, $results[2] /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "🔈 " . $results[0], 
 array(
   $results[2] . ' by ' . $results[1],
-  'shift' => 'Not Available',
-  'ctrl' => 'Not Available') 
+  'shift' => 'Not Available') 
 , ($results[3] == "playing") ? './images/' . $theme . '/' . 'pause.png' : './images/' . $theme . '/' . 'play.png', 'yes', null, '');
                                         
 					$w->result(uniqid(), '', "🔈👤 " . ucfirst($results[1]), "Browse this artist", $currentArtistArtwork, 'no', null, "Artist⇾" . $results[1] . "⇾");
