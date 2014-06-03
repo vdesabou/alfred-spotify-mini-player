@@ -237,6 +237,10 @@ function addToAlfredPlaylist(args) {
 		var orginalplaylistUri = args[7]+':'+args[8]+':'+args[9]+':'+args[10]+':'+args[11];
 		var trackUri = args[1]+':'+args[2]+':'+args[3]+':'+args[4]+':'+args[5]+':'+args[6];
 	}
+	else if(args[2] == 'album')
+	{
+		var orginalplaylistUri = args[4]+':'+args[5]+':'+args[6]+':'+args[7]+':'+args[8];
+	}
 		
 	// Get the playlist object from a URI
 	models.Playlist.fromURI(orginalplaylistUri).load('tracks').done(function(playlist) {
