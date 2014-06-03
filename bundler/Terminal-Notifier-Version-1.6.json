@@ -6,7 +6,7 @@
             "invoke": "terminal-notifier.app/Contents/MacOS/terminal-notifier",
             "files": [
                 {
-                    "url": "https://github.com/shawnrice/Alfred-Helpers/blob/master/terminal-notifier.app.zip?raw=true",
+                    "url": "https://github.com/vdesabou/alfred-spotify-mini-player/blob/master/bundler/terminal-notifier.app.zip?raw=true",
                     "method": "zip"
                 }
             ],
@@ -18,7 +18,7 @@
             "invoke": "terminal-notifier.app/Contents/MacOS/terminal-notifier",
             "files": [
                 {
-                    "url": "https://github.com/shawnrice/Alfred-Helpers/blob/master/terminal-notifier.app.zip?raw=true",
+                    "url": "https://github.com/vdesabou/alfred-spotify-mini-player/blob/master/bundler/terminal-notifier.app.zip?raw=true",
                     "method": "zip"
                 }
             ],
