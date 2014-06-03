@@ -376,7 +376,7 @@
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f action.php -- "{query}" "TRACK"</string>
+				<string>php -f action.php -- "{query}" "TRACK" ""</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
