@@ -145,6 +145,11 @@ if ($type == "TRACK") {
 		// case of current song with cmd
 		$artist_uri = getArtistUriFromName($w,'black',$artist_name);
 	}
+	
+	if($artist_uri == "") {
+    	displayNotification("Error: cannot get artist uri");
+    	return;
+	}
     exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:playartistoralbum:$artist_uri:" . uniqid() . "\"'");
     exec("osascript -e 'tell application \"Spotify\" to open location \"$artist_uri\"'");
     displayNotificationWithArtwork('🔈 Artist ' . $artist_name,$artist_artwork_path);
