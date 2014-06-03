@@ -101,7 +101,6 @@ if ($type == "TRACK") {
     exec("osascript -e 'tell application \"Spotify\" to open location \"$album_uri\"'");
 	displayNotificationWithArtwork('🔈 Album ' . $album_name . ' by ' . ucfirst($artist_name),$album_artwork_path);
 } else if ($type == "ONLINE") {
-	echo "before $artist_uri";
 	if($artist_uri == "") {
 		// case of current song with ctrl
 		$artist_uri = getArtistUriFromName($w,'black',$artist_name);
