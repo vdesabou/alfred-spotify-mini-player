@@ -811,7 +811,7 @@ function getArtistUriFromName($w,$theme,$artist) {
 }
 
 function getAlbumUriFromName($w,$theme,$album,$artist) {
-	$getTracks = "select album_uri from tracks where album_name='" . $album . "' and artist_name'" . $artist . "'";	
+	$getTracks = "select album_uri from tracks where album_name='" . $album . "' and artist_name='" . $artist . "'";	
 	
     $dbfile = $w->data() . "/library.db";
     exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);

@@ -97,9 +97,16 @@ if ($type == "TRACK") {
         }
     }
 } else if ($type == "ALBUM") {
+	if($album_uri == "") {
+		// case of current song with alt
+		$album_uri = getAlbumUriFromName($w,'black',$album_name,$artist_name);
+		$album_artwork_path = getTrackOrAlbumArtwork($w,'black',$album_uri,true);
+	}
+			
     exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:playartistoralbum:$album_uri:" . uniqid() . "\"'");
     exec("osascript -e 'tell application \"Spotify\" to open location \"$album_uri\"'");
 	displayNotificationWithArtwork('🔈 Album ' . $album_name . ' by ' . ucfirst($artist_name),$album_artwork_path);
+	return;
 } else if ($type == "ONLINE") {
 	if($artist_uri == "") {
 		// case of current song with ctrl
@@ -117,7 +124,7 @@ if ($type == "TRACK") {
         if ($album_name != "") {
         
 			if($album_uri == "") {
-				// case of current song with alt
+				// case of current song with shift
 				$album_uri = getAlbumUriFromName($w,'black',$album_name,$artist_name);
 				$album_artwork_path = getTrackOrAlbumArtwork($w,'black',$album_uri,true);
 			}
