@@ -791,6 +791,24 @@ function floatToSquares($decimal)
     return str_repeat("◼︎", $squares) . str_repeat("◻︎", 10 - $squares);
 }
 
+function getArtistUriFromName($w,$theme,$artist) {
+	$getArtists = "select artist_uri,artist_artwork_path,artist_biography from artists where artist_name='" . $artist . "'";	
+	
+    $dbfile = $w->data() . "/library.db";
+    exec("sqlite3 -separator '	' \"$dbfile\" \"$getArtists\" 2>&1", $artists, $returnValue);
+
+    if ($returnValue != 0) {
+        handleDbIssue($theme);
+        return "";
+    }
+
+    if (count($artists) > 0) {
+    	
+    	$theartist = explode("	", $artists[0]);
+    	return $theartist[0];
+    }
+    return "";
+}
 /**
  * Mulit-byte Unserialize
  *

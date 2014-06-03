@@ -117,9 +117,14 @@ if ($type == "TRACK") {
         }
     }
 } else if ($type == "ARTIST") {
+
+	if($artist_uri == "") {
+		$artist_uri = getArtistUriFromName($w,'black',$artist_name);
+	}
     exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:playartistoralbum:$artist_uri:" . uniqid() . "\"'");
     exec("osascript -e 'tell application \"Spotify\" to open location \"$artist_uri\"'");
     displayNotificationWithArtwork('🔈 Artist ' . $artist_name,$artist_artwork_path);
+    return;
 }
 
 if ($playlist_uri != "") {
