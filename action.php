@@ -36,6 +36,7 @@ $other_settings = $arg[6];
 $other_action = $arg[7];
 $alfred_playlist_uri = $arg[8];
 $artist_name = $arg[9];
+$output = $arg[10];
 
 if ($other_action == "update_playlist" && $playlist_uri != "") {
 	  if(! $w->internet()) {
@@ -70,22 +71,27 @@ if ($other_action == "update_playlist" && $playlist_uri != "") {
 if ($type == "TRACK") {
     if ($track_uri != "") {
         if ($alfredplaylist != "") {
+        	// add track to alfred playlist
             exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:addtoalfredplaylist:$track_uri:$alfred_playlist_uri\"'");
             exec("osascript -e 'tell application \"Spotify\" to open location \"$alfred_playlist_uri\"'");
+            displayNotificationWithArtwork('Track ' . $output[5] . ' added to 🎵 Playlist ',$output[9]);
             return;
         } else if ($playlist_uri != "") {
             exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:playtrackwithplaylistcontext:$track_uri:$playlist_uri\"'");
             exec("osascript -e 'tell application \"Spotify\" to open location \"$playlist_uri\"'");
+            displayNotificationWithArtwork('🔈 ' . $output[5] . ' by ' . ucfirst($output[7]),$output[9]);
             return;
         }  
         else {
             if ($other_action == "")
                 exec("osascript -e 'tell application \"Spotify\" to open location \"$track_uri\"'");
+                displayNotificationWithArtwork('🔈 ' . $output[5] . ' by ' . ucfirst($output[7]),$output[9]);
         }
     }
 } else if ($type == "ALBUM") {
     exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:playartistoralbum:$album_uri:" . uniqid() . "\"'");
     exec("osascript -e 'tell application \"Spotify\" to open location \"$album_uri\"'");
+	displayNotificationWithArtwork('🔈 Album ' . $output[6] . ' by ' . ucfirst($output[7]),$output[11]);
 } else if ($type == "ONLINE") {
     exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online⇾$artist_uri@$artist_name\"'");
 } else if ($type == "ALBUM_OR_PLAYLIST") {
@@ -93,21 +99,25 @@ if ($type == "TRACK") {
         if ($album_uri != "") {
             exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:addtoalfredplaylist:$album_uri:$alfred_playlist_uri\"'");
             exec("osascript -e 'tell application \"Spotify\" to open location \"$alfred_playlist_uri\"'");
+			displayNotificationWithArtwork('Album ' . $output[6] . ' added to 🎵 Playlist ',$output[11]);
             return;
         } else if ($playlist_uri != "") {
             exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:addplaylisttoalfredplaylist:$playlist_uri:$alfred_playlist_uri\"'");
             exec("osascript -e 'tell application \"Spotify\" to open location \"$alfred_playlist_uri\"'");
+            displayNotificationWithArtwork('Playlist ' . $output[1] . ' added to 🎵 Playlist ',$output[5]);
             return;
         }
     }
 } else if ($type == "ARTIST") {
     exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:playartistoralbum:$artist_uri:" . uniqid() . "\"'");
     exec("osascript -e 'tell application \"Spotify\" to open location \"$artist_uri\"'");
+    displayNotificationWithArtwork('🔈 Artist ' . $output[7],$output[10]);
 }
 
 if ($playlist_uri != "") {
     exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:startplaylist:$playlist_uri:" . uniqid() . "\"'");
     exec("osascript -e 'tell application \"Spotify\" to open location \"$playlist_uri\"'");
+    displayNotificationWithArtwork('🔈 Playlist ' . $output[1],$output[5]);
 } else if ($spotify_command != "") {
 
 	$spotify_command = str_replace("\\", "", $spotify_command);
