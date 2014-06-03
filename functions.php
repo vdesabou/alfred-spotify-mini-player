@@ -78,9 +78,17 @@ function checkIfResultAlreadyThere($results, $title)
 function displayNotification($output)
 {
 	// Load and use Terminal Notifier, a "helper" utility
-	//$tn = __load('terminal-notifier' , 'default' , 'utility' );
 	$tn = __load('Terminal-Notifier-Version-1.6' , '1.6.0' , 'utility', './bundler/Terminal-Notifier-Version-1.6.json' );
 	exec( "$tn -title 'Spotify Mini Player' -sender 'com.spotify.miniplayer' -message '" . $output . "'" );
+}
+
+function displayNotificationWithArtwork($output,$artwork)
+{
+
+	copy($artwork,"/tmp/tmp");
+	// Load and use Terminal Notifier, a "helper" utility
+	$tn = __load('Terminal-Notifier-Version-1.6' , '1.6.0' , 'utility', './bundler/Terminal-Notifier-Version-1.6.json' );
+	exec( "$tn -title 'Spotify Mini Player' -sender 'com.spotify.miniplayer' -contentImage '/tmp/tmp' -message '" . $output . "'" );
 }
 
 function getTrackOrAlbumArtwork($w,$theme, $spotifyURL, $fetchIfNotPresent)

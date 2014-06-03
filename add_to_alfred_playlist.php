@@ -23,7 +23,7 @@ if (substr_count($command_output, '⇾') > 0) {
 	//
 	// Read settings from DB
 	//
-	$getSettings = 'select alfred_playlist_uri,alfred_playlist_name from settings';
+	$getSettings = 'select alfred_playlist_uri,alfred_playlist_name,theme from settings';
 	$dbfile = $w->data() . '/settings.db';
 	exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
 	
@@ -39,12 +39,13 @@ if (substr_count($command_output, '⇾') > 0) {
 	
 	    $alfred_playlist_uri = $setting[0];
 	    $alfred_playlist_name = $setting[1];
+	    $theme = $setting[2];
 	endforeach;
 
     exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:addtoalfredplaylist:$results[4]:$alfred_playlist_uri\"'");
     exec("osascript -e 'tell application \"Spotify\" to open location \"$alfred_playlist_uri\"'"); 
     
-    displayNotification('' . $results[2] . ' by ' . $results[1] . ' was added to ' . $alfred_playlist_name);                   
+    displayNotificationWithArtwork('' . $results[2] . ' by ' . $results[1] . ' was added to ' . $alfred_playlist_name,getTrackOrAlbumArtwork($w,$theme,$results[4],true));                   
 }
 else {
 	displayNotification("Error: No track is playing");
