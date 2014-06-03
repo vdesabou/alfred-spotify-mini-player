@@ -104,7 +104,13 @@ if ($type == "TRACK") {
     exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online⇾$artist_uri@$artist_name\"'");
 } else if ($type == "ALBUM_OR_PLAYLIST") {
     if ($alfredplaylist != "") {
-        if ($album_uri != "") {
+        if ($album_name != "") {
+        
+			if($album_uri == "") {
+				// case of current song with alt
+				$album_uri = getAlbumUriFromName($w,'black',$album_name,$artist_name);
+				$album_artwork_path = getTrackOrAlbumArtwork($w,'black',$album_uri,true);
+			}
             exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:addtoalfredplaylist:$album_uri:$alfred_playlist_uri\"'");
             exec("osascript -e 'tell application \"Spotify\" to open location \"$alfred_playlist_uri\"'");
 			displayNotificationWithArtwork('Album ' . $album_name . ' added to 🎵 Playlist ',$album_artwork_path);

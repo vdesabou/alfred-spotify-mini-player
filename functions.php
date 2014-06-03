@@ -809,6 +809,27 @@ function getArtistUriFromName($w,$theme,$artist) {
     }
     return "";
 }
+
+function getAlbumUriFromName($w,$theme,$album,$artist) {
+	$getTracks = "select album_uri from tracks where album_name='" . $album . "' and artist_name'" . $artist . "'";	
+	
+    $dbfile = $w->data() . "/library.db";
+    exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
+
+    if ($returnValue != 0) {
+        handleDbIssue($theme);
+        return "";
+    }
+
+    if (count($tracks) > 0) {
+    	
+    	$thealbum = explode("	", $tracks[0]);
+    	return $thealbum[0];
+    }
+    return "";
+}
+
+
 /**
  * Mulit-byte Unserialize
  *
