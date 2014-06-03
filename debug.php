@@ -54,24 +54,6 @@ else
 	copy($w->data() . "/library.db",$w->home() . "/Downloads/spot_mini_debug/library.db");
 }
 
-if(!file_exists( "./output.log"))
-{
-	$output = $output .  "The file output.log is not present\n";
-}
-else
-{
-	copy( "./output.log",$w->home() . "/Downloads/spot_mini_debug/output.log");
-}
-
-if(!file_exists( "./output_action.log"))
-{
-	$output = $output .  "The file output_action.log is not present\n";
-}
-else
-{
-	copy( "./output_action.log",$w->home() . "/Downloads/spot_mini_debug/output_action.log");
-}
-
 
 $output = $output . exec("uname -a");
 $output = $output . "\n";
