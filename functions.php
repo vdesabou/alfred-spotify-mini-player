@@ -84,8 +84,9 @@ function displayNotification($output)
 
 function displayNotificationWithArtwork($output,$artwork)
 {
-
-	copy($artwork,"/tmp/tmp");
+	if($artwork != "") {
+		copy($artwork,"/tmp/tmp");
+	}
 	// Load and use Terminal Notifier, a "helper" utility
 	$tn = __load('Terminal-Notifier-Version-1.6' , '1.6.0' , 'utility', './bundler/Terminal-Notifier-Version-1.6.json' );
 	exec( "$tn -title 'Spotify Mini Player' -sender 'com.spotify.miniplayer' -contentImage '/tmp/tmp' -message '" . $output . "'" );
