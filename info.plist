@@ -311,7 +311,7 @@
 	<key>disabled</key>
 	<false/>
 	<key>name</key>
-	<string>Spotify Mini Player 4.2.4</string>
+	<string>Spotify Mini Player 4.3</string>
 	<key>objects</key>
 	<array>
 		<dict>
@@ -1138,7 +1138,7 @@ end alfred_script</string>
 				<key>subtext</key>
 				<string>Current track will be added to Alfred Playlist</string>
 				<key>text</key>
-				<string>Add track to Alfred Playlist</string>
+				<string>Add current track to Alfred Playlist</string>
 				<key>withspace</key>
 				<false/>
 			</dict>

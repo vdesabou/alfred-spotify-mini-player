@@ -42,6 +42,7 @@ You can also control Spotify using keywords such as play/next/volmax/random/shuf
 * Select a track with ⌥ to play the album, or ⌘ to play the artist
 * Same control keywords as iTunes Mini Player: play, pause, mute, next, random, previous, volmax, volmid. And shuffle to activate shuffling.
 * Star currently played track with keyword *star*
+* Add current track to Alfred Playlist
 * Display artist bigraphy
 * Browse Related artists
 * Display current track lyrics
