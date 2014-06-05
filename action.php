@@ -100,6 +100,15 @@ if ($type == "TRACK") {
 	if($album_uri == "") {
 		// case of current song with alt
 		$album_uri = getAlbumUriFromName($w,'black',$album_name,$artist_name);
+		
+		if($album_uri == "") {
+			// track is not from library
+		    exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:playcurrenttrackalbum:" . uniqid() . "\"'");
+		    exec("osascript -e 'tell application \"Spotify\" to open location \"$track_uri\"'");
+			displayNotificationWithArtwork('🔈 Album ' . $album_name . ' by ' . ucfirst($artist_name),getTrackOrAlbumArtwork($w,'black',$track_uri,true));
+			return;
+		}
+		
 		$album_artwork_path = getTrackOrAlbumArtwork($w,'black',$album_uri,true);
 	}
 			
@@ -111,12 +120,13 @@ if ($type == "TRACK") {
 	if($artist_uri == "") {
 		// case of current song with ctrl
 		$artist_uri = getArtistUriFromName($w,'black',$artist_name);
+		
+		if($artist_uri == "") {
+	    	displayNotification("Error: artist is not in your library");
+	    	return;
+		}	
 	}
 	
-	if($artist_uri == "") {
-    	displayNotification("Error: cannot get artist uri");
-    	return;
-	}
     exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online⇾$artist_uri@$artist_name\"'");
     return;
 } else if ($type == "ALBUM_OR_PLAYLIST") {
@@ -126,6 +136,14 @@ if ($type == "TRACK") {
 			if($album_uri == "") {
 				// case of current song with shift
 				$album_uri = getAlbumUriFromName($w,'black',$album_name,$artist_name);
+				
+				if($album_uri == "") {
+					// track is not from library
+				    exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:addcurrenttrackalbumtoalfredplaylist:$alfred_playlist_uri\"'");
+				     exec("osascript -e 'tell application \"Spotify\" to open location \"$alfred_playlist_uri\"'");
+					displayNotificationWithArtwork('Album ' . $album_name . ' added to 🎵 Playlist ',getTrackOrAlbumArtwork($w,'black',$track_uri,true));
+					return;
+				}
 				$album_artwork_path = getTrackOrAlbumArtwork($w,'black',$album_uri,true);
 			}
             exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:addtoalfredplaylist:$album_uri:$alfred_playlist_uri\"'");
@@ -144,12 +162,16 @@ if ($type == "TRACK") {
 	if($artist_uri == "") {
 		// case of current song with cmd
 		$artist_uri = getArtistUriFromName($w,'black',$artist_name);
+		
+		if($artist_uri == "") {
+			// artist is not from library
+		    exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:playcurrenttrackartist\"'");
+		    exec("osascript -e 'tell application \"Spotify\" to open location \"$track_uri\"'");
+			displayNotificationWithArtwork('🔈 Artist ' . $artist_name,getTrackOrAlbumArtwork($w,'black',$track_uri,true));
+			return;
+		}
 	}
 	
-	if($artist_uri == "") {
-    	displayNotification("Error: cannot get artist uri");
-    	return;
-	}
     exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:playartistoralbum:$artist_uri:" . uniqid() . "\"'");
     exec("osascript -e 'tell application \"Spotify\" to open location \"$artist_uri\"'");
     displayNotificationWithArtwork('🔈 Artist ' . $artist_name,$artist_artwork_path);

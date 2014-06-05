@@ -26,6 +26,15 @@ function handleArgs() {
 			case "star":
 				starCurrentTrack();
 				break;
+			case "playcurrenttrackalbum":
+				playCurrentTrackAlbum();
+				break;
+			case "playcurrenttrackartist":
+				playCurrentTrackArtist();
+				break;
+			case "addcurrenttrackalbumtoalfredplaylist":
+				addCurrentTrackAlbumToAlfredPlaylist(args);
+				break;
 			case "update_library":
 				sleep(1000);
 				getAll(function(matchedAll) {
@@ -492,6 +501,58 @@ function starCurrentTrack() {
 	
 	if (track != null) {
 		models.Track.fromURI(track.uri).star();
+	} 
+}
+
+function playCurrentTrackAlbum() {
+	var track = models.player.track;
+	if (track != null) {
+		var album = track.album;
+		models.player.playContext(album);
+	} 
+}
+
+function playCurrentTrackArtist() {
+	var track = models.player.track;
+	if (track != null) {
+		var artists = track.artists;
+		
+        if(artists.length > 0) {
+        	console.log(artists);
+			var album = models.Album.fromURI(artists[0].uri);
+			console.log(album);
+			models.player.playContext(artists[0]);
+        }
+     
+	} 
+}
+
+function addCurrentTrackAlbumToAlfredPlaylist(args) {
+	var track = models.player.track;
+	var orginalplaylistUri = args[1]+':'+args[2]+':'+args[3]+':'+args[4]+':'+args[5];
+	if (track != null) {
+		var album = track.album;
+		// Get the playlist object from a URI
+		models.Playlist.fromURI(orginalplaylistUri).load('tracks').done(function(playlist) {
+								
+			models.Album.fromURI(album.uri).load('tracks').done(function(a) {
+			    // This callback is fired when the album has loaded.
+			    // The album object has a tracks property, which is a standard array.
+							
+				a.tracks.snapshot().done(function(t){
+								
+				                var tracks = t.toArray();
+				                for(i=0;i<tracks.length;i++){
+				                	console.log(t.get(i).name);
+				                    playlist.tracks.add(tracks[i]);
+				                }
+				                // Verify the song was added to the playlist
+			console.log(playlist);	
+				            });
+	    	});
+				
+			
+		});	
 	} 
 }
 
