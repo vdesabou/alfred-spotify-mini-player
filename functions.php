@@ -152,7 +152,7 @@ function getTrackOrAlbumArtwork($w,$theme, $spotifyURL, $fetchIfNotPresent)
     }
 }
 
-function getPlaylistArtwork($w, $playlistURI, $username, $fetchIfNotPresent)
+function getPlaylistArtwork($w, $playlistURI, $fetchIfNotPresent)
 {
 
     $hrefs = explode(':', $playlistURI);
@@ -175,12 +175,13 @@ function getPlaylistArtwork($w, $playlistURI, $username, $fetchIfNotPresent)
 
 
     if (count($hrefs) == 5) {
-        $filename = "" . $username . "_" . $hrefs[4];
-        $url = "http://open.spotify.com/user/" . $username . "/playlist/" . $hrefs[4];
+    	
+        $filename = "" . $hrefs[2] . "_" . $hrefs[4];
+        $url = "http://open.spotify.com/user/" . $hrefs[2] . "/playlist/" . $hrefs[4];
     } else {
         //starred playlist
-        $filename = "" . $username . "_" . $hrefs[3];
-        $url = "http://open.spotify.com/user/" . $username . "/" . $hrefs[3];
+        $filename = "" . $hrefs[2] . "_" . $hrefs[3];
+        $url = "http://open.spotify.com/user/" . $hrefs[2] . "/" . $hrefs[3];
     }
 
 
@@ -401,7 +402,7 @@ function updateLibrary($jsonData)
 		$nb_track = 0;
 			
         foreach ($playlists as $playlist) {
-            $playlist_artwork_path = getPlaylistArtwork($w, $playlist['uri'], $playlist['username'], true);
+            $playlist_artwork_path = getPlaylistArtwork($w, $playlist['uri'], true);
 
             if ($playlist['ownedbyuser'] == true) {
                 $ownedbyuser = 1;
@@ -657,7 +658,7 @@ function updatePlaylistList($jsonData)
             // Add the new playlist
             if (count($playlists) == 0) {
                 displayNotification("Added playlist " . $playlist['name'] . "\n");
-                $playlist_artwork_path = getPlaylistArtwork($w, $playlist['uri'], $playlist['username'], true);
+                $playlist_artwork_path = getPlaylistArtwork($w, $playlist['uri'], true);
 
 	            if ($playlist['ownedbyuser'] == true) {
 	                $ownedbyuser = 1;

@@ -608,7 +608,7 @@ array(
             } else {
                 $r = explode(':', $alfred_playlist_uri);
 
-                $w->result(uniqid(), '', "Browse your Alfred playlist (" . $alfred_playlist_name . " by " . $r[2] . ")" , "You can change the playlist by selecting Change your Alfred playlist below", getPlaylistArtwork($w, $alfred_playlist_uri, $r[2], false), 'no', null, 'Playlist⇾' . $alfred_playlist_uri . '⇾');
+                $w->result(uniqid(), '', "Browse your Alfred playlist (" . $alfred_playlist_name . " by " . $r[2] . ")" , "You can change the playlist by selecting Change your Alfred playlist below", getPlaylistArtwork($w, $alfred_playlist_uri, false), 'no', null, 'Playlist⇾' . $alfred_playlist_uri . '⇾');
                 
                 $w->result(uniqid(), '', "Change your Alfred playlist", "Select one of your playlists below as your Alfred playlist", './images/' . $theme . '/' . 'settings.png', 'no', null, 'Alfred Playlist⇾Set Alfred Playlist⇾');
                 
