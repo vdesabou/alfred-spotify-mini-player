@@ -197,7 +197,10 @@ if ($playlist_uri != "") {
         $setSettings = 'update settings set alfred_playlist_uri=\"' . $setting[1] . '\"' . ',alfred_playlist_name=\"' . $setting[2] . '\"';
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotification("Alfred Playlist set to $setting[2]");
+        
+		displayNotificationWithArtwork('🎵 Playlist set to ' . $setting[2],getPlaylistArtwork($w, $setting[1], true));
+		return;
+
     } else if ($setting[0] == "CLEAR_ALFRED_PLAYLIST") {
 		exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:clearplaylist:$setting[1]:" . uniqid() . "\"'");
 	    exec("osascript -e 'tell application \"Spotify\" to open location \"$setting[1]\"'");
