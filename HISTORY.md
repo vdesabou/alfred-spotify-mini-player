@@ -2,6 +2,10 @@
 
 [![Download Workflow](https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/images/alfred-workflow-icon.png)](https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/SpotifyMiniPlayer.alfredworkflow)
 
+4.3.1:
+
+* Fix release package 4.3
+
 4.3:
 
 * New command "spot_mini_add_to_alfred_playlist": Add current track to Alfred Playlist
