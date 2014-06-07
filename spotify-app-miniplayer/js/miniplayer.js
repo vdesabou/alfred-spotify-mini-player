@@ -24,7 +24,29 @@ function handleArgs() {
 				randomTrack();
 				break;
 			case "star":
-				starCurrentTrack();
+				sleep(1000);
+								
+				appendText("star track started");
+				appendText("Trying to connect with Spotify Mini Player workflow on port " + args[1] + ".");
+				
+				var conn = new WebSocket('ws://127.0.0.1:' + args[1]);
+				conn.onopen = function(e) {
+					appendText("Connection established with Spotify Mini Player workflow on port " + args[1] + ". Transmitting data..");
+				    conn.send('star⇾' + JSON.stringify(starCurrentTrack()));
+				};
+				
+				conn.onerror = function (e) {
+                    appendText("Error received");
+                };
+				
+				conn.onclose = function (e) {
+                    appendText("Workflow closed connection " + e.reason);
+                };
+				
+				conn.onmessage = function(e) {
+				    appendText("Received response from workflow: " + e.data);
+				    conn.close();
+				};
 				break;
 			case "playcurrenttrackalbum":
 				playCurrentTrackAlbum();
@@ -522,11 +544,19 @@ function startPlaylist(args) {
 }
 
 function starCurrentTrack() {
+	var t={};
 	var track = models.player.track;
-	
 	if (track != null) {
+	
 		models.Track.fromURI(track.uri).star();
-	} 
+		
+
+    	t.name = track.name;
+    	t.uri = track.uri; 
+    	console.log("starCurrentTrack: ", t);       	
+		return t;
+	}
+	return t;
 }
 
 function playCurrentTrackAlbum() {

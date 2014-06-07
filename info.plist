@@ -87,7 +87,7 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>626E477C-213B-4F72-B62C-328E21E9C882</string>
+				<string>A69FA8D7-260F-4BB2-B77A-31301E0E32AC</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -311,7 +311,7 @@
 	<key>disabled</key>
 	<false/>
 	<key>name</key>
-	<string>Spotify Mini Player 4.3.3</string>
+	<string>Spotify Mini Player 4.3.4</string>
 	<key>objects</key>
 	<array>
 		<dict>
@@ -376,7 +376,7 @@
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f action.php -- "{query}" "TRACK" ""</string>
+				<string>php -f action.php -- "{query}" "TRACK" "" 2&gt;&amp;1</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -782,20 +782,17 @@ end alfred_script</string>
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>applescript</key>
-				<string>on alfred_script(q)
-	tell application "Spotify"
-		set timestamp to (do shell script "date +%s") as integer
-		open location "spotify:app:miniplayer:star:" &amp; timestamp
-	end tell
-end alfred_script</string>
-				<key>cachescript</key>
-				<true/>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>php -f action.php -- "" "STAR" "STAR"</string>
+				<key>type</key>
+				<integer>0</integer>
 			</dict>
 			<key>type</key>
-			<string>alfred.workflow.action.applescript</string>
+			<string>alfred.workflow.action.script</string>
 			<key>uid</key>
-			<string>626E477C-213B-4F72-B62C-328E21E9C882</string>
+			<string>A69FA8D7-260F-4BB2-B77A-31301E0E32AC</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -1251,11 +1248,6 @@ end alfred_script</string>
 			<key>ypos</key>
 			<real>750</real>
 		</dict>
-		<key>626E477C-213B-4F72-B62C-328E21E9C882</key>
-		<dict>
-			<key>ypos</key>
-			<real>1470</real>
-		</dict>
 		<key>64AF8526-B1B0-415C-97C1-2787A835A605</key>
 		<dict>
 			<key>ypos</key>
@@ -1305,6 +1297,11 @@ end alfred_script</string>
 		<dict>
 			<key>ypos</key>
 			<real>2250</real>
+		</dict>
+		<key>A69FA8D7-260F-4BB2-B77A-31301E0E32AC</key>
+		<dict>
+			<key>ypos</key>
+			<real>1470</real>
 		</dict>
 		<key>AE6160D1-56EA-4416-991E-CF12B874FFD3</key>
 		<dict>

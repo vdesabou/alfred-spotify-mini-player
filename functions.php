@@ -2,6 +2,7 @@
 
 // Require the bundler.
 require_once('alfred.bundler.php');
+require_once('workflows.php');
 
 function installSpotifyAppIfNeeded($w)
 {
@@ -92,6 +93,12 @@ function displayNotificationWithArtwork($output,$artwork)
 	exec( "$tn -title 'Spotify Mini Player' -sender 'com.spotify.miniplayer' -contentImage '/tmp/tmp' -message '" . $output . "'" );
 }
 
+function displayNotificationForStarredTrack($track_name,$track_uri)
+{
+	$w = new Workflows;
+	displayNotificationWithArtwork('⭐️ ' . $track_name . ' has been starred',getTrackOrAlbumArtwork($w,'black',$track_uri,true));
+}
+
 function getTrackOrAlbumArtwork($w,$theme, $spotifyURL, $fetchIfNotPresent)
 {
 
@@ -151,6 +158,7 @@ function getTrackOrAlbumArtwork($w,$theme, $spotifyURL, $fetchIfNotPresent)
         return $currentArtwork;
     }
 }
+
 
 function getPlaylistArtwork($w, $playlistURI, $fetchIfNotPresent)
 {
@@ -296,6 +304,7 @@ function getArtistArtworkURL($w, $artist)
     }
     return $json[artist][image][1]['#text'];
 }
+
 
 function updateLibrary($jsonData)
 {

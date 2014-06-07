@@ -23,8 +23,10 @@ class MiniPlayer implements MessageComponentInterface {
         $numRecv = count($this->clients) - 1;
         
 
-        /*echo sprintf('Connection %d sending message "%s" to %d other connection%s' . "\n"
-            , $from->resourceId, $msg, $numRecv, $numRecv == 1 ? '' : 's');*/
+/*
+        echo sprintf('Connection %d sending message "%s" to %d other connection%s' . "\n"
+            , $from->resourceId, $msg, $numRecv, $numRecv == 1 ? '' : 's');
+*/
 
 		$tmp = explode('⇾', $msg);
 		$command=$tmp[0];
@@ -66,16 +68,49 @@ class MiniPlayer implements MessageComponentInterface {
 					foreach ($this->clients as $client) {
 						$client->send("CURRENT TRACK GET ARTIST FAIL");
 					}
+					displayNotification("Error: cannot get artist for current track");
 				}
 		    				        
 		    }else {
 				foreach ($this->clients as $client) {
 					$client->send("CURRENT TRACK GET ARTIST FAIL");
 				}
+				displayNotification("Error: cannot get artist for current track");
 		    }
 
 	        foreach ($this->clients as $client) {
 	                $client->send("CURRENT TRACK GET ARTIST SUCCESS");
+	        }		
+		}
+		else if($command=="star")
+		{
+		    //try to decode it
+		    $track = json_decode($json, true);
+		    if (json_last_error() === JSON_ERROR_NONE) {
+		    	
+		    	if(count($track) > 0)
+		    	{
+			    	$track_uri = $track['uri'];
+			    	$track_name = $track['name'];
+
+					displayNotificationForStarredTrack($track_name,$track_uri);
+			    	
+		    	} else {
+					foreach ($this->clients as $client) {
+						$client->send("STAR FAIL");
+					}
+					displayNotification("Error: cannot get current track");
+				}
+		    				        
+		    }else {
+				foreach ($this->clients as $client) {
+					$client->send("STAR FAIL");
+				}
+				displayNotification("Error: cannot get current track");
+		    }
+
+	        foreach ($this->clients as $client) {
+	                $client->send("STAR SUCCESS");
 	        }		
 		}
 		else
