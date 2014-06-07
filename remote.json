@@ -1,5 +1,5 @@
 {
-    "version": 4.32,
+    "version": 4.33,
     "download_url": "https://raw.githubusercontent.com/packal/repository/master/com.vdesabou.spotify.mini.player/spotifyminiplayer.alfredworkflow",
-    "description": "Fix release package 4.3.1"
+    "description": "Fix display of results in a playlist when searching tracks"
 }
