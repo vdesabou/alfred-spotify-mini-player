@@ -35,6 +35,31 @@ function handleArgs() {
 			case "addcurrenttrackalbumtoalfredplaylist":
 				addCurrentTrackAlbumToAlfredPlaylist(args);
 				break;
+			case "current_track_get_artist":
+				sleep(1000);
+								
+				appendText("current_track_get_artist started");
+				appendText("Trying to connect with Spotify Mini Player workflow on port " + args[1] + ".");
+				
+				var conn = new WebSocket('ws://127.0.0.1:' + args[1]);
+				conn.onopen = function(e) {
+					appendText("Connection established with Spotify Mini Player workflow on port " + args[1] + ". Transmitting data..");
+				    conn.send('current_track_get_artist⇾' + JSON.stringify(getCurrentTrackArtist()));
+				};
+				
+				conn.onerror = function (e) {
+                    appendText("Error received");
+                };
+				
+				conn.onclose = function (e) {
+                    appendText("Workflow closed connection " + e.reason);
+                };
+				
+				conn.onmessage = function(e) {
+				    appendText("Received response from workflow: " + e.data);
+				    conn.close();
+				};
+				break;
 			case "update_library":
 				sleep(1000);
 				getAll(function(matchedAll) {
@@ -526,6 +551,26 @@ function playCurrentTrackArtist() {
      
 	} 
 }
+
+function getCurrentTrackArtist() {
+	var a={};
+	var track = models.player.track;
+	if (track != null) {
+		var artists = track.artists;
+		
+        if(artists.length > 0) {
+        	
+        	a.artist_name = artists[0].name;
+        	a.artist_uri = artists[0].uri; 
+        	console.log("getCurrentTrackArtist: ", a);       	
+			return a;
+        }
+     
+	}
+	return a;
+}
+
+
 
 function addCurrentTrackAlbumToAlfredPlaylist(args) {
 	var track = models.player.track;

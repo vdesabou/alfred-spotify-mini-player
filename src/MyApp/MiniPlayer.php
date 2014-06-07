@@ -22,10 +22,10 @@ class MiniPlayer implements MessageComponentInterface {
     public function onMessage(ConnectionInterface $from, $msg) {
         $numRecv = count($this->clients) - 1;
         
-/*
-        echo sprintf('Connection %d sending message "%s" to %d other connection%s' . "\n"
-            , $from->resourceId, $msg, $numRecv, $numRecv == 1 ? '' : 's');
-*/
+
+        /*echo sprintf('Connection %d sending message "%s" to %d other connection%s' . "\n"
+            , $from->resourceId, $msg, $numRecv, $numRecv == 1 ? '' : 's');*/
+
 		$tmp = explode('⇾', $msg);
 		$command=$tmp[0];
 		$json=$tmp[1];
@@ -48,6 +48,34 @@ class MiniPlayer implements MessageComponentInterface {
 			updatePlaylistList($json);
 	        foreach ($this->clients as $client) {
 	                $client->send("UPDATE PLAYLIST LIST SUCCESS");
+	        }		
+		}
+		else if($command=="current_track_get_artist")
+		{
+		    //try to decode it
+		    $artist = json_decode($json, true);
+		    if (json_last_error() === JSON_ERROR_NONE) {
+		    	
+		    	if(count($artist) > 0)
+		    	{
+			    	$artist_uri = $artist['artist_uri'];
+			    	$artist_name = $artist['artist_name'];
+			    	
+			    	exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online⇾$artist_uri@$artist_name\"'");
+		    	} else {
+					foreach ($this->clients as $client) {
+						$client->send("CURRENT TRACK GET ARTIST FAIL");
+					}
+				}
+		    				        
+		    }else {
+				foreach ($this->clients as $client) {
+					$client->send("CURRENT TRACK GET ARTIST FAIL");
+				}
+		    }
+
+	        foreach ($this->clients as $client) {
+	                $client->send("CURRENT TRACK GET ARTIST SUCCESS");
 	        }		
 		}
 		else

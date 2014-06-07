@@ -122,7 +122,20 @@ if ($type == "TRACK") {
 		$artist_uri = getArtistUriFromName($w,'black',$artist_name);
 		
 		if($artist_uri == "") {
-	    	displayNotification("Error: artist is not in your library");
+			$tcpport = getFreeTcpPort();
+		    exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:current_track_get_artist:" . $tcpport . ":" . uniqid() . "\"'");
+		
+		    $server = IoServer::factory(
+		        new HttpServer(
+		            new WsServer(
+		                new MiniPlayer()
+		            )
+		        ),
+		        $tcpport
+		    );
+		    // FIX THIS: server will exit when done
+		    // Did not find a way to set a timeout
+		    $server->run();
 	    	return;
 		}	
 	}
