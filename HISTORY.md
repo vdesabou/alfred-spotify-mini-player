@@ -2,6 +2,12 @@
 
 [![Download Workflow](https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/images/alfred-workflow-icon.png)](https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/SpotifyMiniPlayer.alfredworkflow)
 
+4.3.4:
+
+* Star track display track info and artwork
+
+* Search artist online even when not in library
+
 4.3.3:
 
 * Fix display of results in a playlist when searching tracks
