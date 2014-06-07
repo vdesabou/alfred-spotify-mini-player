@@ -1014,8 +1014,8 @@ function checkForUpdate($w,$last_check_update_time) {
 
 		// get local information		
 		if (!file_exists('./packal/package.xml')) {
-            displayNotification("Error: the package.xml file cannot be found");
-            return;
+            displayNotification("Error: this release has not been downloaded from Packal");
+			return 1;
 		}
 		$xml = $w->read('./packal/package.xml');
 		$workflow= new SimpleXMLElement($xml);
@@ -1027,7 +1027,7 @@ function checkForUpdate($w,$last_check_update_time) {
 
         if (empty($jsonDataRemote)) {
             displayNotification("Error: the export.json " . $remote_json . " file cannot be found");
-            return;
+            return 1;
         }
 
         $json = json_decode($jsonDataRemote,true);
@@ -1051,7 +1051,8 @@ function checkForUpdate($w,$last_check_update_time) {
         	
         }
         else {
-			displayNotification("Error: check for update failed: remote.json error");	        
+			displayNotification("Error: check for update failed: remote.json error");
+			return 1;	        
         }	
 
 	}

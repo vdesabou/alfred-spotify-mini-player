@@ -287,7 +287,7 @@ if ($playlist_uri != "") {
 		if($check_results != null && is_array($check_results)) {
 			displayNotification('New version ' . $check_results[0] . ' is available in Downloads directory ');
 		}
-		else {
+		else if ($check_results == null) {
 			displayNotification('No update available');
 		}
 		
