@@ -160,7 +160,7 @@ function getTrackOrAlbumArtwork($w,$theme, $spotifyURL, $fetchIfNotPresent)
 }
 
 
-function getPlaylistArtwork($w, $playlistURI, $fetchIfNotPresent)
+function getPlaylistArtwork($w, $theme, $playlistURI, $fetchIfNotPresent)
 {
 
     $hrefs = explode(':', $playlistURI);
@@ -228,7 +228,7 @@ function getPlaylistArtwork($w, $playlistURI, $fetchIfNotPresent)
     }
 }
 
-function getArtistArtwork($w, $artist, $fetchIfNotPresent)
+function getArtistArtwork($w, $theme, $artist, $fetchIfNotPresent)
 {
     $parsedArtist = urlencode($artist);
 
@@ -388,12 +388,12 @@ function updateLibrary($jsonData)
 		$nb_artists = 0;
 		foreach ($artists as $artist) {
 
-			$artist_artwork_path = getArtistArtwork($w, $artist['artist_name'], true);
+			$artist_artwork_path = getArtistArtwork($w, $theme, $artist['artist_name'], true);
 			
 			$relateds = $artist['related'];			
 			foreach ($relateds as $related) {
 
-				$related_artist_artwork_path = getArtistArtwork($w, $related['name'], true);
+				$related_artist_artwork_path = getArtistArtwork($w, $theme, $related['name'], true);
 				
 				$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert or ignore into artists values (\"' . escapeQuery($artist['artist_name']) . '\",\"' . $artist['artist_uri'] . '\",\"' . $related_artist_artwork_path . '\",\"' . escapeQuery($artist['biography']) . '\",' . $artist['popularity']  . ',\"' . $artist['years']['from'] . '\",\"' . $artist['years']['to'] . '\",\"' . escapeQuery($related['name']) . '\",\"' . $related['uri'] . '\",\"' . $related_artist_artwork_path . '\")"';
 				exec($sql);
@@ -411,7 +411,7 @@ function updateLibrary($jsonData)
 		$nb_track = 0;
 			
         foreach ($playlists as $playlist) {
-            $playlist_artwork_path = getPlaylistArtwork($w, $playlist['uri'], true);
+            $playlist_artwork_path = getPlaylistArtwork($w,'black',$playlist['uri'], true);
 
             if ($playlist['ownedbyuser'] == true) {
                 $ownedbyuser = 1;
@@ -439,7 +439,7 @@ function updateLibrary($jsonData)
                 //
                 // Download artworks
                 $track_artwork_path = getTrackOrAlbumArtwork($w,$theme, $track['uri'], true);
-                $artist_artwork_path = getArtistArtwork($w, $track['artist_name'], true);
+                $artist_artwork_path = getArtistArtwork($w,$theme,$track['artist_name'], true);
                 $album_artwork_path = getTrackOrAlbumArtwork($w,$theme, $track['album_uri'], true);
 
                 $album_year = 1995;
@@ -563,7 +563,7 @@ function updatePlaylist($jsonData)
                 //
                 // Download artworks
                 $track_artwork_path = getTrackOrAlbumArtwork($w,$theme, $track['uri'], true);
-                $artist_artwork_path = getArtistArtwork($w, $track['artist_name'], true);
+                $artist_artwork_path = getArtistArtwork($w,$theme,$track['artist_name'], true);
                 $album_artwork_path = getTrackOrAlbumArtwork($w,$theme, $track['album_uri'], true);
 
                 $album_year = 1995;
@@ -667,7 +667,7 @@ function updatePlaylistList($jsonData)
             // Add the new playlist
             if (count($playlists) == 0) {
                 displayNotification("Added playlist " . $playlist['name'] . "\n");
-                $playlist_artwork_path = getPlaylistArtwork($w, $playlist['uri'], true);
+                $playlist_artwork_path = getPlaylistArtwork($w,'black', $playlist['uri'], true);
 
 	            if ($playlist['ownedbyuser'] == true) {
 	                $ownedbyuser = 1;
@@ -695,7 +695,7 @@ function updatePlaylistList($jsonData)
                     //
                     // Download artworks
                     $track_artwork_path = getTrackOrAlbumArtwork($w,$theme, $track['uri'], true);
-                    $artist_artwork_path = getArtistArtwork($w, $track['artist_name'], true);
+                    $artist_artwork_path = getArtistArtwork($w, $theme, $track['artist_name'], true);
                     $album_artwork_path = getTrackOrAlbumArtwork($w,$theme, $track['album_uri'], true);
 
                     $album_year = 1995;

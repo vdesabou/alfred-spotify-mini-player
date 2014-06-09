@@ -186,7 +186,7 @@ if (mb_strlen($query) < 3 ||
 
                 if (substr_count($command_output, '⇾') > 0) {
                     $results = explode('⇾', $command_output);
-                    $currentArtistArtwork = getArtistArtwork($w, $results[1], false);
+                    $currentArtistArtwork = getArtistArtwork($w,$theme,$results[1], false);
                     
                     $w->result(uniqid(), serialize(array($results[4] /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'playpause' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ , $alfred_playlist_uri /* alfred_playlist_uri */ , $results[1] /* artist_name */, $results[0] /* track_name */, $results[2] /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "🔈 " . $results[0], 
 array(
@@ -608,7 +608,7 @@ array(
             } else {
                 $r = explode(':', $alfred_playlist_uri);
 
-                $w->result(uniqid(), '', "Browse your Alfred playlist (" . $alfred_playlist_name . " by " . $r[2] . ")" , "You can change the playlist by selecting Change your Alfred playlist below", getPlaylistArtwork($w, $alfred_playlist_uri, false), 'no', null, 'Playlist⇾' . $alfred_playlist_uri . '⇾');
+                $w->result(uniqid(), '', "Browse your Alfred playlist (" . $alfred_playlist_name . " by " . $r[2] . ")" , "You can change the playlist by selecting Change your Alfred playlist below", getPlaylistArtwork($w, $theme ,$alfred_playlist_uri, false), 'no', null, 'Playlist⇾' . $alfred_playlist_uri . '⇾');
                 
                 $w->result(uniqid(), '', "Change your Alfred playlist", "Select one of your playlists below as your Alfred playlist", './images/' . $theme . '/' . 'settings.png', 'no', null, 'Alfred Playlist⇾Set Alfred Playlist⇾');
                 

@@ -214,7 +214,7 @@ if ($playlist_uri != "") {
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
         
-		displayNotificationWithArtwork('🎵 Playlist set to ' . $setting[2],getPlaylistArtwork($w, $setting[1], true));
+		displayNotificationWithArtwork('🎵 Playlist set to ' . $setting[2],getPlaylistArtwork($w,'black', $setting[1], true));
 		return;
 
     } else if ($setting[0] == "CLEAR_ALFRED_PLAYLIST") {
