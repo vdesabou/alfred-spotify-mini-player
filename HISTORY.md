@@ -1,7 +1,5 @@
 ## History
 
-[![Download Workflow](https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/images/alfred-workflow-icon.png)](https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/SpotifyMiniPlayer.alfredworkflow)
-
 4.3.4:
 
 * Star track display track info and artwork
