@@ -67,8 +67,8 @@ function escapeQuery($text)
 function checkIfResultAlreadyThere($results, $title)
 {
     foreach ($results as $result) {
-        if ($result[title]) {
-            if ($result[title] == $title) {
+        if ($result['title']) {
+            if ($result['title'] == $title) {
                 return true;
             }
         }
@@ -114,7 +114,8 @@ function getTrackOrAlbumArtwork($w,$theme, $spotifyURL, $fetchIfNotPresent)
     endif;
 
     $currentArtwork = $w->data() . "/artwork/" . hash('md5', $hrefs[2] . ".png") . "/" . "$hrefs[2].png";
-
+	$artwork = "";
+	
     if (!is_file($currentArtwork)) {
         if ($fetchIfNotPresent == true) {
             $artwork = getTrackArtworkURL($w, $hrefs[1], $hrefs[2]);
@@ -237,7 +238,7 @@ function getArtistArtwork($w, $theme, $artist, $fetchIfNotPresent)
     endif;
 
     $currentArtwork = $w->data() . "/artwork/" . hash('md5', $parsedArtist . ".png") . "/" . "$parsedArtist.png";
-
+	$artwork = "";
 
     if (!is_file($currentArtwork)) {
         if ($fetchIfNotPresent == true) {
