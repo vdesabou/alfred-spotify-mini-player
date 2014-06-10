@@ -1,7 +1,7 @@
 <?php
 
 // Turn off all error reporting
-//error_reporting(0);
+error_reporting(0);
 
 if ( ! file_exists('alfred.bundler.php') ) 
   exec( 'curl -sL "https://raw.githubusercontent.com/shawnrice/alfred-bundler/aries/wrappers/alfred.bundler.php" > "alfred.bundler.php"' );
