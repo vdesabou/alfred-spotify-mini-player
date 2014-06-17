@@ -1048,7 +1048,6 @@ function checkForUpdate($w,$last_check_update_time) {
         	$description = $json['description'];
         	
         	if($local_version < $remote_version) {
-	        	displayNotification("An update is available");
 				
 				$workflow_file_name = $w->home() . '/Downloads/spotify-app-miniplayer-' . $remote_version . '.alfredworkflow';
                 $fp = fopen($workflow_file_name , 'w+');

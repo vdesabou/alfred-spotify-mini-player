@@ -92,7 +92,7 @@ if ($type == "TRACK") {
 			exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
 			
 			if ($returnValue != 0) {
-			    displayNotification("Error: Alfred Playlist is not set");
+			    displayNotification("Error: cannot read settings");
 			    return;
 			}
 		    
@@ -180,7 +180,7 @@ added to ' . $alfred_playlist_name,$track_artwork_path);
 		exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
 		
 		if ($returnValue != 0) {
-		    displayNotification("Error: Alfred Playlist is not set");
+		    displayNotification("Error: cannot read settings");
 		    return;
 		}
 	    
@@ -281,66 +281,87 @@ if ($playlist_uri != "") {
 } else if ($original_query != "") {
     exec("osascript -e 'tell application \"Alfred 2\" to search \"spot $original_query\"'");
 } else if ($other_action != "") {
+
+	//
+	// Read settings from DB
+	//
+	$getSettings = 'select theme from settings';
+	$dbfile = $w->data() . '/settings.db';
+	exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
+	
+	if ($returnValue != 0) {
+	    displayNotification("Error: cannot read settings");
+	    return;
+	}
+    
+
+	foreach ($settings as $setting):
+	
+	    $setting = explode("	", $setting);
+	
+	    $theme = $setting[0];
+	endforeach;
+		
     if ($other_action == "disable_all_playlist") {
         $setSettings = "update settings set all_playlists=0";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-	    displayNotification("Search scope set to starred playlist");
+	    displayNotificationWithArtwork("Search scope set to starred playlist",'./images/' . $theme . '/' . 'search.png');
     } else if ($other_action == "enable_all_playlist") {
         $setSettings = "update settings set all_playlists=1";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotification("Search scope set to all playlists");
+        displayNotificationWithArtwork("Search scope set to all playlists",'./images/' . $theme . '/' . 'search.png');
     } else if ($other_action == "enable_spotifiuous") {
         $setSettings = "update settings set is_spotifious_active=1";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-	    displayNotification("Spotifious is now enabled");
+	    displayNotificationWithArtwork("Spotifious is now enabled",'./images/' . $theme . '/' . 'check.png');
     } else if ($other_action == "disable_spotifiuous") {
         $setSettings = "update settings set is_spotifious_active=0";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-	    displayNotification("Spotifious is now disabled");
+	    displayNotificationWithArtwork("Spotifious is now disabled",'./images/' . $theme . '/' . 'uncheck.png');
     } else if ($other_action == "set_theme_to_black") {
         $setSettings = "update settings set theme='black'";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-	    displayNotification("Theme set to black");
+	    displayNotificationWithArtwork("Theme set to black",'./images/' . 'black' . '/' . 'check.png');
     } else if ($other_action == "set_theme_to_green") {
         $setSettings = "update settings set theme='green'";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-	    displayNotification("Theme set to green");
+	    displayNotificationWithArtwork("Theme set to green",'./images/' . 'green' . '/' . 'check.png');
     } else if ($other_action == "enable_displaymorefrom") {
         $setSettings = "update settings set is_displaymorefrom_active=1";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-	    displayNotification("Now Playing is now enabled");
+	    displayNotificationWithArtwork("Now Playing is now enabled",'./images/' . $theme . '/' . 'check.png');
     } else if ($other_action == "disable_displaymorefrom") {
         $setSettings = "update settings set is_displaymorefrom_active=0";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-	    displayNotification("Now Playing is now disabled");
+	    displayNotificationWithArtwork("Now Playing is now disabled",'./images/' . $theme . '/' . 'uncheck.png');
     } else if ($other_action == "enable_lyrics") {
         $setSettings = "update settings set is_lyrics_active=1";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-	    displayNotification("Get Lyrics is now enabled");
+	    displayNotificationWithArtwork("Get Lyrics is now enabled",'./images/' . $theme . '/' . 'check.png');
     } else if ($other_action == "disable_lyrics") {
         $setSettings = "update settings set is_lyrics_active=0";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-	    displayNotification("Get Lyrics is now disabled");
+	    displayNotificationWithArtwork("Get Lyrics is now disabled",'./images/' . $theme . '/' . 'uncheck.png');
     } else if ($other_action == "enable_alfred_playlist") {
         $setSettings = "update settings set is_alfred_playlist_active=1";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-	    displayNotification("Alfred Playlist is now enabled");
+	    displayNotificationWithArtwork("Alfred Playlist is now enabled",'./images/' . $theme . '/' . 'check.png');
     } else if ($other_action == "disable_alfred_playlist") {
         $setSettings = "update settings set is_alfred_playlist_active=0";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-	    displayNotification("Alfred Playlist is now disabled");
+	    displayNotificationWithArtwork("Alfred Playlist is now disabled",'./images/' . $theme . '/' . 'uncheck.png');
     } else if ($other_action == "open_spotify_export_app") {
         exec("osascript -e 'tell application \"Spotify\" to activate'");
         exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer\"'");
@@ -351,10 +372,10 @@ if ($playlist_uri != "") {
 	    }
 		$check_results = checkForUpdate($w,0);
 		if($check_results != null && is_array($check_results)) {
-			displayNotification('New version ' . $check_results[0] . ' is available in Downloads directory ');
+			displayNotificationWithArtwork('New version ' . $check_results[0] . ' is available in Downloads directory ','./images/' . $theme . '/' . 'check_update.png');
 		}
 		else if ($check_results == null) {
-			displayNotification('No update available');
+			displayNotificationWithArtwork('No update available','./images/' . $theme . '/' . 'check_update.png');
 		}
 		
     } else if ($other_action == "star") {
