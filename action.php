@@ -48,7 +48,7 @@ $alfred_playlist_name = $arg[17];
 
 if ($other_action == "update_playlist" && $playlist_uri != "") {
 	  if(! $w->internet()) {
-        displayNotification("Error: No internet connection");
+        displayNotificationWithArtwork("Error: No internet connection",'./images/warning.png');
         return;
 	  }
   
@@ -273,7 +273,7 @@ if ($playlist_uri != "") {
 	    displayNotificationWithArtwork('Alfred Playlist ' . $setting[2] . ' was cleared' ,getPlaylistArtwork($w,'black', $setting[1], true));
     } else if ($setting[0] == "GET_LYRICS") {
 	    if(! $w->internet()) {
-        	displayNotification("Error: No internet connection");
+        	displayNotificationWithArtwork("Error: No internet connection",'./images/warning.png');
         	return;
 	    }
 		getLyrics($w,$setting[1],$setting[2]);
@@ -367,7 +367,7 @@ if ($playlist_uri != "") {
         exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer\"'");
     } else if ($other_action == "check_for_update") {
 	    if(! $w->internet()) {
-        	displayNotification("Error: No internet connection");
+        	displayNotificationWithArtwork("Error: No internet connection",'./images/warning.png');
         	return;
 	    }
 		$check_results = checkForUpdate($w,0);
@@ -383,6 +383,7 @@ if ($playlist_uri != "") {
 		return;
     } else if ($other_action == "random") {
         exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:random:" . uniqid() . "\"'");
+        return;
     }
 	else if ($other_action == "display_biography") {
        	$getBiography = "select artist_biography from artists where artist_name='" . $artist_name . "'";	
@@ -396,7 +397,7 @@ if ($playlist_uri != "") {
         }
 
         if (count($biographs) == 0) {
-            displayNotification("No biography found");
+            displayNotificationWithArtwork("No biography found",'./images/' . $theme . '/' . 'biography.png');
             return;
         }
     	
@@ -411,23 +412,23 @@ if ($playlist_uri != "") {
             }
             else
             {
-	            displayNotification("No biography found");
+	            displayNotificationWithArtwork("No biography found",'./images/' . $theme . '/' . 'biography.png');
 	            return;
             }
         endforeach;
-	    
+        return;	    
     } 
 	else if ($other_action == "morefromthisartist") {
 
 	    if(! $w->internet()) {
-        	displayNotification("Error: No internet connection");
+        	displayNotificationWithArtwork("Error: No internet connection",'./images/warning.png');
         	return;
 	    }
         exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online⇾" . $artist_uri . "@" . escapeQuery($artist_name) . "\"'");
     }
      else if ($other_action == "update_library") {
 	    if(! $w->internet()) {
-        	displayNotification("Error: No internet connection");
+        	displayNotificationWithArtwork("Error: No internet connection",'./images/warning.png');
         	return;
 	    }
         touch($w->data() . "/update_library_in_progress");
@@ -449,7 +450,7 @@ if ($playlist_uri != "") {
         $server->run();
     } else if ($other_action == "update_playlist_list") {
 	    if(! $w->internet()) {
-        	displayNotification("Error: No internet connection");
+        	displayNotificationWithArtwork("Error: No internet connection",'./images/warning.png');
         	return;
 	    }
         touch($w->data() . "/update_library_in_progress");
