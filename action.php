@@ -269,7 +269,8 @@ if ($playlist_uri != "") {
     } else if ($setting[0] == "CLEAR_ALFRED_PLAYLIST") {
 		exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:clearplaylist:$setting[1]:" . uniqid() . "\"'");
 	    exec("osascript -e 'tell application \"Spotify\" to open location \"$setting[1]\"'");
-	    displayNotification("Alfred Playlist $setting[2] was cleared");
+	    
+	    displayNotificationWithArtwork('Alfred Playlist ' . $setting[2] . ' was cleared' ,getPlaylistArtwork($w,'black', $setting[1], true));
     } else if ($setting[0] == "GET_LYRICS") {
 	    if(! $w->internet()) {
         	displayNotification("Error: No internet connection");
