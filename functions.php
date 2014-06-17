@@ -615,7 +615,8 @@ function updatePlaylist($jsonData)
         exec($sql);
 		
 		$elapsed_time = time() - $words[3];
-		displayNotification("\nPlaylist has been updated (" . $nb_track . " tracks) - it took " . beautifyTime($elapsed_time));
+		
+		displayNotificationWithArtwork("\nPlaylist " . $playlist['name'] . " has been updated (" . $nb_track . " tracks) - it took " . beautifyTime($elapsed_time),getPlaylistArtwork($w,'black', $playlist['uri'], true));
         
         unlink($w->data() . "/update_library_in_progress");
     } else {
