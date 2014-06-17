@@ -1,5 +1,5 @@
 {
-    "version": 4.34,
+    "version": 4.35,
     "download_url": "https://raw.githubusercontent.com/packal/repository/master/com.vdesabou.spotify.mini.player/spotifyminiplayer.alfredworkflow",
-    "description": "Star track display track info and artwork - Search artist online even when not in library"
+    "description": "Fix issue with spot_mini_add_to_alfred_playlist command"
 }
