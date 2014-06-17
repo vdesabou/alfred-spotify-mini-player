@@ -1,5 +1,9 @@
 ## History
 
+4.3.5:
+
+* Fix issue with spot_mini_add_to_alfred_playlist command
+
 4.3.4:
 
 * Star track display track info and artwork
