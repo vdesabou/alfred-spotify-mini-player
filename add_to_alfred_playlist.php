@@ -1,18 +1,12 @@
 <?php
 
-if ( ! file_exists('alfred.bundler.php') ) 
-  exec( 'curl -sL "https://raw.githubusercontent.com/shawnrice/alfred-bundler/aries/wrappers/alfred.bundler.php" > "alfred.bundler.php"' );
-
-// Require the bundler.
-require_once('alfred.bundler.php');
-
 
 // Load and use David Ferguson's Workflows.php class
-$files = __load( "Workflows" );
+//$files = __load( "Workflows" );
+require_once('workflows.php');
 $w = new Workflows;
 
 require('functions.php');
-
 
  // get info on current song
 $command_output = exec("./track_info.sh 2>&1");
