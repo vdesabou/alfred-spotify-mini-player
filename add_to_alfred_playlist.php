@@ -39,7 +39,7 @@ if (substr_count($command_output, '⇾') > 0) {
     exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:addtoalfredplaylist:$results[4]:$alfred_playlist_uri\"'");
     exec("osascript -e 'tell application \"Spotify\" to open location \"$alfred_playlist_uri\"'"); 
     
-    displayNotificationWithArtwork('' . $results[2] . ' by ' . $results[1] . ' was added to ' . $alfred_playlist_name,getTrackOrAlbumArtwork($w,$theme,$results[4],true));                   
+    displayNotificationWithArtwork('' . $results[0] . ' by ' . $results[1] . ' was added to ' . $alfred_playlist_name,getTrackOrAlbumArtwork($w,$theme,$results[4],true));                   
 }
 else {
 	displayNotification("Error: No track is playing");
