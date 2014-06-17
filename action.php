@@ -77,12 +77,37 @@ if ($other_action == "update_playlist" && $playlist_uri != "") {
 
 
 if ($type == "TRACK") {
+	
     if ($track_uri != "") {
         if ($alfredplaylist != "") {
         	// add track to alfred playlist
             exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:addtoalfredplaylist:$track_uri:$alfred_playlist_uri\"'");
             exec("osascript -e 'tell application \"Spotify\" to open location \"$alfred_playlist_uri\"'");
-            displayNotificationWithArtwork('Track ' . $track_name . ' added to 🎵 Playlist ',$track_artwork_path);
+
+			//
+			// Read settings from DB
+			//
+			$getSettings = 'select alfred_playlist_uri,alfred_playlist_name,theme from settings';
+			$dbfile = $w->data() . '/settings.db';
+			exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
+			
+			if ($returnValue != 0) {
+			    displayNotification("Error: Alfred Playlist is not set");
+			    return;
+			}
+		    
+		
+			foreach ($settings as $setting):
+			
+			    $setting = explode("	", $setting);
+			
+			    $alfred_playlist_uri = $setting[0];
+			    $alfred_playlist_name = $setting[1];
+			    $theme = $setting[2];
+			endforeach;
+	
+            displayNotificationWithArtwork('' . $track_name . '
+added to ' . $alfred_playlist_name,$track_artwork_path);
             return;
         } else if ($playlist_uri != "") {
             exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:playtrackwithplaylistcontext:$track_uri:$playlist_uri\"'");
@@ -147,6 +172,27 @@ if ($type == "TRACK") {
 	return;
 } else if ($type == "ALBUM_OR_PLAYLIST") {
     if ($alfredplaylist != "") {
+		//
+		// Read settings from DB
+		//
+		$getSettings = 'select alfred_playlist_uri,alfred_playlist_name,theme from settings';
+		$dbfile = $w->data() . '/settings.db';
+		exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
+		
+		if ($returnValue != 0) {
+		    displayNotification("Error: Alfred Playlist is not set");
+		    return;
+		}
+	    
+	
+		foreach ($settings as $setting):
+		
+		    $setting = explode("	", $setting);
+		
+		    $alfred_playlist_uri = $setting[0];
+		    $alfred_playlist_name = $setting[1];
+		    $theme = $setting[2];
+		endforeach;
         if ($album_name != "") {
         
 			if($album_uri == "") {
@@ -157,19 +203,22 @@ if ($type == "TRACK") {
 					// track is not from library
 				    exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:addcurrenttrackalbumtoalfredplaylist:$alfred_playlist_uri\"'");
 				     exec("osascript -e 'tell application \"Spotify\" to open location \"$alfred_playlist_uri\"'");
-					displayNotificationWithArtwork('Album ' . $album_name . ' added to 🎵 Playlist ',getTrackOrAlbumArtwork($w,'black',$track_uri,true));
+					displayNotificationWithArtwork('Album ' . $album_name . '
+added to ' . $alfred_playlist_name,getTrackOrAlbumArtwork($w,$theme,$track_uri,true));
 					return;
 				}
-				$album_artwork_path = getTrackOrAlbumArtwork($w,'black',$album_uri,true);
+				$album_artwork_path = getTrackOrAlbumArtwork($w,$theme,$album_uri,true);
 			}
             exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:addtoalfredplaylist:$album_uri:$alfred_playlist_uri\"'");
             exec("osascript -e 'tell application \"Spotify\" to open location \"$alfred_playlist_uri\"'");
-			displayNotificationWithArtwork('Album ' . $album_name . ' added to 🎵 Playlist ',$album_artwork_path);
+			displayNotificationWithArtwork('Album ' . $album_name . '
+added to ' . $alfred_playlist_name,$album_artwork_path);
             return;
         } else if ($playlist_uri != "") {
             exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:addplaylisttoalfredplaylist:$playlist_uri:$alfred_playlist_uri\"'");
             exec("osascript -e 'tell application \"Spotify\" to open location \"$alfred_playlist_uri\"'");
-            displayNotificationWithArtwork('Playlist ' . $playlist_name . ' added to 🎵 Playlist ',$playlist_artwork_path);
+            displayNotificationWithArtwork('Playlist ' . $playlist_name . '
+added to ' . $alfred_playlist_name,$playlist_artwork_path);
             return;
         }
     }
@@ -214,7 +263,7 @@ if ($playlist_uri != "") {
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
         
-		displayNotificationWithArtwork('🎵 Playlist set to ' . $setting[2],getPlaylistArtwork($w,'black', $setting[1], true));
+		displayNotificationWithArtwork('Alfred Playlist set to ' . $setting[2],getPlaylistArtwork($w,'black', $setting[1], true));
 		return;
 
     } else if ($setting[0] == "CLEAR_ALFRED_PLAYLIST") {
