@@ -1,5 +1,9 @@
 ## History
 
+4.3.6:
+
+* Improved notifications
+
 4.3.5:
 
 * Fix issue with spot_mini_add_to_alfred_playlist command
