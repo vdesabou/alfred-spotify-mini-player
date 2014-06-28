@@ -79,14 +79,14 @@ if ($spotify_command != "" && $type == "TRACK" && $alfredplaylist == "") {
 
 	$spotify_command = str_replace("\\", "", $spotify_command);
 	exec("osascript -e 'tell application \"Spotify\" to $spotify_command'");
-	
+
 	if($spotify_command == "playpause") {
 		displayNotificationWithArtwork('🎶 Play/Pause ' . $track_name . '
  by ' . ucfirst($artist_name),getTrackOrAlbumArtwork($w,'black',$track_uri,true));
- 	}
+	}
 	return;
-} 
-	
+}
+
 
 if ($type == "TRACK") {
 
@@ -126,7 +126,7 @@ added to ' . $alfred_playlist_name,$track_artwork_path);
 				exec("osascript -e 'tell application \"Spotify\" to open location \"$playlist_uri\"'");
 				displayNotificationWithArtwork('🔈 ' . $track_name . ' by ' . ucfirst($artist_name),$track_artwork_path);
 				return;
-		}
+			}
 		else {
 			if ($other_action == "") {
 				exec("osascript -e 'tell application \"Spotify\" to open location \"$track_uri\"'");
@@ -187,7 +187,7 @@ added to ' . $alfred_playlist_name,$track_artwork_path);
 		unstarCurrentTrack($w);
 		return;
 	}
-	else if ($type == "ALBUM_OR_PLAYLIST") {
+else if ($type == "ALBUM_OR_PLAYLIST") {
 		if ($alfredplaylist != "") {
 			//
 			// Read settings from DB
@@ -491,7 +491,7 @@ if ($playlist_uri != "") {
 
 /**
  * starCurrentTrack function.
- * 
+ *
  * @access public
  * @param mixed $w
  * @return void
@@ -534,7 +534,7 @@ function starCurrentTrack($w)
 
 /**
  * unstarCurrentTrack function.
- * 
+ *
  * @access public
  * @param mixed $w
  * @return void
