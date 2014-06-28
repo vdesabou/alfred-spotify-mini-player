@@ -4,6 +4,13 @@
 require_once('alfred.bundler.php');
 require_once('workflows.php');
 
+/**
+ * installSpotifyAppIfNeeded function.
+ * 
+ * @access public
+ * @param mixed $w
+ * @return void
+ */
 function installSpotifyAppIfNeeded($w)
 {
 	if (!file_exists($w->home() . '/Spotify/spotify-app-miniplayer')) {
@@ -23,6 +30,12 @@ function installSpotifyAppIfNeeded($w)
 	return true;
 }
 
+/**
+ * getFreeTcpPort function.
+ * 
+ * @access public
+ * @return void
+ */
 function getFreeTcpPort()
 {
 	//avoid warnings like this PHP Warning:  fsockopen(): unable to connect to localhost (Connection refused)
@@ -52,6 +65,13 @@ function getFreeTcpPort()
 	return 17693;
 }
 
+/**
+ * escapeQuery function.
+ * 
+ * @access public
+ * @param mixed $text
+ * @return void
+ */
 function escapeQuery($text)
 {
 	$text = str_replace("'", "’", $text);
@@ -65,6 +85,14 @@ function escapeQuery($text)
 	return $text;
 }
 
+/**
+ * checkIfResultAlreadyThere function.
+ * 
+ * @access public
+ * @param mixed $results
+ * @param mixed $title
+ * @return void
+ */
 function checkIfResultAlreadyThere($results, $title)
 {
 	foreach ($results as $result) {
@@ -77,6 +105,13 @@ function checkIfResultAlreadyThere($results, $title)
 	return false;
 }
 
+/**
+ * displayNotification function.
+ * 
+ * @access public
+ * @param mixed $output
+ * @return void
+ */
 function displayNotification($output)
 {
 	// Load and use Terminal Notifier, a "helper" utility
@@ -84,6 +119,14 @@ function displayNotification($output)
 	exec( "$tn -title 'Spotify Mini Player' -sender 'com.spotify.miniplayer' -message '" . $output . "'" );
 }
 
+/**
+ * displayNotificationWithArtwork function.
+ * 
+ * @access public
+ * @param mixed $output
+ * @param mixed $artwork
+ * @return void
+ */
 function displayNotificationWithArtwork($output,$artwork)
 {
 	if($artwork != "") {
@@ -94,12 +137,30 @@ function displayNotificationWithArtwork($output,$artwork)
 	exec( "$tn -title 'Spotify Mini Player' -sender 'com.spotify.miniplayer' -contentImage '/tmp/tmp' -message '" . $output . "'" );
 }
 
+/**
+ * displayNotificationForStarredTrack function.
+ * 
+ * @access public
+ * @param mixed $track_name
+ * @param mixed $track_uri
+ * @return void
+ */
 function displayNotificationForStarredTrack($track_name,$track_uri)
 {
 	$w = new Workflows;
 	displayNotificationWithArtwork('⭐️ ' . $track_name . ' has been starred',getTrackOrAlbumArtwork($w,'black',$track_uri,true));
 }
 
+/**
+ * getTrackOrAlbumArtwork function.
+ * 
+ * @access public
+ * @param mixed $w
+ * @param mixed $theme
+ * @param mixed $spotifyURL
+ * @param mixed $fetchIfNotPresent
+ * @return void
+ */
 function getTrackOrAlbumArtwork($w,$theme, $spotifyURL, $fetchIfNotPresent)
 {
 
@@ -162,6 +223,16 @@ function getTrackOrAlbumArtwork($w,$theme, $spotifyURL, $fetchIfNotPresent)
 }
 
 
+/**
+ * getPlaylistArtwork function.
+ * 
+ * @access public
+ * @param mixed $w
+ * @param mixed $theme
+ * @param mixed $playlistURI
+ * @param mixed $fetchIfNotPresent
+ * @return void
+ */
 function getPlaylistArtwork($w, $theme, $playlistURI, $fetchIfNotPresent)
 {
 
@@ -230,6 +301,16 @@ function getPlaylistArtwork($w, $theme, $playlistURI, $fetchIfNotPresent)
 	}
 }
 
+/**
+ * getArtistArtwork function.
+ * 
+ * @access public
+ * @param mixed $w
+ * @param mixed $theme
+ * @param mixed $artist
+ * @param mixed $fetchIfNotPresent
+ * @return void
+ */
 function getArtistArtwork($w, $theme, $artist, $fetchIfNotPresent)
 {
 	$parsedArtist = urlencode($artist);
@@ -271,6 +352,15 @@ function getArtistArtwork($w, $theme, $artist, $fetchIfNotPresent)
 	}
 }
 
+/**
+ * getTrackArtworkURL function.
+ * 
+ * @access public
+ * @param mixed $w
+ * @param mixed $type
+ * @param mixed $id
+ * @return void
+ */
 function getTrackArtworkURL($w, $type, $id)
 {
 	$html = $w->request("http://open.spotify.com/$type/$id");
@@ -283,6 +373,14 @@ function getTrackArtworkURL($w, $type, $id)
 	return 0;
 }
 
+/**
+ * getPlaylistArtworkURL function.
+ * 
+ * @access public
+ * @param mixed $w
+ * @param mixed $url
+ * @return void
+ */
 function getPlaylistArtworkURL($w, $url)
 {
 	$html = $w->request($url);
@@ -295,6 +393,14 @@ function getPlaylistArtworkURL($w, $url)
 	return 0;
 }
 
+/**
+ * getArtistArtworkURL function.
+ * 
+ * @access public
+ * @param mixed $w
+ * @param mixed $artist
+ * @return void
+ */
 function getArtistArtworkURL($w, $artist)
 {
 	$parsedArtist = urlencode($artist);
@@ -308,6 +414,13 @@ function getArtistArtworkURL($w, $artist)
 }
 
 
+/**
+ * updateLibrary function.
+ * 
+ * @access public
+ * @param mixed $jsonData
+ * @return void
+ */
 function updateLibrary($jsonData)
 {
 	$w = new Workflows();
@@ -509,6 +622,13 @@ function updateLibrary($jsonData)
 	}
 }
 
+/**
+ * updatePlaylist function.
+ * 
+ * @access public
+ * @param mixed $jsonData
+ * @return void
+ */
 function updatePlaylist($jsonData)
 {
 	$w = new Workflows();
@@ -626,6 +746,13 @@ function updatePlaylist($jsonData)
 	}
 }
 
+/**
+ * updatePlaylistList function.
+ * 
+ * @access public
+ * @param mixed $jsonData
+ * @return void
+ */
 function updatePlaylistList($jsonData)
 {
 	$w = new Workflows();
@@ -790,6 +917,13 @@ function updatePlaylistList($jsonData)
 	}
 }
 
+/**
+ * handleDbIssue function.
+ * 
+ * @access public
+ * @param mixed $theme
+ * @return void
+ */
 function handleDbIssue($theme) {
 	$w = new Workflows();
 	$w->result(uniqid(), '', 'There is a problem with the library, try to update it.', 'Select Update library below', './images/warning.png', 'no', null, '');
@@ -799,12 +933,28 @@ function handleDbIssue($theme) {
 	echo $w->toxml();
 }
 
+/**
+ * floatToSquares function.
+ * 
+ * @access public
+ * @param mixed $decimal
+ * @return void
+ */
 function floatToSquares($decimal)
 {
 	$squares = ($decimal < 1) ? floor($decimal * 10) : 10;
 	return str_repeat("◼︎", $squares) . str_repeat("◻︎", 10 - $squares);
 }
 
+/**
+ * getArtistUriFromName function.
+ * 
+ * @access public
+ * @param mixed $w
+ * @param mixed $theme
+ * @param mixed $artist
+ * @return void
+ */
 function getArtistUriFromName($w,$theme,$artist) {
 	$getArtists = "select artist_uri,artist_artwork_path,artist_biography from artists where artist_name='" . $artist . "'";
 
@@ -824,6 +974,16 @@ function getArtistUriFromName($w,$theme,$artist) {
 	return "";
 }
 
+/**
+ * getAlbumUriFromName function.
+ * 
+ * @access public
+ * @param mixed $w
+ * @param mixed $theme
+ * @param mixed $album
+ * @param mixed $artist
+ * @return void
+ */
 function getAlbumUriFromName($w,$theme,$album,$artist) {
 	$getTracks = "select album_uri from tracks where album_name='" . $album . "' and artist_name='" . $artist . "'";
 
@@ -879,7 +1039,14 @@ along with SpotCommander.  If not, see <http://www.gnu.org/licenses/>.
 
 Copyright 2013 Ole Jon Bjørkum
 
-*/
+ * getLyrics function.
+ * 
+ * @access public
+ * @param mixed $w
+ * @param mixed $artist
+ * @param mixed $title
+ * @return void
+ */
 function getLyrics($w,$artist,$title) {
 	$query_artist = $artist;
 	$query_title = $title;
@@ -1010,11 +1177,26 @@ function getLyrics($w,$artist,$title) {
 	}
 }
 
+/**
+ * strip_string function.
+ * 
+ * @access public
+ * @param mixed $string
+ * @return void
+ */
 function strip_string($string)
 {
 	return preg_replace('/[^a-zA-Z0-9-\s]/', '', $string);
 }
 
+/**
+ * checkForUpdate function.
+ * 
+ * @access public
+ * @param mixed $w
+ * @param mixed $last_check_update_time
+ * @return void
+ */
 function checkForUpdate($w,$last_check_update_time) {
 
 	if(time()-$last_check_update_time > 86400)
@@ -1069,11 +1251,13 @@ function checkForUpdate($w,$last_check_update_time) {
 	}
 }
 
-/*
-	Thanks to Spotifious code
-
-	https://github.com/citelao/Spotify-for-Alfred
-*/
+/**
+ * beautifyTime function.
+ * 
+ * @access public
+ * @param mixed $seconds
+ * @return void
+ */
 function beautifyTime($seconds) {
 	$m = floor($seconds / 60);
 	$s = $seconds % 60;
@@ -1081,6 +1265,14 @@ function beautifyTime($seconds) {
 	return  $m . "m" . $s . "s";
 }
 
+/**
+ * startswith function.
+ * 
+ * @access public
+ * @param mixed $haystack
+ * @param mixed $needle
+ * @return void
+ */
 function startswith($haystack, $needle) {
 	return substr($haystack, 0, strlen($needle)) === $needle;
 }
