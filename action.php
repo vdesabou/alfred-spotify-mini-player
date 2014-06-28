@@ -75,7 +75,7 @@ if ($other_action == "update_playlist" && $playlist_uri != "") {
 	return;
 }
 
-if ($spotify_command != "") {
+if ($spotify_command != "" && $type == "TRACK" && $alfredplaylist == "") {
 
 	$spotify_command = str_replace("\\", "", $spotify_command);
 	exec("osascript -e 'tell application \"Spotify\" to $spotify_command'");
