@@ -22,7 +22,7 @@
 		"en"
 	],
 	 "Dependencies": {
-	    "api": "1.43.0",
+	    "api": "1.38.0",
 	    "views": "1.18.1"
     },
 	"RequiredPermissions": [
