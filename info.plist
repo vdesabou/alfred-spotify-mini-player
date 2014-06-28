@@ -387,7 +387,7 @@
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f action.php -- "{query}" "TRACK" "" 2&gt;&amp;1</string>
+				<string>php -f action.php -- "{query}" "TRACK" ""</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -1235,7 +1235,7 @@ end alfred_script</string>
 		<key>1A88766E-BF4A-48F5-9BD4-D3538634422F</key>
 		<dict>
 			<key>ypos</key>
-			<real>300</real>
+			<real>310</real>
 		</dict>
 		<key>22216C91-0A58-4FE1-9F28-DF023E4F4282</key>
 		<dict>
@@ -1290,7 +1290,7 @@ end alfred_script</string>
 		<key>5F5E8A6D-8707-41FC-B5D1-660CD11685F0</key>
 		<dict>
 			<key>ypos</key>
-			<real>520</real>
+			<real>530</real>
 		</dict>
 		<key>60EA5756-7B07-4DCA-959A-C3B0E90150AC</key>
 		<dict>
@@ -1305,7 +1305,7 @@ end alfred_script</string>
 		<key>7918E8F7-20AE-445E-9AEA-E2E54CDE967D</key>
 		<dict>
 			<key>ypos</key>
-			<real>410</real>
+			<real>420</real>
 		</dict>
 		<key>794A76A7-BB98-4A83-92BE-386A56875120</key>
 		<dict>
@@ -1340,7 +1340,7 @@ end alfred_script</string>
 		<key>9845C770-A2CC-4752-A542-D71BE1081691</key>
 		<dict>
 			<key>ypos</key>
-			<real>200</real>
+			<real>210</real>
 		</dict>
 		<key>A3EB4F73-2F67-44E8-A87A-80C400ABF1AE</key>
 		<dict>
