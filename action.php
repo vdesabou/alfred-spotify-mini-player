@@ -75,6 +75,15 @@ if ($other_action == "update_playlist" && $playlist_uri != "") {
 	return;
 }
 
+if ($spotify_command != "") {
+
+	$spotify_command = str_replace("\\", "", $spotify_command);
+	exec("osascript -e 'tell application \"Spotify\" to $spotify_command'");
+	displayNotificationWithArtwork('🎶 Play/Pause ' . $track_name . '
+ by ' . ucfirst($artist_name),getTrackOrAlbumArtwork($w,'black',$track_uri,true));
+	return;
+} 
+	
 
 if ($type == "TRACK") {
 
@@ -114,11 +123,12 @@ added to ' . $alfred_playlist_name,$track_artwork_path);
 				exec("osascript -e 'tell application \"Spotify\" to open location \"$playlist_uri\"'");
 				displayNotificationWithArtwork('🔈 ' . $track_name . ' by ' . ucfirst($artist_name),$track_artwork_path);
 				return;
-			}
+		}
 		else {
-			if ($other_action == "")
+			if ($other_action == "") {
 				exec("osascript -e 'tell application \"Spotify\" to open location \"$track_uri\"'");
-			displayNotificationWithArtwork('🔈 ' . $track_name . ' by ' . ucfirst($artist_name),$track_artwork_path);
+				displayNotificationWithArtwork('🔈 ' . $track_name . ' by ' . ucfirst($artist_name),$track_artwork_path);
+			}
 		}
 	}
 } else if ($type == "ALBUM") {
@@ -251,11 +261,7 @@ if ($playlist_uri != "") {
 	exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:startplaylist:$playlist_uri:" . uniqid() . "\"'");
 	exec("osascript -e 'tell application \"Spotify\" to open location \"$playlist_uri\"'");
 	displayNotificationWithArtwork('🔈 Playlist ' . $playlist_name,$playlist_artwork_path);
-} else if ($spotify_command != "") {
-
-		$spotify_command = str_replace("\\", "", $spotify_command);
-		exec("osascript -e 'tell application \"Spotify\" to $spotify_command'");
-	} else if ($other_settings != "") {
+}else if ($other_settings != "") {
 		$setting = explode('⇾', $other_settings);
 		if ($setting[0] == "MAX_RESULTS") {
 			$setSettings = "update settings set max_results=" . $setting[1];
