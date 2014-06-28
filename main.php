@@ -94,13 +94,18 @@ if(!installSpotifyAppIfNeeded($w))
 //
 $getSettings = 'select all_playlists,is_spotifious_active,is_alfred_playlist_active,is_displaymorefrom_active,is_lyrics_active,max_results, alfred_playlist_uri,alfred_playlist_name,country_code,theme,last_check_update_time from settings';
 $dbfile = $w->data() . '/settings.db';
-exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
 
-if ($returnValue != 0) {
+
+$db = new SQLite3($dbfile);
+
+$settings = $db->query($getSettings);
+
+if ($settings == false) {
     if (file_exists($w->data() . '/settings.db')) {
         unlink($w->data() . '/settings.db');
     }
 }
+
 
 
 //
@@ -117,10 +122,7 @@ if (!file_exists($w->data() . '/settings.db')) {
 }
 
 
-foreach ($settings as $setting):
-
-    $setting = explode("	", $setting);
-
+while ($setting = $settings->fetchArray()) {
     $all_playlists = $setting[0];
     $is_spotifious_active = $setting[1];
     $is_alfred_playlist_active = $setting[2];
@@ -132,7 +134,8 @@ foreach ($settings as $setting):
     $country_code = $setting[8];
     $theme = $setting[9];
     $last_check_update_time = $setting[10];
-endforeach;
+}
+
 
 $check_results = checkForUpdate($w,$last_check_update_time);
 if($check_results != null && is_array($check_results))
@@ -154,16 +157,17 @@ if (mb_strlen($query) < 3 ||
         if (file_exists($w->data() . '/library.db')) {
             $getCounters = 'select * from counters';
             $dbfile = $w->data() . '/library.db';
-            exec("sqlite3 -separator '	' \"$dbfile\" \"$getCounters\" 2>&1", $counters, $returnValue);
 
-            if ($returnValue != 0) {
+			$db = new SQLite3($dbfile);
+			
+			$counters = $db->query($getCounters);
+
+            if ($counters == false) {
                 handleDbIssue($theme);
                 return;
             }
 
-            foreach ($counters as $counter):
-
-                $counter = explode("	", $counter);
+			while ($counter = $counters->fetchArray()) {
 
                 $all_tracks = $counter[0];
                 $starred_tracks = $counter[1];
@@ -172,7 +176,7 @@ if (mb_strlen($query) < 3 ||
                 $all_albums = $counter[4];
                 $starred_albums = $counter[5];
                 $nb_playlists = $counter[6];
-            endforeach;
+            }
 
             if ($all_playlists == true) {
                 $w->result(uniqid(), '', 'Search for music in all your playlists', 'Begin typing at least 3 characters to start search' . ' (' . $all_tracks . ' tracks)', './images/' . $theme . '/' . 'allplaylists.png', 'no', null, '');
@@ -207,41 +211,37 @@ array(
   'ctrl' => 'Not Available')
 , getTrackOrAlbumArtwork($w,$theme,$results[4],false), 'yes', null, '');
                     }
-                                       
                     
-                    
+                    $dbfile = $w->data() . "/library.db";                  
+					$db = new SQLite3($dbfile);
+					
 	                $getTracks = "select * from tracks where playable=1 and uri='" . $results[4] . "'" . " limit " . $max_results;
 
-	                $dbfile = $w->data() . "/library.db";
-	                exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
-	
-	                if ($returnValue != 0) {
+					$tracks = $db->query($getTracks);
+	                
+	                if ($tracks == false) {
 	                    handleDbIssue($theme);
 	                    return;
 	                }
 	
-			        foreach ($tracks as $track):
-			            $track = explode("	", $track);
+					while ($track = $tracks->fetchArray()) {
 						            
 				        $getPlaylists = "select * from playlists where uri='" . $track[13] . "'";
 				
-				        $dbfile = $w->data() . "/library.db";
-				        exec("sqlite3 -separator '	' \"$dbfile\" \"$getPlaylists\" 2>&1", $playlists, $returnValue);
+				        $playlists = $db->query($getPlaylists);
 				
-				        if ($returnValue != 0) {
+				        if ($playlists == false) {
 				            handleDbIssue($theme);
 				            return;
 				        }
 				
-				        foreach ($playlists as $playlist):
-				            $playlist = explode("	", $playlist);
+				        while ($playlist = $playlists->fetchArray()) {
 							
 							if (checkIfResultAlreadyThere($w->results(), "🔈🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)") == false) {
 				            	$w->result(uniqid(), '', "🔈🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", $playlist[5], 'no', null, "Playlist⇾" . $playlist[0] . "⇾");
 				            }
-				        endforeach;
-			        endforeach;
-
+				        }
+				   }
                     
 
                 }
@@ -458,21 +458,21 @@ array(
         // Search in Playlists
         //
 
+        $dbfile = $w->data() . "/library.db";                  
+		$db = new SQLite3($dbfile);
         $getPlaylists = "select * from playlists where name like '%" . $query . "%'";
 
-        $dbfile = $w->data() . "/library.db";
-        exec("sqlite3 -separator '	' \"$dbfile\" \"$getPlaylists\" 2>&1", $playlists, $returnValue);
+		$playlists = $db->query($getPlaylists);
 
-        if ($returnValue != 0) {
+        if ($playlists == false) {
             handleDbIssue($theme);
             return;
         }
 
-        foreach ($playlists as $playlist):
-            $playlist = explode("	", $playlist);
+        while ($playlist = $playlists->fetchArray()) {
 
             $w->result(uniqid(), '', "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", $playlist[5], 'no', null, "Playlist⇾" . $playlist[0] . "⇾");
-        endforeach;
+        }
 
 
         //
@@ -483,23 +483,19 @@ array(
         } else {
             $getTracks = "select * from tracks where playable=1 and artist_name like '%" . $query . "%'" . " limit " . $max_results;
         }
-
-
-        $dbfile = $w->data() . "/library.db";
-        exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
-
-        if ($returnValue != 0) {
+		
+		$tracks = $db->query($getTracks);
+        if ($tracks == false) {
             handleDbIssue($theme);
             return;
         }
 
-        foreach ($tracks as $track):
-            $track = explode("	", $track);
+        while ($track = $tracks->fetchArray()) {
 
             if (checkIfResultAlreadyThere($w->results(), "👤 " . ucfirst($track[7])) == false) {
                 $w->result(uniqid(), '', "👤 " . ucfirst($track[7]), "Browse this artist", $track[10], 'no', null, "Artist⇾" . $track[7] . "⇾");
             }
-        endforeach;
+        }
 
 
         //
@@ -512,24 +508,23 @@ array(
         }
 
 
-        $dbfile = $w->data() . "/library.db";
-        exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
-
-        if ($returnValue != 0) {
+		$tracks = $db->query($getTracks);
+        if ($tracks == false) {
             handleDbIssue($theme);
-            return;            
-		}
-		
-        if (count($tracks) > 0) {
-            $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-            if ($is_alfred_playlist_active == true) {
-                $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
-            }
-            $w->result(uniqid(), 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', null, '');
+            return;
         }
-        foreach ($tracks as $track):
-            $track = explode("	", $track);
-
+          
+        $noresult=true;
+        while ($track = $tracks->fetchArray()) {
+			
+			if($noresult==true) {
+	            $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
+	            if ($is_alfred_playlist_active == true) {
+	                $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
+	            }
+	            $w->result(uniqid(), 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', null, '');
+			}
+			$noresult=false;
             $subtitle = ($track[0] == true) ? "★ " : "";
             $subtitle = $subtitle . $track[6];
 
@@ -537,7 +532,12 @@ array(
                 $w->result(uniqid(), serialize(array($track[2] /*track_uri*/ ,$track[3] /* album_uri */ ,$track[4] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,$track[7]  /* artist_name */, $track[5] /* track_name */, $track[6] /* album_name */, $track[9] /* track_artwork_path */, $track[10] /* artist_artwork_path */, $track[11] /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), ucfirst($track[7]) . " - " . $track[5], $subtitle, $track[9], 'yes', null, '');
                 
             }
-        endforeach;
+        }            
+
+		if($noresult) {
+		    $w->result(uniqid(), 'help', "There is no result for your search", "", './images/warning.png', 'no', null, ''); 
+		}
+		
 
         $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'activate (open location "spotify:search:' . $query . '")' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $query . " with Spotify", array(
   'This will start a new search in Spotify',
@@ -570,32 +570,40 @@ array(
             //
             // Search playlists
             //
-            $theplaylist = $words[1];
-
-            $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_playlist_list' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Update Playlist List (use it when you have added or removed a playlist)", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', null, '');
-            
+            $theplaylist = $words[1];            
 
             if (mb_strlen($theplaylist) < 3) {
                 $getPlaylists = "select * from playlists";
+	            $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_playlist_list' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Update Playlist List (use it when you have added or removed a playlist)", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', null, '');
             }
             else {
             	$getPlaylists = "select * from playlists where ( name like '%" . $theplaylist . "%' or author like '%" . $theplaylist . "%')";
             }
 
-            $dbfile = $w->data() . "/library.db";
-
-            exec("sqlite3 -separator '	' \"$dbfile\" \"$getPlaylists\" 2>&1", $playlists, $returnValue);
-
-            if ($returnValue != 0) {
+            $dbfile = $w->data() . "/library.db";                  
+			$db = new SQLite3($dbfile);
+			$playlists = $db->query($getPlaylists);
+			
+            if ($playlists == false) {
                 handleDbIssue($theme);
                 return;
             }
 
-            foreach ($playlists as $playlist):
-                $playlist = explode("	", $playlist);
+			
+	        $noresult=true;
+	        while ($playlist = $playlists->fetchArray()) {
 
-                $w->result(uniqid(), '', "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", $playlist[5], 'no', null, "Playlist⇾" . $playlist[0] . "⇾");
-            endforeach;
+				$noresult=false;
+
+	            $w->result(uniqid(), '', "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", $playlist[5], 'no', null, "Playlist⇾" . $playlist[0] . "⇾");
+
+	        }            
+	
+			if($noresult) {
+			    $w->result(uniqid(), 'help', "There is no result for your search", "", './images/warning.png', 'no', null, ''); 
+			}
+			
+
         } // search by Playlist end
         elseif ($kind == "Alfred Playlist") {
             //
@@ -643,22 +651,31 @@ array(
                 }            
             }
 
-            $dbfile = $w->data() . "/library.db";
-            exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
+            $dbfile = $w->data() . "/library.db";                 
+			$db = new SQLite3($dbfile);
+			$tracks = $db->query($getTracks);
 
-            if ($returnValue != 0) {
+            if ($tracks == false) {
                 handleDbIssue($theme);
                 return;
             }
 
             // display all artists
-            foreach ($tracks as $track):
-                $track = explode("	", $track);
+	        $noresult=true;
+	        while ($track = $tracks->fetchArray()) {
+				
+
+				$noresult=false;
 
                 if (checkIfResultAlreadyThere($w->results(), "👤 " . ucfirst($track[7])) == false) {
                     $w->result(uniqid(), '', "👤 " . ucfirst($track[7]), "Browse this artist", $track[10], 'no', null, "Artist⇾" . $track[7] . "⇾");
                 }
-            endforeach;
+	        }            
+	
+			if($noresult) {
+			    $w->result(uniqid(), 'help', "There is no result for your search", "", './images/warning.png', 'no', null, ''); 
+			}
+
         } // search by Artist end
         elseif ($kind == "Album") {
             //
@@ -682,23 +699,30 @@ array(
             }
 
 
-            $dbfile = $w->data() . "/library.db";
-            exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
+            $dbfile = $w->data() . "/library.db";                 
+			$db = new SQLite3($dbfile);
+			$tracks = $db->query($getTracks);
 
-            if ($returnValue != 0) {
+            if ($tracks == false) {
                 handleDbIssue($theme);
                 return;
             }
 
             // display all albums
-            foreach ($tracks as $track):
-                $track = explode("	", $track);
+	        $noresult=true;
+	        while ($track = $tracks->fetchArray()) {
+				
+
+				$noresult=false;
 
                 if (checkIfResultAlreadyThere($w->results(), ucfirst($track[6])) == false) {
                     $w->result(uniqid(), '', ucfirst($track[6]), "by " . $track[7], $track[11], 'no', null, "Album⇾" . $track[6] . "⇾");
                 }
-            endforeach;
-
+	        }            
+	
+			if($noresult) {
+			    $w->result(uniqid(), 'help', "There is no result for your search", "", './images/warning.png', 'no', null, ''); 
+			}
         } // search by Album end
         elseif ($kind == "Online") {
             if (substr_count($query, '@') == 1) {
@@ -820,37 +844,44 @@ array(
             // display tracks for selected artists
             //
             $artist = $words[1];
-            $track = $words[2];
-
-
-        	$getArtists = "select artist_uri,artist_artwork_path,artist_biography from artists where artist_name='" . $artist . "'";	
-        	
-	        $dbfile = $w->data() . "/library.db";
-	        exec("sqlite3 -separator '	' \"$dbfile\" \"$getArtists\" 2>&1", $artists, $returnValue);
+            $track = $words[2];           
+            
+        	$getArtists = "select artist_uri,artist_artwork_path,artist_biography,related_artist_name from artists where artist_name='" . $artist . "'";	
 	
-	        if ($returnValue != 0) {
+            $dbfile = $w->data() . "/library.db";                 
+			$db = new SQLite3($dbfile);
+			$artists = $db->query($getArtists);
+
+            if ($artists == false) {
 	            handleDbIssue($theme);
 	            return;
 	        }
-
-	        if (count($artists) > 0) {
-	        	
-	        	$theartist = explode("	", $artists[0]);
-	        	$w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,$theartist[0] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'morefromthisartist' /* other_action */ ,'' /* alfred_playlist_uri */ ,$artist  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "👤 " . $artist, '☁︎ Query all albums/tracks from this artist online..', $theartist[1], 'yes', null, '');
-	        	
-	            if($theartist[2] != "") {
-	            	$w->result('display-biography', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'display_biography' /* other_action */ ,'' /* alfred_playlist_uri */ ,$artist  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Display biography', 'This will display the artist biography', './images/' . $theme . '/' . 'biography.png', 'yes', null, ''); 
+ 			
+ 			// only get first result
+ 			$theartist = $artists->fetchArray();
+ 			                          
+            if (mb_strlen($track) < 3) {
+            			
+            	if($theartist != false) {
+		        	$w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,$theartist[0] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'morefromthisartist' /* other_action */ ,'' /* alfred_playlist_uri */ ,$artist  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "👤 " . $artist, '☁︎ Query all albums/tracks from this artist online..', $theartist[1], 'yes', null, '');
+		        	
+		            if($theartist[2] != "") {
+		            	$w->result('display-biography', serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'display_biography' /* other_action */ ,'' /* alfred_playlist_uri */ ,$artist  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Display biography', 'This will display the artist biography', './images/' . $theme . '/' . 'biography.png', 'yes', null, ''); 
+		            }
+		            
+		            if($theartist[3] != "") {
+			            $w->result(uniqid(), '', 'Related Artists', 'Browse related artists', './images/' . $theme . '/' . 'related.png', 'no', null, $query . 'Related⇾');
+			        }
 	            }
 	            
-	            $w->result(uniqid(), '', 'Related Artists', 'Browse related artists', './images/' . $theme . '/' . 'related.png', 'no', null, $query . 'Related⇾');         
-	        } 
-                        
-            if (mb_strlen($track) < 3) {
+	            
+		        
                 if ($all_playlists == false) {
                     $getTracks = "select * from tracks where playable=1 and starred=1 and artist_name='" . $artist . "'" . " limit " . $max_results;
                 } else {
                     $getTracks = "select * from tracks where playable=1 and artist_name='" . $artist . "'" . " limit " . $max_results;
-                }
+                }        	
+
             }
             else {
                 if ($all_playlists == false) {
@@ -861,35 +892,38 @@ array(
             }
 
 
-            $dbfile = $w->data() . "/library.db";
-            exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
+            $dbfile = $w->data() . "/library.db";                 
+			$db = new SQLite3($dbfile);
+			$tracks = $db->query($getTracks);
 
-            if ($returnValue != 0) {
+            if ($tracks == false) {
                 handleDbIssue($theme);
                 return;
             }
 
-            if (count($tracks) > 0) {
-                $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-                if ($is_alfred_playlist_active == true) {
-                    $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
-                }
-                $w->result(uniqid(), 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', null, '');
-            }
-
-            foreach ($tracks as $track):
-                $track = explode("	", $track);
-
-                $subtitle = ($track[0] == true) ? "★ " : "";
-                $subtitle = $subtitle . $track[6];
-
+	        $noresult=true;
+	        while ($track = $tracks->fetchArray()) {
+				
+				if($noresult==true) {
+		            $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
+		            if ($is_alfred_playlist_active == true) {
+		                $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
+		            }
+		            $w->result(uniqid(), 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', null, '');
+				}
+				$noresult=false;
+	            $subtitle = ($track[0] == true) ? "★ " : "";
+	            $subtitle = $subtitle . $track[6];
+	
                 if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " - " . $track[5]) == false) {
                     $w->result(uniqid(), serialize(array($track[2] /*track_uri*/ ,$track[3] /* album_uri */ ,$track[4] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,$track[7]  /* artist_name */, $track[5] /* track_name */, $track[6] /* album_name */, $track[9] /* track_artwork_path */, $track[10] /* artist_artwork_path */, $track[11] /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), ucfirst($track[7]) . " - " . $track[5], $subtitle, $track[9], 'yes', null, '');
                 }
-                if ($artist_uri == "")
-                    $artist_uri = $track[4];
-            endforeach;
-
+	        }            
+	
+			if($noresult) {
+			    $w->result(uniqid(), 'help', "There is no result for your search", "", './images/warning.png', 'no', null, ''); 
+			}
+		
             $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'activate (open location "spotify:search:' . $artist . '")' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $artist . " with Spotify", array(
   'This will start a new search in Spotify',
   'alt' => 'Not Available',
@@ -897,14 +931,17 @@ array(
   'shift' => 'Not Available',
   'fn' => 'Not Available',
   'ctrl' => 'Not Available'), 'fileicon:/Applications/Spotify.app', 'yes', null, '');
-            if ($is_spotifious_active == true) {
-                $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,$artist_uri . " ⟩ " . $artist . " ►" /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $artist . " with Spotifious", array(
-  'Spotifious workflow must be installed',
-  'alt' => 'Not Available',
-  'cmd' => 'Not Available',
-  'shift' => 'Not Available',
-  'fn' => 'Not Available',
-  'ctrl' => 'Not Available'), './images/spotifious.png', 'yes', null, '');
+  
+  			if($theartist != false) {
+	            if ($is_spotifious_active == true) {
+	                $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,$theartist[4] . " ⟩ " . $artist . " ►" /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $artist . " with Spotifious", array(
+	  'Spotifious workflow must be installed',
+	  'alt' => 'Not Available',
+	  'cmd' => 'Not Available',
+	  'shift' => 'Not Available',
+	  'fn' => 'Not Available',
+	  'ctrl' => 'Not Available'), './images/spotifious.png', 'yes', null, '');
+	            }
             }
 
         } // end of tracks by artist
@@ -932,53 +969,67 @@ array(
                 }            
             }
 
+            $dbfile = $w->data() . "/library.db";                 
+			$db = new SQLite3($dbfile);
+			$tracks = $db->query($getTracks);
 
-            $dbfile = $w->data() . "/library.db";
-            exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
-
-            if ($returnValue != 0) {
+            if ($tracks == false) {
                 handleDbIssue($theme);
                 return;
             }
-
-            if (count($tracks) > 0) {
-                $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-                if ($is_alfred_playlist_active == true) {
-                    $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
-                }
-                $w->result(uniqid(), 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', null, '');
-            }
-
-            foreach ($tracks as $track):
-                $track = explode("	", $track);
-
-                $subtitle = ($track[0] == true) ? "★ " : "";
-                $subtitle = $subtitle . $track[6];
-
+			$album_uri="";
+	        $noresult=true;
+	        while ($track = $tracks->fetchArray()) {
+				
+				if($noresult==true) {
+		            $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
+		            if ($is_alfred_playlist_active == true) {
+		                $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
+		            }
+		            $w->result(uniqid(), 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', null, '');
+				}
+				$noresult=false;
+	            $subtitle = ($track[0] == true) ? "★ " : "";
+	            $subtitle = $subtitle . $track[6];
+	
                 if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " - " . $track[5]) == false) {
                     $w->result(uniqid(), serialize(array($track[2] /*track_uri*/ ,$track[3] /* album_uri */ ,$track[4] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,$track[7]  /* artist_name */, $track[5] /* track_name */, $track[6] /* album_name */, $track[9] /* track_artwork_path */, $track[10] /* artist_artwork_path */, $track[11] /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), ucfirst($track[7]) . " - " . $track[5], $subtitle, $track[9], 'yes', null, '');
                 }
                 if ($album_uri == "")
                     $album_uri = $track[3];
-            endforeach;
-
-            $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'activate (open location "spotify:search:' . $album . '")' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $album . " with Spotify", array(
-  'This will start a new search in Spotify',
-  'alt' => 'Not Available',
-  'cmd' => 'Not Available',
-  'shift' => 'Not Available',
-  'fn' => 'Not Available',
-  'ctrl' => 'Not Available'), 'fileicon:/Applications/Spotify.app', 'yes', null, '');
-            if ($is_spotifious_active == true) {
-                $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,$album_uri . " ⟩ " . $album . " ►"/* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $album . " with Spotifious", array(
-  'Spotifious workflow must be installed',
-  'alt' => 'Not Available',
-  'cmd' => 'Not Available',
-  'shift' => 'Not Available',
-  'fn' => 'Not Available',
-  'ctrl' => 'Not Available'), './images/spotifious.png', 'yes', null, '');
-            }
-                
+	        }            
+	
+			if($noresult) {
+			    $w->result(uniqid(), 'help', "There is no result for your search", "", './images/warning.png', 'no', null, '');
+			    
+	            $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'activate (open location "spotify:search:' . $album . '")' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $album . " with Spotify", array(
+	  'This will start a new search in Spotify',
+	  'alt' => 'Not Available',
+	  'cmd' => 'Not Available',
+	  'shift' => 'Not Available',
+	  'fn' => 'Not Available',
+	  'ctrl' => 'Not Available'), 'fileicon:/Applications/Spotify.app', 'yes', null, ''); 
+			}
+			else {
+	            $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'activate (open location "spotify:search:' . $album . '")' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $album . " with Spotify", array(
+	  'This will start a new search in Spotify',
+	  'alt' => 'Not Available',
+	  'cmd' => 'Not Available',
+	  'shift' => 'Not Available',
+	  'fn' => 'Not Available',
+	  'ctrl' => 'Not Available'), 'fileicon:/Applications/Spotify.app', 'yes', null, '');	
+	  
+	            if ($is_spotifious_active == true) {
+	                $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,$album_uri . " ⟩ " . $album . " ►"/* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $album . " with Spotifious", array(
+	  'Spotifious workflow must be installed',
+	  'alt' => 'Not Available',
+	  'cmd' => 'Not Available',
+	  'shift' => 'Not Available',
+	  'fn' => 'Not Available',
+	  'ctrl' => 'Not Available'), './images/spotifious.png', 'yes', null, '');
+	            }			
+			}
+        
         } // end of tracks by album
         elseif ($kind == "Playlist") {
             //
@@ -988,17 +1039,17 @@ array(
             $thetrack = $words[2];
 
             $getPlaylists = "select * from playlists where uri='" . $theplaylisturi . "'";
-            $dbfile = $w->data() . "/library.db";
-            exec("sqlite3 -separator '	' \"$dbfile\" \"$getPlaylists\" 2>&1", $playlists, $returnValue);
 
-            if ($returnValue != 0) {
+            $dbfile = $w->data() . "/library.db";                 
+			$db = new SQLite3($dbfile);
+			$playlists = $db->query($getPlaylists);
+
+            if ($playlists == false) {
                 handleDbIssue($theme);
                 return;
             }
-
-            if (count($playlists) > 0) {
-                $playlist = $playlists[0];
-                $playlist = explode("	", $playlist);
+			
+			while ($playlist = $playlists->fetchArray()) {
                 if (mb_strlen($thetrack) < 3) {
                 
 	                $subtitle = "Launch Playlist";
@@ -1024,35 +1075,59 @@ array(
                 else {
                     $getTracks = "select * from tracks where playable=1 and playlist_uri='" . $theplaylisturi . "' and (artist_name like '%" . $thetrack . "%' or album_name like '%" . $thetrack . "%' or track_name like '%" . $thetrack . "%')" . " limit " . $max_results;                
                 }
+            
 
-                $dbfile = $w->data() . "/library.db";
-                exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
-
-                if ($returnValue != 0) {
+				$tracks = $db->query($getTracks);
+	
+	            if ($tracks == false) {
                     $handleDbIssue($theme);
                     return;
                 }
 
-            } 
+		        $noresult=true;
+		        while ($track = $tracks->fetchArray()) {
+					
+					if($noresult==true) {
+			            $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
+			            if ($is_alfred_playlist_active == true) {
+			                $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
+			            }
+			            $w->result(uniqid(), 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', null, '');
+					}
+					$noresult=false;
+		            $subtitle = ($track[0] == true) ? "★ " : "";
+		            $subtitle = $subtitle . $track[6];
+		
+		            if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " - " . $track[5]) == false) {
+		                $w->result(uniqid(), serialize(array($track[2] /*track_uri*/ ,$track[3] /* album_uri */ ,$track[4] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,$track[7]  /* artist_name */, $track[5] /* track_name */, $track[6] /* album_name */, $track[9] /* track_artwork_path */, $track[10] /* artist_artwork_path */, $track[11] /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), ucfirst($track[7]) . " - " . $track[5], $subtitle, $track[9], 'yes', null, '');
+		                
+		            }
+		        }            
+		
+				if($noresult) {
+				    $w->result(uniqid(), 'help', "There is no result for your search", "", './images/warning.png', 'no', null, '');
+				     
+				}
 
-
-                if (count($tracks) > 0) {
-                    $subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-                    if ($is_alfred_playlist_active == true) {
-                        $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
-                    }
-                    $w->result(uniqid(), 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', null, '');
-                }
-                                
-                foreach ($tracks as $track):
-                    $track = explode("	", $track);
-
-                    if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " - " . $track[5]) == false) {
-                        $subtitle = ($track[0] == true) ? "★ " : "";
-                        $subtitle = $subtitle . $track[6];
-                        $w->result(uniqid(), serialize(array($track[2] /*track_uri*/ ,$track[3] /* album_uri */ ,$track[4] /* artist_uri */ ,$track[13] /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,$track[7]  /* artist_name */, $track[5] /* track_name */, $track[6] /* album_name */, $track[9] /* track_artwork_path */, $track[10] /* artist_artwork_path */, $track[11] /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), ucfirst($track[7]) . " - " . $track[5], $subtitle, $track[9], 'yes', null, '');
-                    }
-                endforeach;       
+	            $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'activate (open location "spotify:search:' . $playlist[1] . '")' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $playlist[1] . " with Spotify", array(
+	  'This will start a new search in Spotify',
+	  'alt' => 'Not Available',
+	  'cmd' => 'Not Available',
+	  'shift' => 'Not Available',
+	  'fn' => 'Not Available',
+	  'ctrl' => 'Not Available'), 'fileicon:/Applications/Spotify.app', 'yes', null, '');	
+	  
+		        if ($is_spotifious_active == true) {
+		            $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,$playlist[1] /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $playlist[1] . " with Spotifious", array(
+		  'Spotifious workflow must be installed',
+		  'alt' => 'Not Available',
+		  'cmd' => 'Not Available',
+		  'shift' => 'Not Available',
+		  'fn' => 'Not Available',
+		  'ctrl' => 'Not Available'), './images/spotifious.png', 'yes', null, '');
+		        }
+			        
+			}       
         } // end of tracks by Playlist
         elseif ($kind == "Settings") {
             $setting_kind = $words[1];
@@ -1094,24 +1169,23 @@ array(
 	            	$getPlaylists = "select * from playlists where ownedbyuser=1 and ( name like '%" . $theplaylist . "%' or author like '%" . $theplaylist . "%')";
 	            }
 	
-	            $dbfile = $w->data() . "/library.db";
+	            $dbfile = $w->data() . "/library.db";                 
+				$db = new SQLite3($dbfile);
+				$playlists = $db->query($getPlaylists);
 	
-	            exec("sqlite3 -separator '	' \"$dbfile\" \"$getPlaylists\" 2>&1", $playlists, $returnValue);
-	
-	            if ($returnValue != 0) {
+	            if ($playlists == false) {
 	                handleDbIssue($theme);
 	                return;
 	            }
 	
-	            foreach ($playlists as $playlist):
-	                $playlist = explode("	", $playlist);
+				while ($playlist = $playlists->fetchArray()) {
 	                
 	                // Prevent toplist to be chosen as Alfred Playlist
 	                if (strpos($playlist[0], 'toplist') === false)
 	                {
 	                	$w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'ALFRED_PLAYLIST⇾' .  $playlist[0] . '⇾' . $playlist[1] /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "Select the playlist to set it as your Alfred Playlist", $playlist[5], 'yes', null, '');
 	                }
-	            endforeach; 
+	            } 
             } elseif ($setting_kind == "Confirm Clear Alfred Playlist") {
             
             	$w->result(uniqid(), '', "Are you sure?", "This will remove all the tracks in your current Alfred Playlist.", './images/warning.png', 'no', null, '');
@@ -1148,25 +1222,29 @@ array(
 				$getRelateds = "select related_artist_name,related_artist_uri,related_artist_artwork_path from artists where artist_name='" . $artist_name . "'" . " and related_artist_name like '%" . $theartist . "%'";
         	}
         	
-	        $dbfile = $w->data() . "/library.db";
-	        exec("sqlite3 -separator '	' \"$dbfile\" \"$getRelateds\" 2>&1", $relateds, $returnValue);
-	
-	        if ($returnValue != 0) {
+            $dbfile = $w->data() . "/library.db";                 
+			$db = new SQLite3($dbfile);
+			$relateds = $db->query($getRelateds);
+
+            if ($relateds == false) {
 	            handleDbIssue($theme);
 	            return;
 	        }
 
-	        if (count($relateds) == 0) {
-	            $w->result(uniqid(), 'help', "There is no related artist for this artist", $subtitle, './images/warning.png', 'no', null, '');
-	        }
-        	
-	        foreach ($relateds as $related):
-	            $related = explode("	", $related);
-	
+	        $noresult=true;
+	        while ($related = $relateds->fetchArray()) {
+				
+	            // display all related
+				$noresult=false;
+
 	            if (checkIfResultAlreadyThere($w->results(), "👤 " . ucfirst($related[0])) == false) {
                     $w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ , $related[1] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'morefromthisartist' /* other_action */ ,'' /* alfred_playlist_uri */ ,$related[0]  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "👤 " . ucfirst($related[0]), '☁︎ Query all albums/tracks from this artist online..', $related[2], 'yes', null, '');
 	            }
-	        endforeach;
+	        }            
+	
+			if($noresult) {
+			    $w->result(uniqid(), 'help', "There is no related artist for this artist", "", './images/warning.png', 'no', null, ''); 
+			}
         }   
     
     }
