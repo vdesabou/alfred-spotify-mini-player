@@ -1274,7 +1274,7 @@ end alfred_script</string>
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -n -f update.php</string>
+				<string>php -f update.php</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
