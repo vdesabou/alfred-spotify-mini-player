@@ -79,8 +79,11 @@ if ($spotify_command != "" && $type == "TRACK" && $alfredplaylist == "") {
 
 	$spotify_command = str_replace("\\", "", $spotify_command);
 	exec("osascript -e 'tell application \"Spotify\" to $spotify_command'");
-	displayNotificationWithArtwork('🎶 Play/Pause ' . $track_name . '
+	
+	if($spotify_command == "playpause") {
+		displayNotificationWithArtwork('🎶 Play/Pause ' . $track_name . '
  by ' . ucfirst($artist_name),getTrackOrAlbumArtwork($w,'black',$track_uri,true));
+ 	}
 	return;
 } 
 	
