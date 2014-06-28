@@ -1,5 +1,12 @@
 ## History
 
+
+4.4:
+
+* Improved performances
+
+* New command to unstar a track
+
 4.3.6:
 
 * Improved notifications

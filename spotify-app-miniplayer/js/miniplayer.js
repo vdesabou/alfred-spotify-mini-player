@@ -11,6 +11,12 @@ require([
     models.application.addEventListener('arguments', handleArgs);
  
     	
+/**
+ * handleArgs function.
+ * 
+ * @access public
+ * @return void
+ */
 function handleArgs() {
 	var args = models.application.arguments;
 	
@@ -33,6 +39,31 @@ function handleArgs() {
 				conn.onopen = function(e) {
 					appendText("Connection established with Spotify Mini Player workflow on port " + args[1] + ". Transmitting data..");
 				    conn.send('star⇾' + JSON.stringify(starCurrentTrack()));
+				};
+				
+				conn.onerror = function (e) {
+                    appendText("Error received");
+                };
+				
+				conn.onclose = function (e) {
+                    appendText("Workflow closed connection " + e.reason);
+                };
+				
+				conn.onmessage = function(e) {
+				    appendText("Received response from workflow: " + e.data);
+				    conn.close();
+				};
+				break;
+			case "unstar":
+				sleep(1000);
+								
+				appendText("unstar track started");
+				appendText("Trying to connect with Spotify Mini Player workflow on port " + args[1] + ".");
+				
+				var conn = new WebSocket('ws://127.0.0.1:' + args[1]);
+				conn.onopen = function(e) {
+					appendText("Connection established with Spotify Mini Player workflow on port " + args[1] + ". Transmitting data..");
+				    conn.send('unstar⇾' + JSON.stringify(unstarCurrentTrack()));
 				};
 				
 				conn.onerror = function (e) {
@@ -245,6 +276,13 @@ function handleArgs() {
 
 
 
+/**
+ * starTrackOrAlbum function.
+ * 
+ * @access public
+ * @param mixed args
+ * @return void
+ */
 function starTrackOrAlbum(args) {
 		if(args[2] == 'track')
 		{
@@ -269,6 +307,13 @@ function starTrackOrAlbum(args) {
 		}
 }
 
+/**
+ * clearPlaylist function.
+ * 
+ * @access public
+ * @param mixed args
+ * @return void
+ */
 function clearPlaylist(args) {
 	// Get the playlist object from a URI
 	models.Playlist.fromURI(args[1]+':'+args[2]+':'+args[3]+':'+args[4]+':'+args[5]).load('tracks').done(function(playlist) {
@@ -281,6 +326,13 @@ function clearPlaylist(args) {
 	});	
 }
 
+/**
+ * addToAlfredPlaylist function.
+ * 
+ * @access public
+ * @param mixed args
+ * @return void
+ */
 function addToAlfredPlaylist(args) {
 
 	if(args[2] == 'track')
@@ -330,6 +382,13 @@ function addToAlfredPlaylist(args) {
 	});	
 }
 
+/**
+ * starTopList function.
+ * 
+ * @access public
+ * @param mixed args
+ * @return void
+ */
 function starTopList(args) {
 	// Get the playlist object from a URI
 
@@ -358,6 +417,13 @@ function starTopList(args) {
 	});	
 }
 
+/**
+ * addTopOrStarredListToAlfredPlaylist function.
+ * 
+ * @access public
+ * @param mixed args
+ * @return void
+ */
 function addTopOrStarredListToAlfredPlaylist(args) {
 	// Get the playlist object from a URI
 
@@ -388,6 +454,13 @@ function addTopOrStarredListToAlfredPlaylist(args) {
 }
 
 
+/**
+ * addPlaylistToAlfredPlaylist function.
+ * 
+ * @access public
+ * @param mixed args
+ * @return void
+ */
 function addPlaylistToAlfredPlaylist(args) {
 	// Get the playlist object from a URI
 
@@ -417,6 +490,13 @@ function addPlaylistToAlfredPlaylist(args) {
 	});	
 }
 
+/**
+ * starPlaylist function.
+ * 
+ * @access public
+ * @param mixed args
+ * @return void
+ */
 function starPlaylist(args) {
 
 		models.Playlist.fromURI(args[1]+':'+args[2]+':'+args[3]+':'+args[4]+':'+args[5]).load('tracks').done(function(p) {
@@ -434,6 +514,13 @@ function starPlaylist(args) {
     	});
 }
 
+/**
+ * playArtistOrAlbum function.
+ * 
+ * @access public
+ * @param mixed args
+ * @return void
+ */
 function playArtistOrAlbum(args) {
 	console.log(args[1]+':'+args[2]+':'+args[3]);
 	
@@ -442,6 +529,13 @@ function playArtistOrAlbum(args) {
 }
 
 
+/**
+ * playTrackWithPlaylistContext function.
+ * 
+ * @access public
+ * @param mixed args
+ * @return void
+ */
 function playTrackWithPlaylistContext(args) {	
 
 		if(args[2] == 'track')
@@ -507,6 +601,13 @@ function playTrackWithPlaylistContext(args) {
 }
 
 
+/**
+ * startPlaylist function.
+ * 
+ * @access public
+ * @param mixed args
+ * @return void
+ */
 function startPlaylist(args) {	
 
 		var playlistName = "Temp playlist for startPlaylist"; 
@@ -543,6 +644,12 @@ function startPlaylist(args) {
 						
 }
 
+/**
+ * starCurrentTrack function.
+ * 
+ * @access public
+ * @return void
+ */
 function starCurrentTrack() {
 	var t={};
 	var track = models.player.track;
@@ -559,6 +666,34 @@ function starCurrentTrack() {
 	return t;
 }
 
+/**
+ * unstarCurrentTrack function.
+ * 
+ * @access public
+ * @return void
+ */
+function unstarCurrentTrack() {
+	var t={};
+	var track = models.player.track;
+	if (track != null) {
+	
+		models.Track.fromURI(track.uri).unstar();
+		
+
+    	t.name = track.name;
+    	t.uri = track.uri; 
+    	console.log("unstarCurrentTrack: ", t);       	
+		return t;
+	}
+	return t;
+}
+
+/**
+ * playCurrentTrackAlbum function.
+ * 
+ * @access public
+ * @return void
+ */
 function playCurrentTrackAlbum() {
 	var track = models.player.track;
 	if (track != null) {
@@ -567,6 +702,12 @@ function playCurrentTrackAlbum() {
 	} 
 }
 
+/**
+ * playCurrentTrackArtist function.
+ * 
+ * @access public
+ * @return void
+ */
 function playCurrentTrackArtist() {
 	var track = models.player.track;
 	if (track != null) {
@@ -582,6 +723,12 @@ function playCurrentTrackArtist() {
 	} 
 }
 
+/**
+ * getCurrentTrackArtist function.
+ * 
+ * @access public
+ * @return void
+ */
 function getCurrentTrackArtist() {
 	var a={};
 	var track = models.player.track;
@@ -602,6 +749,13 @@ function getCurrentTrackArtist() {
 
 
 
+/**
+ * addCurrentTrackAlbumToAlfredPlaylist function.
+ * 
+ * @access public
+ * @param mixed args
+ * @return void
+ */
 function addCurrentTrackAlbumToAlfredPlaylist(args) {
 	var track = models.player.track;
 	var orginalplaylistUri = args[1]+':'+args[2]+':'+args[3]+':'+args[4]+':'+args[5];
@@ -631,6 +785,13 @@ function addCurrentTrackAlbumToAlfredPlaylist(args) {
 	} 
 }
 
+/**
+ * sleep function.
+ * 
+ * @access public
+ * @param mixed milliseconds
+ * @return void
+ */
 function sleep(milliseconds) {
   var start = new Date().getTime();
   for (var i = 0; i < 1e7; i++) {
@@ -640,6 +801,12 @@ function sleep(milliseconds) {
   }
 }
 
+/**
+ * randomTrack function.
+ * 
+ * @access public
+ * @return void
+ */
 function randomTrack() {
 
 	// Grab a random track from your library (cause it's more fun)
@@ -656,6 +823,12 @@ models.player.load('track').done(updateCurrentTrack);
 models.player.addEventListener('change:track', updateCurrentTrack);
 
 
+/**
+ * updateCurrentTrack function.
+ * 
+ * @access public
+ * @return void
+ */
 function updateCurrentTrack(){
     var currentHTML = document.getElementById('now-playing');
     if (models.player.track == null) {
@@ -672,6 +845,14 @@ function updateCurrentTrack(){
 }
     
 
+/**
+ * getAlbum function.
+ * 
+ * @access public
+ * @param mixed objtrack
+ * @param mixed matchedAlbumCallback
+ * @return void
+ */
 function getAlbum(objtrack,matchedAlbumCallback) {
 	
 	models.Album.fromURI(objtrack.album_uri).load('name','uri').done(function(album) {
@@ -707,6 +888,14 @@ function doGetTopTrack(artist, num, callback) {
 };
 */
 
+/**
+ * getRelatedArtists function.
+ * 
+ * @access public
+ * @param mixed objartist
+ * @param mixed matchedRelatedArtistsCallback
+ * @return void
+ */
 function getRelatedArtists(objartist,matchedRelatedArtistsCallback) {
 	
 	var array_artists= [];
@@ -832,6 +1021,14 @@ function getRelatedArtists(objartist,matchedRelatedArtistsCallback) {
 			 });
 }
 
+/**
+ * getExternalPlaylistUri function.
+ * 
+ * @access public
+ * @param mixed uri
+ * @param mixed username
+ * @return void
+ */
 function getExternalPlaylistUri(uri,username) {
 	var playlist_uri = "";
 	var words = uri.split(":");
@@ -843,6 +1040,14 @@ function getExternalPlaylistUri(uri,username) {
 	}
 }
 
+/**
+ * getPlaylistTracks function.
+ * 
+ * @access public
+ * @param mixed uri
+ * @param mixed matchedPlaylistTracksCallback
+ * @return void
+ */
 function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {	
 	var array_tracks = [];
 	var array_artists = [];
@@ -1000,6 +1205,13 @@ function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {
 }
 
 
+/**
+ * getPlaylists function.
+ * 
+ * @access public
+ * @param mixed matchedPlaylistsCallback
+ * @return void
+ */
 function getPlaylists(matchedPlaylistsCallback) {
 		
 	var array_results = [];
@@ -1040,6 +1252,14 @@ function getPlaylists(matchedPlaylistsCallback) {
 }
 
 
+/**
+ * getAllRelatedArtists function.
+ * 
+ * @access public
+ * @param mixed allplaylists
+ * @param mixed matchedAllRelatedArtistsCallback
+ * @return void
+ */
 function getAllRelatedArtists(allplaylists,matchedAllRelatedArtistsCallback)
 {
 	var array_artists= [];
@@ -1089,6 +1309,13 @@ function getAllRelatedArtists(allplaylists,matchedAllRelatedArtistsCallback)
 
 
 
+/**
+ * getAllPlaylists function.
+ * 
+ * @access public
+ * @param mixed matchedAllCallback
+ * @return void
+ */
 function getAllPlaylists(matchedAllCallback) {
 
 	var array_results = [];
@@ -1111,6 +1338,13 @@ function getAllPlaylists(matchedAllCallback) {
 	});
 }
 
+/**
+ * getAll function.
+ * 
+ * @access public
+ * @param mixed matchedAll
+ * @return void
+ */
 function getAll(matchedAll) {
 
 	results={};
@@ -1139,6 +1373,13 @@ function getAll(matchedAll) {
 	  });	
 }											
 
+/**
+ * appendText function.
+ * 
+ * @access public
+ * @param mixed myVar
+ * @return void
+ */
 function appendText(myVar) {
 	var myTextArea = document.getElementById('debug_area');
 	d = new Date();

@@ -6,7 +6,7 @@ This is "Spotify Mini Player", like the alfred built-in iTunes Mini Player, but 
 ## Description
 
 Speed is the key word here: instead of using slow Spotify API, it uses a local version of your library stored in a database(it includes all the playlists you created and playlists that you're subscribed to). You can decide to search in your starred playlist only, or in all all your playlists. You can browse by Artist, Album or Playlist. You can also lookup for artists online, search for lyrics, get related artists, display biography, etc..
-You can also control Spotify using keywords such as play/next/volmax/random/shuffle/star/etc...
+You can also control Spotify using keywords such as play/next/volmax/random/shuffle/star/unstar/etc...
 
 ## Animated Gifs
 
@@ -41,7 +41,7 @@ You can also control Spotify using keywords such as play/next/volmax/random/shuf
 * **Alfred Playlist** manage a playlist from Alfred: add track (using fn), albums or playlist (using ⇧)
 * Select a track with ⌥ to play the album, or ⌘ to play the artist
 * Same control keywords as iTunes Mini Player: play, pause, mute, next, random, previous, volmax, volmid. And shuffle to activate shuffling.
-* Star currently played track with keyword *star*
+* Star/Unstar currently played track with keyword *star*/*unstar*
 * Add current track to Alfred Playlist
 * Display artist bigraphy
 * Browse Related artists

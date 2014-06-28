@@ -170,7 +170,11 @@ added to ' . $alfred_playlist_name,$track_artwork_path);
 	}else if ($type == "STAR") {
 		starCurrentTrack($w);
 		return;
-	} else if ($type == "ALBUM_OR_PLAYLIST") {
+	}else if ($type == "UNSTAR") {
+		unstarCurrentTrack($w);
+		return;
+	}
+	else if ($type == "ALBUM_OR_PLAYLIST") {
 		if ($alfredplaylist != "") {
 			//
 			// Read settings from DB
@@ -381,6 +385,9 @@ if ($playlist_uri != "") {
 			} else if ($other_action == "star") {
 				starCurrentTrack($w);
 				return;
+			} else if ($other_action == "unstar") {
+				unstarCurrentTrack($w);
+				return;
 			} else if ($other_action == "random") {
 				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:random:" . uniqid() . "\"'");
 				return;
@@ -473,6 +480,13 @@ if ($playlist_uri != "") {
 			}
 	}
 
+/**
+ * starCurrentTrack function.
+ * 
+ * @access public
+ * @param mixed $w
+ * @return void
+ */
 function starCurrentTrack($w)
 {
 	$tcpport = getFreeTcpPort();
@@ -491,6 +505,49 @@ function starCurrentTrack($w)
 	endforeach;
 
 	exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:star:" . $tcpport . ":" . uniqid() . "\"'");
+	exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:user:$username:starred\"'");
+
+
+
+	$server = IoServer::factory(
+		new HttpServer(
+			new WsServer(
+				new MiniPlayer()
+			)
+		),
+		$tcpport
+	);
+	// FIX THIS: server will exit when done
+	// Did not find a way to set a timeout
+	$server->run();
+	return;
+}
+
+/**
+ * unstarCurrentTrack function.
+ * 
+ * @access public
+ * @param mixed $w
+ * @return void
+ */
+function unstarCurrentTrack($w)
+{
+	$tcpport = getFreeTcpPort();
+	$getUser = 'select username from user';
+	$dbfile = $w->data() . '/library.db';
+	exec("sqlite3 -separator '	' \"$dbfile\" \"$getUser\" 2>&1", $users, $returnValue);
+
+	if ($returnValue != 0) {
+		displayNotification('An error happened with user database');
+		return;
+	}
+
+	foreach ($users as $user):
+		$user = explode("	", $user);
+	$username = $user[0];
+	endforeach;
+
+	exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:unstar:" . $tcpport . ":" . uniqid() . "\"'");
 	exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:user:$username:starred\"'");
 
 

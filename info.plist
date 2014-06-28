@@ -218,6 +218,17 @@
 				<string></string>
 			</dict>
 		</array>
+		<key>C46E2C64-7407-4811-8503-5213DD65C39A</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>B9857323-CDD4-4134-B272-26C4686049E5</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 		<key>C7CFF014-DBC8-4663-A0AB-219C57A427EE</key>
 		<array>
 			<dict>
@@ -799,6 +810,44 @@ end alfred_script</string>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>unstar</string>
+				<key>subtext</key>
+				<string>Unstar current track</string>
+				<key>text</key>
+				<string>Unstar Track</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>C46E2C64-7407-4811-8503-5213DD65C39A</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>php -f action.php -- "" "UNSTAR" "UNSTAR"</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>B9857323-CDD4-4134-B272-26C4686049E5</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>lastpathcomponent</key>
 				<false/>
 				<key>onlyshowifquerypopulated</key>
@@ -1308,10 +1357,20 @@ end alfred_script</string>
 			<key>ypos</key>
 			<real>10</real>
 		</dict>
+		<key>B9857323-CDD4-4134-B272-26C4686049E5</key>
+		<dict>
+			<key>ypos</key>
+			<real>1600</real>
+		</dict>
 		<key>C0402AEB-638A-43F4-A4E3-17EC788F526E</key>
 		<dict>
 			<key>ypos</key>
 			<real>2130</real>
+		</dict>
+		<key>C46E2C64-7407-4811-8503-5213DD65C39A</key>
+		<dict>
+			<key>ypos</key>
+			<real>1600</real>
 		</dict>
 		<key>C7CFF014-DBC8-4663-A0AB-219C57A427EE</key>
 		<dict>

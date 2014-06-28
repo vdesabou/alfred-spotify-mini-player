@@ -152,6 +152,20 @@ function displayNotificationForStarredTrack($track_name,$track_uri)
 }
 
 /**
+ * displayNotificationForUnstarredTrack function.
+ * 
+ * @access public
+ * @param mixed $track_name
+ * @param mixed $track_uri
+ * @return void
+ */
+function displayNotificationForUnstarredTrack($track_name,$track_uri)
+{
+	$w = new Workflows;
+	displayNotificationWithArtwork('❌ ' . $track_name . ' has been unstarred',getTrackOrAlbumArtwork($w,'black',$track_uri,true));
+}
+
+/**
  * getTrackOrAlbumArtwork function.
  * 
  * @access public
