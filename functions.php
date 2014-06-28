@@ -58,7 +58,8 @@ function escapeQuery($text)
 	$text = str_replace('"', "’", $text);
 	$text = str_replace("&apos;", "’", $text);
 	$text = str_replace("`", "’", $text);
-	$text = str_replace("&amp;", "&", $text);
+	$text = str_replace("&amp;", "and", $text);
+	$text = str_replace("&", "and", $text);
 	$text = str_replace("\\", " ", $text);
 	$text = str_replace("$", "\\$", $text);
 	return $text;
