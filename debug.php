@@ -26,7 +26,7 @@ if (file_exists($w->data() . "/update_library_in_progress"))
 }
 
 if (!file_exists($w->home() . "/Spotify/spotify-app-miniplayer"))
-{		
+{
 	$output = $output . "The directory" . $w->home() . "/Spotify/spotify-app-miniplayer is not present\n";
 }
 else
@@ -81,26 +81,26 @@ $w->result( uniqid(), $val, 'Browse to Alfred workflow folder', $val, 'fileicon:
 
 echo $w->toxml();
 function copy_directory( $source, $destination ) {
-        if ( is_dir( $source ) ) {
-        @mkdir( $destination ); 
-        $directory = dir( $source );
-        while ( FALSE !== ( $readdirectory = $directory->read() ) ) {
-            if ( $readdirectory == '.' || $readdirectory == '..' ) {
-                continue;
-            }
-            $PathDir = $source . '/' . $readdirectory; 
-            if ( is_dir( $PathDir ) ) {
-                copy_directory( $PathDir, $destination . '/' . $readdirectory );
-                continue;
-            }
-            copy( $PathDir, $destination . '/' . $readdirectory );
-        }
+	if ( is_dir( $source ) ) {
+		@mkdir( $destination );
+		$directory = dir( $source );
+		while ( FALSE !== ( $readdirectory = $directory->read() ) ) {
+			if ( $readdirectory == '.' || $readdirectory == '..' ) {
+				continue;
+			}
+			$PathDir = $source . '/' . $readdirectory;
+			if ( is_dir( $PathDir ) ) {
+				copy_directory( $PathDir, $destination . '/' . $readdirectory );
+				continue;
+			}
+			copy( $PathDir, $destination . '/' . $readdirectory );
+		}
 
-        $directory->close();
-        }else {
-        copy( $source, $destination );
-        }
-    }
-    
+		$directory->close();
+	}else {
+		copy( $source, $destination );
+	}
+}
+
 
 ?>
