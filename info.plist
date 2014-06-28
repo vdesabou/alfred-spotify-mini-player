@@ -105,6 +105,17 @@
 				<string></string>
 			</dict>
 		</array>
+		<key>2B0C8466-4AED-4272-9C10-50F3BCE88043</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>CF46537F-6F59-40DB-A643-72A7BB952840</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 		<key>2D26D8E2-52A2-4BF9-B693-0D5190C6CC23</key>
 		<array/>
 		<key>3F85747B-FC44-4B07-AA6E-3645F0CC0DF7</key>
@@ -207,6 +218,17 @@
 		<array/>
 		<key>9845C770-A2CC-4752-A542-D71BE1081691</key>
 		<array/>
+		<key>A4437594-2A54-42A1-836E-129E46F5DB47</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>2B0C8466-4AED-4272-9C10-50F3BCE88043</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 		<key>AE6160D1-56EA-4416-991E-CF12B874FFD3</key>
 		<array>
 			<dict>
@@ -1212,6 +1234,57 @@ end alfred_script</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>spot_mini_update_library</string>
+				<key>subtext</key>
+				<string>This will update the entire library</string>
+				<key>text</key>
+				<string>Update Spotify Mini Player library</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>2B0C8466-4AED-4272-9C10-50F3BCE88043</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>triggerid</key>
+				<string>update</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.external</string>
+			<key>uid</key>
+			<string>A4437594-2A54-42A1-836E-129E46F5DB47</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>php -n -f update.php</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>CF46537F-6F59-40DB-A643-72A7BB952840</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string></string>
@@ -1251,6 +1324,11 @@ end alfred_script</string>
 		<dict>
 			<key>ypos</key>
 			<real>2320</real>
+		</dict>
+		<key>2B0C8466-4AED-4272-9C10-50F3BCE88043</key>
+		<dict>
+			<key>ypos</key>
+			<real>2650</real>
 		</dict>
 		<key>2D26D8E2-52A2-4BF9-B693-0D5190C6CC23</key>
 		<dict>
@@ -1347,6 +1425,11 @@ end alfred_script</string>
 			<key>ypos</key>
 			<real>2250</real>
 		</dict>
+		<key>A4437594-2A54-42A1-836E-129E46F5DB47</key>
+		<dict>
+			<key>ypos</key>
+			<real>2650</real>
+		</dict>
 		<key>A69FA8D7-260F-4BB2-B77A-31301E0E32AC</key>
 		<dict>
 			<key>ypos</key>
@@ -1391,6 +1474,11 @@ end alfred_script</string>
 		<dict>
 			<key>ypos</key>
 			<real>2010</real>
+		</dict>
+		<key>CF46537F-6F59-40DB-A643-72A7BB952840</key>
+		<dict>
+			<key>ypos</key>
+			<real>2650</real>
 		</dict>
 		<key>D4442911-E17B-49CC-8F7F-EAC1830B11CD</key>
 		<dict>
