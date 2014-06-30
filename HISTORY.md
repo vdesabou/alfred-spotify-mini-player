@@ -9,6 +9,8 @@
 
 * Added new command (with external trigger) spot_mini_update_library to update library
 
+* Automatically update Alfred Playlist after adding track, album or playlist
+
 4.3.6:
 
 * Improved notifications
