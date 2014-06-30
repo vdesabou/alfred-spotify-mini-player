@@ -173,27 +173,7 @@ added to ' . $alfred_playlist_name,$track_artwork_path);
 	}
 else if ($type == "ALBUM_OR_PLAYLIST") {
 		if ($alfredplaylist != "") {
-			//
-			// Read settings from DB
-			//
-			$getSettings = 'select alfred_playlist_uri,alfred_playlist_name,theme from settings';
-			$dbfile = $w->data() . '/settings.db';
-			exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
 
-			if ($returnValue != 0) {
-				displayNotification("Error: cannot read settings");
-				return;
-			}
-
-
-			foreach ($settings as $setting):
-
-				$setting = explode("	", $setting);
-
-			$alfred_playlist_uri = $setting[0];
-			$alfred_playlist_name = $setting[1];
-			$theme = $setting[2];
-			endforeach;
 			if ($album_name != "") {
 
 				if ($alfred_playlist_uri == "" || $alfred_playlist_name == "") {
