@@ -202,8 +202,8 @@ if (mb_strlen($query) < 3 ||
 							$subtitle,
 							'alt' => 'Play album ' . escapeQuery($results[2]) . ' with Spotify',
 							'cmd' => 'Play artist ' . escapeQuery($results[1]) . ' in Spotify',
-							'fn' => 'Add track ' . escapeQuery($results[0]) . ' to Alfred playlist',
-							'shift' => 'Add album ' . escapeQuery($results[2]) . ' to your Alfred Playlist',
+							'fn' => 'Add track ' . escapeQuery($results[0]) . ' to ' . $alfred_playlist_name,
+							'shift' => 'Add album ' . escapeQuery($results[2]) . ' to ' . $alfred_playlist_name,
 							'ctrl' => 'Search artist ' . escapeQuery($results[1]) . ' online')
 						, ($results[3] == "playing") ? './images/' . $theme . '/' . 'pause.png' : './images/' . $theme . '/' . 'play.png', 'yes', null, '');
 
@@ -545,8 +545,8 @@ if (mb_strlen($query) < 3 ||
 							$subtitle,
 							'alt' => 'Play album ' . $track[6] . ' with Spotify',
 							'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
-							'fn' => 'Add track ' . $track[5] . ' to Alfred playlist',
-							'shift' => 'Add album ' . $track[6] . ' to your Alfred Playlist',
+							'fn' => 'Add track ' . $track[5] . ' to ' . $alfred_playlist_name,
+							'shift' => 'Add album ' . $track[6] . ' to ' . $alfred_playlist_name,
 							'ctrl' => 'Search artist ' . $track[7] . ' online')
 							, $track[9], 'yes', null, '');
 
@@ -843,8 +843,8 @@ if (mb_strlen($query) < 3 ||
 							$album_name . " (" . $json->album->released . ")",
 							'alt' => 'Play album ' . $album_name . ' with Spotify',
 							'cmd' => 'Play artist ' . $artist_name . ' in Spotify',
-							'fn' => 'Add track ' . $value->name . ' to Alfred playlist',
-							'shift' => 'Add album ' . $album_name . ' to your Alfred Playlist',
+							'fn' => 'Add track ' . $value->name . ' to ' . $alfred_playlist_name,
+							'shift' => 'Add album ' . $album_name . ' to ' . $alfred_playlist_name,
 							'ctrl' => 'Search artist ' . $artist_name . ' online'), $track_artwork, 'yes', null, '');
 					}
 					break;
@@ -947,8 +947,8 @@ if (mb_strlen($query) < 3 ||
 							$subtitle,
 							'alt' => 'Play album ' . $track[6] . ' with Spotify',
 							'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
-							'fn' => 'Add track ' . $track[5] . ' to Alfred playlist',
-							'shift' => 'Add album ' . $track[6] . ' to your Alfred Playlist',
+							'fn' => 'Add track ' . $track[5] . ' to ' . $alfred_playlist_name,
+							'shift' => 'Add album ' . $track[6] . ' to ' . $alfred_playlist_name,
 							'ctrl' => 'Search artist ' . $track[7] . ' online'), $track[9], 'yes', null, '');
 				}
 			}
@@ -1031,8 +1031,8 @@ if (mb_strlen($query) < 3 ||
 							$subtitle,
 							'alt' => 'Play album ' . $track[6] . ' with Spotify',
 							'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
-							'fn' => 'Add track ' . $track[5] . ' to Alfred playlist',
-							'shift' => 'Add album ' . $track[6] . ' to your Alfred Playlist',
+							'fn' => 'Add track ' . $track[5] . ' to ' . $alfred_playlist_name,
+							'shift' => 'Add album ' . $track[6] . ' to ' . $alfred_playlist_name,
 							'ctrl' => 'Search artist ' . $track[7] . ' online'), $track[9], 'yes', null, '');
 				}
 				if ($album_uri == "")
@@ -1144,8 +1144,8 @@ if (mb_strlen($query) < 3 ||
 							$subtitle,
 							'alt' => 'Play album ' . $track[6] . ' with Spotify',
 							'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
-							'fn' => 'Add track ' . $track[5] . ' to Alfred playlist',
-							'shift' => 'Add album ' . $track[6] . ' to your Alfred Playlist',
+							'fn' => 'Add track ' . $track[5] . ' to ' . $alfred_playlist_name,
+							'shift' => 'Add album ' . $track[6] . ' to ' . $alfred_playlist_name,
 							'ctrl' => 'Search artist ' . $track[7] . ' online'), $track[9], 'yes', null, '');
 
 					}
