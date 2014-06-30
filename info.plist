@@ -71,16 +71,7 @@
 			</dict>
 		</array>
 		<key>19215BE5-986E-4AC9-9166-C80872C51DBE</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>C0402AEB-638A-43F4-A4E3-17EC788F526E</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-			</dict>
-		</array>
+		<array/>
 		<key>1A88766E-BF4A-48F5-9BD4-D3538634422F</key>
 		<array/>
 		<key>22216C91-0A58-4FE1-9F28-DF023E4F4282</key>
@@ -383,62 +374,6 @@
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>argumenttype</key>
-				<integer>1</integer>
-				<key>escaping</key>
-				<integer>38</integer>
-				<key>keyword</key>
-				<string>spot_mini</string>
-				<key>runningsubtext</key>
-				<string>Wait for it...</string>
-				<key>script</key>
-				<string>php -n -f main.php -- "{query}"</string>
-				<key>subtext</key>
-				<string>Search in your playlists for tracks, artists, and albums</string>
-				<key>title</key>
-				<string>Spotify Mini Player</string>
-				<key>type</key>
-				<integer>0</integer>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.scriptfilter</string>
-			<key>uid</key>
-			<string>18496AC4-EA42-444C-A906-642E38259C96</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>action</key>
-				<integer>0</integer>
-				<key>argument</key>
-				<integer>0</integer>
-				<key>hotkey</key>
-				<integer>36</integer>
-				<key>hotmod</key>
-				<integer>1310720</integer>
-				<key>hotstring</key>
-				<string>↩</string>
-				<key>leftcursor</key>
-				<false/>
-				<key>modsmode</key>
-				<integer>2</integer>
-				<key>relatedAppsMode</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.trigger.hotkey</string>
-			<key>uid</key>
-			<string>AE6160D1-56EA-4416-991E-CF12B874FFD3</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
@@ -484,6 +419,96 @@
 				<key>action</key>
 				<integer>0</integer>
 				<key>argument</key>
+				<integer>0</integer>
+				<key>hotkey</key>
+				<integer>36</integer>
+				<key>hotmod</key>
+				<integer>1310720</integer>
+				<key>hotstring</key>
+				<string>↩</string>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>2</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>AE6160D1-56EA-4416-991E-CF12B874FFD3</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>php -f action.php -- "{query}" "ARTIST" ""</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>9845C770-A2CC-4752-A542-D71BE1081691</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>php -f action.php -- "{query}" "ALBUM_OR_PLAYLIST" "ADDTOPLAYLIST"</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>1A88766E-BF4A-48F5-9BD4-D3538634422F</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>keyword</key>
+				<string>spot_mini</string>
+				<key>runningsubtext</key>
+				<string>Wait for it...</string>
+				<key>script</key>
+				<string>php -n -f main.php -- "{query}"</string>
+				<key>subtext</key>
+				<string>Search in your playlists for tracks, artists, and albums</string>
+				<key>title</key>
+				<string>Spotify Mini Player</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>18496AC4-EA42-444C-A906-642E38259C96</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
 				<integer>3</integer>
 				<key>argumenttext</key>
 				<string>Alfred Playlist⇾</string>
@@ -513,14 +538,14 @@
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f action.php -- "{query}" "ARTIST" ""</string>
+				<string>php -f action.php -- "{query}" "TRACK" "ADDTOPLAYLIST"</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.action.script</string>
 			<key>uid</key>
-			<string>9845C770-A2CC-4752-A542-D71BE1081691</string>
+			<string>7918E8F7-20AE-445E-9AEA-E2E54CDE967D</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -559,69 +584,6 @@
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f action.php -- "{query}" "ALBUM_OR_PLAYLIST" "ADDTOPLAYLIST"</string>
-				<key>type</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>1A88766E-BF4A-48F5-9BD4-D3538634422F</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>action</key>
-				<integer>0</integer>
-				<key>argument</key>
-				<integer>3</integer>
-				<key>argumenttext</key>
-				<string>Playlist⇾</string>
-				<key>hotkey</key>
-				<integer>35</integer>
-				<key>hotmod</key>
-				<integer>1310720</integer>
-				<key>hotstring</key>
-				<string>P</string>
-				<key>leftcursor</key>
-				<false/>
-				<key>modsmode</key>
-				<integer>2</integer>
-				<key>relatedAppsMode</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.trigger.hotkey</string>
-			<key>uid</key>
-			<string>DAE270E5-CA94-4F36-99FE-D8EC996608C0</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>escaping</key>
-				<integer>38</integer>
-				<key>script</key>
-				<string>php -f action.php -- "{query}" "TRACK" "ADDTOPLAYLIST"</string>
-				<key>type</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>7918E8F7-20AE-445E-9AEA-E2E54CDE967D</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>escaping</key>
-				<integer>38</integer>
-				<key>script</key>
 				<string>php -f action.php -- "{query}" "ONLINE" "ONLINE"</string>
 				<key>type</key>
 				<integer>0</integer>
@@ -653,6 +615,35 @@ end alfred_script</string>
 			<string>4367DDDE-C360-4642-908E-EB1F916727CC</string>
 			<key>version</key>
 			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>3</integer>
+				<key>argumenttext</key>
+				<string>Playlist⇾</string>
+				<key>hotkey</key>
+				<integer>35</integer>
+				<key>hotmod</key>
+				<integer>1310720</integer>
+				<key>hotstring</key>
+				<string>P</string>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>2</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>DAE270E5-CA94-4F36-99FE-D8EC996608C0</string>
+			<key>version</key>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -1186,31 +1177,6 @@ end alfred_script</string>
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>lastpathcomponent</key>
-				<false/>
-				<key>onlyshowifquerypopulated</key>
-				<false/>
-				<key>output</key>
-				<integer>0</integer>
-				<key>removeextension</key>
-				<false/>
-				<key>sticky</key>
-				<false/>
-				<key>text</key>
-				<string>{query}</string>
-				<key>title</key>
-				<string>Spotify Mini Player</string>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.output.notification</string>
-			<key>uid</key>
-			<string>C0402AEB-638A-43F4-A4E3-17EC788F526E</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
@@ -1420,7 +1386,7 @@ https://github.com/vdesabou/alfred-spotify-mini-player</string>
 		<key>18496AC4-EA42-444C-A906-642E38259C96</key>
 		<dict>
 			<key>ypos</key>
-			<real>10</real>
+			<real>330</real>
 		</dict>
 		<key>19215BE5-986E-4AC9-9166-C80872C51DBE</key>
 		<dict>
@@ -1555,7 +1521,7 @@ https://github.com/vdesabou/alfred-spotify-mini-player</string>
 		<key>A5C6FE27-E7CE-45C4-ADB0-8B2D0CC39E99</key>
 		<dict>
 			<key>ypos</key>
-			<real>260</real>
+			<real>480</real>
 		</dict>
 		<key>A69FA8D7-260F-4BB2-B77A-31301E0E32AC</key>
 		<dict>
@@ -1565,22 +1531,17 @@ https://github.com/vdesabou/alfred-spotify-mini-player</string>
 		<key>AE6160D1-56EA-4416-991E-CF12B874FFD3</key>
 		<dict>
 			<key>ypos</key>
-			<real>10</real>
+			<real>200</real>
 		</dict>
 		<key>B22B739D-D9B8-4E4C-AB9E-BE2EA1E0478D</key>
 		<dict>
 			<key>ypos</key>
-			<real>140</real>
+			<real>330</real>
 		</dict>
 		<key>B9857323-CDD4-4134-B272-26C4686049E5</key>
 		<dict>
 			<key>ypos</key>
 			<real>1600</real>
-		</dict>
-		<key>C0402AEB-638A-43F4-A4E3-17EC788F526E</key>
-		<dict>
-			<key>ypos</key>
-			<real>2130</real>
 		</dict>
 		<key>C46E2C64-7407-4811-8503-5213DD65C39A</key>
 		<dict>
@@ -1625,7 +1586,7 @@ https://github.com/vdesabou/alfred-spotify-mini-player</string>
 		<key>DAE270E5-CA94-4F36-99FE-D8EC996608C0</key>
 		<dict>
 			<key>ypos</key>
-			<real>380</real>
+			<real>630</real>
 		</dict>
 		<key>E3215F64-F5B9-4639-93D1-1D643339E2E7</key>
 		<dict>
