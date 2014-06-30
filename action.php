@@ -1,7 +1,7 @@
 <?php
 
 // Turn off all error reporting
-error_reporting(0);
+//error_reporting(0);
 
 require('functions.php');
 
@@ -47,31 +47,7 @@ $playlist_artwork_path = $arg[16];
 $alfred_playlist_name = $arg[17];
 
 if ($other_action == "update_playlist" && $playlist_uri != "") {
-	if(! $w->internet()) {
-		displayNotificationWithArtwork("Error: No internet connection",'./images/warning.png');
-		return;
-	}
-
-	touch($w->data() . "/update_library_in_progress");
-	$w->write('InitPlaylist⇾' . 0 . '⇾' . 0 . '⇾' . time(), 'update_library_in_progress');
-
-	$tcpport = getFreeTcpPort();
-	exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:update_playlist:" . $playlist_uri . ":" . $tcpport . ":" . uniqid() . "\"'");
-	exec("osascript -e 'tell application \"Spotify\" to open location \"$playlist_uri\"'");
-
-	$server = IoServer::factory(
-		new HttpServer(
-			new WsServer(
-				new MiniPlayer()
-			)
-		),
-		$tcpport
-	);
-	// FIX THIS: server will exit when done
-	// Did not find a way to set a timeout
-	$server->run();
-
-
+	refreshPlaylist($w,$playlist_uri);
 	return;
 }
 
@@ -100,11 +76,18 @@ if ($type == "TRACK") {
 
 			// add track to alfred playlist
 			exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:addtoalfredplaylist:$track_uri:$alfred_playlist_uri\"'");
-			exec("osascript -e 'tell application \"Spotify\" to open location \"$alfred_playlist_uri\"'");
+			
 
 			displayNotificationWithArtwork('' . $track_name . '
 added to ' . $alfred_playlist_name,$track_artwork_path);
-			return;
+
+			if(! $w->internet()) {
+				displayNotificationWithArtwork("Error: No internet connection",'./images/warning.png');
+				return;
+			}
+		
+			// update alfred playlist
+			refreshPlaylist($w,$alfred_playlist_uri);
 		} else if ($playlist_uri != "") {
 				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:playtrackwithplaylistcontext:$track_uri:$playlist_uri\"'");
 				exec("osascript -e 'tell application \"Spotify\" to open location \"$playlist_uri\"'");
@@ -188,17 +171,20 @@ else if ($type == "ALBUM_OR_PLAYLIST") {
 					if($album_uri == "") {
 						// track is not from library
 						exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:addcurrenttrackalbumtoalfredplaylist:$alfred_playlist_uri\"'");
-						exec("osascript -e 'tell application \"Spotify\" to open location \"$alfred_playlist_uri\"'");
 						displayNotificationWithArtwork('Album ' . $album_name . '
 added to ' . $alfred_playlist_name,getTrackOrAlbumArtwork($w,$theme,$track_uri,true));
+
+						// update alfred playlist
+						refreshPlaylist($w,$alfred_playlist_uri);
 						return;
 					}
 					$album_artwork_path = getTrackOrAlbumArtwork($w,$theme,$album_uri,true);
 				}
 				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:addtoalfredplaylist:$album_uri:$alfred_playlist_uri\"'");
-				exec("osascript -e 'tell application \"Spotify\" to open location \"$alfred_playlist_uri\"'");
 				displayNotificationWithArtwork('Album ' . $album_name . '
 added to ' . $alfred_playlist_name,$album_artwork_path);
+				// update alfred playlist
+				refreshPlaylist($w,$alfred_playlist_uri);
 				return;
 			} else if ($playlist_uri != "") {
 					exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:addplaylisttoalfredplaylist:$playlist_uri:$alfred_playlist_uri\"'");
@@ -458,6 +444,7 @@ if ($playlist_uri != "") {
 			}
 	}
 
+
 /**
  * starCurrentTrack function.
  *
@@ -543,4 +530,38 @@ function unstarCurrentTrack($w)
 	$server->run();
 	return;
 }
+
+/**
+ * refreshPlaylist function.
+ *
+ * @access public
+ * @param mixed $w
+ * @string $playlist_uri
+ * @return void
+ */
+function refreshPlaylist($w,$playlist_uri)
+{
+	// update alfred playlist
+	touch($w->data() . "/update_library_in_progress");
+	$w->write('InitPlaylist⇾' . 0 . '⇾' . 0 . '⇾' . time(), 'update_library_in_progress');
+
+	$tcpport = getFreeTcpPort();
+	exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:update_playlist:" . $playlist_uri . ":" . $tcpport . ":" . uniqid() . "\"'");
+	exec("osascript -e 'tell application \"Spotify\" to open location \"$playlist_uri\"'");
+	
+	$server = IoServer::factory(
+		new HttpServer(
+			new WsServer(
+				new MiniPlayer()
+			)
+		),
+		$tcpport
+	);
+	// FIX THIS: server will exit when done
+	// Did not find a way to set a timeout
+	$server->run();	
+	return;
+
+}
+
 ?>
