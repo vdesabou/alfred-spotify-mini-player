@@ -6,7 +6,8 @@
 require_once('workflows.php');
 $w = new Workflows;
 
-require('functions.php');
+//require('functions.php');
+require('action.php');
 
  // get info on current song
 $command_output = exec("./track_info.sh 2>&1");
@@ -26,10 +27,6 @@ if (substr_count($command_output, '⇾') > 0) {
 	    return;
 	}
  
-	if ($alfred_playlist_uri == "" || $alfred_playlist_name == "") {
-	    displayNotification("Error: Alfred Playlist is not set");
-	    return;
-	}   
 
 	foreach ($settings as $setting):
 	
@@ -39,12 +36,19 @@ if (substr_count($command_output, '⇾') > 0) {
 	    $alfred_playlist_name = $setting[1];
 	    $theme = $setting[2];
 	endforeach;
+	
+	if ($alfred_playlist_uri == "" || $alfred_playlist_name == "") {
+	    displayNotification("Error: Alfred Playlist is not set");
+	    return;
+	}  
 
     exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:addtoalfredplaylist:$results[4]:$alfred_playlist_uri\"'");
-    exec("osascript -e 'tell application \"Spotify\" to open location \"$alfred_playlist_uri\"'"); 
     
     displayNotificationWithArtwork('' . $results[0] . ' by ' . $results[1] . '
-added to ' . $alfred_playlist_name,getTrackOrAlbumArtwork($w,$theme,$results[4],true));                   
+added to ' . $alfred_playlist_name,getTrackOrAlbumArtwork($w,$theme,$results[4],true));
+
+	// update alfred playlist
+	refreshPlaylist($w,$alfred_playlist_uri);                   
 }
 else {
 	displayNotification("Error: No track is playing");
