@@ -25,7 +25,11 @@ if (substr_count($command_output, '⇾') > 0) {
 	    displayNotification("Error: Alfred Playlist is not set");
 	    return;
 	}
-    
+ 
+	if ($alfred_playlist_uri == "" || $alfred_playlist_name == "") {
+	    displayNotification("Error: Alfred Playlist is not set");
+	    return;
+	}   
 
 	foreach ($settings as $setting):
 	

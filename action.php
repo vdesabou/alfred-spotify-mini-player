@@ -92,6 +92,12 @@ if ($type == "TRACK") {
 
 	if ($track_uri != "") {
 		if ($alfredplaylist != "") {
+		
+			if ($alfred_playlist_uri == "" || $alfred_playlist_name == "") {
+				displayNotification("Error: Alfred Playlist is not set");
+				return;
+			}   
+
 			// add track to alfred playlist
 			exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:addtoalfredplaylist:$track_uri:$alfred_playlist_uri\"'");
 			exec("osascript -e 'tell application \"Spotify\" to open location \"$alfred_playlist_uri\"'");
@@ -211,6 +217,11 @@ else if ($type == "ALBUM_OR_PLAYLIST") {
 			$theme = $setting[2];
 			endforeach;
 			if ($album_name != "") {
+
+				if ($alfred_playlist_uri == "" || $alfred_playlist_name == "") {
+					displayNotification("Error: Alfred Playlist is not set");
+					return;
+				}   
 
 				if($album_uri == "") {
 					// case of current song with shift
