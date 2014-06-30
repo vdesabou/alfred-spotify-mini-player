@@ -229,7 +229,29 @@
 				<string></string>
 			</dict>
 		</array>
+		<key>A5C6FE27-E7CE-45C4-ADB0-8B2D0CC39E99</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>18496AC4-EA42-444C-A906-642E38259C96</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 		<key>AE6160D1-56EA-4416-991E-CF12B874FFD3</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>18496AC4-EA42-444C-A906-642E38259C96</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>B22B739D-D9B8-4E4C-AB9E-BE2EA1E0478D</key>
 		<array>
 			<dict>
 				<key>destinationuid</key>
@@ -308,6 +330,17 @@
 		</array>
 		<key>DA0A3B7F-B5F1-4F92-9013-217E6F17C588</key>
 		<array/>
+		<key>DAE270E5-CA94-4F36-99FE-D8EC996608C0</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>18496AC4-EA42-444C-A906-642E38259C96</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 		<key>E3215F64-F5B9-4639-93D1-1D643339E2E7</key>
 		<array/>
 		<key>ECC53637-75AD-4FD2-9605-8E038D04C4BF</key>
@@ -448,6 +481,35 @@
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>3</integer>
+				<key>argumenttext</key>
+				<string>Alfred Playlist⇾</string>
+				<key>hotkey</key>
+				<integer>12</integer>
+				<key>hotmod</key>
+				<integer>1310720</integer>
+				<key>hotstring</key>
+				<string>A</string>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>2</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>B22B739D-D9B8-4E4C-AB9E-BE2EA1E0478D</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
@@ -465,6 +527,35 @@
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>3</integer>
+				<key>argumenttext</key>
+				<string>Settings⇾</string>
+				<key>hotkey</key>
+				<integer>1</integer>
+				<key>hotmod</key>
+				<integer>1310720</integer>
+				<key>hotstring</key>
+				<string>S</string>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>2</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>A5C6FE27-E7CE-45C4-ADB0-8B2D0CC39E99</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
@@ -478,6 +569,35 @@
 			<string>1A88766E-BF4A-48F5-9BD4-D3538634422F</string>
 			<key>version</key>
 			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>3</integer>
+				<key>argumenttext</key>
+				<string>Playlist⇾</string>
+				<key>hotkey</key>
+				<integer>35</integer>
+				<key>hotmod</key>
+				<integer>1310720</integer>
+				<key>hotstring</key>
+				<string>P</string>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>2</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>DAE270E5-CA94-4F36-99FE-D8EC996608C0</string>
+			<key>version</key>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -1141,7 +1261,7 @@ end alfred_script</string>
 				<key>hotkey</key>
 				<integer>35</integer>
 				<key>hotmod</key>
-				<integer>1310720</integer>
+				<integer>1835008</integer>
 				<key>hotstring</key>
 				<string>P</string>
 				<key>leftcursor</key>
@@ -1432,6 +1552,11 @@ https://github.com/vdesabou/alfred-spotify-mini-player</string>
 			<key>ypos</key>
 			<real>2650</real>
 		</dict>
+		<key>A5C6FE27-E7CE-45C4-ADB0-8B2D0CC39E99</key>
+		<dict>
+			<key>ypos</key>
+			<real>260</real>
+		</dict>
 		<key>A69FA8D7-260F-4BB2-B77A-31301E0E32AC</key>
 		<dict>
 			<key>ypos</key>
@@ -1441,6 +1566,11 @@ https://github.com/vdesabou/alfred-spotify-mini-player</string>
 		<dict>
 			<key>ypos</key>
 			<real>10</real>
+		</dict>
+		<key>B22B739D-D9B8-4E4C-AB9E-BE2EA1E0478D</key>
+		<dict>
+			<key>ypos</key>
+			<real>140</real>
 		</dict>
 		<key>B9857323-CDD4-4134-B272-26C4686049E5</key>
 		<dict>
@@ -1491,6 +1621,11 @@ https://github.com/vdesabou/alfred-spotify-mini-player</string>
 		<dict>
 			<key>ypos</key>
 			<real>1870</real>
+		</dict>
+		<key>DAE270E5-CA94-4F36-99FE-D8EC996608C0</key>
+		<dict>
+			<key>ypos</key>
+			<real>380</real>
 		</dict>
 		<key>E3215F64-F5B9-4639-93D1-1D643339E2E7</key>
 		<dict>
