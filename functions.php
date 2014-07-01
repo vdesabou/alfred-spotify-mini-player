@@ -761,6 +761,18 @@ function updatePlaylist($jsonData)
 }
 
 /**
+ * removeUpdateLibraryInProgressFile function.
+ * 
+ * @access public
+ * @return void
+ */
+function removeUpdateLibraryInProgressFile()
+{
+	$w = new Workflows();
+	unlink($w->data() . "/update_library_in_progress");
+}
+
+/**
  * updatePlaylistList function.
  * 
  * @access public

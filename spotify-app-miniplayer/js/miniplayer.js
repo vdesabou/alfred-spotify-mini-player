@@ -35,7 +35,9 @@ function handleArgs() {
 							
 				appendText("star track started");
 				appendText("Trying to connect with Spotify Mini Player workflow on port " + args[1] + ".");
-
+				
+				var result = JSON.stringify(starCurrentTrack());
+				
 				var pl = models.Playlist.fromURI(Library.forCurrentUser().starred.uri);
 				pl.load('name','uri').done(function() {
 					getPlaylistTracks(pl.uri,function(matchedPlaylistTracks) {
@@ -49,7 +51,7 @@ function handleArgs() {
 
 						conn.onopen = function(e) {
 						    appendText("Connection established with Spotify Mini Player workflow on port " + args[1] + ". Transmitting data..");
-						    conn.send('star⇾' + JSON.stringify(array_results) + '⇾' + JSON.stringify(starCurrentTrack()));
+						    conn.send('star⇾' + JSON.stringify(array_results) + '⇾' + result);
 						};
 						
 						conn.onerror = function (e) {
@@ -73,7 +75,9 @@ function handleArgs() {
 							
 				appendText("unstar track started");
 				appendText("Trying to connect with Spotify Mini Player workflow on port " + args[1] + ".");
-
+				
+				var result = JSON.stringify(unstarCurrentTrack());
+				
 				var pl = models.Playlist.fromURI(Library.forCurrentUser().starred.uri);
 				pl.load('name','uri').done(function() {
 					getPlaylistTracks(pl.uri,function(matchedPlaylistTracks) {
@@ -87,7 +91,7 @@ function handleArgs() {
 
 						conn.onopen = function(e) {
 						    appendText("Connection established with Spotify Mini Player workflow on port " + args[1] + ". Transmitting data..");
-						    conn.send('unstar⇾' + JSON.stringify(array_results) + '⇾' + JSON.stringify(unstarCurrentTrack()));
+						    conn.send('unstar⇾' + JSON.stringify(array_results) + '⇾' + result);
 						};
 						
 						conn.onerror = function (e) {
@@ -686,7 +690,7 @@ function starCurrentTrack() {
 
     	t.name = track.name;
     	t.uri = track.uri; 
-    	console.log("starCurrentTrack: ", t);       	
+    	appendText("starCurrentTrack: " + track.name);       	
 		return t;
 	}
 	return t;
@@ -708,7 +712,7 @@ function unstarCurrentTrack() {
 
     	t.name = track.name;
     	t.uri = track.uri; 
-    	console.log("unstarCurrentTrack: ", t);       	
+    	appendText("unstarCurrentTrack: " + track.name);       	
 		return t;
 	}
 	return t;

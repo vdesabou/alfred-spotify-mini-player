@@ -103,6 +103,7 @@ class MiniPlayer implements MessageComponentInterface {
 						$client->send("STAR FAIL");
 					}
 					displayNotification("Error: cannot get current track");
+					removeUpdateLibraryInProgressFile();
 				}
 		    				        
 		    }else {
@@ -110,6 +111,7 @@ class MiniPlayer implements MessageComponentInterface {
 					$client->send("STAR FAIL");
 				}
 				displayNotification("Error: cannot get current track");
+				removeUpdateLibraryInProgressFile();
 		    }
 
 	        foreach ($this->clients as $client) {
@@ -136,6 +138,7 @@ class MiniPlayer implements MessageComponentInterface {
 						$client->send("UNSTAR FAIL");
 					}
 					displayNotification("Error: cannot get current track");
+					removeUpdateLibraryInProgressFile();
 				}
 		    				        
 		    }else {
@@ -143,6 +146,7 @@ class MiniPlayer implements MessageComponentInterface {
 					$client->send("UNSTAR FAIL");
 				}
 				displayNotification("Error: cannot get current track");
+				removeUpdateLibraryInProgressFile();
 		    }
 
 	        foreach ($this->clients as $client) {
