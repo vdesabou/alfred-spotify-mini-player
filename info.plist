@@ -73,7 +73,16 @@
 		<key>19215BE5-986E-4AC9-9166-C80872C51DBE</key>
 		<array/>
 		<key>1A88766E-BF4A-48F5-9BD4-D3538634422F</key>
-		<array/>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>86617270-3D9B-4AF9-88DF-5782CD290079</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 		<key>22216C91-0A58-4FE1-9F28-DF023E4F4282</key>
 		<array>
 			<dict>
@@ -167,11 +176,29 @@
 			</dict>
 		</array>
 		<key>5F5E8A6D-8707-41FC-B5D1-660CD11685F0</key>
-		<array/>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>86617270-3D9B-4AF9-88DF-5782CD290079</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 		<key>60EA5756-7B07-4DCA-959A-C3B0E90150AC</key>
 		<array/>
 		<key>7918E8F7-20AE-445E-9AEA-E2E54CDE967D</key>
-		<array/>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>86617270-3D9B-4AF9-88DF-5782CD290079</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 		<key>794A76A7-BB98-4A83-92BE-386A56875120</key>
 		<array>
 			<dict>
@@ -206,7 +233,16 @@
 			</dict>
 		</array>
 		<key>8DF18F9A-B3A5-4B14-8360-AD850CF5C143</key>
-		<array/>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>86617270-3D9B-4AF9-88DF-5782CD290079</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 		<key>9845C770-A2CC-4752-A542-D71BE1081691</key>
 		<array/>
 		<key>A4437594-2A54-42A1-836E-129E46F5DB47</key>
@@ -1227,7 +1263,7 @@ end alfred_script</string>
 				<key>hotkey</key>
 				<integer>35</integer>
 				<key>hotmod</key>
-				<integer>1835008</integer>
+				<integer>1572864</integer>
 				<key>hotstring</key>
 				<string>P</string>
 				<key>leftcursor</key>
