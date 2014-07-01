@@ -150,7 +150,7 @@ class MiniPlayer implements MessageComponentInterface {
 		    }
 
 	        foreach ($this->clients as $client) {
-	                $client->send("STAR SUCCESS");
+	                $client->send("UNSTAR SUCCESS");
 	        }		
 		}
 		else
