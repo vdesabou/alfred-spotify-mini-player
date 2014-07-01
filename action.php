@@ -235,10 +235,19 @@ if ($playlist_uri != "") {
 				return;
 
 			} else if ($setting[0] == "CLEAR_ALFRED_PLAYLIST") {
+			
+				if ($setting[1] == "" || $setting[2] == "") {
+					displayNotification("Error: Alfred Playlist is not set");
+					return;
+				}   
 				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:clearplaylist:$setting[1]:" . uniqid() . "\"'");
 				exec("osascript -e 'tell application \"Spotify\" to open location \"$setting[1]\"'");
 
 				displayNotificationWithArtwork('Alfred Playlist ' . $setting[2] . ' was cleared' ,getPlaylistArtwork($w,'black', $setting[1], true));
+				
+				// update alfred playlist
+				refreshPlaylist($w,$setting[1]);
+				return;
 			} else if ($setting[0] == "GET_LYRICS") {
 				if(! $w->internet()) {
 					displayNotificationWithArtwork("Error: No internet connection",'./images/warning.png');
