@@ -11,6 +11,8 @@
 
 * Automatically update Alfred Playlist after adding track, album or playlist
 
+* Automatically update starred playlist after star/unstar track
+
 4.3.6:
 
 * Improved notifications
