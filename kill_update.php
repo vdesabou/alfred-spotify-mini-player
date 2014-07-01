@@ -18,5 +18,7 @@ if ( file_exists($w->data() . "/update_library_in_progress") )
 
 exec("kill -9 $(ps -efx | grep \"php\" | grep \"update_\" | awk '{print $2}')");    
 exec("kill -9 $(ps -efx | grep \"php\" | grep \"update.php\" | awk '{print $2}')");
+exec("kill -9 $(ps -efx | grep \"php\" | grep \"add_to_alfred_playlist.php\" | awk '{print $2}')");
+exec("kill -9 $(ps -efx | grep \"php\" | grep \"ADDTOPLAYLIST\" | awk '{print $2}')");
 
 ?>
