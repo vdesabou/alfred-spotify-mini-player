@@ -31,53 +31,79 @@ function handleArgs() {
 				break;
 			case "star":
 				sleep(1000);
-								
+				var array_results = [];
+							
 				appendText("star track started");
 				appendText("Trying to connect with Spotify Mini Player workflow on port " + args[1] + ".");
-				
-				var conn = new WebSocket('ws://127.0.0.1:' + args[1]);
-				conn.onopen = function(e) {
-					appendText("Connection established with Spotify Mini Player workflow on port " + args[1] + ". Transmitting data..");
-				    conn.send('star⇾' + JSON.stringify(starCurrentTrack()));
-				};
-				
-				conn.onerror = function (e) {
-                    appendText("Error received");
-                };
-				
-				conn.onclose = function (e) {
-                    appendText("Workflow closed connection " + e.reason);
-                };
-				
-				conn.onmessage = function(e) {
-				    appendText("Received response from workflow: " + e.data);
-				    conn.close();
-				};
+
+				var pl = models.Playlist.fromURI(Library.forCurrentUser().starred.uri);
+				pl.load('name','uri').done(function() {
+					getPlaylistTracks(pl.uri,function(matchedPlaylistTracks) {
+			
+						array_results.push(matchedPlaylistTracks);	
+			
+						appendText("update_playlist for starred playlist finished");
+						appendText("Trying to connect with Spotify Mini Player workflow on port " + args[1] + ".");
+						
+						var conn = new WebSocket('ws://127.0.0.1:' + args[1]);
+
+						conn.onopen = function(e) {
+						    appendText("Connection established with Spotify Mini Player workflow on port " + args[1] + ". Transmitting data..");
+						    conn.send('star⇾' + JSON.stringify(array_results) + '⇾' + JSON.stringify(starCurrentTrack()));
+						};
+						
+						conn.onerror = function (e) {
+                            appendText("Error received");
+                        };
+						
+						conn.onclose = function (e) {
+                            appendText("Workflow closed connection " + e.reason);
+                        };
+						
+						conn.onmessage = function(e) {
+						    appendText("Received response from workflow: " + e.data);
+						    conn.close();
+						};
+					});				        
+				});	
 				break;
 			case "unstar":
 				sleep(1000);
-								
+				var array_results = [];
+							
 				appendText("unstar track started");
 				appendText("Trying to connect with Spotify Mini Player workflow on port " + args[1] + ".");
-				
-				var conn = new WebSocket('ws://127.0.0.1:' + args[1]);
-				conn.onopen = function(e) {
-					appendText("Connection established with Spotify Mini Player workflow on port " + args[1] + ". Transmitting data..");
-				    conn.send('unstar⇾' + JSON.stringify(unstarCurrentTrack()));
-				};
-				
-				conn.onerror = function (e) {
-                    appendText("Error received");
-                };
-				
-				conn.onclose = function (e) {
-                    appendText("Workflow closed connection " + e.reason);
-                };
-				
-				conn.onmessage = function(e) {
-				    appendText("Received response from workflow: " + e.data);
-				    conn.close();
-				};
+
+				var pl = models.Playlist.fromURI(Library.forCurrentUser().starred.uri);
+				pl.load('name','uri').done(function() {
+					getPlaylistTracks(pl.uri,function(matchedPlaylistTracks) {
+			
+						array_results.push(matchedPlaylistTracks);	
+			
+						appendText("update_playlist for starred playlist finished");
+						appendText("Trying to connect with Spotify Mini Player workflow on port " + args[1] + ".");
+						
+						var conn = new WebSocket('ws://127.0.0.1:' + args[1]);
+
+						conn.onopen = function(e) {
+						    appendText("Connection established with Spotify Mini Player workflow on port " + args[1] + ". Transmitting data..");
+						    conn.send('unstar⇾' + JSON.stringify(array_results) + '⇾' + JSON.stringify(unstarCurrentTrack()));
+						};
+						
+						conn.onerror = function (e) {
+                            appendText("Error received");
+                        };
+						
+						conn.onclose = function (e) {
+                            appendText("Workflow closed connection " + e.reason);
+                        };
+						
+						conn.onmessage = function(e) {
+						    appendText("Received response from workflow: " + e.data);
+						    conn.close();
+						};
+					});				        
+				});	
 				break;
 			case "playcurrenttrackalbum":
 				playCurrentTrackAlbum();

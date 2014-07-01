@@ -85,7 +85,8 @@ class MiniPlayer implements MessageComponentInterface {
 		else if($command=="star")
 		{
 		    //try to decode it
-		    $track = json_decode($json, true);
+		    
+		    $track = json_decode($tmp[2], true);
 		    if (json_last_error() === JSON_ERROR_NONE) {
 		    	
 		    	if(count($track) > 0)
@@ -94,6 +95,8 @@ class MiniPlayer implements MessageComponentInterface {
 			    	$track_name = $track['name'];
 
 					displayNotificationForStarredTrack($track_name,$track_uri);
+					
+					updatePlaylist($json);
 			    	
 		    	} else {
 					foreach ($this->clients as $client) {
@@ -116,7 +119,7 @@ class MiniPlayer implements MessageComponentInterface {
 		else if($command=="unstar")
 		{
 		    //try to decode it
-		    $track = json_decode($json, true);
+		    $track = json_decode($tmp[2], true);
 		    if (json_last_error() === JSON_ERROR_NONE) {
 		    	
 		    	if(count($track) > 0)
@@ -125,6 +128,8 @@ class MiniPlayer implements MessageComponentInterface {
 			    	$track_name = $track['name'];
 
 					displayNotificationForUnstarredTrack($track_name,$track_uri);
+					
+					updatePlaylist($json);
 			    	
 		    	} else {
 					foreach ($this->clients as $client) {

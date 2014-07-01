@@ -469,6 +469,9 @@ function starCurrentTrack($w)
 	$username = $user[0];
 	endforeach;
 
+	touch($w->data() . "/update_library_in_progress");
+	$w->write('InitPlaylist⇾' . 0 . '⇾' . 0 . '⇾' . time(), 'update_library_in_progress');
+	
 	exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:star:" . $tcpport . ":" . uniqid() . "\"'");
 	exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:user:$username:starred\"'");
 
@@ -512,6 +515,9 @@ function unstarCurrentTrack($w)
 	$username = $user[0];
 	endforeach;
 
+	touch($w->data() . "/update_library_in_progress");
+	$w->write('InitPlaylist⇾' . 0 . '⇾' . 0 . '⇾' . time(), 'update_library_in_progress');
+	
 	exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:unstar:" . $tcpport . ":" . uniqid() . "\"'");
 	exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:user:$username:starred\"'");
 
