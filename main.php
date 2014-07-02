@@ -207,8 +207,28 @@ if (mb_strlen($query) < 3 ||
 							'ctrl' => 'Search artist ' . escapeQuery($results[1]) . ' online')
 						, ($results[3] == "playing") ? './images/' . $theme . '/' . 'pause.png' : './images/' . $theme . '/' . 'play.png', 'yes', null, '');
 
-					$w->result(uniqid(), '', "🔈👤 " . ucfirst(escapeQuery($results[1])), "Browse this artist", $currentArtistArtwork, 'no', null, "Artist⇾" . escapeQuery($results[1]) . "⇾");
 
+					$getTracks = "select * from tracks where playable=1 and artist_name like '%" . escapeQuery($results[1]) . "%'" . " limit " . $max_results;
+					$dbfile = $w->data() . "/library.db";
+					$db = new SQLite3($dbfile);
+					$tracks = $db->query($getTracks);
+		
+					if ($tracks == false) {
+						handleDbIssue($theme);
+						return;
+					}
+		
+					// check if artist is in library
+					$noresult=true;
+					while ($track = $tracks->fetchArray()) {
+				
+						$noresult=false;
+					}
+		
+					if($noresult == false) {
+						$w->result(uniqid(), '', "🔈👤 " . ucfirst(escapeQuery($results[1])), "Browse this artist", $currentArtistArtwork, 'no', null, "Artist⇾" . escapeQuery($results[1]) . "⇾");
+					}
+			
 					if($is_lyrics_active == true) {
 						$w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'GET_LYRICS⇾' . escapeQuery($results[1]) . '⇾' . escapeQuery($results[0]) /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,'' /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "🔈🎤 Get Lyrics for track " . escapeQuery($results[0]),
 							array(
@@ -220,9 +240,6 @@ if (mb_strlen($query) < 3 ||
 								'ctrl' => 'Not Available')
 							, getTrackOrAlbumArtwork($w,$theme,$results[4],false), 'yes', null, '');
 					}
-
-					$dbfile = $w->data() . "/library.db";
-					$db = new SQLite3($dbfile);
 
 					$getTracks = "select * from tracks where playable=1 and uri='" . $results[4] . "'" . " limit " . $max_results;
 
