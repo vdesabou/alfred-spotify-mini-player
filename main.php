@@ -208,7 +208,7 @@ if (mb_strlen($query) < 3 ||
 						, ($results[3] == "playing") ? './images/' . $theme . '/' . 'pause.png' : './images/' . $theme . '/' . 'play.png', 'yes', null, '');
 
 
-					$getTracks = "select * from tracks where playable=1 and artist_name like '%" . escapeQuery($results[1]) . "%'" . " limit " . $max_results;
+					$getTracks = "select * from tracks where playable=1 and artist_name like '%" . escapeQuery($results[1]) . "%'" . " limit " . 1;
 					$dbfile = $w->data() . "/library.db";
 					$db = new SQLite3($dbfile);
 					$tracks = $db->query($getTracks);
