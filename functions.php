@@ -440,6 +440,27 @@ function updateLibrary($jsonData)
 	$w = new Workflows();
 
 	$in_progress_data = $w->read('update_library_in_progress');
+	
+	//
+	// Read settings from DB
+	//
+	$getSettings = 'select theme from settings';
+	$dbfile = $w->data() . '/settings.db';
+	exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
+
+	if ($returnValue != 0) {
+		displayNotification("Error: cannot read settings");
+		unlink($w->data() . "/update_library_in_progress");
+		return;
+	}
+
+
+	foreach ($settings as $setting):
+
+		$setting = explode("	", $setting);
+
+	$theme = $setting[0];
+	endforeach;
 
 	$words = explode('⇾', $in_progress_data);
 
@@ -648,6 +669,27 @@ function updatePlaylist($jsonData)
 	$w = new Workflows();
 
 	$in_progress_data = $w->read('update_library_in_progress');
+	
+	//
+	// Read settings from DB
+	//
+	$getSettings = 'select theme from settings';
+	$dbfile = $w->data() . '/settings.db';
+	exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
+
+	if ($returnValue != 0) {
+		displayNotification("Error: cannot read settings");
+		unlink($w->data() . "/update_library_in_progress");
+		return;
+	}
+
+
+	foreach ($settings as $setting):
+
+		$setting = explode("	", $setting);
+
+	$theme = $setting[0];
+	endforeach;
 
 	$words = explode('⇾', $in_progress_data);
 
@@ -784,6 +826,27 @@ function updatePlaylistList($jsonData)
 	$w = new Workflows();
 
 	$in_progress_data = $w->read('update_library_in_progress');
+	
+	//
+	// Read settings from DB
+	//
+	$getSettings = 'select theme from settings';
+	$dbfile = $w->data() . '/settings.db';
+	exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
+
+	if ($returnValue != 0) {
+		displayNotification("Error: cannot read settings");
+		unlink($w->data() . "/update_library_in_progress");
+		return;
+	}
+
+
+	foreach ($settings as $setting):
+
+		$setting = explode("	", $setting);
+
+	$theme = $setting[0];
+	endforeach;
 
 	$words = explode('⇾', $in_progress_data);
 
