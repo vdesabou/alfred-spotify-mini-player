@@ -3,11 +3,11 @@
 
 // Load and use David Ferguson's Workflows.php class
 //$files = __load( "Workflows" );
-require_once('workflows.php');
+require_once('./src/workflows.php');
 $w = new Workflows;
 
-//require('functions.php');
-require('action.php');
+//require('./src/functions.php');
+require('./src/action.php');
 
  // get info on current song
 $command_output = exec("./track_info.sh 2>&1");

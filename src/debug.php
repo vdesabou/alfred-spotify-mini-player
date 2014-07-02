@@ -9,7 +9,7 @@ require_once('alfred.bundler.php');
 
 // Load and use David Ferguson's Workflows.php class
 //$files = __load( "Workflows" );
-require_once('workflows.php');
+require_once('./src/workflows.php');
 $w = new Workflows;
 
 

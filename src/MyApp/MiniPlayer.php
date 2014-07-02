@@ -3,7 +3,7 @@ namespace MyApp;
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
 
-include_once('./functions.php');
+include_once('./src/functions.php');
 
 class MiniPlayer implements MessageComponentInterface {
     protected $clients;

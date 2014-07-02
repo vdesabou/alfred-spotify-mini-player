@@ -413,7 +413,7 @@
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f action.php -- "{query}" "TRACK" ""</string>
+				<string>php -f ./src/action.php -- "{query}" "TRACK" ""</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -438,7 +438,7 @@
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f action.php -- "{query}" "ALBUM" ""</string>
+				<string>php -f ./src/action.php -- "{query}" "ALBUM" ""</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -482,7 +482,7 @@
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f action.php -- "{query}" "ARTIST" ""</string>
+				<string>php -f ./src/action.php -- "{query}" "ARTIST" ""</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -499,7 +499,7 @@
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f action.php -- "{query}" "ALBUM_OR_PLAYLIST" "ADDTOPLAYLIST"</string>
+				<string>php -f ./src/action.php -- "{query}" "ALBUM_OR_PLAYLIST" "ADDTOPLAYLIST"</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -522,7 +522,7 @@
 				<key>runningsubtext</key>
 				<string>Wait for it...</string>
 				<key>script</key>
-				<string>php -n -f main.php -- "{query}"</string>
+				<string>php -n -f ./src/main.php -- "{query}"</string>
 				<key>subtext</key>
 				<string>Search in your playlists for tracks, artists, and albums</string>
 				<key>title</key>
@@ -574,7 +574,7 @@
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f action.php -- "{query}" "TRACK" "ADDTOPLAYLIST"</string>
+				<string>php -f ./src/action.php -- "{query}" "TRACK" "ADDTOPLAYLIST"</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -620,7 +620,7 @@
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f action.php -- "{query}" "ONLINE" "ONLINE"</string>
+				<string>php -f ./src/action.php -- "{query}" "ONLINE" "ONLINE"</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -965,7 +965,7 @@ end alfred_script</string>
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f action.php -- "" "STAR" "STAR"</string>
+				<string>php -f ./src/action.php -- "" "STAR" "STAR"</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -1003,7 +1003,7 @@ end alfred_script</string>
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f action.php -- "" "UNSTAR" "UNSTAR"</string>
+				<string>php -f ./src/action.php -- "" "UNSTAR" "UNSTAR"</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -1178,7 +1178,7 @@ end alfred_script</string>
 				<key>escaping</key>
 				<integer>127</integer>
 				<key>script</key>
-				<string>php -f kill_update.php</string>
+				<string>php -f ./src/kill_update.php</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -1345,7 +1345,7 @@ end alfred_script</string>
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -n -f add_to_alfred_playlist.php</string>
+				<string>php -n -f ./src/add_to_alfred_playlist.php</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -1396,7 +1396,7 @@ end alfred_script</string>
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f update.php</string>
+				<string>php -f ./src/update.php</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>

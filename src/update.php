@@ -1,5 +1,5 @@
 <?php
-	require('functions.php');
+	require('./src/functions.php');
 	
 	use Ratchet\Server\IoServer;
 	use Ratchet\Http\HttpServer;
@@ -11,7 +11,7 @@
 	
 	// Load and use David Ferguson's Workflows.php class
 	//$files = __load( "Workflows" );
-	require_once('workflows.php');
+	require_once('./src/workflows.php');
 	
 	$w = new Workflows;
 	

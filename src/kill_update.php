@@ -4,12 +4,12 @@
 error_reporting(0);
 
 // Require the bundler.
-//require_once('alfred.bundler.php');
-require('functions.php');
+//require_once('./src/alfred.bundler.php');
+require('./src/functions.php');
 
 // Load and use David Ferguson's Workflows.php class
 //$files = __load( "Workflows" );
-require_once('workflows.php');
+require_once('./src/workflows.php');
 $w = new Workflows;
 
 displayNotificationWithArtwork("Update library/playlist was killed!",'05F86AA1-D3EE-4409-9A58-898B36FFE503.png');

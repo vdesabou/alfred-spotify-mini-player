@@ -1,23 +1,23 @@
 <?php
 
 // Turn off all error reporting
-error_reporting(0);
+//error_reporting(0);
 
-if ( ! file_exists('alfred.bundler.php') )
-	exec( 'curl -sL "https://raw.githubusercontent.com/shawnrice/alfred-bundler/aries/wrappers/alfred.bundler.php" > "alfred.bundler.php"' );
+if ( ! file_exists('./src/alfred.bundler.php') )
+	exec( 'curl -sL "https://raw.githubusercontent.com/shawnrice/alfred-bundler/aries/wrappers/alfred.bundler.php" > "./src/alfred.bundler.php"' );
 
 // Require the bundler.
-require_once('alfred.bundler.php');
+require_once('./src/alfred.bundler.php');
 
 
 // Load and use David Ferguson's Workflows.php class
 //$files = __load( "Workflows" );
-require_once('workflows.php');
+require_once('./src/workflows.php');
 $w = new Workflows;
 
 
 
-require('functions.php');
+require('./src/functions.php');
 
 
 $query = escapeQuery($argv[1]);

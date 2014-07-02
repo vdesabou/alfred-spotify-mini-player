@@ -1,8 +1,8 @@
 <?php
 
 // Require the bundler.
-require_once('alfred.bundler.php');
-require_once('workflows.php');
+require_once('./src/alfred.bundler.php');
+require_once('./src/workflows.php');
 
 /**
  * installSpotifyAppIfNeeded function.
