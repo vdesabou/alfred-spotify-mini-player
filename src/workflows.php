@@ -177,7 +177,7 @@ class Workflows {
 			return false;
 		endif;
 
-		$items = new SimpleXMLElement("<items></items>"); 	// Create new XML element
+		$items = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><items></items>'); 	// Create new XML element
 
 		foreach( $a as $b ):								// Loop through each object in the array
 			$c = $items->addChild( 'item' );				// Add a new 'item' element for each object
