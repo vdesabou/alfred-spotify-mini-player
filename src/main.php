@@ -101,8 +101,8 @@ $dbsettings->query("PRAGMA journal_mode = OFF");
 $dbsettings->query("PRAGMA temp_store = MEMORY");
 $dbsettings->query("PRAGMA count_changes = OFF");
 $dbsettings->query("PRAGMA PAGE_SIZE = 4096");
-$dbsettings->query("PRAGMA default_cache_size=700000"); 
-$dbsettings->query("PRAGMA cache_size=700000"); 
+$dbsettings->query("PRAGMA default_cache_size=700000");
+$dbsettings->query("PRAGMA cache_size=700000");
 $dbsettings->query("PRAGMA compile_options");
 
 $settings = $dbsettings->query($getSettings);
@@ -151,8 +151,8 @@ $db->query("PRAGMA journal_mode = OFF");
 $db->query("PRAGMA temp_store = MEMORY");
 $db->query("PRAGMA count_changes = OFF");
 $db->query("PRAGMA PAGE_SIZE = 4096");
-$db->query("PRAGMA default_cache_size=700000"); 
-$db->query("PRAGMA cache_size=700000"); 
+$db->query("PRAGMA default_cache_size=700000");
+$db->query("PRAGMA cache_size=700000");
 $db->query("PRAGMA compile_options");
 
 $check_results = checkForUpdate($w,$last_check_update_time);
@@ -212,7 +212,7 @@ if (mb_strlen($query) < 3 ||
 					if ($is_alfred_playlist_active == true) {
 						$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
 					}
-					
+
 					$w->result(uniqid(), serialize(array($results[4] /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'playpause' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ , $alfred_playlist_uri /* alfred_playlist_uri */ , escapeQuery($results[1]) /* artist_name */, escapeQuery($results[0]) /* track_name */, escapeQuery($results[2]) /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), "🔈 " . escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]) . ' in ' . escapeQuery($results[2]),
 						array(
 							$subtitle,
@@ -227,23 +227,23 @@ if (mb_strlen($query) < 3 ||
 					$getTracks = "select * from tracks where playable=1 and artist_name like '%" . escapeQuery($results[1]) . "%'" . " limit " . 1;
 
 					$tracks = $db->query($getTracks);
-		
+
 					if ($tracks == false) {
 						handleDbIssue($theme);
 						return;
 					}
-		
+
 					// check if artist is in library
 					$noresult=true;
 					while ($track = $tracks->fetch()) {
-				
+
 						$noresult=false;
 					}
-		
+
 					if($noresult == false) {
 						$w->result(uniqid(), '', "🔈👤 " . ucfirst(escapeQuery($results[1])), "Browse this artist", $currentArtistArtwork, 'no', null, "Artist⇾" . escapeQuery($results[1]) . "⇾");
 					}
-			
+
 					if($is_lyrics_active == true) {
 						$w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'GET_LYRICS⇾' . escapeQuery($results[1]) . '⇾' . escapeQuery($results[0]) /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,'' /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "🔈🎤 Get Lyrics for track " . escapeQuery($results[0]),
 							array(
@@ -569,15 +569,15 @@ if (mb_strlen($query) < 3 ||
 			$subtitle = $subtitle . $track[6];
 
 			if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " ● " . $track[5]) == false) {
-				$w->result(uniqid(), serialize(array($track[2] /*track_uri*/ ,$track[3] /* album_uri */ ,$track[4] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,$track[7]  /* artist_name */, $track[5] /* track_name */, $track[6] /* album_name */, $track[9] /* track_artwork_path */, $track[10] /* artist_artwork_path */, $track[11] /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), ucfirst($track[7]) . " ● " . $track[5], 
-						array(
-							$subtitle,
-							'alt' => 'Play album ' . $track[6] . ' in Spotify',
-							'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
-							'fn' => 'Add track ' . $track[5] . ' to ' . $alfred_playlist_name,
-							'shift' => 'Add album ' . $track[6] . ' to ' . $alfred_playlist_name,
-							'ctrl' => 'Search artist ' . $track[7] . ' online')
-							, $track[9], 'yes', null, '');
+				$w->result(uniqid(), serialize(array($track[2] /*track_uri*/ ,$track[3] /* album_uri */ ,$track[4] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,$track[7]  /* artist_name */, $track[5] /* track_name */, $track[6] /* album_name */, $track[9] /* track_artwork_path */, $track[10] /* artist_artwork_path */, $track[11] /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), ucfirst($track[7]) . " ● " . $track[5],
+					array(
+						$subtitle,
+						'alt' => 'Play album ' . $track[6] . ' in Spotify',
+						'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
+						'fn' => 'Add track ' . $track[5] . ' to ' . $alfred_playlist_name,
+						'shift' => 'Add album ' . $track[6] . ' to ' . $alfred_playlist_name,
+						'ctrl' => 'Search artist ' . $track[7] . ' online')
+					, $track[9], 'yes', null, '');
 
 			}
 		}
@@ -860,14 +860,14 @@ if (mb_strlen($query) < 3 ||
 					$w->result(uniqid(), 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', null, '');
 					foreach ($json->album->tracks as $key => $value) {
 						$track_artwork = getTrackOrAlbumArtwork($w,$theme, $value->href, false);
-						$w->result(uniqid(), serialize(array($value->href /*track_uri*/ ,$album_uri /* album_uri */ ,$artist_uri /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,$artist_name  /* artist_name */, $value->name /* track_name */, $album_name /* album_name */, $track_artwork /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), ucfirst($artist_name) . " ● " . $value->name, 
-						array(
-							$album_name . " (" . $json->album->released . ")",
-							'alt' => 'Play album ' . $album_name . ' in Spotify',
-							'cmd' => 'Play artist ' . $artist_name . ' in Spotify',
-							'fn' => 'Add track ' . $value->name . ' to ' . $alfred_playlist_name,
-							'shift' => 'Add album ' . $album_name . ' to ' . $alfred_playlist_name,
-							'ctrl' => 'Search artist ' . $artist_name . ' online'), $track_artwork, 'yes', null, '');
+						$w->result(uniqid(), serialize(array($value->href /*track_uri*/ ,$album_uri /* album_uri */ ,$artist_uri /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,$artist_name  /* artist_name */, $value->name /* track_name */, $album_name /* album_name */, $track_artwork /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), ucfirst($artist_name) . " ● " . $value->name,
+							array(
+								$album_name . " (" . $json->album->released . ")",
+								'alt' => 'Play album ' . $album_name . ' in Spotify',
+								'cmd' => 'Play artist ' . $artist_name . ' in Spotify',
+								'fn' => 'Add track ' . $value->name . ' to ' . $alfred_playlist_name,
+								'shift' => 'Add album ' . $album_name . ' to ' . $alfred_playlist_name,
+								'ctrl' => 'Search artist ' . $artist_name . ' online'), $track_artwork, 'yes', null, '');
 					}
 					break;
 				}
@@ -959,7 +959,7 @@ if (mb_strlen($query) < 3 ||
 				$subtitle = $subtitle . $track[6];
 
 				if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " ● " . $track[5]) == false) {
-					$w->result(uniqid(), serialize(array($track[2] /*track_uri*/ ,$track[3] /* album_uri */ ,$track[4] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,$track[7]  /* artist_name */, $track[5] /* track_name */, $track[6] /* album_name */, $track[9] /* track_artwork_path */, $track[10] /* artist_artwork_path */, $track[11] /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), ucfirst($track[7]) . " ● " . $track[5], 
+					$w->result(uniqid(), serialize(array($track[2] /*track_uri*/ ,$track[3] /* album_uri */ ,$track[4] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,$track[7]  /* artist_name */, $track[5] /* track_name */, $track[6] /* album_name */, $track[9] /* track_artwork_path */, $track[10] /* artist_artwork_path */, $track[11] /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), ucfirst($track[7]) . " ● " . $track[5],
 						array(
 							$subtitle,
 							'alt' => 'Play album ' . $track[6] . ' in Spotify',
@@ -1041,7 +1041,7 @@ if (mb_strlen($query) < 3 ||
 				$subtitle = $subtitle . $track[6];
 
 				if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " ● " . $track[5]) == false) {
-					$w->result(uniqid(), serialize(array($track[2] /*track_uri*/ ,$track[3] /* album_uri */ ,$track[4] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,$track[7]  /* artist_name */, $track[5] /* track_name */, $track[6] /* album_name */, $track[9] /* track_artwork_path */, $track[10] /* artist_artwork_path */, $track[11] /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), ucfirst($track[7]) . " ● " . $track[5], 
+					$w->result(uniqid(), serialize(array($track[2] /*track_uri*/ ,$track[3] /* album_uri */ ,$track[4] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,$track[7]  /* artist_name */, $track[5] /* track_name */, $track[6] /* album_name */, $track[9] /* track_artwork_path */, $track[10] /* artist_artwork_path */, $track[11] /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), ucfirst($track[7]) . " ● " . $track[5],
 						array(
 							$subtitle,
 							'alt' => 'Play album ' . $track[6] . ' in Spotify',
@@ -1151,14 +1151,14 @@ if (mb_strlen($query) < 3 ||
 					$subtitle = $subtitle . $track[6];
 
 					if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " ● " . $track[5]) == false) {
-						$w->result(uniqid(), serialize(array($track[2] /*track_uri*/ ,$track[3] /* album_uri */ ,$track[4] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,$track[7]  /* artist_name */, $track[5] /* track_name */, $track[6] /* album_name */, $track[9] /* track_artwork_path */, $track[10] /* artist_artwork_path */, $track[11] /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), ucfirst($track[7]) . " ● " . $track[5], 
-						array(
-							$subtitle,
-							'alt' => 'Play album ' . $track[6] . ' in Spotify',
-							'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
-							'fn' => 'Add track ' . $track[5] . ' to ' . $alfred_playlist_name,
-							'shift' => 'Add album ' . $track[6] . ' to ' . $alfred_playlist_name,
-							'ctrl' => 'Search artist ' . $track[7] . ' online'), $track[9], 'yes', null, '');
+						$w->result(uniqid(), serialize(array($track[2] /*track_uri*/ ,$track[3] /* album_uri */ ,$track[4] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,$track[7]  /* artist_name */, $track[5] /* track_name */, $track[6] /* album_name */, $track[9] /* track_artwork_path */, $track[10] /* artist_artwork_path */, $track[11] /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), ucfirst($track[7]) . " ● " . $track[5],
+							array(
+								$subtitle,
+								'alt' => 'Play album ' . $track[6] . ' in Spotify',
+								'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
+								'fn' => 'Add track ' . $track[5] . ' to ' . $alfred_playlist_name,
+								'shift' => 'Add album ' . $track[6] . ' to ' . $alfred_playlist_name,
+								'ctrl' => 'Search artist ' . $track[7] . ' online'), $track[9], 'yes', null, '');
 
 					}
 				}
