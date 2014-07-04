@@ -256,9 +256,11 @@ if (mb_strlen($query) < 3 ||
 
 					while ($track = $tracks->fetchArray()) {
 
-						$getPlaylists = "select * from playlists where uri='" . $track[13] . "'";
+						$getPlaylists = "select * from playlists where uri=:uri";
 
-						$playlists = $db->query($getPlaylists);
+						$stmt = $db->prepare($getPlaylists);
+						$stmt->bindValue(':uri', '%' . $track[13] . '%');
+						$playlists = $stmt->execute();
 
 						if ($playlists == false) {
 							handleDbIssue($theme);
@@ -1143,6 +1145,8 @@ if (mb_strlen($query) < 3 ||
 
 			$dbfile = $w->data() . "/library.db";
 			$db = new SQLite3($dbfile);
+			
+
 			$playlists = $db->query($getPlaylists);
 
 			if ($playlists == false) {
