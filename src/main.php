@@ -208,10 +208,14 @@ if (mb_strlen($query) < 3 ||
 						, ($results[3] == "playing") ? './images/' . $theme . '/' . 'pause.png' : './images/' . $theme . '/' . 'play.png', 'yes', null, '');
 
 
-					$getTracks = "select * from tracks where playable=1 and artist_name like '%" . escapeQuery($results[1]) . "%'" . " limit " . 1;
+					$getTracks = "select * from tracks where playable=1 and artist_name like :artist_name limit " . 1;
 					$dbfile = $w->data() . "/library.db";
 					$db = new SQLite3($dbfile);
-					$tracks = $db->query($getTracks);
+					
+					$stmt = $db->prepare($getTracks);
+					$stmt->bindValue(':artist', $artist);
+					$stmt->bindValue(':artist_name', '%' . escapeQuery($results[1]) . '%');
+					$tracks = $stmt->execute();
 		
 					if ($tracks == false) {
 						handleDbIssue($theme);
@@ -488,10 +492,14 @@ if (mb_strlen($query) < 3 ||
 
 		$dbfile = $w->data() . "/library.db";
 		$db = new SQLite3($dbfile);
-		$getPlaylists = "select * from playlists where name like '%" . $query . "%'";
+		$getPlaylists = "select * from playlists where name like :query";
 
-		$playlists = $db->query($getPlaylists);
 
+		$stmt = $db->prepare($getPlaylists);
+		$stmt->bindValue(':query', '%' . $query . '%');
+		$playlists = $stmt->execute();
+
+			
 		if ($playlists == false) {
 			handleDbIssue($theme);
 			return;
@@ -507,12 +515,16 @@ if (mb_strlen($query) < 3 ||
 		// Search artists
 		//
 		if ($all_playlists == false) {
-			$getTracks = "select * from tracks where playable=1 and starred=1 and artist_name like '%" . $query . "%'" . " limit " . $max_results;
+			$getTracks = "select * from tracks where playable=1 and starred=1 and artist_name like :artist_name limit " . $max_results;
 		} else {
-			$getTracks = "select * from tracks where playable=1 and artist_name like '%" . $query . "%'" . " limit " . $max_results;
+			$getTracks = "select * from tracks where playable=1 and artist_name like :artist_name limit " . $max_results;
 		}
 
-		$tracks = $db->query($getTracks);
+		$stmt = $db->prepare($getTracks);
+		$stmt->bindValue(':artist_name', '%' . $query . '%');
+		
+		$tracks = $stmt->execute();
+
 		if ($tracks == false) {
 			handleDbIssue($theme);
 			return;
@@ -530,13 +542,17 @@ if (mb_strlen($query) < 3 ||
 		// Search everything
 		//
 		if ($all_playlists == false) {
-			$getTracks = "select * from tracks where playable=1 and starred=1 and (artist_name like '%" . $query . "%' or album_name like '%" . $query . "%' or track_name like '%" . $query . "%')" . " limit " . $max_results;
+			$getTracks = "select * from tracks where playable=1 and starred=1 and (artist_name like :query or album_name like :query or track_name like :query)" . " limit " . $max_results;
 		} else {
-			$getTracks = "select * from tracks where playable=1 and (artist_name like '%" . $query . "%' or album_name like '%" . $query . "%' or track_name like '%" . $query . "%')" . " limit " . $max_results;
+			$getTracks = "select * from tracks where playable=1 and (artist_name like :query or album_name like :query or track_name like :query)" . " limit " . $max_results;
 		}
 
 
-		$tracks = $db->query($getTracks);
+		$stmt = $db->prepare($getTracks);
+		$stmt->bindValue(':query', '%' . $query . '%');
+		
+		$tracks = $stmt->execute();
+
 		if ($tracks == false) {
 			handleDbIssue($theme);
 			return;
@@ -613,12 +629,17 @@ if (mb_strlen($query) < 3 ||
 				$w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_playlist_list' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Update Playlist List (use it when you have added or removed a playlist)", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', null, '');
 			}
 			else {
-				$getPlaylists = "select * from playlists where ( name like '%" . $theplaylist . "%' or author like '%" . $theplaylist . "%')";
+				$getPlaylists = "select * from playlists where ( name like :query or author like :query)";
 			}
 
 			$dbfile = $w->data() . "/library.db";
 			$db = new SQLite3($dbfile);
-			$playlists = $db->query($getPlaylists);
+			//$playlists = $db->query($getPlaylists);
+			
+			$stmt = $db->prepare($getPlaylists);
+			$stmt->bindValue(':query', '%' . $theplaylist . '%');
+			
+			$playlists = $stmt->execute();
 
 			if ($playlists == false) {
 				handleDbIssue($theme);
@@ -671,26 +692,31 @@ if (mb_strlen($query) < 3 ||
 			//
 			$artist = $words[1];
 
-
+			$dbfile = $w->data() . "/library.db";
+			$db = new SQLite3($dbfile);
+			
 			if (mb_strlen($artist) < 3) {
 				if ($all_playlists == false) {
 					$getTracks = "select * from tracks where playable=1 and starred=1 group by artist_name" . " limit " . $max_results;
 				} else {
 					$getTracks = "select * from tracks where playable=1 group by artist_name" . " limit " . $max_results;
 				}
+				$stmt = $db->prepare($getTracks);
 			}
 			else {
 				if ($all_playlists == false) {
-					$getTracks = "select * from tracks where playable=1 and starred=1 and artist_name like '%" . $artist . "%'" . " limit " . $max_results;
+					$getTracks = "select * from tracks where playable=1 and starred=1 and artist_name like :query limit " . $max_results;
 				} else {
-					$getTracks = "select * from tracks where playable=1 and artist_name like '%" . $artist . "%'" . " limit " . $max_results;
+					$getTracks = "select * from tracks where playable=1 and artist_name like :query limit " . $max_results;
 				}
+				$stmt = $db->prepare($getTracks);
+				$stmt->bindValue(':query', '%' . $artist . '%');
 			}
 
-			$dbfile = $w->data() . "/library.db";
-			$db = new SQLite3($dbfile);
-			$tracks = $db->query($getTracks);
 
+			//$tracks = $db->query($getTracks);			
+			$tracks = $stmt->execute();
+		
 			if ($tracks == false) {
 				handleDbIssue($theme);
 				return;
@@ -719,25 +745,31 @@ if (mb_strlen($query) < 3 ||
 			//
 			$album = $words[1];
 
+			$dbfile = $w->data() . "/library.db";
+			$db = new SQLite3($dbfile);
+			
 			if (mb_strlen($album) < 3) {
 				if ($all_playlists == false) {
 					$getTracks = "select * from tracks where playable=1 and starred=1 group by album_name" . " limit " . $max_results;
 				} else {
 					$getTracks = "select * from tracks where playable=1 group by album_name" . " limit " . $max_results;
 				}
+				$stmt = $db->prepare($getTracks);
 			}
 			else {
 				if ($all_playlists == false) {
-					$getTracks = "select * from tracks where playable=1 and starred=1 and album_name like '%" . $album . "%'" . " limit " . $max_results;
+					$getTracks = "select * from tracks where playable=1 and starred=1 and album_name like :query limit " . $max_results;
 				} else {
-					$getTracks = "select * from tracks where playable=1 and album_name like '%" . $album . "%'" . " limit " . $max_results;
+					$getTracks = "select * from tracks where playable=1 and album_name like :query limit " . $max_results;
 				}
+				$stmt = $db->prepare($getTracks);
+				$stmt->bindValue(':query', '%' . $album . '%');
 			}
 
 
-			$dbfile = $w->data() . "/library.db";
-			$db = new SQLite3($dbfile);
-			$tracks = $db->query($getTracks);
+
+			//$tracks = $db->query($getTracks);
+			$tracks = $stmt->execute();
 
 			if ($tracks == false) {
 				handleDbIssue($theme);
@@ -920,24 +952,30 @@ if (mb_strlen($query) < 3 ||
 
 
 				if ($all_playlists == false) {
-					$getTracks = "select * from tracks where playable=1 and starred=1 and artist_name='" . $artist . "'" . " limit " . $max_results;
+					$getTracks = "select * from tracks where playable=1 and starred=1 and artist_name=:artist limit " . $max_results;
 				} else {
-					$getTracks = "select * from tracks where playable=1 and artist_name='" . $artist . "'" . " limit " . $max_results;
+					$getTracks = "select * from tracks where playable=1 and artist_name=:artist limit " . $max_results;
 				}
 
 			}
 			else {
 				if ($all_playlists == false) {
-					$getTracks = "select * from tracks where playable=1 and starred=1 and (artist_name='" . $artist . "' and track_name like '%" . $track . "%')" . " limit " . $max_results;
+					$getTracks = "select * from tracks where playable=1 and starred=1 and (artist_name=:artist and track_name like :track)" . " limit " . $max_results;
 				} else {
-					$getTracks = "select * from tracks where playable=1 and artist_name='" . $artist . "' and track_name like '%" . $track . "%'" . " limit " . $max_results;
+					$getTracks = "select * from tracks where playable=1 and artist_name=:artist and track_name like :track limit " . $max_results;
 				}
 			}
 
 
 			$dbfile = $w->data() . "/library.db";
 			$db = new SQLite3($dbfile);
-			$tracks = $db->query($getTracks);
+			
+			$stmt = $db->prepare($getTracks);
+			$stmt->bindValue(':artist', $artist);
+			$stmt->bindValue(':track', '%' . $track . '%');
+			$tracks = $stmt->execute();
+				
+			//$tracks = $db->query($getTracks);
 
 			if ($tracks == false) {
 				handleDbIssue($theme);
@@ -1006,22 +1044,28 @@ if (mb_strlen($query) < 3 ||
 				$album_uri = "";
 
 				if ($all_playlists == false) {
-					$getTracks = "select * from tracks where playable=1 and starred=1 and album_name='" . $album . "'" . " limit " . $max_results;
+					$getTracks = "select * from tracks where playable=1 and starred=1 and album_name=:album limit " . $max_results;
 				} else {
-					$getTracks = "select * from tracks where playable=1 and album_name='" . $album . "'" . " limit " . $max_results;
+					$getTracks = "select * from tracks where playable=1 and album_name=:album limit " . $max_results;
 				}
 			}
 			else {
 				if ($all_playlists == false) {
-					$getTracks = "select * from tracks where playable=1 and starred=1 and (album_name='" . $album . "' and track_name like '%" . $track . "%')" . " limit " . $max_results;
+					$getTracks = "select * from tracks where playable=1 and starred=1 and (album_name=:album and track_name like :track limit " . $max_results;
 				} else {
-					$getTracks = "select * from tracks where playable=1 and album_name='" . $album . "' and track_name like '%" . $track . "%'" . " limit " . $max_results;
+					$getTracks = "select * from tracks where playable=1 and album_name=:album and track_name like :track limit " . $max_results;
 				}
 			}
 
 			$dbfile = $w->data() . "/library.db";
 			$db = new SQLite3($dbfile);
-			$tracks = $db->query($getTracks);
+			
+			$stmt = $db->prepare($getTracks);
+			$stmt->bindValue(':album', $album);
+			$stmt->bindValue(':track', '%' . $track . '%');
+			$tracks = $stmt->execute();
+				
+			//$tracks = $db->query($getTracks);
 
 			if ($tracks == false) {
 				handleDbIssue($theme);
@@ -1127,14 +1171,19 @@ if (mb_strlen($query) < 3 ||
 
 					$w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'activate (open location "' . $playlist[0] . '")' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Open playlist " . $playlist[1] . " in Spotify", "This will open the playlist in Spotify", 'fileicon:/Applications/Spotify.app', 'yes', null, '');
 
-					$getTracks = "select * from tracks where playable=1 and playlist_uri='" . $theplaylisturi . "' limit " . $max_results;
+					$getTracks = "select * from tracks where playable=1 and playlist_uri=:theplaylisturi limit " . $max_results;
 				}
 				else {
-					$getTracks = "select * from tracks where playable=1 and playlist_uri='" . $theplaylisturi . "' and (artist_name like '%" . $thetrack . "%' or album_name like '%" . $thetrack . "%' or track_name like '%" . $thetrack . "%')" . " limit " . $max_results;
+					$getTracks = "select * from tracks where playable=1 and playlist_uri=:theplaylisturi and (artist_name like :track or album_name like :track or track_name like :track)" . " limit " . $max_results;
 				}
 
-
-				$tracks = $db->query($getTracks);
+				$stmt = $db->prepare($getTracks);
+				$stmt->bindValue(':theplaylisturi', $theplaylisturi);
+				$stmt->bindValue(':track', '%' . $thetrack . '%');
+				$tracks = $stmt->execute();
+					
+				//$tracks = $db->query($getTracks);
+			
 
 				if ($tracks == false) {
 					$handleDbIssue($theme);
@@ -1230,12 +1279,17 @@ if (mb_strlen($query) < 3 ||
 					$getPlaylists = "select * from playlists where ownedbyuser=1";
 				}
 				else {
-					$getPlaylists = "select * from playlists where ownedbyuser=1 and ( name like '%" . $theplaylist . "%' or author like '%" . $theplaylist . "%')";
+					$getPlaylists = "select * from playlists where ownedbyuser=1 and ( name like :playlist or author like :playlist)";
 				}
 
 				$dbfile = $w->data() . "/library.db";
 				$db = new SQLite3($dbfile);
-				$playlists = $db->query($getPlaylists);
+				
+				$stmt = $db->prepare($getPlaylists);
+				$stmt->bindValue(':playlist', '%' . $theplaylist . '%');
+				$playlists = $stmt->execute();
+					
+				//$playlists = $db->query($getPlaylists);
 
 				if ($playlists == false) {
 					handleDbIssue($theme);
@@ -1279,16 +1333,21 @@ if (mb_strlen($query) < 3 ||
 			$theartist = $words[3];
 
 			if (mb_strlen($theartist) < 3) {
-				$getRelateds = "select related_artist_name,related_artist_uri,related_artist_artwork_path from artists where artist_name='" . $artist_name . "'";
+				$getRelateds = "select related_artist_name,related_artist_uri,related_artist_artwork_path from artists where artist_name=:artist_name";
 			}
 			else
 			{
-				$getRelateds = "select related_artist_name,related_artist_uri,related_artist_artwork_path from artists where artist_name='" . $artist_name . "'" . " and related_artist_name like '%" . $theartist . "%'";
+				$getRelateds = "select related_artist_name,related_artist_uri,related_artist_artwork_path from artists where artist_name=:artist_name and related_artist_name like :artist";
 			}
 
 			$dbfile = $w->data() . "/library.db";
 			$db = new SQLite3($dbfile);
-			$relateds = $db->query($getRelateds);
+			
+			$stmt = $db->prepare($getRelateds);
+			$stmt->bindValue(':artist_name', $artist_name);
+			$stmt->bindValue(':artist', '%' . $theartist . '%');
+			$relateds = $stmt->execute();
+
 
 			if ($relateds == false) {
 				handleDbIssue($theme);
