@@ -509,18 +509,31 @@ function updateLibrary($jsonData)
 
 		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table tracks (starred boolean, popularity int, uri text, album_uri text, artist_uri text, track_name text, album_name text, artist_name text, album_year text, track_artwork_path text, artist_artwork_path text, album_artwork_path text, playlist_name text, playlist_uri text, playable boolean, availability text)"';
 		exec($sql);
+
+		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "CREATE INDEX IndexPlaylistUri ON tracks (playlist_uri)"';
+		exec($sql);
+		
+		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "CREATE INDEX IndexArtistName ON tracks (artist_name)"';
+		exec($sql);
+		
+		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "CREATE INDEX IndexAlbumName ON tracks (album_name)"';
+		exec($sql);
+				
+
 		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table counters (all_tracks int, starred_tracks int, all_artists int, starred_artists int, all_albums int, starred_albums int, playlists int)"';
 		exec($sql);
 
 		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table user (uri text, username text, name text, image text)"';
 		exec($sql);
 
-		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table playlists (uri text, name text, nb_tracks int, author text, username text, playlist_artwork_path text, ownedbyuser boolean)"';
+		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table playlists (uri text PRIMARY KEY NOT NULL, name text, nb_tracks int, author text, username text, playlist_artwork_path text, ownedbyuser boolean)"';
 		exec($sql);
 
 		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table artists (artist_name text, artist_uri text, artist_artwork_path text, artist_biography text, artist_popularity int, artist_years_from text, artist_years_to text, related_artist_name text, related_artist_uri text, related_artist_artwork_path text, PRIMARY KEY (artist_name, related_artist_name))"';
 		exec($sql);
 
+		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "CREATE INDEX indexArtistName ON artists (artist_name)"';
+		exec($sql);
 
 
 		// Handle user
