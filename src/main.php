@@ -95,10 +95,17 @@ if(!installSpotifyAppIfNeeded($w))
 $getSettings = 'select all_playlists,is_spotifious_active,is_alfred_playlist_active,is_displaymorefrom_active,is_lyrics_active,max_results, alfred_playlist_uri,alfred_playlist_name,country_code,theme,last_check_update_time from settings';
 $dbfile = $w->data() . '/settings.db';
 
+$dbsettings = new PDO("sqlite:$dbfile","","",array(PDO::ATTR_PERSISTENT => true));
+$dbsettings->query("PRAGMA synchronous = OFF");
+$dbsettings->query("PRAGMA journal_mode = OFF");
+$dbsettings->query("PRAGMA temp_store = MEMORY");
+$dbsettings->query("PRAGMA count_changes = OFF");
+$dbsettings->query("PRAGMA PAGE_SIZE = 4096");
+$dbsettings->query("PRAGMA default_cache_size=700000"); 
+$dbsettings->query("PRAGMA cache_size=700000"); 
+$dbsettings->query("PRAGMA compile_options");
 
-$db = new SQLite3($dbfile);
-
-$settings = $db->query($getSettings);
+$settings = $dbsettings->query($getSettings);
 
 if ($settings == false) {
 	if (file_exists($w->data() . '/settings.db')) {
@@ -122,7 +129,7 @@ if (!file_exists($w->data() . '/settings.db')) {
 }
 
 
-while ($setting = $settings->fetchArray()) {
+while ($setting = $settings->fetch()) {
 	$all_playlists = $setting[0];
 	$is_spotifious_active = $setting[1];
 	$is_alfred_playlist_active = $setting[2];
@@ -136,6 +143,17 @@ while ($setting = $settings->fetchArray()) {
 	$last_check_update_time = $setting[10];
 }
 
+$dbfile = $w->data() . '/library.db';
+
+$db = new PDO("sqlite:$dbfile","","",array(PDO::ATTR_PERSISTENT => true));
+$db->query("PRAGMA synchronous = OFF");
+$db->query("PRAGMA journal_mode = OFF");
+$db->query("PRAGMA temp_store = MEMORY");
+$db->query("PRAGMA count_changes = OFF");
+$db->query("PRAGMA PAGE_SIZE = 4096");
+$db->query("PRAGMA default_cache_size=700000"); 
+$db->query("PRAGMA cache_size=700000"); 
+$db->query("PRAGMA compile_options");
 
 $check_results = checkForUpdate($w,$last_check_update_time);
 if($check_results != null && is_array($check_results))
@@ -156,9 +174,7 @@ if (mb_strlen($query) < 3 ||
 		// check for correct configuration
 		if (file_exists($w->data() . '/library.db')) {
 			$getCounters = 'select * from counters';
-			$dbfile = $w->data() . '/library.db';
 
-			$db = new SQLite3($dbfile);
 
 			$counters = $db->query($getCounters);
 
@@ -167,7 +183,7 @@ if (mb_strlen($query) < 3 ||
 				return;
 			}
 
-			while ($counter = $counters->fetchArray()) {
+			while ($counter = $counters->fetch()) {
 
 				$all_tracks = $counter[0];
 				$starred_tracks = $counter[1];
@@ -209,8 +225,7 @@ if (mb_strlen($query) < 3 ||
 
 
 					$getTracks = "select * from tracks where playable=1 and artist_name like '%" . escapeQuery($results[1]) . "%'" . " limit " . 1;
-					$dbfile = $w->data() . "/library.db";
-					$db = new SQLite3($dbfile);
+
 					$tracks = $db->query($getTracks);
 		
 					if ($tracks == false) {
@@ -220,7 +235,7 @@ if (mb_strlen($query) < 3 ||
 		
 					// check if artist is in library
 					$noresult=true;
-					while ($track = $tracks->fetchArray()) {
+					while ($track = $tracks->fetch()) {
 				
 						$noresult=false;
 					}
@@ -250,7 +265,7 @@ if (mb_strlen($query) < 3 ||
 						return;
 					}
 
-					while ($track = $tracks->fetchArray()) {
+					while ($track = $tracks->fetch()) {
 
 						$getPlaylists = "select * from playlists where uri='" . $track[13] . "'";
 
@@ -261,7 +276,7 @@ if (mb_strlen($query) < 3 ||
 							return;
 						}
 
-						while ($playlist = $playlists->fetchArray()) {
+						while ($playlist = $playlists->fetch()) {
 
 							if (checkIfResultAlreadyThere($w->results(), "🔈🎵 " . "In playlist " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)") == false) {
 								$w->result(uniqid(), '', "🔈🎵 " . "In playlist " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", $playlist[5], 'no', null, "Playlist⇾" . $playlist[0] . "⇾");
@@ -485,9 +500,6 @@ if (mb_strlen($query) < 3 ||
 		//
 		// Search in Playlists
 		//
-
-		$dbfile = $w->data() . "/library.db";
-		$db = new SQLite3($dbfile);
 		$getPlaylists = "select * from playlists where name like '%" . $query . "%'";
 
 		$playlists = $db->query($getPlaylists);
@@ -497,7 +509,7 @@ if (mb_strlen($query) < 3 ||
 			return;
 		}
 
-		while ($playlist = $playlists->fetchArray()) {
+		while ($playlist = $playlists->fetch()) {
 
 			$w->result(uniqid(), '', "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", $playlist[5], 'no', null, "Playlist⇾" . $playlist[0] . "⇾");
 		}
@@ -518,7 +530,7 @@ if (mb_strlen($query) < 3 ||
 			return;
 		}
 
-		while ($track = $tracks->fetchArray()) {
+		while ($track = $tracks->fetch()) {
 
 			if (checkIfResultAlreadyThere($w->results(), "👤 " . ucfirst($track[7])) == false) {
 				$w->result(uniqid(), '', "👤 " . ucfirst($track[7]), "Browse this artist", $track[10], 'no', null, "Artist⇾" . $track[7] . "⇾");
@@ -543,7 +555,7 @@ if (mb_strlen($query) < 3 ||
 		}
 
 		$noresult=true;
-		while ($track = $tracks->fetchArray()) {
+		while ($track = $tracks->fetch()) {
 
 			if($noresult==true) {
 				$subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
@@ -616,8 +628,6 @@ if (mb_strlen($query) < 3 ||
 				$getPlaylists = "select * from playlists where ( name like '%" . $theplaylist . "%' or author like '%" . $theplaylist . "%')";
 			}
 
-			$dbfile = $w->data() . "/library.db";
-			$db = new SQLite3($dbfile);
 			$playlists = $db->query($getPlaylists);
 
 			if ($playlists == false) {
@@ -627,7 +637,7 @@ if (mb_strlen($query) < 3 ||
 
 
 			$noresult=true;
-			while ($playlist = $playlists->fetchArray()) {
+			while ($playlist = $playlists->fetch()) {
 
 				$noresult=false;
 
@@ -687,8 +697,6 @@ if (mb_strlen($query) < 3 ||
 				}
 			}
 
-			$dbfile = $w->data() . "/library.db";
-			$db = new SQLite3($dbfile);
 			$tracks = $db->query($getTracks);
 
 			if ($tracks == false) {
@@ -698,7 +706,7 @@ if (mb_strlen($query) < 3 ||
 
 			// display all artists
 			$noresult=true;
-			while ($track = $tracks->fetchArray()) {
+			while ($track = $tracks->fetch()) {
 
 
 				$noresult=false;
@@ -734,9 +742,6 @@ if (mb_strlen($query) < 3 ||
 				}
 			}
 
-
-			$dbfile = $w->data() . "/library.db";
-			$db = new SQLite3($dbfile);
 			$tracks = $db->query($getTracks);
 
 			if ($tracks == false) {
@@ -746,7 +751,7 @@ if (mb_strlen($query) < 3 ||
 
 			// display all albums
 			$noresult=true;
-			while ($track = $tracks->fetchArray()) {
+			while ($track = $tracks->fetch()) {
 
 
 				$noresult=false;
@@ -891,8 +896,6 @@ if (mb_strlen($query) < 3 ||
 
 			$getArtists = "select artist_uri,artist_artwork_path,artist_biography,related_artist_name from artists where artist_name='" . $artist . "'";
 
-			$dbfile = $w->data() . "/library.db";
-			$db = new SQLite3($dbfile);
 			$artists = $db->query($getArtists);
 
 			if ($artists == false) {
@@ -901,7 +904,7 @@ if (mb_strlen($query) < 3 ||
 			}
 
 			// only get first result
-			$theartist = $artists->fetchArray();
+			$theartist = $artists->fetch();
 
 			if (mb_strlen($track) < 3) {
 
@@ -934,9 +937,6 @@ if (mb_strlen($query) < 3 ||
 				}
 			}
 
-
-			$dbfile = $w->data() . "/library.db";
-			$db = new SQLite3($dbfile);
 			$tracks = $db->query($getTracks);
 
 			if ($tracks == false) {
@@ -945,7 +945,7 @@ if (mb_strlen($query) < 3 ||
 			}
 
 			$noresult=true;
-			while ($track = $tracks->fetchArray()) {
+			while ($track = $tracks->fetch()) {
 
 				if($noresult==true) {
 					$subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
@@ -1019,8 +1019,6 @@ if (mb_strlen($query) < 3 ||
 				}
 			}
 
-			$dbfile = $w->data() . "/library.db";
-			$db = new SQLite3($dbfile);
 			$tracks = $db->query($getTracks);
 
 			if ($tracks == false) {
@@ -1029,7 +1027,7 @@ if (mb_strlen($query) < 3 ||
 			}
 			$album_uri="";
 			$noresult=true;
-			while ($track = $tracks->fetchArray()) {
+			while ($track = $tracks->fetch()) {
 
 				if($noresult==true) {
 					$subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
@@ -1096,9 +1094,6 @@ if (mb_strlen($query) < 3 ||
 			$thetrack = $words[2];
 
 			$getPlaylists = "select * from playlists where uri='" . $theplaylisturi . "'";
-
-			$dbfile = $w->data() . "/library.db";
-			$db = new SQLite3($dbfile);
 			$playlists = $db->query($getPlaylists);
 
 			if ($playlists == false) {
@@ -1106,7 +1101,7 @@ if (mb_strlen($query) < 3 ||
 				return;
 			}
 
-			while ($playlist = $playlists->fetchArray()) {
+			while ($playlist = $playlists->fetch()) {
 				if (mb_strlen($thetrack) < 3) {
 
 					$subtitle = "Launch Playlist";
@@ -1142,7 +1137,7 @@ if (mb_strlen($query) < 3 ||
 				}
 
 				$noresult=true;
-				while ($track = $tracks->fetchArray()) {
+				while ($track = $tracks->fetch()) {
 
 					if($noresult==true) {
 						$subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
@@ -1233,8 +1228,6 @@ if (mb_strlen($query) < 3 ||
 					$getPlaylists = "select * from playlists where ownedbyuser=1 and ( name like '%" . $theplaylist . "%' or author like '%" . $theplaylist . "%')";
 				}
 
-				$dbfile = $w->data() . "/library.db";
-				$db = new SQLite3($dbfile);
 				$playlists = $db->query($getPlaylists);
 
 				if ($playlists == false) {
@@ -1242,7 +1235,7 @@ if (mb_strlen($query) < 3 ||
 					return;
 				}
 
-				while ($playlist = $playlists->fetchArray()) {
+				while ($playlist = $playlists->fetch()) {
 
 					// Prevent toplist to be chosen as Alfred Playlist
 					if (strpos($playlist[0], 'toplist') === false)
@@ -1286,8 +1279,6 @@ if (mb_strlen($query) < 3 ||
 				$getRelateds = "select related_artist_name,related_artist_uri,related_artist_artwork_path from artists where artist_name='" . $artist_name . "'" . " and related_artist_name like '%" . $theartist . "%'";
 			}
 
-			$dbfile = $w->data() . "/library.db";
-			$db = new SQLite3($dbfile);
 			$relateds = $db->query($getRelateds);
 
 			if ($relateds == false) {
@@ -1296,7 +1287,7 @@ if (mb_strlen($query) < 3 ||
 			}
 
 			$noresult=true;
-			while ($related = $relateds->fetchArray()) {
+			while ($related = $relateds->fetch()) {
 
 				// display all related
 				$noresult=false;
