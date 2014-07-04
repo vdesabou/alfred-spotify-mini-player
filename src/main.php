@@ -94,8 +94,6 @@ if(!installSpotifyAppIfNeeded($w))
 //
 $getSettings = 'select all_playlists,is_spotifious_active,is_alfred_playlist_active,is_displaymorefrom_active,is_lyrics_active,max_results, alfred_playlist_uri,alfred_playlist_name,country_code,theme,last_check_update_time from settings';
 $dbfile = $w->data() . '/settings.db';
-
-
 $db = new SQLite3($dbfile);
 
 $settings = $db->query($getSettings);
@@ -136,6 +134,8 @@ while ($setting = $settings->fetchArray()) {
 	$last_check_update_time = $setting[10];
 }
 
+$db->close();
+unset($db);
 
 $check_results = checkForUpdate($w,$last_check_update_time);
 if($check_results != null && is_array($check_results))
@@ -159,6 +159,8 @@ if (mb_strlen($query) < 3 ||
 			$dbfile = $w->data() . '/library.db';
 
 			$db = new SQLite3($dbfile);
+			
+			
 
 			$counters = $db->query($getCounters);
 
