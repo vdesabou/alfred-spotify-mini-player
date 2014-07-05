@@ -105,8 +105,6 @@ $dbsettings->query("PRAGMA default_cache_size=700000");
 $dbsettings->query("PRAGMA cache_size=700000");
 $dbsettings->query("PRAGMA compile_options");
 
-//$settings = $dbsettings->query($getSettings);
-
 $stmt = $dbsettings->prepare($getSettings);
 
 $settings = $stmt->execute();
@@ -640,14 +638,15 @@ if (mb_strlen($query) < 3 ||
 
 			if (mb_strlen($theplaylist) < 3) {
 				$getPlaylists = "select * from playlists";
+				$stmt = $db->prepare($getPlaylists);
+
 				$w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_playlist_list' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Update Playlist List (use it when you have added or removed a playlist)", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', null, '');
 			}
 			else {
-				$getPlaylists = "select * from playlists where ( name like :query or author like :query)";
+				$getPlaylists = "select * from playlists where (name like :query or author like :query)";
+				$stmt = $db->prepare($getPlaylists);
+				$stmt->bindValue(':query', '%' . $theplaylist . '%');
 			}
-
-			$stmt = $db->prepare($getPlaylists);
-			$stmt->bindValue(':query', '%' . $theplaylist . '%');
 			
 			$playlists = $stmt->execute();
 			if ($playlists == false) {
@@ -923,7 +922,7 @@ if (mb_strlen($query) < 3 ||
 			$getArtists = "select artist_uri,artist_artwork_path,artist_biography,related_artist_name from artists where artist_name=:artist_name";
 
 			$stmt = $db->prepare($getArtists);
-			$stmt->bindValue(':artist_name', '%' . $artist . '%');
+			$stmt->bindValue(':artist_name', $artist);
 			
 			$artists = $stmt->execute();
 
@@ -956,6 +955,8 @@ if (mb_strlen($query) < 3 ||
 				} else {
 					$getTracks = "select * from tracks where playable=1 and artist_name=:artist limit " . $max_results;
 				}
+				$stmt = $db->prepare($getTracks);
+				$stmt->bindValue(':artist', $artist);
 
 			}
 			else {
@@ -964,11 +965,12 @@ if (mb_strlen($query) < 3 ||
 				} else {
 					$getTracks = "select * from tracks where playable=1 and artist_name=:artist and track_name like :track limit " . $max_results;
 				}
+				$stmt = $db->prepare($getTracks);
+				$stmt->bindValue(':artist', $artist);
+				$stmt->bindValue(':track', '%' . $track . '%');
 			}
 
-			$stmt = $db->prepare($getTracks);
-			$stmt->bindValue(':artist', $artist);
-			$stmt->bindValue(':track', '%' . $track . '%');
+
 			$tracks = $stmt->execute();
 
 			if ($tracks == false) {
@@ -1042,6 +1044,8 @@ if (mb_strlen($query) < 3 ||
 				} else {
 					$getTracks = "select * from tracks where playable=1 and album_name=:album limit " . $max_results;
 				}
+				$stmt = $db->prepare($getTracks);
+				$stmt->bindValue(':album', $album);
 			}
 			else {
 				if ($all_playlists == false) {
@@ -1049,11 +1053,12 @@ if (mb_strlen($query) < 3 ||
 				} else {
 					$getTracks = "select * from tracks where playable=1 and album_name=:album and track_name like :track limit " . $max_results;
 				}
+				$stmt = $db->prepare($getTracks);
+				$stmt->bindValue(':album', $album);
+				$stmt->bindValue(':track', '%' . $track . '%');
 			}
 
-			$stmt = $db->prepare($getTracks);
-			$stmt->bindValue(':album', $album);
-			$stmt->bindValue(':track', '%' . $track . '%');
+
 			$tracks = $stmt->execute();
 
 			if ($tracks == false) {
@@ -1128,7 +1133,7 @@ if (mb_strlen($query) < 3 ||
 			$theplaylisturi = $words[1];
 			$thetrack = $words[2];
 			$getPlaylists = "select * from playlists where uri=:uri";
-
+			
 			$stmt = $db->prepare($getPlaylists);
 			$stmt->bindValue(':uri', $theplaylisturi);
 			
@@ -1162,15 +1167,16 @@ if (mb_strlen($query) < 3 ||
 					$w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'activate (open location "' . $playlist[0] . '")' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Open playlist " . $playlist[1] . " in Spotify", "This will open the playlist in Spotify", 'fileicon:/Applications/Spotify.app', 'yes', null, '');
 
 					$getTracks = "select * from tracks where playable=1 and playlist_uri=:theplaylisturi limit " . $max_results;
+					$stmt = $db->prepare($getTracks);
+					$stmt->bindValue(':theplaylisturi', $theplaylisturi);
 				}
 				else {
 					$getTracks = "select * from tracks where playable=1 and playlist_uri=:theplaylisturi and (artist_name like :track or album_name like :track or track_name like :track)" . " limit " . $max_results;
+					$stmt = $db->prepare($getTracks);
+					$stmt->bindValue(':theplaylisturi', $theplaylisturi);
+					$stmt->bindValue(':track', '%' . $thetrack . '%');
 				}
 
-
-				$stmt = $db->prepare($getTracks);
-				$stmt->bindValue(':theplaylisturi', $theplaylisturi);
-				$stmt->bindValue(':track', '%' . $thetrack . '%');
 				$tracks = $stmt->execute();
 
 
@@ -1266,16 +1272,16 @@ if (mb_strlen($query) < 3 ||
 
 				if (mb_strlen($theplaylist) < 3) {
 					$getPlaylists = "select * from playlists where ownedbyuser=1";
+					$stmt = $db->prepare($getPlaylists);
 				}
 				else {
 					$getPlaylists = "select * from playlists where ownedbyuser=1 and ( name like :playlist or author like :playlist)";
+					$stmt = $db->prepare($getPlaylists);
+					$stmt->bindValue(':playlist', '%' . $theplaylist . '%');
 				}
 
-				$stmt = $db->prepare($getPlaylists);
-				$stmt->bindValue(':playlist', '%' . $theplaylist . '%');
 				$playlists = $stmt->execute();
 					
-
 				if ($playlists == false) {
 					handleDbIssue($theme);
 					return;
@@ -1319,15 +1325,17 @@ if (mb_strlen($query) < 3 ||
 
 			if (mb_strlen($theartist) < 3) {
 				$getRelateds = "select related_artist_name,related_artist_uri,related_artist_artwork_path from artists where artist_name=:artist_name";
+				$stmt = $db->prepare($getRelateds);
+				$stmt->bindValue(':artist_name', $artist_name);
 			}
 			else
 			{
 				$getRelateds = "select related_artist_name,related_artist_uri,related_artist_artwork_path from artists where artist_name=:artist_name and related_artist_name like :artist";
+				$stmt = $db->prepare($getRelateds);
+				$stmt->bindValue(':artist_name', $artist_name);
+				$stmt->bindValue(':artist', '%' . $theartist . '%');
 			}
 
-			$stmt = $db->prepare($getRelateds);
-			$stmt->bindValue(':artist_name', $artist_name);
-			$stmt->bindValue(':artist', '%' . $theartist . '%');
 			$relateds = $stmt->execute();
 
 			if ($relateds == false) {
