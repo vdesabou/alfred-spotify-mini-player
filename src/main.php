@@ -262,21 +262,22 @@ if (mb_strlen($query) < 3 ||
 							, getTrackOrAlbumArtwork($w,$theme,$results[4],false), 'yes', null, '');
 					}
 
-					$getTracks = "select * from tracks where playable=1 and uri='" . $results[4] . "'" . " limit " . $max_results;
-
-					$tracks = $db->query($getTracks);
+					$getTracks = "select * from tracks where playable=1 and uri=:uri limit " . $max_results;
+					$stmt = $db->prepare($getTracks);
+					$stmt->bindValue(':uri', $results[4]);
+					$tracks = $stmt->execute();
 
 					if ($tracks == false) {
 						handleDbIssue($theme);
 						return;
 					}
 
-					while ($track = $tracks->fetch()) {
+					while ($track = $stmt->fetch()) {
 
 						$getPlaylists = "select * from playlists where uri=:uri";
 
 						$stmt = $db->prepare($getPlaylists);
-						$stmt->bindValue(':uri', '%' . $track[13] . '%');
+						$stmt->bindValue(':uri',$track[13]);
 						$playlists = $stmt->execute();
 
 						if ($playlists == false) {
