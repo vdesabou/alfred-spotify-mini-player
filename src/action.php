@@ -16,7 +16,7 @@ require_once('./vendor/autoload.php');
 // Load and use David Ferguson's Workflows.php class
 //$files = __load( "Workflows" );
 require_once('./src/workflows.php');
-$w = new Workflows;
+$w = new Workflows('com.vdesabou.spotify.mini.player');
 
 $query = $argv[1];
 $type = $argv[2];

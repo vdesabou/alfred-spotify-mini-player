@@ -4,6 +4,12 @@
 require_once('./src/alfred.bundler.php');
 require_once('./src/workflows.php');
 
+function computeTime() 
+{
+list($msec, $sec) = explode(' ', microtime());
+return ((float) $sec + (float) $msec) ;
+}
+    
 /**
  * installSpotifyAppIfNeeded function.
  * 
@@ -13,17 +19,17 @@ require_once('./src/workflows.php');
  */
 function installSpotifyAppIfNeeded($w)
 {
-	if (!file_exists($w->home() . '/Spotify/spotify-app-miniplayer')) {
+	if (!file_exists(exec('printf $HOME') . '/Spotify/spotify-app-miniplayer')) {
 		exec('mkdir -p ~/Spotify');
-		symlink($w->path() . '/spotify-app-miniplayer', $w->home() . '/Spotify/spotify-app-miniplayer');
+		symlink($w->path() . '/spotify-app-miniplayer', exec('printf $HOME') . '/Spotify/spotify-app-miniplayer');
 	}
 
-	if (!file_exists($w->home() . '/Spotify/spotify-app-miniplayer/manifest.json')) {
-		exec("rm -rf " . $w->home() . "/Spotify/spotify-app-miniplayer");
-		symlink($w->path() . '/spotify-app-miniplayer', $w->home() . '/Spotify/spotify-app-miniplayer');
+	if (!file_exists(exec('printf $HOME') . '/Spotify/spotify-app-miniplayer/manifest.json')) {
+		exec("rm -rf " . exec('printf $HOME') . "/Spotify/spotify-app-miniplayer");
+		symlink($w->path() . '/spotify-app-miniplayer', exec('printf $HOME') . '/Spotify/spotify-app-miniplayer');
 	}
 
-	if (!file_exists($w->home() . '/Spotify/spotify-app-miniplayer/manifest.json'))
+	if (!file_exists(exec('printf $HOME') . '/Spotify/spotify-app-miniplayer/manifest.json'))
 	{
 		return false;
 	}
@@ -659,8 +665,8 @@ function updateLibrary($jsonData)
 		unlink($w->data() . "/update_library_in_progress");
 
 		if (file_exists($w->data() . "/library.db")) {
-			if (file_exists($w->home() . "/Spotify/spotify-app-miniplayer")) {
-				exec("rm -rf " . $w->home() . "/Spotify/spotify-app-miniplayer");
+			if (file_exists(exec('printf $HOME') . "/Spotify/spotify-app-miniplayer")) {
+				exec("rm -rf " . exec('printf $HOME') . "/Spotify/spotify-app-miniplayer");
 			}
 		}
 
@@ -1334,7 +1340,7 @@ function checkForUpdate($w,$last_check_update_time) {
 
 			if($local_version < $remote_version) {
 
-				$workflow_file_name = $w->home() . '/Downloads/spotify-app-miniplayer-' . $remote_version . '.alfredworkflow';
+				$workflow_file_name = exec('printf $HOME') . '/Downloads/spotify-app-miniplayer-' . $remote_version . '.alfredworkflow';
 				$fp = fopen($workflow_file_name , 'w+');
 				$options = array(
 					CURLOPT_FILE => $fp

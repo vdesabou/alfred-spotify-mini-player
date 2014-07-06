@@ -9,15 +9,23 @@ if ( ! file_exists('./src/alfred.bundler.php') )
 // Require the bundler.
 require_once('./src/alfred.bundler.php');
 
+require('./src/functions.php');
+
+$begin_time = computeTime();
+
+$end_time = computeTime();
+$total_temp = ($end_time-$begin_time);
+echo "1 $total_temp\n";
 
 // Load and use David Ferguson's Workflows.php class
 //$files = __load( "Workflows" );
 require_once('./src/workflows.php');
-$w = new Workflows;
+$w = new Workflows('com.vdesabou.spotify.mini.player');
 
 
-
-require('./src/functions.php');
+$end_time = computeTime();
+$total_temp = ($end_time-$begin_time);
+echo "2 $total_temp\n";
 
 
 $query = escapeQuery($argv[1]);
@@ -1363,5 +1371,7 @@ if (mb_strlen($query) < 3 ||
 }
 
 echo $w->toxml();
-
+$end_time = computeTime();
+$total_temp = ($end_time-$begin_time);
+echo "$total_temp\n";
 ?>
