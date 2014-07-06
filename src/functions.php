@@ -443,7 +443,7 @@ function getArtistArtworkURL($w, $artist)
  */
 function updateLibrary($jsonData)
 {
-	$w = new Workflows();
+	$w = new Workflows('com.vdesabou.spotify.mini.player');;
 
 	$in_progress_data = $w->read('update_library_in_progress');
 	
@@ -685,7 +685,7 @@ function updateLibrary($jsonData)
  */
 function updatePlaylist($jsonData)
 {
-	$w = new Workflows();
+	$w = new Workflows('com.vdesabou.spotify.mini.player');;
 
 	$in_progress_data = $w->read('update_library_in_progress');
 	
@@ -829,7 +829,7 @@ function updatePlaylist($jsonData)
  */
 function removeUpdateLibraryInProgressFile()
 {
-	$w = new Workflows();
+	$w = new Workflows('com.vdesabou.spotify.mini.player');;
 	unlink($w->data() . "/update_library_in_progress");
 }
 
@@ -842,7 +842,7 @@ function removeUpdateLibraryInProgressFile()
  */
 function updatePlaylistList($jsonData)
 {
-	$w = new Workflows();
+	$w = new Workflows('com.vdesabou.spotify.mini.player');;
 
 	$in_progress_data = $w->read('update_library_in_progress');
 	
@@ -1033,7 +1033,7 @@ function updatePlaylistList($jsonData)
  * @return void
  */
 function handleDbIssue($theme) {
-	$w = new Workflows();
+	$w = new Workflows('com.vdesabou.spotify.mini.player');;
 	$w->result(uniqid(), '', 'There is a problem with the library, try to update it.', 'Select Update library below', './images/warning.png', 'no', null, '');
 
 	$w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', null, '');
