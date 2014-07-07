@@ -96,7 +96,6 @@ $getSettings = 'select all_playlists,is_spotifious_active,is_alfred_playlist_act
 $dbfile = $w->data() . '/settings.db';
 
 $dbsettings = new PDO("sqlite:$dbfile","","",array(PDO::ATTR_PERSISTENT => true));
-/*
 $dbsettings->query("PRAGMA synchronous = OFF");
 $dbsettings->query("PRAGMA journal_mode = OFF");
 $dbsettings->query("PRAGMA temp_store = MEMORY");
@@ -105,7 +104,6 @@ $dbsettings->query("PRAGMA PAGE_SIZE = 4096");
 $dbsettings->query("PRAGMA default_cache_size=700000");
 $dbsettings->query("PRAGMA cache_size=700000");
 $dbsettings->query("PRAGMA compile_options");
-*/
 
 $stmt = $dbsettings->prepare($getSettings);
 
@@ -342,7 +340,7 @@ if (mb_strlen($query) < 3 ||
 			$w->result(uniqid(), '', 'Settings', 'Search scope=<only ★>, Max results=<' . $max_results . '>, Spotifious is <' . $spotifious_state . '>, Alfred Playlist is <' . $alfred_playlist_state . '>', './images/' . $theme . '/' . 'settings.png', 'no', null, 'Settings▹');
 		}
 
-	} 
+	}
 	//
 	// Settings
 	//
@@ -543,7 +541,7 @@ if (mb_strlen($query) < 3 ||
 
 		$stmt = $db->prepare($getTracks);
 		$stmt->bindValue(':artist_name', '%' . $query . '%');
-		
+
 		$tracks = $stmt->execute();
 		if ($tracks == false) {
 			handleDbIssue($theme);
@@ -570,7 +568,7 @@ if (mb_strlen($query) < 3 ||
 
 		$stmt = $db->prepare($getTracks);
 		$stmt->bindValue(':query', '%' . $query . '%');
-		
+
 		$tracks = $stmt->execute();
 
 		if ($tracks == false) {
@@ -655,7 +653,7 @@ if (mb_strlen($query) < 3 ||
 				$stmt = $db->prepare($getPlaylists);
 				$stmt->bindValue(':query', '%' . $theplaylist . '%');
 			}
-			
+
 			$playlists = $stmt->execute();
 			if ($playlists == false) {
 				handleDbIssue($theme);
@@ -931,7 +929,7 @@ if (mb_strlen($query) < 3 ||
 
 			$stmt = $db->prepare($getArtists);
 			$stmt->bindValue(':artist_name', $artist);
-			
+
 			$artists = $stmt->execute();
 
 			if ($artists == false) {
@@ -1141,13 +1139,13 @@ if (mb_strlen($query) < 3 ||
 			$theplaylisturi = $words[1];
 			$thetrack = $words[2];
 			$getPlaylists = "select * from playlists where uri=:uri";
-			
+
 			$stmt = $db->prepare($getPlaylists);
 			$stmt->bindValue(':uri', $theplaylisturi);
-			
+
 			$playlists = $stmt->execute();
-		
-		
+
+
 			if ($playlists == false) {
 				handleDbIssue($theme);
 				return;
@@ -1289,7 +1287,7 @@ if (mb_strlen($query) < 3 ||
 				}
 
 				$playlists = $stmt->execute();
-					
+
 				if ($playlists == false) {
 					handleDbIssue($theme);
 					return;
