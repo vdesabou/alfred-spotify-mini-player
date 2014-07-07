@@ -1,13 +1,17 @@
 <?php
 
-// Require the bundler.
-require_once('./src/alfred.bundler.php');
 require_once('./src/workflows.php');
 
+/**
+ * computeTime function.
+ * 
+ * @access public
+ * @return void
+ */
 function computeTime() 
 {
-list($msec, $sec) = explode(' ', microtime());
-return ((float) $sec + (float) $msec) ;
+	list($msec, $sec) = explode(' ', microtime());
+	return ((float) $sec + (float) $msec) ;
 }
     
 /**
@@ -121,9 +125,7 @@ function checkIfResultAlreadyThere($results, $title)
  */
 function displayNotification($output)
 {
-	// Load and use Terminal Notifier, a "helper" utility
-	$tn = __load('terminal-notifier' , '1.6.0' , 'utility' );
-	exec( "$tn -title 'Spotify Mini Player' -sender 'com.spotify.miniplayer' -message '" . $output . "'" );
+	exec('./terminal-notifier.app/Contents/MacOS/terminal-notifier -title "Spotify Mini Player" -sender com.spotify.miniplayer -message "' .  $output . '"');
 }
 
 /**
@@ -139,9 +141,8 @@ function displayNotificationWithArtwork($output,$artwork)
 	if($artwork != "") {
 		copy($artwork,"/tmp/tmp");
 	}
-	// Load and use Terminal Notifier, a "helper" utility
-	$tn = __load('terminal-notifier' , '1.6.0' , 'utility' );
-	exec( "$tn -title 'Spotify Mini Player' -sender 'com.spotify.miniplayer' -contentImage '/tmp/tmp' -message '" . $output . "'" );
+	
+	exec("./terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'Spotify Mini Player' -sender 'com.spotify.miniplayer' -contentImage '/tmp/tmp' -message '" .  $output . "'");
 }
 
 /**

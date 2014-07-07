@@ -3,18 +3,11 @@
 // Turn off all error reporting
 //error_reporting(0);
 
-if ( ! file_exists('./src/alfred.bundler.php') )
-	exec( 'curl -sL "https://raw.githubusercontent.com/shawnrice/alfred-bundler/aries/wrappers/alfred.bundler.php" > "./src/alfred.bundler.php"' );
-
-// Require the bundler.
-require_once('./src/alfred.bundler.php');
-
 require('./src/functions.php');
 
 /* $begin_time = computeTime(); */
 
 // Load and use David Ferguson's Workflows.php class
-//$files = __load( "Workflows" );
 require_once('./src/workflows.php');
 $w = new Workflows('com.vdesabou.spotify.mini.player');
 

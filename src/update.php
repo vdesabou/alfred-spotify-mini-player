@@ -8,13 +8,10 @@
 	
 	require_once('./vendor/autoload.php');
 	
-	
 	// Load and use David Ferguson's Workflows.php class
-	//$files = __load( "Workflows" );
 	require_once('./src/workflows.php');
 	
 	$w = new Workflows('com.vdesabou.spotify.mini.player');
-	
 	
 	if(! $w->internet()) {
 		displayNotificationWithArtwork("Error: No internet connection",'./images/warning.png');
