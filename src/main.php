@@ -318,11 +318,13 @@ if (mb_strlen($query) < 3 ||
 		if ($is_alfred_playlist_active == true) {
 			if($alfred_playlist_name != "") {
 				$title = '♫ Alfred Playlist ● ' . $alfred_playlist_name;
+				$w->result(uniqid(), '', $title, 'Choose one of your playlists and add tracks, album, playlist to it directly from the workflow', './images/' . $theme . '/' . 'alfred_playlist.png', 'no', null, 'Alfred Playlist▹');
 			}
 			else {
 				$title = '♫ Alfred Playlist ● not set';
+				$w->result(uniqid(), '', $title, 'Choose one of your playlists and add tracks, album, playlist to it directly from the workflow', './images/' . $theme . '/' . 'alfred_playlist.png', 'no', null, 'Alfred Playlist▹Set Alfred Playlist▹');
 			}
-			$w->result(uniqid(), '', $title, 'Choose one of your playlists and add tracks, album, playlist to it directly from the workflow', './images/' . $theme . '/' . 'alfred_playlist.png', 'no', null, 'Alfred Playlist▹');
+
 		}
 		$w->result(uniqid(), '', 'Playlists', 'Browse by playlist' . ' (' . $nb_playlists . ' playlists)', './images/' . $theme . '/' . 'playlists.png', 'no', null, 'Playlist▹');
 		if ($all_playlists == true) {
@@ -691,23 +693,19 @@ if (mb_strlen($query) < 3 ||
 			//
 			$playlist = $words[1];
 
-			if ($alfred_playlist_uri == "") {
-				$w->result(uniqid(), '', "Alfred playlist is not set", "Click to select one of your playlists below as your Alfred playlist", './images/' . $theme . '/' . 'settings.png', 'no', null, 'Alfred Playlist▹Set Alfred Playlist▹');
-			} else {
-				$r = explode(':', $alfred_playlist_uri);
+			$r = explode(':', $alfred_playlist_uri);
 
-				$w->result(uniqid(), '', "Browse your Alfred playlist (" . $alfred_playlist_name . " by " . $r[2] . ")" , "You can change the playlist by selecting Change your Alfred playlist below", getPlaylistArtwork($w, $theme ,$alfred_playlist_uri, false), 'no', null, 'Playlist▹' . $alfred_playlist_uri . '▹');
+			$w->result(uniqid(), '', "Browse your Alfred playlist (" . $alfred_playlist_name . " by " . $r[2] . ")" , "You can change the playlist by selecting Change your Alfred playlist below", getPlaylistArtwork($w, $theme ,$alfred_playlist_uri, false), 'no', null, 'Playlist▹' . $alfred_playlist_uri . '▹');
 
-				$w->result(uniqid(), '', "Change your Alfred playlist", "Select one of your playlists below as your Alfred playlist", './images/' . $theme . '/' . 'settings.png', 'no', null, 'Alfred Playlist▹Set Alfred Playlist▹');
+			$w->result(uniqid(), '', "Change your Alfred playlist", "Select one of your playlists below as your Alfred playlist", './images/' . $theme . '/' . 'settings.png', 'no', null, 'Alfred Playlist▹Set Alfred Playlist▹');
 
-				if($r[3] != 'starred')
-				{
-					$w->result(uniqid(), '', "Clear your Alfred Playlist", "This will remove all the tracks in your current Alfred Playlist", './images/' . $theme . '/' . 'uncheck.png', 'no', null, 'Alfred Playlist▹Confirm Clear Alfred Playlist▹');
-				}
-
-				$w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,$alfred_playlist_uri /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_playlist' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Update your Alfred Playlist", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', null, '');
-
+			if($r[3] != 'starred')
+			{
+				$w->result(uniqid(), '', "Clear your Alfred Playlist", "This will remove all the tracks in your current Alfred Playlist", './images/' . $theme . '/' . 'uncheck.png', 'no', null, 'Alfred Playlist▹Confirm Clear Alfred Playlist▹');
 			}
+
+			$w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,$alfred_playlist_uri /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_playlist' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Update your Alfred Playlist", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', null, '');
+
 		} //  Alfred Playlist end
 		elseif ($kind == "Artist") {
 			//
