@@ -198,7 +198,7 @@ if (mb_strlen($query) < 3 ||
 			}
 
 			if ($all_playlists == true) {
-				$w->result(uniqid(), '', 'Search for music in all your playlists', 'Begin typing at least 3 characters to start search' . ' (' . $all_tracks . ' tracks)', './images/' . $theme . '/' . 'allplaylists.png', 'no', null, '');
+				$w->result(uniqid(), '', 'Search for music in all your ' . $nb_playlists . ' playlists', 'Begin typing at least 3 characters to start search' . ' (' . $all_tracks . ' tracks)', './images/' . $theme . '/' . 'allplaylists.png', 'no', null, '');
 			} else {
 				$w->result(uniqid(), '', 'Search for music in your ★ playlist', 'Begin typing at least 3 characters to start search' . ' (' . $starred_tracks . ' tracks)', './images/' . $theme . '/' . 'star.png', 'no', null, '');
 			}
