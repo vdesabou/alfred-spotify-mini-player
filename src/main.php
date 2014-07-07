@@ -11,7 +11,7 @@ require_once('./src/alfred.bundler.php');
 
 require('./src/functions.php');
 
-//$begin_time = computeTime();
+/* $begin_time = computeTime(); */
 
 // Load and use David Ferguson's Workflows.php class
 //$files = __load( "Workflows" );
@@ -88,6 +88,7 @@ if(!installSpotifyAppIfNeeded($w))
 }
 
 
+
 //
 // Read settings from DB
 //
@@ -95,6 +96,7 @@ $getSettings = 'select all_playlists,is_spotifious_active,is_alfred_playlist_act
 $dbfile = $w->data() . '/settings.db';
 
 $dbsettings = new PDO("sqlite:$dbfile","","",array(PDO::ATTR_PERSISTENT => true));
+/*
 $dbsettings->query("PRAGMA synchronous = OFF");
 $dbsettings->query("PRAGMA journal_mode = OFF");
 $dbsettings->query("PRAGMA temp_store = MEMORY");
@@ -103,6 +105,7 @@ $dbsettings->query("PRAGMA PAGE_SIZE = 4096");
 $dbsettings->query("PRAGMA default_cache_size=700000");
 $dbsettings->query("PRAGMA cache_size=700000");
 $dbsettings->query("PRAGMA compile_options");
+*/
 
 $stmt = $dbsettings->prepare($getSettings);
 
@@ -130,19 +133,20 @@ if (!file_exists($w->data() . '/settings.db')) {
 }
 
 
-while ($setting = $stmt->fetch()) {
-	$all_playlists = $setting[0];
-	$is_spotifious_active = $setting[1];
-	$is_alfred_playlist_active = $setting[2];
-	$is_displaymorefrom_active = $setting[3];
-	$is_lyrics_active = $setting[4];
-	$max_results = $setting[5];
-	$alfred_playlist_uri = $setting[6];
-	$alfred_playlist_name = $setting[7];
-	$country_code = $setting[8];
-	$theme = $setting[9];
-	$last_check_update_time = $setting[10];
-}
+$setting = $stmt->fetch();
+$all_playlists = $setting[0];
+$is_spotifious_active = $setting[1];
+$is_alfred_playlist_active = $setting[2];
+$is_displaymorefrom_active = $setting[3];
+$is_lyrics_active = $setting[4];
+$max_results = $setting[5];
+$alfred_playlist_uri = $setting[6];
+$alfred_playlist_name = $setting[7];
+$country_code = $setting[8];
+$theme = $setting[9];
+$last_check_update_time = $setting[10];
+
+
 
 $dbfile = $w->data() . '/library.db';
 
@@ -156,6 +160,7 @@ $db->query("PRAGMA default_cache_size=700000");
 $db->query("PRAGMA cache_size=700000");
 $db->query("PRAGMA compile_options");
 
+
 $check_results = checkForUpdate($w,$last_check_update_time);
 if($check_results != null && is_array($check_results))
 {
@@ -165,6 +170,7 @@ if($check_results != null && is_array($check_results))
 	echo $w->toxml();
 	return;
 }
+
 
 // thanks to http://www.alfredforum.com/topic/1788-prevent-flash-of-no-result
 mb_internal_encoding('UTF-8');
@@ -186,16 +192,15 @@ if (mb_strlen($query) < 3 ||
 				return;
 			}
 
-			while ($counter = $stmt->fetch()) {
+			$counter = $stmt->fetch();
 
-				$all_tracks = $counter[0];
-				$starred_tracks = $counter[1];
-				$all_artists = $counter[2];
-				$starred_artists = $counter[3];
-				$all_albums = $counter[4];
-				$starred_albums = $counter[5];
-				$nb_playlists = $counter[6];
-			}
+			$all_tracks = $counter[0];
+			$starred_tracks = $counter[1];
+			$all_artists = $counter[2];
+			$starred_artists = $counter[3];
+			$all_albums = $counter[4];
+			$starred_albums = $counter[5];
+			$nb_playlists = $counter[6];
 
 			if ($all_playlists == true) {
 				$w->result(uniqid(), '', 'Search for music in all your ' . $nb_playlists . ' playlists', 'Begin typing at least 3 characters to start search' . ' (' . $all_tracks . ' tracks)', './images/' . $theme . '/' . 'allplaylists.png', 'no', null, '');
@@ -204,6 +209,7 @@ if (mb_strlen($query) < 3 ||
 			}
 
 			if ($is_displaymorefrom_active == true) {
+
 				// get info on current song
 				$command_output = exec("./track_info.sh 2>&1");
 
@@ -227,11 +233,12 @@ if (mb_strlen($query) < 3 ||
 						, ($results[3] == "playing") ? './images/' . $theme . '/' . 'pause.png' : './images/' . $theme . '/' . 'play.png', 'yes', null, '');
 
 
-					$getTracks = "select * from tracks where playable=1 and artist_name like :artist_name limit " . 1;
+					$getTracks = "select * from tracks where playable=1 and artist_name=:artist_name limit " . 1;
 
 					$stmt = $db->prepare($getTracks);
-					$stmt->bindValue(':artist_name', '%' . escapeQuery($results[1]) . '%');
+					$stmt->bindValue(':artist_name', escapeQuery($results[1]));
 					$tracks = $stmt->execute();
+
 
 					if ($tracks == false) {
 						handleDbIssue($theme);
@@ -261,7 +268,7 @@ if (mb_strlen($query) < 3 ||
 							, getTrackOrAlbumArtwork($w,$theme,$results[4],false), 'yes', null, '');
 					}
 
-					$getTracks = "select * from tracks where playable=1 and uri=:uri limit " . $max_results;
+					$getTracks = "select playlist_uri from tracks where playable=1 and uri=:uri limit " . $max_results;
 					$stmt = $db->prepare($getTracks);
 					$stmt->bindValue(':uri', $results[4]);
 					$tracks = $stmt->execute();
@@ -276,7 +283,8 @@ if (mb_strlen($query) < 3 ||
 						$getPlaylists = "select * from playlists where uri=:uri";
 
 						$stmt = $db->prepare($getPlaylists);
-						$stmt->bindValue(':uri',$track[13]);
+						$stmt->bindValue(':uri',$track[0]);
+
 						$playlists = $stmt->execute();
 
 						if ($playlists == false) {
@@ -1362,9 +1370,11 @@ if (mb_strlen($query) < 3 ||
 }
 
 echo $w->toxml();
+
 /*
 $end_time = computeTime();
 $total_temp = ($end_time-$begin_time);
 echo "$total_temp\n";
 */
+
 ?>
