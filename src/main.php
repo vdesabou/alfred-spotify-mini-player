@@ -711,17 +711,17 @@ if (mb_strlen($query) < 3 ||
 
 			if (mb_strlen($artist) < 3) {
 				if ($all_playlists == false) {
-					$getTracks = "select * from tracks where playable=1 and starred=1 group by artist_name" . " limit " . $max_results;
+					$getTracks = "select artist_name,artist_artwork_path from tracks where playable=1 and starred=1 group by artist_name" . " limit " . $max_results;
 				} else {
-					$getTracks = "select * from tracks where playable=1 group by artist_name" . " limit " . $max_results;
+					$getTracks = "select artist_name,artist_artwork_path from tracks where playable=1 group by artist_name" . " limit " . $max_results;
 				}
 				$stmt = $db->prepare($getTracks);
 			}
 			else {
 				if ($all_playlists == false) {
-					$getTracks = "select * from tracks where playable=1 and starred=1 and artist_name like :query limit " . $max_results;
+					$getTracks = "select artist_name,artist_artwork_path from tracks where playable=1 and starred=1 and artist_name like :query limit " . $max_results;
 				} else {
-					$getTracks = "select * from tracks where playable=1 and artist_name like :query limit " . $max_results;
+					$getTracks = "select artist_name,artist_artwork_path from tracks where playable=1 and artist_name like :query limit " . $max_results;
 				}
 				$stmt = $db->prepare($getTracks);
 				$stmt->bindValue(':query', '%' . $artist . '%');
@@ -741,8 +741,8 @@ if (mb_strlen($query) < 3 ||
 
 				$noresult=false;
 
-				if (checkIfResultAlreadyThere($w->results(), "👤 " . ucfirst($track[7])) == false) {
-					$w->result(uniqid(), '', "👤 " . ucfirst($track[7]), "Browse this artist", $track[10], 'no', null, "Artist⇾" . $track[7] . "⇾");
+				if (checkIfResultAlreadyThere($w->results(), "👤 " . ucfirst($track[0])) == false) {
+					$w->result(uniqid(), '', "👤 " . ucfirst($track[0]), "Browse this artist", $track[1], 'no', null, "Artist⇾" . $track[0] . "⇾");
 				}
 			}
 
@@ -759,17 +759,17 @@ if (mb_strlen($query) < 3 ||
 
 			if (mb_strlen($album) < 3) {
 				if ($all_playlists == false) {
-					$getTracks = "select * from tracks where playable=1 and starred=1 group by album_name" . " limit " . $max_results;
+					$getTracks = "select album_name,album_artwork_path,artist_name from tracks where playable=1 and starred=1 group by album_name" . " limit " . $max_results;
 				} else {
-					$getTracks = "select * from tracks where playable=1 group by album_name" . " limit " . $max_results;
+					$getTracks = "select album_name,album_artwork_path,artist_name from tracks where playable=1 group by album_name" . " limit " . $max_results;
 				}
 				$stmt = $db->prepare($getTracks);
 			}
 			else {
 				if ($all_playlists == false) {
-					$getTracks = "select * from tracks where playable=1 and starred=1 and album_name like :query limit " . $max_results;
+					$getTracks = "select album_name,album_artwork_path,artist_name from tracks where playable=1 and starred=1 and album_name like :query limit " . $max_results;
 				} else {
-					$getTracks = "select * from tracks where playable=1 and album_name like :query limit " . $max_results;
+					$getTracks = "select album_name,album_artwork_path,artist_name from tracks where playable=1 and album_name like :query limit " . $max_results;
 				}
 				$stmt = $db->prepare($getTracks);
 				$stmt->bindValue(':query', '%' . $album . '%');
@@ -789,8 +789,8 @@ if (mb_strlen($query) < 3 ||
 
 				$noresult=false;
 
-				if (checkIfResultAlreadyThere($w->results(), ucfirst($track[6])) == false) {
-					$w->result(uniqid(), '', ucfirst($track[6]), "by " . $track[7], $track[11], 'no', null, "Album⇾" . $track[6] . "⇾");
+				if (checkIfResultAlreadyThere($w->results(), ucfirst($track[0])) == false) {
+					$w->result(uniqid(), '', ucfirst($track[0]), "by " . $track[2], $track[1], 'no', null, "Album⇾" . $track[0] . "⇾");
 				}
 			}
 
