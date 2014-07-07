@@ -1,181 +1,220 @@
-# Alfred Spotify Mini Player
+[size=7][b]Alfred Spotify Mini Player[/b][/size]
 
 
 This is "Spotify Mini Player", like the alfred built-in iTunes Mini Player, but for Spotify!
 
-## Description
+[size=6][b]Description[/b][/size]
 
 Speed is the key word here: instead of using slow Spotify API, it uses a local version of your library stored in a database(it includes all the playlists you created and playlists that you're subscribed to). You can decide to search in your starred playlist only, or in all all your playlists. You can browse by Artist, Album or Playlist. You can also lookup for artists online, search for lyrics, get related artists, display biography, etc..
 You can also control Spotify using keywords such as play/next/volmax/random/shuffle/star/unstar/etc...
 
-## Animated Gifs
+[size=6][b]Screencast[/b][/size]
 
-* Search in all your playlists
+See it in action here [url=http://quick.as/nmwxcxx0]screencast[/url]
 
-![Screenshot](https://i.cloudup.com/pKTGG2faiC.gif)
+[size=6][b]Animated Gifs[/b][/size]
 
-* Browse and launch your playlists
+[list]
+[*]Search in all your playlists[/*]
+[/list]
 
-![Screenshot](https://i.cloudup.com/A9tePlpX1S.gif)
+[img=https://i.cloudup.com/pKTGG2faiC.gif]
 
-* Update your playlist and see progress
+[list]
+[*]Browse and launch your playlists[/*]
+[/list]
 
-![Screenshot](https://i.cloudup.com/tx8lqblTEu.gif)
+[img=https://i.cloudup.com/A9tePlpX1S.gif]
 
-* Browse by artist
+[list]
+[*]Update your playlist and see progress[/*]
+[/list]
 
-![Screenshot](https://i.cloudup.com/UKMug-dWQV.gif)
+[img=https://i.cloudup.com/tx8lqblTEu.gif]
 
-* Lookup artist "online"
 
-![Screenshot](https://i.cloudup.com/zbv6NCInTi.gif)
+[list]
+[*]Lookup artist "online"[/*]
+[/list]
 
-## Features
+[img=https://i.cloudup.com/zbv6NCInTi.gif]
 
-* Hotkey to trigger the workflow
-* Update of playlists directly from the workflow!
-* Search for Albums, Artists or Tracks
-* Search for playlists (including your Top List), browse them and launch them
-* Browse by Artists, Albums or Playlists
-* **Lookup artist online** by using ctrl key on a track
-* **Alfred Playlist** manage a playlist from Alfred: add track (using fn), albums or playlist (using ⇧)
-* Select a track with ⌥ to play the album, or ⌘ to play the artist
-* Same control keywords as iTunes Mini Player: play, pause, mute, next, random, previous, volmax, volmid. And shuffle to activate shuffling.
-* Star/Unstar currently played track with keyword *star*/*unstar*
-* Add current track to Alfred Playlist
-* Display artist bigraphy
-* Browse Related artists
-* Display current track lyrics
-* Two themes available: black and green
-* Auto-Updater: it checks once per day and download automatically the new version
-* Direct call to [Spotifious](http://www.alfredforum.com/topic/1644-spotifious-a-natural-spotify-controller-for-alfred) workflow
+[size=6][b]Features[/b][/size]
 
-## Settings
+[list]
+[*]Hotkey to trigger the workflow[/*]
+[*]Update of playlists directly from the workflow![/*]
+[*]Search for Albums, Artists or Tracks[/*]
+[*]Search for playlists (including your Top List), browse them and launch them[/*]
+[*]Browse by Artists, Albums or Playlists[/*]
+[*][b]Lookup artist online[/b] by using ctrl key on a track[/*]
+[*][b]Alfred Playlist[/b] manage a playlist from Alfred: add track (using fn), albums or playlist (using ⇧)[/*]
+[*]Select a track with ⌥ to play the album, or ⌘ to play the artist[/*]
+[*]Same control keywords as iTunes Mini Player: play, pause, mute, next, random, previous, volmax, volmid. And shuffle to activate shuffling.[/*]
+[*]Star/Unstar currently played track with keyword [i]star[/i]/[i]unstar[/i][/*]
+[*]Add current track to Alfred Playlist[/*]
+[*]Display artist bigraphy[/*]
+[*]Browse Related artists[/*]
+[*]Display current track lyrics[/*]
+[*]Two themes available: black and green[/*]
+[*]Auto-Updater: it checks once per day and download automatically the new version[/*]
+[*]Direct call to [url=http://www.alfredforum.com/topic/1644-spotifious-a-natural-spotify-controller-for-alfred]Spotifious[/url] workflow[/*]
+[/list]
 
-* Configurable Search Scope: Only Starred playlist (by default) or All your playlists
-* Set max number of results. 50 by default
-* enable/disable Spotifious or Alfred Playlist
-* enable/disable ***Lookup this artist online***
-* Check for workflow update
-* Choose workflow theme: ***black*** or ***green***
-* Install/Update of the library (see next section for explanations)
+[size=6][b]Settings[/b][/size]
 
-## First time use
+[list]
+[*]Configurable Search Scope: Only Starred playlist (by default) or All your playlists[/*]
+[*]Set max number of results. 50 by default[/*]
+[*]enable/disable Spotifious or Alfred Playlist[/*]
+[*]enable/disable [b][i]Lookup this artist online[/i][/b][/*]
+[*]Check for workflow update[/*]
+[*]Choose workflow theme: [b][i]black[/i][/b] or [b][i]green[/i][/b][/*]
+[*]Install/Update of the library (see next section for explanations)[/*]
+[/list]
+
+[size=6][b]First time use[/b][/size]
 
 You'll need to do the following steps:
 
-* Sign up for a [developer account on Spotify](https://devaccount.spotify.com/my-account/) (this is for both free and premium users).
+[list]
+[*]Sign up for a [url=https://devaccount.spotify.com/my-account/]developer account on Spotify[/url] (this is for both free and premium users).[/*]
+[/list]
 
-* Download the [latest version](https://www.spotify.com/fr/download/mac/) of Spotify and ***install*** it (I had to do it, even though I was pretty sure to already have the latest version, so please do it!)
+[list]
+[*]Download the [url=https://www.spotify.com/fr/download/mac/]latest version[/url] of Spotify and [b][i]install[/i][/b] it (I had to do it, even though I was pretty sure to already have the latest version, so please do it!)[/*]
+[/list]
 
-* Type "spot_mini" or configured hotkey to invoke Spotify Mini Player, and select "1/ Open Spotify Mini Player App <spotify:app:miniplayer>" 
+[list]
+[*]Type "spot_mini" or configured hotkey to invoke Spotify Mini Player, and select "1/ Open Spotify Mini Player App <spotify:app:miniplayer>" [/*]
+[/list]
 
-![Screenshot](https://i.cloudup.com/QVFwkPR7V7.png)
+[img=https://i.cloudup.com/QVFwkPR7V7.png]
 
-* If it doesn't work (Spotify indicates "Failed to load application miniplayer."):
+[list]
+[*]If it doesn't work (Spotify indicates "Failed to load application miniplayer."):[/*]
+[/list]
 
   * try to restart Spotify multiple times
   
   * try to logout from Spotify and login again
   
-  * make sure you see in [Developer Account](https://devaccount.spotify.com/my-account/):
+  * make sure you see in [url=https://devaccount.spotify.com/my-account/]Developer Account[/url]:
 
-```  
+[code=auto:0]  
 You are successfully registered with us as a Spotify apps developer.
-```
+[/code]
 
-* If it works, invoke the Spotify Mini Player workflow again and select "2/ Install library"
+[list]
+[*]If it works, invoke the Spotify Mini Player workflow again and select "2/ Install library"[/*]
+[/list]
 
-* After some time, you should get a notification saying that library has been created.
+[list]
+[*]After some time, you should get a notification saying that library has been created.[/*]
+[/list]
 
-**Note that the first time the library is created, all artworks are downloaded, so it can take a while!**
+[b]Note that the first time the library is created, all artworks are downloaded, so it can take a while![/b]
 
 You can check progress by invoking the workflow again:-
 
-![Screenshot](https://i.cloudup.com/NajHMexvb7.png)
+[img=https://i.cloudup.com/NajHMexvb7.png]
 
 
-## Library/Playlist Update
+[size=6][b]Library/Playlist Update[/b][/size]
 
 You can now update your entire library and/or only one specific playlist directly from the Spotify Mini Player!
 
 For example:
 
-![Screenshot](https://i.cloudup.com/QER69TlaZa.png)
+[img=https://i.cloudup.com/QER69TlaZa.png]
 
-## Alfred Playlist
+[size=6][b]Alfred Playlist[/b][/size]
 
 The Alfred Playlist is one of your playlists where tracks, albums and even playlists can be added from within the workflow.
 
-* Simply choose one of your playlists as the current "Alfred Playlist" (you can even choose your starred playlist)
+[list]
+[*]Simply choose one of your playlists as the current "Alfred Playlist" (you can even choose your starred playlist)[/*]
+[/list]
 
-![Screenshot](https://i.cloudup.com/CkEfC9emQI.png)
+[img=https://i.cloudup.com/CkEfC9emQI.png]
 
-* To add a track to your playlist select it with *fn* modifier
+[list]
+[*]To add a track to your playlist select it with [i]fn[/i] modifier[/*]
+[/list]
 
-![Screenshot](https://i.cloudup.com/O9I8lqCvl3.png)
+[img=https://i.cloudup.com/O9I8lqCvl3.png]
 
-* To add an album or another playlist to your playlist select it with *shift* modifier
+[list]
+[*]To add an album or another playlist to your playlist select it with [i]shift[/i] modifier[/*]
+[/list]
 
-![Screenshot](https://i.cloudup.com/I6zvg23d39.png)
+[img=https://i.cloudup.com/I6zvg23d39.png]
 
 
-* You can also clear all tracks from your Alfred Playlist (for security, you cannot do it if your starred playlist is the Alfred Playlist), be careful when doing it. 
+[list]
+[*]You can also clear all tracks from your Alfred Playlist (for security, you cannot do it if your starred playlist is the Alfred Playlist), be careful when doing it. [/*]
+[/list]
 
 A confirmation will be asked:
 
-![Screenshot](https://i.cloudup.com/y6qlZZaGaK.png)
+[img=https://i.cloudup.com/y6qlZZaGaK.png]
 
 
-## Now Playing
+[size=6][b]Now Playing[/b][/size]
 
 This is an option to diplay various options based on the current track (play/pause, browse artist, display lyrics, show playlists where the track belongs)
 
-![Screenshot](https://i.cloudup.com/PZrDLRlLwb.png)
+[img=https://i.cloudup.com/PZrDLRlLwb.png]
 
-## Commands
+[size=6][b]Commands[/b][/size]
 
-* Modifer keys
+[list]
+[*]Modifer keys[/*]
+[/list]
 
-![Screenshot](https://i.cloudup.com/8TSup8JB2l.png)
+[img=https://i.cloudup.com/8TSup8JB2l.png]
 
-* Other commands
+[list]
+[*]Other commands[/*]
+[/list]
 
 Note: These commands can also be triggered from the main workflow window
 
-![Screenshot](https://i.cloudup.com/nGQOVeLbdr.png)
+[img=https://i.cloudup.com/nGQOVeLbdr.png]
 
 
-## Auto-Update
+[size=6][b]Auto-Update[/b][/size]
 
 The workflow checks for update once per day, if an update is available, it will download the new version in your Downloads folder.
 
 Note that you can also force a check for update in Settings section
 
 
-## Troubleshooting
+[size=6][b]Troubleshooting[/b][/size]
 
 If you experience an issue with the workflow, use the "spot_mini_debug" command, it will generate a spot_mini_debug.tgz file in your Downloads directory. Then send this file to me.
 
-![Screenshot](https://i.cloudup.com/rkqaeTehJK.png)
+[img=https://i.cloudup.com/rkqaeTehJK.png]
 
 If the update library is stuck (be aware the first time, it can take hours as all artworks are downloaded, next times it shall not exceed 10 minutes), you can kill it by invoking "spot_mini_kill" command:
 
-![Screenshot](https://i.cloudup.com/rusuJc78Wg.png)
+[img=https://i.cloudup.com/rusuJc78Wg.png]
 
 If you want to report an issue or propose an enhancement, use the "spot_mini_issue" command.
 
-## Credits
+[size=6][b]Credits[/b][/size]
 
-* [Spotifious workflow](https://github.com/citelao/Spotify-for-Alfred)
-* [Ratchet](http://socketo.me)
-* [SpotCommander](https://github.com/olejon/spotcommander)
-* [Terminal-Notifier](https://github.com/alloy/terminal-notifier)
+[list]
+[*][url=https://github.com/citelao/Spotify-for-Alfred]Spotifious workflow[/url][/*]
+[*][url=http://socketo.me]Ratchet[/url][/*]
+[*][url=https://github.com/olejon/spotcommander]SpotCommander[/url][/*]
+[*][url=https://github.com/alloy/terminal-notifier]Terminal-Notifier[/url][/*]
+[/list]
 
 
-## Download the workflow
+[size=6][b]Download the workflow[/b][/size]
 
 Download the workflow below and open in Alfred.
 
-[![Download Workflow](https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/images/alfred-workflow-icon.png)](https://raw.githubusercontent.com/packal/repository/master/com.vdesabou.spotify.mini.player/spotifyminiplayer.alfredworkflow)
+[url=https://raw.githubusercontent.com/packal/repository/master/com.vdesabou.spotify.mini.player/spotifyminiplayer.alfredworkflow][img=https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/images/alfred-workflow-icon.png][/url]
 
