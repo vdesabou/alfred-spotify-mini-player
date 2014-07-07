@@ -21,12 +21,13 @@ function installSpotifyAppIfNeeded($w)
 {
 	if (!file_exists(exec('printf $HOME') . '/Spotify/spotify-app-miniplayer')) {
 		exec('mkdir -p ~/Spotify');
-		symlink($w->path() . '/spotify-app-miniplayer', exec('printf $HOME') . '/Spotify/spotify-app-miniplayer');
+		echo exec('pwd') . '/spotify-app-miniplayer' . 'vdfvdfvd ' . exec('printf $HOME') . '/Spotify/spotify-app-miniplayer';
+		symlink(exec('pwd') . '/spotify-app-miniplayer', exec('printf $HOME') . '/Spotify/spotify-app-miniplayer');
 	}
 
 	if (!file_exists(exec('printf $HOME') . '/Spotify/spotify-app-miniplayer/manifest.json')) {
 		exec("rm -rf " . exec('printf $HOME') . "/Spotify/spotify-app-miniplayer");
-		symlink($w->path() . '/spotify-app-miniplayer', exec('printf $HOME') . '/Spotify/spotify-app-miniplayer');
+		symlink(exec('pwd') . '/spotify-app-miniplayer', exec('printf $HOME') . '/Spotify/spotify-app-miniplayer');
 	}
 
 	if (!file_exists(exec('printf $HOME') . '/Spotify/spotify-app-miniplayer/manifest.json'))

@@ -75,7 +75,7 @@ $val=$w->data();
 
 $w->result( uniqid(), $val, 'Browse to App Support Folder', $val, 'fileicon:'.$val, 'yes', null, 'file' );
 
-$val=$w->path();
+$val=exec('pwd');
 
 $w->result( uniqid(), $val, 'Browse to Alfred workflow folder', $val, 'fileicon:'.$val, 'yes', null, 'file' );
 

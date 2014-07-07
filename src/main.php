@@ -88,7 +88,6 @@ if(!installSpotifyAppIfNeeded($w))
 }
 
 
-
 //
 // Read settings from DB
 //
@@ -123,8 +122,6 @@ else {
 }
 
 
-
-
 //
 // Create settings.db with default values if needed
 //
@@ -155,7 +152,9 @@ $theme = $setting[9];
 $last_check_update_time = $setting[10];
 
 
-
+// check for correct configuration
+if (file_exists($w->data() . '/library.db')) {
+		
 $dbfile = $w->data() . '/library.db';
 
 $db = new PDO("sqlite:$dbfile","","",array(PDO::ATTR_PERSISTENT => true));
@@ -167,6 +166,16 @@ $db->query("PRAGMA PAGE_SIZE = 4096");
 $db->query("PRAGMA default_cache_size=700000");
 $db->query("PRAGMA cache_size=700000");
 $db->query("PRAGMA compile_options");
+}
+else {
+	$w->result(uniqid(), '', 'Workflow is not configured', '1/ Select Open Spotify Mini Player App below and make sure it works 2/ Then select Install library below', './images/warning.png', 'no', null, '');
+
+	$w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'open_spotify_export_app' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "1/ Open Spotify Mini Player App <spotify:app:miniplayer>", "If it doesn't work, restart Spotify multiple times and make sure you have a developer account", './images/' . $theme . '/' . 'app_miniplayer.png', 'yes', null, '');
+
+	$w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), '2/ Install library', "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', null, '');
+	echo $w->toxml();
+	return;
+}
 
 
 $check_results = checkForUpdate($w,$last_check_update_time);
@@ -186,158 +195,142 @@ if (mb_strlen($query) < 3 ||
 	((substr_count($query, '▹') == 1) && (strpos('Settings▹', $query) !== false))
 ) {
 	if (substr_count($query, '▹') == 0) {
-		// check for correct configuration
-		if (file_exists($w->data() . '/library.db')) {
-			$getCounters = 'select * from counters';
+		$getCounters = 'select * from counters';
 
+		$stmt = $db->prepare($getCounters);
 
-			$stmt = $db->prepare($getCounters);
+		$counters = $stmt->execute();
 
-			$counters = $stmt->execute();
-
-			if ($counters == false) {
-				handleDbIssue($theme);
-				return;
-			}
-
-			$counter = $stmt->fetch();
-
-			$all_tracks = $counter[0];
-			$starred_tracks = $counter[1];
-			$all_artists = $counter[2];
-			$starred_artists = $counter[3];
-			$all_albums = $counter[4];
-			$starred_albums = $counter[5];
-			$nb_playlists = $counter[6];
-
-			if ($all_playlists == true) {
-				$w->result(uniqid(), '', 'Search for music in all your ' . $nb_playlists . ' playlists', 'Begin typing at least 3 characters to start search' . ' (' . $all_tracks . ' tracks)', './images/' . $theme . '/' . 'allplaylists.png', 'no', null, '');
-			} else {
-				$w->result(uniqid(), '', 'Search for music in your ★ playlist', 'Begin typing at least 3 characters to start search' . ' (' . $starred_tracks . ' tracks)', './images/' . $theme . '/' . 'star.png', 'no', null, '');
-			}
-
-			if ($is_displaymorefrom_active == true) {
-
-				// get info on current song
-				$command_output = exec("./track_info.sh 2>&1");
-
-				if (substr_count($command_output, '▹') > 0) {
-					$results = explode('▹', $command_output);
-					$currentArtistArtwork = getArtistArtwork($w,$theme,$results[1], false);
-
-					$subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-					if ($is_alfred_playlist_active == true) {
-						$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
-					}
-
-					$w->result(uniqid(), serialize(array($results[4] /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'playpause' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ , $alfred_playlist_uri /* alfred_playlist_uri */ , escapeQuery($results[1]) /* artist_name */, escapeQuery($results[0]) /* track_name */, escapeQuery($results[2]) /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), "🔈 " . escapeQuery($results[0]) . " ● " . escapeQuery($results[1]) . " ● " . escapeQuery($results[2]),
-						array(
-							$subtitle,
-							'alt' => 'Play album ' . escapeQuery($results[2]) . ' in Spotify',
-							'cmd' => 'Play artist ' . escapeQuery($results[1]) . ' in Spotify',
-							'fn' => 'Add track ' . escapeQuery($results[0]) . ' to ' . $alfred_playlist_name,
-							'shift' => 'Add album ' . escapeQuery($results[2]) . ' to ' . $alfred_playlist_name,
-							'ctrl' => 'Search artist ' . escapeQuery($results[1]) . ' online')
-						, ($results[3] == "playing") ? './images/' . $theme . '/' . 'pause.png' : './images/' . $theme . '/' . 'play.png', 'yes', null, '');
-
-
-					$getTracks = "select * from tracks where playable=1 and artist_name=:artist_name limit " . 1;
-
-					$stmt = $db->prepare($getTracks);
-					$stmt->bindValue(':artist_name', escapeQuery($results[1]));
-					$tracks = $stmt->execute();
-
-
-					if ($tracks == false) {
-						handleDbIssue($theme);
-						return;
-					}
-
-					// check if artist is in library
-					$noresult=true;
-					while ($track = $stmt->fetch()) {
-
-						$noresult=false;
-					}
-
-					if($noresult == false) {
-						$w->result(uniqid(), '', "🔈👤 " . ucfirst(escapeQuery($results[1])), "Browse this artist", $currentArtistArtwork, 'no', null, "Artist▹" . escapeQuery($results[1]) . "▹");
-					}
-
-					if($is_lyrics_active == true) {
-						$w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'GET_LYRICS▹' . escapeQuery($results[1]) . '▹' . escapeQuery($results[0]) /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,'' /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "🔈🎤 Get Lyrics for track " . escapeQuery($results[0]),
-							array(
-								'This will fetch lyrics on lyrics.com',
-								'alt' => 'Not Available',
-								'cmd' => 'Not Available',
-								'shift' => 'Not Available',
-								'fn' => 'Not Available',
-								'ctrl' => 'Not Available')
-							, getTrackOrAlbumArtwork($w,$theme,$results[4],false), 'yes', null, '');
-					}
-
-					$getTracks = "select playlist_uri from tracks where playable=1 and uri=:uri limit " . $max_results;
-					$stmt = $db->prepare($getTracks);
-					$stmt->bindValue(':uri', $results[4]);
-					$tracks = $stmt->execute();
-
-					if ($tracks == false) {
-						handleDbIssue($theme);
-						return;
-					}
-
-					while ($track = $stmt->fetch()) {
-
-						$getPlaylists = "select * from playlists where uri=:uri";
-
-						$stmt = $db->prepare($getPlaylists);
-						$stmt->bindValue(':uri',$track[0]);
-
-						$playlists = $stmt->execute();
-
-						if ($playlists == false) {
-							handleDbIssue($theme);
-							return;
-						}
-
-						while ($playlist = $stmt->fetch()) {
-
-							if (checkIfResultAlreadyThere($w->results(), "🔈🎵 " . "In playlist " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)") == false) {
-								$w->result(uniqid(), '', "🔈🎵 " . "In playlist " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
-							}
-						}
-					}
-				}
-			}
-			if ($is_alfred_playlist_active == true) {
-				if($alfred_playlist_name != "") {
-					$title = '♫ Alfred Playlist ● ' . $alfred_playlist_name;
-				}
-				else {
-					$title = '♫ Alfred Playlist ● not set';
-				}
-				$w->result(uniqid(), '', $title, 'Choose one of your playlists and add tracks, album, playlist to it directly from the workflow', './images/' . $theme . '/' . 'alfred_playlist.png', 'no', null, 'Alfred Playlist▹');
-			}
-			$w->result(uniqid(), '', 'Playlists', 'Browse by playlist' . ' (' . $nb_playlists . ' playlists)', './images/' . $theme . '/' . 'playlists.png', 'no', null, 'Playlist▹');
-			if ($all_playlists == true) {
-				$w->result(uniqid(), '', 'Artists', 'Browse by artist' . ' (' . $all_artists . ' artists)', './images/' . $theme . '/' . 'artists.png', 'no', null, 'Artist▹');
-				$w->result(uniqid(), '', 'Albums', 'Browse by album' . ' (' . $all_albums . ' albums)', './images/' . $theme . '/' . 'albums.png', 'no', null, 'Album▹');
-			} else {
-				$w->result(uniqid(), '', 'Artists', 'Browse by artist' . ' (' . $starred_artists . ' artists)', './images/' . $theme . '/' . 'artists.png', 'no', null, 'Artist▹');
-				$w->result(uniqid(), '', 'Albums', 'Browse by album' . ' (' . $starred_albums . ' albums)', './images/' . $theme . '/' . 'albums.png', 'no', null, 'Album▹');
-			}
-		} else {
-			if (!file_exists($w->data() . '/library.db')) {
-				$w->result(uniqid(), '', 'Workflow is not configured', '1/ Select Open Spotify Mini Player App below and make sure it works 2/ Then select Install library below', './images/warning.png', 'no', null, '');
-
-				$w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'open_spotify_export_app' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "1/ Open Spotify Mini Player App <spotify:app:miniplayer>", "If it doesn't work, restart Spotify multiple times and make sure you have a developer account", './images/' . $theme . '/' . 'app_miniplayer.png', 'yes', null, '');
-
-
-			}
-
-			$w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), '2/ Install library', "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', null, '');
-			echo $w->toxml();
+		if ($counters == false) {
+			handleDbIssue($theme);
 			return;
+		}
+
+		$counter = $stmt->fetch();
+
+		$all_tracks = $counter[0];
+		$starred_tracks = $counter[1];
+		$all_artists = $counter[2];
+		$starred_artists = $counter[3];
+		$all_albums = $counter[4];
+		$starred_albums = $counter[5];
+		$nb_playlists = $counter[6];
+
+		if ($all_playlists == true) {
+			$w->result(uniqid(), '', 'Search for music in all your ' . $nb_playlists . ' playlists', 'Begin typing at least 3 characters to start search' . ' (' . $all_tracks . ' tracks)', './images/' . $theme . '/' . 'allplaylists.png', 'no', null, '');
+		} else {
+			$w->result(uniqid(), '', 'Search for music in your ★ playlist', 'Begin typing at least 3 characters to start search' . ' (' . $starred_tracks . ' tracks)', './images/' . $theme . '/' . 'star.png', 'no', null, '');
+		}
+
+		if ($is_displaymorefrom_active == true) {
+
+			// get info on current song
+			$command_output = exec("./track_info.sh 2>&1");
+
+			if (substr_count($command_output, '▹') > 0) {
+				$results = explode('▹', $command_output);
+				$currentArtistArtwork = getArtistArtwork($w,$theme,$results[1], false);
+
+				$subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
+				if ($is_alfred_playlist_active == true) {
+					$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
+				}
+
+				$w->result(uniqid(), serialize(array($results[4] /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'playpause' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ , $alfred_playlist_uri /* alfred_playlist_uri */ , escapeQuery($results[1]) /* artist_name */, escapeQuery($results[0]) /* track_name */, escapeQuery($results[2]) /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), "🔈 " . escapeQuery($results[0]) . " ● " . escapeQuery($results[1]) . " ● " . escapeQuery($results[2]),
+					array(
+						$subtitle,
+						'alt' => 'Play album ' . escapeQuery($results[2]) . ' in Spotify',
+						'cmd' => 'Play artist ' . escapeQuery($results[1]) . ' in Spotify',
+						'fn' => 'Add track ' . escapeQuery($results[0]) . ' to ' . $alfred_playlist_name,
+						'shift' => 'Add album ' . escapeQuery($results[2]) . ' to ' . $alfred_playlist_name,
+						'ctrl' => 'Search artist ' . escapeQuery($results[1]) . ' online')
+					, ($results[3] == "playing") ? './images/' . $theme . '/' . 'pause.png' : './images/' . $theme . '/' . 'play.png', 'yes', null, '');
+
+
+				$getTracks = "select * from tracks where playable=1 and artist_name=:artist_name limit " . 1;
+
+				$stmt = $db->prepare($getTracks);
+				$stmt->bindValue(':artist_name', escapeQuery($results[1]));
+				$tracks = $stmt->execute();
+
+
+				if ($tracks == false) {
+					handleDbIssue($theme);
+					return;
+				}
+
+				// check if artist is in library
+				$noresult=true;
+				while ($track = $stmt->fetch()) {
+
+					$noresult=false;
+				}
+
+				if($noresult == false) {
+					$w->result(uniqid(), '', "🔈👤 " . ucfirst(escapeQuery($results[1])), "Browse this artist", $currentArtistArtwork, 'no', null, "Artist▹" . escapeQuery($results[1]) . "▹");
+				}
+
+				if($is_lyrics_active == true) {
+					$w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'GET_LYRICS▹' . escapeQuery($results[1]) . '▹' . escapeQuery($results[0]) /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,'' /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "🔈🎤 Get Lyrics for track " . escapeQuery($results[0]),
+						array(
+							'This will fetch lyrics on lyrics.com',
+							'alt' => 'Not Available',
+							'cmd' => 'Not Available',
+							'shift' => 'Not Available',
+							'fn' => 'Not Available',
+							'ctrl' => 'Not Available')
+						, getTrackOrAlbumArtwork($w,$theme,$results[4],false), 'yes', null, '');
+				}
+
+				$getTracks = "select playlist_uri from tracks where playable=1 and uri=:uri limit " . $max_results;
+				$stmt = $db->prepare($getTracks);
+				$stmt->bindValue(':uri', $results[4]);
+				$tracks = $stmt->execute();
+
+				if ($tracks == false) {
+					handleDbIssue($theme);
+					return;
+				}
+
+				while ($track = $stmt->fetch()) {
+
+					$getPlaylists = "select * from playlists where uri=:uri";
+
+					$stmt = $db->prepare($getPlaylists);
+					$stmt->bindValue(':uri',$track[0]);
+
+					$playlists = $stmt->execute();
+
+					if ($playlists == false) {
+						handleDbIssue($theme);
+						return;
+					}
+
+					while ($playlist = $stmt->fetch()) {
+
+						if (checkIfResultAlreadyThere($w->results(), "🔈🎵 " . "In playlist " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)") == false) {
+							$w->result(uniqid(), '', "🔈🎵 " . "In playlist " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
+						}
+					}
+				}
+			}
+		}
+		if ($is_alfred_playlist_active == true) {
+			if($alfred_playlist_name != "") {
+				$title = '♫ Alfred Playlist ● ' . $alfred_playlist_name;
+			}
+			else {
+				$title = '♫ Alfred Playlist ● not set';
+			}
+			$w->result(uniqid(), '', $title, 'Choose one of your playlists and add tracks, album, playlist to it directly from the workflow', './images/' . $theme . '/' . 'alfred_playlist.png', 'no', null, 'Alfred Playlist▹');
+		}
+		$w->result(uniqid(), '', 'Playlists', 'Browse by playlist' . ' (' . $nb_playlists . ' playlists)', './images/' . $theme . '/' . 'playlists.png', 'no', null, 'Playlist▹');
+		if ($all_playlists == true) {
+			$w->result(uniqid(), '', 'Artists', 'Browse by artist' . ' (' . $all_artists . ' artists)', './images/' . $theme . '/' . 'artists.png', 'no', null, 'Artist▹');
+			$w->result(uniqid(), '', 'Albums', 'Browse by album' . ' (' . $all_albums . ' albums)', './images/' . $theme . '/' . 'albums.png', 'no', null, 'Album▹');
+		} else {
+			$w->result(uniqid(), '', 'Artists', 'Browse by artist' . ' (' . $starred_artists . ' artists)', './images/' . $theme . '/' . 'artists.png', 'no', null, 'Artist▹');
+			$w->result(uniqid(), '', 'Albums', 'Browse by album' . ' (' . $starred_albums . ' albums)', './images/' . $theme . '/' . 'albums.png', 'no', null, 'Album▹');
 		}
 
 		if ($is_spotifious_active == true) {
