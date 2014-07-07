@@ -1,7 +1,7 @@
 <?php
 
 // Turn off all error reporting
-error_reporting(0);
+//error_reporting(0);
 
 if ( ! file_exists('./src/alfred.bundler.php') )
 	exec( 'curl -sL "https://raw.githubusercontent.com/shawnrice/alfred-bundler/aries/wrappers/alfred.bundler.php" > "./src/alfred.bundler.php"' );
@@ -107,13 +107,21 @@ $dbsettings->query("PRAGMA compile_options");
 
 $stmt = $dbsettings->prepare($getSettings);
 
-$settings = $stmt->execute();
-
-if ($settings == false) {
+if($stmt == false) {
 	if (file_exists($w->data() . '/settings.db')) {
 		unlink($w->data() . '/settings.db');
-	}
+	}	
 }
+else {
+	$settings = $stmt->execute();
+	
+	if ($settings == false) {
+		if (file_exists($w->data() . '/settings.db')) {
+			unlink($w->data() . '/settings.db');
+		}
+	}	
+}
+
 
 
 
@@ -128,6 +136,8 @@ if (!file_exists($w->data() . '/settings.db')) {
 
 	$sql = 'sqlite3 "' . $w->data() . '/settings.db" ' . '"insert into settings values (1,1,1,1,1,50,\"\",\"\",\"\",\"green\",0)"';
 	exec($sql);
+	
+	$stmt = $dbsettings->prepare($getSettings);
 }
 
 
