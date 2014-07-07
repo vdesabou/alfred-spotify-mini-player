@@ -310,7 +310,13 @@ if (mb_strlen($query) < 3 ||
 				}
 			}
 			if ($is_alfred_playlist_active == true) {
-				$w->result(uniqid(), '', '♫ Alfred Playlist ● ' . $alfred_playlist_name , 'Choose one of your playlists and add tracks, album, playlist to it directly from the workflow', './images/' . $theme . '/' . 'alfred_playlist.png', 'no', null, 'Alfred Playlist▹');
+				if($alfred_playlist_name != "") {
+					$title = '♫ Alfred Playlist ● ' . $alfred_playlist_name;
+				}
+				else {
+					$title = '♫ Alfred Playlist ● not set';
+				}
+				$w->result(uniqid(), '', $title, 'Choose one of your playlists and add tracks, album, playlist to it directly from the workflow', './images/' . $theme . '/' . 'alfred_playlist.png', 'no', null, 'Alfred Playlist▹');
 			}
 			$w->result(uniqid(), '', 'Playlists', 'Browse by playlist' . ' (' . $nb_playlists . ' playlists)', './images/' . $theme . '/' . 'playlists.png', 'no', null, 'Playlist▹');
 			if ($all_playlists == true) {
