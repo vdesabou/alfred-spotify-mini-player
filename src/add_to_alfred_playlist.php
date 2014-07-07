@@ -12,8 +12,8 @@ require('./src/action.php');
  // get info on current song
 $command_output = exec("./track_info.sh 2>&1");
 
-if (substr_count($command_output, '⇾') > 0) {
-    $results = explode('⇾', $command_output);
+if (substr_count($command_output, '▹') > 0) {
+    $results = explode('▹', $command_output);
  
 	//
 	// Read settings from DB

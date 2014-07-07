@@ -28,7 +28,7 @@ class MiniPlayer implements MessageComponentInterface {
             , $from->resourceId, $msg, $numRecv, $numRecv == 1 ? '' : 's');
 */
 
-		$tmp = explode('⇾', $msg);
+		$tmp = explode('▹', $msg);
 		$command=$tmp[0];
 		$json=$tmp[1];
 		if($command=="update_library")
@@ -63,7 +63,7 @@ class MiniPlayer implements MessageComponentInterface {
 			    	$artist_uri = $artist['artist_uri'];
 			    	$artist_name = $artist['artist_name'];
 			    	
-			    	exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online⇾$artist_uri@$artist_name\"'");
+			    	exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online▹$artist_uri@$artist_name\"'");
 		    	} else {
 					foreach ($this->clients as $client) {
 						$client->send("CURRENT TRACK GET ARTIST FAIL");

@@ -547,7 +547,7 @@
 				<key>argument</key>
 				<integer>3</integer>
 				<key>argumenttext</key>
-				<string>Alfred Playlist⇾</string>
+				<string>Alfred Playlist▹</string>
 				<key>hotkey</key>
 				<integer>12</integer>
 				<key>hotmod</key>
@@ -593,7 +593,7 @@
 				<key>argument</key>
 				<integer>3</integer>
 				<key>argumenttext</key>
-				<string>Settings⇾</string>
+				<string>Settings▹</string>
 				<key>hotkey</key>
 				<integer>1</integer>
 				<key>hotmod</key>
@@ -660,7 +660,7 @@ end alfred_script</string>
 				<key>argument</key>
 				<integer>3</integer>
 				<key>argumenttext</key>
-				<string>Playlist⇾</string>
+				<string>Playlist▹</string>
 				<key>hotkey</key>
 				<integer>35</integer>
 				<key>hotmod</key>

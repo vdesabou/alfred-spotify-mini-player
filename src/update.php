@@ -21,7 +21,7 @@
 		return;
 	}
 	touch($w->data() . "/update_library_in_progress");
-	$w->write('InitLibrary⇾' . 0 . '⇾' . 0 . '⇾' . time(), 'update_library_in_progress');
+	$w->write('InitLibrary▹' . 0 . '▹' . 0 . '▹' . time(), 'update_library_in_progress');
 
 	$tcpport = getFreeTcpPort();
 	exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:update_library:" . $tcpport . ":" . uniqid() . "\"'");

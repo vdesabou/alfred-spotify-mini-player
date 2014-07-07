@@ -145,7 +145,7 @@ added to ' . $alfred_playlist_name,$track_artwork_path);
 			}
 		}
 
-		exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online⇾$artist_uri@$artist_name\"'");
+		exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online▹$artist_uri@$artist_name\"'");
 		return;
 	}else if ($type == "STAR") {
 		starCurrentTrack($w);
@@ -220,7 +220,7 @@ if ($playlist_uri != "") {
 	exec("osascript -e 'tell application \"Spotify\" to open location \"$playlist_uri\"'");
 	displayNotificationWithArtwork('🔈 Playlist ' . $playlist_name,$playlist_artwork_path);
 }else if ($other_settings != "") {
-		$setting = explode('⇾', $other_settings);
+		$setting = explode('▹', $other_settings);
 		if ($setting[0] == "MAX_RESULTS") {
 			$setSettings = "update settings set max_results=" . $setting[1];
 			$dbfile = $w->data() . "/settings.db";
@@ -404,7 +404,7 @@ if ($playlist_uri != "") {
 					displayNotificationWithArtwork("Error: No internet connection",'./images/warning.png');
 					return;
 				}
-				exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online⇾" . $artist_uri . "@" . escapeQuery($artist_name) . "\"'");
+				exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online▹" . $artist_uri . "@" . escapeQuery($artist_name) . "\"'");
 			}
 		else if ($other_action == "update_library") {
 				if(! $w->internet()) {
@@ -412,7 +412,7 @@ if ($playlist_uri != "") {
 					return;
 				}
 				touch($w->data() . "/update_library_in_progress");
-				$w->write('InitLibrary⇾' . 0 . '⇾' . 0 . '⇾' . time(), 'update_library_in_progress');
+				$w->write('InitLibrary▹' . 0 . '▹' . 0 . '▹' . time(), 'update_library_in_progress');
 
 				$tcpport = getFreeTcpPort();
 				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:update_library:" . $tcpport . ":" . uniqid() . "\"'");
@@ -434,7 +434,7 @@ if ($playlist_uri != "") {
 					return;
 				}
 				touch($w->data() . "/update_library_in_progress");
-				$w->write('InitPlaylistList⇾' . 0 . '⇾' . 0 . '⇾' . time(), 'update_library_in_progress');
+				$w->write('InitPlaylistList▹' . 0 . '▹' . 0 . '▹' . time(), 'update_library_in_progress');
 
 				$tcpport = getFreeTcpPort();
 				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:update_playlist_list:" . $tcpport . ":" . uniqid() . "\"'");
@@ -479,7 +479,7 @@ function starCurrentTrack($w)
 	endforeach;
 
 	touch($w->data() . "/update_library_in_progress");
-	$w->write('InitPlaylist⇾' . 0 . '⇾' . 0 . '⇾' . time(), 'update_library_in_progress');
+	$w->write('InitPlaylist▹' . 0 . '▹' . 0 . '▹' . time(), 'update_library_in_progress');
 	
 	exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:star:" . $tcpport . ":" . uniqid() . "\"'");
 	exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:user:$username:starred\"'");
@@ -525,7 +525,7 @@ function unstarCurrentTrack($w)
 	endforeach;
 
 	touch($w->data() . "/update_library_in_progress");
-	$w->write('InitPlaylist⇾' . 0 . '⇾' . 0 . '⇾' . time(), 'update_library_in_progress');
+	$w->write('InitPlaylist▹' . 0 . '▹' . 0 . '▹' . time(), 'update_library_in_progress');
 	
 	exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:unstar:" . $tcpport . ":" . uniqid() . "\"'");
 	exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:user:$username:starred\"'");
@@ -558,7 +558,7 @@ function refreshPlaylist($w,$playlist_uri)
 {
 	// update alfred playlist
 	touch($w->data() . "/update_library_in_progress");
-	$w->write('InitPlaylist⇾' . 0 . '⇾' . 0 . '⇾' . time(), 'update_library_in_progress');
+	$w->write('InitPlaylist▹' . 0 . '▹' . 0 . '▹' . time(), 'update_library_in_progress');
 
 	$tcpport = getFreeTcpPort();
 	exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:update_playlist:" . $playlist_uri . ":" . $tcpport . ":" . uniqid() . "\"'");

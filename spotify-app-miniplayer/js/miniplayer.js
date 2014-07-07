@@ -51,7 +51,7 @@ function handleArgs() {
 
 						conn.onopen = function(e) {
 						    appendText("Connection established with Spotify Mini Player workflow on port " + args[1] + ". Transmitting data..");
-						    conn.send('star⇾' + JSON.stringify(array_results) + '⇾' + result);
+						    conn.send('star▹' + JSON.stringify(array_results) + '▹' + result);
 						};
 						
 						conn.onerror = function (e) {
@@ -91,7 +91,7 @@ function handleArgs() {
 
 						conn.onopen = function(e) {
 						    appendText("Connection established with Spotify Mini Player workflow on port " + args[1] + ". Transmitting data..");
-						    conn.send('unstar⇾' + JSON.stringify(array_results) + '⇾' + result);
+						    conn.send('unstar▹' + JSON.stringify(array_results) + '▹' + result);
 						};
 						
 						conn.onerror = function (e) {
@@ -127,7 +127,7 @@ function handleArgs() {
 				var conn = new WebSocket('ws://127.0.0.1:' + args[1]);
 				conn.onopen = function(e) {
 					appendText("Connection established with Spotify Mini Player workflow on port " + args[1] + ". Transmitting data..");
-				    conn.send('current_track_get_artist⇾' + JSON.stringify(getCurrentTrackArtist()));
+				    conn.send('current_track_get_artist▹' + JSON.stringify(getCurrentTrackArtist()));
 				};
 				
 				conn.onerror = function (e) {
@@ -152,7 +152,7 @@ function handleArgs() {
 					var conn = new WebSocket('ws://127.0.0.1:' + args[1]);
 					conn.onopen = function(e) {
 						appendText("Connection established with Spotify Mini Player workflow on port " + args[1] + ". Transmitting data..");
-					    conn.send('update_library⇾' + JSON.stringify(matchedAll));
+					    conn.send('update_library▹' + JSON.stringify(matchedAll));
 					};
 					
 					conn.onerror = function (e) {
@@ -178,7 +178,7 @@ function handleArgs() {
 					var conn = new WebSocket('ws://127.0.0.1:' + args[1]);
 					conn.onopen = function(e) {
 						appendText("Connection established with Spotify Mini Player workflow on port " + args[1] + ". Transmitting data..");
-					    conn.send('update_playlist_list⇾' + JSON.stringify(matchedAll));
+					    conn.send('update_playlist_list▹' + JSON.stringify(matchedAll));
 					};
 					
 					conn.onerror = function (e) {
@@ -221,7 +221,7 @@ function handleArgs() {
 
 						conn.onopen = function(e) {
 						    appendText("Connection established with Spotify Mini Player workflow on port " + tcpport + ". Transmitting data..");
-						    conn.send('update_playlist⇾' + JSON.stringify(array_results))
+						    conn.send('update_playlist▹' + JSON.stringify(array_results))
 						};
 						
 						conn.onerror = function (e) {

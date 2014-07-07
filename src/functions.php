@@ -468,7 +468,7 @@ function updateLibrary($jsonData)
 	$theme = $setting[0];
 	endforeach;
 
-	$words = explode('⇾', $in_progress_data);
+	$words = explode('▹', $in_progress_data);
 
 	//
 	// move legacy artwork files in hash directories if needed
@@ -511,7 +511,7 @@ function updateLibrary($jsonData)
 
 		// get artists
 		$artists = $json['artists'];
-		$w->write('Related Artists⇾0⇾' . count($artists) . '⇾' . $words[3], 'update_library_in_progress');
+		$w->write('Related Artists▹0▹' . count($artists) . '▹' . $words[3], 'update_library_in_progress');
 
 		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table tracks (starred boolean, popularity int, uri text, album_uri text, artist_uri text, track_name text, album_name text, artist_name text, album_year text, track_artwork_path text, artist_artwork_path text, album_artwork_path text, playlist_name text, playlist_uri text, playable boolean, availability text)"';
 		exec($sql);
@@ -569,13 +569,13 @@ function updateLibrary($jsonData)
 			}
 			$nb_artists++;
 			if ($nb_artists % 10 === 0) {
-				$w->write('Related Artists⇾' . $nb_artists . '⇾' . count($artists) . '⇾' . $words[3], 'update_library_in_progress');
+				$w->write('Related Artists▹' . $nb_artists . '▹' . count($artists) . '▹' . $words[3], 'update_library_in_progress');
 			}
 		}
 
 
 		// Handle playlists
-		$w->write('Library⇾0⇾' . $nb_tracktotal . '⇾' . $words[3], 'update_library_in_progress');
+		$w->write('Library▹0▹' . $nb_tracktotal . '▹' . $words[3], 'update_library_in_progress');
 
 		$nb_track = 0;
 
@@ -619,7 +619,7 @@ function updateLibrary($jsonData)
 
 				$nb_track++;
 				if ($nb_track % 10 === 0) {
-					$w->write('Library⇾' . $nb_track . '⇾' . $nb_tracktotal . '⇾' . $words[3], 'update_library_in_progress');
+					$w->write('Library▹' . $nb_track . '▹' . $nb_tracktotal . '▹' . $words[3], 'update_library_in_progress');
 				}
 			}
 		}// end playlists
@@ -710,7 +710,7 @@ function updatePlaylist($jsonData)
 	$theme = $setting[0];
 	endforeach;
 
-	$words = explode('⇾', $in_progress_data);
+	$words = explode('▹', $in_progress_data);
 
 	putenv('LANG=fr_FR.UTF-8');
 
@@ -725,7 +725,7 @@ function updatePlaylist($jsonData)
 			$nb_tracktotal += count($playlist['tracks']);
 
 		}
-		$w->write('Playlist⇾0⇾' . $nb_tracktotal . '⇾' . $words[3], 'update_library_in_progress');
+		$w->write('Playlist▹0▹' . $nb_tracktotal . '▹' . $words[3], 'update_library_in_progress');
 
 		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "drop table counters"';
 		exec($sql);
@@ -770,7 +770,7 @@ function updatePlaylist($jsonData)
 
 				$nb_track++;
 				if ($nb_track % 10 === 0) {
-					$w->write('Playlist⇾' . $nb_track . '⇾' . $nb_tracktotal . '⇾' . $words[3], 'update_library_in_progress');
+					$w->write('Playlist▹' . $nb_track . '▹' . $nb_tracktotal . '▹' . $words[3], 'update_library_in_progress');
 				}
 			}
 		}
@@ -867,7 +867,7 @@ function updatePlaylistList($jsonData)
 	$theme = $setting[0];
 	endforeach;
 
-	$words = explode('⇾', $in_progress_data);
+	$words = explode('▹', $in_progress_data);
 
 	putenv('LANG=fr_FR.UTF-8');
 
@@ -878,7 +878,7 @@ function updatePlaylistList($jsonData)
 	if (json_last_error() === JSON_ERROR_NONE) {
 		$nb_playlist_total = count($json);
 
-		$w->write('Playlist List⇾0⇾' . $nb_playlist_total . '⇾' . $words[3], 'update_library_in_progress');
+		$w->write('Playlist List▹0▹' . $nb_playlist_total . '▹' . $words[3], 'update_library_in_progress');
 
 		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "drop table counters"';
 		exec($sql);
@@ -894,7 +894,7 @@ function updatePlaylistList($jsonData)
 
 			$nb_playlist++;
 			if ($nb_playlist % 4 === 0) {
-				$w->write('Playlist List⇾' . $nb_playlist . '⇾' . $nb_playlist_total . '⇾' . $words[3], 'update_library_in_progress');
+				$w->write('Playlist List▹' . $nb_playlist . '▹' . $nb_playlist_total . '▹' . $words[3], 'update_library_in_progress');
 			}
 
 			if ($returnValue != 0) {
