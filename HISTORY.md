@@ -13,6 +13,10 @@
 
 * Automatically update starred playlist after star/unstar track
 
+* New theme
+
+* Shortcuts to Settings/Alfred Playlist/Playlists (need to configure hotkeys)
+
 4.3.6:
 
 * Improved notifications
