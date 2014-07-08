@@ -308,6 +308,11 @@ if ($playlist_uri != "") {
 				$dbfile = $w->data() . "/settings.db";
 				exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 				displayNotificationWithArtwork("Theme set to green",'./images/' . 'green' . '/' . 'check.png');
+			} else if ($other_action == "set_theme_to_new") {
+				$setSettings = "update settings set theme='new'";
+				$dbfile = $w->data() . "/settings.db";
+				exec("sqlite3 \"$dbfile\" \"$setSettings\"");
+				displayNotificationWithArtwork("Theme set to new",'./images/' . 'new' . '/' . 'check.png');
 			} else if ($other_action == "enable_displaymorefrom") {
 				$setSettings = "update settings set is_displaymorefrom_active=1";
 				$dbfile = $w->data() . "/settings.db";
