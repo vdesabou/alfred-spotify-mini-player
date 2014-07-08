@@ -1249,7 +1249,7 @@ if (mb_strlen($query) < 3 ||
 
 			if ($setting_kind == "MaxResults") {
 				if (mb_strlen($the_query) == 0) {
-					$w->result(uniqid(), '', "Enter the Max Results number (must be greater than 0):", "Recommendation is between 50 to 100", './images/' . $theme . '/' . 'settings.png', 'no', null, '');
+					$w->result(uniqid(), '', "Enter the Max Results number (must be greater than 0):", "Recommendation is between 10 to 100", './images/' . $theme . '/' . 'settings.png', 'no', null, '');
 				} else {
 					// max results has been set
 					if (is_numeric($the_query) == true && $the_query > 0) {
