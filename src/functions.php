@@ -1333,6 +1333,12 @@ function checkForUpdate($w,$last_check_update_time,$dbsettings) {
 		$setSettings = "update settings set last_check_update_time=" . time();		
 		$dbsettings->exec($setSettings);
 
+		if(! $w->internet()) {
+			displayNotificationWithArtwork("Check for update error: 
+No internet connection",'./images/warning.png');
+			return;
+		}
+			
 		// get local information
 		if (!file_exists('./packal/package.xml')) {
 			displayNotification("Error: this release has not been downloaded from Packal");
@@ -1347,7 +1353,7 @@ function checkForUpdate($w,$last_check_update_time,$dbsettings) {
 		$jsonDataRemote = $w->request($remote_json);
 
 		if (empty($jsonDataRemote)) {
-			displayNotification("Error: the export.json " . $remote_json . " file cannot be found");
+			displayNotification("Check for update error: the export.json " . $remote_json . " file cannot be found");
 			return 1;
 		}
 
