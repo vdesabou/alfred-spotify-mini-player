@@ -673,6 +673,7 @@ function updateLibrary($jsonData)
 		}
 
 	} else {
+		unlink($w->data() . "/update_library_in_progress");
 		//it's not JSON. Log error
 		displayNotification("ERROR: JSON data is not valid!");
 	}
