@@ -1058,7 +1058,6 @@ function handleDbIssuePdo($theme,$dbhandle) {
 	$w->result(uniqid(), '', 'Database Error: ' . $dbhandle->errorInfo()[0] . ' ' . $dbhandle->errorInfo()[1] . ' ' . $dbhandle->errorInfo()[2], '', './images/warning.png', 'no', null, '');
 	$w->result(uniqid(), '', 'There is a problem with the library, try to update it.', 'Select Update library below', './images/warning.png', 'no', null, '');
 	$w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', null, '');
-	$dbhandle=null;
 	echo $w->toxml();
 }
 
@@ -1326,14 +1325,13 @@ function strip_string($string)
  * @param mixed $last_check_update_time
  * @return void
  */
-function checkForUpdate($w,$last_check_update_time) {
+function checkForUpdate($w,$last_check_update_time,$dbsettings) {
 
 	if(time()-$last_check_update_time > 86400)
 	{
 		// update last_check_update_time
-		$setSettings = "update settings set last_check_update_time=" . time();
-		$dbfile = $w->data() . "/settings.db";
-		exec("sqlite3 \"$dbfile\" \"$setSettings\"");
+		$setSettings = "update settings set last_check_update_time=" . time();		
+		$dbsettings->exec($setSettings);
 
 		// get local information
 		if (!file_exists('./packal/package.xml')) {
