@@ -1353,7 +1353,8 @@ No internet connection",'./images/warning.png');
 		$jsonDataRemote = $w->request($remote_json);
 
 		if (empty($jsonDataRemote)) {
-			displayNotification("Check for update error: the export.json " . $remote_json . " file cannot be found");
+			displayNotification("Check for update error: 
+the export.json " . $remote_json . " file cannot be found");
 			return 1;
 		}
 
@@ -1377,7 +1378,8 @@ No internet connection",'./images/warning.png');
 
 		}
 		else {
-			displayNotification("Error: check for update failed: remote.json error");
+			displayNotification("Check for update error: 
+remote.json error");
 			return 1;
 		}
 
