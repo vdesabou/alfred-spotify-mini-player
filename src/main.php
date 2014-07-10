@@ -5,13 +5,20 @@
 
 require('./src/functions.php');
 
-//$begin_time = computeTime();
+$begin_time = computeTime();
+
+$end_time = computeTime();
+$total_temp = ($end_time-$begin_time);
+//echo "1 $total_temp\n";
 
 
 // Load and use David Ferguson's Workflows.php class
 require_once('./src/workflows.php');
 $w = new Workflows('com.vdesabou.spotify.mini.player');
 
+$end_time = computeTime();
+$total_temp = ($end_time-$begin_time);
+//echo "2 $total_temp\n";
 
 $query = escapeQuery($argv[1]);
 # thanks to http://www.alfredforum.com/topic/1788-prevent-flash-of-no-result
@@ -75,6 +82,10 @@ if(!installSpotifyAppIfNeeded($w))
 }
 
 
+$end_time = computeTime();
+$total_temp = ($end_time-$begin_time);
+//echo "3 $total_temp\n";
+
 //
 // Read settings from DB
 //
@@ -98,6 +109,9 @@ try {
 	return;
 }
 
+$end_time = computeTime();
+$total_temp = ($end_time-$begin_time);
+//echo "4 $total_temp\n";
 
 try {
 	$stmt = $dbsettings->prepare($getSettings);
@@ -157,15 +171,25 @@ $country_code = $setting[8];
 $theme = $setting[9];
 $last_check_update_time = $setting[10];
 
+$end_time = computeTime();
+$total_temp = ($end_time-$begin_time);
+//echo "5 $total_temp\n";
 
 // check for correct configuration
 if (file_exists($w->data() . '/library.db')) {
+
+$end_time = computeTime();
+$total_temp = ($end_time-$begin_time);
+//echo "5_1 $total_temp\n";
 
 	$dbfile = $w->data() . '/library.db';
 
 	try {
 		$db = new PDO("sqlite:$dbfile","","",array(PDO::ATTR_PERSISTENT => true));
 		
+$end_time = computeTime();
+$total_temp = ($end_time-$begin_time);
+//echo "5_2 $total_temp\n";
 		$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$db->query("PRAGMA synchronous = OFF");
 		$db->query("PRAGMA journal_mode = OFF");
@@ -175,7 +199,9 @@ if (file_exists($w->data() . '/library.db')) {
 		$db->query("PRAGMA default_cache_size=700000");
 		$db->query("PRAGMA cache_size=700000");
 		$db->query("PRAGMA compile_options");
-
+$end_time = computeTime();
+$total_temp = ($end_time-$begin_time);
+//echo "5_3 $total_temp\n";
 	} catch (PDOException $e) {
 		handleDbIssuePdo($theme,$db);
 		return;
@@ -192,8 +218,18 @@ else {
 	return;
 }
 
+$end_time = computeTime();
+$total_temp = ($end_time-$begin_time);
+//echo "5_4 $total_temp\n";
 
+
+$end_time = computeTime();
+$total_temp = ($end_time-$begin_time);
+//echo "5_5 $total_temp\n";
 $check_results = checkForUpdate($w,$last_check_update_time,$dbsettings);
+$end_time = computeTime();
+$total_temp = ($end_time-$begin_time);
+//echo "5_6 $total_temp\n";
 if($check_results != null && is_array($check_results))
 {
 	$w->result(uniqid(), '', 'New version ' . $check_results[0] . ' is available', $check_results[2], './images/' . $theme . '/' . 'info.png', 'no', null, '');
@@ -204,6 +240,10 @@ if($check_results != null && is_array($check_results))
 }
 
 
+$end_time = computeTime();
+$total_temp = ($end_time-$begin_time);
+//echo "6 $total_temp\n";
+
 // thanks to http://www.alfredforum.com/topic/1788-prevent-flash-of-no-result
 mb_internal_encoding('UTF-8');
 if (mb_strlen($query) < 3 ||
@@ -211,6 +251,9 @@ if (mb_strlen($query) < 3 ||
 ) {
 	if (substr_count($query, '▹') == 0) {
 	
+	$end_time = computeTime();
+$total_temp = ($end_time-$begin_time);
+//echo "7 $total_temp\n";
 
 		$getCounters = 'select * from counters';
 		try {
@@ -237,16 +280,24 @@ if (mb_strlen($query) < 3 ||
 		} else {
 			$w->result(uniqid(), '', 'Search for music in your ★ playlist', 'Begin typing at least 3 characters to start search' . ' (' . $starred_tracks . ' tracks)', './images/' . $theme . '/' . 'star.png', 'no', null, '');
 		}
-
+$end_time = computeTime();
+$total_temp = ($end_time-$begin_time);
+//echo "8 $total_temp\n";
 		if ($is_displaymorefrom_active == true) {
-
+$end_time = computeTime();
+$total_temp = ($end_time-$begin_time);
+//echo "9 $total_temp\n";
 			// get info on current song
 			$command_output = exec("./track_info.sh 2>&1");
-
+$end_time = computeTime();
+$total_temp = ($end_time-$begin_time);
+//echo "10 $total_temp\n";
 			if (substr_count($command_output, '▹') > 0) {
 				$results = explode('▹', $command_output);
 				$currentArtistArtwork = getArtistArtwork($w,$theme,$results[1], false);
-
+$end_time = computeTime();
+$total_temp = ($end_time-$begin_time);
+//echo "11 $total_temp\n";
 				$subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
 				if ($is_alfred_playlist_active == true) {
 					$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
@@ -262,6 +313,9 @@ if (mb_strlen($query) < 3 ||
 						'ctrl' => 'Search artist ' . escapeQuery($results[1]) . ' online')
 					, ($results[3] == "playing") ? './images/' . $theme . '/' . 'pause.png' : './images/' . $theme . '/' . 'play.png', 'yes', null, '');
 
+$end_time = computeTime();
+$total_temp = ($end_time-$begin_time);
+//echo "12 $total_temp\n";
 				$getTracks = "select * from tracks where playable=1 and artist_name=:artist_name limit " . 1;
 
 				try {
@@ -273,6 +327,9 @@ if (mb_strlen($query) < 3 ||
 					handleDbIssuePdo($theme,$db);
 					return;
 				}
+$end_time = computeTime();
+$total_temp = ($end_time-$begin_time);
+//echo "13 $total_temp\n";
 				// check if artist is in library
 				$noresult=true;
 				while ($track = $stmt->fetch()) {
@@ -284,6 +341,9 @@ if (mb_strlen($query) < 3 ||
 					$w->result(uniqid(), '', "🔈👤 " . ucfirst(escapeQuery($results[1])), "Browse this artist", $currentArtistArtwork, 'no', null, "Artist▹" . escapeQuery($results[1]) . "▹");
 				}
 
+$end_time = computeTime();
+$total_temp = ($end_time-$begin_time);
+//echo "14 $total_temp\n";
 				if($is_lyrics_active == true) {
 					$w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'GET_LYRICS▹' . escapeQuery($results[1]) . '▹' . escapeQuery($results[0]) /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,'' /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "🔈🎤 Get Lyrics for track " . escapeQuery($results[0]),
 						array(
@@ -296,6 +356,9 @@ if (mb_strlen($query) < 3 ||
 						, getTrackOrAlbumArtwork($w,$theme,$results[4],false), 'yes', null, '');
 				}
 
+$end_time = computeTime();
+$total_temp = ($end_time-$begin_time);
+//echo "15 $total_temp\n";
 				$getTracks = "select playlist_uri from tracks where playable=1 and uri=:uri limit " . $max_results;
 
 				try {
@@ -307,7 +370,9 @@ if (mb_strlen($query) < 3 ||
 					handleDbIssuePdo($theme,$db);
 					return;
 				}
-
+$end_time = computeTime();
+$total_temp = ($end_time-$begin_time);
+//echo "16 $total_temp\n";
 				while ($track = $stmt->fetch()) {
 
 					$getPlaylists = "select * from playlists where uri=:uri";
@@ -322,7 +387,9 @@ if (mb_strlen($query) < 3 ||
 						handleDbIssuePdo($theme,$db);
 						return;
 					}
-
+$end_time = computeTime();
+$total_temp = ($end_time-$begin_time);
+//echo "17 $total_temp\n";
 					while ($playlist = $stmt->fetch()) {
 
 						if (checkIfResultAlreadyThere($w->results(), "🔈🎵 " . "In playlist " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)") == false) {
@@ -332,7 +399,9 @@ if (mb_strlen($query) < 3 ||
 				}
 			}
 		}
-
+$end_time = computeTime();
+$total_temp = ($end_time-$begin_time);
+//echo "18 $total_temp\n";
 		if ($is_alfred_playlist_active == true) {
 			if($alfred_playlist_name != "") {
 				$title = '♫ Alfred Playlist ● ' . $alfred_playlist_name;
@@ -368,6 +437,9 @@ if (mb_strlen($query) < 3 ||
 		} else {
 			$w->result(uniqid(), '', 'Settings', 'Search scope=<only ★>, Max results=<' . $max_results . '>, Spotifious is <' . $spotifious_state . '>, Alfred Playlist is <' . $alfred_playlist_state . '>', './images/' . $theme . '/' . 'settings.png', 'no', null, 'Settings▹');
 		}
+$end_time = computeTime();
+$total_temp = ($end_time-$begin_time);
+//echo "19 $total_temp\n";
 	}
 	//
 	// Settings
@@ -1398,10 +1470,8 @@ if (mb_strlen($query) < 3 ||
 
 echo $w->toxml();
 
-/*
 $end_time = computeTime();
 $total_temp = ($end_time-$begin_time);
-echo "$total_temp\n";
-*/
+//echo "$total_temp\n";
 
 ?>
