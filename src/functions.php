@@ -21,7 +21,7 @@ function computeTime()
  * @param mixed $w
  * @return void
  */
-function installSpotifyAppIfNeeded($w,$homedir)
+function installSpotifyAppIfNeeded($homedir)
 {
 	if (!file_exists($homedir . '/Spotify/spotify-app-miniplayer')) {
 		exec('mkdir -p ~/Spotify');

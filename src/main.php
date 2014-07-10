@@ -183,7 +183,7 @@ $total_temp = ($end_time-$begin_time);
 // Install spotify-app-miniplayer app if needed
 // very first time use
 //
-if(!installSpotifyAppIfNeeded($w,$homedir))
+if(!installSpotifyAppIfNeeded($homedir))
 {
 	$w->result(uniqid(), '', 'Unable to install properly Spotify Mini Player App in ~/Spotify/spotify-app-miniplayer', 'Report to the author (use spot_mini_debug command to generate a tgz file)', './images/warning.png', 'no', null, '');
 	echo $w->toxml();
