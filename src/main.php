@@ -104,7 +104,7 @@ try {
 	$dbsettings->query("PRAGMA cache_size=700000");
 	$dbsettings->query("PRAGMA compile_options");
 } catch (PDOException $e) {
-	handleDbIssuePdo($theme,$dbsettings);
+	handleDbIssuePdo('new',$dbsettings);
 	$dbsettings=null;
 	return;
 }
@@ -113,39 +113,28 @@ $end_time = computeTime();
 $total_temp = ($end_time-$begin_time);
 //echo "4 $total_temp\n";
 
-$stmt = $dbsettings->prepare($getSettings);
+try {
+	$stmt = $dbsettings->prepare($getSettings);
+	$settings = $stmt->execute();
 
-if($stmt == false) {
+} catch (PDOException $e) {
 	if (file_exists($w->data() . '/settings.db')) {
 		unlink($w->data() . '/settings.db');
 	}
 }
-else {
-	$settings = $stmt->execute();
-
-	if ($settings == false) {
-		if (file_exists($w->data() . '/settings.db')) {
-			unlink($w->data() . '/settings.db');
-		}
-	}
-}
-
 
 //
 // Create settings.db with default values if needed
 //
 if (!file_exists($w->data() . '/settings.db')) {
 	touch($w->data() . '/settings.db');
-
-	$sql = 'sqlite3 "' . $w->data() . '/settings.db" ' . ' "create table settings (all_playlists boolean, is_spotifious_active boolean, is_alfred_playlist_active boolean, is_displaymorefrom_active boolean, is_lyrics_active boolean, max_results int, alfred_playlist_uri text, alfred_playlist_name text, country_code text, theme text, last_check_update_time int)"';
-	exec($sql);
-
-	$sql = 'sqlite3 "' . $w->data() . '/settings.db" ' . '"insert into settings values (1,1,1,1,1,50,\"\",\"\",\"\",\"new\",0)"';
-	exec($sql);
-
 	try {
-		$dbsettings = new PDO("sqlite:$dbfile","","",array(PDO::ATTR_PERSISTENT => true));
+		$dbsettings = new PDO("sqlite:$dbfile","","",null);
 		$dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		
+		$dbsettings->exec("create table settings (all_playlists boolean, is_spotifious_active boolean, is_alfred_playlist_active boolean, is_displaymorefrom_active boolean, is_lyrics_active boolean, max_results int, alfred_playlist_uri text, alfred_playlist_name text, country_code text, theme text, last_check_update_time int)");
+		$dbsettings->exec("insert into settings values (1,1,1,1,1,50,\"\",\"\",\"\",\"new\",0)");
+		
 		$dbsettings->query("PRAGMA synchronous = OFF");
 		$dbsettings->query("PRAGMA journal_mode = OFF");
 		$dbsettings->query("PRAGMA temp_store = MEMORY");
@@ -154,18 +143,22 @@ if (!file_exists($w->data() . '/settings.db')) {
 		$dbsettings->query("PRAGMA default_cache_size=700000");
 		$dbsettings->query("PRAGMA cache_size=700000");
 		$dbsettings->query("PRAGMA compile_options");
+		
+		$stmt = $dbsettings->prepare($getSettings);	
 
 	} catch (PDOException $e) {
-		handleDbIssuePdo($theme,$dbsettings);
+		handleDbIssuePdo('new',$dbsettings);
 		return;
-	}
-
-
-	$stmt = $dbsettings->prepare($getSettings);
+	}	
 }
 
-
-$setting = $stmt->fetch();
+try {
+	$setting = $stmt->fetch();
+}
+catch (PDOException $e) {
+	handleDbIssuePdo('new',$dbsettings);
+	return;
+}	
 $all_playlists = $setting[0];
 $is_spotifious_active = $setting[1];
 $is_alfred_playlist_active = $setting[2];
