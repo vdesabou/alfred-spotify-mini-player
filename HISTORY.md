@@ -7,6 +7,9 @@
 
 * New command to unstar a track
 
+
+![Screenshot](https://i.cloudup.com/2I5Jg9uLgu.png)
+
 * Added new command (with external trigger) spot_mini_update_library to update library
 
 * Automatically update Alfred Playlist after adding track, album or playlist
@@ -15,7 +18,9 @@
 
 * New theme
 
-* Shortcuts to Settings/Alfred Playlist/Playlists (need to configure hotkeys)
+* Shortcuts to Settings/Alfred Playlist/Playlists (need to configure hotkeys) 
+
+![Screenshot](https://i.cloudup.com/9msSHFbr8h.png)
 
 4.3.6:
 
