@@ -625,11 +625,11 @@ function updateLibrary($jsonData)
 			}
 		}// end playlists
 
-		$getCount = "select count(*) from tracks";
+		$getCount = "select count(distinct uri) from tracks";
 		$dbfile = $w->data() . "/library.db";
 		exec("sqlite3 \"$dbfile\" \"$getCount\"", $all_tracks);
 
-		$getCount = "select count(*) from tracks where starred=1";
+		$getCount = "select count(distinct uri) from tracks where starred=1";
 		$dbfile = $w->data() . "/library.db";
 		exec("sqlite3 \"$dbfile\" \"$getCount\"", $starred_tracks);
 
@@ -777,11 +777,11 @@ function updatePlaylist($jsonData)
 			}
 		}
 
-		$getCount = "select count(*) from tracks";
+		$getCount = "select count(distinct uri) from tracks";
 		$dbfile = $w->data() . "/library.db";
 		exec("sqlite3 \"$dbfile\" \"$getCount\"", $all_tracks);
 
-		$getCount = "select count(*) from tracks where starred=1";
+		$getCount = "select count(distinct uri) from tracks where starred=1";
 		$dbfile = $w->data() . "/library.db";
 		exec("sqlite3 \"$dbfile\" \"$getCount\"", $starred_tracks);
 
@@ -982,11 +982,11 @@ function updatePlaylistList($jsonData)
 			endforeach;
 		}
 
-		$getCount = "select count(*) from tracks";
+		$getCount = "select count(distinct uri) from tracks";
 		$dbfile = $w->data() . "/library.db";
 		exec("sqlite3 \"$dbfile\" \"$getCount\"", $all_tracks);
 
-		$getCount = "select count(*) from tracks where starred=1";
+		$getCount = "select count(distinct uri) from tracks where starred=1";
 		$dbfile = $w->data() . "/library.db";
 		exec("sqlite3 \"$dbfile\" \"$getCount\"", $starred_tracks);
 
