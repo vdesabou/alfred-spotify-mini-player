@@ -75,6 +75,7 @@ if ($type == "TRACK") {
 
 			// add track to alfred playlist
 			exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:addtoalfredplaylist:$track_uri:$alfred_playlist_uri\"'");
+			exec("osascript -e 'tell application \"Spotify\" to open location \"$alfred_playlist_uri\"'");
 			
 
 			displayNotificationWithArtwork('' . $track_name . '
@@ -170,6 +171,7 @@ else if ($type == "ALBUM_OR_PLAYLIST") {
 					if($album_uri == "") {
 						// track is not from library
 						exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:addcurrenttrackalbumtoalfredplaylist:$alfred_playlist_uri\"'");
+						exec("osascript -e 'tell application \"Spotify\" to open location \"$alfred_playlist_uri\"'");
 						displayNotificationWithArtwork('Album ' . $album_name . '
 added to ' . $alfred_playlist_name,getTrackOrAlbumArtwork($w,$theme,$track_uri,true));
 
@@ -180,6 +182,7 @@ added to ' . $alfred_playlist_name,getTrackOrAlbumArtwork($w,$theme,$track_uri,t
 					$album_artwork_path = getTrackOrAlbumArtwork($w,$theme,$album_uri,true);
 				}
 				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:addtoalfredplaylist:$album_uri:$alfred_playlist_uri\"'");
+				exec("osascript -e 'tell application \"Spotify\" to open location \"$alfred_playlist_uri\"'");
 				displayNotificationWithArtwork('Album ' . $album_name . '
 added to ' . $alfred_playlist_name,$album_artwork_path);
 				// update alfred playlist
@@ -190,6 +193,9 @@ added to ' . $alfred_playlist_name,$album_artwork_path);
 					exec("osascript -e 'tell application \"Spotify\" to open location \"$alfred_playlist_uri\"'");
 					displayNotificationWithArtwork('Playlist ' . $playlist_name . '
 added to ' . $alfred_playlist_name,$playlist_artwork_path);
+
+					// update alfred playlist
+					refreshPlaylist($w,$alfred_playlist_uri);
 					return;
 				}
 		}
