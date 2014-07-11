@@ -27,19 +27,16 @@ class Workflows {
 	*/
 	function __construct( $bundleid=null )
 	{
-		//$this->path = exec('pwd');
-		$this->home = exec('printf $HOME');
+		$this->home = getenv("HOME");
 
 		if ( !is_null( $bundleid ) ):
 			$this->bundle = $bundleid;
-		endif;
-		
-		
-/*
+		else:
 		if ( file_exists( 'info.plist' ) ):
+				$this->path();
 			$this->bundle = $this->get( 'bundleid', 'info.plist' );
 		endif;
-*/
+		endif;
 
 		$this->cache = $this->home. "/Library/Caches/com.runningwithcrayons.Alfred-2/Workflow Data/".$this->bundle;
 		$this->data  = $this->home. "/Library/Application Support/Alfred 2/Workflow Data/".$this->bundle;
@@ -125,10 +122,10 @@ class Workflows {
 	public function path()
 	{
 		if ( is_null( $this->path ) ):
-			return false;
-		else:
-			return $this->path;
+			$this->path = getenv("PWD");
 		endif;
+		
+		return $this->path;
 	}
 
 	/**
