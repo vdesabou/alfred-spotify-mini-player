@@ -6,7 +6,7 @@ error_reporting(0);
 
 // Load and use David Ferguson's Workflows.php class
 require_once('./src/workflows.php');
-$w = new Workflows;
+$w = new Workflows('com.vdesabou.spotify.mini.player');
 
 
 exec("mkdir -p ~/Downloads/spot_mini_debug");

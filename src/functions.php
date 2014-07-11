@@ -4,19 +4,19 @@ require_once('./src/workflows.php');
 
 /**
  * computeTime function.
- * 
+ *
  * @access public
  * @return void
  */
-function computeTime() 
+function computeTime()
 {
 	list($msec, $sec) = explode(' ', microtime());
 	return ((float) $sec + (float) $msec) ;
 }
-    
+
 /**
  * installSpotifyAppIfNeeded function.
- * 
+ *
  * @access public
  * @param mixed $w
  * @return void
@@ -27,7 +27,7 @@ function installSpotifyAppIfNeeded($homedir)
 		displayNotification("Error: Home Directory <" . $homedir . "> does not exist");
 		return false;
 	}
-	
+
 	if (!file_exists($homedir . '/Spotify/spotify-app-miniplayer')) {
 		exec('mkdir -p ~/Spotify');
 		symlink(exec('pwd') . '/spotify-app-miniplayer', $homedir . '/Spotify/spotify-app-miniplayer');
@@ -47,7 +47,7 @@ function installSpotifyAppIfNeeded($homedir)
 
 /**
  * getFreeTcpPort function.
- * 
+ *
  * @access public
  * @return void
  */
@@ -82,7 +82,7 @@ function getFreeTcpPort()
 
 /**
  * escapeQuery function.
- * 
+ *
  * @access public
  * @param mixed $text
  * @return void
@@ -102,7 +102,7 @@ function escapeQuery($text)
 
 /**
  * checkIfResultAlreadyThere function.
- * 
+ *
  * @access public
  * @param mixed $results
  * @param mixed $title
@@ -122,7 +122,7 @@ function checkIfResultAlreadyThere($results, $title)
 
 /**
  * displayNotification function.
- * 
+ *
  * @access public
  * @param mixed $output
  * @return void
@@ -134,7 +134,7 @@ function displayNotification($output)
 
 /**
  * displayNotificationWithArtwork function.
- * 
+ *
  * @access public
  * @param mixed $output
  * @param mixed $artwork
@@ -145,13 +145,13 @@ function displayNotificationWithArtwork($output,$artwork)
 	if($artwork != "") {
 		copy($artwork,"/tmp/tmp");
 	}
-	
+
 	exec("./terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'Spotify Mini Player' -sender 'com.spotify.miniplayer' -contentImage '/tmp/tmp' -message '" .  $output . "'");
 }
 
 /**
  * displayNotificationForStarredTrack function.
- * 
+ *
  * @access public
  * @param mixed $track_name
  * @param mixed $track_uri
@@ -159,13 +159,13 @@ function displayNotificationWithArtwork($output,$artwork)
  */
 function displayNotificationForStarredTrack($track_name,$track_uri)
 {
-	$w = new Workflows;
+	$w = new Workflows('com.vdesabou.spotify.mini.player');
 	displayNotificationWithArtwork('⭐️ ' . $track_name . ' has been starred',getTrackOrAlbumArtwork($w,'black',$track_uri,true));
 }
 
 /**
  * displayNotificationForUnstarredTrack function.
- * 
+ *
  * @access public
  * @param mixed $track_name
  * @param mixed $track_uri
@@ -173,13 +173,13 @@ function displayNotificationForStarredTrack($track_name,$track_uri)
  */
 function displayNotificationForUnstarredTrack($track_name,$track_uri)
 {
-	$w = new Workflows;
+	$w = new Workflows('com.vdesabou.spotify.mini.player');
 	displayNotificationWithArtwork('❌ ' . $track_name . ' has been unstarred',getTrackOrAlbumArtwork($w,'black',$track_uri,true));
 }
 
 /**
  * getTrackOrAlbumArtwork function.
- * 
+ *
  * @access public
  * @param mixed $w
  * @param mixed $theme
@@ -251,7 +251,7 @@ function getTrackOrAlbumArtwork($w,$theme, $spotifyURL, $fetchIfNotPresent)
 
 /**
  * getPlaylistArtwork function.
- * 
+ *
  * @access public
  * @param mixed $w
  * @param mixed $theme
@@ -329,7 +329,7 @@ function getPlaylistArtwork($w, $theme, $playlistURI, $fetchIfNotPresent)
 
 /**
  * getArtistArtwork function.
- * 
+ *
  * @access public
  * @param mixed $w
  * @param mixed $theme
@@ -380,7 +380,7 @@ function getArtistArtwork($w, $theme, $artist, $fetchIfNotPresent)
 
 /**
  * getTrackArtworkURL function.
- * 
+ *
  * @access public
  * @param mixed $w
  * @param mixed $type
@@ -401,7 +401,7 @@ function getTrackArtworkURL($w, $type, $id)
 
 /**
  * getPlaylistArtworkURL function.
- * 
+ *
  * @access public
  * @param mixed $w
  * @param mixed $url
@@ -421,7 +421,7 @@ function getPlaylistArtworkURL($w, $url)
 
 /**
  * getArtistArtworkURL function.
- * 
+ *
  * @access public
  * @param mixed $w
  * @param mixed $artist
@@ -442,17 +442,17 @@ function getArtistArtworkURL($w, $artist)
 
 /**
  * updateLibrary function.
- * 
+ *
  * @access public
  * @param mixed $jsonData
  * @return void
  */
 function updateLibrary($jsonData)
 {
-	$w = new Workflows('com.vdesabou.spotify.mini.player');;
+	$w = new Workflows('com.vdesabou.spotify.mini.player');
 
 	$in_progress_data = $w->read('update_library_in_progress');
-	
+
 	//
 	// Read settings from DB
 	//
@@ -524,13 +524,13 @@ function updateLibrary($jsonData)
 
 		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "CREATE INDEX IndexPlaylistUri ON tracks (playlist_uri)"';
 		exec($sql);
-		
+
 		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "CREATE INDEX IndexArtistName ON tracks (artist_name)"';
 		exec($sql);
-		
+
 		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "CREATE INDEX IndexAlbumName ON tracks (album_name)"';
 		exec($sql);
-				
+
 
 		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table counters (all_tracks int, starred_tracks int, all_artists int, starred_artists int, all_albums int, starred_albums int, playlists int)"';
 		exec($sql);
@@ -685,17 +685,17 @@ function updateLibrary($jsonData)
 
 /**
  * updatePlaylist function.
- * 
+ *
  * @access public
  * @param mixed $jsonData
  * @return void
  */
 function updatePlaylist($jsonData)
 {
-	$w = new Workflows('com.vdesabou.spotify.mini.player');;
+	$w = new Workflows('com.vdesabou.spotify.mini.player');
 
 	$in_progress_data = $w->read('update_library_in_progress');
-	
+
 	//
 	// Read settings from DB
 	//
@@ -830,29 +830,29 @@ function updatePlaylist($jsonData)
 
 /**
  * removeUpdateLibraryInProgressFile function.
- * 
+ *
  * @access public
  * @return void
  */
 function removeUpdateLibraryInProgressFile()
 {
-	$w = new Workflows('com.vdesabou.spotify.mini.player');;
+	$w = new Workflows('com.vdesabou.spotify.mini.player');
 	unlink($w->data() . "/update_library_in_progress");
 }
 
 /**
  * updatePlaylistList function.
- * 
+ *
  * @access public
  * @param mixed $jsonData
  * @return void
  */
 function updatePlaylistList($jsonData)
 {
-	$w = new Workflows('com.vdesabou.spotify.mini.player');;
+	$w = new Workflows('com.vdesabou.spotify.mini.player');
 
 	$in_progress_data = $w->read('update_library_in_progress');
-	
+
 	//
 	// Read settings from DB
 	//
@@ -1034,7 +1034,7 @@ function updatePlaylistList($jsonData)
 
 /**
  * handleDbIssue function.
- * 
+ *
  * @access public
  * @param mixed $theme
  * @return void
@@ -1051,7 +1051,7 @@ function handleDbIssue($theme) {
 
 /**
  * handleDbIssuePdo function.
- * 
+ *
  * @access public
  * @param mixed $theme
  * @param mixed $dbhandle
@@ -1067,7 +1067,7 @@ function handleDbIssuePdo($theme,$dbhandle) {
 
 /**
  * floatToSquares function.
- * 
+ *
  * @access public
  * @param mixed $decimal
  * @return void
@@ -1080,7 +1080,7 @@ function floatToSquares($decimal)
 
 /**
  * getArtistUriFromName function.
- * 
+ *
  * @access public
  * @param mixed $w
  * @param mixed $theme
@@ -1108,7 +1108,7 @@ function getArtistUriFromName($w,$theme,$artist) {
 
 /**
  * getAlbumUriFromName function.
- * 
+ *
  * @access public
  * @param mixed $w
  * @param mixed $theme
@@ -1172,7 +1172,7 @@ along with SpotCommander.  If not, see <http://www.gnu.org/licenses/>.
 Copyright 2013 Ole Jon Bjørkum
 
  * getLyrics function.
- * 
+ *
  * @access public
  * @param mixed $w
  * @param mixed $artist
@@ -1311,7 +1311,7 @@ function getLyrics($w,$artist,$title) {
 
 /**
  * strip_string function.
- * 
+ *
  * @access public
  * @param mixed $string
  * @return void
@@ -1323,7 +1323,7 @@ function strip_string($string)
 
 /**
  * checkForUpdate function.
- * 
+ *
  * @access public
  * @param mixed $w
  * @param mixed $last_check_update_time
@@ -1334,15 +1334,15 @@ function checkForUpdate($w,$last_check_update_time,$dbsettings) {
 	if(time()-$last_check_update_time > 86400)
 	{
 		// update last_check_update_time
-		$setSettings = "update settings set last_check_update_time=" . time();		
+		$setSettings = "update settings set last_check_update_time=" . time();
 		$dbsettings->exec($setSettings);
 
 		if(! $w->internet()) {
-			displayNotificationWithArtwork("Check for update error: 
+			displayNotificationWithArtwork("Check for update error:
 No internet connection",'./images/warning.png');
 			return;
 		}
-			
+
 		// get local information
 		if (!file_exists('./packal/package.xml')) {
 			displayNotification("Error: this release has not been downloaded from Packal");
@@ -1357,7 +1357,7 @@ No internet connection",'./images/warning.png');
 		$jsonDataRemote = $w->request($remote_json);
 
 		if (empty($jsonDataRemote)) {
-			displayNotification("Check for update error: 
+			displayNotification("Check for update error:
 the export.json " . $remote_json . " file cannot be found");
 			return 1;
 		}
@@ -1382,7 +1382,7 @@ the export.json " . $remote_json . " file cannot be found");
 
 		}
 		else {
-			displayNotification("Check for update error: 
+			displayNotification("Check for update error:
 remote.json error");
 			return 1;
 		}
@@ -1392,7 +1392,7 @@ remote.json error");
 
 /**
  * beautifyTime function.
- * 
+ *
  * @access public
  * @param mixed $seconds
  * @return void
@@ -1406,7 +1406,7 @@ function beautifyTime($seconds) {
 
 /**
  * startswith function.
- * 
+ *
  * @access public
  * @param mixed $haystack
  * @param mixed $needle
