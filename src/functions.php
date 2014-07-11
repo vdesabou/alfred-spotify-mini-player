@@ -23,6 +23,11 @@ function computeTime()
  */
 function installSpotifyAppIfNeeded($homedir)
 {
+	if (!file_exists($homedir)) {
+		displayNotification("Error: Home Directory <" . $homedir . "> does not exist");
+		return false;
+	}
+	
 	if (!file_exists($homedir . '/Spotify/spotify-app-miniplayer')) {
 		exec('mkdir -p ~/Spotify');
 		symlink(exec('pwd') . '/spotify-app-miniplayer', $homedir . '/Spotify/spotify-app-miniplayer');
