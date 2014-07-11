@@ -21,24 +21,24 @@ function computeTime()
  * @param mixed $w
  * @return void
  */
-function installSpotifyAppIfNeeded($homedir)
+function installSpotifyAppIfNeeded($w)
 {
-	if (!file_exists($homedir)) {
-		displayNotification("Error: Home Directory <" . $homedir . "> does not exist");
+	if (!file_exists($w->home())) {
+		displayNotification("Error: Home Directory <" . $w->home() . "> does not exist");
 		return false;
 	}
 
-	if (!file_exists($homedir . '/Spotify/spotify-app-miniplayer')) {
+	if (!file_exists($w->home() . '/Spotify/spotify-app-miniplayer')) {
 		exec('mkdir -p ~/Spotify');
-		symlink(exec('pwd') . '/spotify-app-miniplayer', $homedir . '/Spotify/spotify-app-miniplayer');
+		symlink(exec('pwd') . '/spotify-app-miniplayer', $w->home() . '/Spotify/spotify-app-miniplayer');
 	}
 
-	if (!file_exists($homedir . '/Spotify/spotify-app-miniplayer/manifest.json')) {
-		exec("rm -rf " . $homedir . "/Spotify/spotify-app-miniplayer");
-		symlink(exec('pwd') . '/spotify-app-miniplayer', $homedir . '/Spotify/spotify-app-miniplayer');
+	if (!file_exists($w->home() . '/Spotify/spotify-app-miniplayer/manifest.json')) {
+		exec("rm -rf " . $w->home() . "/Spotify/spotify-app-miniplayer");
+		symlink(exec('pwd') . '/spotify-app-miniplayer', $w->home() . '/Spotify/spotify-app-miniplayer');
 	}
 
-	if (!file_exists($homedir . '/Spotify/spotify-app-miniplayer/manifest.json'))
+	if (!file_exists($w->home() . '/Spotify/spotify-app-miniplayer/manifest.json'))
 	{
 		return false;
 	}

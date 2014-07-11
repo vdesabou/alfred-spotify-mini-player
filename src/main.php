@@ -86,7 +86,7 @@ $total_temp = ($end_time-$begin_time);
 //
 // Read settings from DB
 //
-$getSettings = 'select all_playlists,is_spotifious_active,is_alfred_playlist_active,is_displaymorefrom_active,is_lyrics_active,max_results, alfred_playlist_uri,alfred_playlist_name,country_code,theme,last_check_update_time,homedir from settings';
+$getSettings = 'select all_playlists,is_spotifious_active,is_alfred_playlist_active,is_displaymorefrom_active,is_lyrics_active,max_results, alfred_playlist_uri,alfred_playlist_name,country_code,theme,last_check_update_time from settings';
 $dbfile = $w->data() . '/settings.db';
 
 try {
@@ -125,14 +125,12 @@ try {
 //
 if (!file_exists($w->data() . '/settings.db')) {
 	touch($w->data() . '/settings.db');
-	
-	$homedir = exec('printf $HOME');
 	try {
 		$dbsettings = new PDO("sqlite:$dbfile","","",null);
 		$dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		
-		$dbsettings->exec("create table settings (all_playlists boolean, is_spotifious_active boolean, is_alfred_playlist_active boolean, is_displaymorefrom_active boolean, is_lyrics_active boolean, max_results int, alfred_playlist_uri text, alfred_playlist_name text, country_code text, theme text, last_check_update_time int, homedir text)");
-		$dbsettings->exec("insert into settings values (1,1,1,1,1,50,\"\",\"\",\"\",\"new\",0,\"$homedir\")");
+		$dbsettings->exec("create table settings (all_playlists boolean, is_spotifious_active boolean, is_alfred_playlist_active boolean, is_displaymorefrom_active boolean, is_lyrics_active boolean, max_results int, alfred_playlist_uri text, alfred_playlist_name text, country_code text, theme text, last_check_update_time int)");
+		$dbsettings->exec("insert into settings values (1,1,1,1,1,50,\"\",\"\",\"\",\"new\",0)");
 		
 		$dbsettings->query("PRAGMA synchronous = OFF");
 		$dbsettings->query("PRAGMA journal_mode = OFF");
@@ -173,7 +171,6 @@ $alfred_playlist_name = $setting[7];
 $country_code = $setting[8];
 $theme = $setting[9];
 $last_check_update_time = $setting[10];
-$homedir = $setting[11];
 
 $end_time = computeTime();
 $total_temp = ($end_time-$begin_time);
@@ -183,7 +180,7 @@ $total_temp = ($end_time-$begin_time);
 // Install spotify-app-miniplayer app if needed
 // very first time use
 //
-if(!installSpotifyAppIfNeeded($homedir))
+if(!installSpotifyAppIfNeeded($w))
 {
 	$w->result(uniqid(), '', 'Unable to install properly Spotify Mini Player App in ~/Spotify/spotify-app-miniplayer', 'Report to the author (use spot_mini_debug command to generate a tgz file)', './images/warning.png', 'no', null, '');
 	echo $w->toxml();
