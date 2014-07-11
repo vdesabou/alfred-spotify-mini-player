@@ -174,9 +174,7 @@ If you want to report an issue or propose an enhancement, use the "spot_mini_iss
 * [Terminal-Notifier](https://github.com/alloy/terminal-notifier)
 
 
-## Download the workflow
+## Download the workflow on Packal
 
-Download the workflow below and open in Alfred.
-
-[![Download Workflow](https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/images/alfred-workflow-icon.png)](https://raw.githubusercontent.com/packal/repository/master/com.vdesabou.spotify.mini.player/spotify-app-miniplayer-4.35.alfredworkflow)
+[Packal link](http://www.packal.org/workflow/spotify-mini-player)
 
