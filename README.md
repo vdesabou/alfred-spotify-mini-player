@@ -5,7 +5,7 @@ This is "Spotify Mini Player", like the alfred built-in iTunes Mini Player, but 
 
 ## Download the workflow on Packal
 
-[Packal link](http://www.packal.org/workflow/spotify-mini-player)
+[![Download Workflow](https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/images/alfred-workflow-icon.png)](http://www.packal.org/workflow/spotify-mini-player)
 
 ## Description
 
