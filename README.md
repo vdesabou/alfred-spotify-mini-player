@@ -3,6 +3,10 @@
 
 This is "Spotify Mini Player", like the alfred built-in iTunes Mini Player, but for Spotify!
 
+## Download the workflow on Packal
+
+[Packal link](http://www.packal.org/workflow/spotify-mini-player)
+
 ## Description
 
 Speed is the key word here: instead of using slow Spotify API, it uses a local version of your library stored in a database(it includes all the playlists you created and playlists that you're subscribed to). You can decide to search in your starred playlist only, or in all all your playlists. You can browse by Artist, Album or Playlist. You can also lookup for artists online, search for lyrics, get related artists, display biography, etc..
@@ -47,7 +51,7 @@ See it in action here [screencast](http://quick.as/nmwxcxx0)
 * Display artist bigraphy
 * Browse Related artists
 * Display current track lyrics
-* Two themes available: black and green
+* Three themes available: black, green and new theme from Spotify
 * Auto-Updater: it checks once per day and download automatically the new version
 * Direct call to [Spotifious](http://www.alfredforum.com/topic/1644-spotifious-a-natural-spotify-controller-for-alfred) workflow
 
@@ -174,7 +178,5 @@ If you want to report an issue or propose an enhancement, use the "spot_mini_iss
 * [Terminal-Notifier](https://github.com/alloy/terminal-notifier)
 
 
-## Download the workflow on Packal
 
-[Packal link](http://www.packal.org/workflow/spotify-mini-player)
 
