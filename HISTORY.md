@@ -1,6 +1,10 @@
 ## History
 
 
+4.41:
+
+* Compliant with latest Spotifious version
+
 4.4:
 
 * Improved performances
