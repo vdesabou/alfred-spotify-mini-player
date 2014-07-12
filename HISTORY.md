@@ -1,10 +1,10 @@
 ## History
 
-4.42:
+4.4.2:
 
 * Fixed check for updates
 
-4.41:
+4.4.1:
 
 * Compliant with latest Spotifious version
 
