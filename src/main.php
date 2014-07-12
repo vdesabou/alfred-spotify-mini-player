@@ -643,7 +643,7 @@ if (mb_strlen($query) < 3 ||
 
 		if ($is_spotifious_active == true) {
 			$w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,$query /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $query . " with Spotifious", array(
-					'Spotifious workflow must be installed',
+					'Spotifious workflow must be installed and script filter set with <spotifious>',
 					'alt' => 'Not Available',
 					'cmd' => 'Not Available',
 					'shift' => 'Not Available',
@@ -1047,7 +1047,7 @@ if (mb_strlen($query) < 3 ||
 			if($theartist != false) {
 				if ($is_spotifious_active == true) {
 					$w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,$theartist[4] . " ▹ " . $artist . " ►" /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $artist . " with Spotifious", array(
-							'Spotifious workflow must be installed',
+							'Spotifious workflow must be installed and script filter set with <spotifious>',
 							'alt' => 'Not Available',
 							'cmd' => 'Not Available',
 							'shift' => 'Not Available',
@@ -1145,7 +1145,7 @@ if (mb_strlen($query) < 3 ||
 
 				if ($is_spotifious_active == true) {
 					$w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,$album_uri . " ▹ " . $album . " ►"/* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $album . " with Spotifious", array(
-							'Spotifious workflow must be installed',
+							'Spotifious workflow must be installed and script filter set with <spotifious>',
 							'alt' => 'Not Available',
 							'cmd' => 'Not Available',
 							'shift' => 'Not Available',
@@ -1247,7 +1247,7 @@ if (mb_strlen($query) < 3 ||
 
 					if ($is_spotifious_active == true) {
 						$w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,$playlist[1] /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $playlist[1] . " with Spotifious", array(
-								'Spotifious workflow must be installed',
+								'Spotifious workflow must be installed and script filter set with <spotifious>',
 								'alt' => 'Not Available',
 								'cmd' => 'Not Available',
 								'shift' => 'Not Available',

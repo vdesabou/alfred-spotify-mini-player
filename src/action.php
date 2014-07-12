@@ -261,7 +261,7 @@ if ($playlist_uri != "") {
 				getLyrics($w,$setting[1],$setting[2]);
 			}
 	} else if ($original_query != "") {
-		exec("osascript -e 'tell application \"Alfred 2\" to search \"spot $original_query\"'");
+		exec("osascript -e 'tell application \"Alfred 2\" to search \"spotifious $original_query\"'");
 	} else if ($other_action != "") {
 
 		//
