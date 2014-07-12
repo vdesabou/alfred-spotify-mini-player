@@ -106,17 +106,24 @@ added to ' . $alfred_playlist_name,$track_artwork_path);
 			// case of current song with alt
 			$album_uri = getAlbumUriFromName($w,'black',$album_name,$artist_name);
 
+			if($album_artwork_path == "") {
+				$album_artwork_path = getTrackOrAlbumArtwork($w,'black',$album_uri,true);
+			}
 			if($album_uri == "") {
 				// track is not from library
 				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:playcurrenttrackalbum:" . uniqid() . "\"'");
-				exec("osascript -e 'tell application \"Spotify\" to open location \"$track_uri\"'");
-				displayNotificationWithArtwork('🔈 Album ' . $album_name . ' by ' . ucfirst($artist_name),getTrackOrAlbumArtwork($w,'black',$track_uri,true));
+				exec("osascript -e 'tell application \"Spotify\" to open location \"$album_uri\"'");
+				displayNotificationWithArtwork('🔈 Album ' . $album_name . ' by ' . ucfirst($artist_name),$album_artwork_path);
 				return;
 			}
 
 			$album_artwork_path = getTrackOrAlbumArtwork($w,'black',$album_uri,true);
 		}
 
+		if($album_artwork_path == "") {
+			$album_artwork_path = getTrackOrAlbumArtwork($w,'black',$album_uri,true);
+		}
+			
 		exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:playartistoralbum:$album_uri:" . uniqid() . "\"'");
 		exec("osascript -e 'tell application \"Spotify\" to open location \"$album_uri\"'");
 		displayNotificationWithArtwork('🔈 Album ' . $album_name . ' by ' . ucfirst($artist_name),$album_artwork_path);
@@ -204,16 +211,24 @@ added to ' . $alfred_playlist_name,$playlist_artwork_path);
 		if($artist_uri == "") {
 			// case of current song with cmd
 			$artist_uri = getArtistUriFromName($w,'black',$artist_name);
+			
+			if($artist_artwork_path == "") {
+				$artist_artwork_path = getTrackOrAlbumArtwork($w,'black',$track_uri,true);
+			}
 
 			if($artist_uri == "") {
 				// artist is not from library
 				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:playcurrenttrackartist\"'");
 				exec("osascript -e 'tell application \"Spotify\" to open location \"$track_uri\"'");
-				displayNotificationWithArtwork('🔈 Artist ' . $artist_name,getTrackOrAlbumArtwork($w,'black',$track_uri,true));
+				displayNotificationWithArtwork('🔈 Artist ' . $artist_name,$artist_artwork_path);
 				return;
 			}
 		}
 
+		if($artist_artwork_path == "") {
+			$artist_artwork_path = getTrackOrAlbumArtwork($w,'black',$track_uri,true);
+		}
+			
 		exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:playartistoralbum:$artist_uri:" . uniqid() . "\"'");
 		exec("osascript -e 'tell application \"Spotify\" to open location \"$artist_uri\"'");
 		displayNotificationWithArtwork('🔈 Artist ' . $artist_name,$artist_artwork_path);
