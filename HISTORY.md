@@ -1,5 +1,8 @@
 ## History
 
+4.42:
+
+* Fixed check for updates
 
 4.41:
 
