@@ -357,7 +357,18 @@ if ($playlist_uri != "") {
 					displayNotificationWithArtwork("Error: No internet connection",'./images/warning.png');
 					return;
 				}
-				$check_results = checkForUpdate($w,0);
+				
+				$dbfile = $w->data() . '/settings.db';
+				
+				try {
+					$dbsettings = new PDO("sqlite:$dbfile","","",array(PDO::ATTR_PERSISTENT => true));
+					$dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+				} catch (PDOException $e) {
+					handleDbIssuePdo('new',$dbsettings);
+					$dbsettings=null;
+					return;
+				}
+				$check_results = checkForUpdate($w,0,$dbsettings);
 				if($check_results != null && is_array($check_results)) {
 					displayNotificationWithArtwork('New version ' . $check_results[0] . ' is available in Downloads directory ','./images/' . $theme . '/' . 'check_update.png');
 				}
