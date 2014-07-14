@@ -927,7 +927,7 @@ function doGetTopTrack(artist, num, callback) {
  * @return void
  */
 function getRelatedArtists(objartist,matchedRelatedArtistsCallback) {
-	
+	sleep(10);
 	var array_artists= [];
 	var array_tmp_artists = [];
 		
@@ -1039,7 +1039,7 @@ function getRelatedArtists(objartist,matchedRelatedArtistsCallback) {
           	 { 
           	 	// this happens when it is from a local track
           	 	// artist uri is then spotify:local:Damien+Rice
-          	 	//console.log("Failed to load artists for " + objartist.artist_name  + " " + objartist.artist_uri);
+          	 	console.log("Failed to load artists for " + objartist.artist_name  + " " + objartist.artist_uri);
           	 	// ignore it by setting artist_name to unknown artist
           	 	objartist.artist_name="unknown artist";
           	 	objartist.related=array_artists;
@@ -1315,11 +1315,14 @@ function getAllRelatedArtists(allplaylists,matchedAllRelatedArtistsCallback)
 						for(m=0;m<array_artists.length;m++){
 						    if(array_artists[m].artist_name == matchedRelatedArtists.artist_name){
 						        ++found; // value was found
+						        //appendText("Found " + matchedRelatedArtists.artist_name );
 						        break;
 						    }
 						}
-						if(found==0)
+						if(found==0) {
 							array_artists.push(matchedRelatedArtists);
+							//appendText("Not Found " + matchedRelatedArtists.artist_name );
+						}
 						
 						nb_artists+=1;
 
