@@ -285,10 +285,7 @@ function handleArgs() {
 
 				break;
 			case "playartistoralbum":
-				if(args[3])
-				{
-					playArtistOrAlbum(args);
-				}
+				playArtistOrAlbum(args);
 				break;
 			case "startplaylist":
 				startPlaylist(args);
@@ -551,10 +548,22 @@ function starPlaylist(args) {
  * @param mixed args
  * @return void
  */
-function playArtistOrAlbum(args) {
-	console.log(args[1]+':'+args[2]+':'+args[3]);
+function playArtistOrAlbum(args) {	
+	if(args[2] == 'track')
+	{
+        var uri = args[1]+':'+args[2]+':'+args[3];
+	}
+	else if(args[2] == 'artist')
+	{
+        var uri = args[1]+':'+args[2]+':'+args[3];
+	}
+	else if(args[2] == 'local')
+	{
+		var uri = args[1]+':'+args[2]+':'+args[3]+':'+args[4];
+	}
 	
-	var album = models.Album.fromURI(args[1]+':'+args[2]+':'+args[3]);
+	appendText("playArtistOrAlbum: " + args + " uri " + uri);
+	var album = models.Album.fromURI(uri);
 	models.player.playContext(album);				
 }
 
