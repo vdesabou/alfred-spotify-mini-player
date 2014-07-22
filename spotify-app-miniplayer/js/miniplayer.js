@@ -579,7 +579,8 @@ function playTrackWithPlaylistContext(args) {
 			var trackUri = args[1]+':'+args[2]+':'+args[3]+':'+args[4]+':'+args[5]+':'+args[6];
 		}
 		
-		var playlistName = "Temp playlist for playTrackWithPlaylistContext"; 
+		d = new Date();
+		var playlistName = "Temp playlist for playTrackWithPlaylistContext " + d.toLocaleTimeString(); 
 	 
 		models.Playlist.createTemporary(playlistName).done(function(playlist) {
 			playlist.load("tracks").done(function(playlist) {
@@ -596,29 +597,26 @@ function playTrackWithPlaylistContext(args) {
 
 				 			var tracksNew = [];
 							for (var i = 0; i < tracks.length; i++) {
-								
-									
-									if(tracks[i].uri != args[1]+':'+args[2]+':'+args[3])
-									{
-										tracksNew.push(tracks[i]);
-									}
-									else
-									{
-										console.log("playTrackWithPlaylistContext: track has been skipped " + args[1]+':'+args[2]+':'+args[3]);
-									}
+		
+								if(tracks[i].uri != trackUri)
+								{
+									tracksNew.push(tracks[i]);
 								}
+								else
+								{
+									appendText("playTrackWithPlaylistContext: track has been skipped " + args[1]+':'+args[2]+':'+args[3]);
+								}
+							}
 													 			
 				 			playlist.tracks.add(models.Track.fromURI(trackUri));
 							playlist.tracks.add(tracksNew).done(function(addedTracks) {
 								playlist.tracks.snapshot().done(function(snapshot) {
 
-	
-			/*
-					for (var i = 0; i < snapshot.length; i++) {
-										console.log("#" + i + " In array: " + tracks[i] + " -  In Playlist: " + snapshot.get(i).uri);
+									for (var i = 0; i < snapshot.length; i++) {
+										appendText("#" + i + " track: " + snapshot.get(i).name);
 									}
-*/
 
+									appendText("playTrackWithPlaylistContext: track " + trackUri + " playlist " + playlist);
 									models.player.playContext(playlist);
 								});
 							});
@@ -709,7 +707,6 @@ function unstarCurrentTrack() {
 	
 		models.Track.fromURI(track.uri).unstar();
 		
-
     	t.name = track.name;
     	t.uri = track.uri; 
     	appendText("unstarCurrentTrack: " + track.name);       	
@@ -728,6 +725,7 @@ function playCurrentTrackAlbum() {
 	var track = models.player.track;
 	if (track != null) {
 		var album = track.album;
+        appendText("playCurrentTrackAlbum: " + album);
 		models.player.playContext(album);
 	} 
 }
@@ -744,9 +742,7 @@ function playCurrentTrackArtist() {
 		var artists = track.artists;
 		
         if(artists.length > 0) {
-        	console.log(artists);
-			var album = models.Album.fromURI(artists[0].uri);
-			console.log(album);
+        	appendText("playCurrentTrackArtist: " + artists[0]);
 			models.player.playContext(artists[0]);
         }
      
@@ -1070,6 +1066,9 @@ function getExternalPlaylistUri(uri,username) {
 	}
 }
 
+
+  
+  
 /**
  * getPlaylistTracks function.
  * 
@@ -1421,6 +1420,66 @@ function appendText(myVar) {
 	myTextArea.innerHTML += '\n';	
 }
 
+  function getAlbumsForArtist(artist_uri) {
+    models.Artist
+      .fromURI(artist_uri)
+      .load('albums','name')
+      .done(function (artist) {
+        artist.albums.snapshot().done(function (snapshot) {
+          snapshot.loadAll().done(function (albums) {
+
+
+            var promises = [];
+            for (var i = 0; i < albums.length; i++) {
+            
+              var albumGroup = albums[i];
+              var albums2 = albumGroup.albums;
+
+	            for (var j = 0; j < albums2.length; j++) {
+	            	              
+	            	appendText("here " + albums2[j].uri);
+	              var promise = getAlbumPromise(albums2[j].uri);
+	              promises.push(promise);
+	            }              
+
+            }
+
+            models.Promise.join(promises)
+              .done(function (albums) {
+               // appendText('Loaded all albums' + albums);
+              })
+              .fail(function (albums) {
+                appendText('getAlbumsForArtist ' + artist.name + ' Failed to load at least one albums ', albums);
+              })
+              .always(function (albums) {
+              	console.log('Always.', albums);
+              	appendText('getAlbumsForArtist ' + artist.name + ' albums ' + albums);
+			  	return albums;
+              });
+          });
+        });
+      });
+  }
+
+  function getAlbumPromise(album_uri) {
+  
+  	appendText("getAlbumPromise: " + album_uri);
+    var promise = new models.Promise();
+
+	models.Album.fromURI(album_uri).load('name','uri').done(function(album) {
+			// This callback is fired when the album has loaded.
+			// The album object has a tracks property, which is a standard array.
+			promise.setDone(album)
+		}).fail(function(f) 
+          	 { 
+          	 	promise.setFail(f);
+			 });	
+			 
+		return promise;	 
+			
+  }
+  
+  
 $(function(){
 		
 	$("#commands a").click(function(e){
@@ -1428,13 +1487,17 @@ $(function(){
 			case "simulate_update_library":
 			
 			appendText("Simulate update library");
-  			
+ 
+			var albums = getAlbumsForArtist('spotify:artist:2VAvhf61GgLYmC6C8anyX1');
+			appendText("result " + albums); 			
+/*
 			getAll(function(matchedAll) {
 				appendText("Success!!");
 
 				//$("#debug_area").text(JSON.stringify(matchedAll));
 			
 			});	
+*/
 		
 			$("textarea").on("click", function() {
 				$(this).select();
