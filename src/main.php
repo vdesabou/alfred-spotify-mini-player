@@ -596,6 +596,9 @@ if (mb_strlen($query) < 3 ||
 			handleDbIssuePdo($theme,$db);
 			return;
 		}
+		
+
+		
 
 		$noresult=true;
 		while ($track = $stmt->fetch()) {
@@ -612,9 +615,37 @@ if (mb_strlen($query) < 3 ||
 			$subtitle = $subtitle . $track[6];
 
 			if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " ● " . $track[5]) == false) {
+			
+			
+				$getPlaylistsForTrack = "select playlist_name from tracks where uri=:uri";
+				try {
+					$stmt2 = $db->prepare($getPlaylistsForTrack);
+					$stmt2->bindValue(':uri', '' . $track[2] . '');
+		
+					$stmt2->execute();
+					
+					$playlistsfortrack = "";
+					
+					$noresult2=true;
+					while ($playlist = $stmt2->fetch()) {
+						if($noresult2==true) {
+							$playlistsfortrack = $playlistsfortrack . " ● In playlists: " . $playlist[0];
+						} else {
+							$playlistsfortrack =  $playlistsfortrack . " ○ " . $playlist[0];
+						}
+						$noresult2=false;
+					}
+					
+		
+				} catch (PDOException $e) {
+					handleDbIssuePdo($theme,$db);
+					return;
+				}
+		
+		
 				$w->result(null, serialize(array($track[2] /*track_uri*/ ,$track[3] /* album_uri */ ,$track[4] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,$track[7]  /* artist_name */, $track[5] /* track_name */, $track[6] /* album_name */, $track[9] /* track_artwork_path */, $track[10] /* artist_artwork_path */, $track[11] /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), ucfirst($track[7]) . " ● " . $track[5],
 					array(
-						$subtitle,
+						$subtitle . $playlistsfortrack,
 						'alt' => 'Play album ' . $track[6] . ' in Spotify',
 						'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
 						'fn' => 'Add track ' . $track[5] . ' to ' . $alfred_playlist_name,
@@ -1010,9 +1041,35 @@ if (mb_strlen($query) < 3 ||
 				$subtitle = $subtitle . $track[6];
 
 				if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " ● " . $track[5]) == false) {
+				
+					$getPlaylistsForTrack = "select playlist_name from tracks where uri=:uri";
+					try {
+						$stmt2 = $db->prepare($getPlaylistsForTrack);
+						$stmt2->bindValue(':uri', '' . $track[2] . '');
+			
+						$stmt2->execute();
+						
+						$playlistsfortrack = "";
+						
+						$noresult2=true;
+						while ($playlist = $stmt2->fetch()) {
+							if($noresult2==true) {
+								$playlistsfortrack = $playlistsfortrack . " ● In playlists: " . $playlist[0];
+							} else {
+								$playlistsfortrack =  $playlistsfortrack . " ○ " . $playlist[0];
+							}
+							$noresult2=false;
+						}
+						
+			
+					} catch (PDOException $e) {
+						handleDbIssuePdo($theme,$db);
+						return;
+					}
+				
 					$w->result(null, serialize(array($track[2] /*track_uri*/ ,$track[3] /* album_uri */ ,$track[4] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,$track[7]  /* artist_name */, $track[5] /* track_name */, $track[6] /* album_name */, $track[9] /* track_artwork_path */, $track[10] /* artist_artwork_path */, $track[11] /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), ucfirst($track[7]) . " ● " . $track[5],
 						array(
-							$subtitle,
+							$subtitle . $playlistsfortrack,
 							'alt' => 'Play album ' . $track[6] . ' in Spotify',
 							'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
 							'fn' => 'Add track ' . $track[5] . ' to ' . $alfred_playlist_name,
@@ -1098,9 +1155,35 @@ if (mb_strlen($query) < 3 ||
 				$subtitle = $subtitle . $track[6];
 
 				if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " ● " . $track[5]) == false) {
+				
+					$getPlaylistsForTrack = "select playlist_name from tracks where uri=:uri";
+					try {
+						$stmt2 = $db->prepare($getPlaylistsForTrack);
+						$stmt2->bindValue(':uri', '' . $track[2] . '');
+			
+						$stmt2->execute();
+						
+						$playlistsfortrack = "";
+						
+						$noresult2=true;
+						while ($playlist = $stmt2->fetch()) {
+							if($noresult2==true) {
+								$playlistsfortrack = $playlistsfortrack . " ● In playlists: " . $playlist[0];
+							} else {
+								$playlistsfortrack =  $playlistsfortrack . " ○ " . $playlist[0];
+							}
+							$noresult2=false;
+						}
+						
+			
+					} catch (PDOException $e) {
+						handleDbIssuePdo($theme,$db);
+						return;
+					}
+					
 					$w->result(null, serialize(array($track[2] /*track_uri*/ ,$track[3] /* album_uri */ ,$track[4] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,$track[7]  /* artist_name */, $track[5] /* track_name */, $track[6] /* album_name */, $track[9] /* track_artwork_path */, $track[10] /* artist_artwork_path */, $track[11] /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), ucfirst($track[7]) . " ● " . $track[5],
 						array(
-							$subtitle,
+							$subtitle . $playlistsfortrack,
 							'alt' => 'Play album ' . $track[6] . ' in Spotify',
 							'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
 							'fn' => 'Add track ' . $track[5] . ' to ' . $alfred_playlist_name,
@@ -1206,9 +1289,35 @@ if (mb_strlen($query) < 3 ||
 						$subtitle = $subtitle . $track[6];
 
 						if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " ● " . $track[5]) == false) {
+						
+							$getPlaylistsForTrack = "select playlist_name from tracks where uri=:uri";
+							try {
+								$stmt2 = $db->prepare($getPlaylistsForTrack);
+								$stmt2->bindValue(':uri', '' . $track[2] . '');
+					
+								$stmt2->execute();
+								
+								$playlistsfortrack = "";
+								
+								$noresult2=true;
+								while ($playlist = $stmt2->fetch()) {
+									if($noresult2==true) {
+										$playlistsfortrack = $playlistsfortrack . " ● In playlists: " . $playlist[0];
+									} else {
+										$playlistsfortrack =  $playlistsfortrack . " ○ " . $playlist[0];
+									}
+									$noresult2=false;
+								}
+								
+					
+							} catch (PDOException $e) {
+								handleDbIssuePdo($theme,$db);
+								return;
+							}
+				
 							$w->result(null, serialize(array($track[2] /*track_uri*/ ,$track[3] /* album_uri */ ,$track[4] /* artist_uri */ ,$theplaylisturi /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,$track[7]  /* artist_name */, $track[5] /* track_name */, $track[6] /* album_name */, $track[9] /* track_artwork_path */, $track[10] /* artist_artwork_path */, $track[11] /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), ucfirst($track[7]) . " ● " . $track[5],
 								array(
-									$subtitle,
+									$subtitle . $playlistsfortrack,
 									'alt' => 'Play album ' . $track[6] . ' in Spotify',
 									'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
 									'fn' => 'Add track ' . $track[5] . ' to ' . $alfred_playlist_name,
