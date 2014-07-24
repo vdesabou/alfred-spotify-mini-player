@@ -1,5 +1,6 @@
 output.log
 *.log
+*copy*.*
 
 packal/package.xml
 packal/com.vdesabou.spotify.mini.player.pub
