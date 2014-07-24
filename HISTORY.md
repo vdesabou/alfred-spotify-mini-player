@@ -1,5 +1,12 @@
 ## History
 
+4.4.3:
+
+* Get related artists is more reliable
+
+* Display in playlist for every track
+
+
 4.4.2:
 
 * Fixed check for updates
