@@ -146,7 +146,6 @@ $country_code = $setting[8];
 $theme = $setting[9];
 $last_check_update_time = $setting[10];
 
-
 //
 // Install spotify-app-miniplayer app if needed
 // very first time use
@@ -551,7 +550,6 @@ if (mb_strlen($query) < 3 ||
 			$w->result(null, '', "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
 		}
 
-
 		//
 		// Search artists
 		//
@@ -578,7 +576,6 @@ if (mb_strlen($query) < 3 ||
 				$w->result(null, '', "👤 " . ucfirst($track[7]), "Browse this artist", $track[10], 'no', null, "Artist▹" . $track[7] . "▹");
 			}
 		}
-
 
 		//
 		// Search everything
@@ -632,7 +629,6 @@ if (mb_strlen($query) < 3 ||
 			$w->result(null, 'help', "There is no result for your search", "", './images/warning.png', 'no', null, '');
 		}
 
-
 		$w->result(null, serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'activate (open location "spotify:search:' . $query . '")' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $query . " in Spotify", array(
 				'This will start a new search in Spotify',
 				'alt' => 'Not Available',
@@ -684,7 +680,6 @@ if (mb_strlen($query) < 3 ||
 				return;
 			}
 
-
 			$noresult=true;
 			while ($playlist = $stmt->fetch()) {
 
@@ -697,7 +692,6 @@ if (mb_strlen($query) < 3 ||
 			if($noresult) {
 				$w->result(null, 'help', "There is no result for your search", "", './images/warning.png', 'no', null, '');
 			}
-
 
 		} // search by Playlist end
 		elseif ($kind == "Alfred Playlist") {
@@ -756,7 +750,6 @@ if (mb_strlen($query) < 3 ||
 			$noresult=true;
 			while ($track = $stmt->fetch()) {
 
-
 				$noresult=false;
 
 				if (checkIfResultAlreadyThere($w->results(), "👤 " . ucfirst($track[0])) == false) {
@@ -803,7 +796,6 @@ if (mb_strlen($query) < 3 ||
 			// display all albums
 			$noresult=true;
 			while ($track = $stmt->fetch()) {
-
 
 				$noresult=false;
 
@@ -976,8 +968,6 @@ if (mb_strlen($query) < 3 ||
 						}
 					}
 
-
-
 					if ($all_playlists == false) {
 						$getTracks = "select * from tracks where playable=1 and starred=1 and artist_name=:artist limit " . $max_results;
 					} else {
@@ -997,7 +987,6 @@ if (mb_strlen($query) < 3 ||
 					$stmt->bindValue(':artist', $artist);
 					$stmt->bindValue(':track', '%' . $track . '%');
 				}
-
 
 				$tracks = $stmt->execute();
 
@@ -1087,7 +1076,6 @@ if (mb_strlen($query) < 3 ||
 					$stmt->bindValue(':track', '%' . $track . '%');
 				}
 
-
 				$tracks = $stmt->execute();
 
 			} catch (PDOException $e) {
@@ -1169,7 +1157,6 @@ if (mb_strlen($query) < 3 ||
 
 				$playlists = $stmt->execute();
 
-
 				while ($playlist = $stmt->fetch()) {
 					if (mb_strlen($thetrack) < 3) {
 
@@ -1203,7 +1190,6 @@ if (mb_strlen($query) < 3 ||
 					}
 
 					$tracks = $stmt->execute();
-
 
 					$noresult=true;
 					while ($track = $stmt->fetch()) {
@@ -1295,7 +1281,6 @@ if (mb_strlen($query) < 3 ||
 			if ($setting_kind == "Set Alfred Playlist") {
 				$w->result(null, '', "Set your Alfred playlist", "Select one of your playlists below as your Alfred playlist", './images/' . $theme . '/' . 'settings.png', 'no', null, '');
 
-
 				try {
 					if (mb_strlen($theplaylist) < 3) {
 						$getPlaylists = "select * from playlists where ownedbyuser=1";
@@ -1344,7 +1329,6 @@ if (mb_strlen($query) < 3 ||
 
 		$artist_name = $words[1];
 		$kind = $words[2];
-
 
 		if ($kind == "Related") {
 
