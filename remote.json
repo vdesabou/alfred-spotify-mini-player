@@ -1,5 +1,5 @@
 {
-    "version": 4.42,
+    "version": 4.43,
     "download_url": "https://raw.githubusercontent.com/packal/repository/master/com.vdesabou.spotify.mini.player/spotifyminiplayer.alfredworkflow",
-    "description": "Fixed check for updates"
+    "description": "Get related artists is more reliable - Display in playlist for every track"
 }
