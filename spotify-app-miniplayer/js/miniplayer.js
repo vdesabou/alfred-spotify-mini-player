@@ -344,12 +344,8 @@ function starTrackOrAlbum(args) {
 function clearPlaylist(args) {
 	// Get the playlist object from a URI
 	models.Playlist.fromURI(args[1]+':'+args[2]+':'+args[3]+':'+args[4]+':'+args[5]).load('tracks').done(function(playlist) {
-
-			
+		appendText("clearPlaylist: " + args);
 	    playlist.tracks.clear();
-			
-		// Verify the song was added to the playlist
-		//console.log(playlist);	
 	});	
 }
 
@@ -647,7 +643,8 @@ function playTrackWithPlaylistContext(args) {
  */
 function startPlaylist(args) {	
 
-		var playlistName = "Temp playlist for startPlaylist"; 
+		d = new Date();
+		var playlistName = "Temp playlist for startPlaylist " + d.toLocaleTimeString(); 
 	 
 		models.Playlist.createTemporary(playlistName).done(function(playlist) {
 			playlist.load("tracks").done(function(playlist) {
@@ -670,6 +667,7 @@ function startPlaylist(args) {
 										console.log("#" + i + " In array: " + tracks[i] + " -  In Playlist: " + snapshot.get(i).uri);
 									}
 */
+									appendText("startPlaylist: " + args);
 									models.player.playContext(playlist);
 								});
 							});
@@ -700,6 +698,9 @@ function starCurrentTrack() {
     	appendText("starCurrentTrack: " + track.name);       	
 		return t;
 	}
+	else {
+		appendText("starCurrentTrack: Error cannot get current track " + models.player.track);
+	}
 	return t;
 }
 
@@ -721,6 +722,9 @@ function unstarCurrentTrack() {
     	appendText("unstarCurrentTrack: " + track.name);       	
 		return t;
 	}
+	else {
+		appendText("unstarCurrentTrack: Error cannot get current track " + models.player.track);
+	}
 	return t;
 }
 
@@ -736,6 +740,9 @@ function playCurrentTrackAlbum() {
 		var album = track.album;
         appendText("playCurrentTrackAlbum: " + album);
 		models.player.playContext(album);
+	} 
+	else {
+		appendText("playCurrentTrackAlbum: Error cannot get current track " + models.player.track);
 	} 
 }
 
@@ -754,7 +761,9 @@ function playCurrentTrackArtist() {
         	appendText("playCurrentTrackArtist: " + artists[0]);
 			models.player.playContext(artists[0]);
         }
-     
+	}
+	else {
+		appendText("playCurrentTrackArtist: Error cannot get current track " + models.player.track);
 	} 
 }
 
@@ -779,6 +788,9 @@ function getCurrentTrackArtist() {
         }
      
 	}
+	else {
+		appendText("getCurrentTrackArtist: Error cannot get current track " + models.player.track);
+	}	
 	return a;
 }
 
@@ -846,7 +858,7 @@ function randomTrack() {
 
 	// Grab a random track from your library (cause it's more fun)
     Library.forCurrentUser().tracks.snapshot().done(function(snapshot){
-    
+    	appendText("randomTrack called");
     	models.player.playTrack(snapshot.get(Math.floor(Math.random()*snapshot.length)));
 
     });
@@ -903,157 +915,6 @@ function getAlbum(objtrack,matchedAlbumCallback) {
 		  	 	matchedAlbumCallback(objtrack);
 		  	 	return;
 			 });	
-}
-/*
-
-function doGetTopTrack(artist, num, callback) {
-    var artistTopList = Toplist.forArtist(artist);
-
-    artistTopList.tracks.snapshot(0,num).done(function (snapshot) { //only get the number of tracks we need
-
-        snapshot.loadAll('name').done(function (tracks) {
-            var i, num_toptracks;
-            num_toptracks = num; //this probably should be minimum of num and tracks.length
-
-            for (i = 0; i < num_toptracks; i++) {
-                callback(artist, tracks[i]);
-            }
-        });
-    });
-};
-*/
-
-/**
- * getRelatedArtists function.
- * 
- * @access public
- * @param mixed objartist
- * @param mixed matchedRelatedArtistsCallback
- * @return void
- */
-function getRelatedArtists(objartist,matchedRelatedArtistsCallback) {
-	sleep(10);
-	var array_artists= [];
-	var array_tmp_artists = [];
-		
-    models.Artist.fromURI(objartist.artist_uri).load('name', 'related', 'uri', 'biography', 'popularity', 'years').done(function (theartist) {
-		
-          theartist.related.snapshot().done(function(snapshot) {
-          
-			if(snapshot.length == 0)
-			{
-				objartist.related=array_artists;
-				if(theartist.biography != null) {
-					objartist.biography=theartist.biography.decodeForText();
-				}
-				else {
-					objartist.biography="";
-				}
-				objartist.popularity=theartist.popularity;
-				objartist.years=theartist.years;
-				matchedRelatedArtistsCallback(objartist);
-				return;
-			}
-			
-            snapshot.loadAll('name').each(function(artist) {
-		    	// workaround for http://stackoverflow.com/questions/20440664/incorrect-snapshot-length-returned-for-a-specific-playlist
-		    	// use tmp array to get the real snapshot length
-				array_tmp_artists.push(artist);
-            });
-
-			if(array_tmp_artists.length == 0)
-			{	
-				objartist.related=array_artists;
-				if(theartist.biography != null) {
-					objartist.biography=theartist.biography.decodeForText();
-				}
-				else {
-					objartist.biography="";
-				}
-				objartist.popularity=theartist.popularity;
-				objartist.years=theartist.years;
-				matchedRelatedArtistsCallback(objartist);
-				return;
-			}
-					              		    	
-              for (var i = 0; i < array_tmp_artists.length; i++) {
-
-				var a = array_tmp_artists[i];
-	
-				if(a != null) 
-				{
-					objrelatedartist={};
-					objrelatedartist.name=a.name;
-					objrelatedartist.uri=a.uri;
-					array_artists.push(objrelatedartist);
-					
-					if(array_tmp_artists.length == array_artists.length)
-					{	
-						objartist.related=array_artists;
-						if(theartist.biography != null) {
-							objartist.biography=theartist.biography.decodeForText();
-						}
-						else {
-							objartist.biography="";
-						}
-						objartist.popularity=theartist.popularity;
-						objartist.years=theartist.years;
-						matchedRelatedArtistsCallback(objartist);
-						return;
-					}
-												
-/*
-					doGetTopTrack(a, 1, function (artist, toptrack) {
-					      
-							objartist={};
-							objartist.name=artist.name;
-							objartist.uri=artist.uri;
-							objartist.toptrack=toptrack.name;
-							array_artists.push(objartist);
-							
-							if(array_tmp_artists.length == array_artists.length)
-							{
-			
-								matchedRelatedArtistsCallback(array_artists);
-							}
-					
-					});	
-*/		
-				
-				}
-
-              }
-
-
-          }).fail(function() 
-          	 { 
-          	 	appendText("Failed to get related artists for " + objartist.artist_name);
-          	 	objartist.related=array_artists;
-				if(theartist.biography != null) {
-					objartist.biography=theartist.biography.decodeForText();
-				}
-				else {
-					objartist.biography="";
-				}
-				objartist.popularity=theartist.popularity;
-				objartist.years=theartist.years; 
-		  	 	matchedRelatedArtistsCallback(objartist);
-		  	 	return;
-			 });
-      }).fail(function() 
-          	 { 
-          	 	// this happens when it is from a local track
-          	 	// artist uri is then spotify:local:Damien+Rice
-          	 	console.log("Failed to load artists for " + objartist.artist_name  + " " + objartist.artist_uri);
-          	 	// ignore it by setting artist_name to unknown artist
-          	 	objartist.artist_name="unknown artist";
-          	 	objartist.related=array_artists;
-				objartist.biography="";
-				objartist.popularity=0;
-				//objartist.years=theartist.years;
-		  	 	matchedRelatedArtistsCallback(objartist);
-		  	 	return;
-			 });
 }
 
 /**
@@ -1170,8 +1031,11 @@ function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {
 					objartist={};
 					objartist.artist_name=t.artists[0].name;
 					objartist.artist_uri=t.artists[0].uri;
-					array_artists.push(objartist);
 					
+					if(!checkIfArtistAlreadyThere(array_artists,objartist)) {
+						array_artists.push(objartist);
+					}
+										
 					getAlbum(objtrack,function(matchedAlbum) {
 
 								array_tracks.push(matchedAlbum);
@@ -1186,6 +1050,8 @@ function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {
 									p.owner=owner.name;
 									p.username=owner.username;
 									p.tracks=array_tracks;
+									
+									
 									p.artists=array_artists;
 									matchedPlaylistTracksCallback(p);
 								}					
@@ -1244,6 +1110,25 @@ function getPlaylistTracks(uri,matchedPlaylistTracksCallback) {
 
 
 /**
+ * checkIfArtistAlreadyThere function.
+ * 
+ * @access public
+ * @param mixed array_artists
+ * @param mixed objartist
+ * @return void
+ */
+function checkIfArtistAlreadyThere(array_artists,objartist) {
+	
+	for (var i = 0, l = array_artists.length; i < l; i++) {
+		var a = array_artists[i];
+		if(a.artist_name == objartist.artist_name) {
+			return true;
+		}	
+	}
+	
+	return false;
+}
+/**
  * getPlaylists function.
  * 
  * @access public
@@ -1289,6 +1174,153 @@ function getPlaylists(matchedPlaylistsCallback) {
 		
 }
 
+/**
+ * getRelatedArtistsPromise function.
+ * 
+ * @access public
+ * @param mixed track
+ * @return void
+ */
+function getRelatedArtistsPromise(artist_name,artist_uri) {
+	var array_artists= [];
+	var array_tmp_artists = [];
+	
+	var promise = new models.Promise();
+
+	objartist={};
+	objartist.artist_name=artist_name;
+	objartist.artist_uri=artist_uri;
+
+		
+	var uri = objartist.artist_uri;
+	var words = uri.split(":");
+	if(words[1] == 'local') {
+  	 	// this happens when it is from a local track
+  	 	appendText("Local artist " + objartist.artist_name  + " " + objartist.artist_uri);
+  	 	objartist.related=array_artists;
+		objartist.biography="";
+		objartist.popularity=0;
+		var array_years= [];
+		objartist.years=array_years;
+		promise.setDone(objartist);
+  	 	return promise;		
+	}
+
+	
+    models.Artist.fromURI(objartist.artist_uri).load('name', 'related', 'uri', 'biography', 'popularity', 'years', 'albums').done(function (theartist) {
+		
+			objartist={};
+			objartist.artist_name=theartist.name;
+			objartist.artist_uri=theartist.uri;
+			
+
+          theartist.related.snapshot().done(function(snapshot) {
+          
+			if(snapshot.length == 0)
+			{
+				objartist.related=array_artists;
+				if(theartist.biography != null) {
+					objartist.biography=theartist.biography.decodeForText();
+				}
+				else {
+					objartist.biography="";
+				}
+				objartist.popularity=theartist.popularity;
+				objartist.years=theartist.years;
+				promise.setDone(objartist);
+				return promise;
+			}
+			
+            snapshot.loadAll('name').each(function(artist) {
+		    	// workaround for http://stackoverflow.com/questions/20440664/incorrect-snapshot-length-returned-for-a-specific-playlist
+		    	// use tmp array to get the real snapshot length
+				array_tmp_artists.push(artist);
+            });
+
+			objartist={};
+			objartist.artist_name=theartist.name;
+			objartist.artist_uri=theartist.uri;
+
+
+			if(array_tmp_artists.length == 0)
+			{	
+				objartist.related=array_artists;
+				if(theartist.biography != null) {
+					objartist.biography=theartist.biography.decodeForText();
+				}
+				else {
+					objartist.biography="";
+				}
+				objartist.popularity=theartist.popularity;
+				objartist.years=theartist.years;
+				promise.setDone(objartist);
+				return promise;
+			}
+					              		    	
+              for (var i = 0; i < array_tmp_artists.length; i++) {
+
+				var a = array_tmp_artists[i];
+	
+				if(a != null) 
+				{
+					objrelatedartist={};
+					objrelatedartist.name=a.name;
+					objrelatedartist.uri=a.uri;
+					array_artists.push(objrelatedartist);
+					
+					if(array_tmp_artists.length == array_artists.length)
+					{	
+						objartist.related=array_artists;
+						if(theartist.biography != null) {
+							objartist.biography=theartist.biography.decodeForText();
+						}
+						else {
+							objartist.biography="";
+						}
+						objartist.popularity=theartist.popularity;
+						objartist.years=theartist.years;
+						
+						promise.setDone(objartist);
+						return promise;						
+					}		
+				
+				}
+
+              }
+
+
+          }).fail(function() 
+          	 { 
+          	 	appendText("Failed to get related artists for " + objartist.artist_name);
+          	 	objartist.related=array_artists;
+				if(theartist.biography != null) {
+					objartist.biography=theartist.biography.decodeForText();
+				}
+				else {
+					objartist.biography="";
+				}
+				objartist.popularity=theartist.popularity;
+				objartist.years=theartist.years; 
+				promise.setDone(objartist);
+		  	 	return promise;
+			 });
+      }).fail(function() 
+          	 { 
+          	 	// this happens when it is from a local track
+          	 	// artist uri is then spotify:local:Damien+Rice
+          	 	appendText("Failed to load artists for " + objartist.artist_name  + " " + objartist.artist_uri);
+          	 	objartist.related=array_artists;
+				objartist.biography="";
+				objartist.popularity=0;
+				var array_years= [];
+				objartist.years=array_years;
+				promise.setDone(objartist);
+		  	 	return promise;
+			 });
+			 
+	return promise;
+}
+
 
 /**
  * getAllRelatedArtists function.
@@ -1301,8 +1333,9 @@ function getPlaylists(matchedPlaylistsCallback) {
 function getAllRelatedArtists(allplaylists,matchedAllRelatedArtistsCallback)
 {
 	var array_artists= [];
-	var nb_artists_total=0;
 	var nb_artists= 0;
+	var promises = [];
+
 	
 	for (var i = 0, l = allplaylists.length; i < l; i++) 
 	{
@@ -1310,38 +1343,37 @@ function getAllRelatedArtists(allplaylists,matchedAllRelatedArtistsCallback)
 		
 		for (var j = 0, k = playlist.artists.length; j < k; j++) 
 		{
-			nb_artists_total+=1;
 			var a = playlist.artists[j];
-			
-			objartist={};
-			objartist.artist_name=a.artist_name;
-			objartist.artist_uri=a.artist_uri;
-	
-			getRelatedArtists(objartist,function(matchedRelatedArtists) {
-	
-						var found = 0;
-						for(m=0;m<array_artists.length;m++){
-						    if(array_artists[m].artist_name == matchedRelatedArtists.artist_name){
-						        ++found; // value was found
-						        //appendText("Found " + matchedRelatedArtists.artist_name );
-						        break;
-						    }
-						}
-						if(found==0) {
-							array_artists.push(matchedRelatedArtists);
-							//appendText("Not Found " + matchedRelatedArtists.artist_name );
-						}
-						
-						nb_artists+=1;
-
-						if(nb_artists == nb_artists_total)
-						{
-							matchedAllRelatedArtistsCallback(array_artists);
-						}					
-				});		
+			if(!checkIfArtistAlreadyThere(array_artists,a)) {
+				array_artists.push(a);
+			}		
 		
-		}
+		}			
 
+	}
+
+	for (var i = 0, l = array_artists.length; i < l; i++) 
+	{
+		var a = array_artists[i];
+		var promise_artist = getRelatedArtistsPromise(a.artist_name,a.artist_uri);
+		promises.push(promise_artist);								
+					
+        models.Promise.join(promises)
+          .done(function (artists) {
+
+          })
+          .fail(function (artists) {
+            console.log('getRelatedArtistsPromise Failed to load at least one artist ', artists);
+          })
+          .always(function (artists) {
+			
+			if(array_artists.length == artists.length)
+			{
+				console.log("All artists have been retrieved",artists);
+				matchedAllRelatedArtistsCallback(artists);								
+			}
+
+          });	
 	}
 
 
@@ -1496,17 +1528,13 @@ $(function(){
 			case "simulate_update_library":
 			
 			appendText("Simulate update library");
- 
-			var albums = getAlbumsForArtist('spotify:artist:2VAvhf61GgLYmC6C8anyX1');
-			appendText("result " + albums); 			
-/*
+ 			
 			getAll(function(matchedAll) {
 				appendText("Success!!");
 
 				//$("#debug_area").text(JSON.stringify(matchedAll));
 			
 			});	
-*/
 		
 			$("textarea").on("click", function() {
 				$(this).select();
