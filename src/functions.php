@@ -248,7 +248,6 @@ function getTrackOrAlbumArtwork($w,$theme, $spotifyURL, $fetchIfNotPresent)
 	}
 }
 
-
 /**
  * getPlaylistArtwork function.
  *
@@ -274,12 +273,10 @@ function getPlaylistArtwork($w, $theme, $playlistURI, $fetchIfNotPresent)
 
 	// need to translate to http://open.spotify.com/user/xxxxusernamexxx/playlist/6orFdd91Cb0fwB2kyUFCKX
 
-
 	// spotify:user:@:starred
 	// spotify:user:117875373:starred
 
 	// need to translate to http://open.spotify.com/user/xxxxusernamexxx/starred
-
 
 	if (count($hrefs) == 5) {
 
@@ -290,7 +287,6 @@ function getPlaylistArtwork($w, $theme, $playlistURI, $fetchIfNotPresent)
 		$filename = "" . $hrefs[2] . "_" . $hrefs[3];
 		$url = "http://open.spotify.com/user/" . $hrefs[2] . "/" . $hrefs[3];
 	}
-
 
 	$currentArtwork = $w->data() . "/artwork/" . hash('md5', $filename . ".png") . "/" . "$filename.png";
 
@@ -439,7 +435,6 @@ function getArtistArtworkURL($w, $artist)
 	return $json[artist][image][1]['#text'];
 }
 
-
 /**
  * updateLibrary function.
  *
@@ -465,7 +460,6 @@ function updateLibrary($jsonData)
 		unlink($w->data() . "/update_library_in_progress");
 		return;
 	}
-
 
 	foreach ($settings as $setting):
 
@@ -531,7 +525,6 @@ function updateLibrary($jsonData)
 		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "CREATE INDEX IndexAlbumName ON tracks (album_name)"';
 		exec($sql);
 
-
 		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table counters (all_tracks int, starred_tracks int, all_artists int, starred_artists int, all_albums int, starred_albums int, playlists int)"';
 		exec($sql);
 
@@ -546,7 +539,6 @@ function updateLibrary($jsonData)
 
 		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "CREATE INDEX indexArtistName ON artists (artist_name)"';
 		exec($sql);
-
 
 		// Handle user
 		$user = $json['user'];
@@ -578,7 +570,6 @@ function updateLibrary($jsonData)
 				$w->write('Related Artists▹' . $nb_artists . '▹' . count($artists) . '▹' . $words[3], 'update_library_in_progress');
 			}
 		}
-
 
 		// Handle playlists
 		$w->write('Library▹0▹' . $nb_tracktotal . '▹' . $words[3], 'update_library_in_progress');
@@ -709,7 +700,6 @@ function updatePlaylist($jsonData)
 		return;
 	}
 
-
 	foreach ($settings as $setting):
 
 		$setting = explode("	", $setting);
@@ -748,7 +738,6 @@ function updatePlaylist($jsonData)
 		foreach ($json as $playlist) {
 			$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "update playlists set nb_tracks=' . count($playlist['tracks']) . ' where uri=\"' . $playlist['uri'] . '\""';
 			exec($sql);
-
 
 			foreach ($playlist['tracks'] as $track) {
 
@@ -865,7 +854,6 @@ function updatePlaylistList($jsonData)
 		unlink($w->data() . "/update_library_in_progress");
 		return;
 	}
-
 
 	foreach ($settings as $setting):
 
@@ -1048,7 +1036,6 @@ function handleDbIssue($theme) {
 	echo $w->toxml();
 }
 
-
 /**
  * handleDbIssuePdo function.
  *
@@ -1135,7 +1122,6 @@ function getAlbumUriFromName($w,$theme,$album,$artist) {
 	return "";
 }
 
-
 /**
  * Mulit-byte Unserialize
  *
@@ -1152,7 +1138,6 @@ function mb_unserialize($string) {
 }
 
 /*
-
 
 This function was mostly taken from SpotCommander.
 
