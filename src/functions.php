@@ -79,6 +79,44 @@ function getFreeTcpPort()
 
 	return 17693;
 }
+				
+
+/**
+ * getPlaylistsForTrack function.
+ * 
+ * @access public
+ * @param mixed $db
+ * @param mixed $theme
+ * @param mixed $track_uri
+ * @return void
+ */
+function getPlaylistsForTrack($db,$theme,$track_uri) {
+
+	$playlistsfortrack = "";
+	$getPlaylistsForTrack = "select playlist_name from tracks where uri=:uri";
+	try {
+		$stmt = $db->prepare($getPlaylistsForTrack);
+		$stmt->bindValue(':uri', '' . $track_uri . '');
+
+		$stmt->execute();
+				
+		$noresult=true;
+		while ($playlist = $stmt->fetch()) {
+			if($noresult==true) {
+				$playlistsfortrack = $playlistsfortrack . " ● In playlists: " . $playlist[0];
+			} else {
+				$playlistsfortrack =  $playlistsfortrack . " ○ " . $playlist[0];
+			}
+			$noresult=false;
+		}
+		
+
+	} catch (PDOException $e) {
+		handleDbIssuePdo($theme,$db);
+		return $playlistsfortrack;
+	}	
+	return $playlistsfortrack;
+}
 
 /**
  * escapeQuery function.

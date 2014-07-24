@@ -242,10 +242,10 @@ if (mb_strlen($query) < 3 ||
 				if ($is_alfred_playlist_active == true) {
 					$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
 				}
-
+				$playlistsfortrack = getPlaylistsForTrack($db,$theme,$results[4]);
 				$w->result(null, serialize(array($results[4] /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'playpause' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ , $alfred_playlist_uri /* alfred_playlist_uri */ , escapeQuery($results[1]) /* artist_name */, escapeQuery($results[0]) /* track_name */, escapeQuery($results[2]) /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), "🔈 " . escapeQuery($results[0]) . " ● " . escapeQuery($results[1]) . " ● " . escapeQuery($results[2]),
 					array(
-						$subtitle,
+						$subtitle . $playlistsfortrack,
 						'alt' => 'Play album ' . escapeQuery($results[2]) . ' in Spotify',
 						'cmd' => 'Play artist ' . escapeQuery($results[1]) . ' in Spotify',
 						'fn' => 'Add track ' . escapeQuery($results[0]) . ' to ' . $alfred_playlist_name,
@@ -616,32 +616,7 @@ if (mb_strlen($query) < 3 ||
 
 			if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " ● " . $track[5]) == false) {
 			
-			
-				$getPlaylistsForTrack = "select playlist_name from tracks where uri=:uri";
-				try {
-					$stmt2 = $db->prepare($getPlaylistsForTrack);
-					$stmt2->bindValue(':uri', '' . $track[2] . '');
-		
-					$stmt2->execute();
-					
-					$playlistsfortrack = "";
-					
-					$noresult2=true;
-					while ($playlist = $stmt2->fetch()) {
-						if($noresult2==true) {
-							$playlistsfortrack = $playlistsfortrack . " ● In playlists: " . $playlist[0];
-						} else {
-							$playlistsfortrack =  $playlistsfortrack . " ○ " . $playlist[0];
-						}
-						$noresult2=false;
-					}
-					
-		
-				} catch (PDOException $e) {
-					handleDbIssuePdo($theme,$db);
-					return;
-				}
-		
+				$playlistsfortrack = getPlaylistsForTrack($db,$theme,$track[2]);		
 		
 				$w->result(null, serialize(array($track[2] /*track_uri*/ ,$track[3] /* album_uri */ ,$track[4] /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , '' /* other_action */ ,$alfred_playlist_uri /* alfred_playlist_uri */ ,$track[7]  /* artist_name */, $track[5] /* track_name */, $track[6] /* album_name */, $track[9] /* track_artwork_path */, $track[10] /* artist_artwork_path */, $track[11] /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), ucfirst($track[7]) . " ● " . $track[5],
 					array(
