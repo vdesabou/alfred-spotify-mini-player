@@ -18,22 +18,14 @@ See it in action here [screencast](http://quick.as/nmwxcxx0)
 
 ## Animated Gifs
 
-* Search in all your playlists
 
-![Screenshot](https://i.cloudup.com/pKTGG2faiC.gif)
+![Screenshot](https://i.cloudup.com/LPzN0Syjga.gif)
 
 * Browse and launch your playlists
 
-![Screenshot](https://i.cloudup.com/A9tePlpX1S.gif)
-
-* Update your playlist and see progress
-
-![Screenshot](https://i.cloudup.com/tx8lqblTEu.gif)
+![Screenshot](https://i.cloudup.com/v5zZ3SKm-U.gif)
 
 
-* Lookup artist "online"
-
-![Screenshot](https://i.cloudup.com/zbv6NCInTi.gif)
 
 ## Features
 
