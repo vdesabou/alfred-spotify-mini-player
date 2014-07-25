@@ -1,6 +1,6 @@
 <?php
 
-require_once('./src/workflows.php');
+require_once './src/workflows.php';
 
 /**
  * computeTime function.
@@ -8,10 +8,9 @@ require_once('./src/workflows.php');
  * @access public
  * @return void
  */
-function computeTime()
-{
+function computeTime() {
 	list($msec, $sec) = explode(' ', microtime());
-	return ((float) $sec + (float) $msec) ;
+	return (float) $sec + (float) $msec;
 }
 
 /**
@@ -21,8 +20,7 @@ function computeTime()
  * @param mixed $w
  * @return void
  */
-function installSpotifyAppIfNeeded($w)
-{
+function installSpotifyAppIfNeeded($w) {
 	if (!file_exists($w->home())) {
 		displayNotification("Error: Home Directory <" . $w->home() . "> does not exist");
 		return false;
@@ -38,8 +36,7 @@ function installSpotifyAppIfNeeded($w)
 		symlink(exec('pwd') . '/spotify-app-miniplayer', $w->home() . '/Spotify/spotify-app-miniplayer');
 	}
 
-	if (!file_exists($w->home() . '/Spotify/spotify-app-miniplayer/manifest.json'))
-	{
+	if (!file_exists($w->home() . '/Spotify/spotify-app-miniplayer/manifest.json')) {
 		return false;
 	}
 	return true;
@@ -51,8 +48,7 @@ function installSpotifyAppIfNeeded($w)
  * @access public
  * @return void
  */
-function getFreeTcpPort()
-{
+function getFreeTcpPort() {
 	//avoid warnings like this PHP Warning:  fsockopen(): unable to connect to localhost (Connection refused)
 	error_reporting(~E_ALL);
 
@@ -62,16 +58,13 @@ function getFreeTcpPort()
 	//TCP ports
 	$host = 'localhost';
 
-	for($port = $from; $port <= $to ; $port++)
-	{
+	for ($port = $from; $port <= $to ; $port++) {
 		$fp = fsockopen($host , $port);
-		if (!$fp)
-		{
+		if (!$fp) {
 			//port is free
 			return $port;
 		}
-		else
-		{
+		else {
 			// port open, close it
 			fclose($fp);
 		}
@@ -79,18 +72,18 @@ function getFreeTcpPort()
 
 	return 17693;
 }
-				
+
 
 /**
  * getPlaylistsForTrack function.
- * 
+ *
  * @access public
  * @param mixed $db
  * @param mixed $theme
  * @param mixed $track_uri
  * @return void
  */
-function getPlaylistsForTrack($db,$theme,$track_uri) {
+function getPlaylistsForTrack($db, $theme, $track_uri) {
 
 	$playlistsfortrack = "";
 	$getPlaylistsForTrack = "select playlist_name from tracks where uri=:uri";
@@ -99,22 +92,22 @@ function getPlaylistsForTrack($db,$theme,$track_uri) {
 		$stmt->bindValue(':uri', '' . $track_uri . '');
 
 		$stmt->execute();
-				
+
 		$noresult=true;
 		while ($playlist = $stmt->fetch()) {
-			if($noresult==true) {
+			if ($noresult==true) {
 				$playlistsfortrack = $playlistsfortrack . " ● In playlists: " . $playlist[0];
 			} else {
 				$playlistsfortrack =  $playlistsfortrack . " ○ " . $playlist[0];
 			}
 			$noresult=false;
 		}
-		
+
 
 	} catch (PDOException $e) {
-		handleDbIssuePdo($theme,$db);
+		handleDbIssuePdo($theme, $db);
 		return $playlistsfortrack;
-	}	
+	}
 	return $playlistsfortrack;
 }
 
@@ -125,8 +118,7 @@ function getPlaylistsForTrack($db,$theme,$track_uri) {
  * @param mixed $text
  * @return void
  */
-function escapeQuery($text)
-{
+function escapeQuery($text) {
 	$text = str_replace("'", "’", $text);
 	$text = str_replace('"', "’", $text);
 	$text = str_replace("&apos;", "’", $text);
@@ -146,8 +138,7 @@ function escapeQuery($text)
  * @param mixed $title
  * @return void
  */
-function checkIfResultAlreadyThere($results, $title)
-{
+function checkIfResultAlreadyThere($results, $title) {
 	foreach ($results as $result) {
 		if ($result['title']) {
 			if ($result['title'] == $title) {
@@ -165,8 +156,7 @@ function checkIfResultAlreadyThere($results, $title)
  * @param mixed $output
  * @return void
  */
-function displayNotification($output)
-{
+function displayNotification($output) {
 	exec('./terminal-notifier.app/Contents/MacOS/terminal-notifier -title "Spotify Mini Player" -sender com.spotify.miniplayer -message "' .  $output . '"');
 }
 
@@ -178,10 +168,9 @@ function displayNotification($output)
  * @param mixed $artwork
  * @return void
  */
-function displayNotificationWithArtwork($output,$artwork)
-{
-	if($artwork != "") {
-		copy($artwork,"/tmp/tmp");
+function displayNotificationWithArtwork($output, $artwork) {
+	if ($artwork != "") {
+		copy($artwork, "/tmp/tmp");
 	}
 
 	exec("./terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'Spotify Mini Player' -sender 'com.spotify.miniplayer' -contentImage '/tmp/tmp' -message '" .  $output . "'");
@@ -195,10 +184,9 @@ function displayNotificationWithArtwork($output,$artwork)
  * @param mixed $track_uri
  * @return void
  */
-function displayNotificationForStarredTrack($track_name,$track_uri)
-{
+function displayNotificationForStarredTrack($track_name, $track_uri) {
 	$w = new Workflows('com.vdesabou.spotify.mini.player');
-	displayNotificationWithArtwork('⭐️ ' . $track_name . ' has been starred',getTrackOrAlbumArtwork($w,'black',$track_uri,true));
+	displayNotificationWithArtwork('⭐️ ' . $track_name . ' has been starred', getTrackOrAlbumArtwork($w, 'black', $track_uri, true));
 }
 
 /**
@@ -209,10 +197,9 @@ function displayNotificationForStarredTrack($track_name,$track_uri)
  * @param mixed $track_uri
  * @return void
  */
-function displayNotificationForUnstarredTrack($track_name,$track_uri)
-{
+function displayNotificationForUnstarredTrack($track_name, $track_uri) {
 	$w = new Workflows('com.vdesabou.spotify.mini.player');
-	displayNotificationWithArtwork('❌ ' . $track_name . ' has been unstarred',getTrackOrAlbumArtwork($w,'black',$track_uri,true));
+	displayNotificationWithArtwork('❌ ' . $track_name . ' has been unstarred', getTrackOrAlbumArtwork($w, 'black', $track_uri, true));
 }
 
 /**
@@ -225,8 +212,7 @@ function displayNotificationForUnstarredTrack($track_name,$track_uri)
  * @param mixed $fetchIfNotPresent
  * @return void
  */
-function getTrackOrAlbumArtwork($w,$theme, $spotifyURL, $fetchIfNotPresent)
-{
+function getTrackOrAlbumArtwork($w, $theme, $spotifyURL, $fetchIfNotPresent) {
 
 	$hrefs = explode(':', $spotifyURL);
 
@@ -296,8 +282,7 @@ function getTrackOrAlbumArtwork($w,$theme, $spotifyURL, $fetchIfNotPresent)
  * @param mixed $fetchIfNotPresent
  * @return void
  */
-function getPlaylistArtwork($w, $theme, $playlistURI, $fetchIfNotPresent)
-{
+function getPlaylistArtwork($w, $theme, $playlistURI, $fetchIfNotPresent) {
 
 	$hrefs = explode(':', $playlistURI);
 
@@ -371,8 +356,7 @@ function getPlaylistArtwork($w, $theme, $playlistURI, $fetchIfNotPresent)
  * @param mixed $fetchIfNotPresent
  * @return void
  */
-function getArtistArtwork($w, $theme, $artist, $fetchIfNotPresent)
-{
+function getArtistArtwork($w, $theme, $artist, $fetchIfNotPresent) {
 	$parsedArtist = urlencode($artist);
 
 	if (!file_exists($w->data() . "/artwork")):
@@ -421,8 +405,7 @@ function getArtistArtwork($w, $theme, $artist, $fetchIfNotPresent)
  * @param mixed $id
  * @return void
  */
-function getTrackArtworkURL($w, $type, $id)
-{
+function getTrackArtworkURL($w, $type, $id) {
 	$html = $w->request("http://open.spotify.com/$type/$id");
 
 	if (!empty($html)) {
@@ -441,8 +424,7 @@ function getTrackArtworkURL($w, $type, $id)
  * @param mixed $url
  * @return void
  */
-function getPlaylistArtworkURL($w, $url)
-{
+function getPlaylistArtworkURL($w, $url) {
 	$html = $w->request($url);
 
 	if (!empty($html)) {
@@ -461,8 +443,7 @@ function getPlaylistArtworkURL($w, $url)
  * @param mixed $artist
  * @return void
  */
-function getArtistArtworkURL($w, $artist)
-{
+function getArtistArtworkURL($w, $artist) {
 	$parsedArtist = urlencode($artist);
 	$html = $w->request("http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&api_key=49d58890a60114e8fdfc63cbcf75d6c5&artist=$parsedArtist&format=json");
 	$json = json_decode($html, true);
@@ -480,8 +461,7 @@ function getArtistArtworkURL($w, $artist)
  * @param mixed $jsonData
  * @return void
  */
-function updateLibrary($jsonData)
-{
+function updateLibrary($jsonData) {
 	$w = new Workflows('com.vdesabou.spotify.mini.player');
 
 	$in_progress_data = $w->read('update_library_in_progress');
@@ -615,7 +595,7 @@ function updateLibrary($jsonData)
 		$nb_track = 0;
 
 		foreach ($playlists as $playlist) {
-			$playlist_artwork_path = getPlaylistArtwork($w,'black',$playlist['uri'], true);
+			$playlist_artwork_path = getPlaylistArtwork($w, 'black', $playlist['uri'], true);
 
 			if ($playlist['ownedbyuser'] == true) {
 				$ownedbyuser = 1;
@@ -642,9 +622,9 @@ function updateLibrary($jsonData)
 
 				//
 				// Download artworks
-				$track_artwork_path = getTrackOrAlbumArtwork($w,$theme, $track['uri'], true);
-				$artist_artwork_path = getArtistArtwork($w,$theme,$track['artist_name'], true);
-				$album_artwork_path = getTrackOrAlbumArtwork($w,$theme, $track['album_uri'], true);
+				$track_artwork_path = getTrackOrAlbumArtwork($w, $theme, $track['uri'], true);
+				$artist_artwork_path = getArtistArtwork($w, $theme, $track['artist_name'], true);
+				$album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $track['album_uri'], true);
 
 				$album_year = 1995;
 
@@ -719,8 +699,7 @@ function updateLibrary($jsonData)
  * @param mixed $jsonData
  * @return void
  */
-function updatePlaylist($jsonData)
-{
+function updatePlaylist($jsonData) {
 	$w = new Workflows('com.vdesabou.spotify.mini.player');
 
 	$in_progress_data = $w->read('update_library_in_progress');
@@ -793,9 +772,9 @@ function updatePlaylist($jsonData)
 
 				//
 				// Download artworks
-				$track_artwork_path = getTrackOrAlbumArtwork($w,$theme, $track['uri'], true);
-				$artist_artwork_path = getArtistArtwork($w,$theme,$track['artist_name'], true);
-				$album_artwork_path = getTrackOrAlbumArtwork($w,$theme, $track['album_uri'], true);
+				$track_artwork_path = getTrackOrAlbumArtwork($w, $theme, $track['uri'], true);
+				$artist_artwork_path = getArtistArtwork($w, $theme, $track['artist_name'], true);
+				$album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $track['album_uri'], true);
 
 				$album_year = 1995;
 
@@ -846,7 +825,7 @@ function updatePlaylist($jsonData)
 
 		$elapsed_time = time() - $words[3];
 
-		displayNotificationWithArtwork("\nPlaylist " . $playlist['name'] . " has been updated (" . $nb_track . " tracks) - it took " . beautifyTime($elapsed_time),getPlaylistArtwork($w,'black', $playlist['uri'], true));
+		displayNotificationWithArtwork("\nPlaylist " . $playlist['name'] . " has been updated (" . $nb_track . " tracks) - it took " . beautifyTime($elapsed_time), getPlaylistArtwork($w, 'black', $playlist['uri'], true));
 
 		unlink($w->data() . "/update_library_in_progress");
 	} else {
@@ -861,8 +840,7 @@ function updatePlaylist($jsonData)
  * @access public
  * @return void
  */
-function removeUpdateLibraryInProgressFile()
-{
+function removeUpdateLibraryInProgressFile() {
 	$w = new Workflows('com.vdesabou.spotify.mini.player');
 	unlink($w->data() . "/update_library_in_progress");
 }
@@ -874,8 +852,7 @@ function removeUpdateLibraryInProgressFile()
  * @param mixed $jsonData
  * @return void
  */
-function updatePlaylistList($jsonData)
-{
+function updatePlaylistList($jsonData) {
 	$w = new Workflows('com.vdesabou.spotify.mini.player');
 
 	$in_progress_data = $w->read('update_library_in_progress');
@@ -938,7 +915,7 @@ function updatePlaylistList($jsonData)
 			// Add the new playlist
 			if (count($playlists) == 0) {
 				displayNotification("Added playlist " . $playlist['name'] . "\n");
-				$playlist_artwork_path = getPlaylistArtwork($w,'black', $playlist['uri'], true);
+				$playlist_artwork_path = getPlaylistArtwork($w, 'black', $playlist['uri'], true);
 
 				if ($playlist['ownedbyuser'] == true) {
 					$ownedbyuser = 1;
@@ -965,9 +942,9 @@ function updatePlaylistList($jsonData)
 
 					//
 					// Download artworks
-					$track_artwork_path = getTrackOrAlbumArtwork($w,$theme, $track['uri'], true);
+					$track_artwork_path = getTrackOrAlbumArtwork($w, $theme, $track['uri'], true);
 					$artist_artwork_path = getArtistArtwork($w, $theme, $track['artist_name'], true);
-					$album_artwork_path = getTrackOrAlbumArtwork($w,$theme, $track['album_uri'], true);
+					$album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $track['album_uri'], true);
 
 					$album_year = 1995;
 
@@ -1069,7 +1046,7 @@ function handleDbIssue($theme) {
 	$w = new Workflows('com.vdesabou.spotify.mini.player');
 	$w->result(uniqid(), '', 'There is a problem with the library, try to update it.', 'Select Update library below', './images/warning.png', 'no', null, '');
 
-	$w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', null, '');
+	$w->result(uniqid(), serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'update_library' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', null, '');
 
 	echo $w->toxml();
 }
@@ -1082,11 +1059,11 @@ function handleDbIssue($theme) {
  * @param mixed $dbhandle
  * @return void
  */
-function handleDbIssuePdo($theme,$dbhandle) {
+function handleDbIssuePdo($theme, $dbhandle) {
 	$w = new Workflows('com.vdesabou.spotify.mini.player');
 	$w->result(uniqid(), '', 'Database Error: ' . $dbhandle->errorInfo()[0] . ' ' . $dbhandle->errorInfo()[1] . ' ' . $dbhandle->errorInfo()[2], '', './images/warning.png', 'no', null, '');
 	$w->result(uniqid(), '', 'There is a problem with the library, try to update it.', 'Select Update library below', './images/warning.png', 'no', null, '');
-	$w->result(uniqid(), serialize(array('' /*track_uri*/ ,'' /* album_uri */ ,'' /* artist_uri */ ,'' /* playlist_uri */ ,'' /* spotify_command */ ,'' /* query */ ,'' /* other_settings*/ , 'update_library' /* other_action */ ,'' /* alfred_playlist_uri */ ,''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', null, '');
+	$w->result(uniqid(), serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'update_library' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', null, '');
 	echo $w->toxml();
 }
 
@@ -1097,8 +1074,7 @@ function handleDbIssuePdo($theme,$dbhandle) {
  * @param mixed $decimal
  * @return void
  */
-function floatToSquares($decimal)
-{
+function floatToSquares($decimal) {
 	$squares = ($decimal < 1) ? floor($decimal * 10) : 10;
 	return str_repeat("◼︎", $squares) . str_repeat("◻︎", 10 - $squares);
 }
@@ -1112,7 +1088,7 @@ function floatToSquares($decimal)
  * @param mixed $artist
  * @return void
  */
-function getArtistUriFromName($w,$theme,$artist) {
+function getArtistUriFromName($w, $theme, $artist) {
 	$getArtists = "select artist_uri,artist_artwork_path,artist_biography from artists where artist_name='" . $artist . "'";
 
 	$dbfile = $w->data() . "/library.db";
@@ -1141,7 +1117,7 @@ function getArtistUriFromName($w,$theme,$artist) {
  * @param mixed $artist
  * @return void
  */
-function getAlbumUriFromName($w,$theme,$album,$artist) {
+function getAlbumUriFromName($w, $theme, $album, $artist) {
 	$getTracks = "select album_uri from tracks where album_name='" . $album . "' and artist_name='" . $artist . "'";
 
 	$dbfile = $w->data() . "/library.db";
@@ -1202,24 +1178,20 @@ Copyright 2013 Ole Jon Bjørkum
  * @param mixed $title
  * @return void
  */
-function getLyrics($w,$artist,$title) {
+function getLyrics($w, $artist, $title) {
 	$query_artist = $artist;
 	$query_title = $title;
 
-	if(stristr($query_artist, 'feat.'))
-	{
+	if (stristr($query_artist, 'feat.')) {
 		$query_artist = stristr($query_artist, 'feat.', true);
 	}
-	elseif(stristr($query_artist, 'featuring'))
-	{
+	elseif (stristr($query_artist, 'featuring')) {
 		$query_artist = stristr($query_artist, 'featuring', true);
 	}
-	elseif(stristr($query_title, ' con '))
-	{
+	elseif (stristr($query_title, ' con ')) {
 		$query_title = stristr($query_title, ' con ', true);
 	}
-	elseif(stristr($query_artist, ' & '))
-	{
+	elseif (stristr($query_artist, ' & ')) {
 		$query_artist = stristr($query_artist, ' & ', true);
 	}
 
@@ -1231,44 +1203,34 @@ function getLyrics($w,$artist,$title) {
 
 	$query_title = str_ireplace(array('acoustic version', 'new album version', 'original album version', 'album version', 'bonus track', 'clean version', 'club mix', 'demo version', 'extended mix', 'extended outro', 'extended version', 'extended', 'explicit version', 'explicit', '(live)', '- live', 'live version', 'lp mix', '(original)', 'original edit', 'original mix edit', 'original version', '(radio)', 'radio edit', 'radio mix', 'remastered version', 're-mastered version', 'remastered digital version', 're-mastered digital version', 'remastered', 'remaster', 'remixed version', 'remix', 'single version', 'studio version', 'version acustica', 'versión acústica', 'vocal edit'), '', $query_title);
 
-	if(stristr($query_title, 'feat.'))
-	{
+	if (stristr($query_title, 'feat.')) {
 		$query_title = stristr($query_title, 'feat.', true);
 	}
-	elseif(stristr($query_title, 'featuring'))
-	{
+	elseif (stristr($query_title, 'featuring')) {
 		$query_title = stristr($query_title, 'featuring', true);
 	}
-	elseif(stristr($query_title, ' con '))
-	{
+	elseif (stristr($query_title, ' con ')) {
 		$query_title = stristr($query_title, ' con ', true);
 	}
-	elseif(stristr($query_title, '(includes'))
-	{
+	elseif (stristr($query_title, '(includes')) {
 		$query_title = stristr($query_title, '(includes', true);
 	}
-	elseif(stristr($query_title, '(live at'))
-	{
+	elseif (stristr($query_title, '(live at')) {
 		$query_title = stristr($query_title, '(live at', true);
 	}
-	elseif(stristr($query_title, 'revised'))
-	{
+	elseif (stristr($query_title, 'revised')) {
 		$query_title = stristr($query_title, 'revised', true);
 	}
-	elseif(stristr($query_title, '(19'))
-	{
+	elseif (stristr($query_title, '(19')) {
 		$query_title = stristr($query_title, '(19', true);
 	}
-	elseif(stristr($query_title, '(20'))
-	{
+	elseif (stristr($query_title, '(20')) {
 		$query_title = stristr($query_title, '(20', true);
 	}
-	elseif(stristr($query_title, '- 19'))
-	{
+	elseif (stristr($query_title, '- 19')) {
 		$query_title = stristr($query_title, '- 19', true);
 	}
-	elseif(stristr($query_title, '- 20'))
-	{
+	elseif (stristr($query_title, '- 20')) {
 		$query_title = stristr($query_title, '- 20', true);
 	}
 
@@ -1290,43 +1252,35 @@ function getLyrics($w,$artist,$title) {
 
 	$lyrics = (empty($lyrics[1])) ? '' : $lyrics[1];
 
-	if(empty($file))
-	{
+	if (empty($file)) {
 		$error = true;
 	}
-	elseif(empty($lyrics) || stristr($lyrics, 'we do not have the lyric for this song') || stristr($lyrics, 'lyrics are currently unavailable') || stristr($lyrics, 'your name will be printed as part of the credit'))
-	{
+	elseif (empty($lyrics) || stristr($lyrics, 'we do not have the lyric for this song') || stristr($lyrics, 'lyrics are currently unavailable') || stristr($lyrics, 'your name will be printed as part of the credit')) {
 		$no_match = true;
 	}
-	else
-	{
-		if(strstr($lyrics, 'Ã') && strstr($lyrics, '©')) $lyrics = utf8_decode($lyrics);
+	else {
+		if (strstr($lyrics, 'Ã') && strstr($lyrics, '©')) $lyrics = utf8_decode($lyrics);
 
 		$lyrics = trim(str_replace('<br />', '<br>', $lyrics));
 
-		if(strstr($lyrics, '<br>---')) $lyrics = strstr($lyrics, '<br>---', true);
+		if (strstr($lyrics, '<br>---')) $lyrics = strstr($lyrics, '<br>---', true);
 	}
 
-	if($error)
-	{
+	if ($error) {
 		displayNotification("Timeout or failure. Try again");
 	}
-	elseif($no_match)
-	{
+	elseif ($no_match) {
 		displayNotification("Sorry there is no match for this track");
 	}
-	else
-	{
+	else {
 		$lyrics = strip_tags($lyrics);
 
 		//$lyrics = (strlen($lyrics) > 1303) ? substr($lyrics,0,1300).'...' : $lyrics;
 
-		if($lyrics=="")
-		{
+		if ($lyrics=="") {
 			displayNotification("Sorry there is no match for this track");
 		}
-		else
-		{
+		else {
 			echo "🎤 $title by $artist\n---------------------------\n$lyrics";
 		}
 	}
@@ -1339,8 +1293,7 @@ function getLyrics($w,$artist,$title) {
  * @param mixed $string
  * @return void
  */
-function strip_string($string)
-{
+function strip_string($string) {
 	return preg_replace('/[^a-zA-Z0-9-\s]/', '', $string);
 }
 
@@ -1352,17 +1305,16 @@ function strip_string($string)
  * @param mixed $last_check_update_time
  * @return void
  */
-function checkForUpdate($w,$last_check_update_time,$dbsettings) {
+function checkForUpdate($w, $last_check_update_time, $dbsettings) {
 
-	if(time()-$last_check_update_time > 86400)
-	{
+	if (time()-$last_check_update_time > 86400) {
 		// update last_check_update_time
 		$setSettings = "update settings set last_check_update_time=" . time();
 		$dbsettings->exec($setSettings);
 
-		if(! $w->internet()) {
+		if (! $w->internet()) {
 			displayNotificationWithArtwork("Check for update error:
-No internet connection",'./images/warning.png');
+No internet connection", './images/warning.png');
 			return;
 		}
 
@@ -1385,13 +1337,13 @@ the export.json " . $remote_json . " file cannot be found");
 			return 1;
 		}
 
-		$json = json_decode($jsonDataRemote,true);
+		$json = json_decode($jsonDataRemote, true);
 		if (json_last_error() === JSON_ERROR_NONE) {
 			$download_url = $json['download_url'];
 			$remote_version = $json['version'];
 			$description = $json['description'];
 
-			if($local_version < $remote_version) {
+			if ($local_version < $remote_version) {
 
 				$workflow_file_name = exec('printf $HOME') . '/Downloads/spotify-app-miniplayer-' . $remote_version . '.alfredworkflow';
 				$fp = fopen($workflow_file_name , 'w+');
@@ -1400,7 +1352,7 @@ the export.json " . $remote_json . " file cannot be found");
 				);
 				$w->request("$download_url", $options);
 
-				return array($remote_version,$workflow_file_name,$description);
+				return array($remote_version, $workflow_file_name, $description);
 			}
 
 		}
