@@ -1,5 +1,10 @@
 ## History
 
+4.4.4:
+
+* Moved to new Spotify WEB API for online lookups
+
+
 4.4.3:
 
 * Get related artists is more reliable
