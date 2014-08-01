@@ -843,40 +843,23 @@ if (mb_strlen($query) < 3 ||
 					return;
 				}
 
-				$json = $w->request("https://api.spotify.com/v1/artists/" . trim($tmp_uri[2]) . "/albums");
+				$json = doWebApiRequest($w,"https://api.spotify.com/v1/artists/" . trim($tmp_uri[2]) . "/albums");
+				
+				foreach ($json->items as $key => $value) {
 
+					$album=$value;
+
+					if (count($album->available_markets) == 0 || in_array($country_code,$album->available_markets) !== false) {
+						if (checkIfResultAlreadyThere($w->results(), ucfirst($album->name)) == false) {
+							$w->result(null, '', ucfirst($album->name), $album->album_type . " by " . $artist_name, getTrackOrAlbumArtwork($w, $theme, $album->uri, false), 'no', null, "Online▹" . $artist_uri . "@" . $artist_name . "@" . $album->uri . "@" . $album->name);
+						}
+					}
+				}
 				
 				if (empty($json)) {
 					$w->result(null, '', "Error: Spotify WEB API returned empty result", "https://api.spotify.com/v1/artists/" . $tmp_uri[2] . "/albums", './images/warning.png', 'no', null, '');
 					echo $w->toxml();
 					return;
-				}
-				
-				$json = json_decode($json);
-				
-				switch (json_last_error()) {
-				case JSON_ERROR_DEPTH:
-					$w->result(null, '', "There was an error when retrieving online information", "Maximum stack depth exceeded", './images/warning.png', 'no', null, '');
-					break;
-				case JSON_ERROR_CTRL_CHAR:
-					$w->result(null, '', "There was an error when retrieving online information", "Unexpected control character found", './images/warning.png', 'no', null, '');
-					break;
-				case JSON_ERROR_SYNTAX:
-					$w->result(null, '', "There was an error when retrieving online information", "Syntax error, malformed JSON", './images/warning.png', 'no', null, '');
-					break;
-				case JSON_ERROR_NONE:
-				
-					foreach ($json->items as $key => $value) {
-
-						$album=$value;
-
-						if (count($album->available_markets) == 0 || in_array($country_code,$album->available_markets) !== false) {
-							if (checkIfResultAlreadyThere($w->results(), ucfirst($album->name)) == false) {
-								$w->result(null, '', ucfirst($album->name), $album->album_type . " by " . $artist_name, getTrackOrAlbumArtwork($w, $theme, $album->uri, false), 'no', null, "Online▹" . $artist_uri . "@" . $artist_name . "@" . $album->uri . "@" . $album->name);
-							}
-						}
-					}
-					break;
 				}
 			} elseif (substr_count($query, '@') == 3) {
 				//
@@ -891,46 +874,26 @@ if (mb_strlen($query) < 3 ||
 				
 				$tmp_uri = explode(':', $album_uri);
 
-				$json = $w->request("https://api.spotify.com/v1/albums/" . $tmp_uri[2] . "/tracks");
+				$json = doWebApiRequest($w,"https://api.spotify.com/v1/albums/" . $tmp_uri[2] . "/tracks");	
 
-				if (empty($json)) {
-					$w->result(null, '', "Error: Spotify WEB API returned empty result", "https://api.spotify.com/v1/albums/" . $tmp_uri[2] . "/tracks", './images/warning.png', 'no', null, '');
-					echo $w->toxml();
-					return;
+				$subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
+				if ($is_alfred_playlist_active == true) {
+					$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
 				}
-
-				$json = json_decode($json);
-				switch (json_last_error()) {
-				case JSON_ERROR_DEPTH:
-					$w->result(null, '', "There was an error when retrieving online information", "Maximum stack depth exceeded", './images/warning.png', 'no', null, '');
-					break;
-				case JSON_ERROR_CTRL_CHAR:
-					$w->result(null, '', "There was an error when retrieving online information", "Unexpected control character found", './images/warning.png', 'no', null, '');
-					break;
-				case JSON_ERROR_SYNTAX:
-					$w->result(null, '', "There was an error when retrieving online information", "Syntax error, malformed JSON", './images/warning.png', 'no', null, '');
-					break;
-				case JSON_ERROR_NONE:
-					$subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-					if ($is_alfred_playlist_active == true) {
-						$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
+				$w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', null, '');
+				foreach ($json->items as $key => $value) {
+					
+					if (count($value->available_markets) == 0 || in_array($country_code,$value->available_markets) !== false) {
+						$track_artwork = getTrackOrAlbumArtwork($w, $theme, $value->uri, false);
+						$w->result(null, serialize(array($value->uri /*track_uri*/ , $album_uri /* album_uri */ , $artist_uri /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , '' /* other_action */ , $alfred_playlist_uri /* alfred_playlist_uri */ , $artist_name  /* artist_name */, $value->name /* track_name */, $album_name /* album_name */, $track_artwork /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), ucfirst($artist_name) . " ● " . $value->name,
+							array(
+								$album_name . " (" . beautifyTime($value->duration_ms/1000) . ")",
+								'alt' => 'Play album ' . $album_name . ' in Spotify',
+								'cmd' => 'Play artist ' . $artist_name . ' in Spotify',
+								'fn' => 'Add track ' . $value->name . ' to ' . $alfred_playlist_name,
+								'shift' => 'Add album ' . $album_name . ' to ' . $alfred_playlist_name,
+								'ctrl' => 'Search artist ' . $artist_name . ' online'), $track_artwork, 'yes', null, '');
 					}
-					$w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', null, '');
-					foreach ($json->items as $key => $value) {
-						
-						if (count($value->available_markets) == 0 || in_array($country_code,$value->available_markets) !== false) {
-							$track_artwork = getTrackOrAlbumArtwork($w, $theme, $value->uri, false);
-							$w->result(null, serialize(array($value->uri /*track_uri*/ , $album_uri /* album_uri */ , $artist_uri /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , '' /* other_action */ , $alfred_playlist_uri /* alfred_playlist_uri */ , $artist_name  /* artist_name */, $value->name /* track_name */, $album_name /* album_name */, $track_artwork /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), ucfirst($artist_name) . " ● " . $value->name,
-								array(
-									$album_name . " (" . beautifyTime($value->duration_ms/1000) . ")",
-									'alt' => 'Play album ' . $album_name . ' in Spotify',
-									'cmd' => 'Play artist ' . $artist_name . ' in Spotify',
-									'fn' => 'Add track ' . $value->name . ' to ' . $alfred_playlist_name,
-									'shift' => 'Add album ' . $album_name . ' to ' . $alfred_playlist_name,
-									'ctrl' => 'Search artist ' . $artist_name . ' online'), $track_artwork, 'yes', null, '');
-						}
-					}
-					break;
 				}
 			}
 

@@ -1366,6 +1366,49 @@ remote.json error");
 }
 
 /**
+ * doWebApiRequest function.
+ * 
+ * @access public
+ * @param mixed $w
+ * @param mixed $url
+ * @return void
+ */
+function doWebApiRequest($w,$url) {
+
+	$json = $w->request($url);
+
+	if (empty($json)) {
+		$w->result(null, '', "Error: Spotify WEB API returned empty result", $url, './images/warning.png', 'no', null, '');
+		echo $w->toxml();
+		exit;
+	}
+
+	$json = json_decode($json);
+	switch (json_last_error()) {
+	case JSON_ERROR_DEPTH:
+		$w->result(null, '', "There was an error when retrieving online information", "Maximum stack depth exceeded", './images/warning.png', 'no', null, '');
+		echo $w->toxml();
+		exit;
+	case JSON_ERROR_CTRL_CHAR:
+		$w->result(null, '', "There was an error when retrieving online information", "Unexpected control character found", './images/warning.png', 'no', null, '');
+		echo $w->toxml();
+		exit;
+	case JSON_ERROR_SYNTAX:
+		$w->result(null, '', "There was an error when retrieving online information", "Syntax error, malformed JSON", './images/warning.png', 'no', null, '');
+		echo $w->toxml();
+		exit;
+	case JSON_ERROR_NONE:
+		return $json;
+	}
+	
+	$w->result(null, '', "Error: Spotify WEB API returned error " . json_last_error(), "Try again or report to author", './images/warning.png', 'no', null, '');
+	echo $w->toxml();
+	exit;
+}
+
+
+
+/**
  * beautifyTime function.
  *
  * @access public
