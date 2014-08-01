@@ -845,20 +845,32 @@ if (mb_strlen($query) < 3 ||
 
 				$json = doWebApiRequest($w,"https://api.spotify.com/v1/artists/" . trim($tmp_uri[2]) . "/albums");
 				
+				$album_id_list="";
+				$first=true;
 				foreach ($json->items as $album) {
 
 					if (count($album->available_markets) == 0 || in_array($country_code,$album->available_markets) !== false) {
-						if (checkIfResultAlreadyThere($w->results(), ucfirst($album->name)) == false) {
-							$w->result(null, '', ucfirst($album->name), $album->album_type . " by " . $artist_name, getTrackOrAlbumArtwork($w, $theme, $album->uri, false), 'no', null, "Online▹" . $artist_uri . "@" . $artist_name . "@" . $album->uri . "@" . $album->name);
-						}
+				
+						if
+						($first==true) {
+							$album_id_list = $album_id_list . $album->id; 
+							$first=false;
+						} else {
+							$album_id_list = $album_id_list . "," . $album->id;
+						}		
 					}
 				}
-				
-				if (empty($json)) {
-					$w->result(null, '', "Error: Spotify WEB API returned empty result", "https://api.spotify.com/v1/artists/" . $tmp_uri[2] . "/albums", './images/warning.png', 'no', null, '');
-					echo $w->toxml();
-					return;
+
+				$json2 = doWebApiRequest($w,"https://api.spotify.com/v1/albums?ids=" . $album_id_list);				
+				foreach ($json2->albums as $album) {
+
+					if (checkIfResultAlreadyThere($w->results(), ucfirst($album->name)) == false) {
+					
+						$genre = (count($album->genres) > 0) ? ' ● Genre: ' . implode('|',$album->genres) : '';
+						$w->result(null, '', ucfirst($album->name), $album->album_type . " by " . $artist_name . ' ● Release date: ' . $album->release_date . $genre, getTrackOrAlbumArtwork($w, $theme, $album->uri, false), 'no', null, "Online▹" . $artist_uri . "@" . $artist_name . "@" . $album->uri . "@" . $album->name);
+					}
 				}
+
 			} elseif (substr_count($query, '@') == 3) {
 				//
 				// Search Album Online
