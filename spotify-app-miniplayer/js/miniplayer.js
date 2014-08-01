@@ -428,6 +428,8 @@ require(['$api/models', '$api/toplists#Toplist', '$api/library#Library'], functi
 			var uri = args[1] + ':' + args[2] + ':' + args[3];
 		} else if (args[2] == 'artist') {
 			var uri = args[1] + ':' + args[2] + ':' + args[3];
+		} else if (args[2] == 'album') {
+			var uri = args[1] + ':' + args[2] + ':' + args[3];
 		} else if (args[2] == 'local') {
 			var uri = args[1] + ':' + args[2] + ':' + args[3] + ':' + args[4];
 		}
