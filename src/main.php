@@ -845,9 +845,7 @@ if (mb_strlen($query) < 3 ||
 
 				$json = doWebApiRequest($w,"https://api.spotify.com/v1/artists/" . trim($tmp_uri[2]) . "/albums");
 				
-				foreach ($json->items as $key => $value) {
-
-					$album=$value;
+				foreach ($json->items as $album) {
 
 					if (count($album->available_markets) == 0 || in_array($country_code,$album->available_markets) !== false) {
 						if (checkIfResultAlreadyThere($w->results(), ucfirst($album->name)) == false) {
@@ -881,16 +879,19 @@ if (mb_strlen($query) < 3 ||
 					$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
 				}
 				$w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', null, '');
-				foreach ($json->items as $key => $value) {
+				
+				
+
+				foreach ($json->items as $track) {
 					
-					if (count($value->available_markets) == 0 || in_array($country_code,$value->available_markets) !== false) {
-						$track_artwork = getTrackOrAlbumArtwork($w, $theme, $value->uri, false);
-						$w->result(null, serialize(array($value->uri /*track_uri*/ , $album_uri /* album_uri */ , $artist_uri /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , '' /* other_action */ , $alfred_playlist_uri /* alfred_playlist_uri */ , $artist_name  /* artist_name */, $value->name /* track_name */, $album_name /* album_name */, $track_artwork /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), ucfirst($artist_name) . " ● " . $value->name,
+					if (count($track->available_markets) == 0 || in_array($country_code,$track->available_markets) !== false) {
+						$track_artwork = getTrackOrAlbumArtwork($w, $theme, $track->uri, false);
+						$w->result(null, serialize(array($track->uri /*track_uri*/ , $album_uri /* album_uri */ , $artist_uri /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , '' /* other_action */ , $alfred_playlist_uri /* alfred_playlist_uri */ , $artist_name  /* artist_name */, $track->name /* track_name */, $album_name /* album_name */, $track_artwork /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), ucfirst($artist_name) . " ● " . $track->name,
 							array(
-								$album_name . " (" . beautifyTime($value->duration_ms/1000) . ")",
+								$album_name . " (" . beautifyTime($track->duration_ms/1000) . ")",
 								'alt' => 'Play album ' . $album_name . ' in Spotify',
 								'cmd' => 'Play artist ' . $artist_name . ' in Spotify',
-								'fn' => 'Add track ' . $value->name . ' to ' . $alfred_playlist_name,
+								'fn' => 'Add track ' . $track->name . ' to ' . $alfred_playlist_name,
 								'shift' => 'Add album ' . $album_name . ' to ' . $alfred_playlist_name,
 								'ctrl' => 'Search artist ' . $artist_name . ' online'), $track_artwork, 'yes', null, '');
 					}
