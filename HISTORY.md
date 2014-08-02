@@ -4,6 +4,8 @@
 
 * Moved to new Spotify WEB API for online lookups
 
+* Display release date of album in online mode
+
 
 4.4.3:
 
