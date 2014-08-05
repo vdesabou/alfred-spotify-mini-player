@@ -575,13 +575,18 @@ function updateLibrary($jsonData) {
 
 			$artist_artwork_path = getArtistArtwork($w, $theme, $artist['artist_name'], true);
 
-			$relateds = $artist['related'];
-			foreach ($relateds as $related) {
-
-				$related_artist_artwork_path = getArtistArtwork($w, $theme, $related['name'], true);
-
-				$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert or ignore into artists values (\"' . escapeQuery($artist['artist_name']) . '\",\"' . $artist['artist_uri'] . '\",\"' . $related_artist_artwork_path . '\",\"' . escapeQuery($artist['biography']) . '\",' . $artist['popularity']  . ',\"' . $artist['years']['from'] . '\",\"' . $artist['years']['to'] . '\",\"' . escapeQuery($related['name']) . '\",\"' . $related['uri'] . '\",\"' . $related_artist_artwork_path . '\")"';
-				exec($sql);
+			if (isset($artist['related'])) {
+				$relateds = $artist['related'];
+				foreach ($relateds as $related) {
+	
+					$related_artist_artwork_path = getArtistArtwork($w, $theme, $related['name'], true);
+	
+					$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert or ignore into artists values (\"' . escapeQuery($artist['artist_name']) . '\",\"' . $artist['artist_uri'] . '\",\"' . $artist_artwork_path . '\",\"' . escapeQuery($artist['biography']) . '\",' . $artist['popularity']  . ',\"' . $artist['years']['from'] . '\",\"' . $artist['years']['to'] . '\",\"' . escapeQuery($related['name']) . '\",\"' . $related['uri'] . '\",\"' . $related_artist_artwork_path . '\")"';
+					exec($sql);
+				}
+			} else {
+				$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert or ignore into artists values (\"' . escapeQuery($artist['artist_name']) . '\",\"' . $artist['artist_uri'] . '\",\"' . $artist_artwork_path . '\",\"' . escapeQuery($artist['biography']) . '\",' . $artist['popularity']  . ',\"' . $artist['years']['from'] . '\",\"' . $artist['years']['to'] . '\",\"' . "" . '\",\"' . "" . '\",\"' . "" . '\")"';
+				exec($sql);				
 			}
 			$nb_artists++;
 			if ($nb_artists % 10 === 0) {
