@@ -945,6 +945,7 @@ require(['$api/models', '$api/toplists#Toplist', '$api/library#Library'], functi
 	 */
 
 	function getRelatedArtistsPromise(artist_name, artist_uri) {
+		sleep(2);
 		var array_artists = [];
 		var array_tmp_artists = [];
 		var promise = new models.Promise();
