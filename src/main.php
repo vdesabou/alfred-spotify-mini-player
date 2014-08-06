@@ -12,7 +12,7 @@ require_once './src/workflows.php';
 $w = new Workflows('com.vdesabou.spotify.mini.player');
 
 $query = escapeQuery($argv[1]);
-# thanks to http://www.alfredforum.com/topic/1788-prevent-flash-of-no-result
+// thanks to http://www.alfredforum.com/topic/1788-prevent-flash-of-no-result
 $query = iconv('UTF-8-MAC', 'UTF-8', $query);
 
 //
@@ -600,9 +600,6 @@ if (mb_strlen($query) < 3 ||
 			return;
 		}
 
-
-
-
 		$noresult=true;
 		while ($track = $stmt->fetch()) {
 
@@ -831,7 +828,7 @@ if (mb_strlen($query) < 3 ||
 				$words = explode('@', $tmp);
 				$artist_uri = $words[0];
 				$tmp_uri = explode(':', $artist_uri);
-				
+
 				$artist_name = $words[1];
 
 				if ($country_code == "") {
@@ -843,30 +840,30 @@ if (mb_strlen($query) < 3 ||
 					return;
 				}
 
-				$json = doWebApiRequest($w,"https://api.spotify.com/v1/artists/" . trim($tmp_uri[2]) . "/albums");
-				
+				$json = doWebApiRequest($w, "https://api.spotify.com/v1/artists/" . trim($tmp_uri[2]) . "/albums");
+
 				$album_id_list="";
 				$first=true;
 				foreach ($json->items as $album) {
 
-					if (count($album->available_markets) == 0 || in_array($country_code,$album->available_markets) !== false) {
-				
+					if (count($album->available_markets) == 0 || in_array($country_code, $album->available_markets) !== false) {
+
 						if
 						($first==true) {
-							$album_id_list = $album_id_list . $album->id; 
+							$album_id_list = $album_id_list . $album->id;
 							$first=false;
 						} else {
 							$album_id_list = $album_id_list . "," . $album->id;
-						}		
+						}
 					}
 				}
 
-				$json2 = doWebApiRequest($w,"https://api.spotify.com/v1/albums?ids=" . $album_id_list);				
+				$json2 = doWebApiRequest($w, "https://api.spotify.com/v1/albums?ids=" . $album_id_list);
 				foreach ($json2->albums as $album) {
 
 					if (checkIfResultAlreadyThere($w->results(), ucfirst($album->name)) == false) {
-					
-						$genre = (count($album->genres) > 0) ? ' ● Genre: ' . implode('|',$album->genres) : '';
+
+						$genre = (count($album->genres) > 0) ? ' ● Genre: ' . implode('|', $album->genres) : '';
 						$w->result(null, '', ucfirst($album->name), $album->album_type . " by " . $artist_name . ' ● Release date: ' . $album->release_date . $genre, getTrackOrAlbumArtwork($w, $theme, $album->uri, false), 'no', null, "Online▹" . $artist_uri . "@" . $artist_name . "@" . $album->uri . "@" . $album->name);
 					}
 				}
@@ -881,22 +878,22 @@ if (mb_strlen($query) < 3 ||
 				$artist_name = $words[1];
 				$album_uri = $words[2];
 				$album_name = $words[3];
-				
+
 				$tmp_uri = explode(':', $album_uri);
 
-				$json = doWebApiRequest($w,"https://api.spotify.com/v1/albums/" . $tmp_uri[2] . "/tracks");	
+				$json = doWebApiRequest($w, "https://api.spotify.com/v1/albums/" . $tmp_uri[2] . "/tracks");
 
 				$subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
 				if ($is_alfred_playlist_active == true) {
 					$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
 				}
 				$w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', null, '');
-				
-				
+
+
 
 				foreach ($json->items as $track) {
-					
-					if (count($track->available_markets) == 0 || in_array($country_code,$track->available_markets) !== false) {
+
+					if (count($track->available_markets) == 0 || in_array($country_code, $track->available_markets) !== false) {
 						$track_artwork = getTrackOrAlbumArtwork($w, $theme, $track->uri, false);
 						$w->result(null, serialize(array($track->uri /*track_uri*/ , $album_uri /* album_uri */ , $artist_uri /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , '' /* other_action */ , $alfred_playlist_uri /* alfred_playlist_uri */ , $artist_name  /* artist_name */, $track->name /* track_name */, $album_name /* album_name */, $track_artwork /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), ucfirst($artist_name) . " ● " . $track->name,
 							array(

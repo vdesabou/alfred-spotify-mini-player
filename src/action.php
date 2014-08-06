@@ -533,6 +533,7 @@ function starCurrentTrack($w) {
 	return;
 }
 
+
 /**
  * unstarCurrentTrack function.
  *
@@ -578,6 +579,7 @@ function unstarCurrentTrack($w) {
 	return;
 }
 
+
 /**
  * refreshPlaylist function.
  *
@@ -609,5 +611,6 @@ function refreshPlaylist($w, $playlist_uri) {
 	return;
 
 }
+
 
 ?>
