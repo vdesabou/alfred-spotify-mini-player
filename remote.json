@@ -1,5 +1,5 @@
 {
-    "version": 4.44,
+    "version": 4.45,
     "download_url": "https://raw.githubusercontent.com/packal/repository/master/com.vdesabou.spotify.mini.player/spotifyminiplayer.alfredworkflow",
-    "description": "Moved to new Spotify WEB API for online lookups - Display release date of album in online mode"
+    "description": "Second attempt to get related artists more reliable - Improved performances of Update Library, Update Playlist and Update Playlist List"
 }
