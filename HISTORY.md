@@ -1,5 +1,12 @@
 ## History
 
+4.4.5:
+
+* Second attempt to get related artists more reliable
+
+* Improved performances of Update Library, Update Playlist and Update Playlist List
+
+
 4.4.4:
 
 * Moved to new Spotify WEB API for online lookups
