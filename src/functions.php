@@ -542,7 +542,6 @@ function updateLibrary($jsonData) {
 		$w->write('Related Artists▹0▹' . count($artists) . '▹' . $words[3], 'update_library_in_progress');
 
 		$db->exec("create table tracks (starred boolean, popularity int, uri text, album_uri text, artist_uri text, track_name text, album_name text, artist_name text, album_year text, track_artwork_path text, artist_artwork_path text, album_artwork_path text, playlist_name text, playlist_uri text, playable boolean, availability text)");
-
 		$db->exec("CREATE INDEX IndexPlaylistUri ON tracks (playlist_uri)");
 		$db->exec("CREATE INDEX IndexArtistName ON tracks (artist_name)");
 		$db->exec("CREATE INDEX IndexAlbumName ON tracks (album_name)");
@@ -709,30 +708,37 @@ function updateLibrary($jsonData) {
 	
 			$getCount = 'select count(distinct uri) from tracks';
 			$stmt = $db->prepare($getCount);
+			$stmt->execute();
 			$all_tracks = $stmt->fetch();
 
 			$getCount = 'select count(distinct uri) from tracks where starred=1';
 			$stmt = $db->prepare($getCount);
+			$stmt->execute();
 			$starred_tracks = $stmt->fetch();
 			
 			$getCount = 'select count(distinct artist_name) from tracks';
 			$stmt = $db->prepare($getCount);
+			$stmt->execute();
 			$all_artists = $stmt->fetch();
 			
 			$getCount = 'select count(distinct artist_name) from tracks where starred=1';
 			$stmt = $db->prepare($getCount);
+			$stmt->execute();
 			$starred_artists = $stmt->fetch();
 			
 			$getCount = 'select count(distinct album_name) from tracks';
 			$stmt = $db->prepare($getCount);
+			$stmt->execute();
 			$all_albums = $stmt->fetch();
 			
 			$getCount = 'select count(distinct album_name) from tracks where starred=1';
 			$stmt = $db->prepare($getCount);
+			$stmt->execute();
 			$starred_albums = $stmt->fetch();
 
 			$getCount = 'select count(*) from playlists';
 			$stmt = $db->prepare($getCount);
+			$stmt->execute();
 			$playlists_count = $stmt->fetch();
 			
 			$insertCounter = "insert into counters values (:all_tracks,:starred_tracks,:all_artists,:starred_artists,:all_albums,:starred_albums,:playlists)";
@@ -746,6 +752,7 @@ function updateLibrary($jsonData) {
 			$stmt->bindValue(':starred_albums', $starred_albums[0]);
 			$stmt->bindValue(':playlists', $playlists_count[0]);
 			$stmt->execute();
+			
 		} catch (PDOException $e) {
 			handleDbIssuePdo($theme, $db);
 			$dbsettings=null;
@@ -787,22 +794,20 @@ function updatePlaylist($jsonData) {
 	//
 	// Read settings from DB
 	//
-	$getSettings = 'select theme from settings';
 	$dbfile = $w->data() . '/settings.db';
-	exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
-
-	if ($returnValue != 0) {
-		displayNotification("Error: cannot read settings");
+	try {
+		$dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
+		$dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$getSettings = 'select theme from settings';
+		$stmt = $dbsettings->prepare($getSettings);
+		$setting = $stmt->fetch();
+		$theme = $setting[0];
+	} catch (PDOException $e) {
+		handleDbIssuePdo('new', $dbsettings);
+		$dbsettings=null;
 		unlink($w->data() . "/update_library_in_progress");
 		return;
 	}
-
-	foreach ($settings as $setting):
-
-		$setting = explode("	", $setting);
-
-	$theme = $setting[0];
-	endforeach;
 
 	$words = explode('▹', $in_progress_data);
 
@@ -813,101 +818,150 @@ function updatePlaylist($jsonData) {
 	//try to decode it
 	$json = json_decode($jsonData, true);
 	if (json_last_error() === JSON_ERROR_NONE) {
-		$nb_tracktotal = 0;
-		foreach ($json as $playlist) {
+		$dbfile = $w->data() . '/library.db';
+		
+		try {
+			$db = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
+			$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-			$nb_tracktotal += count($playlist['tracks']);
+		
+			$nb_tracktotal = 0;
+			foreach ($json as $playlist) {
+				$nb_tracktotal += count($playlist['tracks']);
+			}
+			$w->write('Playlist▹0▹' . $nb_tracktotal . '▹' . $words[3], 'update_library_in_progress');
+	
+			$db->exec("drop table counters");
+			$db->exec("create table counters (all_tracks int, starred_tracks int, all_artists int, starred_artists int, all_albums int, starred_albums int, playlists int)");
+	
+			$nb_track = 0;
 
-		}
-		$w->write('Playlist▹0▹' . $nb_tracktotal . '▹' . $words[3], 'update_library_in_progress');
+			$deleteFromTracks="delete from tracks where playlist_uri=:playlist_uri";
+			$stmt = $db->prepare($deleteFromTracks);
+			$stmt->bindValue(':playlist_uri', $playlist['uri']);
+			$stmt->execute();
 
-		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "drop table counters"';
-		exec($sql);
-
-		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table counters (all_tracks int, starred_tracks int, all_artists int, starred_artists int, all_albums int, starred_albums int, playlists int)"';
-		exec($sql);
-
-		$nb_track = 0;
-
-		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"delete from tracks where playlist_uri=\"' . $playlist['uri'] . '\""';
-		exec($sql);
-
-		foreach ($json as $playlist) {
-			$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "update playlists set nb_tracks=' . count($playlist['tracks']) . ' where uri=\"' . $playlist['uri'] . '\""';
-			exec($sql);
-
-			foreach ($playlist['tracks'] as $track) {
-
-				if ($track['starred'] == true) {
-					$starred = 1;
-				} else {
-					$starred = 0;
-				}
-
-				if ($track['playable'] == true) {
-					$playable = 1;
-				} else {
-					$playable = 0;
-				}
-
-				//
-				// Download artworks
-				$track_artwork_path = getTrackOrAlbumArtwork($w, $theme, $track['uri'], true);
-				$artist_artwork_path = getArtistArtwork($w, $theme, $track['artist_name'], true);
-				$album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $track['album_uri'], true);
-
-				$album_year = 1995;
-
-				$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into tracks values (' . $starred . ',' . $track['popularity'] . ',\"' . $track['uri'] . '\",\"' . $track['album_uri'] . '\",\"' . $track['artist_uri'] . '\",\"' . escapeQuery($track['name']) . '\",\"' . escapeQuery($track['album_name']) . '\",\"' . escapeQuery($track['artist_name']) . '\"' . ',' . $album_year . ',\"' . $track_artwork_path . '\"' . ',\"' . $artist_artwork_path . '\"' . ',\"' . $album_artwork_path . '\"' . ',\"' . escapeQuery($track['playlist_name']) . '\"' . ',\"' . $track['playlist_uri'] . '\"' . ',' . $playable . ',\"' . $track['availability'] . '\"' . ')"';
-				exec($sql);
-
-				$nb_track++;
-				if ($nb_track % 10 === 0) {
-					$w->write('Playlist▹' . $nb_track . '▹' . $nb_tracktotal . '▹' . $words[3], 'update_library_in_progress');
+			$updatePlaylistsNbTracks="update playlists set nb_tracks=:nb_tracks where uri=:uri";
+			$stmt = $db->prepare($updatePlaylistsNbTracks);
+			
+			$insertTrack = "insert into tracks values (:starred,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_year,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:availability)";
+			$stmtTrack = $db->prepare($insertTrack);
+						
+						
+			foreach ($json as $playlist) {
+				$stmt->bindValue(':nb_tracks', count($playlist['tracks']));
+				$stmt->bindValue(':uri', $playlist['uri']);
+				$stmt->execute();
+					
+				foreach ($playlist['tracks'] as $track) {
+	
+					if ($track['starred'] == true) {
+						$starred = 1;
+					} else {
+						$starred = 0;
+					}
+	
+					if ($track['playable'] == true) {
+						$playable = 1;
+					} else {
+						$playable = 0;
+					}
+	
+					//
+					// Download artworks
+					$track_artwork_path = getTrackOrAlbumArtwork($w, $theme, $track['uri'], true);
+					$artist_artwork_path = getArtistArtwork($w, $theme, $track['artist_name'], true);
+					$album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $track['album_uri'], true);
+	
+					$album_year = 1995;
+	
+					$stmtTrack->bindValue(':starred', $starred);	
+					$stmtTrack->bindValue(':popularity', $track['popularity']);
+					$stmtTrack->bindValue(':uri',$track['uri']);
+					$stmtTrack->bindValue(':album_uri',$track['album_uri']);
+					$stmtTrack->bindValue(':artist_uri',$track['artist_uri']);
+					$stmtTrack->bindValue(':track_name',escapeQuery($track['name']));
+					$stmtTrack->bindValue(':album_name',escapeQuery($track['album_name']));
+					$stmtTrack->bindValue(':artist_name',escapeQuery($track['artist_name']));
+					$stmtTrack->bindValue(':album_year',$album_year);
+					$stmtTrack->bindValue(':track_artwork_path',$track_artwork_path);
+					$stmtTrack->bindValue(':artist_artwork_path',$artist_artwork_path);
+					$stmtTrack->bindValue(':album_artwork_path',$album_artwork_path);
+					$stmtTrack->bindValue(':playlist_name',escapeQuery($track['playlist_name']));
+					$stmtTrack->bindValue(':playlist_uri',$track['playlist_uri']);
+					$stmtTrack->bindValue(':playable',$playable);
+					$stmtTrack->bindValue(':availability',$track['availability']);
+					$stmtTrack->execute();	
+	
+					$nb_track++;
+					if ($nb_track % 10 === 0) {
+						$w->write('Playlist▹' . $nb_track . '▹' . $nb_tracktotal . '▹' . $words[3], 'update_library_in_progress');
+					}
 				}
 			}
+	
+			$getCount = 'select count(distinct uri) from tracks';
+			$stmt = $db->prepare($getCount);
+			$stmt->execute();
+			$all_tracks = $stmt->fetch();
+
+			$getCount = 'select count(distinct uri) from tracks where starred=1';
+			$stmt = $db->prepare($getCount);
+			$stmt->execute();
+			$starred_tracks = $stmt->fetch();
+			
+			$getCount = 'select count(distinct artist_name) from tracks';
+			$stmt = $db->prepare($getCount);
+			$stmt->execute();
+			$all_artists = $stmt->fetch();
+			
+			$getCount = 'select count(distinct artist_name) from tracks where starred=1';
+			$stmt = $db->prepare($getCount);
+			$stmt->execute();
+			$starred_artists = $stmt->fetch();
+			
+			$getCount = 'select count(distinct album_name) from tracks';
+			$stmt = $db->prepare($getCount);
+			$stmt->execute();
+			$all_albums = $stmt->fetch();
+			
+			$getCount = 'select count(distinct album_name) from tracks where starred=1';
+			$stmt = $db->prepare($getCount);
+			$stmt->execute();
+			$starred_albums = $stmt->fetch();
+
+			$getCount = 'select count(*) from playlists';
+			$stmt = $db->prepare($getCount);
+			$stmt->execute();
+			$playlists_count = $stmt->fetch();
+			
+			$insertCounter = "insert into counters values (:all_tracks,:starred_tracks,:all_artists,:starred_artists,:all_albums,:starred_albums,:playlists)";
+			$stmt = $db->prepare($insertCounter);
+			
+			$stmt->bindValue(':all_tracks', $all_tracks[0]);
+			$stmt->bindValue(':starred_tracks', $starred_tracks[0]);
+			$stmt->bindValue(':all_artists', $all_artists[0]);
+			$stmt->bindValue(':starred_artists', $starred_artists[0]);
+			$stmt->bindValue(':all_albums', $all_albums[0]);
+			$stmt->bindValue(':starred_albums', $starred_albums[0]);
+			$stmt->bindValue(':playlists', $playlists_count[0]);
+			$stmt->execute();
+	
+			$elapsed_time = time() - $words[3];
+	
+			displayNotificationWithArtwork("\nPlaylist " . $playlist['name'] . " has been updated (" . $nb_track . " tracks) - it took " . beautifyTime($elapsed_time), getPlaylistArtwork($w, 'black', $playlist['uri'], true));
+			
+			unlink($w->data() . "/update_library_in_progress");
+
+		} catch (PDOException $e) {
+			handleDbIssuePdo($theme, $db);
+			$dbsettings=null;
+			$db=null;
+			unlink($w->data() . "/update_library_in_progress");
+			return;
 		}
-
-		$getCount = "select count(distinct uri) from tracks";
-		$dbfile = $w->data() . "/library.db";
-		exec("sqlite3 \"$dbfile\" \"$getCount\"", $all_tracks);
-
-		$getCount = "select count(distinct uri) from tracks where starred=1";
-		$dbfile = $w->data() . "/library.db";
-		exec("sqlite3 \"$dbfile\" \"$getCount\"", $starred_tracks);
-
-		$getCount = "select count(distinct artist_name) from tracks";
-		$dbfile = $w->data() . "/library.db";
-		exec("sqlite3 \"$dbfile\" \"$getCount\"", $all_artists);
-
-		$getCount = "select count(distinct artist_name) from tracks where starred=1";
-		$dbfile = $w->data() . "/library.db";
-		exec("sqlite3 \"$dbfile\" \"$getCount\"", $starred_artists);
-
-		$getCount = "select count(distinct album_name) from tracks";
-		$dbfile = $w->data() . "/library.db";
-		exec("sqlite3 \"$dbfile\" \"$getCount\"", $all_albums);
-
-		$getCount = "select count(distinct album_name) from tracks where starred=1";
-		$dbfile = $w->data() . "/library.db";
-		exec("sqlite3 \"$dbfile\" \"$getCount\"", $starred_albums);
-
-		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into counters values (' . $all_tracks[0] . ',' . $starred_tracks[0] . ',' . $all_artists[0] . ',' . $starred_artists[0] . ',' . $all_albums[0] . ',' . $starred_albums[0] . ',' . '\"\"' . ')"';
-		exec($sql);
-
-		$getCount = "select count(*) from playlists";
-		$dbfile = $w->data() . "/library.db";
-		exec("sqlite3 \"$dbfile\" \"$getCount\"", $playlists_count);
-
-		// update counters for playlists
-		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"update counters set playlists=' . $playlists_count[0] . '"';
-		exec($sql);
-
-		$elapsed_time = time() - $words[3];
-
-		displayNotificationWithArtwork("\nPlaylist " . $playlist['name'] . " has been updated (" . $nb_track . " tracks) - it took " . beautifyTime($elapsed_time), getPlaylistArtwork($w, 'black', $playlist['uri'], true));
-
-		unlink($w->data() . "/update_library_in_progress");
+		
+		
 	} else {
 		//it's not JSON. Log error
 		displayNotification("ERROR: JSON data is not valid!");
@@ -940,22 +994,20 @@ function updatePlaylistList($jsonData) {
 	//
 	// Read settings from DB
 	//
-	$getSettings = 'select theme from settings';
 	$dbfile = $w->data() . '/settings.db';
-	exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
-
-	if ($returnValue != 0) {
-		displayNotification("Error: cannot read settings");
+	try {
+		$dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
+		$dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$getSettings = 'select theme from settings';
+		$stmt = $dbsettings->prepare($getSettings);
+		$setting = $stmt->fetch();
+		$theme = $setting[0];
+	} catch (PDOException $e) {
+		handleDbIssuePdo('new', $dbsettings);
+		$dbsettings=null;
 		unlink($w->data() . "/update_library_in_progress");
 		return;
 	}
-
-	foreach ($settings as $setting):
-
-		$setting = explode("	", $setting);
-
-	$theme = $setting[0];
-	endforeach;
 
 	$words = explode('▹', $in_progress_data);
 
@@ -970,145 +1022,193 @@ function updatePlaylistList($jsonData) {
 
 		$w->write('Playlist List▹0▹' . $nb_playlist_total . '▹' . $words[3], 'update_library_in_progress');
 
-		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "drop table counters"';
-		exec($sql);
+		$dbfile = $w->data() . '/library.db';
+		
+		try {
+			$db = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
+			$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			
+			$db->exec("drop table counters");
+			$db->exec("create table counters (all_tracks int, starred_tracks int, all_artists int, starred_artists int, all_albums int, starred_albums int, playlists int)");
+	
+			$getPlaylists = "select * from playlists where name=:name and username=:username";
+			$stmt = $db->prepare($getPlaylists);
+			
+			$insertPlaylist = "insert into playlists values (:uri,:name,:count_tracks,:owner,:username,:playlist_artwork_path,:ownedbyuser)";
+			$stmtPlaylist = $db->prepare($insertPlaylist);
 
-		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . ' "create table counters (all_tracks int, starred_tracks int, all_artists int, starred_artists int, all_albums int, starred_albums int, playlists int)"';
-		exec($sql);
-
-		foreach ($json as $playlist) {
-			$playlists = array();
-			$getPlaylists = "select * from playlists where name='" . escapeQuery($playlist['name']) . "'" . " and username='" . $playlist['username'] . "'";
-			$dbfile = $w->data() . "/library.db";
-			exec("sqlite3 -separator '	' \"$dbfile\" \"$getPlaylists\" 2>&1", $playlists, $returnValue);
-
-			$nb_playlist++;
-			if ($nb_playlist % 4 === 0) {
-				$w->write('Playlist List▹' . $nb_playlist . '▹' . $nb_playlist_total . '▹' . $words[3], 'update_library_in_progress');
-			}
-
-			if ($returnValue != 0) {
-				displayNotification("ERROR: when processing playlist" . escapeQuery($playlist['name']) . " with uri " . $playlist['uri'] . "\n");
-				continue;
-			}
-
-			// Add the new playlist
-			if (count($playlists) == 0) {
-				displayNotification("Added playlist " . $playlist['name'] . "\n");
-				$playlist_artwork_path = getPlaylistArtwork($w, 'black', $playlist['uri'], true);
-
-				if ($playlist['ownedbyuser'] == true) {
-					$ownedbyuser = 1;
-				} else {
-					$ownedbyuser = 0;
-				}
-
-				$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into playlists values (\"' . $playlist['uri'] . '\",\"' . escapeQuery($playlist['name']) . '\",' . count($playlist['tracks']) . ',\"' . $playlist['owner'] . '\",\"' . $playlist['username'] . '\",\"' . $playlist_artwork_path . '\",' . $ownedbyuser . ')"';
-				exec($sql);
-
-				foreach ($playlist['tracks'] as $track) {
-
-					if ($track['starred'] == true) {
-						$starred = 1;
-					} else {
-						$starred = 0;
-					}
-
-					if ($track['playable'] == true) {
-						$playable = 1;
-					} else {
-						$playable = 0;
-					}
-
-					//
-					// Download artworks
-					$track_artwork_path = getTrackOrAlbumArtwork($w, $theme, $track['uri'], true);
-					$artist_artwork_path = getArtistArtwork($w, $theme, $track['artist_name'], true);
-					$album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $track['album_uri'], true);
-
-					$album_year = 1995;
-
-					$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into tracks values (' . $starred . ',' . $track['popularity'] . ',\"' . $track['uri'] . '\",\"' . $track['album_uri'] . '\",\"' . $track['artist_uri'] . '\",\"' . escapeQuery($track['name']) . '\",\"' . escapeQuery($track['album_name']) . '\",\"' . escapeQuery($track['artist_name']) . '\"' . ',' . $album_year . ',\"' . $track_artwork_path . '\"' . ',\"' . $artist_artwork_path . '\"' . ',\"' . $album_artwork_path . '\"' . ',\"' . escapeQuery($track['playlist_name']) . '\"' . ',\"' . $track['playlist_uri'] . '\"' . ',' . $playable . ',\"' . $track['availability'] . '\"' . ')"';
-
-					exec($sql);
-
-				}
-			} else {
-				continue;
-			}
-		}
-
-		// check for deleted playlists
-		$playlists = array();
-
-		$getPlaylists = "select * from playlists";
-
-		$dbfile = $w->data() . "/library.db";
-
-		exec("sqlite3 -separator '	' \"$dbfile\" \"$getPlaylists\" 2>&1", $playlists, $returnValue);
-
-		if ($returnValue != 0) {
-			displayNotification("ERROR: when checking deleted playlist");
-		} else {
-			foreach ($playlists as $pl):
-				$pl = explode("	", $pl);
-
-			$found = 0;
+			$insertTrack = "insert into tracks values (:starred,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_year,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:availability)";
+			$stmtTrack = $db->prepare($insertTrack);
+						
 			foreach ($json as $playlist) {
-				if (escapeQuery($playlist['name']) == escapeQuery($pl[1]) && $playlist['username'] == $pl[4]) {
-					$found = 1;
+				
+				$stmt->bindValue(':name', escapeQuery($playlist['name']));
+				$stmt->bindValue(':username', $playlist['username']);
+				$stmt->execute();
+				
+				$noresult=true;
+				while ($playlists = $stmt->fetch()) {
+					$noresult=false;
 					break;
 				}
+									
+				$nb_playlist++;
+				if ($nb_playlist % 4 === 0) {
+					$w->write('Playlist List▹' . $nb_playlist . '▹' . $nb_playlist_total . '▹' . $words[3], 'update_library_in_progress');
+				}
+
+				// Add the new playlist
+				if ($noresult == true) {
+					displayNotification("Added playlist " . $playlist['name'] . "\n");
+					$playlist_artwork_path = getPlaylistArtwork($w, 'black', $playlist['uri'], true);
+	
+					if ($playlist['ownedbyuser'] == true) {
+						$ownedbyuser = 1;
+					} else {
+						$ownedbyuser = 0;
+					}
+
+					$stmtPlaylist->bindValue(':uri', $playlist['uri']);
+					$stmtPlaylist->bindValue(':name', escapeQuery($playlist['name']));
+					$stmtPlaylist->bindValue(':count_tracks', count($playlist['tracks']));
+					$stmtPlaylist->bindValue(':owner', $playlist['owner']);
+					$stmtPlaylist->bindValue(':username', $playlist['username']);
+					$stmtPlaylist->bindValue(':playlist_artwork_path', $playlist_artwork_path);
+					$stmtPlaylist->bindValue(':ownedbyuser', $ownedbyuser);
+					$stmtPlaylist->execute();
+				
+					foreach ($playlist['tracks'] as $track) {
+	
+						if ($track['starred'] == true) {
+							$starred = 1;
+						} else {
+							$starred = 0;
+						}
+	
+						if ($track['playable'] == true) {
+							$playable = 1;
+						} else {
+							$playable = 0;
+						}
+	
+						//
+						// Download artworks
+						$track_artwork_path = getTrackOrAlbumArtwork($w, $theme, $track['uri'], true);
+						$artist_artwork_path = getArtistArtwork($w, $theme, $track['artist_name'], true);
+						$album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $track['album_uri'], true);
+	
+						$album_year = 1995;
+	
+						$stmtTrack->bindValue(':starred', $starred);	
+						$stmtTrack->bindValue(':popularity', $track['popularity']);
+						$stmtTrack->bindValue(':uri',$track['uri']);
+						$stmtTrack->bindValue(':album_uri',$track['album_uri']);
+						$stmtTrack->bindValue(':artist_uri',$track['artist_uri']);
+						$stmtTrack->bindValue(':track_name',escapeQuery($track['name']));
+						$stmtTrack->bindValue(':album_name',escapeQuery($track['album_name']));
+						$stmtTrack->bindValue(':artist_name',escapeQuery($track['artist_name']));
+						$stmtTrack->bindValue(':album_year',$album_year);
+						$stmtTrack->bindValue(':track_artwork_path',$track_artwork_path);
+						$stmtTrack->bindValue(':artist_artwork_path',$artist_artwork_path);
+						$stmtTrack->bindValue(':album_artwork_path',$album_artwork_path);
+						$stmtTrack->bindValue(':playlist_name',escapeQuery($track['playlist_name']));
+						$stmtTrack->bindValue(':playlist_uri',$track['playlist_uri']);
+						$stmtTrack->bindValue(':playable',$playable);
+						$stmtTrack->bindValue(':availability',$track['availability']);
+						$stmtTrack->execute();
+	
+					}
+				} else {
+					continue;
+				}
 			}
-			if ($found != 1) {
-				displayNotification("Playlist " . escapeQuery($pl[1]) . " was removed" . "\n");
-				$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"delete from playlists where uri=\"' . $pl[0] . '\""';
-				exec($sql);
-				$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"delete from tracks where playlist_uri=\"' . $pl[0] . '\""';
-				exec($sql);
+	
+			// check for deleted playlists	
+			$getPlaylists = "select * from playlists";
+			$stmt = $db->prepare($getPlaylists);
+			$stmt->execute();
+
+			while ($pl = $stmt->fetch()) {
+				$found = 0;
+				foreach ($json as $playlist) {
+					if (escapeQuery($playlist['name']) == escapeQuery($pl[1]) && $playlist['username'] == $pl[4]) {
+						$found = 1;
+						break;
+					}
+				}
+				if ($found != 1) {
+					$deleteFromPlaylist="delete from playlists where uri=:uri";
+					$stmtDelete = $db->prepare($deleteFromPlaylist);
+					$stmtDelete->bindValue(':uri', $pl[0]);
+					$stmtDelete->execute();
+
+					$deleteFromTracks="delete from tracks where playlist_uri=:uri";
+					$stmtDelete = $db->prepare($deleteFromTracks);
+					$stmtDelete->bindValue(':uri', $pl[0]);
+					$stmtDelete->execute();
+					displayNotification("Playlist " . escapeQuery($pl[1]) . " was removed" . "\n");
+				}			
 			}
-			endforeach;
+	
+			$getCount = 'select count(distinct uri) from tracks';
+			$stmt = $db->prepare($getCount);
+			$stmt->execute();
+			$all_tracks = $stmt->fetch();
+
+			$getCount = 'select count(distinct uri) from tracks where starred=1';
+			$stmt = $db->prepare($getCount);
+			$stmt->execute();
+			$starred_tracks = $stmt->fetch();
+			
+			$getCount = 'select count(distinct artist_name) from tracks';
+			$stmt = $db->prepare($getCount);
+			$stmt->execute();
+			$all_artists = $stmt->fetch();
+			
+			$getCount = 'select count(distinct artist_name) from tracks where starred=1';
+			$stmt = $db->prepare($getCount);
+			$stmt->execute();
+			$starred_artists = $stmt->fetch();
+			
+			$getCount = 'select count(distinct album_name) from tracks';
+			$stmt = $db->prepare($getCount);
+			$stmt->execute();
+			$all_albums = $stmt->fetch();
+			
+			$getCount = 'select count(distinct album_name) from tracks where starred=1';
+			$stmt = $db->prepare($getCount);
+			$stmt->execute();
+			$starred_albums = $stmt->fetch();
+
+			$getCount = 'select count(*) from playlists';
+			$stmt = $db->prepare($getCount);
+			$stmt->execute();
+			$playlists_count = $stmt->fetch();
+			
+			$insertCounter = "insert into counters values (:all_tracks,:starred_tracks,:all_artists,:starred_artists,:all_albums,:starred_albums,:playlists)";
+			$stmt = $db->prepare($insertCounter);
+			
+			$stmt->bindValue(':all_tracks', $all_tracks[0]);
+			$stmt->bindValue(':starred_tracks', $starred_tracks[0]);
+			$stmt->bindValue(':all_artists', $all_artists[0]);
+			$stmt->bindValue(':starred_artists', $starred_artists[0]);
+			$stmt->bindValue(':all_albums', $all_albums[0]);
+			$stmt->bindValue(':starred_albums', $starred_albums[0]);
+			$stmt->bindValue(':playlists', $playlists_count[0]);
+			$stmt->execute();
+	
+			$elapsed_time = time() - $words[3];
+			displayNotification("Playlist list has been updated - it took " . beautifyTime($elapsed_time));
+	
+			unlink($w->data() . "/update_library_in_progress");
+		
+		} catch (PDOException $e) {
+			handleDbIssuePdo($theme, $db);
+			$dbsettings=null;
+			$db=null;
+			unlink($w->data() . "/update_library_in_progress");
+			return;
 		}
-
-		$getCount = "select count(distinct uri) from tracks";
-		$dbfile = $w->data() . "/library.db";
-		exec("sqlite3 \"$dbfile\" \"$getCount\"", $all_tracks);
-
-		$getCount = "select count(distinct uri) from tracks where starred=1";
-		$dbfile = $w->data() . "/library.db";
-		exec("sqlite3 \"$dbfile\" \"$getCount\"", $starred_tracks);
-
-		$getCount = "select count(distinct artist_name) from tracks";
-		$dbfile = $w->data() . "/library.db";
-		exec("sqlite3 \"$dbfile\" \"$getCount\"", $all_artists);
-
-		$getCount = "select count(distinct artist_name) from tracks where starred=1";
-		$dbfile = $w->data() . "/library.db";
-		exec("sqlite3 \"$dbfile\" \"$getCount\"", $starred_artists);
-
-		$getCount = "select count(distinct album_name) from tracks";
-		$dbfile = $w->data() . "/library.db";
-		exec("sqlite3 \"$dbfile\" \"$getCount\"", $all_albums);
-
-		$getCount = "select count(distinct album_name) from tracks where starred=1";
-		$dbfile = $w->data() . "/library.db";
-		exec("sqlite3 \"$dbfile\" \"$getCount\"", $starred_albums);
-
-		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"insert into counters values (' . $all_tracks[0] . ',' . $starred_tracks[0] . ',' . $all_artists[0] . ',' . $starred_artists[0] . ',' . $all_albums[0] . ',' . $starred_albums[0] . ',' . '\"\"' . ')"';
-		exec($sql);
-
-		$getCount = "select count(*) from playlists";
-		$dbfile = $w->data() . "/library.db";
-		exec("sqlite3 \"$dbfile\" \"$getCount\"", $playlists_count);
-
-		// update counters for playlists
-		$sql = 'sqlite3 "' . $w->data() . '/library.db" ' . '"update counters set playlists=' . $playlists_count[0] . '"';
-		exec($sql);
-
-		$elapsed_time = time() - $words[3];
-		displayNotification("Playlist list has been updated - it took " . beautifyTime($elapsed_time));
-
-		unlink($w->data() . "/update_library_in_progress");
 	} else {
 		//it's not JSON. Log error
 		displayNotification("ERROR: JSON data is not valid!");
