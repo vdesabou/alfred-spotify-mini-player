@@ -404,7 +404,7 @@
 	<key>disabled</key>
 	<false/>
 	<key>name</key>
-	<string>Spotify Mini Player 4.4.5</string>
+	<string>Spotify Mini Player 4.4.6</string>
 	<key>objects</key>
 	<array>
 		<dict>
@@ -1145,7 +1145,7 @@ end alfred_script</string>
 				<key>runningsubtext</key>
 				<string>Wait for it...</string>
 				<key>script</key>
-				<string>php -f debug.php</string>
+				<string>php -f ./src/debug.php</string>
 				<key>subtext</key>
 				<string>Send the generated tgz file to the workflow author</string>
 				<key>title</key>
