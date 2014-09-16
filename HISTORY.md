@@ -1,5 +1,9 @@
 ## History
 
+4.4.6:
+
+* Fixed spot_mini_debug
+
 4.4.5:
 
 * Second attempt to get related artists more reliable
