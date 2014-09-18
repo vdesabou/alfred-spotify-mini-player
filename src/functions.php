@@ -326,6 +326,7 @@ function getPlaylistArtwork($w, $theme, $playlistURI, $fetchIfNotPresent) {
 	if (!is_file($currentArtwork)) {
 		if ($fetchIfNotPresent == true) {
 			$artwork = getPlaylistArtworkURL($w, $url);
+			
 
 			// if return 0, it is a 404 error, no need to fetch
 			if (!empty($artwork) || (is_numeric($artwork) && $artwork != 0)) {
@@ -422,7 +423,7 @@ function getTrackArtworkURL($w, $type, $id) {
 
 	if (!empty($html)) {
 		preg_match_all('/.*?og:image.*?content="(.*?)">.*?/is', $html, $m);
-		return (isset($m[1][0])) ? $m[1][0] : 0;
+		return (isset($m[1][0])) ? 'http://o.scdn.co/image/' . $m[1][0] : 0;
 	}
 
 	return 0;
@@ -442,7 +443,7 @@ function getPlaylistArtworkURL($w, $url) {
 
 	if (!empty($html)) {
 		preg_match_all('/.*?og:image.*?content="(.*?)">.*?/is', $html, $m);
-		return (isset($m[1][0])) ? $m[1][0] : 0;
+		return (isset($m[1][0])) ? 'http://o.scdn.co/image/' . $m[1][0] : 0;
 	}
 
 	return 0;
