@@ -969,7 +969,7 @@ function updatePlaylist($jsonData) {
 
 			$elapsed_time = time() - $words[3];
 
-			displayNotificationWithArtwork("\nPlaylist " . $playlist['name'] . " has been updated (" . $nb_track . " tracks) - it took " . beautifyTime($elapsed_time), getPlaylistArtwork($w, 'black', $playlist['uri'], true));
+			displayNotificationWithArtwork("\nPlaylist " . $playlist['name'] . " has been updated (" . $nb_track . " tracks) - it took " . beautifyTime($elapsed_time), getPlaylistArtwork($w, $theme, $playlist['uri'], true));
 
 			unlink($w->data() . "/update_library_in_progress");
 
@@ -1084,7 +1084,7 @@ function updatePlaylistList($jsonData) {
 				// Add the new playlist
 				if ($noresult == true) {
 					displayNotification("Added playlist " . $playlist['name'] . "\n");
-					$playlist_artwork_path = getPlaylistArtwork($w, 'black', $playlist['uri'], true);
+					$playlist_artwork_path = getPlaylistArtwork($w, $theme, $playlist['uri'], true);
 
 					if ($playlist['ownedbyuser'] == true) {
 						$ownedbyuser = 1;
