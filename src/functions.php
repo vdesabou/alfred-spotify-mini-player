@@ -419,11 +419,16 @@ function getArtistArtwork($w, $theme, $artist, $fetchIfNotPresent) {
  * @return void
  */
 function getTrackArtworkURL($w, $type, $id) {
-	$html = $w->request("http://open.spotify.com/$type/$id");
+	$options = array(
+		CURLOPT_FOLLOWLOCATION => 1
+	);
 
+	$html = $w->request("http://open.spotify.com/$type/$id",$options);
+	
 	if (!empty($html)) {
+		// <meta property="og:image" content="http://o.scdn.co/image/635ee3ae30686e97e01900d2797690e356958729">
 		preg_match_all('/.*?og:image.*?content="(.*?)">.*?/is', $html, $m);
-		return (isset($m[1][0])) ? 'http://o.scdn.co/image/' . $m[1][0] : 0;
+		return (isset($m[1][0])) ? $m[1][0] : 0;
 	}
 
 	return 0;
@@ -442,6 +447,7 @@ function getPlaylistArtworkURL($w, $url) {
 	$html = $w->request($url);
 
 	if (!empty($html)) {
+		// <meta property="og:image" content="b67ffda66531dd025683ed0469d55d7ce98e6ccc">
 		preg_match_all('/.*?og:image.*?content="(.*?)">.*?/is', $html, $m);
 		return (isset($m[1][0])) ? 'http://o.scdn.co/image/' . $m[1][0] : 0;
 	}
