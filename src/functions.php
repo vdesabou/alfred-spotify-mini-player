@@ -490,6 +490,7 @@ function updateLibrary($jsonData) {
 		$dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$getSettings = 'select theme from settings';
 		$stmt = $dbsettings->prepare($getSettings);
+		$stmt->execute();
 		$setting = $stmt->fetch();
 		$theme = $setting[0];
 	} catch (PDOException $e) {
@@ -817,6 +818,7 @@ function updatePlaylist($jsonData) {
 		$dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$getSettings = 'select theme from settings';
 		$stmt = $dbsettings->prepare($getSettings);
+		$stmt->execute();
 		$setting = $stmt->fetch();
 		$theme = $setting[0];
 	} catch (PDOException $e) {
@@ -1020,6 +1022,7 @@ function updatePlaylistList($jsonData) {
 		$dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$getSettings = 'select theme from settings';
 		$stmt = $dbsettings->prepare($getSettings);
+		$stmt->execute();
 		$setting = $stmt->fetch();
 		$theme = $setting[0];
 	} catch (PDOException $e) {

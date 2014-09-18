@@ -295,7 +295,7 @@ if (mb_strlen($query) < 3 ||
 				try {
 					$stmt = $db->prepare($getTracks);
 					$stmt->bindValue(':uri', $results[4]);
-					$tracks = $stmt->execute();
+					$stmt->execute();
 
 				} catch (PDOException $e) {
 					handleDbIssuePdo($theme, $db);
