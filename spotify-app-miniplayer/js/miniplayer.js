@@ -351,8 +351,9 @@ require(['$api/models', '$api/toplists#Toplist', '$api/library#Library'], functi
 				models.Playlist.fromURI(args[1] + ':' + args[2] + ':' + args[3] + ':' + args[4]).load('tracks').done(function(p) {
 					// This callback is fired when the playlist has loaded.
 					// The playlist object has a tracks property, which is a standard array.
-					var sorted = p.tracks.sort('addTime', 'desc');
-					sorted.snapshot().done(function(t) {
+					//var sorted = p.tracks.sort('addTime', 'desc');
+					//sorted.snapshot().done(function(t) {
+					p.tracks.snapshot().done(function(t) {
 						var tracks = t.toArray();
 						for (i = 0; i < tracks.length; i++) {
 							console.log(t.get(i).name);
@@ -380,8 +381,9 @@ require(['$api/models', '$api/toplists#Toplist', '$api/library#Library'], functi
 				models.Playlist.fromURI(args[1] + ':' + args[2] + ':' + args[3] + ':' + args[4] + ':' + args[5]).load('tracks').done(function(p) {
 					// This callback is fired when the playlist has loaded.
 					// The playlist object has a tracks property, which is a standard array.
-					var sorted = p.tracks.sort('addTime', 'desc');
-					sorted.snapshot().done(function(t) {
+					//var sorted = p.tracks.sort('addTime', 'desc');
+					//sorted.snapshot().done(function(t) {
+					p.tracks.snapshot().done(function(t) {
 						var tracks = t.toArray();
 						for (i = 0; i < tracks.length; i++) {
 							console.log(t.get(i).name);
@@ -462,8 +464,9 @@ require(['$api/models', '$api/toplists#Toplist', '$api/library#Library'], functi
 				playlist.tracks.clear().done(function(emptyCollection) {
 					var orginalplaylist = models.Playlist.fromURI(orginalplaylistUri);
 					orginalplaylist.load('name', 'tracks').done(function() {
-						var sorted = orginalplaylist.tracks.sort('addTime', 'desc');
-						sorted.snapshot().done(function(t) {
+						//p.tracks.snapshot().done(function(t) {
+						//var sorted = orginalplaylist.tracks.sort('addTime', 'desc');
+						orginalplaylist.tracks.snapshot().done(function(t) {
 							var tracks = t.toArray();
 							var tracksNew = [];
 							for (var i = 0; i < tracks.length; i++) {
@@ -507,8 +510,9 @@ require(['$api/models', '$api/toplists#Toplist', '$api/library#Library'], functi
 				playlist.tracks.clear().done(function(emptyCollection) {
 					var orginalplaylist = models.Playlist.fromURI(args[1] + ':' + args[2] + ':' + args[3] + ':' + args[4] + ':' + args[5]);
 					orginalplaylist.load('name', 'tracks').done(function() {
-						var sorted = orginalplaylist.tracks.sort('addTime', 'desc');
-						sorted.snapshot().done(function(t) {
+						//var sorted = orginalplaylist.tracks.sort('addTime', 'desc');
+						//sorted.snapshot().done(function(t) {
+						orginalplaylist.tracks.snapshot().done(function(t) {
 							var tracks = t.toArray();
 							playlist.tracks.add(tracks).done(function(addedTracks) {
 								playlist.tracks.snapshot().done(function(snapshot) {
@@ -775,8 +779,9 @@ require(['$api/models', '$api/toplists#Toplist', '$api/library#Library'], functi
 		playlist.load('tracks', 'name', 'owner').done(function() {
 			appendText("Starting to retrieve all tracks for playlist " + playlist.name);
 			playlist.owner.load('name', 'username', 'currentUser').done(function(owner) {
-				var sorted = playlist.tracks.sort('addTime', 'desc');
-				sorted.snapshot().done(function(snapshot) {
+				//var sorted = playlist.tracks.sort('addTime', 'desc');
+				//sorted.snapshot().done(function(snapshot) {
+				playlist.tracks.snapshot().done(function(snapshot) {
 					//check for empty playlists
 					if (snapshot.length == 0) {
 						p = {};
@@ -1195,6 +1200,7 @@ require(['$api/models', '$api/toplists#Toplist', '$api/library#Library'], functi
 		$("#commands a").click(function(e) {
 			switch ($(this).attr('command')) {
 			case "simulate_update_library":
+				
 				appendText("Simulate update library");
 				getAll(function(matchedAll) {
 					appendText("Success!!");
