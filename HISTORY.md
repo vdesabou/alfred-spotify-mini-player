@@ -1,5 +1,10 @@
 ## History
 
+4.4.8:
+
+* Temporarly fixed problem with update library (see https://github.com/vdesabou/alfred-spotify-mini-player/issues/22)
+
+
 4.4.7:
 
 * Fixed artwork download issues
