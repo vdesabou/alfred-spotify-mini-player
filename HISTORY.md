@@ -1,5 +1,9 @@
 ## History
 
+4.4.9:
+
+* Get a maximum of 1000 related artists (see https://github.com/vdesabou/alfred-spotify-mini-player/issues/22)
+
 4.4.8:
 
 * Temporarly fixed problem with update library (see https://github.com/vdesabou/alfred-spotify-mini-player/issues/22)
