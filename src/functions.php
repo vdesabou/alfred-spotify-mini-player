@@ -447,9 +447,8 @@ function getPlaylistArtworkURL($w, $url) {
 	$html = $w->request($url);
 
 	if (!empty($html)) {
-		// <meta property="og:image" content="b67ffda66531dd025683ed0469d55d7ce98e6ccc">
-		preg_match_all('/.*?og:image.*?content="(.*?)">.*?/is', $html, $m);
-		return (isset($m[1][0])) ? 'http://o.scdn.co/image/' . $m[1][0] : 0;
+		preg_match_all('/.*?twitter:image.*?content="(.*?)">.*?/is', $html, $m);
+		return (isset($m[1][0])) ? $m[1][0] : 0;
 	}
 
 	return 0;
