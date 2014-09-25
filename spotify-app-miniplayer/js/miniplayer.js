@@ -1077,14 +1077,24 @@ require(['$api/models', '$api/toplists#Toplist', '$api/library#Library'], functi
 				}
 			}
 		}
-		for (var i = 0, l = array_artists.length; i < l; i++) {
+		
+		var max_artists = 1000;
+		
+		if(array_artists.length > max_artists) {
+			appendText("There are too many artists (" + array_artists.length + ") only get the first " + max_artists + " ones");
+			nb_artists = max_artists;	
+		} else {
+			nb_artists = array_artists.length;
+		}
+			
+		for (var i = 0, l = nb_artists; i < l; i++) {
 			var a = array_artists[i];
 			var promise_artist = getRelatedArtistsPromise(a.artist_name, a.artist_uri);
 			promises.push(promise_artist);
 			models.Promise.join(promises).done(function(artists) {}).fail(function(artists) {
 				console.log('getRelatedArtistsPromise Failed to load at least one artist ', artists);
 			}).always(function(artists) {
-				if (array_artists.length == artists.length) {
+				if (nb_artists == artists.length) {
 					console.log("All artists have been retrieved", artists);
 					matchedAllRelatedArtistsCallback(artists);
 				}
@@ -1131,10 +1141,10 @@ require(['$api/models', '$api/toplists#Toplist', '$api/library#Library'], functi
 			getAllPlaylists(function(matchedAllPlaylists) {
 				results.playlists = matchedAllPlaylists;
 				appendText("All playlists have been processed");
-				appendText("Starting retrieval of all related artists");
+				appendText("Starting retrieval of all related artists");				
 				getAllRelatedArtists(results.playlists, function(matchedAllRelatedArtists) {
 					results.artists = matchedAllRelatedArtists;
-					appendText("Ended retrieval of all related artists. Found " + matchedAllRelatedArtists.length + " results.");
+					appendText("Ended retrieval of all related artists. Found " + matchedAllRelatedArtists.length + " artists.");
 					matchedAll(results);
 				});
 			});
