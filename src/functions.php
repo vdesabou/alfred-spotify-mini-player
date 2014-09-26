@@ -237,8 +237,8 @@ function getTrackOrAlbumArtwork($w, $theme, $spotifyURL, $fetchIfNotPresent) {
 	$currentArtwork = $w->data() . "/artwork/" . hash('md5', $hrefs[2] . ".png") . "/" . "$hrefs[2].png";
 	$artwork = "";
 
-	if (!is_file($currentArtwork)) {
-		if ($fetchIfNotPresent == true) {
+	if (!is_file($currentArtwork) || filesize($currentArtwork) == 0) {
+		if ($fetchIfNotPresent == true || filesize($currentArtwork) == 0) {
 			$artwork = getTrackArtworkURL($w, $hrefs[1], $hrefs[2]);
 
 			// if return 0, it is a 404 error, no need to fetch
@@ -323,10 +323,9 @@ function getPlaylistArtwork($w, $theme, $playlistURI, $fetchIfNotPresent) {
 
 	$currentArtwork = $w->data() . "/artwork/" . hash('md5', $filename . ".png") . "/" . "$filename.png";
 
-	if (!is_file($currentArtwork)) {
-		if ($fetchIfNotPresent == true) {
+	if (!is_file($currentArtwork) || filesize($currentArtwork) == 0) {
+		if ($fetchIfNotPresent == true || filesize($currentArtwork) == 0) {
 			$artwork = getPlaylistArtworkURL($w, $url);
-			
 
 			// if return 0, it is a 404 error, no need to fetch
 			if (!empty($artwork) || (is_numeric($artwork) && $artwork != 0)) {
@@ -341,7 +340,6 @@ function getPlaylistArtwork($w, $theme, $playlistURI, $fetchIfNotPresent) {
 				$w->request("$artwork", $options);
 			}
 		} else {
-
 			return "images/" . $theme . "/playlists.png";
 		}
 	} else {
@@ -378,8 +376,8 @@ function getArtistArtwork($w, $theme, $artist, $fetchIfNotPresent) {
 	$currentArtwork = $w->data() . "/artwork/" . hash('md5', $parsedArtist . ".png") . "/" . "$parsedArtist.png";
 	$artwork = "";
 
-	if (!is_file($currentArtwork)) {
-		if ($fetchIfNotPresent == true) {
+	if (!is_file($currentArtwork) || filesize($currentArtwork) == 0) {
+		if ($fetchIfNotPresent == true || filesize($currentArtwork) == 0) {
 			$artwork = getArtistArtworkURL($w, $artist);
 			// if return 0, it is a 404 error, no need to fetch
 			if (!empty($artwork) || (is_numeric($artwork) && $artwork != 0)) {
