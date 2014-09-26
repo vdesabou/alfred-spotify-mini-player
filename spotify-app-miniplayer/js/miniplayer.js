@@ -1077,16 +1077,13 @@ require(['$api/models', '$api/toplists#Toplist', '$api/library#Library'], functi
 				}
 			}
 		}
-		
 		var max_artists = 1000;
-		
-		if(array_artists.length > max_artists) {
+		if (array_artists.length > max_artists) {
 			appendText("There are too many artists (" + array_artists.length + ") only get the first " + max_artists + " ones");
-			nb_artists = max_artists;	
+			nb_artists = max_artists;
 		} else {
 			nb_artists = array_artists.length;
 		}
-			
 		for (var i = 0, l = nb_artists; i < l; i++) {
 			var a = array_artists[i];
 			var promise_artist = getRelatedArtistsPromise(a.artist_name, a.artist_uri);
@@ -1141,7 +1138,7 @@ require(['$api/models', '$api/toplists#Toplist', '$api/library#Library'], functi
 			getAllPlaylists(function(matchedAllPlaylists) {
 				results.playlists = matchedAllPlaylists;
 				appendText("All playlists have been processed");
-				appendText("Starting retrieval of all related artists");				
+				appendText("Starting retrieval of all related artists");
 				getAllRelatedArtists(results.playlists, function(matchedAllRelatedArtists) {
 					results.artists = matchedAllRelatedArtists;
 					appendText("Ended retrieval of all related artists. Found " + matchedAllRelatedArtists.length + " artists.");
@@ -1165,6 +1162,13 @@ require(['$api/models', '$api/toplists#Toplist', '$api/library#Library'], functi
 		myTextArea.innerHTML += myVar;
 		myTextArea.innerHTML += '\n';
 	}
+	/**
+	 * getAlbumsForArtist function.
+	 *
+	 * @access public
+	 * @param mixed artist_uri
+	 * @return void
+	 */
 
 	function getAlbumsForArtist(artist_uri) {
 		models.Artist.fromURI(artist_uri).load('albums', 'name').done(function(artist) {
@@ -1193,6 +1197,13 @@ require(['$api/models', '$api/toplists#Toplist', '$api/library#Library'], functi
 			});
 		});
 	}
+	/**
+	 * getAlbumPromise function.
+	 *
+	 * @access public
+	 * @param mixed album_uri
+	 * @return void
+	 */
 
 	function getAlbumPromise(album_uri) {
 		appendText("getAlbumPromise: " + album_uri);
@@ -1210,7 +1221,6 @@ require(['$api/models', '$api/toplists#Toplist', '$api/library#Library'], functi
 		$("#commands a").click(function(e) {
 			switch ($(this).attr('command')) {
 			case "simulate_update_library":
-				
 				appendText("Simulate update library");
 				getAll(function(matchedAll) {
 					appendText("Success!!");
