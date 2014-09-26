@@ -149,7 +149,6 @@ The workflow checks for update once per day, if an update is available, it will 
 
 Note that you can also force a check for update in Settings section
 
-
 ## Troubleshooting
 
 If you experience an issue with the workflow, use the "spot_mini_debug" command, it will generate a spot_mini_debug.tgz file in your Downloads directory. Then send this file to me.
