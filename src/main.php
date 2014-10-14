@@ -1271,12 +1271,12 @@ if (mb_strlen($query) < 3 ||
 								$playlistsfortrack = "";
 
 								$noresult2=true;
-								while ($playlist = $stmt2->fetch()) {
+								while ($playlist2 = $stmt2->fetch()) {
 									if
 									($noresult2==true) {
-										$playlistsfortrack = $playlistsfortrack . " ● In playlists: " . $playlist[0];
+										$playlistsfortrack = $playlistsfortrack . " ● In playlists: " . $playlist2[0];
 									} else {
-										$playlistsfortrack =  $playlistsfortrack . " ○ " . $playlist[0];
+										$playlistsfortrack =  $playlistsfortrack . " ○ " . $playlist2[0];
 									}
 									$noresult2=false;
 								}
