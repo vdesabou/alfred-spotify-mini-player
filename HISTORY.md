@@ -1,5 +1,9 @@
 ## History
 
+4.5:
+
+* Add Play artist option in Browse this artist mode
+
 4.4.91:
 
 * Fix for artworks being downloaded in online mode (regression)
