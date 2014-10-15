@@ -440,6 +440,13 @@ if ($playlist_uri != "") {
 				}
 				exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online▹" . $artist_uri . "@" . escapeQuery($artist_name) . "\"'");
 			}
+		else if ($other_action == "playartist") {
+	
+				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:playartistoralbum:$artist_uri:" . uniqid() . "\"'");
+				exec("osascript -e 'tell application \"Spotify\" to open location \"$artist_uri\"'");
+				displayNotificationWithArtwork('🔈 Artist ' . $artist_name, $artist_artwork_path);
+				return;
+			}
 		else if ($other_action == "update_library") {
 				if (! $w->internet()) {
 					displayNotificationWithArtwork("Error: No internet connection", './images/warning.png');
