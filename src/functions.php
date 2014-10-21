@@ -198,6 +198,20 @@ function displayNotificationForRandomTrack($track_name, $track_uri, $artist_name
 }
 
 /**
+ * displayNotificationForCurrentTrack function.
+ * 
+ * @access public
+ * @param mixed $track_name
+ * @param mixed $track_uri
+ * @param mixed $artist_name
+ * @return void
+ */
+function displayNotificationForCurrentTrack($track_name, $track_uri, $artist_name) {
+	$w = new Workflows('com.vdesabou.spotify.mini.player');
+	displayNotificationWithArtwork('🔈 ' . $track_name . ' by ' . $artist_name, getTrackOrAlbumArtwork($w, 'black', $track_uri, true));
+}
+
+/**
  * displayNotificationForStarredTrack function.
  *
  * @access public

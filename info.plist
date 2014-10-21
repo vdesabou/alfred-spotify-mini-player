@@ -245,6 +245,17 @@
 		</array>
 		<key>9845C770-A2CC-4752-A542-D71BE1081691</key>
 		<array/>
+		<key>A38DD404-DE03-42C2-B0CB-A37891B6F24D</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>BC672665-5E43-4892-B8D3-BFCBA48E34C4</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 		<key>A4437594-2A54-42A1-836E-129E46F5DB47</key>
 		<array>
 			<dict>
@@ -1133,37 +1144,36 @@ end alfred_script</string>
 			<dict>
 				<key>argumenttype</key>
 				<integer>2</integer>
-				<key>escaping</key>
-				<integer>127</integer>
 				<key>keyword</key>
-				<string>spot_mini_debug</string>
-				<key>runningsubtext</key>
-				<string>Wait for it...</string>
-				<key>script</key>
-				<string>php -f ./src/debug.php</string>
+				<string>current</string>
 				<key>subtext</key>
-				<string>Send the generated tgz file to the workflow author</string>
-				<key>title</key>
-				<string>Debug tools for Spotify Mini Player</string>
-				<key>type</key>
-				<integer>0</integer>
+				<string>Get current track information</string>
+				<key>text</key>
+				<string>Get Current Track info</string>
 				<key>withspace</key>
 				<false/>
 			</dict>
 			<key>type</key>
-			<string>alfred.workflow.input.scriptfilter</string>
+			<string>alfred.workflow.input.keyword</string>
 			<key>uid</key>
-			<string>CEF36AB9-7CC2-4765-BF84-751E88B69023</string>
+			<string>A38DD404-DE03-42C2-B0CB-A37891B6F24D</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
 		<dict>
 			<key>config</key>
-			<dict/>
+			<dict>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>php -f ./src/action.php -- "" "CURRENT" "CURRENT"</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
 			<key>type</key>
-			<string>alfred.workflow.action.browseinalfred</string>
+			<string>alfred.workflow.action.script</string>
 			<key>uid</key>
-			<string>F005BD44-180A-4A9A-9339-BE457D1E207F</string>
+			<string>BC672665-5E43-4892-B8D3-BFCBA48E34C4</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -1412,6 +1422,45 @@ end alfred_script</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>escaping</key>
+				<integer>127</integer>
+				<key>keyword</key>
+				<string>spot_mini_debug</string>
+				<key>runningsubtext</key>
+				<string>Wait for it...</string>
+				<key>script</key>
+				<string>php -f ./src/debug.php</string>
+				<key>subtext</key>
+				<string>Send the generated tgz file to the workflow author</string>
+				<key>title</key>
+				<string>Debug tools for Spotify Mini Player</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>CEF36AB9-7CC2-4765-BF84-751E88B69023</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict/>
+			<key>type</key>
+			<string>alfred.workflow.action.browseinalfred</string>
+			<key>uid</key>
+			<string>F005BD44-180A-4A9A-9339-BE457D1E207F</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string>Github page:
@@ -1513,7 +1562,7 @@ SOFTWARE.</string>
 		<key>4EB5FB5E-6472-4757-A479-B206B6080036</key>
 		<dict>
 			<key>ypos</key>
-			<real>1870</real>
+			<real>1840</real>
 		</dict>
 		<key>5AF7EEEC-2E55-482C-8750-4CE6AD752683</key>
 		<dict>
@@ -1575,6 +1624,11 @@ SOFTWARE.</string>
 			<key>ypos</key>
 			<real>210</real>
 		</dict>
+		<key>A38DD404-DE03-42C2-B0CB-A37891B6F24D</key>
+		<dict>
+			<key>ypos</key>
+			<real>1950</real>
+		</dict>
 		<key>A3EB4F73-2F67-44E8-A87A-80C400ABF1AE</key>
 		<dict>
 			<key>ypos</key>
@@ -1615,6 +1669,11 @@ SOFTWARE.</string>
 			<key>ypos</key>
 			<real>2770</real>
 		</dict>
+		<key>BC672665-5E43-4892-B8D3-BFCBA48E34C4</key>
+		<dict>
+			<key>ypos</key>
+			<real>1950</real>
+		</dict>
 		<key>C46E2C64-7407-4811-8503-5213DD65C39A</key>
 		<dict>
 			<key>ypos</key>
@@ -1638,7 +1697,7 @@ SOFTWARE.</string>
 		<key>CEF36AB9-7CC2-4765-BF84-751E88B69023</key>
 		<dict>
 			<key>ypos</key>
-			<real>2010</real>
+			<real>2880</real>
 		</dict>
 		<key>CF46537F-6F59-40DB-A643-72A7BB952840</key>
 		<dict>
@@ -1653,7 +1712,7 @@ SOFTWARE.</string>
 		<key>DA0A3B7F-B5F1-4F92-9013-217E6F17C588</key>
 		<dict>
 			<key>ypos</key>
-			<real>1870</real>
+			<real>1840</real>
 		</dict>
 		<key>DAE270E5-CA94-4F36-99FE-D8EC996608C0</key>
 		<dict>
@@ -1673,7 +1732,7 @@ SOFTWARE.</string>
 		<key>F005BD44-180A-4A9A-9339-BE457D1E207F</key>
 		<dict>
 			<key>ypos</key>
-			<real>2010</real>
+			<real>2880</real>
 		</dict>
 		<key>F250A59C-0B2D-4A08-9085-9CA0A2FB2DCC</key>
 		<dict>

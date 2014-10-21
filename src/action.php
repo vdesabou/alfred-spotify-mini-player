@@ -176,6 +176,22 @@ added to ' . $alfred_playlist_name, $track_artwork_path);
 		// Did not find a way to set a timeout
 		$server->run();
 		return;
+	}else if ($type == "CURRENT") {
+		$tcpport = getFreeTcpPort();
+		exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:current_track:" . $tcpport . ":" . uniqid() . "\"'");
+
+		$server = IoServer::factory(
+			new HttpServer(
+				new WsServer(
+					new MiniPlayer()
+				)
+			),
+			$tcpport
+		);
+		// FIX THIS: server will exit when done
+		// Did not find a way to set a timeout
+		$server->run();
+		return;
 	}
 	
 else if ($type == "ALBUM_OR_PLAYLIST") {
@@ -413,6 +429,22 @@ if ($playlist_uri != "") {
 				return;
 			} else if ($other_action == "unstar") {
 				unstarCurrentTrack($w);
+				return;
+			} else if ($other_action == "current") {
+				$tcpport = getFreeTcpPort();
+				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:current_track:" . $tcpport . ":" . uniqid() . "\"'");
+		
+				$server = IoServer::factory(
+					new HttpServer(
+						new WsServer(
+							new MiniPlayer()
+						)
+					),
+					$tcpport
+				);
+				// FIX THIS: server will exit when done
+				// Did not find a way to set a timeout
+				$server->run();
 				return;
 			} else if ($other_action == "random") {
 				$tcpport = getFreeTcpPort();

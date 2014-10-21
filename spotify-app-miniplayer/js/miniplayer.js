@@ -38,6 +38,28 @@ require(['$api/models', '$api/toplists#Toplist', '$api/library#Library'], functi
 					conn.close();
 				};
 				break;
+			case "current_track":
+				sleep(1000);
+				appendText("current_track started");
+				appendText("Trying to connect with Spotify Mini Player workflow on port " + args[1] + ".");
+				var conn = new WebSocket('ws://127.0.0.1:' + args[1]);
+				conn.onopen = function(e) {
+					appendText("Connection established with Spotify Mini Player workflow on port " + args[1] + ". Transmitting data..");
+					currentTrack(function(matchedCurrentTrack) {
+						conn.send('current_track▹' + JSON.stringify(matchedCurrentTrack));
+					});				
+				};
+				conn.onerror = function(e) {
+					appendText("Error received");
+				};
+				conn.onclose = function(e) {
+					appendText("Workflow closed connection " + e.reason);
+				};
+				conn.onmessage = function(e) {
+					appendText("Received response from workflow: " + e.data);
+					conn.close();
+				};
+				break;
 			case "star":
 				sleep(1000);
 				var array_results = [];
@@ -724,6 +746,36 @@ require(['$api/models', '$api/toplists#Toplist', '$api/library#Library'], functi
 			return;			
 		});
 	}
+	
+
+	/**
+	 * currentTrack function.
+	 * 
+	 * @access public
+	 * @param mixed matchedCustomTrack
+	 * @return void
+	 */
+	function currentTrack(matchedCustomTrack) {
+		var t = {};
+		var track = models.player.track;
+		if (track != null) {
+			
+			models.Track.fromURI(track.uri).load('name','artists').done(function(track) {
+				console.log(track.uri + ': ' + track.name.decodeForText());
+				t.name = track.name;
+				t.uri = track.uri;
+				t.artist_name = track.artists[0].name;
+				appendText("currentTrack: " + track.name + " by " + track.artists[0].name);
+				matchedCustomTrack(t);
+				return;	
+			});
+		} else {
+			appendText("currentTrack: Error cannot get current track " + models.player.track);
+		}
+		matchedCustomTrack(t);
+		return;	
+	}
+	
 	// Get the currently-playing track
 	models.player.load('track').done(updateCurrentTrack);
 	// Update the DOM when the song changes

@@ -4,6 +4,8 @@
 
 * Now displaying notification for random track
 
+* Add 'Get current track information'
+
 4.5:
 
 * Add Play artist option in Browse this artist mode

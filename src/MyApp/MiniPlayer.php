@@ -109,6 +109,37 @@ class MiniPlayer implements MessageComponentInterface {
 					$client->send("RANDOM TRACK SUCCESS");
 				}
 			}
+		else if ($command=="current_track") {
+				//try to decode it
+
+				$track = json_decode($json, true);
+				if (json_last_error() === JSON_ERROR_NONE) {
+
+					if (count($track) > 0) {
+						$track_uri = $track['uri'];
+						$track_name = $track['name'];
+						$artist_name = $track['artist_name'];
+
+						displayNotificationForCurrentTrack($track_name, $track_uri, $artist_name);
+
+					} else {
+						foreach ($this->clients as $client) {
+							$client->send("CURRENT TRACK FAIL");
+						}
+						displayNotification("Error: cannot get current track" + $json);
+					}
+
+				}else {
+					foreach ($this->clients as $client) {
+						$client->send("CURRENT TRACK FAIL");
+					}
+					displayNotification("Error: cannot get current  track" + $json);
+				}
+
+				foreach ($this->clients as $client) {
+					$client->send("CURRENT TRACK SUCCESS");
+				}
+			}
 		else if ($command=="star") {
 				//try to decode it
 
