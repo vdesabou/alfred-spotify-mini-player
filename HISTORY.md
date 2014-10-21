@@ -1,5 +1,9 @@
 ## History
 
+4.6:
+
+* Now displaying notification for random track
+
 4.5:
 
 * Add Play artist option in Browse this artist mode
