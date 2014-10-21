@@ -687,11 +687,25 @@ require(['$api/models', '$api/toplists#Toplist', '$api/library#Library'], functi
 	 */
 
 	function randomTrack() {
+		results = {};
+		getAllPlaylists(function(matchedAllPlaylists) {
+			results = matchedAllPlaylists;
+			appendText("All playlists have been processed");
+			
+			var playlist = results[Math.floor(Math.random() * results.length)];
+			var track = playlist.tracks[Math.floor(Math.random() * playlist.tracks.length)];
+			console.log(track);
+			
+			
+			models.player.playTrack(models.Track.fromURI(track.uri));
+		});
 		// Grab a random track from your library (cause it's more fun)
+/*
 		Library.forCurrentUser().tracks.snapshot().done(function(snapshot) {
 			appendText("randomTrack called");
 			models.player.playTrack(snapshot.get(Math.floor(Math.random() * snapshot.length)));
 		});
+*/
 	}
 	// Get the currently-playing track
 	models.player.load('track').done(updateCurrentTrack);
