@@ -922,7 +922,7 @@ end alfred_script</string>
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -n -f ./src/random_track.php</string>
+				<string>php -f ./src/action.php -- "" "RANDOM" "RANDOM"</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>

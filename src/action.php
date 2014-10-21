@@ -160,7 +160,24 @@ added to ' . $alfred_playlist_name, $track_artwork_path);
 	}else if ($type == "UNSTAR") {
 		unstarCurrentTrack($w);
 		return;
+	}else if ($type == "RANDOM") {
+		$tcpport = getFreeTcpPort();
+		exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:random_track:" . $tcpport . ":" . uniqid() . "\"'");
+
+		$server = IoServer::factory(
+			new HttpServer(
+				new WsServer(
+					new MiniPlayer()
+				)
+			),
+			$tcpport
+		);
+		// FIX THIS: server will exit when done
+		// Did not find a way to set a timeout
+		$server->run();
+		return;
 	}
+	
 else if ($type == "ALBUM_OR_PLAYLIST") {
 		if ($alfredplaylist != "") {
 
