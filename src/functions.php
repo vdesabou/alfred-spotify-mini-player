@@ -184,16 +184,17 @@ function displayNotificationWithArtwork($output, $artwork) {
 
 /**
  * displayNotificationForRandomTrack function.
- *
+ * 
  * @access public
  * @param mixed $track_name
  * @param mixed $track_uri
  * @param mixed $artist_name
+ * @param mixed $playlist_name
  * @return void
  */
-function displayNotificationForRandomTrack($track_name, $track_uri, $artist_name) {
+function displayNotificationForRandomTrack($track_name, $track_uri, $artist_name, $playlist_name) {
 	$w = new Workflows('com.vdesabou.spotify.mini.player');
-	displayNotificationWithArtwork('🔀 ' . $track_name . ' by ' . $artist_name, getTrackOrAlbumArtwork($w, 'black', $track_uri, true));
+	displayNotificationWithArtwork('🔀 ' . $track_name . ' by ' . $artist_name . ' in playlist ' . $playlist_name, getTrackOrAlbumArtwork($w, 'black', $track_uri, true));
 }
 
 /**

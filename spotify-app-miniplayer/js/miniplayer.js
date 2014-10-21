@@ -717,7 +717,8 @@ require(['$api/models', '$api/toplists#Toplist', '$api/library#Library'], functi
 			t.name = track.name;
 			t.uri = track.uri;
 			t.artist_name = track.artist_name;
-			console.log("randomTrack: ", t);
+			t.playlist_name = track.playlist_name;
+			console.log("randomTrack: ", track);
 			models.player.playTrack(models.Track.fromURI(track.uri));
 			matchedRandomTrack(t);
 			return;			

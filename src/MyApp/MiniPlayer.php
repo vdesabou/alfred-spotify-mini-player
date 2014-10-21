@@ -87,8 +87,9 @@ class MiniPlayer implements MessageComponentInterface {
 						$track_uri = $track['uri'];
 						$track_name = $track['name'];
 						$artist_name = $track['artist_name'];
+						$playlist_name = $track['playlist_name'];
 
-						displayNotificationForRandomTrack($track_name, $track_uri, $artist_name);
+						displayNotificationForRandomTrack($track_name, $track_uri, $artist_name, $playlist_name);
 
 					} else {
 						foreach ($this->clients as $client) {
