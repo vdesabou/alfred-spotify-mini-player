@@ -182,6 +182,19 @@ function displayNotificationWithArtwork($output, $artwork) {
 	exec("./terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'Spotify Mini Player' -sender 'com.spotify.miniplayer' -contentImage '/tmp/tmp' -message '" .  $output . "'");
 }
 
+/**
+ * displayNotificationForRandomTrack function.
+ *
+ * @access public
+ * @param mixed $track_name
+ * @param mixed $track_uri
+ * @param mixed $artist_name
+ * @return void
+ */
+function displayNotificationForRandomTrack($track_name, $track_uri, $artist_name) {
+	$w = new Workflows('com.vdesabou.spotify.mini.player');
+	displayNotificationWithArtwork('🔀 ' . $track_name . ' by ' . $artist_name, getTrackOrAlbumArtwork($w, 'black', $track_uri, true));
+}
 
 /**
  * displayNotificationForStarredTrack function.

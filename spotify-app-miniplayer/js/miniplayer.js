@@ -16,8 +16,27 @@ require(['$api/models', '$api/toplists#Toplist', '$api/library#Library'], functi
 		if (args[0]) {
 			appendText("\nNew command received: <" + args + "> \n==================");
 			switch (args[0]) {
-			case "random":
-				randomTrack();
+			case "random_track":
+				sleep(1000);
+				appendText("random_track started");
+				appendText("Trying to connect with Spotify Mini Player workflow on port " + args[1] + ".");
+				var conn = new WebSocket('ws://127.0.0.1:' + args[1]);
+				conn.onopen = function(e) {
+					appendText("Connection established with Spotify Mini Player workflow on port " + args[1] + ". Transmitting data..");
+					randomTrack(function(matchedRandomTrack) {
+						conn.send('random_track▹' + JSON.stringify(matchedRandomTrack));
+					});				
+				};
+				conn.onerror = function(e) {
+					appendText("Error received");
+				};
+				conn.onclose = function(e) {
+					appendText("Workflow closed connection " + e.reason);
+				};
+				conn.onmessage = function(e) {
+					appendText("Received response from workflow: " + e.data);
+					conn.close();
+				};
 				break;
 			case "star":
 				sleep(1000);
@@ -679,33 +698,30 @@ require(['$api/models', '$api/toplists#Toplist', '$api/library#Library'], functi
 			}
 		}
 	}
+
 	/**
 	 * randomTrack function.
-	 *
+	 * 
 	 * @access public
+	 * @param mixed matchedRandomTrack
 	 * @return void
 	 */
-
-	function randomTrack() {
+	function randomTrack(matchedRandomTrack) {
+		var t = {};
 		results = {};
 		getAllPlaylists(function(matchedAllPlaylists) {
 			results = matchedAllPlaylists;
-			appendText("All playlists have been processed");
 			
 			var playlist = results[Math.floor(Math.random() * results.length)];
 			var track = playlist.tracks[Math.floor(Math.random() * playlist.tracks.length)];
-			console.log(track);
-			
-			
+			t.name = track.name;
+			t.uri = track.uri;
+			t.artist_name = track.artist_name;
+			console.log("randomTrack: ", t);
 			models.player.playTrack(models.Track.fromURI(track.uri));
+			matchedRandomTrack(t);
+			return;			
 		});
-		// Grab a random track from your library (cause it's more fun)
-/*
-		Library.forCurrentUser().tracks.snapshot().done(function(snapshot) {
-			appendText("randomTrack called");
-			models.player.playTrack(snapshot.get(Math.floor(Math.random() * snapshot.length)));
-		});
-*/
 	}
 	// Get the currently-playing track
 	models.player.load('track').done(updateCurrentTrack);

@@ -398,7 +398,20 @@ if ($playlist_uri != "") {
 				unstarCurrentTrack($w);
 				return;
 			} else if ($other_action == "random") {
-				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:random:" . uniqid() . "\"'");
+				$tcpport = getFreeTcpPort();
+				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:random_track:" . $tcpport . ":" . uniqid() . "\"'");
+
+				$server = IoServer::factory(
+					new HttpServer(
+						new WsServer(
+							new MiniPlayer()
+						)
+					),
+					$tcpport
+				);
+				// FIX THIS: server will exit when done
+				// Did not find a way to set a timeout
+				$server->run();
 				return;
 			}
 		else if ($other_action == "display_biography") {

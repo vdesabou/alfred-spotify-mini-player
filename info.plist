@@ -225,7 +225,7 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>64AF8526-B1B0-415C-97C1-2787A835A605</string>
+				<string>05D01A85-8BDC-4FF6-BEBB-BAF26BB5870A</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -919,22 +919,17 @@ end alfred_script</string>
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>applescript</key>
-				<string>on alfred_script(q)
-
-tell application "Spotify"
-	set timestamp to (do shell script "date +%s") as integer
-	open location "spotify:app:miniplayer:random:" &amp; timestamp
-end tell
-
-end alfred_script</string>
-				<key>cachescript</key>
-				<true/>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>php -n -f ./src/random_track.php</string>
+				<key>type</key>
+				<integer>0</integer>
 			</dict>
 			<key>type</key>
-			<string>alfred.workflow.action.applescript</string>
+			<string>alfred.workflow.action.script</string>
 			<key>uid</key>
-			<string>64AF8526-B1B0-415C-97C1-2787A835A605</string>
+			<string>05D01A85-8BDC-4FF6-BEBB-BAF26BB5870A</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -1407,6 +1402,16 @@ end alfred_script</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict/>
+			<key>type</key>
+			<string>alfred.workflow.trigger.external</string>
+			<key>uid</key>
+			<string>BB6D0DE1-6E60-4106-B901-F079693EEAD3</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string>Github page:
@@ -1440,6 +1445,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.</string>
 	<key>uidata</key>
 	<dict>
+		<key>05D01A85-8BDC-4FF6-BEBB-BAF26BB5870A</key>
+		<dict>
+			<key>ypos</key>
+			<real>1350</real>
+		</dict>
 		<key>05F86AA1-D3EE-4409-9A58-898B36FFE503</key>
 		<dict>
 			<key>ypos</key>
@@ -1525,11 +1535,6 @@ SOFTWARE.</string>
 			<key>ypos</key>
 			<real>750</real>
 		</dict>
-		<key>64AF8526-B1B0-415C-97C1-2787A835A605</key>
-		<dict>
-			<key>ypos</key>
-			<real>1350</real>
-		</dict>
 		<key>7918E8F7-20AE-445E-9AEA-E2E54CDE967D</key>
 		<dict>
 			<key>ypos</key>
@@ -1604,6 +1609,11 @@ SOFTWARE.</string>
 		<dict>
 			<key>ypos</key>
 			<real>1600</real>
+		</dict>
+		<key>BB6D0DE1-6E60-4106-B901-F079693EEAD3</key>
+		<dict>
+			<key>ypos</key>
+			<real>2770</real>
 		</dict>
 		<key>C46E2C64-7407-4811-8503-5213DD65C39A</key>
 		<dict>
