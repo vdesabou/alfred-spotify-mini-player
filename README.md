@@ -39,6 +39,7 @@ See it in action here [screencast](http://quick.as/nmwxcxx0)
 * Select a track with ⌥ to play the album, or ⌘ to play the artist
 * Same control keywords as iTunes Mini Player: play, pause, mute, next, random, previous, volmax, volmid. And shuffle to activate shuffling.
 * Star/Unstar currently played track with keyword *star*/*unstar*
+* Display information currently played track with keyword *current*
 * Add current track to Alfred Playlist
 * Display artist bigraphy
 * Browse Related artists
