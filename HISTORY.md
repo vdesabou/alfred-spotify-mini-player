@@ -6,6 +6,8 @@
 
 * Add 'Get current track information'
 
+* Add notification for previous and next track
+
 4.5:
 
 * Add Play artist option in Browse this artist mode

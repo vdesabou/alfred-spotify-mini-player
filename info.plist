@@ -129,8 +129,6 @@
 				<string></string>
 			</dict>
 		</array>
-		<key>4367DDDE-C360-4642-908E-EB1F916727CC</key>
-		<array/>
 		<key>44AF5C5A-254F-4206-BBD7-BE9BA7831628</key>
 		<array>
 			<dict>
@@ -146,7 +144,7 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>DA0A3B7F-B5F1-4F92-9013-217E6F17C588</string>
+				<string>64953E09-D9D0-485B-B92B-79E7FEC15927</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -337,7 +335,7 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>4367DDDE-C360-4642-908E-EB1F916727CC</string>
+				<string>77BC9498-F4E6-48BB-919D-D0B64DAFEF26</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -366,8 +364,6 @@
 				<string></string>
 			</dict>
 		</array>
-		<key>DA0A3B7F-B5F1-4F92-9013-217E6F17C588</key>
-		<array/>
 		<key>DAE270E5-CA94-4F36-99FE-D8EC996608C0</key>
 		<array>
 			<dict>
@@ -645,27 +641,6 @@
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>applescript</key>
-				<string>on alfred_script(q)
-	
-	tell application "Spotify"
-		previous track
-	end tell
-	
-end alfred_script</string>
-				<key>cachescript</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.applescript</string>
-			<key>uid</key>
-			<string>4367DDDE-C360-4642-908E-EB1F916727CC</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>action</key>
 				<integer>0</integer>
 				<key>argument</key>
@@ -691,6 +666,23 @@ end alfred_script</string>
 			<string>DAE270E5-CA94-4F36-99FE-D8EC996608C0</string>
 			<key>version</key>
 			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>php -f ./src/action.php -- "" "PREVIOUS" "PREVIOUS"</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>77BC9498-F4E6-48BB-919D-D0B64DAFEF26</string>
+			<key>version</key>
+			<integer>0</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -1100,6 +1092,23 @@ end alfred_script</string>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>php -f ./src/action.php -- "" "NEXT" "NEXT"</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>64953E09-D9D0-485B-B92B-79E7FEC15927</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
@@ -1115,27 +1124,6 @@ end alfred_script</string>
 			<string>alfred.workflow.input.keyword</string>
 			<key>uid</key>
 			<string>4EB5FB5E-6472-4757-A479-B206B6080036</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>applescript</key>
-				<string>on alfred_script(q)
-	
-	tell application "Spotify"
-		next track
-	end tell
-	
-end alfred_script</string>
-				<key>cachescript</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.applescript</string>
-			<key>uid</key>
-			<string>DA0A3B7F-B5F1-4F92-9013-217E6F17C588</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -1549,11 +1537,6 @@ SOFTWARE.</string>
 			<key>ypos</key>
 			<real>2530</real>
 		</dict>
-		<key>4367DDDE-C360-4642-908E-EB1F916727CC</key>
-		<dict>
-			<key>ypos</key>
-			<real>630</real>
-		</dict>
 		<key>44AF5C5A-254F-4206-BBD7-BE9BA7831628</key>
 		<dict>
 			<key>ypos</key>
@@ -1583,6 +1566,16 @@ SOFTWARE.</string>
 		<dict>
 			<key>ypos</key>
 			<real>750</real>
+		</dict>
+		<key>64953E09-D9D0-485B-B92B-79E7FEC15927</key>
+		<dict>
+			<key>ypos</key>
+			<real>1840</real>
+		</dict>
+		<key>77BC9498-F4E6-48BB-919D-D0B64DAFEF26</key>
+		<dict>
+			<key>ypos</key>
+			<real>630</real>
 		</dict>
 		<key>7918E8F7-20AE-445E-9AEA-E2E54CDE967D</key>
 		<dict>
@@ -1708,11 +1701,6 @@ SOFTWARE.</string>
 		<dict>
 			<key>ypos</key>
 			<real>1110</real>
-		</dict>
-		<key>DA0A3B7F-B5F1-4F92-9013-217E6F17C588</key>
-		<dict>
-			<key>ypos</key>
-			<real>1840</real>
 		</dict>
 		<key>DAE270E5-CA94-4F36-99FE-D8EC996608C0</key>
 		<dict>
