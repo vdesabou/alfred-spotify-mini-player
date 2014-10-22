@@ -95,14 +95,14 @@ class MiniPlayer implements MessageComponentInterface {
 						foreach ($this->clients as $client) {
 							$client->send("RANDOM TRACK FAIL");
 						}
-						displayNotification("Error: cannot play random track" + $json);
+						displayNotification("Error: cannot play random track");
 					}
 
 				}else {
 					foreach ($this->clients as $client) {
 						$client->send("RANDOM TRACK FAIL");
 					}
-					displayNotification("Error: cannot play random track" + $json);
+					displayNotification("Error: cannot play random track");
 				}
 
 				foreach ($this->clients as $client) {
@@ -126,14 +126,14 @@ class MiniPlayer implements MessageComponentInterface {
 						foreach ($this->clients as $client) {
 							$client->send("CURRENT TRACK FAIL");
 						}
-						displayNotification("Error: cannot get current track" + $json);
+						displayNotification("Error: cannot get current track");
 					}
 
 				}else {
 					foreach ($this->clients as $client) {
 						$client->send("CURRENT TRACK FAIL");
 					}
-					displayNotification("Error: cannot get current  track" + $json);
+					displayNotification("Error: cannot get current  track");
 				}
 
 				foreach ($this->clients as $client) {
