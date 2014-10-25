@@ -55,7 +55,7 @@ See it in action here [screencast](http://quick.as/nmwxcxx0)
 * enable/disable Spotifious or Alfred Playlist
 * enable/disable ***Lookup this artist online***
 * Check for workflow update
-* Choose workflow theme: ***black*** or ***green***
+* Choose workflow theme: ***black*** or ***green*** or ***new***
 * Install/Update of the library (see next section for explanations)
 
 ## First time use
