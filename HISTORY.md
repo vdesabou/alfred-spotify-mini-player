@@ -2,6 +2,8 @@
 
 4.6:
 
+* Fixed broken Play Random Track
+
 * Now displaying notification for random track
 
 * Add 'Get current track information'
