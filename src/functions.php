@@ -1,7 +1,99 @@
 <?php
 
 require_once './src/workflows.php';
+require 'vendor/autoload.php';
 
+
+/**
+ * getSpotifyWebAPI function.
+ *
+ * @access public
+ * @param mixed $w
+ * @return api, false if error
+ */
+function getSpotifyWebAPI($w) {
+	//
+	// Read settings from DB
+	//
+	$getSettings = 'select oauth_client_id,oauth_client_secret,oauth_redirect_uri,oauth_access_token,oauth_expires,oauth_refresh_token from settings';
+	$dbfile = $w->data() . '/settings.db';
+
+	try {
+		$dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
+		$dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$dbsettings->query("PRAGMA synchronous = OFF");
+		$dbsettings->query("PRAGMA journal_mode = OFF");
+		$dbsettings->query("PRAGMA temp_store = MEMORY");
+		$dbsettings->query("PRAGMA count_changes = OFF");
+		$dbsettings->query("PRAGMA PAGE_SIZE = 4096");
+		$dbsettings->query("PRAGMA default_cache_size=700000");
+		$dbsettings->query("PRAGMA cache_size=700000");
+		$dbsettings->query("PRAGMA compile_options");
+	} catch (PDOException $e) {
+		displayNotification("Error[getSpotifyWebAPI]: cannot set PDO settings");
+		return false;
+	}
+
+	try {
+		$stmt = $dbsettings->prepare($getSettings);
+		$settings = $stmt->execute();
+
+	} catch (PDOException $e) {
+		$dbsettings=null;
+		displayNotification("Error[getSpotifyWebAPI]: cannot prepare settings");
+		return false;
+	}
+
+	try {
+		$setting = $stmt->fetch();
+	}
+	catch (PDOException $e) {
+		displayNotification("Error[getSpotifyWebAPI]: cannot fetch settings");
+		return false;
+	}
+
+	$oauth_client_id = $setting[0];
+	$oauth_client_secret = $setting[1];
+	$oauth_redirect_uri = $setting[2];
+	$oauth_access_token = $setting[3];
+	$oauth_expires = $setting[4];
+	$oauth_refresh_token = $setting[5];
+
+	$session = new SpotifyWebAPI\Session($oauth_client_id, $oauth_client_secret, $oauth_redirect_uri);
+	$session->setRefreshToken($oauth_refresh_token);
+	$api = new SpotifyWebAPI\SpotifyWebAPI();
+
+	// Check if refresh token necessary
+	if (time()-$oauth_expires > 3600) {
+		if($session->refreshToken()) {
+
+			$oauth_access_token = $session->getAccessToken();
+
+			// Set new token to settings
+			$updateSettings = "update settings set oauth_access_token=:oauth_access_token,oauth_expires=:oauth_expires";
+			try {
+				$stmt = $dbsettings->prepare($updateSettings);
+				$stmt->bindValue(':oauth_access_token', $session->getAccessToken());
+				$stmt->bindValue(':oauth_expires', time());
+				$stmt->execute();
+
+			} catch (PDOException $e) {
+				$dbsettings=null;;
+				displayNotification("Error[getSpotifyWebAPI]: token could not be refreshed");
+				return false;
+			}
+
+			displayNotification("Token was refreshed");
+
+		} else {
+			displayNotification("Error[getSpotifyWebAPI]: token could not be refreshed");
+			return false;
+		}
+	}
+	$api->setAccessToken($oauth_access_token);
+
+	return $api;
+}
 /**
  * computeTime function.
  *

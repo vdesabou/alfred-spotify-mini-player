@@ -20,7 +20,7 @@ if (!empty($_GET['error'])) {
 //
 // Read settings from DB
 //
-$getSettings = 'select oauth_client_id,oauth_client_secret,oauth_redirect_uri,oauth_access_token from settings';
+$getSettings = 'select oauth_client_id,oauth_client_secret,oauth_redirect_uri from settings';
 $dbfile = $w->data() . '/settings.db';
 
 try {
@@ -80,7 +80,7 @@ try {
 			try {
 				$stmt = $dbsettings->prepare($updateSettings);
 				$stmt->bindValue(':oauth_access_token', $session->getAccessToken());
-				$stmt->bindValue(':oauth_expires', $session->getExpires());
+				$stmt->bindValue(':oauth_expires', time());
 				$stmt->bindValue(':oauth_refresh_token', $session->getRefreshToken());
 				$stmt->bindValue(':country_code', $user->country);
 				$stmt->bindValue(':display_name', $user->display_name);
