@@ -10,6 +10,23 @@ require './src/functions.php';
 require_once './src/workflows.php';
 $w = new Workflows('com.vdesabou.spotify.mini.player');
 
+/*
+$api = getSpotifyWebAPI($w);
+if($api != false)
+{
+	try {
+		$json = $api->me();
+	}
+	catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+		echo "There was an error during the authentication (exception " . $e . ")";
+	}
+
+	print_r($json);
+}
+
+return;
+*/
+
 $query = $argv[1];
 $type = $argv[2];
 $alfredplaylist = $argv[3];
