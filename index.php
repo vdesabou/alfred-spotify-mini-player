@@ -67,11 +67,11 @@ try {
 							'playlist-modify-public',
 							'playlist-modify-private'),
 		'show_dialog' => true)));
-
-
 }
 catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-	echo "ERROR: Exception " . $e;
+	echo "There was an error during the authentication flow (exception " . $e . ")";
+	displayNotification("Web server killed");
+	exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk '{print $2}')");
 	return;
 }
 ?>

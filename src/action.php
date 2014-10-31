@@ -329,11 +329,6 @@ if ($playlist_uri != "") {
 			exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 			displayNotification("Client Secret set to $setting[1]");
 		}
-		else if ($setting[0] == "Oauth_Login") {
-			exec("php -S localhost:15298 > /tmp/spotify_mini_player_web_server.log 2>&1 &");
-			exec("open http://localhost:15298");
-			displayNotification("Web server started");
-		}
 		else if ($setting[0] == "ALFRED_PLAYLIST") {
 				$setSettings = 'update settings set alfred_playlist_uri=\"' . $setting[1] . '\"' . ',alfred_playlist_name=\"' . $setting[2] . '\"';
 				$dbfile = $w->data() . "/settings.db";
@@ -455,6 +450,10 @@ if ($playlist_uri != "") {
 			} else if ($other_action == "open_spotify_export_app") {
 				exec("osascript -e 'tell application \"Spotify\" to activate'");
 				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer\"'");
+			} else if ($other_action == "Oauth_Login") {
+				exec("php -S localhost:15298 > /tmp/spotify_mini_player_web_server.log 2>&1 &");
+				exec("open http://localhost:15298");
+				displayNotification("Web server started");
 			} else if ($other_action == "check_for_update") {
 				if (! $w->internet()) {
 					displayNotificationWithArtwork("Error: No internet connection", './images/warning.png');
