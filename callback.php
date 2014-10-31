@@ -9,9 +9,8 @@ require_once './src/workflows.php';
 $w = new Workflows('com.vdesabou.spotify.mini.player');
 
 if (!empty($_GET['error'])) {
-	echo "There was an error during the authentication (error " . $_GET['error'] . ")";
+	displayNotification( "There was an error during the authentication (error " . $_GET['error'] . ")");
 
-	displayNotification("Web server killed");
 	exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk '{print $2}')");
 	return;
 }
@@ -35,7 +34,7 @@ try {
 	$dbsettings->query("PRAGMA cache_size=700000");
 	$dbsettings->query("PRAGMA compile_options");
 } catch (PDOException $e) {
-	handleDbIssuePdo('new', $dbsettings);
+	displayNotification("Error[callback.php]: cannot set PDO settings");
 	$dbsettings=null;
 	return;
 }
@@ -45,7 +44,7 @@ try {
 	$settings = $stmt->execute();
 
 } catch (PDOException $e) {
-	handleDbIssuePdo('new', $dbsettings);
+	displayNotification("Error[callback.php]: cannot prepare settings");
 	$dbsettings=null;
 	return;
 }
@@ -54,7 +53,7 @@ try {
 	$setting = $stmt->fetch();
 }
 catch (PDOException $e) {
-	handleDbIssuePdo('new', $dbsettings);
+	displayNotification("Error[callback.php]: cannot fetch settings");
 	return;
 }
 

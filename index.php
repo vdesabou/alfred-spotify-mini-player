@@ -27,7 +27,7 @@ try {
 	$dbsettings->query("PRAGMA cache_size=700000");
 	$dbsettings->query("PRAGMA compile_options");
 } catch (PDOException $e) {
-	handleDbIssuePdo('new', $dbsettings);
+	displayNotification("Error[index.php]: cannot set PDO settings");
 	$dbsettings=null;
 	return;
 }
@@ -37,8 +37,7 @@ try {
 	$settings = $stmt->execute();
 
 } catch (PDOException $e) {
-	handleDbIssuePdo('new', $dbsettings);
-	$dbsettings=null;
+	displayNotification("Error[index.php]: cannot set prepare settings");
 	return;
 }
 
@@ -46,7 +45,7 @@ try {
 	$setting = $stmt->fetch();
 }
 catch (PDOException $e) {
-	handleDbIssuePdo('new', $dbsettings);
+	displayNotification("Error[index.php]: cannot set fetch settings");
 	return;
 }
 
