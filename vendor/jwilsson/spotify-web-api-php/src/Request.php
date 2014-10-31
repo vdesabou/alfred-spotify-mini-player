@@ -3,7 +3,7 @@ namespace SpotifyWebAPI;
 
 class Request
 {
-    private $returnAssoc = true;
+    private $returnAssoc = false;
 
     const ACCOUNT_URL = 'https://accounts.spotify.com';
     const API_URL = 'https://api.spotify.com';
