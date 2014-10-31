@@ -518,12 +518,22 @@ class SpotifyWebAPI
      *
      * @param string $userId ID of the user.
      * @param string $playlistId ID of the playlist.
+     * @param array|object $options Optional. Options for the playlist.
+     * - array fields Optional. A list of fields to return. See Spotify docs for more info.
      *
      * @return object
      */
-    public function getUserPlaylist($userId, $playlistId)
+    public function getUserPlaylist($userId, $playlistId, $options = array())
     {
-        $response = $this->request->api('GET', '/v1/users/' . $userId . '/playlists/' . $playlistId, array(), array(
+        $defaults = array(
+            'fields' => array()
+        );
+
+        $options = array_merge($defaults, (array) $options);
+        $options['fields'] = implode(',', $options['fields']);
+        $options = array_filter($options);
+
+        $response = $this->request->api('GET', '/v1/users/' . $userId . '/playlists/' . $playlistId, $options, array(
             'Authorization' => 'Bearer ' . $this->accessToken
         ));
 
@@ -703,5 +713,31 @@ class SpotifyWebAPI
         ));
 
         return $response['status'] == 200;
+    }
+
+    /**
+     * Set the return type for the Request body element
+     * If unset or set to false it will return a stdObject, but
+     * if set to true it will return an associative array.
+     *
+     * @param bool $returnAssoc Whether to return an associative array or not.
+     *
+     * @return void
+     */
+    public function setReturnAssoc($returnAssoc)
+    {
+        $this->request->setReturnAssoc($returnAssoc);
+    }
+
+    /**
+     * Get the return type for the Request body element
+     * Returns true if the body is returned as an associative array,
+     * and false if it is returned as an stdObject.
+     *
+     * @return bool true if body is returned as an array, else false.
+     */
+    public function getReturnAssoc()
+    {
+        return $this->request->getReturnAssoc();
     }
 }

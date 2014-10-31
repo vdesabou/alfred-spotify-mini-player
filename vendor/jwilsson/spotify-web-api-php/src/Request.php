@@ -3,6 +3,8 @@ namespace SpotifyWebAPI;
 
 class Request
 {
+    private $returnAssoc = true;
+
     const ACCOUNT_URL = 'https://accounts.spotify.com';
     const API_URL = 'https://api.spotify.com';
 
@@ -105,10 +107,10 @@ class Request
 
         list($headers, $body) = explode("\r\n\r\n", $response, 2);
 
-        $body = json_decode($body);
+        $body = json_decode($body, $this->returnAssoc);
 
         if ($status < 200 || $status > 299) {
-            if (isset($body->error)) {
+            if (!$this->returnAssoc && isset($body->error)) {
                 $error = $body->error;
 
                 // These properties only exist on API calls, not auth calls
@@ -116,6 +118,17 @@ class Request
                     throw new SpotifyWebAPIException($error->message, $error->status);
                 } elseif (isset($body->error_description)) {
                     throw new SpotifyWebAPIException($body->error_description, $status);
+                } else {
+                    throw new SpotifyWebAPIException($error, $status);
+                }
+            } elseif ($this->returnAssoc && isset($body['error'])) {
+                $error = $body['error'];
+
+                // These properties only exist on API calls, not auth calls
+                if (isset($error['message']) && isset($error['status'])) {
+                    throw new SpotifyWebAPIException($error['message'], $error['status']);
+                } elseif (isset($body['error_description'])) {
+                    throw new SpotifyWebAPIException($body['error_description'], $status);
                 } else {
                     throw new SpotifyWebAPIException($error, $status);
                 }
@@ -129,5 +142,31 @@ class Request
             'headers' => $headers,
             'status' => $status
         );
+    }
+
+    /**
+     * Set the return type for the body element
+     * If unset or set to false it will return a stdObject, but
+     * if set to true it will return an associative array.
+     *
+     * @param bool $returnAssoc Whether to return an associative array or not.
+     *
+     * @return void
+     */
+    public function setReturnAssoc($returnAssoc)
+    {
+        $this->returnAssoc = $returnAssoc;
+    }
+
+    /**
+     * Returns true if this class returns the body as an
+     * associative array, and false if it returns the body
+     * as a stdObject.
+     *
+     * @return bool true if body is returned as an array, else false.
+     */
+    public function getReturnAssoc()
+    {
+        return $this->returnAssoc;
     }
 }
