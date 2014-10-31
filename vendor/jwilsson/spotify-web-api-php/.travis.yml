@@ -1,0 +1,25 @@
+language: php
+
+php:
+  - 5.3
+  - 5.4
+  - 5.5
+  - 5.6
+  - hhvm
+
+matrix:
+  fast_finish: true
+
+before_install:
+  - openssl aes-256-cbc -K $encrypted_02ebdc0031ce_key -iv $encrypted_02ebdc0031ce_iv -in .env.enc -out .env -d
+
+before_script:
+  - travis_retry composer self-update
+  - travis_retry composer install --prefer-dist --no-interaction
+
+script:
+  - mkdir -p build/logs
+  - vendor/bin/phpunit --verbose --coverage-clover build/logs/clover.xml
+
+after_script:
+ - php vendor/bin/coveralls -v
