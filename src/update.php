@@ -1,12 +1,6 @@
 <?php
 require './src/functions.php';
 
-use Ratchet\Server\IoServer;
-use Ratchet\Http\HttpServer;
-use Ratchet\WebSocket\WsServer;
-use MyApp\MiniPlayer;
-
-require_once './vendor/autoload.php';
 
 // Load and use David Ferguson's Workflows.php class
 require_once './src/workflows.php';
@@ -23,6 +17,7 @@ $w->write('InitLibrary▹' . 0 . '▹' . 0 . '▹' . time(), 'update_library_in_
 $tcpport = getFreeTcpPort();
 exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:update_library:" . $tcpport . ":" . uniqid() . "\"'");
 
+/*
 $server = IoServer::factory(
 	new HttpServer(
 		new WsServer(
@@ -34,4 +29,5 @@ $server = IoServer::factory(
 // FIX THIS: server will exit when done
 // Did not find a way to set a timeout
 $server->run();
+*/
 ?>

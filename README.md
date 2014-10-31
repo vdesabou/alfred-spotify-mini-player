@@ -165,7 +165,7 @@ If you want to report an issue or propose an enhancement, use the "spot_mini_iss
 ## Credits
 
 * [Spotifious workflow](https://github.com/citelao/Spotify-for-Alfred)
-* [Ratchet](http://socketo.me)
+* [jwilsson/spotify-web-api-php](https://github.com/jwilsson/spotify-web-api-php)
 * [SpotCommander](https://github.com/olejon/spotcommander)
 * [Terminal-Notifier](https://github.com/alloy/terminal-notifier)
 

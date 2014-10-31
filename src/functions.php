@@ -14,35 +14,6 @@ function computeTime() {
 }
 
 
-/**
- * installSpotifyAppIfNeeded function.
- *
- * @access public
- * @param mixed $w
- * @return void
- */
-function installSpotifyAppIfNeeded($w) {
-	if (!file_exists($w->home())) {
-		displayNotification("Error: Home Directory <" . $w->home() . "> does not exist");
-		return false;
-	}
-
-	if (!file_exists($w->home() . '/Spotify/spotify-app-miniplayer')) {
-		exec('mkdir -p ~/Spotify');
-		symlink(exec('pwd') . '/spotify-app-miniplayer', $w->home() . '/Spotify/spotify-app-miniplayer');
-	}
-
-	if (!file_exists($w->home() . '/Spotify/spotify-app-miniplayer/manifest.json')) {
-		exec("rm -rf " . $w->home() . "/Spotify/spotify-app-miniplayer");
-		symlink(exec('pwd') . '/spotify-app-miniplayer', $w->home() . '/Spotify/spotify-app-miniplayer');
-	}
-
-	if (!file_exists($w->home() . '/Spotify/spotify-app-miniplayer/manifest.json')) {
-		return false;
-	}
-	return true;
-}
-
 
 /**
  * getFreeTcpPort function.
@@ -184,7 +155,7 @@ function displayNotificationWithArtwork($output, $artwork) {
 
 /**
  * displayNotificationForRandomTrack function.
- * 
+ *
  * @access public
  * @param mixed $track_name
  * @param mixed $track_uri
@@ -199,7 +170,7 @@ function displayNotificationForRandomTrack($track_name, $track_uri, $artist_name
 
 /**
  * displayNotificationForCurrentTrack function.
- * 
+ *
  * @access public
  * @param mixed $track_name
  * @param mixed $track_uri
@@ -450,7 +421,7 @@ function getTrackArtworkURL($w, $type, $id) {
 	);
 
 	$html = $w->request("http://open.spotify.com/$type/$id",$options);
-	
+
 	if (!empty($html)) {
 		// <meta property="og:image" content="http://o.scdn.co/image/635ee3ae30686e97e01900d2797690e356958729">
 		preg_match_all('/.*?og:image.*?content="(.*?)">.*?/is', $html, $m);

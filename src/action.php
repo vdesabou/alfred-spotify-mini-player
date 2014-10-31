@@ -1,16 +1,9 @@
 <?php
 
 // Turn off all error reporting
-error_reporting(0);
+//error_reporting(0);
 
 require './src/functions.php';
-
-use Ratchet\Server\IoServer;
-use Ratchet\Http\HttpServer;
-use Ratchet\WebSocket\WsServer;
-use MyApp\MiniPlayer;
-
-require_once './vendor/autoload.php';
 
 
 // Load and use David Ferguson's Workflows.php class
@@ -137,6 +130,7 @@ added to ' . $alfred_playlist_name, $track_artwork_path);
 				$tcpport = getFreeTcpPort();
 				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:current_track_get_artist:" . $tcpport . ":" . uniqid() . "\"'");
 
+/*
 				$server = IoServer::factory(
 					new HttpServer(
 						new WsServer(
@@ -148,6 +142,7 @@ added to ' . $alfred_playlist_name, $track_artwork_path);
 				// FIX THIS: server will exit when done
 				// Did not find a way to set a timeout
 				$server->run();
+*/
 				return;
 			}
 		}
@@ -164,6 +159,7 @@ added to ' . $alfred_playlist_name, $track_artwork_path);
 		$tcpport = getFreeTcpPort();
 		exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:random_track:" . $tcpport . ":" . uniqid() . "\"'");
 
+/*
 		$server = IoServer::factory(
 			new HttpServer(
 				new WsServer(
@@ -175,11 +171,13 @@ added to ' . $alfred_playlist_name, $track_artwork_path);
 		// FIX THIS: server will exit when done
 		// Did not find a way to set a timeout
 		$server->run();
+*/
 		return;
 	}else if ($type == "CURRENT") {
 		$tcpport = getFreeTcpPort();
 		exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:current_track:" . $tcpport . ":" . uniqid() . "\"'");
 
+/*
 		$server = IoServer::factory(
 			new HttpServer(
 				new WsServer(
@@ -191,12 +189,14 @@ added to ' . $alfred_playlist_name, $track_artwork_path);
 		// FIX THIS: server will exit when done
 		// Did not find a way to set a timeout
 		$server->run();
+*/
 		return;
 	}else if ($type == "NEXT") {
 		exec("osascript -e 'tell application \"Spotify\" to next track'");
 		$tcpport = getFreeTcpPort();
 		exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:current_track:" . $tcpport . ":" . uniqid() . "\"'");
 
+/*
 		$server = IoServer::factory(
 			new HttpServer(
 				new WsServer(
@@ -208,12 +208,14 @@ added to ' . $alfred_playlist_name, $track_artwork_path);
 		// FIX THIS: server will exit when done
 		// Did not find a way to set a timeout
 		$server->run();
+*/
 		return;
 	}else if ($type == "PREVIOUS") {
 		exec("osascript -e 'tell application \"Spotify\" to previous track'");
 		$tcpport = getFreeTcpPort();
 		exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:current_track:" . $tcpport . ":" . uniqid() . "\"'");
 
+/*
 		$server = IoServer::factory(
 			new HttpServer(
 				new WsServer(
@@ -225,9 +227,10 @@ added to ' . $alfred_playlist_name, $track_artwork_path);
 		// FIX THIS: server will exit when done
 		// Did not find a way to set a timeout
 		$server->run();
+*/
 		return;
 	}
-	
+
 else if ($type == "ALBUM_OR_PLAYLIST") {
 		if ($alfredplaylist != "") {
 
@@ -313,7 +316,25 @@ if ($playlist_uri != "") {
 			$dbfile = $w->data() . "/settings.db";
 			exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 			displayNotification("Max results set to $setting[1]");
-		} else if ($setting[0] == "ALFRED_PLAYLIST") {
+		}
+		else if ($setting[0] == "Oauth_Client_ID") {
+			$setSettings = 'update settings set oauth_client_id=\"' . $setting[1] . '\"';
+			$dbfile = $w->data() . "/settings.db";
+			exec("sqlite3 \"$dbfile\" \"$setSettings\"");
+			displayNotification("Client ID set to $setting[1]");
+		}
+		else if ($setting[0] == "Oauth_Client_SECRET") {
+			$setSettings = 'update settings set oauth_client_secret=\"' . $setting[1] . '\"';
+			$dbfile = $w->data() . "/settings.db";
+			exec("sqlite3 \"$dbfile\" \"$setSettings\"");
+			displayNotification("Client Secret set to $setting[1]");
+		}
+		else if ($setting[0] == "Oauth_Login") {
+			exec("php -S localhost:15298 > /tmp/spotify_mini_player_web_server.log 2>&1 &");
+			exec("open http://localhost:15298");
+			displayNotification("Web server started");
+		}
+		else if ($setting[0] == "ALFRED_PLAYLIST") {
 				$setSettings = 'update settings set alfred_playlist_uri=\"' . $setting[1] . '\"' . ',alfred_playlist_name=\"' . $setting[2] . '\"';
 				$dbfile = $w->data() . "/settings.db";
 				exec("sqlite3 \"$dbfile\" \"$setSettings\"");
@@ -467,7 +488,8 @@ if ($playlist_uri != "") {
 			} else if ($other_action == "current") {
 				$tcpport = getFreeTcpPort();
 				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:current_track:" . $tcpport . ":" . uniqid() . "\"'");
-		
+
+/*
 				$server = IoServer::factory(
 					new HttpServer(
 						new WsServer(
@@ -479,12 +501,14 @@ if ($playlist_uri != "") {
 				// FIX THIS: server will exit when done
 				// Did not find a way to set a timeout
 				$server->run();
+*/
 				return;
 			} else if ($other_action == "previous") {
 				exec("osascript -e 'tell application \"Spotify\" to previous track'");
 				$tcpport = getFreeTcpPort();
 				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:current_track:" . $tcpport . ":" . uniqid() . "\"'");
-		
+
+/*
 				$server = IoServer::factory(
 					new HttpServer(
 						new WsServer(
@@ -496,12 +520,14 @@ if ($playlist_uri != "") {
 				// FIX THIS: server will exit when done
 				// Did not find a way to set a timeout
 				$server->run();
+*/
 				return;
 			} else if ($other_action == "next") {
 				exec("osascript -e 'tell application \"Spotify\" to next track'");
 				$tcpport = getFreeTcpPort();
 				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:current_track:" . $tcpport . ":" . uniqid() . "\"'");
-		
+
+/*
 				$server = IoServer::factory(
 					new HttpServer(
 						new WsServer(
@@ -513,11 +539,13 @@ if ($playlist_uri != "") {
 				// FIX THIS: server will exit when done
 				// Did not find a way to set a timeout
 				$server->run();
+*/
 				return;
 			} else if ($other_action == "random") {
 				$tcpport = getFreeTcpPort();
 				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:random_track:" . $tcpport . ":" . uniqid() . "\"'");
 
+/*
 				$server = IoServer::factory(
 					new HttpServer(
 						new WsServer(
@@ -529,6 +557,7 @@ if ($playlist_uri != "") {
 				// FIX THIS: server will exit when done
 				// Did not find a way to set a timeout
 				$server->run();
+*/
 				return;
 			}
 		else if ($other_action == "display_biography") {
@@ -571,7 +600,7 @@ if ($playlist_uri != "") {
 				exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online▹" . $artist_uri . "@" . escapeQuery($artist_name) . "\"'");
 			}
 		else if ($other_action == "playartist") {
-	
+
 				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:playartistoralbum:$artist_uri:" . uniqid() . "\"'");
 				exec("osascript -e 'tell application \"Spotify\" to open location \"$artist_uri\"'");
 				displayNotificationWithArtwork('🔈 Artist ' . $artist_name, $artist_artwork_path);
@@ -588,6 +617,7 @@ if ($playlist_uri != "") {
 				$tcpport = getFreeTcpPort();
 				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:update_library:" . $tcpport . ":" . uniqid() . "\"'");
 
+/*
 				$server = IoServer::factory(
 					new HttpServer(
 						new WsServer(
@@ -599,6 +629,7 @@ if ($playlist_uri != "") {
 				// FIX THIS: server will exit when done
 				// Did not find a way to set a timeout
 				$server->run();
+*/
 			} else if ($other_action == "update_playlist_list") {
 				if (! $w->internet()) {
 					displayNotificationWithArtwork("Error: No internet connection", './images/warning.png');
@@ -610,6 +641,7 @@ if ($playlist_uri != "") {
 				$tcpport = getFreeTcpPort();
 				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:update_playlist_list:" . $tcpport . ":" . uniqid() . "\"'");
 
+/*
 				$server = IoServer::factory(
 					new HttpServer(
 						new WsServer(
@@ -621,6 +653,7 @@ if ($playlist_uri != "") {
 				// FIX THIS: server will exit when done
 				// Did not find a way to set a timeout
 				$server->run();
+*/
 			}
 	}
 

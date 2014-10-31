@@ -1,7 +1,7 @@
 <?php
 
 // Turn off all error reporting
-error_reporting(0);
+//error_reporting(0);
 
 require './src/functions.php';
 
@@ -64,7 +64,7 @@ if (file_exists($w->data() . '/update_library_in_progress')) {
 //
 // Read settings from DB
 //
-$getSettings = 'select all_playlists,is_spotifious_active,is_alfred_playlist_active,is_displaymorefrom_active,is_lyrics_active,max_results, alfred_playlist_uri,alfred_playlist_name,country_code,theme,last_check_update_time from settings';
+$getSettings = 'select all_playlists,is_spotifious_active,is_alfred_playlist_active,is_displaymorefrom_active,is_lyrics_active,max_results, alfred_playlist_uri,alfred_playlist_name,country_code,theme,last_check_update_time,oauth_client_id,oauth_client_secret,oauth_redirect_uri,oauth_access_token,oauth_expires,oauth_refresh_token,display_name,userid from settings';
 $dbfile = $w->data() . '/settings.db';
 
 try {
@@ -103,8 +103,8 @@ if (!file_exists($w->data() . '/settings.db')) {
 		$dbsettings = new PDO("sqlite:$dbfile", "", "", null);
 		$dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-		$dbsettings->exec("create table settings (all_playlists boolean, is_spotifious_active boolean, is_alfred_playlist_active boolean, is_displaymorefrom_active boolean, is_lyrics_active boolean, max_results int, alfred_playlist_uri text, alfred_playlist_name text, country_code text, theme text, last_check_update_time int)");
-		$dbsettings->exec("insert into settings values (1,1,1,1,1,50,\"\",\"\",\"\",\"new\",0)");
+		$dbsettings->exec("create table settings (all_playlists boolean, is_spotifious_active boolean, is_alfred_playlist_active boolean, is_displaymorefrom_active boolean, is_lyrics_active boolean, max_results int, alfred_playlist_uri text, alfred_playlist_name text, country_code text, theme text, last_check_update_time int, oauth_client_id text,oauth_client_secret text,oauth_redirect_uri text,oauth_access_token text,oauth_expires int,oauth_refresh_token text,display_name text,userid text)");
+		$dbsettings->exec("insert into settings values (1,1,1,1,1,50,\"\",\"\",\"\",\"new\",0,\"\",\"\",\"http://localhost:15298/callback.php\",\"\",0,\"\",\"\",\"\")");
 
 		$dbsettings->query("PRAGMA synchronous = OFF");
 		$dbsettings->query("PRAGMA journal_mode = OFF");
@@ -145,17 +145,42 @@ $alfred_playlist_name = $setting[7];
 $country_code = $setting[8];
 $theme = $setting[9];
 $last_check_update_time = $setting[10];
+$oauth_client_id = $setting[11];
+$oauth_client_secret = $setting[12];
+$oauth_redirect_uri = $setting[13];
+$oauth_access_token = $setting[14];
+$oauth_expires = $setting[15];
+$oauth_refresh_token = $setting[16];
+$display_name = $setting[17];
+$userid = $setting[18];
 
-//
-// Install spotify-app-miniplayer app if needed
-// very first time use
-//
-if
-(!installSpotifyAppIfNeeded($w)) {
-	$w->result(null, '', 'Unable to install properly Spotify Mini Player App in ~/Spotify/spotify-app-miniplayer', 'Report to the author (use spot_mini_debug command to generate a tgz file)', './images/warning.png', 'no', null, '');
+////
+// OAUTH checks
+// Check oauth config : Client ID and Client Secret
+if($oauth_client_id == '' && substr_count($query, '▹') == 0) {
+	$w->result(null, '', 'Your Oauth Client ID is missing', 'Select option below to set it', './images/warning.png', 'no', null, '');
+
+	$w->result(null, '', "Configure the OAuth Client ID", "Create your Application", './images/' . $theme . '/' . '.png', 'no', null, 'Settings▹Oauth_Client_ID▹');
 	echo $w->toxml();
 	return;
 }
+
+if($oauth_client_secret == '' && substr_count($query, '▹') == 0) {
+	$w->result(null, '', 'Your Oauth Client Secret is missing', 'Select option below to set it', './images/warning.png', 'no', null, '');
+
+	$w->result(null, '', "Configure the OAuth Client Secret", "Create your Application", './images/' . $theme . '/' . '.png', 'no', null, 'Settings▹Oauth_Client_SECRET▹');
+	echo $w->toxml();
+	return;
+}
+
+if($oauth_access_token == '' && substr_count($query, '▹') == 0) {
+	$w->result(null, '', 'Your Oauth Access Token is missing', 'Select option below to set it', './images/warning.png', 'no', null, '');
+
+	$w->result(null, '', "Login to Spotify", "This will start a web browser and ask to login to Spotify", './images/' . $theme . '/' . '.png', 'no', null, 'Settings▹Oauth_Login▹');
+	echo $w->toxml();
+	return;
+}
+
 
 // check for correct configuration
 if (file_exists($w->data() . '/library.db')) {
@@ -181,11 +206,9 @@ if (file_exists($w->data() . '/library.db')) {
 
 }
 else {
-	$w->result(null, '', 'Workflow is not configured', '1/ Select Open Spotify Mini Player App below and make sure it works 2/ Then select Install library below', './images/warning.png', 'no', null, '');
+	$w->result(null, '', 'No library could be found', 'Select Install library below', './images/warning.png', 'no', null, '');
 
-	$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'open_spotify_export_app' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "1/ Open Spotify Mini Player App <spotify:app:miniplayer>", "If it doesn't work, restart Spotify multiple times and make sure you have a developer account", './images/' . $theme . '/' . 'app_miniplayer.png', 'yes', null, '');
-
-	$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'update_library' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), '2/ Install library', "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', null, '');
+	$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'update_library' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Install library', "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', null, '');
 	echo $w->toxml();
 	return;
 }
@@ -391,6 +414,9 @@ if (mb_strlen($query) < 3 ||
 		$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'update_library' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Update Library', "When done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', null, '');
 		$w->result(null, '', "Configure Max Number of Results", "Number of results displayed. (it doesn't apply to your playlist list)", './images/' . $theme . '/' . 'numbers.png', 'no', null, 'Settings▹MaxResults▹');
 		$w->result(null, '', "Configure the Theme", "Current available colors for icons: green or black, or new design", './images/' . $theme . '/' . 'settings.png', 'no', null, 'Settings▹Theme▹');
+		$w->result(null, '', "Configure the OAuth Client ID", "Create your Application", './images/' . $theme . '/' . '.png', 'no', null, 'Settings▹Oauth_Client_ID▹');
+		$w->result(null, '', "Configure the OAuth Client Secret", "Create your Application", './images/' . $theme . '/' . '.png', 'no', null, 'Settings▹Oauth_Client_SECRET▹');
+		$w->result(null, '', "Login to Spotify", "This will start a web browser and ask to login to Spotify", './images/' . $theme . '/' . '.png', 'no', null, 'Settings▹Oauth_Login▹');
 
 		if ($is_spotifious_active == true) {
 			$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'disable_spotifiuous' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Disable Spotifious", array(
@@ -1348,6 +1374,23 @@ if (mb_strlen($query) < 3 ||
 
 					}
 				}
+			}
+			else if ($setting_kind == "Oauth_Client_ID") {
+				if (mb_strlen($the_query) == 0) {
+					$w->result(null, '', "Enter your Spotify Application Client ID:", "FIX THIS", './images/' . $theme . '/' . 'settings.png', 'no', null, '');
+				} else {
+						$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , 'Oauth_Client_ID▹' . $the_query /* other_settings*/ , '' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Client ID will be set to <" . $the_query . ">", "Type enter to validate the Client ID", './images/' . $theme . '/' . 'settings.png', 'yes', null, '');
+				}
+			}
+			else if ($setting_kind == "Oauth_Client_SECRET") {
+				if (mb_strlen($the_query) == 0) {
+					$w->result(null, '', "Enter your Spotify Application Client Secret:", "FIX THIS", './images/' . $theme . '/' . 'settings.png', 'no', null, '');
+				} else {
+						$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , 'Oauth_Client_SECRET▹' . $the_query /* other_settings*/ , '' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Client Secret will be set to <" . $the_query . ">", "Type enter to validate the Client Secret", './images/' . $theme . '/' . 'settings.png', 'yes', null, '');
+				}
+			}
+			else if ($setting_kind == "Oauth_Login") {
+				$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , 'Oauth_Login▹' . $the_query /* other_settings*/ , '' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "This will start the authentification process", "Type enter to start", './images/' . $theme . '/' . 'settings.png', 'yes', null, '');
 			}
 			else if ($setting_kind == "Theme") {
 
