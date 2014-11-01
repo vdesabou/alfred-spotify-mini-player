@@ -608,49 +608,16 @@ if ($playlist_uri != "") {
 					displayNotificationWithArtwork("Error: No internet connection", './images/warning.png');
 					return;
 				}
-				touch($w->data() . "/update_library_in_progress");
-				$w->write('InitLibrary▹' . 0 . '▹' . 0 . '▹' . time(), 'update_library_in_progress');
-
-				$tcpport = getFreeTcpPort();
-				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:update_library:" . $tcpport . ":" . uniqid() . "\"'");
-
-/*
-				$server = IoServer::factory(
-					new HttpServer(
-						new WsServer(
-							new MiniPlayer()
-						)
-					),
-					$tcpport
-				);
-				// FIX THIS: server will exit when done
-				// Did not find a way to set a timeout
-				$server->run();
-*/
+				updateLibrary();
+				return;
 			} else if ($other_action == "update_playlist_list") {
 				if (! $w->internet()) {
 					displayNotificationWithArtwork("Error: No internet connection", './images/warning.png');
 					return;
 				}
-				touch($w->data() . "/update_library_in_progress");
-				$w->write('InitPlaylistList▹' . 0 . '▹' . 0 . '▹' . time(), 'update_library_in_progress');
 
-				$tcpport = getFreeTcpPort();
-				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:update_playlist_list:" . $tcpport . ":" . uniqid() . "\"'");
-
-/*
-				$server = IoServer::factory(
-					new HttpServer(
-						new WsServer(
-							new MiniPlayer()
-						)
-					),
-					$tcpport
-				);
-				// FIX THIS: server will exit when done
-				// Did not find a way to set a timeout
-				$server->run();
-*/
+				updatePlaylistList();
+				return;
 			}
 	}
 
@@ -664,7 +631,7 @@ if ($playlist_uri != "") {
  */
 function starCurrentTrack($w) {
 	$tcpport = getFreeTcpPort();
-	$getUser = 'select username from user';
+	$getUser = 'select username from user'; // FIX THIS now in settings
 	$dbfile = $w->data() . '/library.db';
 	exec("sqlite3 -separator '	' \"$dbfile\" \"$getUser\" 2>&1", $users, $returnValue);
 
