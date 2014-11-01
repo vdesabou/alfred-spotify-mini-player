@@ -188,17 +188,10 @@ else if ($type == "ALBUM_OR_PLAYLIST") {
 
 				if ($album_uri == "") {
 					// case of current song with shift
-					$album_uri = getAlbumUriFromName($w, 'black', $album_name, $artist_name);
 
-					if ($album_uri == "") {
-						// track is not from library
-
-						/// FIX THIS, chec if we can get it from WEB API?
-/*
-						exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:addcurrenttrackalbumtoalfredplaylist:$alfred_playlist_uri\"'");
-						exec("osascript -e 'tell application \"Spotify\" to open location \"$alfred_playlist_uri\"'");
-*/
-
+					$album_uri = getAlbumUriFromTrack($w,$track_uri);
+					if($album_uri == false) {
+						displayNotification("Error: cannot get current album");
 						return;
 					}
 					$album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $album_uri, true);
@@ -221,27 +214,15 @@ added to ' . $alfred_playlist_name, $playlist_artwork_path);
 
 		if ($artist_uri == "") {
 			// case of current song with cmd
-			$artist_uri = getArtistUriFromName($w, 'black', $artist_name);
-
-			if ($artist_artwork_path == "") {
-				$artist_artwork_path = getTrackOrAlbumArtwork($w, 'black', $track_uri, true);
-			}
-
-			if ($artist_uri == "") {
-				// artist is not from library
-				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:playcurrenttrackartist\"'");
-				exec("osascript -e 'tell application \"Spotify\" to open location \"$track_uri\"'");
-				displayNotificationWithArtwork('🔈 Artist ' . $artist_name, $artist_artwork_path);
+			$artist_uri = getArtistUriFromTrack($w,$track_uri);
+			if($artist_uri == false) {
+				displayNotification("Error: cannot get current artist");
 				return;
 			}
+			$artist_artwork_path = getArtistArtwork($w, 'black', $artist_uri, true);
 		}
 
-		if ($artist_artwork_path == "") {
-			$artist_artwork_path = getTrackOrAlbumArtwork($w, 'black', $track_uri, true);
-		}
-
-		exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:playartistoralbum:$artist_uri:" . uniqid() . "\"'");
-		exec("osascript -e 'tell application \"Spotify\" to open location \"$artist_uri\"'");
+		exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
 		displayNotificationWithArtwork('🔈 Artist ' . $artist_name, $artist_artwork_path);
 		return;
 	}

@@ -101,12 +101,76 @@ function getSpotifyWebAPI($w) {
 	return $api;
 }
 
+
+/**
+ * getArtistUriFromTrack function.
+ *
+ * @access public
+ * @param mixed $w
+ * @param mixed $track_uri
+ * @return void
+ */
+function getArtistUriFromTrack($w, $track_uri) {
+	$api = getSpotifyWebAPI($w);
+	if($api == false)
+	{
+		displayNotification("Error: Cannot get SpotifyWebAPI(");
+		return;
+	}
+
+	try {
+		$tmp = explode(':', $track_uri);
+
+		$track = $api->getTrack($tmp[2]);
+		$artists = $track->artists;
+		$artist = $artists[0];
+	}
+	catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+		echo "Error(getArtistUriFromTrack): (exception " . $e . ")";
+		return false;
+	}
+
+	return $artist->uri;
+}
+
+
+/**
+ * getAlbumUriFromTrack function.
+ *
+ * @access public
+ * @param mixed $w
+ * @param mixed $track_uri
+ * @return void
+ */
+function getAlbumUriFromTrack($w, $track_uri) {
+	$api = getSpotifyWebAPI($w);
+	if($api == false)
+	{
+		displayNotification("Error: Cannot get SpotifyWebAPI(");
+		return;
+	}
+
+	try {
+		$tmp = explode(':', $track_uri);
+
+		$track = $api->getTrack($tmp[2]);
+		$album = $track->album;
+	}
+	catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+		echo "Error(getAlbumUriFromTrack): (exception " . $e . ")";
+		return false;
+	}
+
+	return $album->uri;
+}
+
+
 /**
  * getThePlaylistracks function.
  *
  * @access public
  * @param mixed $w
- * @param mixed $album_uri
+ * @param mixed $playlist_uri
  * @return void
  */
 function getThePlaylistracks($w,$playlist_uri) {
@@ -1626,63 +1690,7 @@ function floatToSquares($decimal) {
 }
 
 
-/**
- * getArtistUriFromName function.
- *
- * @access public
- * @param mixed $w
- * @param mixed $theme
- * @param mixed $artist
- * @return void
- */
-function getArtistUriFromName($w, $theme, $artist) {
-	$getArtists = "select artist_uri,artist_artwork_path,artist_biography from artists where artist_name='" . $artist . "'";
 
-	$dbfile = $w->data() . "/library.db";
-	exec("sqlite3 -separator '	' \"$dbfile\" \"$getArtists\" 2>&1", $artists, $returnValue);
-
-	if ($returnValue != 0) {
-		handleDbIssue($theme);
-		return "";
-	}
-
-	if (count($artists) > 0) {
-
-		$theartist = explode("	", $artists[0]);
-		return $theartist[0];
-	}
-	return "";
-}
-
-
-/**
- * getAlbumUriFromName function.
- *
- * @access public
- * @param mixed $w
- * @param mixed $theme
- * @param mixed $album
- * @param mixed $artist
- * @return void
- */
-function getAlbumUriFromName($w, $theme, $album, $artist) {
-	$getTracks = "select album_uri from tracks where album_name='" . $album . "' and artist_name='" . $artist . "'";
-
-	$dbfile = $w->data() . "/library.db";
-	exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
-
-	if ($returnValue != 0) {
-		handleDbIssue($theme);
-		return "";
-	}
-
-	if (count($tracks) > 0) {
-
-		$thealbum = explode("	", $tracks[0]);
-		return $thealbum[0];
-	}
-	return "";
-}
 
 
 /**
