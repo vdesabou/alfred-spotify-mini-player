@@ -86,28 +86,14 @@ if ($type == "TRACK") {
 } else if ($type == "ALBUM") {
 		if ($album_uri == "") {
 			// case of current song with alt
-			$album_uri = getAlbumUriFromName($w, 'black', $album_name, $artist_name);
-
-			if ($album_artwork_path == "") {
-				$album_artwork_path = getTrackOrAlbumArtwork($w, 'black', $album_uri, true);
-			}
-			if ($album_uri == "") {
-				// track is not from library
-				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:playcurrenttrackalbum:" . uniqid() . "\"'");
-				exec("osascript -e 'tell application \"Spotify\" to open location \"$album_uri\"'");
-				displayNotificationWithArtwork('🔈 Album ' . $album_name . ' by ' . ucfirst($artist_name), $album_artwork_path);
+			$album_uri = getAlbumUriFromTrack($w,$track_uri);
+			if($album_uri == false) {
+				displayNotification("Error: cannot get current album");
 				return;
 			}
-
-			$album_artwork_path = getTrackOrAlbumArtwork($w, 'black', $album_uri, true);
+			$album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $album_uri, true);
 		}
-
-		if ($album_artwork_path == "") {
-			$album_artwork_path = getTrackOrAlbumArtwork($w, 'black', $album_uri, true);
-		}
-
-		exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:playartistoralbum:$album_uri:" . uniqid() . "\"'");
-		exec("osascript -e 'tell application \"Spotify\" to open location \"$album_uri\"'");
+		exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
 		displayNotificationWithArtwork('🔈 Album ' . $album_name . ' by ' . ucfirst($artist_name), $album_artwork_path);
 		return;
 	} else if ($type == "ONLINE") {
