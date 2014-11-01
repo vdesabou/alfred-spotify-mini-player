@@ -1040,8 +1040,8 @@ function updateLibrary($w) {
 						$stmtTrack->bindValue(':track_artwork_path', $track_artwork_path);
 						$stmtTrack->bindValue(':artist_artwork_path', $artist_artwork_path);
 						$stmtTrack->bindValue(':album_artwork_path', $album_artwork_path);
-						$stmtTrack->bindValue(':playlist_name', escapeQuery($playlist_name));
-						$stmtTrack->bindValue(':playlist_uri', $playlist_uri);
+						$stmtTrack->bindValue(':playlist_name', escapeQuery($playlist->name));
+						$stmtTrack->bindValue(':playlist_uri', $playlist->uri);
 						$stmtTrack->bindValue(':playable', $playable);
 						$stmtTrack->bindValue(':availability', 'FIX THIS');
 						$stmtTrack->execute();
@@ -1256,14 +1256,14 @@ function updatePlaylist($w, $playlist_uri, $playlist_name) {
 					$stmtTrack->bindValue(':track_artwork_path', $track_artwork_path);
 					$stmtTrack->bindValue(':artist_artwork_path', $artist_artwork_path);
 					$stmtTrack->bindValue(':album_artwork_path', $album_artwork_path);
-					$stmtTrack->bindValue(':playlist_name', escapeQuery($playlist_name));
-					$stmtTrack->bindValue(':playlist_uri', $playlist_uri);
+					$stmtTrack->bindValue(':playlist_name', escapeQuery($playlist->name));
+					$stmtTrack->bindValue(':playlist_uri', $playlist->uri);
 					$stmtTrack->bindValue(':playable', $playable);
 					$stmtTrack->bindValue(':availability', 'FIX THIS');
 					$stmtTrack->execute();
 
 					$nb_track++;
-					if ($nb_track % 10 === 0) {
+					if ($nb_track % 30 === 0) {
 						$w->write('Playlist▹' . $nb_track . '▹' . $nb_tracktotal . '▹' . $words[3], 'update_library_in_progress');
 					}
 				}
@@ -1525,8 +1525,8 @@ function updatePlaylistList($w) {
 									$stmtTrack->bindValue(':track_artwork_path', $track_artwork_path);
 									$stmtTrack->bindValue(':artist_artwork_path', $artist_artwork_path);
 									$stmtTrack->bindValue(':album_artwork_path', $album_artwork_path);
-									$stmtTrack->bindValue(':playlist_name', escapeQuery($playlist_name));
-									$stmtTrack->bindValue(':playlist_uri', $playlist_uri);
+									$stmtTrack->bindValue(':playlist_name', escapeQuery($playlist->name));
+									$stmtTrack->bindValue(':playlist_uri', $playlist->uri);
 									$stmtTrack->bindValue(':playable', $playable);
 									$stmtTrack->bindValue(':availability', 'FIX THIS');
 									$stmtTrack->execute();
