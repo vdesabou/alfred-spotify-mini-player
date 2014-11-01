@@ -4,6 +4,7 @@ require_once './src/workflows.php';
 require 'vendor/autoload.php';
 
 
+
 /**
  * getSpotifyWebAPI function.
  *
@@ -264,14 +265,19 @@ function displayNotificationForRandomTrack($track_name, $track_uri, $artist_name
  * displayNotificationForCurrentTrack function.
  *
  * @access public
- * @param mixed $track_name
- * @param mixed $track_uri
- * @param mixed $artist_name
  * @return void
  */
-function displayNotificationForCurrentTrack($track_name, $track_uri, $artist_name) {
+function displayNotificationForCurrentTrack() {
 	$w = new Workflows('com.vdesabou.spotify.mini.player');
-	displayNotificationWithArtwork('🔈 ' . $track_name . ' by ' . $artist_name, getTrackOrAlbumArtwork($w, 'black', $track_uri, true));
+
+	$command_output = exec("./track_info.sh 2>&1");
+
+	if (substr_count($command_output, '▹') > 0) {
+		$results = explode('▹', $command_output);
+		displayNotificationWithArtwork('🔈 ' . $results[0] . ' by ' . $results[1], getTrackOrAlbumArtwork($w, 'new', $results[4], true));
+	} else {
+		displayNotification("Error: cannot get current track");
+	}
 }
 
 /**

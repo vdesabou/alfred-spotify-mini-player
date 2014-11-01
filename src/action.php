@@ -174,60 +174,15 @@ added to ' . $alfred_playlist_name, $track_artwork_path);
 */
 		return;
 	}else if ($type == "CURRENT") {
-		$tcpport = getFreeTcpPort();
-		exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:current_track:" . $tcpport . ":" . uniqid() . "\"'");
-
-/*
-		$server = IoServer::factory(
-			new HttpServer(
-				new WsServer(
-					new MiniPlayer()
-				)
-			),
-			$tcpport
-		);
-		// FIX THIS: server will exit when done
-		// Did not find a way to set a timeout
-		$server->run();
-*/
+		displayNotificationForCurrentTrack();
 		return;
 	}else if ($type == "NEXT") {
 		exec("osascript -e 'tell application \"Spotify\" to next track'");
-		$tcpport = getFreeTcpPort();
-		exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:current_track:" . $tcpport . ":" . uniqid() . "\"'");
-
-/*
-		$server = IoServer::factory(
-			new HttpServer(
-				new WsServer(
-					new MiniPlayer()
-				)
-			),
-			$tcpport
-		);
-		// FIX THIS: server will exit when done
-		// Did not find a way to set a timeout
-		$server->run();
-*/
+		displayNotificationForCurrentTrack();
 		return;
 	}else if ($type == "PREVIOUS") {
 		exec("osascript -e 'tell application \"Spotify\" to previous track'");
-		$tcpport = getFreeTcpPort();
-		exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:current_track:" . $tcpport . ":" . uniqid() . "\"'");
-
-/*
-		$server = IoServer::factory(
-			new HttpServer(
-				new WsServer(
-					new MiniPlayer()
-				)
-			),
-			$tcpport
-		);
-		// FIX THIS: server will exit when done
-		// Did not find a way to set a timeout
-		$server->run();
-*/
+		displayNotificationForCurrentTrack();
 		return;
 	}
 
@@ -483,60 +438,15 @@ if ($playlist_uri != "") {
 				unstarCurrentTrack($w);
 				return;
 			} else if ($other_action == "current") {
-				$tcpport = getFreeTcpPort();
-				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:current_track:" . $tcpport . ":" . uniqid() . "\"'");
-
-/*
-				$server = IoServer::factory(
-					new HttpServer(
-						new WsServer(
-							new MiniPlayer()
-						)
-					),
-					$tcpport
-				);
-				// FIX THIS: server will exit when done
-				// Did not find a way to set a timeout
-				$server->run();
-*/
+				displayNotificationForCurrentTrack();
 				return;
 			} else if ($other_action == "previous") {
 				exec("osascript -e 'tell application \"Spotify\" to previous track'");
-				$tcpport = getFreeTcpPort();
-				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:current_track:" . $tcpport . ":" . uniqid() . "\"'");
-
-/*
-				$server = IoServer::factory(
-					new HttpServer(
-						new WsServer(
-							new MiniPlayer()
-						)
-					),
-					$tcpport
-				);
-				// FIX THIS: server will exit when done
-				// Did not find a way to set a timeout
-				$server->run();
-*/
+				displayNotificationForCurrentTrack();
 				return;
 			} else if ($other_action == "next") {
 				exec("osascript -e 'tell application \"Spotify\" to next track'");
-				$tcpport = getFreeTcpPort();
-				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:current_track:" . $tcpport . ":" . uniqid() . "\"'");
-
-/*
-				$server = IoServer::factory(
-					new HttpServer(
-						new WsServer(
-							new MiniPlayer()
-						)
-					),
-					$tcpport
-				);
-				// FIX THIS: server will exit when done
-				// Did not find a way to set a timeout
-				$server->run();
-*/
+				displayNotificationForCurrentTrack();
 				return;
 			} else if ($other_action == "random") {
 				$tcpport = getFreeTcpPort();
