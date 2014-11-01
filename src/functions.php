@@ -1064,44 +1064,6 @@ function updateLibrary($w) {
 			$stmt->bindValue(':related_artist_artwork_path', '');
 			$stmt->execute();
 
-			/*try {
-				$artistRelatedArtists = $api->getArtistRelatedArtists($artist->id);
-
-				if(count($artistRelatedArtists) > 0) {
-					foreach ($artistRelatedArtists->artists as $related) {
-						$related_artist_artwork_path = getArtistArtwork($w, $theme, $related->name, true);
-						$stmt->bindValue(':artist_name', escapeQuery($artist->name));
-						$stmt->bindValue(':artist_uri', $artist->uri);
-						$stmt->bindValue(':artist_artwork_path', $artist_artwork_path);
-						$stmt->bindValue(':biography', 'FIX THIS');
-						$stmt->bindValue(':popularity', $artist->popularity);
-						$stmt->bindValue(':from', 'FIX THIS');
-						$stmt->bindValue(':to', 'FIX THIS');
-						$stmt->bindValue(':related_name', escapeQuery($related->name));
-						$stmt->bindValue(':related_uri', $related->uri);
-						$stmt->bindValue(':related_artist_artwork_path', $related_artist_artwork_path);
-						$stmt->execute();
-					}
-				} else {
-					$stmt->bindValue(':artist_name', escapeQuery($artist->name));
-					$stmt->bindValue(':artist_uri', $artist->uri);
-					$stmt->bindValue(':artist_artwork_path', $artist_artwork_path);
-					$stmt->bindValue(':biography', 'FIX THIS');
-					$stmt->bindValue(':popularity', $artist->popularity);
-					$stmt->bindValue(':from', 'FIX THIS');
-					$stmt->bindValue(':to', 'FIX THIS');
-					$stmt->bindValue(':related_name', '');
-					$stmt->bindValue(':related_uri', '');
-					$stmt->bindValue(':related_artist_artwork_path', '');
-					$stmt->execute();
-				}
-
-			}
-			catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-				echo "Error(getArtistRelatedArtists): artist name " . $artist->name . " (exception " . $e . ")";
-			}
-			*/
-
 			$nb_artists++;
 			if ($nb_artists % 10 === 0) {
 				$w->write('Artists▹' . $nb_artists . '▹' . count($savedListArtists) . '▹' . $words[3], 'update_library_in_progress');
