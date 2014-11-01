@@ -47,7 +47,7 @@ if (substr_count($command_output, '▹') > 0) {
 added to ' . $alfred_playlist_name, getTrackOrAlbumArtwork($w, $theme, $results[4], true));
 
 	// update alfred playlist
-	refreshPlaylist($w, $alfred_playlist_uri);
+	updatePlaylist($w, $alfred_playlist_uri, $alfred_playlist_name);
 }
 else {
 	displayNotification("Error: No track is playing");
