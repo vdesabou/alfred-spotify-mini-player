@@ -101,7 +101,86 @@ function getSpotifyWebAPI($w) {
 	return $api;
 }
 
+/**
+ * getThePlaylistracks function.
+ *
+ * @access public
+ * @param mixed $w
+ * @param mixed $album_uri
+ * @return void
+ */
+function getThePlaylistracks($w,$playlist_uri) {
+	$api = getSpotifyWebAPI($w);
+	if($api == false)
+	{
+		displayNotification("Error: Cannot get SpotifyWebAPI(");
+		return;
+	}
 
+	$tracks = array();
+
+	try {
+		$tmp = explode(':', $playlist_uri);
+		$offsetGetUserPlaylistTracks = 0;
+		$limitGetUserPlaylistTracks = 100;
+		do {
+			$userPlaylistTracks = $api->getUserPlaylistTracks($tmp[2],$tmp[4],array(
+	            'fields' => array(),
+	            'limit' => $limitGetUserPlaylistTracks,
+	            'offset' => $offsetGetUserPlaylistTracks
+	        ));
+
+			foreach ($userPlaylistTracks->items as $track) {
+				$track = $track->track;
+				$tracks[] = $track->id;
+			}
+
+			$offsetGetUserPlaylistTracks+=$limitGetUserPlaylistTracks;
+
+		} while ($offsetGetUserPlaylistTracks < $userPlaylistTracks->total);
+	}
+	catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+		echo "Error(getThePlaylistracks): playlist uri " . $playlist_uri . " (exception " . $e . ")";
+	}
+
+
+	return $tracks;
+}
+
+/**
+ * getTheAlbumTracks function.
+ *
+ * @access public
+ * @param mixed $w
+ * @param mixed $album_uri
+ * @return void
+ */
+function getTheAlbumTracks($w,$album_uri) {
+	$api = getSpotifyWebAPI($w);
+	if($api == false)
+	{
+		displayNotification("Error: Cannot get SpotifyWebAPI(");
+		return;
+	}
+
+	$tracks = array();
+
+	try {
+		$tmp = explode(':', $album_uri);
+
+		$json = $api->getAlbumTracks($tmp[2]);
+
+		foreach ($json->items as $track) {
+			$tracks[] = $track->id;
+		}
+	}
+	catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+		echo "Error(getTheAlbumTracks): (exception " . $e . ")";
+		return false;
+	}
+
+	return $tracks;
+}
 
 /**
  * addTrackToPlaylist function.
@@ -129,7 +208,7 @@ function addTracksToPlaylist($w,$tracks,$playlist_uri,$playlist_name) {
 	} catch (PDOException $e) {
 		echo "Error(addTracksToPlaylist): (exception " . $e . ")";
 		$dbsettings=null;
-		return;
+		return false;
 	}
 
 	$api = getSpotifyWebAPI($w);
@@ -146,11 +225,13 @@ function addTracksToPlaylist($w,$tracks,$playlist_uri,$playlist_name) {
 	}
 	catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 		echo "Error(addTracksToPlaylist): (exception " . $e . ")";
-		return;
+		return false;
 	}
 
 	// refresh playlist
 	updatePlaylist($w, $playlist_uri, $playlist_name);
+
+	return true;
 }
 
 

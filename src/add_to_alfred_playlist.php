@@ -41,13 +41,9 @@ if (substr_count($command_output, '▹') > 0) {
 		return;
 	}
 
-	addTracksToPlaylist($w,$results[4],$alfred_playlist_uri,$alfred_playlist_name);
-
-	displayNotificationWithArtwork('' . $results[0] . ' by ' . $results[1] . '
-added to ' . $alfred_playlist_name, getTrackOrAlbumArtwork($w, $theme, $results[4], true));
-
-	// update alfred playlist
-	updatePlaylist($w, $alfred_playlist_uri, $alfred_playlist_name);
+	if (addTracksToPlaylist($w,$results[4],$alfred_playlist_uri,$alfred_playlist_name)) {
+		displayNotificationWithArtwork('' . $results[0] . ' by ' . $results[1] . ' added to ' . $alfred_playlist_name, getTrackOrAlbumArtwork($w, $theme, $results[4], true));
+	}
 }
 else {
 	displayNotification("Error: No track is playing");
