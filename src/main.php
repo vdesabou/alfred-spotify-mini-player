@@ -31,17 +31,7 @@ if (file_exists($w->data() . '/update_library_in_progress')) {
 		else {
 			$w->result(null, '', 'There is a problem, the initialization phase last more than 5 minutes', 'Follow the steps below:', './images/warning.png', 'no', null, '');
 
-			$w->result(null, '', "1/ Kill update library", "You can kill it by using spot_mini_kill_update command", '05F86AA1-D3EE-4409-9A58-898B36FFE503.png', 'no', null, '');
-
-			$w->result(null, '', "2/ Open Spotify Mini Player App <spotify:app:miniplayer>", array(
-					"Go to the Spotify Mini Player App in Spotify.",
-					'alt' => 'Not Available',
-					'cmd' => 'Not Available',
-					'shift' => 'Not Available',
-					'fn' => 'Not Available',
-					'ctrl' => 'Not Available'), './images/' . 'black' . '/' . 'app_miniplayer.png', 'no', null, '');
-
-			$w->result(null, '', '3/ Copy paste the Debug output and provide it to the author', 'Also provide a tgz file with spot_mini_debug command', 'CEF36AB9-7CC2-4765-BF84-751E88B69023.png', 'no', null, '');
+			$w->result(null, '', "Kill update library", "You can kill it by using spot_mini_kill_update command", '05F86AA1-D3EE-4409-9A58-898B36FFE503.png', 'no', null, '');
 		}
 	}
 	else {
@@ -506,14 +496,6 @@ if (mb_strlen($query) < 3 ||
 				'shift' => 'Not Available',
 				'fn' => 'Not Available',
 				'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'check_update.png', 'yes', null, '');
-
-		$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'open_spotify_export_app' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Open Spotify Mini Player App <spotify:app:miniplayer>", array(
-				"Go to the Spotify Mini Player App in Spotify.",
-				'alt' => 'Not Available',
-				'cmd' => 'Not Available',
-				'shift' => 'Not Available',
-				'fn' => 'Not Available',
-				'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'app_miniplayer.png', 'yes', null, '');
 	}
 } else {
 	////////////

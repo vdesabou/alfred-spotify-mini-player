@@ -186,8 +186,7 @@ added to ' . $alfred_playlist_name, $playlist_artwork_path);
 	}
 
 if ($playlist_uri != "") {
-	exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:startplaylist:$playlist_uri:" . uniqid() . "\"'");
-	exec("osascript -e 'tell application \"Spotify\" to open location \"$playlist_uri\"'");
+	exec("osascript -e 'tell application \"Spotify\" to play track \"$playlist_uri\"'");
 	displayNotificationWithArtwork('🔈 Playlist ' . $playlist_name, $playlist_artwork_path);
 }else if ($other_settings != "") {
 		$setting = explode('▹', $other_settings);
@@ -325,10 +324,7 @@ if ($playlist_uri != "") {
 				$dbfile = $w->data() . "/settings.db";
 				exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 				displayNotificationWithArtwork("Alfred Playlist is now disabled", './images/' . $theme . '/' . 'uncheck.png');
-			} else if ($other_action == "open_spotify_export_app") {
-				exec("osascript -e 'tell application \"Spotify\" to activate'");
-				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer\"'");
-			} else if ($other_action == "Oauth_Login") {
+			}else if ($other_action == "Oauth_Login") {
 				exec("php -S localhost:15298 > /tmp/spotify_mini_player_web_server.log 2>&1 &");
 				exec("open http://localhost:15298");
 				displayNotification("Web server started");
@@ -422,9 +418,7 @@ if ($playlist_uri != "") {
 				exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online▹" . $artist_uri . "@" . escapeQuery($artist_name) . "\"'");
 			}
 		else if ($other_action == "playartist") {
-
-				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:playartistoralbum:$artist_uri:" . uniqid() . "\"'");
-				exec("osascript -e 'tell application \"Spotify\" to open location \"$artist_uri\"'");
+				exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
 				displayNotificationWithArtwork('🔈 Artist ' . $artist_name, $artist_artwork_path);
 				return;
 			}
