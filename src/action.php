@@ -98,26 +98,10 @@ if ($type == "TRACK") {
 		return;
 	} else if ($type == "ONLINE") {
 		if ($artist_uri == "") {
-			// case of current song with ctrl
-			$artist_uri = getArtistUriFromName($w, 'black', $artist_name);
-
-			if ($artist_uri == "") {
-				$tcpport = getFreeTcpPort();
-				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:current_track_get_artist:" . $tcpport . ":" . uniqid() . "\"'");
-
-/*
-				$server = IoServer::factory(
-					new HttpServer(
-						new WsServer(
-							new MiniPlayer()
-						)
-					),
-					$tcpport
-				);
-				// FIX THIS: server will exit when done
-				// Did not find a way to set a timeout
-				$server->run();
-*/
+			// case of current song with cmd
+			$artist_uri = getArtistUriFromTrack($w,$track_uri);
+			if($artist_uri == false) {
+				displayNotification("Error: cannot get current artist");
 				return;
 			}
 		}
@@ -173,7 +157,6 @@ else if ($type == "ALBUM_OR_PLAYLIST") {
 
 				if ($album_uri == "") {
 					// case of current song with shift
-
 					$album_uri = getAlbumUriFromTrack($w,$track_uri);
 					if($album_uri == false) {
 						displayNotification("Error: cannot get current album");
