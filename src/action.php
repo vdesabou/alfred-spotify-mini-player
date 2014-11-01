@@ -72,14 +72,13 @@ if ($type == "TRACK") {
 			}
 
 		} else if ($playlist_uri != "") {
-				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:playtrackwithplaylistcontext:$track_uri:$playlist_uri\"'");
-				exec("osascript -e 'tell application \"Spotify\" to open location \"$playlist_uri\"'");
+				exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\" in context \"$playlist_uri\"'");
 				displayNotificationWithArtwork('🔈 ' . $track_name . ' by ' . ucfirst($artist_name), $track_artwork_path);
 				return;
 			}
 		else {
 			if ($other_action == "") {
-				exec("osascript -e 'tell application \"Spotify\" to open location \"$track_uri\"'");
+				exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
 				displayNotificationWithArtwork('🔈 ' . $track_name . ' by ' . ucfirst($artist_name), $track_artwork_path);
 			}
 		}
