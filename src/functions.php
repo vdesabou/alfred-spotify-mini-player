@@ -4,6 +4,32 @@ require_once './src/workflows.php';
 require 'vendor/autoload.php';
 
 
+
+/**
+ * getRandomTrack function.
+ *
+ * @access public
+ * @param mixed $w
+ * @return void
+ */
+function getRandomTrack($w) {
+	$getTracks = "select uri from tracks order by random() limit 1";
+
+	$dbfile = $w->data() . "/library.db";
+	exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
+
+	if ($returnValue != 0) {
+		handleDbIssue($theme);
+		return "";
+	}
+
+	if (count($tracks) > 0) {
+
+		$thetrackuri = explode("	", $tracks[0]);
+		return $thetrackuri[0];
+	}
+	return false;
+}
 /**
  * getSpotifyWebAPI function.
  *

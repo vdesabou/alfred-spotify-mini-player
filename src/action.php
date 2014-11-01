@@ -115,22 +115,12 @@ if ($type == "TRACK") {
 		unstarCurrentTrack($w);
 		return;
 	}else if ($type == "RANDOM") {
-		$tcpport = getFreeTcpPort();
-		exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:random_track:" . $tcpport . ":" . uniqid() . "\"'");
-
-/*
-		$server = IoServer::factory(
-			new HttpServer(
-				new WsServer(
-					new MiniPlayer()
-				)
-			),
-			$tcpport
-		);
-		// FIX THIS: server will exit when done
-		// Did not find a way to set a timeout
-		$server->run();
-*/
+		$track_uri = getRandomTrack($w);
+		if($track_uri == false) {
+			displayNotification("Error: cannot find a random track");
+		}
+		exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
+		displayNotificationForCurrentTrack();
 		return;
 	}else if ($type == "CURRENT") {
 		displayNotificationForCurrentTrack();
@@ -384,22 +374,12 @@ if ($playlist_uri != "") {
 				displayNotificationForCurrentTrack();
 				return;
 			} else if ($other_action == "random") {
-				$tcpport = getFreeTcpPort();
-				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:random_track:" . $tcpport . ":" . uniqid() . "\"'");
-
-/*
-				$server = IoServer::factory(
-					new HttpServer(
-						new WsServer(
-							new MiniPlayer()
-						)
-					),
-					$tcpport
-				);
-				// FIX THIS: server will exit when done
-				// Did not find a way to set a timeout
-				$server->run();
-*/
+				$track_uri = getRandomTrack($w);
+				if($track_uri == false) {
+					displayNotification("Error: cannot find a random track");
+				}
+				exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
+				displayNotificationForCurrentTrack();
 				return;
 			}
 		else if ($other_action == "display_biography") {
