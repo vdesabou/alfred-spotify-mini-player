@@ -939,7 +939,7 @@ if (mb_strlen($query) < 3 ||
 
 				foreach ($json->artists as $related) {
 
-					$w->result(null, '', "👤 " . ucfirst($related->name), '☁︎ Query all albums/tracks from this artist online..', getTrackOrAlbumArtwork($w, $theme, $album->uri, false), 'no', null, "Online▹" . $related->uri . "@" . $related->name);
+					$w->result(null, '', "👤 " . ucfirst($related->name), '☁︎ Query all albums/tracks from this artist online..', getArtistArtwork($w, $theme, $related->name, false), 'no', null, "Online▹" . $related->uri . "@" . $related->name);
 				}
 
 			}
