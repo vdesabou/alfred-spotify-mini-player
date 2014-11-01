@@ -74,10 +74,7 @@ if ($type == "TRACK") {
 			displayNotificationWithArtwork('' . $track_name . '
 added to ' . $alfred_playlist_name, $track_artwork_path);
 
-			if (! $w->internet()) {
-				displayNotificationWithArtwork("Error: No internet connection", './images/warning.png');
-				return;
-			}
+
 
 			// update alfred playlist
 			updatePlaylist($w, $alfred_playlist_uri, $alfred_playlist_name);
@@ -514,19 +511,10 @@ if ($playlist_uri != "") {
 				return;
 			}
 		else if ($other_action == "update_library") {
-				if (! $w->internet()) {
-					displayNotificationWithArtwork("Error: No internet connection", './images/warning.png');
-					return;
-				}
-				updateLibrary();
+				updateLibrary($w);
 				return;
 			} else if ($other_action == "update_playlist_list") {
-				if (! $w->internet()) {
-					displayNotificationWithArtwork("Error: No internet connection", './images/warning.png');
-					return;
-				}
-
-				updatePlaylistList();
+				updatePlaylistList($w);
 				return;
 			}
 	}

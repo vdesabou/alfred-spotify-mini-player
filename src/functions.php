@@ -4,7 +4,6 @@ require_once './src/workflows.php';
 require 'vendor/autoload.php';
 
 
-
 /**
  * getSpotifyWebAPI function.
  *
@@ -13,6 +12,12 @@ require 'vendor/autoload.php';
  * @return api, false if error
  */
 function getSpotifyWebAPI($w) {
+
+	if (! $w->internet()) {
+		displayNotificationWithArtwork("Error: No internet connection", './images/warning.png');
+		return false;
+	}
+
 	//
 	// Read settings from DB
 	//
@@ -95,6 +100,60 @@ function getSpotifyWebAPI($w) {
 
 	return $api;
 }
+
+
+
+/**
+ * addTrackToPlaylist function.
+ *
+ * @access public
+ * @param mixed $w
+ * @param strain/array $tracks
+ * @param mixed $playlist_uri
+ * @return void
+ */
+function addTracksToPlaylist($w,$tracks,$playlist_uri,$playlist_name) {
+
+	//
+	// Read settings from DB
+	//
+	$dbfile = $w->data() . '/settings.db';
+	try {
+		$dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
+		$dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$getSettings = 'select userid from settings';
+		$stmt = $dbsettings->prepare($getSettings);
+		$stmt->execute();
+		$setting = $stmt->fetch();
+		$userid = $setting[0];
+	} catch (PDOException $e) {
+		echo "Error(addTracksToPlaylist): (exception " . $e . ")";
+		$dbsettings=null;
+		return;
+	}
+
+	$api = getSpotifyWebAPI($w);
+	if($api == false)
+	{
+		displayNotification("Error: Cannot get SpotifyWebAPI(");
+		return;
+	}
+
+	try {
+		$tmp = explode(':', $playlist_uri);
+
+		$api->addUserPlaylistTracks($userid, $tmp[4], $tracks);
+	}
+	catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+		echo "Error(addTracksToPlaylist): (exception " . $e . ")";
+		return;
+	}
+
+	// refresh playlist
+	updatePlaylist($w, $playlist_uri, $playlist_name);
+}
+
+
 /**
  * computeTime function.
  *
@@ -244,21 +303,6 @@ function displayNotificationWithArtwork($output, $artwork) {
 	}
 
 	exec("./terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'Spotify Mini Player' -sender 'com.spotify.miniplayer' -contentImage '/tmp/tmp' -message '" .  $output . "'");
-}
-
-/**
- * displayNotificationForRandomTrack function.
- *
- * @access public
- * @param mixed $track_name
- * @param mixed $track_uri
- * @param mixed $artist_name
- * @param mixed $playlist_name
- * @return void
- */
-function displayNotificationForRandomTrack($track_name, $track_uri, $artist_name, $playlist_name) {
-	$w = new Workflows('com.vdesabou.spotify.mini.player');
-	displayNotificationWithArtwork('🔀 ' . $track_name . ' by ' . $artist_name . ' in playlist ' . $playlist_name, getTrackOrAlbumArtwork($w, 'black', $track_uri, true));
 }
 
 /**
@@ -570,15 +614,15 @@ function getArtistArtworkURL($w, $artist) {
 }
 
 
+
 /**
  * updateLibrary function.
  *
  * @access public
- * @param mixed $jsonData
+ * @param mixed $w
  * @return void
  */
-function updateLibrary() {
-	$w = new Workflows('com.vdesabou.spotify.mini.player');
+function updateLibrary($w) {
 
 	$api = getSpotifyWebAPI($w);
 	if($api == false)
@@ -600,12 +644,13 @@ function updateLibrary() {
 	try {
 		$dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
 		$dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$getSettings = 'select theme,country_code from settings';
+		$getSettings = 'select theme,country_code,userid from settings';
 		$stmt = $dbsettings->prepare($getSettings);
 		$stmt->execute();
 		$setting = $stmt->fetch();
 		$theme = $setting[0];
 		$country_code = $setting[1];
+		$userid = $setting[2];
 	} catch (PDOException $e) {
 		handleDbIssuePdo('new', $dbsettings);
 		$dbsettings=null;
@@ -782,13 +827,13 @@ function updateLibrary() {
 
 		foreach ($savedListPlaylst as $playlist) {
 			$tracks = $playlist->tracks;
-			$owner=$playlist->owner;
+			$owner = $playlist->owner;
 
 			//echo "Playlist $playlist->name $playlist->id $nb_tracktotal\n";
 
 			$playlist_artwork_path = getPlaylistArtwork($w, $theme, $playlist->uri, true);
 
-			if ($owner->id == $userid) {
+			if ("-" . $owner->id . "-" == "-" . $userid. "-") {
 				$ownedbyuser = 1;
 			} else {
 				$ownedbyuser = 0;
@@ -948,8 +993,6 @@ function updateLibrary() {
  * @return void
  */
 function updatePlaylist($w, $playlist_uri, $playlist_name) {
-	$w = new Workflows('com.vdesabou.spotify.mini.player');
-
 	$api = getSpotifyWebAPI($w);
 	if($api == false)
 	{
@@ -1154,16 +1197,16 @@ function updatePlaylist($w, $playlist_uri, $playlist_name) {
 
 }
 
+
 /**
  * updatePlaylistList function.
  *
  * @access public
+ * @param mixed $w
  * @return void
  */
-function updatePlaylistList() {
+function updatePlaylistList($w) {
 	// Note that a user's collaborative playlists are not currently retrievable.
-	$w = new Workflows('com.vdesabou.spotify.mini.player');
-
 	$api = getSpotifyWebAPI($w);
 	if($api == false)
 	{
@@ -1275,7 +1318,7 @@ function updatePlaylistList() {
 						displayNotification("Added playlist " . $playlist->name . "\n");
 						$playlist_artwork_path = getPlaylistArtwork($w, $theme, $playlist->uri, true);
 
-						if ($owner->id == $userid) {
+						if ("-" . $owner->id . "-" == "-" . $userid. "-") {
 							$ownedbyuser = 1;
 						} else {
 							$ownedbyuser = 0;
