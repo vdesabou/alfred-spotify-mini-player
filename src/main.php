@@ -37,8 +37,8 @@ if (file_exists($w->data() . '/update_library_in_progress')) {
 	else {
 		if ($words[0] == 'Playlist List') {
 			$type = 'playlists';
-		} else if ($words[0] == 'Related Artists') {
-				$type = 'related artists';
+		} else if ($words[0] == 'Artists') {
+				$type = 'artists';
 			}
 		else {
 			$type = 'tracks';
@@ -853,14 +853,7 @@ if (mb_strlen($query) < 3 ||
 
 				$artist_name = $words[1];
 
-				if ($country_code == "") {
-					$w->result(null, '', 'Country code is not set.', 'Select Update library below', './images/warning.png', 'no', null, '');
-
-					$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'update_library' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', null, '');
-
-					echo $w->toxml();
-					return;
-				}
+				$w->result(null, '', 'Related Artists', 'Browse related artists', './images/' . $theme . '/' . 'related.png', 'no', null, "OnlineRelated▹" . $artist_uri . "@" . $artist_name);
 
 				$json = doWebApiRequest($w, "https://api.spotify.com/v1/artists/" . trim($tmp_uri[2]) . "/albums");
 
@@ -930,6 +923,27 @@ if (mb_strlen($query) < 3 ||
 			}
 
 		} // Online mode end
+		elseif ($kind == "OnlineRelated") {
+			if (substr_count($query, '@') == 1) {
+				//
+				// Search Related Artist Online
+				//
+				$tmp = $words[1];
+				$words = explode('@', $tmp);
+				$artist_uri = $words[0];
+				$tmp_uri = explode(':', $artist_uri);
+
+				$artist_name = $words[1];
+
+				$json = doWebApiRequest($w, "https://api.spotify.com/v1/artists/" . trim($tmp_uri[2]) . "/related-artists");
+
+				foreach ($json->artists as $related) {
+
+					$w->result(null, '', "👤 " . ucfirst($related->name), '☁︎ Query all albums/tracks from this artist online..', getTrackOrAlbumArtwork($w, $theme, $album->uri, false), 'no', null, "Online▹" . $related->uri . "@" . $related->name);
+				}
+
+			}
+		}
 	} ////////////
 	//
 	// SECOND DELIMITER: Artist▹the_artist▹tracks , Album▹the_album▹tracks, Playlist▹the_playlist▹tracks,Settings▹Theme▹color or Settings▹MaxResults▹max_numbers, Alfred Playlist▹Set Alfred Playlist▹alfred_playlist, Alfred Playlist▹Clear Alfred Playlist▹yes or no
@@ -950,7 +964,7 @@ if (mb_strlen($query) < 3 ||
 			$artist = $words[1];
 			$track = $words[2];
 
-			$getArtists = "select artist_uri,artist_artwork_path,artist_biography,related_artist_name from artists where artist_name=:artist_name";
+			$getArtists = "select artist_uri,artist_artwork_path,artist_biography from artists where artist_name=:artist_name";
 
 			try {
 				$stmt = $db->prepare($getArtists);
@@ -977,11 +991,6 @@ if (mb_strlen($query) < 3 ||
 						if
 						($theartist[2] != "") {
 							$w->result('display-biography', serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'display_biography' /* other_action */ , '' /* alfred_playlist_uri */ , $artist  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Display biography', 'This will display the artist biography', './images/' . $theme . '/' . 'biography.png', 'yes', null, '');
-						}
-
-						if
-						($theartist[3] != "") {
-							$w->result(null, '', 'Related Artists', 'Browse related artists', './images/' . $theme . '/' . 'related.png', 'no', null, $query . 'Related▹');
 						}
 					}
 
@@ -1436,58 +1445,6 @@ if (mb_strlen($query) < 3 ||
 			}
 		}
 		// end of Settings
-	}
-	elseif (substr_count($query, '▹') == 3) {
-
-		//
-		// Get all related artists for selected artist
-		//
-
-		$words = explode('▹', $query);
-
-		$artist_name = $words[1];
-		$kind = $words[2];
-
-		if ($kind == "Related") {
-
-			$theartist = $words[3];
-
-			try {
-				if (mb_strlen($theartist) < 3) {
-					$getRelateds = "select related_artist_name,related_artist_uri,related_artist_artwork_path from artists where artist_name=:artist_name";
-					$stmt = $db->prepare($getRelateds);
-					$stmt->bindValue(':artist_name', $artist_name);
-				}
-				else {
-					$getRelateds = "select related_artist_name,related_artist_uri,related_artist_artwork_path from artists where artist_name=:artist_name and related_artist_name like :artist";
-					$stmt = $db->prepare($getRelateds);
-					$stmt->bindValue(':artist_name', $artist_name);
-					$stmt->bindValue(':artist', '%' . $theartist . '%');
-				}
-
-				$relateds = $stmt->execute();
-
-			} catch (PDOException $e) {
-				handleDbIssuePdo($theme, $db);
-				return;
-			}
-
-			$noresult=true;
-			while ($related = $stmt->fetch()) {
-
-				// display all related
-				$noresult=false;
-
-				if (checkIfResultAlreadyThere($w->results(), "👤 " . ucfirst($related[0])) == false) {
-					$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , $related[1] /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'morefromthisartist' /* other_action */ , '' /* alfred_playlist_uri */ , $related[0]  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "👤 " . ucfirst($related[0]), '☁︎ Query all albums/tracks from this artist online..', $related[2], 'yes', null, '');
-				}
-			}
-
-			if
-			($noresult) {
-				$w->result(null, 'help', "There is no related artist for this artist", "", './images/warning.png', 'no', null, '');
-			}
-		}
 	}
 }
 

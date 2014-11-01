@@ -1040,9 +1040,9 @@ function updateLibrary($w) {
 		}
 	}
 
-	// Handle related artists
+	// Handle artists
 
-	$w->write('Related Artists▹0▹' . count($savedListArtists) . '▹' . $words[3], 'update_library_in_progress');
+	$w->write('Artists▹0▹' . count($savedListArtists) . '▹' . $words[3], 'update_library_in_progress');
  	$nb_artists = 0;
 	try {
 
@@ -1104,7 +1104,7 @@ function updateLibrary($w) {
 
 			$nb_artists++;
 			if ($nb_artists % 10 === 0) {
-				$w->write('Related Artists▹' . $nb_artists . '▹' . count($savedListArtists) . '▹' . $words[3], 'update_library_in_progress');
+				$w->write('Artists▹' . $nb_artists . '▹' . count($savedListArtists) . '▹' . $words[3], 'update_library_in_progress');
 			}
 		}
 
