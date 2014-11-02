@@ -261,7 +261,7 @@ if ($playlist_uri != "") {
 			$setSettings = "update settings set all_playlists=0";
 			$dbfile = $w->data() . "/settings.db";
 			exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-			displayNotificationWithArtwork("Search scope set to starred playlist", './images/' . $theme . '/' . 'search.png');
+			displayNotificationWithArtwork("Search scope set to my music", './images/' . $theme . '/' . 'search.png');
 		} else if ($other_action == "enable_all_playlist") {
 				$setSettings = "update settings set all_playlists=1";
 				$dbfile = $w->data() . "/settings.db";
@@ -462,7 +462,7 @@ function starCurrentTrack($w) {
 	$w->write('InitPlaylist▹' . 0 . '▹' . 0 . '▹' . time(), 'update_library_in_progress');
 
 	exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:star:" . $tcpport . ":" . uniqid() . "\"'");
-	exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:user:$username:starred\"'");
+	exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:user:$username:mymusic\"'");
 
 
 
@@ -508,7 +508,7 @@ function unstarCurrentTrack($w) {
 	$w->write('InitPlaylist▹' . 0 . '▹' . 0 . '▹' . time(), 'update_library_in_progress');
 
 	exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:unstar:" . $tcpport . ":" . uniqid() . "\"'");
-	exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:user:$username:starred\"'");
+	exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:user:$username:mymusic\"'");
 
 
 

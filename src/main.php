@@ -238,17 +238,17 @@ if (mb_strlen($query) < 3 ||
 		}
 
 		$all_tracks = $counter[0];
-		$starred_tracks = $counter[1];
+		$mymusic_tracks = $counter[1];
 		$all_artists = $counter[2];
-		$starred_artists = $counter[3];
+		$mymusic_artists = $counter[3];
 		$all_albums = $counter[4];
-		$starred_albums = $counter[5];
+		$mymusic_albums = $counter[5];
 		$nb_playlists = $counter[6];
 
 		if ($all_playlists == true) {
-			$w->result(null, '', 'Search for music in all your ' . $nb_playlists . ' playlists', 'Begin typing at least 3 characters to start search' . ' (' . $all_tracks . ' tracks)', './images/' . $theme . '/' . 'allplaylists.png', 'no', null, '');
+			$w->result(null, '', 'Search for music in "My Music" and my ' . $nb_playlists . ' playlists', 'Begin typing at least 3 characters to start search' . ' (' . $all_tracks . ' tracks)', './images/' . $theme . '/' . 'allplaylists.png', 'no', null, '');
 		} else {
-			$w->result(null, '', 'Search for music in your ★ playlist', 'Begin typing at least 3 characters to start search' . ' (' . $starred_tracks . ' tracks)', './images/' . $theme . '/' . 'star.png', 'no', null, '');
+			$w->result(null, '', 'Search for music in "My Music" only', 'Begin typing at least 3 characters to start search' . ' (' . $mymusic_tracks . ' tracks)', './images/' . $theme . '/' . 'tracks.png', 'no', null, '');
 		}
 		if ($is_displaymorefrom_active == true) {
 			// get info on current song
@@ -363,8 +363,8 @@ if (mb_strlen($query) < 3 ||
 			$w->result(null, '', 'Artists', 'Browse by artist' . ' (' . $all_artists . ' artists)', './images/' . $theme . '/' . 'artists.png', 'no', null, 'Artist▹');
 			$w->result(null, '', 'Albums', 'Browse by album' . ' (' . $all_albums . ' albums)', './images/' . $theme . '/' . 'albums.png', 'no', null, 'Album▹');
 		} else {
-			$w->result(null, '', 'Artists', 'Browse by artist' . ' (' . $starred_artists . ' artists)', './images/' . $theme . '/' . 'artists.png', 'no', null, 'Artist▹');
-			$w->result(null, '', 'Albums', 'Browse by album' . ' (' . $starred_albums . ' albums)', './images/' . $theme . '/' . 'albums.png', 'no', null, 'Album▹');
+			$w->result(null, '', 'Artists in "My Music"', 'Browse by artist' . ' (' . $mymusic_artists . ' artists)', './images/' . $theme . '/' . 'artists.png', 'no', null, 'Artist▹');
+			$w->result(null, '', 'Albums in "My Music"', 'Browse by album' . ' (' . $mymusic_albums . ' albums)', './images/' . $theme . '/' . 'albums.png', 'no', null, 'Album▹');
 		}
 
 		if ($is_spotifious_active == true) {
@@ -390,7 +390,7 @@ if (mb_strlen($query) < 3 ||
 		if ($all_playlists == true) {
 			// argument is csv form: track_uri|album_uri|artist_uri|playlist_uri|spotify_command|query|other_settings|other_action|alfred_playlist_uri|artist_name
 			$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'disable_all_playlist' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Change Search Scope', array(
-					'Select to change to ★ playlist only',
+					'Select to change to "My Music" only',
 					'alt' => 'Not Available',
 					'cmd' => 'Not Available',
 					'shift' => 'Not Available',
@@ -399,7 +399,7 @@ if (mb_strlen($query) < 3 ||
 
 		} else {
 			$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'enable_all_playlist' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Change Search Scope', array(
-					'Select to change to ALL playlists',
+					'Select to change to "My Music" and all Playlists',
 					'alt' => 'Not Available',
 					'cmd' => 'Not Available',
 					'shift' => 'Not Available',
@@ -579,7 +579,7 @@ if (mb_strlen($query) < 3 ||
 		// Search artists
 		//
 		if ($all_playlists == false) {
-			$getTracks = "select artist_name,artist_uri,artist_artwork_path from tracks where playable=1 and starred=1 and artist_name like :artist_name limit " . $max_results;
+			$getTracks = "select artist_name,artist_uri,artist_artwork_path from tracks where playable=1 and mymusic=1 and artist_name like :artist_name limit " . $max_results;
 		} else {
 			$getTracks = "select artist_name,artist_uri,artist_artwork_path from tracks where playable=1 and artist_name like :artist_name limit " . $max_results;
 		}
@@ -606,7 +606,7 @@ if (mb_strlen($query) < 3 ||
 		// Search everything
 		//
 		if ($all_playlists == false) {
-			$getTracks = "select * from tracks where playable=1 and starred=1 and (artist_name like :query or album_name like :query or track_name like :query)" . " limit " . $max_results;
+			$getTracks = "select * from tracks where playable=1 and mymusic=1 and (artist_name like :query or album_name like :query or track_name like :query)" . " limit " . $max_results;
 		} else {
 			$getTracks = "select * from tracks where playable=1 and (artist_name like :query or album_name like :query or track_name like :query)" . " limit " . $max_results;
 		}
@@ -738,7 +738,7 @@ if (mb_strlen($query) < 3 ||
 			$w->result(null, '', "Change your Alfred playlist", "Select one of your playlists below as your Alfred playlist", './images/' . $theme . '/' . 'settings.png', 'no', null, 'Alfred Playlist▹Set Alfred Playlist▹');
 
 			if
-			($r[3] != 'starred') {
+			($r[3] != 'mymusic') {
 				$w->result(null, '', "Clear your Alfred Playlist", "This will remove all the tracks in your current Alfred Playlist", './images/' . $theme . '/' . 'uncheck.png', 'no', null, 'Alfred Playlist▹Confirm Clear Alfred Playlist▹');
 			}
 
@@ -754,7 +754,7 @@ if (mb_strlen($query) < 3 ||
 			try {
 				if (mb_strlen($artist) < 3) {
 					if ($all_playlists == false) {
-						$getTracks = "select artist_name,artist_artwork_path,artist_uri from tracks where playable=1 and starred=1 group by artist_name" . " limit " . $max_results;
+						$getTracks = "select artist_name,artist_artwork_path,artist_uri from tracks where playable=1 and mymusic=1 group by artist_name" . " limit " . $max_results;
 					} else {
 						$getTracks = "select artist_name,artist_artwork_path,artist_uri from tracks where playable=1 group by artist_name" . " limit " . $max_results;
 					}
@@ -762,7 +762,7 @@ if (mb_strlen($query) < 3 ||
 				}
 				else {
 					if ($all_playlists == false) {
-						$getTracks = "select artist_name,artist_artwork_path,artist_uri from tracks where playable=1 and starred=1 and artist_name like :query limit " . $max_results;
+						$getTracks = "select artist_name,artist_artwork_path,artist_uri from tracks where playable=1 and mymusic=1 and artist_name like :query limit " . $max_results;
 					} else {
 						$getTracks = "select artist_name,artist_artwork_path,artist_uri from tracks where playable=1 and artist_name like :query limit " . $max_results;
 					}
@@ -802,7 +802,7 @@ if (mb_strlen($query) < 3 ||
 			try {
 				if (mb_strlen($album) < 3) {
 					if ($all_playlists == false) {
-						$getTracks = "select album_name,album_artwork_path,artist_name,album_uri from tracks where playable=1 and starred=1 group by album_name" . " limit " . $max_results;
+						$getTracks = "select album_name,album_artwork_path,artist_name,album_uri from tracks where playable=1 and mymusic=1 group by album_name" . " limit " . $max_results;
 					} else {
 						$getTracks = "select album_name,album_artwork_path,artist_name,album_uri from tracks where playable=1 group by album_name" . " limit " . $max_results;
 					}
@@ -810,7 +810,7 @@ if (mb_strlen($query) < 3 ||
 				}
 				else {
 					if ($all_playlists == false) {
-						$getTracks = "select album_name,album_artwork_path,artist_name,album_uri from tracks where playable=1 and starred=1 and album_name like :query limit " . $max_results;
+						$getTracks = "select album_name,album_artwork_path,artist_name,album_uri from tracks where playable=1 and mymusic=1 and album_name like :query limit " . $max_results;
 					} else {
 						$getTracks = "select album_name,album_artwork_path,artist_name,album_uri from tracks where playable=1 and album_name like :query limit " . $max_results;
 					}
@@ -1006,7 +1006,7 @@ if (mb_strlen($query) < 3 ||
 					}
 
 					if ($all_playlists == false) {
-						$getTracks = "select * from tracks where playable=1 and starred=1 and artist_uri=:artist_uri limit " . $max_results;
+						$getTracks = "select * from tracks where playable=1 and mymusic=1 and artist_uri=:artist_uri limit " . $max_results;
 					} else {
 						$getTracks = "select * from tracks where playable=1 and artist_uri=:artist_uri limit " . $max_results;
 					}
@@ -1016,7 +1016,7 @@ if (mb_strlen($query) < 3 ||
 				}
 				else {
 					if ($all_playlists == false) {
-						$getTracks = "select * from tracks where playable=1 and starred=1 and (artist_uri=:artist_uri and track_name like :track)" . " limit " . $max_results;
+						$getTracks = "select * from tracks where playable=1 and mymusic=1 and (artist_uri=:artist_uri and track_name like :track)" . " limit " . $max_results;
 					} else {
 						$getTracks = "select * from tracks where playable=1 and artist_uri=:artist_uri and track_name like :track limit " . $max_results;
 					}
@@ -1126,7 +1126,7 @@ if (mb_strlen($query) < 3 ||
 			try {
 				if (mb_strlen($track) < 3) {
 					if ($all_playlists == false) {
-						$getTracks = "select * from tracks where playable=1 and starred=1 and album_uri=:album_uri limit " . $max_results;
+						$getTracks = "select * from tracks where playable=1 and mymusic=1 and album_uri=:album_uri limit " . $max_results;
 					} else {
 						$getTracks = "select * from tracks where playable=1 and album_uri=:album_uri limit " . $max_results;
 					}
@@ -1135,7 +1135,7 @@ if (mb_strlen($query) < 3 ||
 				}
 				else {
 					if ($all_playlists == false) {
-						$getTracks = "select * from tracks where playable=1 and starred=1 and (album_uri=:album_uri and track_name like :track limit " . $max_results;
+						$getTracks = "select * from tracks where playable=1 and mymusic=1 and (album_uri=:album_uri and track_name like :track limit " . $max_results;
 					} else {
 						$getTracks = "select * from tracks where playable=1 and album_uri=:album_uri and track_name like :track limit " . $max_results;
 					}

@@ -573,14 +573,14 @@ function displayNotificationForStarredTrack($track_name, $track_uri) {
 
 
 /**
- * displayNotificationForUnstarredTrack function.
+ * displayNotificationForUnmymusicTrack function.
  *
  * @access public
  * @param mixed $track_name
  * @param mixed $track_uri
  * @return void
  */
-function displayNotificationForUnstarredTrack($track_name, $track_uri) {
+function displayNotificationForUnmymusicTrack($track_name, $track_uri) {
 	$w = new Workflows('com.vdesabou.spotify.mini.player');
 	displayNotificationWithArtwork('❌ ' . $track_name . ' has been unstarred', getTrackOrAlbumArtwork($w, 'black', $track_uri, true));
 }
@@ -674,17 +674,6 @@ function getPlaylistArtwork($w, $theme, $playlistURI, $fetchIfNotPresent) {
 	if (!file_exists($w->data() . "/artwork")):
 		exec("mkdir '" . $w->data() . "/artwork'");
 	endif;
-
-	// examples of playlists URI
-	// spotify:user:@:playlist:20SZdrktr658JNa42Lt1vV
-	// spotify:user:@cf86d5f3b8f0b11bc0e70d7fa3661dc8:playlist:3vxotOnOGDlZXyzJPLFnm2
-
-	// need to translate to http://open.spotify.com/user/xxxxusernamexxx/playlist/6orFdd91Cb0fwB2kyUFCKX
-
-	// spotify:user:@:starred
-	// spotify:user:117875373:starred
-
-	// need to translate to http://open.spotify.com/user/xxxxusernamexxx/starred
 
 	if (count($hrefs) == 5) {
 
@@ -862,7 +851,7 @@ function updateLibrary($w) {
 	if($api == false)
 	{
 		displayNotification("Error: Cannot update playlist, authentication issue");
-		return;
+		return false;
 	}
 
 	touch($w->data() . "/update_library_in_progress");
@@ -889,7 +878,7 @@ function updateLibrary($w) {
 		handleDbIssuePdo('new', $dbsettings);
 		$dbsettings=null;
 		unlink($w->data() . "/update_library_in_progress");
-		return;
+		return false;
 	}
 
 
@@ -931,9 +920,10 @@ function updateLibrary($w) {
 		$dbsettings=null;
 		$db=null;
 		unlink($w->data() . "/update_library_in_progress");
-		return;
+		return false;
 	}
 
+	// get the total number of tracks
 	$nb_tracktotal = 0;
 	try {
 		$offsetGetUserPlaylists = 0;
@@ -946,14 +936,14 @@ function updateLibrary($w) {
 	        ));
 
 
-			$savedListPlaylst = array();
+			$savedListPlaylist = array();
 
 			foreach ($userPlaylists->items as $playlist) {
 
 				$tracks = $playlist->tracks;
 				$nb_tracktotal += $tracks->total;
 
-				$savedListPlaylst[] = $playlist;
+				$savedListPlaylist[] = $playlist;
 			}
 
 			$offsetGetUserPlaylists+=$limitGetUserPlaylists;
@@ -962,13 +952,39 @@ function updateLibrary($w) {
 	}
 	catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 		echo "Error(getUserPlaylists): (exception " . $e . ")";
+		unlink($w->data() . "/update_library_in_progress");
+		return false;
+	}
+	$savedMySavedTracks = array();
+	try {
+		$offsetGetMySavedTracks = 0;
+		$limitGetMySavedTracks = 50;
+		do {
+			$userMySavedTracks = $api->getMySavedTracks(array(
+	            'limit' => $limitGetMySavedTracks,
+	            'offset' => $offsetGetMySavedTracks
+	        ));
+	        
+			foreach ($userMySavedTracks->items as $track) {	
+				$savedMySavedTracks[] = $track;
+				$nb_tracktotal += 1;
+			}
+	
+			$offsetGetMySavedTracks+=$limitGetMySavedTracks;
+	
+		} while ($offsetGetMySavedTracks < $userMySavedTracks->total);
+	}
+	catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+		echo "Error(getMySavedTracks): (exception " . $e . ")";
+		unlink($w->data() . "/update_library_in_progress");
+		return false;
 	}
 
-	$db->exec("create table tracks (starred boolean, popularity int, uri text, album_uri text, artist_uri text, track_name text, album_name text, artist_name text, album_year text, track_artwork_path text, artist_artwork_path text, album_artwork_path text, playlist_name text, playlist_uri text, playable boolean, availability text)");
+	$db->exec("create table tracks (mymusic boolean, popularity int, uri text, album_uri text, artist_uri text, track_name text, album_name text, artist_name text, album_year text, track_artwork_path text, artist_artwork_path text, album_artwork_path text, playlist_name text, playlist_uri text, playable boolean, availability text)");
 	$db->exec("CREATE INDEX IndexPlaylistUri ON tracks (playlist_uri)");
 	$db->exec("CREATE INDEX IndexArtistName ON tracks (artist_name)");
 	$db->exec("CREATE INDEX IndexAlbumName ON tracks (album_name)");
-	$db->exec("create table counters (all_tracks int, starred_tracks int, all_artists int, starred_artists int, all_albums int, starred_albums int, playlists int)");
+	$db->exec("create table counters (all_tracks int, mymusic_tracks int, all_artists int, mymusic_artists int, all_albums int, mymusic_albums int, playlists int)");
 	$db->exec("create table user (uri text, username text, name text, image text)");
 	$db->exec("create table playlists (uri text PRIMARY KEY NOT NULL, name text, nb_tracks int, author text, username text, playlist_artwork_path text, ownedbyuser boolean)");
 	$db->exec("create table artists (artist_name text, artist_uri text, artist_artwork_path text, artist_biography text, artist_popularity int, artist_years_from text, artist_years_to text, related_artist_name text, related_artist_uri text, related_artist_artwork_path text, PRIMARY KEY (artist_name, related_artist_name))");
@@ -983,12 +999,12 @@ function updateLibrary($w) {
 	$insertPlaylist = "insert into playlists values (:uri,:name,:count_tracks,:owner,:username,:playlist_artwork_path,:ownedbyuser)";
 	$stmtPlaylist = $db->prepare($insertPlaylist);
 
-	$insertTrack = "insert into tracks values (:starred,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_year,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:availability)";
+	$insertTrack = "insert into tracks values (:mymusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_year,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:availability)";
 	$stmtTrack = $db->prepare($insertTrack);
 
 	$savedListArtists = array();
 
-	foreach ($savedListPlaylst as $playlist) {
+	foreach ($savedListPlaylist as $playlist) {
 		$tracks = $playlist->tracks;
 		$owner = $playlist->owner;
 
@@ -1024,10 +1040,6 @@ function updateLibrary($w) {
 
 				foreach ($userPlaylistTracks->items as $track) {
 					$track = $track->track;
-
-					// FIX THIS
-					$starred = 0;
-
 					if (count($track->available_markets) == 0 || in_array($country_code, $track->available_markets) !== false) {
 						$playable = 1;
 					} else {
@@ -1050,7 +1062,7 @@ function updateLibrary($w) {
 
 					$album_year = 1995;
 
-					$stmtTrack->bindValue(':starred', $starred);
+					$stmtTrack->bindValue(':mymusic', 0);
 					$stmtTrack->bindValue(':popularity', $track->popularity);
 					$stmtTrack->bindValue(':uri', $track->uri);
 					$stmtTrack->bindValue(':album_uri', $album->uri);
@@ -1080,9 +1092,61 @@ function updateLibrary($w) {
 		}
 		catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 			echo "Error(getUserPlaylistTracks): playlist id " . $playlist->id . " (exception " . $e . ")";
+			unlink($w->data() . "/update_library_in_progress");
+			return false;
 		}
 	}
 
+	// Handle My Music
+	foreach ($savedMySavedTracks as $track) {
+		$track = $track->track;
+		if (count($track->available_markets) == 0 || in_array($country_code, $track->available_markets) !== false) {
+			$playable = 1;
+		} else {
+			$playable = 0;
+		}
+		$artists = $track->artists;
+		$artist = $artists[0];
+
+		// save artist in an array
+		if(! checkIfArtistAlreadyThere($savedListArtists, $artist->name)) {
+			$savedListArtists[] = $artist;
+		}
+		$album = $track->album;
+
+		//
+		// Download artworks
+		$track_artwork_path = getTrackOrAlbumArtwork($w, $theme, $track->uri, true);
+		$artist_artwork_path = getArtistArtwork($w, $theme, $artist->name, true);
+		$album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $album->uri, true);
+
+		$album_year = 1995;
+
+		$stmtTrack->bindValue(':mymusic', 1);
+		$stmtTrack->bindValue(':popularity', $track->popularity);
+		$stmtTrack->bindValue(':uri', $track->uri);
+		$stmtTrack->bindValue(':album_uri', $album->uri);
+		$stmtTrack->bindValue(':artist_uri', $artist->uri);
+		$stmtTrack->bindValue(':track_name', escapeQuery($track->name));
+		$stmtTrack->bindValue(':album_name', escapeQuery($album->name));
+		$stmtTrack->bindValue(':artist_name', escapeQuery($artist->name));
+		$stmtTrack->bindValue(':album_year', $album_year);
+		$stmtTrack->bindValue(':track_artwork_path', $track_artwork_path);
+		$stmtTrack->bindValue(':artist_artwork_path', $artist_artwork_path);
+		$stmtTrack->bindValue(':album_artwork_path', $album_artwork_path);
+		$stmtTrack->bindValue(':playlist_name', escapeQuery($playlist->name));
+		$stmtTrack->bindValue(':playlist_uri', $playlist->uri);
+		$stmtTrack->bindValue(':playable', $playable);
+		$stmtTrack->bindValue(':availability', 'FIX THIS');
+		$stmtTrack->execute();
+
+		$nb_track++;
+		if ($nb_track % 10 === 0) {
+			$w->write('Library▹' . $nb_track . '▹' . $nb_tracktotal . '▹' . $words[3], 'update_library_in_progress');
+		}
+	}
+
+		
 	// Handle artists
 
 	$w->write('Artists▹0▹' . count($savedListArtists) . '▹' . $words[3], 'update_library_in_progress');
@@ -1119,45 +1183,45 @@ function updateLibrary($w) {
 		$stmt->execute();
 		$all_tracks = $stmt->fetch();
 
-		$getCount = 'select count(distinct uri) from tracks where starred=1';
+		$getCount = 'select count(distinct uri) from tracks where mymusic=1';
 		$stmt = $db->prepare($getCount);
 		$stmt->execute();
-		$starred_tracks = $stmt->fetch();
+		$mymusic_tracks = $stmt->fetch();
 
 		$getCount = 'select count(distinct artist_name) from tracks';
 		$stmt = $db->prepare($getCount);
 		$stmt->execute();
 		$all_artists = $stmt->fetch();
 
-		$getCount = 'select count(distinct artist_name) from tracks where starred=1';
+		$getCount = 'select count(distinct artist_name) from tracks where mymusic=1';
 		$stmt = $db->prepare($getCount);
 		$stmt->execute();
-		$starred_artists = $stmt->fetch();
+		$mymusic_artists = $stmt->fetch();
 
 		$getCount = 'select count(distinct album_name) from tracks';
 		$stmt = $db->prepare($getCount);
 		$stmt->execute();
 		$all_albums = $stmt->fetch();
 
-		$getCount = 'select count(distinct album_name) from tracks where starred=1';
+		$getCount = 'select count(distinct album_name) from tracks where mymusic=1';
 		$stmt = $db->prepare($getCount);
 		$stmt->execute();
-		$starred_albums = $stmt->fetch();
+		$mymusic_albums = $stmt->fetch();
 
 		$getCount = 'select count(*) from playlists';
 		$stmt = $db->prepare($getCount);
 		$stmt->execute();
 		$playlists_count = $stmt->fetch();
 
-		$insertCounter = "insert into counters values (:all_tracks,:starred_tracks,:all_artists,:starred_artists,:all_albums,:starred_albums,:playlists)";
+		$insertCounter = "insert into counters values (:all_tracks,:mymusic_tracks,:all_artists,:mymusic_artists,:all_albums,:mymusic_albums,:playlists)";
 		$stmt = $db->prepare($insertCounter);
 
 		$stmt->bindValue(':all_tracks', $all_tracks[0]);
-		$stmt->bindValue(':starred_tracks', $starred_tracks[0]);
+		$stmt->bindValue(':mymusic_tracks', $mymusic_tracks[0]);
 		$stmt->bindValue(':all_artists', $all_artists[0]);
-		$stmt->bindValue(':starred_artists', $starred_artists[0]);
+		$stmt->bindValue(':mymusic_artists', $mymusic_artists[0]);
 		$stmt->bindValue(':all_albums', $all_albums[0]);
-		$stmt->bindValue(':starred_albums', $starred_albums[0]);
+		$stmt->bindValue(':mymusic_albums', $mymusic_albums[0]);
 		$stmt->bindValue(':playlists', $playlists_count[0]);
 		$stmt->execute();
 
@@ -1166,7 +1230,7 @@ function updateLibrary($w) {
 		$dbsettings=null;
 		$db=null;
 		unlink($w->data() . "/update_library_in_progress");
-		return;
+		return false;
 	}
 
 	$elapsed_time = time() - $words[3];
@@ -1239,7 +1303,7 @@ function updatePlaylist($w, $playlist_uri, $playlist_name) {
 
 
 		$db->exec("drop table counters");
-		$db->exec("create table counters (all_tracks int, starred_tracks int, all_artists int, starred_artists int, all_albums int, starred_albums int, playlists int)");
+		$db->exec("create table counters (all_tracks int, mymusic_tracks int, all_artists int, mymusic_artists int, all_albums int, mymusic_albums int, playlists int)");
 
 		$nb_track = 0;
 
@@ -1251,7 +1315,7 @@ function updatePlaylist($w, $playlist_uri, $playlist_name) {
 		$updatePlaylistsNbTracks="update playlists set nb_tracks=:nb_tracks where uri=:uri";
 		$stmt = $db->prepare($updatePlaylistsNbTracks);
 
-		$insertTrack = "insert into tracks values (:starred,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_year,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:availability)";
+		$insertTrack = "insert into tracks values (:mymusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_year,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:availability)";
 		$stmtTrack = $db->prepare($insertTrack);
 
 		$tmp = explode(':', $playlist_uri);
@@ -1276,10 +1340,6 @@ function updatePlaylist($w, $playlist_uri, $playlist_name) {
 
 				foreach ($userPlaylistTracks->items as $track) {
 					$track = $track->track;
-
-					// FIX THIS
-					$starred = 0;
-
 					if (count($track->available_markets) == 0 || in_array($country_code, $track->available_markets) !== false) {
 						$playable = 1;
 					} else {
@@ -1297,7 +1357,7 @@ function updatePlaylist($w, $playlist_uri, $playlist_name) {
 
 					$album_year = 1995;
 
-					$stmtTrack->bindValue(':starred', $starred);
+					$stmtTrack->bindValue(':mymusic', 0);
 					$stmtTrack->bindValue(':popularity', $track->popularity);
 					$stmtTrack->bindValue(':uri', $track->uri);
 					$stmtTrack->bindValue(':album_uri', $album->uri);
@@ -1337,45 +1397,45 @@ function updatePlaylist($w, $playlist_uri, $playlist_name) {
 		$stmt->execute();
 		$all_tracks = $stmt->fetch();
 
-		$getCount = 'select count(distinct uri) from tracks where starred=1';
+		$getCount = 'select count(distinct uri) from tracks where mymusic=1';
 		$stmt = $db->prepare($getCount);
 		$stmt->execute();
-		$starred_tracks = $stmt->fetch();
+		$mymusic_tracks = $stmt->fetch();
 
 		$getCount = 'select count(distinct artist_name) from tracks';
 		$stmt = $db->prepare($getCount);
 		$stmt->execute();
 		$all_artists = $stmt->fetch();
 
-		$getCount = 'select count(distinct artist_name) from tracks where starred=1';
+		$getCount = 'select count(distinct artist_name) from tracks where mymusic=1';
 		$stmt = $db->prepare($getCount);
 		$stmt->execute();
-		$starred_artists = $stmt->fetch();
+		$mymusic_artists = $stmt->fetch();
 
 		$getCount = 'select count(distinct album_name) from tracks';
 		$stmt = $db->prepare($getCount);
 		$stmt->execute();
 		$all_albums = $stmt->fetch();
 
-		$getCount = 'select count(distinct album_name) from tracks where starred=1';
+		$getCount = 'select count(distinct album_name) from tracks where mymusic=1';
 		$stmt = $db->prepare($getCount);
 		$stmt->execute();
-		$starred_albums = $stmt->fetch();
+		$mymusic_albums = $stmt->fetch();
 
 		$getCount = 'select count(*) from playlists';
 		$stmt = $db->prepare($getCount);
 		$stmt->execute();
 		$playlists_count = $stmt->fetch();
 
-		$insertCounter = "insert into counters values (:all_tracks,:starred_tracks,:all_artists,:starred_artists,:all_albums,:starred_albums,:playlists)";
+		$insertCounter = "insert into counters values (:all_tracks,:mymusic_tracks,:all_artists,:mymusic_artists,:all_albums,:mymusic_albums,:playlists)";
 		$stmt = $db->prepare($insertCounter);
 
 		$stmt->bindValue(':all_tracks', $all_tracks[0]);
-		$stmt->bindValue(':starred_tracks', $starred_tracks[0]);
+		$stmt->bindValue(':mymusic_tracks', $mymusic_tracks[0]);
 		$stmt->bindValue(':all_artists', $all_artists[0]);
-		$stmt->bindValue(':starred_artists', $starred_artists[0]);
+		$stmt->bindValue(':mymusic_artists', $mymusic_artists[0]);
 		$stmt->bindValue(':all_albums', $all_albums[0]);
-		$stmt->bindValue(':starred_albums', $starred_albums[0]);
+		$stmt->bindValue(':mymusic_albums', $mymusic_albums[0]);
 		$stmt->bindValue(':playlists', $playlists_count[0]);
 		$stmt->execute();
 
@@ -1454,7 +1514,7 @@ function updatePlaylistList($w) {
 		$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 		$db->exec("drop table counters");
-		$db->exec("create table counters (all_tracks int, starred_tracks int, all_artists int, starred_artists int, all_albums int, starred_albums int, playlists int)");
+		$db->exec("create table counters (all_tracks int, mymusic_tracks int, all_artists int, mymusic_artists int, all_albums int, mymusic_albums int, playlists int)");
 
 		$getPlaylists = "select * from playlists where name=:name and username=:username";
 		$stmt = $db->prepare($getPlaylists);
@@ -1462,7 +1522,7 @@ function updatePlaylistList($w) {
 		$insertPlaylist = "insert into playlists values (:uri,:name,:count_tracks,:owner,:username,:playlist_artwork_path,:ownedbyuser)";
 		$stmtPlaylist = $db->prepare($insertPlaylist);
 
-		$insertTrack = "insert into tracks values (:starred,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_year,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:availability)";
+		$insertTrack = "insert into tracks values (:mymusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_year,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:availability)";
 		$stmtTrack = $db->prepare($insertTrack);
 
 
@@ -1488,14 +1548,14 @@ function updatePlaylistList($w) {
 
 				$nb_playlist++;
 
-				$savedListPlaylst = array();
+				$savedListPlaylist = array();
 
 
 				foreach ($userPlaylists->items as $playlist) {
 					$tracks = $playlist->tracks;
 					$owner=$playlist->owner;
 
-					$savedListPlaylst[] = $playlist;
+					$savedListPlaylist[] = $playlist;
 
 					$nb_tracktotal += $tracks->total;
 
@@ -1545,10 +1605,6 @@ function updatePlaylistList($w) {
 
 								foreach ($userPlaylistTracks->items as $track) {
 									$track = $track->track;
-
-									// FIX THIS
-									$starred = 0;
-
 									if (count($track->available_markets) == 0 || in_array($country_code, $track->available_markets) !== false) {
 										$playable = 1;
 									} else {
@@ -1566,7 +1622,7 @@ function updatePlaylistList($w) {
 
 									$album_year = 1995;
 
-									$stmtTrack->bindValue(':starred', $starred);
+									$stmtTrack->bindValue(':mymusic', 0);
 									$stmtTrack->bindValue(':popularity', $track->popularity);
 									$stmtTrack->bindValue(':uri', $track->uri);
 									$stmtTrack->bindValue(':album_uri', $album->uri);
@@ -1613,7 +1669,7 @@ function updatePlaylistList($w) {
 
 		while ($pl = $stmt->fetch()) {
 			$found = 0;
-			foreach ($savedListPlaylst as $playlist) {
+			foreach ($savedListPlaylist as $playlist) {
 				$owner=$playlist->owner;
 				if (escapeQuery($playlist->name) == escapeQuery($pl[1]) && $owner->id == $pl[4]) {
 					$found = 1;
@@ -1639,45 +1695,45 @@ function updatePlaylistList($w) {
 		$stmt->execute();
 		$all_tracks = $stmt->fetch();
 
-		$getCount = 'select count(distinct uri) from tracks where starred=1';
+		$getCount = 'select count(distinct uri) from tracks where mymusic=1';
 		$stmt = $db->prepare($getCount);
 		$stmt->execute();
-		$starred_tracks = $stmt->fetch();
+		$mymusic_tracks = $stmt->fetch();
 
 		$getCount = 'select count(distinct artist_name) from tracks';
 		$stmt = $db->prepare($getCount);
 		$stmt->execute();
 		$all_artists = $stmt->fetch();
 
-		$getCount = 'select count(distinct artist_name) from tracks where starred=1';
+		$getCount = 'select count(distinct artist_name) from tracks where mymusic=1';
 		$stmt = $db->prepare($getCount);
 		$stmt->execute();
-		$starred_artists = $stmt->fetch();
+		$mymusic_artists = $stmt->fetch();
 
 		$getCount = 'select count(distinct album_name) from tracks';
 		$stmt = $db->prepare($getCount);
 		$stmt->execute();
 		$all_albums = $stmt->fetch();
 
-		$getCount = 'select count(distinct album_name) from tracks where starred=1';
+		$getCount = 'select count(distinct album_name) from tracks where mymusic=1';
 		$stmt = $db->prepare($getCount);
 		$stmt->execute();
-		$starred_albums = $stmt->fetch();
+		$mymusic_albums = $stmt->fetch();
 
 		$getCount = 'select count(*) from playlists';
 		$stmt = $db->prepare($getCount);
 		$stmt->execute();
 		$playlists_count = $stmt->fetch();
 
-		$insertCounter = "insert into counters values (:all_tracks,:starred_tracks,:all_artists,:starred_artists,:all_albums,:starred_albums,:playlists)";
+		$insertCounter = "insert into counters values (:all_tracks,:mymusic_tracks,:all_artists,:mymusic_artists,:all_albums,:mymusic_albums,:playlists)";
 		$stmt = $db->prepare($insertCounter);
 
 		$stmt->bindValue(':all_tracks', $all_tracks[0]);
-		$stmt->bindValue(':starred_tracks', $starred_tracks[0]);
+		$stmt->bindValue(':mymusic_tracks', $mymusic_tracks[0]);
 		$stmt->bindValue(':all_artists', $all_artists[0]);
-		$stmt->bindValue(':starred_artists', $starred_artists[0]);
+		$stmt->bindValue(':mymusic_artists', $mymusic_artists[0]);
 		$stmt->bindValue(':all_albums', $all_albums[0]);
-		$stmt->bindValue(':starred_albums', $starred_albums[0]);
+		$stmt->bindValue(':mymusic_albums', $mymusic_albums[0]);
 		$stmt->bindValue(':playlists', $playlists_count[0]);
 		$stmt->execute();
 
