@@ -192,7 +192,7 @@ function getAlbumUriFromTrack($w, $track_uri) {
 
 /**
  * clearPlaylist function.
- * 
+ *
  * @access public
  * @param mixed $w
  * @param mixed $playlist_uri
@@ -206,43 +206,43 @@ function clearPlaylist($w,$playlist_uri,$playlist_name) {
 		displayNotification("Error: Cannot get SpotifyWebAPI(");
 		return false;
 	}
-	
+
 	try {
 		$tmp = explode(':', $playlist_uri);
 		$tracks = array();
 		$newtracks = array();
-		$tracks = getThePlaylistracks($w,$playlist_uri);
-		
-		
+		$tracks = getThePlaylisTracks($w,$playlist_uri);
+
+
 		for ($i = 0; $i < count($tracks); $i++) {
 			$tmp = array();
-			$tmp['id'] = $tracks[$i]; 
+			$tmp['id'] = $tracks[$i];
 			$newtracks[] = $tmp;
 		}
 		print_r($newtracks);
-		
+
 		$api->deletePlaylistTracks($tmp[2],$tmp[4],$newtracks);
 	}
 	catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 		echo "Error(clearPlaylist): playlist uri " . $playlist_uri . " (exception " . $e . ")";
 		return false;
 	}
-	
+
 	// refresh playlist
 	updatePlaylist($w, $playlist_uri, $playlist_name);
-	
+
 	return true;
 }
 
 /**
- * getThePlaylistracks function.
+ * getThePlaylisTracks function.
  *
  * @access public
  * @param mixed $w
  * @param mixed $playlist_uri
  * @return void
  */
-function getThePlaylistracks($w,$playlist_uri) {
+function getThePlaylisTracks($w,$playlist_uri) {
 	$api = getSpotifyWebAPI($w);
 	if($api == false)
 	{
@@ -273,7 +273,7 @@ function getThePlaylistracks($w,$playlist_uri) {
 		} while ($offsetGetUserPlaylistTracks < $userPlaylistTracks->total);
 	}
 	catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-		echo "Error(getThePlaylistracks): playlist uri " . $playlist_uri . " (exception " . $e . ")";
+		echo "Error(getThePlaylisTracks): playlist uri " . $playlist_uri . " (exception " . $e . ")";
 		return false;
 	}
 
@@ -964,14 +964,14 @@ function updateLibrary($w) {
 	            'limit' => $limitGetMySavedTracks,
 	            'offset' => $offsetGetMySavedTracks
 	        ));
-	        
-			foreach ($userMySavedTracks->items as $track) {	
+
+			foreach ($userMySavedTracks->items as $track) {
 				$savedMySavedTracks[] = $track;
 				$nb_tracktotal += 1;
 			}
-	
+
 			$offsetGetMySavedTracks+=$limitGetMySavedTracks;
-	
+
 		} while ($offsetGetMySavedTracks < $userMySavedTracks->total);
 	}
 	catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
@@ -1146,7 +1146,7 @@ function updateLibrary($w) {
 		}
 	}
 
-		
+
 	// Handle artists
 
 	$w->write('Artists▹0▹' . count($savedListArtists) . '▹' . $words[3], 'update_library_in_progress');
