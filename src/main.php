@@ -579,9 +579,9 @@ if (mb_strlen($query) < 3 ||
 		// Search artists
 		//
 		if ($all_playlists == false) {
-			$getTracks = "select * from tracks where playable=1 and starred=1 and artist_name like :artist_name limit " . $max_results;
+			$getTracks = "select artist_name,artist_uri,artist_artwork_path from tracks where playable=1 and starred=1 and artist_name like :artist_name limit " . $max_results;
 		} else {
-			$getTracks = "select * from tracks where playable=1 and artist_name like :artist_name limit " . $max_results;
+			$getTracks = "select artist_name,artist_uri,artist_artwork_path from tracks where playable=1 and artist_name like :artist_name limit " . $max_results;
 		}
 
 		try {
@@ -597,8 +597,8 @@ if (mb_strlen($query) < 3 ||
 
 		while ($track = $stmt->fetch()) {
 
-			if (checkIfResultAlreadyThere($w->results(), "👤 " . ucfirst($track[7])) == false) {
-				$w->result(null, '', "👤 " . ucfirst($track[7]), "Browse this artist", $track[10], 'no', null, "Artist▹" . $track[7] . "▹");
+			if (checkIfResultAlreadyThere($w->results(), "👤 " . ucfirst($track[0])) == false) {
+				$w->result(null, '', "👤 " . ucfirst($track[0]), "Browse this artist", $track[2], 'no', null, "Artist▹" . $track[1] . '∙' . $track[0] . "▹");
 			}
 		}
 
