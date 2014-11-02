@@ -261,16 +261,25 @@ if (mb_strlen($query) < 3 ||
 				if ($is_alfred_playlist_active == true) {
 					$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
 				}
-
-				$w->result(null, serialize(array($results[4] /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , 'playpause' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , '' /* other_action */ , $alfred_playlist_uri /* alfred_playlist_uri */ , escapeQuery($results[1]) /* artist_name */, escapeQuery($results[0]) /* track_name */, escapeQuery($results[2]) /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), "🔈 " . escapeQuery($results[0]) . " ● " . escapeQuery($results[1]) . " ● " . escapeQuery($results[2]),
-					array(
+				if ($is_alfred_playlist_active == true) {
+					$arrayresult = array(
 						$subtitle,
 						'alt' => 'Play album ' . escapeQuery($results[2]) . ' in Spotify',
 						'cmd' => 'Play artist ' . escapeQuery($results[1]) . ' in Spotify',
 						'fn' => 'Add track ' . escapeQuery($results[0]) . ' to ' . $alfred_playlist_name,
 						'shift' => 'Add album ' . escapeQuery($results[2]) . ' to ' . $alfred_playlist_name,
-						'ctrl' => 'Search artist ' . escapeQuery($results[1]) . ' online')
-					, ($results[3] == "playing") ? './images/' . $theme . '/' . 'pause.png' : './images/' . $theme . '/' . 'play.png', 'yes', null, '');
+						'ctrl' => 'Search artist ' . escapeQuery($results[1]) . ' online');
+				} else {
+					$arrayresult = array(
+						$subtitle,
+						'alt' => 'Play album ' . escapeQuery($results[2]) . ' in Spotify',
+						'cmd' => 'Play artist ' . escapeQuery($results[1]) . ' in Spotify',
+						'fn' => 'Not Available',
+						'shift' => 'Not Available',
+						'ctrl' => 'Search artist ' . escapeQuery($results[1]) . ' online');						
+				}
+					
+				$w->result(null, serialize(array($results[4] /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , 'playpause' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , '' /* other_action */ , $alfred_playlist_uri /* alfred_playlist_uri */ , escapeQuery($results[1]) /* artist_name */, escapeQuery($results[0]) /* track_name */, escapeQuery($results[2]) /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), "🔈 " . escapeQuery($results[0]) . " ● " . escapeQuery($results[1]) . " ● " . escapeQuery($results[2]),$arrayresult, ($results[3] == "playing") ? './images/' . $theme . '/' . 'pause.png' : './images/' . $theme . '/' . 'play.png', 'yes', null, '');
 
 				$getTracks = "select artist_name,artist_uri from tracks where playable=1 and artist_name=:artist_name limit " . 1;
 
@@ -643,15 +652,27 @@ if (mb_strlen($query) < 3 ||
 
 				$playlistsfortrack = getPlaylistsForTrack($db, $theme, $track[2]);
 
-				$w->result(null, serialize(array($track[2] /*track_uri*/ , $track[3] /* album_uri */ , $track[4] /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , '' /* other_action */ , $alfred_playlist_uri /* alfred_playlist_uri */ , $track[7]  /* artist_name */, $track[5] /* track_name */, $track[6] /* album_name */, $track[9] /* track_artwork_path */, $track[10] /* artist_artwork_path */, $track[11] /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), ucfirst($track[7]) . " ● " . $track[5],
-					array(
+				if ($is_alfred_playlist_active == true) {
+					$arrayresult = array(
 						$subtitle . $playlistsfortrack,
 						'alt' => 'Play album ' . $track[6] . ' in Spotify',
 						'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
 						'fn' => 'Add track ' . $track[5] . ' to ' . $alfred_playlist_name,
 						'shift' => 'Add album ' . $track[6] . ' to ' . $alfred_playlist_name,
 						'ctrl' => 'Search artist ' . $track[7] . ' online')
-					, $track[9], 'yes', array('copy' => ucfirst($track[7]) . " ● " . $track[5], 'largetype' => ucfirst($track[7]) . " ● " . $track[5]), '');
+					;
+				} else {
+					$arrayresult = array(
+						$subtitle . $playlistsfortrack,
+						'alt' => 'Play album ' . $track[6] . ' in Spotify',
+						'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
+						'fn' => 'Not Available',
+						'shift' => 'Not Available',
+						'ctrl' => 'Search artist ' . $track[7] . ' online')
+					;						
+				}
+					
+				$w->result(null, serialize(array($track[2] /*track_uri*/ , $track[3] /* album_uri */ , $track[4] /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , '' /* other_action */ , $alfred_playlist_uri /* alfred_playlist_uri */ , $track[7]  /* artist_name */, $track[5] /* track_name */, $track[6] /* album_name */, $track[9] /* track_artwork_path */, $track[10] /* artist_artwork_path */, $track[11] /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), ucfirst($track[7]) . " ● " . $track[5],$arrayresult, $track[9], 'yes', array('copy' => ucfirst($track[7]) . " ● " . $track[5], 'largetype' => ucfirst($track[7]) . " ● " . $track[5]), '');
 
 			}
 		}
@@ -918,14 +939,24 @@ if (mb_strlen($query) < 3 ||
 
 					if (count($track->available_markets) == 0 || in_array($country_code, $track->available_markets) !== false) {
 						$track_artwork = getTrackOrAlbumArtwork($w, $theme, $track->uri, false);
-						$w->result(null, serialize(array($track->uri /*track_uri*/ , $album_uri /* album_uri */ , $artist_uri /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , '' /* other_action */ , $alfred_playlist_uri /* alfred_playlist_uri */ , $artist_name  /* artist_name */, $track->name /* track_name */, $album_name /* album_name */, $track_artwork /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), ucfirst($artist_name) . " ● " . $track->name,
-							array(
+						if ($is_alfred_playlist_active == true) {
+							$arrayresult = array(
 								$album_name . " (" . beautifyTime($track->duration_ms/1000) . ")",
 								'alt' => 'Play album ' . $album_name . ' in Spotify',
 								'cmd' => 'Play artist ' . $artist_name . ' in Spotify',
 								'fn' => 'Add track ' . $track->name . ' to ' . $alfred_playlist_name,
 								'shift' => 'Add album ' . $album_name . ' to ' . $alfred_playlist_name,
-								'ctrl' => 'Search artist ' . $artist_name . ' online'), $track_artwork, 'yes', null, '');
+								'ctrl' => 'Search artist ' . $artist_name . ' online');
+						} else {
+							$arrayresult = array(
+								$album_name . " (" . beautifyTime($track->duration_ms/1000) . ")",
+								'alt' => 'Play album ' . $album_name . ' in Spotify',
+								'cmd' => 'Play artist ' . $artist_name . ' in Spotify',
+								'fn' => 'Not Available',
+								'shift' => 'Not Available',
+								'ctrl' => 'Search artist ' . $artist_name . ' online');						
+						}
+						$w->result(null, serialize(array($track->uri /*track_uri*/ , $album_uri /* album_uri */ , $artist_uri /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , '' /* other_action */ , $alfred_playlist_uri /* alfred_playlist_uri */ , $artist_name  /* artist_name */, $track->name /* track_name */, $album_name /* album_name */, $track_artwork /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), ucfirst($artist_name) . " ● " . $track->name,$arrayresult, $track_artwork, 'yes', null, '');
 					}
 				}
 			}
@@ -1077,14 +1108,24 @@ if (mb_strlen($query) < 3 ||
 						return;
 					}
 
-					$w->result(null, serialize(array($track[2] /*track_uri*/ , $track[3] /* album_uri */ , $track[4] /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , '' /* other_action */ , $alfred_playlist_uri /* alfred_playlist_uri */ , $track[7]  /* artist_name */, $track[5] /* track_name */, $track[6] /* album_name */, $track[9] /* track_artwork_path */, $track[10] /* artist_artwork_path */, $track[11] /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), ucfirst($track[7]) . " ● " . $track[5],
-						array(
+					if ($is_alfred_playlist_active == true) {
+						$arrayresult = array(
 							$subtitle . $playlistsfortrack,
 							'alt' => 'Play album ' . $track[6] . ' in Spotify',
 							'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
 							'fn' => 'Add track ' . $track[5] . ' to ' . $alfred_playlist_name,
 							'shift' => 'Add album ' . $track[6] . ' to ' . $alfred_playlist_name,
-							'ctrl' => 'Search artist ' . $track[7] . ' online'), $track[9], 'yes', null, '');
+							'ctrl' => 'Search artist ' . $track[7] . ' online');
+					} else {
+						$arrayresult = array(
+							$subtitle . $playlistsfortrack,
+							'alt' => 'Play album ' . $track[6] . ' in Spotify',
+							'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
+							'fn' => 'Not Available',
+							'shift' => 'Not Available',
+							'ctrl' => 'Search artist ' . $track[7] . ' online');						
+					}
+					$w->result(null, serialize(array($track[2] /*track_uri*/ , $track[3] /* album_uri */ , $track[4] /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , '' /* other_action */ , $alfred_playlist_uri /* alfred_playlist_uri */ , $track[7]  /* artist_name */, $track[5] /* track_name */, $track[6] /* album_name */, $track[9] /* track_artwork_path */, $track[10] /* artist_artwork_path */, $track[11] /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), ucfirst($track[7]) . " ● " . $track[5],$arrayresult, $track[9], 'yes', null, '');
 				}
 			}
 
@@ -1199,14 +1240,24 @@ if (mb_strlen($query) < 3 ||
 						return;
 					}
 
-					$w->result(null, serialize(array($track[2] /*track_uri*/ , $track[3] /* album_uri */ , $track[4] /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , '' /* other_action */ , $alfred_playlist_uri /* alfred_playlist_uri */ , $track[7]  /* artist_name */, $track[5] /* track_name */, $track[6] /* album_name */, $track[9] /* track_artwork_path */, $track[10] /* artist_artwork_path */, $track[11] /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), ucfirst($track[7]) . " ● " . $track[5],
-						array(
+					if ($is_alfred_playlist_active == true) {
+						$arrayresult = array(
 							$subtitle . $playlistsfortrack,
 							'alt' => 'Play album ' . $track[6] . ' in Spotify',
 							'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
 							'fn' => 'Add track ' . $track[5] . ' to ' . $alfred_playlist_name,
 							'shift' => 'Add album ' . $track[6] . ' to ' . $alfred_playlist_name,
-							'ctrl' => 'Search artist ' . $track[7] . ' online'), $track[9], 'yes', null, '');
+							'ctrl' => 'Search artist ' . $track[7] . ' online');
+					} else {
+						$arrayresult = array(
+							$subtitle . $playlistsfortrack,
+							'alt' => 'Play album ' . $track[6] . ' in Spotify',
+							'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
+							'fn' => 'Not Available',
+							'shift' => 'Not Available',
+							'ctrl' => 'Search artist ' . $track[7] . ' online');						
+					}
+					$w->result(null, serialize(array($track[2] /*track_uri*/ , $track[3] /* album_uri */ , $track[4] /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , '' /* other_action */ , $alfred_playlist_uri /* alfred_playlist_uri */ , $track[7]  /* artist_name */, $track[5] /* track_name */, $track[6] /* album_name */, $track[9] /* track_artwork_path */, $track[10] /* artist_artwork_path */, $track[11] /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), ucfirst($track[7]) . " ● " . $track[5],$arrayresult, $track[9], 'yes', null, '');
 				}
 			}
 
@@ -1333,15 +1384,24 @@ if (mb_strlen($query) < 3 ||
 								handleDbIssuePdo($theme, $db);
 								return;
 							}
-
-							$w->result(null, serialize(array($track[2] /*track_uri*/ , $track[3] /* album_uri */ , $track[4] /* artist_uri */ , $theplaylisturi /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , '' /* other_action */ , $alfred_playlist_uri /* alfred_playlist_uri */ , $track[7]  /* artist_name */, $track[5] /* track_name */, $track[6] /* album_name */, $track[9] /* track_artwork_path */, $track[10] /* artist_artwork_path */, $track[11] /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), ucfirst($track[7]) . " ● " . $track[5],
-								array(
+							if ($is_alfred_playlist_active == true) {
+								$arrayresult = array(
 									$subtitle . $playlistsfortrack,
 									'alt' => 'Play album ' . $track[6] . ' in Spotify',
 									'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
 									'fn' => 'Add track ' . $track[5] . ' to ' . $alfred_playlist_name,
 									'shift' => 'Add album ' . $track[6] . ' to ' . $alfred_playlist_name,
-									'ctrl' => 'Search artist ' . $track[7] . ' online'), $track[9], 'yes', null, '');
+									'ctrl' => 'Search artist ' . $track[7] . ' online');
+							} else {
+								$arrayresult = array(
+									$subtitle . $playlistsfortrack,
+									'alt' => 'Play album ' . $track[6] . ' in Spotify',
+									'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
+									'fn' => 'Not Available',
+									'shift' => 'Not Available',
+									'ctrl' => 'Search artist ' . $track[7] . ' online');					
+							}
+							$w->result(null, serialize(array($track[2] /*track_uri*/ , $track[3] /* album_uri */ , $track[4] /* artist_uri */ , $theplaylisturi /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , '' /* other_action */ , $alfred_playlist_uri /* alfred_playlist_uri */ , $track[7]  /* artist_name */, $track[5] /* track_name */, $track[6] /* album_name */, $track[9] /* track_artwork_path */, $track[10] /* artist_artwork_path */, $track[11] /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), ucfirst($track[7]) . " ● " . $track[5],$arrayresult, $track[9], 'yes', null, '');
 
 						}
 					}
