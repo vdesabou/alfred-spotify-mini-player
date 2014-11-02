@@ -115,7 +115,7 @@ function getSpotifyWebAPI($w) {
 				return false;
 			}
 
-			displayNotification("Token was refreshed");
+			//displayNotification("Token was refreshed");
 
 		} else {
 			echo("Error[getSpotifyWebAPI]: token could not be refreshed");
