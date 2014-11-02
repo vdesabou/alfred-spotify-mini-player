@@ -272,7 +272,7 @@ if (mb_strlen($query) < 3 ||
 						'ctrl' => 'Search artist ' . escapeQuery($results[1]) . ' online')
 					, ($results[3] == "playing") ? './images/' . $theme . '/' . 'pause.png' : './images/' . $theme . '/' . 'play.png', 'yes', null, '');
 
-				$getTracks = "select * from tracks where playable=1 and artist_name=:artist_name limit " . 1;
+				$getTracks = "select artist_name,artist_uri from tracks where playable=1 and artist_name=:artist_name limit " . 1;
 
 				try {
 					$stmt = $db->prepare($getTracks);
@@ -287,13 +287,13 @@ if (mb_strlen($query) < 3 ||
 				// check if artist is in library
 				$noresult=true;
 				while ($track = $stmt->fetch()) {
-
+					$artist_uri = $track[1];
 					$noresult=false;
 				}
 
 				if
 				($noresult == false) {
-					$w->result(null, '', "🔈👤 " . ucfirst(escapeQuery($results[1])), "Browse this artist", $currentArtistArtwork, 'no', null, "Artist▹" . escapeQuery($results[1]) . "▹");
+					$w->result(null, '', "🔈👤 " . ucfirst(escapeQuery($results[1])), "Browse this artist", $currentArtistArtwork, 'no', null, "Artist▹" . $artist_uri . '∙' . escapeQuery($results[1]) . "▹");
 				}
 
 				if
