@@ -161,7 +161,7 @@ else if ($type == "ALBUM_OR_PLAYLIST") {
 
 				return;
 			} else if ($playlist_uri != "") {
-					if(addTracksToPlaylist($w,getThePlaylistracks($w,$playlist_uri),$alfred_playlist_uri,$alfred_playlist_name)) {
+					if(addTracksToPlaylist($w,getThePlaylisTracks($w,$playlist_uri),$alfred_playlist_uri,$alfred_playlist_name)) {
 						displayNotificationWithArtwork('Playlist ' . $playlist_name . '
 added to ' . $alfred_playlist_name, $playlist_artwork_path);
 					}
@@ -224,7 +224,7 @@ if ($playlist_uri != "") {
 				}
 
 				if(clearPlaylist($w,$setting[1],$setting[2])) {
-					displayNotificationWithArtwork('Alfred Playlist ' . $setting[2] . ' was cleared' , getPlaylistArtwork($w, 'black', $setting[1], true));	
+					displayNotificationWithArtwork('Alfred Playlist ' . $setting[2] . ' was cleared' , getPlaylistArtwork($w, 'black', $setting[1], true));
 				}
 				return;
 			} else if ($setting[0] == "GET_LYRICS") {
