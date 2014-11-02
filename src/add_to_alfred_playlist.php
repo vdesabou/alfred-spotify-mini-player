@@ -40,9 +40,12 @@ if (substr_count($command_output, '▹') > 0) {
 		displayNotification("Error: Alfred Playlist is not set");
 		return;
 	}
-
-	if (addTracksToPlaylist($w,$results[4],$alfred_playlist_uri,$alfred_playlist_name)) {
+	$tmp = explode(':', $results[4]);
+	$ret = addTracksToPlaylist($w,$tmp[2],$alfred_playlist_uri,$alfred_playlist_name,false);
+	if (is_numeric($ret) && $ret > 0) {
 		displayNotificationWithArtwork('' . $results[0] . ' by ' . $results[1] . ' added to ' . $alfred_playlist_name, getTrackOrAlbumArtwork($w, $theme, $results[4], true));
+	} else if (is_numeric($ret) && $ret == 0) {
+		displayNotification('Error: ' . $results[0] . ' by ' . $results[1] . ' is already in ' . $alfred_playlist_name);
 	}
 }
 else {

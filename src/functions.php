@@ -211,7 +211,7 @@ function clearPlaylist($w,$playlist_uri,$playlist_name) {
 		$tmp = explode(':', $playlist_uri);
 		$tracks = array();
 		$newtracks = array();
-		$tracks = getThePlaylisTracks($w,$playlist_uri);
+		$tracks = getThePlaylistTracks($w,$playlist_uri);
 
 
 		for ($i = 0; $i < count($tracks); $i++) {
@@ -235,14 +235,14 @@ function clearPlaylist($w,$playlist_uri,$playlist_name) {
 }
 
 /**
- * getThePlaylisTracks function.
+ * getThePlaylistTracks function.
  *
  * @access public
  * @param mixed $w
  * @param mixed $playlist_uri
  * @return void
  */
-function getThePlaylisTracks($w,$playlist_uri) {
+function getThePlaylistTracks($w,$playlist_uri) {
 	$api = getSpotifyWebAPI($w);
 	if($api == false)
 	{
@@ -273,7 +273,7 @@ function getThePlaylisTracks($w,$playlist_uri) {
 		} while ($offsetGetUserPlaylistTracks < $userPlaylistTracks->total);
 	}
 	catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-		echo "Error(getThePlaylisTracks): playlist uri " . $playlist_uri . " (exception " . $e . ")";
+		echo "Error(getThePlaylistTracks): playlist uri " . $playlist_uri . " (exception " . $e . ")";
 		return false;
 	}
 
@@ -324,7 +324,7 @@ function getTheAlbumTracks($w,$album_uri) {
  * @param mixed $playlist_uri
  * @return void
  */
-function addTracksToPlaylist($w,$tracks,$playlist_uri,$playlist_name) {
+function addTracksToPlaylist($w,$tracks,$playlist_uri,$playlist_name,$allow_duplicate) {
 
 	//
 	// Read settings from DB
@@ -351,20 +351,40 @@ function addTracksToPlaylist($w,$tracks,$playlist_uri,$playlist_name) {
 		return;
 	}
 
-	try {
-		$tmp = explode(':', $playlist_uri);
+	$tracks_with_no_dup = array();
+	if(!$allow_duplicate) {
+		try {
+			$playlist_tracks = getThePlaylistTracks($w, $playlist_uri);
 
-		$api->addUserPlaylistTracks($userid, $tmp[4], $tracks);
+			foreach ((array) $tracks as $track) {
+				if(!checkIfDuplicate($playlist_tracks, $track)) {
+					$tracks_with_no_dup[] = $track;
+				}
+			}
+
+			$tracks = $tracks_with_no_dup;
+		}
+		catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+			echo "Error(addTracksToPlaylist): (exception " . $e . ")";
+			return false;
+		}
 	}
-	catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-		echo "Error(addTracksToPlaylist): (exception " . $e . ")";
-		return false;
+
+	if(count($tracks) != 0) {
+		try {
+			$tmp = explode(':', $playlist_uri);
+			$api->addUserPlaylistTracks($userid, $tmp[4], $tracks);
+		}
+		catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+			echo "Error(addTracksToPlaylist): (exception " . $e . ")";
+			return false;
+		}
+
+		// refresh playlist
+		updatePlaylist($w, $playlist_uri, $playlist_name);
 	}
 
-	// refresh playlist
-	updatePlaylist($w, $playlist_uri, $playlist_name);
-
-	return true;
+	return count($tracks);
 }
 
 
@@ -509,6 +529,25 @@ function checkIfArtistAlreadyThere($artists, $artist_name) {
 	}
 	return false;
 }
+
+/**
+ * checkIfDuplicate function.
+ *
+ * @access public
+ * @param mixed $track_ids
+ * @param mixed $id
+ * @return void
+ */
+function checkIfDuplicate($track_ids, $id) {
+	foreach ($track_ids as $track_id) {
+		if ($track_id == $id) {
+			return true;
+		}
+	}
+	return false;
+}
+
+
 
 
 /**

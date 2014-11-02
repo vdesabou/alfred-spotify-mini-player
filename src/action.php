@@ -67,8 +67,11 @@ if ($type == "TRACK") {
 			}
 
 			// add track to alfred playlist
-			if(addTracksToPlaylist($w,$track_uri,$alfred_playlist_uri,$alfred_playlist_name)) {
+			$ret = addTracksToPlaylist($w,$track_uri,$alfred_playlist_uri,$alfred_playlist_name,false);
+			if (is_numeric($ret) && $ret > 0) {
 				displayNotificationWithArtwork('' . $track_name . ' by ' . $artist_name . ' added to ' . $alfred_playlist_name, $track_artwork_path);
+			} else if (is_numeric($ret) && $ret == 0) {
+				displayNotification('Error: ' . $track_name . ' by ' . $artist_name . ' is already in ' . $alfred_playlist_name);
 			}
 
 		} else if ($playlist_uri != "") {
@@ -155,16 +158,23 @@ else if ($type == "ALBUM_OR_PLAYLIST") {
 					$album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $album_uri, true);
 				}
 
-				if(addTracksToPlaylist($w,getTheAlbumTracks($w,$album_uri),$alfred_playlist_uri,$alfred_playlist_name)) {
+				$ret = addTracksToPlaylist($w,getTheAlbumTracks($w,$album_uri),$alfred_playlist_uri,$alfred_playlist_name,false);
+				if (is_numeric($ret) && $ret > 0) {
 					displayNotificationWithArtwork('Album ' . $album_name . ' added to ' . $alfred_playlist_name, $album_artwork_path);
+				} else if (is_numeric($ret) && $ret == 0) {
+					displayNotification('Error: Album ' . $album_name . ' is already in ' . $alfred_playlist_name);
 				}
 
 				return;
 			} else if ($playlist_uri != "") {
-					if(addTracksToPlaylist($w,getThePlaylisTracks($w,$playlist_uri),$alfred_playlist_uri,$alfred_playlist_name)) {
+					$ret = addTracksToPlaylist($w,getThePlaylistTracks($w,$playlist_uri),$alfred_playlist_uri,$alfred_playlist_name,false);
+					if (is_numeric($ret) && $ret > 0) {
 						displayNotificationWithArtwork('Playlist ' . $playlist_name . '
 added to ' . $alfred_playlist_name, $playlist_artwork_path);
+					} else if (is_numeric($ret) && $ret == 0) {
+						displayNotification('Error: Playlist ' . $playlist_name . ' is already in ' . $alfred_playlist_name);
 					}
+
 					return;
 				}
 		}
