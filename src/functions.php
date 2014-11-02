@@ -1202,7 +1202,7 @@ function updateLibrary($w) {
 			$stmt->bindValue(':artist_uri', $artist->uri);
 			$stmt->bindValue(':artist_artwork_path', $artist_artwork_path);
 			$stmt->bindValue(':biography', 'FIX THIS');
-			$stmt->bindValue(':artist_popularity', $artist->popularity);
+			$stmt->bindValue(':popularity', $artist->popularity);
 			$stmt->bindValue(':from', 'FIX THIS');
 			$stmt->bindValue(':to', 'FIX THIS');
 			$stmt->bindValue(':related_name', '');
