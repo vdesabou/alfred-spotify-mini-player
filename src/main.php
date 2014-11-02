@@ -754,17 +754,17 @@ if (mb_strlen($query) < 3 ||
 			try {
 				if (mb_strlen($artist) < 3) {
 					if ($all_playlists == false) {
-						$getTracks = "select artist_name,artist_artwork_path from tracks where playable=1 and starred=1 group by artist_name" . " limit " . $max_results;
+						$getTracks = "select artist_name,artist_artwork_path,artist_uri from tracks where playable=1 and starred=1 group by artist_name" . " limit " . $max_results;
 					} else {
-						$getTracks = "select artist_name,artist_artwork_path from tracks where playable=1 group by artist_name" . " limit " . $max_results;
+						$getTracks = "select artist_name,artist_artwork_path,artist_uri from tracks where playable=1 group by artist_name" . " limit " . $max_results;
 					}
 					$stmt = $db->prepare($getTracks);
 				}
 				else {
 					if ($all_playlists == false) {
-						$getTracks = "select artist_name,artist_artwork_path from tracks where playable=1 and starred=1 and artist_name like :query limit " . $max_results;
+						$getTracks = "select artist_name,artist_artwork_path,artist_uri from tracks where playable=1 and starred=1 and artist_name like :query limit " . $max_results;
 					} else {
-						$getTracks = "select artist_name,artist_artwork_path from tracks where playable=1 and artist_name like :query limit " . $max_results;
+						$getTracks = "select artist_name,artist_artwork_path,artist_uri from tracks where playable=1 and artist_name like :query limit " . $max_results;
 					}
 					$stmt = $db->prepare($getTracks);
 					$stmt->bindValue(':query', '%' . $artist . '%');
@@ -784,7 +784,7 @@ if (mb_strlen($query) < 3 ||
 				$noresult=false;
 
 				if (checkIfResultAlreadyThere($w->results(), "👤 " . ucfirst($track[0])) == false) {
-					$w->result(null, '', "👤 " . ucfirst($track[0]), "Browse this artist", $track[1], 'no', null, "Artist▹" . $track[0] . "▹");
+					$w->result(null, '', "👤 " . ucfirst($track[0]), "Browse this artist", $track[1], 'no', null, "Artist▹" . $track[2] . '∙'. $track[0] . "▹");
 				}
 			}
 
@@ -967,14 +967,16 @@ if (mb_strlen($query) < 3 ||
 			//
 			// display tracks for selected artists
 			//
-			$artist = $words[1];
+			$tmp = explode('∙', $words[1]);
+			$artist_uri = $tmp[0];
+			$artist_name = $tmp[1];
 			$track = $words[2];
 
-			$getArtists = "select artist_uri,artist_artwork_path,artist_biography from artists where artist_name=:artist_name";
+			$getArtists = "select artist_uri,artist_artwork_path,artist_biography from artists where artist_uri=:artist_uri";
 
 			try {
 				$stmt = $db->prepare($getArtists);
-				$stmt->bindValue(':artist_name', $artist);
+				$stmt->bindValue(':artist_uri', $artist_uri);
 
 				$artists = $stmt->execute();
 
@@ -983,7 +985,6 @@ if (mb_strlen($query) < 3 ||
 				return;
 			}
 
-			// only get first result
 			$theartist = $stmt->fetch();
 
 			try {
@@ -991,8 +992,8 @@ if (mb_strlen($query) < 3 ||
 
 					if
 					($theartist != false) {
-						$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , $theartist[0] /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'playartist' /* other_action */ , '' /* alfred_playlist_uri */ , $artist  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, $theartist[1] /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "👤 " . $artist, '▶️ Play artist', $theartist[1], 'yes', null, '');
-						$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , $theartist[0] /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'morefromthisartist' /* other_action */ , '' /* alfred_playlist_uri */ , $artist  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "👤 " . $artist, '☁︎ Query all albums/tracks from this artist online..', $theartist[1], 'yes', null, '');
+						$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , $artist_uri /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'playartist' /* other_action */ , '' /* alfred_playlist_uri */ , $artist_name  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, $theartist[1] /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "👤 " . $artist_name, '▶️ Play artist', $theartist[1], 'yes', null, '');
+						$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , $artist_uri /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'morefromthisartist' /* other_action */ , '' /* alfred_playlist_uri */ , $artist_name  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "👤 " . $artist_name, '☁︎ Query all albums/tracks from this artist online..', $theartist[1], 'yes', null, '');
 
 
 //						if
@@ -1001,26 +1002,26 @@ if (mb_strlen($query) < 3 ||
 //						}
 
 
-						$w->result(null, '', 'Related Artists', 'Browse related artists', './images/' . $theme . '/' . 'related.png', 'no', null, "OnlineRelated▹" . $theartist[0] . "@" . $artist);
+						$w->result(null, '', 'Related Artists', 'Browse related artists', './images/' . $theme . '/' . 'related.png', 'no', null, "OnlineRelated▹" . $artist_uri . "@" . $artist_name);
 					}
 
 					if ($all_playlists == false) {
-						$getTracks = "select * from tracks where playable=1 and starred=1 and artist_name=:artist limit " . $max_results;
+						$getTracks = "select * from tracks where playable=1 and starred=1 and artist_uri=:artist_uri limit " . $max_results;
 					} else {
-						$getTracks = "select * from tracks where playable=1 and artist_name=:artist limit " . $max_results;
+						$getTracks = "select * from tracks where playable=1 and artist_uri=:artist_uri limit " . $max_results;
 					}
 					$stmt = $db->prepare($getTracks);
-					$stmt->bindValue(':artist', $artist);
+					$stmt->bindValue(':artist_uri', $artist_uri);
 
 				}
 				else {
 					if ($all_playlists == false) {
-						$getTracks = "select * from tracks where playable=1 and starred=1 and (artist_name=:artist and track_name like :track)" . " limit " . $max_results;
+						$getTracks = "select * from tracks where playable=1 and starred=1 and (artist_uri=:artist_uri and track_name like :track)" . " limit " . $max_results;
 					} else {
-						$getTracks = "select * from tracks where playable=1 and artist_name=:artist and track_name like :track limit " . $max_results;
+						$getTracks = "select * from tracks where playable=1 and artist_uri=:artist_uri and track_name like :track limit " . $max_results;
 					}
 					$stmt = $db->prepare($getTracks);
-					$stmt->bindValue(':artist', $artist);
+					$stmt->bindValue(':artist_uri', $artist_uri);
 					$stmt->bindValue(':track', '%' . $track . '%');
 				}
 
@@ -1090,7 +1091,7 @@ if (mb_strlen($query) < 3 ||
 				$w->result(null, 'help', "There is no result for your search", "", './images/warning.png', 'no', null, '');
 			}
 
-			$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , 'activate (open location "spotify:search:' . $artist . '")' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , '' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $artist . " in Spotify", array(
+			$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , 'activate (open location "spotify:search:' . $artist_name . '")' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , '' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $artist_name . " in Spotify", array(
 					'This will start a new search in Spotify',
 					'alt' => 'Not Available',
 					'cmd' => 'Not Available',
@@ -1101,7 +1102,7 @@ if (mb_strlen($query) < 3 ||
 			if
 			($theartist != false) {
 				if ($is_spotifious_active == true) {
-					$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , $theartist[4] . " ▹ " . $artist . " ►" /* query */ , '' /* other_settings*/ , '' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $artist . " with Spotifious", array(
+					$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , $theartist[4] . " ▹ " . $artist_name . " ►" /* query */ , '' /* other_settings*/ , '' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $artist_name . " with Spotifious", array(
 							'Spotifious workflow must be installed and script filter set with <spotifious>',
 							'alt' => 'Not Available',
 							'cmd' => 'Not Available',
