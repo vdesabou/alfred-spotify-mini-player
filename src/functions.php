@@ -141,7 +141,7 @@ function getArtistUriFromTrack($w, $track_uri) {
 	if($api == false)
 	{
 		displayNotification("Error: Cannot get SpotifyWebAPI(");
-		return;
+		return false;
 	}
 
 	try {
@@ -173,7 +173,7 @@ function getAlbumUriFromTrack($w, $track_uri) {
 	if($api == false)
 	{
 		displayNotification("Error: Cannot get SpotifyWebAPI(");
-		return;
+		return false;
 	}
 
 	try {
@@ -190,6 +190,49 @@ function getAlbumUriFromTrack($w, $track_uri) {
 	return $album->uri;
 }
 
+/**
+ * clearPlaylist function.
+ * 
+ * @access public
+ * @param mixed $w
+ * @param mixed $playlist_uri
+ * @param mixed $playlist_name
+ * @return void
+ */
+function clearPlaylist($w,$playlist_uri,$playlist_name) {
+	$api = getSpotifyWebAPI($w);
+	if($api == false)
+	{
+		displayNotification("Error: Cannot get SpotifyWebAPI(");
+		return false;
+	}
+	
+	try {
+		$tmp = explode(':', $playlist_uri);
+		$tracks = array();
+		$newtracks = array();
+		$tracks = getThePlaylistracks($w,$playlist_uri);
+		
+		
+		for ($i = 0; $i < count($tracks); $i++) {
+			$tmp = array();
+			$tmp['id'] = $tracks[$i]; 
+			$newtracks[] = $tmp;
+		}
+		print_r($newtracks);
+		
+		$api->deletePlaylistTracks($tmp[2],$tmp[4],$newtracks);
+	}
+	catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+		echo "Error(clearPlaylist): playlist uri " . $playlist_uri . " (exception " . $e . ")";
+		return false;
+	}
+	
+	// refresh playlist
+	updatePlaylist($w, $playlist_uri, $playlist_name);
+	
+	return true;
+}
 
 /**
  * getThePlaylistracks function.
@@ -204,7 +247,7 @@ function getThePlaylistracks($w,$playlist_uri) {
 	if($api == false)
 	{
 		displayNotification("Error: Cannot get SpotifyWebAPI(");
-		return;
+		return false;
 	}
 
 	$tracks = array();
@@ -231,8 +274,8 @@ function getThePlaylistracks($w,$playlist_uri) {
 	}
 	catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 		echo "Error(getThePlaylistracks): playlist uri " . $playlist_uri . " (exception " . $e . ")";
+		return false;
 	}
-
 
 	return $tracks;
 }

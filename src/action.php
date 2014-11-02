@@ -223,10 +223,9 @@ if ($playlist_uri != "") {
 					return;
 				}
 
-				displayNotificationWithArtwork('Alfred Playlist ' . $setting[2] . ' was cleared' , getPlaylistArtwork($w, 'black', $setting[1], true));
-
-				// update alfred playlist
-				updatePlaylist($w, $setting[1], $setting[2] );
+				if(clearPlaylist($w,$setting[1],$setting[2])) {
+					displayNotificationWithArtwork('Alfred Playlist ' . $setting[2] . ' was cleared' , getPlaylistArtwork($w, 'black', $setting[1], true));	
+				}
 				return;
 			} else if ($setting[0] == "GET_LYRICS") {
 				if (! $w->internet()) {
@@ -250,7 +249,6 @@ if ($playlist_uri != "") {
 			displayNotification("Error: cannot read settings");
 			return;
 		}
-
 
 		foreach ($settings as $setting):
 
