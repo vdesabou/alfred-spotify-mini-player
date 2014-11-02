@@ -901,6 +901,9 @@ if (mb_strlen($query) < 3 ||
 
 				$json = doWebApiRequest($w, "https://api.spotify.com/v1/albums/" . $tmp_uri[2] . "/tracks");
 
+				$album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $album_uri, false);
+				$w->result(null, serialize(array('' /*track_uri*/ , $album_uri /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'playalbum' /* other_action */ , '' /* alfred_playlist_uri */ , '' /* artist_name */, '' /* track_name */, $album_name /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, $album_artwork_path /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "💿 " . $album_name, '▶️ Play album', $album_artwork_path, 'yes', null, '');
+				
 				$subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
 				if ($is_alfred_playlist_active == true) {
 					$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";

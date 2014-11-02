@@ -420,6 +420,11 @@ if ($playlist_uri != "") {
 				displayNotificationWithArtwork('🔈 Artist ' . $artist_name, $artist_artwork_path);
 				return;
 			}
+		else if ($other_action == "playalbum") {
+				exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
+				displayNotificationWithArtwork('🔈 Album ' . $album_name, $album_artwork_path);
+				return;
+			}
 		else if ($other_action == "update_library") {
 				updateLibrary($w);
 				return;
