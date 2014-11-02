@@ -802,17 +802,17 @@ if (mb_strlen($query) < 3 ||
 			try {
 				if (mb_strlen($album) < 3) {
 					if ($all_playlists == false) {
-						$getTracks = "select album_name,album_artwork_path,artist_name from tracks where playable=1 and starred=1 group by album_name" . " limit " . $max_results;
+						$getTracks = "select album_name,album_artwork_path,artist_name,album_uri from tracks where playable=1 and starred=1 group by album_name" . " limit " . $max_results;
 					} else {
-						$getTracks = "select album_name,album_artwork_path,artist_name from tracks where playable=1 group by album_name" . " limit " . $max_results;
+						$getTracks = "select album_name,album_artwork_path,artist_name,album_uri from tracks where playable=1 group by album_name" . " limit " . $max_results;
 					}
 					$stmt = $db->prepare($getTracks);
 				}
 				else {
 					if ($all_playlists == false) {
-						$getTracks = "select album_name,album_artwork_path,artist_name from tracks where playable=1 and starred=1 and album_name like :query limit " . $max_results;
+						$getTracks = "select album_name,album_artwork_path,artist_name,album_uri from tracks where playable=1 and starred=1 and album_name like :query limit " . $max_results;
 					} else {
-						$getTracks = "select album_name,album_artwork_path,artist_name from tracks where playable=1 and album_name like :query limit " . $max_results;
+						$getTracks = "select album_name,album_artwork_path,artist_name,album_uri from tracks where playable=1 and album_name like :query limit " . $max_results;
 					}
 					$stmt = $db->prepare($getTracks);
 					$stmt->bindValue(':query', '%' . $album . '%');
@@ -832,7 +832,7 @@ if (mb_strlen($query) < 3 ||
 				$noresult=false;
 
 				if (checkIfResultAlreadyThere($w->results(), ucfirst($track[0])) == false) {
-					$w->result(null, '', ucfirst($track[0]), "by " . $track[2], $track[1], 'no', null, "Album▹" . $track[0] . "▹");
+					$w->result(null, '', ucfirst($track[0]), "by " . $track[2], $track[1], 'no', null, "Album▹" . $track[3] . '∙' . $track[0] . "▹");
 				}
 			}
 
@@ -1116,29 +1116,30 @@ if (mb_strlen($query) < 3 ||
 			//
 			// display tracks for selected album
 			//
-			$album = $words[1];
+			$tmp = explode('∙', $words[1]);
+			$album_uri = $tmp[0];
+			$album_name = $tmp[1];
+			
 			$track = $words[2];
 
 			try {
 				if (mb_strlen($track) < 3) {
-					$album_uri = "";
-
 					if ($all_playlists == false) {
-						$getTracks = "select * from tracks where playable=1 and starred=1 and album_name=:album limit " . $max_results;
+						$getTracks = "select * from tracks where playable=1 and starred=1 and album_uri=:album_uri limit " . $max_results;
 					} else {
-						$getTracks = "select * from tracks where playable=1 and album_name=:album limit " . $max_results;
+						$getTracks = "select * from tracks where playable=1 and album_uri=:album_uri limit " . $max_results;
 					}
 					$stmt = $db->prepare($getTracks);
-					$stmt->bindValue(':album', $album);
+					$stmt->bindValue(':album_uri', $album_uri);
 				}
 				else {
 					if ($all_playlists == false) {
-						$getTracks = "select * from tracks where playable=1 and starred=1 and (album_name=:album and track_name like :track limit " . $max_results;
+						$getTracks = "select * from tracks where playable=1 and starred=1 and (album_uri=:album_uri and track_name like :track limit " . $max_results;
 					} else {
-						$getTracks = "select * from tracks where playable=1 and album_name=:album and track_name like :track limit " . $max_results;
+						$getTracks = "select * from tracks where playable=1 and album_uri=:album_uri and track_name like :track limit " . $max_results;
 					}
 					$stmt = $db->prepare($getTracks);
-					$stmt->bindValue(':album', $album);
+					$stmt->bindValue(':album_uri', $album_uri);
 					$stmt->bindValue(':track', '%' . $track . '%');
 				}
 
@@ -1148,7 +1149,10 @@ if (mb_strlen($query) < 3 ||
 				handleDbIssuePdo($theme, $db);
 				return;
 			}
-			$album_uri="";
+
+			$album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $album_uri, false);
+			$w->result(null, serialize(array('' /*track_uri*/ , $album_uri /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'playalbum' /* other_action */ , '' /* alfred_playlist_uri */ , '' /* artist_name */, '' /* track_name */, $album_name /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, $album_artwork_path /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "💿 " . $album_name, '▶️ Play album', $album_artwork_path, 'yes', null, '');
+			
 			$noresult=true;
 			while ($track = $stmt->fetch()) {
 
@@ -1201,15 +1205,13 @@ if (mb_strlen($query) < 3 ||
 							'shift' => 'Add album ' . $track[6] . ' to ' . $alfred_playlist_name,
 							'ctrl' => 'Search artist ' . $track[7] . ' online'), $track[9], 'yes', null, '');
 				}
-				if ($album_uri == "")
-					$album_uri = $track[3];
 			}
 
 			if
 			($noresult) {
 				$w->result(null, 'help', "There is no result for your search", "", './images/warning.png', 'no', null, '');
 
-				$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , 'activate (open location "spotify:search:' . $album . '")' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , '' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $album . " in Spotify", array(
+				$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , 'activate (open location "spotify:search:' . $album_name . '")' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , '' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $album_name . " in Spotify", array(
 						'This will start a new search in Spotify',
 						'alt' => 'Not Available',
 						'cmd' => 'Not Available',
@@ -1218,7 +1220,7 @@ if (mb_strlen($query) < 3 ||
 						'ctrl' => 'Not Available'), 'fileicon:/Applications/Spotify.app', 'yes', null, '');
 			}
 			else {
-				$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , 'activate (open location "spotify:search:' . $album . '")' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , '' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $album . " in Spotify", array(
+				$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , 'activate (open location "spotify:search:' . $album_name . '")' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , '' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $album_name . " in Spotify", array(
 						'This will start a new search in Spotify',
 						'alt' => 'Not Available',
 						'cmd' => 'Not Available',
@@ -1227,7 +1229,7 @@ if (mb_strlen($query) < 3 ||
 						'ctrl' => 'Not Available'), 'fileicon:/Applications/Spotify.app', 'yes', null, '');
 
 				if ($is_spotifious_active == true) {
-					$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , $album_uri . " ▹ " . $album . " ►"/* query */ , '' /* other_settings*/ , '' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $album . " with Spotifious", array(
+					$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , $album_uri . " ▹ " . $album_name . " ►"/* query */ , '' /* other_settings*/ , '' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $album_name . " with Spotifious", array(
 							'Spotifious workflow must be installed and script filter set with <spotifious>',
 							'alt' => 'Not Available',
 							'cmd' => 'Not Available',
