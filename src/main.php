@@ -309,37 +309,39 @@ if (mb_strlen($query) < 3 ||
 						, getTrackOrAlbumArtwork($w, $theme, $results[4], false), 'yes', null, '');
 				}
 
-				$getTracks = "select playlist_uri from tracks where playable=1 and uri=:uri limit " . $max_results;
-
-				try {
-					$stmt = $db->prepare($getTracks);
-					$stmt->bindValue(':uri', $results[4]);
-					$stmt->execute();
-
-				} catch (PDOException $e) {
-					handleDbIssuePdo($theme, $db);
-					return;
-				}
-
-				while ($track = $stmt->fetch()) {
-
-					$getPlaylists = "select * from playlists where uri=:uri";
-
+				if ($all_playlists == true) {
+					$getTracks = "select playlist_uri from tracks where playable=1 and uri=:uri limit " . $max_results;
+	
 					try {
-						$stmt = $db->prepare($getPlaylists);
-						$stmt->bindValue(':uri', $track[0]);
-
-						$playlists = $stmt->execute();
-
+						$stmt = $db->prepare($getTracks);
+						$stmt->bindValue(':uri', $results[4]);
+						$stmt->execute();
+	
 					} catch (PDOException $e) {
 						handleDbIssuePdo($theme, $db);
 						return;
 					}
-
-					while ($playlist = $stmt->fetch()) {
-
-						if (checkIfResultAlreadyThere($w->results(), "🔈🎵 " . "In playlist " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)") == false) {
-							$w->result(null, '', "🔈🎵 " . "In playlist " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
+	
+					while ($track = $stmt->fetch()) {
+	
+						$getPlaylists = "select * from playlists where uri=:uri";
+	
+						try {
+							$stmt = $db->prepare($getPlaylists);
+							$stmt->bindValue(':uri', $track[0]);
+	
+							$playlists = $stmt->execute();
+	
+						} catch (PDOException $e) {
+							handleDbIssuePdo($theme, $db);
+							return;
+						}
+	
+						while ($playlist = $stmt->fetch()) {
+	
+							if (checkIfResultAlreadyThere($w->results(), "🔈🎵 " . "In playlist " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)") == false) {
+								$w->result(null, '', "🔈🎵 " . "In playlist " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
+							}
 						}
 					}
 				}
