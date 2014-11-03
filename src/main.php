@@ -660,7 +660,7 @@ if (mb_strlen($query) < 3 ||
 
 				if ($is_alfred_playlist_active == true) {
 					$arrayresult = array(
-						$subtitle . $playlistsfortrack,
+						beautifyTime($track[16]/1000) . " ● " . $subtitle .  $playlistsfortrack,
 						'alt' => 'Play album ' . $track[6] . ' in Spotify',
 						'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
 						'fn' => 'Add track ' . $track[5] . ' to ' . $alfred_playlist_name,
@@ -669,7 +669,7 @@ if (mb_strlen($query) < 3 ||
 					;
 				} else {
 					$arrayresult = array(
-						$subtitle . $playlistsfortrack,
+						beautifyTime($track[16]/1000) . " ● " . $subtitle .  $playlistsfortrack,
 						'alt' => 'Play album ' . $track[6] . ' in Spotify',
 						'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
 						'fn' => 'Add track ' . $track[5] . ' to My Music',
@@ -947,7 +947,7 @@ if (mb_strlen($query) < 3 ||
 						$track_artwork = getTrackOrAlbumArtwork($w, $theme, $track->uri, false);
 						if ($is_alfred_playlist_active == true) {
 							$arrayresult = array(
-								$album_name . " (" . beautifyTime($track->duration_ms/1000) . ")",
+								beautifyTime($track->duration_ms/1000) . " ● " . $album_name,
 								'alt' => 'Play album ' . $album_name . ' in Spotify',
 								'cmd' => 'Play artist ' . $artist_name . ' in Spotify',
 								'fn' => 'Add track ' . $track->name . ' to ' . $alfred_playlist_name,
@@ -955,7 +955,7 @@ if (mb_strlen($query) < 3 ||
 								'ctrl' => 'Search artist ' . $artist_name . ' online');
 						} else {
 							$arrayresult = array(
-								$album_name . " (" . beautifyTime($track->duration_ms/1000) . ")",
+								beautifyTime($track->duration_ms/1000) . " ● " . $album_name,
 								'alt' => 'Play album ' . $album_name . ' in Spotify',
 								'cmd' => 'Play artist ' . $artist_name . ' in Spotify',
 								'fn' => 'Add track ' . $track->name . ' to My Music',
@@ -1116,7 +1116,7 @@ if (mb_strlen($query) < 3 ||
 
 					if ($is_alfred_playlist_active == true) {
 						$arrayresult = array(
-							$subtitle . $playlistsfortrack,
+							beautifyTime($track[16]/1000) . " ● " . $subtitle .  $playlistsfortrack,
 							'alt' => 'Play album ' . $track[6] . ' in Spotify',
 							'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
 							'fn' => 'Add track ' . $track[5] . ' to ' . $alfred_playlist_name,
@@ -1124,7 +1124,7 @@ if (mb_strlen($query) < 3 ||
 							'ctrl' => 'Search artist ' . $track[7] . ' online');
 					} else {
 						$arrayresult = array(
-							$subtitle . $playlistsfortrack,
+							beautifyTime($track[16]/1000) . " ● " . $subtitle .  $playlistsfortrack,
 							'alt' => 'Play album ' . $track[6] . ' in Spotify',
 							'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
 							'fn' => 'Add track ' . $track[5] . ' to My Music',
@@ -1248,7 +1248,7 @@ if (mb_strlen($query) < 3 ||
 
 					if ($is_alfred_playlist_active == true) {
 						$arrayresult = array(
-							$subtitle . $playlistsfortrack,
+							beautifyTime($track[16]/1000) . " ● " . $subtitle .  $playlistsfortrack,
 							'alt' => 'Play album ' . $track[6] . ' in Spotify',
 							'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
 							'fn' => 'Add track ' . $track[5] . ' to ' . $alfred_playlist_name,
@@ -1256,7 +1256,7 @@ if (mb_strlen($query) < 3 ||
 							'ctrl' => 'Search artist ' . $track[7] . ' online');
 					} else {
 						$arrayresult = array(
-							$subtitle . $playlistsfortrack,
+							beautifyTime($track[16]/1000) . " ● " . $subtitle .  $playlistsfortrack,
 							'alt' => 'Play album ' . $track[6] . ' in Spotify',
 							'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
 							'fn' => 'Add track ' . $track[5] . ' to My Music',
@@ -1404,7 +1404,7 @@ if (mb_strlen($query) < 3 ||
 							}
 							if ($is_alfred_playlist_active == true) {
 								$arrayresult = array(
-									$subtitle . $playlistsfortrack,
+									beautifyTime($track[16]/1000) . " ● " . $subtitle .  $playlistsfortrack,
 									'alt' => 'Play album ' . $track[6] . ' in Spotify',
 									'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
 									'fn' => 'Add track ' . $track[5] . ' to ' . $alfred_playlist_name,
@@ -1412,7 +1412,7 @@ if (mb_strlen($query) < 3 ||
 									'ctrl' => 'Search artist ' . $track[7] . ' online');
 							} else {
 								$arrayresult = array(
-									$subtitle . $playlistsfortrack,
+									beautifyTime($track[16]/1000) . " ● " . $subtitle .  $playlistsfortrack,
 									'alt' => 'Play album ' . $track[6] . ' in Spotify',
 									'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
 									'fn' => 'Add track ' . $track[5] . ' to My Music',

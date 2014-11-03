@@ -1182,7 +1182,7 @@ function updateLibrary($w) {
 		return false;
 	}
 
-	$db->exec("create table tracks (mymusic boolean, popularity int, uri text, album_uri text, artist_uri text, track_name text, album_name text, artist_name text, album_year text, track_artwork_path text, artist_artwork_path text, album_artwork_path text, playlist_name text, playlist_uri text, playable boolean, availability text)");
+	$db->exec("create table tracks (mymusic boolean, popularity int, uri text, album_uri text, artist_uri text, track_name text, album_name text, artist_name text, album_year text, track_artwork_path text, artist_artwork_path text, album_artwork_path text, playlist_name text, playlist_uri text, playable boolean, availability text, duration_ms int)");
 	$db->exec("CREATE INDEX IndexPlaylistUri ON tracks (playlist_uri)");
 	$db->exec("CREATE INDEX IndexArtistName ON tracks (artist_name)");
 	$db->exec("CREATE INDEX IndexAlbumName ON tracks (album_name)");
@@ -1200,7 +1200,7 @@ function updateLibrary($w) {
 	$insertPlaylist = "insert into playlists values (:uri,:name,:count_tracks,:owner,:username,:playlist_artwork_path,:ownedbyuser)";
 	$stmtPlaylist = $db->prepare($insertPlaylist);
 
-	$insertTrack = "insert into tracks values (:mymusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_year,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:availability)";
+	$insertTrack = "insert into tracks values (:mymusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_year,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:availability,:duration_ms)";
 	$stmtTrack = $db->prepare($insertTrack);
 
 	$savedListArtists = array();
@@ -1279,6 +1279,7 @@ function updateLibrary($w) {
 					$stmtTrack->bindValue(':playlist_uri', $playlist->uri);
 					$stmtTrack->bindValue(':playable', $playable);
 					$stmtTrack->bindValue(':availability', 'FIX THIS');
+					$stmtTrack->bindValue(':duration_ms', $track->duration_ms);
 					$stmtTrack->execute();
 
 					$nb_track++;
@@ -1339,6 +1340,7 @@ function updateLibrary($w) {
 		$stmtTrack->bindValue(':playlist_uri', $playlist->uri);
 		$stmtTrack->bindValue(':playable', $playable);
 		$stmtTrack->bindValue(':availability', 'FIX THIS');
+		$stmtTrack->bindValue(':duration_ms', $track->duration_ms);
 		$stmtTrack->execute();
 
 		$nb_track++;
@@ -1510,7 +1512,7 @@ function updatePlaylist($w, $playlist_uri, $playlist_name) {
 		$updatePlaylists="update playlists set nb_tracks=:nb_tracks,playlist_artwork_path=:playlist_artwork_path where uri=:uri";
 		$stmtUpdatePlaylists = $db->prepare($updatePlaylists);
 
-		$insertTrack = "insert into tracks values (:mymusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_year,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:availability)";
+		$insertTrack = "insert into tracks values (:mymusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_year,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:availability,:duration_ms)";
 		$stmtTrack = $db->prepare($insertTrack);
 
 		$tmp = explode(':', $playlist_uri);
@@ -1570,6 +1572,7 @@ function updatePlaylist($w, $playlist_uri, $playlist_name) {
 					$stmtTrack->bindValue(':playlist_uri', $playlist_uri);
 					$stmtTrack->bindValue(':playable', $playable);
 					$stmtTrack->bindValue(':availability', 'FIX THIS');
+					$stmtTrack->bindValue(':duration_ms', $track->duration_ms);
 					$stmtTrack->execute();
 
 					$nb_track++;
@@ -1719,7 +1722,7 @@ function updatePlaylistList($w) {
 		$insertPlaylist = "insert into playlists values (:uri,:name,:count_tracks,:owner,:username,:playlist_artwork_path,:ownedbyuser)";
 		$stmtPlaylist = $db->prepare($insertPlaylist);
 
-		$insertTrack = "insert into tracks values (:mymusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_year,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:availability)";
+		$insertTrack = "insert into tracks values (:mymusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_year,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:availability,:duration_ms)";
 		$stmtTrack = $db->prepare($insertTrack);
 
 		$deleteFromTracks="delete from tracks where playlist_uri=:playlist_uri";
@@ -1835,6 +1838,7 @@ function updatePlaylistList($w) {
 									$stmtTrack->bindValue(':playlist_uri', $playlist->uri);
 									$stmtTrack->bindValue(':playable', $playable);
 									$stmtTrack->bindValue(':availability', 'FIX THIS');
+									$stmtTrack->bindValue(':duration_ms', $track->duration_ms);
 									$stmtTrack->execute();
 								}
 
@@ -1905,6 +1909,7 @@ function updatePlaylistList($w) {
 										$stmtTrack->bindValue(':playlist_uri', $playlist->uri);
 										$stmtTrack->bindValue(':playable', $playable);
 										$stmtTrack->bindValue(':availability', 'FIX THIS');
+										$stmtTrack->bindValue(':duration_ms', $track->duration_ms);
 										$stmtTrack->execute();
 									}
 
@@ -2080,7 +2085,7 @@ function updateMyMusic($w) {
 		$db->exec("drop table counters");
 		$db->exec("create table counters (all_tracks int, mymusic_tracks int, all_artists int, mymusic_artists int, all_albums int, mymusic_albums int, playlists int)");
 
-		$insertTrack = "insert into tracks values (:mymusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_year,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:availability)";
+		$insertTrack = "insert into tracks values (:mymusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_year,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:availability,:duration_ms)";
 		$stmtTrack = $db->prepare($insertTrack);
 
 		$deleteFromTracks="delete from tracks where mymusic=:mymusic";
@@ -2134,6 +2139,7 @@ function updateMyMusic($w) {
 					$stmtTrack->bindValue(':playlist_uri', $playlist->uri);
 					$stmtTrack->bindValue(':playable', $playable);
 					$stmtTrack->bindValue(':availability', 'FIX THIS');
+					$stmtTrack->bindValue(':duration_ms', $track->duration_ms);
 					$stmtTrack->execute();
 
 
