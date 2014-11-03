@@ -1246,7 +1246,7 @@ end alfred_script</string>
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -n -f ./src/add_to_alfred_playlist.php</string>
+				<string>php -f ./src/action.php -- "" "ADD_TO_ALFRED_PLAYLIST" "ADD_TO_ALFRED_PLAYLIST"</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>

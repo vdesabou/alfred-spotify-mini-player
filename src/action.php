@@ -136,6 +136,50 @@ if ($type == "TRACK") {
 		exec("osascript -e 'tell application \"Spotify\" to previous track'");
 		displayNotificationForCurrentTrack();
 		return;
+	}else if ($type == "ADD_TO_ALFRED_PLAYLIST") {
+		// get info on current song
+		$command_output = exec("./track_info.sh 2>&1");
+
+		if (substr_count($command_output, '▹') > 0) {
+			$results = explode('▹', $command_output);
+
+			//
+			// Read settings from DB
+			//
+			$getSettings = 'select alfred_playlist_uri,alfred_playlist_name,theme from settings';
+			$dbfile = $w->data() . '/settings.db';
+			exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
+
+			if ($returnValue != 0) {
+				displayNotification("Error: Alfred Playlist is not set");
+				return;
+			}
+
+			foreach ($settings as $setting):
+
+				$setting = explode("	", $setting);
+
+			$alfred_playlist_uri = $setting[0];
+			$alfred_playlist_name = $setting[1];
+			$theme = $setting[2];
+			endforeach;
+
+			if ($alfred_playlist_uri == "" || $alfred_playlist_name == "") {
+				displayNotification("Error: Alfred Playlist is not set");
+				return;
+			}
+			$tmp = explode(':', $results[4]);
+			$ret = addTracksToPlaylist($w,$tmp[2],$alfred_playlist_uri,$alfred_playlist_name,false);
+			if (is_numeric($ret) && $ret > 0) {
+				displayNotificationWithArtwork('' . $results[0] . ' by ' . $results[1] . ' added to ' . $alfred_playlist_name, getTrackOrAlbumArtwork($w, $theme, $results[4], true));
+			} else if (is_numeric($ret) && $ret == 0) {
+				displayNotification('Error: ' . $results[0] . ' by ' . $results[1] . ' is already in ' . $alfred_playlist_name);
+			}
+		}
+		else {
+			displayNotification("Error: No track is playing");
+		}
+		return;
 	}
 
 else if ($type == "ALBUM_OR_PLAYLIST") {
@@ -368,6 +412,50 @@ if ($playlist_uri != "") {
 				return;
 			} else if ($other_action == "current") {
 				displayNotificationForCurrentTrack();
+				return;
+			} else if ($other_action == "add_to_alfred_playlist") {
+				// get info on current song
+				$command_output = exec("./track_info.sh 2>&1");
+
+				if (substr_count($command_output, '▹') > 0) {
+					$results = explode('▹', $command_output);
+
+					//
+					// Read settings from DB
+					//
+					$getSettings = 'select alfred_playlist_uri,alfred_playlist_name,theme from settings';
+					$dbfile = $w->data() . '/settings.db';
+					exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
+
+					if ($returnValue != 0) {
+						displayNotification("Error: Alfred Playlist is not set");
+						return;
+					}
+
+					foreach ($settings as $setting):
+
+						$setting = explode("	", $setting);
+
+					$alfred_playlist_uri = $setting[0];
+					$alfred_playlist_name = $setting[1];
+					$theme = $setting[2];
+					endforeach;
+
+					if ($alfred_playlist_uri == "" || $alfred_playlist_name == "") {
+						displayNotification("Error: Alfred Playlist is not set");
+						return;
+					}
+					$tmp = explode(':', $results[4]);
+					$ret = addTracksToPlaylist($w,$tmp[2],$alfred_playlist_uri,$alfred_playlist_name,false);
+					if (is_numeric($ret) && $ret > 0) {
+						displayNotificationWithArtwork('' . $results[0] . ' by ' . $results[1] . ' added to ' . $alfred_playlist_name, getTrackOrAlbumArtwork($w, $theme, $results[4], true));
+					} else if (is_numeric($ret) && $ret == 0) {
+						displayNotification('Error: ' . $results[0] . ' by ' . $results[1] . ' is already in ' . $alfred_playlist_name);
+					}
+				}
+				else {
+					displayNotification("Error: No track is playing");
+				}
 				return;
 			} else if ($other_action == "previous") {
 				exec("osascript -e 'tell application \"Spotify\" to previous track'");
