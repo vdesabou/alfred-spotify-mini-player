@@ -83,17 +83,6 @@
 				<string></string>
 			</dict>
 		</array>
-		<key>22216C91-0A58-4FE1-9F28-DF023E4F4282</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>A69FA8D7-260F-4BB2-B77A-31301E0E32AC</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-			</dict>
-		</array>
 		<key>2B0C8466-4AED-4272-9C10-50F3BCE88043</key>
 		<array>
 			<dict>
@@ -268,17 +257,6 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>18496AC4-EA42-444C-A906-642E38259C96</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-			</dict>
-		</array>
-		<key>C46E2C64-7407-4811-8503-5213DD65C39A</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>B9857323-CDD4-4134-B272-26C4686049E5</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -931,18 +909,18 @@ end alfred_script</string>
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>star</string>
+				<string>spot_mini_add_to_alfred_playlist</string>
 				<key>subtext</key>
-				<string>Star current track</string>
+				<string>Current track will be added to Alfred Playlist</string>
 				<key>text</key>
-				<string>Star Track</string>
+				<string>Add current track to Alfred Playlist</string>
 				<key>withspace</key>
 				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.input.keyword</string>
 			<key>uid</key>
-			<string>22216C91-0A58-4FE1-9F28-DF023E4F4282</string>
+			<string>3F85747B-FC44-4B07-AA6E-3645F0CC0DF7</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -952,52 +930,14 @@ end alfred_script</string>
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f ./src/action.php -- "" "STAR" "STAR"</string>
+				<string>php -f ./src/action.php -- "" "ADD_TO_ALFRED_PLAYLIST" "ADD_TO_ALFRED_PLAYLIST"</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.action.script</string>
 			<key>uid</key>
-			<string>A69FA8D7-260F-4BB2-B77A-31301E0E32AC</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>2</integer>
-				<key>keyword</key>
-				<string>unstar</string>
-				<key>subtext</key>
-				<string>Unstar current track</string>
-				<key>text</key>
-				<string>Unstar Track</string>
-				<key>withspace</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>C46E2C64-7407-4811-8503-5213DD65C39A</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>escaping</key>
-				<integer>38</integer>
-				<key>script</key>
-				<string>php -f ./src/action.php -- "" "UNSTAR" "UNSTAR"</string>
-				<key>type</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>B9857323-CDD4-4134-B272-26C4686049E5</string>
+			<string>ECC53637-75AD-4FD2-9605-8E038D04C4BF</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -1236,44 +1176,6 @@ end alfred_script</string>
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>spot_mini_add_to_alfred_playlist</string>
-				<key>subtext</key>
-				<string>Current track will be added to Alfred Playlist</string>
-				<key>text</key>
-				<string>Add current track to Alfred Playlist</string>
-				<key>withspace</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>3F85747B-FC44-4B07-AA6E-3645F0CC0DF7</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>escaping</key>
-				<integer>38</integer>
-				<key>script</key>
-				<string>php -f ./src/action.php -- "" "ADD_TO_ALFRED_PLAYLIST" "ADD_TO_ALFRED_PLAYLIST"</string>
-				<key>type</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>ECC53637-75AD-4FD2-9605-8E038D04C4BF</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>2</integer>
-				<key>keyword</key>
 				<string>spot_mini_update_library</string>
 				<key>subtext</key>
 				<string>This will update the entire library</string>
@@ -1416,11 +1318,6 @@ SOFTWARE.</string>
 			<key>ypos</key>
 			<real>310</real>
 		</dict>
-		<key>22216C91-0A58-4FE1-9F28-DF023E4F4282</key>
-		<dict>
-			<key>ypos</key>
-			<real>1470</real>
-		</dict>
 		<key>24B8C827-75F2-4421-A412-D48782DA1DB8</key>
 		<dict>
 			<key>ypos</key>
@@ -1444,7 +1341,7 @@ SOFTWARE.</string>
 		<key>3F85747B-FC44-4B07-AA6E-3645F0CC0DF7</key>
 		<dict>
 			<key>ypos</key>
-			<real>2530</real>
+			<real>1460</real>
 		</dict>
 		<key>4EB5FB5E-6472-4757-A479-B206B6080036</key>
 		<dict>
@@ -1536,11 +1433,6 @@ SOFTWARE.</string>
 			<key>ypos</key>
 			<real>480</real>
 		</dict>
-		<key>A69FA8D7-260F-4BB2-B77A-31301E0E32AC</key>
-		<dict>
-			<key>ypos</key>
-			<real>1470</real>
-		</dict>
 		<key>AE6160D1-56EA-4416-991E-CF12B874FFD3</key>
 		<dict>
 			<key>ypos</key>
@@ -1551,20 +1443,10 @@ SOFTWARE.</string>
 			<key>ypos</key>
 			<real>330</real>
 		</dict>
-		<key>B9857323-CDD4-4134-B272-26C4686049E5</key>
-		<dict>
-			<key>ypos</key>
-			<real>1600</real>
-		</dict>
 		<key>BC672665-5E43-4892-B8D3-BFCBA48E34C4</key>
 		<dict>
 			<key>ypos</key>
 			<real>1950</real>
-		</dict>
-		<key>C46E2C64-7407-4811-8503-5213DD65C39A</key>
-		<dict>
-			<key>ypos</key>
-			<real>1600</real>
 		</dict>
 		<key>C7CFF014-DBC8-4663-A0AB-219C57A427EE</key>
 		<dict>
@@ -1609,7 +1491,7 @@ SOFTWARE.</string>
 		<key>ECC53637-75AD-4FD2-9605-8E038D04C4BF</key>
 		<dict>
 			<key>ypos</key>
-			<real>2530</real>
+			<real>1460</real>
 		</dict>
 		<key>F005BD44-180A-4A9A-9339-BE457D1E207F</key>
 		<dict>

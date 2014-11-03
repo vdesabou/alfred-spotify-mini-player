@@ -649,34 +649,6 @@ function displayNotificationForCurrentTrack() {
 }
 
 /**
- * displayNotificationForStarredTrack function.
- *
- * @access public
- * @param mixed $track_name
- * @param mixed $track_uri
- * @return void
- */
-function displayNotificationForStarredTrack($track_name, $track_uri) {
-	$w = new Workflows('com.vdesabou.spotify.mini.player');
-	displayNotificationWithArtwork('⭐️ ' . $track_name . ' has been starred', getTrackOrAlbumArtwork($w, 'black', $track_uri, true));
-}
-
-
-/**
- * displayNotificationForUnmymusicTrack function.
- *
- * @access public
- * @param mixed $track_name
- * @param mixed $track_uri
- * @return void
- */
-function displayNotificationForUnmymusicTrack($track_name, $track_uri) {
-	$w = new Workflows('com.vdesabou.spotify.mini.player');
-	displayNotificationWithArtwork('❌ ' . $track_name . ' has been unstarred', getTrackOrAlbumArtwork($w, 'black', $track_uri, true));
-}
-
-
-/**
  * getTrackOrAlbumArtwork function.
  *
  * @access public

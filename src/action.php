@@ -111,12 +111,6 @@ if ($type == "TRACK") {
 
 		exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online▹$artist_uri@$artist_name\"'");
 		return;
-	}else if ($type == "STAR") {
-		starCurrentTrack($w);
-		return;
-	}else if ($type == "UNSTAR") {
-		unstarCurrentTrack($w);
-		return;
 	}else if ($type == "RANDOM") {
 		$track_uri = getRandomTrack($w);
 		if($track_uri == false) {
@@ -370,12 +364,6 @@ if ($playlist_uri != "") {
 						displayNotificationWithArtwork('No update available', './images/' . $theme . '/' . 'check_update.png');
 					}
 
-			} else if ($other_action == "star") {
-				starCurrentTrack($w);
-				return;
-			} else if ($other_action == "unstar") {
-				unstarCurrentTrack($w);
-				return;
 			} else if ($other_action == "current") {
 				displayNotificationForCurrentTrack();
 				return;
@@ -456,100 +444,4 @@ if ($playlist_uri != "") {
 				return;
 			}
 	}
-
-
-
-/**
- * starCurrentTrack function.
- *
- * @access public
- * @param mixed $w
- * @return void
- */
-function starCurrentTrack($w) {
-	$tcpport = getFreeTcpPort();
-	$getUser = 'select username from user'; // FIX THIS now in settings
-	$dbfile = $w->data() . '/library.db';
-	exec("sqlite3 -separator '	' \"$dbfile\" \"$getUser\" 2>&1", $users, $returnValue);
-
-	if ($returnValue != 0) {
-		displayNotification('An error happened with user database');
-		return;
-	}
-
-	foreach ($users as $user):
-		$user = explode("	", $user);
-	$username = $user[0];
-	endforeach;
-
-	touch($w->data() . "/update_library_in_progress");
-	$w->write('InitPlaylist▹' . 0 . '▹' . 0 . '▹' . time(), 'update_library_in_progress');
-
-	exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:star:" . $tcpport . ":" . uniqid() . "\"'");
-	exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:user:$username:mymusic\"'");
-
-
-
-	$server = IoServer::factory(
-		new HttpServer(
-			new WsServer(
-				new MiniPlayer()
-			)
-		),
-		$tcpport
-	);
-	// FIX THIS: server will exit when done
-	// Did not find a way to set a timeout
-	$server->run();
-	return;
-}
-
-
-/**
- * unstarCurrentTrack function.
- *
- * @access public
- * @param mixed $w
- * @return void
- */
-function unstarCurrentTrack($w) {
-	$tcpport = getFreeTcpPort();
-	$getUser = 'select username from user';
-	$dbfile = $w->data() . '/library.db';
-	exec("sqlite3 -separator '	' \"$dbfile\" \"$getUser\" 2>&1", $users, $returnValue);
-
-	if ($returnValue != 0) {
-		displayNotification('An error happened with user database');
-		return;
-	}
-
-	foreach ($users as $user):
-		$user = explode("	", $user);
-	$username = $user[0];
-	endforeach;
-
-	touch($w->data() . "/update_library_in_progress");
-	$w->write('InitPlaylist▹' . 0 . '▹' . 0 . '▹' . time(), 'update_library_in_progress');
-
-	exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:unstar:" . $tcpport . ":" . uniqid() . "\"'");
-	exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:user:$username:mymusic\"'");
-
-
-
-	$server = IoServer::factory(
-		new HttpServer(
-			new WsServer(
-				new MiniPlayer()
-			)
-		),
-		$tcpport
-	);
-	// FIX THIS: server will exit when done
-	// Did not find a way to set a timeout
-	$server->run();
-	return;
-}
-
-
-
 ?>
