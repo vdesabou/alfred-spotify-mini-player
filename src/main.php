@@ -376,6 +376,8 @@ if (mb_strlen($query) < 3 ||
 			$w->result(null, '', 'Albums in "My Music"', 'Browse by album' . ' (' . $mymusic_albums . ' albums)', './images/' . $theme . '/' . 'albums.png', 'no', null, 'Album▹');
 		}
 
+		$w->result(null, '', 'Featured Playlists', 'Browse the current featured playlists', './images/' . $theme . '/' . 'playlists.png', 'no', null, 'FeaturedPlaylist▹');
+		
 		if ($is_spotifious_active == true) {
 			$spotifious_state = 'enabled';
 		} else {
@@ -526,6 +528,8 @@ if (mb_strlen($query) < 3 ||
 				$w->result(null, '', 'Alfred Playlist (currently set to <' . $alfred_playlist_name . '>)' , 'Choose one of your playlists and add tracks, album, playlist to it directly from the workflow', './images/' . $theme . '/' . 'alfred_playlist.png', 'no', null, 'Alfred Playlist▹');
 			} else if (strpos(strtolower('settings'), strtolower($query)) !== false) {
 				$w->result(null, '', 'Settings', 'Go to settings', './images/' . $theme . '/' . 'settings.png', 'no', null, 'Settings▹');
+			} else if (strpos(strtolower('featured'), strtolower($query)) !== false) {
+				$w->result(null, '', 'Featured Playlist', 'Browse the current featured playlists', './images/' . $theme . '/' . 'playlists.png', 'no', null, 'FeaturedPlaylist▹');
 			}
 
 		//
@@ -866,6 +870,60 @@ if (mb_strlen($query) < 3 ||
 				$w->result(null, 'help', "There is no result for your search", "", './images/warning.png', 'no', null, '');
 			}
 		} // search by Album end
+		elseif ($kind == "FeaturedPlaylist") {
+			$api = getSpotifyWebAPI($w);
+			if($api == false)
+			{
+				$w->result(null, 'help', "Internal issue (getSpotifyWebAPI)", "", './images/warning.png', 'no', null, '');
+				echo $w->toxml();
+				return;
+			}
+		
+			try {
+				$featuredPlaylists = $api->getFeaturedPlaylists(array(
+					            'country' => $country_code,
+					            'limit' => 0,
+					            'locale' => '',
+					            'offset' => 0,
+					            'timestamp' => ''
+					        ));
+
+				$subtitle = "Launch Playlist";
+				if ($is_alfred_playlist_active == true) {
+					$arrayresult = array(
+						$subtitle,
+						'alt' => 'Not Available',
+						'cmd' => 'Not Available',
+						'shift' => 'Add playlist ' . ucfirst($playlist->name) . ' to your Alfred Playlist',
+						'fn' => 'Not Available',
+						'ctrl' => 'Not Available');
+				} else {
+					$arrayresult = array(
+						$subtitle,
+						'alt' => 'Not Available',
+						'cmd' => 'Not Available',
+						'shift' => 'Add playlist ' . ucfirst($playlist->name) . ' to My Music',
+						'fn' => 'Not Available',
+						'ctrl' => 'Not Available');
+				}	  
+				$playlists = $featuredPlaylists->playlists;
+				$items = $playlists->items;    
+				foreach ($items as $playlist) {
+					$tracks = $playlist->tracks;
+					$owner = $playlist->owner;
+					
+					$playlist_artwork_path = getPlaylistArtwork($w, $theme , $playlist->uri, false);
+					$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , $playlist->uri /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , '' /* other_action */ , $alfred_playlist_uri /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, $playlist->name /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* alfred_playlist_name */)), ucfirst($playlist->name) . " (" . $tracks->total . " tracks)", $arrayresult, $playlist_artwork_path,$playlist->uri, 'yes', null, ''); 
+				}
+				
+			}
+			catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+				$w->result(null, 'help', "Exception occurred", "" . $e, './images/warning.png', 'no', null, '');
+				echo $w->toxml();
+				return;
+			}
+			
+		} // Featured Playlist end
 		elseif ($kind == "Online") {
 			if (substr_count($query, '@') == 1) {
 				//
@@ -1331,7 +1389,7 @@ if (mb_strlen($query) < 3 ||
 								'fn' => 'Not Available',
 								'ctrl' => 'Not Available');
 						}
-						$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , $playlist[0] /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , '' /* other_action */ , $alfred_playlist_uri /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, $playlist[1] /* playlist_name */, $playlist[5] /* playlist_artwork_path */, $alfred_playlist_name /* alfred_playlist_name */)), "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks), by " . $playlist[3] . " (" . $playlist[4] . ")", $arrayresult, $playlist[5], 'yes', null, '');
+						$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , $playlist[0] /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , '' /* other_action */ , $alfred_playlist_uri /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, $playlist[1] /* playlist_name */, $playlist[5] /* playlist_artwork_path */, $alfred_playlist_name /* alfred_playlist_name */)), "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks), by " . $playlist[3], $arrayresult, $playlist[5], 'yes', null, '');
 
 						$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , $playlist[0] /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'update_playlist' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, $playlist[1] /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Update playlist " . ucfirst($playlist[1]) . " by " . $playlist[3], "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', null, '');
 
