@@ -399,7 +399,7 @@ if ($playlist_uri != "") {
 					$dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
 					$dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 				} catch (PDOException $e) {
-					handleDbIssuePdo('new', $dbsettings);
+					handleDbIssuePdoEcho($dbsettings);
 					$dbsettings=null;
 					return;
 				}

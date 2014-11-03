@@ -69,7 +69,7 @@ try {
 	$dbsettings->query("PRAGMA cache_size=700000");
 	$dbsettings->query("PRAGMA compile_options");
 } catch (PDOException $e) {
-	handleDbIssuePdo('new', $dbsettings);
+	handleDbIssuePdoXml('new', $dbsettings);
 	$dbsettings=null;
 	return;
 }
@@ -112,7 +112,7 @@ if (!file_exists($w->data() . '/settings.db')) {
 		return;
 
 	} catch (PDOException $e) {
-		handleDbIssuePdo('new', $dbsettings);
+		handleDbIssuePdoXml('new', $dbsettings);
 		return;
 	}
 }
@@ -121,7 +121,7 @@ try {
 	$setting = $stmt->fetch();
 }
 catch (PDOException $e) {
-	handleDbIssuePdo('new', $dbsettings);
+	handleDbIssuePdoXml('new', $dbsettings);
 	return;
 }
 $all_playlists = $setting[0];
@@ -196,7 +196,7 @@ if (file_exists($w->data() . '/library.db')) {
 		$db->query("PRAGMA cache_size=700000");
 		$db->query("PRAGMA compile_options");
 	} catch (PDOException $e) {
-		handleDbIssuePdo($theme, $db);
+		handleDbIssuePdoXml($theme, $db);
 		return;
 	}
 
@@ -233,7 +233,7 @@ if (mb_strlen($query) < 3 ||
 			$counter = $stmt->fetch();
 
 		} catch (PDOException $e) {
-			handleDbIssuePdo($theme, $db);
+			handleDbIssuePdoXml($theme, $db);
 			return;
 		}
 
@@ -289,7 +289,7 @@ if (mb_strlen($query) < 3 ||
 					$tracks = $stmt->execute();
 
 				} catch (PDOException $e) {
-					handleDbIssuePdo($theme, $db);
+					handleDbIssuePdoXml($theme, $db);
 					return;
 				}
 
@@ -327,7 +327,7 @@ if (mb_strlen($query) < 3 ||
 						$stmt->execute();
 
 					} catch (PDOException $e) {
-						handleDbIssuePdo($theme, $db);
+						handleDbIssuePdoXml($theme, $db);
 						return;
 					}
 
@@ -342,7 +342,7 @@ if (mb_strlen($query) < 3 ||
 							$playlists = $stmt->execute();
 
 						} catch (PDOException $e) {
-							handleDbIssuePdo($theme, $db);
+							handleDbIssuePdoXml($theme, $db);
 							return;
 						}
 
@@ -579,7 +579,7 @@ if (mb_strlen($query) < 3 ||
 			$playlists = $stmt->execute();
 
 		} catch (PDOException $e) {
-			handleDbIssuePdo($theme, $db);
+			handleDbIssuePdoXml($theme, $db);
 			return;
 		}
 
@@ -604,7 +604,7 @@ if (mb_strlen($query) < 3 ||
 			$tracks = $stmt->execute();
 
 		} catch (PDOException $e) {
-			handleDbIssuePdo($theme, $db);
+			handleDbIssuePdoXml($theme, $db);
 			return;
 		}
 
@@ -631,7 +631,7 @@ if (mb_strlen($query) < 3 ||
 			$tracks = $stmt->execute();
 
 		} catch (PDOException $e) {
-			handleDbIssuePdo($theme, $db);
+			handleDbIssuePdoXml($theme, $db);
 			return;
 		}
 
@@ -731,7 +731,7 @@ if (mb_strlen($query) < 3 ||
 
 				$playlists = $stmt->execute();
 			} catch (PDOException $e) {
-				handleDbIssuePdo($theme, $db);
+				handleDbIssuePdoXml($theme, $db);
 				return;
 			}
 
@@ -798,7 +798,7 @@ if (mb_strlen($query) < 3 ||
 				$tracks = $stmt->execute();
 
 			} catch (PDOException $e) {
-				handleDbIssuePdo($theme, $db);
+				handleDbIssuePdoXml($theme, $db);
 				return;
 			}
 
@@ -846,7 +846,7 @@ if (mb_strlen($query) < 3 ||
 				$tracks = $stmt->execute();
 
 			} catch (PDOException $e) {
-				handleDbIssuePdo($theme, $db);
+				handleDbIssuePdoXml($theme, $db);
 				return;
 			}
 
@@ -1016,7 +1016,7 @@ if (mb_strlen($query) < 3 ||
 				$artists = $stmt->execute();
 
 			} catch (PDOException $e) {
-				handleDbIssuePdo($theme, $db);
+				handleDbIssuePdoXml($theme, $db);
 				return;
 			}
 
@@ -1063,7 +1063,7 @@ if (mb_strlen($query) < 3 ||
 				$tracks = $stmt->execute();
 
 			} catch (PDOException $e) {
-				handleDbIssuePdo($theme, $db);
+				handleDbIssuePdoXml($theme, $db);
 				return;
 			}
 
@@ -1106,7 +1106,7 @@ if (mb_strlen($query) < 3 ||
 
 
 					} catch (PDOException $e) {
-						handleDbIssuePdo($theme, $db);
+						handleDbIssuePdoXml($theme, $db);
 						return;
 					}
 
@@ -1192,7 +1192,7 @@ if (mb_strlen($query) < 3 ||
 				$tracks = $stmt->execute();
 
 			} catch (PDOException $e) {
-				handleDbIssuePdo($theme, $db);
+				handleDbIssuePdoXml($theme, $db);
 				return;
 			}
 
@@ -1238,7 +1238,7 @@ if (mb_strlen($query) < 3 ||
 
 
 					} catch (PDOException $e) {
-						handleDbIssuePdo($theme, $db);
+						handleDbIssuePdoXml($theme, $db);
 						return;
 					}
 
@@ -1383,7 +1383,7 @@ if (mb_strlen($query) < 3 ||
 
 
 							} catch (PDOException $e) {
-								handleDbIssuePdo($theme, $db);
+								handleDbIssuePdoXml($theme, $db);
 								return;
 							}
 							if ($is_alfred_playlist_active == true) {
@@ -1434,7 +1434,7 @@ if (mb_strlen($query) < 3 ||
 
 				}
 			} catch (PDOException $e) {
-				handleDbIssuePdo($theme, $db);
+				handleDbIssuePdoXml($theme, $db);
 				return;
 			}
 		} // end of tracks by Playlist
@@ -1500,7 +1500,7 @@ if (mb_strlen($query) < 3 ||
 					$playlists = $stmt->execute();
 
 				} catch (PDOException $e) {
-					handleDbIssuePdo($theme, $db);
+					handleDbIssuePdoXml($theme, $db);
 					return;
 				}
 

@@ -219,7 +219,7 @@ function clearPlaylist($w,$playlist_uri,$playlist_name) {
 			$tmp['id'] = $tracks[$i];
 			$newtracks[] = $tmp;
 		}
-		print_r($newtracks);
+		//print_r($newtracks);
 
 		$api->deletePlaylistTracks($tmp[2],$tmp[4],$newtracks);
 	}
@@ -464,7 +464,7 @@ function getPlaylistsForTrack($db, $theme, $track_uri) {
 
 
 	} catch (PDOException $e) {
-		handleDbIssuePdo($theme, $db);
+		handleDbIssuePdoXml($theme, $db);
 		return $playlistsfortrack;
 	}
 	return $playlistsfortrack;
@@ -914,7 +914,7 @@ function updateLibrary($w) {
 		$country_code = $setting[1];
 		$userid = $setting[2];
 	} catch (PDOException $e) {
-		handleDbIssuePdo('new', $dbsettings);
+		handleDbIssuePdoEcho($dbsettings);
 		$dbsettings=null;
 		unlink($w->data() . "/update_library_in_progress");
 		return false;
@@ -955,7 +955,7 @@ function updateLibrary($w) {
 		$db = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
 		$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	} catch (PDOException $e) {
-		handleDbIssuePdo($theme, $db);
+		handleDbIssuePdoEcho($db);
 		$dbsettings=null;
 		$db=null;
 		unlink($w->data() . "/update_library_in_progress");
@@ -1258,7 +1258,7 @@ function updateLibrary($w) {
 		$stmt->execute();
 
 	} catch (PDOException $e) {
-		handleDbIssuePdo($theme, $db);
+		handleDbIssuePdoEcho($db);
 		$dbsettings=null;
 		$db=null;
 		unlink($w->data() . "/update_library_in_progress");
@@ -1313,7 +1313,7 @@ function updatePlaylist($w, $playlist_uri, $playlist_name) {
 		$theme = $setting[0];
 		$country_code = $setting[1];
 	} catch (PDOException $e) {
-		handleDbIssuePdo('new', $dbsettings);
+		handleDbIssuePdoEcho($dbsettings);
 		$dbsettings=null;
 		unlink($w->data() . "/update_library_in_progress");
 		return;
@@ -1478,7 +1478,7 @@ function updatePlaylist($w, $playlist_uri, $playlist_name) {
 		unlink($w->data() . "/update_library_in_progress");
 
 	} catch (PDOException $e) {
-		handleDbIssuePdo($theme, $db);
+		handleDbIssuePdoEcho($db);
 		$dbsettings=null;
 		$db=null;
 		unlink($w->data() . "/update_library_in_progress");
@@ -1525,7 +1525,7 @@ function updatePlaylistList($w) {
 		$country_code = $setting[1];
 		$userid = $setting[2];
 	} catch (PDOException $e) {
-		handleDbIssuePdo('new', $dbsettings);
+		handleDbIssuePdoEcho($dbsettings);
 		$dbsettings=null;
 		unlink($w->data() . "/update_library_in_progress");
 		return;
@@ -1557,6 +1557,11 @@ function updatePlaylistList($w) {
 		$insertTrack = "insert into tracks values (:mymusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_year,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:availability)";
 		$stmtTrack = $db->prepare($insertTrack);
 
+		$deleteFromTracks="delete from tracks where playlist_uri=:playlist_uri";
+		$stmtDeleteFromTracks = $db->prepare($deleteFromTracks);
+
+		$updatePlaylistsNbTracks="update playlists set nb_tracks=:nb_tracks where uri=:uri";
+		$stmtUpdatePlaylistsNbTracks = $db->prepare($updatePlaylistsNbTracks);
 
 		try {
 			$offsetGetUserPlaylists = 0;
@@ -1579,10 +1584,7 @@ function updatePlaylistList($w) {
 				}
 
 				$nb_playlist++;
-
 				$savedListPlaylist = array();
-
-
 				foreach ($userPlaylists->items as $playlist) {
 					$tracks = $playlist->tracks;
 					$owner=$playlist->owner;
@@ -1616,9 +1618,7 @@ function updatePlaylistList($w) {
 
 						$stmtPlaylist->bindValue(':uri', $playlist->uri);
 						$stmtPlaylist->bindValue(':name', escapeQuery($playlist->name));
-						$playlist_tracks = $playlist->tracks;
-						$stmtPlaylist->bindValue(':count_tracks', $playlist_tracks->total);
-						// Fix this display name is not available
+						$stmtPlaylist->bindValue(':count_tracks', $tracks->total);
 						$stmtPlaylist->bindValue(':owner', $owner->id);
 						$stmtPlaylist->bindValue(':username', $owner->id);
 						$stmtPlaylist->bindValue(':playlist_artwork_path', $playlist_artwork_path);
@@ -1681,7 +1681,80 @@ function updatePlaylistList($w) {
 							echo "Error(getUserPlaylistTracks): playlist id " . $playlist->id . " (exception " . $e . ")";
 						}
 					} else {
-						continue;
+						// number of tracks has changed
+						// update the playlist
+						if($playlists[2] != $tracks->total) {
+							displayNotification("Updated playlist " . $playlist->name . "\n");
+
+							$stmtDeleteFromTracks->bindValue(':playlist_uri', $playlist->uri);
+							$stmtDeleteFromTracks->execute();
+
+							$tmp = explode(':', $playlist->uri);
+
+							try {
+								$offsetGetUserPlaylistTracks = 0;
+								$limitGetUserPlaylistTracks = 100;
+								do {
+									$userPlaylistTracks = $api->getUserPlaylistTracks($tmp[2],$tmp[4],array(
+							            'fields' => array(),
+							            'limit' => $limitGetUserPlaylistTracks,
+							            'offset' => $offsetGetUserPlaylistTracks
+							        ));
+
+									$stmtUpdatePlaylistsNbTracks->bindValue(':nb_tracks', $userPlaylistTracks->total);
+									$stmtUpdatePlaylistsNbTracks->bindValue(':uri', $playlist->uri);
+									$stmtUpdatePlaylistsNbTracks->execute();
+
+									foreach ($userPlaylistTracks->items as $track) {
+										$track = $track->track;
+										if (count($track->available_markets) == 0 || in_array($country_code, $track->available_markets) !== false) {
+											$playable = 1;
+										} else {
+											$playable = 0;
+										}
+										$artists = $track->artists;
+										$artist = $artists[0];
+										$album = $track->album;
+
+										//
+										// Download artworks
+										$track_artwork_path = getTrackOrAlbumArtwork($w, $theme, $track->uri, true);
+										$artist_artwork_path = getArtistArtwork($w, $theme, $artist->name, true);
+										$album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $album->uri, true);
+
+										$album_year = 1995;
+
+										$stmtTrack->bindValue(':mymusic', 0);
+										$stmtTrack->bindValue(':popularity', $track->popularity);
+										$stmtTrack->bindValue(':uri', $track->uri);
+										$stmtTrack->bindValue(':album_uri', $album->uri);
+										$stmtTrack->bindValue(':artist_uri', $artist->uri);
+										$stmtTrack->bindValue(':track_name', escapeQuery($track->name));
+										$stmtTrack->bindValue(':album_name', escapeQuery($album->name));
+										$stmtTrack->bindValue(':artist_name', escapeQuery($artist->name));
+										$stmtTrack->bindValue(':album_year', $album_year);
+										$stmtTrack->bindValue(':track_artwork_path', $track_artwork_path);
+										$stmtTrack->bindValue(':artist_artwork_path', $artist_artwork_path);
+										$stmtTrack->bindValue(':album_artwork_path', $album_artwork_path);
+										$stmtTrack->bindValue(':playlist_name', escapeQuery($playlist->name));
+										$stmtTrack->bindValue(':playlist_uri', $playlist->uri);
+										$stmtTrack->bindValue(':playable', $playable);
+										$stmtTrack->bindValue(':availability', 'FIX THIS');
+										$stmtTrack->execute();
+									}
+
+									$offsetGetUserPlaylistTracks+=$limitGetUserPlaylistTracks;
+
+								} while ($offsetGetUserPlaylistTracks < $userPlaylistTracks->total);
+							}
+							catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+								echo "Error(getUserPlaylistTracks): playlist id " . $tmp[4]. " (exception " . $e . ")";
+								unlink($w->data() . "/update_library_in_progress");
+								return;
+							}
+						} else {
+							continue;
+						}
 					}
 				}
 
@@ -1775,7 +1848,7 @@ function updatePlaylistList($w) {
 		unlink($w->data() . "/update_library_in_progress");
 
 	} catch (PDOException $e) {
-		handleDbIssuePdo($theme, $db);
+		handleDbIssuePdoEcho($db);
 		$dbsettings=null;
 		$db=null;
 		unlink($w->data() . "/update_library_in_progress");
@@ -1785,37 +1858,33 @@ function updatePlaylistList($w) {
 
 
 /**
- * handleDbIssue function.
- *
- * @access public
- * @param mixed $theme
- * @return void
- */
-function handleDbIssue($theme) {
-	$w = new Workflows('com.vdesabou.spotify.mini.player');
-	$w->result(uniqid(), '', 'There is a problem with the library, try to update it.', 'Select Update library below', './images/warning.png', 'no', null, '');
-
-	$w->result(uniqid(), serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'update_library' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', null, '');
-
-	echo $w->toxml();
-}
-
-
-/**
- * handleDbIssuePdo function.
+ * handleDbIssuePdoXml function.
  *
  * @access public
  * @param mixed $theme
  * @param mixed $dbhandle
  * @return void
  */
-function handleDbIssuePdo($theme, $dbhandle) {
+function handleDbIssuePdoXml($theme, $dbhandle) {
 	$w = new Workflows('com.vdesabou.spotify.mini.player');
 	$w->result(uniqid(), '', 'Database Error: ' . $dbhandle->errorInfo()[0] . ' ' . $dbhandle->errorInfo()[1] . ' ' . $dbhandle->errorInfo()[2], '', './images/warning.png', 'no', null, '');
 	$w->result(uniqid(), '', 'There is a problem with the library, try to update it.', 'Select Update library below', './images/warning.png', 'no', null, '');
 	$w->result(uniqid(), serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'update_library' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Update library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', null, '');
 	echo $w->toxml();
 }
+
+/**
+ * handleDbIssuePdoEcho function.
+ *
+ * @access public
+ * @param mixed $theme
+ * @param mixed $dbhandle
+ * @return void
+ */
+function handleDbIssuePdoEcho($dbhandle) {
+	echo 'Database Error: ' . $dbhandle->errorInfo()[0] . ' ' . $dbhandle->errorInfo()[1] . ' ' . $dbhandle->errorInfo()[2];
+}
+
 
 
 /**

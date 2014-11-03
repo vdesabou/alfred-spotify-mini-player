@@ -80,7 +80,7 @@ try {
 				$stmt->execute();
 
 			} catch (PDOException $e) {
-				handleDbIssuePdo($theme, $dbsettings);
+				handleDbIssuePdoEcho($dbsettings);
 				$dbsettings=null;;
 				displayNotification("Web server killed");
 				exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk '{print $2}')");
