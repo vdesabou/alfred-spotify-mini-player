@@ -1310,16 +1310,6 @@ end alfred_script</string>
 		</dict>
 		<dict>
 			<key>config</key>
-			<dict/>
-			<key>type</key>
-			<string>alfred.workflow.trigger.external</string>
-			<key>uid</key>
-			<string>BB6D0DE1-6E60-4106-B901-F079693EEAD3</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
 			<dict>
 				<key>argumenttype</key>
 				<integer>2</integer>
@@ -1549,11 +1539,6 @@ SOFTWARE.</string>
 		<dict>
 			<key>ypos</key>
 			<real>1600</real>
-		</dict>
-		<key>BB6D0DE1-6E60-4106-B901-F079693EEAD3</key>
-		<dict>
-			<key>ypos</key>
-			<real>2770</real>
 		</dict>
 		<key>BC672665-5E43-4892-B8D3-BFCBA48E34C4</key>
 		<dict>
