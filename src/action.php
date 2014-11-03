@@ -136,6 +136,13 @@ if ($type == "TRACK") {
 		exec("osascript -e 'tell application \"Spotify\" to previous track'");
 		displayNotificationForCurrentTrack();
 		return;
+	}else if ($type == "PLAY") {
+		exec("osascript -e 'tell application \"Spotify\" to playpause'");
+		displayNotificationForCurrentTrack();
+		return;
+	}else if ($type == "PAUSE") {
+		exec("osascript -e 'tell application \"Spotify\" to playpause'");
+		return;
 	}else if ($type == "ADD_TO_ALFRED_PLAYLIST") {
 		// get info on current song
 		$command_output = exec("./track_info.sh 2>&1");

@@ -133,7 +133,7 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>60EA5756-7B07-4DCA-959A-C3B0E90150AC</string>
+				<string>98123379-ADC9-4377-9F28-DF79E01715D1</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -162,8 +162,6 @@
 				<string></string>
 			</dict>
 		</array>
-		<key>60EA5756-7B07-4DCA-959A-C3B0E90150AC</key>
-		<array/>
 		<key>7918E8F7-20AE-445E-9AEA-E2E54CDE967D</key>
 		<array>
 			<dict>
@@ -372,7 +370,7 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>60EA5756-7B07-4DCA-959A-C3B0E90150AC</string>
+				<string>24B8C827-75F2-4421-A412-D48782DA1DB8</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -686,27 +684,6 @@
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>applescript</key>
-				<string>on alfred_script(q)
-	
-	tell application "Spotify"
-		playpause
-	end tell
-
-end alfred_script</string>
-				<key>cachescript</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.applescript</string>
-			<key>uid</key>
-			<string>60EA5756-7B07-4DCA-959A-C3B0E90150AC</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
@@ -728,6 +705,23 @@ end alfred_script</string>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>php -f ./src/action.php -- "" "PLAY" "PLAY"</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>98123379-ADC9-4377-9F28-DF79E01715D1</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
@@ -743,6 +737,23 @@ end alfred_script</string>
 			<string>alfred.workflow.input.keyword</string>
 			<key>uid</key>
 			<string>F4382654-9318-4849-82E4-550AC235148C</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>php -f ./src/action.php -- "" "PAUSE" "PAUSE"</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>24B8C827-75F2-4421-A412-D48782DA1DB8</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -1410,6 +1421,11 @@ SOFTWARE.</string>
 			<key>ypos</key>
 			<real>1470</real>
 		</dict>
+		<key>24B8C827-75F2-4421-A412-D48782DA1DB8</key>
+		<dict>
+			<key>ypos</key>
+			<real>870</real>
+		</dict>
 		<key>29A1FCD7-3432-4BFF-89DB-4111B3169AD5</key>
 		<dict>
 			<key>ypos</key>
@@ -1449,11 +1465,6 @@ SOFTWARE.</string>
 		<dict>
 			<key>ypos</key>
 			<real>530</real>
-		</dict>
-		<key>60EA5756-7B07-4DCA-959A-C3B0E90150AC</key>
-		<dict>
-			<key>ypos</key>
-			<real>750</real>
 		</dict>
 		<key>64953E09-D9D0-485B-B92B-79E7FEC15927</key>
 		<dict>
@@ -1499,6 +1510,11 @@ SOFTWARE.</string>
 		<dict>
 			<key>ypos</key>
 			<real>110</real>
+		</dict>
+		<key>98123379-ADC9-4377-9F28-DF79E01715D1</key>
+		<dict>
+			<key>ypos</key>
+			<real>750</real>
 		</dict>
 		<key>9845C770-A2CC-4752-A542-D71BE1081691</key>
 		<dict>
