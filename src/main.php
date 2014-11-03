@@ -384,14 +384,14 @@ if (mb_strlen($query) < 3 ||
 			$spotifious_state = 'disabled';
 		}
 		if ($is_alfred_playlist_active == true) {
-			$alfred_playlist_state = 'enabled';
+			$alfred_playlist_state = 'Alfred Playlist';
 		} else {
-			$alfred_playlist_state = 'disabled';
+			$alfred_playlist_state = 'My Music';
 		}
 		if ($all_playlists == true) {
-			$w->result(null, '', 'Settings', 'Search scope=<all>, Max results=<' . $max_results . '>, Spotifious is <' . $spotifious_state . '>, Alfred Playlist is <' . $alfred_playlist_state . '>', './images/' . $theme . '/' . 'settings.png', 'no', null, 'Settings▹');
+			$w->result(null, '', 'Settings', 'Search scope=<all>, Max results=<' . $max_results . '>, Spotifious is <' . $spotifious_state . '>, Controlling <' . $alfred_playlist_state . '>', './images/' . $theme . '/' . 'settings.png', 'no', null, 'Settings▹');
 		} else {
-			$w->result(null, '', 'Settings', 'Search scope=<only ★>, Max results=<' . $max_results . '>, Spotifious is <' . $spotifious_state . '>, Alfred Playlist is <' . $alfred_playlist_state . '>', './images/' . $theme . '/' . 'settings.png', 'no', null, 'Settings▹');
+			$w->result(null, '', 'Settings', 'Search scope=<only ★>, Max results=<' . $max_results . '>, Spotifious is <' . $spotifious_state . '>, Controlling <' . $alfred_playlist_state . '>', './images/' . $theme . '/' . 'settings.png', 'no', null, 'Settings▹');
 		}
 	}
 	//
@@ -449,21 +449,21 @@ if (mb_strlen($query) < 3 ||
 					'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'check.png', 'yes', null, '');
 		}
 		if ($is_alfred_playlist_active == true) {
-			$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'disable_alfred_playlist' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Disable Alfred Playlist", array(
-					"Do not display Alfred Playlist",
+			$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'disable_alfred_playlist' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Enable My Music", array(
+					"You will control My Music (if disabled, you control Alfred Playlist)",
 					'alt' => 'Not Available',
 					'cmd' => 'Not Available',
 					'shift' => 'Not Available',
 					'fn' => 'Not Available',
-					'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'uncheck.png', 'yes', null, '');
+					'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'settings.png', 'yes', null, '');
 		} else {
 			$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'enable_alfred_playlist' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Enable Alfred Playlist", array(
-					"Display Alfred Playlist",
+					"You will control the Alfred Playlist (if disabled, you control My Music)",
 					'alt' => 'Not Available',
 					'cmd' => 'Not Available',
 					'shift' => 'Not Available',
 					'fn' => 'Not Available',
-					'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'check.png', 'yes', null, '');
+					'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'settings.png', 'yes', null, '');
 		}
 		if ($is_lyrics_active == true) {
 			$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'disable_lyrics' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Disable Get Lyrics", array(
