@@ -696,6 +696,7 @@ function getTrackOrAlbumArtwork($w, $theme, $spotifyURL, $fetchIfNotPresent) {
 }
 
 
+
 /**
  * getPlaylistArtwork function.
  *
@@ -704,9 +705,10 @@ function getTrackOrAlbumArtwork($w, $theme, $spotifyURL, $fetchIfNotPresent) {
  * @param mixed $theme
  * @param mixed $playlistURI
  * @param mixed $fetchIfNotPresent
+ * @param bool $forceFetch (default: false)
  * @return void
  */
-function getPlaylistArtwork($w, $theme, $playlistURI, $fetchIfNotPresent) {
+function getPlaylistArtwork($w, $theme, $playlistURI, $fetchIfNotPresent, $forceFetch = false) {
 
 	$hrefs = explode(':', $playlistURI);
 
@@ -726,8 +728,8 @@ function getPlaylistArtwork($w, $theme, $playlistURI, $fetchIfNotPresent) {
 
 	$currentArtwork = $w->data() . "/artwork/" . hash('md5', $filename . ".png") . "/" . "$filename.png";
 
-	if (!is_file($currentArtwork) || (is_file($currentArtwork) && filesize($currentArtwork) == 0)) {
-		if ($fetchIfNotPresent == true || (is_file($currentArtwork) && filesize($currentArtwork) == 0)) {
+	if (!is_file($currentArtwork) || (is_file($currentArtwork) && filesize($currentArtwork) == 0) || $forceFetch) {
+		if ($fetchIfNotPresent == true || (is_file($currentArtwork) && filesize($currentArtwork) == 0) || $forceFetch) {
 			$artwork = getPlaylistArtworkURL($w, $url);
 
 			// if return 0, it is a 404 error, no need to fetch
@@ -1048,7 +1050,7 @@ function updateLibrary($w) {
 
 		//echo "Playlist $playlist->name $playlist->id $nb_tracktotal\n";
 
-		$playlist_artwork_path = getPlaylistArtwork($w, $theme, $playlist->uri, true);
+		$playlist_artwork_path = getPlaylistArtwork($w, $theme, $playlist->uri, true, true);
 
 		if ("-" . $owner->id . "-" == "-" . $userid. "-") {
 			$ownedbyuser = 1;
@@ -1344,8 +1346,8 @@ function updatePlaylist($w, $playlist_uri, $playlist_name) {
 		$stmt->bindValue(':playlist_uri', $playlist_uri);
 		$stmt->execute();
 
-		$updatePlaylistsNbTracks="update playlists set nb_tracks=:nb_tracks where uri=:uri";
-		$stmt = $db->prepare($updatePlaylistsNbTracks);
+		$updatePlaylists="update playlists set nb_tracks=:nb_tracks,playlist_artwork_path=:playlist_artwork_path where uri=:uri";
+		$stmtUpdatePlaylists = $db->prepare($updatePlaylists);
 
 		$insertTrack = "insert into tracks values (:mymusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_year,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:availability)";
 		$stmtTrack = $db->prepare($insertTrack);
@@ -1366,9 +1368,11 @@ function updatePlaylist($w, $playlist_uri, $playlist_name) {
 
 				$w->write('Playlist▹0▹' . $nb_tracktotal . '▹' . $words[3], 'update_library_in_progress');
 
-				$stmt->bindValue(':nb_tracks', $nb_tracktotal);
-				$stmt->bindValue(':uri', $playlist_uri);
-				$stmt->execute();
+				$stmtUpdatePlaylists->bindValue(':nb_tracks', $nb_tracktotal);
+				$playlist_artwork_path =  getPlaylistArtwork($w, $theme, $playlist_uri, true, true);
+				$stmtUpdatePlaylists->bindValue(':playlist_artwork_path', $playlist_artwork_path);
+				$stmtUpdatePlaylists->bindValue(':uri', $playlist_uri);
+				$stmtUpdatePlaylists->execute();
 
 				foreach ($userPlaylistTracks->items as $track) {
 					$track = $track->track;
@@ -1473,7 +1477,7 @@ function updatePlaylist($w, $playlist_uri, $playlist_name) {
 
 		$elapsed_time = time() - $words[3];
 
-		displayNotificationWithArtwork("\nPlaylist " . $playlist_name . " has been updated (" . $nb_track . " tracks) - it took " . beautifyTime($elapsed_time), getPlaylistArtwork($w, $theme, $playlist_uri, true));
+		displayNotificationWithArtwork("\nPlaylist " . $playlist_name . " has been updated (" . $nb_track . " tracks) - it took " . beautifyTime($elapsed_time), $playlist_artwork_path);
 
 		unlink($w->data() . "/update_library_in_progress");
 
@@ -1608,7 +1612,7 @@ function updatePlaylistList($w) {
 					// Add the new playlist
 					if ($noresult == true) {
 						displayNotification("Added playlist " . $playlist->name . "\n");
-						$playlist_artwork_path = getPlaylistArtwork($w, $theme, $playlist->uri, true);
+						$playlist_artwork_path = getPlaylistArtwork($w, $theme, $playlist->uri, true, true);
 
 						if ("-" . $owner->id . "-" == "-" . $userid. "-") {
 							$ownedbyuser = 1;
