@@ -20,14 +20,6 @@ if (file_exists($w->data() . "/update_library_in_progress")) {
 	$output = $output . "Library update in progress: " . "the file" . $w->data() . "/update_library_in_progress is present\n";
 }
 
-if (!file_exists($w->home() . "/Spotify/spotify-app-miniplayer")) {
-	$output = $output . "The directory" . $w->home() . "/Spotify/spotify-app-miniplayer is not present\n";
-}
-else {
-	copy_directory($w->home() . "/Spotify/spotify-app-miniplayer", $w->home() . "/Downloads/spot_mini_debug/spotify-app-miniplayer");
-}
-
-
 if (!file_exists($w->data() . "/settings.db")) {
 	$output = $output .  "The directory" . $w->data() . "/settings.db is not present\n";
 }
@@ -35,6 +27,9 @@ else {
 	copy($w->data() . "/settings.db", $w->home() . "/Downloads/spot_mini_debug/settings.db");
 }
 
+if (file_exists("/tmp/spotify_mini_player_web_server.log")) {
+	copy("/tmp/spotify_mini_player_web_server.log", $w->home() . "/Downloads/spot_mini_debug/spotify_mini_player_web_server.log");
+}
 
 if (!file_exists($w->data() . "/library.db")) {
 	$output = $output .  "The directory" . $w->data() . "/library.db is not present\n";
