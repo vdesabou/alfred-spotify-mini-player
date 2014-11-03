@@ -305,20 +305,9 @@ function clearPlaylist($w,$playlist_uri,$playlist_name) {
 	}
 
 	try {
-		$tmp = explode(':', $playlist_uri);
-		$tracks = array();
-		$newtracks = array();
-		$tracks = getThePlaylistTracks($w,$playlist_uri);
-
-
-		for ($i = 0; $i < count($tracks); $i++) {
-			$tmp = array();
-			$tmp['id'] = $tracks[$i];
-			$newtracks[] = $tmp;
-		}
-		//print_r($newtracks);
-
-		$api->deletePlaylistTracks($tmp[2],$tmp[4],$newtracks);
+		$tmp = explode(':', $playlist_uri);		
+		$emptytracks = array();
+		$api->replacePlaylistTracks($tmp[2],$tmp[4],$emptytracks);
 	}
 	catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 		echo "Error(clearPlaylist): playlist uri " . $playlist_uri . " (exception " . $e . ")";
