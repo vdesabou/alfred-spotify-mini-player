@@ -435,12 +435,23 @@ function addTracksToMyTracks($w,$tracks,$allow_duplicate = true) {
 	$tracks_contain = array();
 	if(!$allow_duplicate) {
 		try {
-			$tracks_contain = $api->myTracksContains($tracks);
-			for ($i = 0; $i < count($tracks); $i++) {
-				if(! $tracks_contain[$i]) {
-					$tracks_with_no_dup[] = $tracks[$i];
+
+			// Note: max 50 Ids
+			$offset=0;
+			do {
+				$output = array_slice($tracks, $offset, 50);
+				$offset+=50;
+
+				if(count($output)) {
+					$tracks_contain = $api->myTracksContains($output);
+					for ($i = 0; $i < count($output); $i++) {
+						if(! $tracks_contain[$i]) {
+							$tracks_with_no_dup[] = $output[$i];
+						}
+					}
 				}
-			}
+
+			} while(count($output) > 0);
 
 			$tracks = $tracks_with_no_dup;
 		}
@@ -451,8 +462,20 @@ function addTracksToMyTracks($w,$tracks,$allow_duplicate = true) {
 	}
 
 	if(count($tracks) != 0) {
+
 		try {
-			$api->addMyTracks($tracks);
+			$offset=0;
+			do {
+				$output = array_slice($tracks, $offset, 50);
+				$offset+=50;
+
+				if(count($output)) {
+					$api->addMyTracks($output);
+
+				}
+
+			} while(count($output) > 0);
+
 		}
 		catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 			echo "Error(addTracksToMyTracks): (exception " . $e . ")";
@@ -527,7 +550,18 @@ function addTracksToPlaylist($w,$tracks,$playlist_uri,$playlist_name,$allow_dupl
 	if(count($tracks) != 0) {
 		try {
 			$tmp = explode(':', $playlist_uri);
-			$api->addUserPlaylistTracks($userid, $tmp[4], $tracks);
+
+			// Note: max 100 Ids
+			$offset=0;
+			do {
+				$output = array_slice($tracks, $offset, 100);
+				$offset+=100;
+
+				if(count($output)) {
+					$api->addUserPlaylistTracks($userid, $tmp[4], $output);
+				}
+
+			} while(count($output) > 0);
 		}
 		catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 			echo "Error(addTracksToPlaylist): (exception " . $e . ")";
@@ -1532,8 +1566,8 @@ function updatePlaylist($w, $playlist_uri, $playlist_name) {
 					$stmtTrack->bindValue(':track_artwork_path', $track_artwork_path);
 					$stmtTrack->bindValue(':artist_artwork_path', $artist_artwork_path);
 					$stmtTrack->bindValue(':album_artwork_path', $album_artwork_path);
-					$stmtTrack->bindValue(':playlist_name', escapeQuery($playlist->name));
-					$stmtTrack->bindValue(':playlist_uri', $playlist->uri);
+					$stmtTrack->bindValue(':playlist_name', escapeQuery($playlist_name));
+					$stmtTrack->bindValue(':playlist_uri', $playlist_uri);
 					$stmtTrack->bindValue(':playable', $playable);
 					$stmtTrack->bindValue(':availability', 'FIX THIS');
 					$stmtTrack->execute();

@@ -12,7 +12,7 @@ $w = new Workflows('com.vdesabou.spotify.mini.player');
 
 $query = $argv[1];
 $type = $argv[2];
-$alfredplaylist = $argv[3];
+$add_to_option = $argv[3];
 
 
 $arg = mb_unserialize($query);
@@ -43,7 +43,7 @@ if ($other_action == "update_playlist" && $playlist_uri != "" && $playlist_name 
 	return;
 }
 
-if ($spotify_command != "" && $type == "TRACK" && $alfredplaylist == "") {
+if ($spotify_command != "" && $type == "TRACK" && $add_to_option == "") {
 
 	$spotify_command = str_replace("\\", "", $spotify_command);
 	exec("osascript -e 'tell application \"Spotify\" to $spotify_command'");
@@ -59,21 +59,56 @@ if ($spotify_command != "" && $type == "TRACK" && $alfredplaylist == "") {
 if ($type == "TRACK") {
 
 	if ($track_uri != "") {
-		if ($alfredplaylist != "") {
+		if ($add_to_option != "") {
 
-			if ($alfred_playlist_uri == "" || $alfred_playlist_name == "") {
-				displayNotification("Error: Alfred Playlist is not set");
+			//
+			// Read settings from DB
+			//
+			$getSettings = 'select theme,is_alfred_playlist_active from settings';
+			$dbfile = $w->data() . '/settings.db';
+			exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
+
+			if ($returnValue != 0) {
+				displayNotification("Error: cannot read settings");
 				return;
 			}
 
-			// add track to alfred playlist
-			$ret = addTracksToPlaylist($w,$track_uri,$alfred_playlist_uri,$alfred_playlist_name,false);
-			if (is_numeric($ret) && $ret > 0) {
-				displayNotificationWithArtwork('' . $track_name . ' by ' . $artist_name . ' added to ' . $alfred_playlist_name, $track_artwork_path);
-			} else if (is_numeric($ret) && $ret == 0) {
-				displayNotification('Error: ' . $track_name . ' by ' . $artist_name . ' is already in ' . $alfred_playlist_name);
-			}
+			foreach ($settings as $setting):
 
+				$setting = explode("	", $setting);
+
+			$theme = $setting[0];
+			$is_alfred_playlist_active = $setting[1];
+			endforeach;
+
+			$tmp = explode(':', $track_uri);
+
+			if ($track_artwork_path == "") {
+				$track_artwork_path = getTrackOrAlbumArtwork($w, $theme, $track_uri, true);
+			}
+			if ($is_alfred_playlist_active == true) {
+
+				if ($alfred_playlist_uri == "" || $alfred_playlist_name == "") {
+					displayNotification("Error: Alfred Playlist is not set");
+					return;
+				}
+
+				// add track to alfred playlist
+				$ret = addTracksToPlaylist($w,$tmp[2],$alfred_playlist_uri,$alfred_playlist_name,false);
+				if (is_numeric($ret) && $ret > 0) {
+					displayNotificationWithArtwork('' . $track_name . ' by ' . $artist_name . ' added to ' . $alfred_playlist_name, $track_artwork_path);
+				} else if (is_numeric($ret) && $ret == 0) {
+					displayNotification('Error: ' . $track_name . ' by ' . $artist_name . ' is already in ' . $alfred_playlist_name);
+				}
+			} else {
+				// add track to my music
+				$ret = addTracksToMyTracks($w,$tmp[2],false);
+				if (is_numeric($ret) && $ret > 0) {
+					displayNotificationWithArtwork('' . $track_name . ' by ' . $artist_name . ' added to My Music', $track_artwork_path);
+				} else if (is_numeric($ret) && $ret == 0) {
+					displayNotification('Error: ' . $track_name . ' by ' . $artist_name . ' is already in My Music');
+				}
+			}
 		} else if ($playlist_uri != "") {
 				exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\" in context \"$playlist_uri\"'");
 				displayNotificationWithArtwork('🔈 ' . $track_name . ' by ' . ucfirst($artist_name), $track_artwork_path);
@@ -168,14 +203,29 @@ if ($type == "TRACK") {
 	}
 
 else if ($type == "ALBUM_OR_PLAYLIST") {
-		if ($alfredplaylist != "") {
+		if ($add_to_option != "") {
 
 			if ($album_name != "") {
 
-				if ($alfred_playlist_uri == "" || $alfred_playlist_name == "") {
-					displayNotification("Error: Alfred Playlist is not set");
+				//
+				// Read settings from DB
+				//
+				$getSettings = 'select theme,is_alfred_playlist_active from settings';
+				$dbfile = $w->data() . '/settings.db';
+				exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
+
+				if ($returnValue != 0) {
+					displayNotification("Error: cannot read settings");
 					return;
 				}
+
+				foreach ($settings as $setting):
+
+					$setting = explode("	", $setting);
+
+				$theme = $setting[0];
+				$is_alfred_playlist_active = $setting[1];
+				endforeach;
 
 				if ($album_uri == "") {
 					// case of current song with shift
@@ -187,21 +237,71 @@ else if ($type == "ALBUM_OR_PLAYLIST") {
 					$album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $album_uri, true);
 				}
 
-				$ret = addTracksToPlaylist($w,getTheAlbumTracks($w,$album_uri),$alfred_playlist_uri,$alfred_playlist_name,false);
-				if (is_numeric($ret) && $ret > 0) {
-					displayNotificationWithArtwork('Album ' . $album_name . ' added to ' . $alfred_playlist_name, $album_artwork_path);
-				} else if (is_numeric($ret) && $ret == 0) {
-					displayNotification('Error: Album ' . $album_name . ' is already in ' . $alfred_playlist_name);
+				if ($is_alfred_playlist_active == true) {
+
+					if ($alfred_playlist_uri == "" || $alfred_playlist_name == "") {
+						displayNotification("Error: Alfred Playlist is not set");
+						return;
+					}
+
+					// add album to alfred playlist
+					$ret = addTracksToPlaylist($w,getTheAlbumTracks($w,$album_uri),$alfred_playlist_uri,$alfred_playlist_name,false);
+					if (is_numeric($ret) && $ret > 0) {
+						displayNotificationWithArtwork('Album ' . $album_name . ' added to ' . $alfred_playlist_name, $album_artwork_path);
+					} else if (is_numeric($ret) && $ret == 0) {
+						displayNotification('Error: Album ' . $album_name . ' is already in ' . $alfred_playlist_name);
+					}
+				} else {
+					// add album to my music
+					$ret = addTracksToMyTracks($w,getTheAlbumTracks($w,$album_uri),false);
+					if (is_numeric($ret) && $ret > 0) {
+						displayNotificationWithArtwork('Album ' . $album_name . ' added to My Music', $album_artwork_path);
+					} else if (is_numeric($ret) && $ret == 0) {
+						displayNotification('Error: Album ' . $album_name . ' is already in My Music');
+					}
 				}
 
 				return;
 			} else if ($playlist_uri != "") {
-					$ret = addTracksToPlaylist($w,getThePlaylistTracks($w,$playlist_uri),$alfred_playlist_uri,$alfred_playlist_name,false);
-					if (is_numeric($ret) && $ret > 0) {
-						displayNotificationWithArtwork('Playlist ' . $playlist_name . '
-added to ' . $alfred_playlist_name, $playlist_artwork_path);
-					} else if (is_numeric($ret) && $ret == 0) {
-						displayNotification('Error: Playlist ' . $playlist_name . ' is already in ' . $alfred_playlist_name);
+
+					//
+					// Read settings from DB
+					//
+					$getSettings = 'select theme,is_alfred_playlist_active from settings';
+					$dbfile = $w->data() . '/settings.db';
+					exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
+
+					if ($returnValue != 0) {
+						displayNotification("Error: cannot read settings");
+						return;
+					}
+
+					foreach ($settings as $setting):
+
+						$setting = explode("	", $setting);
+
+					$theme = $setting[0];
+					$is_alfred_playlist_active = $setting[1];
+					endforeach;
+
+					$playlist_artwork_path = getPlaylistArtwork($w, $theme, $playlist_uri, true, true);
+
+					if ($is_alfred_playlist_active == true) {
+						// add playlist to alfred playlist
+						$ret = addTracksToPlaylist($w,getThePlaylistTracks($w,$playlist_uri),$alfred_playlist_uri,$alfred_playlist_name,false);
+						if (is_numeric($ret) && $ret > 0) {
+							displayNotificationWithArtwork('Playlist ' . $playlist_name . ' added to ' . $alfred_playlist_name, $playlist_artwork_path);
+						} else if (is_numeric($ret) && $ret == 0) {
+							displayNotification('Error: Playlist ' . $playlist_name . ' is already in ' . $alfred_playlist_name);
+						}
+					} else {
+						// add playlist to my music
+						$ret = addTracksToMyTracks($w,getThePlaylistTracks($w,$playlist_uri),false);
+						if (is_numeric($ret) && $ret > 0) {
+							displayNotificationWithArtwork('Playlist ' . $playlist_name . ' added to My Music', $playlist_artwork_path);
+						} else if (is_numeric($ret) && $ret == 0) {
+							displayNotification('Error: Playlist ' . $playlist_name . ' is already in My Music');
+						}
 					}
 
 					return;
@@ -469,9 +569,9 @@ if ($playlist_uri != "") {
 		else if ($other_action == "update_library") {
 				updateLibrary($w);
 				return;
-			} else if ($other_action == "update_playlist_list") {
-				updatePlaylistList($w);
-				return;
-			}
+		} else if ($other_action == "update_playlist_list") {
+			updatePlaylistList($w);
+			return;
+		}
 	}
 ?>
