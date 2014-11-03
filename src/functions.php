@@ -1024,9 +1024,8 @@ function updateLibrary($w) {
 	$db->exec("CREATE INDEX IndexArtistName ON tracks (artist_name)");
 	$db->exec("CREATE INDEX IndexAlbumName ON tracks (album_name)");
 	$db->exec("create table counters (all_tracks int, mymusic_tracks int, all_artists int, mymusic_artists int, all_albums int, mymusic_albums int, playlists int)");
-	$db->exec("create table user (uri text, username text, name text, image text)");
 	$db->exec("create table playlists (uri text PRIMARY KEY NOT NULL, name text, nb_tracks int, author text, username text, playlist_artwork_path text, ownedbyuser boolean)");
-	$db->exec("create table artists (artist_name text, artist_uri text, artist_artwork_path text, artist_biography text, artist_popularity int, artist_years_from text, artist_years_to text, related_artist_name text, related_artist_uri text, related_artist_artwork_path text, PRIMARY KEY (artist_name, related_artist_name))");
+	$db->exec("create table artists (artist_name text, artist_uri text, artist_artwork_path text, artist_biography text, PRIMARY KEY (artist_name))");
 	$db->exec("CREATE INDEX indexArtistNameForArtists ON artists (artist_name)");
 
 
@@ -1192,7 +1191,7 @@ function updateLibrary($w) {
  	$nb_artists = 0;
 	try {
 
-		$insertArtist = "insert or ignore into artists values (:artist_name,:artist_uri,:artist_artwork_path,:biography,:popularity,:from,:to,:related_name,:related_uri,:related_artist_artwork_path)";
+		$insertArtist = "insert or ignore into artists values (:artist_name,:artist_uri,:artist_artwork_path,:biography)";
 		$stmt = $db->prepare($insertArtist);
 
 		foreach ($savedListArtists as $artist) {
@@ -1202,12 +1201,6 @@ function updateLibrary($w) {
 			$stmt->bindValue(':artist_uri', $artist->uri);
 			$stmt->bindValue(':artist_artwork_path', $artist_artwork_path);
 			$stmt->bindValue(':biography', 'FIX THIS');
-			$stmt->bindValue(':popularity', $artist->popularity);
-			$stmt->bindValue(':from', 'FIX THIS');
-			$stmt->bindValue(':to', 'FIX THIS');
-			$stmt->bindValue(':related_name', '');
-			$stmt->bindValue(':related_uri', '');
-			$stmt->bindValue(':related_artist_artwork_path', '');
 			$stmt->execute();
 
 			$nb_artists++;
