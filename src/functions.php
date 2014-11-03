@@ -57,6 +57,52 @@ function addCurrentTrackToAlfredPlaylist($w) {
 }
 
 /**
+ * addCurrentTrackToMyTracks function.
+ *
+ * @access public
+ * @param mixed $w
+ * @return void
+ */
+function addCurrentTrackToMyTracks($w) {
+	// get info on current song
+	$command_output = exec("./track_info.sh 2>&1");
+
+	//
+	// Read settings from DB
+	//
+	$getSettings = 'select theme from settings';
+	$dbfile = $w->data() . '/settings.db';
+	exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
+
+	if ($returnValue != 0) {
+		displayNotification("Error: Alfred Playlist is not set");
+		return;
+	}
+
+	foreach ($settings as $setting):
+
+		$setting = explode("	", $setting);
+
+	$theme = $setting[0];
+	endforeach;
+
+	if (substr_count($command_output, '▹') > 0) {
+		$results = explode('▹', $command_output);
+
+		$tmp = explode(':', $results[4]);
+		$ret = addTracksToMyTracks($w,$tmp[2],false);
+		if (is_numeric($ret) && $ret > 0) {
+			displayNotificationWithArtwork('' . $results[0] . ' by ' . $results[1] . ' added to My Music', getTrackOrAlbumArtwork($w, $theme, $results[4], true));
+		} else if (is_numeric($ret) && $ret == 0) {
+			displayNotification('Error: ' . $results[0] . ' by ' . $results[1] . ' is already in My Music');
+		}
+	}
+	else {
+		displayNotification("Error: No track is playing");
+	}
+}
+
+/**
  * getRandomTrack function.
  *
  * @access public
@@ -366,16 +412,73 @@ function getTheAlbumTracks($w,$album_uri) {
 	return $tracks;
 }
 
+
 /**
- * addTrackToPlaylist function.
+ * addTracksToMyTracks function.
  *
  * @access public
  * @param mixed $w
- * @param strain/array $tracks
- * @param mixed $playlist_uri
+ * @param mixed $tracks
+ * @param bool $allow_duplicate (default: true)
  * @return void
  */
-function addTracksToPlaylist($w,$tracks,$playlist_uri,$playlist_name,$allow_duplicate) {
+function addTracksToMyTracks($w,$tracks,$allow_duplicate = true) {
+
+	$api = getSpotifyWebAPI($w);
+	if($api == false)
+	{
+		displayNotification("Error: Cannot get SpotifyWebAPI(");
+		return;
+	}
+	$tracks = (array) $tracks;
+	$tracks_with_no_dup = array();
+	$tracks_contain = array();
+	if(!$allow_duplicate) {
+		try {
+			$tracks_contain = $api->myTracksContains($tracks);
+			for ($i = 0; $i < count($tracks); $i++) {
+				if(! $tracks_contain[$i]) {
+					$tracks_with_no_dup[] = $tracks[$i];
+				}
+			}
+
+			$tracks = $tracks_with_no_dup;
+		}
+		catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+			echo "Error(addTracksToMyTracks): (exception " . $e . ")";
+			return false;
+		}
+	}
+
+	if(count($tracks) != 0) {
+		try {
+			$api->addMyTracks($tracks);
+		}
+		catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+			echo "Error(addTracksToMyTracks): (exception " . $e . ")";
+			return false;
+		}
+
+		// refresh my tracks
+		updateMyMusic($w);
+	}
+
+	return count($tracks);
+}
+
+
+/**
+ * addTracksToPlaylist function.
+ *
+ * @access public
+ * @param mixed $w
+ * @param mixed $tracks
+ * @param mixed $playlist_uri
+ * @param mixed $playlist_name
+ * @param bool $allow_duplicate (default: true)
+ * @return void
+ */
+function addTracksToPlaylist($w,$tracks,$playlist_uri,$playlist_name,$allow_duplicate = true) {
 
 	//
 	// Read settings from DB
@@ -1019,6 +1122,7 @@ function updateLibrary($w) {
 		unlink($w->data() . "/update_library_in_progress");
 		return false;
 	}
+
 	$savedMySavedTracks = array();
 	try {
 		$offsetGetMySavedTracks = 0;
@@ -1871,6 +1975,204 @@ function updatePlaylistList($w) {
 
 		$elapsed_time = time() - $words[3];
 		displayNotification("Playlist list has been updated - it took " . beautifyTime($elapsed_time));
+
+		unlink($w->data() . "/update_library_in_progress");
+
+	} catch (PDOException $e) {
+		handleDbIssuePdoEcho($db);
+		$dbsettings=null;
+		$db=null;
+		unlink($w->data() . "/update_library_in_progress");
+		return;
+	}
+}
+
+/**
+ * updateMyMusic function.
+ *
+ * @access public
+ * @param mixed $w
+ * @return void
+ */
+function updateMyMusic($w) {
+
+	$api = getSpotifyWebAPI($w);
+	if($api == false)
+	{
+		displayNotification("Error: Cannot update my music, authentication issue");
+		return;
+	}
+
+	touch($w->data() . "/update_library_in_progress");
+	$w->write('InitMyMusic▹' . 0 . '▹' . 0 . '▹' . time(), 'update_library_in_progress');
+
+	$in_progress_data = $w->read('update_library_in_progress');
+
+	//
+	// Read settings from DB
+	//
+	$dbfile = $w->data() . '/settings.db';
+	try {
+		$dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
+		$dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		$getSettings = 'select theme,country_code,userid from settings';
+		$stmt = $dbsettings->prepare($getSettings);
+		$stmt->execute();
+		$setting = $stmt->fetch();
+		$theme = $setting[0];
+		$country_code = $setting[1];
+		$userid = $setting[2];
+	} catch (PDOException $e) {
+		handleDbIssuePdoEcho($dbsettings);
+		$dbsettings=null;
+		unlink($w->data() . "/update_library_in_progress");
+		return;
+	}
+
+
+	$words = explode('▹', $in_progress_data);
+
+	putenv('LANG=fr_FR.UTF-8');
+
+	ini_set('memory_limit', '512M');
+
+	$nb_playlist=0;
+	$dbfile = $w->data() . '/library.db';
+
+	try {
+		$db = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
+		$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+		$db->exec("drop table counters");
+		$db->exec("create table counters (all_tracks int, mymusic_tracks int, all_artists int, mymusic_artists int, all_albums int, mymusic_albums int, playlists int)");
+
+		$insertTrack = "insert into tracks values (:mymusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_year,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:availability)";
+		$stmtTrack = $db->prepare($insertTrack);
+
+		$deleteFromTracks="delete from tracks where mymusic=:mymusic";
+		$stmtDeleteFromTracks = $db->prepare($deleteFromTracks);
+		$stmtDeleteFromTracks->bindValue(':mymusic', 1);
+		$stmtDeleteFromTracks->execute();
+
+
+		$nb_track=0;
+		try {
+			$offsetGetMySavedTracks = 0;
+			$limitGetMySavedTracks = 50;
+			do {
+				$userMySavedTracks = $api->getMySavedTracks(array(
+		            'limit' => $limitGetMySavedTracks,
+		            'offset' => $offsetGetMySavedTracks
+		        ));
+
+				foreach ($userMySavedTracks->items as $track) {
+					$track = $track->track;
+					if (count($track->available_markets) == 0 || in_array($country_code, $track->available_markets) !== false) {
+						$playable = 1;
+					} else {
+						$playable = 0;
+					}
+					$artists = $track->artists;
+					$artist = $artists[0];
+					$album = $track->album;
+
+					//
+					// Download artworks
+					$track_artwork_path = getTrackOrAlbumArtwork($w, $theme, $track->uri, true);
+					$artist_artwork_path = getArtistArtwork($w, $theme, $artist->name, true);
+					$album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $album->uri, true);
+
+					$album_year = 1995;
+
+					$stmtTrack->bindValue(':mymusic', 1);
+					$stmtTrack->bindValue(':popularity', $track->popularity);
+					$stmtTrack->bindValue(':uri', $track->uri);
+					$stmtTrack->bindValue(':album_uri', $album->uri);
+					$stmtTrack->bindValue(':artist_uri', $artist->uri);
+					$stmtTrack->bindValue(':track_name', escapeQuery($track->name));
+					$stmtTrack->bindValue(':album_name', escapeQuery($album->name));
+					$stmtTrack->bindValue(':artist_name', escapeQuery($artist->name));
+					$stmtTrack->bindValue(':album_year', $album_year);
+					$stmtTrack->bindValue(':track_artwork_path', $track_artwork_path);
+					$stmtTrack->bindValue(':artist_artwork_path', $artist_artwork_path);
+					$stmtTrack->bindValue(':album_artwork_path', $album_artwork_path);
+					$stmtTrack->bindValue(':playlist_name', escapeQuery($playlist->name));
+					$stmtTrack->bindValue(':playlist_uri', $playlist->uri);
+					$stmtTrack->bindValue(':playable', $playable);
+					$stmtTrack->bindValue(':availability', 'FIX THIS');
+					$stmtTrack->execute();
+
+
+					$nb_track++;
+					if($nb_track == 0){
+						$w->write('MyMusic▹0▹' . $userMySavedTracks->total . '▹' . $words[3], 'update_library_in_progress');
+					} else {
+						if ($nb_track % 10 === 0) {
+							$w->write('MyMusic▹' . $nb_track . '▹' . $userMySavedTracks->total. '▹' . $words[3], 'update_library_in_progress');
+						}
+					}
+
+				}
+
+				$offsetGetMySavedTracks+=$limitGetMySavedTracks;
+
+			} while ($offsetGetMySavedTracks < $userMySavedTracks->total);
+		}
+		catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+			echo "Error(getMySavedTracks): (exception " . $e . ")";
+			unlink($w->data() . "/update_library_in_progress");
+			return false;
+		}
+
+		$getCount = 'select count(distinct uri) from tracks';
+		$stmt = $db->prepare($getCount);
+		$stmt->execute();
+		$all_tracks = $stmt->fetch();
+
+		$getCount = 'select count(distinct uri) from tracks where mymusic=1';
+		$stmt = $db->prepare($getCount);
+		$stmt->execute();
+		$mymusic_tracks = $stmt->fetch();
+
+		$getCount = 'select count(distinct artist_name) from tracks';
+		$stmt = $db->prepare($getCount);
+		$stmt->execute();
+		$all_artists = $stmt->fetch();
+
+		$getCount = 'select count(distinct artist_name) from tracks where mymusic=1';
+		$stmt = $db->prepare($getCount);
+		$stmt->execute();
+		$mymusic_artists = $stmt->fetch();
+
+		$getCount = 'select count(distinct album_name) from tracks';
+		$stmt = $db->prepare($getCount);
+		$stmt->execute();
+		$all_albums = $stmt->fetch();
+
+		$getCount = 'select count(distinct album_name) from tracks where mymusic=1';
+		$stmt = $db->prepare($getCount);
+		$stmt->execute();
+		$mymusic_albums = $stmt->fetch();
+
+		$getCount = 'select count(*) from playlists';
+		$stmt = $db->prepare($getCount);
+		$stmt->execute();
+		$playlists_count = $stmt->fetch();
+
+		$insertCounter = "insert into counters values (:all_tracks,:mymusic_tracks,:all_artists,:mymusic_artists,:all_albums,:mymusic_albums,:playlists)";
+		$stmt = $db->prepare($insertCounter);
+
+		$stmt->bindValue(':all_tracks', $all_tracks[0]);
+		$stmt->bindValue(':mymusic_tracks', $mymusic_tracks[0]);
+		$stmt->bindValue(':all_artists', $all_artists[0]);
+		$stmt->bindValue(':mymusic_artists', $mymusic_artists[0]);
+		$stmt->bindValue(':all_albums', $all_albums[0]);
+		$stmt->bindValue(':mymusic_albums', $mymusic_albums[0]);
+		$stmt->bindValue(':playlists', $playlists_count[0]);
+		$stmt->execute();
+
+		$elapsed_time = time() - $words[3];
+		displayNotification("My Music has been updated - it took " . beautifyTime($elapsed_time));
 
 		unlink($w->data() . "/update_library_in_progress");
 

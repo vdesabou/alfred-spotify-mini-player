@@ -930,7 +930,7 @@ end alfred_script</string>
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f ./src/action.php -- "" "ADD_TO_ALFRED_PLAYLIST" "ADD_TO_ALFRED_PLAYLIST"</string>
+				<string>php -f ./src/action.php -- "" "ADD_CURRENT_TRACK" "ADD_CURRENT_TRACK"</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -1301,7 +1301,7 @@ SOFTWARE.</string>
 		<key>05F86AA1-D3EE-4409-9A58-898B36FFE503</key>
 		<dict>
 			<key>ypos</key>
-			<real>2130</real>
+			<real>2040</real>
 		</dict>
 		<key>18496AC4-EA42-444C-A906-642E38259C96</key>
 		<dict>
@@ -1311,7 +1311,7 @@ SOFTWARE.</string>
 		<key>19215BE5-986E-4AC9-9166-C80872C51DBE</key>
 		<dict>
 			<key>ypos</key>
-			<real>2130</real>
+			<real>2040</real>
 		</dict>
 		<key>1A88766E-BF4A-48F5-9BD4-D3538634422F</key>
 		<dict>
@@ -1381,7 +1381,7 @@ SOFTWARE.</string>
 		<key>794A76A7-BB98-4A83-92BE-386A56875120</key>
 		<dict>
 			<key>ypos</key>
-			<real>2250</real>
+			<real>2150</real>
 		</dict>
 		<key>81BA0BC2-F1CB-46DC-A715-C38A1A0E055E</key>
 		<dict>
@@ -1396,7 +1396,7 @@ SOFTWARE.</string>
 		<key>899AC4D2-88FA-474F-A075-AFA12F361E2B</key>
 		<dict>
 			<key>ypos</key>
-			<real>2250</real>
+			<real>2150</real>
 		</dict>
 		<key>8C78472B-13EB-4512-B94D-4BF92867CD92</key>
 		<dict>

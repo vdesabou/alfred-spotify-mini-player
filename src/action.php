@@ -137,8 +137,33 @@ if ($type == "TRACK") {
 	}else if ($type == "PAUSE") {
 		exec("osascript -e 'tell application \"Spotify\" to playpause'");
 		return;
-	}else if ($type == "ADD_TO_ALFRED_PLAYLIST") {
-		addCurrentTrackToAlfredPlaylist($w);
+	}else if ($type == "ADD_CURRENT_TRACK") {
+
+		//
+		// Read settings from DB
+		//
+		$getSettings = 'select theme,is_alfred_playlist_active from settings';
+		$dbfile = $w->data() . '/settings.db';
+		exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
+
+		if ($returnValue != 0) {
+			displayNotification("Error: cannot read settings");
+			return;
+		}
+
+		foreach ($settings as $setting):
+
+			$setting = explode("	", $setting);
+
+		$theme = $setting[0];
+		$is_alfred_playlist_active = $setting[1];
+		endforeach;
+
+		if ($is_alfred_playlist_active == true) {
+			addCurrentTrackToAlfredPlaylist($w);
+		} else {
+			addCurrentTrackToMyTracks($w);
+		}
 		return;
 	}
 
@@ -255,7 +280,7 @@ if ($playlist_uri != "") {
 		//
 		// Read settings from DB
 		//
-		$getSettings = 'select theme from settings';
+		$getSettings = 'select theme,is_alfred_playlist_active from settings';
 		$dbfile = $w->data() . '/settings.db';
 		exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
 
@@ -269,6 +294,7 @@ if ($playlist_uri != "") {
 			$setting = explode("	", $setting);
 
 		$theme = $setting[0];
+		$is_alfred_playlist_active = $setting[1];
 		endforeach;
 
 		if ($other_action == "disable_all_playlist") {
@@ -367,8 +393,12 @@ if ($playlist_uri != "") {
 			} else if ($other_action == "current") {
 				displayNotificationForCurrentTrack();
 				return;
-			} else if ($other_action == "add_to_alfred_playlist") {
-				addCurrentTrackToAlfredPlaylist($w);
+			} else if ($other_action == "add_current_track") {
+				if ($is_alfred_playlist_active == true) {
+					addCurrentTrackToAlfredPlaylist($w);
+				} else {
+					addCurrentTrackToMyTracks($w);
+				}
 				return;
 			} else if ($other_action == "previous") {
 				exec("osascript -e 'tell application \"Spotify\" to previous track'");
