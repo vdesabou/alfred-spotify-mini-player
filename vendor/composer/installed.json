@@ -45,5 +45,40 @@
         "keywords": [
             "spotify"
         ]
+    },
+    {
+        "name": "phprtflite/phprtflite",
+        "version": "v1.3.3",
+        "version_normalized": "1.3.3.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/phprtflite/PHPRtfLite.git",
+            "reference": "eef76d965fc7a0cb4c7342f229f67ad4793c61c2"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/phprtflite/PHPRtfLite/zipball/eef76d965fc7a0cb4c7342f229f67ad4793c61c2",
+            "reference": "eef76d965fc7a0cb4c7342f229f67ad4793c61c2",
+            "shasum": ""
+        },
+        "time": "2014-07-04 19:43:18",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "PHPRtfLite": "lib/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "GPL-3.0"
+        ],
+        "authors": [
+            {
+                "name": "Steffen Zeidler",
+                "email": "sigma_z@sigma-scripts.de"
+            }
+        ],
+        "description": "PHPRtfLite is an API enabling developers to create rtf documents with php."
     }
 ]

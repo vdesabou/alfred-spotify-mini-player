@@ -4,7 +4,7 @@
 //error_reporting(0);
 
 require './src/functions.php';
-
+require_once './vendor/phprtflite/phprtflite/lib/PHPRtfLite.php';
 
 // Load and use David Ferguson's Workflows.php class
 require_once './src/workflows.php';
@@ -520,35 +520,56 @@ if ($playlist_uri != "") {
 				return;
 			}
 		else if ($other_action == "display_biography") {
-				$getBiography = "select artist_biography from artists where artist_name='" . $artist_name . "'";
+			
+				$json = doWebApiRequest($w,'http://developer.echonest.com/api/v4/artist/biographies?api_key=5EG94BIZEGFEY9AL9&id=' . $artist_uri);
+				$response = $json->response;
+				
+				$file = $w->cache() . '/spotify_mini_player_biography.rtf';
+				PHPRtfLite::registerAutoloader();
+			
+				foreach ($response->biographies as $biography) {
 
-				$dbfile = $w->data() . "/library.db";
-				exec("sqlite3 -separator '	' \"$dbfile\" \"$getBiography\" 2>&1", $biographs, $returnValue);
-
-				if ($returnValue != 0) {
-					displayNotification("There is a problem with the library, try to update it");
-					return;
+					if($biography->site == "wikipedia") {
+						$wikipedia = $biography->text;						
+					}
+					if($biography->site == "last.fm") {
+						$lastfm = $biography->text;						
+					}
+					$default = $biography->text;
 				}
 
-				if (count($biographs) == 0) {
-					displayNotificationWithArtwork("No biography found", './images/' . $theme . '/' . 'biography.png');
-					return;
+				if($wikipedia) {
+					$text = $wikipedia;
+				} elseif ($lastfm) {
+					$text = $lastfm;
+				} else {
+					$text = $default;
 				}
-
-				foreach ($biographs as $biography):
-					$biography = explode("	", $biography);
-
-				if ($biography[0] != "") {
-					$output=strip_tags($biography[0]);
-					echo "🎓 $artist_name\n---------------------------\n$output";
-					return;
+				if($text=="") {
+					$text = "No biography found";
 				}
-				else {
-					displayNotificationWithArtwork("No biography found", './images/' . $theme . '/' . 'biography.png');
-					return;
-				}
-				endforeach;
+				$output=strip_tags($text);
+				
+				$file = $w->cache() . '/spotify_mini_player_biography.rtf';
+				
+				$rtf = new PHPRtfLite();
+				
+				$section = $rtf->addSection();
+				// centered text
+				$fontTitle = new PHPRtfLite_Font(24, 'Arial', '#000000', '#FFFFFF');
+				$parFormatTitle = new PHPRtfLite_ParFormat(PHPRtfLite_ParFormat::TEXT_ALIGN_CENTER);
+				$section->writeText($artist_name, $fontTitle, $parFormatTitle);
+				
+				$parFormat = new PHPRtfLite_ParFormat();
+				$parFormat->setSpaceAfter(4);
+				$font = new PHPRtfLite_Font(12, 'Arial', '#000000', '#FFFFFF');
+				// write text
+				$section->writeText($output, $font, $parFormat);
+				
+				$rtf->save($file);	
+				exec("qlmanage -p \"$file\"");
 				return;
+
 			}
 		else if ($other_action == "morefromthisartist") {
 

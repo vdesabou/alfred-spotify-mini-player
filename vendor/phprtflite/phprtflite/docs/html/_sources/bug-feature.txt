@@ -1,0 +1,8 @@
+Bugs and feature requests
+*************************
+
+If you find a bug or think it should work in another way, or you have a good idea to improve the library, please let me know.
+
+- Please submit bugs at `<http://sourceforge.net/tracker/?group_id=217109&atid=1039236>`_.
+- Please submit feature requests at `<http://sourceforge.net/tracker/?group_id=217109&atid=1039236>`_.
+- Please submit errors found in the documentation to: sigma_z(at)web.de

@@ -1,0 +1,98 @@
+.. _header-footer:
+
+Headers and footers
+********************
+
+Headers and footers can be defined for the RTF document. When sections are used, headers and footers must be defined through the sections, otherwise the headers and footers must be defined through the PHPRtfLite instance.
+
+Header / footer types:
+
+- TYPE_ALL (default)
+- TYPE_LEFT
+- TYPE_RIGHT
+- TYPE_FIRST
+
+
+TYPE_ALL
+=========
+
+Example for setting the header and footer of the RTF document:
+
+.. code-block:: php
+
+    <?php
+    // rtf document instance
+    $rtf = new PHPRtfLite();
+    // add section
+    $section = $rtf->addSection();
+    // add header
+    $header = $section->addHeader();
+    $header->writeText('header text');
+    // add footer
+    $footer = $section->addFooter();
+    $footer->writeText('footer text');
+
+By default headers and footers are displayed for all pages.
+
+
+TYPE_LEFT and TYPE_RIGHT
+========================
+
+To define different headers for odd and even pages, the RTF document must be set to use different headers/footers for odd and even pages:
+
+.. code-block:: php
+
+    <?php
+    // rtf document instance
+    $rtf = new PHPRtfLite();
+    // use different headers and footers for odd and even pages
+    $rtf->setOddEvenDifferent();
+    // section
+    $section = $rtf->addSection();
+    // add left header
+    $header = $section->addHeader(PHPRtfLite_Container_Header::TYPE_LEFT);
+    $header->writeText('left header');
+    // add right header
+    $header = $section->addHeader(PHPRtfLite_Container_Header::TYPE_RIGHT);
+    $header->writeText('right header');
+
+
+TYPE_FIRST
+===================
+
+If you want to specify, that the header or the footer should only appear on the first page, use can use the type TYPE_FIRST:
+
+.. code-block:: php
+
+    <?php
+    // rtf document instance
+    $rtf = new PHPRtfLite();
+    // section
+    $section = $rtf->addSection();
+    // add header only for the first page
+    $header = $section->addHeader(PHPRtfLite_Container_Header::TYPE_FIRST);
+    $header->writeText('this header should only appear on the first page');
+
+    
+    
+    
+Tables and images in headers / footers
+======================================
+
+Of course you can use tables and images in headers and footers:
+
+.. code-block:: php
+
+    <?php
+    // rtf document instance
+    $rtf = new PHPRtfLite();
+    // section
+    $section = $rtf->addSection();
+    // add header
+    $header = $section->addHeader();
+    // add table
+    $table = $header->addTable();
+    $table->addRows(1);
+    $table->addColumnsList(array(2, 2, 2));
+    // add image to table in header
+    $image = $table->addImageToCell(1, 1, '/path/to/image/file');

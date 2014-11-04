@@ -1,0 +1,198 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Page settings &mdash; PHPRtfLite v1.x documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.x',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="PHPRtfLite v1.x documentation" href="index.html" />
+    <link rel="next" title="Sections" href="sections.html" />
+    <link rel="prev" title="Getting started" href="getting-started.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="sections.html" title="Sections"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="getting-started.html" title="Getting started"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">PHPRtfLite v1.x documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="page-settings">
+<h1>Page settings<a class="headerlink" href="#page-settings" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="page-layout">
+<h2>Page layout<a class="headerlink" href="#page-layout" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="page-orientation">
+<h3>Page orientation<a class="headerlink" href="#page-orientation" title="Permalink to this headline">¶</a></h3>
+<p>You can use between <tt class="docutils literal"><span class="pre">landscape</span></tt> and <tt class="docutils literal"><span class="pre">portrait</span></tt> (default) page orientation.</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="c1">// rtf document instance</span>
+<span class="nv">$rtf</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PHPRtfLite</span><span class="p">();</span>
+<span class="c1">// landscape page orientation</span>
+<span class="nv">$rtf</span><span class="o">-&gt;</span><span class="na">setLandscape</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="page-margins">
+<h3>Page margins<a class="headerlink" href="#page-margins" title="Permalink to this headline">¶</a></h3>
+<p>You can set margins for the document and for sections, too. Section margins will overwrite document margins.</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="nv">$rtf</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PHPRtfLite</span><span class="p">();</span>
+<span class="c1">// margin left: 1cm</span>
+<span class="nv">$rtf</span><span class="o">-&gt;</span><span class="na">setMarginLeft</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="c1">// margin right: 2cm</span>
+<span class="nv">$rtf</span><span class="o">-&gt;</span><span class="na">setMarginRight</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<span class="c1">// margin top: 3cm</span>
+<span class="nv">$rtf</span><span class="o">-&gt;</span><span class="na">setMarginTop</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+<span class="c1">// margin bottom: 4cm</span>
+<span class="nv">$rtf</span><span class="o">-&gt;</span><span class="na">setMarginBottom</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The code example below does the same in a shorter way.</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="nv">$rtf</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PHPRtfLite</span><span class="p">();</span>
+<span class="c1">// margins: left 1cm, top 3cm, right 2cm, bottom 4cm</span>
+<span class="nv">$rtf</span><span class="o">-&gt;</span><span class="na">setMargins</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>You can define that odd and even pages uses mirrored margins.</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="nv">$rtf</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PHPRtfLite</span><span class="p">();</span>
+<span class="c1">// margin left: 2cm</span>
+<span class="nv">$rtf</span><span class="o">-&gt;</span><span class="na">setMarginLeft</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<span class="c1">// margin right: 1cm</span>
+<span class="nv">$rtf</span><span class="o">-&gt;</span><span class="na">setMarginRight</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="c1">// odd pages: left 2cm, right 1 cm</span>
+<span class="c1">// even pages: left 1cm, right 2 cm</span>
+<span class="nv">$rtf</span><span class="o">-&gt;</span><span class="na">setMirrorMarings</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="page-width-page-height">
+<h3>Page width / page height<a class="headerlink" href="#page-width-page-height" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-php"><div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="nv">$rtf</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PHPRtfLite</span><span class="p">();</span>
+<span class="nv">$rtf</span><span class="o">-&gt;</span><span class="na">setPageWidth</span><span class="p">(</span><span class="mi">14</span><span class="p">);</span>  <span class="c1">// in cm</span>
+<span class="nv">$rtf</span><span class="o">-&gt;</span><span class="na">setPageHeight</span><span class="p">(</span><span class="mi">25</span><span class="p">);</span> <span class="c1">// in cm</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="character-set-text-input">
+<h2>Character set (text input)<a class="headerlink" href="#character-set-text-input" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-php"><div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="nv">$rtf</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PHPRtfLite</span><span class="p">();</span>
+<span class="nv">$rtf</span><span class="o">-&gt;</span><span class="na">setCharset</span><span class="p">(</span><span class="s1">&#39;Latin1&#39;</span><span class="p">);</span>  <span class="c1">// use Latin1 instead of UTF-8</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="hyphenation">
+<h2>Hyphenation<a class="headerlink" href="#hyphenation" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-php"><div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="nv">$rtf</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PHPRtfLite</span><span class="p">();</span>
+<span class="nv">$rtf</span><span class="o">-&gt;</span><span class="na">setHyphenation</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Page settings</a><ul>
+<li><a class="reference internal" href="#page-layout">Page layout</a><ul>
+<li><a class="reference internal" href="#page-orientation">Page orientation</a></li>
+<li><a class="reference internal" href="#page-margins">Page margins</a></li>
+<li><a class="reference internal" href="#page-width-page-height">Page width / page height</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#character-set-text-input">Character set (text input)</a></li>
+<li><a class="reference internal" href="#hyphenation">Hyphenation</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="getting-started.html"
+                        title="previous chapter">Getting started</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="sections.html"
+                        title="next chapter">Sections</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/page-layouts.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="sections.html" title="Sections"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="getting-started.html" title="Getting started"
+             >previous</a> |</li>
+        <li><a href="index.html">PHPRtfLite v1.x documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2011, sigmaz.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

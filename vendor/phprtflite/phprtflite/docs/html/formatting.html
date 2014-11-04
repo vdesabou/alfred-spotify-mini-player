@@ -1,0 +1,349 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Formatting &mdash; PHPRtfLite v1.x documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.x',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="PHPRtfLite v1.x documentation" href="index.html" />
+    <link rel="next" title="Tables" href="tables.html" />
+    <link rel="prev" title="Sections" href="sections.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="tables.html" title="Tables"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="sections.html" title="Sections"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">PHPRtfLite v1.x documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="formatting">
+<h1>Formatting<a class="headerlink" href="#formatting" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="fonts">
+<h2>Fonts<a class="headerlink" href="#fonts" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="size-font-family-font-color-background-color">
+<h3>Size, Font family, Font color, Background color<a class="headerlink" href="#size-font-family-font-color-background-color" title="Permalink to this headline">¶</a></h3>
+<p>To format text, you can use the <tt class="docutils literal"><span class="pre">PHPRtfLite_Font</span></tt>.</p>
+<p>Example sets size to 12pt, font family to Arial, font color to red, and background color to blue:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="c1">// some bootstraping here</span>
+
+<span class="nv">$section</span> <span class="o">=</span> <span class="nv">$rtf</span><span class="o">-&gt;</span><span class="na">addSection</span><span class="p">();</span>
+<span class="nv">$font</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PHPRtfLite_Font</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="s1">&#39;Arial&#39;</span><span class="p">,</span> <span class="s1">&#39;#FF0000&#39;</span><span class="p">,</span> <span class="s1">&#39;#0000FF&#39;</span><span class="p">);</span>
+<span class="nv">$section</span><span class="o">-&gt;</span><span class="na">writeText</span><span class="p">(</span><span class="s1">&#39;Lorem ipsum&#39;</span><span class="p">,</span> <span class="nv">$font</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="text-formatting">
+<h3>Text formatting<a class="headerlink" href="#text-formatting" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-php"><div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="c1">// some bootstraping here</span>
+
+<span class="nv">$section</span> <span class="o">=</span> <span class="nv">$rtf</span><span class="o">-&gt;</span><span class="na">addSection</span><span class="p">();</span>
+<span class="nv">$font</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PHPRtfLite_Font</span><span class="p">();</span>
+<span class="nv">$font</span><span class="o">-&gt;</span><span class="na">setBold</span><span class="p">();</span>           <span class="c1">// bold font</span>
+<span class="nv">$font</span><span class="o">-&gt;</span><span class="na">setItalic</span><span class="p">();</span>         <span class="c1">// italic font</span>
+<span class="nv">$font</span><span class="o">-&gt;</span><span class="na">setUnderline</span><span class="p">();</span>      <span class="c1">// underline font</span>
+<span class="nv">$font</span><span class="o">-&gt;</span><span class="na">setStriked</span><span class="p">();</span>        <span class="c1">// strike text</span>
+<span class="nv">$font</span><span class="o">-&gt;</span><span class="na">setDoubleStriked</span><span class="p">();</span>  <span class="c1">// double strike text</span>
+<span class="nv">$section</span><span class="o">-&gt;</span><span class="na">writeText</span><span class="p">(</span><span class="s1">&#39;Lorem ipsum&#39;</span><span class="p">,</span> <span class="nv">$font</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="html-tags-as-text-formatting">
+<h3>HTML-Tags as text formatting<a class="headerlink" href="#html-tags-as-text-formatting" title="Permalink to this headline">¶</a></h3>
+<p>You can use HTML-Tags in your text to format text:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="c1">// some bootstraping here</span>
+
+<span class="nv">$section</span> <span class="o">=</span> <span class="nv">$rtf</span><span class="o">-&gt;</span><span class="na">addSection</span><span class="p">();</span>
+
+<span class="c1">// text will be displayed as bold</span>
+<span class="nv">$section</span><span class="o">-&gt;</span><span class="na">writeText</span><span class="p">(</span><span class="s1">&#39;&lt;strong&gt;text&lt;/strong&gt;&#39;</span><span class="p">);</span>
+<span class="nv">$section</span><span class="o">-&gt;</span><span class="na">writeText</span><span class="p">(</span><span class="s1">&#39;&lt;b&gt;text&lt;/b&gt;&#39;</span><span class="p">);</span>
+
+<span class="c1">// text will be displayed as italic</span>
+<span class="nv">$section</span><span class="o">-&gt;</span><span class="na">writeText</span><span class="p">(</span><span class="s1">&#39;&lt;em&gt;text&lt;/em&gt;&#39;</span><span class="p">);</span>
+<span class="nv">$section</span><span class="o">-&gt;</span><span class="na">writeText</span><span class="p">(</span><span class="s1">&#39;&lt;i&gt;text&lt;/i&gt;&#39;</span><span class="p">);</span>
+
+<span class="c1">// text will be displayed as underlined</span>
+<span class="nv">$section</span><span class="o">-&gt;</span><span class="na">writeText</span><span class="p">(</span><span class="s1">&#39;&lt;u&gt;text&lt;/u&gt;&#39;</span><span class="p">);</span>
+
+<span class="c1">// text will start with a bullet</span>
+<span class="nv">$section</span><span class="o">-&gt;</span><span class="na">writeText</span><span class="p">(</span><span class="s1">&#39;&lt;bullet&gt; text&#39;</span><span class="p">);</span>
+
+<span class="c1">// text will have a line break after</span>
+<span class="nv">$section</span><span class="o">-&gt;</span><span class="na">writeText</span><span class="p">(</span><span class="s1">&#39;text&lt;br&gt;&#39;</span><span class="p">);</span>
+
+<span class="c1">// text will have a horizontal rule after</span>
+<span class="nv">$section</span><span class="o">-&gt;</span><span class="na">writeText</span><span class="p">(</span><span class="s1">&#39;text&lt;hr&gt;&#39;</span><span class="p">);</span>
+
+<span class="c1">// tabulator will be displayed between text</span>
+<span class="nv">$section</span><span class="o">-&gt;</span><span class="na">writeText</span><span class="p">(</span><span class="s1">&#39;text&lt;tab&gt;text&#39;</span><span class="p">);</span>
+
+<span class="c1">// will display section number before &quot;hello world&quot;</span>
+<span class="nv">$section</span><span class="o">-&gt;</span><span class="na">writeText</span><span class="p">(</span><span class="s1">&#39;&lt;sectnum&gt; hello world&#39;</span><span class="p">);</span>
+
+<span class="c1">// will display page number before &quot;hello world&quot;</span>
+<span class="nv">$section</span><span class="o">-&gt;</span><span class="na">writeText</span><span class="p">(</span><span class="s1">&#39;&lt;pagenum&gt; hello world&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="text-animation">
+<h3>Text animation<a class="headerlink" href="#text-animation" title="Permalink to this headline">¶</a></h3>
+<p>Class constants for text animation:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">ANIMATE_LAS_VEGAS_LIGHTS</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">ANIMATE_BLINKING_BACKGROUND</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">ANIMATE_SPARKLE_TEXT</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">ANIMATE_MARCHING_BLACK_ANTS</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">ANIMATE_MARCHING_RED_ANTS</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">ANIMATE_SHIMMER</span></tt></li>
+</ul>
+<div class="highlight-php"><div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="c1">// some bootstraping here</span>
+
+<span class="nv">$section</span> <span class="o">=</span> <span class="nv">$rtf</span><span class="o">-&gt;</span><span class="na">addSection</span><span class="p">();</span>
+<span class="nv">$font</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PHPRtfLite_Font</span><span class="p">();</span>
+<span class="c1">// text with marching black ants around</span>
+<span class="nv">$font</span><span class="o">-&gt;</span><span class="na">setAnimation</span><span class="p">(</span><span class="nx">PHPRtfLite_Font</span><span class="o">::</span><span class="na">ANIMATE_MARCHING_BLACK_ANTS</span><span class="p">);</span>
+<span class="nv">$section</span><span class="o">-&gt;</span><span class="na">writeText</span><span class="p">(</span><span class="s1">&#39;Lorem ipsum&#39;</span><span class="p">,</span> <span class="nv">$font</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="paragraph-formatting">
+<h2>Paragraph formatting<a class="headerlink" href="#paragraph-formatting" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="text-alignment">
+<h3>Text alignment<a class="headerlink" href="#text-alignment" title="Permalink to this headline">¶</a></h3>
+<p>Class constants for text alignment:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">TEXT_ALIGN_LEFT</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">TEXT_ALIGN_RIGHT</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">TEXT_ALIGN_CENTER</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">TEXT_ALIGN_JUSTIFY</span></tt></li>
+</ul>
+<div class="highlight-php"><div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="c1">// some bootstraping here</span>
+
+<span class="nv">$section</span> <span class="o">=</span> <span class="nv">$rtf</span><span class="o">-&gt;</span><span class="na">addSection</span><span class="p">();</span>
+<span class="c1">// centered text</span>
+<span class="nv">$parFormat</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PHPRtfLite_ParFormat</span><span class="p">(</span><span class="nx">PHPRtfLite_ParFormat</span><span class="o">::</span><span class="na">TEXT_ALIGN_CENTER</span><span class="p">);</span>
+<span class="nv">$section</span><span class="o">-&gt;</span><span class="na">writeText</span><span class="p">(</span><span class="s1">&#39;Lorem ipsum&#39;</span><span class="p">,</span> <span class="k">null</span><span class="p">,</span> <span class="nv">$parFormat</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="paragraph-indention">
+<h3>Paragraph indention<a class="headerlink" href="#paragraph-indention" title="Permalink to this headline">¶</a></h3>
+<p>First line indention:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="c1">// some bootstraping here</span>
+
+<span class="nv">$section</span> <span class="o">=</span> <span class="nv">$rtf</span><span class="o">-&gt;</span><span class="na">addSection</span><span class="p">();</span>
+<span class="nv">$parFormat</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PHPRtfLite_ParFormat</span><span class="p">();</span>
+<span class="c1">// first line of paragraph will be indented by 1cm</span>
+<span class="nv">$parFormat</span><span class="o">-&gt;</span><span class="na">setIndentFirstLine</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="nv">$section</span><span class="o">-&gt;</span><span class="na">writeText</span><span class="p">(</span><span class="s1">&#39;Lorem ipsum&#39;</span><span class="p">,</span> <span class="k">null</span><span class="p">,</span> <span class="nv">$parFormat</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Indent the whole paragraph left or/and right:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="c1">// some bootstraping here</span>
+<span class="nv">$parFormat</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PHPRtfLite_ParFormat</span><span class="p">();</span>
+<span class="c1">// paragraph will be indented by 1cm from the left and right</span>
+<span class="nv">$parFormat</span><span class="o">-&gt;</span><span class="na">setIndentLeft</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="nv">$parFormat</span><span class="o">-&gt;</span><span class="na">setIndentRight</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="space-between-paragraphs">
+<h3>Space between paragraphs<a class="headerlink" href="#space-between-paragraphs" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-php"><div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="c1">// some bootstraping here</span>
+<span class="nv">$parFormat</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PHPRtfLite_ParFormat</span><span class="p">();</span>
+<span class="c1">// spaces in lines after the paragraph</span>
+<span class="nv">$parFormat</span><span class="o">-&gt;</span><span class="na">setSpaceAfter</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="c1">// spaces in lines before the paragraph</span>
+<span class="nv">$parFormat</span><span class="o">-&gt;</span><span class="na">setSpaceBefore</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="space-between-lines">
+<h3>Space between lines<a class="headerlink" href="#space-between-lines" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-php"><div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="c1">// some bootstraping here</span>
+<span class="nv">$parFormat</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PHPRtfLite_ParFormat</span><span class="p">();</span>
+<span class="c1">// spaces between lines</span>
+<span class="nv">$parFormat</span><span class="o">-&gt;</span><span class="na">setSpaceBetweenLines</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="background-color">
+<h3>Background color<a class="headerlink" href="#background-color" title="Permalink to this headline">¶</a></h3>
+<p>Paragraph background color:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="c1">// some bootstraping here</span>
+<span class="nv">$parFormat</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PHPRtfLite_ParFormat</span><span class="p">();</span>
+<span class="nv">$parFormat</span><span class="o">-&gt;</span><span class="na">setBackgroundColor</span><span class="p">(</span><span class="s1">&#39;#FF0000&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="borders">
+<span id="id1"></span><h3>Borders<a class="headerlink" href="#borders" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-php"><div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="c1">// some bootstraping here</span>
+
+<span class="nv">$border</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PHPRtfLite_Border</span><span class="p">(</span>
+    <span class="nv">$rtf</span><span class="p">,</span>                                       <span class="c1">// PHPRtfLite instance</span>
+    <span class="k">new</span> <span class="nx">PHPRtfLite_Border_Format</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;#00FF00&#39;</span><span class="p">),</span> <span class="c1">// left border: 2pt, green color</span>
+    <span class="k">new</span> <span class="nx">PHPRtfLite_Border_Format</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;#FFFF00&#39;</span><span class="p">),</span> <span class="c1">// top border: 1pt, yellow color</span>
+    <span class="k">new</span> <span class="nx">PHPRtfLite_Border_Format</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;#FF0000&#39;</span><span class="p">),</span> <span class="c1">// right border: 2pt, red color</span>
+    <span class="k">new</span> <span class="nx">PHPRtfLite_Border_Format</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;#0000FF&#39;</span><span class="p">)</span>  <span class="c1">// bottom border: 1pt, blue color</span>
+<span class="p">);</span>
+<span class="nv">$parFormat</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PHPRtfLite_ParFormat</span><span class="p">();</span>
+<span class="nv">$parFormat</span><span class="o">-&gt;</span><span class="na">setBorder</span><span class="p">(</span><span class="nv">$border</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>There are some alternative ways to create borders:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="c1">// some bootstraping here</span>
+
+<span class="c1">// creating border in a different way: 1pt dotted red border with 0.5cm space</span>
+<span class="nv">$border</span> <span class="o">=</span> <span class="nx">PHPRtfLite_Border</span><span class="o">::</span><span class="na">create</span><span class="p">(</span><span class="nv">$rtf</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;#FF3333&#39;</span><span class="p">,</span> <span class="nx">PHPRtfLite_Border_Format</span><span class="o">::</span><span class="na">TYPE_DOT</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="highlight-php"><div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="c1">// some bootstraping here</span>
+
+<span class="c1">// creating border in a different way: 1pt dotted red border</span>
+<span class="nv">$border</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PHPRtfLite_Border</span><span class="p">(</span><span class="nv">$rtf</span><span class="p">);</span>
+<span class="c1">// 2pt border in green color</span>
+<span class="nv">$border</span><span class="o">-&gt;</span><span class="na">setBorders</span><span class="p">(</span><span class="k">new</span> <span class="nx">PHPRtfLite_Border_Format</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;#00FF00&#39;</span><span class="p">));</span>
+</pre></div>
+</div>
+<div class="section" id="border-style-types">
+<h4>Border style types<a class="headerlink" href="#border-style-types" title="Permalink to this headline">¶</a></h4>
+<p>Border style types represented as class constants of <tt class="docutils literal"><span class="pre">PHPRtfLite_Border_Format</span></tt> are:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">TYPE_SINGLE</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">TYPE_DOT</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">TYPE_DASH</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">TYPE_DOTDASH</span></tt></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Formatting</a><ul>
+<li><a class="reference internal" href="#fonts">Fonts</a><ul>
+<li><a class="reference internal" href="#size-font-family-font-color-background-color">Size, Font family, Font color, Background color</a></li>
+<li><a class="reference internal" href="#text-formatting">Text formatting</a></li>
+<li><a class="reference internal" href="#html-tags-as-text-formatting">HTML-Tags as text formatting</a></li>
+<li><a class="reference internal" href="#text-animation">Text animation</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#paragraph-formatting">Paragraph formatting</a><ul>
+<li><a class="reference internal" href="#text-alignment">Text alignment</a></li>
+<li><a class="reference internal" href="#paragraph-indention">Paragraph indention</a></li>
+<li><a class="reference internal" href="#space-between-paragraphs">Space between paragraphs</a></li>
+<li><a class="reference internal" href="#space-between-lines">Space between lines</a></li>
+<li><a class="reference internal" href="#background-color">Background color</a></li>
+<li><a class="reference internal" href="#borders">Borders</a><ul>
+<li><a class="reference internal" href="#border-style-types">Border style types</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="sections.html"
+                        title="previous chapter">Sections</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="tables.html"
+                        title="next chapter">Tables</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/formatting.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="tables.html" title="Tables"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="sections.html" title="Sections"
+             >previous</a> |</li>
+        <li><a href="index.html">PHPRtfLite v1.x documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, sigmaz.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

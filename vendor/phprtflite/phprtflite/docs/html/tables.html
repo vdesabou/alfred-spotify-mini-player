@@ -1,0 +1,318 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Tables &mdash; PHPRtfLite v1.x documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.x',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="PHPRtfLite v1.x documentation" href="index.html" />
+    <link rel="next" title="Images" href="images.html" />
+    <link rel="prev" title="Formatting" href="formatting.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="images.html" title="Images"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="formatting.html" title="Formatting"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">PHPRtfLite v1.x documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="tables">
+<h1>Tables<a class="headerlink" href="#tables" title="Permalink to this headline">¶</a></h1>
+<p>PHPRtfLite supports tables and nested tables.</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="c1">// some bootstraping here</span>
+
+<span class="nv">$section</span> <span class="o">=</span> <span class="nv">$rtf</span><span class="o">-&gt;</span><span class="na">addSection</span><span class="p">();</span>
+<span class="nv">$table</span> <span class="o">=</span> <span class="nv">$section</span><span class="o">-&gt;</span><span class="na">addTable</span><span class="p">();</span>
+<span class="c1">// add 2 rows with a height of 1cm for each of them</span>
+<span class="nv">$table</span><span class="o">-&gt;</span><span class="na">addRows</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+<span class="c1">// add a row with a height of 2cm (table has now 4 rows)</span>
+<span class="nv">$table</span><span class="o">-&gt;</span><span class="na">addRow</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<span class="c1">// add 3 columns (first: 1cm, second: 2cm, third: 3cm)</span>
+<span class="nv">$table</span><span class="o">-&gt;</span><span class="na">addColumnsList</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">));</span>
+</pre></div>
+</div>
+<div class="section" id="cells">
+<h2>Cells<a class="headerlink" href="#cells" title="Permalink to this headline">¶</a></h2>
+<p>Cells can contain images, texts, paragraphs and (nested) tables as well.</p>
+<div class="section" id="text-in-cells">
+<h3>Text in cells<a class="headerlink" href="#text-in-cells" title="Permalink to this headline">¶</a></h3>
+<p>Please mind that row and column indexes are starting with 1.</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="c1">// writing text to a cell for row 1 and column 2</span>
+<span class="nv">$table</span><span class="o">-&gt;</span><span class="na">writeToCell</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;text&#39;</span><span class="p">);</span>
+<span class="c1">// writing text via cell object for row 1 and column 3</span>
+<span class="nv">$cell</span> <span class="o">=</span> <span class="nv">$table</span><span class="o">-&gt;</span><span class="na">getCell</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+<span class="nv">$cell</span><span class="o">-&gt;</span><span class="na">writeText</span><span class="p">(</span><span class="s1">&#39;text&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="cell-formatting">
+<h3>Cell formatting<a class="headerlink" href="#cell-formatting" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="cell-font">
+<h4>Cell font<a class="headerlink" href="#cell-font" title="Permalink to this headline">¶</a></h4>
+<p>Setting the font for a cell or a cell, cell range, column or row.</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="c1">// set &quot;Arial&quot; with red color to a single cell</span>
+<span class="nv">$fontRed</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PHPRtfLite_Font</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="s1">&#39;Arial&#39;</span><span class="p">,</span> <span class="s1">&#39;#f00&#39;</span><span class="p">);</span>
+<span class="nv">$cell</span> <span class="o">=</span> <span class="nv">$table</span><span class="o">-&gt;</span><span class="na">getCell</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+<span class="nv">$cell</span><span class="o">-&gt;</span><span class="na">setFont</span><span class="p">(</span><span class="nv">$fontRed</span><span class="p">);</span>
+
+<span class="c1">// set &quot;Times New Roman&quot; with green color to a cell range</span>
+<span class="nv">$fontGreen</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PHPRtfLite_Font</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="s1">&#39;Times New Roman&#39;</span><span class="p">,</span> <span class="s1">&#39;#0f0&#39;</span><span class="p">);</span>
+<span class="nv">$table</span><span class="o">-&gt;</span><span class="na">setFontForCellRange</span><span class="p">(</span><span class="nv">$fontGreen</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+
+<span class="c1">// set &quot;Times New Roman&quot; with blue color to a column</span>
+<span class="nv">$fontBlue</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PHPRtfLite_Font</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="s1">&#39;Times New Roman&#39;</span><span class="p">,</span> <span class="s1">&#39;#00f&#39;</span><span class="p">);</span>
+<span class="nv">$table</span><span class="o">-&gt;</span><span class="na">getColumn</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">setFont</span><span class="p">(</span><span class="nv">$fontBlue</span><span class="p">);</span>
+
+<span class="c1">// set &quot;Tahoma&quot; with yellow color to a row</span>
+<span class="nv">$fontYellow</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PHPRtfLite_Font</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="s1">&#39;Tahoma&#39;</span><span class="p">,</span> <span class="s1">&#39;#ff0&#39;</span><span class="p">);</span>
+<span class="nv">$table</span><span class="o">-&gt;</span><span class="na">getRow</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">setFont</span><span class="p">(</span><span class="nv">$fontYellow</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="cell-alignment">
+<h4>Cell alignment<a class="headerlink" href="#cell-alignment" title="Permalink to this headline">¶</a></h4>
+<p>Cells can be aligned horizontal and vertical.</p>
+<p>Horizontal alignment is also called text alignment. These types are availble as class constants:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">TEXT_ALIGN_LEFT</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">TEXT_ALIGN_RIGHT</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">TEXT_ALIGN_CENTER</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">TEXT_ALIGN_JUSTIFY</span></tt></li>
+</ul>
+<p>Vertical alignment types available via class constants are:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">VERTICAL_ALIGN_TOP</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">VERTICAL_ALIGN_BOTTOM</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">VERTICAL_ALIGN_CENTER</span></tt></li>
+</ul>
+<div class="highlight-php"><div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="nv">$cell</span> <span class="o">=</span> <span class="nv">$table</span><span class="o">-&gt;</span><span class="na">getCell</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+<span class="nv">$cell</span><span class="o">-&gt;</span><span class="na">setTextAlignment</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="cell-padding">
+<h4>Cell padding<a class="headerlink" href="#cell-padding" title="Permalink to this headline">¶</a></h4>
+<p>Using Microsoft Word top and bottom cell paddings are applied to all cells in a row.</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="nv">$cell</span> <span class="o">=</span> <span class="nv">$table</span><span class="o">-&gt;</span><span class="na">getCell</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+<span class="c1">// cell padding left: 0.2cm</span>
+<span class="nv">$cell</span><span class="o">-&gt;</span><span class="na">setCellPaddingLeft</span><span class="p">(</span><span class="mf">0.2</span><span class="p">);</span>
+<span class="c1">// cell padding right: 0.2cm</span>
+<span class="nv">$cell</span><span class="o">-&gt;</span><span class="na">setCellPaddingRight</span><span class="p">(</span><span class="mf">0.2</span><span class="p">);</span>
+<span class="c1">// cell padding left: 0.4cm</span>
+<span class="nv">$cell</span><span class="o">-&gt;</span><span class="na">setCellPaddingTop</span><span class="p">(</span><span class="mf">0.4</span><span class="p">);</span>
+<span class="c1">// cell padding left: 0.4cm</span>
+<span class="nv">$cell</span><span class="o">-&gt;</span><span class="na">setCellPaddingBottom</span><span class="p">(</span><span class="mf">0.4</span><span class="p">);</span>
+
+<span class="c1">// or the same in a shorter way</span>
+<span class="nv">$cell</span><span class="o">-&gt;</span><span class="na">setCellPaddings</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="background-color">
+<h4>Background color<a class="headerlink" href="#background-color" title="Permalink to this headline">¶</a></h4>
+<p>The background color can be set for a single cell or for a range of cells.</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="nv">$cell</span> <span class="o">=</span> <span class="nv">$table</span><span class="o">-&gt;</span><span class="na">getCell</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+<span class="c1">// set background color of cell to red</span>
+<span class="nv">$cell</span><span class="o">-&gt;</span><span class="na">setBackgroundColor</span><span class="p">(</span><span class="s1">&#39;#FF0000&#39;</span><span class="p">);</span>
+<span class="c1">// set background color for a cell range (from row 1 column 1 to row 4 column 4) to blue</span>
+<span class="nv">$table</span><span class="o">-&gt;</span><span class="na">setBackgroundForCellRange</span><span class="p">(</span><span class="s1">&#39;#0000FF&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="border-formatting">
+<h4>Border formatting<a class="headerlink" href="#border-formatting" title="Permalink to this headline">¶</a></h4>
+<p>Cell borders can be set for a single cell or for a range of cells.</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="nv">$border</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PHPRtfLite_Border</span><span class="p">(</span>
+    <span class="nv">$rtf</span><span class="p">,</span>                                       <span class="c1">// PHPRtfLite instance</span>
+    <span class="k">new</span> <span class="nx">PHPRtfLite_Border_Format</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;#00FF00&#39;</span><span class="p">),</span> <span class="c1">// left border: 2pt, green color</span>
+    <span class="k">new</span> <span class="nx">PHPRtfLite_Border_Format</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;#FFFF00&#39;</span><span class="p">),</span> <span class="c1">// top border: 1pt, yellow color</span>
+    <span class="k">new</span> <span class="nx">PHPRtfLite_Border_Format</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;#FF0000&#39;</span><span class="p">),</span> <span class="c1">// right border: 2pt, red color</span>
+    <span class="k">new</span> <span class="nx">PHPRtfLite_Border_Format</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;#0000FF&#39;</span><span class="p">)</span>  <span class="c1">// bottom border: 1pt, blue color</span>
+<span class="p">);</span>
+<span class="nv">$cell</span> <span class="o">=</span> <span class="nv">$table</span><span class="o">-&gt;</span><span class="na">getCell</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+<span class="c1">// cell with border</span>
+<span class="nv">$cell</span><span class="o">-&gt;</span><span class="na">setBorder</span><span class="p">(</span><span class="nv">$border</span><span class="p">);</span>
+
+<span class="c1">// set border for cell range (from row 1 and column 1 to row 3 and column 2)</span>
+<span class="nv">$table</span><span class="o">-&gt;</span><span class="na">setBorderForCellRange</span><span class="p">(</span><span class="nv">$border</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Read more about creating borders here: <a class="reference internal" href="formatting.html#borders"><em>Borders</em></a>.</p>
+</div>
+<div class="section" id="rotate-text-in-cells">
+<h4>Rotate text in cells<a class="headerlink" href="#rotate-text-in-cells" title="Permalink to this headline">¶</a></h4>
+<p>Cell text can be rotated to left and right.</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="nv">$cell</span> <span class="o">=</span> <span class="nv">$table</span><span class="o">-&gt;</span><span class="na">getCell</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+<span class="c1">// rotate text in cell to left</span>
+<span class="nv">$cell</span><span class="o">-&gt;</span><span class="na">rotateTo</span><span class="p">(</span><span class="nx">PHPRtfLite_Container_Cell</span><span class="o">::</span><span class="na">ROTATE_LEFT</span><span class="p">);</span>
+
+<span class="c1">// rotate text for a cell range (from row 1, column 2 to row 3, column 4) to right</span>
+<span class="nv">$table</span><span class="o">-&gt;</span><span class="na">rotateCellRange</span><span class="p">(</span><span class="nx">PHPRtfLite_Container_Cell</span><span class="o">::</span><span class="na">ROTATE_RIGHT</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="images">
+<h3>Images<a class="headerlink" href="#images" title="Permalink to this headline">¶</a></h3>
+<p>Images can be added to a table cell.</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="nv">$cell</span> <span class="o">=</span> <span class="nv">$table</span><span class="o">-&gt;</span><span class="na">getCell</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+<span class="c1">// adding image to cell row 1 and column 3</span>
+<span class="nv">$imageFile</span> <span class="o">=</span> <span class="s1">&#39;/path/to/image/example.jpg&#39;</span><span class="p">;</span>
+<span class="nv">$image</span> <span class="o">=</span> <span class="nv">$cell</span><span class="o">-&gt;</span><span class="na">addImage</span><span class="p">(</span><span class="nv">$imageFile</span><span class="p">);</span>
+<span class="c1">// image width 3cm and height 3cm</span>
+<span class="nv">$image</span><span class="o">-&gt;</span><span class="na">setWidth</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+<span class="nv">$image</span><span class="o">-&gt;</span><span class="na">setHeight</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+
+<span class="c1">// the same as short cut</span>
+<span class="nv">$image</span><span class="o">-&gt;</span><span class="na">addImageToCell</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="nv">$imageFile</span><span class="p">,</span> <span class="k">new</span> <span class="nx">PHPRtfLite_ParFormat</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Adding images to the RTF document is also described in <a class="reference internal" href="images.html#images"><em>Images</em></a>.</p>
+</div>
+<div class="section" id="merging-a-cell-range">
+<h3>Merging a cell range<a class="headerlink" href="#merging-a-cell-range" title="Permalink to this headline">¶</a></h3>
+<p>Cells can be merged horizontal, vertically and both.</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="c1">// merge cells from row 1 column 1 to row 2 and column 3</span>
+<span class="nv">$table</span><span class="o">-&gt;</span><span class="na">mergeCellRange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="nested-tables">
+<h2>Nested tables<a class="headerlink" href="#nested-tables" title="Permalink to this headline">¶</a></h2>
+<p>Nested tables are not supported by OpenOffice 3.2.</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="nv">$cell</span> <span class="o">=</span> <span class="nv">$table</span><span class="o">-&gt;</span><span class="na">getCell</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+<span class="nv">$cell</span><span class="o">-&gt;</span><span class="na">writeText</span><span class="p">(</span><span class="s1">&#39;Text before nested table&#39;</span><span class="p">);</span>
+<span class="c1">// nested cell</span>
+<span class="nv">$nestedTable</span> <span class="o">=</span> <span class="nv">$cell</span><span class="o">-&gt;</span><span class="na">addTable</span><span class="p">();</span>
+<span class="nv">$nestedTable</span><span class="o">-&gt;</span><span class="na">addRow</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="nv">$nestedTable</span><span class="o">-&gt;</span><span class="na">addColumnsList</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">));</span>
+<span class="nv">$nestedTable</span><span class="o">-&gt;</span><span class="na">writeToCell</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Text for first nested cell&#39;</span><span class="p">);</span>
+
+<span class="nv">$cell</span><span class="o">-&gt;</span><span class="na">writeText</span><span class="p">(</span><span class="s1">&#39;Text after nested table!&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Tables</a><ul>
+<li><a class="reference internal" href="#cells">Cells</a><ul>
+<li><a class="reference internal" href="#text-in-cells">Text in cells</a></li>
+<li><a class="reference internal" href="#cell-formatting">Cell formatting</a><ul>
+<li><a class="reference internal" href="#cell-font">Cell font</a></li>
+<li><a class="reference internal" href="#cell-alignment">Cell alignment</a></li>
+<li><a class="reference internal" href="#cell-padding">Cell padding</a></li>
+<li><a class="reference internal" href="#background-color">Background color</a></li>
+<li><a class="reference internal" href="#border-formatting">Border formatting</a></li>
+<li><a class="reference internal" href="#rotate-text-in-cells">Rotate text in cells</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#images">Images</a></li>
+<li><a class="reference internal" href="#merging-a-cell-range">Merging a cell range</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#nested-tables">Nested tables</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="formatting.html"
+                        title="previous chapter">Formatting</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="images.html"
+                        title="next chapter">Images</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/tables.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="images.html" title="Images"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="formatting.html" title="Formatting"
+             >previous</a> |</li>
+        <li><a href="index.html">PHPRtfLite v1.x documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, sigmaz.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

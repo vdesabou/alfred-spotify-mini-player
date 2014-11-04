@@ -1,0 +1,148 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Images &mdash; PHPRtfLite v1.x documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.x',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="PHPRtfLite v1.x documentation" href="index.html" />
+    <link rel="next" title="Headers and footers" href="header-footer.html" />
+    <link rel="prev" title="Tables" href="tables.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="header-footer.html" title="Headers and footers"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tables.html" title="Tables"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">PHPRtfLite v1.x documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="images">
+<span id="id1"></span><h1>Images<a class="headerlink" href="#images" title="Permalink to this headline">¶</a></h1>
+<p>In PHPRtfLite you can add images to headers and footers, to table cells, and sections.</p>
+<div class="section" id="image-resize">
+<h2>Image resize<a class="headerlink" href="#image-resize" title="Permalink to this headline">¶</a></h2>
+<p>You can specify the width and the height of the image in the RTF document. Note, that adding large images will cause large RTF documents, even if the images is scaled down by RTF.</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="nv">$imageFile</span> <span class="o">=</span> <span class="s1">&#39;/path/to/image/file&#39;</span><span class="p">;</span>
+<span class="nv">$image</span> <span class="o">=</span> <span class="nv">$section</span><span class="o">-&gt;</span><span class="na">addImage</span><span class="p">(</span><span class="nv">$imageFile</span><span class="p">);</span>
+<span class="c1">// width to 1cm</span>
+<span class="nv">$image</span><span class="o">-&gt;</span><span class="na">setWidth</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="c1">// height to 1cm</span>
+<span class="nv">$image</span><span class="o">-&gt;</span><span class="na">setHeight</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="image-border">
+<h2>Image border<a class="headerlink" href="#image-border" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-php"><div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="nv">$border</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PHPRtfLite_Border</span><span class="p">(</span>
+    <span class="nv">$rtf</span><span class="p">,</span>                                       <span class="c1">// PHPRtfLite instance</span>
+    <span class="k">new</span> <span class="nx">PHPRtfLite_Border_Format</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;#00FF00&#39;</span><span class="p">),</span> <span class="c1">// left border: 2pt, green color</span>
+    <span class="k">new</span> <span class="nx">PHPRtfLite_Border_Format</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;#FFFF00&#39;</span><span class="p">),</span> <span class="c1">// top border: 1pt, yellow color</span>
+    <span class="k">new</span> <span class="nx">PHPRtfLite_Border_Format</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;#FF0000&#39;</span><span class="p">),</span> <span class="c1">// right border: 2pt, red color</span>
+    <span class="k">new</span> <span class="nx">PHPRtfLite_Border_Format</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;#0000FF&#39;</span><span class="p">)</span>  <span class="c1">// bottom border: 1pt, blue color</span>
+<span class="p">);</span>
+<span class="c1">// image with border</span>
+<span class="nv">$image</span><span class="o">-&gt;</span><span class="na">setBorder</span><span class="p">(</span><span class="nv">$border</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Read more about creating borders here: <a class="reference internal" href="formatting.html#borders"><em>Borders</em></a>.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Images</a><ul>
+<li><a class="reference internal" href="#image-resize">Image resize</a></li>
+<li><a class="reference internal" href="#image-border">Image border</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tables.html"
+                        title="previous chapter">Tables</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="header-footer.html"
+                        title="next chapter">Headers and footers</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/images.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="header-footer.html" title="Headers and footers"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="tables.html" title="Tables"
+             >previous</a> |</li>
+        <li><a href="index.html">PHPRtfLite v1.x documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, sigmaz.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>
