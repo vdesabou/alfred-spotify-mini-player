@@ -655,7 +655,7 @@ if (mb_strlen($query) < 3 ||
 				$w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', null, '');
 			}
 			$noresult=false;
-			$subtitle = $subtitle . $track[6];
+			$subtitle = $track[6];
 
 			if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " ● " . $track[5]) == false) {
 
@@ -1101,7 +1101,7 @@ if (mb_strlen($query) < 3 ||
 					$w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', null, '');
 				}
 				$noresult=false;
-				$subtitle = $subtitle . $track[6];
+				$subtitle = $track[6];
 
 				if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " ● " . $track[5]) == false) {
 
@@ -1230,7 +1230,7 @@ if (mb_strlen($query) < 3 ||
 					$w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', null, '');
 				}
 				$noresult=false;
-				$subtitle = $subtitle . $track[6];
+				$subtitle = $track[6];
 
 				if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " ● " . $track[5]) == false) {
 
@@ -1384,7 +1384,7 @@ if (mb_strlen($query) < 3 ||
 							$w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', null, '');
 						}
 						$noresult=false;
-						$subtitle = $subtitle . $track[6];
+						$subtitle = $track[6];
 
 						if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " ● " . $track[5]) == false) {
 
@@ -1495,7 +1495,7 @@ if (mb_strlen($query) < 3 ||
 					$w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', null, '');
 				}
 				$noresult=false;
-				$subtitle = $subtitle . $track[6];
+				$subtitle = $track[6];
 
 				if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " ● " . $track[5]) == false) {
 

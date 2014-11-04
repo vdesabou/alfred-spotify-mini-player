@@ -305,7 +305,7 @@ function clearPlaylist($w,$playlist_uri,$playlist_name) {
 	}
 
 	try {
-		$tmp = explode(':', $playlist_uri);		
+		$tmp = explode(':', $playlist_uri);
 		$emptytracks = array();
 		$api->replacePlaylistTracks($tmp[2],$tmp[4],$emptytracks);
 	}
@@ -632,9 +632,14 @@ function getPlaylistsForTrack($db, $theme, $track_uri) {
 		$noresult=true;
 		while ($playlist = $stmt->fetch()) {
 			if ($noresult==true) {
-				$playlistsfortrack = $playlistsfortrack . " ● In playlists: " . $playlist[0];
+				$playlistsfortrack = $playlistsfortrack . " ● ♫ : " . $playlist[0];
 			} else {
-				$playlistsfortrack =  $playlistsfortrack . " ○ " . $playlist[0];
+				if($playlist[0] == "") {
+					$playlistsfortrack =  $playlistsfortrack . " ○ " . 'Your Music';
+				} else {
+					$playlistsfortrack =  $playlistsfortrack . " ○ " . $playlist[0];
+				}
+
 			}
 			$noresult=false;
 		}
