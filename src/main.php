@@ -865,14 +865,25 @@ if (mb_strlen($query) < 3 ||
 			}
 		} // search by Album end
 		elseif ($kind == "FeaturedPlaylist") {
-			$w->result(null, '', $country_code . ' (your country)', 'Browse the current featured playlists in ' .  $country_code, './images/' . $theme . '/' . 'star.png', 'no', null, 'FeaturedPlaylist▹'.$country_code.'▹');
+			
+			if($country_code == 'FR') {
+				$country_flag = '🇫🇷';
+				$country_name = 'France';
+			} elseif($country_code == 'IT') {
+				$country_flag = '🇮🇹';
+				$country_name = 'Italy';
+			} else {
+				$country_flag = $country_code;
+				$country_name = $country_code;
+			}
+			$w->result(null, '', $country_flag, 'Browse the current featured playlists in ' .  $country_name, './images/' . $theme . '/' . 'star.png', 'no', null, 'FeaturedPlaylist▹'.$country_code.'▹');
 
 			if ($country_code != 'US') {
-				$w->result(null, '', 'US', 'Browse the current featured playlists in US', './images/' . $theme . '/' . 'star.png', 'no', null, 'FeaturedPlaylist▹US▹');
+				$w->result(null, '', '🇺🇸', 'Browse the current featured playlists in US', './images/' . $theme . '/' . 'star.png', 'no', null, 'FeaturedPlaylist▹US▹');
 			}
 
 			if ($country_code != 'GB') {
-				$w->result(null, '', 'UK', 'Browse the current featured playlists in UK', './images/' . $theme . '/' . 'star.png', 'no', null, 'FeaturedPlaylist▹GB▹');
+				$w->result(null, '', '🇬🇧', 'Browse the current featured playlists in UK', './images/' . $theme . '/' . 'star.png', 'no', null, 'FeaturedPlaylist▹GB▹');
 			}
 
 		} // Featured Playlist end
