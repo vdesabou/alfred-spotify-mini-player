@@ -376,7 +376,7 @@ if (mb_strlen($query) < 3 ||
 			$w->result(null, '', 'Albums in "My Music"', 'Browse by album' . ' (' . $mymusic_albums . ' albums)', './images/' . $theme . '/' . 'albums.png', 'no', null, 'Album▹');
 		}
 
-		$w->result(null, '', 'Featured Playlists', 'Browse the current featured playlists', './images/' . $theme . '/' . 'playlists.png', 'no', null, 'FeaturedPlaylist▹');
+		$w->result(null, '', 'Featured Playlists', 'Browse the current featured playlists', './images/' . $theme . '/' . 'star.png', 'no', null, 'FeaturedPlaylist▹');
 
 		if ($is_spotifious_active == true) {
 			$spotifious_state = 'enabled';
@@ -529,7 +529,7 @@ if (mb_strlen($query) < 3 ||
 			} else if (strpos(strtolower('settings'), strtolower($query)) !== false) {
 				$w->result(null, '', 'Settings', 'Go to settings', './images/' . $theme . '/' . 'settings.png', 'no', null, 'Settings▹');
 			} else if (strpos(strtolower('featured'), strtolower($query)) !== false) {
-				$w->result(null, '', 'Featured Playlist', 'Browse the current featured playlists', './images/' . $theme . '/' . 'playlists.png', 'no', null, 'FeaturedPlaylist▹');
+				$w->result(null, '', 'Featured Playlist', 'Browse the current featured playlists', './images/' . $theme . '/' . 'star.png', 'no', null, 'FeaturedPlaylist▹');
 			}
 
 		//
@@ -871,14 +871,14 @@ if (mb_strlen($query) < 3 ||
 			}
 		} // search by Album end
 		elseif ($kind == "FeaturedPlaylist") {
-			$w->result(null, '', $country_code . ' (your country)', 'Browse the current featured playlists in ' .  $country_code, './images/' . $theme . '/' . 'playlists.png', 'no', null, 'FeaturedPlaylist▹'.$country_code.'▹');
+			$w->result(null, '', $country_code . ' (your country)', 'Browse the current featured playlists in ' .  $country_code, './images/' . $theme . '/' . 'star.png', 'no', null, 'FeaturedPlaylist▹'.$country_code.'▹');
 
 			if($country_code != 'US') {
-				$w->result(null, '', 'US', 'Browse the current featured playlists in US', './images/' . $theme . '/' . 'playlists.png', 'no', null, 'FeaturedPlaylist▹US▹');
+				$w->result(null, '', 'US', 'Browse the current featured playlists in US', './images/' . $theme . '/' . 'star.png', 'no', null, 'FeaturedPlaylist▹US▹');
 			}
 
 			if($country_code != 'GB') {
-				$w->result(null, '', 'UK', 'Browse the current featured playlists in UK', './images/' . $theme . '/' . 'playlists.png', 'no', null, 'FeaturedPlaylist▹GB▹');
+				$w->result(null, '', 'UK', 'Browse the current featured playlists in UK', './images/' . $theme . '/' . 'star.png', 'no', null, 'FeaturedPlaylist▹GB▹');
 			}
 
 		} // Featured Playlist end
