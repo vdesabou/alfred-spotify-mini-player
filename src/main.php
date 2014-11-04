@@ -1728,6 +1728,7 @@ if (mb_strlen($query) < 3 ||
 						'ctrl' => 'Not Available');
 				}
 				$playlists = $featuredPlaylists->playlists;
+				$w->result(null, '', $featuredPlaylists->message , '' . $playlists->total . ' playlists available', './images/' . $theme . '/' . 'info.png', 'no', null, '');
 				$items = $playlists->items;
 				foreach ($items as $playlist) {
 					$tracks = $playlist->tracks;
