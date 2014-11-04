@@ -101,12 +101,12 @@ if ($type == "TRACK") {
 					displayNotification('Error: ' . $track_name . ' by ' . $artist_name . ' is already in ' . $alfred_playlist_name);
 				}
 			} else {
-				// add track to my music
+				// add track to your music
 				$ret = addTracksToMyTracks($w,$tmp[2],false);
 				if (is_numeric($ret) && $ret > 0) {
-					displayNotificationWithArtwork('' . $track_name . ' by ' . $artist_name . ' added to My Music', $track_artwork_path);
+					displayNotificationWithArtwork('' . $track_name . ' by ' . $artist_name . ' added to Your Music', $track_artwork_path);
 				} else if (is_numeric($ret) && $ret == 0) {
-					displayNotification('Error: ' . $track_name . ' by ' . $artist_name . ' is already in My Music');
+					displayNotification('Error: ' . $track_name . ' by ' . $artist_name . ' is already in Your Music');
 				}
 			}
 		} else if ($playlist_uri != "") {
@@ -251,12 +251,12 @@ else if ($type == "ALBUM_OR_PLAYLIST") {
 						displayNotification('Error: Album ' . $album_name . ' is already in ' . $alfred_playlist_name);
 					}
 				} else {
-					// add album to my music
+					// add album to your music
 					$ret = addTracksToMyTracks($w,getTheAlbumTracks($w,$album_uri),false);
 					if (is_numeric($ret) && $ret > 0) {
-						displayNotificationWithArtwork('Album ' . $album_name . ' added to My Music', $album_artwork_path);
+						displayNotificationWithArtwork('Album ' . $album_name . ' added to Your Music', $album_artwork_path);
 					} else if (is_numeric($ret) && $ret == 0) {
-						displayNotification('Error: Album ' . $album_name . ' is already in My Music');
+						displayNotification('Error: Album ' . $album_name . ' is already in Your Music');
 					}
 				}
 
@@ -294,12 +294,12 @@ else if ($type == "ALBUM_OR_PLAYLIST") {
 							displayNotification('Error: Playlist ' . $playlist_name . ' is already in ' . $alfred_playlist_name);
 						}
 					} else {
-						// add playlist to my music
+						// add playlist to your music
 						$ret = addTracksToMyTracks($w,getThePlaylistTracks($w,$playlist_uri),false);
 						if (is_numeric($ret) && $ret > 0) {
-							displayNotificationWithArtwork('Playlist ' . $playlist_name . ' added to My Music', $playlist_artwork_path);
+							displayNotificationWithArtwork('Playlist ' . $playlist_name . ' added to Your Music', $playlist_artwork_path);
 						} else if (is_numeric($ret) && $ret == 0) {
-							displayNotification('Error: Playlist ' . $playlist_name . ' is already in My Music');
+							displayNotification('Error: Playlist ' . $playlist_name . ' is already in Your Music');
 						}
 					}
 
@@ -400,7 +400,7 @@ if ($playlist_uri != "") {
 			$setSettings = "update settings set all_playlists=0";
 			$dbfile = $w->data() . "/settings.db";
 			exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-			displayNotificationWithArtwork("Search scope set to my music", './images/' . $theme . '/' . 'search.png');
+			displayNotificationWithArtwork("Search scope set to your music", './images/' . $theme . '/' . 'search.png');
 		} else if ($other_action == "enable_all_playlist") {
 				$setSettings = "update settings set all_playlists=1";
 				$dbfile = $w->data() . "/settings.db";

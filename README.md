@@ -9,7 +9,7 @@ This is "Spotify Mini Player", like the alfred built-in iTunes Mini Player, but 
 
 ## Description
 
-Speed is the key word here: instead of using slow Spotify API, it uses a local version of your library stored in a database(it includes everything inside My Music and all the playlists you created and playlists that you're subscribed to). You can decide to search in My Music only, or your complete library (all playlists and My Music). You can browse by Artist, Album or Playlist. You can also lookup for artists online, search for lyrics, get related artists, get featured playlists etc..
+Speed is the key word here: instead of using slow Spotify API, it uses a local version of your library stored in a database(it includes everything inside *Your Music* and all the playlists you created and playlists that you're subscribed to). You can decide to search in *Your Music* only, or your complete library (all playlists and *Your Music*). You can browse by Artist, Album or Playlist. You can also lookup for artists online, search for lyrics, get related artists, get featured playlists etc..
 You can also control Spotify using keywords such as play/next/volmax/random/shuffle/etc...
 
 ## Screencast
@@ -36,7 +36,7 @@ See it in action here [screencast](http://quick.as/nmwxcxx0)
 * Select a track with ⌥ to play the album, or ⌘ to play the artist
 * Same control keywords as iTunes Mini Player: play, pause, mute, next, random, previous, volmax, volmid. And shuffle to activate shuffling.
 * Display information currently played track with keyword *current*
-* Add current track to Alfred Playlist or My Music
+* Add current track to Alfred Playlist or Your Music
 * Browse Related artists
 * Get featured playlists from Spotify in your country, US and UK
 * Display current track lyrics
@@ -46,10 +46,10 @@ See it in action here [screencast](http://quick.as/nmwxcxx0)
 
 ## Settings
 
-* Configurable Search Scope: Only in My Music or in your complete library, including My Music and all playlists (by default)
+* Configurable Search Scope: Only in *Your Music* or in your complete library, including *Your Music* and all playlists (by default)
 * Set max number of results. 50 by default
 * enable/disable Spotifious
-* Set controller to Alfred Playlist or My Music. 
+* Set controller to Alfred Playlist or Your Music. 
 * enable/disable ***Lookup this artist online***
 * Check for workflow update
 * Choose workflow theme: ***black*** or ***green*** or ***new***

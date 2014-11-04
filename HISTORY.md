@@ -1,5 +1,18 @@
 ## History
 
+5.0:
+
+* Using now Spotify WEB API instead of Spotify App API
+
+* Using OAuth 2.0 authentication
+
+* Control Your Music, you can choose to control the Alfred Playlist or Your Music now
+
+* Featured Playlists
+
+* Update Playlist List now also update playlists which have been updated (not only the ones added or removed as before)
+
+
 4.6:
 
 * Fixed broken Play Random Track
