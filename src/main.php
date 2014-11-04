@@ -94,7 +94,7 @@ if (!file_exists($w->data() . '/settings.db')) {
 		$dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 		$dbsettings->exec("create table settings (all_playlists boolean, is_spotifious_active boolean, is_alfred_playlist_active boolean, is_displaymorefrom_active boolean, is_lyrics_active boolean, max_results int, alfred_playlist_uri text, alfred_playlist_name text, country_code text, theme text, last_check_update_time int, oauth_client_id text,oauth_client_secret text,oauth_redirect_uri text,oauth_access_token text,oauth_expires int,oauth_refresh_token text,display_name text,userid text)");
-		$dbsettings->exec("insert into settings values (1,1,1,1,1,50,\"\",\"\",\"\",\"new\",0,\"\",\"\",\"http://localhost:15298/callback.php\",\"\",0,\"\",\"\",\"\")");
+		$dbsettings->exec("insert into settings values (1,0,1,1,1,50,\"\",\"\",\"\",\"new\",0,\"\",\"\",\"http://localhost:15298/callback.php\",\"\",0,\"\",\"\",\"\")");
 
 		$dbsettings->query("PRAGMA synchronous = OFF");
 		$dbsettings->query("PRAGMA journal_mode = OFF");
