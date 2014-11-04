@@ -466,8 +466,8 @@ if ($playlist_uri != "") {
 				displayNotificationWithArtwork("Alfred Playlist is now disabled", './images/' . $theme . '/' . 'uncheck.png');
 			}else if ($other_action == "Oauth_Login") {
 				exec("php -S localhost:15298 > /tmp/spotify_mini_player_web_server.log 2>&1 &");
+				sleep(2);
 				exec("open http://localhost:15298");
-				displayNotification("Web server started");
 			} else if ($other_action == "check_for_update") {
 				if (! $w->internet()) {
 					displayNotificationWithArtwork("Error: No internet connection", './images/warning.png');

@@ -148,24 +148,26 @@ $userid = $setting[18];
 // OAUTH checks
 // Check oauth config : Client ID and Client Secret
 if ($oauth_client_id == '' && substr_count($query, '▹') == 0) {
-	$w->result(null, '', 'Your Oauth Client ID is missing', 'Select option below to set it', './images/warning.png', 'no', null, '');
-
-	$w->result(null, '', "Configure the OAuth Client ID", "Create your Application", './images/' . $theme . '/' . 'settings.png', 'no', null, 'Settings▹Oauth_Client_ID▹');
+	if (mb_strlen($query) == 0) {
+		$w->result(null, '', 'Your Application Client ID is missing!', 'Get it from your Spotify Application and enter it here', './images/warning.png', 'no', null, '');
+	} else {
+		$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , 'Oauth_Client_ID▹' . rtrim(ltrim($query)) /* other_settings*/ , '' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Application Client ID will be set to <" . rtrim(ltrim($query)) . ">", "Type enter to validate the Application Client ID", './images/' . $theme . '/' . 'settings.png', 'yes', null, '');
+	}
 	echo $w->toxml();
 	return;
 }
 
 if ($oauth_client_secret == '' && substr_count($query, '▹') == 0) {
-	$w->result(null, '', 'Your Oauth Client Secret is missing', 'Select option below to set it', './images/warning.png', 'no', null, '');
-
-	$w->result(null, '', "Configure the OAuth Client Secret", "Create your Application", './images/' . $theme . '/' . 'settings.png', 'no', null, 'Settings▹Oauth_Client_SECRET▹');
+	if (mb_strlen($query) == 0) {
+		$w->result(null, '', 'Your Application Client Secret is missing!', 'Get it from your Spotify Application and enter it here', './images/warning.png', 'no', null, '');
+	} else {
+		$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , 'Oauth_Client_SECRET▹' . rtrim(ltrim($query)) /* other_settings*/ , '' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Application Client Secret will be set to <" . rtrim(ltrim($query)) . ">", "Type enter to validate the Application Client Secret", './images/' . $theme . '/' . 'settings.png', 'yes', null, '');
+	}
 	echo $w->toxml();
 	return;
 }
 
 if ($oauth_access_token == '' && substr_count($query, '▹') == 0) {
-	$w->result(null, '', 'Your Oauth Access Token is missing', 'Select option below to set it', './images/warning.png', 'no', null, '');
-
 	$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'Oauth_Login' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Authenticate to Spotify", array(
 			"This will start the authentication process",
 			'alt' => 'Not Available',
@@ -202,9 +204,7 @@ if (file_exists($w->data() . '/library.db')) {
 
 }
 else {
-	$w->result(null, '', 'No library could be found', 'Select Install library below', './images/warning.png', 'no', null, '');
-
-	$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'update_library' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Install library', "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', null, '');
+	$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'update_library' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Create library', "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', null, '');
 	echo $w->toxml();
 	return;
 }
@@ -422,15 +422,6 @@ if (mb_strlen($query) < 3 ||
 		$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'update_library' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Update Library', "When done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', null, '');
 		$w->result(null, '', "Configure Max Number of Results", "Number of results displayed. (it doesn't apply to your playlist list)", './images/' . $theme . '/' . 'numbers.png', 'no', null, 'Settings▹MaxResults▹');
 		$w->result(null, '', "Configure the Theme", "Current available colors for icons: green or black, or new design", './images/' . $theme . '/' . 'settings.png', 'no', null, 'Settings▹Theme▹');
-		$w->result(null, '', "Configure the OAuth Client ID", "Currently set to " . $oauth_client_id, './images/' . $theme . '/' . 'settings.png', 'no', null, 'Settings▹Oauth_Client_ID▹');
-		$w->result(null, '', "Configure the OAuth Client Secret", "Currently set to " . $oauth_client_secret, './images/' . $theme . '/' . 'settings.png', 'no', null, 'Settings▹Oauth_Client_SECRET▹');
-		$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'Oauth_Login' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Authenticate to Spotify", array(
-				"This will start the authentication process",
-				'alt' => 'Not Available',
-				'cmd' => 'Not Available',
-				'shift' => 'Not Available',
-				'fn' => 'Not Available',
-				'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'settings.png', 'yes', null, '');
 
 		if ($is_spotifious_active == true) {
 			$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'disable_spotifiuous' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Disable Spotifious", array(
@@ -1664,20 +1655,6 @@ if (mb_strlen($query) < 3 ||
 					}
 				}
 			}
-			else if ($setting_kind == "Oauth_Client_ID") {
-					if (mb_strlen($the_query) == 0) {
-						$w->result(null, '', "Enter your Spotify Application Client ID:", "FIX THIS", './images/' . $theme . '/' . 'settings.png', 'no', null, '');
-					} else {
-						$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , 'Oauth_Client_ID▹' . rtrim(ltrim($the_query)) /* other_settings*/ , '' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Client ID will be set to <" . rtrim(ltrim($the_query)) . ">", "Type enter to validate the Client ID", './images/' . $theme . '/' . 'settings.png', 'yes', null, '');
-					}
-				}
-			else if ($setting_kind == "Oauth_Client_SECRET") {
-					if (mb_strlen($the_query) == 0) {
-						$w->result(null, '', "Enter your Spotify Application Client Secret:", "FIX THIS", './images/' . $theme . '/' . 'settings.png', 'no', null, '');
-					} else {
-						$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , 'Oauth_Client_SECRET▹' . rtrim(ltrim($the_query)) /* other_settings*/ , '' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Client Secret will be set to <" . rtrim(ltrim($the_query)) . ">", "Type enter to validate the Client Secret", './images/' . $theme . '/' . 'settings.png', 'yes', null, '');
-					}
-				}
 			else if ($setting_kind == "Theme") {
 
 					$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'set_theme_to_black' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Set theme to Black", "will set icons to black color", './images/' . 'black' . '/' . 'settings.png', 'yes', null, '');

@@ -28,6 +28,7 @@ try {
 	$dbsettings->query("PRAGMA compile_options");
 } catch (PDOException $e) {
 	displayNotification("Error[callback.php]: cannot set PDO settings");
+	exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk '{print $2}')");
 	$dbsettings=null;
 	return;
 }
@@ -38,6 +39,7 @@ try {
 
 } catch (PDOException $e) {
 	displayNotification("Error[callback.php]: cannot prepare settings");
+	exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk '{print $2}')");
 	$dbsettings=null;
 	return;
 }
@@ -47,6 +49,7 @@ try {
 }
 catch (PDOException $e) {
 	displayNotification("Error[callback.php]: cannot fetch settings");
+	exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk '{print $2}')");
 	return;
 }
 
@@ -82,7 +85,6 @@ try {
 			} catch (PDOException $e) {
 				handleDbIssuePdoEcho($dbsettings);
 				$dbsettings=null;;
-				displayNotification("Web server killed");
 				exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk '{print $2}')");
 				return;
 			}
@@ -101,9 +103,5 @@ catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 	echo "There was an error during the authentication (exception " . $e . ")";
 }
 
-displayNotification("Web server killed");
 exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk '{print $2}')");
-
-
-
 ?>
