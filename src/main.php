@@ -1333,7 +1333,7 @@ if (mb_strlen($query) < 3 ||
 
 						$subtitle = "Launch Playlist";
 						if ($is_alfred_playlist_active == true &&
-							$playlist[1] != "Alfred Playlist"
+							$playlist[1] != $alfred_playlist_name
 						) {
 							$subtitle = "$subtitle ,⇧ ▹ add playlist to ♫";
 						}
