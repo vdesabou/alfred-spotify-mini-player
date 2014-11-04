@@ -257,7 +257,7 @@ if (mb_strlen($query) < 3 ||
 			if (substr_count($command_output, '▹') > 0) {
 				$results = explode('▹', $command_output);
 				$currentArtistArtwork = getArtistArtwork($w, $theme, $results[1], false);
-				$subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
+				$subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
 				$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
 				if ($is_alfred_playlist_active == true) {
 					$arrayresult = array(
@@ -650,12 +650,11 @@ if (mb_strlen($query) < 3 ||
 
 			if
 			($noresult==true) {
-				$subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
+				$subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
 				$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
 				$w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', null, '');
 			}
 			$noresult=false;
-			$subtitle = ($track[0] == true) ? "★ " : "";
 			$subtitle = $subtitle . $track[6];
 
 			if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " ● " . $track[5]) == false) {
@@ -955,7 +954,7 @@ if (mb_strlen($query) < 3 ||
 				$album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $album_uri, false);
 				$w->result(null, serialize(array('' /*track_uri*/ , $album_uri /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'playalbum' /* other_action */ , '' /* alfred_playlist_uri */ , '' /* artist_name */, '' /* track_name */, $album_name /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, $album_artwork_path /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "💿 " . escapeQuery($album_name), '▶️ Play album', $album_artwork_path, 'yes', null, '');
 
-				$subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
+				$subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
 				$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
 				$w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', null, '');
 				foreach ($json->items as $track) {
@@ -1097,12 +1096,11 @@ if (mb_strlen($query) < 3 ||
 
 				if
 				($noresult==true) {
-					$subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
+					$subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
 					$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
 					$w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', null, '');
 				}
 				$noresult=false;
-				$subtitle = ($track[0] == true) ? "★ " : "";
 				$subtitle = $subtitle . $track[6];
 
 				if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " ● " . $track[5]) == false) {
@@ -1227,12 +1225,11 @@ if (mb_strlen($query) < 3 ||
 
 				if
 				($noresult==true) {
-					$subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
+					$subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
 					$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
 					$w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', null, '');
 				}
 				$noresult=false;
-				$subtitle = ($track[0] == true) ? "★ " : "";
 				$subtitle = $subtitle . $track[6];
 
 				if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " ● " . $track[5]) == false) {
@@ -1382,12 +1379,11 @@ if (mb_strlen($query) < 3 ||
 
 						if
 						($noresult==true) {
-							$subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
+							$subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
 							$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
 							$w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', null, '');
 						}
 						$noresult=false;
-						$subtitle = ($track[0] == true) ? "★ " : "";
 						$subtitle = $subtitle . $track[6];
 
 						if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " ● " . $track[5]) == false) {
@@ -1494,12 +1490,11 @@ if (mb_strlen($query) < 3 ||
 
 				if
 				($noresult==true) {
-					$subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
+					$subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
 					$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
 					$w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', null, '');
 				}
 				$noresult=false;
-				$subtitle = ($track[0] == true) ? "★ " : "";
 				$subtitle = $subtitle . $track[6];
 
 				if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " ● " . $track[5]) == false) {
