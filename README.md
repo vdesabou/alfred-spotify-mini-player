@@ -9,8 +9,8 @@ This is "Spotify Mini Player", like the alfred built-in iTunes Mini Player, but 
 
 ## Description
 
-Speed is the key word here: instead of using slow Spotify API, it uses a local version of your library stored in a database(it includes all the playlists you created and playlists that you're subscribed to). You can decide to search in your starred playlist only, or in all all your playlists. You can browse by Artist, Album or Playlist. You can also lookup for artists online, search for lyrics, get related artists, display biography, etc..
-You can also control Spotify using keywords such as play/next/volmax/random/shuffle/star/unstar/etc...
+Speed is the key word here: instead of using slow Spotify API, it uses a local version of your library stored in a database(it includes everything inside My Music and all the playlists you created and playlists that you're subscribed to). You can decide to search in My Music only, or your complete library (all playlists and My Music). You can browse by Artist, Album or Playlist. You can also lookup for artists online, search for lyrics, get related artists, get featured playlists etc..
+You can also control Spotify using keywords such as play/next/volmax/random/shuffle/etc...
 
 ## Screencast
 
@@ -29,20 +29,16 @@ See it in action here [screencast](http://quick.as/nmwxcxx0)
 
 ## Features
 
-* Hotkey to trigger the workflow
 * Update of playlists directly from the workflow!
-* Search for Albums, Artists or Tracks
-* Search for playlists (including your Top List), browse them and launch them
-* Browse by Artists, Albums or Playlists
+* Search for Albums, Artists or Tracks and Playlists, browse them and launch them
 * **Lookup artist online** by using ctrl key on a track
 * **Alfred Playlist** manage a playlist from Alfred: add track (using fn), albums or playlist (using ⇧)
 * Select a track with ⌥ to play the album, or ⌘ to play the artist
 * Same control keywords as iTunes Mini Player: play, pause, mute, next, random, previous, volmax, volmid. And shuffle to activate shuffling.
-* Star/Unstar currently played track with keyword *star*/*unstar*
 * Display information currently played track with keyword *current*
-* Add current track to Alfred Playlist
-* Display artist bigraphy
+* Add current track to Alfred Playlist or My Music
 * Browse Related artists
+* Get featured playlists from Spotify in your country, US and UK
 * Display current track lyrics
 * Three themes available: black, green and new theme from Spotify
 * Auto-Updater: it checks once per day and download automatically the new version
@@ -50,9 +46,10 @@ See it in action here [screencast](http://quick.as/nmwxcxx0)
 
 ## Settings
 
-* Configurable Search Scope: Only Starred playlist (by default) or All your playlists
+* Configurable Search Scope: Only in My Music or in your complete library, including My Music and all playlists (by default)
 * Set max number of results. 50 by default
-* enable/disable Spotifious or Alfred Playlist
+* enable/disable Spotifious
+* Set controller to Alfred Playlist or My Music. 
 * enable/disable ***Lookup this artist online***
 * Check for workflow update
 * Choose workflow theme: ***black*** or ***green*** or ***new***
@@ -62,31 +59,18 @@ See it in action here [screencast](http://quick.as/nmwxcxx0)
 
 You'll need to do the following steps:
 
-* Sign up for a [developer account on Spotify](https://devaccount.spotify.com/my-account/) (this is for both free and premium users).
+* Create an [Application on Spotify](https://developer.spotify.com/my-applications) (this is for both free and premium users)
+    * You can set Application Name and Description to whatever you want
+    * ***Redirect URI must be set to*** *http://localhost:15298/callback.php*
 
-* Download the [latest version](https://www.spotify.com/fr/download/mac/) of Spotify and ***install*** it (I had to do it, even though I was pretty sure to already have the latest version, so please do it!)
+![Example](http://cl.ly/image/0h2F1z232Q2p/Capture_d%E2%80%99e%CC%81cran_2014-11-04_a%CC%80_11_13_50.png)
 
-* Type "spot_mini" or configured hotkey to invoke Spotify Mini Player, and select "1/ Open Spotify Mini Player App <spotify:app:miniplayer>" 
 
-![Screenshot](https://i.cloudup.com/QVFwkPR7V7.png)
-
-* If it doesn't work (Spotify indicates "Failed to load application miniplayer."):
-
-  * try to restart Spotify multiple times
-  
-  * try to logout from Spotify and login again
-  
-  * make sure you see in [Developer Account](https://devaccount.spotify.com/my-account/):
-
-```  
-You are successfully registered with us as a Spotify apps developer.
-```
-
-* If it works, invoke the Spotify Mini Player workflow again and select "2/ Install library"
+* Invoke the workflow and follow the steps
 
 * After some time, you should get a notification saying that library has been created.
 
-**Note that the first time the library is created, all artworks are downloaded, so it can take a while!**
+**Note that the first time the library is created, all artworks are downloaded, so i takes quite some time. But don't worry next updates are very quick!**
 
 You can check progress by invoking the workflow again:-
 
@@ -164,10 +148,10 @@ If you want to report an issue or propose an enhancement, use the "spot_mini_iss
 
 ## Credits
 
-* [Spotifious workflow](https://github.com/citelao/Spotify-for-Alfred)
 * [jwilsson/spotify-web-api-php](https://github.com/jwilsson/spotify-web-api-php)
 * [SpotCommander](https://github.com/olejon/spotcommander)
 * [Terminal-Notifier](https://github.com/alloy/terminal-notifier)
+* [Spotifious workflow](https://github.com/citelao/Spotify-for-Alfred)
 
 
 
