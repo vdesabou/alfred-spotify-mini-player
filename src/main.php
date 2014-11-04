@@ -368,6 +368,7 @@ if (mb_strlen($query) < 3 ||
 
 		}
 		$w->result(null, '', 'Playlists', 'Browse by playlist' . ' (' . $nb_playlists . ' playlists)', './images/' . $theme . '/' . 'playlists.png', 'no', null, 'Playlist▹');
+		$w->result(null, '', 'Your Music', 'Browse Your Music' . ' (' . $mymusic_tracks . ' tracks ● ' .  $mymusic_albums . '  albums ● ' . $mymusic_artists . ' artists)', './images/' . $theme . '/' . 'tracks.png', 'no', null, 'YourMusic▹');
 		if ($all_playlists == true) {
 			$w->result(null, '', 'Artists', 'Browse by artist' . ' (' . $all_artists . ' artists)', './images/' . $theme . '/' . 'artists.png', 'no', null, 'Artist▹');
 			$w->result(null, '', 'Albums', 'Browse by album' . ' (' . $all_albums . ' albums)', './images/' . $theme . '/' . 'albums.png', 'no', null, 'Album▹');
@@ -530,7 +531,10 @@ if (mb_strlen($query) < 3 ||
 				$w->result(null, '', 'Settings', 'Go to settings', './images/' . $theme . '/' . 'settings.png', 'no', null, 'Settings▹');
 			} else if (strpos(strtolower('featured'), strtolower($query)) !== false) {
 				$w->result(null, '', 'Featured Playlist', 'Browse the current featured playlists', './images/' . $theme . '/' . 'star.png', 'no', null, 'FeaturedPlaylist▹');
+			} else if (strpos(strtolower('yourmusic'), strtolower($query)) !== false) {
+				$w->result(null, '', 'Your Music', 'Browse Your Music', './images/' . $theme . '/' . 'tracks.png', 'no', null, 'YourMusic▹');
 			}
+
 
 		//
 		// Search commands for fast access
@@ -707,7 +711,7 @@ if (mb_strlen($query) < 3 ||
 		}
 	} ////////////
 	//
-	// FIRST DELIMITER: Artist▹, Album▹, Playlist▹, Alfred Playlist▹, Settings▹ or Online▹artist uri
+	// FIRST DELIMITER: Artist▹, Album▹, Playlist▹, Alfred Playlist▹, Settings▹, FeaturedPlaylist▹, YourMusic▹ or Online▹artist uri
 	//
 	////////////
 	elseif (substr_count($query, '▹') == 1) {
@@ -767,7 +771,7 @@ if (mb_strlen($query) < 3 ||
 			$w->result(null, '', "Change your Alfred playlist", "Select one of your playlists below as your Alfred playlist", './images/' . $theme . '/' . 'settings.png', 'no', null, 'Alfred Playlist▹Set Alfred Playlist▹');
 
 			if
-			($r[3] != 'mymusic') {
+			(strtolower($r[3]) != strtolower('Starred')) {
 				$w->result(null, '', "Clear your Alfred Playlist", "This will remove all the tracks in your current Alfred Playlist", './images/' . $theme . '/' . 'uncheck.png', 'no', null, 'Alfred Playlist▹Confirm Clear Alfred Playlist▹');
 			}
 
@@ -882,6 +886,12 @@ if (mb_strlen($query) < 3 ||
 			}
 
 		} // Featured Playlist end
+		elseif ($kind == "YourMusic") {
+			$w->result(null, '', 'Tracks' , 'Browse tracks in Your Music', './images/' . $theme . '/' . 'tracks.png', 'no', null, 'YourMusic▹Tracks▹');
+			$w->result(null, '', 'Albums', 'Browse albums in Your Music', './images/' . $theme . '/' . 'albums.png', 'no', null, 'YourMusic▹Albums▹');
+			$w->result(null, '', 'Artists', 'Browse artists in Your Music', './images/' . $theme . '/' . 'artists.png', 'no', null, 'YourMusic▹Artists▹');
+
+		} // Featured YourMusic end
 		elseif ($kind == "Online") {
 			if (substr_count($query, '@') == 1) {
 				//
@@ -998,7 +1008,11 @@ if (mb_strlen($query) < 3 ||
 		}
 	} ////////////
 	//
-	// SECOND DELIMITER: Artist▹the_artist▹tracks , Album▹the_album▹tracks, Playlist▹the_playlist▹tracks,Settings▹Theme▹color or Settings▹MaxResults▹max_numbers, Alfred Playlist▹Set Alfred Playlist▹alfred_playlist, Alfred Playlist▹Clear Alfred Playlist▹yes or no
+	// SECOND DELIMITER: Artist▹the_artist▹tracks , Album▹the_album▹tracks,
+	//  Playlist▹the_playlist▹tracks,Settings▹Theme▹color or Settings▹MaxResults▹max_numbers,
+	//  Alfred Playlist▹Set Alfred Playlist▹alfred_playlist,
+	//  Alfred Playlist▹Clear Alfred Playlist▹yes or YourMusic▹Tracks▹
+	//  YourMusic▹Albums▹ or YourMusic▹Artists▹
 	//
 	////////////
 	elseif (substr_count($query, '▹') == 2) {
@@ -1455,7 +1469,190 @@ if (mb_strlen($query) < 3 ||
 				return;
 			}
 		} // end of tracks by Playlist
-		elseif ($kind == "Settings") {
+		elseif ($kind == "YourMusic" && $words[1] == "Tracks") {
+			//
+			// display tracks for Your Music
+			//
+			$thetrack = $words[2];
+
+			if (mb_strlen($thetrack) < 3) {
+				$getTracks = "select * from tracks where playable=1 and mymusic=:mymusic limit " . $max_results;
+				$stmt = $db->prepare($getTracks);
+				$stmt->bindValue(':mymusic', 1);
+			}
+			else {
+				$getTracks = "select * from tracks where playable=1 and mymusic=:mymusic and (artist_name like :track or album_name like :track or track_name like :track)" . " limit " . $max_results;
+				$stmt = $db->prepare($getTracks);
+				$stmt->bindValue(':mymusic', 1);
+				$stmt->bindValue(':track', '%' . $thetrack . '%');
+			}
+
+			$tracks = $stmt->execute();
+
+			$noresult=true;
+			while ($track = $stmt->fetch()) {
+
+				if
+				($noresult==true) {
+					$subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
+					$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
+					$w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', null, '');
+				}
+				$noresult=false;
+				$subtitle = ($track[0] == true) ? "★ " : "";
+				$subtitle = $subtitle . $track[6];
+
+				if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " ● " . $track[5]) == false) {
+
+					$getPlaylistsForTrack = "select playlist_name from tracks where uri=:uri";
+					try {
+						$stmt2 = $db->prepare($getPlaylistsForTrack);
+						$stmt2->bindValue(':uri', '' . $track[2] . '');
+
+						$stmt2->execute();
+
+						$playlistsfortrack = "";
+
+						$noresult2=true;
+						while ($playlist2 = $stmt2->fetch()) {
+							if
+							($noresult2==true) {
+								$playlistsfortrack = $playlistsfortrack . " ● In playlists: " . $playlist2[0];
+							} else {
+								$playlistsfortrack =  $playlistsfortrack . " ○ " . $playlist2[0];
+							}
+							$noresult2=false;
+						}
+					} catch (PDOException $e) {
+						handleDbIssuePdoXml($theme, $db);
+						return;
+					}
+					if ($is_alfred_playlist_active == true) {
+						$arrayresult = array(
+							beautifyTime($track[16]/1000) . " ● " . $subtitle .  $playlistsfortrack,
+							'alt' => 'Play album ' . $track[6] . ' in Spotify',
+							'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
+							'fn' => 'Add track ' . $track[5] . ' to ' . $alfred_playlist_name,
+							'shift' => 'Add album ' . $track[6] . ' to ' . $alfred_playlist_name,
+							'ctrl' => 'Search artist ' . $track[7] . ' online');
+					} else {
+						$arrayresult = array(
+							beautifyTime($track[16]/1000) . " ● " . $subtitle .  $playlistsfortrack,
+							'alt' => 'Play album ' . $track[6] . ' in Spotify',
+							'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
+							'fn' => 'Add track ' . $track[5] . ' to Your Music',
+							'shift' => 'Add album ' . $track[6] . ' to Your Music',
+							'ctrl' => 'Search artist ' . $track[7] . ' online');
+					}
+					$w->result(null, serialize(array($track[2] /*track_uri*/ , $track[3] /* album_uri */ , $track[4] /* artist_uri */ , $theplaylisturi /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , '' /* other_action */ , $alfred_playlist_uri /* alfred_playlist_uri */ , $track[7]  /* artist_name */, $track[5] /* track_name */, $track[6] /* album_name */, $track[9] /* track_artwork_path */, $track[10] /* artist_artwork_path */, $track[11] /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), ucfirst($track[7]) . " ● " . $track[5],$arrayresult, $track[9], 'yes', null, '');
+				}
+			}
+
+			if
+			($noresult) {
+				$w->result(null, 'help', "There is no result for your search", "", './images/warning.png', 'no', null, '');
+
+			}
+
+			$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , 'activate (open location "spotify:search:' . $playlist[1] . '")' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , '' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $playlist[1] . " in Spotify", array(
+					'This will start a new search in Spotify',
+					'alt' => 'Not Available',
+					'cmd' => 'Not Available',
+					'shift' => 'Not Available',
+					'fn' => 'Not Available',
+					'ctrl' => 'Not Available'), 'fileicon:/Applications/Spotify.app', 'yes', null, '');
+
+			if ($is_spotifious_active == true) {
+				$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , $playlist[1] /* query */ , '' /* other_settings*/ , '' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $playlist[1] . " with Spotifious", array(
+						'Spotifious workflow must be installed and script filter set with <spotifious>',
+						'alt' => 'Not Available',
+						'cmd' => 'Not Available',
+						'shift' => 'Not Available',
+						'fn' => 'Not Available',
+						'ctrl' => 'Not Available'), './images/spotifious.png', 'yes', null, '');
+			}
+		} // end of YourMusic▹Tracks▹
+		elseif ($kind == "YourMusic" && $words[1] == "Albums") {
+
+			//
+			// Search albums
+			//
+			$album = $words[2];
+			try {
+				if (mb_strlen($album) < 3) {
+					$getTracks = "select album_name,album_artwork_path,artist_name,album_uri from tracks where playable=1 and mymusic=1 group by album_name" . " limit " . $max_results;
+					$stmt = $db->prepare($getTracks);
+				}
+				else {
+					$getTracks = "select album_name,album_artwork_path,artist_name,album_uri from tracks where playable=1 and mymusic=1 and album_name like :query limit " . $max_results;
+					$stmt = $db->prepare($getTracks);
+					$stmt->bindValue(':query', '%' . $album . '%');
+				}
+
+				$tracks = $stmt->execute();
+
+			} catch (PDOException $e) {
+				handleDbIssuePdoXml($theme, $db);
+				return;
+			}
+
+			// display all albums
+			$noresult=true;
+			while ($track = $stmt->fetch()) {
+
+				$noresult=false;
+
+				if (checkIfResultAlreadyThere($w->results(), ucfirst($track[0])) == false) {
+					$w->result(null, '', ucfirst($track[0]), "by " . $track[2], $track[1], 'no', null, "Album▹" . $track[3] . '∙' . $track[0] . "▹");
+				}
+			}
+
+			if
+			($noresult) {
+				$w->result(null, 'help', "There is no result for your search", "", './images/warning.png', 'no', null, '');
+			}
+		} // end of YourMusic▹Albums▹
+		elseif ($kind == "YourMusic" && $words[1] == "Artists") {
+			//
+			// Search artists
+			//
+			$artist = $words[2];
+
+			try {
+				if (mb_strlen($artist) < 3) {
+					$getTracks = "select artist_name,artist_artwork_path,artist_uri from tracks where playable=1 and mymusic=1 group by artist_name" . " limit " . $max_results;
+					$stmt = $db->prepare($getTracks);
+				}
+				else {
+					$getTracks = "select artist_name,artist_artwork_path,artist_uri from tracks where playable=1 and mymusic=1 and artist_name like :query limit " . $max_results;
+					$stmt = $db->prepare($getTracks);
+					$stmt->bindValue(':query', '%' . $artist . '%');
+				}
+
+				$tracks = $stmt->execute();
+
+			} catch (PDOException $e) {
+				handleDbIssuePdoXml($theme, $db);
+				return;
+			}
+
+			// display all artists
+			$noresult=true;
+			while ($track = $stmt->fetch()) {
+
+				$noresult=false;
+
+				if (checkIfResultAlreadyThere($w->results(), "👤 " . ucfirst($track[0])) == false) {
+					$w->result(null, '', "👤 " . ucfirst($track[0]), "Browse this artist", $track[1], 'no', null, "Artist▹" . $track[2] . '∙'. $track[0] . "▹");
+				}
+			}
+
+			if
+			($noresult) {
+				$w->result(null, 'help', "There is no result for your search", "", './images/warning.png', 'no', null, '');
+			}
+		} // end of YourMusic▹Albums▹
+		elseif ($kind == "Artists") {
 			$setting_kind = $words[1];
 			$the_query = $words[2];
 
