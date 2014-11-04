@@ -1249,7 +1249,7 @@ end alfred_script</string>
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f ./src/update.php</string>
+				<string>php -f ./src/action.php -- "" "UPDATE_LIBRARY" "UPDATE_LIBRARY"</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>

@@ -171,6 +171,9 @@ if ($type == "TRACK") {
 	}else if ($type == "PAUSE") {
 		exec("osascript -e 'tell application \"Spotify\" to playpause'");
 		return;
+	}else if ($type == "UPDATE_LIBRARY") {
+		updateLibrary($w);
+		return;
 	}else if ($type == "ADD_CURRENT_TRACK") {
 
 		//
@@ -487,7 +490,7 @@ if ($playlist_uri != "") {
 				}
 				else if ($check_results == null) {
 						displayNotificationWithArtwork('No update available', './images/' . $theme . '/' . 'check_update.png');
-					}
+				}
 
 			} else if ($other_action == "current") {
 				displayNotificationForCurrentTrack();
