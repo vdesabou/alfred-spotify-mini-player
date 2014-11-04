@@ -113,8 +113,7 @@ if ($type == "TRACK") {
 				exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\" in context \"$playlist_uri\"'");
 				displayNotificationWithArtwork('🔈 ' . $track_name . ' by ' . ucfirst($artist_name), $track_artwork_path);
 				return;
-			}
-		else {
+		} else {
 			if ($other_action == "") {
 				exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
 				displayNotificationWithArtwork('🔈 ' . $track_name . ' by ' . ucfirst($artist_name), $track_artwork_path);

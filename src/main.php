@@ -377,7 +377,7 @@ if (mb_strlen($query) < 3 ||
 		}
 
 		$w->result(null, '', 'Featured Playlists', 'Browse the current featured playlists', './images/' . $theme . '/' . 'playlists.png', 'no', null, 'FeaturedPlaylist▹');
-		
+
 		if ($is_spotifious_active == true) {
 			$spotifious_state = 'enabled';
 		} else {
@@ -871,58 +871,16 @@ if (mb_strlen($query) < 3 ||
 			}
 		} // search by Album end
 		elseif ($kind == "FeaturedPlaylist") {
-			$api = getSpotifyWebAPI($w);
-			if($api == false)
-			{
-				$w->result(null, 'help', "Internal issue (getSpotifyWebAPI)", "", './images/warning.png', 'no', null, '');
-				echo $w->toxml();
-				return;
-			}
-		
-			try {
-				$featuredPlaylists = $api->getFeaturedPlaylists(array(
-					            'country' => $country_code,
-					            'limit' => 0,
-					            'locale' => '',
-					            'offset' => 0,
-					            'timestamp' => ''
-					        ));
+			$w->result(null, '', $country_code . ' (your country)', 'Browse the current featured playlists in ' .  $country_code, './images/' . $theme . '/' . 'playlists.png', 'no', null, 'FeaturedPlaylist▹'.$country_code.'▹');
 
-				$subtitle = "Launch Playlist";
-				if ($is_alfred_playlist_active == true) {
-					$arrayresult = array(
-						$subtitle,
-						'alt' => 'Not Available',
-						'cmd' => 'Not Available',
-						'shift' => 'Add playlist ' . ucfirst($playlist->name) . ' to your Alfred Playlist',
-						'fn' => 'Not Available',
-						'ctrl' => 'Not Available');
-				} else {
-					$arrayresult = array(
-						$subtitle,
-						'alt' => 'Not Available',
-						'cmd' => 'Not Available',
-						'shift' => 'Add playlist ' . ucfirst($playlist->name) . ' to My Music',
-						'fn' => 'Not Available',
-						'ctrl' => 'Not Available');
-				}	  
-				$playlists = $featuredPlaylists->playlists;
-				$items = $playlists->items;    
-				foreach ($items as $playlist) {
-					$tracks = $playlist->tracks;
-					$owner = $playlist->owner;
-					
-					$playlist_artwork_path = getPlaylistArtwork($w, $theme , $playlist->uri, false);
-					$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , $playlist->uri /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , '' /* other_action */ , $alfred_playlist_uri /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, $playlist->name /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* alfred_playlist_name */)), ucfirst($playlist->name) . " (" . $tracks->total . " tracks)", $arrayresult, $playlist_artwork_path,$playlist->uri, 'yes', null, ''); 
-				}
-				
+			if($country_code != 'US') {
+				$w->result(null, '', 'US', 'Browse the current featured playlists in US', './images/' . $theme . '/' . 'playlists.png', 'no', null, 'FeaturedPlaylist▹US▹');
 			}
-			catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-				$w->result(null, 'help', "Exception occurred", "" . $e, './images/warning.png', 'no', null, '');
-				echo $w->toxml();
-				return;
+
+			if($country_code != 'GB') {
+				$w->result(null, '', 'UK', 'Browse the current featured playlists in UK', './images/' . $theme . '/' . 'playlists.png', 'no', null, 'FeaturedPlaylist▹GB▹');
 			}
-			
+
 		} // Featured Playlist end
 		elseif ($kind == "Online") {
 			if (substr_count($query, '@') == 1) {
@@ -990,9 +948,6 @@ if (mb_strlen($query) < 3 ||
 				$subtitle = "  ⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
 				$subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
 				$w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', null, '');
-
-
-
 				foreach ($json->items as $track) {
 
 					if (count($track->available_markets) == 0 || in_array($country_code, $track->available_markets) !== false) {
@@ -1541,6 +1496,63 @@ if (mb_strlen($query) < 3 ||
 
 				}
 		} // end of Settings
+		elseif ($kind == "FeaturedPlaylist") {
+			$country = $words[1];
+			$the_query = $words[2];
+
+			$api = getSpotifyWebAPI($w);
+			if($api == false)
+			{
+				$w->result(null, 'help', "Internal issue (getSpotifyWebAPI)", "", './images/warning.png', 'no', null, '');
+				echo $w->toxml();
+				return;
+			}
+
+			try {
+				$featuredPlaylists = $api->getFeaturedPlaylists(array(
+					            'country' => $country,
+					            'limit' => 0,
+					            'locale' => '',
+					            'offset' => 0,
+					            'timestamp' => ''
+					        ));
+
+				$subtitle = "Launch Playlist";
+				if ($is_alfred_playlist_active == true) {
+					$arrayresult = array(
+						$subtitle,
+						'alt' => 'Not Available',
+						'cmd' => 'Not Available',
+						'shift' => 'Add playlist ' . ucfirst($playlist->name) . ' to your Alfred Playlist',
+						'fn' => 'Not Available',
+						'ctrl' => 'Not Available');
+				} else {
+					$arrayresult = array(
+						$subtitle,
+						'alt' => 'Not Available',
+						'cmd' => 'Not Available',
+						'shift' => 'Add playlist ' . ucfirst($playlist->name) . ' to My Music',
+						'fn' => 'Not Available',
+						'ctrl' => 'Not Available');
+				}
+				$playlists = $featuredPlaylists->playlists;
+				$items = $playlists->items;
+				foreach ($items as $playlist) {
+					$tracks = $playlist->tracks;
+					$owner = $playlist->owner;
+
+					$playlist_artwork_path = getPlaylistArtwork($w, $theme , $playlist->uri, false);
+					$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , $playlist->uri /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , '' /* other_action */ , $alfred_playlist_uri /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, $playlist->name /* playlist_name */, $playlist_artwork_path /* playlist_artwork_path */, $alfred_playlist_name /* alfred_playlist_name */)), ucfirst($playlist->name) . " (" . $tracks->total . " tracks)", $arrayresult, $playlist_artwork_path,$playlist->uri, 'yes', null, '');
+				}
+
+			}
+			catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+				$w->result(null, 'help', "Exception occurred", "" . $e, './images/warning.png', 'no', null, '');
+				echo $w->toxml();
+				return;
+			}
+
+		}
 		elseif ($kind == "Alfred Playlist") {
 			$setting_kind = $words[1];
 			$theplaylist = $words[2];
