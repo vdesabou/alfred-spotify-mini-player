@@ -58,14 +58,14 @@ try {
 
 	// Get the authorization URL and send the user there
 	header('Location: ' . $session->getAuthorizeUrl(array(
-		'scope' => array(   'user-library-read',
-							'user-read-email',
-							'user-read-private',
-							'user-library-modify',
-							'playlist-read-private',
-							'playlist-modify-public',
-							'playlist-modify-private'),
-		'show_dialog' => true)));
+				'scope' => array(   'user-library-read',
+					'user-read-email',
+					'user-read-private',
+					'user-library-modify',
+					'playlist-read-private',
+					'playlist-modify-public',
+					'playlist-modify-private'),
+				'show_dialog' => true)));
 }
 catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 	echo "There was an error during the authentication flow (exception " . $e . ")";

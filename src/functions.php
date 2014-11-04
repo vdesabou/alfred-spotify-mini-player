@@ -44,12 +44,12 @@ function addCurrentTrackToAlfredPlaylist($w) {
 			return;
 		}
 		$tmp = explode(':', $results[4]);
-		$ret = addTracksToPlaylist($w,$tmp[2],$alfred_playlist_uri,$alfred_playlist_name,false);
+		$ret = addTracksToPlaylist($w, $tmp[2], $alfred_playlist_uri, $alfred_playlist_name, false);
 		if (is_numeric($ret) && $ret > 0) {
 			displayNotificationWithArtwork('' . $results[0] . ' by ' . $results[1] . ' added to ' . $alfred_playlist_name, getTrackOrAlbumArtwork($w, $theme, $results[4], true));
 		} else if (is_numeric($ret) && $ret == 0) {
-			displayNotification('Error: ' . $results[0] . ' by ' . $results[1] . ' is already in ' . $alfred_playlist_name);
-		}
+				displayNotification('Error: ' . $results[0] . ' by ' . $results[1] . ' is already in ' . $alfred_playlist_name);
+			}
 	}
 	else {
 		displayNotification("Error: No track is playing");
@@ -90,12 +90,12 @@ function addCurrentTrackToMyTracks($w) {
 		$results = explode('▹', $command_output);
 
 		$tmp = explode(':', $results[4]);
-		$ret = addTracksToMyTracks($w,$tmp[2],false);
+		$ret = addTracksToMyTracks($w, $tmp[2], false);
 		if (is_numeric($ret) && $ret > 0) {
 			displayNotificationWithArtwork('' . $results[0] . ' by ' . $results[1] . ' added to My Music', getTrackOrAlbumArtwork($w, $theme, $results[4], true));
 		} else if (is_numeric($ret) && $ret == 0) {
-			displayNotification('Error: ' . $results[0] . ' by ' . $results[1] . ' is already in My Music');
-		}
+				displayNotification('Error: ' . $results[0] . ' by ' . $results[1] . ' is already in My Music');
+			}
 	}
 	else {
 		displayNotification("Error: No track is playing");
@@ -159,7 +159,7 @@ function getSpotifyWebAPI($w) {
 		$dbsettings->query("PRAGMA cache_size=700000");
 		$dbsettings->query("PRAGMA compile_options");
 	} catch (PDOException $e) {
-		echo("Error[getSpotifyWebAPI]: exception " . $e);
+		echo "Error[getSpotifyWebAPI]: exception " . $e;
 		return false;
 	}
 
@@ -169,7 +169,7 @@ function getSpotifyWebAPI($w) {
 
 	} catch (PDOException $e) {
 		$dbsettings=null;
-		echo("Error[getSpotifyWebAPI]: exception " . $e);
+		echo "Error[getSpotifyWebAPI]: exception " . $e;
 		return false;
 	}
 
@@ -177,7 +177,7 @@ function getSpotifyWebAPI($w) {
 		$setting = $stmt->fetch();
 	}
 	catch (PDOException $e) {
-		echo("Error[getSpotifyWebAPI]: exception " . $e);
+		echo "Error[getSpotifyWebAPI]: exception " . $e;
 		return false;
 	}
 
@@ -194,7 +194,7 @@ function getSpotifyWebAPI($w) {
 
 	// Check if refresh token necessary
 	if (time()-$oauth_expires > 3100) {
-		if($session->refreshToken()) {
+		if ($session->refreshToken()) {
 
 			$oauth_access_token = $session->getAccessToken();
 
@@ -208,14 +208,14 @@ function getSpotifyWebAPI($w) {
 
 			} catch (PDOException $e) {
 				$dbsettings=null;;
-				echo("Error[getSpotifyWebAPI]: exception " . $e);
+				echo "Error[getSpotifyWebAPI]: exception " . $e;
 				return false;
 			}
 
 			//displayNotification("Token was refreshed");
 
 		} else {
-			echo("Error[getSpotifyWebAPI]: token could not be refreshed");
+			echo "Error[getSpotifyWebAPI]: token could not be refreshed";
 			return false;
 		}
 	}
@@ -235,8 +235,7 @@ function getSpotifyWebAPI($w) {
  */
 function getArtistUriFromTrack($w, $track_uri) {
 	$api = getSpotifyWebAPI($w);
-	if($api == false)
-	{
+	if ($api == false) {
 		displayNotification("Error: Cannot get SpotifyWebAPI(");
 		return false;
 	}
@@ -267,8 +266,7 @@ function getArtistUriFromTrack($w, $track_uri) {
  */
 function getAlbumUriFromTrack($w, $track_uri) {
 	$api = getSpotifyWebAPI($w);
-	if($api == false)
-	{
+	if ($api == false) {
 		displayNotification("Error: Cannot get SpotifyWebAPI(");
 		return false;
 	}
@@ -296,10 +294,9 @@ function getAlbumUriFromTrack($w, $track_uri) {
  * @param mixed $playlist_name
  * @return void
  */
-function clearPlaylist($w,$playlist_uri,$playlist_name) {
+function clearPlaylist($w, $playlist_uri, $playlist_name) {
 	$api = getSpotifyWebAPI($w);
-	if($api == false)
-	{
+	if ($api == false) {
 		displayNotification("Error: Cannot get SpotifyWebAPI(");
 		return false;
 	}
@@ -307,7 +304,7 @@ function clearPlaylist($w,$playlist_uri,$playlist_name) {
 	try {
 		$tmp = explode(':', $playlist_uri);
 		$emptytracks = array();
-		$api->replacePlaylistTracks($tmp[2],$tmp[4],$emptytracks);
+		$api->replacePlaylistTracks($tmp[2], $tmp[4], $emptytracks);
 	}
 	catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 		echo "Error(clearPlaylist): playlist uri " . $playlist_uri . " (exception " . $e . ")";
@@ -328,10 +325,9 @@ function clearPlaylist($w,$playlist_uri,$playlist_name) {
  * @param mixed $playlist_uri
  * @return void
  */
-function getThePlaylistTracks($w,$playlist_uri) {
+function getThePlaylistTracks($w, $playlist_uri) {
 	$api = getSpotifyWebAPI($w);
-	if($api == false)
-	{
+	if ($api == false) {
 		displayNotification("Error: Cannot get SpotifyWebAPI(");
 		return false;
 	}
@@ -343,11 +339,11 @@ function getThePlaylistTracks($w,$playlist_uri) {
 		$offsetGetUserPlaylistTracks = 0;
 		$limitGetUserPlaylistTracks = 100;
 		do {
-			$userPlaylistTracks = $api->getUserPlaylistTracks($tmp[2],$tmp[4],array(
-	            'fields' => array(),
-	            'limit' => $limitGetUserPlaylistTracks,
-	            'offset' => $offsetGetUserPlaylistTracks
-	        ));
+			$userPlaylistTracks = $api->getUserPlaylistTracks($tmp[2], $tmp[4], array(
+					'fields' => array(),
+					'limit' => $limitGetUserPlaylistTracks,
+					'offset' => $offsetGetUserPlaylistTracks
+				));
 
 			foreach ($userPlaylistTracks->items as $track) {
 				$track = $track->track;
@@ -374,10 +370,9 @@ function getThePlaylistTracks($w,$playlist_uri) {
  * @param mixed $album_uri
  * @return void
  */
-function getTheAlbumTracks($w,$album_uri) {
+function getTheAlbumTracks($w, $album_uri) {
 	$api = getSpotifyWebAPI($w);
-	if($api == false)
-	{
+	if ($api == false) {
 		displayNotification("Error: Cannot get SpotifyWebAPI(");
 		return;
 	}
@@ -411,18 +406,17 @@ function getTheAlbumTracks($w,$album_uri) {
  * @param bool $allow_duplicate (default: true)
  * @return void
  */
-function addTracksToMyTracks($w,$tracks,$allow_duplicate = true) {
+function addTracksToMyTracks($w, $tracks, $allow_duplicate = true) {
 
 	$api = getSpotifyWebAPI($w);
-	if($api == false)
-	{
+	if ($api == false) {
 		displayNotification("Error: Cannot get SpotifyWebAPI(");
 		return;
 	}
 	$tracks = (array) $tracks;
 	$tracks_with_no_dup = array();
 	$tracks_contain = array();
-	if(!$allow_duplicate) {
+	if (!$allow_duplicate) {
 		try {
 
 			// Note: max 50 Ids
@@ -431,16 +425,16 @@ function addTracksToMyTracks($w,$tracks,$allow_duplicate = true) {
 				$output = array_slice($tracks, $offset, 50);
 				$offset+=50;
 
-				if(count($output)) {
+				if (count($output)) {
 					$tracks_contain = $api->myTracksContains($output);
 					for ($i = 0; $i < count($output); $i++) {
-						if(! $tracks_contain[$i]) {
+						if (! $tracks_contain[$i]) {
 							$tracks_with_no_dup[] = $output[$i];
 						}
 					}
 				}
 
-			} while(count($output) > 0);
+			} while (count($output) > 0);
 
 			$tracks = $tracks_with_no_dup;
 		}
@@ -450,7 +444,7 @@ function addTracksToMyTracks($w,$tracks,$allow_duplicate = true) {
 		}
 	}
 
-	if(count($tracks) != 0) {
+	if (count($tracks) != 0) {
 
 		try {
 			$offset=0;
@@ -458,12 +452,12 @@ function addTracksToMyTracks($w,$tracks,$allow_duplicate = true) {
 				$output = array_slice($tracks, $offset, 50);
 				$offset+=50;
 
-				if(count($output)) {
+				if (count($output)) {
 					$api->addMyTracks($output);
 
 				}
 
-			} while(count($output) > 0);
+			} while (count($output) > 0);
 
 		}
 		catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
@@ -490,7 +484,7 @@ function addTracksToMyTracks($w,$tracks,$allow_duplicate = true) {
  * @param bool $allow_duplicate (default: true)
  * @return void
  */
-function addTracksToPlaylist($w,$tracks,$playlist_uri,$playlist_name,$allow_duplicate = true) {
+function addTracksToPlaylist($w, $tracks, $playlist_uri, $playlist_name, $allow_duplicate = true) {
 
 	//
 	// Read settings from DB
@@ -511,19 +505,18 @@ function addTracksToPlaylist($w,$tracks,$playlist_uri,$playlist_name,$allow_dupl
 	}
 
 	$api = getSpotifyWebAPI($w);
-	if($api == false)
-	{
+	if ($api == false) {
 		displayNotification("Error: Cannot get SpotifyWebAPI(");
 		return;
 	}
 
 	$tracks_with_no_dup = array();
-	if(!$allow_duplicate) {
+	if (!$allow_duplicate) {
 		try {
 			$playlist_tracks = getThePlaylistTracks($w, $playlist_uri);
 
 			foreach ((array) $tracks as $track) {
-				if(!checkIfDuplicate($playlist_tracks, $track)) {
+				if (!checkIfDuplicate($playlist_tracks, $track)) {
 					$tracks_with_no_dup[] = $track;
 				}
 			}
@@ -536,7 +529,7 @@ function addTracksToPlaylist($w,$tracks,$playlist_uri,$playlist_name,$allow_dupl
 		}
 	}
 
-	if(count($tracks) != 0) {
+	if (count($tracks) != 0) {
 		try {
 			$tmp = explode(':', $playlist_uri);
 
@@ -546,11 +539,11 @@ function addTracksToPlaylist($w,$tracks,$playlist_uri,$playlist_name,$allow_dupl
 				$output = array_slice($tracks, $offset, 100);
 				$offset+=100;
 
-				if(count($output)) {
+				if (count($output)) {
 					$api->addUserPlaylistTracks($userid, $tmp[4], $output);
 				}
 
-			} while(count($output) > 0);
+			} while (count($output) > 0);
 		}
 		catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 			echo "Error(addTracksToPlaylist): (exception " . $e . ")";
@@ -634,7 +627,7 @@ function getPlaylistsForTrack($db, $theme, $track_uri) {
 			if ($noresult==true) {
 				$playlistsfortrack = $playlistsfortrack . " ● ♫ : " . $playlist[0];
 			} else {
-				if($playlist[0] == "") {
+				if ($playlist[0] == "") {
 					$playlistsfortrack =  $playlistsfortrack . " ○ " . 'Your Music';
 				} else {
 					$playlistsfortrack =  $playlistsfortrack . " ○ " . $playlist[0];
@@ -980,7 +973,7 @@ function getTrackArtworkURL($w, $type, $id) {
 		CURLOPT_FOLLOWLOCATION => 1
 	);
 
-	$html = $w->request("http://open.spotify.com/$type/$id",$options);
+	$html = $w->request("http://open.spotify.com/$type/$id", $options);
 
 	if (!empty($html)) {
 		// <meta property="og:image" content="http://o.scdn.co/image/635ee3ae30686e97e01900d2797690e356958729">
@@ -1043,8 +1036,7 @@ function getArtistArtworkURL($w, $artist) {
 function updateLibrary($w) {
 
 	$api = getSpotifyWebAPI($w);
-	if($api == false)
-	{
+	if ($api == false) {
 		displayNotification("Error: Cannot update playlist, authentication issue");
 		return false;
 	}
@@ -1124,11 +1116,11 @@ function updateLibrary($w) {
 		$offsetGetUserPlaylists = 0;
 		$limitGetUserPlaylists = 50;
 		do {
-			$userPlaylists = $api->getUserPlaylists('vdesabou',array(
-	            'fields' => array(),
-	            'limit' => $limitGetUserPlaylists,
-	            'offset' => $offsetGetUserPlaylists
-	        ));
+			$userPlaylists = $api->getUserPlaylists('vdesabou', array(
+					'fields' => array(),
+					'limit' => $limitGetUserPlaylists,
+					'offset' => $offsetGetUserPlaylists
+				));
 
 
 			$savedListPlaylist = array();
@@ -1157,9 +1149,9 @@ function updateLibrary($w) {
 		$limitGetMySavedTracks = 50;
 		do {
 			$userMySavedTracks = $api->getMySavedTracks(array(
-	            'limit' => $limitGetMySavedTracks,
-	            'offset' => $offsetGetMySavedTracks
-	        ));
+					'limit' => $limitGetMySavedTracks,
+					'offset' => $offsetGetMySavedTracks
+				));
 
 			foreach ($userMySavedTracks->items as $track) {
 				$savedMySavedTracks[] = $track;
@@ -1227,11 +1219,11 @@ function updateLibrary($w) {
 			$offsetGetUserPlaylistTracks = 0;
 			$limitGetUserPlaylistTracks = 100;
 			do {
-				$userPlaylistTracks = $api->getUserPlaylistTracks($owner->id,$playlist->id,array(
-		            'fields' => array(),
-		            'limit' => $limitGetUserPlaylistTracks,
-		            'offset' => $offsetGetUserPlaylistTracks
-		        ));
+				$userPlaylistTracks = $api->getUserPlaylistTracks($owner->id, $playlist->id, array(
+						'fields' => array(),
+						'limit' => $limitGetUserPlaylistTracks,
+						'offset' => $offsetGetUserPlaylistTracks
+					));
 
 				foreach ($userPlaylistTracks->items as $track) {
 					$track = $track->track;
@@ -1244,7 +1236,7 @@ function updateLibrary($w) {
 					$artist = $artists[0];
 
 					// save artist in an array
-					if(! checkIfArtistAlreadyThere($savedListArtists, $artist->name)) {
+					if (! checkIfArtistAlreadyThere($savedListArtists, $artist->name)) {
 						$savedListArtists[] = $artist;
 					}
 					$album = $track->album;
@@ -1305,7 +1297,7 @@ function updateLibrary($w) {
 		$artist = $artists[0];
 
 		// save artist in an array
-		if(! checkIfArtistAlreadyThere($savedListArtists, $artist->name)) {
+		if (! checkIfArtistAlreadyThere($savedListArtists, $artist->name)) {
 			$savedListArtists[] = $artist;
 		}
 		$album = $track->album;
@@ -1347,7 +1339,7 @@ function updateLibrary($w) {
 	// Handle artists
 
 	$w->write('Artists▹0▹' . count($savedListArtists) . '▹' . $words[3], 'update_library_in_progress');
- 	$nb_artists = 0;
+	$nb_artists = 0;
 	try {
 
 		$insertArtist = "insert or ignore into artists values (:artist_name,:artist_uri,:artist_artwork_path,:biography)";
@@ -1447,8 +1439,7 @@ function updateLibrary($w) {
  */
 function updatePlaylist($w, $playlist_uri, $playlist_name) {
 	$api = getSpotifyWebAPI($w);
-	if($api == false)
-	{
+	if ($api == false) {
 		displayNotification("Error: Cannot update playlist, authentication issue");
 		return;
 	}
@@ -1515,11 +1506,11 @@ function updatePlaylist($w, $playlist_uri, $playlist_name) {
 			$offsetGetUserPlaylistTracks = 0;
 			$limitGetUserPlaylistTracks = 100;
 			do {
-				$userPlaylistTracks = $api->getUserPlaylistTracks($tmp[2],$tmp[4],array(
-		            'fields' => array(),
-		            'limit' => $limitGetUserPlaylistTracks,
-		            'offset' => $offsetGetUserPlaylistTracks
-		        ));
+				$userPlaylistTracks = $api->getUserPlaylistTracks($tmp[2], $tmp[4], array(
+						'fields' => array(),
+						'limit' => $limitGetUserPlaylistTracks,
+						'offset' => $offsetGetUserPlaylistTracks
+					));
 
 				$nb_tracktotal = $userPlaylistTracks->total;
 
@@ -1660,8 +1651,7 @@ function updatePlaylist($w, $playlist_uri, $playlist_name) {
 function updatePlaylistList($w) {
 	// Note that a user's collaborative playlists are not currently retrievable.
 	$api = getSpotifyWebAPI($w);
-	if($api == false)
-	{
+	if ($api == false) {
 		displayNotification("Error: Cannot update playlist list, authentication issue");
 		return;
 	}
@@ -1729,15 +1719,15 @@ function updatePlaylistList($w) {
 			$offsetGetUserPlaylists = 0;
 			$limitGetUserPlaylists = 50;
 			do {
-				$userPlaylists = $api->getUserPlaylists($userid,array(
-		            'fields' => array(),
-		            'limit' => $limitGetUserPlaylists,
-		            'offset' => $offsetGetUserPlaylists
-		        ));
+				$userPlaylists = $api->getUserPlaylists($userid, array(
+						'fields' => array(),
+						'limit' => $limitGetUserPlaylists,
+						'offset' => $offsetGetUserPlaylists
+					));
 
 				$nb_playlist_total = $userPlaylists->total;
 
-				if($nb_playlist == 0){
+				if ($nb_playlist == 0) {
 					$w->write('Playlist List▹0▹' . $nb_playlist_total . '▹' . $words[3], 'update_library_in_progress');
 				} else {
 					if ($nb_playlist % 4 === 0) {
@@ -1791,11 +1781,11 @@ function updatePlaylistList($w) {
 							$offsetGetUserPlaylistTracks = 0;
 							$limitGetUserPlaylistTracks = 100;
 							do {
-								$userPlaylistTracks = $api->getUserPlaylistTracks($owner->id,$playlist->id,array(
-						            'fields' => array(),
-						            'limit' => $limitGetUserPlaylistTracks,
-						            'offset' => $offsetGetUserPlaylistTracks
-						        ));
+								$userPlaylistTracks = $api->getUserPlaylistTracks($owner->id, $playlist->id, array(
+										'fields' => array(),
+										'limit' => $limitGetUserPlaylistTracks,
+										'offset' => $offsetGetUserPlaylistTracks
+									));
 
 								foreach ($userPlaylistTracks->items as $track) {
 									$track = $track->track;
@@ -1846,7 +1836,7 @@ function updatePlaylistList($w) {
 					} else {
 						// number of tracks has changed
 						// update the playlist
-						if($playlists[2] != $tracks->total) {
+						if ($playlists[2] != $tracks->total) {
 							displayNotification("Updated playlist " . $playlist->name . "\n");
 
 							$stmtDeleteFromTracks->bindValue(':playlist_uri', $playlist->uri);
@@ -1858,11 +1848,11 @@ function updatePlaylistList($w) {
 								$offsetGetUserPlaylistTracks = 0;
 								$limitGetUserPlaylistTracks = 100;
 								do {
-									$userPlaylistTracks = $api->getUserPlaylistTracks($tmp[2],$tmp[4],array(
-							            'fields' => array(),
-							            'limit' => $limitGetUserPlaylistTracks,
-							            'offset' => $offsetGetUserPlaylistTracks
-							        ));
+									$userPlaylistTracks = $api->getUserPlaylistTracks($tmp[2], $tmp[4], array(
+											'fields' => array(),
+											'limit' => $limitGetUserPlaylistTracks,
+											'offset' => $offsetGetUserPlaylistTracks
+										));
 
 									$stmtUpdatePlaylistsNbTracks->bindValue(':nb_tracks', $userPlaylistTracks->total);
 									$stmtUpdatePlaylistsNbTracks->bindValue(':uri', $playlist->uri);
@@ -2030,8 +2020,7 @@ function updatePlaylistList($w) {
 function updateMyMusic($w) {
 
 	$api = getSpotifyWebAPI($w);
-	if($api == false)
-	{
+	if ($api == false) {
 		displayNotification("Error: Cannot update my music, authentication issue");
 		return;
 	}
@@ -2094,9 +2083,9 @@ function updateMyMusic($w) {
 			$limitGetMySavedTracks = 50;
 			do {
 				$userMySavedTracks = $api->getMySavedTracks(array(
-		            'limit' => $limitGetMySavedTracks,
-		            'offset' => $offsetGetMySavedTracks
-		        ));
+						'limit' => $limitGetMySavedTracks,
+						'offset' => $offsetGetMySavedTracks
+					));
 
 				foreach ($userMySavedTracks->items as $track) {
 					$track = $track->track;
@@ -2138,7 +2127,7 @@ function updateMyMusic($w) {
 
 
 					$nb_track++;
-					if($nb_track == 0){
+					if ($nb_track == 0) {
 						$w->write('MyMusic▹0▹' . $userMySavedTracks->total . '▹' . $words[3], 'update_library_in_progress');
 					} else {
 						if ($nb_track % 10 === 0) {

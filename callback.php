@@ -62,7 +62,7 @@ try {
 		// Request a access token using the code from Spotify
 		$ret = $session->requestToken($_GET['code']);
 
-		if($ret == true) {
+		if ($ret == true) {
 			$api = new SpotifyWebAPI\SpotifyWebAPI();
 			// Set the code on the API wrapper
 			$api->setAccessToken($session->getAccessToken());
