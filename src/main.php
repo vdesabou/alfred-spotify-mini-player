@@ -1648,7 +1648,7 @@ if (mb_strlen($query) < 3 ||
 				$w->result(null, 'help', "There is no result for your search", "", './images/warning.png', 'no', null, '');
 			}
 		} // end of YourMusic▹Albums▹
-		elseif ($kind == "Artists") {
+		elseif ($kind == "Settings") {
 			$setting_kind = $words[1];
 			$the_query = $words[2];
 
