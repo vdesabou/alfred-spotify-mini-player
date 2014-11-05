@@ -591,9 +591,12 @@ if ($playlist_uri != "") {
 		else if ($other_action == "update_library") {
 				updateLibrary($w);
 				return;
-			} else if ($other_action == "update_playlist_list") {
+		} else if ($other_action == "update_your_music") {
+				updateMyMusic($w);
+				return;
+		} else if ($other_action == "update_playlist_list") {
 				updatePlaylistList($w);
 				return;
-			}
+		}
 	}
 ?>
