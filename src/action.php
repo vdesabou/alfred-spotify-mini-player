@@ -551,13 +551,13 @@ if ($playlist_uri != "") {
 
 				$section = $rtf->addSection();
 				// centered text
-				$fontTitle = new PHPRtfLite_Font(24, 'Arial', '#000000', '#FFFFFF');
+				$fontTitle = new PHPRtfLite_Font(28, 'Arial', '#000000', '#FFFFFF');
 				$parFormatTitle = new PHPRtfLite_ParFormat(PHPRtfLite_ParFormat::TEXT_ALIGN_CENTER);
 				$section->writeText($artist, $fontTitle, $parFormatTitle);
 
 				$parFormat = new PHPRtfLite_ParFormat();
 				$parFormat->setSpaceAfter(4);
-				$font = new PHPRtfLite_Font(12, 'Arial', '#000000', '#FFFFFF');
+				$font = new PHPRtfLite_Font(14, 'Arial', '#000000', '#FFFFFF');
 				// write text
 				$section->writeText($output, $font, $parFormat);
 
