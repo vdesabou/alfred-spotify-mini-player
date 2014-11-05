@@ -535,15 +535,18 @@ if ($playlist_uri != "") {
 					if($biography->site == "last.fm") {
 						$lastfm = $biography->text;						
 					}
-					$default = $biography->text;
+					$default = 'Source: ' . $biography->site . '\n' . $biography->text;
 				}
 
 				if($wikipedia) {
 					$text = $wikipedia;
+					$artist_name = $artist_name . ' (Source: Wikipedia)'; 
 				} elseif ($lastfm) {
 					$text = $lastfm;
+					$artist_name = $artist_name . ' (Source: Last.FM)';
 				} else {
 					$text = $default;
+					$artist_name = $artist_name . ' (Source: ' . $biography->site . ')';
 				}
 				if($text=="") {
 					$text = "No biography found";
