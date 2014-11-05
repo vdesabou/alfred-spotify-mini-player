@@ -8,9 +8,13 @@
 
 * Control Your Music, you can choose to control the Alfred Playlist or Your Music now
 
-* Featured Playlists
+* Featured Playlists in your country, US and UK
 
-* Update Playlist List now also update playlists which have been updated (not only the ones added or removed as before)
+* Update Playlists now also update playlists which have been updated (not only the ones added or removed as before)
+
+* Reworked biography
+
+* Many more improvements
 
 
 4.6:

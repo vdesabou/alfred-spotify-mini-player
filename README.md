@@ -14,12 +14,12 @@ You can also control Spotify using keywords such as play/next/volmax/random/shuf
 
 ## Screencast
 
-See it in action here [screencast](http://quick.as/nmwxcxx0)
+See it in action here [screencast](http://cl.ly/YNyq)
 
 ## Animated Gifs
 
 
-![Screenshot](https://i.cloudup.com/LPzN0Syjga.gif)
+![Screenshot](http://cl.ly/image/210g0k1M3w0i/Screen%20Recording%202014-11-05%20at%2007.49%20PM.gif)
 
 * Browse and launch your playlists
 
