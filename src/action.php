@@ -511,7 +511,7 @@ if ($playlist_uri != "") {
 				displayNotificationForCurrentTrack();
 				return;
 			}
-		else if ($other_action == "display_biography") {
+		else if (startsWith($other_action,'display_biography')) {
 
 				$json = doWebApiRequest($w,'http://developer.echonest.com/api/v4/artist/biographies?api_key=5EG94BIZEGFEY9AL9&id=' . $artist_uri);
 				$response = $json->response;
@@ -532,13 +532,13 @@ if ($playlist_uri != "") {
 
 				if($wikipedia) {
 					$text = $wikipedia;
-					$artist_name = $artist_name . ' (Source: Wikipedia)';
+					$artist = $artist_name . ' (Source: Wikipedia)';
 				} elseif ($lastfm) {
 					$text = $lastfm;
-					$artist_name = $artist_name . ' (Source: Last.FM)';
+					$artist = $artist_name . ' (Source: Last.FM)';
 				} else {
 					$text = $default;
-					$artist_name = $artist_name . ' (Source: ' . $biography->site . ')';
+					$artist = $artist_name . ' (Source: ' . $biography->site . ')';
 				}
 				if($text=="") {
 					$text = "No biography found";
@@ -553,7 +553,7 @@ if ($playlist_uri != "") {
 				// centered text
 				$fontTitle = new PHPRtfLite_Font(24, 'Arial', '#000000', '#FFFFFF');
 				$parFormatTitle = new PHPRtfLite_ParFormat(PHPRtfLite_ParFormat::TEXT_ALIGN_CENTER);
-				$section->writeText($artist_name, $fontTitle, $parFormatTitle);
+				$section->writeText($artist, $fontTitle, $parFormatTitle);
 
 				$parFormat = new PHPRtfLite_ParFormat();
 				$parFormat->setSpaceAfter(4);
@@ -562,7 +562,11 @@ if ($playlist_uri != "") {
 				$section->writeText($output, $font, $parFormat);
 
 				$rtf->save($file);
-				exec("qlmanage -p \"$file\"");
+				if($other_action == 'display_biography') {
+					exec("qlmanage -p \"$file\";osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Artist▹" . $artist_uri . "∙" . $artist_name . "▹\"'");
+				} else {
+					exec("qlmanage -p \"$file\";osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online▹" . $artist_uri . "@" . $artist_name . "\"'");
+				}
 				return;
 
 			}
