@@ -1,0 +1,137 @@
+Sections
+************
+
+Sections margins and paper width and height can be specified in the same way like for the RTF document. Sections margin and paper width/height will overwrite RTF document margins and paper width/heigth.
+
+.. note::
+
+  See *Document settings* > :ref:`doc-settings_page-margins` and *Document settings* > :ref:`doc-settings_page-size`.
+
+  
+Section columns
+===============
+
+Section text can be spreaded over columns (all having the same width):
+
+.. code-block:: php
+
+    <?php
+    // some bootstraping here
+    
+    $section = $rtf->addSection();
+    // text will spreaded over 3 columns
+    $section->setNumberOfColumns(3);
+    
+
+Another way to define section columns with particular column widths:
+
+.. code-block:: php
+
+    <?php
+    // some bootstraping here
+    
+    $section = $rtf->addSection();
+    // text will spreaded over 3 columns (widths are: 1cm, 2cm, and 3cm)
+    $section->setColumnWidths(array(1, 2, 3));
+
+    
+Separate your section columns with a line, if you like to:
+
+.. code-block:: php
+
+    <?php
+    // some bootstraping here
+    
+    $section = $rtf->addSection();
+    // text will spreaded over 3 columns (widths are: 1cm, 2cm, and 3cm)
+    $section->setColumnWidths(array(1, 2, 3));
+    // line between section columns
+    $section->setLineBetweenColumns();
+    $section->writeText('Lorem ipsum');
+
+
+There is also the posibility to add space between the columns: 
+
+.. code-block:: php
+
+    <?php
+    // some bootstraping here
+    
+    $section = $rtf->addSection();
+    // text will spreaded over 3 columns (widths are: 1cm, 2cm, and 3cm)
+    $section->setColumnWidths(array(1, 2, 3));
+    // 0.2cm of space between section columns
+    $section->setSpaceBetweenColumns(0.2);
+    $section->writeText('Lorem ipsum');
+
+
+Page breaks
+================
+    
+Explizit page break:
+
+.. code-block:: php
+
+    <?php
+    // some bootstraping here
+    
+    $section = $rtf->addSection();
+    $section->writeText('Lorem ipsum');
+    // insert a page break
+    $section->insertPageBreak();
+    $section->writeText('Text on the next page');
+
+
+To prevent a page break, if possible, you can do the following:
+
+.. code-block:: php
+
+    <?php
+    // some bootstraping here
+    
+    $section = $rtf->addSection();
+    $section->writeText('Lorem ipsum');
+    // prevent page break
+    $section->setNoBreak();
+    $section->writeText('Text on the next page');
+
+
+Hyperlinks
+===================
+
+To add a hyperlink:
+
+.. code-block:: php
+
+    <?php
+    // some bootstraping here
+    
+    $section = $rtf->addSection();
+    $section->writeText('Lorem ipsum: ');
+    $section->writeHyperLink('http://lipsum.lipsum.com/', 'Lorem ipsum');
+
+    
+Borders
+==============
+
+.. code-block:: php
+
+    <?php
+    // some bootstraping here
+    
+    $border = new PHPRtfLite_Border(
+        $rtf,                                       // PHPRtfLite instance
+        new PHPRtfLite_Border_Format(2, '#00FF00'), // left border: 2pt, green color
+        new PHPRtfLite_Border_Format(1, '#FFFF00'), // top border: 1pt, yellow color   
+        new PHPRtfLite_Border_Format(2, '#FF0000'), // right border: 2pt, red color
+        new PHPRtfLite_Border_Format(1, '#0000FF')  // bottom border: 1pt, blue color
+    );
+    $section = $rtf->addSection();
+    // set section border
+    $section->setBorder($border);
+    
+    // set one border format for top, left, right, and bottom
+    $section->setBorders(new PHPRtfLite_Border_Format(2, '#00FF00'));
+
+
+Read more about creating borders here: :ref:`borders`.

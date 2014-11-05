@@ -1,17 +1,10 @@
 <?php
 
 // Turn off all error reporting
-error_reporting(0);
+//error_reporting(0);
 
 require './src/functions.php';
-
-use Ratchet\Server\IoServer;
-use Ratchet\Http\HttpServer;
-use Ratchet\WebSocket\WsServer;
-use MyApp\MiniPlayer;
-
-require_once './vendor/autoload.php';
-
+require_once './vendor/phprtflite/phprtflite/lib/PHPRtfLite.php';
 
 // Load and use David Ferguson's Workflows.php class
 require_once './src/workflows.php';
@@ -19,8 +12,7 @@ $w = new Workflows('com.vdesabou.spotify.mini.player');
 
 $query = $argv[1];
 $type = $argv[2];
-$alfredplaylist = $argv[3];
-
+$add_to_option = $argv[3];
 
 $arg = mb_unserialize($query);
 
@@ -45,12 +37,12 @@ $playlist_name = $arg[15];
 $playlist_artwork_path = $arg[16];
 $alfred_playlist_name = $arg[17];
 
-if ($other_action == "update_playlist" && $playlist_uri != "") {
-	refreshPlaylist($w, $playlist_uri);
+if ($other_action == "update_playlist" && $playlist_uri != "" && $playlist_name != "") {
+	updatePlaylist($w, $playlist_uri, $playlist_name);
 	return;
 }
 
-if ($spotify_command != "" && $type == "TRACK" && $alfredplaylist == "") {
+if ($spotify_command != "" && $type == "TRACK" && $add_to_option == "") {
 
 	$spotify_command = str_replace("\\", "", $spotify_command);
 	exec("osascript -e 'tell application \"Spotify\" to $spotify_command'");
@@ -62,214 +54,277 @@ if ($spotify_command != "" && $type == "TRACK" && $alfredplaylist == "") {
 	return;
 }
 
-
 if ($type == "TRACK") {
 
 	if ($track_uri != "") {
-		if ($alfredplaylist != "") {
+		if ($add_to_option != "") {
 
-			if ($alfred_playlist_uri == "" || $alfred_playlist_name == "") {
-				displayNotification("Error: Alfred Playlist is not set");
+			//
+			// Read settings from DB
+			//
+			$getSettings = 'select theme,is_alfred_playlist_active from settings';
+			$dbfile = $w->data() . '/settings.db';
+			exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
+
+			if ($returnValue != 0) {
+				displayNotification("Error: cannot read settings");
 				return;
 			}
 
-			// add track to alfred playlist
-			exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:addtoalfredplaylist:$track_uri:$alfred_playlist_uri\"'");
-			exec("osascript -e 'tell application \"Spotify\" to open location \"$alfred_playlist_uri\"'");
+			foreach ($settings as $setting):
+				$setting = explode("	", $setting);
+			$theme = $setting[0];
+			$is_alfred_playlist_active = $setting[1];
+			endforeach;
 
+			$tmp = explode(':', $track_uri);
 
-			displayNotificationWithArtwork('' . $track_name . '
-added to ' . $alfred_playlist_name, $track_artwork_path);
-
-			if (! $w->internet()) {
-				displayNotificationWithArtwork("Error: No internet connection", './images/warning.png');
-				return;
+			if ($track_artwork_path == "") {
+				$track_artwork_path = getTrackOrAlbumArtwork($w, $theme, $track_uri, true);
 			}
-
-			// update alfred playlist
-			refreshPlaylist($w, $alfred_playlist_uri);
-		} else if ($playlist_uri != "") {
-				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:playtrackwithplaylistcontext:$track_uri:$playlist_uri\"'");
-				exec("osascript -e 'tell application \"Spotify\" to open location \"$playlist_uri\"'");
-				displayNotificationWithArtwork('🔈 ' . $track_name . ' by ' . ucfirst($artist_name), $track_artwork_path);
-				return;
-			}
-		else {
-			if ($other_action == "") {
-				exec("osascript -e 'tell application \"Spotify\" to open location \"$track_uri\"'");
-				displayNotificationWithArtwork('🔈 ' . $track_name . ' by ' . ucfirst($artist_name), $track_artwork_path);
-			}
-		}
-	}
-} else if ($type == "ALBUM") {
-		if ($album_uri == "") {
-			// case of current song with alt
-			$album_uri = getAlbumUriFromName($w, 'black', $album_name, $artist_name);
-
-			if ($album_artwork_path == "") {
-				$album_artwork_path = getTrackOrAlbumArtwork($w, 'black', $album_uri, true);
-			}
-			if ($album_uri == "") {
-				// track is not from library
-				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:playcurrenttrackalbum:" . uniqid() . "\"'");
-				exec("osascript -e 'tell application \"Spotify\" to open location \"$album_uri\"'");
-				displayNotificationWithArtwork('🔈 Album ' . $album_name . ' by ' . ucfirst($artist_name), $album_artwork_path);
-				return;
-			}
-
-			$album_artwork_path = getTrackOrAlbumArtwork($w, 'black', $album_uri, true);
-		}
-
-		if ($album_artwork_path == "") {
-			$album_artwork_path = getTrackOrAlbumArtwork($w, 'black', $album_uri, true);
-		}
-
-		exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:playartistoralbum:$album_uri:" . uniqid() . "\"'");
-		exec("osascript -e 'tell application \"Spotify\" to open location \"$album_uri\"'");
-		displayNotificationWithArtwork('🔈 Album ' . $album_name . ' by ' . ucfirst($artist_name), $album_artwork_path);
-		return;
-	} else if ($type == "ONLINE") {
-		if ($artist_uri == "") {
-			// case of current song with ctrl
-			$artist_uri = getArtistUriFromName($w, 'black', $artist_name);
-
-			if ($artist_uri == "") {
-				$tcpport = getFreeTcpPort();
-				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:current_track_get_artist:" . $tcpport . ":" . uniqid() . "\"'");
-
-				$server = IoServer::factory(
-					new HttpServer(
-						new WsServer(
-							new MiniPlayer()
-						)
-					),
-					$tcpport
-				);
-				// FIX THIS: server will exit when done
-				// Did not find a way to set a timeout
-				$server->run();
-				return;
-			}
-		}
-
-		exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online▹$artist_uri@$artist_name\"'");
-		return;
-	}else if ($type == "STAR") {
-		starCurrentTrack($w);
-		return;
-	}else if ($type == "UNSTAR") {
-		unstarCurrentTrack($w);
-		return;
-	}else if ($type == "RANDOM") {
-		$tcpport = getFreeTcpPort();
-		exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:random_track:" . $tcpport . ":" . uniqid() . "\"'");
-
-		$server = IoServer::factory(
-			new HttpServer(
-				new WsServer(
-					new MiniPlayer()
-				)
-			),
-			$tcpport
-		);
-		// FIX THIS: server will exit when done
-		// Did not find a way to set a timeout
-		$server->run();
-		return;
-	}else if ($type == "CURRENT") {
-		$tcpport = getFreeTcpPort();
-		exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:current_track:" . $tcpport . ":" . uniqid() . "\"'");
-
-		$server = IoServer::factory(
-			new HttpServer(
-				new WsServer(
-					new MiniPlayer()
-				)
-			),
-			$tcpport
-		);
-		// FIX THIS: server will exit when done
-		// Did not find a way to set a timeout
-		$server->run();
-		return;
-	}else if ($type == "NEXT") {
-		exec("osascript -e 'tell application \"Spotify\" to next track'");
-		$tcpport = getFreeTcpPort();
-		exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:current_track:" . $tcpport . ":" . uniqid() . "\"'");
-
-		$server = IoServer::factory(
-			new HttpServer(
-				new WsServer(
-					new MiniPlayer()
-				)
-			),
-			$tcpport
-		);
-		// FIX THIS: server will exit when done
-		// Did not find a way to set a timeout
-		$server->run();
-		return;
-	}else if ($type == "PREVIOUS") {
-		exec("osascript -e 'tell application \"Spotify\" to previous track'");
-		$tcpport = getFreeTcpPort();
-		exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:current_track:" . $tcpport . ":" . uniqid() . "\"'");
-
-		$server = IoServer::factory(
-			new HttpServer(
-				new WsServer(
-					new MiniPlayer()
-				)
-			),
-			$tcpport
-		);
-		// FIX THIS: server will exit when done
-		// Did not find a way to set a timeout
-		$server->run();
-		return;
-	}
-	
-else if ($type == "ALBUM_OR_PLAYLIST") {
-		if ($alfredplaylist != "") {
-
-			if ($album_name != "") {
+			if ($is_alfred_playlist_active == true) {
 
 				if ($alfred_playlist_uri == "" || $alfred_playlist_name == "") {
 					displayNotification("Error: Alfred Playlist is not set");
 					return;
 				}
 
+				// add track to alfred playlist
+				$ret = addTracksToPlaylist($w, $tmp[2], $alfred_playlist_uri, $alfred_playlist_name, false);
+				if (is_numeric($ret) && $ret > 0) {
+					displayNotificationWithArtwork('' . $track_name . ' by ' . $artist_name . ' added to ' . $alfred_playlist_name, $track_artwork_path);
+					return;
+				} else if (is_numeric($ret) && $ret == 0) {
+						displayNotification('Error: ' . $track_name . ' by ' . $artist_name . ' is already in ' . $alfred_playlist_name);
+						return;
+					} else {
+						return;
+					}
+			} else {
+				// add track to your music
+				$ret = addTracksToMyTracks($w, $tmp[2], false);
+				if (is_numeric($ret) && $ret > 0) {
+					displayNotificationWithArtwork('' . $track_name . ' by ' . $artist_name . ' added to Your Music', $track_artwork_path);
+					return;
+				} else if (is_numeric($ret) && $ret == 0) {
+						displayNotification('Error: ' . $track_name . ' by ' . $artist_name . ' is already in Your Music');
+						return;
+					} else {
+						return;
+					}
+			}
+		} else if ($playlist_uri != "") {
+				exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\" in context \"$playlist_uri\"'");
+				displayNotificationWithArtwork('🔈 ' . $track_name . ' by ' . ucfirst($artist_name), $track_artwork_path);
+				return;
+			} else {
+			if ($other_action == "") {
+				exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
+				displayNotificationWithArtwork('🔈 ' . $track_name . ' by ' . ucfirst($artist_name), $track_artwork_path);
+				return;
+			}
+		}
+	}
+} else if ($type == "ALBUM") {
+		if ($album_uri == "") {
+			// case of current song with alt
+			$album_uri = getAlbumUriFromTrack($w, $track_uri);
+			if ($album_uri == false) {
+				displayNotification("Error: cannot get current album");
+				return;
+			}
+			$album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $album_uri, true);
+		}
+		exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
+		displayNotificationWithArtwork('🔈 Album ' . $album_name . ' by ' . ucfirst($artist_name), $album_artwork_path);
+		return;
+	} else if ($type == "ONLINE") {
+		if ($artist_uri == "") {
+			// case of current song with cmd
+			$artist_uri = getArtistUriFromTrack($w, $track_uri);
+			if ($artist_uri == false) {
+				displayNotification("Error: cannot get current artist");
+				return;
+			}
+		}
+
+		exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online▹$artist_uri@$artist_name\"'");
+		return;
+	}else if ($type == "RANDOM") {
+		$track_uri = getRandomTrack($w);
+		if ($track_uri == false) {
+			displayNotification("Error: cannot find a random track");
+		}
+		exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
+		displayNotificationForCurrentTrack();
+		return;
+	}else if ($type == "CURRENT") {
+		displayNotificationForCurrentTrack();
+		return;
+	}else if ($type == "NEXT") {
+		exec("osascript -e 'tell application \"Spotify\" to next track'");
+		displayNotificationForCurrentTrack();
+		return;
+	}else if ($type == "PREVIOUS") {
+		exec("osascript -e 'tell application \"Spotify\" to previous track'");
+		displayNotificationForCurrentTrack();
+		return;
+	}else if ($type == "PLAY") {
+		exec("osascript -e 'tell application \"Spotify\" to playpause'");
+		displayNotificationForCurrentTrack();
+		return;
+	}else if ($type == "PAUSE") {
+		exec("osascript -e 'tell application \"Spotify\" to playpause'");
+		return;
+	}else if ($type == "UPDATE_LIBRARY") {
+		updateLibrary($w);
+		return;
+	}else if ($type == "ADD_CURRENT_TRACK") {
+
+		//
+		// Read settings from DB
+		//
+		$getSettings = 'select theme,is_alfred_playlist_active from settings';
+		$dbfile = $w->data() . '/settings.db';
+		exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
+
+		if ($returnValue != 0) {
+			displayNotification("Error: cannot read settings");
+			return;
+		}
+
+		foreach ($settings as $setting):
+			$setting = explode("	", $setting);
+		$theme = $setting[0];
+		$is_alfred_playlist_active = $setting[1];
+		endforeach;
+
+		if ($is_alfred_playlist_active == true) {
+			addCurrentTrackToAlfredPlaylist($w);
+		} else {
+			addCurrentTrackToMyTracks($w);
+		}
+		return;
+	}
+
+else if ($type == "ALBUM_OR_PLAYLIST") {
+		if ($add_to_option != "") {
+
+			if ($album_name != "") {
+
+				//
+				// Read settings from DB
+				//
+				$getSettings = 'select theme,is_alfred_playlist_active from settings';
+				$dbfile = $w->data() . '/settings.db';
+				exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
+
+				if ($returnValue != 0) {
+					displayNotification("Error: cannot read settings");
+					return;
+				}
+
+				foreach ($settings as $setting):
+					$setting = explode("	", $setting);
+				$theme = $setting[0];
+				$is_alfred_playlist_active = $setting[1];
+				endforeach;
+
 				if ($album_uri == "") {
 					// case of current song with shift
-					$album_uri = getAlbumUriFromName($w, 'black', $album_name, $artist_name);
-
-					if ($album_uri == "") {
-						// track is not from library
-						exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:addcurrenttrackalbumtoalfredplaylist:$alfred_playlist_uri\"'");
-						exec("osascript -e 'tell application \"Spotify\" to open location \"$alfred_playlist_uri\"'");
-						displayNotificationWithArtwork('Album ' . $album_name . '
-added to ' . $alfred_playlist_name, getTrackOrAlbumArtwork($w, $theme, $track_uri, true));
-
-						// update alfred playlist
-						refreshPlaylist($w, $alfred_playlist_uri);
+					$album_uri = getAlbumUriFromTrack($w, $track_uri);
+					if ($album_uri == false) {
+						displayNotification("Error: cannot get current album");
 						return;
 					}
 					$album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $album_uri, true);
 				}
-				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:addtoalfredplaylist:$album_uri:$alfred_playlist_uri\"'");
-				exec("osascript -e 'tell application \"Spotify\" to open location \"$alfred_playlist_uri\"'");
-				displayNotificationWithArtwork('Album ' . $album_name . '
-added to ' . $alfred_playlist_name, $album_artwork_path);
-				// update alfred playlist
-				refreshPlaylist($w, $alfred_playlist_uri);
+
+				if ($is_alfred_playlist_active == true) {
+
+					if ($alfred_playlist_uri == "" || $alfred_playlist_name == "") {
+						displayNotification("Error: Alfred Playlist is not set");
+						return;
+					}
+
+					// add album to alfred playlist
+					$ret = addTracksToPlaylist($w, getTheAlbumTracks($w, $album_uri), $alfred_playlist_uri, $alfred_playlist_name, false);
+					if (is_numeric($ret) && $ret > 0) {
+						displayNotificationWithArtwork('Album ' . $album_name . ' added to ' . $alfred_playlist_name, $album_artwork_path);
+						return;
+					} else if (is_numeric($ret) && $ret == 0) {
+							displayNotification('Error: Album ' . $album_name . ' is already in ' . $alfred_playlist_name);
+							return;
+						} else {
+							return;
+					}
+				} else {
+					// add album to your music
+					$ret = addTracksToMyTracks($w, getTheAlbumTracks($w, $album_uri), false);
+					if (is_numeric($ret) && $ret > 0) {
+						displayNotificationWithArtwork('Album ' . $album_name . ' added to Your Music', $album_artwork_path);
+						return;
+					} else if (is_numeric($ret) && $ret == 0) {
+							displayNotification('Error: Album ' . $album_name . ' is already in Your Music');
+							return;
+						} else {
+						return;
+					}
+				}
+
 				return;
 			} else if ($playlist_uri != "") {
-					exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:addplaylisttoalfredplaylist:$playlist_uri:$alfred_playlist_uri\"'");
-					exec("osascript -e 'tell application \"Spotify\" to open location \"$alfred_playlist_uri\"'");
-					displayNotificationWithArtwork('Playlist ' . $playlist_name . '
-added to ' . $alfred_playlist_name, $playlist_artwork_path);
 
-					// update alfred playlist
-					refreshPlaylist($w, $alfred_playlist_uri);
+					//
+					// Read settings from DB
+					//
+					$getSettings = 'select theme,is_alfred_playlist_active from settings';
+					$dbfile = $w->data() . '/settings.db';
+					exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
+
+					if ($returnValue != 0) {
+						displayNotification("Error: cannot read settings");
+						return;
+					}
+
+					foreach ($settings as $setting):
+						$setting = explode("	", $setting);
+					$theme = $setting[0];
+					$is_alfred_playlist_active = $setting[1];
+					endforeach;
+
+					$playlist_artwork_path = getPlaylistArtwork($w, $theme, $playlist_uri, true, true);
+
+					if ($is_alfred_playlist_active == true) {
+						if ($playlist_uri == $alfred_playlist_uri) {
+							displayNotification("Error: cannot add Alfred Playlist " . $alfred_playlist_name . " to itself!");
+							return;
+						}
+						// add playlist to alfred playlist
+						$ret = addTracksToPlaylist($w, getThePlaylistTracks($w, $playlist_uri), $alfred_playlist_uri, $alfred_playlist_name, false);
+						if (is_numeric($ret) && $ret > 0) {
+							displayNotificationWithArtwork('Playlist ' . $playlist_name . ' added to ' . $alfred_playlist_name, $playlist_artwork_path);
+							return;
+						} else if (is_numeric($ret) && $ret == 0) {
+								displayNotification('Error: Playlist ' . $playlist_name . ' is already in ' . $alfred_playlist_name);
+								return;
+							} else {
+								return;
+						}
+					} else {
+						// add playlist to your music
+						$ret = addTracksToMyTracks($w, getThePlaylistTracks($w, $playlist_uri), false);
+						if (is_numeric($ret) && $ret > 0) {
+							displayNotificationWithArtwork('Playlist ' . $playlist_name . ' added to Your Music', $playlist_artwork_path);
+							return;
+						} else if (is_numeric($ret) && $ret == 0) {
+								displayNotification('Error: Playlist ' . $playlist_name . ' is already in Your Music');
+								return;
+							} else {
+								return;
+						}
+					}
+
 					return;
 				}
 		}
@@ -277,35 +332,23 @@ added to ' . $alfred_playlist_name, $playlist_artwork_path);
 
 		if ($artist_uri == "") {
 			// case of current song with cmd
-			$artist_uri = getArtistUriFromName($w, 'black', $artist_name);
-
-			if ($artist_artwork_path == "") {
-				$artist_artwork_path = getTrackOrAlbumArtwork($w, 'black', $track_uri, true);
-			}
-
-			if ($artist_uri == "") {
-				// artist is not from library
-				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:playcurrenttrackartist\"'");
-				exec("osascript -e 'tell application \"Spotify\" to open location \"$track_uri\"'");
-				displayNotificationWithArtwork('🔈 Artist ' . $artist_name, $artist_artwork_path);
+			$artist_uri = getArtistUriFromTrack($w, $track_uri);
+			if ($artist_uri == false) {
+				displayNotification("Error: cannot get current artist");
 				return;
 			}
+			$artist_artwork_path = getArtistArtwork($w, 'black', $artist_uri, true);
 		}
 
-		if ($artist_artwork_path == "") {
-			$artist_artwork_path = getTrackOrAlbumArtwork($w, 'black', $track_uri, true);
-		}
-
-		exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:playartistoralbum:$artist_uri:" . uniqid() . "\"'");
-		exec("osascript -e 'tell application \"Spotify\" to open location \"$artist_uri\"'");
+		exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
 		displayNotificationWithArtwork('🔈 Artist ' . $artist_name, $artist_artwork_path);
 		return;
 	}
 
 if ($playlist_uri != "") {
-	exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:startplaylist:$playlist_uri:" . uniqid() . "\"'");
-	exec("osascript -e 'tell application \"Spotify\" to open location \"$playlist_uri\"'");
+	exec("osascript -e 'tell application \"Spotify\" to play track \"$playlist_uri\"'");
 	displayNotificationWithArtwork('🔈 Playlist ' . $playlist_name, $playlist_artwork_path);
+	return;
 }else if ($other_settings != "") {
 		$setting = explode('▹', $other_settings);
 		if ($setting[0] == "MAX_RESULTS") {
@@ -313,7 +356,23 @@ if ($playlist_uri != "") {
 			$dbfile = $w->data() . "/settings.db";
 			exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 			displayNotification("Max results set to $setting[1]");
-		} else if ($setting[0] == "ALFRED_PLAYLIST") {
+			return;
+		}
+		else if ($setting[0] == "Oauth_Client_ID") {
+				$setSettings = 'update settings set oauth_client_id=\"' . $setting[1] . '\"';
+				$dbfile = $w->data() . "/settings.db";
+				exec("sqlite3 \"$dbfile\" \"$setSettings\"");
+				displayNotification("Client ID set to $setting[1]");
+				return;
+			}
+		else if ($setting[0] == "Oauth_Client_SECRET") {
+				$setSettings = 'update settings set oauth_client_secret=\"' . $setting[1] . '\"';
+				$dbfile = $w->data() . "/settings.db";
+				exec("sqlite3 \"$dbfile\" \"$setSettings\"");
+				displayNotification("Client Secret set to $setting[1]");
+				return;
+			}
+		else if ($setting[0] == "ALFRED_PLAYLIST") {
 				$setSettings = 'update settings set alfred_playlist_uri=\"' . $setting[1] . '\"' . ',alfred_playlist_name=\"' . $setting[2] . '\"';
 				$dbfile = $w->data() . "/settings.db";
 				exec("sqlite3 \"$dbfile\" \"$setSettings\"");
@@ -327,13 +386,10 @@ if ($playlist_uri != "") {
 					displayNotification("Error: Alfred Playlist is not set");
 					return;
 				}
-				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:clearplaylist:$setting[1]:" . uniqid() . "\"'");
-				exec("osascript -e 'tell application \"Spotify\" to open location \"$setting[1]\"'");
 
-				displayNotificationWithArtwork('Alfred Playlist ' . $setting[2] . ' was cleared' , getPlaylistArtwork($w, 'black', $setting[1], true));
-
-				// update alfred playlist
-				refreshPlaylist($w, $setting[1]);
+				if (clearPlaylist($w, $setting[1], $setting[2])) {
+					displayNotificationWithArtwork('Alfred Playlist ' . $setting[2] . ' was cleared' , getPlaylistArtwork($w, 'black', $setting[1], true));
+				}
 				return;
 			} else if ($setting[0] == "GET_LYRICS") {
 				if (! $w->internet()) {
@@ -341,15 +397,17 @@ if ($playlist_uri != "") {
 					return;
 				}
 				getLyrics($w, $setting[1], $setting[2]);
+				return;
 			}
 	} else if ($original_query != "") {
 		exec("osascript -e 'tell application \"Alfred 2\" to search \"spotifious $original_query\"'");
+		return;
 	} else if ($other_action != "") {
 
 		//
 		// Read settings from DB
 		//
-		$getSettings = 'select theme from settings';
+		$getSettings = 'select theme,is_alfred_playlist_active from settings';
 		$dbfile = $w->data() . '/settings.db';
 		exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
 
@@ -358,82 +416,95 @@ if ($playlist_uri != "") {
 			return;
 		}
 
-
 		foreach ($settings as $setting):
-
 			$setting = explode("	", $setting);
-
 		$theme = $setting[0];
+		$is_alfred_playlist_active = $setting[1];
 		endforeach;
 
 		if ($other_action == "disable_all_playlist") {
 			$setSettings = "update settings set all_playlists=0";
 			$dbfile = $w->data() . "/settings.db";
 			exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-			displayNotificationWithArtwork("Search scope set to starred playlist", './images/' . $theme . '/' . 'search.png');
+			displayNotificationWithArtwork("Search scope set to your music", './images/' . $theme . '/' . 'search.png');
+			return;
 		} else if ($other_action == "enable_all_playlist") {
 				$setSettings = "update settings set all_playlists=1";
 				$dbfile = $w->data() . "/settings.db";
 				exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 				displayNotificationWithArtwork("Search scope set to all playlists", './images/' . $theme . '/' . 'search.png');
+				return;
 			} else if ($other_action == "enable_spotifiuous") {
 				$setSettings = "update settings set is_spotifious_active=1";
 				$dbfile = $w->data() . "/settings.db";
 				exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 				displayNotificationWithArtwork("Spotifious is now enabled", './images/' . $theme . '/' . 'check.png');
+				return;
 			} else if ($other_action == "disable_spotifiuous") {
 				$setSettings = "update settings set is_spotifious_active=0";
 				$dbfile = $w->data() . "/settings.db";
 				exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 				displayNotificationWithArtwork("Spotifious is now disabled", './images/' . $theme . '/' . 'uncheck.png');
+				return;
 			} else if ($other_action == "set_theme_to_black") {
 				$setSettings = "update settings set theme='black'";
 				$dbfile = $w->data() . "/settings.db";
 				exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 				displayNotificationWithArtwork("Theme set to black", './images/' . 'black' . '/' . 'check.png');
+				return;
 			} else if ($other_action == "set_theme_to_green") {
 				$setSettings = "update settings set theme='green'";
 				$dbfile = $w->data() . "/settings.db";
 				exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 				displayNotificationWithArtwork("Theme set to green", './images/' . 'green' . '/' . 'check.png');
+				return;
 			} else if ($other_action == "set_theme_to_new") {
 				$setSettings = "update settings set theme='new'";
 				$dbfile = $w->data() . "/settings.db";
 				exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 				displayNotificationWithArtwork("Theme set to new", './images/' . 'new' . '/' . 'check.png');
+				return;
 			} else if ($other_action == "enable_displaymorefrom") {
 				$setSettings = "update settings set is_displaymorefrom_active=1";
 				$dbfile = $w->data() . "/settings.db";
 				exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 				displayNotificationWithArtwork("Now Playing is now enabled", './images/' . $theme . '/' . 'check.png');
+				return;
 			} else if ($other_action == "disable_displaymorefrom") {
 				$setSettings = "update settings set is_displaymorefrom_active=0";
 				$dbfile = $w->data() . "/settings.db";
 				exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 				displayNotificationWithArtwork("Now Playing is now disabled", './images/' . $theme . '/' . 'uncheck.png');
+				return;
 			} else if ($other_action == "enable_lyrics") {
 				$setSettings = "update settings set is_lyrics_active=1";
 				$dbfile = $w->data() . "/settings.db";
 				exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 				displayNotificationWithArtwork("Get Lyrics is now enabled", './images/' . $theme . '/' . 'check.png');
+				return;
 			} else if ($other_action == "disable_lyrics") {
 				$setSettings = "update settings set is_lyrics_active=0";
 				$dbfile = $w->data() . "/settings.db";
 				exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 				displayNotificationWithArtwork("Get Lyrics is now disabled", './images/' . $theme . '/' . 'uncheck.png');
+				return;
 			} else if ($other_action == "enable_alfred_playlist") {
 				$setSettings = "update settings set is_alfred_playlist_active=1";
 				$dbfile = $w->data() . "/settings.db";
 				exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 				displayNotificationWithArtwork("Alfred Playlist is now enabled", './images/' . $theme . '/' . 'check.png');
+				return;
 			} else if ($other_action == "disable_alfred_playlist") {
 				$setSettings = "update settings set is_alfred_playlist_active=0";
 				$dbfile = $w->data() . "/settings.db";
 				exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 				displayNotificationWithArtwork("Alfred Playlist is now disabled", './images/' . $theme . '/' . 'uncheck.png');
-			} else if ($other_action == "open_spotify_export_app") {
-				exec("osascript -e 'tell application \"Spotify\" to activate'");
-				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer\"'");
+				return;
+			}else if ($other_action == "Oauth_Login") {
+				exec("php -S localhost:15298 > /tmp/spotify_mini_player_web_server.log 2>&1 &");
+				sleep(2);
+				exec("open http://localhost:15298");
+				return;
 			} else if ($other_action == "check_for_update") {
 				if (! $w->internet()) {
 					displayNotificationWithArtwork("Error: No internet connection", './images/warning.png');
@@ -446,7 +517,7 @@ if ($playlist_uri != "") {
 					$dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
 					$dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 				} catch (PDOException $e) {
-					handleDbIssuePdo('new', $dbsettings);
+					handleDbIssuePdoEcho($dbsettings);
 					$dbsettings=null;
 					return;
 				}
@@ -457,110 +528,94 @@ if ($playlist_uri != "") {
 				else if ($check_results == null) {
 						displayNotificationWithArtwork('No update available', './images/' . $theme . '/' . 'check_update.png');
 					}
-
-			} else if ($other_action == "star") {
-				starCurrentTrack($w);
-				return;
-			} else if ($other_action == "unstar") {
-				unstarCurrentTrack($w);
 				return;
 			} else if ($other_action == "current") {
-				$tcpport = getFreeTcpPort();
-				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:current_track:" . $tcpport . ":" . uniqid() . "\"'");
-		
-				$server = IoServer::factory(
-					new HttpServer(
-						new WsServer(
-							new MiniPlayer()
-						)
-					),
-					$tcpport
-				);
-				// FIX THIS: server will exit when done
-				// Did not find a way to set a timeout
-				$server->run();
+				displayNotificationForCurrentTrack();
+				return;
+			} else if ($other_action == "add_current_track") {
+				if ($is_alfred_playlist_active == true) {
+					addCurrentTrackToAlfredPlaylist($w);
+				} else {
+					addCurrentTrackToMyTracks($w);
+				}
 				return;
 			} else if ($other_action == "previous") {
 				exec("osascript -e 'tell application \"Spotify\" to previous track'");
-				$tcpport = getFreeTcpPort();
-				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:current_track:" . $tcpport . ":" . uniqid() . "\"'");
-		
-				$server = IoServer::factory(
-					new HttpServer(
-						new WsServer(
-							new MiniPlayer()
-						)
-					),
-					$tcpport
-				);
-				// FIX THIS: server will exit when done
-				// Did not find a way to set a timeout
-				$server->run();
+				displayNotificationForCurrentTrack();
 				return;
 			} else if ($other_action == "next") {
 				exec("osascript -e 'tell application \"Spotify\" to next track'");
-				$tcpport = getFreeTcpPort();
-				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:current_track:" . $tcpport . ":" . uniqid() . "\"'");
-		
-				$server = IoServer::factory(
-					new HttpServer(
-						new WsServer(
-							new MiniPlayer()
-						)
-					),
-					$tcpport
-				);
-				// FIX THIS: server will exit when done
-				// Did not find a way to set a timeout
-				$server->run();
+				displayNotificationForCurrentTrack();
 				return;
 			} else if ($other_action == "random") {
-				$tcpport = getFreeTcpPort();
-				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:random_track:" . $tcpport . ":" . uniqid() . "\"'");
-
-				$server = IoServer::factory(
-					new HttpServer(
-						new WsServer(
-							new MiniPlayer()
-						)
-					),
-					$tcpport
-				);
-				// FIX THIS: server will exit when done
-				// Did not find a way to set a timeout
-				$server->run();
+				$track_uri = getRandomTrack($w);
+				if ($track_uri == false) {
+					displayNotification("Error: cannot find a random track");
+					return;
+				}
+				exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
+				displayNotificationForCurrentTrack();
 				return;
 			}
-		else if ($other_action == "display_biography") {
-				$getBiography = "select artist_biography from artists where artist_name='" . $artist_name . "'";
+		else if (startsWith($other_action, 'display_biography')) {
 
-				$dbfile = $w->data() . "/library.db";
-				exec("sqlite3 -separator '	' \"$dbfile\" \"$getBiography\" 2>&1", $biographs, $returnValue);
+				$json = doWebApiRequest($w, 'http://developer.echonest.com/api/v4/artist/biographies?api_key=5EG94BIZEGFEY9AL9&id=' . $artist_uri);
+				$response = $json->response;
 
-				if ($returnValue != 0) {
-					displayNotification("There is a problem with the library, try to update it");
-					return;
+				$file = $w->cache() . '/spotify_mini_player_biography.rtf';
+				PHPRtfLite::registerAutoloader();
+
+				foreach ($response->biographies as $biography) {
+
+					if ($biography->site == "wikipedia") {
+						$wikipedia = $biography->text;
+					}
+					if ($biography->site == "last.fm") {
+						$lastfm = $biography->text;
+					}
+					$default = 'Source: ' . $biography->site . '\n' . $biography->text;
 				}
 
-				if (count($biographs) == 0) {
-					displayNotificationWithArtwork("No biography found", './images/' . $theme . '/' . 'biography.png');
-					return;
+				if ($wikipedia) {
+					$text = $wikipedia;
+					$artist = $artist_name . ' (Source: Wikipedia)';
+				} elseif ($lastfm) {
+					$text = $lastfm;
+					$artist = $artist_name . ' (Source: Last.FM)';
+				} else {
+					$text = $default;
+					$artist = $artist_name . ' (Source: ' . $biography->site . ')';
 				}
+				if ($text=="") {
+					$text = "No biography found";
+					$artist = $artist_name;
+				}
+				$output=strip_tags($text);
 
-				foreach ($biographs as $biography):
-					$biography = explode("	", $biography);
+				$file = $w->cache() . '/spotify_mini_player_biography.rtf';
 
-				if ($biography[0] != "") {
-					$output=strip_tags($biography[0]);
-					echo "🎓 $artist_name\n---------------------------\n$output";
-					return;
+				$rtf = new PHPRtfLite();
+
+				$section = $rtf->addSection();
+				// centered text
+				$fontTitle = new PHPRtfLite_Font(28, 'Arial', '#000000', '#FFFFFF');
+				$parFormatTitle = new PHPRtfLite_ParFormat(PHPRtfLite_ParFormat::TEXT_ALIGN_CENTER);
+				$section->writeText($artist, $fontTitle, $parFormatTitle);
+
+				$parFormat = new PHPRtfLite_ParFormat();
+				$parFormat->setSpaceAfter(4);
+				$font = new PHPRtfLite_Font(14, 'Arial', '#000000', '#FFFFFF');
+				// write text
+				$section->writeText($output, $font, $parFormat);
+
+				$rtf->save($file);
+				if ($other_action == 'display_biography') {
+					exec("qlmanage -p \"$file\";osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Artist▹" . $artist_uri . "∙" . $artist_name . "▹\"'");
+				} else {
+					exec("qlmanage -p \"$file\";osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online▹" . $artist_uri . "@" . $artist_name . "\"'");
 				}
-				else {
-					displayNotificationWithArtwork("No biography found", './images/' . $theme . '/' . 'biography.png');
-					return;
-				}
-				endforeach;
 				return;
+
 			}
 		else if ($other_action == "morefromthisartist") {
 
@@ -571,183 +626,24 @@ if ($playlist_uri != "") {
 				exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online▹" . $artist_uri . "@" . escapeQuery($artist_name) . "\"'");
 			}
 		else if ($other_action == "playartist") {
-	
-				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:playartistoralbum:$artist_uri:" . uniqid() . "\"'");
-				exec("osascript -e 'tell application \"Spotify\" to open location \"$artist_uri\"'");
+				exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
 				displayNotificationWithArtwork('🔈 Artist ' . $artist_name, $artist_artwork_path);
 				return;
 			}
+		else if ($other_action == "playalbum") {
+				exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
+				displayNotificationWithArtwork('🔈 Album ' . $album_name, $album_artwork_path);
+				return;
+			}
 		else if ($other_action == "update_library") {
-				if (! $w->internet()) {
-					displayNotificationWithArtwork("Error: No internet connection", './images/warning.png');
-					return;
-				}
-				touch($w->data() . "/update_library_in_progress");
-				$w->write('InitLibrary▹' . 0 . '▹' . 0 . '▹' . time(), 'update_library_in_progress');
-
-				$tcpport = getFreeTcpPort();
-				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:update_library:" . $tcpport . ":" . uniqid() . "\"'");
-
-				$server = IoServer::factory(
-					new HttpServer(
-						new WsServer(
-							new MiniPlayer()
-						)
-					),
-					$tcpport
-				);
-				// FIX THIS: server will exit when done
-				// Did not find a way to set a timeout
-				$server->run();
+				updateLibrary($w);
+				return;
+			} else if ($other_action == "update_your_music") {
+				updateMyMusic($w);
+				return;
 			} else if ($other_action == "update_playlist_list") {
-				if (! $w->internet()) {
-					displayNotificationWithArtwork("Error: No internet connection", './images/warning.png');
-					return;
-				}
-				touch($w->data() . "/update_library_in_progress");
-				$w->write('InitPlaylistList▹' . 0 . '▹' . 0 . '▹' . time(), 'update_library_in_progress');
-
-				$tcpport = getFreeTcpPort();
-				exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:update_playlist_list:" . $tcpport . ":" . uniqid() . "\"'");
-
-				$server = IoServer::factory(
-					new HttpServer(
-						new WsServer(
-							new MiniPlayer()
-						)
-					),
-					$tcpport
-				);
-				// FIX THIS: server will exit when done
-				// Did not find a way to set a timeout
-				$server->run();
+				updatePlaylistList($w);
+				return;
 			}
 	}
-
-
-/**
- * starCurrentTrack function.
- *
- * @access public
- * @param mixed $w
- * @return void
- */
-function starCurrentTrack($w) {
-	$tcpport = getFreeTcpPort();
-	$getUser = 'select username from user';
-	$dbfile = $w->data() . '/library.db';
-	exec("sqlite3 -separator '	' \"$dbfile\" \"$getUser\" 2>&1", $users, $returnValue);
-
-	if ($returnValue != 0) {
-		displayNotification('An error happened with user database');
-		return;
-	}
-
-	foreach ($users as $user):
-		$user = explode("	", $user);
-	$username = $user[0];
-	endforeach;
-
-	touch($w->data() . "/update_library_in_progress");
-	$w->write('InitPlaylist▹' . 0 . '▹' . 0 . '▹' . time(), 'update_library_in_progress');
-
-	exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:star:" . $tcpport . ":" . uniqid() . "\"'");
-	exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:user:$username:starred\"'");
-
-
-
-	$server = IoServer::factory(
-		new HttpServer(
-			new WsServer(
-				new MiniPlayer()
-			)
-		),
-		$tcpport
-	);
-	// FIX THIS: server will exit when done
-	// Did not find a way to set a timeout
-	$server->run();
-	return;
-}
-
-
-/**
- * unstarCurrentTrack function.
- *
- * @access public
- * @param mixed $w
- * @return void
- */
-function unstarCurrentTrack($w) {
-	$tcpport = getFreeTcpPort();
-	$getUser = 'select username from user';
-	$dbfile = $w->data() . '/library.db';
-	exec("sqlite3 -separator '	' \"$dbfile\" \"$getUser\" 2>&1", $users, $returnValue);
-
-	if ($returnValue != 0) {
-		displayNotification('An error happened with user database');
-		return;
-	}
-
-	foreach ($users as $user):
-		$user = explode("	", $user);
-	$username = $user[0];
-	endforeach;
-
-	touch($w->data() . "/update_library_in_progress");
-	$w->write('InitPlaylist▹' . 0 . '▹' . 0 . '▹' . time(), 'update_library_in_progress');
-
-	exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:unstar:" . $tcpport . ":" . uniqid() . "\"'");
-	exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:user:$username:starred\"'");
-
-
-
-	$server = IoServer::factory(
-		new HttpServer(
-			new WsServer(
-				new MiniPlayer()
-			)
-		),
-		$tcpport
-	);
-	// FIX THIS: server will exit when done
-	// Did not find a way to set a timeout
-	$server->run();
-	return;
-}
-
-
-/**
- * refreshPlaylist function.
- *
- * @access public
- * @param mixed $w
- * @string $playlist_uri
- * @return void
- */
-function refreshPlaylist($w, $playlist_uri) {
-	// update alfred playlist
-	touch($w->data() . "/update_library_in_progress");
-	$w->write('InitPlaylist▹' . 0 . '▹' . 0 . '▹' . time(), 'update_library_in_progress');
-
-	$tcpport = getFreeTcpPort();
-	exec("osascript -e 'tell application \"Spotify\" to open location \"spotify:app:miniplayer:update_playlist:" . $playlist_uri . ":" . $tcpport . ":" . uniqid() . "\"'");
-	exec("osascript -e 'tell application \"Spotify\" to open location \"$playlist_uri\"'");
-
-	$server = IoServer::factory(
-		new HttpServer(
-			new WsServer(
-				new MiniPlayer()
-			)
-		),
-		$tcpport
-	);
-	// FIX THIS: server will exit when done
-	// Did not find a way to set a timeout
-	$server->run();
-	return;
-
-}
-
-
 ?>

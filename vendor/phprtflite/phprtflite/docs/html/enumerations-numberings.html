@@ -1,0 +1,184 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Enumerations / Numberings &mdash; PHPRtfLite v1.x documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.x',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="PHPRtfLite v1.x documentation" href="index.html" />
+    <link rel="next" title="Footnotes / Endnotes" href="footnotes-endnotes.html" />
+    <link rel="prev" title="Headers and footers" href="header-footer.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="footnotes-endnotes.html" title="Footnotes / Endnotes"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="header-footer.html" title="Headers and footers"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">PHPRtfLite v1.x documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="enumerations-numberings">
+<h1>Enumerations / Numberings<a class="headerlink" href="#enumerations-numberings" title="Permalink to this headline">¶</a></h1>
+<p>Enumerations and numberings can be added to table cells and sections. They can be nested.</p>
+<div class="section" id="enumerations">
+<h2>Enumerations<a class="headerlink" href="#enumerations" title="Permalink to this headline">¶</a></h2>
+<p>Enumeration example:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="c1">// first level enumeration</span>
+<span class="nv">$enum</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PHPRtfLite_List_Enumeration</span><span class="p">(</span><span class="nv">$rtf</span><span class="p">);</span>
+<span class="nv">$enum</span><span class="o">-&gt;</span><span class="na">addItem</span><span class="p">(</span><span class="s1">&#39;hello world&#39;</span><span class="p">);</span>
+<span class="nv">$enum</span><span class="o">-&gt;</span><span class="na">addItem</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">);</span>
+<span class="nv">$enum</span><span class="o">-&gt;</span><span class="na">addItem</span><span class="p">(</span><span class="s1">&#39;bar&#39;</span><span class="p">);</span>
+<span class="c1">// second level enumeration</span>
+<span class="nv">$subEnum</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PHPRtfLite_List_Enumeration</span><span class="p">(</span><span class="nv">$rtf</span><span class="p">);</span>
+<span class="nv">$subEnum</span><span class="o">-&gt;</span><span class="na">addItem</span><span class="p">(</span><span class="s1">&#39;hello world&#39;</span><span class="p">);</span>
+<span class="nv">$subEnum</span><span class="o">-&gt;</span><span class="na">addItem</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">);</span>
+<span class="nv">$subEnum</span><span class="o">-&gt;</span><span class="na">addItem</span><span class="p">(</span><span class="s1">&#39;bar&#39;</span><span class="p">);</span>
+<span class="nv">$enum</span><span class="o">-&gt;</span><span class="na">addList</span><span class="p">(</span><span class="nv">$subEnum</span><span class="p">);</span>
+
+<span class="nv">$section</span> <span class="o">=</span> <span class="nv">$rtf</span><span class="o">-&gt;</span><span class="na">addSection</span><span class="p">();</span>
+<span class="c1">// add enumeration to a section</span>
+<span class="nv">$section</span><span class="o">-&gt;</span><span class="na">addList</span><span class="p">(</span><span class="nv">$enum</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>For enumerations the following types are supported:</p>
+<ul class="simple">
+<li>TYPE_BULLET   uses bullets as enumeration characters (default)</li>
+<li>TYPE_ARROW    uses arrows as enumeration characters</li>
+<li>TYPE_CIRCLE   uses circles as enumeration characters</li>
+<li>TYPE_SQUARE   uses squares as enumeration characters</li>
+<li>TYPE_DIAMOND  uses diamonds as enumeration characters</li>
+</ul>
+<p>The bullet character are the default character for enumerations.</p>
+</div>
+<div class="section" id="numberings">
+<h2>Numberings<a class="headerlink" href="#numberings" title="Permalink to this headline">¶</a></h2>
+<p>Numbering example:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="c1">// first level numbering</span>
+<span class="nv">$numList</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PHPRtfLite_List_Numbering</span><span class="p">(</span><span class="nv">$rtf</span><span class="p">);</span>
+<span class="nv">$numList</span><span class="o">-&gt;</span><span class="na">addItem</span><span class="p">(</span><span class="s1">&#39;hello world&#39;</span><span class="p">);</span>
+<span class="nv">$numList</span><span class="o">-&gt;</span><span class="na">addItem</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">);</span>
+<span class="nv">$numList</span><span class="o">-&gt;</span><span class="na">addItem</span><span class="p">(</span><span class="s1">&#39;bar&#39;</span><span class="p">);</span>
+
+<span class="c1">// second level numbering</span>
+<span class="nv">$subNumList</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PHPRtfLite_List_Numbering</span><span class="p">(</span><span class="nv">$rtf</span><span class="p">);</span>
+<span class="nv">$subNumList</span><span class="o">-&gt;</span><span class="na">addItem</span><span class="p">(</span><span class="s1">&#39;hello world&#39;</span><span class="p">);</span>
+<span class="nv">$subNumList</span><span class="o">-&gt;</span><span class="na">addItem</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">);</span>
+<span class="nv">$subNumList</span><span class="o">-&gt;</span><span class="na">addItem</span><span class="p">(</span><span class="s1">&#39;bar&#39;</span><span class="p">);</span>
+<span class="nv">$numList</span><span class="o">-&gt;</span><span class="na">addList</span><span class="p">(</span><span class="nv">$subNumList</span><span class="p">);</span>
+<span class="c1">// add item in the first level</span>
+<span class="nv">$numList</span><span class="o">-&gt;</span><span class="na">addItem</span><span class="p">(</span><span class="s1">&#39;foobar&#39;</span><span class="p">);</span>
+
+<span class="nv">$section</span> <span class="o">=</span> <span class="nv">$rtf</span><span class="o">-&gt;</span><span class="na">addSection</span><span class="p">();</span>
+<span class="c1">// add numbering to a section</span>
+<span class="nv">$section</span><span class="o">-&gt;</span><span class="na">addList</span><span class="p">(</span><span class="nv">$numList</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>For numberings the following types are supported:</p>
+<ul class="simple">
+<li>TYPE_ARABIC_NUM   counting in arabic numbers (default)</li>
+<li>TYPE_ALPHA_UPPER  counting in alphanumeric characters in upper case</li>
+<li>TYPE_ALPHA_LOWER  counting in alphanumeric characters in lower case</li>
+<li>TYPE_ROMAN_UPPER  counting in roman characters in upper case</li>
+<li>TYPE_ROMAN_LOWER  counting in roman characters in lower case</li>
+</ul>
+<p>Arabic numbering is the default type.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Enumerations / Numberings</a><ul>
+<li><a class="reference internal" href="#enumerations">Enumerations</a></li>
+<li><a class="reference internal" href="#numberings">Numberings</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="header-footer.html"
+                        title="previous chapter">Headers and footers</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="footnotes-endnotes.html"
+                        title="next chapter">Footnotes / Endnotes</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/enumerations-numberings.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="footnotes-endnotes.html" title="Footnotes / Endnotes"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="header-footer.html" title="Headers and footers"
+             >previous</a> |</li>
+        <li><a href="index.html">PHPRtfLite v1.x documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, sigmaz.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,27 @@
+{
+    "name": "jwilsson/spotify-web-api-php",
+    "description": "PHP implementation of Spotify's Web API.",
+    "type": "library",
+    "license": "MIT",
+    "keywords": ["spotify"],
+    "homepage": "https://github.com/jwilsson/spotify-web-api-php",
+    "authors": [
+        {
+            "name": "Jonathan Wilsson",
+            "email": "jonathan.wilsson@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.*",
+        "satooshi/php-coveralls": "dev-master",
+        "vlucas/phpdotenv": "1.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "SpotifyWebAPI\\": "src/"
+        }
+    }
+}

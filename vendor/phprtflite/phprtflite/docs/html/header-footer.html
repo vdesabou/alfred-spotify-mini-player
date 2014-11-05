@@ -1,0 +1,198 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Headers and footers &mdash; PHPRtfLite v1.x documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.x',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="PHPRtfLite v1.x documentation" href="index.html" />
+    <link rel="next" title="Enumerations / Numberings" href="enumerations-numberings.html" />
+    <link rel="prev" title="Images" href="images.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="enumerations-numberings.html" title="Enumerations / Numberings"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="images.html" title="Images"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">PHPRtfLite v1.x documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="headers-and-footers">
+<span id="header-footer"></span><h1>Headers and footers<a class="headerlink" href="#headers-and-footers" title="Permalink to this headline">¶</a></h1>
+<p>Headers and footers can be defined for the RTF document. When sections are used, headers and footers must be defined through the sections, otherwise the headers and footers must be defined through the PHPRtfLite instance.</p>
+<p>Header / footer types:</p>
+<ul class="simple">
+<li>TYPE_ALL (default)</li>
+<li>TYPE_LEFT</li>
+<li>TYPE_RIGHT</li>
+<li>TYPE_FIRST</li>
+</ul>
+<div class="section" id="type-all">
+<h2>TYPE_ALL<a class="headerlink" href="#type-all" title="Permalink to this headline">¶</a></h2>
+<p>Example for setting the header and footer of the RTF document:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="c1">// rtf document instance</span>
+<span class="nv">$rtf</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PHPRtfLite</span><span class="p">();</span>
+<span class="c1">// add section</span>
+<span class="nv">$section</span> <span class="o">=</span> <span class="nv">$rtf</span><span class="o">-&gt;</span><span class="na">addSection</span><span class="p">();</span>
+<span class="c1">// add header</span>
+<span class="nv">$header</span> <span class="o">=</span> <span class="nv">$section</span><span class="o">-&gt;</span><span class="na">addHeader</span><span class="p">();</span>
+<span class="nv">$header</span><span class="o">-&gt;</span><span class="na">writeText</span><span class="p">(</span><span class="s1">&#39;header text&#39;</span><span class="p">);</span>
+<span class="c1">// add footer</span>
+<span class="nv">$footer</span> <span class="o">=</span> <span class="nv">$section</span><span class="o">-&gt;</span><span class="na">addFooter</span><span class="p">();</span>
+<span class="nv">$footer</span><span class="o">-&gt;</span><span class="na">writeText</span><span class="p">(</span><span class="s1">&#39;footer text&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>By default headers and footers are displayed for all pages.</p>
+</div>
+<div class="section" id="type-left-and-type-right">
+<h2>TYPE_LEFT and TYPE_RIGHT<a class="headerlink" href="#type-left-and-type-right" title="Permalink to this headline">¶</a></h2>
+<p>To define different headers for odd and even pages, the RTF document must be set to use different headers/footers for odd and even pages:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="c1">// rtf document instance</span>
+<span class="nv">$rtf</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PHPRtfLite</span><span class="p">();</span>
+<span class="c1">// use different headers and footers for odd and even pages</span>
+<span class="nv">$rtf</span><span class="o">-&gt;</span><span class="na">setOddEvenDifferent</span><span class="p">();</span>
+<span class="c1">// section</span>
+<span class="nv">$section</span> <span class="o">=</span> <span class="nv">$rtf</span><span class="o">-&gt;</span><span class="na">addSection</span><span class="p">();</span>
+<span class="c1">// add left header</span>
+<span class="nv">$header</span> <span class="o">=</span> <span class="nv">$section</span><span class="o">-&gt;</span><span class="na">addHeader</span><span class="p">(</span><span class="nx">PHPRtfLite_Container_Header</span><span class="o">::</span><span class="na">TYPE_LEFT</span><span class="p">);</span>
+<span class="nv">$header</span><span class="o">-&gt;</span><span class="na">writeText</span><span class="p">(</span><span class="s1">&#39;left header&#39;</span><span class="p">);</span>
+<span class="c1">// add right header</span>
+<span class="nv">$header</span> <span class="o">=</span> <span class="nv">$section</span><span class="o">-&gt;</span><span class="na">addHeader</span><span class="p">(</span><span class="nx">PHPRtfLite_Container_Header</span><span class="o">::</span><span class="na">TYPE_RIGHT</span><span class="p">);</span>
+<span class="nv">$header</span><span class="o">-&gt;</span><span class="na">writeText</span><span class="p">(</span><span class="s1">&#39;right header&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="type-first">
+<h2>TYPE_FIRST<a class="headerlink" href="#type-first" title="Permalink to this headline">¶</a></h2>
+<p>If you want to specify, that the header or the footer should only appear on the first page, use can use the type TYPE_FIRST:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="c1">// rtf document instance</span>
+<span class="nv">$rtf</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PHPRtfLite</span><span class="p">();</span>
+<span class="c1">// section</span>
+<span class="nv">$section</span> <span class="o">=</span> <span class="nv">$rtf</span><span class="o">-&gt;</span><span class="na">addSection</span><span class="p">();</span>
+<span class="c1">// add header only for the first page</span>
+<span class="nv">$header</span> <span class="o">=</span> <span class="nv">$section</span><span class="o">-&gt;</span><span class="na">addHeader</span><span class="p">(</span><span class="nx">PHPRtfLite_Container_Header</span><span class="o">::</span><span class="na">TYPE_FIRST</span><span class="p">);</span>
+<span class="nv">$header</span><span class="o">-&gt;</span><span class="na">writeText</span><span class="p">(</span><span class="s1">&#39;this header should only appear on the first page&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="tables-and-images-in-headers-footers">
+<h2>Tables and images in headers / footers<a class="headerlink" href="#tables-and-images-in-headers-footers" title="Permalink to this headline">¶</a></h2>
+<p>Of course you can use tables and images in headers and footers:</p>
+<div class="highlight-php"><div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="c1">// rtf document instance</span>
+<span class="nv">$rtf</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PHPRtfLite</span><span class="p">();</span>
+<span class="c1">// section</span>
+<span class="nv">$section</span> <span class="o">=</span> <span class="nv">$rtf</span><span class="o">-&gt;</span><span class="na">addSection</span><span class="p">();</span>
+<span class="c1">// add header</span>
+<span class="nv">$header</span> <span class="o">=</span> <span class="nv">$section</span><span class="o">-&gt;</span><span class="na">addHeader</span><span class="p">();</span>
+<span class="c1">// add table</span>
+<span class="nv">$table</span> <span class="o">=</span> <span class="nv">$header</span><span class="o">-&gt;</span><span class="na">addTable</span><span class="p">();</span>
+<span class="nv">$table</span><span class="o">-&gt;</span><span class="na">addRows</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="nv">$table</span><span class="o">-&gt;</span><span class="na">addColumnsList</span><span class="p">(</span><span class="k">array</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">));</span>
+<span class="c1">// add image to table in header</span>
+<span class="nv">$image</span> <span class="o">=</span> <span class="nv">$table</span><span class="o">-&gt;</span><span class="na">addImageToCell</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;/path/to/image/file&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Headers and footers</a><ul>
+<li><a class="reference internal" href="#type-all">TYPE_ALL</a></li>
+<li><a class="reference internal" href="#type-left-and-type-right">TYPE_LEFT and TYPE_RIGHT</a></li>
+<li><a class="reference internal" href="#type-first">TYPE_FIRST</a></li>
+<li><a class="reference internal" href="#tables-and-images-in-headers-footers">Tables and images in headers / footers</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="images.html"
+                        title="previous chapter">Images</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="enumerations-numberings.html"
+                        title="next chapter">Enumerations / Numberings</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/header-footer.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="enumerations-numberings.html" title="Enumerations / Numberings"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="images.html" title="Images"
+             >previous</a> |</li>
+        <li><a href="index.html">PHPRtfLite v1.x documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, sigmaz.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+    </div>
+  </body>
+</html>
