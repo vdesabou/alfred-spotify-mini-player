@@ -14,7 +14,6 @@ $query = $argv[1];
 $type = $argv[2];
 $add_to_option = $argv[3];
 
-
 $arg = mb_unserialize($query);
 
 //var_dump($arg);
@@ -55,7 +54,6 @@ if ($spotify_command != "" && $type == "TRACK" && $add_to_option == "") {
 	return;
 }
 
-
 if ($type == "TRACK") {
 
 	if ($track_uri != "") {
@@ -74,11 +72,9 @@ if ($type == "TRACK") {
 			}
 
 			foreach ($settings as $setting):
-
 				$setting = explode("	", $setting);
-
-			$theme = $setting[0];
-			$is_alfred_playlist_active = $setting[1];
+				$theme = $setting[0];
+				$is_alfred_playlist_active = $setting[1];
 			endforeach;
 
 			$tmp = explode(':', $track_uri);
@@ -189,11 +185,9 @@ if ($type == "TRACK") {
 		}
 
 		foreach ($settings as $setting):
-
 			$setting = explode("	", $setting);
-
-		$theme = $setting[0];
-		$is_alfred_playlist_active = $setting[1];
+			$theme = $setting[0];
+			$is_alfred_playlist_active = $setting[1];
 		endforeach;
 
 		if ($is_alfred_playlist_active == true) {
@@ -222,11 +216,9 @@ else if ($type == "ALBUM_OR_PLAYLIST") {
 				}
 
 				foreach ($settings as $setting):
-
 					$setting = explode("	", $setting);
-
-				$theme = $setting[0];
-				$is_alfred_playlist_active = $setting[1];
+					$theme = $setting[0];
+					$is_alfred_playlist_active = $setting[1];
 				endforeach;
 
 				if ($album_uri == "") {
@@ -279,11 +271,9 @@ else if ($type == "ALBUM_OR_PLAYLIST") {
 					}
 
 					foreach ($settings as $setting):
-
 						$setting = explode("	", $setting);
-
-					$theme = $setting[0];
-					$is_alfred_playlist_active = $setting[1];
+						$theme = $setting[0];
+						$is_alfred_playlist_active = $setting[1];
 					endforeach;
 
 					$playlist_artwork_path = getPlaylistArtwork($w, $theme, $playlist_uri, true, true);
@@ -396,11 +386,9 @@ if ($playlist_uri != "") {
 		}
 
 		foreach ($settings as $setting):
-
 			$setting = explode("	", $setting);
-
-		$theme = $setting[0];
-		$is_alfred_playlist_active = $setting[1];
+			$theme = $setting[0];
+			$is_alfred_playlist_active = $setting[1];
 		endforeach;
 
 		if ($other_action == "disable_all_playlist") {
