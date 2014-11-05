@@ -1,5 +1,5 @@
 {
-    "version": 4.6,
+    "version": 5.0,
     "download_url": "https://raw.githubusercontent.com/packal/repository/master/com.vdesabou.spotify.mini.player/spotifyminiplayer.alfredworkflow",
-    "description": "Fixed broken Play Random Track - Now displaying notification for random track - Add notification for previous and next track - Add Get current track information"
+    "description": "Version 5.0 - Huge Update, refer to Packal page for instructions on how to setup"
 }
