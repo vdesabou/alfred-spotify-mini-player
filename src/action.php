@@ -588,6 +588,7 @@ if ($playlist_uri != "") {
 				}
 				if ($text=="") {
 					$text = "No biography found";
+					$artist = $artist_name;
 				}
 				$output=strip_tags($text);
 
