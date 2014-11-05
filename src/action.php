@@ -73,8 +73,8 @@ if ($type == "TRACK") {
 
 			foreach ($settings as $setting):
 				$setting = explode("	", $setting);
-				$theme = $setting[0];
-				$is_alfred_playlist_active = $setting[1];
+			$theme = $setting[0];
+			$is_alfred_playlist_active = $setting[1];
 			endforeach;
 
 			$tmp = explode(':', $track_uri);
@@ -93,16 +93,24 @@ if ($type == "TRACK") {
 				$ret = addTracksToPlaylist($w, $tmp[2], $alfred_playlist_uri, $alfred_playlist_name, false);
 				if (is_numeric($ret) && $ret > 0) {
 					displayNotificationWithArtwork('' . $track_name . ' by ' . $artist_name . ' added to ' . $alfred_playlist_name, $track_artwork_path);
+					return;
 				} else if (is_numeric($ret) && $ret == 0) {
 						displayNotification('Error: ' . $track_name . ' by ' . $artist_name . ' is already in ' . $alfred_playlist_name);
+						return;
+					} else {
+						return;
 					}
 			} else {
 				// add track to your music
 				$ret = addTracksToMyTracks($w, $tmp[2], false);
 				if (is_numeric($ret) && $ret > 0) {
 					displayNotificationWithArtwork('' . $track_name . ' by ' . $artist_name . ' added to Your Music', $track_artwork_path);
+					return;
 				} else if (is_numeric($ret) && $ret == 0) {
 						displayNotification('Error: ' . $track_name . ' by ' . $artist_name . ' is already in Your Music');
+						return;
+					} else {
+						return;
 					}
 			}
 		} else if ($playlist_uri != "") {
@@ -113,6 +121,7 @@ if ($type == "TRACK") {
 			if ($other_action == "") {
 				exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
 				displayNotificationWithArtwork('🔈 ' . $track_name . ' by ' . ucfirst($artist_name), $track_artwork_path);
+				return;
 			}
 		}
 	}
@@ -186,8 +195,8 @@ if ($type == "TRACK") {
 
 		foreach ($settings as $setting):
 			$setting = explode("	", $setting);
-			$theme = $setting[0];
-			$is_alfred_playlist_active = $setting[1];
+		$theme = $setting[0];
+		$is_alfred_playlist_active = $setting[1];
 		endforeach;
 
 		if ($is_alfred_playlist_active == true) {
@@ -217,8 +226,8 @@ else if ($type == "ALBUM_OR_PLAYLIST") {
 
 				foreach ($settings as $setting):
 					$setting = explode("	", $setting);
-					$theme = $setting[0];
-					$is_alfred_playlist_active = $setting[1];
+				$theme = $setting[0];
+				$is_alfred_playlist_active = $setting[1];
 				endforeach;
 
 				if ($album_uri == "") {
@@ -242,17 +251,25 @@ else if ($type == "ALBUM_OR_PLAYLIST") {
 					$ret = addTracksToPlaylist($w, getTheAlbumTracks($w, $album_uri), $alfred_playlist_uri, $alfred_playlist_name, false);
 					if (is_numeric($ret) && $ret > 0) {
 						displayNotificationWithArtwork('Album ' . $album_name . ' added to ' . $alfred_playlist_name, $album_artwork_path);
+						return;
 					} else if (is_numeric($ret) && $ret == 0) {
 							displayNotification('Error: Album ' . $album_name . ' is already in ' . $alfred_playlist_name);
-						}
+							return;
+						} else {
+							return;
+					}
 				} else {
 					// add album to your music
 					$ret = addTracksToMyTracks($w, getTheAlbumTracks($w, $album_uri), false);
 					if (is_numeric($ret) && $ret > 0) {
 						displayNotificationWithArtwork('Album ' . $album_name . ' added to Your Music', $album_artwork_path);
+						return;
 					} else if (is_numeric($ret) && $ret == 0) {
 							displayNotification('Error: Album ' . $album_name . ' is already in Your Music');
-						}
+							return;
+						} else {
+						return;
+					}
 				}
 
 				return;
@@ -272,14 +289,14 @@ else if ($type == "ALBUM_OR_PLAYLIST") {
 
 					foreach ($settings as $setting):
 						$setting = explode("	", $setting);
-						$theme = $setting[0];
-						$is_alfred_playlist_active = $setting[1];
+					$theme = $setting[0];
+					$is_alfred_playlist_active = $setting[1];
 					endforeach;
 
 					$playlist_artwork_path = getPlaylistArtwork($w, $theme, $playlist_uri, true, true);
 
 					if ($is_alfred_playlist_active == true) {
-						if($playlist_uri == $alfred_playlist_uri) {
+						if ($playlist_uri == $alfred_playlist_uri) {
 							displayNotification("Error: cannot add Alfred Playlist " . $alfred_playlist_name . " to itself!");
 							return;
 						}
@@ -287,17 +304,25 @@ else if ($type == "ALBUM_OR_PLAYLIST") {
 						$ret = addTracksToPlaylist($w, getThePlaylistTracks($w, $playlist_uri), $alfred_playlist_uri, $alfred_playlist_name, false);
 						if (is_numeric($ret) && $ret > 0) {
 							displayNotificationWithArtwork('Playlist ' . $playlist_name . ' added to ' . $alfred_playlist_name, $playlist_artwork_path);
+							return;
 						} else if (is_numeric($ret) && $ret == 0) {
 								displayNotification('Error: Playlist ' . $playlist_name . ' is already in ' . $alfred_playlist_name);
-							}
+								return;
+							} else {
+								return;
+						}
 					} else {
 						// add playlist to your music
 						$ret = addTracksToMyTracks($w, getThePlaylistTracks($w, $playlist_uri), false);
 						if (is_numeric($ret) && $ret > 0) {
 							displayNotificationWithArtwork('Playlist ' . $playlist_name . ' added to Your Music', $playlist_artwork_path);
+							return;
 						} else if (is_numeric($ret) && $ret == 0) {
 								displayNotification('Error: Playlist ' . $playlist_name . ' is already in Your Music');
-							}
+								return;
+							} else {
+								return;
+						}
 					}
 
 					return;
@@ -323,6 +348,7 @@ else if ($type == "ALBUM_OR_PLAYLIST") {
 if ($playlist_uri != "") {
 	exec("osascript -e 'tell application \"Spotify\" to play track \"$playlist_uri\"'");
 	displayNotificationWithArtwork('🔈 Playlist ' . $playlist_name, $playlist_artwork_path);
+	return;
 }else if ($other_settings != "") {
 		$setting = explode('▹', $other_settings);
 		if ($setting[0] == "MAX_RESULTS") {
@@ -330,18 +356,21 @@ if ($playlist_uri != "") {
 			$dbfile = $w->data() . "/settings.db";
 			exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 			displayNotification("Max results set to $setting[1]");
+			return;
 		}
 		else if ($setting[0] == "Oauth_Client_ID") {
 				$setSettings = 'update settings set oauth_client_id=\"' . $setting[1] . '\"';
 				$dbfile = $w->data() . "/settings.db";
 				exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 				displayNotification("Client ID set to $setting[1]");
+				return;
 			}
 		else if ($setting[0] == "Oauth_Client_SECRET") {
 				$setSettings = 'update settings set oauth_client_secret=\"' . $setting[1] . '\"';
 				$dbfile = $w->data() . "/settings.db";
 				exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 				displayNotification("Client Secret set to $setting[1]");
+				return;
 			}
 		else if ($setting[0] == "ALFRED_PLAYLIST") {
 				$setSettings = 'update settings set alfred_playlist_uri=\"' . $setting[1] . '\"' . ',alfred_playlist_name=\"' . $setting[2] . '\"';
@@ -368,9 +397,11 @@ if ($playlist_uri != "") {
 					return;
 				}
 				getLyrics($w, $setting[1], $setting[2]);
+				return;
 			}
 	} else if ($original_query != "") {
 		exec("osascript -e 'tell application \"Alfred 2\" to search \"spotifious $original_query\"'");
+		return;
 	} else if ($other_action != "") {
 
 		//
@@ -387,8 +418,8 @@ if ($playlist_uri != "") {
 
 		foreach ($settings as $setting):
 			$setting = explode("	", $setting);
-			$theme = $setting[0];
-			$is_alfred_playlist_active = $setting[1];
+		$theme = $setting[0];
+		$is_alfred_playlist_active = $setting[1];
 		endforeach;
 
 		if ($other_action == "disable_all_playlist") {
@@ -396,70 +427,84 @@ if ($playlist_uri != "") {
 			$dbfile = $w->data() . "/settings.db";
 			exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 			displayNotificationWithArtwork("Search scope set to your music", './images/' . $theme . '/' . 'search.png');
+			return;
 		} else if ($other_action == "enable_all_playlist") {
 				$setSettings = "update settings set all_playlists=1";
 				$dbfile = $w->data() . "/settings.db";
 				exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 				displayNotificationWithArtwork("Search scope set to all playlists", './images/' . $theme . '/' . 'search.png');
+				return;
 			} else if ($other_action == "enable_spotifiuous") {
 				$setSettings = "update settings set is_spotifious_active=1";
 				$dbfile = $w->data() . "/settings.db";
 				exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 				displayNotificationWithArtwork("Spotifious is now enabled", './images/' . $theme . '/' . 'check.png');
+				return;
 			} else if ($other_action == "disable_spotifiuous") {
 				$setSettings = "update settings set is_spotifious_active=0";
 				$dbfile = $w->data() . "/settings.db";
 				exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 				displayNotificationWithArtwork("Spotifious is now disabled", './images/' . $theme . '/' . 'uncheck.png');
+				return;
 			} else if ($other_action == "set_theme_to_black") {
 				$setSettings = "update settings set theme='black'";
 				$dbfile = $w->data() . "/settings.db";
 				exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 				displayNotificationWithArtwork("Theme set to black", './images/' . 'black' . '/' . 'check.png');
+				return;
 			} else if ($other_action == "set_theme_to_green") {
 				$setSettings = "update settings set theme='green'";
 				$dbfile = $w->data() . "/settings.db";
 				exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 				displayNotificationWithArtwork("Theme set to green", './images/' . 'green' . '/' . 'check.png');
+				return;
 			} else if ($other_action == "set_theme_to_new") {
 				$setSettings = "update settings set theme='new'";
 				$dbfile = $w->data() . "/settings.db";
 				exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 				displayNotificationWithArtwork("Theme set to new", './images/' . 'new' . '/' . 'check.png');
+				return;
 			} else if ($other_action == "enable_displaymorefrom") {
 				$setSettings = "update settings set is_displaymorefrom_active=1";
 				$dbfile = $w->data() . "/settings.db";
 				exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 				displayNotificationWithArtwork("Now Playing is now enabled", './images/' . $theme . '/' . 'check.png');
+				return;
 			} else if ($other_action == "disable_displaymorefrom") {
 				$setSettings = "update settings set is_displaymorefrom_active=0";
 				$dbfile = $w->data() . "/settings.db";
 				exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 				displayNotificationWithArtwork("Now Playing is now disabled", './images/' . $theme . '/' . 'uncheck.png');
+				return;
 			} else if ($other_action == "enable_lyrics") {
 				$setSettings = "update settings set is_lyrics_active=1";
 				$dbfile = $w->data() . "/settings.db";
 				exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 				displayNotificationWithArtwork("Get Lyrics is now enabled", './images/' . $theme . '/' . 'check.png');
+				return;
 			} else if ($other_action == "disable_lyrics") {
 				$setSettings = "update settings set is_lyrics_active=0";
 				$dbfile = $w->data() . "/settings.db";
 				exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 				displayNotificationWithArtwork("Get Lyrics is now disabled", './images/' . $theme . '/' . 'uncheck.png');
+				return;
 			} else if ($other_action == "enable_alfred_playlist") {
 				$setSettings = "update settings set is_alfred_playlist_active=1";
 				$dbfile = $w->data() . "/settings.db";
 				exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 				displayNotificationWithArtwork("Alfred Playlist is now enabled", './images/' . $theme . '/' . 'check.png');
+				return;
 			} else if ($other_action == "disable_alfred_playlist") {
 				$setSettings = "update settings set is_alfred_playlist_active=0";
 				$dbfile = $w->data() . "/settings.db";
 				exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 				displayNotificationWithArtwork("Alfred Playlist is now disabled", './images/' . $theme . '/' . 'uncheck.png');
+				return;
 			}else if ($other_action == "Oauth_Login") {
 				exec("php -S localhost:15298 > /tmp/spotify_mini_player_web_server.log 2>&1 &");
 				sleep(2);
 				exec("open http://localhost:15298");
+				return;
 			} else if ($other_action == "check_for_update") {
 				if (! $w->internet()) {
 					displayNotificationWithArtwork("Error: No internet connection", './images/warning.png');
@@ -482,8 +527,8 @@ if ($playlist_uri != "") {
 				}
 				else if ($check_results == null) {
 						displayNotificationWithArtwork('No update available', './images/' . $theme . '/' . 'check_update.png');
-				}
-
+					}
+				return;
 			} else if ($other_action == "current") {
 				displayNotificationForCurrentTrack();
 				return;
@@ -506,14 +551,15 @@ if ($playlist_uri != "") {
 				$track_uri = getRandomTrack($w);
 				if ($track_uri == false) {
 					displayNotification("Error: cannot find a random track");
+					return;
 				}
 				exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
 				displayNotificationForCurrentTrack();
 				return;
 			}
-		else if (startsWith($other_action,'display_biography')) {
+		else if (startsWith($other_action, 'display_biography')) {
 
-				$json = doWebApiRequest($w,'http://developer.echonest.com/api/v4/artist/biographies?api_key=5EG94BIZEGFEY9AL9&id=' . $artist_uri);
+				$json = doWebApiRequest($w, 'http://developer.echonest.com/api/v4/artist/biographies?api_key=5EG94BIZEGFEY9AL9&id=' . $artist_uri);
 				$response = $json->response;
 
 				$file = $w->cache() . '/spotify_mini_player_biography.rtf';
@@ -521,16 +567,16 @@ if ($playlist_uri != "") {
 
 				foreach ($response->biographies as $biography) {
 
-					if($biography->site == "wikipedia") {
+					if ($biography->site == "wikipedia") {
 						$wikipedia = $biography->text;
 					}
-					if($biography->site == "last.fm") {
+					if ($biography->site == "last.fm") {
 						$lastfm = $biography->text;
 					}
 					$default = 'Source: ' . $biography->site . '\n' . $biography->text;
 				}
 
-				if($wikipedia) {
+				if ($wikipedia) {
 					$text = $wikipedia;
 					$artist = $artist_name . ' (Source: Wikipedia)';
 				} elseif ($lastfm) {
@@ -540,7 +586,7 @@ if ($playlist_uri != "") {
 					$text = $default;
 					$artist = $artist_name . ' (Source: ' . $biography->site . ')';
 				}
-				if($text=="") {
+				if ($text=="") {
 					$text = "No biography found";
 				}
 				$output=strip_tags($text);
@@ -562,7 +608,7 @@ if ($playlist_uri != "") {
 				$section->writeText($output, $font, $parFormat);
 
 				$rtf->save($file);
-				if($other_action == 'display_biography') {
+				if ($other_action == 'display_biography') {
 					exec("qlmanage -p \"$file\";osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Artist▹" . $artist_uri . "∙" . $artist_name . "▹\"'");
 				} else {
 					exec("qlmanage -p \"$file\";osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online▹" . $artist_uri . "@" . $artist_name . "\"'");
@@ -591,12 +637,12 @@ if ($playlist_uri != "") {
 		else if ($other_action == "update_library") {
 				updateLibrary($w);
 				return;
-		} else if ($other_action == "update_your_music") {
+			} else if ($other_action == "update_your_music") {
 				updateMyMusic($w);
 				return;
-		} else if ($other_action == "update_playlist_list") {
+			} else if ($other_action == "update_playlist_list") {
 				updatePlaylistList($w);
 				return;
-		}
+			}
 	}
 ?>
