@@ -289,6 +289,10 @@ else if ($type == "ALBUM_OR_PLAYLIST") {
 					$playlist_artwork_path = getPlaylistArtwork($w, $theme, $playlist_uri, true, true);
 
 					if ($is_alfred_playlist_active == true) {
+						if($playlist_uri == $alfred_playlist_uri) {
+							displayNotification("Error: cannot add Alfred Playlist " . $alfred_playlist_name . " to itself!");
+							return;
+						}
 						// add playlist to alfred playlist
 						$ret = addTracksToPlaylist($w, getThePlaylistTracks($w, $playlist_uri), $alfred_playlist_uri, $alfred_playlist_name, false);
 						if (is_numeric($ret) && $ret > 0) {
@@ -520,27 +524,27 @@ if ($playlist_uri != "") {
 				return;
 			}
 		else if ($other_action == "display_biography") {
-			
+
 				$json = doWebApiRequest($w,'http://developer.echonest.com/api/v4/artist/biographies?api_key=5EG94BIZEGFEY9AL9&id=' . $artist_uri);
 				$response = $json->response;
-				
+
 				$file = $w->cache() . '/spotify_mini_player_biography.rtf';
 				PHPRtfLite::registerAutoloader();
-			
+
 				foreach ($response->biographies as $biography) {
 
 					if($biography->site == "wikipedia") {
-						$wikipedia = $biography->text;						
+						$wikipedia = $biography->text;
 					}
 					if($biography->site == "last.fm") {
-						$lastfm = $biography->text;						
+						$lastfm = $biography->text;
 					}
 					$default = 'Source: ' . $biography->site . '\n' . $biography->text;
 				}
 
 				if($wikipedia) {
 					$text = $wikipedia;
-					$artist_name = $artist_name . ' (Source: Wikipedia)'; 
+					$artist_name = $artist_name . ' (Source: Wikipedia)';
 				} elseif ($lastfm) {
 					$text = $lastfm;
 					$artist_name = $artist_name . ' (Source: Last.FM)';
@@ -552,24 +556,24 @@ if ($playlist_uri != "") {
 					$text = "No biography found";
 				}
 				$output=strip_tags($text);
-				
+
 				$file = $w->cache() . '/spotify_mini_player_biography.rtf';
-				
+
 				$rtf = new PHPRtfLite();
-				
+
 				$section = $rtf->addSection();
 				// centered text
 				$fontTitle = new PHPRtfLite_Font(24, 'Arial', '#000000', '#FFFFFF');
 				$parFormatTitle = new PHPRtfLite_ParFormat(PHPRtfLite_ParFormat::TEXT_ALIGN_CENTER);
 				$section->writeText($artist_name, $fontTitle, $parFormatTitle);
-				
+
 				$parFormat = new PHPRtfLite_ParFormat();
 				$parFormat->setSpaceAfter(4);
 				$font = new PHPRtfLite_Font(12, 'Arial', '#000000', '#FFFFFF');
 				// write text
 				$section->writeText($output, $font, $parFormat);
-				
-				$rtf->save($file);	
+
+				$rtf->save($file);
 				exec("qlmanage -p \"$file\"");
 				return;
 
