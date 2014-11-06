@@ -252,7 +252,7 @@ if (mb_strlen($query) < 3 ||
 		}
 		if ($is_displaymorefrom_active == true) {
 			// get info on current song
-			$command_output = exec("./track_info.sh 2>&1");
+			$command_output = exec("././src/track_info.sh 2>&1");
 
 			if (substr_count($command_output, '▹') > 0) {
 				$results = explode('▹', $command_output);

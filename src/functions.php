@@ -13,7 +13,7 @@ require 'vendor/autoload.php';
  */
 function addCurrentTrackToAlfredPlaylist($w) {
 	// get info on current song
-	$command_output = exec("./track_info.sh 2>&1");
+	$command_output = exec("././src/track_info.sh 2>&1");
 
 	if (substr_count($command_output, '▹') > 0) {
 		$results = explode('▹', $command_output);
@@ -65,7 +65,7 @@ function addCurrentTrackToAlfredPlaylist($w) {
  */
 function addCurrentTrackToMyTracks($w) {
 	// get info on current song
-	$command_output = exec("./track_info.sh 2>&1");
+	$command_output = exec("././src/track_info.sh 2>&1");
 
 	//
 	// Read settings from DB
@@ -762,7 +762,7 @@ function displayNotificationWithArtwork($output, $artwork) {
 function displayNotificationForCurrentTrack() {
 	$w = new Workflows('com.vdesabou.spotify.mini.player');
 
-	$command_output = exec("./track_info.sh 2>&1");
+	$command_output = exec("././src/track_info.sh 2>&1");
 
 	if (substr_count($command_output, '▹') > 0) {
 		$results = explode('▹', $command_output);
