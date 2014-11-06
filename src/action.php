@@ -46,11 +46,6 @@ if ($spotify_command != "" && $type == "TRACK" && $add_to_option == "") {
 
 	$spotify_command = str_replace("\\", "", $spotify_command);
 	exec("osascript -e 'tell application \"Spotify\" to $spotify_command'");
-
-	if ($spotify_command == "playpause") {
-		displayNotificationWithArtwork('🎶 Play/Pause ' . $track_name . '
- by ' . ucfirst($artist_name), getTrackOrAlbumArtwork($w, 'black', $track_uri, true));
-	}
 	return;
 }
 
@@ -170,11 +165,11 @@ if ($type == "TRACK") {
 		displayNotificationForCurrentTrack();
 		return;
 	}else if ($type == "PLAY") {
-		exec("osascript -e 'tell application \"Spotify\" to playpause'");
+		exec("osascript -e 'tell application \"Spotify\" to play'");
 		displayNotificationForCurrentTrack();
 		return;
 	}else if ($type == "PAUSE") {
-		exec("osascript -e 'tell application \"Spotify\" to playpause'");
+		exec("osascript -e 'tell application \"Spotify\" to pause'");
 		return;
 	}else if ($type == "UPDATE_LIBRARY") {
 		updateLibrary($w);
@@ -500,7 +495,15 @@ if ($playlist_uri != "") {
 				exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 				displayNotificationWithArtwork("Alfred Playlist is now disabled", './images/' . $theme . '/' . 'uncheck.png');
 				return;
-			}else if ($other_action == "Oauth_Login") {
+			} else if ($other_action == "play") {
+					exec("osascript -e 'tell application \"Spotify\" to play'");
+					displayNotificationForCurrentTrack();
+					return;
+			}else if ($other_action == "pause") {
+				exec("osascript -e 'tell application \"Spotify\" to pause'");
+				return;
+			}
+			else if ($other_action == "Oauth_Login") {
 				exec("php -S localhost:15298 > /tmp/spotify_mini_player_web_server.log 2>&1 &");
 				sleep(2);
 				exec("open http://localhost:15298");

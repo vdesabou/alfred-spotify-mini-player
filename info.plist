@@ -667,9 +667,9 @@
 				<key>keyword</key>
 				<string>play</string>
 				<key>subtext</key>
-				<string>Play / Pause the current Spotify track</string>
+				<string>Play the current Spotify track</string>
 				<key>text</key>
-				<string>Play / Pause</string>
+				<string>Play</string>
 				<key>withspace</key>
 				<false/>
 			</dict>
@@ -705,9 +705,9 @@
 				<key>keyword</key>
 				<string>pause</string>
 				<key>subtext</key>
-				<string>Play / Pause the current Spotify track</string>
+				<string>Pause the current Spotify track</string>
 				<key>text</key>
-				<string>Play / Pause</string>
+				<string>Pause</string>
 				<key>withspace</key>
 				<false/>
 			</dict>
