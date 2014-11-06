@@ -733,7 +733,7 @@ function checkIfDuplicate($track_ids, $id) {
  * @return void
  */
 function displayNotification($output) {
-	exec('./terminal-notifier.app/Contents/MacOS/terminal-notifier -title "Spotify Mini Player" -sender com.spotify.miniplayer -message "' .  $output . '"');
+	exec('./spotify-app-miniplayer/terminal-notifier.app/Contents/MacOS/terminal-notifier -title "Spotify Mini Player" -sender com.spotify.miniplayer -message "' .  $output . '"');
 }
 
 
@@ -750,7 +750,7 @@ function displayNotificationWithArtwork($output, $artwork) {
 		copy($artwork, "/tmp/tmp");
 	}
 
-	exec("./terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'Spotify Mini Player' -sender 'com.spotify.miniplayer' -contentImage '/tmp/tmp' -message '" .  $output . "'");
+	exec("./spotify-app-miniplayer/terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'Spotify Mini Player' -sender 'com.spotify.miniplayer' -contentImage '/tmp/tmp' -message '" .  $output . "'");
 }
 
 /**
