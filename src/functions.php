@@ -873,6 +873,7 @@ function getPlaylistArtwork($w, $theme, $playlistURI, $fetchIfNotPresent, $force
 		$url = "http://open.spotify.com/user/" . $hrefs[2] . "/" . $hrefs[3];
 	}
 
+
 	$currentArtwork = $w->data() . "/artwork/" . hash('md5', $filename . ".png") . "/" . "$filename.png";
 
 	if (!is_file($currentArtwork) || (is_file($currentArtwork) && filesize($currentArtwork) == 0) || $forceFetch) {
@@ -994,7 +995,11 @@ function getTrackArtworkURL($w, $type, $id) {
  * @return void
  */
 function getPlaylistArtworkURL($w, $url) {
-	$html = $w->request($url);
+	$options = array(
+		CURLOPT_FOLLOWLOCATION => 1
+	);
+
+	$html = $w->request($url, $options);
 
 	if (!empty($html)) {
 		preg_match_all('/.*?twitter:image.*?content="(.*?)">.*?/is', $html, $m);
