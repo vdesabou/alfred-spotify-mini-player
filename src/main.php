@@ -219,7 +219,7 @@ $check_results = checkForUpdate($w, $last_check_update_time, $dbsettings);
 if
 ($check_results != null && is_array($check_results)) {
 	$w->result(null, '', 'New version ' . $check_results[0] . ' is available', $check_results[2], './images/' . $theme . '/' . 'info.png', 'no', null, '');
-	$w->result(null, '', 'Please install the new version in Downloads directory', $check_results[1], 'fileicon:'.$check_results[1], 'no', null, '' );
+	$w->result(null, $check_results[1], 'Please install the new version in Downloads directory', $check_results[1], 'fileicon:'.$check_results[1], 'no', '', '', 'file' );
 
 	echo $w->toxml();
 	return;
