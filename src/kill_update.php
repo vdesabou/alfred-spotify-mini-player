@@ -13,6 +13,6 @@ displayNotificationWithArtwork("Update library/playlist was killed!", '05F86AA1-
 if ( file_exists($w->data() . "/update_library_in_progress") )
 	unlink($w->data() . "/update_library_in_progress");
 
-exec("kill -9 $(ps -efx | grep \"php\" | egrep \"update_|update.php|add_to_alfred_playlist.php|ADDTOPLAYLIST\" | grep -v grep | awk '{print $2}')");
+exec("kill -9 $(ps -efx | grep \"php\" | egrep \"update_|php -S localhost:15298|ADDTOPLAYLIST|UPDATE_\" | grep -v grep | awk '{print $2}')");
 
 ?>
