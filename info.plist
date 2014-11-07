@@ -96,6 +96,17 @@
 		</array>
 		<key>2D26D8E2-52A2-4BF9-B693-0D5190C6CC23</key>
 		<array/>
+		<key>2DBC505C-4788-4F45-BD15-2DCED7844A60</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>3860554B-B36E-423F-98CC-1FC7212CEDDA</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 		<key>3F85747B-FC44-4B07-AA6E-3645F0CC0DF7</key>
 		<array>
 			<dict>
@@ -257,6 +268,17 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>18496AC4-EA42-444C-A906-642E38259C96</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>B23712E3-4564-4668-BD6D-4D535839CC8C</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>2DBC505C-4788-4F45-BD15-2DCED7844A60</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -1260,6 +1282,78 @@ end alfred_script</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>spot_mini_reset</string>
+				<key>subtext</key>
+				<string>The authentication will have to be done again</string>
+				<key>text</key>
+				<string>Reset settings for Spotify Mini Player</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>B23712E3-4564-4668-BD6D-4D535839CC8C</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>// Load and use David Ferguson's Workflows.php class
+require_once './src/workflows.php';
+$w = new Workflows('com.vdesabou.spotify.mini.player');
+
+if (file_exists($w-&gt;data() . '/settings.db')) {
+	unlink($w-&gt;data() . '/settings.db');
+	echo "Settings have been deleted";
+} else {
+	echo "Error: Settings do not exist";
+}</string>
+				<key>type</key>
+				<integer>1</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>2DBC505C-4788-4F45-BD15-2DCED7844A60</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<false/>
+				<key>output</key>
+				<integer>0</integer>
+				<key>removeextension</key>
+				<false/>
+				<key>sticky</key>
+				<false/>
+				<key>text</key>
+				<string>{query}</string>
+				<key>title</key>
+				<string>Spotify Mini Player</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.notification</string>
+			<key>uid</key>
+			<string>3860554B-B36E-423F-98CC-1FC7212CEDDA</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string>Github page:
@@ -1337,6 +1431,16 @@ SOFTWARE.</string>
 		<dict>
 			<key>ypos</key>
 			<real>1230</real>
+		</dict>
+		<key>2DBC505C-4788-4F45-BD15-2DCED7844A60</key>
+		<dict>
+			<key>ypos</key>
+			<real>2380</real>
+		</dict>
+		<key>3860554B-B36E-423F-98CC-1FC7212CEDDA</key>
+		<dict>
+			<key>ypos</key>
+			<real>2380</real>
 		</dict>
 		<key>3F85747B-FC44-4B07-AA6E-3645F0CC0DF7</key>
 		<dict>
@@ -1442,6 +1546,11 @@ SOFTWARE.</string>
 		<dict>
 			<key>ypos</key>
 			<real>330</real>
+		</dict>
+		<key>B23712E3-4564-4668-BD6D-4D535839CC8C</key>
+		<dict>
+			<key>ypos</key>
+			<real>2380</real>
 		</dict>
 		<key>BC672665-5E43-4892-B8D3-BFCBA48E34C4</key>
 		<dict>
