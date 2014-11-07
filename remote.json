@@ -1,5 +1,5 @@
 {
-    "version": 5.1,
+    "version": 5.11,
     "download_url": "https://raw.githubusercontent.com/packal/repository/master/com.vdesabou.spotify.mini.player/spotifyminiplayer.alfredworkflow",
-    "description": "fixed hard-code user id in update library - enhancements to play pause"
+    "description": "added more validations for authentication . Added command spot_mini_reset to reset settings"
 }
