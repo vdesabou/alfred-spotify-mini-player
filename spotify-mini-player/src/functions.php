@@ -816,26 +816,26 @@ function getTrackOrAlbumArtwork($w, $theme, $spotifyURL, $fetchIfNotPresent) {
 			}
 		} else {
 			if ($isAlbum) {
-				return "images/" . $theme . "/albums.png";
+				return "./spotify-mini-player/images/" . $theme . "/albums.png";
 			} else {
-				return "images/" . $theme . "/tracks.png";
+				return "./spotify-mini-player/images/" . $theme . "/tracks.png";
 			}
 		}
 	} else {
 		if (filesize($currentArtwork) == 0) {
 			if ($isAlbum) {
-				return "images/" . $theme . "/albums.png";
+				return "./spotify-mini-player/images/" . $theme . "/albums.png";
 			} else {
-				return "images/" . $theme . "/tracks.png";
+				return "./spotify-mini-player/images/" . $theme . "/tracks.png";
 			}
 		}
 	}
 
 	if (is_numeric($artwork) && $artwork == 0) {
 		if ($isAlbum) {
-			return "images/" . $theme . "/albums.png";
+			return "./spotify-mini-player/images/" . $theme . "/albums.png";
 		} else {
-			return "images/" . $theme . "/tracks.png";
+			return "./spotify-mini-player/images/" . $theme . "/tracks.png";
 		}
 	} else {
 		return $currentArtwork;
@@ -893,16 +893,16 @@ function getPlaylistArtwork($w, $theme, $playlistURI, $fetchIfNotPresent, $force
 				$w->request("$artwork", $options);
 			}
 		} else {
-			return "images/" . $theme . "/playlists.png";
+			return "./spotify-mini-player/images/" . $theme . "/playlists.png";
 		}
 	} else {
 		if (filesize($currentArtwork) == 0) {
-			return "images/" . $theme . "/playlists.png";
+			return "./spotify-mini-player/images/" . $theme . "/playlists.png";
 		}
 	}
 
 	if (is_numeric($artwork) && $artwork == 0) {
-		return "images/" . $theme . "/playlists.png";
+		return "./spotify-mini-player/images/" . $theme . "/playlists.png";
 	} else {
 		return $currentArtwork;
 	}
@@ -944,16 +944,16 @@ function getArtistArtwork($w, $theme, $artist, $fetchIfNotPresent) {
 				$w->request("$artwork", $options);
 			}
 		} else {
-			return "images/" . $theme . "/artists.png";
+			return "./spotify-mini-player/images/" . $theme . "/artists.png";
 		}
 	} else {
 		if (filesize($currentArtwork) == 0) {
-			return "images/" . $theme . "/artists.png";
+			return "./spotify-mini-player/images/" . $theme . "/artists.png";
 		}
 	}
 
 	if (is_numeric($artwork) && $artwork == 0) {
-		return "images/" . $theme . "/artists.png";
+		return "./spotify-mini-player/images/" . $theme . "/artists.png";
 	} else {
 		return $currentArtwork;
 	}
