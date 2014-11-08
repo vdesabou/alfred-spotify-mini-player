@@ -396,7 +396,7 @@
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f ./src/action.php -- "{query}" "TRACK" ""</string>
+				<string>php -f ./spotify-mini-player/src/action.php -- "{query}" "TRACK" ""</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -413,7 +413,7 @@
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f ./src/action.php -- "{query}" "ALBUM" ""</string>
+				<string>php -f ./spotify-mini-player/src/action.php -- "{query}" "ALBUM" ""</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -457,7 +457,7 @@
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f ./src/action.php -- "{query}" "ARTIST" ""</string>
+				<string>php -f ./spotify-mini-player/src/action.php -- "{query}" "ARTIST" ""</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -474,7 +474,7 @@
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f ./src/action.php -- "{query}" "ALBUM_OR_PLAYLIST" "ADDTOPLAYLIST"</string>
+				<string>php -f ./spotify-mini-player/src/action.php -- "{query}" "ALBUM_OR_PLAYLIST" "ADDTOPLAYLIST"</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -497,7 +497,7 @@
 				<key>runningsubtext</key>
 				<string>Wait for it...</string>
 				<key>script</key>
-				<string>php -n -f ./src/main.php -- "{query}"</string>
+				<string>php -n -f ./spotify-mini-player/src/main.php -- "{query}"</string>
 				<key>subtext</key>
 				<string>Search in your playlists for tracks, artists, and albums</string>
 				<key>title</key>
@@ -557,7 +557,7 @@
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f ./src/action.php -- "{query}" "TRACK" "ADDTOPLAYLIST"</string>
+				<string>php -f ./spotify-mini-player/src/action.php -- "{query}" "TRACK" "ADDTOPLAYLIST"</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -603,7 +603,7 @@
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f ./src/action.php -- "{query}" "ONLINE" "ONLINE"</string>
+				<string>php -f ./spotify-mini-player/src/action.php -- "{query}" "ONLINE" "ONLINE"</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -649,7 +649,7 @@
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f ./src/action.php -- "" "PREVIOUS" "PREVIOUS"</string>
+				<string>php -f ./spotify-mini-player/src/action.php -- "" "PREVIOUS" "PREVIOUS"</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -708,7 +708,7 @@
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f ./src/action.php -- "" "PLAY" "PLAY"</string>
+				<string>php -f ./spotify-mini-player/src/action.php -- "" "PLAY" "PLAY"</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -746,7 +746,7 @@
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f ./src/action.php -- "" "PAUSE" "PAUSE"</string>
+				<string>php -f ./spotify-mini-player/src/action.php -- "" "PAUSE" "PAUSE"</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -914,7 +914,7 @@ end alfred_script</string>
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f ./src/action.php -- "" "RANDOM" "RANDOM"</string>
+				<string>php -f ./spotify-mini-player/src/action.php -- "" "RANDOM" "RANDOM"</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -952,7 +952,7 @@ end alfred_script</string>
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f ./src/action.php -- "" "ADD_CURRENT_TRACK" "ADD_CURRENT_TRACK"</string>
+				<string>php -f ./spotify-mini-player/src/action.php -- "" "ADD_CURRENT_TRACK" "ADD_CURRENT_TRACK"</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -1046,7 +1046,7 @@ end alfred_script</string>
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f ./src/action.php -- "" "NEXT" "NEXT"</string>
+				<string>php -f ./spotify-mini-player/src/action.php -- "" "NEXT" "NEXT"</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -1105,7 +1105,7 @@ end alfred_script</string>
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f ./src/action.php -- "" "CURRENT" "CURRENT"</string>
+				<string>php -f ./spotify-mini-player/src/action.php -- "" "CURRENT" "CURRENT"</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -1128,7 +1128,7 @@ end alfred_script</string>
 				<key>runningsubtext</key>
 				<string>Wait for it...</string>
 				<key>script</key>
-				<string>php -f ./src/debug.php</string>
+				<string>php -f ./spotify-mini-player/src/debug.php</string>
 				<key>subtext</key>
 				<string>Send the generated tgz file to the workflow author</string>
 				<key>title</key>
@@ -1161,7 +1161,7 @@ end alfred_script</string>
 				<key>escaping</key>
 				<integer>127</integer>
 				<key>script</key>
-				<string>php -f ./src/kill_update.php</string>
+				<string>php -f ./spotify-mini-player/src/kill_update.php</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -1271,7 +1271,7 @@ end alfred_script</string>
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f ./src/action.php -- "" "UPDATE_LIBRARY" "UPDATE_LIBRARY"</string>
+				<string>php -f ./spotify-mini-player/src/action.php -- "" "UPDATE_LIBRARY" "UPDATE_LIBRARY"</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -1310,7 +1310,7 @@ end alfred_script</string>
 				<integer>38</integer>
 				<key>script</key>
 				<string>// Load and use David Ferguson's Workflows.php class
-require_once './src/workflows.php';
+require_once './spotify-mini-player/src/workflows.php';
 $w = new Workflows('com.vdesabou.spotify.mini.player');
 
 if (file_exists($w-&gt;data() . '/settings.db')) {
