@@ -60,5 +60,5 @@ Please refer to the [WIKI](https://github.com/vdesabou/alfred-spotify-mini-playe
 
 ## Download the workflow on Packal
 
-[![Download Workflow](https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/images/alfred-workflow-icon.png)](http://www.packal.org/workflow/spotify-mini-player)
+[![Download Workflow](https://raw.github.com/vdesabou/alfred-spotify-mini-player/master/spotify-mini-player/images/alfred-workflow-icon.png)](http://www.packal.org/workflow/spotify-mini-player)
 
