@@ -59,6 +59,11 @@ $val=$w->data();
 
 $w->result( uniqid(), $val, 'Browse to App Support Folder', $val, 'fileicon:'.$val, 'yes', null, 'file' );
 
+$val=$w->cache();
+
+$w->result( uniqid(), $val, 'Browse to Workflow Cache Folder', $val, 'fileicon:'.$val, 'yes', null, 'file' );
+
+
 $val=exec('pwd');
 
 $w->result( uniqid(), $val, 'Browse to Alfred workflow folder', $val, 'fileicon:'.$val, 'yes', null, 'file' );
