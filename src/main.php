@@ -29,9 +29,9 @@ if (file_exists($w->data() . '/update_library_in_progress')) {
 			$w->result(null, $w->data() . '/update_library_in_progress', 'Initialization phase since ' . beautifyTime($elapsed_time) . ' : ' . floatToSquares(0), 'waiting for Spotify Mini Player app to return required data', './images/update_in_progress.png', 'no', null, '');
 		}
 		else {
-			$w->result(null, '', 'There is a problem, the initialization phase last more than 5 minutes', 'Follow the steps below:', './images/warning.png', 'no', null, '');
+			$w->result(null, '', 'There is a problem, the initialization phase last more than 5 minutes', 'Follow the step below:', './images/warning.png', 'no', null, '');
 
-			$w->result(null, '', "Kill update library", "You can kill it by using spot_mini_kill_update command", '05F86AA1-D3EE-4409-9A58-898B36FFE503.png', 'no', null, '');
+			$w->result(null, '', "Kill update library", "You can kill it by using spot_mini_kill_update command", 'icon.png', 'no', null, '');
 		}
 	}
 	else {

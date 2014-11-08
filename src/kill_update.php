@@ -9,7 +9,7 @@ require './src/functions.php';
 require_once './src/workflows.php';
 $w = new Workflows('com.vdesabou.spotify.mini.player');
 
-displayNotificationWithArtwork("Update library/playlist was killed!", '05F86AA1-D3EE-4409-9A58-898B36FFE503.png');
+displayNotificationWithArtwork("Update library/playlist was killed!", 'icon.png');
 if ( file_exists($w->data() . "/update_library_in_progress") )
 	unlink($w->data() . "/update_library_in_progress");
 
