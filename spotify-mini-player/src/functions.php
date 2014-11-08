@@ -1,7 +1,7 @@
 <?php
 
 require_once './spotify-mini-player/src/workflows.php';
-require 'vendor/autoload.php';
+require './spotify-mini-player/vendor/autoload.php';
 
 
 /**

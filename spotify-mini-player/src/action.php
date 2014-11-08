@@ -4,7 +4,7 @@
 //error_reporting(0);
 
 require './spotify-mini-player/src/functions.php';
-require_once './vendor/phprtflite/phprtflite/lib/PHPRtfLite.php';
+require_once './spotify-mini-player/vendor/phprtflite/phprtflite/lib/PHPRtfLite.php';
 
 // Load and use David Ferguson's Workflows.php class
 require_once './spotify-mini-player/src/workflows.php';

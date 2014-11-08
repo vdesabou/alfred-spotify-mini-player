@@ -1,6 +1,6 @@
 <?php
 
-require 'vendor/autoload.php';
+require './spotify-mini-player/vendor/autoload.php';
 require './spotify-mini-player/src/functions.php';
 
 
