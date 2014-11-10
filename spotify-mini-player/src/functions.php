@@ -1117,6 +1117,7 @@ function updateLibrary($w) {
 
 	// get the total number of tracks
 	$nb_tracktotal = 0;
+	$savedListPlaylist = array();
 	try {
 		$offsetGetUserPlaylists = 0;
 		$limitGetUserPlaylists = 50;
@@ -1126,9 +1127,6 @@ function updateLibrary($w) {
 					'limit' => $limitGetUserPlaylists,
 					'offset' => $offsetGetUserPlaylists
 				));
-
-
-			$savedListPlaylist = array();
 
 			foreach ($userPlaylists->items as $playlist) {
 
