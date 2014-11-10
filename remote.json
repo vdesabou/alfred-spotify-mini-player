@@ -1,5 +1,5 @@
 {
-    "version": 5.11,
+    "version": 5.12,
     "download_url": "https://raw.githubusercontent.com/packal/repository/master/com.vdesabou.spotify.mini.player/spotifyminiplayer.alfredworkflow",
-    "description": "added more validations for authentication . Added command spot_mini_reset to reset settings"
+    "description": "Fix for issue #29(If you had more than 50 playlists, say 58, only the last 8 were processed) . Fix for playlist artworks not downloaded"
 }
