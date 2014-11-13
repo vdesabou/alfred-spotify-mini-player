@@ -391,7 +391,30 @@ if ($playlist_uri != "") {
 					displayNotificationWithArtwork("Error: No internet connection", './spotify-mini-player/images/warning.png');
 					return;
 				}
-				getLyrics($w, $setting[1], $setting[2]);
+				$output = getLyrics($w, $setting[1], $setting[2]);
+				
+				if($output != false) {
+					PHPRtfLite::registerAutoloader();
+	
+					$file = $w->cache() . '/lyrics.rtf';
+	
+					$rtf = new PHPRtfLite();
+	
+					$section = $rtf->addSection();
+					// centered text
+					$fontTitle = new PHPRtfLite_Font(28, 'Arial', '#000000', '#FFFFFF');
+					$parFormatTitle = new PHPRtfLite_ParFormat(PHPRtfLite_ParFormat::TEXT_ALIGN_CENTER);
+					$section->writeText($setting[2] . ' by ' . $setting[1] , $fontTitle, $parFormatTitle);
+	
+					$parFormat = new PHPRtfLite_ParFormat();
+					$parFormat->setSpaceAfter(4);
+					$font = new PHPRtfLite_Font(14, 'Arial', '#000000', '#FFFFFF');
+					// write text
+					$section->writeText($output, $font, $parFormat);
+	
+					$rtf->save($file);
+					exec("qlmanage -p \"$file\"");
+				}
 				return;
 			}
 	} else if ($original_query != "") {
@@ -565,8 +588,6 @@ if ($playlist_uri != "") {
 
 				$json = doWebApiRequest($w, 'http://developer.echonest.com/api/v4/artist/biographies?api_key=5EG94BIZEGFEY9AL9&id=' . $artist_uri);
 				$response = $json->response;
-
-				$file = $w->cache() . '/spotify_mini_player_biography.rtf';
 				PHPRtfLite::registerAutoloader();
 
 				foreach ($response->biographies as $biography) {
@@ -596,7 +617,7 @@ if ($playlist_uri != "") {
 				}
 				$output=strip_tags($text);
 
-				$file = $w->cache() . '/spotify_mini_player_biography.rtf';
+				$file = $w->cache() . '/biography.rtf';
 
 				$rtf = new PHPRtfLite();
 

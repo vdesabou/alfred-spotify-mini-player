@@ -29,11 +29,10 @@ if (file_exists($w->data() . '/update_library_in_progress')) {
 		if (startsWith($update_library_in_progress_words[0], 'Init')) {
 			if
 			($elapsed_time < 300) {
-				$w->result(null, $w->data() . '/update_library_in_progress', 'Initialization phase since ' . beautifyTime($elapsed_time) . ' : ' . floatToSquares(0), 'waiting for Spotify Mini Player app to return required data', './spotify-mini-player/images/update_in_progress.png', 'no', null, '');
+				$w->result(null, $w->data() . '/update_library_in_progress', 'Initialization phase since ' . beautifyTime($elapsed_time) . ' : ' . floatToSquares(0), 'waiting for Spotify servers to return required data', './spotify-mini-player/images/update_in_progress.png', 'no', null, '');
 			}
 			else {
 				$w->result(null, '', 'There is a problem, the initialization phase last more than 5 minutes', 'Follow the step below:', './spotify-mini-player/images/warning.png', 'no', null, '');
-	
 				$w->result(null, '', "Kill update library", "You can kill it by using spot_mini_kill_update command", 'icon.png', 'no', null, '');
 			}
 		}
@@ -266,7 +265,7 @@ if (mb_strlen($query) < 3 ||
 
 		if ($update_in_progress == true) {
 			if (startsWith($update_library_in_progress_words[0], 'Init')) {
-				$w->result(null, $w->data() . '/update_library_in_progress', 'Initialization phase since ' . beautifyTime($elapsed_time) . ' : ' . floatToSquares(0), 'waiting for Spotify Mini Player app to return required data', './spotify-mini-player/images/update_in_progress.png', 'no', null, '');
+				$w->result(null, $w->data() . '/update_library_in_progress', 'Initialization phase since ' . beautifyTime($elapsed_time) . ' : ' . floatToSquares(0), 'waiting for Spotify servers to return required data', './spotify-mini-player/images/update_in_progress.png', 'no', null, '');
 			} else {
 				if ($update_library_in_progress_words[0] == 'Playlist List') {
 					$type = 'playlists';

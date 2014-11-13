@@ -2288,7 +2288,7 @@ Copyright 2013 Ole Jon Bjørkum
  * @param mixed $w
  * @param mixed $artist
  * @param mixed $title
- * @return void
+ * @return lyrics
  */
 function getLyrics($w, $artist, $title) {
 	$query_artist = $artist;
@@ -2391,9 +2391,10 @@ function getLyrics($w, $artist, $title) {
 
 		if ($lyrics=="") {
 			displayNotification("Sorry there is no match for this track");
+			return false;
 		}
 		else {
-			echo "🎤 $title by $artist\n---------------------------\n$lyrics";
+			return "$lyrics";
 		}
 	}
 }

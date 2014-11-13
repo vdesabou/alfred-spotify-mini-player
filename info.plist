@@ -73,16 +73,7 @@
 		<key>19215BE5-986E-4AC9-9166-C80872C51DBE</key>
 		<array/>
 		<key>1A88766E-BF4A-48F5-9BD4-D3538634422F</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>86617270-3D9B-4AF9-88DF-5782CD290079</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-			</dict>
-		</array>
+		<array/>
 		<key>2B0C8466-4AED-4272-9C10-50F3BCE88043</key>
 		<array>
 			<dict>
@@ -141,38 +132,11 @@
 			</dict>
 		</array>
 		<key>5F3AF2C8-064F-4C10-8D99-22E212825BFE</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>86617270-3D9B-4AF9-88DF-5782CD290079</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-			</dict>
-		</array>
+		<array/>
 		<key>5F5E8A6D-8707-41FC-B5D1-660CD11685F0</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>86617270-3D9B-4AF9-88DF-5782CD290079</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-			</dict>
-		</array>
+		<array/>
 		<key>7918E8F7-20AE-445E-9AEA-E2E54CDE967D</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>86617270-3D9B-4AF9-88DF-5782CD290079</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-			</dict>
-		</array>
+		<array/>
 		<key>794A76A7-BB98-4A83-92BE-386A56875120</key>
 		<array>
 			<dict>
@@ -207,16 +171,7 @@
 			</dict>
 		</array>
 		<key>8DF18F9A-B3A5-4B14-8360-AD850CF5C143</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>86617270-3D9B-4AF9-88DF-5782CD290079</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-			</dict>
-		</array>
+		<array/>
 		<key>9845C770-A2CC-4752-A542-D71BE1081691</key>
 		<array/>
 		<key>A38DD404-DE03-42C2-B0CB-A37891B6F24D</key>
@@ -550,14 +505,6 @@ php -f ./spotify-mini-player/src/action.php -- "{query}" "ALBUM_OR_PLAYLIST" "AD
 			<string>B22B739D-D9B8-4E4C-AB9E-BE2EA1E0478D</string>
 			<key>version</key>
 			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>type</key>
-			<string>alfred.workflow.output.largetype</string>
-			<key>uid</key>
-			<string>86617270-3D9B-4AF9-88DF-5782CD290079</string>
-			<key>version</key>
-			<integer>0</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -1504,11 +1451,6 @@ SOFTWARE.</string>
 		<dict>
 			<key>ypos</key>
 			<real>1580</real>
-		</dict>
-		<key>86617270-3D9B-4AF9-88DF-5782CD290079</key>
-		<dict>
-			<key>ypos</key>
-			<real>330</real>
 		</dict>
 		<key>899AC4D2-88FA-474F-A075-AFA12F361E2B</key>
 		<dict>
