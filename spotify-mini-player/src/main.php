@@ -1075,7 +1075,7 @@ if (mb_strlen($query) < 3 ||
 			$artist_name = $tmp[1];
 			$track = $words[2];
 
-			$getArtists = "select artist_uri,artist_artwork_path,artist_biography from artists where artist_uri=:artist_uri";
+			$getArtists = "select artist_uri,artist_artwork_path from tracks where artist_uri=:artist_uri";
 
 			try {
 				$stmt = $db->prepare($getArtists);

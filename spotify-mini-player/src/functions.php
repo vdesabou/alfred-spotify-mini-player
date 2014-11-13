@@ -687,25 +687,6 @@ function checkIfResultAlreadyThere($results, $title) {
 
 
 /**
- * checkIfArtistAlreadyThere function.
- *
- * @access public
- * @param mixed $artists
- * @param mixed $artist_name
- * @return void
- */
-function checkIfArtistAlreadyThere($artists, $artist_name) {
-	foreach ($artists as $artist) {
-		if ($artist->name) {
-			if ($artist->name == $artist_name) {
-				return true;
-			}
-		}
-	}
-	return false;
-}
-
-/**
  * checkIfDuplicate function.
  *
  * @access public
@@ -1184,10 +1165,6 @@ function updateLibrary($w) {
 	$db->exec("CREATE INDEX IndexAlbumName ON tracks (album_name)");
 	$db->exec("create table counters (all_tracks int, mymusic_tracks int, all_artists int, mymusic_artists int, all_albums int, mymusic_albums int, playlists int)");
 	$db->exec("create table playlists (uri text PRIMARY KEY NOT NULL, name text, nb_tracks int, author text, username text, playlist_artwork_path text, ownedbyuser boolean)");
-	$db->exec("create table artists (artist_name text, artist_uri text, artist_artwork_path text, artist_biography text, PRIMARY KEY (artist_name))");
-	$db->exec("CREATE INDEX indexArtistNameForArtists ON artists (artist_name)");
-
-
 
 	// Handle playlists
 	$w->write('Library▹0▹' . $nb_tracktotal . '▹' . $words[3], 'update_library_in_progress');
@@ -1199,13 +1176,9 @@ function updateLibrary($w) {
 	$insertTrack = "insert into tracks values (:mymusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_year,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:availability,:duration_ms)";
 	$stmtTrack = $db->prepare($insertTrack);
 
-	$savedListArtists = array();
-
 	foreach ($savedListPlaylist as $playlist) {
 		$tracks = $playlist->tracks;
 		$owner = $playlist->owner;
-
-		//echo "Playlist $playlist->name $playlist->id $nb_tracktotal\n";
 
 		$playlist_artwork_path = getPlaylistArtwork($w, $theme, $playlist->uri, true, true);
 
@@ -1224,7 +1197,7 @@ function updateLibrary($w) {
 		$stmtPlaylist->bindValue(':playlist_artwork_path', $playlist_artwork_path);
 		$stmtPlaylist->bindValue(':ownedbyuser', $ownedbyuser);
 		$stmtPlaylist->execute();
-
+			
 		try {
 			$offsetGetUserPlaylistTracks = 0;
 			$limitGetUserPlaylistTracks = 100;
@@ -1244,11 +1217,6 @@ function updateLibrary($w) {
 					}
 					$artists = $track->artists;
 					$artist = $artists[0];
-
-					// save artist in an array
-					if (! checkIfArtistAlreadyThere($savedListArtists, $artist->name)) {
-						$savedListArtists[] = $artist;
-					}
 					$album = $track->album;
 
 					//
@@ -1307,11 +1275,6 @@ function updateLibrary($w) {
 		}
 		$artists = $track->artists;
 		$artist = $artists[0];
-
-		// save artist in an array
-		if (! checkIfArtistAlreadyThere($savedListArtists, $artist->name)) {
-			$savedListArtists[] = $artist;
-		}
 		$album = $track->album;
 
 		//
@@ -1348,31 +1311,8 @@ function updateLibrary($w) {
 	}
 
 
-	// Handle artists
-
-	$w->write('Artists▹0▹' . count($savedListArtists) . '▹' . $words[3], 'update_library_in_progress');
-	$nb_artists = 0;
+	// update counters
 	try {
-
-		$insertArtist = "insert or ignore into artists values (:artist_name,:artist_uri,:artist_artwork_path,:biography)";
-		$stmt = $db->prepare($insertArtist);
-
-		foreach ($savedListArtists as $artist) {
-
-			$artist_artwork_path = getArtistArtwork($w, $theme, $artist->name, true);
-			$stmt->bindValue(':artist_name', escapeQuery($artist->name));
-			$stmt->bindValue(':artist_uri', $artist->uri);
-			$stmt->bindValue(':artist_artwork_path', $artist_artwork_path);
-			$stmt->bindValue(':biography', 'FIX THIS');
-			$stmt->execute();
-
-			$nb_artists++;
-			if ($nb_artists % 10 === 0) {
-				$w->write('Artists▹' . $nb_artists . '▹' . count($savedListArtists) . '▹' . $words[3], 'update_library_in_progress');
-			}
-		}
-
-
 		$getCount = 'select count(distinct uri) from tracks';
 		$stmt = $db->prepare($getCount);
 		$stmt->execute();
