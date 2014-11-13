@@ -504,7 +504,8 @@ if ($playlist_uri != "") {
 				return;
 			}
 			else if ($other_action == "Oauth_Login") {
-				exec("php -S localhost:15298 > /tmp/spotify_mini_player_web_server.log 2>&1 &");
+				$cache_log=$w->cache() . '/spotify_mini_player_web_server.log';
+				exec("php -S localhost:15298 > \"$cache_log\" 2>&1 &");
 				sleep(2);
 				exec("open http://localhost:15298");
 				return;

@@ -27,9 +27,7 @@ else {
 	copy($w->data() . "/settings.db", $w->home() . "/Downloads/spot_mini_debug/settings.db");
 }
 
-if (file_exists("/tmp/spotify_mini_player_web_server.log")) {
-	copy("/tmp/spotify_mini_player_web_server.log", $w->home() . "/Downloads/spot_mini_debug/spotify_mini_player_web_server.log");
-}
+copy_directory($w->cache(),$w->home() . "/Downloads/spot_mini_debug/cache");
 
 if (!file_exists($w->data() . "/library.db")) {
 	$output = $output .  "The directory" . $w->data() . "/library.db is not present\n";
