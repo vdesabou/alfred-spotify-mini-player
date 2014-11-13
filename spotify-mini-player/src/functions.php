@@ -746,7 +746,7 @@ function displayNotification($output) {
  * @return void
  */
 function displayNotificationWithArtwork($output, $artwork) {
-	if ($artwork != "") {
+	if ($artwork != "" && file_exists($artwork)) {
 		copy($artwork, "/tmp/tmp");
 	}
 
@@ -1053,9 +1053,11 @@ function updateLibrary($w) {
 
 
 	//
-	// Read settings from DB
+	// Read settings from a copy of DB
 	//
-	$dbfile = $w->data() . '/settings.db';
+	
+	copy($w->data() . '/settings.db',$w->data() . '/settings_tmp.db');
+	$dbfile = $w->data() . '/settings_tmp.db';
 	try {
 		$dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
 		$dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -1098,10 +1100,10 @@ function updateLibrary($w) {
 
 	ini_set('memory_limit', '512M');
 
-	$dbfile = $w->data() . '/library.db';
-	if (file_exists($dbfile)) {
-		unlink($dbfile);
+	if (file_exists($w->data() . '/library.db')) {
+		rename($w->data() . '/library.db',$w->data() . '/library_old.db');
 	}
+	$dbfile = $w->data() . '/library_new.db';
 	touch($dbfile);
 
 	try {
@@ -1112,6 +1114,8 @@ function updateLibrary($w) {
 		$dbsettings=null;
 		$db=null;
 		unlink($w->data() . "/update_library_in_progress");
+		unlink($w->data() . "/library_new.db");
+		unlink($w->data() . '/settings_tmp.db');
 		return false;
 	}
 
@@ -1143,6 +1147,7 @@ function updateLibrary($w) {
 	catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 		echo "Error(getUserPlaylists): (exception " . $e . ")";
 		unlink($w->data() . "/update_library_in_progress");
+		unlink($w->data() . "/library_new.db");
 		return false;
 	}
 
@@ -1168,6 +1173,8 @@ function updateLibrary($w) {
 	catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 		echo "Error(getMySavedTracks): (exception " . $e . ")";
 		unlink($w->data() . "/update_library_in_progress");
+		unlink($w->data() . "/library_new.db");
+		unlink($w->data() . '/settings_tmp.db');
 		return false;
 	}
 
@@ -1284,6 +1291,8 @@ function updateLibrary($w) {
 		catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 			echo "Error(getUserPlaylistTracks): playlist id " . $playlist->id . " (exception " . $e . ")";
 			unlink($w->data() . "/update_library_in_progress");
+			unlink($w->data() . "/library_new.db");
+			unlink($w->data() . '/settings_tmp.db');
 			return false;
 		}
 	}
@@ -1416,6 +1425,8 @@ function updateLibrary($w) {
 		$dbsettings=null;
 		$db=null;
 		unlink($w->data() . "/update_library_in_progress");
+		unlink($w->data() . "/library_new.db");
+		unlink($w->data() . '/settings_tmp.db');
 		return false;
 	}
 
@@ -1423,7 +1434,10 @@ function updateLibrary($w) {
 	displayNotification("Library has been created (" . $all_tracks[0] . " tracks) - it took " . beautifyTime($elapsed_time));
 
 	unlink($w->data() . "/update_library_in_progress");
-
+	unlink($w->data() . '/library_old.db');
+	rename($w->data() . '/library_new.db',$w->data() . '/library.db');
+	unlink($w->data() . '/settings_tmp.db');
+	
 	// remove legacy spotify app if needed
 	if (file_exists($w->data() . "/library.db")) {
 		if (file_exists(exec('printf $HOME') . "/Spotify/spotify-app-miniplayer")) {

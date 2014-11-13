@@ -17,48 +17,52 @@ $query = iconv('UTF-8-MAC', 'UTF-8', $query);
 
 //
 // check for library update in progress
+$update_in_progress = false;
 if (file_exists($w->data() . '/update_library_in_progress')) {
 	$in_progress_data = $w->read('update_library_in_progress');
-	$words = explode('▹', $in_progress_data);
+	$update_library_in_progress_words = explode('▹', $in_progress_data);
 
-	$elapsed_time = time() - $words[3];
-
-	if (startsWith($words[0], 'Init')) {
-		if
-		($elapsed_time < 300) {
-			$w->result(null, $w->data() . '/update_library_in_progress', 'Initialization phase since ' . beautifyTime($elapsed_time) . ' : ' . floatToSquares(0), 'waiting for Spotify Mini Player app to return required data', './spotify-mini-player/images/update_in_progress.png', 'no', null, '');
-		}
-		else {
-			$w->result(null, '', 'There is a problem, the initialization phase last more than 5 minutes', 'Follow the step below:', './spotify-mini-player/images/warning.png', 'no', null, '');
-
-			$w->result(null, '', "Kill update library", "You can kill it by using spot_mini_kill_update command", 'icon.png', 'no', null, '');
-		}
-	}
-	else {
-		if ($words[0] == 'Playlist List') {
-			$type = 'playlists';
-		} else if ($words[0] == 'Artists') {
-				$type = 'artists';
+	$elapsed_time = time() - $update_library_in_progress_words[3];
+	$update_in_progress = true;
+	if(!file_exists($w->data() . '/library_old.db') ) {
+	
+		if (startsWith($update_library_in_progress_words[0], 'Init')) {
+			if
+			($elapsed_time < 300) {
+				$w->result(null, $w->data() . '/update_library_in_progress', 'Initialization phase since ' . beautifyTime($elapsed_time) . ' : ' . floatToSquares(0), 'waiting for Spotify Mini Player app to return required data', './spotify-mini-player/images/update_in_progress.png', 'no', null, '');
 			}
-		else {
-			$type = 'tracks';
+			else {
+				$w->result(null, '', 'There is a problem, the initialization phase last more than 5 minutes', 'Follow the step below:', './spotify-mini-player/images/warning.png', 'no', null, '');
+	
+				$w->result(null, '', "Kill update library", "You can kill it by using spot_mini_kill_update command", 'icon.png', 'no', null, '');
+			}
 		}
-
-		$w->result(null, $w->data() . '/update_library_in_progress', $words[0] . ' update in progress since ' . beautifyTime($elapsed_time) . ' : '  . floatToSquares(intval($words[1]) / intval($words[2])), $words[1] . '/' . $words[2] . ' ' . $type . ' processed so far (if no progress, use spot_mini_kill_update command to stop it)', './spotify-mini-player/images/update_in_progress.png', 'no', null, '');
+		else {
+			if ($update_library_in_progress_words[0] == 'Playlist List') {
+				$type = 'playlists';
+			} else if ($update_library_in_progress_words[0] == 'Artists') {
+					$type = 'artists';
+				}
+			else {
+				$type = 'tracks';
+			}
+	
+			$w->result(null, $w->data() . '/update_library_in_progress', $update_library_in_progress_words[0] . ' update in progress since ' . beautifyTime($elapsed_time) . ' : '  . floatToSquares(intval($update_library_in_progress_words[1]) / intval($update_library_in_progress_words[2])), $update_library_in_progress_words[1] . '/' . $update_library_in_progress_words[2] . ' ' . $type . ' processed so far (if no progress, use spot_mini_kill_update command to stop it)', './spotify-mini-player/images/update_in_progress.png', 'no', null, '');
+		}
+	
+		echo $w->toxml();
+		return;
 	}
-
-	echo $w->toxml();
-	return;
 }
 
 //
 // Read settings from DB
 //
 $getSettings = 'select all_playlists,is_spotifious_active,is_alfred_playlist_active,is_displaymorefrom_active,is_lyrics_active,max_results, alfred_playlist_uri,alfred_playlist_name,country_code,theme,last_check_update_time,oauth_client_id,oauth_client_secret,oauth_redirect_uri,oauth_access_token,oauth_expires,oauth_refresh_token,display_name,userid from settings';
-$dbfile = $w->data() . '/settings.db';
+$dbsettingsfile = $w->data() . '/settings.db';
 
 try {
-	$dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
+	$dbsettings = new PDO("sqlite:$dbsettingsfile", "", "", array(PDO::ATTR_PERSISTENT => true));
 	$dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	$dbsettings->query("PRAGMA synchronous = OFF");
 	$dbsettings->query("PRAGMA journal_mode = OFF");
@@ -90,7 +94,7 @@ try {
 if (!file_exists($w->data() . '/settings.db')) {
 	touch($w->data() . '/settings.db');
 	try {
-		$dbsettings = new PDO("sqlite:$dbfile", "", "", null);
+		$dbsettings = new PDO("sqlite:$dbsettingsfile", "", "", null);
 		$dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 		$dbsettings->exec("create table settings (all_playlists boolean, is_spotifious_active boolean, is_alfred_playlist_active boolean, is_displaymorefrom_active boolean, is_lyrics_active boolean, max_results int, alfred_playlist_uri text, alfred_playlist_name text, country_code text, theme text, last_check_update_time int, oauth_client_id text,oauth_client_secret text,oauth_redirect_uri text,oauth_access_token text,oauth_expires int,oauth_refresh_token text,display_name text,userid text)");
@@ -186,35 +190,44 @@ if ($oauth_access_token == '' && substr_count($query, '▹') == 0) {
 }
 
 
-// check for correct configuration
-if (file_exists($w->data() . '/library.db')) {
+// check for library DB
+$dbfile = "";
 
+if ($update_in_progress == false && 
+	file_exists($w->data() . '/library.db')) {
 	$dbfile = $w->data() . '/library.db';
-
-	try {
-		$db = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
-
-		$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$db->query("PRAGMA synchronous = OFF");
-		$db->query("PRAGMA journal_mode = OFF");
-		$db->query("PRAGMA temp_store = MEMORY");
-		$db->query("PRAGMA count_changes = OFF");
-		$db->query("PRAGMA PAGE_SIZE = 4096");
-		$db->query("PRAGMA default_cache_size=700000");
-		$db->query("PRAGMA cache_size=700000");
-		$db->query("PRAGMA compile_options");
-	} catch (PDOException $e) {
-		handleDbIssuePdoXml($theme, $db);
-		return;
+} else if (file_exists($w->data() . '/library_old.db')) {
+	// update in progress use the old library
+	if($update_in_progress == true) {
+		$dbfile = $w->data() . '/library_old.db';
+	} else {
+		unlink($w->data() . '/library_old.db');
 	}
-
 }
-else {
+if ($dbfile == "") {
 	$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'update_library' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Create library', "when done you'll receive a notification. you can check progress by invoking the workflow again", './spotify-mini-player/images/' . $theme . '/' . 'update.png', 'yes', null, '');
 	echo $w->toxml();
 	return;
 }
 
+
+try {
+	$db = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
+
+	$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	$db->query("PRAGMA synchronous = OFF");
+	$db->query("PRAGMA journal_mode = OFF");
+	$db->query("PRAGMA temp_store = MEMORY");
+	$db->query("PRAGMA count_changes = OFF");
+	$db->query("PRAGMA PAGE_SIZE = 4096");
+	$db->query("PRAGMA default_cache_size=700000");
+	$db->query("PRAGMA cache_size=700000");
+	$db->query("PRAGMA compile_options");
+} catch (PDOException $e) {
+	handleDbIssuePdoXml($theme, $db);
+	return;
+}
+	
 $check_results = checkForUpdate($w, $last_check_update_time, $dbsettings);
 if
 ($check_results != null && is_array($check_results)) {
@@ -251,6 +264,21 @@ if (mb_strlen($query) < 3 ||
 		$mymusic_albums = $counter[5];
 		$nb_playlists = $counter[6];
 
+		if ($update_in_progress == true) {
+			if (startsWith($update_library_in_progress_words[0], 'Init')) {
+				$w->result(null, $w->data() . '/update_library_in_progress', 'Initialization phase since ' . beautifyTime($elapsed_time) . ' : ' . floatToSquares(0), 'waiting for Spotify Mini Player app to return required data', './spotify-mini-player/images/update_in_progress.png', 'no', null, '');
+			} else {
+				if ($update_library_in_progress_words[0] == 'Playlist List') {
+					$type = 'playlists';
+				} else if ($update_library_in_progress_words[0] == 'Artists') {
+						$type = 'artists';
+					}
+				else {
+					$type = 'tracks';
+				}
+				$w->result(null, $w->data() . '/update_library_in_progress', $update_library_in_progress_words[0] . ' update in progress since ' . beautifyTime($elapsed_time) . ' : '  . floatToSquares(intval($update_library_in_progress_words[1]) / intval($update_library_in_progress_words[2])), $update_library_in_progress_words[1] . '/' . $update_library_in_progress_words[2] . ' ' . $type . ' processed so far', './spotify-mini-player/images/update_in_progress.png', 'no', null, '');	
+			}
+		}
 		if ($all_playlists == true) {
 			$w->result(null, '', 'Search for music in "Your Music" and your ' . $nb_playlists . ' playlists', 'Begin typing at least 3 characters to start search' . ' (' . $all_tracks . ' tracks)', './spotify-mini-player/images/' . $theme . '/' . 'allplaylists.png', 'no', null, '');
 		} else {
@@ -431,7 +459,9 @@ if (mb_strlen($query) < 3 ||
 					'ctrl' => 'Not Available'), './spotify-mini-player/images/' . $theme . '/' . 'search.png', 'yes', null, '');
 		}
 
+		if ($update_in_progress == false) {
 		$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'update_library' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Re-Create Library', "When done you'll receive a notification. you can check progress by invoking the workflow again", './spotify-mini-player/images/' . $theme . '/' . 'update.png', 'yes', null, '');
+		}
 		$w->result(null, '', "Configure Max Number of Results", "Number of results displayed. (it doesn't apply to your playlist list)", './spotify-mini-player/images/' . $theme . '/' . 'numbers.png', 'no', null, 'Settings▹MaxResults▹');
 		$w->result(null, '', "Configure the Theme", "Current available colors for icons: green or black, or new design", './spotify-mini-player/images/' . $theme . '/' . 'settings.png', 'no', null, 'Settings▹Theme▹');
 
@@ -725,7 +755,9 @@ if (mb_strlen($query) < 3 ||
 					$getPlaylists = "select * from playlists";
 					$stmt = $db->prepare($getPlaylists);
 
+					if ($update_in_progress == false) {
 					$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'update_playlist_list' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Update your playlists (new, modified or deleted)", "when done you'll receive a notification. you can check progress by invoking the workflow again", './spotify-mini-player/images/' . $theme . '/' . 'update.png', 'yes', null, '');
+				}
 				}
 				else {
 					$getPlaylists = "select * from playlists where (name like :query or author like :query)";
@@ -770,8 +802,9 @@ if (mb_strlen($query) < 3 ||
 			(strtolower($r[3]) != strtolower('Starred')) {
 				$w->result(null, '', "Clear your Alfred Playlist", "This will remove all the tracks in your current Alfred Playlist", './spotify-mini-player/images/' . $theme . '/' . 'uncheck.png', 'no', null, 'Alfred Playlist▹Confirm Clear Alfred Playlist▹');
 			}
-
+			if ($update_in_progress == false) {
 			$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , $alfred_playlist_uri /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'update_playlist' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, $alfred_playlist_name /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Update your Alfred Playlist", "when done you'll receive a notification. you can check progress by invoking the workflow again", './spotify-mini-player/images/' . $theme . '/' . 'update.png', 'yes', null, '');
+			}
 
 		} //  Alfred Playlist end
 		elseif ($kind == "Artist") {
@@ -1364,8 +1397,9 @@ if (mb_strlen($query) < 3 ||
 								'ctrl' => 'Not Available');
 						}
 						$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , $playlist[0] /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , '' /* other_action */ , $alfred_playlist_uri /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, $playlist[1] /* playlist_name */, $playlist[5] /* playlist_artwork_path */, $alfred_playlist_name /* alfred_playlist_name */)), "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks), by " . $playlist[3], $arrayresult, $playlist[5], 'yes', null, '');
-
+						if ($update_in_progress == false) {
 						$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , $playlist[0] /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'update_playlist' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, $playlist[1] /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Update playlist " . ucfirst($playlist[1]) . " by " . $playlist[3], "when done you'll receive a notification. you can check progress by invoking the workflow again", './spotify-mini-player/images/' . $theme . '/' . 'update.png', 'yes', null, '');
+						}
 
 						$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , 'activate (open location "' . $playlist[0] . '")' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , '' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Open playlist " . $playlist[1] . " in Spotify", "This will open the playlist in Spotify", 'fileicon:/Applications/Spotify.app', 'yes', null, '');
 
