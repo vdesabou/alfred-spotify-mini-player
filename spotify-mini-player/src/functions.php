@@ -1407,23 +1407,26 @@ function updatePlaylist($w, $playlist_uri, $playlist_name) {
 	$in_progress_data = $w->read('update_library_in_progress');
 
 	//
-	// Read settings from DB
+	// Read settings from a copy of DB
 	//
-	$dbfile = $w->data() . '/settings.db';
+	
+	copy($w->data() . '/settings.db',$w->data() . '/settings_tmp.db');
+	$dbfile = $w->data() . '/settings_tmp.db';
 	try {
 		$dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
 		$dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		$getSettings = 'select theme,country_code from settings';
+		$getSettings = 'select theme,country_code,userid from settings';
 		$stmt = $dbsettings->prepare($getSettings);
 		$stmt->execute();
 		$setting = $stmt->fetch();
 		$theme = $setting[0];
 		$country_code = $setting[1];
+		$userid = $setting[2];
 	} catch (PDOException $e) {
 		handleDbIssuePdoEcho($dbsettings);
 		$dbsettings=null;
 		unlink($w->data() . "/update_library_in_progress");
-		return;
+		return false;
 	}
 
 
@@ -1434,7 +1437,11 @@ function updatePlaylist($w, $playlist_uri, $playlist_name) {
 	ini_set('memory_limit', '512M');
 
 
-	$dbfile = $w->data() . '/library.db';
+	if (file_exists($w->data() . '/library.db')) {
+		rename($w->data() . '/library.db',$w->data() . '/library_old.db');
+	}
+	copy($w->data() . '/library_old.db',$w->data() . '/library_new.db');
+	$dbfile = $w->data() . '/library_new.db';
 
 	try {
 		$db = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
@@ -1530,6 +1537,8 @@ function updatePlaylist($w, $playlist_uri, $playlist_name) {
 		catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 			echo "Error(getUserPlaylistTracks): playlist id " . $tmp[4]. " (exception " . $e . ")";
 			unlink($w->data() . "/update_library_in_progress");
+			unlink($w->data() . "/library_new.db");
+			unlink($w->data() . '/settings_tmp.db');
 			return;
 		}
 
@@ -1586,7 +1595,9 @@ function updatePlaylist($w, $playlist_uri, $playlist_name) {
 		displayNotificationWithArtwork("\nPlaylist " . $playlist_name . " has been updated (" . $nb_track . " tracks) - it took " . beautifyTime($elapsed_time), $playlist_artwork_path);
 
 		unlink($w->data() . "/update_library_in_progress");
-
+		unlink($w->data() . '/library_old.db');
+		rename($w->data() . '/library_new.db',$w->data() . '/library.db');
+		unlink($w->data() . '/settings_tmp.db');
 	} catch (PDOException $e) {
 		handleDbIssuePdoEcho($db);
 		$dbsettings=null;
@@ -1620,9 +1631,11 @@ function updatePlaylistList($w) {
 	$in_progress_data = $w->read('update_library_in_progress');
 
 	//
-	// Read settings from DB
+	// Read settings from a copy of DB
 	//
-	$dbfile = $w->data() . '/settings.db';
+	
+	copy($w->data() . '/settings.db',$w->data() . '/settings_tmp.db');
+	$dbfile = $w->data() . '/settings_tmp.db';
 	try {
 		$dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
 		$dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -1637,7 +1650,7 @@ function updatePlaylistList($w) {
 		handleDbIssuePdoEcho($dbsettings);
 		$dbsettings=null;
 		unlink($w->data() . "/update_library_in_progress");
-		return;
+		return false;
 	}
 
 
@@ -1648,7 +1661,11 @@ function updatePlaylistList($w) {
 	ini_set('memory_limit', '512M');
 
 	$nb_playlist=0;
-	$dbfile = $w->data() . '/library.db';
+	if (file_exists($w->data() . '/library.db')) {
+		rename($w->data() . '/library.db',$w->data() . '/library_old.db');
+	}
+	copy($w->data() . '/library_old.db',$w->data() . '/library_new.db');
+	$dbfile = $w->data() . '/library_new.db';
 
 	try {
 		$db = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
@@ -1701,9 +1718,6 @@ function updatePlaylistList($w) {
 					$savedListPlaylist[] = $playlist;
 
 					$nb_tracktotal += $tracks->total;
-
-					//echo "Playlist $playlist->name $playlist->id $nb_tracktotal\n";
-
 					$stmt->bindValue(':name', escapeQuery($playlist->name));
 					$stmt->bindValue(':username', $owner->id);
 					$stmt->execute();
@@ -1861,6 +1875,8 @@ function updatePlaylistList($w) {
 							catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 								echo "Error(getUserPlaylistTracks): playlist id " . $tmp[4]. " (exception " . $e . ")";
 								unlink($w->data() . "/update_library_in_progress");
+								unlink($w->data() . "/library_new.db");
+								unlink($w->data() . '/settings_tmp.db');	
 								return;
 							}
 						} else {
@@ -1875,6 +1891,9 @@ function updatePlaylistList($w) {
 		}
 		catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 			echo "Error(getUserPlaylists): (exception " . $e . ")";
+			unlink($w->data() . "/update_library_in_progress");
+			unlink($w->data() . "/library_new.db");
+			unlink($w->data() . '/settings_tmp.db');
 		}
 
 
@@ -1957,12 +1976,16 @@ function updatePlaylistList($w) {
 		displayNotification("Playlist list has been updated - it took " . beautifyTime($elapsed_time));
 
 		unlink($w->data() . "/update_library_in_progress");
-
+		unlink($w->data() . '/library_old.db');
+		rename($w->data() . '/library_new.db',$w->data() . '/library.db');
+		unlink($w->data() . '/settings_tmp.db');
 	} catch (PDOException $e) {
 		handleDbIssuePdoEcho($db);
 		$dbsettings=null;
 		$db=null;
 		unlink($w->data() . "/update_library_in_progress");
+		unlink($w->data() . "/library_new.db");
+		unlink($w->data() . '/settings_tmp.db');
 		return;
 	}
 }
@@ -1988,9 +2011,11 @@ function updateMyMusic($w) {
 	$in_progress_data = $w->read('update_library_in_progress');
 
 	//
-	// Read settings from DB
+	// Read settings from a copy of DB
 	//
-	$dbfile = $w->data() . '/settings.db';
+	
+	copy($w->data() . '/settings.db',$w->data() . '/settings_tmp.db');
+	$dbfile = $w->data() . '/settings_tmp.db';
 	try {
 		$dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
 		$dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -2005,7 +2030,7 @@ function updateMyMusic($w) {
 		handleDbIssuePdoEcho($dbsettings);
 		$dbsettings=null;
 		unlink($w->data() . "/update_library_in_progress");
-		return;
+		return false;
 	}
 
 
@@ -2016,7 +2041,11 @@ function updateMyMusic($w) {
 	ini_set('memory_limit', '512M');
 
 	$nb_playlist=0;
-	$dbfile = $w->data() . '/library.db';
+	if (file_exists($w->data() . '/library.db')) {
+		rename($w->data() . '/library.db',$w->data() . '/library_old.db');
+	}
+	copy($w->data() . '/library_old.db',$w->data() . '/library_new.db');
+	$dbfile = $w->data() . '/library_new.db';
 
 	try {
 		$db = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
@@ -2101,6 +2130,8 @@ function updateMyMusic($w) {
 		catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 			echo "Error(getMySavedTracks): (exception " . $e . ")";
 			unlink($w->data() . "/update_library_in_progress");
+			unlink($w->data() . "/library_new.db");
+			unlink($w->data() . '/settings_tmp.db');
 			return false;
 		}
 
@@ -2155,12 +2186,16 @@ function updateMyMusic($w) {
 		displayNotification("My Music has been updated - it took " . beautifyTime($elapsed_time));
 
 		unlink($w->data() . "/update_library_in_progress");
-
+		unlink($w->data() . '/library_old.db');
+		rename($w->data() . '/library_new.db',$w->data() . '/library.db');
+		unlink($w->data() . '/settings_tmp.db');
 	} catch (PDOException $e) {
 		handleDbIssuePdoEcho($db);
 		$dbsettings=null;
 		$db=null;
 		unlink($w->data() . "/update_library_in_progress");
+		unlink($w->data() . "/library_new.db");
+		unlink($w->data() . '/settings_tmp.db');
 		return;
 	}
 }
