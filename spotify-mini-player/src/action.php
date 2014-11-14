@@ -179,7 +179,11 @@ if ($type == "TRACK") {
 		exec("osascript -e 'tell application \"Spotify\" to pause'");
 		return;
 	}else if ($type == "UPDATE_LIBRARY") {
-		updateLibrary($w);
+		if (file_exists($w->data() . '/update_library_in_progress')) {
+			displayNotification("Error: cannot update library while update is in progress");
+			return;	
+		}	
+		updatePlaylistList($w);
 		return;
 	}else if ($type == "ADD_CURRENT_TRACK") {
 
