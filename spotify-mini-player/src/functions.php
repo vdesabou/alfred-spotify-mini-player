@@ -754,6 +754,66 @@ function displayNotificationForCurrentTrack() {
 }
 
 /**
+ * displayLyricsForCurrentTrack function.
+ *
+ * @access public
+ * @return void
+ */
+function displayLyricsForCurrentTrack() {
+	$w = new Workflows('com.vdesabou.spotify.mini.player');
+
+	$command_output = exec("./spotify-mini-player/src/track_info.sh 2>&1");
+
+	if (substr_count($command_output, '▹') > 0) {
+		$results = explode('▹', $command_output);		
+		displayLyrics($w,$results[1],$results[0]);
+	} else {
+		displayNotification("Error: cannot get current track");
+	}
+}
+
+/**
+ * displayLyrics function.
+ * 
+ * @access public
+ * @param mixed $w
+ * @param mixed $artist
+ * @param mixed $title
+ * @return void
+ */
+function displayLyrics($w,$artist,$title) {
+	if (! $w->internet()) {
+		displayNotificationWithArtwork("Error: No internet connection", './spotify-mini-player/images/warning.png');
+		return;
+	}
+	$output = getLyrics($w, $artist, $title);
+	
+	if($output != false) {
+		PHPRtfLite::registerAutoloader();
+
+		$file = $w->cache() . '/lyrics.rtf';
+
+		$rtf = new PHPRtfLite();
+
+		$section = $rtf->addSection();
+		// centered text
+		$fontTitle = new PHPRtfLite_Font(28, 'Arial', '#000000', '#FFFFFF');
+		$parFormatTitle = new PHPRtfLite_ParFormat(PHPRtfLite_ParFormat::TEXT_ALIGN_CENTER);
+		$section->writeText($title . ' by ' . $artist , $fontTitle, $parFormatTitle);
+
+		$parFormat = new PHPRtfLite_ParFormat();
+		$parFormat->setSpaceAfter(4);
+		$font = new PHPRtfLite_Font(14, 'Arial', '#000000', '#FFFFFF');
+		// write text
+		$section->writeText($output, $font, $parFormat);
+
+		$rtf->save($file);
+		exec("qlmanage -p \"$file\"");
+	}
+	return;
+}
+
+/**
  * getTrackOrAlbumArtwork function.
  *
  * @access public

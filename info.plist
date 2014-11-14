@@ -207,6 +207,17 @@
 				<string></string>
 			</dict>
 		</array>
+		<key>AC236315-8CDE-41E3-A9BA-BB59D292FE14</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>EB1ED46F-71D7-49D1-B7BB-DA1ECF2F665F</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 		<key>AE6160D1-56EA-4416-991E-CF12B874FFD3</key>
 		<array>
 			<dict>
@@ -1328,6 +1339,46 @@ if (file_exists($w-&gt;data() . '/settings.db')) {
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>lyrics</string>
+				<key>subtext</key>
+				<string>Get current track lyrics</string>
+				<key>text</key>
+				<string>Get Lyrics for current track</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>AC236315-8CDE-41E3-A9BA-BB59D292FE14</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>echo "===== LYRICS ========" &gt;&gt; "$alfred_workflow_cache/action.log"
+echo "`date` {query}" &gt;&gt; "$alfred_workflow_cache/action.log"
+php -f ./spotify-mini-player/src/action.php -- "{query}" "LYRICS" "LYRICS" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>EB1ED46F-71D7-49D1-B7BB-DA1ECF2F665F</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string>Github page:
@@ -1506,6 +1557,11 @@ SOFTWARE.</string>
 			<key>ypos</key>
 			<real>480</real>
 		</dict>
+		<key>AC236315-8CDE-41E3-A9BA-BB59D292FE14</key>
+		<dict>
+			<key>ypos</key>
+			<real>2500</real>
+		</dict>
 		<key>AE6160D1-56EA-4416-991E-CF12B874FFD3</key>
 		<dict>
 			<key>ypos</key>
@@ -1565,6 +1621,11 @@ SOFTWARE.</string>
 		<dict>
 			<key>ypos</key>
 			<real>1110</real>
+		</dict>
+		<key>EB1ED46F-71D7-49D1-B7BB-DA1ECF2F665F</key>
+		<dict>
+			<key>ypos</key>
+			<real>2500</real>
 		</dict>
 		<key>ECC53637-75AD-4FD2-9605-8E038D04C4BF</key>
 		<dict>

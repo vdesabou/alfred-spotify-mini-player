@@ -163,6 +163,9 @@ if ($type == "TRACK") {
 	}else if ($type == "CURRENT") {
 		displayNotificationForCurrentTrack();
 		return;
+	}else if ($type == "LYRICS") {
+		displayLyricsForCurrentTrack();
+		return;
 	}else if ($type == "NEXT") {
 		exec("osascript -e 'tell application \"Spotify\" to next track'");
 		displayNotificationForCurrentTrack();
@@ -397,35 +400,8 @@ if ($playlist_uri != "") {
 					displayNotificationWithArtwork('Alfred Playlist ' . $setting[2] . ' was cleared' , getPlaylistArtwork($w, 'black', $setting[1], true));
 				}
 				return;
-			} else if ($setting[0] == "GET_LYRICS") {
-				if (! $w->internet()) {
-					displayNotificationWithArtwork("Error: No internet connection", './spotify-mini-player/images/warning.png');
-					return;
-				}
-				$output = getLyrics($w, $setting[1], $setting[2]);
-				
-				if($output != false) {
-					PHPRtfLite::registerAutoloader();
-	
-					$file = $w->cache() . '/lyrics.rtf';
-	
-					$rtf = new PHPRtfLite();
-	
-					$section = $rtf->addSection();
-					// centered text
-					$fontTitle = new PHPRtfLite_Font(28, 'Arial', '#000000', '#FFFFFF');
-					$parFormatTitle = new PHPRtfLite_ParFormat(PHPRtfLite_ParFormat::TEXT_ALIGN_CENTER);
-					$section->writeText($setting[2] . ' by ' . $setting[1] , $fontTitle, $parFormatTitle);
-	
-					$parFormat = new PHPRtfLite_ParFormat();
-					$parFormat->setSpaceAfter(4);
-					$font = new PHPRtfLite_Font(14, 'Arial', '#000000', '#FFFFFF');
-					// write text
-					$section->writeText($output, $font, $parFormat);
-	
-					$rtf->save($file);
-					exec("qlmanage -p \"$file\"");
-				}
+			} else if ($setting[0] == "GET_LYRICS") {			
+				displayLyrics($w,$setting[1],$setting[2]);
 				return;
 			}
 	} else if ($original_query != "") {
