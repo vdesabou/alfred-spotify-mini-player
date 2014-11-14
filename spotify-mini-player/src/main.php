@@ -25,7 +25,7 @@ if (file_exists($w->data() . '/update_library_in_progress')) {
 	$elapsed_time = time() - $update_library_in_progress_words[3];
 	$update_in_progress = true;
 	if(!file_exists($w->data() . '/library_old.db') ) {
-	
+
 		if (startsWith($update_library_in_progress_words[0], 'Init')) {
 			if
 			($elapsed_time < 300) {
@@ -45,10 +45,10 @@ if (file_exists($w->data() . '/update_library_in_progress')) {
 			else {
 				$type = 'tracks';
 			}
-	
+
 			$w->result(null, $w->data() . '/update_library_in_progress', $update_library_in_progress_words[0] . ' update in progress since ' . beautifyTime($elapsed_time) . ' : '  . floatToSquares(intval($update_library_in_progress_words[1]) / intval($update_library_in_progress_words[2])), $update_library_in_progress_words[1] . '/' . $update_library_in_progress_words[2] . ' ' . $type . ' processed so far (if no progress, use spot_mini_kill_update command to stop it)', './spotify-mini-player/images/update_in_progress.png', 'no', null, '');
 		}
-	
+
 		echo $w->toxml();
 		return;
 	}
@@ -192,7 +192,7 @@ if ($oauth_access_token == '' && substr_count($query, '▹') == 0) {
 // check for library DB
 $dbfile = "";
 
-if ($update_in_progress == false && 
+if ($update_in_progress == false &&
 	file_exists($w->data() . '/library.db')) {
 	$dbfile = $w->data() . '/library.db';
 } else if (file_exists($w->data() . '/library_old.db')) {
@@ -226,7 +226,7 @@ try {
 	handleDbIssuePdoXml($theme, $db);
 	return;
 }
-	
+
 $check_results = checkForUpdate($w, $last_check_update_time, $dbsettings);
 if
 ($check_results != null && is_array($check_results)) {
@@ -275,7 +275,7 @@ if (mb_strlen($query) < 3 ||
 				else {
 					$type = 'tracks';
 				}
-				$w->result(null, $w->data() . '/update_library_in_progress', $update_library_in_progress_words[0] . ' update in progress since ' . beautifyTime($elapsed_time) . ' : '  . floatToSquares(intval($update_library_in_progress_words[1]) / intval($update_library_in_progress_words[2])), $update_library_in_progress_words[1] . '/' . $update_library_in_progress_words[2] . ' ' . $type . ' processed so far', './spotify-mini-player/images/update_in_progress.png', 'no', null, '');	
+				$w->result(null, $w->data() . '/update_library_in_progress', $update_library_in_progress_words[0] . ' update in progress since ' . beautifyTime($elapsed_time) . ' : '  . floatToSquares(intval($update_library_in_progress_words[1]) / intval($update_library_in_progress_words[2])), $update_library_in_progress_words[1] . '/' . $update_library_in_progress_words[2] . ' ' . $type . ' processed so far', './spotify-mini-player/images/update_in_progress.png', 'no', null, '');
 			}
 		}
 		if ($all_playlists == true) {
@@ -863,17 +863,17 @@ if (mb_strlen($query) < 3 ||
 			try {
 				if (mb_strlen($album) < 3) {
 					if ($all_playlists == false) {
-						$getTracks = "select album_name,album_artwork_path,artist_name,album_uri from tracks where playable=1 and mymusic=1 group by album_name" . " limit " . $max_results;
+						$getTracks = "select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where playable=1 and mymusic=1 group by album_name" . " limit " . $max_results;
 					} else {
-						$getTracks = "select album_name,album_artwork_path,artist_name,album_uri from tracks where playable=1 group by album_name" . " limit " . $max_results;
+						$getTracks = "select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where playable=1 group by album_name" . " limit " . $max_results;
 					}
 					$stmt = $db->prepare($getTracks);
 				}
 				else {
 					if ($all_playlists == false) {
-						$getTracks = "select album_name,album_artwork_path,artist_name,album_uri from tracks where playable=1 and mymusic=1 and album_name like :query limit " . $max_results;
+						$getTracks = "select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where playable=1 and mymusic=1 and album_name like :query limit " . $max_results;
 					} else {
-						$getTracks = "select album_name,album_artwork_path,artist_name,album_uri from tracks where playable=1 and album_name like :query limit " . $max_results;
+						$getTracks = "select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where playable=1 and album_name like :query limit " . $max_results;
 					}
 					$stmt = $db->prepare($getTracks);
 					$stmt->bindValue(':query', '%' . $album . '%');
@@ -893,7 +893,7 @@ if (mb_strlen($query) < 3 ||
 				$noresult=false;
 
 				if (checkIfResultAlreadyThere($w->results(), ucfirst($track[0])) == false) {
-					$w->result(null, '', ucfirst($track[0]), "by " . $track[2], $track[1], 'no', null, "Album▹" . $track[3] . '∙' . $track[0] . "▹");
+					$w->result(null, '', ucfirst($track[0]), $track[4] . ' by ' . $track[2], $track[1], 'no', null, "Album▹" . $track[3] . '∙' . $track[0] . "▹");
 				}
 			}
 
