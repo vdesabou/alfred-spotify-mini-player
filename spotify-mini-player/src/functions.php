@@ -340,13 +340,13 @@ function getThePlaylistTracks($w, $playlist_uri) {
 		$limitGetUserPlaylistTracks = 100;
 		do {
 			$userPlaylistTracks = $api->getUserPlaylistTracks($tmp[2], $tmp[4], array(
-					'fields' => array(),
+					'fields' => array('items.track(id)'),
 					'limit' => $limitGetUserPlaylistTracks,
 					'offset' => $offsetGetUserPlaylistTracks
 				));
 
-			foreach ($userPlaylistTracks->items as $track) {
-				$track = $track->track;
+			foreach ($userPlaylistTracks->items as $item) {
+				$track = $item->track;
 				$tracks[] = $track->id;
 			}
 
@@ -765,7 +765,7 @@ function displayLyricsForCurrentTrack() {
 	$command_output = exec("./spotify-mini-player/src/track_info.sh 2>&1");
 
 	if (substr_count($command_output, '▹') > 0) {
-		$results = explode('▹', $command_output);		
+		$results = explode('▹', $command_output);
 		displayLyrics($w,$results[1],$results[0]);
 	} else {
 		displayNotification("Error: cannot get current track");
@@ -774,7 +774,7 @@ function displayLyricsForCurrentTrack() {
 
 /**
  * displayLyrics function.
- * 
+ *
  * @access public
  * @param mixed $w
  * @param mixed $artist
@@ -787,7 +787,7 @@ function displayLyrics($w,$artist,$title) {
 		return;
 	}
 	$output = getLyrics($w, $artist, $title);
-	
+
 	if($output != false) {
 		PHPRtfLite::registerAutoloader();
 
@@ -1096,7 +1096,7 @@ function updateLibrary($w) {
 	//
 	// Read settings from a copy of DB
 	//
-	
+
 	copy($w->data() . '/settings.db',$w->data() . '/settings_tmp.db');
 	$dbfile = $w->data() . '/settings_tmp.db';
 	try {
@@ -1219,7 +1219,7 @@ function updateLibrary($w) {
 		return false;
 	}
 
-	$db->exec("create table tracks (mymusic boolean, popularity int, uri text, album_uri text, artist_uri text, track_name text, album_name text, artist_name text, album_year text, track_artwork_path text, artist_artwork_path text, album_artwork_path text, playlist_name text, playlist_uri text, playable boolean, availability text, duration_ms int)");
+	$db->exec("create table tracks (mymusic boolean, popularity int, uri text, album_uri text, artist_uri text, track_name text, album_name text, artist_name text, album_type text, track_artwork_path text, artist_artwork_path text, album_artwork_path text, playlist_name text, playlist_uri text, playable boolean, added_at text, duration_ms int)");
 	$db->exec("CREATE INDEX IndexPlaylistUri ON tracks (playlist_uri)");
 	$db->exec("CREATE INDEX IndexArtistName ON tracks (artist_name)");
 	$db->exec("CREATE INDEX IndexAlbumName ON tracks (album_name)");
@@ -1233,7 +1233,7 @@ function updateLibrary($w) {
 	$insertPlaylist = "insert into playlists values (:uri,:name,:count_tracks,:owner,:username,:playlist_artwork_path,:ownedbyuser)";
 	$stmtPlaylist = $db->prepare($insertPlaylist);
 
-	$insertTrack = "insert into tracks values (:mymusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_year,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:availability,:duration_ms)";
+	$insertTrack = "insert into tracks values (:mymusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_type,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:added_at,:duration_ms)";
 	$stmtTrack = $db->prepare($insertTrack);
 
 	foreach ($savedListPlaylist as $playlist) {
@@ -1257,19 +1257,23 @@ function updateLibrary($w) {
 		$stmtPlaylist->bindValue(':playlist_artwork_path', $playlist_artwork_path);
 		$stmtPlaylist->bindValue(':ownedbyuser', $ownedbyuser);
 		$stmtPlaylist->execute();
-			
+
 		try {
 			$offsetGetUserPlaylistTracks = 0;
 			$limitGetUserPlaylistTracks = 100;
 			do {
 				$userPlaylistTracks = $api->getUserPlaylistTracks($owner->id, $playlist->id, array(
-						'fields' => array(),
+						'fields' => array(	'items(added_at)',
+											'items.track(available_markets,duration_ms,uri,popularity,name)',
+											'items.track.album(album_type,images,uri,name)',
+											'items.track.artists(name,uri)'
+										),
 						'limit' => $limitGetUserPlaylistTracks,
 						'offset' => $offsetGetUserPlaylistTracks
 					));
 
-				foreach ($userPlaylistTracks->items as $track) {
-					$track = $track->track;
+				foreach ($userPlaylistTracks->items as $item) {
+					$track = $item->track;
 					if (count($track->available_markets) == 0 || in_array($country_code, $track->available_markets) !== false) {
 						$playable = 1;
 					} else {
@@ -1285,8 +1289,6 @@ function updateLibrary($w) {
 					$artist_artwork_path = getArtistArtwork($w, $theme, $artist->name, true);
 					$album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $album->uri, true);
 
-					$album_year = 1995;
-
 					$stmtTrack->bindValue(':mymusic', 0);
 					$stmtTrack->bindValue(':popularity', $track->popularity);
 					$stmtTrack->bindValue(':uri', $track->uri);
@@ -1295,14 +1297,14 @@ function updateLibrary($w) {
 					$stmtTrack->bindValue(':track_name', escapeQuery($track->name));
 					$stmtTrack->bindValue(':album_name', escapeQuery($album->name));
 					$stmtTrack->bindValue(':artist_name', escapeQuery($artist->name));
-					$stmtTrack->bindValue(':album_year', $album_year);
+					$stmtTrack->bindValue(':album_type', $album->album_type);
 					$stmtTrack->bindValue(':track_artwork_path', $track_artwork_path);
 					$stmtTrack->bindValue(':artist_artwork_path', $artist_artwork_path);
 					$stmtTrack->bindValue(':album_artwork_path', $album_artwork_path);
 					$stmtTrack->bindValue(':playlist_name', escapeQuery($playlist->name));
 					$stmtTrack->bindValue(':playlist_uri', $playlist->uri);
 					$stmtTrack->bindValue(':playable', $playable);
-					$stmtTrack->bindValue(':availability', 'FIX THIS');
+					$stmtTrack->bindValue(':added_at', $item->added_at);
 					$stmtTrack->bindValue(':duration_ms', $track->duration_ms);
 					$stmtTrack->execute();
 
@@ -1343,8 +1345,6 @@ function updateLibrary($w) {
 		$artist_artwork_path = getArtistArtwork($w, $theme, $artist->name, true);
 		$album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $album->uri, true);
 
-		$album_year = 1995;
-
 		$stmtTrack->bindValue(':mymusic', 1);
 		$stmtTrack->bindValue(':popularity', $track->popularity);
 		$stmtTrack->bindValue(':uri', $track->uri);
@@ -1353,14 +1353,14 @@ function updateLibrary($w) {
 		$stmtTrack->bindValue(':track_name', escapeQuery($track->name));
 		$stmtTrack->bindValue(':album_name', escapeQuery($album->name));
 		$stmtTrack->bindValue(':artist_name', escapeQuery($artist->name));
-		$stmtTrack->bindValue(':album_year', $album_year);
+		$stmtTrack->bindValue(':album_type', $album->album_type);
 		$stmtTrack->bindValue(':track_artwork_path', $track_artwork_path);
 		$stmtTrack->bindValue(':artist_artwork_path', $artist_artwork_path);
 		$stmtTrack->bindValue(':album_artwork_path', $album_artwork_path);
 		$stmtTrack->bindValue(':playlist_name', escapeQuery($playlist->name));
 		$stmtTrack->bindValue(':playlist_uri', $playlist->uri);
 		$stmtTrack->bindValue(':playable', $playable);
-		$stmtTrack->bindValue(':availability', 'FIX THIS');
+		$stmtTrack->bindValue(':added_at', $track->added_at);
 		$stmtTrack->bindValue(':duration_ms', $track->duration_ms);
 		$stmtTrack->execute();
 
@@ -1437,7 +1437,7 @@ function updateLibrary($w) {
 	unlink($w->data() . '/library_old.db');
 	rename($w->data() . '/library_new.db',$w->data() . '/library.db');
 	unlink($w->data() . '/settings_tmp.db');
-	
+
 	// remove legacy spotify app if needed
 	if (file_exists($w->data() . "/library.db")) {
 		if (file_exists(exec('printf $HOME') . "/Spotify/spotify-app-miniplayer")) {
@@ -1469,7 +1469,7 @@ function updatePlaylist($w, $playlist_uri, $playlist_name) {
 	//
 	// Read settings from a copy of DB
 	//
-	
+
 	copy($w->data() . '/settings.db',$w->data() . '/settings_tmp.db');
 	$dbfile = $w->data() . '/settings_tmp.db';
 	try {
@@ -1521,7 +1521,7 @@ function updatePlaylist($w, $playlist_uri, $playlist_name) {
 		$updatePlaylists="update playlists set nb_tracks=:nb_tracks,playlist_artwork_path=:playlist_artwork_path where uri=:uri";
 		$stmtUpdatePlaylists = $db->prepare($updatePlaylists);
 
-		$insertTrack = "insert into tracks values (:mymusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_year,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:availability,:duration_ms)";
+		$insertTrack = "insert into tracks values (:mymusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_type,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:added_at,:duration_ms)";
 		$stmtTrack = $db->prepare($insertTrack);
 
 		$tmp = explode(':', $playlist_uri);
@@ -1531,7 +1531,11 @@ function updatePlaylist($w, $playlist_uri, $playlist_name) {
 			$limitGetUserPlaylistTracks = 100;
 			do {
 				$userPlaylistTracks = $api->getUserPlaylistTracks($tmp[2], $tmp[4], array(
-						'fields' => array(),
+						'fields' => array(	'items(added_at)',
+											'items.track(available_markets,duration_ms,uri,popularity,name)',
+											'items.track.album(album_type,images,uri,name)',
+											'items.track.artists(name,uri)'
+										),
 						'limit' => $limitGetUserPlaylistTracks,
 						'offset' => $offsetGetUserPlaylistTracks
 					));
@@ -1546,8 +1550,8 @@ function updatePlaylist($w, $playlist_uri, $playlist_name) {
 				$stmtUpdatePlaylists->bindValue(':uri', $playlist_uri);
 				$stmtUpdatePlaylists->execute();
 
-				foreach ($userPlaylistTracks->items as $track) {
-					$track = $track->track;
+				foreach ($userPlaylistTracks->items as $item) {
+					$track = $item->track;
 					if (count($track->available_markets) == 0 || in_array($country_code, $track->available_markets) !== false) {
 						$playable = 1;
 					} else {
@@ -1563,7 +1567,6 @@ function updatePlaylist($w, $playlist_uri, $playlist_name) {
 					$artist_artwork_path = getArtistArtwork($w, $theme, $artist->name, true);
 					$album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $album->uri, true);
 
-					$album_year = 1995;
 
 					$stmtTrack->bindValue(':mymusic', 0);
 					$stmtTrack->bindValue(':popularity', $track->popularity);
@@ -1573,14 +1576,14 @@ function updatePlaylist($w, $playlist_uri, $playlist_name) {
 					$stmtTrack->bindValue(':track_name', escapeQuery($track->name));
 					$stmtTrack->bindValue(':album_name', escapeQuery($album->name));
 					$stmtTrack->bindValue(':artist_name', escapeQuery($artist->name));
-					$stmtTrack->bindValue(':album_year', $album_year);
+					$stmtTrack->bindValue(':album_type', $album->album_type);
 					$stmtTrack->bindValue(':track_artwork_path', $track_artwork_path);
 					$stmtTrack->bindValue(':artist_artwork_path', $artist_artwork_path);
 					$stmtTrack->bindValue(':album_artwork_path', $album_artwork_path);
 					$stmtTrack->bindValue(':playlist_name', escapeQuery($playlist_name));
 					$stmtTrack->bindValue(':playlist_uri', $playlist_uri);
 					$stmtTrack->bindValue(':playable', $playable);
-					$stmtTrack->bindValue(':availability', 'FIX THIS');
+					$stmtTrack->bindValue(':added_at', $item->added_at);
 					$stmtTrack->bindValue(':duration_ms', $track->duration_ms);
 					$stmtTrack->execute();
 
@@ -1693,7 +1696,7 @@ function updatePlaylistList($w) {
 	//
 	// Read settings from a copy of DB
 	//
-	
+
 	copy($w->data() . '/settings.db',$w->data() . '/settings_tmp.db');
 	$dbfile = $w->data() . '/settings_tmp.db';
 	try {
@@ -1740,7 +1743,7 @@ function updatePlaylistList($w) {
 		$insertPlaylist = "insert into playlists values (:uri,:name,:count_tracks,:owner,:username,:playlist_artwork_path,:ownedbyuser)";
 		$stmtPlaylist = $db->prepare($insertPlaylist);
 
-		$insertTrack = "insert into tracks values (:mymusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_year,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:availability,:duration_ms)";
+		$insertTrack = "insert into tracks values (:mymusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_type,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:added_at,:duration_ms)";
 		$stmtTrack = $db->prepare($insertTrack);
 
 		$deleteFromTracks="delete from tracks where playlist_uri=:playlist_uri";
@@ -1813,13 +1816,17 @@ function updatePlaylistList($w) {
 							$limitGetUserPlaylistTracks = 100;
 							do {
 								$userPlaylistTracks = $api->getUserPlaylistTracks($owner->id, $playlist->id, array(
-										'fields' => array(),
+										'fields' => array(	'items(added_at)',
+											'items.track(available_markets,duration_ms,uri,popularity,name)',
+											'items.track.album(album_type,images,uri,name)',
+											'items.track.artists(name,uri)'
+										),
 										'limit' => $limitGetUserPlaylistTracks,
 										'offset' => $offsetGetUserPlaylistTracks
 									));
 
-								foreach ($userPlaylistTracks->items as $track) {
-									$track = $track->track;
+								foreach ($userPlaylistTracks->items as $item) {
+									$track = $item->track;
 									if (count($track->available_markets) == 0 || in_array($country_code, $track->available_markets) !== false) {
 										$playable = 1;
 									} else {
@@ -1835,8 +1842,6 @@ function updatePlaylistList($w) {
 									$artist_artwork_path = getArtistArtwork($w, $theme, $artist->name, true);
 									$album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $album->uri, true);
 
-									$album_year = 1995;
-
 									$stmtTrack->bindValue(':mymusic', 0);
 									$stmtTrack->bindValue(':popularity', $track->popularity);
 									$stmtTrack->bindValue(':uri', $track->uri);
@@ -1845,14 +1850,14 @@ function updatePlaylistList($w) {
 									$stmtTrack->bindValue(':track_name', escapeQuery($track->name));
 									$stmtTrack->bindValue(':album_name', escapeQuery($album->name));
 									$stmtTrack->bindValue(':artist_name', escapeQuery($artist->name));
-									$stmtTrack->bindValue(':album_year', $album_year);
+									$stmtTrack->bindValue(':album_type', $album->album_type);
 									$stmtTrack->bindValue(':track_artwork_path', $track_artwork_path);
 									$stmtTrack->bindValue(':artist_artwork_path', $artist_artwork_path);
 									$stmtTrack->bindValue(':album_artwork_path', $album_artwork_path);
 									$stmtTrack->bindValue(':playlist_name', escapeQuery($playlist->name));
 									$stmtTrack->bindValue(':playlist_uri', $playlist->uri);
 									$stmtTrack->bindValue(':playable', $playable);
-									$stmtTrack->bindValue(':availability', 'FIX THIS');
+									$stmtTrack->bindValue(':added_at', $item->added_at);
 									$stmtTrack->bindValue(':duration_ms', $track->duration_ms);
 									$stmtTrack->execute();
 								}
@@ -1880,7 +1885,11 @@ function updatePlaylistList($w) {
 								$limitGetUserPlaylistTracks = 100;
 								do {
 									$userPlaylistTracks = $api->getUserPlaylistTracks($tmp[2], $tmp[4], array(
-											'fields' => array(),
+											'fields' => array(	'items(added_at)',
+											'items.track(available_markets,duration_ms,uri,popularity,name)',
+											'items.track.album(album_type,images,uri,name)',
+											'items.track.artists(name,uri)'
+										),
 											'limit' => $limitGetUserPlaylistTracks,
 											'offset' => $offsetGetUserPlaylistTracks
 										));
@@ -1889,8 +1898,8 @@ function updatePlaylistList($w) {
 									$stmtUpdatePlaylistsNbTracks->bindValue(':uri', $playlist->uri);
 									$stmtUpdatePlaylistsNbTracks->execute();
 
-									foreach ($userPlaylistTracks->items as $track) {
-										$track = $track->track;
+									foreach ($userPlaylistTracks->items as $item) {
+										$track = $item->track;
 										if (count($track->available_markets) == 0 || in_array($country_code, $track->available_markets) !== false) {
 											$playable = 1;
 										} else {
@@ -1906,7 +1915,6 @@ function updatePlaylistList($w) {
 										$artist_artwork_path = getArtistArtwork($w, $theme, $artist->name, true);
 										$album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $album->uri, true);
 
-										$album_year = 1995;
 
 										$stmtTrack->bindValue(':mymusic', 0);
 										$stmtTrack->bindValue(':popularity', $track->popularity);
@@ -1916,14 +1924,14 @@ function updatePlaylistList($w) {
 										$stmtTrack->bindValue(':track_name', escapeQuery($track->name));
 										$stmtTrack->bindValue(':album_name', escapeQuery($album->name));
 										$stmtTrack->bindValue(':artist_name', escapeQuery($artist->name));
-										$stmtTrack->bindValue(':album_year', $album_year);
+										$stmtTrack->bindValue(':album_type', $album->album_type);
 										$stmtTrack->bindValue(':track_artwork_path', $track_artwork_path);
 										$stmtTrack->bindValue(':artist_artwork_path', $artist_artwork_path);
 										$stmtTrack->bindValue(':album_artwork_path', $album_artwork_path);
 										$stmtTrack->bindValue(':playlist_name', escapeQuery($playlist->name));
 										$stmtTrack->bindValue(':playlist_uri', $playlist->uri);
 										$stmtTrack->bindValue(':playable', $playable);
-										$stmtTrack->bindValue(':availability', 'FIX THIS');
+										$stmtTrack->bindValue(':added_at', $item->added_at);
 										$stmtTrack->bindValue(':duration_ms', $track->duration_ms);
 										$stmtTrack->execute();
 									}
@@ -1936,7 +1944,7 @@ function updatePlaylistList($w) {
 								echo "Error(getUserPlaylistTracks): playlist id " . $tmp[4]. " (exception " . $e . ")";
 								unlink($w->data() . "/update_library_in_progress");
 								unlink($w->data() . "/library_new.db");
-								unlink($w->data() . '/settings_tmp.db');	
+								unlink($w->data() . '/settings_tmp.db');
 								return;
 							}
 						} else {
@@ -2073,7 +2081,7 @@ function updateMyMusic($w) {
 	//
 	// Read settings from a copy of DB
 	//
-	
+
 	copy($w->data() . '/settings.db',$w->data() . '/settings_tmp.db');
 	$dbfile = $w->data() . '/settings_tmp.db';
 	try {
@@ -2114,7 +2122,7 @@ function updateMyMusic($w) {
 		$db->exec("drop table counters");
 		$db->exec("create table counters (all_tracks int, mymusic_tracks int, all_artists int, mymusic_artists int, all_albums int, mymusic_albums int, playlists int)");
 
-		$insertTrack = "insert into tracks values (:mymusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_year,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:availability,:duration_ms)";
+		$insertTrack = "insert into tracks values (:mymusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_type,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:added_at,:duration_ms)";
 		$stmtTrack = $db->prepare($insertTrack);
 
 		$deleteFromTracks="delete from tracks where mymusic=:mymusic";
@@ -2133,8 +2141,8 @@ function updateMyMusic($w) {
 						'offset' => $offsetGetMySavedTracks
 					));
 
-				foreach ($userMySavedTracks->items as $track) {
-					$track = $track->track;
+				foreach ($userMySavedTracks->items as $item) {
+					$track = $item->track;
 					if (count($track->available_markets) == 0 || in_array($country_code, $track->available_markets) !== false) {
 						$playable = 1;
 					} else {
@@ -2150,7 +2158,6 @@ function updateMyMusic($w) {
 					$artist_artwork_path = getArtistArtwork($w, $theme, $artist->name, true);
 					$album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $album->uri, true);
 
-					$album_year = 1995;
 
 					$stmtTrack->bindValue(':mymusic', 1);
 					$stmtTrack->bindValue(':popularity', $track->popularity);
@@ -2160,14 +2167,14 @@ function updateMyMusic($w) {
 					$stmtTrack->bindValue(':track_name', escapeQuery($track->name));
 					$stmtTrack->bindValue(':album_name', escapeQuery($album->name));
 					$stmtTrack->bindValue(':artist_name', escapeQuery($artist->name));
-					$stmtTrack->bindValue(':album_year', $album_year);
+					$stmtTrack->bindValue(':album_type', $album->album_type);
 					$stmtTrack->bindValue(':track_artwork_path', $track_artwork_path);
 					$stmtTrack->bindValue(':artist_artwork_path', $artist_artwork_path);
 					$stmtTrack->bindValue(':album_artwork_path', $album_artwork_path);
 					$stmtTrack->bindValue(':playlist_name', escapeQuery($playlist->name));
 					$stmtTrack->bindValue(':playlist_uri', $playlist->uri);
 					$stmtTrack->bindValue(':playable', $playable);
-					$stmtTrack->bindValue(':availability', 'FIX THIS');
+					$stmtTrack->bindValue(':added_at', $item->added_at);
 					$stmtTrack->bindValue(':duration_ms', $track->duration_ms);
 					$stmtTrack->execute();
 
