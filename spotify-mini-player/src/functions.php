@@ -1356,8 +1356,8 @@ function updateLibrary($w) {
 		$stmtTrack->bindValue(':track_artwork_path', $track_artwork_path);
 		$stmtTrack->bindValue(':artist_artwork_path', $artist_artwork_path);
 		$stmtTrack->bindValue(':album_artwork_path', $album_artwork_path);
-		$stmtTrack->bindValue(':playlist_name', escapeQuery($playlist->name));
-		$stmtTrack->bindValue(':playlist_uri', $playlist->uri);
+		$stmtTrack->bindValue(':playlist_name', '');
+		$stmtTrack->bindValue(':playlist_uri', '');
 		$stmtTrack->bindValue(':playable', $playable);
 		$stmtTrack->bindValue(':added_at', $track->added_at);
 		$stmtTrack->bindValue(':duration_ms', $track->duration_ms);
@@ -2170,8 +2170,8 @@ function updateMyMusic($w) {
 					$stmtTrack->bindValue(':track_artwork_path', $track_artwork_path);
 					$stmtTrack->bindValue(':artist_artwork_path', $artist_artwork_path);
 					$stmtTrack->bindValue(':album_artwork_path', $album_artwork_path);
-					$stmtTrack->bindValue(':playlist_name', escapeQuery($playlist->name));
-					$stmtTrack->bindValue(':playlist_uri', $playlist->uri);
+					$stmtTrack->bindValue(':playlist_name', '');
+					$stmtTrack->bindValue(':playlist_uri', '');
 					$stmtTrack->bindValue(':playable', $playable);
 					$stmtTrack->bindValue(':added_at', $item->added_at);
 					$stmtTrack->bindValue(':duration_ms', $track->duration_ms);
