@@ -40,8 +40,8 @@ $alfred_playlist_name = $arg[17];
 if ($add_to_option != "") {
 	if (file_exists($w->data() . '/update_library_in_progress')) {
 		displayNotification("Error: cannot modify library while update is in progress");
-		return;	
-	}	
+		return;
+	}
 }
 
 if ($other_action == "update_playlist" && $playlist_uri != "" && $playlist_name != "") {
@@ -158,25 +158,25 @@ if ($type == "TRACK") {
 			displayNotification("Error: cannot find a random track");
 		}
 		exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
-		displayNotificationForCurrentTrack();
+		displayNotificationForCurrentTrack($w);
 		return;
 	}else if ($type == "CURRENT") {
-		displayNotificationForCurrentTrack();
+		displayNotificationForCurrentTrack($w);
 		return;
 	}else if ($type == "LYRICS") {
 		displayLyricsForCurrentTrack();
 		return;
 	}else if ($type == "NEXT") {
 		exec("osascript -e 'tell application \"Spotify\" to next track'");
-		displayNotificationForCurrentTrack();
+		displayNotificationForCurrentTrack($w);
 		return;
 	}else if ($type == "PREVIOUS") {
 		exec("osascript -e 'tell application \"Spotify\" to previous track'");
-		displayNotificationForCurrentTrack();
+		displayNotificationForCurrentTrack($w);
 		return;
 	}else if ($type == "PLAY") {
 		exec("osascript -e 'tell application \"Spotify\" to play'");
-		displayNotificationForCurrentTrack();
+		displayNotificationForCurrentTrack($w);
 		return;
 	}else if ($type == "PAUSE") {
 		exec("osascript -e 'tell application \"Spotify\" to pause'");
@@ -184,8 +184,8 @@ if ($type == "TRACK") {
 	}else if ($type == "UPDATE_LIBRARY") {
 		if (file_exists($w->data() . '/update_library_in_progress')) {
 			displayNotification("Error: cannot update library while update is in progress");
-			return;	
-		}	
+			return;
+		}
 		updatePlaylistList($w);
 		return;
 	}else if ($type == "ADD_CURRENT_TRACK") {
@@ -400,7 +400,7 @@ if ($playlist_uri != "") {
 					displayNotificationWithArtwork('Alfred Playlist ' . $setting[2] . ' was cleared' , getPlaylistArtwork($w, 'black', $setting[1], true));
 				}
 				return;
-			} else if ($setting[0] == "GET_LYRICS") {			
+			} else if ($setting[0] == "GET_LYRICS") {
 				displayLyrics($w,$setting[1],$setting[2]);
 				return;
 			}
@@ -507,7 +507,7 @@ if ($playlist_uri != "") {
 				return;
 			} else if ($other_action == "play") {
 					exec("osascript -e 'tell application \"Spotify\" to play'");
-					displayNotificationForCurrentTrack();
+					displayNotificationForCurrentTrack($w);
 					return;
 			}else if ($other_action == "pause") {
 				exec("osascript -e 'tell application \"Spotify\" to pause'");
@@ -544,7 +544,7 @@ if ($playlist_uri != "") {
 					}
 				return;
 			} else if ($other_action == "current") {
-				displayNotificationForCurrentTrack();
+				displayNotificationForCurrentTrack($w);
 				return;
 			} else if ($other_action == "add_current_track") {
 				if ($is_alfred_playlist_active == true) {
@@ -555,11 +555,11 @@ if ($playlist_uri != "") {
 				return;
 			} else if ($other_action == "previous") {
 				exec("osascript -e 'tell application \"Spotify\" to previous track'");
-				displayNotificationForCurrentTrack();
+				displayNotificationForCurrentTrack($w);
 				return;
 			} else if ($other_action == "next") {
 				exec("osascript -e 'tell application \"Spotify\" to next track'");
-				displayNotificationForCurrentTrack();
+				displayNotificationForCurrentTrack($w);
 				return;
 			} else if ($other_action == "random") {
 				$track_uri = getRandomTrack($w);
@@ -568,7 +568,7 @@ if ($playlist_uri != "") {
 					return;
 				}
 				exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
-				displayNotificationForCurrentTrack();
+				displayNotificationForCurrentTrack($w);
 				return;
 			}
 		else if (startsWith($other_action, 'display_biography')) {

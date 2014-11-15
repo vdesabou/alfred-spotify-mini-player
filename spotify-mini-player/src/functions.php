@@ -738,11 +738,10 @@ function displayNotificationWithArtwork($output, $artwork) {
  * displayNotificationForCurrentTrack function.
  *
  * @access public
+ * @param mixed $w
  * @return void
  */
-function displayNotificationForCurrentTrack() {
-	$w = new Workflows('com.vdesabou.spotify.mini.player');
-
+function displayNotificationForCurrentTrack($w) {
 	$command_output = exec("./spotify-mini-player/src/track_info.sh 2>&1");
 
 	if (substr_count($command_output, '▹') > 0) {
