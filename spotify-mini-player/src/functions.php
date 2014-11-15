@@ -1172,10 +1172,8 @@ function updateLibrary($w) {
 				));
 
 			foreach ($userPlaylists->items as $playlist) {
-
 				$tracks = $playlist->tracks;
 				$nb_tracktotal += $tracks->total;
-
 				$savedListPlaylist[] = $playlist;
 			}
 
@@ -1261,7 +1259,8 @@ function updateLibrary($w) {
 			$limitGetUserPlaylistTracks = 100;
 			do {
 				$userPlaylistTracks = $api->getUserPlaylistTracks($owner->id, $playlist->id, array(
-						'fields' => array(	'items(added_at)',
+						'fields' => array(	'total',
+											'items(added_at)',
 											'items.track(available_markets,duration_ms,uri,popularity,name)',
 											'items.track.album(album_type,images,uri,name)',
 											'items.track.artists(name,uri)'
@@ -1429,7 +1428,7 @@ function updateLibrary($w) {
 	}
 
 	$elapsed_time = time() - $words[3];
-	displayNotification("Library has been created (" . $all_tracks[0] . " tracks) - it took " . beautifyTime($elapsed_time));
+	displayNotification("Library has been created (" . $nb_track . " tracks) - it took " . beautifyTime($elapsed_time));
 
 	unlink($w->data() . "/update_library_in_progress");
 	unlink($w->data() . '/library_old.db');
@@ -1529,7 +1528,8 @@ function updatePlaylist($w, $playlist_uri, $playlist_name) {
 			$limitGetUserPlaylistTracks = 100;
 			do {
 				$userPlaylistTracks = $api->getUserPlaylistTracks($tmp[2], $tmp[4], array(
-						'fields' => array(	'items(added_at)',
+						'fields' => array(	'total',
+											'items(added_at)',
 											'items.track(available_markets,duration_ms,uri,popularity,name)',
 											'items.track.album(album_type,images,uri,name)',
 											'items.track.artists(name,uri)'
@@ -1814,7 +1814,9 @@ function updatePlaylistList($w) {
 							$limitGetUserPlaylistTracks = 100;
 							do {
 								$userPlaylistTracks = $api->getUserPlaylistTracks($owner->id, $playlist->id, array(
-										'fields' => array(	'items(added_at)',
+										'fields' => array(
+											'total',
+											'items(added_at)',
 											'items.track(available_markets,duration_ms,uri,popularity,name)',
 											'items.track.album(album_type,images,uri,name)',
 											'items.track.artists(name,uri)'
@@ -1883,7 +1885,9 @@ function updatePlaylistList($w) {
 								$limitGetUserPlaylistTracks = 100;
 								do {
 									$userPlaylistTracks = $api->getUserPlaylistTracks($tmp[2], $tmp[4], array(
-											'fields' => array(	'items(added_at)',
+											'fields' => array(
+											'total',
+											'items(added_at)',
 											'items.track(available_markets,duration_ms,uri,popularity,name)',
 											'items.track.album(album_type,images,uri,name)',
 											'items.track.artists(name,uri)'
