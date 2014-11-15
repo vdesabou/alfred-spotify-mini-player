@@ -1167,7 +1167,6 @@ function updateLibrary($w) {
 		$limitGetUserPlaylists = 50;
 		do {
 			$userPlaylists = $api->getUserPlaylists($userid, array(
-					'fields' => array(),
 					'limit' => $limitGetUserPlaylists,
 					'offset' => $offsetGetUserPlaylists
 				));
