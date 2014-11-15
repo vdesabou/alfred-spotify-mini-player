@@ -1509,6 +1509,7 @@ function updatePlaylist($w, $playlist_uri, $playlist_name) {
 		$db->exec("create table counters (all_tracks int, mymusic_tracks int, all_artists int, mymusic_artists int, all_albums int, mymusic_albums int, playlists int)");
 
 		$nb_track = 0;
+		$w->write('Playlist▹0▹' . $nb_tracktotal . '▹' . $words[3], 'update_library_in_progress');
 
 		$deleteFromTracks="delete from tracks where playlist_uri=:playlist_uri";
 		$stmt = $db->prepare($deleteFromTracks);
@@ -1540,7 +1541,6 @@ function updatePlaylist($w, $playlist_uri, $playlist_name) {
 
 				$nb_tracktotal = $userPlaylistTracks->total;
 
-				$w->write('Playlist▹0▹' . $nb_tracktotal . '▹' . $words[3], 'update_library_in_progress');
 
 				$stmtUpdatePlaylists->bindValue(':nb_tracks', $nb_tracktotal);
 				$playlist_artwork_path =  getPlaylistArtwork($w, $theme, $playlist_uri, true, true);
