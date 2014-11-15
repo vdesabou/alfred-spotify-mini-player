@@ -32,8 +32,8 @@ if (file_exists($w->data() . '/update_library_in_progress')) {
 				$w->result(null, $w->data() . '/update_library_in_progress', 'Initialization phase since ' . beautifyTime($elapsed_time) . ' : ' . floatToSquares(0), 'waiting for Spotify servers to return required data', './spotify-mini-player/images/update_in_progress.png', 'no', null, '');
 			}
 			else {
-				$w->result(null, '', 'There is a problem, the initialization phase last more than 5 minutes', 'Follow the step below:', './spotify-mini-player/images/warning.png', 'no', null, '');
-				$w->result(null, '', "Kill update library", "You can kill it by using spot_mini_kill_update command", 'icon.png', 'no', null, '');
+				$w->result(null, '', 'There is a problem, the initialization phase last more than 5 minutes', 'Choose kill update library below', './spotify-mini-player/images/warning.png', 'no', null, '');
+				$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'kill_update' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Kill update library', 'This will stop the library update', 'icon.png', 'yes', '');
 			}
 		}
 		else {
@@ -46,7 +46,7 @@ if (file_exists($w->data() . '/update_library_in_progress')) {
 				$type = 'tracks';
 			}
 
-			$w->result(null, $w->data() . '/update_library_in_progress', $update_library_in_progress_words[0] . ' update in progress since ' . beautifyTime($elapsed_time) . ' : '  . floatToSquares(intval($update_library_in_progress_words[1]) / intval($update_library_in_progress_words[2])), $update_library_in_progress_words[1] . '/' . $update_library_in_progress_words[2] . ' ' . $type . ' processed so far (if no progress, use spot_mini_kill_update command to stop it)', './spotify-mini-player/images/update_in_progress.png', 'no', null, '');
+			$w->result(null, $w->data() . '/update_library_in_progress', $update_library_in_progress_words[0] . ' update in progress since ' . beautifyTime($elapsed_time) . ' : '  . floatToSquares(intval($update_library_in_progress_words[1]) / intval($update_library_in_progress_words[2])), $update_library_in_progress_words[1] . '/' . $update_library_in_progress_words[2] . ' ' . $type . ' processed so far', './spotify-mini-player/images/update_in_progress.png', 'no', null, '');
 		}
 
 		echo $w->toxml();
@@ -344,7 +344,7 @@ if (mb_strlen($query) < 3 ||
 
 				if
 				($is_lyrics_active == true) {
-					$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , 'GET_LYRICS▹' . escapeQuery($results[1]) . '▹' . escapeQuery($results[0]) /* other_settings*/ , '' /* other_action */ , '' /* alfred_playlist_uri */ , '' /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "🔈🎤 Get Lyrics for track " . escapeQuery($results[0]),
+					$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'lyrics' /* other_action */ , '' /* alfred_playlist_uri */ , '' /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "🔈🎤 Get Lyrics for track " . escapeQuery($results[0]),
 						array(
 							'This will fetch lyrics on lyrics.com',
 							'alt' => 'Not Available',

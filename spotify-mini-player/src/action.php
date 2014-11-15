@@ -166,6 +166,9 @@ if ($type == "TRACK") {
 	}else if ($type == "LYRICS") {
 		displayLyricsForCurrentTrack();
 		return;
+	}else if ($type == "KILL_UPDATE") {
+		killUpdate($w);
+		return;
 	}else if ($type == "NEXT") {
 		exec("osascript -e 'tell application \"Spotify\" to next track'");
 		displayNotificationForCurrentTrack($w);
@@ -400,9 +403,6 @@ if ($playlist_uri != "") {
 					displayNotificationWithArtwork('Alfred Playlist ' . $setting[2] . ' was cleared' , getPlaylistArtwork($w, 'black', $setting[1], true));
 				}
 				return;
-			} else if ($setting[0] == "GET_LYRICS") {
-				displayLyrics($w,$setting[1],$setting[2]);
-				return;
 			}
 	} else if ($original_query != "") {
 		exec("osascript -e 'tell application \"Alfred 2\" to search \"spotifious $original_query\"'");
@@ -509,8 +509,14 @@ if ($playlist_uri != "") {
 					exec("osascript -e 'tell application \"Spotify\" to play'");
 					displayNotificationForCurrentTrack($w);
 					return;
-			}else if ($other_action == "pause") {
+			} else if ($other_action == "pause") {
 				exec("osascript -e 'tell application \"Spotify\" to pause'");
+				return;
+			} else if ($other_action == "kill_update") {
+				killUpdate($w);
+				return;
+			} else if ($other_action == "lyrics") {
+				displayLyricsForCurrentTrack();
 				return;
 			}
 			else if ($other_action == "Oauth_Login") {

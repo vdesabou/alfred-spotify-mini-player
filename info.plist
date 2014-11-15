@@ -1144,7 +1144,9 @@ php -f ./spotify-mini-player/src/action.php -- "{query}" "CURRENT" "CURRENT" &gt
 				<key>escaping</key>
 				<integer>127</integer>
 				<key>script</key>
-				<string>php -f ./spotify-mini-player/src/kill_update.php</string>
+				<string>echo "===== KILL_UPDATE ========" &gt;&gt; "$alfred_workflow_cache/action.log"
+echo "`date` {query}" &gt;&gt; "$alfred_workflow_cache/action.log"
+php -f ./spotify-mini-player/src/action.php -- "{query}" "KILL_UPDATE" "KILL_UPDATE" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
