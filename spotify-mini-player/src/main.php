@@ -781,13 +781,28 @@ if (mb_strlen($query) < 3 ||
 			}
 
 			$noresult=true;
-			while ($playlist = $stmt->fetch()) {
+			if($query == "Playlist▹Artist radio") {
+				while ($playlist = $stmt->fetch()) {
 
-				$noresult=false;
+					$noresult=false;
 
-				$w->result(null, '', "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
+					if(startswith($playlist[1], 'Artist radio for')) {
+						$w->result(null, '', "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
+					}
+				}
+			} else {
+				$w->result(null, '', "Browse artist radio playlists", "", './spotify-mini-player/images/' . $theme . '/' . 'playlists.png', 'no', null, "Playlist▹Artist radio");
+				while ($playlist = $stmt->fetch()) {
 
+					$noresult=false;
+
+					if((!startswith($playlist[1], 'Artist radio for') && mb_strlen($theplaylist) < 3 ) ||
+					( startswith($playlist[1], 'Artist radio for') && mb_strlen($theplaylist) > 3 )) {
+						$w->result(null, '', "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
+					}
+				}
 			}
+
 
 			if
 			($noresult) {
