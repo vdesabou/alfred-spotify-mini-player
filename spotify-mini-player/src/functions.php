@@ -31,12 +31,10 @@ function addCurrentTrackToAlfredPlaylist($w) {
 		}
 
 		foreach ($settings as $setting):
-
 			$setting = explode("	", $setting);
-
-		$alfred_playlist_uri = $setting[0];
-		$alfred_playlist_name = $setting[1];
-		$theme = $setting[2];
+			$alfred_playlist_uri = $setting[0];
+			$alfred_playlist_name = $setting[1];
+			$theme = $setting[2];
 		endforeach;
 
 		if ($alfred_playlist_uri == "" || $alfred_playlist_name == "") {
@@ -316,6 +314,78 @@ function clearPlaylist($w, $playlist_uri, $playlist_name) {
 
 	return true;
 }
+
+
+/**
+ * createRadioArtistPlaylist function.
+ *
+ * @access public
+ * @param mixed $w
+ * @param mixed $artist_name
+ * @return void
+ */
+function createRadioArtistPlaylist($w, $artist_name) {
+
+	$api = getSpotifyWebAPI($w);
+	if ($api == false) {
+		displayNotification("Error: Cannot get SpotifyWebAPI(");
+		return false;
+	}
+
+	//
+	// Read settings from DB
+	//
+	$getSettings = 'select theme,userid from settings';
+	$dbfile = $w->data() . '/settings.db';
+	exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
+
+	if ($returnValue != 0) {
+		displayNotification("Error: cannot read settings");
+		return;
+	}
+
+	foreach ($settings as $setting):
+		$setting = explode("	", $setting);
+	$theme = $setting[0];
+	$userid = $setting[1];
+	endforeach;
+
+	$json = doWebApiRequest($w, 'http://developer.echonest.com/api/v4/playlist/static?api_key=5EG94BIZEGFEY9AL9&artist=' . urlencode($artist_name) . '&format=json&results=3&type=artist-radio&bucket=id:spotify&bucket=tracks');
+
+	$response = $json->response;
+
+	$newplaylisttracks = array();
+	foreach ($response->songs as $song) {
+		foreach ($song->tracks as $track) {
+			$foreign_id = $track->foreign_id;
+			$tmp = explode(':', $foreign_id);
+			$newplaylisttracks[] = $tmp[2];
+		}
+	}
+
+	try {
+		$json = $api->createUserPlaylist($userid, array(
+            'name' =>  'Artist radio for ' . $artist_name,
+            'public' => false
+        ));
+	}
+	catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+		echo "Error(createUserPlaylist): artist " . $artist_name . " (exception " . $e . ")";
+		return false;
+	}
+
+	$ret = addTracksToPlaylist($w, $newplaylisttracks, $json->uri, $json->name, false);
+	if (is_numeric($ret) && $ret > 0) {
+		displayNotificationWithArtwork('Playlist ' . $json->name . ' added to library',getPlaylistArtwork($w, $theme, $json->name, true));
+		return;
+	} else if (is_numeric($ret) && $ret == 0) {
+		displayNotification('Error: Playlist ' . $json->name . ' cannot be added');
+		return;
+	}
+
+	return true;
+}
+
 
 /**
  * getThePlaylistTracks function.

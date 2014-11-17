@@ -37,6 +37,7 @@ $playlist_name = $arg[15];
 $playlist_artwork_path = $arg[16];
 $alfred_playlist_name = $arg[17];
 
+
 if ($add_to_option != "") {
 	if (file_exists($w->data() . '/update_library_in_progress')) {
 		displayNotification("Error: cannot modify library while update is in progress");
@@ -651,6 +652,10 @@ if ($playlist_uri != "") {
 		else if ($other_action == "playalbum") {
 				exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
 				displayNotificationWithArtwork('🔈 Album ' . $album_name, $album_artwork_path);
+				return;
+			}
+		else if ($other_action == "radio_artist") {
+				createRadioArtistPlaylist($w, $artist_name);
 				return;
 			}
 		else if ($other_action == "update_library") {
