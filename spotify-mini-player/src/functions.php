@@ -840,7 +840,7 @@ function displayNotificationForCurrentTrack($w) {
 
 	if (substr_count($command_output, '▹') > 0) {
 		$results = explode('▹', $command_output);
-		displayNotificationWithArtwork('🔈 ' . $results[0] . ' by ' . $results[1], getTrackOrAlbumArtwork($w, 'new', $results[4], true));
+		displayNotificationWithArtwork('🔈 ' . escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]), getTrackOrAlbumArtwork($w, 'new', $results[4], true));
 	} else {
 		displayNotification("Error: cannot get current track");
 	}
