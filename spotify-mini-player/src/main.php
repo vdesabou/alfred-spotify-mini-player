@@ -369,36 +369,36 @@ if (mb_strlen($query) < 3 ||
 					$getTracks = "select playlist_uri from tracks where playable=1 and uri=:uri limit " . $max_results;
 
 					try {
-						$stmt = $db->prepare($getTracks);
-						$stmt->bindValue(':uri', $results[4]);
-						$stmt->execute();
+						$stmtgetTracks = $db->prepare($getTracks);
+						$stmtgetTracks->bindValue(':uri', $results[4]);
+						$stmtgetTracks->execute();
 
 					} catch (PDOException $e) {
 						handleDbIssuePdoXml($theme, $db);
 						return;
 					}
 
-					while ($track = $stmt->fetch()) {
+					while ($track = $stmtgetTracks->fetch()) {
 
 						$getPlaylists = "select * from playlists where uri=:uri";
 
 						try {
-							$stmt = $db->prepare($getPlaylists);
-							$stmt->bindValue(':uri', $track[0]);
+							$stmtGetPlaylists = $db->prepare($getPlaylists);
+							$stmtGetPlaylists->bindValue(':uri', $track[0]);
 
-							$playlists = $stmt->execute();
+							$playlists = $stmtGetPlaylists->execute();
 
 						} catch (PDOException $e) {
 							handleDbIssuePdoXml($theme, $db);
 							return;
 						}
 
-						while ($playlist = $stmt->fetch()) {
+						while ($playlist = $stmtGetPlaylists->fetch()) {
 							$added = ' ';
 							if(startswith($playlist[1], 'Artist radio for')) {
 								$added = '📻 ';
 							}
-							if (checkIfResultAlreadyThere($w->results(), "🔈🎵 " . "In playlist " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)") == false) {
+							if (checkIfResultAlreadyThere($w->results(), "🔈🎵" . $added . "In playlist " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)") == false) {
 								$w->result(null, '', "🔈🎵" . $added . "In playlist " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
 							}
 						}
