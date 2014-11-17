@@ -315,6 +315,23 @@ function clearPlaylist($w, $playlist_uri, $playlist_name) {
 	return true;
 }
 
+/**
+ * createRadioArtistPlaylistForCurrentArtist function.
+ *
+ * @access public
+ * @param mixed $w
+ * @return void
+ */
+function createRadioArtistPlaylistForCurrentArtist($w) {
+	$command_output = exec("./spotify-mini-player/src/track_info.sh 2>&1");
+
+	if (substr_count($command_output, '▹') > 0) {
+		$results = explode('▹', $command_output);
+		createRadioArtistPlaylist($w, $results[1]);
+	} else {
+		displayNotification("Error: cannot get current artist");
+	}
+}
 
 /**
  * createRadioArtistPlaylist function.

@@ -167,6 +167,9 @@ if ($type == "TRACK") {
 	}else if ($type == "LYRICS") {
 		displayLyricsForCurrentTrack();
 		return;
+	}else if ($type == "CURRENT_ARTIST_RADIO") {
+		createRadioArtistPlaylistForCurrentArtist($w);
+		return;
 	}else if ($type == "KILL_UPDATE") {
 		killUpdate($w);
 		return;

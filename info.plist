@@ -262,6 +262,17 @@
 				<string></string>
 			</dict>
 		</array>
+		<key>C93B7A2B-9105-4456-997A-1BCC4EDA5A27</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>2609AC90-5B4D-4043-8F13-D5187B14833F</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 		<key>CB842E97-4DDD-4663-8630-EAF7407CBA1D</key>
 		<array>
 			<dict>
@@ -573,7 +584,7 @@ php -f ./spotify-mini-player/src/action.php -- "{query}" "TRACK" "ADDTOPLAYLIST"
 				<key>script</key>
 				<string>echo "===== ONLINE ========" &gt;&gt; "$alfred_workflow_cache/action.log"
 echo "`date` {query}" &gt;&gt; "$alfred_workflow_cache/action.log"
-php -f ./spotify-mini-player/src/action.php -- "{query}" "ONLINE" "ONLINE" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;
+php -f ./spotify-mini-player/src/action.php -- "{query}" "ONLINE" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;
 </string>
 				<key>type</key>
 				<integer>0</integer>
@@ -622,7 +633,7 @@ php -f ./spotify-mini-player/src/action.php -- "{query}" "ONLINE" "ONLINE" &gt;&
 				<key>script</key>
 				<string>echo "===== PREVIOUS ========" &gt;&gt; "$alfred_workflow_cache/action.log"
 echo "`date` {query}" &gt;&gt; "$alfred_workflow_cache/action.log"
-php -f ./spotify-mini-player/src/action.php -- "{query}" "PREVIOUS" "PREVIOUS" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+php -f ./spotify-mini-player/src/action.php -- "{query}" "PREVIOUS" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -683,7 +694,7 @@ php -f ./spotify-mini-player/src/action.php -- "{query}" "PREVIOUS" "PREVIOUS" &
 				<key>script</key>
 				<string>echo "===== PLAY ========" &gt;&gt; "$alfred_workflow_cache/action.log"
 echo "`date` {query}" &gt;&gt; "$alfred_workflow_cache/action.log"
-php -f ./spotify-mini-player/src/action.php -- "{query}" "PLAY" "PLAY" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+php -f ./spotify-mini-player/src/action.php -- "{query}" "PLAY" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -723,7 +734,7 @@ php -f ./spotify-mini-player/src/action.php -- "{query}" "PLAY" "PLAY" &gt;&gt; 
 				<key>script</key>
 				<string>echo "===== PAUSE ========" &gt;&gt; "$alfred_workflow_cache/action.log"
 echo "`date` {query}" &gt;&gt; "$alfred_workflow_cache/action.log"
-php -f ./spotify-mini-player/src/action.php -- "{query}" "PAUSE" "PAUSE" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+php -f ./spotify-mini-player/src/action.php -- "{query}" "PAUSE" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -891,7 +902,7 @@ end alfred_script</string>
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f ./spotify-mini-player/src/action.php -- "" "RANDOM" "RANDOM"</string>
+				<string>php -f ./spotify-mini-player/src/action.php -- "" "RANDOM" ""</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -1027,7 +1038,7 @@ end alfred_script</string>
 				<key>script</key>
 				<string>echo "===== NEXT ========" &gt;&gt; "$alfred_workflow_cache/action.log"
 echo "`date` {query}" &gt;&gt; "$alfred_workflow_cache/action.log"
-php -f ./spotify-mini-player/src/action.php -- "{query}" "NEXT" "NEXT" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+php -f ./spotify-mini-player/src/action.php -- "{query}" "NEXT" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -1088,7 +1099,7 @@ php -f ./spotify-mini-player/src/action.php -- "{query}" "NEXT" "NEXT" &gt;&gt; 
 				<key>script</key>
 				<string>echo "===== CURRENT ========" &gt;&gt; "$alfred_workflow_cache/action.log"
 echo "`date` {query}" &gt;&gt; "$alfred_workflow_cache/action.log"
-php -f ./spotify-mini-player/src/action.php -- "{query}" "CURRENT" "CURRENT" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+php -f ./spotify-mini-player/src/action.php -- "{query}" "CURRENT" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -1146,7 +1157,7 @@ php -f ./spotify-mini-player/src/action.php -- "{query}" "CURRENT" "CURRENT" &gt
 				<key>script</key>
 				<string>echo "===== KILL_UPDATE ========" &gt;&gt; "$alfred_workflow_cache/action.log"
 echo "`date` {query}" &gt;&gt; "$alfred_workflow_cache/action.log"
-php -f ./spotify-mini-player/src/action.php -- "{query}" "KILL_UPDATE" "KILL_UPDATE" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+php -f ./spotify-mini-player/src/action.php -- "{query}" "KILL_UPDATE" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -1370,7 +1381,7 @@ if (file_exists($w-&gt;data() . '/settings.db')) {
 				<key>script</key>
 				<string>echo "===== LYRICS ========" &gt;&gt; "$alfred_workflow_cache/action.log"
 echo "`date` {query}" &gt;&gt; "$alfred_workflow_cache/action.log"
-php -f ./spotify-mini-player/src/action.php -- "{query}" "LYRICS" "LYRICS" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+php -f ./spotify-mini-player/src/action.php -- "{query}" "LYRICS" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -1378,6 +1389,46 @@ php -f ./spotify-mini-player/src/action.php -- "{query}" "LYRICS" "LYRICS" &gt;&
 			<string>alfred.workflow.action.script</string>
 			<key>uid</key>
 			<string>EB1ED46F-71D7-49D1-B7BB-DA1ECF2F665F</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>artist_radio</string>
+				<key>subtext</key>
+				<string>Create artist radio playlist</string>
+				<key>text</key>
+				<string>Create artist radio playlist for current artist</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>C93B7A2B-9105-4456-997A-1BCC4EDA5A27</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>echo "===== CURRENT_ARTIST_RADIO ========" &gt;&gt; "$alfred_workflow_cache/action.log"
+echo "`date` {query}" &gt;&gt; "$alfred_workflow_cache/action.log"
+php -f ./spotify-mini-player/src/action.php -- "{query}" "CURRENT_ARTIST_RADIO" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>2609AC90-5B4D-4043-8F13-D5187B14833F</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -1443,6 +1494,11 @@ SOFTWARE.</string>
 		<dict>
 			<key>ypos</key>
 			<real>870</real>
+		</dict>
+		<key>2609AC90-5B4D-4043-8F13-D5187B14833F</key>
+		<dict>
+			<key>ypos</key>
+			<real>2620</real>
 		</dict>
 		<key>29A1FCD7-3432-4BFF-89DB-4111B3169AD5</key>
 		<dict>
@@ -1588,6 +1644,11 @@ SOFTWARE.</string>
 		<dict>
 			<key>ypos</key>
 			<real>990</real>
+		</dict>
+		<key>C93B7A2B-9105-4456-997A-1BCC4EDA5A27</key>
+		<dict>
+			<key>ypos</key>
+			<real>2620</real>
 		</dict>
 		<key>CB842E97-4DDD-4663-8630-EAF7407CBA1D</key>
 		<dict>
