@@ -1237,6 +1237,9 @@ function updateLibrary($w) {
 	if (file_exists($w->data() . '/library.db')) {
 		rename($w->data() . '/library.db',$w->data() . '/library_old.db');
 	}
+	if(file_exists($w->data() . '/library_new.db')) {
+		unlink($w->data() . "/library_new.db");
+	}
 	$dbfile = $w->data() . '/library_new.db';
 	touch($dbfile);
 
@@ -1247,9 +1250,6 @@ function updateLibrary($w) {
 		handleDbIssuePdoEcho($db);
 		$dbsettings=null;
 		$db=null;
-		unlink($w->data() . "/update_library_in_progress");
-		unlink($w->data() . "/library_new.db");
-		unlink($w->data() . '/settings_tmp.db');
 		return false;
 	}
 
@@ -1277,8 +1277,6 @@ function updateLibrary($w) {
 	}
 	catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 		echo "Error(getUserPlaylists): (exception " . $e . ")";
-		unlink($w->data() . "/update_library_in_progress");
-		unlink($w->data() . "/library_new.db");
 		return false;
 	}
 
@@ -1303,9 +1301,7 @@ function updateLibrary($w) {
 	}
 	catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 		echo "Error(getMySavedTracks): (exception " . $e . ")";
-		unlink($w->data() . "/update_library_in_progress");
-		unlink($w->data() . "/library_new.db");
-		unlink($w->data() . '/settings_tmp.db');
+		handleDbIssuePdoEcho($db);
 		return false;
 	}
 
@@ -1411,9 +1407,7 @@ function updateLibrary($w) {
 		}
 		catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 			echo "Error(getUserPlaylistTracks): playlist id " . $playlist->id . " (exception " . $e . ")";
-			unlink($w->data() . "/update_library_in_progress");
-			unlink($w->data() . "/library_new.db");
-			unlink($w->data() . '/settings_tmp.db');
+			handleDbIssuePdoEcho($db);
 			return false;
 		}
 	}
@@ -1515,9 +1509,6 @@ function updateLibrary($w) {
 		handleDbIssuePdoEcho($db);
 		$dbsettings=null;
 		$db=null;
-		unlink($w->data() . "/update_library_in_progress");
-		unlink($w->data() . "/library_new.db");
-		unlink($w->data() . '/settings_tmp.db');
 		return false;
 	}
 
@@ -1525,7 +1516,9 @@ function updateLibrary($w) {
 	displayNotification("Library has been created (" . $nb_track . " tracks) - it took " . beautifyTime($elapsed_time));
 
 	unlink($w->data() . "/update_library_in_progress");
-	unlink($w->data() . '/library_old.db');
+	if(file_exists($w->data() . '/library_old.db')) {
+		unlink($w->data() . '/library_old.db');
+	}
 	rename($w->data() . '/library_new.db',$w->data() . '/library.db');
 	unlink($w->data() . '/settings_tmp.db');
 
@@ -1691,9 +1684,7 @@ function updatePlaylist($w, $playlist_uri, $playlist_name) {
 		}
 		catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 			echo "Error(getUserPlaylistTracks): playlist id " . $tmp[4]. " (exception " . $e . ")";
-			unlink($w->data() . "/update_library_in_progress");
-			unlink($w->data() . "/library_new.db");
-			unlink($w->data() . '/settings_tmp.db');
+			handleDbIssuePdoEcho($db);
 			return;
 		}
 
@@ -1955,6 +1946,8 @@ function updatePlaylistList($w) {
 						}
 						catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 							echo "Error(getUserPlaylistTracks): playlist id " . $playlist->id . " (exception " . $e . ")";
+							handleDbIssuePdoEcho($db);
+							return;
 						}
 
 						displayNotificationWithArtwork('Added playlist ' . $playlist->name . ' was created', $playlist_artwork_path);
@@ -2031,9 +2024,7 @@ function updatePlaylistList($w) {
 							}
 							catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 								echo "Error(getUserPlaylistTracks): playlist id " . $tmp[4]. " (exception " . $e . ")";
-								unlink($w->data() . "/update_library_in_progress");
-								unlink($w->data() . "/library_new.db");
-								unlink($w->data() . '/settings_tmp.db');
+								handleDbIssuePdoEcho($db);
 								return;
 							}
 							displayNotificationWithArtwork('Updated playlist ' . $playlist->name . ' was created',getPlaylistArtwork($w, $theme, $playlist->uri, true));
@@ -2141,9 +2132,6 @@ function updatePlaylistList($w) {
 		handleDbIssuePdoEcho($db);
 		$dbsettings=null;
 		$db=null;
-		unlink($w->data() . "/update_library_in_progress");
-		unlink($w->data() . "/library_new.db");
-		unlink($w->data() . '/settings_tmp.db');
 		return;
 	}
 }
@@ -2187,7 +2175,6 @@ function updateMyMusic($w) {
 	} catch (PDOException $e) {
 		handleDbIssuePdoEcho($dbsettings);
 		$dbsettings=null;
-		unlink($w->data() . "/update_library_in_progress");
 		return false;
 	}
 
@@ -2286,9 +2273,7 @@ function updateMyMusic($w) {
 		}
 		catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 			echo "Error(getMySavedTracks): (exception " . $e . ")";
-			unlink($w->data() . "/update_library_in_progress");
-			unlink($w->data() . "/library_new.db");
-			unlink($w->data() . '/settings_tmp.db');
+			handleDbIssuePdoEcho($db);
 			return false;
 		}
 
@@ -2350,9 +2335,6 @@ function updateMyMusic($w) {
 		handleDbIssuePdoEcho($db);
 		$dbsettings=null;
 		$db=null;
-		unlink($w->data() . "/update_library_in_progress");
-		unlink($w->data() . "/library_new.db");
-		unlink($w->data() . '/settings_tmp.db');
 		return;
 	}
 }
@@ -2384,6 +2366,17 @@ function handleDbIssuePdoXml($theme, $dbhandle) {
  */
 function handleDbIssuePdoEcho($dbhandle) {
 	echo 'Database Error: ' . $dbhandle->errorInfo()[0] . ' ' . $dbhandle->errorInfo()[1] . ' ' . $dbhandle->errorInfo()[2];
+	if ( file_exists($w->data() . '/update_library_in_progress' ) ) {
+		unlink($w->data() . '/update_library_in_progress');
+	}
+
+	if ( file_exists($w->data() . "/library_new.db" ) ) {
+		unlink($w->data() . "/library_new.db");
+	}
+
+	if ( file_exists($w->data() . '/settings_tmp.db') ) {
+		unlink($w->data() . '/settings_tmp.db');
+	}
 }
 
 
@@ -2688,8 +2681,16 @@ function doWebApiRequest($w, $url) {
  * @return void
  */
 function killUpdate($w) {
-	if ( file_exists($w->data() . "/update_library_in_progress") ) {
-		unlink($w->data() . "/update_library_in_progress");
+	if ( file_exists($w->data() . '/update_library_in_progress' ) ) {
+		unlink($w->data() . '/update_library_in_progress');
+	}
+
+	if ( file_exists($w->data() . "/library_new.db" ) ) {
+		unlink($w->data() . "/library_new.db");
+	}
+
+	if ( file_exists($w->data() . '/settings_tmp.db') ) {
+		unlink($w->data() . '/settings_tmp.db');
 	}
 
 	exec("kill -9 $(ps -efx | grep \"php\" | egrep \"update_|php -S localhost:15298|ADDTOPLAYLIST|UPDATE_\" | grep -v grep | awk '{print $2}')");
