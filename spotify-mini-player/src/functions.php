@@ -689,17 +689,20 @@ function getFreeTcpPort() {
 function getPlaylistsForTrack($db, $theme, $track_uri) {
 
 	$playlistsfortrack = "";
-	$getPlaylistsForTrack = "select playlist_name from tracks where uri=:uri";
+	$getPlaylistsForTrack = "select distinct playlist_name from tracks where uri=:uri";
 	try {
 		$stmt = $db->prepare($getPlaylistsForTrack);
 		$stmt->bindValue(':uri', '' . $track_uri . '');
-
 		$stmt->execute();
 
 		$noresult=true;
 		while ($playlist = $stmt->fetch()) {
 			if ($noresult==true) {
-				$playlistsfortrack = $playlistsfortrack . " ● ♫ : " . $playlist[0];
+				if ($playlist[0] == "") {
+					$playlistsfortrack = $playlistsfortrack . " ● ♫ : " . 'Your Music';
+				} else {
+					$playlistsfortrack = $playlistsfortrack . " ● ♫ : " . $playlist[0];
+				}
 			} else {
 				if ($playlist[0] == "") {
 					$playlistsfortrack =  $playlistsfortrack . " ○ " . 'Your Music';
