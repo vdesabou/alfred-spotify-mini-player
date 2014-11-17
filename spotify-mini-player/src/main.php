@@ -394,9 +394,12 @@ if (mb_strlen($query) < 3 ||
 						}
 
 						while ($playlist = $stmt->fetch()) {
-
+							$added = ' ';
+							if(startswith($playlist[1], 'Artist radio for')) {
+								$added = '📻 ';
+							}
 							if (checkIfResultAlreadyThere($w->results(), "🔈🎵 " . "In playlist " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)") == false) {
-								$w->result(null, '', "🔈🎵 " . "In playlist " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
+								$w->result(null, '', "🔈🎵" . $added . "In playlist " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
 							}
 						}
 					}
@@ -630,8 +633,11 @@ if (mb_strlen($query) < 3 ||
 		}
 
 		while ($playlist = $stmt->fetch()) {
-
-			$w->result(null, '', "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
+			$added = ' ';
+			if(startswith($playlist[1], 'Artist radio for')) {
+				$added = '📻 ';
+			}
+			$w->result(null, '', "🎵" . $added . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
 		}
 
 		//
@@ -787,18 +793,26 @@ if (mb_strlen($query) < 3 ||
 					$noresult=false;
 
 					if(startswith($playlist[1], 'Artist radio for')) {
-						$w->result(null, '', "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
+						$added = ' ';
+						if(startswith($playlist[1], 'Artist radio for')) {
+							$added = '📻 ';
+						}
+						$w->result(null, '', "🎵" . $added . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
 					}
 				}
 			} else {
-				$w->result(null, '', "Browse artist radio playlists", "", './spotify-mini-player/images/' . $theme . '/' . 'playlists.png', 'no', null, "Playlist▹Artist radio");
+				$w->result(null, '', "📻 Browse your artist radio playlists", "Display all your artist radio playlists", './spotify-mini-player/images/' . $theme . '/' . 'playlists.png', 'no', null, "Playlist▹Artist radio");
 				while ($playlist = $stmt->fetch()) {
 
 					$noresult=false;
 
 					if((!startswith($playlist[1], 'Artist radio for') && mb_strlen($theplaylist) < 3 ) ||
 					( startswith($playlist[1], 'Artist radio for') && mb_strlen($theplaylist) > 3 )) {
-						$w->result(null, '', "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
+						$added = ' ';
+						if(startswith($playlist[1], 'Artist radio for')) {
+							$added = '📻 ';
+						}
+						$w->result(null, '', "🎵" . $added . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
 					}
 				}
 			}
@@ -1427,7 +1441,11 @@ if (mb_strlen($query) < 3 ||
 								'fn' => 'Not Available',
 								'ctrl' => 'Not Available');
 						}
-						$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , $playlist[0] /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , '' /* other_action */ , $alfred_playlist_uri /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, $playlist[1] /* playlist_name */, $playlist[5] /* playlist_artwork_path */, $alfred_playlist_name /* alfred_playlist_name */)), "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks), by " . $playlist[3], $arrayresult, $playlist[5], 'yes', null, '');
+						$added = ' ';
+						if(startswith($playlist[1], 'Artist radio for')) {
+							$added = '📻 ';
+						}
+						$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , $playlist[0] /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , '' /* other_action */ , $alfred_playlist_uri /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, $playlist[1] /* playlist_name */, $playlist[5] /* playlist_artwork_path */, $alfred_playlist_name /* alfred_playlist_name */)), "🎵" . $added . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks), by " . $playlist[3], $arrayresult, $playlist[5], 'yes', null, '');
 						if ($update_in_progress == false) {
 							$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , $playlist[0] /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'update_playlist' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, $playlist[1] /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Update playlist " . ucfirst($playlist[1]) . " by " . $playlist[3], "when done you'll receive a notification. you can check progress by invoking the workflow again", './spotify-mini-player/images/' . $theme . '/' . 'update.png', 'yes', null, '');
 						}
@@ -1831,10 +1849,12 @@ if (mb_strlen($query) < 3 ||
 
 				while ($playlist = $stmt->fetch()) {
 
-					// Prevent toplist to be chosen as Alfred Playlist
-					if (strpos($playlist[0], 'toplist') === false) {
-						$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , 'ALFRED_PLAYLIST▹' .  $playlist[0] . '▹' . $playlist[1] /* other_settings*/ , '' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "Select the playlist to set it as your Alfred Playlist", $playlist[5], 'yes', null, '');
+					$added = ' ';
+					if(startswith($playlist[1], 'Artist radio for')) {
+						$added = '📻 ';
 					}
+					$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , 'ALFRED_PLAYLIST▹' .  $playlist[0] . '▹' . $playlist[1] /* other_settings*/ , '' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "🎵" . $added . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "Select the playlist to set it as your Alfred Playlist", $playlist[5], 'yes', null, '');
+
 				}
 			} elseif ($setting_kind == "Confirm Clear Alfred Playlist") {
 
