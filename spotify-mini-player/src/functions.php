@@ -350,7 +350,7 @@ function createRadioArtistPlaylist($w, $artist_name) {
 	$userid = $setting[1];
 	endforeach;
 
-	$json = doWebApiRequest($w, 'http://developer.echonest.com/api/v4/playlist/static?api_key=5EG94BIZEGFEY9AL9&artist=' . urlencode($artist_name) . '&format=json&results=3&type=artist-radio&bucket=id:spotify&bucket=tracks');
+	$json = doWebApiRequest($w, 'http://developer.echonest.com/api/v4/playlist/static?api_key=5EG94BIZEGFEY9AL9&artist=' . urlencode($artist_name) . '&format=json&results=100&distribution=focused&type=artist-radio&bucket=id:spotify&bucket=tracks');
 
 	$response = $json->response;
 
@@ -360,6 +360,8 @@ function createRadioArtistPlaylist($w, $artist_name) {
 			$foreign_id = $track->foreign_id;
 			$tmp = explode(':', $foreign_id);
 			$newplaylisttracks[] = $tmp[2];
+			// only take one
+			break;
 		}
 	}
 
@@ -374,9 +376,9 @@ function createRadioArtistPlaylist($w, $artist_name) {
 		return false;
 	}
 
-	$ret = addTracksToPlaylist($w, $newplaylisttracks, $json->uri, $json->name, false);
+	$ret = addTracksToPlaylist($w, $newplaylisttracks, $json->uri, $json->name, false, false);
 	if (is_numeric($ret) && $ret > 0) {
-		displayNotificationWithArtwork('Playlist ' . $json->name . ' added to library',getPlaylistArtwork($w, $theme, $json->name, true));
+		updatePlaylistList($w);
 		return;
 	} else if (is_numeric($ret) && $ret == 0) {
 		displayNotification('Error: Playlist ' . $json->name . ' cannot be added');
@@ -554,7 +556,7 @@ function addTracksToMyTracks($w, $tracks, $allow_duplicate = true) {
  * @param bool $allow_duplicate (default: true)
  * @return void
  */
-function addTracksToPlaylist($w, $tracks, $playlist_uri, $playlist_name, $allow_duplicate = true) {
+function addTracksToPlaylist($w, $tracks, $playlist_uri, $playlist_name, $allow_duplicate = true, $updatePlaylist = true) {
 
 	//
 	// Read settings from DB
@@ -620,8 +622,10 @@ function addTracksToPlaylist($w, $tracks, $playlist_uri, $playlist_name, $allow_
 			return false;
 		}
 
-		// refresh playlist
-		updatePlaylist($w, $playlist_uri, $playlist_name);
+		if($updatePlaylist) {
+			// refresh playlist
+			updatePlaylist($w, $playlist_uri, $playlist_name);
+		}
 	}
 
 	return count($tracks);
@@ -1825,24 +1829,18 @@ function updatePlaylistList($w) {
 			$limitGetUserPlaylists = 50;
 			do {
 				$userPlaylists = $api->getUserPlaylists($userid, array(
-						'fields' => array(),
 						'limit' => $limitGetUserPlaylists,
 						'offset' => $offsetGetUserPlaylists
 					));
 
 				$nb_playlist_total = $userPlaylists->total;
 
-				if ($nb_playlist == 0) {
-					$w->write('Playlist List▹0▹' . $nb_playlist_total . '▹' . $words[3], 'update_library_in_progress');
-				} else {
-					if ($nb_playlist % 4 === 0) {
-						$w->write('Playlist List▹' . $nb_playlist . '▹' . $nb_playlist_total . '▹' . $words[3], 'update_library_in_progress');
-					}
-				}
-
-				$nb_playlist++;
 				$savedListPlaylist = array();
 				foreach ($userPlaylists->items as $playlist) {
+
+					$nb_playlist++;
+					$w->write('Playlist List▹' . $nb_playlist . '▹' . $nb_playlist_total . '▹' . $words[3], 'update_library_in_progress');
+
 					$tracks = $playlist->tracks;
 					$owner=$playlist->owner;
 
@@ -1861,7 +1859,6 @@ function updatePlaylistList($w) {
 
 					// Add the new playlist
 					if ($noresult == true) {
-						displayNotification("Added playlist " . $playlist->name . "\n");
 						$playlist_artwork_path = getPlaylistArtwork($w, $theme, $playlist->uri, true, true);
 
 						if ("-" . $owner->id . "-" == "-" . $userid. "-") {
@@ -1939,12 +1936,12 @@ function updatePlaylistList($w) {
 						catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 							echo "Error(getUserPlaylistTracks): playlist id " . $playlist->id . " (exception " . $e . ")";
 						}
+
+						displayNotificationWithArtwork('Added playlist ' . $playlist->name . ' was created', $playlist_artwork_path);
 					} else {
 						// number of tracks has changed
 						// update the playlist
 						if ($playlists[2] != $tracks->total) {
-							displayNotification("Updated playlist " . $playlist->name . "\n");
-
 							$stmtDeleteFromTracks->bindValue(':playlist_uri', $playlist->uri);
 							$stmtDeleteFromTracks->execute();
 
@@ -2019,6 +2016,7 @@ function updatePlaylistList($w) {
 								unlink($w->data() . '/settings_tmp.db');
 								return;
 							}
+							displayNotificationWithArtwork('Updated playlist ' . $playlist->name . ' was created',getPlaylistArtwork($w, $theme, $playlist->uri, true));
 						} else {
 							continue;
 						}
@@ -2061,7 +2059,7 @@ function updatePlaylistList($w) {
 				$stmtDelete = $db->prepare($deleteFromTracks);
 				$stmtDelete->bindValue(':uri', $pl[0]);
 				$stmtDelete->execute();
-				displayNotification("Playlist " . escapeQuery($pl[1]) . " was removed" . "\n");
+				displayNotificationWithArtwork('Playlist ' . $pl[1]. ' was removed',getPlaylistArtwork($w, $theme, $pl[0], false));
 			}
 		}
 

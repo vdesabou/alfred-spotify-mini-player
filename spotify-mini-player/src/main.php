@@ -1113,7 +1113,7 @@ if (mb_strlen($query) < 3 ||
 
 						$w->result(null, '', 'Related Artists', 'Browse related artists', './spotify-mini-player/images/' . $theme . '/' . 'related.png', 'no', null, "OnlineRelated▹" . $artist_uri . "@" . $artist_name);
 
-				        $w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , $artist_uri /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'radio_artist' /* other_action */ , '' /* alfred_playlist_uri */ , $artist_name  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Create a Radio playlist for the artist', 'This will create a radio playlist or the artist', './spotify-mini-player/images/' . $theme . '/' . 'playlists.png', 'yes', null, '');
+				        $w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , $artist_uri /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'radio_artist' /* other_action */ , '' /* alfred_playlist_uri */ , $artist_name  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Create a Radio playlist for ' . $artist_name, 'This will create a radio playlist for the artist', './spotify-mini-player/images/' . $theme . '/' . 'playlists.png', 'yes', null, '');
 					}
 
 					if ($all_playlists == false) {
