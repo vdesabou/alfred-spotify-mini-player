@@ -367,7 +367,7 @@ function createRadioArtistPlaylist($w, $artist_name) {
 	$userid = $setting[1];
 	endforeach;
 
-	$json = doWebApiRequest($w, 'http://developer.echonest.com/api/v4/playlist/static?api_key=5EG94BIZEGFEY9AL9&artist=' . urlencode($artist_name) . '&format=json&results=100&distribution=focused&type=artist-radio&bucket=id:spotify&bucket=tracks');
+	$json = doWebApiRequest($w, 'http://developer.echonest.com/api/v4/playlist/static?api_key=5EG94BIZEGFEY9AL9&artist=' . urlencode($artist_name) . '&format=json&results=30&distribution=focused&type=artist-radio&bucket=id:spotify&bucket=tracks');
 
 	$response = $json->response;
 
@@ -384,12 +384,106 @@ function createRadioArtistPlaylist($w, $artist_name) {
 
 	try {
 		$json = $api->createUserPlaylist($userid, array(
-            'name' =>  'Artist radio for ' . $artist_name,
+            'name' =>  'Artist radio for ' . escapeQuery($artist_name),
             'public' => false
         ));
 	}
 	catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-		echo "Error(createUserPlaylist): artist " . $artist_name . " (exception " . $e . ")";
+		echo "Error(createUserPlaylist): radio artist " . $artist_name . " (exception " . $e . ")";
+		return false;
+	}
+
+	$ret = addTracksToPlaylist($w, $newplaylisttracks, $json->uri, $json->name, false, false);
+	if (is_numeric($ret) && $ret > 0) {
+		updatePlaylistList($w);
+		return;
+	} else if (is_numeric($ret) && $ret == 0) {
+		displayNotification('Error: Playlist ' . $json->name . ' cannot be added');
+		return;
+	}
+
+	return true;
+}
+
+
+/**
+ * createRadioSongPlaylistForCurrentTrack function.
+ *
+ * @access public
+ * @param mixed $w
+ * @return void
+ */
+function createRadioSongPlaylistForCurrentTrack($w) {
+	$command_output = exec("./spotify-mini-player/src/track_info.sh 2>&1");
+
+	if (substr_count($command_output, '▹') > 0) {
+		$results = explode('▹', $command_output);
+		createRadioSongPlaylist($w, $results[0], $results[4], $results[1]);
+	} else {
+		displayNotification("Error: cannot get current track");
+	}
+}
+
+
+/**
+ * createRadioSongPlaylist function.
+ *
+ * @access public
+ * @param mixed $w
+ * @param mixed $track_name
+ * @param mixed $track_uri
+ * @param mixed $artist_name
+ * @return void
+ */
+function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name) {
+
+	$api = getSpotifyWebAPI($w);
+	if ($api == false) {
+		displayNotification("Error: Cannot get SpotifyWebAPI(");
+		return false;
+	}
+
+	//
+	// Read settings from DB
+	//
+	$getSettings = 'select theme,userid from settings';
+	$dbfile = $w->data() . '/settings.db';
+	exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
+
+	if ($returnValue != 0) {
+		displayNotification("Error: cannot read settings");
+		return;
+	}
+
+	foreach ($settings as $setting):
+		$setting = explode("	", $setting);
+	$theme = $setting[0];
+	$userid = $setting[1];
+	endforeach;
+
+	$json = doWebApiRequest($w, 'http://developer.echonest.com/api/v4/playlist/static?api_key=5EG94BIZEGFEY9AL9&song_id=' . $track_uri . '&format=json&results=30&distribution=focused&type=song-radio&bucket=id:spotify&bucket=tracks');
+
+	$response = $json->response;
+
+	$newplaylisttracks = array();
+	foreach ($response->songs as $song) {
+		foreach ($song->tracks as $track) {
+			$foreign_id = $track->foreign_id;
+			$tmp = explode(':', $foreign_id);
+			$newplaylisttracks[] = $tmp[2];
+			// only take one
+			break;
+		}
+	}
+
+	try {
+		$json = $api->createUserPlaylist($userid, array(
+            'name' =>  'Song radio for ' . escapeQuery($track_name) . ' by ' . escapeQuery($artist_name),
+            'public' => false
+        ));
+	}
+	catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+		echo "Error(createUserPlaylist): radio song " . escapeQuery($track_name) . " (exception " . $e . ")";
 		return false;
 	}
 

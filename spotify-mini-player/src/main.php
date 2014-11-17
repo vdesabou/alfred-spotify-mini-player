@@ -289,9 +289,9 @@ if (mb_strlen($query) < 3 ||
 			}
 		}
 		if ($all_playlists == true) {
-			$w->result(null, '', 'Search for music in "Your Music" and your ' . $nb_playlists . ' playlists', 'Begin typing at least 3 characters to start search' . ' (' . $all_tracks . ' tracks)', './spotify-mini-player/images/' . $theme . '/' . 'allplaylists.png', 'no', null, '');
+			$w->result(null, '', 'Search for music in "Your Music" and your ' . $nb_playlists . ' playlists', 'Begin typing at least 3 characters to start search in your ' . $all_tracks . ' tracks', './spotify-mini-player/images/' . $theme . '/' . 'allplaylists.png', 'no', null, '');
 		} else {
-			$w->result(null, '', 'Search for music in "Your Music" only', 'Begin typing at least 3 characters to start search' . ' (' . $mymusic_tracks . ' tracks)', './spotify-mini-player/images/' . $theme . '/' . 'tracks.png', 'no', null, '');
+			$w->result(null, '', 'Search for music in "Your Music" only', 'Begin typing at least 3 characters to start search in your ' . $mymusic_tracks . ' tracks', './spotify-mini-player/images/' . $theme . '/' . 'tracks.png', 'no', null, '');
 		}
 		if ($is_displaymorefrom_active == true) {
 			// get info on current song

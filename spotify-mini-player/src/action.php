@@ -170,6 +170,9 @@ if ($type == "TRACK") {
 	}else if ($type == "CURRENT_ARTIST_RADIO") {
 		createRadioArtistPlaylistForCurrentArtist($w);
 		return;
+	}else if ($type == "CURRENT_TRACK_RADIO") {
+		createRadioSongPlaylistForCurrentTrack($w);
+		return;
 	}else if ($type == "KILL_UPDATE") {
 		killUpdate($w);
 		return;
