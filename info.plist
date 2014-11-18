@@ -19,6 +19,17 @@
 				<string></string>
 			</dict>
 		</array>
+		<key>0C74516A-D95D-4379-94B6-CD984A31A003</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>18496AC4-EA42-444C-A906-642E38259C96</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 		<key>175EB434-B9E1-4C6F-85B0-B0A3436E7E40</key>
 		<array>
 			<dict>
@@ -773,6 +784,35 @@ php -f ./spotify-mini-player/src/action.php -- "{query}" "TRACK" "ADDTOPLAYLIST"
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>3</integer>
+				<key>argumenttext</key>
+				<string>CurrentTrack▹</string>
+				<key>hotkey</key>
+				<integer>8</integer>
+				<key>hotmod</key>
+				<integer>1310720</integer>
+				<key>hotstring</key>
+				<string>C</string>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>2</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>0C74516A-D95D-4379-94B6-CD984A31A003</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
@@ -798,11 +838,11 @@ php -f ./spotify-mini-player/src/action.php -- "{query}" "ONLINE" "" &gt;&gt; "$
 				<key>argument</key>
 				<integer>0</integer>
 				<key>hotkey</key>
-				<integer>35</integer>
+				<integer>0</integer>
 				<key>hotmod</key>
-				<integer>1179648</integer>
+				<integer>0</integer>
 				<key>hotstring</key>
-				<string>P</string>
+				<string></string>
 				<key>leftcursor</key>
 				<false/>
 				<key>modsmode</key>
@@ -1153,27 +1193,6 @@ end alfred_script</string>
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>argumenttype</key>
-				<integer>2</integer>
-				<key>keyword</key>
-				<string>volmid</string>
-				<key>subtext</key>
-				<string>Set the Spotify Volume to 50%</string>
-				<key>text</key>
-				<string>Set Spotify Volume to 50%</string>
-				<key>withspace</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>F250A59C-0B2D-4A08-9085-9CA0A2FB2DCC</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>applescript</key>
 				<string>on alfred_script(q)
 
@@ -1189,6 +1208,27 @@ end alfred_script</string>
 			<string>alfred.workflow.action.applescript</string>
 			<key>uid</key>
 			<string>2D26D8E2-52A2-4BF9-B693-0D5190C6CC23</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>volmid</string>
+				<key>subtext</key>
+				<string>Set the Spotify Volume to 50%</string>
+				<key>text</key>
+				<string>Set Spotify Volume to 50%</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>F250A59C-0B2D-4A08-9085-9CA0A2FB2DCC</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -1430,11 +1470,11 @@ end alfred_script</string>
 				<key>argument</key>
 				<integer>0</integer>
 				<key>hotkey</key>
-				<integer>45</integer>
+				<integer>0</integer>
 				<key>hotmod</key>
-				<integer>1179648</integer>
+				<integer>0</integer>
 				<key>hotstring</key>
-				<string>N</string>
+				<string></string>
 				<key>leftcursor</key>
 				<false/>
 				<key>modsmode</key>
@@ -1448,25 +1488,6 @@ end alfred_script</string>
 			<string>E63EB492-FCE2-42A1-BD38-7EFE4EA77473</string>
 			<key>version</key>
 			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>escaping</key>
-				<integer>38</integer>
-				<key>script</key>
-				<string>echo "===== NEXT ========" &gt;&gt; "$alfred_workflow_cache/action.log"
-echo "`date` {query}" &gt;&gt; "$alfred_workflow_cache/action.log"
-php -f ./spotify-mini-player/src/action.php -- "{query}" "NEXT" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
-				<key>type</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>64953E09-D9D0-485B-B92B-79E7FEC15927</string>
-			<key>version</key>
-			<integer>0</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -1486,6 +1507,25 @@ php -f ./spotify-mini-player/src/action.php -- "{query}" "NEXT" "" &gt;&gt; "$al
 			<string>alfred.workflow.input.keyword</string>
 			<key>uid</key>
 			<string>4EB5FB5E-6472-4757-A479-B206B6080036</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>echo "===== NEXT ========" &gt;&gt; "$alfred_workflow_cache/action.log"
+echo "`date` {query}" &gt;&gt; "$alfred_workflow_cache/action.log"
+php -f ./spotify-mini-player/src/action.php -- "{query}" "NEXT" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>64953E09-D9D0-485B-B92B-79E7FEC15927</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -2033,6 +2073,11 @@ SOFTWARE.</string>
 		<dict>
 			<key>ypos</key>
 			<real>2040</real>
+		</dict>
+		<key>0C74516A-D95D-4379-94B6-CD984A31A003</key>
+		<dict>
+			<key>ypos</key>
+			<real>460</real>
 		</dict>
 		<key>175EB434-B9E1-4C6F-85B0-B0A3436E7E40</key>
 		<dict>

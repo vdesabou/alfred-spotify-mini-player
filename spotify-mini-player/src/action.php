@@ -476,18 +476,6 @@ if ($playlist_uri != "") {
 				exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 				displayNotificationWithArtwork("Theme set to new", './spotify-mini-player/images/' . 'new' . '/' . 'check.png');
 				return;
-			} else if ($other_action == "enable_displaymorefrom") {
-				$setSettings = "update settings set is_displaymorefrom_active=1";
-				$dbfile = $w->data() . "/settings.db";
-				exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-				displayNotificationWithArtwork("Now Playing is now enabled", './spotify-mini-player/images/' . $theme . '/' . 'check.png');
-				return;
-			} else if ($other_action == "disable_displaymorefrom") {
-				$setSettings = "update settings set is_displaymorefrom_active=0";
-				$dbfile = $w->data() . "/settings.db";
-				exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-				displayNotificationWithArtwork("Now Playing is now disabled", './spotify-mini-player/images/' . $theme . '/' . 'uncheck.png');
-				return;
 			} else if ($other_action == "enable_lyrics") {
 				$setSettings = "update settings set is_lyrics_active=1";
 				$dbfile = $w->data() . "/settings.db";
@@ -648,6 +636,9 @@ if ($playlist_uri != "") {
 					displayNotificationWithArtwork("Error: No internet connection", './spotify-mini-player/images/warning.png');
 					return;
 				}
+				if($artist_uri == "") {
+					$artist_uri = getArtistUriFromTrack($w, $track_uri);
+				}
 				exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online▹" . $artist_uri . "@" . escapeQuery($artist_name) . "\"'");
 			}
 		else if ($other_action == "playartist") {
@@ -656,6 +647,10 @@ if ($playlist_uri != "") {
 				return;
 			}
 		else if ($other_action == "playalbum") {
+
+				if($album_uri == "") {
+					$album_uri = getAlbumUriFromTrack($w, $track_uri);
+				}
 				exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
 				displayNotificationWithArtwork('🔈 Album ' . $album_name, $album_artwork_path);
 				return;
