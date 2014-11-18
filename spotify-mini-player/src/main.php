@@ -319,8 +319,6 @@ if (mb_strlen($query) < 3 ||
 			$w->result(null, '', 'Albums in "Your Music"', 'Browse by album' . ' (' . $mymusic_albums . ' albums)', './spotify-mini-player/images/' . $theme . '/' . 'albums.png', 'no', null, 'Album▹');
 		}
 
-		$w->result(null, '', 'Featured Playlists', 'Browse the current featured playlists', './spotify-mini-player/images/' . $theme . '/' . 'star.png', 'no', null, 'Featured Playlist▹');
-
 		if ($is_spotifious_active == true) {
 			$spotifious_state = 'enabled';
 		} else {
@@ -676,19 +674,18 @@ if (mb_strlen($query) < 3 ||
 					}
 				}
 			} else {
-				$w->result(null, '', "📻 Browse your artist radio playlists", "Display all your artist radio playlists", './spotify-mini-player/images/' . $theme . '/' . 'playlists.png', 'no', null, "Playlist▹Artist radio");
+				if(mb_strlen($theplaylist) < 3) {
+					$w->result(null, '', "📻 Browse your artist radio playlists", "Display all your artist radio playlists", './spotify-mini-player/images/' . $theme . '/' . 'playlists.png', 'no', null, "Playlist▹Artist radio");
+					$w->result(null, '', 'Featured Playlists', 'Browse the current featured playlists', './spotify-mini-player/images/' . $theme . '/' . 'star.png', 'no', null, 'Featured Playlist▹');					
+				}
+
 				while ($playlist = $stmt->fetch()) {
-
 					$noresult=false;
-
-					if((!startswith($playlist[1], 'Artist radio for') && mb_strlen($theplaylist) < 3 ) ||
-					( startswith($playlist[1], 'Artist radio for') && mb_strlen($theplaylist) > 3 )) {
-						$added = ' ';
-						if(startswith($playlist[1], 'Artist radio for')) {
-							$added = '📻 ';
-						}
-						$w->result(null, '', "🎵" . $added . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
+					$added = ' ';
+					if(startswith($playlist[1], 'Artist radio for')) {
+						$added = '📻 ';
 					}
+					$w->result(null, '', "🎵" . $added . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
 				}
 			}
 
