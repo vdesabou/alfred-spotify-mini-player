@@ -356,7 +356,7 @@ else if ($type == "ALBUM_OR_PLAYLIST") {
 				displayNotification("Error: cannot get current artist");
 				return;
 			}
-			$artist_artwork_path = getArtistArtwork($w, 'black', $artist_uri, true);
+			$artist_artwork_path = getArtistArtwork($w, 'black', $artist_name, true);
 		}
 
 		exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
