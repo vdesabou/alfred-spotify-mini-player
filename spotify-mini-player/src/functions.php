@@ -1199,7 +1199,8 @@ function getArtistArtwork($w, $theme, $artist, $fetchIfNotPresent) {
  */
 function getArtworkURL($w, $type, $id) {
 	$options = array(
-		CURLOPT_FOLLOWLOCATION => 1
+		CURLOPT_FOLLOWLOCATION => 1,
+		CURLOPT_TIMEOUT => 5
 	);
 
 	$html = $w->request("http://open.spotify.com/$type/$id", $options);
@@ -1223,9 +1224,9 @@ function getArtworkURL($w, $type, $id) {
  */
 function getPlaylistArtworkURL($w, $url) {
 	$options = array(
-		CURLOPT_FOLLOWLOCATION => 1
+		CURLOPT_FOLLOWLOCATION => 1,
+		CURLOPT_TIMEOUT => 5
 	);
-
 	$html = $w->request($url, $options);
 
 	if (!empty($html)) {
@@ -1246,8 +1247,12 @@ function getPlaylistArtworkURL($w, $url) {
  * @return void
  */
 function getArtistArtworkURL($w, $artist) {
+	$options = array(
+		CURLOPT_TIMEOUT => 5
+	);
+
 	$parsedArtist = urlencode($artist);
-	$html = $w->request("http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&api_key=49d58890a60114e8fdfc63cbcf75d6c5&artist=$parsedArtist&format=json");
+	$html = $w->request("http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&api_key=49d58890a60114e8fdfc63cbcf75d6c5&artist=$parsedArtist&format=json", $options);
 	$json = json_decode($html, true);
 	// make more resilient to empty json responses
 	if (!is_array($json) || empty($json['artist']['image'][1]['#text'])) {
