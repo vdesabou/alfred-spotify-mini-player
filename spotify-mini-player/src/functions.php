@@ -723,7 +723,9 @@ function addTracksToPlaylist($w, $tracks, $playlist_uri, $playlist_name, $allow_
 				$offset+=100;
 
 				if (count($output)) {
-					$api->addUserPlaylistTracks($userid, $tmp[4], $output);
+					$api->addUserPlaylistTracks($userid, $tmp[4], $output, array(
+															            'position' => 0
+															        ));
 				}
 
 			} while (count($output) > 0);
