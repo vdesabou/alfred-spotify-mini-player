@@ -42,11 +42,11 @@ class Workflows {
 		$this->data  = $this->home. "/Library/Application Support/Alfred 2/Workflow Data/".$this->bundle;
 
 		if ( !file_exists( $this->cache ) ):
-			exec("mkdir '".$this->cache."'");
+			exec("mkdir -p '".$this->cache."'");
 		endif;
 
 		if ( !file_exists( $this->data ) ):
-			exec("mkdir '".$this->data."'");
+			exec("mkdir -p '".$this->data."'");
 		endif;
 
 		$this->results = array();
@@ -124,7 +124,7 @@ class Workflows {
 		if ( is_null( $this->path ) ):
 			$this->path = getenv("PWD");
 		endif;
-		
+
 		return $this->path;
 	}
 
@@ -217,11 +217,11 @@ class Workflows {
 						$c->$key = $b[$key];
 					endif;
         elseif ( $key == 'subtitle' ):
-          if ( gettype( $b[$key] ) == 'array' ):            
+          if ( gettype( $b[$key] ) == 'array' ):
             $subtitle_types = ['shift', 'fn', 'ctrl', 'alt', 'cmd'];
             $subtitles = $b[$key];
             $subtitle_keys = array_keys( $subtitles );
-            
+
             foreach( $subtitle_keys as $subtitle_key ):
               $subtitle_element = $c->addChild( 'subtitle', $subtitles[$subtitle_key] );
               if ( in_array( $subtitle_key, $subtitle_types, true ) ):
@@ -235,7 +235,7 @@ class Workflows {
           $text_types = ['copy', 'largetype'];
           $texts = $b[$key];
           $text_keys = array_keys( $texts );
-          
+
           foreach( $text_keys as $text_key ):
             if ( in_array( $text_key, $text_types ) ):
               $c->addChild( 'text', $texts[$text_key] )->addAttribute( 'type', $text_key );
@@ -497,7 +497,7 @@ class Workflows {
 			'autocomplete' => $auto,
 			'type' => $type
 		);
-    
+
 		if ( is_null( $type ) ):
 			unset( $temp['type'] );
 		endif;
@@ -506,7 +506,7 @@ class Workflows {
 
 		return $temp;
 	}
-	
+
 	public function internet()
 	{
 		$internet = @fsockopen("www.google.com",80);
