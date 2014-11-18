@@ -1028,7 +1028,7 @@ function getTrackOrAlbumArtwork($w, $theme, $spotifyURL, $fetchIfNotPresent) {
 
 	if (!is_file($currentArtwork) || (is_file($currentArtwork) && filesize($currentArtwork) == 0)) {
 		if ($fetchIfNotPresent == true || (is_file($currentArtwork) && filesize($currentArtwork) == 0)) {
-			$artwork = getTrackArtworkURL($w, $hrefs[1], $hrefs[2]);
+			$artwork = getArtworkURL($w, $hrefs[1], $hrefs[2]);
 
 			// if return 0, it is a 404 error, no need to fetch
 			if (!empty($artwork) || (is_numeric($artwork) && $artwork != 0)) {
@@ -1189,7 +1189,7 @@ function getArtistArtwork($w, $theme, $artist, $fetchIfNotPresent) {
 
 
 /**
- * getTrackArtworkURL function.
+ * getArtworkURL function.
  *
  * @access public
  * @param mixed $w
@@ -1197,7 +1197,7 @@ function getArtistArtwork($w, $theme, $artist, $fetchIfNotPresent) {
  * @param mixed $id
  * @return void
  */
-function getTrackArtworkURL($w, $type, $id) {
+function getArtworkURL($w, $type, $id) {
 	$options = array(
 		CURLOPT_FOLLOWLOCATION => 1
 	);
@@ -1205,7 +1205,6 @@ function getTrackArtworkURL($w, $type, $id) {
 	$html = $w->request("http://open.spotify.com/$type/$id", $options);
 
 	if (!empty($html)) {
-		// <meta property="og:image" content="http://o.scdn.co/image/635ee3ae30686e97e01900d2797690e356958729">
 		preg_match_all('/.*?og:image.*?content="(.*?)">.*?/is', $html, $m);
 		return (isset($m[1][0])) ? $m[1][0] : 0;
 	}
@@ -1705,6 +1704,8 @@ function updatePlaylist($w, $playlist_uri, $playlist_name) {
 
 		$tmp = explode(':', $playlist_uri);
 
+		$nb_tracktotal = 0;
+		$savedPlaylistTracks = array();
 		try {
 			$offsetGetUserPlaylistTracks = 0;
 			$limitGetUserPlaylistTracks = 100;
@@ -1720,57 +1721,11 @@ function updatePlaylist($w, $playlist_uri, $playlist_name) {
 						'offset' => $offsetGetUserPlaylistTracks
 					));
 
-				$nb_tracktotal = $userPlaylistTracks->total;
-
-
-				$stmtUpdatePlaylists->bindValue(':nb_tracks', $nb_tracktotal);
-				$playlist_artwork_path =  getPlaylistArtwork($w, $theme, $playlist_uri, true, true);
-				$stmtUpdatePlaylists->bindValue(':playlist_artwork_path', $playlist_artwork_path);
-				$stmtUpdatePlaylists->bindValue(':uri', $playlist_uri);
-				$stmtUpdatePlaylists->execute();
-
 				foreach ($userPlaylistTracks->items as $item) {
-					$track = $item->track;
-					if (count($track->available_markets) == 0 || in_array($country_code, $track->available_markets) !== false) {
-						$playable = 1;
-					} else {
-						$playable = 0;
-					}
-					$artists = $track->artists;
-					$artist = $artists[0];
-					$album = $track->album;
+					$savedPlaylistTracks[] = $item;
 
-					//
-					// Download artworks
-					$track_artwork_path = getTrackOrAlbumArtwork($w, $theme, $track->uri, true);
-					$artist_artwork_path = getArtistArtwork($w, $theme, $artist->name, true);
-					$album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $album->uri, true);
-
-
-					$stmtTrack->bindValue(':mymusic', 0);
-					$stmtTrack->bindValue(':popularity', $track->popularity);
-					$stmtTrack->bindValue(':uri', $track->uri);
-					$stmtTrack->bindValue(':album_uri', $album->uri);
-					$stmtTrack->bindValue(':artist_uri', $artist->uri);
-					$stmtTrack->bindValue(':track_name', escapeQuery($track->name));
-					$stmtTrack->bindValue(':album_name', escapeQuery($album->name));
-					$stmtTrack->bindValue(':artist_name', escapeQuery($artist->name));
-					$stmtTrack->bindValue(':album_type', $album->album_type);
-					$stmtTrack->bindValue(':track_artwork_path', $track_artwork_path);
-					$stmtTrack->bindValue(':artist_artwork_path', $artist_artwork_path);
-					$stmtTrack->bindValue(':album_artwork_path', $album_artwork_path);
-					$stmtTrack->bindValue(':playlist_name', escapeQuery($playlist_name));
-					$stmtTrack->bindValue(':playlist_uri', $playlist_uri);
-					$stmtTrack->bindValue(':playable', $playable);
-					$stmtTrack->bindValue(':added_at', $item->added_at);
-					$stmtTrack->bindValue(':duration_ms', $track->duration_ms);
-					$stmtTrack->execute();
-
-					$nb_track++;
-					if ($nb_track % 30 === 0) {
-						$w->write('Playlist▹' . $nb_track . '▹' . $nb_tracktotal . '▹' . $words[3], 'update_library_in_progress');
-					}
 				}
+				$nb_tracktotal = $userPlaylistTracks->total;
 
 				$offsetGetUserPlaylistTracks+=$limitGetUserPlaylistTracks;
 
@@ -1780,6 +1735,55 @@ function updatePlaylist($w, $playlist_uri, $playlist_name) {
 			echo "Error(getUserPlaylistTracks): playlist id " . $tmp[4]. " (exception " . $e . ")";
 			handleDbIssuePdoEcho($db);
 			return;
+		}
+
+		$stmtUpdatePlaylists->bindValue(':nb_tracks', $nb_tracktotal);
+		$playlist_artwork_path =  getPlaylistArtwork($w, $theme, $playlist_uri, true, true);
+		$stmtUpdatePlaylists->bindValue(':playlist_artwork_path', $playlist_artwork_path);
+		$stmtUpdatePlaylists->bindValue(':uri', $playlist_uri);
+		$stmtUpdatePlaylists->execute();
+
+		foreach ($savedPlaylistTracks as $item) {
+			$track = $item->track;
+			if (count($track->available_markets) == 0 || in_array($country_code, $track->available_markets) !== false) {
+				$playable = 1;
+			} else {
+				$playable = 0;
+			}
+			$artists = $track->artists;
+			$artist = $artists[0];
+			$album = $track->album;
+
+			//
+			// Download artworks
+			$track_artwork_path = getTrackOrAlbumArtwork($w, $theme, $track->uri, true);
+			$artist_artwork_path = getArtistArtwork($w, $theme, $artist->name, true);
+			$album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $album->uri, true);
+
+
+			$stmtTrack->bindValue(':mymusic', 0);
+			$stmtTrack->bindValue(':popularity', $track->popularity);
+			$stmtTrack->bindValue(':uri', $track->uri);
+			$stmtTrack->bindValue(':album_uri', $album->uri);
+			$stmtTrack->bindValue(':artist_uri', $artist->uri);
+			$stmtTrack->bindValue(':track_name', escapeQuery($track->name));
+			$stmtTrack->bindValue(':album_name', escapeQuery($album->name));
+			$stmtTrack->bindValue(':artist_name', escapeQuery($artist->name));
+			$stmtTrack->bindValue(':album_type', $album->album_type);
+			$stmtTrack->bindValue(':track_artwork_path', $track_artwork_path);
+			$stmtTrack->bindValue(':artist_artwork_path', $artist_artwork_path);
+			$stmtTrack->bindValue(':album_artwork_path', $album_artwork_path);
+			$stmtTrack->bindValue(':playlist_name', escapeQuery($playlist_name));
+			$stmtTrack->bindValue(':playlist_uri', $playlist_uri);
+			$stmtTrack->bindValue(':playable', $playable);
+			$stmtTrack->bindValue(':added_at', $item->added_at);
+			$stmtTrack->bindValue(':duration_ms', $track->duration_ms);
+			$stmtTrack->execute();
+
+			$nb_track++;
+			if ($nb_track % 10 === 0) {
+				$w->write('Playlist▹' . $nb_track . '▹' . $nb_tracktotal . '▹' . $words[3], 'update_library_in_progress');
+			}
 		}
 
 
