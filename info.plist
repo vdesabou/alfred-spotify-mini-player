@@ -789,7 +789,7 @@ php -f ./spotify-mini-player/src/action.php -- "{query}" "TRACK" "ADDTOPLAYLIST"
 				<key>argument</key>
 				<integer>3</integer>
 				<key>argumenttext</key>
-				<string>CurrentTrack▹</string>
+				<string>Current Track▹</string>
 				<key>hotkey</key>
 				<integer>8</integer>
 				<key>hotmod</key>
