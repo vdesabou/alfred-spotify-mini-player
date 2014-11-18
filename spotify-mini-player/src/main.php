@@ -294,7 +294,7 @@ if (mb_strlen($query) < 3 ||
 			$w->result(null, '', 'Search for music in "Your Music" only', 'Begin typing at least 3 characters to start search in your ' . $mymusic_tracks . ' tracks', './spotify-mini-player/images/' . $theme . '/' . 'tracks.png', 'no', null, '');
 		}
 
-		$w->result(null, '', '🔈 Current Track', 'Display current track information and browse various options', './spotify-mini-player/images/' . $theme . '/' . 'tracks.png', 'no', null, 'CurrentTrack▹');
+		$w->result(null, '', '🔈 Current Track', 'Display current track information and browse various options', './spotify-mini-player/images/' . $theme . '/' . 'tracks.png', 'no', null, 'Current Track▹');
 
 
 		if ($is_alfred_playlist_active == true) {
@@ -310,7 +310,7 @@ if (mb_strlen($query) < 3 ||
 
 		}
 		$w->result(null, '', 'Playlists', 'Browse by playlist' . ' (' . $nb_playlists . ' playlists)', './spotify-mini-player/images/' . $theme . '/' . 'playlists.png', 'no', null, 'Playlist▹');
-		$w->result(null, '', 'Your Music', 'Browse Your Music' . ' (' . $mymusic_tracks . ' tracks ● ' .  $mymusic_albums . '  albums ● ' . $mymusic_artists . ' artists)', './spotify-mini-player/images/' . $theme . '/' . 'tracks.png', 'no', null, 'YourMusic▹');
+		$w->result(null, '', 'Your Music', 'Browse Your Music' . ' (' . $mymusic_tracks . ' tracks ● ' .  $mymusic_albums . '  albums ● ' . $mymusic_artists . ' artists)', './spotify-mini-player/images/' . $theme . '/' . 'tracks.png', 'no', null, 'Your Music▹');
 		if ($all_playlists == true) {
 			$w->result(null, '', 'Artists', 'Browse by artist' . ' (' . $all_artists . ' artists)', './spotify-mini-player/images/' . $theme . '/' . 'artists.png', 'no', null, 'Artist▹');
 			$w->result(null, '', 'Albums', 'Browse by album' . ' (' . $all_albums . ' albums)', './spotify-mini-player/images/' . $theme . '/' . 'albums.png', 'no', null, 'Album▹');
@@ -319,7 +319,7 @@ if (mb_strlen($query) < 3 ||
 			$w->result(null, '', 'Albums in "Your Music"', 'Browse by album' . ' (' . $mymusic_albums . ' albums)', './spotify-mini-player/images/' . $theme . '/' . 'albums.png', 'no', null, 'Album▹');
 		}
 
-		$w->result(null, '', 'Featured Playlists', 'Browse the current featured playlists', './spotify-mini-player/images/' . $theme . '/' . 'star.png', 'no', null, 'FeaturedPlaylist▹');
+		$w->result(null, '', 'Featured Playlists', 'Browse the current featured playlists', './spotify-mini-player/images/' . $theme . '/' . 'star.png', 'no', null, 'Featured Playlist▹');
 
 		if ($is_spotifious_active == true) {
 			$spotifious_state = 'enabled';
@@ -448,11 +448,11 @@ if (mb_strlen($query) < 3 ||
 			} else if (strpos(strtolower('settings'), strtolower($query)) !== false) {
 				$w->result(null, '', 'Settings', 'Go to settings', './spotify-mini-player/images/' . $theme . '/' . 'settings.png', 'no', null, 'Settings▹');
 			} else if (strpos(strtolower('featured'), strtolower($query)) !== false) {
-				$w->result(null, '', 'Featured Playlist', 'Browse the current featured playlists', './spotify-mini-player/images/' . $theme . '/' . 'star.png', 'no', null, 'FeaturedPlaylist▹');
+				$w->result(null, '', 'Featured Playlist', 'Browse the current featured playlists', './spotify-mini-player/images/' . $theme . '/' . 'star.png', 'no', null, 'Featured Playlist▹');
 			} else if (strpos(strtolower('yourmusic'), strtolower($query)) !== false) {
-				$w->result(null, '', 'Your Music', 'Browse Your Music', './spotify-mini-player/images/' . $theme . '/' . 'tracks.png', 'no', null, 'YourMusic▹');
+				$w->result(null, '', 'Your Music', 'Browse Your Music', './spotify-mini-player/images/' . $theme . '/' . 'tracks.png', 'no', null, 'Your Music▹');
 			} else if (strpos(strtolower('current track'), strtolower($query)) !== false) {
-				$w->result(null, '', 'Current Track', 'Display current track information and browse various options', './spotify-mini-player/images/' . $theme . '/' . 'tracks.png', 'no', null, 'CurrentTrack▹');
+				$w->result(null, '', 'Current Track', 'Display current track information and browse various options', './spotify-mini-player/images/' . $theme . '/' . 'tracks.png', 'no', null, 'Current Track▹');
 			}
 
 
@@ -627,7 +627,7 @@ if (mb_strlen($query) < 3 ||
 		}
 	} ////////////
 	//
-	// FIRST DELIMITER: Artist▹, Album▹, Playlist▹, Alfred Playlist▹, Settings▹, FeaturedPlaylist▹, YourMusic▹ or Online▹artist uri
+	// FIRST DELIMITER: Artist▹, Album▹, Playlist▹, Alfred Playlist▹, Settings▹, FeaturedPlaylist▹, Your Music▹ or Online▹artist uri
 	//
 	////////////
 	elseif (substr_count($query, '▹') == 1) {
@@ -816,7 +816,7 @@ if (mb_strlen($query) < 3 ||
 				$w->result(null, 'help', "There is no result for your search", "", './spotify-mini-player/images/warning.png', 'no', null, '');
 			}
 		} // search by Album end
-		elseif ($kind == "FeaturedPlaylist") {
+		elseif ($kind == "Featured Playlist") {
 
 			if($country_code == 'FR') {
 				$country_flag = '🇫🇷';
@@ -828,18 +828,18 @@ if (mb_strlen($query) < 3 ||
 				$country_flag = $country_code;
 				$country_name = $country_code;
 			}
-			$w->result(null, '', $country_flag, 'Browse the current featured playlists in ' .  $country_name, './spotify-mini-player/images/' . $theme . '/' . 'star.png', 'no', null, 'FeaturedPlaylist▹'.$country_code.'▹');
+			$w->result(null, '', $country_flag, 'Browse the current featured playlists in ' .  $country_name, './spotify-mini-player/images/' . $theme . '/' . 'star.png', 'no', null, 'Featured Playlist▹'.$country_code.'▹');
 
 			if ($country_code != 'US') {
-				$w->result(null, '', '🇺🇸', 'Browse the current featured playlists in US', './spotify-mini-player/images/' . $theme . '/' . 'star.png', 'no', null, 'FeaturedPlaylist▹US▹');
+				$w->result(null, '', '🇺🇸', 'Browse the current featured playlists in US', './spotify-mini-player/images/' . $theme . '/' . 'star.png', 'no', null, 'Featured Playlist▹US▹');
 			}
 
 			if ($country_code != 'GB') {
-				$w->result(null, '', '🇬🇧', 'Browse the current featured playlists in UK', './spotify-mini-player/images/' . $theme . '/' . 'star.png', 'no', null, 'FeaturedPlaylist▹GB▹');
+				$w->result(null, '', '🇬🇧', 'Browse the current featured playlists in UK', './spotify-mini-player/images/' . $theme . '/' . 'star.png', 'no', null, 'Featured Playlist▹GB▹');
 			}
 
 		} // Featured Playlist end
-		elseif ($kind == "CurrentTrack") {
+		elseif ($kind == "Current Track") {
 			// get info on current song
 			$command_output = exec("./spotify-mini-player/src/track_info.sh 2>&1");
 
@@ -957,16 +957,16 @@ if (mb_strlen($query) < 3 ||
 					}
 				}
 			}
-		} // CurrentTrack end
-		elseif ($kind == "YourMusic") {
+		} // Current Track end
+		elseif ($kind == "Your Music") {
 			if ($update_in_progress == false) {
 				$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'update_your_music' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Update Your Music ", "when done you'll receive a notification. you can check progress by invoking the workflow again", './spotify-mini-player/images/' . $theme . '/' . 'update.png', 'yes', null, '');
 			}
-			$w->result(null, '', 'Tracks' , 'Browse tracks in Your Music', './spotify-mini-player/images/' . $theme . '/' . 'tracks.png', 'no', null, 'YourMusic▹Tracks▹');
-			$w->result(null, '', 'Albums', 'Browse albums in Your Music', './spotify-mini-player/images/' . $theme . '/' . 'albums.png', 'no', null, 'YourMusic▹Albums▹');
-			$w->result(null, '', 'Artists', 'Browse artists in Your Music', './spotify-mini-player/images/' . $theme . '/' . 'artists.png', 'no', null, 'YourMusic▹Artists▹');
+			$w->result(null, '', 'Tracks' , 'Browse tracks in Your Music', './spotify-mini-player/images/' . $theme . '/' . 'tracks.png', 'no', null, 'Your Music▹Tracks▹');
+			$w->result(null, '', 'Albums', 'Browse albums in Your Music', './spotify-mini-player/images/' . $theme . '/' . 'albums.png', 'no', null, 'Your Music▹Albums▹');
+			$w->result(null, '', 'Artists', 'Browse artists in Your Music', './spotify-mini-player/images/' . $theme . '/' . 'artists.png', 'no', null, 'Your Music▹Artists▹');
 
-		} // Featured YourMusic end
+		} // Featured Your Music end
 		elseif ($kind == "Online") {
 			if (substr_count($query, '@') == 1) {
 				//
@@ -986,7 +986,7 @@ if (mb_strlen($query) < 3 ||
 
 				$w->result(null, '', 'Related Artists', 'Browse related artists', './spotify-mini-player/images/' . $theme . '/' . 'related.png', 'no', null, "OnlineRelated▹" . $artist_uri . "@" . $artist_name);
 				if ($update_in_progress == false) {
-					$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , $artist_uri /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'radio_artist' /* other_action */ , '' /* alfred_playlist_uri */ , $artist_name  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), '📻 Radio playlist for ' . $artist_name, 'This will create a radio playlist for the artist', $artist_artwork_path, 'yes', null, '');
+					$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , $artist_uri /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'radio_artist' /* other_action */ , '' /* alfred_playlist_uri */ , $artist_name  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), '📻 Create a Radio Playlist for ' . $artist_name, 'This will create a radio playlist for the artist', $artist_artwork_path, 'yes', null, '');
 				}
 
 				$json = doWebApiRequest($w, "https://api.spotify.com/v1/artists/" . trim($tmp_uri[2]) . "/albums");
@@ -1091,8 +1091,8 @@ if (mb_strlen($query) < 3 ||
 	// SECOND DELIMITER: Artist▹the_artist▹tracks , Album▹the_album▹tracks,
 	//  Playlist▹the_playlist▹tracks,Settings▹Theme▹color or Settings▹MaxResults▹max_numbers,
 	//  Alfred Playlist▹Set Alfred Playlist▹alfred_playlist,
-	//  Alfred Playlist▹Clear Alfred Playlist▹yes or YourMusic▹Tracks▹
-	//  YourMusic▹Albums▹ or YourMusic▹Artists▹
+	//  Alfred Playlist▹Clear Alfred Playlist▹yes or Your Music▹Tracks▹
+	//  Your Music▹Albums▹ or Your Music▹Artists▹
 	//
 	////////////
 	elseif (substr_count($query, '▹') == 2) {
@@ -1130,7 +1130,7 @@ if (mb_strlen($query) < 3 ||
 
 				$w->result(null, '', 'Related Artists', 'Browse related artists', './spotify-mini-player/images/' . $theme . '/' . 'related.png', 'no', null, "OnlineRelated▹" . $artist_uri . "@" . $artist_name);
 
-		        $w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , $artist_uri /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'radio_artist' /* other_action */ , '' /* alfred_playlist_uri */ , $artist_name  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), '📻 Radio playlist for ' . $artist_name, 'This will create a radio playlist for the artist', $artist_artwork_path, 'yes', null, '');
+		        $w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , $artist_uri /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'radio_artist' /* other_action */ , '' /* alfred_playlist_uri */ , $artist_name  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), '📻 Create a Radio Playlist for ' . $artist_name, 'This will create a radio playlist for the artist', $artist_artwork_path, 'yes', null, '');
 
 				if ($all_playlists == false) {
 					$getTracks = "select * from tracks where playable=1 and mymusic=1 and artist_uri=:artist_uri limit " . $max_results;
@@ -1536,7 +1536,7 @@ if (mb_strlen($query) < 3 ||
 				return;
 			}
 		} // end of tracks by Playlist
-		elseif ($kind == "YourMusic" && $words[1] == "Tracks") {
+		elseif ($kind == "Your Music" && $words[1] == "Tracks") {
 			//
 			// display tracks for Your Music
 			//
@@ -1637,8 +1637,8 @@ if (mb_strlen($query) < 3 ||
 						'fn' => 'Not Available',
 						'ctrl' => 'Not Available'), './spotify-mini-player/images/spotifious.png', 'yes', null, '');
 			}
-		} // end of YourMusic▹Tracks▹
-		elseif ($kind == "YourMusic" && $words[1] == "Albums") {
+		} // end of Your Music▹Tracks▹
+		elseif ($kind == "Your Music" && $words[1] == "Albums") {
 
 			//
 			// Search albums
@@ -1677,8 +1677,8 @@ if (mb_strlen($query) < 3 ||
 			($noresult) {
 				$w->result(null, 'help', "There is no result for your search", "", './spotify-mini-player/images/warning.png', 'no', null, '');
 			}
-		} // end of YourMusic▹Albums▹
-		elseif ($kind == "YourMusic" && $words[1] == "Artists") {
+		} // end of Your Music▹Albums▹
+		elseif ($kind == "Your Music" && $words[1] == "Artists") {
 			//
 			// Search artists
 			//
@@ -1717,7 +1717,7 @@ if (mb_strlen($query) < 3 ||
 			($noresult) {
 				$w->result(null, 'help', "There is no result for your search", "", './spotify-mini-player/images/warning.png', 'no', null, '');
 			}
-		} // end of YourMusic▹Albums▹
+		} // end of Your Music▹Albums▹
 		elseif ($kind == "Settings") {
 			$setting_kind = $words[1];
 			$the_query = $words[2];
@@ -1745,7 +1745,7 @@ if (mb_strlen($query) < 3 ||
 
 				}
 		} // end of Settings
-		elseif ($kind == "FeaturedPlaylist") {
+		elseif ($kind == "Featured Playlist") {
 			$country = $words[1];
 			$the_query = $words[2];
 
