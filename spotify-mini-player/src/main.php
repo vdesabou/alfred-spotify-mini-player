@@ -676,7 +676,7 @@ if (mb_strlen($query) < 3 ||
 			} else {
 				if(mb_strlen($theplaylist) < 3) {
 					$w->result(null, '', "📻 Browse your artist radio playlists", "Display all your artist radio playlists", './spotify-mini-player/images/' . $theme . '/' . 'playlists.png', 'no', null, "Playlist▹Artist radio");
-					$w->result(null, '', 'Featured Playlists', 'Browse the current featured playlists', './spotify-mini-player/images/' . $theme . '/' . 'star.png', 'no', null, 'Featured Playlist▹');					
+					$w->result(null, '', 'Featured Playlists', 'Browse the current featured playlists', './spotify-mini-player/images/' . $theme . '/' . 'star.png', 'no', null, 'Featured Playlist▹');
 				}
 
 				while ($playlist = $stmt->fetch()) {
@@ -898,8 +898,8 @@ if (mb_strlen($query) < 3 ||
 				}
 
 				// use track uri here
-				$album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $results[4], false);
-				$w->result(null, serialize(array($results[4] /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'playalbum' /* other_action */ , '' /* alfred_playlist_uri */ , '' /* artist_name */, '' /* track_name */, escapeQuery($results[2]) /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, $album_artwork_path /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "💿 " . escapeQuery($results[2]), '▶️ Play album', $album_artwork_path, 'yes', null, '');
+				$album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $results[4], true);
+				$w->result(null, serialize(array($results[4] /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'playalbum' /* other_action */ , '' /* alfred_playlist_uri */ , '' /* artist_name */, '' /* track_name */, escapeQuery($results[2]) /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, $album_artwork_path /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "🔈💿 " . escapeQuery($results[2]), '▶️ Play album', $album_artwork_path, 'yes', null, '');
 
 				if
 				($is_lyrics_active == true) {
@@ -913,6 +913,25 @@ if (mb_strlen($query) < 3 ||
 							'ctrl' => 'Not Available')
 						, getTrackOrAlbumArtwork($w, $theme, $results[4], false), 'yes', null, '');
 				}
+
+				if ($is_alfred_playlist_active == true) {
+					$addto = 'Alfred Playlist';
+					$addtosub = $alfred_playlist_name;
+					$image = './spotify-mini-player/images/' . $theme . '/' . 'alfred_playlist.png';
+				} else {
+					$addto = 'Your Music';
+					$addtosub = 'Your Music';
+					$image = './spotify-mini-player/images/' . $theme . '/' . 'tracks.png';
+				}
+				$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'add_current_track' /* other_action */ , '' /* alfred_playlist_uri */ , '' /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "🔈 Add track " . escapeQuery($results[0]) . " to " . $addto,
+						array(
+							'This will add current track to ' . $addtosub,
+							'alt' => 'Not Available',
+							'cmd' => 'Not Available',
+							'shift' => 'Not Available',
+							'fn' => 'Not Available',
+							'ctrl' => 'Not Available')
+						, $image, 'yes', null, '');
 
 				if ($all_playlists == true) {
 					$getTracks = "select playlist_uri from tracks where playable=1 and uri=:uri limit " . $max_results;
@@ -1106,10 +1125,10 @@ if (mb_strlen($query) < 3 ||
 			//
 			$tmp = explode('∙', $words[1]);
 			$artist_uri = $tmp[0];
-			
+
 			$href = explode(':', $artist_uri);
 			if($href[1] == 'track') {
-				
+
 				$track_uri = $artist_uri;
 				$artist_uri = getArtistUriFromTrack($w, $track_uri);
 			}
@@ -1117,7 +1136,7 @@ if (mb_strlen($query) < 3 ||
 			$track = $words[2];
 
 			if (mb_strlen($track) < 3) {
-				$artist_artwork_path = getArtistArtwork($w, $theme, $artist_name, true); 
+				$artist_artwork_path = getArtistArtwork($w, $theme, $artist_name, true);
 				$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , $artist_uri /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'playartist' /* other_action */ , '' /* alfred_playlist_uri */ , $artist_name  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, $artist_artwork_path /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "👤 " . $artist_name, '▶️ Play artist', $artist_artwork_path, 'yes', null, '');
 				$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , $artist_uri /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'morefromthisartist' /* other_action */ , '' /* alfred_playlist_uri */ , $artist_name  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "👤 " . $artist_name, '☁︎ Query all albums/tracks from this artist online..', $artist_artwork_path, 'yes', null, '');
 
@@ -1215,9 +1234,9 @@ if (mb_strlen($query) < 3 ||
 				if (mb_strlen($track) < 3) {
 					$w->result(null, 'help', "There is no track in your library for the artist " . escapeQuery($artist_name), "Choose one of the options above", './spotify-mini-player/images/' . $theme . '/' . 'info.png', 'no', null, '');
 				} else {
-					$w->result(null, 'help', "There is no result for your search", "", './spotify-mini-player/images/warning.png', 'no', null, '');	
+					$w->result(null, 'help', "There is no result for your search", "", './spotify-mini-player/images/warning.png', 'no', null, '');
 				}
-				
+
 			}
 
 			$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , 'activate (open location "spotify:search:' . $artist_name . '")' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , '' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $artist_name . " in Spotify", array(

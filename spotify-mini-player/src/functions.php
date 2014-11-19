@@ -5,6 +5,39 @@ require './spotify-mini-player/vendor/autoload.php';
 
 
 /**
+ * addCurrentTrackToAlfredPlaylistOrMyMusic function.
+ *
+ * @access public
+ * @param mixed $w
+ * @return void
+ */
+function addCurrentTrackToAlfredPlaylistOrMyMusic($w) {
+	//
+	// Read settings from DB
+	//
+	$getSettings = 'select theme,is_alfred_playlist_active from settings';
+	$dbfile = $w->data() . '/settings.db';
+	exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
+
+	if ($returnValue != 0) {
+		displayNotification("Error: cannot read settings");
+		return;
+	}
+
+	foreach ($settings as $setting):
+		$setting = explode("	", $setting);
+		$theme = $setting[0];
+		$is_alfred_playlist_active = $setting[1];
+	endforeach;
+
+	if ($is_alfred_playlist_active == true) {
+		addCurrentTrackToAlfredPlaylist($w);
+	} else {
+		addCurrentTrackToMyTracks($w);
+	}
+}
+
+/**
  * addCurrentTrackToAlfredPlaylist function.
  *
  * @access public
