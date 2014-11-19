@@ -509,24 +509,29 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name) {
 		}
 	}
 
-	try {
-		$json = $api->createUserPlaylist($userid, array(
-            'name' =>  'Song radio for ' . escapeQuery($track_name) . ' by ' . escapeQuery($artist_name),
-            'public' => false
-        ));
-	}
-	catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-		echo "Error(createUserPlaylist): radio song " . escapeQuery($track_name) . " (exception " . $e . ")";
-		return false;
-	}
+	if (count($newplaylisttracks) > 0) {
+		try {
+			$json = $api->createUserPlaylist($userid, array(
+	            'name' =>  'Song radio for ' . escapeQuery($track_name) . ' by ' . escapeQuery($artist_name),
+	            'public' => false
+	        ));
+		}
+		catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+			echo "Error(createUserPlaylist): radio song " . escapeQuery($track_name) . " (exception " . $e . ")";
+			return false;
+		}
 
-	$ret = addTracksToPlaylist($w, $newplaylisttracks, $json->uri, $json->name, false, false);
-	if (is_numeric($ret) && $ret > 0) {
-		updatePlaylistList($w);
-		return;
-	} else if (is_numeric($ret) && $ret == 0) {
-		displayNotification('Error: Playlist ' . $json->name . ' cannot be added');
-		return;
+		$ret = addTracksToPlaylist($w, $newplaylisttracks, $json->uri, $json->name, false, false);
+		if (is_numeric($ret) && $ret > 0) {
+			updatePlaylistList($w);
+			return;
+		} else if (is_numeric($ret) && $ret == 0) {
+			displayNotification('Error: Playlist ' . $json->name . ' cannot be added');
+			return;
+		}
+	} else {
+		displayNotification('Error: track was not found in Echo Nest');
+		return false;
 	}
 
 	return true;

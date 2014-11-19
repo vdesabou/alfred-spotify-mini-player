@@ -483,6 +483,9 @@ if ($spotify_command != "" && $type == "TRACK" && $add_to_option == "") {
 		} else if ($other_action == "lyrics") {
 			displayLyricsForCurrentTrack();
 			return;
+		} else if ($other_action == "current_track_radio") {
+			createRadioSongPlaylistForCurrentTrack($w);
+			return;
 		} else if ($other_action == "Oauth_Login") {
 			$cache_log=$w->cache() . '/spotify_mini_player_web_server.log';
 			exec("php -S localhost:15298 > \"$cache_log\" 2>&1 &");

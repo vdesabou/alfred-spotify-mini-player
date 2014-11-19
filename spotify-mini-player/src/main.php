@@ -933,6 +933,16 @@ if (mb_strlen($query) < 3 ||
 							'ctrl' => 'Not Available')
 						, $image, 'yes', null, '');
 
+				$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'current_track_radio' /* other_action */ , '' /* alfred_playlist_uri */ , '' /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "📻 Create a Song Radio Playlist based on " . escapeQuery($results[0]),
+						array(
+							'This will create a song radio playlist for the current track',
+							'alt' => 'Not Available',
+							'cmd' => 'Not Available',
+							'shift' => 'Not Available',
+							'fn' => 'Not Available',
+							'ctrl' => 'Not Available')
+						, getTrackOrAlbumArtwork($w, $theme, $results[4], false), 'yes', null, '');
+
 				if ($all_playlists == true) {
 					$getTracks = "select playlist_uri from tracks where playable=1 and uri=:uri limit " . $max_results;
 
