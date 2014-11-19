@@ -289,9 +289,9 @@ if (mb_strlen($query) < 3 ||
 			}
 		}
 		if ($all_playlists == true) {
-			$w->result(null, '', 'Search for music in "Your Music" and your ' . $nb_playlists . ' playlists', 'Begin typing at least 3 characters to start search in your ' . $all_tracks . ' tracks', './spotify-mini-player/images/' . $theme . '/' . 'allplaylists.png', 'no', null, '');
+			$w->result(null, '', 'Search for music in "Your Music" and your ' . $nb_playlists . ' playlists', 'Begin typing at least 3 characters to start search in your ' . $all_tracks . ' tracks', './spotify-mini-player/images/' . $theme . '/' . 'search.png', 'no', null, '');
 		} else {
-			$w->result(null, '', 'Search for music in "Your Music" only', 'Begin typing at least 3 characters to start search in your ' . $mymusic_tracks . ' tracks', './spotify-mini-player/images/' . $theme . '/' . 'tracks.png', 'no', null, '');
+			$w->result(null, '', 'Search for music in "Your Music" only', 'Begin typing at least 3 characters to start search in your ' . $mymusic_tracks . ' tracks', './spotify-mini-player/images/' . $theme . '/' . 'search.png', 'no', null, '');
 		}
 
 		$w->result(null, '', '🔈 Current Track', 'Display current track information and browse various options', './spotify-mini-player/images/' . $theme . '/' . 'tracks.png', 'no', null, 'Current Track▹');
@@ -310,7 +310,7 @@ if (mb_strlen($query) < 3 ||
 
 		}
 		$w->result(null, '', 'Playlists', 'Browse by playlist' . ' (' . $nb_playlists . ' playlists)', './spotify-mini-player/images/' . $theme . '/' . 'playlists.png', 'no', null, 'Playlist▹');
-		$w->result(null, '', 'Your Music', 'Browse Your Music' . ' (' . $mymusic_tracks . ' tracks ● ' .  $mymusic_albums . '  albums ● ' . $mymusic_artists . ' artists)', './spotify-mini-player/images/' . $theme . '/' . 'tracks.png', 'no', null, 'Your Music▹');
+		$w->result(null, '', 'Your Music', 'Browse Your Music' . ' (' . $mymusic_tracks . ' tracks ● ' .  $mymusic_albums . '  albums ● ' . $mymusic_artists . ' artists)', './spotify-mini-player/images/' . $theme . '/' . 'allplaylists.png', 'no', null, 'Your Music▹');
 		if ($all_playlists == true) {
 			$w->result(null, '', 'Artists', 'Browse by artist' . ' (' . $all_artists . ' artists)', './spotify-mini-player/images/' . $theme . '/' . 'artists.png', 'no', null, 'Artist▹');
 			$w->result(null, '', 'Albums', 'Browse by album' . ' (' . $all_albums . ' albums)', './spotify-mini-player/images/' . $theme . '/' . 'albums.png', 'no', null, 'Album▹');
@@ -923,7 +923,7 @@ if (mb_strlen($query) < 3 ||
 					$addtosub = 'Your Music';
 					$image = './spotify-mini-player/images/' . $theme . '/' . 'tracks.png';
 				}
-				$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'add_current_track' /* other_action */ , '' /* alfred_playlist_uri */ , '' /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "🔈 Add track " . escapeQuery($results[0]) . " to " . $addto,
+				$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'add_current_track' /* other_action */ , '' /* alfred_playlist_uri */ , '' /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "🔈♫ Add track " . escapeQuery($results[0]) . " to " . $addto,
 						array(
 							'This will add current track to ' . $addtosub,
 							'alt' => 'Not Available',
@@ -933,7 +933,7 @@ if (mb_strlen($query) < 3 ||
 							'ctrl' => 'Not Available')
 						, $image, 'yes', null, '');
 
-				$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'current_track_radio' /* other_action */ , '' /* alfred_playlist_uri */ , '' /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "📻 Create a Song Radio Playlist based on " . escapeQuery($results[0]),
+				$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'current_track_radio' /* other_action */ , '' /* alfred_playlist_uri */ , '' /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "🔈📻 Create a Song Radio Playlist based on " . escapeQuery($results[0]),
 						array(
 							'This will create a song radio playlist for the current track',
 							'alt' => 'Not Available',
