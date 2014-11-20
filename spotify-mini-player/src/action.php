@@ -350,6 +350,12 @@ if ($spotify_command != "" && $type == "TRACK" && $add_to_option == "") {
 			exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 			displayNotification("Max results set to $setting[1]");
 			return;
+		} else if ($setting[0] == "RADIO_TRACKS") {
+			$setSettings = "update settings set radio_number_tracks=" . $setting[1];
+			$dbfile = $w->data() . "/settings.db";
+			exec("sqlite3 \"$dbfile\" \"$setSettings\"");
+			displayNotification("Radio track number set to $setting[1]");
+			return;
 		} else if ($setting[0] == "Oauth_Client_ID") {
 			$setSettings = 'update settings set oauth_client_id=\"' . $setting[1] . '\"';
 			$dbfile = $w->data() . "/settings.db";
