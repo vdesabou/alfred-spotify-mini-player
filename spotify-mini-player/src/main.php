@@ -916,16 +916,22 @@ if (mb_strlen($query) < 3 ||
 						, $album_artwork_path, 'yes', null, '');
 				}
 
+				$addto = '';
 				if ($is_alfred_playlist_active == true) {
-					$addto = 'Alfred Playlist';
-					$addtosub = $alfred_playlist_name;
-					$image = './spotify-mini-player/images/' . $theme . '/' . 'alfred_playlist.png';
+
+					if($alfred_playlist_name != "") {
+						$addto = 'Alfred Playlist';
+						$addtosub = $alfred_playlist_name;
+						$image = './spotify-mini-player/images/' . $theme . '/' . 'alfred_playlist.png';
+					}
+
 				} else {
 					$addto = 'Your Music';
 					$addtosub = 'Your Music';
 					$image = './spotify-mini-player/images/' . $theme . '/' . 'tracks.png';
 				}
-				$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'add_current_track' /* other_action */ , '' /* alfred_playlist_uri */ , '' /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "🔈♫ Add track " . escapeQuery($results[0]) . " to " . $addto,
+				if($addto != '') {
+					$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'add_current_track' /* other_action */ , '' /* alfred_playlist_uri */ , '' /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "🔈♫ Add track " . escapeQuery($results[0]) . " to " . $addto,
 						array(
 							'This will add current track to ' . $addtosub,
 							'alt' => 'Not Available',
@@ -934,6 +940,7 @@ if (mb_strlen($query) < 3 ||
 							'fn' => 'Not Available',
 							'ctrl' => 'Not Available')
 						, $image, 'yes', null, '');
+				}
 
 				$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'current_track_radio' /* other_action */ , '' /* alfred_playlist_uri */ , '' /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "🔈📻 Create a Song Radio Playlist based on " . escapeQuery($results[0]),
 						array(
