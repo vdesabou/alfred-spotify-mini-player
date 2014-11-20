@@ -330,9 +330,9 @@ if (mb_strlen($query) < 3 ||
 			$alfred_playlist_state = 'Your Music';
 		}
 		if ($all_playlists == true) {
-			$w->result(null, '', 'Settings', 'Search scope=<all>, Max results=<' . $max_results . '>, Spotifious is <' . $spotifious_state . '>, Controlling <' . $alfred_playlist_state . '>', './spotify-mini-player/images/' . $theme . '/' . 'settings.png', 'no', null, 'Settings▹');
+			$w->result(null, '', 'Settings', 'Search scope=<All>, Max results=<' . $max_results . '>, Spotifious is <' . $spotifious_state . '>, Controlling <' . $alfred_playlist_state . '>', './spotify-mini-player/images/' . $theme . '/' . 'settings.png', 'no', null, 'Settings▹');
 		} else {
-			$w->result(null, '', 'Settings', 'Search scope=<only ★>, Max results=<' . $max_results . '>, Spotifious is <' . $spotifious_state . '>, Controlling <' . $alfred_playlist_state . '>', './spotify-mini-player/images/' . $theme . '/' . 'settings.png', 'no', null, 'Settings▹');
+			$w->result(null, '', 'Settings', 'Search scope=<Your Music>, Max results=<' . $max_results . '>, Spotifious is <' . $spotifious_state . '>, Controlling <' . $alfred_playlist_state . '>', './spotify-mini-player/images/' . $theme . '/' . 'settings.png', 'no', null, 'Settings▹');
 		}
 	}
 	//
