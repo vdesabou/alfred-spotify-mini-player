@@ -988,9 +988,30 @@ if (mb_strlen($query) < 3 ||
 			if ($update_in_progress == false) {
 				$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'update_your_music' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Update Your Music ", "when done you'll receive a notification. you can check progress by invoking the workflow again", './spotify-mini-player/images/' . $theme . '/' . 'update.png', 'yes', null, '');
 			}
-			$w->result(null, '', 'Tracks' , 'Browse tracks in Your Music', './spotify-mini-player/images/' . $theme . '/' . 'tracks.png', 'no', null, 'Your Music▹Tracks▹');
-			$w->result(null, '', 'Albums', 'Browse albums in Your Music', './spotify-mini-player/images/' . $theme . '/' . 'albums.png', 'no', null, 'Your Music▹Albums▹');
-			$w->result(null, '', 'Artists', 'Browse artists in Your Music', './spotify-mini-player/images/' . $theme . '/' . 'artists.png', 'no', null, 'Your Music▹Artists▹');
+			$getCounters = 'select * from counters';
+			try {
+				$stmt = $db->prepare($getCounters);
+
+				$counters = $stmt->execute();
+				$counter = $stmt->fetch();
+
+			} catch (PDOException $e) {
+				handleDbIssuePdoXml($theme, $db);
+				return;
+			}
+
+			$all_tracks = $counter[0];
+			$mymusic_tracks = $counter[1];
+			$all_artists = $counter[2];
+			$mymusic_artists = $counter[3];
+			$all_albums = $counter[4];
+			$mymusic_albums = $counter[5];
+			$nb_playlists = $counter[6];
+
+
+			$w->result(null, '', 'Tracks' , 'Browse your ' . $mymusic_tracks . ' tracks in Your Music', './spotify-mini-player/images/' . $theme . '/' . 'tracks.png', 'no', null, 'Your Music▹Tracks▹');
+			$w->result(null, '', 'Albums', 'Browse your ' . $mymusic_albums . ' albums in Your Music', './spotify-mini-player/images/' . $theme . '/' . 'albums.png', 'no', null, 'Your Music▹Albums▹');
+			$w->result(null, '', 'Artists', 'Browse your ' . $mymusic_artists . ' artists in Your Music', './spotify-mini-player/images/' . $theme . '/' . 'artists.png', 'no', null, 'Your Music▹Artists▹');
 
 		} // Featured Your Music end
 		elseif ($kind == "Online") {
