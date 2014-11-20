@@ -61,7 +61,7 @@ if (file_exists($w->data() . '/update_library_in_progress')) {
 //
 // Read settings from DB
 //
-$getSettings = 'select all_playlists,is_spotifious_active,is_alfred_playlist_active,is_displaymorefrom_active,is_lyrics_active,max_results, alfred_playlist_uri,alfred_playlist_name,country_code,theme,last_check_update_time,oauth_client_id,oauth_client_secret,oauth_redirect_uri,oauth_access_token,oauth_expires,oauth_refresh_token,display_name,userid from settings';
+$getSettings = 'select all_playlists,is_spotifious_active,is_alfred_playlist_active,radio_number_tracks,is_lyrics_active,max_results, alfred_playlist_uri,alfred_playlist_name,country_code,theme,last_check_update_time,oauth_client_id,oauth_client_secret,oauth_redirect_uri,oauth_access_token,oauth_expires,oauth_refresh_token,display_name,userid,echonest_api_key from settings';
 $dbsettingsfile = $w->data() . '/settings.db';
 
 try {
@@ -100,8 +100,8 @@ if (!file_exists($w->data() . '/settings.db')) {
 		$dbsettings = new PDO("sqlite:$dbsettingsfile", "", "", null);
 		$dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-		$dbsettings->exec("create table settings (all_playlists boolean, is_spotifious_active boolean, is_alfred_playlist_active boolean, is_displaymorefrom_active boolean, is_lyrics_active boolean, max_results int, alfred_playlist_uri text, alfred_playlist_name text, country_code text, theme text, last_check_update_time int, oauth_client_id text,oauth_client_secret text,oauth_redirect_uri text,oauth_access_token text,oauth_expires int,oauth_refresh_token text,display_name text,userid text)");
-		$dbsettings->exec("insert into settings values (1,0,1,1,1,50,\"\",\"\",\"\",\"new\",0,\"\",\"\",\"http://localhost:15298/callback.php\",\"\",0,\"\",\"\",\"\")");
+		$dbsettings->exec("create table settings (all_playlists boolean, is_spotifious_active boolean, is_alfred_playlist_active boolean, radio_number_tracks int, is_lyrics_active boolean, max_results int, alfred_playlist_uri text, alfred_playlist_name text, country_code text, theme text, last_check_update_time int, oauth_client_id text,oauth_client_secret text,oauth_redirect_uri text,oauth_access_token text,oauth_expires int,oauth_refresh_token text,display_name text,userid text, echonest_api_key text)");
+		$dbsettings->exec("insert into settings values (1,0,1,30,1,50,\"\",\"\",\"\",\"new\",0,\"\",\"\",\"http://localhost:15298/callback.php\",\"\",0,\"\",\"\",\"\",\"5EG94BIZEGFEY9AL9\")");
 
 		$dbsettings->query("PRAGMA synchronous = OFF");
 		$dbsettings->query("PRAGMA journal_mode = OFF");
@@ -134,7 +134,7 @@ catch (PDOException $e) {
 $all_playlists = $setting[0];
 $is_spotifious_active = $setting[1];
 $is_alfred_playlist_active = $setting[2];
-$is_displaymorefrom_active = $setting[3]; // no more used, but keep it to avoid user to reset settings
+$radio_number_tracks = $setting[3];
 $is_lyrics_active = $setting[4];
 $max_results = $setting[5];
 $alfred_playlist_uri = $setting[6];
@@ -150,6 +150,7 @@ $oauth_expires = $setting[15];
 $oauth_refresh_token = $setting[16];
 $display_name = $setting[17];
 $userid = $setting[18];
+$echonest_api_key = $setting[19];
 
 ////
 // OAUTH checks

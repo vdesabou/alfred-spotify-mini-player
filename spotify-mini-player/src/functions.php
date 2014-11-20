@@ -385,7 +385,7 @@ function createRadioArtistPlaylist($w, $artist_name) {
 	//
 	// Read settings from DB
 	//
-	$getSettings = 'select theme,userid from settings';
+	$getSettings = 'select theme,userid,radio_number_tracks,echonest_api_key from settings';
 	$dbfile = $w->data() . '/settings.db';
 	exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
 
@@ -396,11 +396,13 @@ function createRadioArtistPlaylist($w, $artist_name) {
 
 	foreach ($settings as $setting):
 		$setting = explode("	", $setting);
-	$theme = $setting[0];
-	$userid = $setting[1];
+		$theme = $setting[0];
+		$userid = $setting[1];
+		$radio_number_tracks = $setting[2];
+		$echonest_api_key = $setting[3];
 	endforeach;
 
-	$json = doWebApiRequest($w, 'http://developer.echonest.com/api/v4/playlist/static?api_key=5EG94BIZEGFEY9AL9&artist=' . urlencode($artist_name) . '&format=json&results=30&distribution=focused&type=artist-radio&bucket=id:spotify&bucket=tracks');
+	$json = doWebApiRequest($w, 'http://developer.echonest.com/api/v4/playlist/static?api_key=' . $echonest_api_key . '&artist=' . urlencode($artist_name) . '&format=json&results=' . $radio_number_tracks . '&distribution=focused&type=artist-radio&bucket=id:spotify&bucket=tracks');
 
 	$response = $json->response;
 
@@ -415,24 +417,29 @@ function createRadioArtistPlaylist($w, $artist_name) {
 		}
 	}
 
-	try {
-		$json = $api->createUserPlaylist($userid, array(
-            'name' =>  'Artist radio for ' . escapeQuery($artist_name),
-            'public' => false
-        ));
-	}
-	catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-		echo "Error(createUserPlaylist): radio artist " . $artist_name . " (exception " . $e . ")";
-		return false;
-	}
+	if (count($newplaylisttracks) > 0) {
+		try {
+			$json = $api->createUserPlaylist($userid, array(
+	            'name' =>  'Artist radio for ' . escapeQuery($artist_name),
+	            'public' => false
+	        ));
+		}
+		catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+			echo "Error(createUserPlaylist): radio artist " . $artist_name . " (exception " . $e . ")";
+			return false;
+		}
 
-	$ret = addTracksToPlaylist($w, $newplaylisttracks, $json->uri, $json->name, false, false);
-	if (is_numeric($ret) && $ret > 0) {
-		updatePlaylistList($w);
-		return;
-	} else if (is_numeric($ret) && $ret == 0) {
-		displayNotification('Error: Playlist ' . $json->name . ' cannot be added');
-		return;
+		$ret = addTracksToPlaylist($w, $newplaylisttracks, $json->uri, $json->name, false, false);
+		if (is_numeric($ret) && $ret > 0) {
+			updatePlaylistList($w);
+			return;
+		} else if (is_numeric($ret) && $ret == 0) {
+			displayNotification('Error: Playlist ' . $json->name . ' cannot be added');
+			return;
+		}
+	} else {
+		displayNotification('Error: track was not found in Echo Nest');
+		return false;
 	}
 
 	return true;
@@ -479,7 +486,7 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name) {
 	//
 	// Read settings from DB
 	//
-	$getSettings = 'select theme,userid from settings';
+	$getSettings = 'select theme,userid,radio_number_tracks,echonest_api_key from settings';
 	$dbfile = $w->data() . '/settings.db';
 	exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
 
@@ -490,11 +497,13 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name) {
 
 	foreach ($settings as $setting):
 		$setting = explode("	", $setting);
-	$theme = $setting[0];
-	$userid = $setting[1];
+		$theme = $setting[0];
+		$userid = $setting[1];
+		$radio_number_tracks = $setting[2];
+		$echonest_api_key = $setting[3];
 	endforeach;
 
-	$json = doWebApiRequest($w, 'http://developer.echonest.com/api/v4/playlist/static?api_key=5EG94BIZEGFEY9AL9&song_id=' . $track_uri . '&format=json&results=30&distribution=focused&type=song-radio&bucket=id:spotify&bucket=tracks');
+	$json = doWebApiRequest($w, 'http://developer.echonest.com/api/v4/playlist/static?api_key=' . $echonest_api_key . '&song_id=' . $track_uri . '&format=json&results=' . $radio_number_tracks . '&distribution=focused&type=song-radio&bucket=id:spotify&bucket=tracks');
 
 	$response = $json->response;
 
