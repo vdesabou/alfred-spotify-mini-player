@@ -900,7 +900,7 @@ if (mb_strlen($query) < 3 ||
 				}
 
 				// use track uri here
-				$album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $results[4], true);
+				$album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $results[4], false);
 				$w->result(null, serialize(array($results[4] /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'playalbum' /* other_action */ , '' /* alfred_playlist_uri */ , '' /* artist_name */, '' /* track_name */, escapeQuery($results[2]) /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, $album_artwork_path /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "🔈💿 " . escapeQuery($results[2]), '▶️ Play album', $album_artwork_path, 'yes', null, '');
 
 				if
@@ -913,7 +913,7 @@ if (mb_strlen($query) < 3 ||
 							'shift' => 'Not Available',
 							'fn' => 'Not Available',
 							'ctrl' => 'Not Available')
-						, getTrackOrAlbumArtwork($w, $theme, $results[4], false), 'yes', null, '');
+						, $album_artwork_path, 'yes', null, '');
 				}
 
 				if ($is_alfred_playlist_active == true) {
@@ -943,7 +943,7 @@ if (mb_strlen($query) < 3 ||
 							'shift' => 'Not Available',
 							'fn' => 'Not Available',
 							'ctrl' => 'Not Available')
-						, getTrackOrAlbumArtwork($w, $theme, $results[4], false), 'yes', null, '');
+						, $album_artwork_path, 'yes', null, '');
 
 				if ($all_playlists == true) {
 					$getTracks = "select playlist_uri from tracks where playable=1 and uri=:uri limit " . $max_results;
