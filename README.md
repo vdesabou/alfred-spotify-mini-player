@@ -24,27 +24,16 @@ You can also control Spotify using keywords such as play/next/volmax/random/shuf
 * Display information currently played track with keyword *current*
 * Add current track to Alfred Playlist or Your Music
 * Browse Related artists online
+* Create Artist or Song playlists from the workflow
 * Get featured playlists from Spotify in your country, US and UK
 * Display current track lyrics
 * Three themes available: black, green and new theme from Spotify
 * Auto-Updater: it checks once per day and download automatically the new version
 * Direct call to [Spotifious](http://www.alfredforum.com/topic/1644-spotifious-a-natural-spotify-controller-for-alfred) workflow
 
-## Settings
-
-* Configurable Search Scope: Only in *Your Music* or in your complete library, including *Your Music* and all playlists (by default)
-* Set max number of results. 50 by default
-* enable/disable Spotifious
-* Set controller to Alfred Playlist or Your Music. 
-* enable/disable ***Lookup this artist online***
-* Check for workflow update
-* Choose workflow theme: ***black*** or ***green*** or ***new***
-* Install/Update of the library (see next section for explanations)
-
 ## Screencast
 
 See it in action here [screencast](http://cl.ly/YNyq)
-
 
 ## Setup and Usage
 
