@@ -158,6 +158,7 @@ $echonest_api_key = $setting[19];
 if ($oauth_client_id == '' && substr_count($query, '▹') == 0) {
 	if (mb_strlen($query) == 0) {
 		$w->result(null, '', 'Your Application Client ID is missing', 'Get it from your Spotify Application and copy/paste it here', './spotify-mini-player/images/' . $theme . '/' . 'settings.png', 'no', null, '');
+		$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , 'Open_Url▹' . 'https://developer.spotify.com/my-applications/#!/applications' /* other_settings*/ , '' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Open Spotify Application page to get required information', "This will open the Application page with your default browser", 'fileicon:/Applications/Spotify.app', 'yes', null, '');
 	} else if(mb_strlen($query) != 32) {
 		$w->result(null, '', 'The Application Client ID does not seem valid!', 'The length is not 32. Make sure to copy the Client ID from https://developer.spotify.com/my-applications', './spotify-mini-player/images/warning.png', 'no', null, '');
 	} else {
@@ -170,6 +171,7 @@ if ($oauth_client_id == '' && substr_count($query, '▹') == 0) {
 if ($oauth_client_secret == '' && substr_count($query, '▹') == 0) {
 	if (mb_strlen($query) == 0) {
 		$w->result(null, '', 'Your Application Client Secret is missing!', 'Get it from your Spotify Application and enter it here', './spotify-mini-player/images/' . $theme . '/' . 'settings.png', 'no', null, '');
+		$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , 'Open_Url▹' . 'https://developer.spotify.com/my-applications/#!/applications' /* other_settings*/ , '' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Open Spotify Application page to get required information', "This will open the Application page with your default browser", 'fileicon:/Applications/Spotify.app', 'yes', null, '');
 	} else if(mb_strlen($query) != 32) {
 		$w->result(null, '', 'The Application Client Secret does not seem valid!', 'The length is not 32. Make sure to copy the Client Secret from https://developer.spotify.com/my-applications', './spotify-mini-player/images/warning.png', 'no', null, '');
 	} else if($query == $oauth_client_id) {
