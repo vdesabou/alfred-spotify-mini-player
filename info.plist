@@ -186,6 +186,17 @@
 				<string></string>
 			</dict>
 		</array>
+		<key>39A1935A-37F5-49FA-A860-BCF7765A8C65</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>18496AC4-EA42-444C-A906-642E38259C96</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 		<key>3F85747B-FC44-4B07-AA6E-3645F0CC0DF7</key>
 		<array>
 			<dict>
@@ -307,6 +318,17 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>899AC4D2-88FA-474F-A075-AFA12F361E2B</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>79F70A28-E2D9-4705-81A9-86F3EA8EB47F</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>18496AC4-EA42-444C-A906-642E38259C96</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -831,31 +853,21 @@ php -f ./spotify-mini-player/src/action.php -- "{query}" "ALBUM" "" &gt;&gt; "$a
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>action</key>
-				<integer>0</integer>
 				<key>argument</key>
-				<integer>3</integer>
-				<key>argumenttext</key>
-				<string>Alfred Playlist▹</string>
-				<key>hotkey</key>
-				<integer>12</integer>
-				<key>hotmod</key>
-				<integer>1310720</integer>
-				<key>hotstring</key>
-				<string>A</string>
-				<key>leftcursor</key>
-				<false/>
-				<key>modsmode</key>
-				<integer>2</integer>
-				<key>relatedAppsMode</key>
+				<string></string>
+				<key>argumenttype</key>
 				<integer>0</integer>
+				<key>triggerid</key>
+				<string>com.vdesabou.miniplayer.show</string>
+				<key>triggername</key>
+				<string>Show Workflow</string>
 			</dict>
 			<key>type</key>
-			<string>alfred.workflow.trigger.hotkey</string>
+			<string>alfred.workflow.trigger.remote</string>
 			<key>uid</key>
-			<string>B22B739D-D9B8-4E4C-AB9E-BE2EA1E0478D</string>
+			<string>39A1935A-37F5-49FA-A860-BCF7765A8C65</string>
 			<key>version</key>
-			<integer>1</integer>
+			<integer>0</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -884,13 +896,13 @@ php -f ./spotify-mini-player/src/action.php -- "{query}" "ARTIST" "" &gt;&gt; "$
 				<key>argument</key>
 				<integer>3</integer>
 				<key>argumenttext</key>
-				<string>Settings▹</string>
+				<string>Alfred Playlist▹</string>
 				<key>hotkey</key>
-				<integer>1</integer>
+				<integer>12</integer>
 				<key>hotmod</key>
 				<integer>1310720</integer>
 				<key>hotstring</key>
-				<string>S</string>
+				<string>A</string>
 				<key>leftcursor</key>
 				<false/>
 				<key>modsmode</key>
@@ -901,7 +913,7 @@ php -f ./spotify-mini-player/src/action.php -- "{query}" "ARTIST" "" &gt;&gt; "$
 			<key>type</key>
 			<string>alfred.workflow.trigger.hotkey</string>
 			<key>uid</key>
-			<string>A5C6FE27-E7CE-45C4-ADB0-8B2D0CC39E99</string>
+			<string>B22B739D-D9B8-4E4C-AB9E-BE2EA1E0478D</string>
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
@@ -957,18 +969,18 @@ php -f ./spotify-mini-player/src/action.php -- "{query}" "ALBUM_OR_PLAYLIST" "AD
 			<key>config</key>
 			<dict>
 				<key>argument</key>
-				<string>Settings▹</string>
+				<string>Alfred Playlist▹</string>
 				<key>argumenttype</key>
 				<integer>3</integer>
 				<key>triggerid</key>
-				<string>com.vdesabou.miniplayer.settings</string>
+				<string>com.vdesabou.miniplayer.alfredplaylist</string>
 				<key>triggername</key>
-				<string>Settings</string>
+				<string>Alfred Playlist</string>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
 			<key>uid</key>
-			<string>DD0755A4-3C70-467C-A005-11F10E23CEF0</string>
+			<string>79F70A28-E2D9-4705-81A9-86F3EA8EB47F</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -988,6 +1000,74 @@ php -f ./spotify-mini-player/src/action.php -- "{query}" "TRACK" "ADDTOPLAYLIST"
 			<string>alfred.workflow.action.script</string>
 			<key>uid</key>
 			<string>7918E8F7-20AE-445E-9AEA-E2E54CDE967D</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>3</integer>
+				<key>argumenttext</key>
+				<string>Settings▹</string>
+				<key>hotkey</key>
+				<integer>1</integer>
+				<key>hotmod</key>
+				<integer>1310720</integer>
+				<key>hotstring</key>
+				<string>S</string>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>2</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>A5C6FE27-E7CE-45C4-ADB0-8B2D0CC39E99</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>echo "===== ONLINE ========" &gt;&gt; "$alfred_workflow_cache/action.log"
+echo "`date` {query}" &gt;&gt; "$alfred_workflow_cache/action.log"
+php -f ./spotify-mini-player/src/action.php -- "{query}" "ONLINE" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;
+</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>5F5E8A6D-8707-41FC-B5D1-660CD11685F0</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string>Settings▹</string>
+				<key>argumenttype</key>
+				<integer>3</integer>
+				<key>triggerid</key>
+				<string>com.vdesabou.miniplayer.settings</string>
+				<key>triggername</key>
+				<string>Settings</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.remote</string>
+			<key>uid</key>
+			<string>DD0755A4-3C70-467C-A005-11F10E23CEF0</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -1019,26 +1099,6 @@ php -f ./spotify-mini-player/src/action.php -- "{query}" "TRACK" "ADDTOPLAYLIST"
 			<string>DAE270E5-CA94-4F36-99FE-D8EC996608C0</string>
 			<key>version</key>
 			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>escaping</key>
-				<integer>38</integer>
-				<key>script</key>
-				<string>echo "===== ONLINE ========" &gt;&gt; "$alfred_workflow_cache/action.log"
-echo "`date` {query}" &gt;&gt; "$alfred_workflow_cache/action.log"
-php -f ./spotify-mini-player/src/action.php -- "{query}" "ONLINE" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;
-</string>
-				<key>type</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>5F5E8A6D-8707-41FC-B5D1-660CD11685F0</string>
-			<key>version</key>
-			<integer>0</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -1110,117 +1170,6 @@ php -f ./spotify-mini-player/src/action.php -- "{query}" "ONLINE" "" &gt;&gt; "$
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>triggerid</key>
-				<string>update</string>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.trigger.external</string>
-			<key>uid</key>
-			<string>A4437594-2A54-42A1-836E-129E46F5DB47</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>escaping</key>
-				<integer>38</integer>
-				<key>script</key>
-				<string>echo "===== UPDATE_LIBRARY ========" &gt;&gt; "$alfred_workflow_cache/action.log"
-echo "`date` {query}" &gt;&gt; "$alfred_workflow_cache/action.log"
-php -f ./spotify-mini-player/src/action.php -- "{query}" "UPDATE_LIBRARY" "UPDATE_LIBRARY" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
-				<key>type</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>CF46537F-6F59-40DB-A643-72A7BB952840</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>2</integer>
-				<key>keyword</key>
-				<string>spot_mini_update_library</string>
-				<key>subtext</key>
-				<string>This will update the entire library</string>
-				<key>text</key>
-				<string>Update Spotify Mini Player library</string>
-				<key>withspace</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>2B0C8466-4AED-4272-9C10-50F3BCE88043</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argument</key>
-				<string></string>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>triggerid</key>
-				<string>com.vdesabou.miniplayer.update</string>
-				<key>triggername</key>
-				<string>Update Library</string>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.trigger.remote</string>
-			<key>uid</key>
-			<string>C588A188-D8D3-450F-9020-5EBB563F6B8A</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>2</integer>
-				<key>escaping</key>
-				<integer>127</integer>
-				<key>keyword</key>
-				<string>spot_mini_debug</string>
-				<key>runningsubtext</key>
-				<string>Wait for it...</string>
-				<key>script</key>
-				<string>php -f ./spotify-mini-player/src/debug.php</string>
-				<key>subtext</key>
-				<string>Send the generated tgz file to the workflow author</string>
-				<key>title</key>
-				<string>Debug tools for Spotify Mini Player</string>
-				<key>type</key>
-				<integer>0</integer>
-				<key>withspace</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.scriptfilter</string>
-			<key>uid</key>
-			<string>CEF36AB9-7CC2-4765-BF84-751E88B69023</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict/>
-			<key>type</key>
-			<string>alfred.workflow.action.browseinalfred</string>
-			<key>uid</key>
-			<string>F005BD44-180A-4A9A-9339-BE457D1E207F</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>plusspaces</key>
 				<false/>
 				<key>url</key>
@@ -1232,25 +1181,6 @@ php -f ./spotify-mini-player/src/action.php -- "{query}" "UPDATE_LIBRARY" "UPDAT
 			<string>alfred.workflow.action.openurl</string>
 			<key>uid</key>
 			<string>899AC4D2-88FA-474F-A075-AFA12F361E2B</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argument</key>
-				<string></string>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>triggerid</key>
-				<string>com.vdesabou.miniplayer.debug</string>
-				<key>triggername</key>
-				<string>Debug</string>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.trigger.remote</string>
-			<key>uid</key>
-			<string>873EF61A-BD03-4946-87B0-C7AE5DFC5E5B</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -2631,6 +2561,136 @@ php -f ./spotify-mini-player/src/action.php -- "{query}" "KILL_UPDATE" "" &gt;&g
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>echo "===== UPDATE_LIBRARY ========" &gt;&gt; "$alfred_workflow_cache/action.log"
+echo "`date` {query}" &gt;&gt; "$alfred_workflow_cache/action.log"
+php -f ./spotify-mini-player/src/action.php -- "{query}" "UPDATE_LIBRARY" "UPDATE_LIBRARY" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>CF46537F-6F59-40DB-A643-72A7BB952840</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>spot_mini_update_library</string>
+				<key>subtext</key>
+				<string>This will update the entire library</string>
+				<key>text</key>
+				<string>Update Spotify Mini Player library</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>2B0C8466-4AED-4272-9C10-50F3BCE88043</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>triggerid</key>
+				<string>update</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.external</string>
+			<key>uid</key>
+			<string>A4437594-2A54-42A1-836E-129E46F5DB47</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string></string>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>triggerid</key>
+				<string>com.vdesabou.miniplayer.update</string>
+				<key>triggername</key>
+				<string>Update Library</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.remote</string>
+			<key>uid</key>
+			<string>C588A188-D8D3-450F-9020-5EBB563F6B8A</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>escaping</key>
+				<integer>127</integer>
+				<key>keyword</key>
+				<string>spot_mini_debug</string>
+				<key>runningsubtext</key>
+				<string>Wait for it...</string>
+				<key>script</key>
+				<string>php -f ./spotify-mini-player/src/debug.php</string>
+				<key>subtext</key>
+				<string>Send the generated tgz file to the workflow author</string>
+				<key>title</key>
+				<string>Debug tools for Spotify Mini Player</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>CEF36AB9-7CC2-4765-BF84-751E88B69023</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string></string>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>triggerid</key>
+				<string>com.vdesabou.miniplayer.debug</string>
+				<key>triggername</key>
+				<string>Debug</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.remote</string>
+			<key>uid</key>
+			<string>873EF61A-BD03-4946-87B0-C7AE5DFC5E5B</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict/>
+			<key>type</key>
+			<string>alfred.workflow.action.browseinalfred</string>
+			<key>uid</key>
+			<string>F005BD44-180A-4A9A-9339-BE457D1E207F</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string>Github page:
@@ -2672,12 +2732,12 @@ SOFTWARE.</string>
 		<key>05F86AA1-D3EE-4409-9A58-898B36FFE503</key>
 		<dict>
 			<key>ypos</key>
-			<real>4830</real>
+			<real>4600</real>
 		</dict>
 		<key>0C74516A-D95D-4379-94B6-CD984A31A003</key>
 		<dict>
 			<key>ypos</key>
-			<real>640</real>
+			<real>890</real>
 		</dict>
 		<key>16F5C3BF-01EE-493C-9E7B-CC54D482B7A6</key>
 		<dict>
@@ -2697,7 +2757,7 @@ SOFTWARE.</string>
 		<key>19215BE5-986E-4AC9-9166-C80872C51DBE</key>
 		<dict>
 			<key>ypos</key>
-			<real>4830</real>
+			<real>4600</real>
 		</dict>
 		<key>1A88766E-BF4A-48F5-9BD4-D3538634422F</key>
 		<dict>
@@ -2737,7 +2797,7 @@ SOFTWARE.</string>
 		<key>2B0C8466-4AED-4272-9C10-50F3BCE88043</key>
 		<dict>
 			<key>ypos</key>
-			<real>930</real>
+			<real>4760</real>
 		</dict>
 		<key>2D26D8E2-52A2-4BF9-B693-0D5190C6CC23</key>
 		<dict>
@@ -2752,7 +2812,7 @@ SOFTWARE.</string>
 		<key>3040749D-6B5C-4CCD-AF95-AEC0F83B48D9</key>
 		<dict>
 			<key>ypos</key>
-			<real>750</real>
+			<real>1000</real>
 		</dict>
 		<key>3837382F-63B4-4B0D-A880-A1CF7079D584</key>
 		<dict>
@@ -2763,6 +2823,11 @@ SOFTWARE.</string>
 		<dict>
 			<key>ypos</key>
 			<real>4420</real>
+		</dict>
+		<key>39A1935A-37F5-49FA-A860-BCF7765A8C65</key>
+		<dict>
+			<key>ypos</key>
+			<real>110</real>
 		</dict>
 		<key>3F85747B-FC44-4B07-AA6E-3645F0CC0DF7</key>
 		<dict>
@@ -2844,6 +2909,11 @@ SOFTWARE.</string>
 			<key>ypos</key>
 			<real>1160</real>
 		</dict>
+		<key>79F70A28-E2D9-4705-81A9-86F3EA8EB47F</key>
+		<dict>
+			<key>ypos</key>
+			<real>320</real>
+		</dict>
 		<key>80B80179-E286-4D4A-9FEC-FCBE63AD8AEE</key>
 		<dict>
 			<key>ypos</key>
@@ -2867,7 +2937,7 @@ SOFTWARE.</string>
 		<key>873EF61A-BD03-4946-87B0-C7AE5DFC5E5B</key>
 		<dict>
 			<key>ypos</key>
-			<real>1160</real>
+			<real>5030</real>
 		</dict>
 		<key>899AC4D2-88FA-474F-A075-AFA12F361E2B</key>
 		<dict>
@@ -2892,7 +2962,7 @@ SOFTWARE.</string>
 		<key>8F8CF9CC-2B4D-4F8E-A211-C32DD49E84F4</key>
 		<dict>
 			<key>ypos</key>
-			<real>540</real>
+			<real>790</real>
 		</dict>
 		<key>96995CA4-6C03-4DB7-9E8E-95AEECA4CEB5</key>
 		<dict>
@@ -2922,7 +2992,7 @@ SOFTWARE.</string>
 		<key>A4437594-2A54-42A1-836E-129E46F5DB47</key>
 		<dict>
 			<key>ypos</key>
-			<real>880</real>
+			<real>4760</real>
 		</dict>
 		<key>A4EEDB0D-EEB3-45CE-B8A8-1397DD905470</key>
 		<dict>
@@ -2932,7 +3002,7 @@ SOFTWARE.</string>
 		<key>A5C6FE27-E7CE-45C4-ADB0-8B2D0CC39E99</key>
 		<dict>
 			<key>ypos</key>
-			<real>220</real>
+			<real>440</real>
 		</dict>
 		<key>A76C26BD-BA48-4797-839B-BE439FF40846</key>
 		<dict>
@@ -2952,7 +3022,7 @@ SOFTWARE.</string>
 		<key>B22B739D-D9B8-4E4C-AB9E-BE2EA1E0478D</key>
 		<dict>
 			<key>ypos</key>
-			<real>110</real>
+			<real>210</real>
 		</dict>
 		<key>B23712E3-4564-4668-BD6D-4D535839CC8C</key>
 		<dict>
@@ -2977,7 +3047,7 @@ SOFTWARE.</string>
 		<key>C588A188-D8D3-450F-9020-5EBB563F6B8A</key>
 		<dict>
 			<key>ypos</key>
-			<real>990</real>
+			<real>4870</real>
 		</dict>
 		<key>C7CFF014-DBC8-4663-A0AB-219C57A427EE</key>
 		<dict>
@@ -3007,12 +3077,12 @@ SOFTWARE.</string>
 		<key>CEF36AB9-7CC2-4765-BF84-751E88B69023</key>
 		<dict>
 			<key>ypos</key>
-			<real>1050</real>
+			<real>5030</real>
 		</dict>
 		<key>CF46537F-6F59-40DB-A643-72A7BB952840</key>
 		<dict>
 			<key>ypos</key>
-			<real>930</real>
+			<real>4760</real>
 		</dict>
 		<key>D4442911-E17B-49CC-8F7F-EAC1830B11CD</key>
 		<dict>
@@ -3032,7 +3102,7 @@ SOFTWARE.</string>
 		<key>DAE270E5-CA94-4F36-99FE-D8EC996608C0</key>
 		<dict>
 			<key>ypos</key>
-			<real>440</real>
+			<real>670</real>
 		</dict>
 		<key>DC403223-17FA-466B-9488-7292DA9D8223</key>
 		<dict>
@@ -3042,7 +3112,7 @@ SOFTWARE.</string>
 		<key>DD0755A4-3C70-467C-A005-11F10E23CEF0</key>
 		<dict>
 			<key>ypos</key>
-			<real>330</real>
+			<real>550</real>
 		</dict>
 		<key>E241B5C1-14A9-4D50-AD12-22033C647C44</key>
 		<dict>
@@ -3082,7 +3152,7 @@ SOFTWARE.</string>
 		<key>F005BD44-180A-4A9A-9339-BE457D1E207F</key>
 		<dict>
 			<key>ypos</key>
-			<real>1050</real>
+			<real>5030</real>
 		</dict>
 		<key>F250A59C-0B2D-4A08-9085-9CA0A2FB2DCC</key>
 		<dict>
