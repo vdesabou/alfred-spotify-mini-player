@@ -1678,22 +1678,24 @@ if (mb_strlen($query) < 3 ||
 
 			}
 
-			$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , 'activate (open location "spotify:search:' . $playlist[1] . '")' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , '' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $playlist[1] . " in Spotify", array(
-					'This will start a new search in Spotify',
-					'alt' => 'Not Available',
-					'cmd' => 'Not Available',
-					'shift' => 'Not Available',
-					'fn' => 'Not Available',
-					'ctrl' => 'Not Available'), 'fileicon:/Applications/Spotify.app', 'yes', null, '');
-
-			if ($is_spotifious_active == true) {
-				$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , $playlist[1] /* query */ , '' /* other_settings*/ , '' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $playlist[1] . " with Spotifious", array(
-						'Spotifious workflow must be installed and script filter set with <spotifious>',
+			if(mb_strlen($thetrack)>0) {
+				$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , 'activate (open location "spotify:search:' . $thetrack . '")' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , '' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $thetrack . " in Spotify", array(
+						'This will start a new search in Spotify',
 						'alt' => 'Not Available',
 						'cmd' => 'Not Available',
 						'shift' => 'Not Available',
 						'fn' => 'Not Available',
-						'ctrl' => 'Not Available'), './spotify-mini-player/images/spotifious.png', 'yes', null, '');
+						'ctrl' => 'Not Available'), 'fileicon:/Applications/Spotify.app', 'yes', null, '');
+	
+				if ($is_spotifious_active == true) {
+					$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , $thetrack /* query */ , '' /* other_settings*/ , '' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $thetrack . " with Spotifious", array(
+							'Spotifious workflow must be installed and script filter set with <spotifious>',
+							'alt' => 'Not Available',
+							'cmd' => 'Not Available',
+							'shift' => 'Not Available',
+							'fn' => 'Not Available',
+							'ctrl' => 'Not Available'), './spotify-mini-player/images/spotifious.png', 'yes', null, '');
+				}				
 			}
 		} // end of Your Music▹Tracks▹
 		elseif ($kind == "Your Music" && $words[1] == "Albums") {
@@ -1775,7 +1777,7 @@ if (mb_strlen($query) < 3 ||
 			($noresult) {
 				$w->result(null, 'help', "There is no result for your search", "", './spotify-mini-player/images/warning.png', 'no', null, '');
 			}
-		} // end of Your Music▹Albums▹
+		} // end of Your Music▹Artists▹
 		elseif ($kind == "Settings") {
 			$setting_kind = $words[1];
 			$the_query = $words[2];
