@@ -1,5 +1,5 @@
 {
-    "version": 5.12,
+    "version": 5.2,
     "download_url": "https://raw.githubusercontent.com/packal/repository/master/com.vdesabou.spotify.mini.player/spotifyminiplayer.alfredworkflow",
-    "description": "Fix for issue #29(If you had more than 50 playlists, say 58, only the last 8 were processed) . Fix for playlist artworks not downloaded"
+    "description": "Artist and Song Radio Playlists. Background updates. Current Track menu and much more. Note: settings will be reset, you will need to re-configure the workflow."
 }
