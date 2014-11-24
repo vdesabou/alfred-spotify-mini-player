@@ -503,7 +503,7 @@ if ($spotify_command != "" && $type == "TRACK" && $add_to_option == "") {
 				return;
 		} else if ($other_action == "check_for_update") {
 			if (! $w->internet()) {
-				displayNotificationWithArtwork("Error: No internet connection", './spotify-mini-player/images/warning.png');
+				displayNotificationWithArtwork("Error: No internet connection", './spotify-mini-player/images/' . $theme . '/' . 'warning.png');
 				return;
 			}
 
@@ -615,7 +615,7 @@ if ($spotify_command != "" && $type == "TRACK" && $add_to_option == "") {
 		} else if ($other_action == "morefromthisartist") {
 
 			if (! $w->internet()) {
-				displayNotificationWithArtwork("Error: No internet connection", './spotify-mini-player/images/warning.png');
+				displayNotificationWithArtwork("Error: No internet connection", './spotify-mini-player/images/' . $theme . '/' . 'warning.png');
 				return;
 			}
 			if ($artist_uri == "") {

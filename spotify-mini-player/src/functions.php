@@ -168,7 +168,7 @@ function getRandomTrack($w) {
 function getSpotifyWebAPI($w) {
 
 	if (! $w->internet()) {
-		displayNotificationWithArtwork("Error: No internet connection", './spotify-mini-player/images/warning.png');
+		displayNotificationWithArtwork("Error: No internet connection", './spotify-mini-player/images/' . $theme . '/' . 'warning.png');
 		return false;
 	}
 
@@ -1019,7 +1019,7 @@ function displayLyricsForCurrentTrack() {
  */
 function displayLyrics($w,$artist,$title) {
 	if (! $w->internet()) {
-		displayNotificationWithArtwork("Error: No internet connection", './spotify-mini-player/images/warning.png');
+		displayNotificationWithArtwork("Error: No internet connection", './spotify-mini-player/images/' . $theme . '/' . 'warning.png');
 		return;
 	}
 	$output = getLyrics($w, $artist, $title);
@@ -2502,8 +2502,8 @@ function updateMyMusic($w) {
  */
 function handleDbIssuePdoXml($theme, $dbhandle) {
 	$w = new Workflows('com.vdesabou.spotify.mini.player');
-	$w->result(uniqid(), '', 'Database Error: ' . $dbhandle->errorInfo()[0] . ' ' . $dbhandle->errorInfo()[1] . ' ' . $dbhandle->errorInfo()[2], '', './spotify-mini-player/images/warning.png', 'no', null, '');
-	$w->result(uniqid(), '', 'There is a problem with the library, try to re-create it.', 'Select Re-Create Library library below', './spotify-mini-player/images/warning.png', 'no', null, '');
+	$w->result(uniqid(), '', 'Database Error: ' . $dbhandle->errorInfo()[0] . ' ' . $dbhandle->errorInfo()[1] . ' ' . $dbhandle->errorInfo()[2], '', './spotify-mini-player/images/' . $theme . '/' . 'warning.png', 'no', null, '');
+	$w->result(uniqid(), '', 'There is a problem with the library, try to re-create it.', 'Select Re-Create Library library below', './spotify-mini-player/images/' . $theme . '/' . 'warning.png', 'no', null, '');
 	$w->result(uniqid(), serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'update_library' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Re-Create Library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './spotify-mini-player/images/' . $theme . '/' . 'update.png', 'yes', null, '');
 	echo $w->toxml();
 }
@@ -2731,7 +2731,7 @@ function checkForUpdate($w, $last_check_update_time, $dbsettings) {
 
 		if (! $w->internet()) {
 			displayNotificationWithArtwork("Check for update error:
-No internet connection", './spotify-mini-player/images/warning.png');
+No internet connection", './spotify-mini-player/images/' . $theme . '/' . 'warning.png');
 			return;
 		}
 
@@ -2796,7 +2796,7 @@ function doWebApiRequest($w, $url) {
 	$json = $w->request($url);
 
 	if (empty($json)) {
-		$w->result(null, '', "Error: Spotify WEB API returned empty result", $url, './spotify-mini-player/images/warning.png', 'no', null, '');
+		$w->result(null, '', "Error: Spotify WEB API returned empty result", $url, './spotify-mini-player/images/' . $theme . '/' . 'warning.png', 'no', null, '');
 		echo $w->toxml();
 		exit;
 	}
@@ -2804,22 +2804,22 @@ function doWebApiRequest($w, $url) {
 	$json = json_decode($json);
 	switch (json_last_error()) {
 	case JSON_ERROR_DEPTH:
-		$w->result(null, '', "There was an error when retrieving online information", "Maximum stack depth exceeded", './spotify-mini-player/images/warning.png', 'no', null, '');
+		$w->result(null, '', "There was an error when retrieving online information", "Maximum stack depth exceeded", './spotify-mini-player/images/' . $theme . '/' . 'warning.png', 'no', null, '');
 		echo $w->toxml();
 		exit;
 	case JSON_ERROR_CTRL_CHAR:
-		$w->result(null, '', "There was an error when retrieving online information", "Unexpected control character found", './spotify-mini-player/images/warning.png', 'no', null, '');
+		$w->result(null, '', "There was an error when retrieving online information", "Unexpected control character found", './spotify-mini-player/images/' . $theme . '/' . 'warning.png', 'no', null, '');
 		echo $w->toxml();
 		exit;
 	case JSON_ERROR_SYNTAX:
-		$w->result(null, '', "There was an error when retrieving online information", "Syntax error, malformed JSON", './spotify-mini-player/images/warning.png', 'no', null, '');
+		$w->result(null, '', "There was an error when retrieving online information", "Syntax error, malformed JSON", './spotify-mini-player/images/' . $theme . '/' . 'warning.png', 'no', null, '');
 		echo $w->toxml();
 		exit;
 	case JSON_ERROR_NONE:
 		return $json;
 	}
 
-	$w->result(null, '', "Error: Spotify WEB API returned error " . json_last_error(), "Try again or report to author", './spotify-mini-player/images/warning.png', 'no', null, '');
+	$w->result(null, '', "Error: Spotify WEB API returned error " . json_last_error(), "Try again or report to author", './spotify-mini-player/images/' . $theme . '/' . 'warning.png', 'no', null, '');
 	echo $w->toxml();
 	exit;
 }
