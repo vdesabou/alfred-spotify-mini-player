@@ -1,7 +1,7 @@
 <?php
 
-require_once './spotify-mini-player/src/workflows.php';
-require './spotify-mini-player/vendor/autoload.php';
+require_once './src/workflows.php';
+require './vendor/autoload.php';
 
 
 
@@ -14,7 +14,7 @@ require './spotify-mini-player/vendor/autoload.php';
  */
 function playCurrentArtist($w) {
 	// get info on current song
-	$command_output = exec("./spotify-mini-player/src/track_info.sh 2>&1");
+	$command_output = exec("./src/track_info.sh 2>&1");
 
 	//
 	// Read settings from DB
@@ -62,7 +62,7 @@ function playCurrentArtist($w) {
  */
 function playCurrentAlbum($w) {
 	// get info on current song
-	$command_output = exec("./spotify-mini-player/src/track_info.sh 2>&1");
+	$command_output = exec("./src/track_info.sh 2>&1");
 
 	//
 	// Read settings from DB
@@ -144,7 +144,7 @@ function addCurrentTrackToAlfredPlaylistOrMyMusic($w) {
  */
 function addCurrentTrackToAlfredPlaylist($w) {
 	// get info on current song
-	$command_output = exec("./spotify-mini-player/src/track_info.sh 2>&1");
+	$command_output = exec("./src/track_info.sh 2>&1");
 
 	if (substr_count($command_output, '▹') > 0) {
 		$results = explode('▹', $command_output);
@@ -194,7 +194,7 @@ function addCurrentTrackToAlfredPlaylist($w) {
  */
 function addCurrentTrackToMyTracks($w) {
 	// get info on current song
-	$command_output = exec("./spotify-mini-player/src/track_info.sh 2>&1");
+	$command_output = exec("./src/track_info.sh 2>&1");
 
 	//
 	// Read settings from DB
@@ -266,7 +266,7 @@ function getRandomTrack($w) {
 function getSpotifyWebAPI($w) {
 
 	if (! $w->internet()) {
-		displayNotificationWithArtwork("Error: No internet connection", './spotify-mini-player/images/' . $theme . '/' . 'warning.png');
+		displayNotificationWithArtwork("Error: No internet connection", './images/' . $theme . '/' . 'warning.png');
 		return false;
 	}
 
@@ -454,7 +454,7 @@ function clearPlaylist($w, $playlist_uri, $playlist_name) {
  * @return void
  */
 function createRadioArtistPlaylistForCurrentArtist($w) {
-	$command_output = exec("./spotify-mini-player/src/track_info.sh 2>&1");
+	$command_output = exec("./src/track_info.sh 2>&1");
 
 	if (substr_count($command_output, '▹') > 0) {
 		$results = explode('▹', $command_output);
@@ -552,7 +552,7 @@ function createRadioArtistPlaylist($w, $artist_name) {
  * @return void
  */
 function createRadioSongPlaylistForCurrentTrack($w) {
-	$command_output = exec("./spotify-mini-player/src/track_info.sh 2>&1");
+	$command_output = exec("./src/track_info.sh 2>&1");
 
 	if (substr_count($command_output, '▹') > 0) {
 		$results = explode('▹', $command_output);
@@ -1049,7 +1049,7 @@ function checkIfDuplicate($track_ids, $id) {
  * @return void
  */
 function displayNotification($output) {
-	exec('./spotify-mini-player/terminal-notifier.app/Contents/MacOS/terminal-notifier -title "Spotify Mini Player" -sender com.spotify.miniplayer -message "' .  $output . '"');
+	exec('./terminal-notifier.app/Contents/MacOS/terminal-notifier -title "Spotify Mini Player" -sender com.spotify.miniplayer -message "' .  $output . '"');
 }
 
 
@@ -1066,7 +1066,7 @@ function displayNotificationWithArtwork($output, $artwork) {
 		copy($artwork, "/tmp/tmp");
 	}
 
-	exec("./spotify-mini-player/terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'Spotify Mini Player' -sender 'com.spotify.miniplayer' -contentImage '/tmp/tmp' -message '" .  $output . "'");
+	exec("./terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'Spotify Mini Player' -sender 'com.spotify.miniplayer' -contentImage '/tmp/tmp' -message '" .  $output . "'");
 }
 
 /**
@@ -1077,7 +1077,7 @@ function displayNotificationWithArtwork($output, $artwork) {
  * @return void
  */
 function displayNotificationForCurrentTrack($w) {
-	$command_output = exec("./spotify-mini-player/src/track_info.sh 2>&1");
+	$command_output = exec("./src/track_info.sh 2>&1");
 
 	//
 	// Read settings from DB
@@ -1115,7 +1115,7 @@ function displayNotificationForCurrentTrack($w) {
 function displayLyricsForCurrentTrack() {
 	$w = new Workflows('com.vdesabou.spotify.mini.player');
 
-	$command_output = exec("./spotify-mini-player/src/track_info.sh 2>&1");
+	$command_output = exec("./src/track_info.sh 2>&1");
 
 	if (substr_count($command_output, '▹') > 0) {
 		$results = explode('▹', $command_output);
@@ -1136,7 +1136,7 @@ function displayLyricsForCurrentTrack() {
  */
 function displayLyrics($w,$artist,$title) {
 	if (! $w->internet()) {
-		displayNotificationWithArtwork("Error: No internet connection", './spotify-mini-player/images/' . $theme . '/' . 'warning.png');
+		displayNotificationWithArtwork("Error: No internet connection", './images/' . $theme . '/' . 'warning.png');
 		return;
 	}
 	$output = getLyrics($w, $artist, $title);
@@ -1210,26 +1210,26 @@ function getTrackOrAlbumArtwork($w, $theme, $spotifyURL, $fetchIfNotPresent) {
 			}
 		} else {
 			if ($isAlbum) {
-				return "./spotify-mini-player/images/" . $theme . "/albums.png";
+				return "./images/" . $theme . "/albums.png";
 			} else {
-				return "./spotify-mini-player/images/" . $theme . "/tracks.png";
+				return "./images/" . $theme . "/tracks.png";
 			}
 		}
 	} else {
 		if (filesize($currentArtwork) == 0) {
 			if ($isAlbum) {
-				return "./spotify-mini-player/images/" . $theme . "/albums.png";
+				return "./images/" . $theme . "/albums.png";
 			} else {
-				return "./spotify-mini-player/images/" . $theme . "/tracks.png";
+				return "./images/" . $theme . "/tracks.png";
 			}
 		}
 	}
 
 	if (is_numeric($artwork) && $artwork == 0) {
 		if ($isAlbum) {
-			return "./spotify-mini-player/images/" . $theme . "/albums.png";
+			return "./images/" . $theme . "/albums.png";
 		} else {
-			return "./spotify-mini-player/images/" . $theme . "/tracks.png";
+			return "./images/" . $theme . "/tracks.png";
 		}
 	} else {
 		return $currentArtwork;
@@ -1287,16 +1287,16 @@ function getPlaylistArtwork($w, $theme, $playlistURI, $fetchIfNotPresent, $force
 				$w->request("$artwork", $options);
 			}
 		} else {
-			return "./spotify-mini-player/images/" . $theme . "/playlists.png";
+			return "./images/" . $theme . "/playlists.png";
 		}
 	} else {
 		if (filesize($currentArtwork) == 0) {
-			return "./spotify-mini-player/images/" . $theme . "/playlists.png";
+			return "./images/" . $theme . "/playlists.png";
 		}
 	}
 
 	if (is_numeric($artwork) && $artwork == 0) {
-		return "./spotify-mini-player/images/" . $theme . "/playlists.png";
+		return "./images/" . $theme . "/playlists.png";
 	} else {
 		return $currentArtwork;
 	}
@@ -1338,16 +1338,16 @@ function getArtistArtwork($w, $theme, $artist, $fetchIfNotPresent) {
 				$w->request("$artwork", $options);
 			}
 		} else {
-			return "./spotify-mini-player/images/" . $theme . "/artists.png";
+			return "./images/" . $theme . "/artists.png";
 		}
 	} else {
 		if (filesize($currentArtwork) == 0) {
-			return "./spotify-mini-player/images/" . $theme . "/artists.png";
+			return "./images/" . $theme . "/artists.png";
 		}
 	}
 
 	if (is_numeric($artwork) && $artwork == 0) {
-		return "./spotify-mini-player/images/" . $theme . "/artists.png";
+		return "./images/" . $theme . "/artists.png";
 	} else {
 		return $currentArtwork;
 	}
@@ -2619,9 +2619,9 @@ function updateMyMusic($w) {
  */
 function handleDbIssuePdoXml($theme, $dbhandle) {
 	$w = new Workflows('com.vdesabou.spotify.mini.player');
-	$w->result(uniqid(), '', 'Database Error: ' . $dbhandle->errorInfo()[0] . ' ' . $dbhandle->errorInfo()[1] . ' ' . $dbhandle->errorInfo()[2], '', './spotify-mini-player/images/' . $theme . '/' . 'warning.png', 'no', null, '');
-	$w->result(uniqid(), '', 'There is a problem with the library, try to re-create it.', 'Select Re-Create Library library below', './spotify-mini-player/images/' . $theme . '/' . 'warning.png', 'no', null, '');
-	$w->result(uniqid(), serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'update_library' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Re-Create Library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './spotify-mini-player/images/' . $theme . '/' . 'update.png', 'yes', null, '');
+	$w->result(uniqid(), '', 'Database Error: ' . $dbhandle->errorInfo()[0] . ' ' . $dbhandle->errorInfo()[1] . ' ' . $dbhandle->errorInfo()[2], '', './images/' . $theme . '/' . 'warning.png', 'no', null, '');
+	$w->result(uniqid(), '', 'There is a problem with the library, try to re-create it.', 'Select Re-Create Library library below', './images/' . $theme . '/' . 'warning.png', 'no', null, '');
+	$w->result(uniqid(), serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'update_library' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Re-Create Library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', null, '');
 	echo $w->toxml();
 }
 
@@ -2848,7 +2848,7 @@ function checkForUpdate($w, $last_check_update_time, $dbsettings) {
 
 		if (! $w->internet()) {
 			displayNotificationWithArtwork("Check for update error:
-No internet connection", './spotify-mini-player/images/' . $theme . '/' . 'warning.png');
+No internet connection", './images/' . $theme . '/' . 'warning.png');
 			return;
 		}
 
@@ -2913,7 +2913,7 @@ function doWebApiRequest($w, $url) {
 	$json = $w->request($url);
 
 	if (empty($json)) {
-		$w->result(null, '', "Error: Spotify WEB API returned empty result", $url, './spotify-mini-player/images/' . $theme . '/' . 'warning.png', 'no', null, '');
+		$w->result(null, '', "Error: Spotify WEB API returned empty result", $url, './images/' . $theme . '/' . 'warning.png', 'no', null, '');
 		echo $w->toxml();
 		exit;
 	}
@@ -2921,22 +2921,22 @@ function doWebApiRequest($w, $url) {
 	$json = json_decode($json);
 	switch (json_last_error()) {
 	case JSON_ERROR_DEPTH:
-		$w->result(null, '', "There was an error when retrieving online information", "Maximum stack depth exceeded", './spotify-mini-player/images/' . $theme . '/' . 'warning.png', 'no', null, '');
+		$w->result(null, '', "There was an error when retrieving online information", "Maximum stack depth exceeded", './images/' . $theme . '/' . 'warning.png', 'no', null, '');
 		echo $w->toxml();
 		exit;
 	case JSON_ERROR_CTRL_CHAR:
-		$w->result(null, '', "There was an error when retrieving online information", "Unexpected control character found", './spotify-mini-player/images/' . $theme . '/' . 'warning.png', 'no', null, '');
+		$w->result(null, '', "There was an error when retrieving online information", "Unexpected control character found", './images/' . $theme . '/' . 'warning.png', 'no', null, '');
 		echo $w->toxml();
 		exit;
 	case JSON_ERROR_SYNTAX:
-		$w->result(null, '', "There was an error when retrieving online information", "Syntax error, malformed JSON", './spotify-mini-player/images/' . $theme . '/' . 'warning.png', 'no', null, '');
+		$w->result(null, '', "There was an error when retrieving online information", "Syntax error, malformed JSON", './images/' . $theme . '/' . 'warning.png', 'no', null, '');
 		echo $w->toxml();
 		exit;
 	case JSON_ERROR_NONE:
 		return $json;
 	}
 
-	$w->result(null, '', "Error: Spotify WEB API returned error " . json_last_error(), "Try again or report to author", './spotify-mini-player/images/' . $theme . '/' . 'warning.png', 'no', null, '');
+	$w->result(null, '', "Error: Spotify WEB API returned error " . json_last_error(), "Try again or report to author", './images/' . $theme . '/' . 'warning.png', 'no', null, '');
 	echo $w->toxml();
 	exit;
 }

@@ -3,11 +3,11 @@
 // Turn off all error reporting
 //error_reporting(0);
 
-require './spotify-mini-player/src/functions.php';
-require_once './spotify-mini-player/vendor/phprtflite/phprtflite/lib/PHPRtfLite.php';
+require './src/functions.php';
+require_once './vendor/phprtflite/phprtflite/lib/PHPRtfLite.php';
 
 // Load and use David Ferguson's Workflows.php class
-require_once './spotify-mini-player/src/workflows.php';
+require_once './src/workflows.php';
 $w = new Workflows('com.vdesabou.spotify.mini.player');
 
 $query = $argv[1];
@@ -424,67 +424,67 @@ if ($spotify_command != "" && $type == "TRACK" && $add_to_option == "") {
 			$setSettings = "update settings set all_playlists=0";
 			$dbfile = $w->data() . "/settings.db";
 			exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-			displayNotificationWithArtwork("Search scope set to your music", './spotify-mini-player/images/' . $theme . '/' . 'search.png');
+			displayNotificationWithArtwork("Search scope set to your music", './images/' . $theme . '/' . 'search.png');
 			return;
 		} else if ($other_action == "enable_all_playlist") {
 			$setSettings = "update settings set all_playlists=1";
 			$dbfile = $w->data() . "/settings.db";
 			exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-			displayNotificationWithArtwork("Search scope set to all playlists", './spotify-mini-player/images/' . $theme . '/' . 'search.png');
+			displayNotificationWithArtwork("Search scope set to all playlists", './images/' . $theme . '/' . 'search.png');
 			return;
 		} else if ($other_action == "enable_spotifiuous") {
 			$setSettings = "update settings set is_spotifious_active=1";
 			$dbfile = $w->data() . "/settings.db";
 			exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-			displayNotificationWithArtwork("Spotifious is now enabled", './spotify-mini-player/images/' . $theme . '/' . 'check.png');
+			displayNotificationWithArtwork("Spotifious is now enabled", './images/' . $theme . '/' . 'check.png');
 			return;
 		} else if ($other_action == "disable_spotifiuous") {
 			$setSettings = "update settings set is_spotifious_active=0";
 			$dbfile = $w->data() . "/settings.db";
 			exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-			displayNotificationWithArtwork("Spotifious is now disabled", './spotify-mini-player/images/' . $theme . '/' . 'uncheck.png');
+			displayNotificationWithArtwork("Spotifious is now disabled", './images/' . $theme . '/' . 'uncheck.png');
 			return;
 		} else if ($other_action == "set_theme_to_black") {
 			$setSettings = "update settings set theme='black'";
 			$dbfile = $w->data() . "/settings.db";
 			exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-			displayNotificationWithArtwork("Theme set to black", './spotify-mini-player/images/' . 'black' . '/' . 'check.png');
+			displayNotificationWithArtwork("Theme set to black", './images/' . 'black' . '/' . 'check.png');
 			return;
 		} else if ($other_action == "set_theme_to_green") {
 			$setSettings = "update settings set theme='green'";
 			$dbfile = $w->data() . "/settings.db";
 			exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-			displayNotificationWithArtwork("Theme set to green", './spotify-mini-player/images/' . 'green' . '/' . 'check.png');
+			displayNotificationWithArtwork("Theme set to green", './images/' . 'green' . '/' . 'check.png');
 			return;
 		} else if ($other_action == "set_theme_to_gray") {
 			$setSettings = "update settings set theme='gray'";
 			$dbfile = $w->data() . "/settings.db";
 			exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-			displayNotificationWithArtwork("Theme set to gray", './spotify-mini-player/images/' . 'gray' . '/' . 'check.png');
+			displayNotificationWithArtwork("Theme set to gray", './images/' . 'gray' . '/' . 'check.png');
 			return;
 		} else if ($other_action == "enable_lyrics") {
 			$setSettings = "update settings set is_lyrics_active=1";
 			$dbfile = $w->data() . "/settings.db";
 			exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-			displayNotificationWithArtwork("Get Lyrics is now enabled", './spotify-mini-player/images/' . $theme . '/' . 'check.png');
+			displayNotificationWithArtwork("Get Lyrics is now enabled", './images/' . $theme . '/' . 'check.png');
 			return;
 		} else if ($other_action == "disable_lyrics") {
 			$setSettings = "update settings set is_lyrics_active=0";
 			$dbfile = $w->data() . "/settings.db";
 			exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-			displayNotificationWithArtwork("Get Lyrics is now disabled", './spotify-mini-player/images/' . $theme . '/' . 'uncheck.png');
+			displayNotificationWithArtwork("Get Lyrics is now disabled", './images/' . $theme . '/' . 'uncheck.png');
 			return;
 		} else if ($other_action == "enable_alfred_playlist") {
 			$setSettings = "update settings set is_alfred_playlist_active=1";
 			$dbfile = $w->data() . "/settings.db";
 			exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-			displayNotificationWithArtwork("Alfred Playlist is now enabled", './spotify-mini-player/images/' . $theme . '/' . 'check.png');
+			displayNotificationWithArtwork("Alfred Playlist is now enabled", './images/' . $theme . '/' . 'check.png');
 			return;
 		} else if ($other_action == "disable_alfred_playlist") {
 			$setSettings = "update settings set is_alfred_playlist_active=0";
 			$dbfile = $w->data() . "/settings.db";
 			exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-			displayNotificationWithArtwork("Alfred Playlist is now disabled", './spotify-mini-player/images/' . $theme . '/' . 'uncheck.png');
+			displayNotificationWithArtwork("Alfred Playlist is now disabled", './images/' . $theme . '/' . 'uncheck.png');
 			return;
 		} else if ($other_action == "play") {
 			exec("osascript -e 'tell application \"Spotify\" to play'");
@@ -516,7 +516,7 @@ if ($spotify_command != "" && $type == "TRACK" && $add_to_option == "") {
 				return;
 		} else if ($other_action == "check_for_update") {
 			if (! $w->internet()) {
-				displayNotificationWithArtwork("Error: No internet connection", './spotify-mini-player/images/' . $theme . '/' . 'warning.png');
+				displayNotificationWithArtwork("Error: No internet connection", './images/' . $theme . '/' . 'warning.png');
 				return;
 			}
 
@@ -532,10 +532,10 @@ if ($spotify_command != "" && $type == "TRACK" && $add_to_option == "") {
 			}
 			$check_results = checkForUpdate($w, 0, $dbsettings);
 			if ($check_results != null && is_array($check_results)) {
-				displayNotificationWithArtwork('New version ' . $check_results[0] . ' is available in Downloads directory ', './spotify-mini-player/images/' . $theme . '/' . 'check_update.png');
+				displayNotificationWithArtwork('New version ' . $check_results[0] . ' is available in Downloads directory ', './images/' . $theme . '/' . 'check_update.png');
 			}
 			else if ($check_results == null) {
-					displayNotificationWithArtwork('No update available', './spotify-mini-player/images/' . $theme . '/' . 'check_update.png');
+					displayNotificationWithArtwork('No update available', './images/' . $theme . '/' . 'check_update.png');
 				}
 			return;
 		} else if ($other_action == "current") {
@@ -628,7 +628,7 @@ if ($spotify_command != "" && $type == "TRACK" && $add_to_option == "") {
 		} else if ($other_action == "morefromthisartist") {
 
 			if (! $w->internet()) {
-				displayNotificationWithArtwork("Error: No internet connection", './spotify-mini-player/images/' . $theme . '/' . 'warning.png');
+				displayNotificationWithArtwork("Error: No internet connection", './images/' . $theme . '/' . 'warning.png');
 				return;
 			}
 			if ($artist_uri == "") {
