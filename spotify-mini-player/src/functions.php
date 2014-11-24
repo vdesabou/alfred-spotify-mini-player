@@ -24,7 +24,7 @@ function playCurrentArtist($w) {
 	exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
 
 	if ($returnValue != 0) {
-		displayNotification("Error: Alfred Playlist is not set");
+		displayNotification("Error: cannot read settings");
 		return;
 	}
 
@@ -46,12 +46,62 @@ function playCurrentArtist($w) {
 			return;
 		}
 		exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
-		displayNotificationWithArtwork('🔈 Artist ' . $results[1] , getArtistArtwork($w, $theme, $results[1], true));
+		displayNotificationWithArtwork('🔈 Artist ' . escapeQuery($results[1]) , getArtistArtwork($w, $theme, $results[1], true));
 	}
 	else {
 		displayNotification("Error: No track is playing");
 	}
 }
+
+/**
+ * playCurrentAlbum function.
+ *
+ * @access public
+ * @param mixed $w
+ * @return void
+ */
+function playCurrentAlbum($w) {
+	// get info on current song
+	$command_output = exec("./spotify-mini-player/src/track_info.sh 2>&1");
+
+	//
+	// Read settings from DB
+	//
+	$getSettings = 'select theme from settings';
+	$dbfile = $w->data() . '/settings.db';
+	exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
+
+	if ($returnValue != 0) {
+		displayNotification("Error: cannot read settings");
+		return;
+	}
+
+	foreach ($settings as $setting):
+
+		$setting = explode("	", $setting);
+
+	$theme = $setting[0];
+	endforeach;
+
+	if (substr_count($command_output, '▹') > 0) {
+		$results = explode('▹', $command_output);
+
+		$tmp = explode(':', $results[4]);
+
+		$album_uri = getAlbumUriFromTrack($w, $results[4]);
+		if ($album_uri == false) {
+			displayNotification("Error: cannot get current album");
+			return;
+		}
+		exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
+		displayNotificationWithArtwork('🔈 Album ' . escapeQuery($results[2]), getTrackOrAlbumArtwork($w, $theme, $results[4], true));
+	}
+	else {
+		displayNotification("Error: No track is playing");
+	}
+}
+
+
 /**
  * addCurrentTrackToAlfredPlaylistOrMyMusic function.
  *
@@ -1029,9 +1079,28 @@ function displayNotificationWithArtwork($output, $artwork) {
 function displayNotificationForCurrentTrack($w) {
 	$command_output = exec("./spotify-mini-player/src/track_info.sh 2>&1");
 
+	//
+	// Read settings from DB
+	//
+	$getSettings = 'select theme from settings';
+	$dbfile = $w->data() . '/settings.db';
+	exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
+
+	if ($returnValue != 0) {
+		displayNotification("Error: cannot read settings");
+		return;
+	}
+
+	foreach ($settings as $setting):
+
+		$setting = explode("	", $setting);
+
+	$theme = $setting[0];
+	endforeach;
+
 	if (substr_count($command_output, '▹') > 0) {
 		$results = explode('▹', $command_output);
-		displayNotificationWithArtwork('🔈 ' . escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]), getTrackOrAlbumArtwork($w, 'new', $results[4], true));
+		displayNotificationWithArtwork('🔈 ' . escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]), getTrackOrAlbumArtwork($w, $theme, $results[4], true));
 	} else {
 		displayNotification("Error: cannot get current track");
 	}

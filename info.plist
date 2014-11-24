@@ -175,6 +175,17 @@
 				<string></string>
 			</dict>
 		</array>
+		<key>2FC567E2-E6C5-4A91-B42E-1996532B78C9</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>23412027-872A-4639-A9D9-DCFD8D8FF36D</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 		<key>3040749D-6B5C-4CCD-AF95-AEC0F83B48D9</key>
 		<array>
 			<dict>
@@ -564,6 +575,17 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>2DBC505C-4788-4F45-BD15-2DCED7844A60</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>B77F5F98-C065-49A4-BBB1-68ADADDD8E7D</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>23412027-872A-4639-A9D9-DCFD8D8FF36D</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -2772,6 +2794,65 @@ php -f ./spotify-mini-player/src/action.php -- "{query}" "PLAY_CURRENT_ARTIST" "
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>echo "===== PLAY_CURRENT_ALBUM ========" &gt;&gt; "$alfred_workflow_cache/action.log"
+echo "`date` {query}" &gt;&gt; "$alfred_workflow_cache/action.log"
+php -f ./spotify-mini-player/src/action.php -- "{query}" "PLAY_CURRENT_ALBUM" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>23412027-872A-4639-A9D9-DCFD8D8FF36D</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>play_album</string>
+				<key>subtext</key>
+				<string>Play the current album</string>
+				<key>text</key>
+				<string>Play current album</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>B77F5F98-C065-49A4-BBB1-68ADADDD8E7D</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string></string>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>triggerid</key>
+				<string>com.vdesabou.miniplayer.playalbum</string>
+				<key>triggername</key>
+				<string>Play Album</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.remote</string>
+			<key>uid</key>
+			<string>2FC567E2-E6C5-4A91-B42E-1996532B78C9</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string>Github page:
@@ -2865,6 +2946,11 @@ SOFTWARE.</string>
 			<key>ypos</key>
 			<real>2160</real>
 		</dict>
+		<key>23412027-872A-4639-A9D9-DCFD8D8FF36D</key>
+		<dict>
+			<key>ypos</key>
+			<real>5350</real>
+		</dict>
 		<key>24B8C827-75F2-4421-A412-D48782DA1DB8</key>
 		<dict>
 			<key>ypos</key>
@@ -2899,6 +2985,11 @@ SOFTWARE.</string>
 		<dict>
 			<key>ypos</key>
 			<real>4420</real>
+		</dict>
+		<key>2FC567E2-E6C5-4A91-B42E-1996532B78C9</key>
+		<dict>
+			<key>ypos</key>
+			<real>5430</real>
 		</dict>
 		<key>3040749D-6B5C-4CCD-AF95-AEC0F83B48D9</key>
 		<dict>
@@ -3124,6 +3215,11 @@ SOFTWARE.</string>
 		<dict>
 			<key>ypos</key>
 			<real>4420</real>
+		</dict>
+		<key>B77F5F98-C065-49A4-BBB1-68ADADDD8E7D</key>
+		<dict>
+			<key>ypos</key>
+			<real>5350</real>
 		</dict>
 		<key>BC488027-E76B-43A7-B414-C7FAA9CF9995</key>
 		<dict>

@@ -175,6 +175,9 @@ if ($spotify_command != "" && $type == "TRACK" && $add_to_option == "") {
 	}else if ($type == "PLAY_CURRENT_ARTIST") {
 		playCurrentArtist($w);
 		return;
+	}else if ($type == "PLAY_CURRENT_ALBUM") {
+		playCurrentAlbum($w);
+		return;
 	}
 	else if ($type == "KILL_UPDATE") {
 		killUpdate($w);
@@ -502,7 +505,10 @@ if ($spotify_command != "" && $type == "TRACK" && $add_to_option == "") {
 		} else if ($other_action == "play_current_artist") {
 			playCurrentArtist($w);
 			return;
-		} else if ($other_action == "Oauth_Login") {
+		} else if ($other_action == "play_current_album") {
+			playCurrentAlbum($w);
+			return;
+		}else if ($other_action == "Oauth_Login") {
 			$cache_log=$w->cache() . '/spotify_mini_player_web_server.log';
 			exec("php -S localhost:15298 > \"$cache_log\" 2>&1 &");
 			sleep(2);
