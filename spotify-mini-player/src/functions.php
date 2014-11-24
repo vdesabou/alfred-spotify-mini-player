@@ -4,6 +4,54 @@ require_once './spotify-mini-player/src/workflows.php';
 require './spotify-mini-player/vendor/autoload.php';
 
 
+
+/**
+ * playCurrentArtist function.
+ *
+ * @access public
+ * @param mixed $w
+ * @return void
+ */
+function playCurrentArtist($w) {
+	// get info on current song
+	$command_output = exec("./spotify-mini-player/src/track_info.sh 2>&1");
+
+	//
+	// Read settings from DB
+	//
+	$getSettings = 'select theme from settings';
+	$dbfile = $w->data() . '/settings.db';
+	exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
+
+	if ($returnValue != 0) {
+		displayNotification("Error: Alfred Playlist is not set");
+		return;
+	}
+
+	foreach ($settings as $setting):
+
+		$setting = explode("	", $setting);
+
+	$theme = $setting[0];
+	endforeach;
+
+	if (substr_count($command_output, '▹') > 0) {
+		$results = explode('▹', $command_output);
+
+		$tmp = explode(':', $results[4]);
+
+		$artist_uri = getArtistUriFromTrack($w, $results[4]);
+		if ($artist_uri == false) {
+			displayNotification("Error: cannot get current artist");
+			return;
+		}
+		exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
+		displayNotificationWithArtwork('🔈 Artist ' . $results[1] , getArtistArtwork($w, $theme, $results[1], true));
+	}
+	else {
+		displayNotification("Error: No track is playing");
+	}
+}
 /**
  * addCurrentTrackToAlfredPlaylistOrMyMusic function.
  *

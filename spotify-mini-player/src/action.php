@@ -172,7 +172,11 @@ if ($spotify_command != "" && $type == "TRACK" && $add_to_option == "") {
 	}else if ($type == "CURRENT_TRACK_RADIO") {
 		createRadioSongPlaylistForCurrentTrack($w);
 		return;
-	}else if ($type == "KILL_UPDATE") {
+	}else if ($type == "PLAY_CURRENT_ARTIST") {
+		playCurrentArtist($w);
+		return;
+	}
+	else if ($type == "KILL_UPDATE") {
 		killUpdate($w);
 		return;
 	}else if ($type == "NEXT") {
@@ -494,6 +498,9 @@ if ($spotify_command != "" && $type == "TRACK" && $add_to_option == "") {
 			return;
 		} else if ($other_action == "current_track_radio") {
 			createRadioSongPlaylistForCurrentTrack($w);
+			return;
+		} else if ($other_action == "play_current_artist") {
+			playCurrentArtist($w);
 			return;
 		} else if ($other_action == "Oauth_Login") {
 			$cache_log=$w->cache() . '/spotify_mini_player_web_server.log';
