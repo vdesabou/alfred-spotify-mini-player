@@ -1,11 +1,4 @@
-output.log
-*.log
-
-packal/package.xml
-packal/com.vdesabou.spotify.mini.player.pub
-
-src/test.php
-
-composer.lock
-
-composer.phar
+spotify-mini-player/packal/package.xml
+spotify-mini-player/packal/com.vdesabou.spotify.mini.player.pub
+spotify-mini-player/composer.lock
+spotify-mini-player/composer.phar
