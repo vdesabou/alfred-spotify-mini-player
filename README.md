@@ -27,7 +27,7 @@ You can also control Spotify using keywords such as play/next/volmax/random/shuf
 * Create Artist or Song playlists from the workflow
 * Get featured playlists from Spotify in your country, US and UK
 * Display current track lyrics
-* Three themes available: black, green and new theme from Spotify
+* Three themes available: black, gray and green
 * Auto-Updater: it checks once per day and download automatically the new version
 * Direct call to [Spotifious](http://www.alfredforum.com/topic/1644-spotifious-a-natural-spotify-controller-for-alfred) workflow
 
