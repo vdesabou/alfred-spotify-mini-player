@@ -297,7 +297,7 @@ if (mb_strlen($query) < 3 ||
 			$w->result(null, '', 'Search for music in "Your Music" only', 'Begin typing at least 3 characters to start search in your ' . $mymusic_tracks . ' tracks', './images/' . $theme . '/' . 'search.png', 'no', null, '');
 		}
 
-		$w->result(null, '', '🔈 Current Track', 'Display current track information and browse various options', './images/' . $theme . '/' . 'volmax.png', 'no', null, 'Current Track▹');
+		$w->result(null, '', '🔈 Current Track', 'Display current track information and browse various options', './images/' . $theme . '/' . 'current_track.png', 'no', null, 'Current Track▹');
 
 
 		if ($is_alfred_playlist_active == true) {
