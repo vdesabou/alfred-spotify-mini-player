@@ -101,7 +101,7 @@ if (!file_exists($w->data() . '/settings.db')) {
 		$dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 		$dbsettings->exec("create table settings (all_playlists boolean, is_spotifious_active boolean, is_alfred_playlist_active boolean, radio_number_tracks int, is_lyrics_active boolean, max_results int, alfred_playlist_uri text, alfred_playlist_name text, country_code text, theme text, last_check_update_time int, oauth_client_id text,oauth_client_secret text,oauth_redirect_uri text,oauth_access_token text,oauth_expires int,oauth_refresh_token text,display_name text,userid text, echonest_api_key text)");
-		$dbsettings->exec("insert into settings values (1,0,1,30,1,50,\"\",\"\",\"\",\"black\",0,\"\",\"\",\"http://localhost:15298/callback.php\",\"\",0,\"\",\"\",\"\",\"5EG94BIZEGFEY9AL9\")");
+		$dbsettings->exec("insert into settings values (1,0,1,30,1,50,\"\",\"\",\"\",\"gray\",0,\"\",\"\",\"http://localhost:15298/callback.php\",\"\",0,\"\",\"\",\"\",\"5EG94BIZEGFEY9AL9\")");
 
 		$dbsettings->query("PRAGMA synchronous = OFF");
 		$dbsettings->query("PRAGMA journal_mode = OFF");
@@ -367,7 +367,7 @@ if (mb_strlen($query) < 3 ||
 		}
 		$w->result(null, '', "Configure Max Number of Results", "Number of results displayed. (it doesn't apply to your playlist list)", './spotify-mini-player/images/' . $theme . '/' . 'numbers.png', 'no', null, 'Settings▹MaxResults▹');
 		$w->result(null, '', "Configure Number of Radio tracks", "Number of tracks to get when creating a Radio Playlist.", './spotify-mini-player/images/' . $theme . '/' . 'numbers.png', 'no', null, 'Settings▹RadioTracks▹');
-		$w->result(null, '', "Configure the Theme", "Current available colors for icons: green or black, or new design", './spotify-mini-player/images/' . $theme . '/' . 'settings.png', 'no', null, 'Settings▹Theme▹');
+		$w->result(null, '', "Configure the Theme", "Current available colors for icons: gray, green or black", './spotify-mini-player/images/' . $theme . '/' . 'settings.png', 'no', null, 'Settings▹Theme▹');
 
 		if ($is_spotifious_active == true) {
 			$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'disable_spotifiuous' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Disable Spotifious", array(
@@ -1686,7 +1686,7 @@ if (mb_strlen($query) < 3 ||
 						'shift' => 'Not Available',
 						'fn' => 'Not Available',
 						'ctrl' => 'Not Available'), 'fileicon:/Applications/Spotify.app', 'yes', null, '');
-	
+
 				if ($is_spotifious_active == true) {
 					$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , $thetrack /* query */ , '' /* other_settings*/ , '' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $thetrack . " with Spotifious", array(
 							'Spotifious workflow must be installed and script filter set with <spotifious>',
@@ -1695,7 +1695,7 @@ if (mb_strlen($query) < 3 ||
 							'shift' => 'Not Available',
 							'fn' => 'Not Available',
 							'ctrl' => 'Not Available'), './spotify-mini-player/images/spotifious.png', 'yes', null, '');
-				}				
+				}
 			}
 		} // end of Your Music▹Tracks▹
 		elseif ($kind == "Your Music" && $words[1] == "Albums") {
@@ -1814,7 +1814,7 @@ if (mb_strlen($query) < 3 ||
 
 					$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'set_theme_to_green' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Set theme to Green", "will set icons to green color", './spotify-mini-player/images/' . 'green' . '/' . 'settings.png', 'yes', null, '');
 
-					$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'set_theme_to_new' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Set theme to New Design", "will set icons to new design", './spotify-mini-player/images/' . 'new' . '/' . 'settings.png', 'yes', null, '');
+					$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'set_theme_to_gray' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Set theme to Gray", "will set icons to gray color", './spotify-mini-player/images/' . 'gray' . '/' . 'settings.png', 'yes', null, '');
 
 				}
 		} // end of Settings

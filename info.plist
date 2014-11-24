@@ -1853,7 +1853,7 @@ php -f ./spotify-mini-player/src/action.php -- "{query}" "ADD_CURRENT_TRACK" "AD
 				<key>triggerid</key>
 				<string>com.vdesabou.miniplayer.addcurrenttrack</string>
 				<key>triggername</key>
-				<string>Add track to Alfred Playlist or Your Music</string>
+				<string>Add track</string>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>

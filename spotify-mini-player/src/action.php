@@ -449,11 +449,11 @@ if ($spotify_command != "" && $type == "TRACK" && $add_to_option == "") {
 			exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 			displayNotificationWithArtwork("Theme set to green", './spotify-mini-player/images/' . 'green' . '/' . 'check.png');
 			return;
-		} else if ($other_action == "set_theme_to_new") {
-			$setSettings = "update settings set theme='new'";
+		} else if ($other_action == "set_theme_to_gray") {
+			$setSettings = "update settings set theme='gray'";
 			$dbfile = $w->data() . "/settings.db";
 			exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-			displayNotificationWithArtwork("Theme set to new", './spotify-mini-player/images/' . 'new' . '/' . 'check.png');
+			displayNotificationWithArtwork("Theme set to gray", './spotify-mini-player/images/' . 'gray' . '/' . 'check.png');
 			return;
 		} else if ($other_action == "enable_lyrics") {
 			$setSettings = "update settings set is_lyrics_active=1";
