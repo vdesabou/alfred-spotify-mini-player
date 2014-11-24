@@ -114,7 +114,7 @@ if (!file_exists($w->data() . '/settings.db')) {
 
 		$stmt = $dbsettings->prepare($getSettings);
 
-		$w->result(null, '', 'Settings have been reset to default values', 'Please invoke again the workflow now to enjoy the Spotify Mini Player', './images/' . $theme . '/' . 'warning.png', 'no', null, '');
+		$w->result(null, '', 'Settings have been reset to default values', 'Please invoke again the workflow now to enjoy the Spotify Mini Player', './images/' . 'gray' . '/' . 'warning.png', 'no', null, '');
 		echo $w->toxml();
 		return;
 
