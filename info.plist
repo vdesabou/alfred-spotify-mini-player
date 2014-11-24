@@ -289,6 +289,28 @@
 		<array/>
 		<key>5F5E8A6D-8707-41FC-B5D1-660CD11685F0</key>
 		<array/>
+		<key>66A0F734-983C-420D-B6E4-F21922513E4B</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>1A29820A-69D9-458F-9285-76901C21D7F4</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>66AE01C5-E034-40D2-9CEE-69A063016B4A</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>23412027-872A-4639-A9D9-DCFD8D8FF36D</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 		<key>66F8A022-163E-42CB-A9E9-B32E8158ACA7</key>
 		<array>
 			<dict>
@@ -2797,6 +2819,31 @@ php -f ./spotify-mini-player/src/action.php -- "{query}" "PLAY_CURRENT_ARTIST" "
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>0</integer>
+				<key>hotkey</key>
+				<integer>0</integer>
+				<key>hotmod</key>
+				<integer>0</integer>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>0</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>66A0F734-983C-420D-B6E4-F21922513E4B</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
@@ -2853,6 +2900,31 @@ php -f ./spotify-mini-player/src/action.php -- "{query}" "PLAY_CURRENT_ALBUM" ""
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>0</integer>
+				<key>hotkey</key>
+				<integer>0</integer>
+				<key>hotmod</key>
+				<integer>0</integer>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>0</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>66AE01C5-E034-40D2-9CEE-69A063016B4A</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string>Github page:
@@ -2899,7 +2971,7 @@ SOFTWARE.</string>
 		<key>0B75CF43-8B04-405F-86C3-2FFC59AC4A70</key>
 		<dict>
 			<key>ypos</key>
-			<real>5150</real>
+			<real>5140</real>
 		</dict>
 		<key>0C74516A-D95D-4379-94B6-CD984A31A003</key>
 		<dict>
@@ -2929,7 +3001,7 @@ SOFTWARE.</string>
 		<key>1A29820A-69D9-458F-9285-76901C21D7F4</key>
 		<dict>
 			<key>ypos</key>
-			<real>5150</real>
+			<real>5140</real>
 		</dict>
 		<key>1A88766E-BF4A-48F5-9BD4-D3538634422F</key>
 		<dict>
@@ -2989,7 +3061,7 @@ SOFTWARE.</string>
 		<key>2FC567E2-E6C5-4A91-B42E-1996532B78C9</key>
 		<dict>
 			<key>ypos</key>
-			<real>5430</real>
+			<real>5410</real>
 		</dict>
 		<key>3040749D-6B5C-4CCD-AF95-AEC0F83B48D9</key>
 		<dict>
@@ -3055,6 +3127,16 @@ SOFTWARE.</string>
 		<dict>
 			<key>ypos</key>
 			<real>3260</real>
+		</dict>
+		<key>66A0F734-983C-420D-B6E4-F21922513E4B</key>
+		<dict>
+			<key>ypos</key>
+			<real>5290</real>
+		</dict>
+		<key>66AE01C5-E034-40D2-9CEE-69A063016B4A</key>
+		<dict>
+			<key>ypos</key>
+			<real>5520</real>
 		</dict>
 		<key>66F8A022-163E-42CB-A9E9-B32E8158ACA7</key>
 		<dict>
@@ -3149,7 +3231,7 @@ SOFTWARE.</string>
 		<key>9661EF24-91C3-44A1-9066-8E9B9817841D</key>
 		<dict>
 			<key>ypos</key>
-			<real>5240</real>
+			<real>5190</real>
 		</dict>
 		<key>96995CA4-6C03-4DB7-9E8E-95AEECA4CEB5</key>
 		<dict>
