@@ -458,6 +458,17 @@
 		</array>
 		<key>8DF18F9A-B3A5-4B14-8360-AD850CF5C143</key>
 		<array/>
+		<key>8F478980-199B-45B5-AD41-EBA185446705</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>899AC4D2-88FA-474F-A075-AFA12F361E2B</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 		<key>8F8CF9CC-2B4D-4F8E-A211-C32DD49E84F4</key>
 		<array>
 			<dict>
@@ -1230,6 +1241,25 @@ php -f ./src/action.php -- "{query}" "ONLINE" "" &gt;&gt; "$alfred_workflow_cach
 			<string>alfred.workflow.trigger.remote</string>
 			<key>uid</key>
 			<string>3040749D-6B5C-4CCD-AF95-AEC0F83B48D9</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string></string>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>triggerid</key>
+				<string>com.vdesabou.miniplayer.issue</string>
+				<key>triggername</key>
+				<string>Report Issue</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.remote</string>
+			<key>uid</key>
+			<string>8F478980-199B-45B5-AD41-EBA185446705</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -3222,6 +3252,11 @@ SOFTWARE.</string>
 		<dict>
 			<key>ypos</key>
 			<real>110</real>
+		</dict>
+		<key>8F478980-199B-45B5-AD41-EBA185446705</key>
+		<dict>
+			<key>ypos</key>
+			<real>1100</real>
 		</dict>
 		<key>8F8CF9CC-2B4D-4F8E-A211-C32DD49E84F4</key>
 		<dict>
