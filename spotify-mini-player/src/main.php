@@ -326,6 +326,8 @@ if (mb_strlen($query) < 3 ||
 			$w->result(null, '', 'Albums in "Your Music"', 'Browse by album' . ' (' . $mymusic_albums . ' albums)', './images/' . $theme . '/' . 'albums.png', 'no', null, 'Album▹');
 		}
 
+		$w->result(null, '', 'Charts', 'Browse charts', './images/' . $theme . '/' . 'star.png', 'no', null, 'Charts▹');
+
 		if ($is_spotifious_active == true) {
 			$spotifious_state = 'enabled';
 		} else {
@@ -445,20 +447,22 @@ if (mb_strlen($query) < 3 ||
 		if (strpos(strtolower('playlists'), strtolower($query)) !== false) {
 			$w->result(null, '', 'Playlists', 'Browse by playlist', './images/' . $theme . '/' . 'playlists.png', 'no', null, 'Playlist▹');
 		} else if (strpos(strtolower('albums'), strtolower($query)) !== false) {
-				$w->result(null, '', 'Albums', 'Browse by album', './images/' . $theme . '/' . 'albums.png', 'no', null, 'Album▹');
-			} else if (strpos(strtolower('artists'), strtolower($query)) !== false) {
-				$w->result(null, '', 'Artists', 'Browse by artist', './images/' . $theme . '/' . 'artists.png', 'no', null, 'Artist▹');
-			} else if (strpos(strtolower('alfred'), strtolower($query)) !== false) {
-				$w->result(null, '', 'Alfred Playlist (currently set to <' . $alfred_playlist_name . '>)' , 'Choose one of your playlists and add tracks, album, playlist to it directly from the workflow', './images/' . $theme . '/' . 'alfred_playlist.png', 'no', null, 'Alfred Playlist▹');
-			} else if (strpos(strtolower('settings'), strtolower($query)) !== false) {
-				$w->result(null, '', 'Settings', 'Go to settings', './images/' . $theme . '/' . 'settings.png', 'no', null, 'Settings▹');
-			} else if (strpos(strtolower('featured'), strtolower($query)) !== false) {
-				$w->result(null, '', 'Featured Playlist', 'Browse the current featured playlists', './images/' . $theme . '/' . 'star.png', 'no', null, 'Featured Playlist▹');
-			} else if (strpos(strtolower('yourmusic'), strtolower($query)) !== false) {
-				$w->result(null, '', 'Your Music', 'Browse Your Music', './images/' . $theme . '/' . 'tracks.png', 'no', null, 'Your Music▹');
-			} else if (strpos(strtolower('current track'), strtolower($query)) !== false) {
-				$w->result(null, '', 'Current Track', 'Display current track information and browse various options', './images/' . $theme . '/' . 'tracks.png', 'no', null, 'Current Track▹');
-			}
+			$w->result(null, '', 'Albums', 'Browse by album', './images/' . $theme . '/' . 'albums.png', 'no', null, 'Album▹');
+		} else if (strpos(strtolower('charts'), strtolower($query)) !== false) {
+			$w->result(null, '', 'Charts', 'Browse charts', './images/' . $theme . '/' . 'star.png', 'no', null, 'Charts▹');
+		} else if (strpos(strtolower('artists'), strtolower($query)) !== false) {
+			$w->result(null, '', 'Artists', 'Browse by artist', './images/' . $theme . '/' . 'artists.png', 'no', null, 'Artist▹');
+		} else if (strpos(strtolower('alfred'), strtolower($query)) !== false) {
+			$w->result(null, '', 'Alfred Playlist (currently set to <' . $alfred_playlist_name . '>)' , 'Choose one of your playlists and add tracks, album, playlist to it directly from the workflow', './images/' . $theme . '/' . 'alfred_playlist.png', 'no', null, 'Alfred Playlist▹');
+		} else if (strpos(strtolower('settings'), strtolower($query)) !== false) {
+			$w->result(null, '', 'Settings', 'Go to settings', './images/' . $theme . '/' . 'settings.png', 'no', null, 'Settings▹');
+		} else if (strpos(strtolower('featured'), strtolower($query)) !== false) {
+			$w->result(null, '', 'Featured Playlist', 'Browse the current featured playlists', './images/' . $theme . '/' . 'star.png', 'no', null, 'Featured Playlist▹');
+		} else if (strpos(strtolower('yourmusic'), strtolower($query)) !== false) {
+			$w->result(null, '', 'Your Music', 'Browse Your Music', './images/' . $theme . '/' . 'tracks.png', 'no', null, 'Your Music▹');
+		} else if (strpos(strtolower('current track'), strtolower($query)) !== false) {
+			$w->result(null, '', 'Current Track', 'Display current track information and browse various options', './images/' . $theme . '/' . 'tracks.png', 'no', null, 'Current Track▹');
+		}
 
 
 		//
@@ -842,6 +846,29 @@ if (mb_strlen($query) < 3 ||
 			}
 
 		} // Featured Playlist end
+		elseif ($kind == "Charts") {
+
+			if($country_code == 'FR') {
+				$country_flag = '🇫🇷';
+				$country_name = 'France';
+			} elseif($country_code == 'IT') {
+				$country_flag = '🇮🇹';
+				$country_name = 'Italy';
+			} else {
+				$country_flag = $country_code;
+				$country_name = $country_code;
+			}
+			$w->result(null, '', $country_flag, 'Browse the current charts in ' .  $country_name, './images/' . $theme . '/' . 'star.png', 'no', null, 'Charts▹'.$country_code.'▹');
+
+			if ($country_code != 'US') {
+				$w->result(null, '', '🇺🇸', 'Browse the current charts in US', './images/' . $theme . '/' . 'star.png', 'no', null, 'Charts▹US▹');
+			}
+
+			if ($country_code != 'GB') {
+				$w->result(null, '', '🇬🇧', 'Browse the current charts in UK', './images/' . $theme . '/' . 'star.png', 'no', null, 'Charts▹GB▹');
+			}
+
+		} // Charts end
 		elseif ($kind == "Current Track") {
 			// get info on current song
 			$command_output = exec("./src/track_info.sh 2>&1");
@@ -1867,7 +1894,46 @@ if (mb_strlen($query) < 3 ||
 				return;
 			}
 
-		}
+		} // end of Featured Playlist
+		elseif ($kind == "Charts") {
+			$country = $words[1];
+			$the_query = $words[2];
+
+			$json = doWebApiRequest($w, "http://charts.spotify.com/api/tracks/most_streamed/" . trim($country) . "/weekly/latest");
+
+			foreach ($json->tracks as $track) {
+
+				// format is https://play.spotify.com/track/3WBLQj2qtrKYFDcC5aisLD
+				$href = explode('/', $track->track_url);
+				$track_uri = 'spotify:track:' . $href[4];
+
+				$href = explode('/', $track->album_url);
+				$album_uri = 'spotify:album:' . $href[4];
+
+				$href = explode('/', $track->artist_url);
+				$artist_uri = 'spotify:artist:' . $href[4];
+				if ($is_alfred_playlist_active == true) {
+					$arrayresult = array(
+						escapeQuery($track->album_name) . " ● " . $track->num_streams . ' streams',
+						'alt' => 'Play album ' . escapeQuery($track->album_name) . ' in Spotify',
+						'cmd' => 'Play artist ' . escapeQuery($track->artist_name) . ' in Spotify',
+						'fn' => 'Add track ' . escapeQuery($track->track_name) . ' to ' . $alfred_playlist_name,
+						'shift' => 'Add album ' . escapeQuery($track->album_name) . ' to ' . $alfred_playlist_name,
+						'ctrl' => 'Search artist ' . escapeQuery($track->artist_name) . ' online');
+				} else {
+					$arrayresult = array(
+						escapeQuery($track->album_name) . " ● " . $track->num_streams . ' streams',
+						'alt' => 'Play album ' . escapeQuery($track->album_name) . ' in Spotify',
+						'cmd' => 'Play artist ' . escapeQuery($track->artist_name) . ' in Spotify',
+						'fn' => 'Add track ' . escapeQuery($track->track_name) . ' to Your Music',
+						'shift' => 'Add album ' . escapeQuery($track->album_name) . ' to Your Music',
+						'ctrl' => 'Search artist ' . escapeQuery($track->artist_name) . ' online');
+				}
+				$track_artwork = getTrackOrAlbumArtwork($w, $theme, $track_uri, false);
+				$w->result(null, serialize(array($track_uri /*track_uri*/ , $album_uri /* album_uri */ , $artist_uri /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , '' /* other_action */ , $alfred_playlist_uri /* alfred_playlist_uri */ , escapeQuery($track->artist_name)  /* artist_name */, escapeQuery($track->track_name) /* track_name */, escapeQuery($track->album_name) /* album_name */, $track_artwork /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), ucfirst(escapeQuery($track->track_name)) . " ● " . escapeQuery($track->artist_name), $arrayresult, $track_artwork, 'yes', null, '');
+			}
+
+		} // end of Charts
 		elseif ($kind == "Alfred Playlist") {
 			$setting_kind = $words[1];
 			$theplaylist = $words[2];
