@@ -158,7 +158,7 @@ $echonest_api_key = $setting[19];
 if ($oauth_client_id == '' && substr_count($query, '▹') == 0) {
 	if (mb_strlen($query) == 0) {
 		$w->result(null, '', 'Your Application Client ID is missing', 'Get it from your Spotify Application and copy/paste it here', './images/' . $theme . '/' . 'settings.png', 'no', null, '');
-		$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , 'Open_Url▹' . 'https://developer.spotify.com/my-applications/#!/applications' /* other_settings*/ , '' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Open Spotify Application page to get required information', "This will open the Application page with your default browser", 'fileicon:/Applications/Spotify.app', 'yes', null, '');
+		$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , 'Open_Url▹' . 'https://developer.spotify.com/my-applications/#!/applications' /* other_settings*/ , '' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Open Spotify Application page to get required information', "This will open the Application page with your default browser", './images/' . $theme . '/' . 'spotify.png', 'yes', null, '');
 	} else if(mb_strlen($query) != 32) {
 		$w->result(null, '', 'The Application Client ID does not seem valid!', 'The length is not 32. Make sure to copy the Client ID from https://developer.spotify.com/my-applications', './images/' . $theme . '/' . 'warning.png', 'no', null, '');
 	} else {
@@ -171,7 +171,7 @@ if ($oauth_client_id == '' && substr_count($query, '▹') == 0) {
 if ($oauth_client_secret == '' && substr_count($query, '▹') == 0) {
 	if (mb_strlen($query) == 0) {
 		$w->result(null, '', 'Your Application Client Secret is missing!', 'Get it from your Spotify Application and enter it here', './images/' . $theme . '/' . 'settings.png', 'no', null, '');
-		$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , 'Open_Url▹' . 'https://developer.spotify.com/my-applications/#!/applications' /* other_settings*/ , '' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Open Spotify Application page to get required information', "This will open the Application page with your default browser", 'fileicon:/Applications/Spotify.app', 'yes', null, '');
+		$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , 'Open_Url▹' . 'https://developer.spotify.com/my-applications/#!/applications' /* other_settings*/ , '' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Open Spotify Application page to get required information', "This will open the Application page with your default browser", './images/' . $theme . '/' . 'spotify.png', 'yes', null, '');
 	} else if(mb_strlen($query) != 32) {
 		$w->result(null, '', 'The Application Client Secret does not seem valid!', 'The length is not 32. Make sure to copy the Client Secret from https://developer.spotify.com/my-applications', './images/' . $theme . '/' . 'warning.png', 'no', null, '');
 	} else if($query == $oauth_client_id) {
@@ -619,7 +619,7 @@ if (mb_strlen($query) < 3 ||
 				'cmd' => 'Not Available',
 				'shift' => 'Not Available',
 				'fn' => 'Not Available',
-				'ctrl' => 'Not Available'), 'fileicon:/Applications/Spotify.app', 'yes', null, '');
+				'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'spotify.png', 'yes', null, '');
 
 		if ($is_spotifious_active == true) {
 			$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , $query /* query */ , '' /* other_settings*/ , '' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $query . " with Spotifious", array(
@@ -628,7 +628,7 @@ if (mb_strlen($query) < 3 ||
 					'cmd' => 'Not Available',
 					'shift' => 'Not Available',
 					'fn' => 'Not Available',
-					'ctrl' => 'Not Available'), './images/spotifious.png', 'yes', null, '');
+					'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'spotifious.png', 'yes', null, '');
 		}
 	} ////////////
 	//
@@ -1286,7 +1286,7 @@ if (mb_strlen($query) < 3 ||
 					'cmd' => 'Not Available',
 					'shift' => 'Not Available',
 					'fn' => 'Not Available',
-					'ctrl' => 'Not Available'), 'fileicon:/Applications/Spotify.app', 'yes', null, '');
+					'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'spotify.png', 'yes', null, '');
 
 			if
 			($theartist != false) {
@@ -1297,7 +1297,7 @@ if (mb_strlen($query) < 3 ||
 							'cmd' => 'Not Available',
 							'shift' => 'Not Available',
 							'fn' => 'Not Available',
-							'ctrl' => 'Not Available'), './images/spotifious.png', 'yes', null, '');
+							'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'spotifious.png', 'yes', null, '');
 				}
 			}
 
@@ -1414,7 +1414,7 @@ if (mb_strlen($query) < 3 ||
 						'cmd' => 'Not Available',
 						'shift' => 'Not Available',
 						'fn' => 'Not Available',
-						'ctrl' => 'Not Available'), 'fileicon:/Applications/Spotify.app', 'yes', null, '');
+						'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'spotify.png', 'yes', null, '');
 			}
 			else {
 				$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , 'activate (open location "spotify:search:' . $album_name . '")' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , '' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $album_name . " in Spotify", array(
@@ -1423,7 +1423,7 @@ if (mb_strlen($query) < 3 ||
 						'cmd' => 'Not Available',
 						'shift' => 'Not Available',
 						'fn' => 'Not Available',
-						'ctrl' => 'Not Available'), 'fileicon:/Applications/Spotify.app', 'yes', null, '');
+						'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'spotify.png', 'yes', null, '');
 
 				if ($is_spotifious_active == true) {
 					$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , $album_uri . " ▹ " . $album_name . " ►"/* query */ , '' /* other_settings*/ , '' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $album_name . " with Spotifious", array(
@@ -1432,7 +1432,7 @@ if (mb_strlen($query) < 3 ||
 							'cmd' => 'Not Available',
 							'shift' => 'Not Available',
 							'fn' => 'Not Available',
-							'ctrl' => 'Not Available'), './images/spotifious.png', 'yes', null, '');
+							'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'spotifious.png', 'yes', null, '');
 				}
 			}
 
@@ -1487,7 +1487,7 @@ if (mb_strlen($query) < 3 ||
 							$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , $playlist[0] /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'update_playlist' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, $playlist[1] /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Update playlist " . ucfirst($playlist[1]) . " by " . $playlist[3], "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', null, '');
 						}
 
-						$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , 'activate (open location "' . $playlist[0] . '")' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , '' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Open playlist " . $playlist[1] . " in Spotify", "This will open the playlist in Spotify", 'fileicon:/Applications/Spotify.app', 'yes', null, '');
+						$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , 'activate (open location "' . $playlist[0] . '")' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , '' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Open playlist " . $playlist[1] . " in Spotify", "This will open the playlist in Spotify", './images/' . $theme . '/' . 'spotify.png', 'yes', null, '');
 
 						$getTracks = "select * from tracks where playable=1 and playlist_uri=:theplaylisturi limit " . $max_results;
 						$stmt = $db->prepare($getTracks);
@@ -1575,7 +1575,7 @@ if (mb_strlen($query) < 3 ||
 							'cmd' => 'Not Available',
 							'shift' => 'Not Available',
 							'fn' => 'Not Available',
-							'ctrl' => 'Not Available'), 'fileicon:/Applications/Spotify.app', 'yes', null, '');
+							'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'spotify.png', 'yes', null, '');
 
 					if ($is_spotifious_active == true) {
 						$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , $playlist[1] /* query */ , '' /* other_settings*/ , '' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $playlist[1] . " with Spotifious", array(
@@ -1584,7 +1584,7 @@ if (mb_strlen($query) < 3 ||
 								'cmd' => 'Not Available',
 								'shift' => 'Not Available',
 								'fn' => 'Not Available',
-								'ctrl' => 'Not Available'), './images/spotifious.png', 'yes', null, '');
+								'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'spotifious.png', 'yes', null, '');
 					}
 
 				}
@@ -1684,7 +1684,7 @@ if (mb_strlen($query) < 3 ||
 						'cmd' => 'Not Available',
 						'shift' => 'Not Available',
 						'fn' => 'Not Available',
-						'ctrl' => 'Not Available'), 'fileicon:/Applications/Spotify.app', 'yes', null, '');
+						'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'spotify.png', 'yes', null, '');
 
 				if ($is_spotifious_active == true) {
 					$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , $thetrack /* query */ , '' /* other_settings*/ , '' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $thetrack . " with Spotifious", array(
@@ -1693,7 +1693,7 @@ if (mb_strlen($query) < 3 ||
 							'cmd' => 'Not Available',
 							'shift' => 'Not Available',
 							'fn' => 'Not Available',
-							'ctrl' => 'Not Available'), './images/spotifious.png', 'yes', null, '');
+							'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'spotifious.png', 'yes', null, '');
 				}
 			}
 		} // end of Your Music▹Tracks▹
