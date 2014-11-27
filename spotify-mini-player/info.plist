@@ -504,11 +504,33 @@
 		</array>
 		<key>9845C770-A2CC-4752-A542-D71BE1081691</key>
 		<array/>
+		<key>9B1431EC-8D2F-4149-9EC0-7DBFD487D93E</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>8B88B440-38F7-4EBA-9A2E-46779141C889</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 		<key>A0EAB8B1-F034-490F-9534-44ADF572AF4E</key>
 		<array>
 			<dict>
 				<key>destinationuid</key>
 				<string>2DBC505C-4788-4F45-BD15-2DCED7844A60</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>A0F746BD-C7AF-490F-B4D9-8BAEDDDAEF90</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>8B88B440-38F7-4EBA-9A2E-46779141C889</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -814,6 +836,17 @@
 				<string></string>
 			</dict>
 		</array>
+		<key>EBD3FE58-A201-4C3D-A2DD-7CD9A6D50A2E</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>8B88B440-38F7-4EBA-9A2E-46779141C889</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 		<key>EBE3B702-B0E0-4AAC-AB87-623064F9D06D</key>
 		<array>
 			<dict>
@@ -1052,7 +1085,7 @@ php -f ./src/action.php -- "{query}" "ALBUM_OR_PLAYLIST" "ADDTOPLAYLIST" &gt;&gt
 				<key>triggerid</key>
 				<string>com.vdesabou.miniplayer.alfredplaylist</string>
 				<key>triggername</key>
-				<string>Alfred Playlist</string>
+				<string>Show Alfred Playlist</string>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
@@ -1139,7 +1172,7 @@ php -f ./src/action.php -- "{query}" "ONLINE" "" &gt;&gt; "$alfred_workflow_cach
 				<key>triggerid</key>
 				<string>com.vdesabou.miniplayer.settings</string>
 				<key>triggername</key>
-				<string>Settings</string>
+				<string>Show Settings</string>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
@@ -1187,7 +1220,7 @@ php -f ./src/action.php -- "{query}" "ONLINE" "" &gt;&gt; "$alfred_workflow_cach
 				<key>triggerid</key>
 				<string>com.vdesabou.miniplayer.playlists</string>
 				<key>triggername</key>
-				<string>Playlists</string>
+				<string>Show Playlists</string>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
@@ -1235,7 +1268,7 @@ php -f ./src/action.php -- "{query}" "ONLINE" "" &gt;&gt; "$alfred_workflow_cach
 				<key>triggerid</key>
 				<string>com.vdesabou.miniplayer.currenttrack</string>
 				<key>triggername</key>
-				<string>Current Track</string>
+				<string>Show Current Track</string>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
@@ -2955,6 +2988,90 @@ php -f ./src/action.php -- "{query}" "PLAY_CURRENT_ALBUM" "" &gt;&gt; "$alfred_w
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>echo "===== PLAY_ALFRED_PLAYLIST ========" &gt;&gt; "$alfred_workflow_cache/action.log"
+echo "`date` {query}" &gt;&gt; "$alfred_workflow_cache/action.log"
+php -f ./src/action.php -- "{query}" "PLAY_ALFRED_PLAYLIST" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>8B88B440-38F7-4EBA-9A2E-46779141C889</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>play_alfred_playlist</string>
+				<key>subtext</key>
+				<string>This will launch your Alfred Playlist</string>
+				<key>text</key>
+				<string>Play Alfred Playlist</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>EBD3FE58-A201-4C3D-A2DD-7CD9A6D50A2E</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string></string>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>triggerid</key>
+				<string>com.vdesabou.miniplayer.playalfredplaylist</string>
+				<key>triggername</key>
+				<string>Play Alfred Playlist</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.remote</string>
+			<key>uid</key>
+			<string>A0F746BD-C7AF-490F-B4D9-8BAEDDDAEF90</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>0</integer>
+				<key>hotkey</key>
+				<integer>0</integer>
+				<key>hotmod</key>
+				<integer>0</integer>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>0</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>9B1431EC-8D2F-4149-9EC0-7DBFD487D93E</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string>Github page:
@@ -3243,6 +3360,11 @@ SOFTWARE.</string>
 			<key>ypos</key>
 			<real>2990</real>
 		</dict>
+		<key>8B88B440-38F7-4EBA-9A2E-46779141C889</key>
+		<dict>
+			<key>ypos</key>
+			<real>5640</real>
+		</dict>
 		<key>8C78472B-13EB-4512-B94D-4BF92867CD92</key>
 		<dict>
 			<key>ypos</key>
@@ -3283,10 +3405,20 @@ SOFTWARE.</string>
 			<key>ypos</key>
 			<real>210</real>
 		</dict>
+		<key>9B1431EC-8D2F-4149-9EC0-7DBFD487D93E</key>
+		<dict>
+			<key>ypos</key>
+			<real>5860</real>
+		</dict>
 		<key>A0EAB8B1-F034-490F-9534-44ADF572AF4E</key>
 		<dict>
 			<key>ypos</key>
 			<real>4490</real>
+		</dict>
+		<key>A0F746BD-C7AF-490F-B4D9-8BAEDDDAEF90</key>
+		<dict>
+			<key>ypos</key>
+			<real>5740</real>
 		</dict>
 		<key>A38DD404-DE03-42C2-B0CB-A37891B6F24D</key>
 		<dict>
@@ -3447,6 +3579,11 @@ SOFTWARE.</string>
 		<dict>
 			<key>ypos</key>
 			<real>3700</real>
+		</dict>
+		<key>EBD3FE58-A201-4C3D-A2DD-7CD9A6D50A2E</key>
+		<dict>
+			<key>ypos</key>
+			<real>5640</real>
 		</dict>
 		<key>EBE3B702-B0E0-4AAC-AB87-623064F9D06D</key>
 		<dict>

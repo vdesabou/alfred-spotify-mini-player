@@ -6,6 +6,48 @@ require './vendor/autoload.php';
 
 
 /**
+ * playAlfredPlaylist function.
+ *
+ * @access public
+ * @param mixed $w
+ * @return void
+ */
+function playAlfredPlaylist($w) {
+
+	//
+	// Read settings from DB
+	//
+	$getSettings = 'select alfred_playlist_uri,alfred_playlist_name,theme from settings';
+	$dbfile = $w->data() . '/settings.db';
+	exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
+
+	if ($returnValue != 0) {
+		displayNotification("Error: Alfred Playlist is not set");
+		return;
+	}
+
+	foreach ($settings as $setting):
+		$setting = explode("	", $setting);
+		$alfred_playlist_uri = $setting[0];
+		$alfred_playlist_name = $setting[1];
+		$theme = $setting[2];
+	endforeach;
+
+	if ($alfred_playlist_uri == "" || $alfred_playlist_name == "") {
+		displayNotification("Error: Alfred Playlist is not set");
+		return;
+	}
+
+
+	exec("osascript -e 'tell application \"Spotify\" to play track \"$alfred_playlist_uri\"'");
+
+	$playlist_artwork_path = getPlaylistArtwork($w, $theme, $alfred_playlist_uri, true, true);
+	displayNotificationWithArtwork('🔈 Playlist ' . $alfred_playlist_name, $playlist_artwork_path);
+}
+
+
+
+/**
  * playCurrentArtist function.
  *
  * @access public

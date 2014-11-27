@@ -178,6 +178,9 @@ if ($spotify_command != "" && $type == "TRACK" && $add_to_option == "") {
 	}else if ($type == "PLAY_CURRENT_ALBUM") {
 		playCurrentAlbum($w);
 		return;
+	}else if ($type == "PLAY_ALFRED_PLAYLIST") {
+		playAlfredPlaylist($w);
+		return;
 	}
 	else if ($type == "KILL_UPDATE") {
 		killUpdate($w);
