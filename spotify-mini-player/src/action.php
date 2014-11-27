@@ -444,24 +444,6 @@ if ($spotify_command != "" && $type == "TRACK" && $add_to_option == "") {
 			exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 			displayNotificationWithArtwork("Spotifious is now disabled", './images/' . $theme . '/' . 'uncheck.png');
 			return;
-		} else if ($other_action == "set_theme_to_black") {
-			$setSettings = "update settings set theme='black'";
-			$dbfile = $w->data() . "/settings.db";
-			exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-			displayNotificationWithArtwork("Theme set to black", './images/' . 'black' . '/' . 'check.png');
-			return;
-		} else if ($other_action == "set_theme_to_green") {
-			$setSettings = "update settings set theme='green'";
-			$dbfile = $w->data() . "/settings.db";
-			exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-			displayNotificationWithArtwork("Theme set to green", './images/' . 'green' . '/' . 'check.png');
-			return;
-		} else if ($other_action == "set_theme_to_gray") {
-			$setSettings = "update settings set theme='gray'";
-			$dbfile = $w->data() . "/settings.db";
-			exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-			displayNotificationWithArtwork("Theme set to gray", './images/' . 'gray' . '/' . 'check.png');
-			return;
 		} else if ($other_action == "enable_lyrics") {
 			$setSettings = "update settings set is_lyrics_active=1";
 			$dbfile = $w->data() . "/settings.db";
