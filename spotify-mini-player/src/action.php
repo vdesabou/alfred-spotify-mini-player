@@ -340,7 +340,7 @@ if ($spotify_command != "" && $type == "TRACK" && $add_to_option == "") {
 				displayNotification("Error: cannot get current artist");
 				return;
 			}
-			$artist_artwork_path = getArtistArtwork($w, 'black', $artist_name, true);
+			$artist_artwork_path = getArtistArtwork($w, 'gray', $artist_name, true);
 		}
 
 		exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
@@ -441,7 +441,7 @@ if ($spotify_command != "" && $type == "TRACK" && $add_to_option == "") {
 			}
 
 			if (clearPlaylist($w, $setting[1], $setting[2])) {
-				displayNotificationWithArtwork('Alfred Playlist ' . $setting[2] . ' was cleared' , getPlaylistArtwork($w, 'black', $setting[1], true));
+				displayNotificationWithArtwork('Alfred Playlist ' . $setting[2] . ' was cleared' , getPlaylistArtwork($w, 'gray', $setting[1], true));
 			}
 			return;
 		}
