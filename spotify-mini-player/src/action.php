@@ -57,7 +57,7 @@ if ($spotify_command != "" && $type == "TRACK" && $add_to_option == "") {
 	return;
 }
 
-	if ($type == "TRACK") {
+	if ($type == "TRACK" && $other_settings == "") {
 		if ($track_uri != "") {
 			if ($add_to_option != "") {
 
@@ -348,7 +348,7 @@ if ($spotify_command != "" && $type == "TRACK" && $add_to_option == "") {
 		return;
 	}
 
-	if ($playlist_uri != "") {
+	if ($playlist_uri != "" && $other_settings == "") {
 		exec("osascript -e 'tell application \"Spotify\" to play track \"$playlist_uri\"'");
 		displayNotificationWithArtwork('🔈 Playlist ' . $playlist_name, $playlist_artwork_path);
 		return;
@@ -383,8 +383,53 @@ if ($spotify_command != "" && $type == "TRACK" && $add_to_option == "") {
 			$dbfile = $w->data() . "/settings.db";
 			exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 
-			displayNotificationWithArtwork('Alfred Playlist set to ' . $setting[2], getPlaylistArtwork($w, 'black', $setting[1], true));
+			displayNotificationWithArtwork('Alfred Playlist set to ' . $setting[2], getPlaylistArtwork($w, 'gray', $setting[1], true));
 			return;
+
+		} else if ($setting[0] == "ADD_TO_PLAYLIST") {
+
+			// add track to playlist
+			if($track_uri != '') {
+				$track_artwork_path = getTrackOrAlbumArtwork($w, $theme, $track_uri, true);
+				$tmp = explode(':', $track_uri);
+
+				$ret = addTracksToPlaylist($w, $tmp[2], $setting[1], $setting[2], false);
+				if (is_numeric($ret) && $ret > 0) {
+					displayNotificationWithArtwork('' . $track_name . ' added to ' . $setting[2], $track_artwork_path);
+					return;
+				} else if (is_numeric($ret) && $ret == 0) {
+						displayNotification('Error: ' . $track_name . ' is already in ' . $setting[2]);
+						return;
+					} else {
+					return;
+				}
+			} // add playlist to playlist
+			elseif ($playlist_uri != '') {
+				$playlist_artwork_path = getPlaylistArtwork($w, $theme, $playlist_uri, true, true);
+				$ret = addTracksToPlaylist($w, getThePlaylistTracks($w, $playlist_uri), $setting[1], $setting[2], false);
+				if (is_numeric($ret) && $ret > 0) {
+					displayNotificationWithArtwork('Playlist ' . $playlist_name . ' added to ' . $setting[2], $playlist_artwork_path);
+					return;
+				} else if (is_numeric($ret) && $ret == 0) {
+						displayNotification('Error: Playlist ' . $playlist_name . ' is already in ' . $setting[2]);
+						return;
+					} else {
+					return;
+				}
+			} // add album to playlist
+			elseif ($album_uri != '') {
+				$album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $album_uri, true);
+				$ret = addTracksToPlaylist($w, getTheAlbumTracks($w, $album_uri), $setting[1], $setting[2], false);
+				if (is_numeric($ret) && $ret > 0) {
+					displayNotificationWithArtwork('Album ' . $album_name . ' added to ' . $setting[2], $album_artwork_path);
+					return;
+				} else if (is_numeric($ret) && $ret == 0) {
+						displayNotification('Error: Album ' . $album_name . ' is already in ' . $setting[2]);
+						return;
+					} else {
+					return;
+				}
+			}
 
 		} else if ($setting[0] == "Open_Url") {
 			exec("open \"$setting[1]\"");
