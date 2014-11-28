@@ -41,6 +41,17 @@
 				<string></string>
 			</dict>
 		</array>
+		<key>15209065-AB33-44E4-ADFC-BAFC5033762E</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>18496AC4-EA42-444C-A906-642E38259C96</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 		<key>16F5C3BF-01EE-493C-9E7B-CC54D482B7A6</key>
 		<array>
 			<dict>
@@ -884,6 +895,17 @@
 		</array>
 		<key>F7D7D2CE-77EE-45C4-ADAA-1B45A6577FFF</key>
 		<array/>
+		<key>FA41B848-C24F-44E4-B1F1-D5EF444B01A9</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>18496AC4-EA42-444C-A906-642E38259C96</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 	</dict>
 	<key>createdby</key>
 	<string>vdesabou</string>
@@ -1280,57 +1302,48 @@ php -f ./src/action.php -- "{query}" "ONLINE" "" &gt;&gt; "$alfred_workflow_cach
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>argument</key>
-				<string></string>
-				<key>argumenttype</key>
+				<key>action</key>
 				<integer>0</integer>
+				<key>argument</key>
+				<integer>3</integer>
+				<key>argumenttext</key>
+				<string>Charts▹</string>
+				<key>hotkey</key>
+				<integer>0</integer>
+				<key>hotmod</key>
+				<integer>0</integer>
+				<key>hotstring</key>
+				<string></string>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>2</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>FA41B848-C24F-44E4-B1F1-D5EF444B01A9</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string>Charts▹</string>
+				<key>argumenttype</key>
+				<integer>3</integer>
 				<key>triggerid</key>
-				<string>com.vdesabou.miniplayer.issue</string>
+				<string>com.vdesabou.miniplayer.showcharts</string>
 				<key>triggername</key>
-				<string>Report Issue</string>
+				<string>Show Charts</string>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
 			<key>uid</key>
-			<string>8F478980-199B-45B5-AD41-EBA185446705</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>plusspaces</key>
-				<false/>
-				<key>url</key>
-				<string>https://github.com/vdesabou/alfred-spotify-mini-player/issues/new</string>
-				<key>utf8</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.openurl</string>
-			<key>uid</key>
-			<string>899AC4D2-88FA-474F-A075-AFA12F361E2B</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>2</integer>
-				<key>keyword</key>
-				<string>spot_mini_issue</string>
-				<key>subtext</key>
-				<string>This will open the GitHub page</string>
-				<key>text</key>
-				<string>Report an issue or propose an enhancement</string>
-				<key>withspace</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>794A76A7-BB98-4A83-92BE-386A56875120</string>
+			<string>15209065-AB33-44E4-ADFC-BAFC5033762E</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -3072,6 +3085,63 @@ php -f ./src/action.php -- "{query}" "PLAY_ALFRED_PLAYLIST" "" &gt;&gt; "$alfred
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>plusspaces</key>
+				<false/>
+				<key>url</key>
+				<string>https://github.com/vdesabou/alfred-spotify-mini-player/issues/new</string>
+				<key>utf8</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.openurl</string>
+			<key>uid</key>
+			<string>899AC4D2-88FA-474F-A075-AFA12F361E2B</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>spot_mini_issue</string>
+				<key>subtext</key>
+				<string>This will open the GitHub page</string>
+				<key>text</key>
+				<string>Report an issue or propose an enhancement</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>794A76A7-BB98-4A83-92BE-386A56875120</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string></string>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>triggerid</key>
+				<string>com.vdesabou.miniplayer.issue</string>
+				<key>triggername</key>
+				<string>Report Issue</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.remote</string>
+			<key>uid</key>
+			<string>8F478980-199B-45B5-AD41-EBA185446705</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string>Github page:
@@ -3124,6 +3194,11 @@ SOFTWARE.</string>
 		<dict>
 			<key>ypos</key>
 			<real>890</real>
+		</dict>
+		<key>15209065-AB33-44E4-ADFC-BAFC5033762E</key>
+		<dict>
+			<key>ypos</key>
+			<real>1200</real>
 		</dict>
 		<key>16F5C3BF-01EE-493C-9E7B-CC54D482B7A6</key>
 		<dict>
@@ -3213,7 +3288,7 @@ SOFTWARE.</string>
 		<key>3040749D-6B5C-4CCD-AF95-AEC0F83B48D9</key>
 		<dict>
 			<key>ypos</key>
-			<real>1000</real>
+			<real>990</real>
 		</dict>
 		<key>3837382F-63B4-4B0D-A880-A1CF7079D584</key>
 		<dict>
@@ -3318,7 +3393,7 @@ SOFTWARE.</string>
 		<key>794A76A7-BB98-4A83-92BE-386A56875120</key>
 		<dict>
 			<key>ypos</key>
-			<real>1160</real>
+			<real>6010</real>
 		</dict>
 		<key>79F70A28-E2D9-4705-81A9-86F3EA8EB47F</key>
 		<dict>
@@ -3353,7 +3428,7 @@ SOFTWARE.</string>
 		<key>899AC4D2-88FA-474F-A075-AFA12F361E2B</key>
 		<dict>
 			<key>ypos</key>
-			<real>1160</real>
+			<real>6010</real>
 		</dict>
 		<key>89BC46B4-E178-4855-8863-393730814F6E</key>
 		<dict>
@@ -3378,7 +3453,7 @@ SOFTWARE.</string>
 		<key>8F478980-199B-45B5-AD41-EBA185446705</key>
 		<dict>
 			<key>ypos</key>
-			<real>1100</real>
+			<real>6140</real>
 		</dict>
 		<key>8F8CF9CC-2B4D-4F8E-A211-C32DD49E84F4</key>
 		<dict>
@@ -3614,6 +3689,11 @@ SOFTWARE.</string>
 		<dict>
 			<key>ypos</key>
 			<real>1920</real>
+		</dict>
+		<key>FA41B848-C24F-44E4-B1F1-D5EF444B01A9</key>
+		<dict>
+			<key>ypos</key>
+			<real>1090</real>
 		</dict>
 	</dict>
 	<key>webaddress</key>
