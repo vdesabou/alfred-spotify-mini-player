@@ -1977,12 +1977,21 @@ if (mb_strlen($query) < 3 ||
 			}
 			$theplaylist = $words[2];
 
-			$w->result(null, '', 'Add ' . $type . ' ' . $tmp[1] . ' to one of your playlists below..' , "Select one of your playlists below to add " . $type, './images/' . $theme . '/' . 'add.png', 'no', null, '');
 
 			try {
 				if (mb_strlen($theplaylist) < 3) {
 					$getPlaylists = "select * from playlists where ownedbyuser=1";
 					$stmt = $db->prepare($getPlaylists);
+
+					$w->result(null, '', 'Add ' . $type . ' ' . $tmp[1] . ' to one of your playlists below..' , "Select one of your playlists below to add " . $type, './images/' . $theme . '/' . 'add.png', 'no', null, '');
+
+					// put Alfred Playlist at beginning
+					if ($is_alfred_playlist_active == true) {
+						if($alfred_playlist_uri != '' && $alfred_playlist_name != '') {
+							$w->result(null, serialize(array($track_uri /*track_uri*/ , $album_uri /* album_uri */ , '' /* artist_uri */ , $playlist_uri /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , 'ADD_TO_PLAYLIST▹' .  $alfred_playlist_uri . '▹' . $alfred_playlist_name /* other_settings*/ , '' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, $track_name /* track_name */, $album_name /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, $playlist_name /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "🎵 Alfred Playlist " . " ● " . ucfirst($alfred_playlist_name), "Select the playlist to add the " . $type, './images/' . $theme . '/' . 'alfred_playlist.png', 'yes', null, '');
+
+						}
+					}
 				}
 				else {
 					$getPlaylists = "select * from playlists where ownedbyuser=1 and ( name like :playlist or author like :playlist)";
@@ -1997,17 +2006,11 @@ if (mb_strlen($query) < 3 ||
 				return;
 			}
 
-			// put Alfred Playlist at beginning
-			if ($is_alfred_playlist_active == true) {
-				if($alfred_playlist_uri != '' && $alfred_playlist_name != '') {
-					$w->result(null, serialize(array($track_uri /*track_uri*/ , $album_uri /* album_uri */ , '' /* artist_uri */ , $playlist_uri /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , 'ADD_TO_PLAYLIST▹' .  $alfred_playlist_uri . '▹' . $alfred_playlist_name /* other_settings*/ , '' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, $track_name /* track_name */, $album_name /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, $playlist_name /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "🎵 Alfred Playlist " . " ● " . ucfirst($alfred_playlist_name), "Select the playlist to add the " . $type, './images/' . $theme . '/' . 'alfred_playlist.png', 'yes', null, '');
-
-				}
-			}
-
 			while ($playlist = $stmt->fetch()) {
 
-				if($playlist[0] != $alfred_playlist_uri) {
+				if( ($playlist[0] != $alfred_playlist_uri
+					&& (mb_strlen($theplaylist) < 3)) ||
+					(mb_strlen($theplaylist) >= 3)) {
 					$added = ' ';
 					if(startswith($playlist[1], 'Artist radio for')) {
 						$added = '📻 ';
