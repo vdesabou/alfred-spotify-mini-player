@@ -508,13 +508,13 @@ if ($spotify_command != "" && $type == "TRACK" && $add_to_option == "") {
 			$setSettings = "update settings set is_alfred_playlist_active=1";
 			$dbfile = $w->data() . "/settings.db";
 			exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-			displayNotificationWithArtwork("Alfred Playlist is now enabled", './images/' . $theme . '/' . 'check.png');
+			displayNotificationWithArtwork("Controlling Alfred Playlist", './images/' . $theme . '/' . 'check.png');
 			return;
 		} else if ($other_action == "disable_alfred_playlist") {
 			$setSettings = "update settings set is_alfred_playlist_active=0";
 			$dbfile = $w->data() . "/settings.db";
 			exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-			displayNotificationWithArtwork("Alfred Playlist is now disabled", './images/' . $theme . '/' . 'uncheck.png');
+			displayNotificationWithArtwork("Controlling Your Music", './images/' . $theme . '/' . 'uncheck.png');
 			return;
 		} else if ($other_action == "play_track_in_album_context") {
 			exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\" in context \"$album_uri\"'");

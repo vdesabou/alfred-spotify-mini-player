@@ -2261,7 +2261,7 @@ function updatePlaylistList($w) {
 							return;
 						}
 
-						displayNotificationWithArtwork('Added playlist ' . $playlist->name . ' was created', $playlist_artwork_path);
+						displayNotificationWithArtwork('Added playlist ' . $playlist->name, $playlist_artwork_path);
 					} else {
 						// number of tracks has changed
 						// update the playlist
@@ -2338,7 +2338,7 @@ function updatePlaylistList($w) {
 								handleDbIssuePdoEcho($db);
 								return;
 							}
-							displayNotificationWithArtwork('Updated playlist ' . $playlist->name . ' was created',getPlaylistArtwork($w, $theme, $playlist->uri, true));
+							displayNotificationWithArtwork('Updated playlist ' . $playlist->name,getPlaylistArtwork($w, $theme, $playlist->uri, true));
 						} else {
 							continue;
 						}
@@ -2381,7 +2381,7 @@ function updatePlaylistList($w) {
 				$stmtDelete = $db->prepare($deleteFromTracks);
 				$stmtDelete->bindValue(':uri', $pl[0]);
 				$stmtDelete->execute();
-				displayNotificationWithArtwork('Playlist ' . $pl[1]. ' was removed',getPlaylistArtwork($w, $theme, $pl[0], false));
+				displayNotificationWithArtwork('Removed playlist ' . $pl[1],getPlaylistArtwork($w, $theme, $pl[0], false));
 			}
 		}
 
