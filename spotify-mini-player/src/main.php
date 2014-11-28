@@ -392,7 +392,7 @@ if (mb_strlen($query) < 3 ||
 					'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'check.png', 'yes', null, '');
 		}
 		if ($is_alfred_playlist_active == true) {
-			$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'disable_alfred_playlist' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Enable Your Music", array(
+			$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'disable_alfred_playlist' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Control Your Music", array(
 					"You will control Your Music (if disabled, you control Alfred Playlist)",
 					'alt' => 'Not Available',
 					'cmd' => 'Not Available',
@@ -400,7 +400,7 @@ if (mb_strlen($query) < 3 ||
 					'fn' => 'Not Available',
 					'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'settings.png', 'yes', null, '');
 		} else {
-			$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'enable_alfred_playlist' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Enable Alfred Playlist", array(
+			$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'enable_alfred_playlist' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Control Alfred Playlist", array(
 					"You will control the Alfred Playlist (if disabled, you control Your Music)",
 					'alt' => 'Not Available',
 					'cmd' => 'Not Available',
@@ -659,7 +659,7 @@ if (mb_strlen($query) < 3 ||
 
 					if ($update_in_progress == false) {
 						$w->result(null, serialize(array('' /*track_uri*/ , '' /* album_uri */ , '' /* artist_uri */ , '' /* playlist_uri */ , '' /* spotify_command */ , '' /* query */ , '' /* other_settings*/ , 'update_playlist_list' /* other_action */ , '' /* alfred_playlist_uri */ , ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Update your playlists (new, modified or deleted)", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', null, '');
-				}
+					}
 				}
 				else {
 					$getPlaylists = "select * from playlists where (name like :query or author like :query)";
@@ -683,22 +683,50 @@ if (mb_strlen($query) < 3 ||
 						$w->result(null, '', "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
 					}
 				}
+			} elseif($query == "Playlist▹Song radio") {
+				while ($playlist = $stmt->fetch()) {
+
+					$noresult=false;
+
+					if(startswith($playlist[1], 'Song radio for')) {
+						$w->result(null, '', "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
+					}
+				}
 			} else {
+				$savedPlaylists = array();
+				$nb_artist_radio_playlist = 0;
+				$nb_song_radio_playlist = 0;
+				while ($playlist = $stmt->fetch()) {
+
+					if(startswith($playlist[1], 'Artist radio for')) {
+						$nb_artist_radio_playlist++;
+						continue;
+					}
+
+					if(startswith($playlist[1], 'Song radio for')) {
+						$nb_song_radio_playlist++;
+						continue;
+					}
+
+					$savedPlaylists[] = $playlist;
+				}
+
 				if(mb_strlen($theplaylist) < 3) {
-					$w->result(null, '', "Browse your artist radio playlists", "Display all your artist radio playlists", './images/' . $theme . '/' . 'radio_artist.png', 'no', null, "Playlist▹Artist radio");
+					if($nb_artist_radio_playlist > 0) {
+						$w->result(null, '', "Browse your artist radio playlists (" . $nb_artist_radio_playlist . " playlists)", "Display all your artist radio playlists", './images/' . $theme . '/' . 'radio_artist.png', 'no', null, "Playlist▹Artist radio");
+					}
+					if($nb_song_radio_playlist > 0) {
+						$w->result(null, '', "Browse your song radio playlists (" . $nb_song_radio_playlist . " playlists)", "Display all your song radio playlists", './images/' . $theme . '/' . 'radio_song.png', 'no', null, "Playlist▹Song radio");
+					}
 					$w->result(null, '', 'Featured Playlists', 'Browse the current featured playlists', './images/' . $theme . '/' . 'star.png', 'no', null, 'Featured Playlist▹');
 				}
 
-				while ($playlist = $stmt->fetch()) {
+				foreach($savedPlaylists as $playlist) {
 					$noresult=false;
 					$added = ' ';
-					if(startswith($playlist[1], 'Artist radio for')) {
-						continue;
-					}
 					$w->result(null, '', "🎵" . $added . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
 				}
 			}
-
 
 			if
 			($noresult) {
