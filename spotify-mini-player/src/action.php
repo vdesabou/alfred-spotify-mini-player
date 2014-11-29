@@ -104,7 +104,7 @@ if ($type == "TRACK" && $other_settings == "") {
                 }
             } else {
                 // add track to your music
-                $ret = addTracksToMyTracks($w, $tmp[2], false);
+                $ret = addTracksToYourMusic($w, $tmp[2], false);
                 if (is_numeric($ret) && $ret > 0) {
                     displayNotificationWithArtwork('' . $track_name . ' by ' . $artist_name . ' added to Your Music', $track_artwork_path);
                     return;
@@ -262,7 +262,7 @@ if ($type == "TRACK" && $other_settings == "") {
                 }
             } else {
                 // add album to your music
-                $ret = addTracksToMyTracks($w, getTheAlbumTracks($w, $album_uri), false);
+                $ret = addTracksToYourMusic($w, getTheAlbumTracks($w, $album_uri), false);
                 if (is_numeric($ret) && $ret > 0) {
                     displayNotificationWithArtwork('Album ' . $album_name . ' added to Your Music', $album_artwork_path);
                     return;
@@ -315,7 +315,7 @@ if ($type == "TRACK" && $other_settings == "") {
                 }
             } else {
                 // add playlist to your music
-                $ret = addTracksToMyTracks($w, getThePlaylistTracks($w, $playlist_uri), false);
+                $ret = addTracksToYourMusic($w, getThePlaylistTracks($w, $playlist_uri), false);
                 if (is_numeric($ret) && $ret > 0) {
                     displayNotificationWithArtwork('Playlist ' . $playlist_name . ' added to Your Music', $playlist_artwork_path);
                     return;
@@ -429,8 +429,51 @@ if ($playlist_uri != "" && $other_settings == "") {
                 return;
             }
         }
+    } else if ($setting[0] == "ADD_TO_YOUR_MUSIC") {
 
-    } else if ($setting[0] == "Open_Url") {
+			// add track to your music
+			if($track_uri != '') {
+				$track_artwork_path = getTrackOrAlbumArtwork($w, $theme, $track_uri, true);
+				$tmp = explode(':', $track_uri);
+
+				$ret = addTracksToYourMusic($w, $tmp[2], false);
+				if (is_numeric($ret) && $ret > 0) {
+					displayNotificationWithArtwork('' . $track_name . ' added to Your Music', $track_artwork_path);
+					return;
+				} else if (is_numeric($ret) && $ret == 0) {
+						displayNotification('Error: ' . $track_name . ' is already in Your Music');
+						return;
+					} else {
+					return;
+				}
+			} // add playlist to your music
+			elseif ($playlist_uri != '') {
+				$playlist_artwork_path = getPlaylistArtwork($w, $theme, $playlist_uri, true, true);
+				$ret = addTracksToYourMusic($w, getThePlaylistTracks($w, $playlist_uri), false);
+				if (is_numeric($ret) && $ret > 0) {
+					displayNotificationWithArtwork('Playlist ' . $playlist_name . ' added to Your Music', $playlist_artwork_path);
+					return;
+				} else if (is_numeric($ret) && $ret == 0) {
+						displayNotification('Error: Playlist ' . $playlist_name . ' is already in Your Music');
+						return;
+					} else {
+					return;
+				}
+			} // add album to your music
+			elseif ($album_uri != '') {
+				$album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $album_uri, true);
+				$ret = addTracksToYourMusic($w, getTheAlbumTracks($w, $album_uri), false);
+				if (is_numeric($ret) && $ret > 0) {
+					displayNotificationWithArtwork('Album ' . $album_name . ' added to Your Music', $album_artwork_path);
+					return;
+				} else if (is_numeric($ret) && $ret == 0) {
+						displayNotification('Error: Album ' . $album_name . ' is already in Your Music');
+						return;
+					} else {
+					return;
+				}
+			}
+	} else if ($setting[0] == "Open_Url") {
         exec("open \"$setting[1]\"");
         return;
     } else if ($setting[0] == "CLEAR_ALFRED_PLAYLIST") {
@@ -507,13 +550,13 @@ if ($playlist_uri != "" && $other_settings == "") {
         $setSettings = "update settings set is_alfred_playlist_active=1";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotificationWithArtwork("Controlling Alfred Playlist", './images/' . $theme . '/' . 'check.png');
+        displayNotificationWithArtwork("Controlling Alfred Playlist", './images/' . $theme . '/' . 'alfred_playlist.png');
         return;
     } else if ($other_action == "disable_alfred_playlist") {
         $setSettings = "update settings set is_alfred_playlist_active=0";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotificationWithArtwork("Controlling Your Music", './images/' . $theme . '/' . 'uncheck.png');
+        displayNotificationWithArtwork("Controlling Your Music", './images/' . $theme . '/' . 'allplaylists.png');
         return;
     } else if ($other_action == "play_track_in_album_context") {
         exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\" in context \"$album_uri\"'");

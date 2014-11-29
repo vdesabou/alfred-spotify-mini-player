@@ -262,7 +262,7 @@ function addCurrentTrackToMyTracks($w)
         $results = explode('▹', $command_output);
 
         $tmp = explode(':', $results[4]);
-        $ret = addTracksToMyTracks($w, $tmp[2], false);
+        $ret = addTracksToYourMusic($w, $tmp[2], false);
         if (is_numeric($ret) && $ret > 0) {
             displayNotificationWithArtwork('' . $results[0] . ' by ' . $results[1] . ' added to My Music', getTrackOrAlbumArtwork($w, $theme, $results[4], true));
         } else if (is_numeric($ret) && $ret == 0) {
@@ -772,7 +772,7 @@ function getTheAlbumTracks($w, $album_uri)
 
 
 /**
- * addTracksToMyTracks function.
+ * addTracksToYourMusic function.
  *
  * @access public
  * @param mixed $w
@@ -780,7 +780,7 @@ function getTheAlbumTracks($w, $album_uri)
  * @param bool $allow_duplicate (default: true)
  * @return void
  */
-function addTracksToMyTracks($w, $tracks, $allow_duplicate = true)
+function addTracksToYourMusic($w, $tracks, $allow_duplicate = true)
 {
 
     $api = getSpotifyWebAPI($w);
@@ -813,7 +813,7 @@ function addTracksToMyTracks($w, $tracks, $allow_duplicate = true)
 
             $tracks = $tracks_with_no_dup;
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            echo "Error(addTracksToMyTracks): (exception " . $e . ")";
+            echo "Error(addTracksToYourMusic): (exception " . $e . ")";
             return false;
         }
     }
@@ -834,7 +834,7 @@ function addTracksToMyTracks($w, $tracks, $allow_duplicate = true)
             } while (count($output) > 0);
 
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            echo "Error(addTracksToMyTracks): (exception " . $e . ")";
+            echo "Error(addTracksToYourMusic): (exception " . $e . ")";
             return false;
         }
 

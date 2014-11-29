@@ -974,20 +974,8 @@ if (mb_strlen($query) < 3 ||
                         , './images/' . $theme . '/' . 'lyrics.png', 'yes', null, '');
                 }
 
-                if ($is_alfred_playlist_active == false) {
-                    $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'add_current_track' /* other_action */, '' /* alfred_playlist_uri */, '' /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Add track " . escapeQuery($results[0]) . " to Your Music",
-                        array(
-                            'This will add current track to Your Music',
-                            'alt' => 'Not Available',
-                            'cmd' => 'Not Available',
-                            'shift' => 'Not Available',
-                            'fn' => 'Not Available',
-                            'ctrl' => 'Not Available')
-                        , './images/' . $theme . '/' . 'tracks.png', 'yes', null, '');
-                }
 
-
-                $w->result(null, '', 'Add track ' . escapeQuery($results[0]) . ' to the playlist..', 'This will add current track to a playlist you will choose in next step', './images/' . $theme . '/' . 'add.png', 'no', null, 'Add▹' . $results[4] . '∙' . escapeQuery($results[0]) . '▹');
+                $w->result(null, '', 'Add track ' . escapeQuery($results[0]) . ' to...', 'This will add current track to Your Music or a playlist you will choose in next step', './images/' . $theme . '/' . 'add.png', 'no', null, 'Add▹' . $results[4] . '∙' . escapeQuery($results[0]) . '▹');
 
                 $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'current_track_radio' /* other_action */, '' /* alfred_playlist_uri */, '' /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Create a Song Radio Playlist based on " . escapeQuery($results[0]),
                     array(
@@ -1139,7 +1127,7 @@ if (mb_strlen($query) < 3 ||
                 $album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $album_uri, false);
                 $w->result(null, serialize(array('' /*track_uri*/, $album_uri /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'playalbum' /* other_action */, '' /* alfred_playlist_uri */, '' /* artist_name */, '' /* track_name */, $album_name /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, $album_artwork_path /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "💿 " . escapeQuery($album_name), 'Play album', $album_artwork_path, 'yes', null, '');
 
-                $w->result(null, '', 'Add album ' . escapeQuery($album_name) . ' to the playlist..', 'This will add current album to a playlist you will choose in next step', './images/' . $theme . '/' . 'add.png', 'no', null, 'Add▹' . $album_uri . '∙' . escapeQuery($album_name) . '▹');
+                $w->result(null, '', 'Add album ' . escapeQuery($album_name) . ' to...', 'This will add current track to Your Music or a playlist you will choose in next step', './images/' . $theme . '/' . 'add.png', 'no', null, 'Add▹' . $album_uri . '∙' . escapeQuery($album_name) . '▹');
 
                 $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
                 $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
@@ -1392,7 +1380,7 @@ if (mb_strlen($query) < 3 ||
             $album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $album_uri, false);
             $w->result(null, serialize(array('' /*track_uri*/, $album_uri /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'playalbum' /* other_action */, '' /* alfred_playlist_uri */, '' /* artist_name */, '' /* track_name */, $album_name /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, $album_artwork_path /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "💿 " . $album_name, 'Play album', $album_artwork_path, 'yes', null, '');
 
-            $w->result(null, '', 'Add album ' . escapeQuery($album_name) . ' to the playlist..', 'This will add current album to a playlist you will choose in next step', './images/' . $theme . '/' . 'add.png', 'no', null, 'Add▹' . $album_uri . '∙' . escapeQuery($album_name) . '▹');
+            $w->result(null, '', 'Add album ' . escapeQuery($album_name) . ' to...', 'This will add current track to Your Music or a playlist you will choose in next step', './images/' . $theme . '/' . 'add.png', 'no', null, 'Add▹' . $album_uri . '∙' . escapeQuery($album_name) . '▹');
 
             $noresult = true;
             while ($track = $stmt->fetch()) {
@@ -1542,7 +1530,7 @@ if (mb_strlen($query) < 3 ||
 
                         $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, 'activate (open location "' . $playlist[0] . '")' /* spotify_command */, '' /* query */, '' /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Open playlist " . escapeQuery($playlist[1]) . " in Spotify", "This will open the playlist in Spotify", './images/' . $theme . '/' . 'spotify.png', 'yes', null, '');
 
-                        $w->result(null, '', 'Add playlist ' . escapeQuery($playlist[1]) . ' to the playlist..', 'This will add current playlist to a playlist you will choose in next step', './images/' . $theme . '/' . 'add.png', 'no', null, 'Add▹' . $playlist[0] . '∙' . escapeQuery($playlist[1]) . '▹');
+                        $w->result(null, '', 'Add playlist ' . escapeQuery($playlist[1]) . ' to...', 'This will add current track to Your Music or a playlist you will choose in next step', './images/' . $theme . '/' . 'add.png', 'no', null, 'Add▹' . $playlist[0] . '∙' . escapeQuery($playlist[1]) . '▹');
 
                         $getTracks = "select * from tracks where playable=1 and playlist_uri=:theplaylisturi limit " . $max_results;
                         $stmt = $db->prepare($getTracks);
@@ -1988,7 +1976,7 @@ if (mb_strlen($query) < 3 ||
                     $getPlaylists = "select * from playlists where ownedbyuser=1";
                     $stmt = $db->prepare($getPlaylists);
 
-                    $w->result(null, '', 'Add ' . $type . ' ' . $tmp[1] . ' to one of your playlists below..', "Select one of your playlists below to add " . $type, './images/' . $theme . '/' . 'add.png', 'no', null, '');
+                    $w->result(null, '', 'Add ' . $type . ' ' . $tmp[1] . ' to Your Music or one of your playlists below..', "Select Your Music or one of your playlists below to add " . $type, './images/' . $theme . '/' . 'add.png', 'no', null, '');
 
                     // put Alfred Playlist at beginning
                     if ($is_alfred_playlist_active == true) {
@@ -1997,6 +1985,8 @@ if (mb_strlen($query) < 3 ||
 
                         }
                     }
+                    
+					$w->result(null, serialize(array($track_uri /*track_uri*/, $album_uri /* album_uri */, '' /* artist_uri */, $playlist_uri /* playlist_uri */, '' /* spotify_command */, '' /* query */, 'ADD_TO_YOUR_MUSIC▹' /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, $track_name /* track_name */, $album_name /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, $playlist_name /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Your Music", "Select to add the " . $type . " to Your Music", './images/' . $theme . '/' . 'allplaylists.png', 'yes', null, '');
                 } else {
                     $getPlaylists = "select * from playlists where ownedbyuser=1 and ( name like :playlist or author like :playlist)";
                     $stmt = $db->prepare($getPlaylists);
@@ -2004,7 +1994,6 @@ if (mb_strlen($query) < 3 ||
                 }
 
                 $playlists = $stmt->execute();
-
             } catch (PDOException $e) {
                 handleDbIssuePdoXml($theme, $db);
                 return;
