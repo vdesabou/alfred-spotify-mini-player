@@ -1413,19 +1413,15 @@ if (mb_strlen($query) < 3 ||
                 'shift' => 'Not Available',
                 'fn' => 'Not Available',
                 'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'spotify.png', 'yes', null, '');
-
-            if
-            ($theartist != false
-            ) {
-                if ($is_spotifious_active == true) {
-                    $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, $theartist[4] . " ▹ " . $artist_name . " ►" /* query */, '' /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $artist_name . " with Spotifious", array(
-                        'Spotifious workflow must be installed and script filter set with <spotifious>',
-                        'alt' => 'Not Available',
-                        'cmd' => 'Not Available',
-                        'shift' => 'Not Available',
-                        'fn' => 'Not Available',
-                        'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'spotifious.png', 'yes', null, '');
-                }
+                
+            if ($is_spotifious_active == true) {
+                $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, $theartist[4] . " ▹ " . $artist_name . " ►" /* query */, '' /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $artist_name . " with Spotifious", array(
+                    'Spotifious workflow must be installed and script filter set with <spotifious>',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'spotifious.png', 'yes', null, '');
             }
 
         } // end of tracks by artist
