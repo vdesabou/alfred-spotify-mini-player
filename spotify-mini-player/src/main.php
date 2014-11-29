@@ -395,7 +395,7 @@ if (mb_strlen($query) < 3 ||
                 'cmd' => 'Not Available',
                 'shift' => 'Not Available',
                 'fn' => 'Not Available',
-                'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'settings.png', 'yes', null, '');
+                'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'allplaylists.png', 'yes', null, '');
         } else {
             $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'enable_alfred_playlist' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Control Alfred Playlist", array(
                 "You will control the Alfred Playlist (if disabled, you control Your Music)",
@@ -403,7 +403,7 @@ if (mb_strlen($query) < 3 ||
                 'cmd' => 'Not Available',
                 'shift' => 'Not Available',
                 'fn' => 'Not Available',
-                'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'settings.png', 'yes', null, '');
+                'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'alfred_playlist.png', 'yes', null, '');
         }
         if ($is_lyrics_active == true) {
             $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'disable_lyrics' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Disable Get Lyrics", array(
