@@ -1259,6 +1259,12 @@ function getTrackOrAlbumArtwork($w, $theme, $spotifyURL, $fetchIfNotPresent)
                 );
 
                 $w->request("$artwork", $options);
+            } else {
+	            if ($isAlbum) {
+	                return "./images/" . $theme . "/albums.png";
+	            } else {
+	                return "./images/" . $theme . "/tracks.png";
+	            }
             }
         } else {
             if ($isAlbum) {
@@ -1337,7 +1343,9 @@ function getPlaylistArtwork($w, $theme, $playlistURI, $fetchIfNotPresent, $force
                 );
 
                 $w->request("$artwork", $options);
-            }
+            } else {
+            	return "./images/" . $theme . "/playlists.png";
+        	}
         } else {
             return "./images/" . $theme . "/playlists.png";
         }
@@ -1379,6 +1387,7 @@ function getArtistArtwork($w, $theme, $artist, $fetchIfNotPresent)
     if (!is_file($currentArtwork) || (is_file($currentArtwork) && filesize($currentArtwork) == 0)) {
         if ($fetchIfNotPresent == true || (is_file($currentArtwork) && filesize($currentArtwork) == 0)) {
             $artwork = getArtistArtworkURL($w, $artist);
+            
             // if return 0, it is a 404 error, no need to fetch
             if (!empty($artwork) || (is_numeric($artwork) && $artwork != 0)) {
                 if (!file_exists($w->data() . "/artwork/" . hash('md5', $parsedArtist . ".png"))):
@@ -1389,6 +1398,8 @@ function getArtistArtwork($w, $theme, $artist, $fetchIfNotPresent)
                     CURLOPT_FILE => $fp
                 );
                 $w->request("$artwork", $options);
+            } else {
+	            return "./images/" . $theme . "/artists.png";
             }
         } else {
             return "./images/" . $theme . "/artists.png";
