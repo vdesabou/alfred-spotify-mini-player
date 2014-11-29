@@ -204,7 +204,7 @@ if ($type == "TRACK" && $other_settings == "") {
         displayNotification("Error: cannot update library while update is in progress");
         return;
     }
-    updatePlaylistList($w);
+    refreshLibrary($w);
     return;
 } else if ($type == "ADD_CURRENT_TRACK") {
     addCurrentTrackToAlfredPlaylistOrMyMusic($w);
@@ -603,7 +603,7 @@ if ($playlist_uri != "" && $other_settings == "") {
             $dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
             $dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
-            handleDbIssuePdoEcho($dbsettings);
+            handleDbIssuePdoEcho($dbsettings,$w);
             $dbsettings = null;
             return;
         }
@@ -731,8 +731,8 @@ if ($playlist_uri != "" && $other_settings == "") {
     } else if ($other_action == "update_your_music") {
         updateMyMusic($w);
         return;
-    } else if ($other_action == "update_playlist_list") {
-        updatePlaylistList($w);
+    } else if ($other_action == "refresh_library") {
+        refreshLibrary($w);
         return;
     }
 }

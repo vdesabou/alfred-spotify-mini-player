@@ -30,10 +30,10 @@ if (file_exists($w->data() . '/update_library_in_progress')) {
             if
             ($elapsed_time < 300
             ) {
-                $w->result(null, $w->data() . '/update_library_in_progress', 'Initialization phase since ' . beautifyTime($elapsed_time) . ' : ' . floatToSquares(0), 'waiting for Spotify servers to return required data', './images/' . $theme . '/' . 'update_in_progress.png', 'no', null, '');
+                $w->result(null, $w->data() . '/update_library_in_progress', 'Initialization phase since ' . beautifyTime($elapsed_time) . ' : ' . floatToSquares(0), 'waiting for Spotify servers to return required data', './images/' . 'gray' . '/' . 'update_in_progress.png', 'no', null, '');
             } else {
                 $w->result(null, '', 'There is a problem, the initialization phase last more than 5 minutes', 'Choose kill update library below', './images/' . $theme . '/' . 'warning.png', 'no', null, '');
-                $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'kill_update' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Kill update library', 'This will stop the library update', './images/' . $theme . '/' . 'kill.png', 'yes', '');
+                $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'kill_update' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Kill update library', 'This will stop the library update', './images/' . 'gray' . '/' . 'kill.png', 'yes', '');
             }
         } else {
             if ($update_library_in_progress_words[0] == 'Playlist List') {
@@ -45,9 +45,9 @@ if (file_exists($w->data() . '/update_library_in_progress')) {
             }
 
             if ($update_library_in_progress_words[2] != 0) {
-                $w->result(null, $w->data() . '/update_library_in_progress', $update_library_in_progress_words[0] . ' update in progress since ' . beautifyTime($elapsed_time) . ' : ' . floatToSquares(intval($update_library_in_progress_words[1]) / intval($update_library_in_progress_words[2])), $update_library_in_progress_words[1] . '/' . $update_library_in_progress_words[2] . ' ' . $type . ' processed so far', './images/' . $theme . '/' . 'update_in_progress.png', 'no', null, '');
+                $w->result(null, $w->data() . '/update_library_in_progress', $update_library_in_progress_words[0] . ' in progress since ' . beautifyTime($elapsed_time) . ' : ' . floatToSquares(intval($update_library_in_progress_words[1]) / intval($update_library_in_progress_words[2])), $update_library_in_progress_words[1] . '/' . $update_library_in_progress_words[2] . ' ' . $type . ' processed so far', './images/' . 'gray' . '/' . 'update_in_progress.png', 'no', null, '');
             } else {
-                $w->result(null, $w->data() . '/update_library_in_progress', $update_library_in_progress_words[0] . ' update in progress since ' . beautifyTime($elapsed_time) . ' : ' . floatToSquares(0), 'No ' . $type . ' processed so far', './images/' . $theme . '/' . 'update_in_progress.png', 'no', null, '');
+                $w->result(null, $w->data() . '/update_library_in_progress', $update_library_in_progress_words[0] . ' in progress since ' . beautifyTime($elapsed_time) . ' : ' . floatToSquares(0), 'No ' . $type . ' processed so far', './images/' . 'gray' . '/' . 'update_in_progress.png', 'no', null, '');
             }
         }
 
@@ -364,9 +364,11 @@ if (mb_strlen($query) < 3 ||
                 'fn' => 'Not Available',
                 'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'search.png', 'yes', null, '');
         }
-
         if ($update_in_progress == false) {
-            $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'update_library' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Re-Create Library', "When done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', null, '');
+            $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'refresh_library' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Refresh your library (when you updated it outside of the workflow)", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', null, '');
+        }
+        if ($update_in_progress == false) {
+            $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'update_library' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Re-Create your library from scratch', "When done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', null, '');
         }
         $w->result(null, '', "Configure Max Number of Results", "Number of results displayed. (it doesn't apply to your playlist list)", './images/' . $theme . '/' . 'numbers.png', 'no', null, 'Settings▹MaxResults▹');
         $w->result(null, '', "Configure Number of Radio tracks", "Number of tracks to get when creating a Radio Playlist.", './images/' . $theme . '/' . 'numbers.png', 'no', null, 'Settings▹RadioTracks▹');
@@ -653,10 +655,6 @@ if (mb_strlen($query) < 3 ||
                 if (mb_strlen($theplaylist) < 3) {
                     $getPlaylists = "select * from playlists";
                     $stmt = $db->prepare($getPlaylists);
-
-                    if ($update_in_progress == false) {
-                        $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'update_playlist_list' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Update your playlists (new, modified or deleted)", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', null, '');
-                    }
                 } else {
                     $getPlaylists = "select * from playlists where (name like :query or author like :query)";
                     $stmt = $db->prepare($getPlaylists);
@@ -748,10 +746,6 @@ if (mb_strlen($query) < 3 ||
             ) {
                 $w->result(null, '', "Clear your Alfred Playlist", "This will remove all the tracks in your current Alfred Playlist", './images/' . $theme . '/' . 'uncheck.png', 'no', null, 'Alfred Playlist▹Confirm Clear Alfred Playlist▹');
             }
-            if ($update_in_progress == false) {
-                $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, $alfred_playlist_uri /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'update_playlist' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, $alfred_playlist_name /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Update your Alfred Playlist", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', null, '');
-            }
-
         } //  Alfred Playlist end
         elseif ($kind == "Artist") {
             //
@@ -1032,10 +1026,6 @@ if (mb_strlen($query) < 3 ||
             $thequery = $words[1];
 
            	if (mb_strlen($thequery) < 3) {
-                
-	            if ($update_in_progress == false) {
-	                $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'update_your_music' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Update Your Music ", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', null, '');
-	            }
 	            $getCounters = 'select * from counters';
 	            try {
 	                $stmt = $db->prepare($getCounters);
@@ -1609,9 +1599,6 @@ if (mb_strlen($query) < 3 ||
                             $added = '📻 ';
                         }
                         $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, $playlist[0] /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, '' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, $playlist[1] /* playlist_name */, $playlist[5] /* playlist_artwork_path */, $alfred_playlist_name /* alfred_playlist_name */)), "🎵" . $added . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks), by " . $playlist[3], $arrayresult, $playlist[5], 'yes', null, '');
-                        if ($update_in_progress == false) {
-                            $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, $playlist[0] /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'update_playlist' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, $playlist[1] /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Update playlist " . ucfirst($playlist[1]) . " by " . $playlist[3], "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', null, '');
-                        }
 
                         $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, 'activate (open location "' . $playlist[0] . '")' /* spotify_command */, '' /* query */, '' /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Open playlist " . escapeQuery($playlist[1]) . " in Spotify", "This will open the playlist in Spotify", './images/' . $theme . '/' . 'spotify.png', 'yes', null, '');
 

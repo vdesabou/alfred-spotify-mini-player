@@ -2728,9 +2728,9 @@ php -f ./src/action.php -- "{query}" "UPDATE_LIBRARY" "UPDATE_LIBRARY" &gt;&gt; 
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>spot_mini_update_library</string>
+				<string>update_library</string>
 				<key>subtext</key>
-				<string>This will update the entire library</string>
+				<string>This will update the library</string>
 				<key>text</key>
 				<string>Update Spotify Mini Player library</string>
 				<key>withspace</key>
@@ -2783,7 +2783,7 @@ php -f ./src/action.php -- "{query}" "UPDATE_LIBRARY" "UPDATE_LIBRARY" &gt;&gt; 
 				<key>escaping</key>
 				<integer>127</integer>
 				<key>keyword</key>
-				<string>spot_mini_debug</string>
+				<string>debug</string>
 				<key>runningsubtext</key>
 				<string>Wait for it...</string>
 				<key>script</key>
