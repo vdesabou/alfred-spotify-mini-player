@@ -1366,8 +1366,8 @@ function getPlaylistArtwork($w, $theme, $playlistURI, $fetchIfNotPresent, $force
  * @return void
  */
 function getArtistArtwork($w, $theme, $artist, $fetchIfNotPresent)
-{
-    $parsedArtist = urlencode($artist);
+{	
+    $parsedArtist = urlencode(escapeQuery($artist));
 
     if (!file_exists($w->data() . "/artwork")):
         exec("mkdir '" . $w->data() . "/artwork'");
