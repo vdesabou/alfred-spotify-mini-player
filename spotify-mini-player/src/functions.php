@@ -22,7 +22,7 @@ function playAlfredPlaylist($w)
     exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
 
     if ($returnValue != 0) {
-        displayNotification("Error: Alfred Playlist is not set");
+        displayNotificationWithArtwork("Error: Alfred Playlist is not set", './images/' . 'gray'. '/' . 'warning.png');
         return;
     }
 
@@ -34,7 +34,7 @@ function playAlfredPlaylist($w)
     endforeach;
 
     if ($alfred_playlist_uri == "" || $alfred_playlist_name == "") {
-        displayNotification("Error: Alfred Playlist is not set");
+        displayNotificationWithArtwork("Error: Alfred Playlist is not set", './images/' . 'gray'. '/' . 'warning.png');
         return;
     }
 
@@ -66,7 +66,7 @@ function playCurrentArtist($w)
     exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
 
     if ($returnValue != 0) {
-        displayNotification("Error: cannot read settings");
+        displayNotificationWithArtwork("Error: cannot read settings", './images/' . 'gray'. '/' . 'warning.png');
         return;
     }
 
@@ -90,7 +90,7 @@ function playCurrentArtist($w)
         exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
         displayNotificationWithArtwork('🔈 Artist ' . escapeQuery($results[1]), getArtistArtwork($w, $theme, $results[1], true));
     } else {
-        displayNotification("Error: No track is playing");
+        displayNotificationWithArtwork("Error: No track is playing", './images/' . 'gray'. '/' . 'warning.png');
     }
 }
 
@@ -114,7 +114,7 @@ function playCurrentAlbum($w)
     exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
 
     if ($returnValue != 0) {
-        displayNotification("Error: cannot read settings");
+        displayNotificationWithArtwork("Error: cannot read settings", './images/' . 'gray'. '/' . 'warning.png');
         return;
     }
 
@@ -138,19 +138,19 @@ function playCurrentAlbum($w)
         exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
         displayNotificationWithArtwork('🔈 Album ' . escapeQuery($results[2]), getTrackOrAlbumArtwork($w, $theme, $results[4], true));
     } else {
-        displayNotification("Error: No track is playing");
+        displayNotificationWithArtwork("Error: No track is playing", './images/' . 'gray'. '/' . 'warning.png');
     }
 }
 
 
 /**
- * addCurrentTrackToAlfredPlaylistOrMyMusic function.
+ * addCurrentTrackToAlfredPlaylistOrYourMusic function.
  *
  * @access public
  * @param mixed $w
  * @return void
  */
-function addCurrentTrackToAlfredPlaylistOrMyMusic($w)
+function addCurrentTrackToAlfredPlaylistOrYourMusic($w)
 {
     //
     // Read settings from DB
@@ -160,7 +160,7 @@ function addCurrentTrackToAlfredPlaylistOrMyMusic($w)
     exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
 
     if ($returnValue != 0) {
-        displayNotification("Error: cannot read settings");
+        displayNotificationWithArtwork("Error: cannot read settings", './images/' . 'gray'. '/' . 'warning.png');
         return;
     }
 
@@ -173,7 +173,7 @@ function addCurrentTrackToAlfredPlaylistOrMyMusic($w)
     if ($is_alfred_playlist_active == true) {
         addCurrentTrackToAlfredPlaylist($w);
     } else {
-        addCurrentTrackToMyTracks($w);
+        addCurrentTrackToYourMusic($w);
     }
 }
 
@@ -200,7 +200,7 @@ function addCurrentTrackToAlfredPlaylist($w)
         exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
 
         if ($returnValue != 0) {
-            displayNotification("Error: Alfred Playlist is not set");
+            displayNotificationWithArtwork("Error: Alfred Playlist is not set", './images/' . 'gray'. '/' . 'warning.png');
             return;
         }
 
@@ -212,15 +212,15 @@ function addCurrentTrackToAlfredPlaylist($w)
         endforeach;
 
         if ($alfred_playlist_uri == "" || $alfred_playlist_name == "") {
-            displayNotification("Error: Alfred Playlist is not set");
+            displayNotificationWithArtwork("Error: Alfred Playlist is not set", './images/' . 'gray'. '/' . 'warning.png');
             return;
         }
         $tmp = explode(':', $results[4]);
         $ret = addTracksToPlaylist($w, $tmp[2], $alfred_playlist_uri, $alfred_playlist_name, false);
         if (is_numeric($ret) && $ret > 0) {
-            displayNotificationWithArtwork('' . $results[0] . ' by ' . $results[1] . ' added to ' . $alfred_playlist_name, getTrackOrAlbumArtwork($w, $theme, $results[4], true));
+            displayNotificationWithArtwork('' . $results[0] . ' by ' . $results[1] . ' added to ' . $alfred_playlist_name . ' Alfred Playlist', getTrackOrAlbumArtwork($w, $theme, $results[4], true));
         } else if (is_numeric($ret) && $ret == 0) {
-            displayNotification('Error: ' . $results[0] . ' by ' . $results[1] . ' is already in ' . $alfred_playlist_name);
+            displayNotificationWithArtwork('Error: ' . $results[0] . ' by ' . $results[1] . ' is already in ' . $alfred_playlist_name . ' Alfred Playlist', './images/' . 'gray'. '/' . 'warning.png');
         }
     } else {
         displayNotification("Error: No track is playing");
@@ -228,13 +228,13 @@ function addCurrentTrackToAlfredPlaylist($w)
 }
 
 /**
- * addCurrentTrackToMyTracks function.
+ * addCurrentTrackToYourMusic function.
  *
  * @access public
  * @param mixed $w
  * @return void
  */
-function addCurrentTrackToMyTracks($w)
+function addCurrentTrackToYourMusic($w)
 {
     // get info on current song
     $command_output = exec("./src/track_info.sh 2>&1");
@@ -247,7 +247,7 @@ function addCurrentTrackToMyTracks($w)
     exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
 
     if ($returnValue != 0) {
-        displayNotification("Error: Alfred Playlist is not set");
+        displayNotificationWithArtwork("Error: Alfred Playlist is not set", './images/' . 'gray'. '/' . 'warning.png');
         return;
     }
 
@@ -264,9 +264,9 @@ function addCurrentTrackToMyTracks($w)
         $tmp = explode(':', $results[4]);
         $ret = addTracksToYourMusic($w, $tmp[2], false);
         if (is_numeric($ret) && $ret > 0) {
-            displayNotificationWithArtwork('' . $results[0] . ' by ' . $results[1] . ' added to My Music', getTrackOrAlbumArtwork($w, $theme, $results[4], true));
+            displayNotificationWithArtwork('' . $results[0] . ' by ' . $results[1] . ' added to Your Music', getTrackOrAlbumArtwork($w, $theme, $results[4], true));
         } else if (is_numeric($ret) && $ret == 0) {
-            displayNotification('Error: ' . $results[0] . ' by ' . $results[1] . ' is already in My Music');
+            displayNotificationWithArtwork('Error: ' . $results[0] . ' by ' . $results[1] . ' is already in Your Music', './images/' . 'gray'. '/' . 'warning.png');
         }
     } else {
         displayNotification("Error: No track is playing");
@@ -311,7 +311,7 @@ function getSpotifyWebAPI($w)
 {
 
     if (!$w->internet()) {
-        displayNotificationWithArtwork("Error: No internet connection", './images/' . $theme . '/' . 'warning.png');
+        displayNotificationWithArtwork("Error: No internet connection", './images/' . 'gray'. '/' . 'warning.png');
         return false;
     }
 
@@ -534,7 +534,7 @@ function createRadioArtistPlaylist($w, $artist_name)
     exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
 
     if ($returnValue != 0) {
-        displayNotification("Error: cannot read settings");
+        displayNotificationWithArtwork("Error: cannot read settings", './images/' . 'gray'. '/' . 'warning.png');
         return;
     }
 
@@ -636,7 +636,7 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name)
     exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
 
     if ($returnValue != 0) {
-        displayNotification("Error: cannot read settings");
+        displayNotificationWithArtwork("Error: cannot read settings", './images/' . 'gray'. '/' . 'warning.png');
         return;
     }
 
@@ -839,7 +839,7 @@ function addTracksToYourMusic($w, $tracks, $allow_duplicate = true)
         }
 
         // refresh my tracks
-        updateMyMusic($w);
+        updateYourMusic($w);
     }
 
     return count($tracks);
@@ -1136,7 +1136,7 @@ function displayNotificationForCurrentTrack($w)
     exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
 
     if ($returnValue != 0) {
-        displayNotification("Error: cannot read settings");
+        displayNotificationWithArtwork("Error: cannot read settings", './images/' . 'gray'. '/' . 'warning.png');
         return;
     }
 
@@ -1187,7 +1187,7 @@ function displayLyricsForCurrentTrack()
 function displayLyrics($w, $artist, $title)
 {
     if (!$w->internet()) {
-        displayNotificationWithArtwork("Error: No internet connection", './images/' . $theme . '/' . 'warning.png');
+        displayNotificationWithArtwork("Error: No internet connection", './images/' . 'gray'. '/' . 'warning.png');
         return;
     }
     $output = getLyrics($w, $artist, $title);
@@ -1740,7 +1740,7 @@ function updateLibrary($w)
         }
     }
 
-    // Handle My Music
+    // Handle Your Music
     foreach ($savedMySavedTracks as $track) {
         $track = $track->track;
         if (count($track->available_markets) == 0 || in_array($country_code, $track->available_markets) !== false) {
@@ -1841,7 +1841,7 @@ function updateLibrary($w)
     }
 
     $elapsed_time = time() - $words[3];
-    displayNotification("Library has been created (" . $nb_track . " tracks) - it took " . beautifyTime($elapsed_time));
+    displayNotificationWithArtwork("Library created (" . $nb_track . " tracks) - took " . beautifyTime($elapsed_time),'./images/' . $theme . '/' . 'update.png');
 
     unlink($w->data() . "/update_library_in_progress");
     if (file_exists($w->data() . '/library_old.db')) {
@@ -2071,7 +2071,7 @@ function updatePlaylist($w, $playlist_uri, $playlist_name)
 
         $elapsed_time = time() - $words[3];
 
-        displayNotificationWithArtwork("\nPlaylist " . $playlist_name . " has been updated (" . $nb_track . " tracks) - it took " . beautifyTime($elapsed_time), $playlist_artwork_path);
+        //displayNotificationWithArtwork("\nPlaylist " . $playlist_name . " updated (" . $nb_track . " tracks) - took " . beautifyTime($elapsed_time), $playlist_artwork_path);
 
         unlink($w->data() . "/update_library_in_progress");
         unlink($w->data() . '/library_old.db');
@@ -2103,8 +2103,6 @@ function refreshLibrary($w)
         displayNotification("Error: Cannot update library, authentication issue");
         return;
     }
-
-
     touch($w->data() . "/update_library_in_progress");
     $w->write('InitRefreshLibrary▹' . 0 . '▹' . 0 . '▹' . time(), 'update_library_in_progress');
 
@@ -2146,7 +2144,11 @@ function refreshLibrary($w)
     }
     copy($w->data() . '/library_old.db', $w->data() . '/library_new.db');
     $dbfile = $w->data() . '/library_new.db';
-
+	
+	$nb_added_playlists = 0;
+	$nb_removed_playlists = 0;
+	$nb_updated_playlists = 0;
+	
     try {
         $db = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -2169,6 +2171,9 @@ function refreshLibrary($w)
         $updatePlaylistsNbTracks = "update playlists set nb_tracks=:nb_tracks where uri=:uri";
         $stmtUpdatePlaylistsNbTracks = $db->prepare($updatePlaylistsNbTracks);
 
+        $deleteFromTracksYourMusic = "delete from tracks where mymusic=:mymusic";
+        $stmtDeleteFromTracksYourMusic = $db->prepare($deleteFromTracksYourMusic);
+        
 		$savedListPlaylist = array();
         try {
             $offsetGetUserPlaylists = 0;
@@ -2180,11 +2185,8 @@ function refreshLibrary($w)
                 ));
 
                 $nb_playlist_total = $userPlaylists->total;
-
-                
+               
                 foreach ($userPlaylists->items as $playlist) {
-                    $nb_playlist++;
-                    $w->write('Refresh Library▹' . $nb_playlist . '▹' . $nb_playlist_total . '▹' . $words[3], 'update_library_in_progress');
                     $savedListPlaylist[] = $playlist;
                     $nb_tracktotal += $tracks->total;                    
                 }
@@ -2199,12 +2201,17 @@ function refreshLibrary($w)
             unlink($w->data() . '/settings_tmp.db');
         }
 
+		// consider Your Music as a playlist for progress bar
+		$nb_playlist_total++;
 		
 		foreach ($savedListPlaylist as $playlist) {
 			
             $tracks = $playlist->tracks;
             $owner = $playlist->owner;
-             
+            
+            $nb_playlist++;
+            $w->write('Refresh Library▹' . $nb_playlist . '▹' . $nb_playlist_total . '▹' . $words[3], 'update_library_in_progress');
+            
             // Loop on existing playlists in library       
             $stmtGetPlaylists->bindValue(':uri', $playlist->uri);
             $stmtGetPlaylists->execute();
@@ -2217,6 +2224,8 @@ function refreshLibrary($w)
 
 			// Playlist does not exist, add it
             if ($noresult == true) {
+	            $nb_added_playlists++;
+	            
                 $playlist_artwork_path = getPlaylistArtwork($w, $theme, $playlist->uri, true, true);
 
                 if ("-" . $owner->id . "-" == "-" . $userid . "-") {
@@ -2301,6 +2310,7 @@ function refreshLibrary($w)
                 // number of tracks has changed or playlist name has changed
                 // update the playlist
                 if ($playlists[2] != $tracks->total || $playlists[1] != escapeQuery($playlist->name)) {
+	                $nb_updated_playlists++;
 	                
 	                if($playlists[1] != escapeQuery($playlist->name)) {
 	                    $updatePlaylistsName = "update playlists set name=:name where uri=:uri";
@@ -2403,6 +2413,8 @@ function refreshLibrary($w)
                 }
             }
             if ($found == false) {
+	            $nb_removed_playlists++;
+	            
                 $deleteFromPlaylist = "delete from playlists where uri=:uri";
                 $stmtDelete = $db->prepare($deleteFromPlaylist);
                 $stmtDelete->bindValue(':uri', $playlist_in_db[0]);
@@ -2416,6 +2428,84 @@ function refreshLibrary($w)
             }
         }
     
+		// check for update to Your Music
+        $savedMySavedTracks = array();
+        try {
+            $offsetGetMySavedTracks = 0;
+            $limitGetMySavedTracks = 50;
+            do {
+                $userMySavedTracks = $api->getMySavedTracks(array(
+                    'limit' => $limitGetMySavedTracks,
+                    'offset' => $offsetGetMySavedTracks
+                ));
+				
+				foreach ($userMySavedTracks->items as $item) {
+					$savedMySavedTracks[] = $item;
+				}
+					
+                $offsetGetMySavedTracks += $limitGetMySavedTracks;
+            } while ($offsetGetMySavedTracks < $userMySavedTracks->total);
+        } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+            echo "Error(getMySavedTracks): (exception " . $e . ")";
+            handleDbIssuePdoEcho($db,$w);
+            return false;
+        }
+		// get current number of track in Your Music
+	    $getCount = 'select count(distinct uri) from tracks where mymusic=1';
+	    $stmt = $db->prepare($getCount);
+	    $stmt->execute();
+	    $mymusic_tracks = $stmt->fetch();
+	    $your_music_updated=false;
+		if($mymusic_tracks[0] != count($savedMySavedTracks)) {
+			
+			$your_music_updated=true;
+			// Your Music has changed, update it
+            $nb_playlist++;
+            $w->write('Refresh Library▹' . $nb_playlist . '▹' . $nb_playlist_total . '▹' . $words[3], 'update_library_in_progress');
+            
+			// delete tracks
+        	$stmtDeleteFromTracksYourMusic->bindValue(':mymusic', 1);
+			$stmtDeleteFromTracksYourMusic->execute();
+        
+            foreach ($savedMySavedTracks as $item) {
+                $track = $item->track;
+                if (count($track->available_markets) == 0 || in_array($country_code, $track->available_markets) !== false) {
+                    $playable = 1;
+                } else {
+                    $playable = 0;
+                }
+                $artists = $track->artists;
+                $artist = $artists[0];
+                $album = $track->album;
+
+                //
+                // Download artworks
+                $track_artwork_path = getTrackOrAlbumArtwork($w, $theme, $track->uri, true);
+                $artist_artwork_path = getArtistArtwork($w, $theme, $artist->name, true);
+                $album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $album->uri, true);
+
+
+                $stmtTrack->bindValue(':mymusic', 1);
+                $stmtTrack->bindValue(':popularity', $track->popularity);
+                $stmtTrack->bindValue(':uri', $track->uri);
+                $stmtTrack->bindValue(':album_uri', $album->uri);
+                $stmtTrack->bindValue(':artist_uri', $artist->uri);
+                $stmtTrack->bindValue(':track_name', escapeQuery($track->name));
+                $stmtTrack->bindValue(':album_name', escapeQuery($album->name));
+                $stmtTrack->bindValue(':artist_name', escapeQuery($artist->name));
+                $stmtTrack->bindValue(':album_type', $album->album_type);
+                $stmtTrack->bindValue(':track_artwork_path', $track_artwork_path);
+                $stmtTrack->bindValue(':artist_artwork_path', $artist_artwork_path);
+                $stmtTrack->bindValue(':album_artwork_path', $album_artwork_path);
+                $stmtTrack->bindValue(':playlist_name', '');
+                $stmtTrack->bindValue(':playlist_uri', '');
+                $stmtTrack->bindValue(':playable', $playable);
+                $stmtTrack->bindValue(':added_at', $item->added_at);
+                $stmtTrack->bindValue(':duration_ms', $track->duration_ms);
+                $stmtTrack->execute();
+            }
+        }        
+        
 	    $getCount = 'select count(distinct uri) from tracks';
 	    $stmt = $db->prepare($getCount);
 	    $stmt->execute();
@@ -2464,7 +2554,34 @@ function refreshLibrary($w)
 	    $stmt->execute();
 
         $elapsed_time = time() - $words[3];
-        displayNotification("Library has been refreshed - it took " . beautifyTime($elapsed_time));
+        $changed = false;
+        if($nb_added_playlists>0) {
+	        $addedMsg = $nb_added_playlists . ' added';
+	        $changed = true;
+        }
+        
+        if($nb_removed_playlists>0) {
+	        $removedMsg = $nb_removed_playlists . ' removed';
+	        $changed = true;
+        }
+        
+        if($nb_updated_playlists>0) {
+	        $updatedMsg = $nb_updated_playlists . ' updated';
+	        $changed = true;
+        }
+        
+        if($your_music_updated) {
+	       $yourMusicMsg = 'Your Music updated';
+	       $changed = true; 
+        }
+        
+        if($changed) {
+	        $message = ' (' . $addedMsg . ' ' . $removedMsg . ' ' . $updatedMsg . ' ' . $yourMusicMsg . ')'; 
+        } else {
+	        $message = ' (no change)';
+        }
+ 
+        displayNotificationWithArtwork("Library refreshed" . $message . " - took " . beautifyTime($elapsed_time),'./images/' . $theme . '/' . 'update.png');
 
         unlink($w->data() . "/update_library_in_progress");
         unlink($w->data() . '/library_old.db');
@@ -2479,18 +2596,18 @@ function refreshLibrary($w)
 }
 
 /**
- * updateMyMusic function.
+ * updateYourMusic function.
  *
  * @access public
  * @param mixed $w
  * @return void
  */
-function updateMyMusic($w)
+function updateYourMusic($w)
 {
 
     $api = getSpotifyWebAPI($w);
     if ($api == false) {
-        displayNotification("Error: Cannot update my music, authentication issue");
+        displayNotification("Error: Cannot update Your Music, authentication issue");
         return;
     }
 
@@ -2667,7 +2784,7 @@ function updateMyMusic($w)
         $stmt->execute();
 
         $elapsed_time = time() - $words[3];
-        displayNotification("My Music has been updated - it took " . beautifyTime($elapsed_time));
+        //displayNotification("Your Music updated - took " . beautifyTime($elapsed_time));
 
         unlink($w->data() . "/update_library_in_progress");
         unlink($w->data() . '/library_old.db');
@@ -2693,8 +2810,8 @@ function updateMyMusic($w)
 function handleDbIssuePdoXml($theme, $dbhandle)
 {
     $w = new Workflows('com.vdesabou.spotify.mini.player');
-    $w->result(uniqid(), '', 'Database Error: ' . $dbhandle->errorInfo()[0] . ' ' . $dbhandle->errorInfo()[1] . ' ' . $dbhandle->errorInfo()[2], '', './images/' . $theme . '/' . 'warning.png', 'no', null, '');
-    $w->result(uniqid(), '', 'There is a problem with the library, try to re-create it.', 'Select Re-Create Library library below', './images/' . $theme . '/' . 'warning.png', 'no', null, '');
+    $w->result(uniqid(), '', 'Database Error: ' . $dbhandle->errorInfo()[0] . ' ' . $dbhandle->errorInfo()[1] . ' ' . $dbhandle->errorInfo()[2], '', './images/' . 'gray'. '/' . 'warning.png', 'no', null, '');
+    $w->result(uniqid(), '', 'There is a problem with the library, try to re-create it.', 'Select Re-Create Library library below', './images/' . 'gray'. '/' . 'warning.png', 'no', null, '');
     $w->result(uniqid(), serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'update_library' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Re-Create Library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', null, '');
     echo $w->toxml();
 }
@@ -2727,7 +2844,7 @@ function handleDbIssuePdoEcho($dbhandle,$w)
         unlink($w->data() . '/settings_tmp.db');
     }
     
-    displayNotificationWithArtwork("Error: DB error " . $dbhandle->errorInfo()[2], './images/' . $theme . '/' . 'warning.png');
+    displayNotificationWithArtwork("Error: DB error " . $dbhandle->errorInfo()[2], './images/' . 'gray'. '/' . 'warning.png');
 }
 
 
@@ -2914,7 +3031,7 @@ function checkForUpdate($w, $last_check_update_time, $dbsettings)
 
         if (!$w->internet()) {
             displayNotificationWithArtwork("Check for update error:
-No internet connection", './images/' . $theme . '/' . 'warning.png');
+No internet connection", './images/' . 'gray'. '/' . 'warning.png');
             return;
         }
 
@@ -2979,7 +3096,7 @@ function doWebApiRequest($w, $url)
     $json = $w->request($url);
 
     if (empty($json)) {
-        $w->result(null, '', "Error: Spotify WEB API returned empty result", $url, './images/' . $theme . '/' . 'warning.png', 'no', null, '');
+        $w->result(null, '', "Error: Spotify WEB API returned empty result", $url, './images/' . 'gray'. '/' . 'warning.png', 'no', null, '');
         echo $w->toxml();
         exit;
     }
@@ -2987,22 +3104,22 @@ function doWebApiRequest($w, $url)
     $json = json_decode($json);
     switch (json_last_error()) {
         case JSON_ERROR_DEPTH:
-            $w->result(null, '', "There was an error when retrieving online information", "Maximum stack depth exceeded", './images/' . $theme . '/' . 'warning.png', 'no', null, '');
+            $w->result(null, '', "There was an error when retrieving online information", "Maximum stack depth exceeded", './images/' . 'gray'. '/' . 'warning.png', 'no', null, '');
             echo $w->toxml();
             exit;
         case JSON_ERROR_CTRL_CHAR:
-            $w->result(null, '', "There was an error when retrieving online information", "Unexpected control character found", './images/' . $theme . '/' . 'warning.png', 'no', null, '');
+            $w->result(null, '', "There was an error when retrieving online information", "Unexpected control character found", './images/' . 'gray'. '/' . 'warning.png', 'no', null, '');
             echo $w->toxml();
             exit;
         case JSON_ERROR_SYNTAX:
-            $w->result(null, '', "There was an error when retrieving online information", "Syntax error, malformed JSON", './images/' . $theme . '/' . 'warning.png', 'no', null, '');
+            $w->result(null, '', "There was an error when retrieving online information", "Syntax error, malformed JSON", './images/' . 'gray'. '/' . 'warning.png', 'no', null, '');
             echo $w->toxml();
             exit;
         case JSON_ERROR_NONE:
             return $json;
     }
 
-    $w->result(null, '', "Error: Spotify WEB API returned error " . json_last_error(), "Try again or report to author", './images/' . $theme . '/' . 'warning.png', 'no', null, '');
+    $w->result(null, '', "Error: Spotify WEB API returned error " . json_last_error(), "Try again or report to author", './images/' . 'gray'. '/' . 'warning.png', 'no', null, '');
     echo $w->toxml();
     exit;
 }

@@ -40,7 +40,7 @@ $alfred_playlist_name = $arg[17];
 
 if ($add_to_option != "") {
     if (file_exists($w->data() . '/update_library_in_progress')) {
-        displayNotification("Error: cannot modify library while update is in progress");
+        displayNotificationWithArtwork("Error: cannot modify library while update is in progress",'./images/' . 'gray'. '/' . 'warning.png');
         return;
     }
 }
@@ -69,7 +69,7 @@ if ($type == "TRACK" && $other_settings == "") {
             exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
 
             if ($returnValue != 0) {
-                displayNotification("Error: cannot read settings");
+                displayNotificationWithArtwork("Error: cannot read settings", './images/' . 'gray'. '/' . 'warning.png');
                 return;
             }
 
@@ -87,7 +87,7 @@ if ($type == "TRACK" && $other_settings == "") {
             if ($is_alfred_playlist_active == true) {
 
                 if ($alfred_playlist_uri == "" || $alfred_playlist_name == "") {
-                    displayNotification("Error: Alfred Playlist is not set");
+                    displayNotificationWithArtwork("Error: Alfred Playlist is not set", './images/' . 'gray'. '/' . 'warning.png');
                     return;
                 }
 
@@ -207,7 +207,7 @@ if ($type == "TRACK" && $other_settings == "") {
     refreshLibrary($w);
     return;
 } else if ($type == "ADD_CURRENT_TRACK") {
-    addCurrentTrackToAlfredPlaylistOrMyMusic($w);
+    addCurrentTrackToAlfredPlaylistOrYourMusic($w);
     return;
 } else if ($type == "ALBUM_OR_PLAYLIST") {
     if ($add_to_option != "") {
@@ -222,7 +222,7 @@ if ($type == "TRACK" && $other_settings == "") {
             exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
 
             if ($returnValue != 0) {
-                displayNotification("Error: cannot read settings");
+                displayNotificationWithArtwork("Error: cannot read settings", './images/' . 'gray'. '/' . 'warning.png');
                 return;
             }
 
@@ -245,7 +245,7 @@ if ($type == "TRACK" && $other_settings == "") {
             if ($is_alfred_playlist_active == true) {
 
                 if ($alfred_playlist_uri == "" || $alfred_playlist_name == "") {
-                    displayNotification("Error: Alfred Playlist is not set");
+                    displayNotificationWithArtwork("Error: Alfred Playlist is not set", './images/' . 'gray'. '/' . 'warning.png');
                     return;
                 }
 
@@ -285,7 +285,7 @@ if ($type == "TRACK" && $other_settings == "") {
             exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
 
             if ($returnValue != 0) {
-                displayNotification("Error: cannot read settings");
+                displayNotificationWithArtwork("Error: cannot read settings", './images/' . 'gray'. '/' . 'warning.png');
                 return;
             }
 
@@ -478,7 +478,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         return;
     } else if ($setting[0] == "CLEAR_ALFRED_PLAYLIST") {
         if ($setting[1] == "" || $setting[2] == "") {
-            displayNotification("Error: Alfred Playlist is not set");
+            displayNotificationWithArtwork("Error: Alfred Playlist is not set", './images/' . 'gray'. '/' . 'warning.png');
             return;
         }
 
@@ -500,7 +500,7 @@ if ($playlist_uri != "" && $other_settings == "") {
     exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
 
     if ($returnValue != 0) {
-        displayNotification("Error: cannot read settings");
+        displayNotificationWithArtwork("Error: cannot read settings", './images/' . 'gray'. '/' . 'warning.png');
         return;
     }
 
@@ -593,7 +593,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         return;
     } else if ($other_action == "check_for_update") {
         if (!$w->internet()) {
-            displayNotificationWithArtwork("Error: No internet connection", './images/' . $theme . '/' . 'warning.png');
+            displayNotificationWithArtwork("Error: No internet connection", './images/' . 'gray'. '/' . 'warning.png');
             return;
         }
 
@@ -621,7 +621,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         if ($is_alfred_playlist_active == true) {
             addCurrentTrackToAlfredPlaylist($w);
         } else {
-            addCurrentTrackToMyTracks($w);
+            addCurrentTrackToYourMusic($w);
         }
         return;
     } else if ($other_action == "previous") {
@@ -633,7 +633,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         displayNotificationForCurrentTrack($w);
         return;
     } else if ($other_action == "add_current_track") {
-        addCurrentTrackToAlfredPlaylistOrMyMusic($w);
+        addCurrentTrackToAlfredPlaylistOrYourMusic($w);
         return;
     } else if ($other_action == "random") {
         $track_uri = getRandomTrack($w);
@@ -704,7 +704,7 @@ if ($playlist_uri != "" && $other_settings == "") {
     } else if ($other_action == "morefromthisartist") {
 
         if (!$w->internet()) {
-            displayNotificationWithArtwork("Error: No internet connection", './images/' . $theme . '/' . 'warning.png');
+            displayNotificationWithArtwork("Error: No internet connection", './images/' . 'gray'. '/' . 'warning.png');
             return;
         }
         if ($artist_uri == "") {
@@ -729,7 +729,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         updateLibrary($w);
         return;
     } else if ($other_action == "update_your_music") {
-        updateMyMusic($w);
+        updateYourMusic($w);
         return;
     } else if ($other_action == "refresh_library") {
         refreshLibrary($w);

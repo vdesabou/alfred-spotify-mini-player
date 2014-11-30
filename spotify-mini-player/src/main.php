@@ -32,7 +32,7 @@ if (file_exists($w->data() . '/update_library_in_progress')) {
             ) {
                 $w->result(null, $w->data() . '/update_library_in_progress', 'Initialization phase since ' . beautifyTime($elapsed_time) . ' : ' . floatToSquares(0), 'waiting for Spotify servers to return required data', './images/' . 'gray' . '/' . 'update_in_progress.png', 'no', null, '');
             } else {
-                $w->result(null, '', 'There is a problem, the initialization phase last more than 5 minutes', 'Choose kill update library below', './images/' . $theme . '/' . 'warning.png', 'no', null, '');
+                $w->result(null, '', 'There is a problem, the initialization phase last more than 5 minutes', 'Choose kill update library below', './images/' . 'gray'. '/' . 'warning.png', 'no', null, '');
                 $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'kill_update' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Kill update library', 'This will stop the library update', './images/' . 'gray' . '/' . 'kill.png', 'yes', '');
             }
         } else {
@@ -161,7 +161,7 @@ if ($oauth_client_id == '' && substr_count($query, '▹') == 0) {
         $w->result(null, '', 'Your Application Client ID is missing', 'Get it from your Spotify Application and copy/paste it here', './images/' . $theme . '/' . 'settings.png', 'no', null, '');
         $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, 'Open_Url▹' . 'https://developer.spotify.com/my-applications/#!/applications' /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Open Spotify Application page to get required information', "This will open the Application page with your default browser", './images/' . $theme . '/' . 'spotify.png', 'yes', null, '');
     } else if (mb_strlen($query) != 32) {
-        $w->result(null, '', 'The Application Client ID does not seem valid!', 'The length is not 32. Make sure to copy the Client ID from https://developer.spotify.com/my-applications', './images/' . $theme . '/' . 'warning.png', 'no', null, '');
+        $w->result(null, '', 'The Application Client ID does not seem valid!', 'The length is not 32. Make sure to copy the Client ID from https://developer.spotify.com/my-applications', './images/' . 'gray'. '/' . 'warning.png', 'no', null, '');
     } else {
         $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, 'Oauth_Client_ID▹' . rtrim(ltrim($query)) /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Application Client ID will be set to <" . rtrim(ltrim($query)) . ">", "Type enter to validate the Application Client ID", './images/' . $theme . '/' . 'settings.png', 'yes', null, '');
     }
@@ -174,9 +174,9 @@ if ($oauth_client_secret == '' && substr_count($query, '▹') == 0) {
         $w->result(null, '', 'Your Application Client Secret is missing!', 'Get it from your Spotify Application and enter it here', './images/' . $theme . '/' . 'settings.png', 'no', null, '');
         $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, 'Open_Url▹' . 'https://developer.spotify.com/my-applications/#!/applications' /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Open Spotify Application page to get required information', "This will open the Application page with your default browser", './images/' . $theme . '/' . 'spotify.png', 'yes', null, '');
     } else if (mb_strlen($query) != 32) {
-        $w->result(null, '', 'The Application Client Secret does not seem valid!', 'The length is not 32. Make sure to copy the Client Secret from https://developer.spotify.com/my-applications', './images/' . $theme . '/' . 'warning.png', 'no', null, '');
+        $w->result(null, '', 'The Application Client Secret does not seem valid!', 'The length is not 32. Make sure to copy the Client Secret from https://developer.spotify.com/my-applications', './images/' . 'gray'. '/' . 'warning.png', 'no', null, '');
     } else if ($query == $oauth_client_id) {
-        $w->result(null, '', 'The Application Client Secret entered is the same as Application Client ID, this is wrong!', 'Make sure to copy the Client Secret from https://developer.spotify.com/my-applications', './images/' . $theme . '/' . 'warning.png', 'no', null, '');
+        $w->result(null, '', 'The Application Client Secret entered is the same as Application Client ID, this is wrong!', 'Make sure to copy the Client Secret from https://developer.spotify.com/my-applications', './images/' . 'gray'. '/' . 'warning.png', 'no', null, '');
     } else {
         $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, 'Oauth_Client_SECRET▹' . rtrim(ltrim($query)) /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Application Client Secret will be set to <" . rtrim(ltrim($query)) . ">", "Type enter to validate the Application Client Secret", './images/' . $theme . '/' . 'settings.png', 'yes', null, '');
     }
@@ -616,7 +616,7 @@ if (mb_strlen($query) < 3 ||
         if
         ($noresult
         ) {
-            $w->result(null, 'help', "There is no result for your search", "", './images/' . $theme . '/' . 'warning.png', 'no', null, '');
+            $w->result(null, 'help', "There is no result for your search", "", './images/' . 'gray'. '/' . 'warning.png', 'no', null, '');
         }
 
         $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, 'activate (open location "spotify:search:' . $query . '")' /* spotify_command */, '' /* query */, '' /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $query . " in Spotify", array(
@@ -725,7 +725,7 @@ if (mb_strlen($query) < 3 ||
             if
             ($noresult
             ) {
-                $w->result(null, 'help', "There is no result for your search", "", './images/' . $theme . '/' . 'warning.png', 'no', null, '');
+                $w->result(null, 'help', "There is no result for your search", "", './images/' . 'gray'. '/' . 'warning.png', 'no', null, '');
             }
 
         } // search by Playlist end
@@ -792,7 +792,7 @@ if (mb_strlen($query) < 3 ||
             if
             ($noresult
             ) {
-                $w->result(null, 'help', "There is no result for your search", "", './images/' . $theme . '/' . 'warning.png', 'no', null, '');
+                $w->result(null, 'help', "There is no result for your search", "", './images/' . 'gray'. '/' . 'warning.png', 'no', null, '');
             }
 
         } // search by Artist end
@@ -840,7 +840,7 @@ if (mb_strlen($query) < 3 ||
             if
             ($noresult
             ) {
-                $w->result(null, 'help', "There is no result for your search", "", './images/' . $theme . '/' . 'warning.png', 'no', null, '');
+                $w->result(null, 'help', "There is no result for your search", "", './images/' . 'gray'. '/' . 'warning.png', 'no', null, '');
             }
         } // search by Album end
         elseif ($kind == "Featured Playlist") {
@@ -1133,7 +1133,7 @@ if (mb_strlen($query) < 3 ||
 		        if
 		        ($noresult
 		        ) {
-		            $w->result(null, 'help', "There is no result for your search", "", './images/' . $theme . '/' . 'warning.png', 'no', null, '');
+		            $w->result(null, 'help', "There is no result for your search", "", './images/' . 'gray'. '/' . 'warning.png', 'no', null, '');
 		        }
             }
         } // Featured Your Music end
@@ -1391,7 +1391,7 @@ if (mb_strlen($query) < 3 ||
                 if (mb_strlen($track) < 3) {
                     $w->result(null, 'help', "There is no track in your library for the artist " . escapeQuery($artist_name), "Choose one of the options above", './images/' . $theme . '/' . 'info.png', 'no', null, '');
                 } else {
-                    $w->result(null, 'help', "There is no result for your search", "", './images/' . $theme . '/' . 'warning.png', 'no', null, '');
+                    $w->result(null, 'help', "There is no result for your search", "", './images/' . 'gray'. '/' . 'warning.png', 'no', null, '');
                 }
 
             }
@@ -1523,7 +1523,7 @@ if (mb_strlen($query) < 3 ||
             if
             ($noresult
             ) {
-                $w->result(null, 'help', "There is no result for your search", "", './images/' . $theme . '/' . 'warning.png', 'no', null, '');
+                $w->result(null, 'help', "There is no result for your search", "", './images/' . 'gray'. '/' . 'warning.png', 'no', null, '');
 
                 $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, 'activate (open location "spotify:search:' . $album_name . '")' /* spotify_command */, '' /* query */, '' /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $album_name . " in Spotify", array(
                     'This will start a new search in Spotify',
@@ -1682,7 +1682,7 @@ if (mb_strlen($query) < 3 ||
                     if
                     ($noresult
                     ) {
-                        $w->result(null, 'help', "There is no result for your search", "", './images/' . $theme . '/' . 'warning.png', 'no', null, '');
+                        $w->result(null, 'help', "There is no result for your search", "", './images/' . 'gray'. '/' . 'warning.png', 'no', null, '');
 
                     }
 
@@ -1792,7 +1792,7 @@ if (mb_strlen($query) < 3 ||
             if
             ($noresult
             ) {
-                $w->result(null, 'help', "There is no result for your search", "", './images/' . $theme . '/' . 'warning.png', 'no', null, '');
+                $w->result(null, 'help', "There is no result for your search", "", './images/' . 'gray'. '/' . 'warning.png', 'no', null, '');
 
             }
 
@@ -1853,7 +1853,7 @@ if (mb_strlen($query) < 3 ||
             if
             ($noresult
             ) {
-                $w->result(null, 'help', "There is no result for your search", "", './images/' . $theme . '/' . 'warning.png', 'no', null, '');
+                $w->result(null, 'help', "There is no result for your search", "", './images/' . 'gray'. '/' . 'warning.png', 'no', null, '');
             }
         } // end of Your Music▹Albums▹
         elseif ($kind == "Your Music" && $words[1] == "Artists") {
@@ -1893,7 +1893,7 @@ if (mb_strlen($query) < 3 ||
             if
             ($noresult
             ) {
-                $w->result(null, 'help', "There is no result for your search", "", './images/' . $theme . '/' . 'warning.png', 'no', null, '');
+                $w->result(null, 'help', "There is no result for your search", "", './images/' . 'gray'. '/' . 'warning.png', 'no', null, '');
             }
         } // end of Your Music▹Artists▹
         elseif ($kind == "Settings") {
@@ -1908,7 +1908,7 @@ if (mb_strlen($query) < 3 ||
                     if (is_numeric($the_query) == true && $the_query > 0) {
                         $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, 'MAX_RESULTS▹' . $the_query /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Max Results will be set to <" . $the_query . ">", "Type enter to validate the Max Results", './images/' . $theme . '/' . 'settings.png', 'yes', null, '');
                     } else {
-                        $w->result(null, '', "The Max Results value entered is not valid", "Please fix it", './images/' . $theme . '/' . 'warning.png', 'no', null, '');
+                        $w->result(null, '', "The Max Results value entered is not valid", "Please fix it", './images/' . 'gray'. '/' . 'warning.png', 'no', null, '');
 
                     }
                 }
@@ -1920,7 +1920,7 @@ if (mb_strlen($query) < 3 ||
                     if (is_numeric($the_query) == true && $the_query > 0 && $the_query <= 100) {
                         $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, 'RADIO_TRACKS▹' . $the_query /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Number of Radio Tracks will be set to <" . $the_query . ">", "Type enter to validate the Radio Tracks number", './images/' . $theme . '/' . 'settings.png', 'yes', null, '');
                     } else {
-                        $w->result(null, '', "The number of tracks value entered is not valid", "Please fix it, it must be a number between 1 and 100", './images/' . $theme . '/' . 'warning.png', 'no', null, '');
+                        $w->result(null, '', "The number of tracks value entered is not valid", "Please fix it, it must be a number between 1 and 100", './images/' . 'gray'. '/' . 'warning.png', 'no', null, '');
 
                     }
                 }
@@ -1932,7 +1932,7 @@ if (mb_strlen($query) < 3 ||
 
             $api = getSpotifyWebAPI($w);
             if ($api == false) {
-                $w->result(null, 'help', "Internal issue (getSpotifyWebAPI)", "", './images/' . $theme . '/' . 'warning.png', 'no', null, '');
+                $w->result(null, 'help', "Internal issue (getSpotifyWebAPI)", "", './images/' . 'gray'. '/' . 'warning.png', 'no', null, '');
                 echo $w->toxml();
                 return;
             }
@@ -1976,7 +1976,7 @@ if (mb_strlen($query) < 3 ||
                 }
 
             } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-                $w->result(null, 'help', "Exception occurred", "" . $e, './images/' . $theme . '/' . 'warning.png', 'no', null, '');
+                $w->result(null, 'help', "Exception occurred", "" . $e, './images/' . 'gray'. '/' . 'warning.png', 'no', null, '');
                 echo $w->toxml();
                 return;
             }
@@ -2120,7 +2120,7 @@ if (mb_strlen($query) < 3 ||
                 }
             } elseif ($setting_kind == "Confirm Clear Alfred Playlist") {
 
-                $w->result(null, '', "Are you sure?", "This will remove all the tracks in your current Alfred Playlist.", './images/' . $theme . '/' . 'warning.png', 'no', null, '');
+                $w->result(null, '', "Are you sure?", "This will remove all the tracks in your current Alfred Playlist.", './images/' . 'gray'. '/' . 'warning.png', 'no', null, '');
 
                 $w->result(null, '', "No, cancel", "Return to Alfred Playlist", './images/' . $theme . '/' . 'uncheck.png', 'no', null, 'Alfred Playlist▹');
 
