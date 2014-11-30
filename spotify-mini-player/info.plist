@@ -151,6 +151,17 @@
 				<string></string>
 			</dict>
 		</array>
+		<key>1F30DEA9-0A81-4E00-9CF0-E7D086C6B5B0</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>BFE954F2-D826-42BE-8363-FBDFCF95C5BC</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 		<key>2B0C6211-1DD0-4CE6-8082-37957F15CC1D</key>
 		<array>
 			<dict>
@@ -197,6 +208,17 @@
 				<string></string>
 			</dict>
 		</array>
+		<key>303A65BF-8E81-48E8-AA28-E1CA408FDD53</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>ECECD543-4958-47B0-A4C6-B758718C8626</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 		<key>3040749D-6B5C-4CCD-AF95-AEC0F83B48D9</key>
 		<array>
 			<dict>
@@ -235,6 +257,17 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>ECC53637-75AD-4FD2-9605-8E038D04C4BF</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>450AEF8B-BDAA-409C-A0D4-68769545FBCF</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>76FC8E26-44F0-4E20-A376-01628F7B28E1</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -349,6 +382,17 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>EB1ED46F-71D7-49D1-B7BB-DA1ECF2F665F</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>78DAB9D1-72A3-4B44-AB3B-D1C71F13DF7A</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>F2E80AAC-7BF3-4701-A8FC-FEF2E8D08E15</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -3142,6 +3186,150 @@ php -f ./src/action.php -- "{query}" "PLAY_ALFRED_PLAYLIST" "" &gt;&gt; "$alfred
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>applescript</key>
+				<string>on alfred_script(q)
+tell application "System Events"	key code 125 -- downend tell
+end alfred_script</string>
+				<key>cachescript</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.applescript</string>
+			<key>uid</key>
+			<string>ECECD543-4958-47B0-A4C6-B758718C8626</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string></string>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>triggerid</key>
+				<string>com.vdesabou.miniplayer.keydown</string>
+				<key>triggername</key>
+				<string>Key Down</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.remote</string>
+			<key>uid</key>
+			<string>303A65BF-8E81-48E8-AA28-E1CA408FDD53</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>applescript</key>
+				<string>on alfred_script(q)
+tell application "System Events"	key code 126 -- upend tell
+end alfred_script</string>
+				<key>cachescript</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.applescript</string>
+			<key>uid</key>
+			<string>BFE954F2-D826-42BE-8363-FBDFCF95C5BC</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string></string>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>triggerid</key>
+				<string>com.vdesabou.miniplayer.keyup</string>
+				<key>triggername</key>
+				<string>Key Up</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.remote</string>
+			<key>uid</key>
+			<string>1F30DEA9-0A81-4E00-9CF0-E7D086C6B5B0</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>applescript</key>
+				<string>on alfred_script(q)
+tell application "System Events"	key code 36 -- enterend tell
+end alfred_script</string>
+				<key>cachescript</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.applescript</string>
+			<key>uid</key>
+			<string>F2E80AAC-7BF3-4701-A8FC-FEF2E8D08E15</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string></string>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>triggerid</key>
+				<string>com.vdesabou.miniplayer.keyenter</string>
+				<key>triggername</key>
+				<string>Key Enter</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.remote</string>
+			<key>uid</key>
+			<string>78DAB9D1-72A3-4B44-AB3B-D1C71F13DF7A</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string></string>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>triggerid</key>
+				<string>com.vdesabou.miniplayer.keyescape</string>
+				<key>triggername</key>
+				<string>Key Escape</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.remote</string>
+			<key>uid</key>
+			<string>450AEF8B-BDAA-409C-A0D4-68769545FBCF</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>applescript</key>
+				<string>on alfred_script(q)
+tell application "System Events"	key code 53 -- escapeend tell
+end alfred_script</string>
+				<key>cachescript</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.applescript</string>
+			<key>uid</key>
+			<string>76FC8E26-44F0-4E20-A376-01628F7B28E1</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string>Github page:
@@ -3240,6 +3428,11 @@ SOFTWARE.</string>
 			<key>ypos</key>
 			<real>2160</real>
 		</dict>
+		<key>1F30DEA9-0A81-4E00-9CF0-E7D086C6B5B0</key>
+		<dict>
+			<key>ypos</key>
+			<real>6400</real>
+		</dict>
 		<key>23412027-872A-4639-A9D9-DCFD8D8FF36D</key>
 		<dict>
 			<key>ypos</key>
@@ -3285,6 +3478,11 @@ SOFTWARE.</string>
 			<key>ypos</key>
 			<real>5410</real>
 		</dict>
+		<key>303A65BF-8E81-48E8-AA28-E1CA408FDD53</key>
+		<dict>
+			<key>ypos</key>
+			<real>6280</real>
+		</dict>
 		<key>3040749D-6B5C-4CCD-AF95-AEC0F83B48D9</key>
 		<dict>
 			<key>ypos</key>
@@ -3309,6 +3507,11 @@ SOFTWARE.</string>
 		<dict>
 			<key>ypos</key>
 			<real>2700</real>
+		</dict>
+		<key>450AEF8B-BDAA-409C-A0D4-68769545FBCF</key>
+		<dict>
+			<key>ypos</key>
+			<real>6640</real>
 		</dict>
 		<key>455BDE70-BCF4-447F-ABFF-C25D8E5B08B6</key>
 		<dict>
@@ -3375,10 +3578,20 @@ SOFTWARE.</string>
 			<key>ypos</key>
 			<real>3850</real>
 		</dict>
+		<key>76FC8E26-44F0-4E20-A376-01628F7B28E1</key>
+		<dict>
+			<key>ypos</key>
+			<real>6640</real>
+		</dict>
 		<key>77BC9498-F4E6-48BB-919D-D0B64DAFEF26</key>
 		<dict>
 			<key>ypos</key>
 			<real>1290</real>
+		</dict>
+		<key>78DAB9D1-72A3-4B44-AB3B-D1C71F13DF7A</key>
+		<dict>
+			<key>ypos</key>
+			<real>6520</real>
 		</dict>
 		<key>78DD84AE-70E9-4DB5-BF2B-44BC774B4383</key>
 		<dict>
@@ -3555,6 +3768,11 @@ SOFTWARE.</string>
 			<key>ypos</key>
 			<real>3480</real>
 		</dict>
+		<key>BFE954F2-D826-42BE-8363-FBDFCF95C5BC</key>
+		<dict>
+			<key>ypos</key>
+			<real>6400</real>
+		</dict>
 		<key>C10A975C-0DAE-4A45-AEAB-4E07CF125703</key>
 		<dict>
 			<key>ypos</key>
@@ -3670,6 +3888,11 @@ SOFTWARE.</string>
 			<key>ypos</key>
 			<real>2700</real>
 		</dict>
+		<key>ECECD543-4958-47B0-A4C6-B758718C8626</key>
+		<dict>
+			<key>ypos</key>
+			<real>6280</real>
+		</dict>
 		<key>F005BD44-180A-4A9A-9339-BE457D1E207F</key>
 		<dict>
 			<key>ypos</key>
@@ -3679,6 +3902,11 @@ SOFTWARE.</string>
 		<dict>
 			<key>ypos</key>
 			<real>2310</real>
+		</dict>
+		<key>F2E80AAC-7BF3-4701-A8FC-FEF2E8D08E15</key>
+		<dict>
+			<key>ypos</key>
+			<real>6520</real>
 		</dict>
 		<key>F4382654-9318-4849-82E4-550AC235148C</key>
 		<dict>
