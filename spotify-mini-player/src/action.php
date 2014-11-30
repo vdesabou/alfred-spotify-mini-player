@@ -45,11 +45,6 @@ if ($add_to_option != "") {
     }
 }
 
-if ($other_action == "update_playlist" && $playlist_uri != "" && $playlist_name != "") {
-    updatePlaylist($w, $playlist_uri, $playlist_name);
-    return;
-}
-
 if ($spotify_command != "" && $type == "TRACK" && $add_to_option == "") {
 
     $spotify_command = str_replace("\\", "", $spotify_command);
@@ -97,7 +92,7 @@ if ($type == "TRACK" && $other_settings == "") {
                     displayNotificationWithArtwork('' . $track_name . ' by ' . $artist_name . ' added to ' . $alfred_playlist_name, $track_artwork_path);
                     return;
                 } else if (is_numeric($ret) && $ret == 0) {
-                    displayNotification('Error: ' . $track_name . ' by ' . $artist_name . ' is already in ' . $alfred_playlist_name);
+                    displayNotificationWithArtwork('Error: ' . $track_name . ' by ' . $artist_name . ' is already in ' . $alfred_playlist_name,'./images/' . 'gray' . '/' . 'warning.png');
                     return;
                 } else {
                     return;
@@ -109,7 +104,7 @@ if ($type == "TRACK" && $other_settings == "") {
                     displayNotificationWithArtwork('' . $track_name . ' by ' . $artist_name . ' added to Your Music', $track_artwork_path);
                     return;
                 } else if (is_numeric($ret) && $ret == 0) {
-                    displayNotification('Error: ' . $track_name . ' by ' . $artist_name . ' is already in Your Music');
+                    displayNotificationWithArtwork('Error: ' . $track_name . ' by ' . $artist_name . ' is already in Your Music','./images/' . 'gray' . '/' . 'warning.png');
                     return;
                 } else {
                     return;
@@ -132,7 +127,7 @@ if ($type == "TRACK" && $other_settings == "") {
         // case of current song with alt
         $album_uri = getAlbumUriFromTrack($w, $track_uri);
         if ($album_uri == false) {
-            displayNotification("Error: cannot get current album");
+            displayNotificationWithArtwork("Error: cannot get current album",'./images/' . 'gray' . '/' . 'warning.png');
             return;
         }
         $album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $album_uri, true);
@@ -145,7 +140,7 @@ if ($type == "TRACK" && $other_settings == "") {
         // case of current song with cmd
         $artist_uri = getArtistUriFromTrack($w, $track_uri);
         if ($artist_uri == false) {
-            displayNotification("Error: cannot get current artist");
+            displayNotificationWithArtwork("Error: cannot get current artist",'./images/' . 'gray' . '/' . 'warning.png');
             return;
         }
     }
@@ -155,7 +150,7 @@ if ($type == "TRACK" && $other_settings == "") {
 } else if ($type == "RANDOM") {
     $track_uri = getRandomTrack($w);
     if ($track_uri == false) {
-        displayNotification("Error: cannot find a random track");
+        displayNotificationWithArtwork("Error: cannot find a random track");
     }
     exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
     displayNotificationForCurrentTrack($w);
@@ -199,9 +194,9 @@ if ($type == "TRACK" && $other_settings == "") {
 } else if ($type == "PAUSE") {
     exec("osascript -e 'tell application \"Spotify\" to pause'");
     return;
-} else if ($type == "UPDATE_LIBRARY") {
+} else if ($type == "REFRESH_LIBRARY") {
     if (file_exists($w->data() . '/update_library_in_progress')) {
-        displayNotification("Error: cannot update library while update is in progress");
+        displayNotificationWithArtwork("Error: cannot refresh library while another update is in progress", './images/' . 'gray' . '/' . 'warning.png');
         return;
     }
     refreshLibrary($w);
@@ -236,7 +231,7 @@ if ($type == "TRACK" && $other_settings == "") {
                 // case of current song with shift
                 $album_uri = getAlbumUriFromTrack($w, $track_uri);
                 if ($album_uri == false) {
-                    displayNotification("Error: cannot get current album");
+                    displayNotificationWithArtwork("Error: cannot get current album",'./images/' . 'gray' . '/' . 'warning.png');
                     return;
                 }
                 $album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $album_uri, true);
@@ -255,7 +250,7 @@ if ($type == "TRACK" && $other_settings == "") {
                     displayNotificationWithArtwork('Album ' . $album_name . ' added to ' . $alfred_playlist_name, $album_artwork_path);
                     return;
                 } else if (is_numeric($ret) && $ret == 0) {
-                    displayNotification('Error: Album ' . $album_name . ' is already in ' . $alfred_playlist_name);
+                    displayNotificationWithArtwork('Error: Album ' . $album_name . ' is already in ' . $alfred_playlist_name,'./images/' . 'gray' . '/' . 'warning.png');
                     return;
                 } else {
                     return;
@@ -267,7 +262,7 @@ if ($type == "TRACK" && $other_settings == "") {
                     displayNotificationWithArtwork('Album ' . $album_name . ' added to Your Music', $album_artwork_path);
                     return;
                 } else if (is_numeric($ret) && $ret == 0) {
-                    displayNotification('Error: Album ' . $album_name . ' is already in Your Music');
+                    displayNotificationWithArtwork('Error: Album ' . $album_name . ' is already in Your Music','./images/' . 'gray' . '/' . 'warning.png');
                     return;
                 } else {
                     return;
@@ -308,7 +303,7 @@ if ($type == "TRACK" && $other_settings == "") {
                     displayNotificationWithArtwork('Playlist ' . $playlist_name . ' added to ' . $alfred_playlist_name, $playlist_artwork_path);
                     return;
                 } else if (is_numeric($ret) && $ret == 0) {
-                    displayNotification('Error: Playlist ' . $playlist_name . ' is already in ' . $alfred_playlist_name);
+                    displayNotificationWithArtwork('Error: Playlist ' . $playlist_name . ' is already in ' . $alfred_playlist_name,'./images/' . 'gray' . '/' . 'warning.png');
                     return;
                 } else {
                     return;
@@ -320,7 +315,7 @@ if ($type == "TRACK" && $other_settings == "") {
                     displayNotificationWithArtwork('Playlist ' . $playlist_name . ' added to Your Music', $playlist_artwork_path);
                     return;
                 } else if (is_numeric($ret) && $ret == 0) {
-                    displayNotification('Error: Playlist ' . $playlist_name . ' is already in Your Music');
+                    displayNotificationWithArtwork('Error: Playlist ' . $playlist_name . ' is already in Your Music','./images/' . 'gray' . '/' . 'warning.png');
                     return;
                 } else {
                     return;
@@ -336,7 +331,7 @@ if ($type == "TRACK" && $other_settings == "") {
         // case of current song with cmd
         $artist_uri = getArtistUriFromTrack($w, $track_uri);
         if ($artist_uri == false) {
-            displayNotification("Error: cannot get current artist");
+            displayNotificationWithArtwork("Error: cannot get current artist",'./images/' . 'gray' . '/' . 'warning.png');
             return;
         }
         $artist_artwork_path = getArtistArtwork($w, 'gray', $artist_name, true);
@@ -357,25 +352,25 @@ if ($playlist_uri != "" && $other_settings == "") {
         $setSettings = "update settings set max_results=" . $setting[1];
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotification("Max results set to $setting[1]");
+        displayNotificationWithArtwork("Max results set to $setting[1]",'./images/' . 'gray' . '/' . 'settings.png');
         return;
     } else if ($setting[0] == "RADIO_TRACKS") {
         $setSettings = "update settings set radio_number_tracks=" . $setting[1];
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotification("Radio track number set to $setting[1]");
+        displayNotificationWithArtwork("Radio track number set to $setting[1]",'./images/' . 'gray' . '/' . 'settings.png');
         return;
     } else if ($setting[0] == "Oauth_Client_ID") {
         $setSettings = 'update settings set oauth_client_id=\"' . $setting[1] . '\"';
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotification("Client ID set to $setting[1]");
+        displayNotificationWithArtwork("Client ID set to $setting[1]",'./images/' . 'gray' . '/' . 'settings.png');
         return;
     } else if ($setting[0] == "Oauth_Client_SECRET") {
         $setSettings = 'update settings set oauth_client_secret=\"' . $setting[1] . '\"';
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotification("Client Secret set to $setting[1]");
+        displayNotificationWithArtwork("Client Secret set to $setting[1]",'./images/' . 'gray' . '/' . 'settings.png');
         return;
     } else if ($setting[0] == "ALFRED_PLAYLIST") {
         $setSettings = 'update settings set alfred_playlist_uri=\"' . $setting[1] . '\"' . ',alfred_playlist_name=\"' . $setting[2] . '\"';
@@ -397,7 +392,7 @@ if ($playlist_uri != "" && $other_settings == "") {
                 displayNotificationWithArtwork('' . $track_name . ' added to ' . $setting[2], $track_artwork_path);
                 return;
             } else if (is_numeric($ret) && $ret == 0) {
-                displayNotification('Error: ' . $track_name . ' is already in ' . $setting[2]);
+                displayNotificationWithArtwork('Error: ' . $track_name . ' is already in ' . $setting[2],'./images/' . 'gray' . '/' . 'warning.png');
                 return;
             } else {
                 return;
@@ -410,7 +405,7 @@ if ($playlist_uri != "" && $other_settings == "") {
                 displayNotificationWithArtwork('Playlist ' . $playlist_name . ' added to ' . $setting[2], $playlist_artwork_path);
                 return;
             } else if (is_numeric($ret) && $ret == 0) {
-                displayNotification('Error: Playlist ' . $playlist_name . ' is already in ' . $setting[2]);
+                displayNotificationWithArtwork('Error: Playlist ' . $playlist_name . ' is already in ' . $setting[2],'./images/' . 'gray' . '/' . 'warning.png');
                 return;
             } else {
                 return;
@@ -423,7 +418,7 @@ if ($playlist_uri != "" && $other_settings == "") {
                 displayNotificationWithArtwork('Album ' . $album_name . ' added to ' . $setting[2], $album_artwork_path);
                 return;
             } else if (is_numeric($ret) && $ret == 0) {
-                displayNotification('Error: Album ' . $album_name . ' is already in ' . $setting[2]);
+                displayNotificationWithArtwork('Error: Album ' . $album_name . ' is already in ' . $setting[2],'./images/' . 'gray' . '/' . 'warning.png');
                 return;
             } else {
                 return;
@@ -441,7 +436,7 @@ if ($playlist_uri != "" && $other_settings == "") {
 					displayNotificationWithArtwork('' . $track_name . ' added to Your Music', $track_artwork_path);
 					return;
 				} else if (is_numeric($ret) && $ret == 0) {
-						displayNotification('Error: ' . $track_name . ' is already in Your Music');
+						displayNotificationWithArtwork('Error: ' . $track_name . ' is already in Your Music','./images/' . 'gray' . '/' . 'warning.png');
 						return;
 					} else {
 					return;
@@ -454,7 +449,7 @@ if ($playlist_uri != "" && $other_settings == "") {
 					displayNotificationWithArtwork('Playlist ' . $playlist_name . ' added to Your Music', $playlist_artwork_path);
 					return;
 				} else if (is_numeric($ret) && $ret == 0) {
-						displayNotification('Error: Playlist ' . $playlist_name . ' is already in Your Music');
+						displayNotificationWithArtwork('Error: Playlist ' . $playlist_name . ' is already in Your Music','./images/' . 'gray' . '/' . 'warning.png');
 						return;
 					} else {
 					return;
@@ -467,7 +462,7 @@ if ($playlist_uri != "" && $other_settings == "") {
 					displayNotificationWithArtwork('Album ' . $album_name . ' added to Your Music', $album_artwork_path);
 					return;
 				} else if (is_numeric($ret) && $ret == 0) {
-						displayNotification('Error: Album ' . $album_name . ' is already in Your Music');
+						displayNotificationWithArtwork('Error: Album ' . $album_name . ' is already in Your Music','./images/' . 'gray' . '/' . 'warning.png');
 						return;
 					} else {
 					return;
@@ -638,7 +633,7 @@ if ($playlist_uri != "" && $other_settings == "") {
     } else if ($other_action == "random") {
         $track_uri = getRandomTrack($w);
         if ($track_uri == false) {
-            displayNotification("Error: cannot find a random track");
+            displayNotificationWithArtwork("Error: cannot find a random track",'./images/' . 'gray' . '/' . 'warning.png');
             return;
         }
         exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
@@ -727,9 +722,6 @@ if ($playlist_uri != "" && $other_settings == "") {
         return;
     } else if ($other_action == "update_library") {
         updateLibrary($w);
-        return;
-    } else if ($other_action == "update_your_music") {
-        updateYourMusic($w);
         return;
     } else if ($other_action == "refresh_library") {
         refreshLibrary($w);
