@@ -2709,9 +2709,9 @@ php -f ./src/action.php -- "{query}" "KILL_UPDATE" "" &gt;&gt; "$alfred_workflow
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>echo "===== UPDATE_LIBRARY ========" &gt;&gt; "$alfred_workflow_cache/action.log"
+				<string>echo "===== REFRESH_LIBRARY ========" &gt;&gt; "$alfred_workflow_cache/action.log"
 echo "`date` {query}" &gt;&gt; "$alfred_workflow_cache/action.log"
-php -f ./src/action.php -- "{query}" "UPDATE_LIBRARY" "UPDATE_LIBRARY" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+php -f ./src/action.php -- "{query}" "REFRESH_LIBRARY" "REFRESH_LIBRARY" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -2728,11 +2728,11 @@ php -f ./src/action.php -- "{query}" "UPDATE_LIBRARY" "UPDATE_LIBRARY" &gt;&gt; 
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>update_library</string>
+				<string>refresh_library</string>
 				<key>subtext</key>
-				<string>This will update the library</string>
+				<string>This will refresh the library</string>
 				<key>text</key>
-				<string>Update Spotify Mini Player library</string>
+				<string>Refresh Spotify Mini Player library</string>
 				<key>withspace</key>
 				<false/>
 			</dict>
@@ -2747,7 +2747,7 @@ php -f ./src/action.php -- "{query}" "UPDATE_LIBRARY" "UPDATE_LIBRARY" &gt;&gt; 
 			<key>config</key>
 			<dict>
 				<key>triggerid</key>
-				<string>update</string>
+				<string>refresh_library</string>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.external</string>
