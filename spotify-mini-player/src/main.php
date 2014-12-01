@@ -1027,6 +1027,9 @@ if (mb_strlen($query) < 3 ||
                     }
                 }
             }
+            else {
+				$w->result(null, 'help', "There is no track currently playing", "Launch a track and come back here", './images/warning.png', 'no', null, '');
+            }
         } // Current Track end
         elseif ($kind == "Your Music") {
             $thequery = $words[1];
