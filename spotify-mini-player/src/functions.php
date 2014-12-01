@@ -1374,7 +1374,7 @@ function getPlaylistArtwork($w, $theme, $playlistURI, $fetchIfNotPresent, $force
  * @return void
  */
 function getArtistArtwork($w, $theme, $artist, $fetchIfNotPresent)
-{	
+{
     $parsedArtist = urlencode(escapeQuery($artist));
 
     if (!file_exists($w->data() . "/artwork")):
@@ -1387,7 +1387,7 @@ function getArtistArtwork($w, $theme, $artist, $fetchIfNotPresent)
     if (!is_file($currentArtwork) || (is_file($currentArtwork) && filesize($currentArtwork) == 0)) {
         if ($fetchIfNotPresent == true || (is_file($currentArtwork) && filesize($currentArtwork) == 0)) {
             $artwork = getArtistArtworkURL($w, $artist);
-            
+
             // if return 0, it is a 404 error, no need to fetch
             if (!empty($artwork) || (is_numeric($artwork) && $artwork != 0)) {
                 if (!file_exists($w->data() . "/artwork/" . hash('md5', $parsedArtist . ".png"))):
@@ -2144,18 +2144,18 @@ function refreshLibrary($w)
     }
     copy($w->data() . '/library_old.db', $w->data() . '/library_new.db');
     $dbfile = $w->data() . '/library_new.db';
-	
+
 	$nb_added_playlists = 0;
 	$nb_removed_playlists = 0;
 	$nb_updated_playlists = 0;
-	
+
     try {
         $db = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 		$db->exec("drop table counters");
 		$db->exec("create table counters (all_tracks int, mymusic_tracks int, all_artists int, mymusic_artists int, all_albums int, mymusic_albums int, playlists int)");
-		
+
         $getPlaylists = "select * from playlists where uri=:uri";
         $stmtGetPlaylists = $db->prepare($getPlaylists);
 
@@ -2173,7 +2173,7 @@ function refreshLibrary($w)
 
         $deleteFromTracksYourMusic = "delete from tracks where mymusic=:mymusic";
         $stmtDeleteFromTracksYourMusic = $db->prepare($deleteFromTracksYourMusic);
-        
+
 		$savedListPlaylist = array();
         try {
             $offsetGetUserPlaylists = 0;
@@ -2185,10 +2185,10 @@ function refreshLibrary($w)
                 ));
 
                 $nb_playlist_total = $userPlaylists->total;
-               
+
                 foreach ($userPlaylists->items as $playlist) {
                     $savedListPlaylist[] = $playlist;
-                    $nb_tracktotal += $tracks->total;                    
+                    $nb_tracktotal += $tracks->total;
                 }
 
                 $offsetGetUserPlaylists += $limitGetUserPlaylists;
@@ -2203,16 +2203,16 @@ function refreshLibrary($w)
 
 		// consider Your Music as a playlist for progress bar
 		$nb_playlist_total++;
-		
+
 		foreach ($savedListPlaylist as $playlist) {
-			
+
             $tracks = $playlist->tracks;
             $owner = $playlist->owner;
-            
+
             $nb_playlist++;
             $w->write('Refresh Library▹' . $nb_playlist . '▹' . $nb_playlist_total . '▹' . $words[3], 'update_library_in_progress');
-            
-            // Loop on existing playlists in library       
+
+            // Loop on existing playlists in library
             $stmtGetPlaylists->bindValue(':uri', $playlist->uri);
             $stmtGetPlaylists->execute();
 
@@ -2225,7 +2225,7 @@ function refreshLibrary($w)
 			// Playlist does not exist, add it
             if ($noresult == true) {
 	            $nb_added_playlists++;
-	            
+
                 $playlist_artwork_path = getPlaylistArtwork($w, $theme, $playlist->uri, true, true);
 
                 if ("-" . $owner->id . "-" == "-" . $userid . "-") {
@@ -2311,16 +2311,16 @@ function refreshLibrary($w)
                 // update the playlist
                 if ($playlists[2] != $tracks->total || $playlists[1] != escapeQuery($playlist->name)) {
 	                $nb_updated_playlists++;
-	                
+
 	                if($playlists[1] != escapeQuery($playlist->name)) {
 	                    $updatePlaylistsName = "update playlists set name=:name where uri=:uri";
 						$stmtUpdatePlaylistsName = $db->prepare($updatePlaylistsName);
-						
+
                         $stmtUpdatePlaylistsName->bindValue(':name', escapeQuery($playlist->name));
                         $stmtUpdatePlaylistsName->bindValue(':uri', $playlist->uri);
-                        $stmtUpdatePlaylistsName->execute();		                
+                        $stmtUpdatePlaylistsName->execute();
 	                }
-        
+
                     $stmtDeleteFromTracks->bindValue(':playlist_uri', $playlist->uri);
                     $stmtDeleteFromTracks->execute();
 
@@ -2398,7 +2398,7 @@ function refreshLibrary($w)
                 }
             }
         }
-                
+
         // check for deleted playlists
         $getPlaylists = "select * from playlists";
         $stmt = $db->prepare($getPlaylists);
@@ -2414,7 +2414,7 @@ function refreshLibrary($w)
             }
             if ($found == false) {
 	            $nb_removed_playlists++;
-	            
+
                 $deleteFromPlaylist = "delete from playlists where uri=:uri";
                 $stmtDelete = $db->prepare($deleteFromPlaylist);
                 $stmtDelete->bindValue(':uri', $playlist_in_db[0]);
@@ -2427,7 +2427,7 @@ function refreshLibrary($w)
                 displayNotificationWithArtwork('Removed playlist ' . $playlist_in_db[1], getPlaylistArtwork($w, $theme, $playlist_in_db[0], false));
             }
         }
-    
+
 		// check for update to Your Music
         $savedMySavedTracks = array();
         try {
@@ -2438,11 +2438,11 @@ function refreshLibrary($w)
                     'limit' => $limitGetMySavedTracks,
                     'offset' => $offsetGetMySavedTracks
                 ));
-				
+
 				foreach ($userMySavedTracks->items as $item) {
 					$savedMySavedTracks[] = $item;
 				}
-					
+
                 $offsetGetMySavedTracks += $limitGetMySavedTracks;
             } while ($offsetGetMySavedTracks < $userMySavedTracks->total);
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
@@ -2457,16 +2457,16 @@ function refreshLibrary($w)
 	    $mymusic_tracks = $stmt->fetch();
 	    $your_music_updated=false;
 		if($mymusic_tracks[0] != count($savedMySavedTracks)) {
-			
+
 			$your_music_updated=true;
 			// Your Music has changed, update it
             $nb_playlist++;
             $w->write('Refresh Library▹' . $nb_playlist . '▹' . $nb_playlist_total . '▹' . $words[3], 'update_library_in_progress');
-            
+
 			// delete tracks
         	$stmtDeleteFromTracksYourMusic->bindValue(':mymusic', 1);
 			$stmtDeleteFromTracksYourMusic->execute();
-        
+
             foreach ($savedMySavedTracks as $item) {
                 $track = $item->track;
                 if (count($track->available_markets) == 0 || in_array($country_code, $track->available_markets) !== false) {
@@ -2504,46 +2504,46 @@ function refreshLibrary($w)
                 $stmtTrack->bindValue(':duration_ms', $track->duration_ms);
                 $stmtTrack->execute();
             }
-        }        
-        
+        }
+
 	    $getCount = 'select count(distinct uri) from tracks';
 	    $stmt = $db->prepare($getCount);
 	    $stmt->execute();
 	    $all_tracks = $stmt->fetch();
-	
+
 	    $getCount = 'select count(distinct uri) from tracks where mymusic=1';
 	    $stmt = $db->prepare($getCount);
 	    $stmt->execute();
 	    $mymusic_tracks = $stmt->fetch();
-	
+
 	    $getCount = 'select count(distinct artist_name) from tracks';
 	    $stmt = $db->prepare($getCount);
 	    $stmt->execute();
 	    $all_artists = $stmt->fetch();
-	
+
 	    $getCount = 'select count(distinct artist_name) from tracks where mymusic=1';
 	    $stmt = $db->prepare($getCount);
 	    $stmt->execute();
 	    $mymusic_artists = $stmt->fetch();
-	
+
 	    $getCount = 'select count(distinct album_name) from tracks';
 	    $stmt = $db->prepare($getCount);
 	    $stmt->execute();
 	    $all_albums = $stmt->fetch();
-	
+
 	    $getCount = 'select count(distinct album_name) from tracks where mymusic=1';
 	    $stmt = $db->prepare($getCount);
 	    $stmt->execute();
 	    $mymusic_albums = $stmt->fetch();
-	
+
 	    $getCount = 'select count(*) from playlists';
 	    $stmt = $db->prepare($getCount);
 	    $stmt->execute();
 	    $playlists_count = $stmt->fetch();
-	
+
 	    $insertCounter = "insert into counters values (:all_tracks,:mymusic_tracks,:all_artists,:mymusic_artists,:all_albums,:mymusic_albums,:playlists)";
 	    $stmt = $db->prepare($insertCounter);
-	
+
 	    $stmt->bindValue(':all_tracks', $all_tracks[0]);
 	    $stmt->bindValue(':mymusic_tracks', $mymusic_tracks[0]);
 	    $stmt->bindValue(':all_artists', $all_artists[0]);
@@ -2554,33 +2554,38 @@ function refreshLibrary($w)
 	    $stmt->execute();
 
         $elapsed_time = time() - $words[3];
-        $changed = false;
+        $changedPlaylists = false;
+        $changedYourMusic = false;
         if($nb_added_playlists>0) {
 	        $addedMsg = $nb_added_playlists . ' added';
-	        $changed = true;
+	        $changedPlaylists = true;
         }
-        
+
         if($nb_removed_playlists>0) {
 	        $removedMsg = $nb_removed_playlists . ' removed';
-	        $changed = true;
+	        $changedPlaylists = true;
         }
-        
+
         if($nb_updated_playlists>0) {
 	        $updatedMsg = $nb_updated_playlists . ' updated';
-	        $changed = true;
+	        $changedPlaylists = true;
         }
-        
+
         if($your_music_updated) {
-	       $yourMusicMsg = 'Your Music updated';
-	       $changed = true; 
+	       $yourMusicMsg = ' - Your Music: updated';
+	       $changedYourMusic = true;
         }
-        
-        if($changed) {
-	        $message = ' (' . $addedMsg . ' ' . $removedMsg . ' ' . $updatedMsg . ' ' . $yourMusicMsg . ')'; 
+
+        if($changedPlaylists && $changedYourMusic) {
+	        $message = ' (Playlists: ' . $addedMsg . ' ' . $removedMsg . ' ' . $updatedMsg . ' ' . $yourMusicMsg . ')';
+        } elseif($changedPlaylists) {
+	        $message = ' (Playlists: ' . $addedMsg . ' ' . $removedMsg . ' ' . $updatedMsg . ')';
+        } elseif($changedYourMusic) {
+	        $message = ' (' . $yourMusicMsg . ')'; ;
         } else {
 	        $message = ' (no change)';
         }
- 
+
         displayNotificationWithArtwork("Library refreshed" . $message . " - took " . beautifyTime($elapsed_time),'./images/' . $theme . '/' . 'update.png');
 
         unlink($w->data() . "/update_library_in_progress");
@@ -2818,7 +2823,7 @@ function handleDbIssuePdoXml($theme, $dbhandle)
 
 /**
  * handleDbIssuePdoEcho function.
- * 
+ *
  * @access public
  * @param mixed $dbhandle
  * @param mixed $w
@@ -2839,11 +2844,11 @@ function handleDbIssuePdoEcho($dbhandle,$w)
     if (file_exists($w->data() . '/library_old.db')) {
         unlink($w->data() . '/library_old.db');
     }
-    
+
     if (file_exists($w->data() . '/settings_tmp.db')) {
         unlink($w->data() . '/settings_tmp.db');
     }
-    
+
     displayNotificationWithArtwork("Error: DB error " . $dbhandle->errorInfo()[2], './images/' . 'gray'. '/' . 'warning.png');
 }
 

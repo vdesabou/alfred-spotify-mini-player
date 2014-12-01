@@ -345,6 +345,7 @@ if (mb_strlen($query) < 3 ||
     // Settings
     //
     elseif (substr_count($query, '▹') == 1) {
+
         if ($all_playlists == true) {
             // argument is csv form: track_uri|album_uri|artist_uri|playlist_uri|spotify_command|query|other_settings|other_action|alfred_playlist_uri|artist_name
             $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'disable_all_playlist' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Change Search Scope', array(
@@ -425,7 +426,7 @@ if (mb_strlen($query) < 3 ||
         if ($update_in_progress == false) {
             $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'update_library' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Re-Create your library from scratch', "Do this when refresh library is not working as you would expect", './images/' . $theme . '/' . 'update.png', 'yes', null, '');
         }
-        
+
         $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'check_for_update' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Check for workflow update', array(
             "Note this is automatically done otherwise once per day",
             'alt' => 'Not Available',
@@ -637,7 +638,7 @@ if (mb_strlen($query) < 3 ||
             'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'spotify.png', 'yes', null, '');
 
         if ($is_spotifious_active == true) {
-            $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, $query /* query */, '' /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $query . " with Spotifious", array(
+            $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, $query /* query */, '' /* other_settings*/, 'search_in_spotifious' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $query . " with Spotifious", array(
                 'Spotifious workflow must be installed and script filter set with <spotifious>',
                 'alt' => 'Not Available',
                 'cmd' => 'Not Available',
@@ -652,7 +653,6 @@ if (mb_strlen($query) < 3 ||
     ////////////
     elseif (substr_count($query, '▹') == 1) {
         $words = explode('▹', $query);
-
         $kind = $words[0];
 
         if ($kind == "Playlist") {
@@ -1031,22 +1031,22 @@ if (mb_strlen($query) < 3 ||
                 }
             }
         } // Current Track end
-        elseif ($kind == "Your Music") {            
+        elseif ($kind == "Your Music") {
             $thequery = $words[1];
 
            	if (mb_strlen($thequery) < 3) {
 	            $getCounters = 'select * from counters';
 	            try {
 	                $stmt = $db->prepare($getCounters);
-	
+
 	                $counters = $stmt->execute();
 	                $counter = $stmt->fetch();
-	
+
 	            } catch (PDOException $e) {
 	                handleDbIssuePdoXml($theme, $db);
 	                return;
 	            }
-	
+
 	            $all_tracks = $counter[0];
 	            $mymusic_tracks = $counter[1];
 	            $all_artists = $counter[2];
@@ -1058,50 +1058,50 @@ if (mb_strlen($query) < 3 ||
 	            $w->result(null, '', 'Tracks', 'Browse your ' . $mymusic_tracks . ' tracks in Your Music', './images/' . $theme . '/' . 'tracks.png', 'no', null, 'Your Music▹Tracks▹');
 	            $w->result(null, '', 'Albums', 'Browse your ' . $mymusic_albums . ' albums in Your Music', './images/' . $theme . '/' . 'albums.png', 'no', null, 'Your Music▹Albums▹');
 	            $w->result(null, '', 'Artists', 'Browse your ' . $mymusic_artists . ' artists in Your Music', './images/' . $theme . '/' . 'artists.png', 'no', null, 'Your Music▹Artists▹');
-        
+
             } else {
 		        //
 		        // Search artists
 		        //
 		        $getTracks = "select artist_name,artist_uri,artist_artwork_path from tracks where playable=1 and mymusic=1 and artist_name like :artist_name limit " . $max_results;
-		
+
 		        try {
 		            $stmt = $db->prepare($getTracks);
 		            $stmt->bindValue(':artist_name', '%' . $thequery . '%');
-		
+
 		            $tracks = $stmt->execute();
-		
+
 		        } catch (PDOException $e) {
 		            handleDbIssuePdoXml($theme, $db);
 		            return;
 		        }
 				$noresult=true;
 		        while ($track = $stmt->fetch()) {
-		
+
 		            if (checkIfResultAlreadyThere($w->results(), "👤 " . ucfirst($track[0])) == false) {
 			            $noresult=false;
 		                $w->result(null, '', "👤 " . ucfirst($track[0]), "Browse this artist", $track[2], 'no', null, "Artist▹" . $track[1] . '∙' . $track[0] . "▹");
 		            }
 		        }
-		
+
 		        //
 		        // Search everything
 		        //
 		        $getTracks = "select * from tracks where playable=1 and mymusic=1 and (artist_name like :query or album_name like :query or track_name like :query)" . " limit " . $max_results;
-		
+
 		        try {
 		            $stmt = $db->prepare($getTracks);
 		            $stmt->bindValue(':query', '%' . $thequery . '%');
-		
+
 		            $tracks = $stmt->execute();
-		
+
 		        } catch (PDOException $e) {
 		            handleDbIssuePdoXml($theme, $db);
 		            return;
 		        }
-		        
+
 		        while ($track = $stmt->fetch()) {
-		
+
 		            if
 		            ($noresult == true
 		            ) {
@@ -1111,11 +1111,11 @@ if (mb_strlen($query) < 3 ||
 		            }
 		            $noresult = false;
 		            $subtitle = $track[6];
-		
+
 		            if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " ● " . $track[5]) == false) {
-		
+
 		                $playlistsfortrack = getPlaylistsForTrack($db, $theme, $track[2]);
-		
+
 		                if ($is_alfred_playlist_active == true) {
 		                    $arrayresult = array(
 		                        beautifyTime($track[16] / 1000) . " ● " . $subtitle . $playlistsfortrack,
@@ -1133,12 +1133,12 @@ if (mb_strlen($query) < 3 ||
 		                        'shift' => 'Add album ' . $track[6] . ' to Your Music',
 		                        'ctrl' => 'Search artist ' . $track[7] . ' online');
 		                }
-		
+
 		                $w->result(null, serialize(array($track[2] /*track_uri*/, $track[3] /* album_uri */, $track[4] /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, '' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, $track[7]  /* artist_name */, $track[5] /* track_name */, $track[6] /* album_name */, $track[9] /* track_artwork_path */, $track[10] /* artist_artwork_path */, $track[11] /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), ucfirst($track[7]) . " ● " . $track[5], $arrayresult, $track[9], 'yes', array('copy' => ucfirst($track[7]) . " ● " . $track[5], 'largetype' => ucfirst($track[7]) . " ● " . $track[5]), '');
-		
+
 		            }
 		        }
-		
+
 		        if
 		        ($noresult
 		        ) {
@@ -1277,12 +1277,8 @@ if (mb_strlen($query) < 3 ||
     //
     ////////////
     elseif (substr_count($query, '▹') == 2) {
-        //
-        // Get all songs for selected artist
-        //
 
         $words = explode('▹', $query);
-
         $kind = $words[0];
         if ($kind == "Artist") {
             //
@@ -1412,9 +1408,9 @@ if (mb_strlen($query) < 3 ||
                 'shift' => 'Not Available',
                 'fn' => 'Not Available',
                 'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'spotify.png', 'yes', null, '');
-                
+
             if ($is_spotifious_active == true) {
-                $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, $theartist[4] . " ▹ " . $artist_name . " ►" /* query */, '' /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $artist_name . " with Spotifious", array(
+                $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, $theartist[4] . " ▹ " . $artist_name . " ►" /* query */, '' /* other_settings*/, 'search_in_spotifious' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $artist_name . " with Spotifious", array(
                     'Spotifious workflow must be installed and script filter set with <spotifious>',
                     'alt' => 'Not Available',
                     'cmd' => 'Not Available',
@@ -1551,7 +1547,7 @@ if (mb_strlen($query) < 3 ||
                     'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'spotify.png', 'yes', null, '');
 
                 if ($is_spotifious_active == true) {
-                    $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, $album_uri . " ▹ " . $album_name . " ►"/* query */, '' /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $album_name . " with Spotifious", array(
+                    $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, $album_uri . " ▹ " . $album_name . " ►"/* query */, '' /* other_settings*/, 'search_in_spotifious' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $album_name . " with Spotifious", array(
                         'Spotifious workflow must be installed and script filter set with <spotifious>',
                         'alt' => 'Not Available',
                         'cmd' => 'Not Available',
@@ -1704,7 +1700,7 @@ if (mb_strlen($query) < 3 ||
                         'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'spotify.png', 'yes', null, '');
 
                     if ($is_spotifious_active == true) {
-                        $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, $playlist[1] /* query */, '' /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $playlist[1] . " with Spotifious", array(
+                        $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, $playlist[1] /* query */, '' /* other_settings*/, 'search_in_spotifious' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $playlist[1] . " with Spotifious", array(
                             'Spotifious workflow must be installed and script filter set with <spotifious>',
                             'alt' => 'Not Available',
                             'cmd' => 'Not Available',
@@ -1815,7 +1811,7 @@ if (mb_strlen($query) < 3 ||
                     'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'spotify.png', 'yes', null, '');
 
                 if ($is_spotifious_active == true) {
-                    $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, $thetrack /* query */, '' /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $thetrack . " with Spotifious", array(
+                    $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, 'search_in_spotifious' /* spotify_command */, $thetrack /* query */, '' /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $thetrack . " with Spotifious", array(
                         'Spotifious workflow must be installed and script filter set with <spotifious>',
                         'alt' => 'Not Available',
                         'cmd' => 'Not Available',
@@ -2066,7 +2062,7 @@ if (mb_strlen($query) < 3 ||
 
                         }
                     }
-                    
+
 					$w->result(null, serialize(array($track_uri /*track_uri*/, $album_uri /* album_uri */, '' /* artist_uri */, $playlist_uri /* playlist_uri */, '' /* spotify_command */, '' /* query */, 'ADD_TO_YOUR_MUSIC▹' /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, $track_name /* track_name */, $album_name /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, $playlist_name /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Your Music", "Select to add the " . $type . " to Your Music", './images/' . $theme . '/' . 'allplaylists.png', 'yes', null, '');
                 } else {
                     $getPlaylists = "select * from playlists where ownedbyuser=1 and ( name like :playlist or author like :playlist)";

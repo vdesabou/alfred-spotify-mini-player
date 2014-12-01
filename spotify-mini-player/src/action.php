@@ -15,9 +15,6 @@ $type = $argv[2];
 $add_to_option = $argv[3];
 
 $arg = mb_unserialize($query);
-
-//var_dump($arg);
-
 $track_uri = $arg[0];
 $album_uri = $arg[1];
 $artist_uri = $arg[2];
@@ -482,9 +479,6 @@ if ($playlist_uri != "" && $other_settings == "") {
         }
         return;
     }
-} else if ($original_query != "") {
-    exec("osascript -e 'tell application \"Alfred 2\" to search \"spotifious $original_query\"'");
-    return;
 } else if ($other_action != "") {
 
     //
@@ -534,6 +528,9 @@ if ($playlist_uri != "" && $other_settings == "") {
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
         displayNotificationWithArtwork("Get Lyrics is now enabled", './images/' . $theme . '/' . 'check.png');
+        return;
+    } else if ($other_action == "search_in_spotifious") {
+    	exec("osascript -e 'tell application \"Alfred 2\" to search \"spotifious $original_query\"'");
         return;
     } else if ($other_action == "disable_lyrics") {
         $setSettings = "update settings set is_lyrics_active=0";
