@@ -37,7 +37,7 @@ $alfred_playlist_name = $arg[17];
 
 if ($add_to_option != "") {
     if (file_exists($w->data() . '/update_library_in_progress')) {
-        displayNotificationWithArtwork("Error: cannot modify library while update is in progress",'./images/' . 'gray'. '/' . 'warning.png');
+        displayNotificationWithArtwork("Error: cannot modify library while update is in progress",'./images/' . 'warning.png');
         return;
     }
 }
@@ -82,7 +82,7 @@ if ($type == "TRACK" && $other_settings == "") {
             if ($is_alfred_playlist_active == true) {
 
                 if ($alfred_playlist_uri == "" || $alfred_playlist_name == "") {
-                    displayNotificationWithArtwork("Error: Alfred Playlist is not set", './images/' . 'gray'. '/' . 'warning.png');
+                    displayNotificationWithArtwork("Error: Alfred Playlist is not set", './images/' . 'warning.png');
                     return;
                 }
 
@@ -245,7 +245,7 @@ if ($type == "TRACK" && $other_settings == "") {
             if ($is_alfred_playlist_active == true) {
 
                 if ($alfred_playlist_uri == "" || $alfred_playlist_name == "") {
-                    displayNotificationWithArtwork("Error: Alfred Playlist is not set", './images/' . 'gray'. '/' . 'warning.png');
+                    displayNotificationWithArtwork("Error: Alfred Playlist is not set", './images/' . 'warning.png');
                     return;
                 }
 
@@ -491,7 +491,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         return;
     } else if ($setting[0] == "CLEAR_ALFRED_PLAYLIST") {
         if ($setting[1] == "" || $setting[2] == "") {
-            displayNotificationWithArtwork("Error: Alfred Playlist is not set", './images/' . 'gray'. '/' . 'warning.png');
+            displayNotificationWithArtwork("Error: Alfred Playlist is not set", './images/' . 'warning.png');
             return;
         }
 
@@ -609,7 +609,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         return;
     } else if ($other_action == "check_for_update") {
         if (!$w->internet()) {
-            displayNotificationWithArtwork("Error: No internet connection", './images/' . 'gray'. '/' . 'warning.png');
+            displayNotificationWithArtwork("Error: No internet connection", './images/' . 'warning.png');
             return;
         }
 
@@ -720,7 +720,7 @@ if ($playlist_uri != "" && $other_settings == "") {
     } else if ($other_action == "morefromthisartist") {
 
         if (!$w->internet()) {
-            displayNotificationWithArtwork("Error: No internet connection", './images/' . 'gray'. '/' . 'warning.png');
+            displayNotificationWithArtwork("Error: No internet connection", './images/' . 'warning.png');
             return;
         }
         if ($artist_uri == "") {

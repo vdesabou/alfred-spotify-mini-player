@@ -37,7 +37,7 @@ function playAlfredPlaylist($w)
 
 
     if ($alfred_playlist_uri == "" || $alfred_playlist_name == "") {
-        displayNotificationWithArtwork("Error: Alfred Playlist is not set", './images/' . 'gray'. '/' . 'warning.png');
+        displayNotificationWithArtwork("Error: Alfred Playlist is not set", './images/' . 'warning.png');
         return;
     }
 
@@ -74,7 +74,7 @@ function playCurrentArtist($w)
         exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
         displayNotificationWithArtwork('🔈 Artist ' . escapeQuery($results[1]), getArtistArtwork($w,  $results[1], true));
     } else {
-        displayNotificationWithArtwork("Error: No track is playing", './images/' . 'gray'. '/' . 'warning.png');
+        displayNotificationWithArtwork("Error: No track is playing", './images/' . 'warning.png');
     }
 }
 
@@ -104,7 +104,7 @@ function playCurrentAlbum($w)
         exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
         displayNotificationWithArtwork('🔈 Album ' . escapeQuery($results[2]), getTrackOrAlbumArtwork($w,  $results[4], true));
     } else {
-        displayNotificationWithArtwork("Error: No track is playing", './images/' . 'gray'. '/' . 'warning.png');
+        displayNotificationWithArtwork("Error: No track is playing", './images/' . 'warning.png');
     }
 }
 
@@ -182,7 +182,7 @@ function addCurrentTrackToAlfredPlaylist($w)
 	    }
 
         if ($alfred_playlist_uri == "" || $alfred_playlist_name == "") {
-            displayNotificationWithArtwork("Error: Alfred Playlist is not set", './images/' . 'gray'. '/' . 'warning.png');
+            displayNotificationWithArtwork("Error: Alfred Playlist is not set", './images/' . 'warning.png');
             return;
         }
         $tmp = explode(':', $results[4]);
@@ -190,7 +190,7 @@ function addCurrentTrackToAlfredPlaylist($w)
         if (is_numeric($ret) && $ret > 0) {
             displayNotificationWithArtwork('' . $results[0] . ' by ' . $results[1] . ' added to ' . $alfred_playlist_name . ' Alfred Playlist', getTrackOrAlbumArtwork($w,  $results[4], true));
         } else if (is_numeric($ret) && $ret == 0) {
-            displayNotificationWithArtwork('Error: ' . $results[0] . ' by ' . $results[1] . ' is already in ' . $alfred_playlist_name . ' Alfred Playlist', './images/' . 'gray'. '/' . 'warning.png');
+            displayNotificationWithArtwork('Error: ' . $results[0] . ' by ' . $results[1] . ' is already in ' . $alfred_playlist_name . ' Alfred Playlist', './images/' . 'warning.png');
         }
     } else {
         displayNotification("Error: No track is playing");
@@ -218,7 +218,7 @@ function addCurrentTrackToYourMusic($w)
         if (is_numeric($ret) && $ret > 0) {
             displayNotificationWithArtwork('' . $results[0] . ' by ' . $results[1] . ' added to Your Music', getTrackOrAlbumArtwork($w,  $results[4], true));
         } else if (is_numeric($ret) && $ret == 0) {
-            displayNotificationWithArtwork('Error: ' . $results[0] . ' by ' . $results[1] . ' is already in Your Music', './images/' . 'gray'. '/' . 'warning.png');
+            displayNotificationWithArtwork('Error: ' . $results[0] . ' by ' . $results[1] . ' is already in Your Music', './images/' . 'warning.png');
         }
     } else {
         displayNotification("Error: No track is playing");
@@ -263,7 +263,7 @@ function getSpotifyWebAPI($w)
 {
 
     if (!$w->internet()) {
-        displayNotificationWithArtwork("Error: No internet connection", './images/' . 'gray'. '/' . 'warning.png');
+        displayNotificationWithArtwork("Error: No internet connection", './images/' . 'warning.png');
         return false;
     }
 
@@ -1146,7 +1146,7 @@ function displayLyricsForCurrentTrack()
 function displayLyrics($w, $artist, $title)
 {
     if (!$w->internet()) {
-        displayNotificationWithArtwork("Error: No internet connection", './images/' . 'gray'. '/' . 'warning.png');
+        displayNotificationWithArtwork("Error: No internet connection", './images/' . 'warning.png');
         return;
     }
     $output = getLyrics($w, $artist, $title);
@@ -2767,8 +2767,8 @@ function updateYourMusic($w)
 function handleDbIssuePdoXml($dbhandle)
 {
     $w = new Workflows('com.vdesabou.spotify.mini.player');
-    $w->result(uniqid(), '', 'Database Error: ' . $dbhandle->errorInfo()[0] . ' ' . $dbhandle->errorInfo()[1] . ' ' . $dbhandle->errorInfo()[2], '', './images/' . 'gray'. '/' . 'warning.png', 'no', null, '');
-    $w->result(uniqid(), '', 'There is a problem with the library, try to re-create it.', 'Select Re-Create Library library below', './images/' . 'gray'. '/' . 'warning.png', 'no', null, '');
+    $w->result(uniqid(), '', 'Database Error: ' . $dbhandle->errorInfo()[0] . ' ' . $dbhandle->errorInfo()[1] . ' ' . $dbhandle->errorInfo()[2], '', './images/' . 'warning.png', 'no', null, '');
+    $w->result(uniqid(), '', 'There is a problem with the library, try to re-create it.', 'Select Re-Create Library library below', './images/' . 'warning.png', 'no', null, '');
     $w->result(uniqid(), serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'update_library' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Re-Create Library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . 'update.png', 'yes', null, '');
     echo $w->toxml();
 }
@@ -2824,7 +2824,7 @@ function handleDbIssuePdoEcho($dbhandle,$w)
         unlink($w->data() . '/settings_tmp.db');
     }
 
-    displayNotificationWithArtwork("Error: DB error " . $dbhandle->errorInfo()[2], './images/' . 'gray'. '/' . 'warning.png');
+    displayNotificationWithArtwork("Error: DB error " . $dbhandle->errorInfo()[2], './images/' . 'warning.png');
 }
 
 
@@ -3011,7 +3011,7 @@ function checkForUpdate($w, $last_check_update_time, $dbsettings)
 
         if (!$w->internet()) {
             displayNotificationWithArtwork("Check for update error:
-No internet connection", './images/' . 'gray'. '/' . 'warning.png');
+No internet connection", './images/' . 'warning.png');
             return;
         }
 
@@ -3076,7 +3076,7 @@ function doWebApiRequest($w, $url)
     $json = $w->request($url);
 
     if (empty($json)) {
-        $w->result(null, '', "Error: Spotify WEB API returned empty result", $url, './images/' . 'gray'. '/' . 'warning.png', 'no', null, '');
+        $w->result(null, '', "Error: Spotify WEB API returned empty result", $url, './images/' . 'warning.png', 'no', null, '');
         echo $w->toxml();
         exit;
     }
@@ -3084,22 +3084,22 @@ function doWebApiRequest($w, $url)
     $json = json_decode($json);
     switch (json_last_error()) {
         case JSON_ERROR_DEPTH:
-            $w->result(null, '', "There was an error when retrieving online information", "Maximum stack depth exceeded", './images/' . 'gray'. '/' . 'warning.png', 'no', null, '');
+            $w->result(null, '', "There was an error when retrieving online information", "Maximum stack depth exceeded", './images/' . 'warning.png', 'no', null, '');
             echo $w->toxml();
             exit;
         case JSON_ERROR_CTRL_CHAR:
-            $w->result(null, '', "There was an error when retrieving online information", "Unexpected control character found", './images/' . 'gray'. '/' . 'warning.png', 'no', null, '');
+            $w->result(null, '', "There was an error when retrieving online information", "Unexpected control character found", './images/' . 'warning.png', 'no', null, '');
             echo $w->toxml();
             exit;
         case JSON_ERROR_SYNTAX:
-            $w->result(null, '', "There was an error when retrieving online information", "Syntax error, malformed JSON", './images/' . 'gray'. '/' . 'warning.png', 'no', null, '');
+            $w->result(null, '', "There was an error when retrieving online information", "Syntax error, malformed JSON", './images/' . 'warning.png', 'no', null, '');
             echo $w->toxml();
             exit;
         case JSON_ERROR_NONE:
             return $json;
     }
 
-    $w->result(null, '', "Error: Spotify WEB API returned error " . json_last_error(), "Try again or report to author", './images/' . 'gray'. '/' . 'warning.png', 'no', null, '');
+    $w->result(null, '', "Error: Spotify WEB API returned error " . json_last_error(), "Try again or report to author", './images/' . 'warning.png', 'no', null, '');
     echo $w->toxml();
     exit;
 }
