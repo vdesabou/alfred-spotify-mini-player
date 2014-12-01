@@ -92,8 +92,9 @@ if ($type == "TRACK" && $other_settings == "") {
                     displayNotificationWithArtwork('Error: ' . $track_name . ' by ' . $artist_name . ' is already in ' . $alfred_playlist_name,'./images/' . 'gray' . '/' . 'warning.png');
                     return;
                 } else {
-                    return;
-                }
+					displayNotificationWithArtwork('Error: Exception ocured. Use debug command','./images/' . 'gray' . '/' . 'warning.png');
+	                return;
+	            }
             } else {
                 // add track to your music
                 $ret = addTracksToYourMusic($w, $tmp[2], false);
@@ -104,8 +105,9 @@ if ($type == "TRACK" && $other_settings == "") {
                     displayNotificationWithArtwork('Error: ' . $track_name . ' by ' . $artist_name . ' is already in Your Music','./images/' . 'gray' . '/' . 'warning.png');
                     return;
                 } else {
-                    return;
-                }
+					displayNotificationWithArtwork('Error: Exception ocured. Use debug command','./images/' . 'gray' . '/' . 'warning.png');
+	                return;
+	            }
             }
         } else if ($playlist_uri != "") {
             exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\" in context \"$playlist_uri\"'");
@@ -250,8 +252,9 @@ if ($type == "TRACK" && $other_settings == "") {
                     displayNotificationWithArtwork('Error: Album ' . $album_name . ' is already in ' . $alfred_playlist_name,'./images/' . 'gray' . '/' . 'warning.png');
                     return;
                 } else {
-                    return;
-                }
+					displayNotificationWithArtwork('Error: Exception ocured. Use debug command','./images/' . 'gray' . '/' . 'warning.png');
+	                return;
+	            }
             } else {
                 // add album to your music
                 $ret = addTracksToYourMusic($w, getTheAlbumTracks($w, $album_uri), false);
@@ -262,8 +265,9 @@ if ($type == "TRACK" && $other_settings == "") {
                     displayNotificationWithArtwork('Error: Album ' . $album_name . ' is already in Your Music','./images/' . 'gray' . '/' . 'warning.png');
                     return;
                 } else {
-                    return;
-                }
+					displayNotificationWithArtwork('Error: Exception ocured. Use debug command','./images/' . 'gray' . '/' . 'warning.png');
+	                return;
+	            }
             }
 
             return;
@@ -303,8 +307,9 @@ if ($type == "TRACK" && $other_settings == "") {
                     displayNotificationWithArtwork('Error: Playlist ' . $playlist_name . ' is already in ' . $alfred_playlist_name,'./images/' . 'gray' . '/' . 'warning.png');
                     return;
                 } else {
-                    return;
-                }
+					displayNotificationWithArtwork('Error: Exception ocured. Use debug command','./images/' . 'gray' . '/' . 'warning.png');
+	                return;
+	            }
             } else {
                 // add playlist to your music
                 $ret = addTracksToYourMusic($w, getThePlaylistTracks($w, $playlist_uri), false);
@@ -315,8 +320,9 @@ if ($type == "TRACK" && $other_settings == "") {
                     displayNotificationWithArtwork('Error: Playlist ' . $playlist_name . ' is already in Your Music','./images/' . 'gray' . '/' . 'warning.png');
                     return;
                 } else {
-                    return;
-                }
+					displayNotificationWithArtwork('Error: Exception ocured. Use debug command','./images/' . 'gray' . '/' . 'warning.png');
+	                return;
+	            }
             }
 
             return;
@@ -392,6 +398,7 @@ if ($playlist_uri != "" && $other_settings == "") {
                 displayNotificationWithArtwork('Error: ' . $track_name . ' is already in ' . $setting[2],'./images/' . 'gray' . '/' . 'warning.png');
                 return;
             } else {
+				displayNotificationWithArtwork('Error: Exception ocured. Use debug command','./images/' . 'gray' . '/' . 'warning.png');
                 return;
             }
         } // add playlist to playlist
@@ -405,6 +412,7 @@ if ($playlist_uri != "" && $other_settings == "") {
                 displayNotificationWithArtwork('Error: Playlist ' . $playlist_name . ' is already in ' . $setting[2],'./images/' . 'gray' . '/' . 'warning.png');
                 return;
             } else {
+				displayNotificationWithArtwork('Error: Exception ocured. Use debug command','./images/' . 'gray' . '/' . 'warning.png');
                 return;
             }
         } // add album to playlist
@@ -418,6 +426,7 @@ if ($playlist_uri != "" && $other_settings == "") {
                 displayNotificationWithArtwork('Error: Album ' . $album_name . ' is already in ' . $setting[2],'./images/' . 'gray' . '/' . 'warning.png');
                 return;
             } else {
+				displayNotificationWithArtwork('Error: Exception ocured. Use debug command','./images/' . 'gray' . '/' . 'warning.png');
                 return;
             }
         }
@@ -433,11 +442,12 @@ if ($playlist_uri != "" && $other_settings == "") {
 					displayNotificationWithArtwork('' . $track_name . ' added to Your Music', $track_artwork_path);
 					return;
 				} else if (is_numeric($ret) && $ret == 0) {
-						displayNotificationWithArtwork('Error: ' . $track_name . ' is already in Your Music','./images/' . 'gray' . '/' . 'warning.png');
-						return;
-					} else {
+					displayNotificationWithArtwork('Error: ' . $track_name . ' is already in Your Music','./images/' . 'gray' . '/' . 'warning.png');
 					return;
-				}
+				} else {
+					displayNotificationWithArtwork('Error: Exception ocured. Use debug command','./images/' . 'gray' . '/' . 'warning.png');
+	                return;
+            	}
 			} // add playlist to your music
 			elseif ($playlist_uri != '') {
 				$playlist_artwork_path = getPlaylistArtwork($w, $theme, $playlist_uri, true, true);
@@ -446,11 +456,12 @@ if ($playlist_uri != "" && $other_settings == "") {
 					displayNotificationWithArtwork('Playlist ' . $playlist_name . ' added to Your Music', $playlist_artwork_path);
 					return;
 				} else if (is_numeric($ret) && $ret == 0) {
-						displayNotificationWithArtwork('Error: Playlist ' . $playlist_name . ' is already in Your Music','./images/' . 'gray' . '/' . 'warning.png');
-						return;
-					} else {
+					displayNotificationWithArtwork('Error: Playlist ' . $playlist_name . ' is already in Your Music','./images/' . 'gray' . '/' . 'warning.png');
 					return;
-				}
+				} else {
+					displayNotificationWithArtwork('Error: Exception ocured. Use debug command','./images/' . 'gray' . '/' . 'warning.png');
+	                return;
+	            }
 			} // add album to your music
 			elseif ($album_uri != '') {
 				$album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $album_uri, true);
@@ -459,11 +470,12 @@ if ($playlist_uri != "" && $other_settings == "") {
 					displayNotificationWithArtwork('Album ' . $album_name . ' added to Your Music', $album_artwork_path);
 					return;
 				} else if (is_numeric($ret) && $ret == 0) {
-						displayNotificationWithArtwork('Error: Album ' . $album_name . ' is already in Your Music','./images/' . 'gray' . '/' . 'warning.png');
-						return;
-					} else {
+					displayNotificationWithArtwork('Error: Album ' . $album_name . ' is already in Your Music','./images/' . 'gray' . '/' . 'warning.png');
 					return;
-				}
+				} else {
+					displayNotificationWithArtwork('Error: Exception ocured. Use debug command','./images/' . 'gray' . '/' . 'warning.png');
+	                return;
+	            }
 			}
 	} else if ($setting[0] == "Open_Url") {
         exec("open \"$setting[1]\"");
