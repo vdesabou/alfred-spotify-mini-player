@@ -2673,7 +2673,7 @@ if (file_exists($w-&gt;data() . '/settings.db')) {
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>spot_mini_reset</string>
+				<string>reset_settings</string>
 				<key>subtext</key>
 				<string>The authentication will have to be done again</string>
 				<key>text</key>
@@ -2713,7 +2713,7 @@ if (file_exists($w-&gt;data() . '/settings.db')) {
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>spot_mini_kill_update</string>
+				<string>kill_update</string>
 				<key>subtext</key>
 				<string>use it if the library update seems stuck</string>
 				<key>text</key>
@@ -3152,7 +3152,7 @@ php -f ./src/action.php -- "{query}" "PLAY_ALFRED_PLAYLIST" "" &gt;&gt; "$alfred
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>spot_mini_issue</string>
+				<string>issue</string>
 				<key>subtext</key>
 				<string>This will open the GitHub page</string>
 				<key>text</key>
