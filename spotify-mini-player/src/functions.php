@@ -4,6 +4,9 @@ require_once './src/workflows.php';
 require './vendor/autoload.php';
 
 
+
+
+
 /**
  * playAlfredPlaylist function.
  *
@@ -734,6 +737,80 @@ function getTheAlbumTracks($w, $album_uri)
 
     return array_filter($tracks);
 }
+
+/**
+ * getTheArtistAlbums function.
+ *
+ * @access public
+ * @param mixed $w
+ * @param mixed $artist_uri
+ * @param mixed $country_code
+ * @return void
+ */
+function getTheArtistAlbums($w, $artist_uri, $country_code)
+{
+    $api = getSpotifyWebAPI($w);
+    if ($api == false) {
+        displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png');
+        return false;
+    }
+
+    $album_ids = array();
+
+    try {
+        $tmp = explode(':', $artist_uri);
+        $offsetGetArtistAlbums = 0;
+        $limitGetArtistAlbums = 50;
+        do {
+            $userArtistAlbums = $api->getArtistAlbums($tmp[2],array(
+									            'album_type' => array('album'),
+									            'market' => $country_code,
+									            'limit' => $limitGetArtistAlbums,
+									            'offset' => $offsetGetArtistAlbums
+									        ));
+
+            foreach ($userArtistAlbums->items as $album) {
+                $album_ids[] = $album->id;
+            }
+
+            $offsetGetArtistAlbums += $limitGetArtistAlbums;
+        } while ($offsetGetArtistAlbums < $userArtistAlbums->total);
+    } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+	    $w2 = new Workflows('com.vdesabou.spotify.mini.player');
+	    $w2->result(null, '', "Error: Spotify WEB API getArtistAlbums returned error " . $e->getMessage(), "Try again or report to author", './images/warning.png', 'no', null, '');
+	    echo $w2->toxml();
+        exit;
+    }
+
+
+	$albums = array();
+
+	 try {
+	    // Note: max 20 Ids
+	    $offset = 0;
+	    do {
+	        $output = array_slice($album_ids, $offset, 20);
+	        $offset += 20;
+
+	        if (count($output)) {
+	            $resultGetAlbums = $api->getAlbums($output);
+	            foreach ($resultGetAlbums->albums as $album) {
+	                $albums[] = $album;
+	            }
+	        }
+
+	    } while (count($output) > 0);
+    } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+	    $w2 = new Workflows('com.vdesabou.spotify.mini.player');
+	    $w2->result(null, '', "Error: Spotify WEB API getAlbums returned error " . $e->getMessage(), "Try again or report to author", './images/warning.png', 'no', null, '');
+	    echo $w2->toxml();
+        exit;
+    }
+
+
+    return $albums;
+}
+
 
 
 /**
@@ -2769,6 +2846,7 @@ function handleDbIssuePdoXml($dbhandle)
     $w->result(uniqid(), serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'update_library' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Re-Create Library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', null, '');
     echo $w->toxml();
 }
+
 
 /**
  * handleSpotifyWebAPIException function.

@@ -1165,27 +1165,11 @@ if (mb_strlen($query) < 3 ||
                     $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, $artist_uri /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'radio_artist' /* other_action */, '' /* alfred_playlist_uri */, $artist_name  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Create a Radio Playlist for ' . $artist_name, 'This will create a radio playlist with ' . $radio_number_tracks . ' for the artist', './images/radio_artist.png', 'yes', null, '');
                 }
 
-                $json = doWebApiRequest($w, "https://api.spotify.com/v1/artists/" . trim($tmp_uri[2]) . "/albums");
+				// call to web api, if it fails,
+				// it displays an error in main window
+				$albums = getTheArtistAlbums($w, $artist_uri, $country_code);
 
-                $album_id_list = "";
-                $first = true;
-                foreach ($json->items as $album) {
-
-                    if (count($album->available_markets) == 0 || in_array($country_code, $album->available_markets) !== false) {
-
-                        if
-                        ($first == true
-                        ) {
-                            $album_id_list = $album_id_list . $album->id;
-                            $first = false;
-                        } else {
-                            $album_id_list = $album_id_list . "," . $album->id;
-                        }
-                    }
-                }
-
-                $json2 = doWebApiRequest($w, "https://api.spotify.com/v1/albums?ids=" . $album_id_list);
-                foreach ($json2->albums as $album) {
+                foreach ($albums as $album) {
 
                     if (checkIfResultAlreadyThere($w->results(), ucfirst($album->name)) == false) {
 
