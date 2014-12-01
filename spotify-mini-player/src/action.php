@@ -37,7 +37,7 @@ $alfred_playlist_name = $arg[17];
 
 if ($add_to_option != "") {
     if (file_exists($w->data() . '/update_library_in_progress')) {
-        displayNotificationWithArtwork("Error: cannot modify library while update is in progress",'./images/' . 'warning.png');
+        displayNotificationWithArtwork("Error: cannot modify library while update is in progress",'./images/warning.png');
         return;
     }
 }
@@ -82,7 +82,7 @@ if ($type == "TRACK" && $other_settings == "") {
             if ($is_alfred_playlist_active == true) {
 
                 if ($alfred_playlist_uri == "" || $alfred_playlist_name == "") {
-                    displayNotificationWithArtwork("Error: Alfred Playlist is not set", './images/' . 'warning.png');
+                    displayNotificationWithArtwork("Error: Alfred Playlist is not set", './images/warning.png');
                     return;
                 }
 
@@ -92,10 +92,10 @@ if ($type == "TRACK" && $other_settings == "") {
                     displayNotificationWithArtwork('' . $track_name . ' by ' . $artist_name . ' added to ' . $alfred_playlist_name, $track_artwork_path);
                     return;
                 } else if (is_numeric($ret) && $ret == 0) {
-                    displayNotificationWithArtwork('Error: ' . $track_name . ' by ' . $artist_name . ' is already in ' . $alfred_playlist_name,'./images/' . 'warning.png');
+                    displayNotificationWithArtwork('Error: ' . $track_name . ' by ' . $artist_name . ' is already in ' . $alfred_playlist_name,'./images/warning.png');
                     return;
                 } else {
-					displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/' . 'warning.png');
+					displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png');
 	                return;
 	            }
             } else {
@@ -105,10 +105,10 @@ if ($type == "TRACK" && $other_settings == "") {
                     displayNotificationWithArtwork('' . $track_name . ' by ' . $artist_name . ' added to Your Music', $track_artwork_path);
                     return;
                 } else if (is_numeric($ret) && $ret == 0) {
-                    displayNotificationWithArtwork('Error: ' . $track_name . ' by ' . $artist_name . ' is already in Your Music','./images/' . 'warning.png');
+                    displayNotificationWithArtwork('Error: ' . $track_name . ' by ' . $artist_name . ' is already in Your Music','./images/warning.png');
                     return;
                 } else {
-					displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/' . 'warning.png');
+					displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png');
 	                return;
 	            }
             }
@@ -129,7 +129,7 @@ if ($type == "TRACK" && $other_settings == "") {
         // case of current song with alt
         $album_uri = getAlbumUriFromTrack($w, $track_uri);
         if ($album_uri == false) {
-            displayNotificationWithArtwork("Error: cannot get current album",'./images/' . 'warning.png');
+            displayNotificationWithArtwork("Error: cannot get current album",'./images/warning.png');
             return;
         }
         $album_artwork_path = getTrackOrAlbumArtwork($w,  $album_uri, true);
@@ -142,7 +142,7 @@ if ($type == "TRACK" && $other_settings == "") {
         // case of current song with cmd
         $artist_uri = getArtistUriFromTrack($w, $track_uri);
         if ($artist_uri == false) {
-            displayNotificationWithArtwork("Error: cannot get current artist",'./images/' . 'warning.png');
+            displayNotificationWithArtwork("Error: cannot get current artist",'./images/warning.png');
             return;
         }
     }
@@ -151,11 +151,10 @@ if ($type == "TRACK" && $other_settings == "") {
     return;
 } else if ($type == "RANDOM") {
     $track_uri = getRandomTrack($w);
-    if ($track_uri == false) {
-        displayNotificationWithArtwork("Error: cannot find a random track");
+    if ($track_uri != false) {
+        exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
+        displayNotificationForCurrentTrack($w);
     }
-    exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
-    displayNotificationForCurrentTrack($w);
     return;
 } else if ($type == "CURRENT") {
     displayNotificationForCurrentTrack($w);
@@ -198,7 +197,7 @@ if ($type == "TRACK" && $other_settings == "") {
     return;
 } else if ($type == "REFRESH_LIBRARY") {
     if (file_exists($w->data() . '/update_library_in_progress')) {
-        displayNotificationWithArtwork("Error: cannot refresh library while another update is in progress", './images/' . 'warning.png');
+        displayNotificationWithArtwork("Error: cannot refresh library while another update is in progress", './images/warning.png');
         return;
     }
     refreshLibrary($w);
@@ -236,7 +235,7 @@ if ($type == "TRACK" && $other_settings == "") {
                 // case of current song with shift
                 $album_uri = getAlbumUriFromTrack($w, $track_uri);
                 if ($album_uri == false) {
-                    displayNotificationWithArtwork("Error: cannot get current album",'./images/' . 'warning.png');
+                    displayNotificationWithArtwork("Error: cannot get current album",'./images/warning.png');
                     return;
                 }
                 $album_artwork_path = getTrackOrAlbumArtwork($w,  $album_uri, true);
@@ -245,7 +244,7 @@ if ($type == "TRACK" && $other_settings == "") {
             if ($is_alfred_playlist_active == true) {
 
                 if ($alfred_playlist_uri == "" || $alfred_playlist_name == "") {
-                    displayNotificationWithArtwork("Error: Alfred Playlist is not set", './images/' . 'warning.png');
+                    displayNotificationWithArtwork("Error: Alfred Playlist is not set", './images/warning.png');
                     return;
                 }
 
@@ -255,10 +254,10 @@ if ($type == "TRACK" && $other_settings == "") {
                     displayNotificationWithArtwork('Album ' . $album_name . ' added to ' . $alfred_playlist_name, $album_artwork_path);
                     return;
                 } else if (is_numeric($ret) && $ret == 0) {
-                    displayNotificationWithArtwork('Error: Album ' . $album_name . ' is already in ' . $alfred_playlist_name,'./images/' . 'warning.png');
+                    displayNotificationWithArtwork('Error: Album ' . $album_name . ' is already in ' . $alfred_playlist_name,'./images/warning.png');
                     return;
                 } else {
-					displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/' . 'warning.png');
+					displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png');
 	                return;
 	            }
             } else {
@@ -268,10 +267,10 @@ if ($type == "TRACK" && $other_settings == "") {
                     displayNotificationWithArtwork('Album ' . $album_name . ' added to Your Music', $album_artwork_path);
                     return;
                 } else if (is_numeric($ret) && $ret == 0) {
-                    displayNotificationWithArtwork('Error: Album ' . $album_name . ' is already in Your Music','./images/' . 'warning.png');
+                    displayNotificationWithArtwork('Error: Album ' . $album_name . ' is already in Your Music','./images/warning.png');
                     return;
                 } else {
-					displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/' . 'warning.png');
+					displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png');
 	                return;
 	            }
             }
@@ -313,10 +312,10 @@ if ($type == "TRACK" && $other_settings == "") {
                     displayNotificationWithArtwork('Playlist ' . $playlist_name . ' added to ' . $alfred_playlist_name, $playlist_artwork_path);
                     return;
                 } else if (is_numeric($ret) && $ret == 0) {
-                    displayNotificationWithArtwork('Error: Playlist ' . $playlist_name . ' is already in ' . $alfred_playlist_name,'./images/' . 'warning.png');
+                    displayNotificationWithArtwork('Error: Playlist ' . $playlist_name . ' is already in ' . $alfred_playlist_name,'./images/warning.png');
                     return;
                 } else {
-					displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/' . 'warning.png');
+					displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png');
 	                return;
 	            }
             } else {
@@ -326,10 +325,10 @@ if ($type == "TRACK" && $other_settings == "") {
                     displayNotificationWithArtwork('Playlist ' . $playlist_name . ' added to Your Music', $playlist_artwork_path);
                     return;
                 } else if (is_numeric($ret) && $ret == 0) {
-                    displayNotificationWithArtwork('Error: Playlist ' . $playlist_name . ' is already in Your Music','./images/' . 'warning.png');
+                    displayNotificationWithArtwork('Error: Playlist ' . $playlist_name . ' is already in Your Music','./images/warning.png');
                     return;
                 } else {
-					displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/' . 'warning.png');
+					displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png');
 	                return;
 	            }
             }
@@ -343,7 +342,7 @@ if ($type == "TRACK" && $other_settings == "") {
         // case of current song with cmd
         $artist_uri = getArtistUriFromTrack($w, $track_uri);
         if ($artist_uri == false) {
-            displayNotificationWithArtwork("Error: cannot get current artist",'./images/' . 'warning.png');
+            displayNotificationWithArtwork("Error: cannot get current artist",'./images/warning.png');
             return;
         }
         $artist_artwork_path = getArtistArtwork($w,  $artist_name, true);
@@ -364,25 +363,25 @@ if ($playlist_uri != "" && $other_settings == "") {
         $setSettings = "update settings set max_results=" . $setting[1];
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotificationWithArtwork("Max results set to $setting[1]",'./images/' . 'settings.png');
+        displayNotificationWithArtwork("Max results set to $setting[1]",'./images/settings.png');
         return;
     } else if ($setting[0] == "RADIO_TRACKS") {
         $setSettings = "update settings set radio_number_tracks=" . $setting[1];
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotificationWithArtwork("Radio track number set to $setting[1]",'./images/' . 'settings.png');
+        displayNotificationWithArtwork("Radio track number set to $setting[1]",'./images/settings.png');
         return;
     } else if ($setting[0] == "Oauth_Client_ID") {
         $setSettings = 'update settings set oauth_client_id=\"' . $setting[1] . '\"';
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotificationWithArtwork("Client ID set to $setting[1]",'./images/' . 'settings.png');
+        displayNotificationWithArtwork("Client ID set to $setting[1]",'./images/settings.png');
         return;
     } else if ($setting[0] == "Oauth_Client_SECRET") {
         $setSettings = 'update settings set oauth_client_secret=\"' . $setting[1] . '\"';
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotificationWithArtwork("Client Secret set to $setting[1]",'./images/' . 'settings.png');
+        displayNotificationWithArtwork("Client Secret set to $setting[1]",'./images/settings.png');
         return;
     } else if ($setting[0] == "ALFRED_PLAYLIST") {
         $setSettings = 'update settings set alfred_playlist_uri=\"' . $setting[1] . '\"' . ',alfred_playlist_name=\"' . $setting[2] . '\"';
@@ -404,10 +403,10 @@ if ($playlist_uri != "" && $other_settings == "") {
                 displayNotificationWithArtwork('' . $track_name . ' added to ' . $setting[2], $track_artwork_path);
                 return;
             } else if (is_numeric($ret) && $ret == 0) {
-                displayNotificationWithArtwork('Error: ' . $track_name . ' is already in ' . $setting[2],'./images/' . 'warning.png');
+                displayNotificationWithArtwork('Error: ' . $track_name . ' is already in ' . $setting[2],'./images/warning.png');
                 return;
             } else {
-				displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/' . 'warning.png');
+				displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png');
                 return;
             }
         } // add playlist to playlist
@@ -418,10 +417,10 @@ if ($playlist_uri != "" && $other_settings == "") {
                 displayNotificationWithArtwork('Playlist ' . $playlist_name . ' added to ' . $setting[2], $playlist_artwork_path);
                 return;
             } else if (is_numeric($ret) && $ret == 0) {
-                displayNotificationWithArtwork('Error: Playlist ' . $playlist_name . ' is already in ' . $setting[2],'./images/' . 'warning.png');
+                displayNotificationWithArtwork('Error: Playlist ' . $playlist_name . ' is already in ' . $setting[2],'./images/warning.png');
                 return;
             } else {
-				displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/' . 'warning.png');
+				displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png');
                 return;
             }
         } // add album to playlist
@@ -432,10 +431,10 @@ if ($playlist_uri != "" && $other_settings == "") {
                 displayNotificationWithArtwork('Album ' . $album_name . ' added to ' . $setting[2], $album_artwork_path);
                 return;
             } else if (is_numeric($ret) && $ret == 0) {
-                displayNotificationWithArtwork('Error: Album ' . $album_name . ' is already in ' . $setting[2],'./images/' . 'warning.png');
+                displayNotificationWithArtwork('Error: Album ' . $album_name . ' is already in ' . $setting[2],'./images/warning.png');
                 return;
             } else {
-				displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/' . 'warning.png');
+				displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png');
                 return;
             }
         }
@@ -451,10 +450,10 @@ if ($playlist_uri != "" && $other_settings == "") {
 					displayNotificationWithArtwork('' . $track_name . ' added to Your Music', $track_artwork_path);
 					return;
 				} else if (is_numeric($ret) && $ret == 0) {
-					displayNotificationWithArtwork('Error: ' . $track_name . ' is already in Your Music','./images/' . 'warning.png');
+					displayNotificationWithArtwork('Error: ' . $track_name . ' is already in Your Music','./images/warning.png');
 					return;
 				} else {
-					displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/' . 'warning.png');
+					displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png');
 	                return;
             	}
 			} // add playlist to your music
@@ -465,10 +464,10 @@ if ($playlist_uri != "" && $other_settings == "") {
 					displayNotificationWithArtwork('Playlist ' . $playlist_name . ' added to Your Music', $playlist_artwork_path);
 					return;
 				} else if (is_numeric($ret) && $ret == 0) {
-					displayNotificationWithArtwork('Error: Playlist ' . $playlist_name . ' is already in Your Music','./images/' . 'warning.png');
+					displayNotificationWithArtwork('Error: Playlist ' . $playlist_name . ' is already in Your Music','./images/warning.png');
 					return;
 				} else {
-					displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/' . 'warning.png');
+					displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png');
 	                return;
 	            }
 			} // add album to your music
@@ -479,10 +478,10 @@ if ($playlist_uri != "" && $other_settings == "") {
 					displayNotificationWithArtwork('Album ' . $album_name . ' added to Your Music', $album_artwork_path);
 					return;
 				} else if (is_numeric($ret) && $ret == 0) {
-					displayNotificationWithArtwork('Error: Album ' . $album_name . ' is already in Your Music','./images/' . 'warning.png');
+					displayNotificationWithArtwork('Error: Album ' . $album_name . ' is already in Your Music','./images/warning.png');
 					return;
 				} else {
-					displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/' . 'warning.png');
+					displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png');
 	                return;
 	            }
 			}
@@ -491,7 +490,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         return;
     } else if ($setting[0] == "CLEAR_ALFRED_PLAYLIST") {
         if ($setting[1] == "" || $setting[2] == "") {
-            displayNotificationWithArtwork("Error: Alfred Playlist is not set", './images/' . 'warning.png');
+            displayNotificationWithArtwork("Error: Alfred Playlist is not set", './images/warning.png');
             return;
         }
 
@@ -527,31 +526,31 @@ if ($playlist_uri != "" && $other_settings == "") {
         $setSettings = "update settings set all_playlists=0";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotificationWithArtwork("Search scope set to your music", './images/' . 'search.png');
+        displayNotificationWithArtwork("Search scope set to your music", './images/search.png');
         return;
     } else if ($other_action == "enable_all_playlist") {
         $setSettings = "update settings set all_playlists=1";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotificationWithArtwork("Search scope set to all playlists", './images/' . 'search.png');
+        displayNotificationWithArtwork("Search scope set to all playlists", './images/search.png');
         return;
     } else if ($other_action == "enable_spotifiuous") {
         $setSettings = "update settings set is_spotifious_active=1";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotificationWithArtwork("Spotifious is now enabled", './images/' . 'check.png');
+        displayNotificationWithArtwork("Spotifious is now enabled", './images/check.png');
         return;
     } else if ($other_action == "disable_spotifiuous") {
         $setSettings = "update settings set is_spotifious_active=0";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotificationWithArtwork("Spotifious is now disabled", './images/' . 'uncheck.png');
+        displayNotificationWithArtwork("Spotifious is now disabled", './images/uncheck.png');
         return;
     } else if ($other_action == "enable_lyrics") {
         $setSettings = "update settings set is_lyrics_active=1";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotificationWithArtwork("Get Lyrics is now enabled", './images/' . 'check.png');
+        displayNotificationWithArtwork("Get Lyrics is now enabled", './images/check.png');
         return;
     } else if ($other_action == "search_in_spotifious") {
     	exec("osascript -e 'tell application \"Alfred 2\" to search \"spotifious $original_query\"'");
@@ -560,19 +559,19 @@ if ($playlist_uri != "" && $other_settings == "") {
         $setSettings = "update settings set is_lyrics_active=0";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotificationWithArtwork("Get Lyrics is now disabled", './images/' . 'uncheck.png');
+        displayNotificationWithArtwork("Get Lyrics is now disabled", './images/uncheck.png');
         return;
     } else if ($other_action == "enable_alfred_playlist") {
         $setSettings = "update settings set is_alfred_playlist_active=1";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotificationWithArtwork("Controlling Alfred Playlist", './images/' . 'alfred_playlist.png');
+        displayNotificationWithArtwork("Controlling Alfred Playlist", './images/alfred_playlist.png');
         return;
     } else if ($other_action == "disable_alfred_playlist") {
         $setSettings = "update settings set is_alfred_playlist_active=0";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotificationWithArtwork("Controlling Your Music", './images/' . 'allplaylists.png');
+        displayNotificationWithArtwork("Controlling Your Music", './images/allplaylists.png');
         return;
     } else if ($other_action == "play_track_in_album_context") {
         exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\" in context \"$album_uri\"'");
@@ -609,7 +608,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         return;
     } else if ($other_action == "check_for_update") {
         if (!$w->internet()) {
-            displayNotificationWithArtwork("Error: No internet connection", './images/' . 'warning.png');
+            displayNotificationWithArtwork("Error: No internet connection", './images/warning.png');
             return;
         }
 
@@ -625,9 +624,9 @@ if ($playlist_uri != "" && $other_settings == "") {
         }
         $check_results = checkForUpdate($w, 0, $dbsettings);
         if ($check_results != null && is_array($check_results)) {
-            displayNotificationWithArtwork('New version ' . $check_results[0] . ' is available in Downloads directory ', './images/' . 'check_update.png');
+            displayNotificationWithArtwork('New version ' . $check_results[0] . ' is available in Downloads directory ', './images/check_update.png');
         } else if ($check_results == null) {
-            displayNotificationWithArtwork('No update available', './images/' . 'check_update.png');
+            displayNotificationWithArtwork('No update available', './images/check_update.png');
         }
         return;
     } else if ($other_action == "current") {
@@ -654,7 +653,7 @@ if ($playlist_uri != "" && $other_settings == "") {
     } else if ($other_action == "random") {
         $track_uri = getRandomTrack($w);
         if ($track_uri == false) {
-            displayNotificationWithArtwork("Error: cannot find a random track",'./images/' . 'warning.png');
+            displayNotificationWithArtwork("Error: cannot find a random track",'./images/warning.png');
             return;
         }
         exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
@@ -720,7 +719,7 @@ if ($playlist_uri != "" && $other_settings == "") {
     } else if ($other_action == "morefromthisartist") {
 
         if (!$w->internet()) {
-            displayNotificationWithArtwork("Error: No internet connection", './images/' . 'warning.png');
+            displayNotificationWithArtwork("Error: No internet connection", './images/warning.png');
             return;
         }
         if ($artist_uri == "") {
