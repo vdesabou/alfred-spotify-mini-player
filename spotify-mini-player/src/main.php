@@ -30,10 +30,10 @@ if (file_exists($w->data() . '/update_library_in_progress')) {
             if
             ($elapsed_time < 300
             ) {
-                $w->result(null, $w->data() . '/update_library_in_progress', 'Initialization phase since ' . beautifyTime($elapsed_time) . ' : ' . floatToSquares(0), 'waiting for Spotify servers to return required data', './images/' . 'gray' . '/' . 'update_in_progress.png', 'no', null, '');
+                $w->result(null, $w->data() . '/update_library_in_progress', 'Initialization phase since ' . beautifyTime($elapsed_time) . ' : ' . floatToSquares(0), 'waiting for Spotify servers to return required data', './images/' . 'update_in_progress.png', 'no', null, '');
             } else {
                 $w->result(null, '', 'There is a problem, the initialization phase last more than 5 minutes', 'Choose kill update library below', './images/' . 'gray'. '/' . 'warning.png', 'no', null, '');
-                $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'kill_update' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Kill update library', 'This will stop the library update', './images/' . 'gray' . '/' . 'kill.png', 'yes', '');
+                $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'kill_update' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Kill update library', 'This will stop the library update', './images/' . 'kill.png', 'yes', '');
             }
         } else {
             if ($update_library_in_progress_words[0] == 'Refresh Library') {
@@ -45,9 +45,9 @@ if (file_exists($w->data() . '/update_library_in_progress')) {
             }
 
             if ($update_library_in_progress_words[2] != 0) {
-                $w->result(null, $w->data() . '/update_library_in_progress', $update_library_in_progress_words[0] . ' in progress since ' . beautifyTime($elapsed_time) . ' : ' . floatToSquares(intval($update_library_in_progress_words[1]) / intval($update_library_in_progress_words[2])), $update_library_in_progress_words[1] . '/' . $update_library_in_progress_words[2] . ' ' . $type . ' processed so far', './images/' . 'gray' . '/' . 'update_in_progress.png', 'no', null, '');
+                $w->result(null, $w->data() . '/update_library_in_progress', $update_library_in_progress_words[0] . ' in progress since ' . beautifyTime($elapsed_time) . ' : ' . floatToSquares(intval($update_library_in_progress_words[1]) / intval($update_library_in_progress_words[2])), $update_library_in_progress_words[1] . '/' . $update_library_in_progress_words[2] . ' ' . $type . ' processed so far', './images/' . 'update_in_progress.png', 'no', null, '');
             } else {
-                $w->result(null, $w->data() . '/update_library_in_progress', $update_library_in_progress_words[0] . ' in progress since ' . beautifyTime($elapsed_time) . ' : ' . floatToSquares(0), 'No ' . $type . ' processed so far', './images/' . 'gray' . '/' . 'update_in_progress.png', 'no', null, '');
+                $w->result(null, $w->data() . '/update_library_in_progress', $update_library_in_progress_words[0] . ' in progress since ' . beautifyTime($elapsed_time) . ' : ' . floatToSquares(0), 'No ' . $type . ' processed so far', './images/' . 'update_in_progress.png', 'no', null, '');
             }
         }
 
@@ -74,7 +74,7 @@ try {
     $dbsettings->query("PRAGMA cache_size=700000");
     $dbsettings->query("PRAGMA compile_options");
 } catch (PDOException $e) {
-    handleDbIssuePdoXml('new', $dbsettings);
+    handleDbIssuePdoXml($dbsettings);
     $dbsettings = null;
     return;
 }
@@ -112,12 +112,12 @@ if (!file_exists($w->data() . '/settings.db')) {
 
         $stmt = $dbsettings->prepare($getSettings);
 
-        $w->result(null, '', 'Settings have been reset to default values', 'Please invoke again the workflow now to enjoy the Spotify Mini Player', './images/' . 'gray' . '/' . 'warning.png', 'no', null, '');
+        $w->result(null, '', 'Settings have been reset to default values', 'Please invoke again the workflow now to enjoy the Spotify Mini Player', './images/' . 'warning.png', 'no', null, '');
         echo $w->toxml();
         return;
 
     } catch (PDOException $e) {
-        handleDbIssuePdoXml('new', $dbsettings);
+        handleDbIssuePdoXml($dbsettings);
         return;
     }
 }
@@ -125,7 +125,7 @@ if (!file_exists($w->data() . '/settings.db')) {
 try {
     $setting = $stmt->fetch();
 } catch (PDOException $e) {
-    handleDbIssuePdoXml('new', $dbsettings);
+    handleDbIssuePdoXml($dbsettings);
     return;
 }
 $all_playlists = $setting[0];
@@ -137,11 +137,8 @@ $max_results = $setting[5];
 $alfred_playlist_uri = $setting[6];
 $alfred_playlist_name = $setting[7];
 $country_code = $setting[8];
-$theme = $setting[9];
-if ($theme != 'gray') {
-    // support only one theme
-    $dbsettings->exec("update settings set theme='gray'");
-}
+// Theme is deprecated
+//$theme = $setting[9];
 $last_check_update_time = $setting[10];
 $oauth_client_id = $setting[11];
 $oauth_client_secret = $setting[12];
@@ -158,12 +155,12 @@ $echonest_api_key = $setting[19];
 // Check oauth config : Client ID and Client Secret
 if ($oauth_client_id == '' && substr_count($query, '▹') == 0) {
     if (mb_strlen($query) == 0) {
-        $w->result(null, '', 'Your Application Client ID is missing', 'Get it from your Spotify Application and copy/paste it here', './images/' . $theme . '/' . 'settings.png', 'no', null, '');
-        $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, 'Open_Url▹' . 'https://developer.spotify.com/my-applications/#!/applications' /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Open Spotify Application page to get required information', "This will open the Application page with your default browser", './images/' . $theme . '/' . 'spotify.png', 'yes', null, '');
+        $w->result(null, '', 'Your Application Client ID is missing', 'Get it from your Spotify Application and copy/paste it here', './images/' . 'settings.png', 'no', null, '');
+        $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, 'Open_Url▹' . 'https://developer.spotify.com/my-applications/#!/applications' /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Open Spotify Application page to get required information', "This will open the Application page with your default browser", './images/' . 'spotify.png', 'yes', null, '');
     } else if (mb_strlen($query) != 32) {
         $w->result(null, '', 'The Application Client ID does not seem valid!', 'The length is not 32. Make sure to copy the Client ID from https://developer.spotify.com/my-applications', './images/' . 'gray'. '/' . 'warning.png', 'no', null, '');
     } else {
-        $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, 'Oauth_Client_ID▹' . rtrim(ltrim($query)) /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Application Client ID will be set to <" . rtrim(ltrim($query)) . ">", "Type enter to validate the Application Client ID", './images/' . $theme . '/' . 'settings.png', 'yes', null, '');
+        $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, 'Oauth_Client_ID▹' . rtrim(ltrim($query)) /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Application Client ID will be set to <" . rtrim(ltrim($query)) . ">", "Type enter to validate the Application Client ID", './images/' . 'settings.png', 'yes', null, '');
     }
     echo $w->toxml();
     return;
@@ -171,14 +168,14 @@ if ($oauth_client_id == '' && substr_count($query, '▹') == 0) {
 
 if ($oauth_client_secret == '' && substr_count($query, '▹') == 0) {
     if (mb_strlen($query) == 0) {
-        $w->result(null, '', 'Your Application Client Secret is missing!', 'Get it from your Spotify Application and enter it here', './images/' . $theme . '/' . 'settings.png', 'no', null, '');
-        $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, 'Open_Url▹' . 'https://developer.spotify.com/my-applications/#!/applications' /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Open Spotify Application page to get required information', "This will open the Application page with your default browser", './images/' . $theme . '/' . 'spotify.png', 'yes', null, '');
+        $w->result(null, '', 'Your Application Client Secret is missing!', 'Get it from your Spotify Application and enter it here', './images/' . 'settings.png', 'no', null, '');
+        $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, 'Open_Url▹' . 'https://developer.spotify.com/my-applications/#!/applications' /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Open Spotify Application page to get required information', "This will open the Application page with your default browser", './images/' . 'spotify.png', 'yes', null, '');
     } else if (mb_strlen($query) != 32) {
         $w->result(null, '', 'The Application Client Secret does not seem valid!', 'The length is not 32. Make sure to copy the Client Secret from https://developer.spotify.com/my-applications', './images/' . 'gray'. '/' . 'warning.png', 'no', null, '');
     } else if ($query == $oauth_client_id) {
         $w->result(null, '', 'The Application Client Secret entered is the same as Application Client ID, this is wrong!', 'Make sure to copy the Client Secret from https://developer.spotify.com/my-applications', './images/' . 'gray'. '/' . 'warning.png', 'no', null, '');
     } else {
-        $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, 'Oauth_Client_SECRET▹' . rtrim(ltrim($query)) /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Application Client Secret will be set to <" . rtrim(ltrim($query)) . ">", "Type enter to validate the Application Client Secret", './images/' . $theme . '/' . 'settings.png', 'yes', null, '');
+        $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, 'Oauth_Client_SECRET▹' . rtrim(ltrim($query)) /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Application Client Secret will be set to <" . rtrim(ltrim($query)) . ">", "Type enter to validate the Application Client Secret", './images/' . 'settings.png', 'yes', null, '');
     }
     echo $w->toxml();
     return;
@@ -191,7 +188,7 @@ if ($oauth_access_token == '' && substr_count($query, '▹') == 0) {
         'cmd' => 'Not Available',
         'shift' => 'Not Available',
         'fn' => 'Not Available',
-        'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'settings.png', 'yes', null, '');
+        'ctrl' => 'Not Available'), './images/' . 'settings.png', 'yes', null, '');
     echo $w->toxml();
     return;
 }
@@ -213,7 +210,7 @@ if ($update_in_progress == false &&
     }
 }
 if ($dbfile == "") {
-    $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'update_library' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Create library', "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', null, '');
+    $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'update_library' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Create library', "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . 'update.png', 'yes', null, '');
     echo $w->toxml();
     return;
 }
@@ -232,7 +229,7 @@ try {
     $db->query("PRAGMA cache_size=700000");
     $db->query("PRAGMA compile_options");
 } catch (PDOException $e) {
-    handleDbIssuePdoXml($theme, $db);
+    handleDbIssuePdoXml($db);
     return;
 }
 
@@ -240,7 +237,7 @@ $check_results = checkForUpdate($w, $last_check_update_time, $dbsettings);
 if
 ($check_results != null && is_array($check_results)
 ) {
-    $w->result(null, '', 'New version ' . $check_results[0] . ' is available', $check_results[2], './images/' . $theme . '/' . 'info.png', 'no', null, '');
+    $w->result(null, '', 'New version ' . $check_results[0] . ' is available', $check_results[2], './images/' . 'info.png', 'no', null, '');
     $w->result(null, $check_results[1], 'Please install the new version in Downloads directory', $check_results[1], 'fileicon:' . $check_results[1], 'no', '', '', 'file');
 
     echo $w->toxml();
@@ -261,7 +258,7 @@ if (mb_strlen($query) < 3 ||
             $counter = $stmt->fetch();
 
         } catch (PDOException $e) {
-            handleDbIssuePdoXml($theme, $db);
+            handleDbIssuePdoXml($db);
             return;
         }
 
@@ -275,7 +272,7 @@ if (mb_strlen($query) < 3 ||
 
         if ($update_in_progress == true) {
             if (startsWith($update_library_in_progress_words[0], 'Init')) {
-                $w->result(null, $w->data() . '/update_library_in_progress', 'Initialization phase since ' . beautifyTime($elapsed_time) . ' : ' . floatToSquares(0), 'waiting for Spotify servers to return required data', './images/' . $theme . '/' . 'update_in_progress.png', 'no', null, '');
+                $w->result(null, $w->data() . '/update_library_in_progress', 'Initialization phase since ' . beautifyTime($elapsed_time) . ' : ' . floatToSquares(0), 'waiting for Spotify servers to return required data', './images/' . 'update_in_progress.png', 'no', null, '');
             } else {
                 if ($update_library_in_progress_words[0] == 'Refresh Library') {
                     $type = 'playlists';
@@ -286,19 +283,19 @@ if (mb_strlen($query) < 3 ||
                 }
 
                 if ($update_library_in_progress_words[2] != 0) {
-                    $w->result(null, $w->data() . '/update_library_in_progress', $update_library_in_progress_words[0] . ' update in progress since ' . beautifyTime($elapsed_time) . ' : ' . floatToSquares(intval($update_library_in_progress_words[1]) / intval($update_library_in_progress_words[2])), $update_library_in_progress_words[1] . '/' . $update_library_in_progress_words[2] . ' ' . $type . ' processed so far', './images/' . $theme . '/' . 'update_in_progress.png', 'no', null, '');
+                    $w->result(null, $w->data() . '/update_library_in_progress', $update_library_in_progress_words[0] . ' update in progress since ' . beautifyTime($elapsed_time) . ' : ' . floatToSquares(intval($update_library_in_progress_words[1]) / intval($update_library_in_progress_words[2])), $update_library_in_progress_words[1] . '/' . $update_library_in_progress_words[2] . ' ' . $type . ' processed so far', './images/' . 'update_in_progress.png', 'no', null, '');
                 } else {
-                    $w->result(null, $w->data() . '/update_library_in_progress', $update_library_in_progress_words[0] . ' update in progress since ' . beautifyTime($elapsed_time) . ' : ' . floatToSquares(0), 'No ' . $type . ' processed so far', './images/' . $theme . '/' . 'update_in_progress.png', 'no', null, '');
+                    $w->result(null, $w->data() . '/update_library_in_progress', $update_library_in_progress_words[0] . ' update in progress since ' . beautifyTime($elapsed_time) . ' : ' . floatToSquares(0), 'No ' . $type . ' processed so far', './images/' . 'update_in_progress.png', 'no', null, '');
                 }
             }
         }
         if ($all_playlists == true) {
-            $w->result(null, '', 'Search for music in "Your Music" and your ' . $nb_playlists . ' playlists', 'Begin typing at least 3 characters to start search in your ' . $all_tracks . ' tracks', './images/' . $theme . '/' . 'search.png', 'no', null, '');
+            $w->result(null, '', 'Search for music in "Your Music" and your ' . $nb_playlists . ' playlists', 'Begin typing at least 3 characters to start search in your ' . $all_tracks . ' tracks', './images/' . 'search.png', 'no', null, '');
         } else {
-            $w->result(null, '', 'Search for music in "Your Music" only', 'Begin typing at least 3 characters to start search in your ' . $mymusic_tracks . ' tracks', './images/' . $theme . '/' . 'search.png', 'no', null, '');
+            $w->result(null, '', 'Search for music in "Your Music" only', 'Begin typing at least 3 characters to start search in your ' . $mymusic_tracks . ' tracks', './images/' . 'search.png', 'no', null, '');
         }
 
-        $w->result(null, '', 'Current Track', 'Display current track information and browse various options', './images/' . $theme . '/' . 'current_track.png', 'no', null, 'Current Track▹');
+        $w->result(null, '', 'Current Track', 'Display current track information and browse various options', './images/' . 'current_track.png', 'no', null, 'Current Track▹');
 
 
         if ($is_alfred_playlist_active == true) {
@@ -306,24 +303,24 @@ if (mb_strlen($query) < 3 ||
             ($alfred_playlist_name != ""
             ) {
                 $title = 'Alfred Playlist ● ' . $alfred_playlist_name;
-                $w->result(null, '', $title, 'Choose one of your playlists and add tracks, album, playlist to it directly from the workflow', './images/' . $theme . '/' . 'alfred_playlist.png', 'no', null, 'Alfred Playlist▹');
+                $w->result(null, '', $title, 'Choose one of your playlists and add tracks, album, playlist to it directly from the workflow', './images/' . 'alfred_playlist.png', 'no', null, 'Alfred Playlist▹');
             } else {
                 $title = 'Alfred Playlist ● not set';
-                $w->result(null, '', $title, 'Choose one of your playlists and add tracks, album, playlist to it directly from the workflow', './images/' . $theme . '/' . 'alfred_playlist.png', 'no', null, 'Alfred Playlist▹Set Alfred Playlist▹');
+                $w->result(null, '', $title, 'Choose one of your playlists and add tracks, album, playlist to it directly from the workflow', './images/' . 'alfred_playlist.png', 'no', null, 'Alfred Playlist▹Set Alfred Playlist▹');
             }
 
         }
-        $w->result(null, '', 'Playlists', 'Browse by playlist' . ' (' . $nb_playlists . ' playlists)', './images/' . $theme . '/' . 'playlists.png', 'no', null, 'Playlist▹');
-        $w->result(null, '', 'Your Music', 'Browse Your Music' . ' (' . $mymusic_tracks . ' tracks ● ' . $mymusic_albums . '  albums ● ' . $mymusic_artists . ' artists)', './images/' . $theme . '/' . 'allplaylists.png', 'no', null, 'Your Music▹');
+        $w->result(null, '', 'Playlists', 'Browse by playlist' . ' (' . $nb_playlists . ' playlists)', './images/' . 'playlists.png', 'no', null, 'Playlist▹');
+        $w->result(null, '', 'Your Music', 'Browse Your Music' . ' (' . $mymusic_tracks . ' tracks ● ' . $mymusic_albums . '  albums ● ' . $mymusic_artists . ' artists)', './images/' . 'allplaylists.png', 'no', null, 'Your Music▹');
         if ($all_playlists == true) {
-            $w->result(null, '', 'Artists', 'Browse by artist' . ' (' . $all_artists . ' artists)', './images/' . $theme . '/' . 'artists.png', 'no', null, 'Artist▹');
-            $w->result(null, '', 'Albums', 'Browse by album' . ' (' . $all_albums . ' albums)', './images/' . $theme . '/' . 'albums.png', 'no', null, 'Album▹');
+            $w->result(null, '', 'Artists', 'Browse by artist' . ' (' . $all_artists . ' artists)', './images/' . 'artists.png', 'no', null, 'Artist▹');
+            $w->result(null, '', 'Albums', 'Browse by album' . ' (' . $all_albums . ' albums)', './images/' . 'albums.png', 'no', null, 'Album▹');
         } else {
-            $w->result(null, '', 'Artists in "Your Music"', 'Browse by artist' . ' (' . $mymusic_artists . ' artists)', './images/' . $theme . '/' . 'artists.png', 'no', null, 'Artist▹');
-            $w->result(null, '', 'Albums in "Your Music"', 'Browse by album' . ' (' . $mymusic_albums . ' albums)', './images/' . $theme . '/' . 'albums.png', 'no', null, 'Album▹');
+            $w->result(null, '', 'Artists in "Your Music"', 'Browse by artist' . ' (' . $mymusic_artists . ' artists)', './images/' . 'artists.png', 'no', null, 'Artist▹');
+            $w->result(null, '', 'Albums in "Your Music"', 'Browse by album' . ' (' . $mymusic_albums . ' albums)', './images/' . 'albums.png', 'no', null, 'Album▹');
         }
 
-        $w->result(null, '', 'Charts', 'Browse charts', './images/' . $theme . '/' . 'numbers.png', 'no', null, 'Charts▹');
+        $w->result(null, '', 'Charts', 'Browse charts', './images/' . 'numbers.png', 'no', null, 'Charts▹');
 
         if ($is_spotifious_active == true) {
             $spotifious_state = 'enabled';
@@ -336,9 +333,9 @@ if (mb_strlen($query) < 3 ||
             $alfred_playlist_state = 'Your Music';
         }
         if ($all_playlists == true) {
-            $w->result(null, '', 'Settings', 'Search scope=<All>, Max results=<' . $max_results . '>, Spotifious is <' . $spotifious_state . '>, Controlling <' . $alfred_playlist_state . '>, Radio tracks=<' . $radio_number_tracks . '>', './images/' . $theme . '/' . 'settings.png', 'no', null, 'Settings▹');
+            $w->result(null, '', 'Settings', 'Search scope=<All>, Max results=<' . $max_results . '>, Spotifious is <' . $spotifious_state . '>, Controlling <' . $alfred_playlist_state . '>, Radio tracks=<' . $radio_number_tracks . '>', './images/' . 'settings.png', 'no', null, 'Settings▹');
         } else {
-            $w->result(null, '', 'Settings', 'Search scope=<Your Music>, Max results=<' . $max_results . '>, Spotifious is <' . $spotifious_state . '>, Controlling <' . $alfred_playlist_state . '>, Radio tracks=<' . $radio_number_tracks . '>', './images/' . $theme . '/' . 'settings.png', 'no', null, 'Settings▹');
+            $w->result(null, '', 'Settings', 'Search scope=<Your Music>, Max results=<' . $max_results . '>, Spotifious is <' . $spotifious_state . '>, Controlling <' . $alfred_playlist_state . '>, Radio tracks=<' . $radio_number_tracks . '>', './images/' . 'settings.png', 'no', null, 'Settings▹');
         }
     }
     //
@@ -354,7 +351,7 @@ if (mb_strlen($query) < 3 ||
                 'cmd' => 'Not Available',
                 'shift' => 'Not Available',
                 'fn' => 'Not Available',
-                'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'search.png', 'yes', null, '');
+                'ctrl' => 'Not Available'), './images/' . 'search.png', 'yes', null, '');
 
         } else {
             $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'enable_all_playlist' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Change Search Scope', array(
@@ -363,13 +360,13 @@ if (mb_strlen($query) < 3 ||
                 'cmd' => 'Not Available',
                 'shift' => 'Not Available',
                 'fn' => 'Not Available',
-                'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'search.png', 'yes', null, '');
+                'ctrl' => 'Not Available'), './images/' . 'search.png', 'yes', null, '');
         }
         if ($update_in_progress == false) {
-            $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'refresh_library' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Refresh your library", "Do this when your library has changed (outside the scope of this workflow)", './images/' . $theme . '/' . 'update.png', 'yes', null, '');
+            $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'refresh_library' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Refresh your library", "Do this when your library has changed (outside the scope of this workflow)", './images/' . 'update.png', 'yes', null, '');
         }
-        $w->result(null, '', "Configure Max Number of Results", "Number of results displayed. (it doesn't apply to your playlist list)", './images/' . $theme . '/' . 'numbers.png', 'no', null, 'Settings▹MaxResults▹');
-        $w->result(null, '', "Configure Number of Radio tracks", "Number of tracks to get when creating a Radio Playlist.", './images/' . $theme . '/' . 'numbers.png', 'no', null, 'Settings▹RadioTracks▹');
+        $w->result(null, '', "Configure Max Number of Results", "Number of results displayed. (it doesn't apply to your playlist list)", './images/' . 'numbers.png', 'no', null, 'Settings▹MaxResults▹');
+        $w->result(null, '', "Configure Number of Radio tracks", "Number of tracks to get when creating a Radio Playlist.", './images/' . 'numbers.png', 'no', null, 'Settings▹RadioTracks▹');
 
         if ($is_spotifious_active == true) {
             $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'disable_spotifiuous' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Disable Spotifious", array(
@@ -378,7 +375,7 @@ if (mb_strlen($query) < 3 ||
                 'cmd' => 'Not Available',
                 'shift' => 'Not Available',
                 'fn' => 'Not Available',
-                'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'uncheck.png', 'yes', null, '');
+                'ctrl' => 'Not Available'), './images/' . 'uncheck.png', 'yes', null, '');
         } else {
             $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'enable_spotifiuous' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Enable Spotifious", array(
                 "Display Spotifious in default results",
@@ -386,7 +383,7 @@ if (mb_strlen($query) < 3 ||
                 'cmd' => 'Not Available',
                 'shift' => 'Not Available',
                 'fn' => 'Not Available',
-                'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'check.png', 'yes', null, '');
+                'ctrl' => 'Not Available'), './images/' . 'check.png', 'yes', null, '');
         }
         if ($is_alfred_playlist_active == true) {
             $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'disable_alfred_playlist' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Control Your Music", array(
@@ -395,7 +392,7 @@ if (mb_strlen($query) < 3 ||
                 'cmd' => 'Not Available',
                 'shift' => 'Not Available',
                 'fn' => 'Not Available',
-                'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'allplaylists.png', 'yes', null, '');
+                'ctrl' => 'Not Available'), './images/' . 'allplaylists.png', 'yes', null, '');
         } else {
             $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'enable_alfred_playlist' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Control Alfred Playlist", array(
                 "You will control the Alfred Playlist (if disabled, you control Your Music)",
@@ -403,7 +400,7 @@ if (mb_strlen($query) < 3 ||
                 'cmd' => 'Not Available',
                 'shift' => 'Not Available',
                 'fn' => 'Not Available',
-                'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'alfred_playlist.png', 'yes', null, '');
+                'ctrl' => 'Not Available'), './images/' . 'alfred_playlist.png', 'yes', null, '');
         }
         if ($is_lyrics_active == true) {
             $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'disable_lyrics' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Disable Get Lyrics", array(
@@ -412,7 +409,7 @@ if (mb_strlen($query) < 3 ||
                 'cmd' => 'Not Available',
                 'shift' => 'Not Available',
                 'fn' => 'Not Available',
-                'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'uncheck.png', 'yes', null, '');
+                'ctrl' => 'Not Available'), './images/' . 'uncheck.png', 'yes', null, '');
         } else {
             $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'enable_lyrics' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Enable Get Lyrics", array(
                 "Display Get Lyrics",
@@ -420,11 +417,11 @@ if (mb_strlen($query) < 3 ||
                 'cmd' => 'Not Available',
                 'shift' => 'Not Available',
                 'fn' => 'Not Available',
-                'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'check.png', 'yes', null, '');
+                'ctrl' => 'Not Available'), './images/' . 'check.png', 'yes', null, '');
         }
 
         if ($update_in_progress == false) {
-            $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'update_library' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Re-Create your library from scratch', "Do this when refresh library is not working as you would expect", './images/' . $theme . '/' . 'update.png', 'yes', null, '');
+            $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'update_library' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Re-Create your library from scratch', "Do this when refresh library is not working as you would expect", './images/' . 'update.png', 'yes', null, '');
         }
 
         $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'check_for_update' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Check for workflow update', array(
@@ -433,7 +430,7 @@ if (mb_strlen($query) < 3 ||
             'cmd' => 'Not Available',
             'shift' => 'Not Available',
             'fn' => 'Not Available',
-            'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'check_update.png', 'yes', null, '');
+            'ctrl' => 'Not Available'), './images/' . 'check_update.png', 'yes', null, '');
     }
 } else {
     ////////////
@@ -446,23 +443,23 @@ if (mb_strlen($query) < 3 ||
         // Search categories for fast access
         //
         if (strpos(strtolower('playlists'), strtolower($query)) !== false) {
-            $w->result(null, '', 'Playlists', 'Browse by playlist', './images/' . $theme . '/' . 'playlists.png', 'no', null, 'Playlist▹');
+            $w->result(null, '', 'Playlists', 'Browse by playlist', './images/' . 'playlists.png', 'no', null, 'Playlist▹');
         } else if (strpos(strtolower('albums'), strtolower($query)) !== false) {
-            $w->result(null, '', 'Albums', 'Browse by album', './images/' . $theme . '/' . 'albums.png', 'no', null, 'Album▹');
+            $w->result(null, '', 'Albums', 'Browse by album', './images/' . 'albums.png', 'no', null, 'Album▹');
         } else if (strpos(strtolower('charts'), strtolower($query)) !== false) {
-            $w->result(null, '', 'Charts', 'Browse charts', './images/' . $theme . '/' . 'numbers.png', 'no', null, 'Charts▹');
+            $w->result(null, '', 'Charts', 'Browse charts', './images/' . 'numbers.png', 'no', null, 'Charts▹');
         } else if (strpos(strtolower('artists'), strtolower($query)) !== false) {
-            $w->result(null, '', 'Artists', 'Browse by artist', './images/' . $theme . '/' . 'artists.png', 'no', null, 'Artist▹');
+            $w->result(null, '', 'Artists', 'Browse by artist', './images/' . 'artists.png', 'no', null, 'Artist▹');
         } else if (strpos(strtolower('alfred'), strtolower($query)) !== false) {
-            $w->result(null, '', 'Alfred Playlist (currently set to <' . $alfred_playlist_name . '>)', 'Choose one of your playlists and add tracks, album, playlist to it directly from the workflow', './images/' . $theme . '/' . 'alfred_playlist.png', 'no', null, 'Alfred Playlist▹');
+            $w->result(null, '', 'Alfred Playlist (currently set to <' . $alfred_playlist_name . '>)', 'Choose one of your playlists and add tracks, album, playlist to it directly from the workflow', './images/' . 'alfred_playlist.png', 'no', null, 'Alfred Playlist▹');
         } else if (strpos(strtolower('settings'), strtolower($query)) !== false) {
-            $w->result(null, '', 'Settings', 'Go to settings', './images/' . $theme . '/' . 'settings.png', 'no', null, 'Settings▹');
+            $w->result(null, '', 'Settings', 'Go to settings', './images/' . 'settings.png', 'no', null, 'Settings▹');
         } else if (strpos(strtolower('featured'), strtolower($query)) !== false) {
-            $w->result(null, '', 'Featured Playlist', 'Browse the current featured playlists', './images/' . $theme . '/' . 'star.png', 'no', null, 'Featured Playlist▹');
+            $w->result(null, '', 'Featured Playlist', 'Browse the current featured playlists', './images/' . 'star.png', 'no', null, 'Featured Playlist▹');
         } else if (strpos(strtolower('yourmusic'), strtolower($query)) !== false) {
-            $w->result(null, '', 'Your Music', 'Browse Your Music', './images/' . $theme . '/' . 'tracks.png', 'no', null, 'Your Music▹');
+            $w->result(null, '', 'Your Music', 'Browse Your Music', './images/' . 'tracks.png', 'no', null, 'Your Music▹');
         } else if (strpos(strtolower('current track'), strtolower($query)) !== false) {
-            $w->result(null, '', 'Current Track', 'Display current track information and browse various options', './images/' . $theme . '/' . 'tracks.png', 'no', null, 'Current Track▹');
+            $w->result(null, '', 'Current Track', 'Display current track information and browse various options', './images/' . 'tracks.png', 'no', null, 'Current Track▹');
         }
 
 
@@ -470,33 +467,33 @@ if (mb_strlen($query) < 3 ||
         // Search commands for fast access
         //
         if (strpos(strtolower('next'), strtolower($query)) !== false) {
-            $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'next' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Next Track', 'Play the next track in Spotify', './images/' . $theme . '/' . 'next.png', 'yes', '');
+            $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'next' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Next Track', 'Play the next track in Spotify', './images/' . 'next.png', 'yes', '');
         } else if (strpos(strtolower('previous'), strtolower($query)) !== false) {
-            $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'previous' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Previous Track', 'Play the previous track in Spotify', './images/' . $theme . '/' . 'previous.png', 'yes', '');
+            $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'previous' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Previous Track', 'Play the previous track in Spotify', './images/' . 'previous.png', 'yes', '');
         } else if (strpos(strtolower('play'), strtolower($query)) !== false) {
-            $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'play' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Play', 'Play the current Spotify track', './images/' . $theme . '/' . 'play.png', 'yes', '');
+            $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'play' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Play', 'Play the current Spotify track', './images/' . 'play.png', 'yes', '');
 
-            $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'play_current_artist' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Play current artist', 'Play the current artist', './images/' . $theme . '/' . 'artists.png', 'yes', null, '');
-            $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'play_current_album' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Play current album', 'Play the current album', './images/' . $theme . '/' . 'albums.png', 'yes', null, '');
+            $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'play_current_artist' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Play current artist', 'Play the current artist', './images/' . 'artists.png', 'yes', null, '');
+            $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'play_current_album' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Play current album', 'Play the current album', './images/' . 'albums.png', 'yes', null, '');
         } else if (strpos(strtolower('pause'), strtolower($query)) !== false) {
-            $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'pause' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Pause', 'Pause the current Spotify track', './images/' . $theme . '/' . 'pause.png', 'yes', '');
+            $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'pause' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Pause', 'Pause the current Spotify track', './images/' . 'pause.png', 'yes', '');
         } else if (strpos(strtolower('current'), strtolower($query)) !== false) {
-            $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'current' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Get Current Track info', 'Get current track information', './images/' . $theme . '/' . 'info.png', 'yes', '');
+            $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'current' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Get Current Track info', 'Get current track information', './images/' . 'info.png', 'yes', '');
         } else if (strpos(strtolower('random'), strtolower($query)) !== false) {
-            $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'random' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Random Track', 'Play random track', './images/' . $theme . '/' . 'random.png', 'yes', '');
+            $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'random' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Random Track', 'Play random track', './images/' . 'random.png', 'yes', '');
         } else if (strpos(strtolower('refresh'), strtolower($query)) !== false) {
 	        if ($update_in_progress == false) {
-	            $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'refresh_library' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Refresh your library", "Do this when your library has changed (outside the scope of this workflow)", './images/' . $theme . '/' . 'update.png', 'yes', null, '');
+	            $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'refresh_library' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Refresh your library", "Do this when your library has changed (outside the scope of this workflow)", './images/' . 'update.png', 'yes', null, '');
 	        }
         } else if (strpos(strtolower('update'), strtolower($query)) !== false) {
 	        if ($update_in_progress == false) {
-	            $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'refresh_library' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Refresh your library", "Do this when your library has changed (outside the scope of this workflow)", './images/' . $theme . '/' . 'update.png', 'yes', null, '');
+	            $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'refresh_library' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Refresh your library", "Do this when your library has changed (outside the scope of this workflow)", './images/' . 'update.png', 'yes', null, '');
 	        }
         } else if (strpos(strtolower('add'), strtolower($query)) !== false) {
             if ($is_alfred_playlist_active == true) {
-                $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'add_current_track' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Add current track to Alfred Playlist', 'Current track will be added to Alfred Playlist', './images/' . $theme . '/' . 'add.png', 'yes', '');
+                $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'add_current_track' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Add current track to Alfred Playlist', 'Current track will be added to Alfred Playlist', './images/' . 'add.png', 'yes', '');
             } else {
-                $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'add_current_track' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Add current track to Your Music', 'Current track will be added to Your Music', './images/' . $theme . '/' . 'add.png', 'yes', '');
+                $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'add_current_track' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Add current track to Your Music', 'Current track will be added to Your Music', './images/' . 'add.png', 'yes', '');
             }
         } else if (strpos(strtolower('mute'), strtolower($query)) !== false) {
             $osascript_command = 'if sound volume is less than or equal to 0 then
@@ -504,13 +501,13 @@ if (mb_strlen($query) < 3 ||
 									else
 										set sound volume to 0
 									end if';
-            $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, $osascript_command /* spotify_command */, '' /* query */, '' /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Mute Spotify Volume', 'Mute Spotify', './images/' . $theme . '/' . 'mute.png', 'yes', '');
+            $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, $osascript_command /* spotify_command */, '' /* query */, '' /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Mute Spotify Volume', 'Mute Spotify', './images/' . 'mute.png', 'yes', '');
         } else if (strpos(strtolower('volmid'), strtolower($query)) !== false) {
             $osascript_command = 'set sound volume to 50';
-            $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, $osascript_command /* spotify_command */, '' /* query */, '' /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Set Spotify Volume to 50%', 'Set the Spotify Volume to 50%', './images/' . $theme . '/' . 'volmid.png', 'yes', '');
+            $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, $osascript_command /* spotify_command */, '' /* query */, '' /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Set Spotify Volume to 50%', 'Set the Spotify Volume to 50%', './images/' . 'volmid.png', 'yes', '');
         } else if (strpos(strtolower('volmax'), strtolower($query)) !== false) {
             $osascript_command = 'set sound volume to 100';
-            $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, $osascript_command /* spotify_command */, '' /* query */, '' /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Set Spotify Volume to Maximum', 'Set the Spotify Volume to Maximum', './images/' . $theme . '/' . 'volmax.png', 'yes', '');
+            $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, $osascript_command /* spotify_command */, '' /* query */, '' /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Set Spotify Volume to Maximum', 'Set the Spotify Volume to Maximum', './images/' . 'volmax.png', 'yes', '');
         }
 
         //
@@ -524,7 +521,7 @@ if (mb_strlen($query) < 3 ||
             $playlists = $stmt->execute();
 
         } catch (PDOException $e) {
-            handleDbIssuePdoXml($theme, $db);
+            handleDbIssuePdoXml($db);
             return;
         }
 
@@ -552,7 +549,7 @@ if (mb_strlen($query) < 3 ||
             $tracks = $stmt->execute();
 
         } catch (PDOException $e) {
-            handleDbIssuePdoXml($theme, $db);
+            handleDbIssuePdoXml($db);
             return;
         }
 
@@ -579,7 +576,7 @@ if (mb_strlen($query) < 3 ||
             $tracks = $stmt->execute();
 
         } catch (PDOException $e) {
-            handleDbIssuePdoXml($theme, $db);
+            handleDbIssuePdoXml($db);
             return;
         }
 
@@ -591,14 +588,14 @@ if (mb_strlen($query) < 3 ||
             ) {
                 $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
                 $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
-                $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', null, '');
+                $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . 'info.png', 'no', null, '');
             }
             $noresult = false;
             $subtitle = $track[6];
 
             if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " ● " . $track[5]) == false) {
 
-                $playlistsfortrack = getPlaylistsForTrack($db, $theme, $track[2]);
+                $playlistsfortrack = getPlaylistsForTrack($db, $track[2]);
 
                 if ($is_alfred_playlist_active == true) {
                     $arrayresult = array(
@@ -635,7 +632,7 @@ if (mb_strlen($query) < 3 ||
             'cmd' => 'Not Available',
             'shift' => 'Not Available',
             'fn' => 'Not Available',
-            'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'spotify.png', 'yes', null, '');
+            'ctrl' => 'Not Available'), './images/' . 'spotify.png', 'yes', null, '');
 
         if ($is_spotifious_active == true) {
             $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, $query /* query */, '' /* other_settings*/, 'search_in_spotifious' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $query . " with Spotifious", array(
@@ -644,7 +641,7 @@ if (mb_strlen($query) < 3 ||
                 'cmd' => 'Not Available',
                 'shift' => 'Not Available',
                 'fn' => 'Not Available',
-                'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'spotifious.png', 'yes', null, '');
+                'ctrl' => 'Not Available'), './images/' . 'spotifious.png', 'yes', null, '');
         }
     } ////////////
     //
@@ -672,7 +669,7 @@ if (mb_strlen($query) < 3 ||
 
                 $playlists = $stmt->execute();
             } catch (PDOException $e) {
-                handleDbIssuePdoXml($theme, $db);
+                handleDbIssuePdoXml($db);
                 return;
             }
 
@@ -716,12 +713,12 @@ if (mb_strlen($query) < 3 ||
 
                 if (mb_strlen($theplaylist) < 3) {
                     if ($nb_artist_radio_playlist > 0) {
-                        $w->result(null, '', "Browse your artist radio playlists (" . $nb_artist_radio_playlist . " playlists)", "Display all your artist radio playlists", './images/' . $theme . '/' . 'radio_artist.png', 'no', null, "Playlist▹Artist radio");
+                        $w->result(null, '', "Browse your artist radio playlists (" . $nb_artist_radio_playlist . " playlists)", "Display all your artist radio playlists", './images/' . 'radio_artist.png', 'no', null, "Playlist▹Artist radio");
                     }
                     if ($nb_song_radio_playlist > 0) {
-                        $w->result(null, '', "Browse your song radio playlists (" . $nb_song_radio_playlist . " playlists)", "Display all your song radio playlists", './images/' . $theme . '/' . 'radio_song.png', 'no', null, "Playlist▹Song radio");
+                        $w->result(null, '', "Browse your song radio playlists (" . $nb_song_radio_playlist . " playlists)", "Display all your song radio playlists", './images/' . 'radio_song.png', 'no', null, "Playlist▹Song radio");
                     }
-                    $w->result(null, '', 'Featured Playlists', 'Browse the current featured playlists', './images/' . $theme . '/' . 'star.png', 'no', null, 'Featured Playlist▹');
+                    $w->result(null, '', 'Featured Playlists', 'Browse the current featured playlists', './images/' . 'star.png', 'no', null, 'Featured Playlist▹');
                 }
 
                 foreach ($savedPlaylists as $playlist) {
@@ -746,14 +743,14 @@ if (mb_strlen($query) < 3 ||
 
             $r = explode(':', $alfred_playlist_uri);
 
-            $w->result(null, '', "Browse your Alfred playlist (" . $alfred_playlist_name . " by " . $r[2] . ")", "You can change the playlist by selecting Change your Alfred playlist below", getPlaylistArtwork($w, $theme, $alfred_playlist_uri, false), 'no', null, 'Playlist▹' . $alfred_playlist_uri . '▹');
+            $w->result(null, '', "Browse your Alfred playlist (" . $alfred_playlist_name . " by " . $r[2] . ")", "You can change the playlist by selecting Change your Alfred playlist below", getPlaylistArtwork($w,  $alfred_playlist_uri, false), 'no', null, 'Playlist▹' . $alfred_playlist_uri . '▹');
 
-            $w->result(null, '', "Change your Alfred playlist", "Select one of your playlists below as your Alfred playlist", './images/' . $theme . '/' . 'settings.png', 'no', null, 'Alfred Playlist▹Set Alfred Playlist▹');
+            $w->result(null, '', "Change your Alfred playlist", "Select one of your playlists below as your Alfred playlist", './images/' . 'settings.png', 'no', null, 'Alfred Playlist▹Set Alfred Playlist▹');
 
             if
             (strtolower($r[3]) != strtolower('Starred')
             ) {
-                $w->result(null, '', "Clear your Alfred Playlist", "This will remove all the tracks in your current Alfred Playlist", './images/' . $theme . '/' . 'uncheck.png', 'no', null, 'Alfred Playlist▹Confirm Clear Alfred Playlist▹');
+                $w->result(null, '', "Clear your Alfred Playlist", "This will remove all the tracks in your current Alfred Playlist", './images/' . 'uncheck.png', 'no', null, 'Alfred Playlist▹Confirm Clear Alfred Playlist▹');
             }
         } //  Alfred Playlist end
         elseif ($kind == "Artist") {
@@ -783,7 +780,7 @@ if (mb_strlen($query) < 3 ||
                 $tracks = $stmt->execute();
 
             } catch (PDOException $e) {
-                handleDbIssuePdoXml($theme, $db);
+                handleDbIssuePdoXml($db);
                 return;
             }
 
@@ -831,7 +828,7 @@ if (mb_strlen($query) < 3 ||
                 $tracks = $stmt->execute();
 
             } catch (PDOException $e) {
-                handleDbIssuePdoXml($theme, $db);
+                handleDbIssuePdoXml($db);
                 return;
             }
 
@@ -864,14 +861,14 @@ if (mb_strlen($query) < 3 ||
                 $country_flag = $country_code;
                 $country_name = $country_code;
             }
-            $w->result(null, '', $country_flag, 'Browse the current featured playlists in ' . $country_name, './images/' . $theme . '/' . 'star.png', 'no', null, 'Featured Playlist▹' . $country_code . '▹');
+            $w->result(null, '', $country_flag, 'Browse the current featured playlists in ' . $country_name, './images/' . 'star.png', 'no', null, 'Featured Playlist▹' . $country_code . '▹');
 
             if ($country_code != 'US') {
-                $w->result(null, '', '🇺🇸', 'Browse the current featured playlists in US', './images/' . $theme . '/' . 'star.png', 'no', null, 'Featured Playlist▹US▹');
+                $w->result(null, '', '🇺🇸', 'Browse the current featured playlists in US', './images/' . 'star.png', 'no', null, 'Featured Playlist▹US▹');
             }
 
             if ($country_code != 'GB') {
-                $w->result(null, '', '🇬🇧', 'Browse the current featured playlists in UK', './images/' . $theme . '/' . 'star.png', 'no', null, 'Featured Playlist▹GB▹');
+                $w->result(null, '', '🇬🇧', 'Browse the current featured playlists in UK', './images/' . 'star.png', 'no', null, 'Featured Playlist▹GB▹');
             }
 
         } // Featured Playlist end
@@ -887,14 +884,14 @@ if (mb_strlen($query) < 3 ||
                 $country_flag = $country_code;
                 $country_name = $country_code;
             }
-            $w->result(null, '', $country_flag, 'Browse the current charts in ' . $country_name, './images/' . $theme . '/' . 'numbers.png', 'no', null, 'Charts▹' . $country_code . '▹');
+            $w->result(null, '', $country_flag, 'Browse the current charts in ' . $country_name, './images/' . 'numbers.png', 'no', null, 'Charts▹' . $country_code . '▹');
 
             if ($country_code != 'US') {
-                $w->result(null, '', '🇺🇸', 'Browse the current charts in US', './images/' . $theme . '/' . 'numbers.png', 'no', null, 'Charts▹US▹');
+                $w->result(null, '', '🇺🇸', 'Browse the current charts in US', './images/' . 'numbers.png', 'no', null, 'Charts▹US▹');
             }
 
             if ($country_code != 'GB') {
-                $w->result(null, '', '🇬🇧', 'Browse the current charts in UK', './images/' . $theme . '/' . 'numbers.png', 'no', null, 'Charts▹GB▹');
+                $w->result(null, '', '🇬🇧', 'Browse the current charts in UK', './images/' . 'numbers.png', 'no', null, 'Charts▹GB▹');
             }
 
         } // Charts end
@@ -904,7 +901,7 @@ if (mb_strlen($query) < 3 ||
 
             if (substr_count($command_output, '▹') > 0) {
                 $results = explode('▹', $command_output);
-                $currentArtistArtwork = getArtistArtwork($w, $theme, $results[1], false);
+                $currentArtistArtwork = getArtistArtwork($w,  $results[1], false);
                 $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
                 $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
                 if ($is_alfred_playlist_active == true) {
@@ -926,10 +923,10 @@ if (mb_strlen($query) < 3 ||
                 }
 
                 if ($results[3] == "playing") {
-                    $w->result(null, serialize(array($results[4] /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'pause' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, escapeQuery($results[1]) /* artist_name */, escapeQuery($results[0]) /* track_name */, escapeQuery($results[2]) /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), " " . escapeQuery($results[0]) . " ● " . escapeQuery($results[1]) . " ● " . escapeQuery($results[2]), $arrayresult, ($results[3] == "playing") ? './images/' . $theme . '/' . 'pause.png' : './images/' . $theme . '/' . 'play.png', 'yes', null, '');
+                    $w->result(null, serialize(array($results[4] /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'pause' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, escapeQuery($results[1]) /* artist_name */, escapeQuery($results[0]) /* track_name */, escapeQuery($results[2]) /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), " " . escapeQuery($results[0]) . " ● " . escapeQuery($results[1]) . " ● " . escapeQuery($results[2]), $arrayresult, ($results[3] == "playing") ? './images/' . 'pause.png' : './images/' . 'play.png', 'yes', null, '');
 
                 } else {
-                    $w->result(null, serialize(array($results[4] /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'play' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, escapeQuery($results[1]) /* artist_name */, escapeQuery($results[0]) /* track_name */, escapeQuery($results[2]) /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), " " . escapeQuery($results[0]) . " ● " . escapeQuery($results[1]) . " ● " . escapeQuery($results[2]), $arrayresult, ($results[3] == "playing") ? './images/' . $theme . '/' . 'pause.png' : './images/' . $theme . '/' . 'play.png', 'yes', null, '');
+                    $w->result(null, serialize(array($results[4] /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'play' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, escapeQuery($results[1]) /* artist_name */, escapeQuery($results[0]) /* track_name */, escapeQuery($results[2]) /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), " " . escapeQuery($results[0]) . " ● " . escapeQuery($results[1]) . " ● " . escapeQuery($results[2]), $arrayresult, ($results[3] == "playing") ? './images/' . 'pause.png' : './images/' . 'play.png', 'yes', null, '');
                 }
 
 
@@ -941,7 +938,7 @@ if (mb_strlen($query) < 3 ||
                     $tracks = $stmt->execute();
 
                 } catch (PDOException $e) {
-                    handleDbIssuePdoXml($theme, $db);
+                    handleDbIssuePdoXml($db);
                     return;
                 }
 
@@ -960,7 +957,7 @@ if (mb_strlen($query) < 3 ||
                 }
 
                 // use track uri here
-                $album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $results[4], false);
+                $album_artwork_path = getTrackOrAlbumArtwork($w,  $results[4], false);
                 $w->result(null, serialize(array($results[4] /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'playalbum' /* other_action */, '' /* alfred_playlist_uri */, '' /* artist_name */, '' /* track_name */, escapeQuery($results[2]) /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, $album_artwork_path /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "💿 " . escapeQuery($results[2]), 'Play album', $album_artwork_path, 'yes', null, '');
 
                 if
@@ -974,11 +971,11 @@ if (mb_strlen($query) < 3 ||
                             'shift' => 'Not Available',
                             'fn' => 'Not Available',
                             'ctrl' => 'Not Available')
-                        , './images/' . $theme . '/' . 'lyrics.png', 'yes', null, '');
+                        , './images/' . 'lyrics.png', 'yes', null, '');
                 }
 
 
-                $w->result(null, '', 'Add track ' . escapeQuery($results[0]) . ' to...', 'This will add current track to Your Music or a playlist you will choose in next step', './images/' . $theme . '/' . 'add.png', 'no', null, 'Add▹' . $results[4] . '∙' . escapeQuery($results[0]) . '▹');
+                $w->result(null, '', 'Add track ' . escapeQuery($results[0]) . ' to...', 'This will add current track to Your Music or a playlist you will choose in next step', './images/' . 'add.png', 'no', null, 'Add▹' . $results[4] . '∙' . escapeQuery($results[0]) . '▹');
 
                 $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'current_track_radio' /* other_action */, '' /* alfred_playlist_uri */, '' /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Create a Song Radio Playlist based on " . escapeQuery($results[0]),
                     array(
@@ -988,7 +985,7 @@ if (mb_strlen($query) < 3 ||
                         'shift' => 'Not Available',
                         'fn' => 'Not Available',
                         'ctrl' => 'Not Available')
-                    , './images/' . $theme . '/' . 'radio_song.png', 'yes', null, '');
+                    , './images/' . 'radio_song.png', 'yes', null, '');
 
                 if ($all_playlists == true) {
                     $getTracks = "select playlist_uri from tracks where playable=1 and uri=:uri limit " . $max_results;
@@ -999,7 +996,7 @@ if (mb_strlen($query) < 3 ||
                         $stmtgetTracks->execute();
 
                     } catch (PDOException $e) {
-                        handleDbIssuePdoXml($theme, $db);
+                        handleDbIssuePdoXml($db);
                         return;
                     }
 
@@ -1014,7 +1011,7 @@ if (mb_strlen($query) < 3 ||
                             $playlists = $stmtGetPlaylists->execute();
 
                         } catch (PDOException $e) {
-                            handleDbIssuePdoXml($theme, $db);
+                            handleDbIssuePdoXml($db);
                             return;
                         }
 
@@ -1043,7 +1040,7 @@ if (mb_strlen($query) < 3 ||
 	                $counter = $stmt->fetch();
 
 	            } catch (PDOException $e) {
-	                handleDbIssuePdoXml($theme, $db);
+	                handleDbIssuePdoXml($db);
 	                return;
 	            }
 
@@ -1055,9 +1052,9 @@ if (mb_strlen($query) < 3 ||
 	            $mymusic_albums = $counter[5];
 	            $nb_playlists = $counter[6];
 
-	            $w->result(null, '', 'Tracks', 'Browse your ' . $mymusic_tracks . ' tracks in Your Music', './images/' . $theme . '/' . 'tracks.png', 'no', null, 'Your Music▹Tracks▹');
-	            $w->result(null, '', 'Albums', 'Browse your ' . $mymusic_albums . ' albums in Your Music', './images/' . $theme . '/' . 'albums.png', 'no', null, 'Your Music▹Albums▹');
-	            $w->result(null, '', 'Artists', 'Browse your ' . $mymusic_artists . ' artists in Your Music', './images/' . $theme . '/' . 'artists.png', 'no', null, 'Your Music▹Artists▹');
+	            $w->result(null, '', 'Tracks', 'Browse your ' . $mymusic_tracks . ' tracks in Your Music', './images/' . 'tracks.png', 'no', null, 'Your Music▹Tracks▹');
+	            $w->result(null, '', 'Albums', 'Browse your ' . $mymusic_albums . ' albums in Your Music', './images/' . 'albums.png', 'no', null, 'Your Music▹Albums▹');
+	            $w->result(null, '', 'Artists', 'Browse your ' . $mymusic_artists . ' artists in Your Music', './images/' . 'artists.png', 'no', null, 'Your Music▹Artists▹');
 
             } else {
 		        //
@@ -1072,7 +1069,7 @@ if (mb_strlen($query) < 3 ||
 		            $tracks = $stmt->execute();
 
 		        } catch (PDOException $e) {
-		            handleDbIssuePdoXml($theme, $db);
+		            handleDbIssuePdoXml($db);
 		            return;
 		        }
 				$noresult=true;
@@ -1096,7 +1093,7 @@ if (mb_strlen($query) < 3 ||
 		            $tracks = $stmt->execute();
 
 		        } catch (PDOException $e) {
-		            handleDbIssuePdoXml($theme, $db);
+		            handleDbIssuePdoXml($db);
 		            return;
 		        }
 
@@ -1107,14 +1104,14 @@ if (mb_strlen($query) < 3 ||
 		            ) {
 		                $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
 		                $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
-		                $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', null, '');
+		                $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . 'info.png', 'no', null, '');
 		            }
 		            $noresult = false;
 		            $subtitle = $track[6];
 
 		            if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " ● " . $track[5]) == false) {
 
-		                $playlistsfortrack = getPlaylistsForTrack($db, $theme, $track[2]);
+		                $playlistsfortrack = getPlaylistsForTrack($db, $track[2]);
 
 		                if ($is_alfred_playlist_active == true) {
 		                    $arrayresult = array(
@@ -1158,14 +1155,14 @@ if (mb_strlen($query) < 3 ||
 
                 $artist_name = $words[1];
 
-                $artist_artwork_path = getArtistArtwork($w, $theme, $artist_name, false);
+                $artist_artwork_path = getArtistArtwork($w,  $artist_name, false);
                 $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, $artist_uri /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'playartist' /* other_action */, '' /* alfred_playlist_uri */, $artist_name  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, $artist_artwork_path /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "👤 " . $artist_name, 'Play artist', $artist_artwork_path, 'yes', null, '');
 
-                $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, $artist_uri /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'display_biography_online' /* other_action */, '' /* alfred_playlist_uri */, $artist_name  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Display biography', 'This will display the artist biography', './images/' . $theme . '/' . 'biography.png', 'yes', null, '');
+                $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, $artist_uri /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'display_biography_online' /* other_action */, '' /* alfred_playlist_uri */, $artist_name  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Display biography', 'This will display the artist biography', './images/' . 'biography.png', 'yes', null, '');
 
-                $w->result(null, '', 'Related Artists', 'Browse related artists', './images/' . $theme . '/' . 'related.png', 'no', null, "OnlineRelated▹" . $artist_uri . "@" . $artist_name);
+                $w->result(null, '', 'Related Artists', 'Browse related artists', './images/' . 'related.png', 'no', null, "OnlineRelated▹" . $artist_uri . "@" . $artist_name);
                 if ($update_in_progress == false) {
-                    $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, $artist_uri /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'radio_artist' /* other_action */, '' /* alfred_playlist_uri */, $artist_name  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Create a Radio Playlist for ' . $artist_name, 'This will create a radio playlist with ' . $radio_number_tracks . ' for the artist', './images/' . $theme . '/' . 'radio_artist.png', 'yes', null, '');
+                    $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, $artist_uri /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'radio_artist' /* other_action */, '' /* alfred_playlist_uri */, $artist_name  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Create a Radio Playlist for ' . $artist_name, 'This will create a radio playlist with ' . $radio_number_tracks . ' for the artist', './images/' . 'radio_artist.png', 'yes', null, '');
                 }
 
                 $json = doWebApiRequest($w, "https://api.spotify.com/v1/artists/" . trim($tmp_uri[2]) . "/albums");
@@ -1193,7 +1190,7 @@ if (mb_strlen($query) < 3 ||
                     if (checkIfResultAlreadyThere($w->results(), ucfirst($album->name)) == false) {
 
                         $genre = (count($album->genres) > 0) ? ' ● Genre: ' . implode('|', $album->genres) : '';
-                        $w->result(null, '', ucfirst($album->name), $album->album_type . " by " . $artist_name . ' ● Release date: ' . $album->release_date . $genre, getTrackOrAlbumArtwork($w, $theme, $album->uri, false), 'no', null, "Online▹" . $artist_uri . "@" . $artist_name . "@" . $album->uri . "@" . $album->name);
+                        $w->result(null, '', ucfirst($album->name), $album->album_type . " by " . $artist_name . ' ● Release date: ' . $album->release_date . $genre, getTrackOrAlbumArtwork($w,  $album->uri, false), 'no', null, "Online▹" . $artist_uri . "@" . $artist_name . "@" . $album->uri . "@" . $album->name);
                     }
                 }
 
@@ -1212,18 +1209,18 @@ if (mb_strlen($query) < 3 ||
 
                 $json = doWebApiRequest($w, "https://api.spotify.com/v1/albums/" . $tmp_uri[2] . "/tracks");
 
-                $album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $album_uri, false);
+                $album_artwork_path = getTrackOrAlbumArtwork($w,  $album_uri, false);
                 $w->result(null, serialize(array('' /*track_uri*/, $album_uri /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'playalbum' /* other_action */, '' /* alfred_playlist_uri */, '' /* artist_name */, '' /* track_name */, $album_name /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, $album_artwork_path /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "💿 " . escapeQuery($album_name), 'Play album', $album_artwork_path, 'yes', null, '');
 
-                $w->result(null, '', 'Add album ' . escapeQuery($album_name) . ' to...', 'This will add current track to Your Music or a playlist you will choose in next step', './images/' . $theme . '/' . 'add.png', 'no', null, 'Add▹' . $album_uri . '∙' . escapeQuery($album_name) . '▹');
+                $w->result(null, '', 'Add album ' . escapeQuery($album_name) . ' to...', 'This will add current track to Your Music or a playlist you will choose in next step', './images/' . 'add.png', 'no', null, 'Add▹' . $album_uri . '∙' . escapeQuery($album_name) . '▹');
 
                 $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
                 $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
-                $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', null, '');
+                $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . 'info.png', 'no', null, '');
                 foreach ($json->items as $track) {
 
                     if (count($track->available_markets) == 0 || in_array($country_code, $track->available_markets) !== false) {
-                        $track_artwork = getTrackOrAlbumArtwork($w, $theme, $track->uri, false);
+                        $track_artwork = getTrackOrAlbumArtwork($w,  $track->uri, false);
                         if ($is_alfred_playlist_active == true) {
                             $arrayresult = array(
                                 beautifyTime($track->duration_ms / 1000) . " ● " . $album_name,
@@ -1263,7 +1260,7 @@ if (mb_strlen($query) < 3 ||
 
                 foreach ($json->artists as $related) {
 
-                    $w->result(null, '', "👤 " . ucfirst($related->name), '☁︎ Query all albums/tracks from this artist online..', getArtistArtwork($w, $theme, $related->name, false), 'no', null, "Online▹" . $related->uri . "@" . $related->name);
+                    $w->result(null, '', "👤 " . ucfirst($related->name), '☁︎ Query all albums/tracks from this artist online..', getArtistArtwork($w,  $related->name, false), 'no', null, "Online▹" . $related->uri . "@" . $related->name);
                 }
             }
         } // end OnlineRelated
@@ -1297,17 +1294,17 @@ if (mb_strlen($query) < 3 ||
             $track = $words[2];
 
             if (mb_strlen($track) < 3) {
-                $artist_artwork_path = getArtistArtwork($w, $theme, $artist_name, true);
+                $artist_artwork_path = getArtistArtwork($w,  $artist_name, true);
                 $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, $artist_uri /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'playartist' /* other_action */, '' /* alfred_playlist_uri */, $artist_name  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, $artist_artwork_path /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "👤 " . $artist_name, 'Play artist', $artist_artwork_path, 'yes', null, '');
                 $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, $artist_uri /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'morefromthisartist' /* other_action */, '' /* alfred_playlist_uri */, $artist_name  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "👤 " . $artist_name, '☁︎ Query all albums/tracks from this artist online..', $artist_artwork_path, 'yes', null, '');
 
                 if ($update_in_progress == false) {
-                    $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, $artist_uri /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'display_biography' /* other_action */, '' /* alfred_playlist_uri */, $artist_name  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Display biography', 'This will display the artist biography', './images/' . $theme . '/' . 'biography.png', 'yes', null, '');
+                    $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, $artist_uri /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'display_biography' /* other_action */, '' /* alfred_playlist_uri */, $artist_name  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Display biography', 'This will display the artist biography', './images/' . 'biography.png', 'yes', null, '');
                 }
 
-                $w->result(null, '', 'Related Artists', 'Browse related artists', './images/' . $theme . '/' . 'related.png', 'no', null, "OnlineRelated▹" . $artist_uri . "@" . $artist_name);
+                $w->result(null, '', 'Related Artists', 'Browse related artists', './images/' . 'related.png', 'no', null, "OnlineRelated▹" . $artist_uri . "@" . $artist_name);
 
-                $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, $artist_uri /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'radio_artist' /* other_action */, '' /* alfred_playlist_uri */, $artist_name  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Create a Radio Playlist for ' . $artist_name, 'This will create a radio playlist with ' . $radio_number_tracks . ' for the artist', './images/' . $theme . '/' . 'radio_artist.png', 'yes', null, '');
+                $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, $artist_uri /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'radio_artist' /* other_action */, '' /* alfred_playlist_uri */, $artist_name  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Create a Radio Playlist for ' . $artist_name, 'This will create a radio playlist with ' . $radio_number_tracks . ' for the artist', './images/' . 'radio_artist.png', 'yes', null, '');
 
                 if ($all_playlists == false) {
                     $getTracks = "select * from tracks where playable=1 and mymusic=1 and artist_uri=:artist_uri limit " . $max_results;
@@ -1337,7 +1334,7 @@ if (mb_strlen($query) < 3 ||
                 ) {
                     $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
                     $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
-                    $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', null, '');
+                    $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . 'info.png', 'no', null, '');
                 }
                 $noresult = false;
                 $subtitle = $track[6];
@@ -1367,7 +1364,7 @@ if (mb_strlen($query) < 3 ||
 
 
                     } catch (PDOException $e) {
-                        handleDbIssuePdoXml($theme, $db);
+                        handleDbIssuePdoXml($db);
                         return;
                     }
 
@@ -1394,7 +1391,7 @@ if (mb_strlen($query) < 3 ||
 
             if ($noresult) {
                 if (mb_strlen($track) < 3) {
-                    $w->result(null, 'help', "There is no track in your library for the artist " . escapeQuery($artist_name), "Choose one of the options above", './images/' . $theme . '/' . 'info.png', 'no', null, '');
+                    $w->result(null, 'help', "There is no track in your library for the artist " . escapeQuery($artist_name), "Choose one of the options above", './images/' . 'info.png', 'no', null, '');
                 } else {
                     $w->result(null, 'help', "There is no result for your search", "", './images/' . 'gray'. '/' . 'warning.png', 'no', null, '');
                 }
@@ -1407,7 +1404,7 @@ if (mb_strlen($query) < 3 ||
                 'cmd' => 'Not Available',
                 'shift' => 'Not Available',
                 'fn' => 'Not Available',
-                'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'spotify.png', 'yes', null, '');
+                'ctrl' => 'Not Available'), './images/' . 'spotify.png', 'yes', null, '');
 
             if ($is_spotifious_active == true) {
                 $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, $theartist[4] . " ▹ " . $artist_name . " ►" /* query */, '' /* other_settings*/, 'search_in_spotifious' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $artist_name . " with Spotifious", array(
@@ -1416,7 +1413,7 @@ if (mb_strlen($query) < 3 ||
                     'cmd' => 'Not Available',
                     'shift' => 'Not Available',
                     'fn' => 'Not Available',
-                    'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'spotifious.png', 'yes', null, '');
+                    'ctrl' => 'Not Available'), './images/' . 'spotifious.png', 'yes', null, '');
             }
 
         } // end of tracks by artist
@@ -1453,14 +1450,14 @@ if (mb_strlen($query) < 3 ||
                 $tracks = $stmt->execute();
 
             } catch (PDOException $e) {
-                handleDbIssuePdoXml($theme, $db);
+                handleDbIssuePdoXml($db);
                 return;
             }
 
-            $album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $album_uri, false);
+            $album_artwork_path = getTrackOrAlbumArtwork($w,  $album_uri, false);
             $w->result(null, serialize(array('' /*track_uri*/, $album_uri /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'playalbum' /* other_action */, '' /* alfred_playlist_uri */, '' /* artist_name */, '' /* track_name */, $album_name /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, $album_artwork_path /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "💿 " . $album_name, 'Play album', $album_artwork_path, 'yes', null, '');
 
-            $w->result(null, '', 'Add album ' . escapeQuery($album_name) . ' to...', 'This will add current track to Your Music or a playlist you will choose in next step', './images/' . $theme . '/' . 'add.png', 'no', null, 'Add▹' . $album_uri . '∙' . escapeQuery($album_name) . '▹');
+            $w->result(null, '', 'Add album ' . escapeQuery($album_name) . ' to...', 'This will add current track to Your Music or a playlist you will choose in next step', './images/' . 'add.png', 'no', null, 'Add▹' . $album_uri . '∙' . escapeQuery($album_name) . '▹');
 
             $noresult = true;
             while ($track = $stmt->fetch()) {
@@ -1470,7 +1467,7 @@ if (mb_strlen($query) < 3 ||
                 ) {
                     $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
                     $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
-                    $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', null, '');
+                    $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . 'info.png', 'no', null, '');
                 }
                 $noresult = false;
                 $subtitle = $track[6];
@@ -1500,7 +1497,7 @@ if (mb_strlen($query) < 3 ||
 
 
                     } catch (PDOException $e) {
-                        handleDbIssuePdoXml($theme, $db);
+                        handleDbIssuePdoXml($db);
                         return;
                     }
 
@@ -1536,7 +1533,7 @@ if (mb_strlen($query) < 3 ||
                     'cmd' => 'Not Available',
                     'shift' => 'Not Available',
                     'fn' => 'Not Available',
-                    'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'spotify.png', 'yes', null, '');
+                    'ctrl' => 'Not Available'), './images/' . 'spotify.png', 'yes', null, '');
             } else {
                 $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, 'activate (open location "spotify:search:' . $album_name . '")' /* spotify_command */, '' /* query */, '' /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $album_name . " in Spotify", array(
                     'This will start a new search in Spotify',
@@ -1544,7 +1541,7 @@ if (mb_strlen($query) < 3 ||
                     'cmd' => 'Not Available',
                     'shift' => 'Not Available',
                     'fn' => 'Not Available',
-                    'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'spotify.png', 'yes', null, '');
+                    'ctrl' => 'Not Available'), './images/' . 'spotify.png', 'yes', null, '');
 
                 if ($is_spotifious_active == true) {
                     $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, $album_uri . " ▹ " . $album_name . " ►"/* query */, '' /* other_settings*/, 'search_in_spotifious' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $album_name . " with Spotifious", array(
@@ -1553,7 +1550,7 @@ if (mb_strlen($query) < 3 ||
                         'cmd' => 'Not Available',
                         'shift' => 'Not Available',
                         'fn' => 'Not Available',
-                        'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'spotifious.png', 'yes', null, '');
+                        'ctrl' => 'Not Available'), './images/' . 'spotifious.png', 'yes', null, '');
                 }
             }
 
@@ -1605,9 +1602,9 @@ if (mb_strlen($query) < 3 ||
                         }
                         $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, $playlist[0] /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, '' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, $playlist[1] /* playlist_name */, $playlist[5] /* playlist_artwork_path */, $alfred_playlist_name /* alfred_playlist_name */)), "🎵" . $added . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks), by " . $playlist[3], $arrayresult, $playlist[5], 'yes', null, '');
 
-                        $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, 'activate (open location "' . $playlist[0] . '")' /* spotify_command */, '' /* query */, '' /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Open playlist " . escapeQuery($playlist[1]) . " in Spotify", "This will open the playlist in Spotify", './images/' . $theme . '/' . 'spotify.png', 'yes', null, '');
+                        $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, 'activate (open location "' . $playlist[0] . '")' /* spotify_command */, '' /* query */, '' /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Open playlist " . escapeQuery($playlist[1]) . " in Spotify", "This will open the playlist in Spotify", './images/' . 'spotify.png', 'yes', null, '');
 
-                        $w->result(null, '', 'Add playlist ' . escapeQuery($playlist[1]) . ' to...', 'This will add current track to Your Music or a playlist you will choose in next step', './images/' . $theme . '/' . 'add.png', 'no', null, 'Add▹' . $playlist[0] . '∙' . escapeQuery($playlist[1]) . '▹');
+                        $w->result(null, '', 'Add playlist ' . escapeQuery($playlist[1]) . ' to...', 'This will add current track to Your Music or a playlist you will choose in next step', './images/' . 'add.png', 'no', null, 'Add▹' . $playlist[0] . '∙' . escapeQuery($playlist[1]) . '▹');
 
                         $getTracks = "select * from tracks where playable=1 and playlist_uri=:theplaylisturi limit " . $max_results;
                         $stmt = $db->prepare($getTracks);
@@ -1629,7 +1626,7 @@ if (mb_strlen($query) < 3 ||
                         ) {
                             $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
                             $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
-                            $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', null, '');
+                            $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . 'info.png', 'no', null, '');
                         }
                         $noresult = false;
                         $subtitle = $track[6];
@@ -1659,7 +1656,7 @@ if (mb_strlen($query) < 3 ||
 
 
                             } catch (PDOException $e) {
-                                handleDbIssuePdoXml($theme, $db);
+                                handleDbIssuePdoXml($db);
                                 return;
                             }
                             if ($is_alfred_playlist_active == true) {
@@ -1697,7 +1694,7 @@ if (mb_strlen($query) < 3 ||
                         'cmd' => 'Not Available',
                         'shift' => 'Not Available',
                         'fn' => 'Not Available',
-                        'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'spotify.png', 'yes', null, '');
+                        'ctrl' => 'Not Available'), './images/' . 'spotify.png', 'yes', null, '');
 
                     if ($is_spotifious_active == true) {
                         $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, $playlist[1] /* query */, '' /* other_settings*/, 'search_in_spotifious' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $playlist[1] . " with Spotifious", array(
@@ -1706,12 +1703,12 @@ if (mb_strlen($query) < 3 ||
                             'cmd' => 'Not Available',
                             'shift' => 'Not Available',
                             'fn' => 'Not Available',
-                            'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'spotifious.png', 'yes', null, '');
+                            'ctrl' => 'Not Available'), './images/' . 'spotifious.png', 'yes', null, '');
                     }
 
                 }
             } catch (PDOException $e) {
-                handleDbIssuePdoXml($theme, $db);
+                handleDbIssuePdoXml($db);
                 return;
             }
         } // end of tracks by Playlist
@@ -1742,7 +1739,7 @@ if (mb_strlen($query) < 3 ||
                 ) {
                     $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
                     $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
-                    $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . $theme . '/' . 'info.png', 'no', null, '');
+                    $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/' . 'info.png', 'no', null, '');
                 }
                 $noresult = false;
                 $subtitle = $track[6];
@@ -1770,7 +1767,7 @@ if (mb_strlen($query) < 3 ||
                             $noresult2 = false;
                         }
                     } catch (PDOException $e) {
-                        handleDbIssuePdoXml($theme, $db);
+                        handleDbIssuePdoXml($db);
                         return;
                     }
                     if ($is_alfred_playlist_active == true) {
@@ -1808,7 +1805,7 @@ if (mb_strlen($query) < 3 ||
                     'cmd' => 'Not Available',
                     'shift' => 'Not Available',
                     'fn' => 'Not Available',
-                    'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'spotify.png', 'yes', null, '');
+                    'ctrl' => 'Not Available'), './images/' . 'spotify.png', 'yes', null, '');
 
                 if ($is_spotifious_active == true) {
                     $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, 'search_in_spotifious' /* spotify_command */, $thetrack /* query */, '' /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Search for " . $thetrack . " with Spotifious", array(
@@ -1817,7 +1814,7 @@ if (mb_strlen($query) < 3 ||
                         'cmd' => 'Not Available',
                         'shift' => 'Not Available',
                         'fn' => 'Not Available',
-                        'ctrl' => 'Not Available'), './images/' . $theme . '/' . 'spotifious.png', 'yes', null, '');
+                        'ctrl' => 'Not Available'), './images/' . 'spotifious.png', 'yes', null, '');
                 }
             }
         } // end of Your Music▹Tracks▹
@@ -1840,7 +1837,7 @@ if (mb_strlen($query) < 3 ||
                 $tracks = $stmt->execute();
 
             } catch (PDOException $e) {
-                handleDbIssuePdoXml($theme, $db);
+                handleDbIssuePdoXml($db);
                 return;
             }
 
@@ -1880,7 +1877,7 @@ if (mb_strlen($query) < 3 ||
                 $tracks = $stmt->execute();
 
             } catch (PDOException $e) {
-                handleDbIssuePdoXml($theme, $db);
+                handleDbIssuePdoXml($db);
                 return;
             }
 
@@ -1907,11 +1904,11 @@ if (mb_strlen($query) < 3 ||
 
             if ($setting_kind == "MaxResults") {
                 if (mb_strlen($the_query) == 0) {
-                    $w->result(null, '', "Enter the Max Results number (must be greater than 0):", "Recommendation is between 10 to 100", './images/' . $theme . '/' . 'settings.png', 'no', null, '');
+                    $w->result(null, '', "Enter the Max Results number (must be greater than 0):", "Recommendation is between 10 to 100", './images/' . 'settings.png', 'no', null, '');
                 } else {
                     // max results has been set
                     if (is_numeric($the_query) == true && $the_query > 0) {
-                        $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, 'MAX_RESULTS▹' . $the_query /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Max Results will be set to <" . $the_query . ">", "Type enter to validate the Max Results", './images/' . $theme . '/' . 'settings.png', 'yes', null, '');
+                        $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, 'MAX_RESULTS▹' . $the_query /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Max Results will be set to <" . $the_query . ">", "Type enter to validate the Max Results", './images/' . 'settings.png', 'yes', null, '');
                     } else {
                         $w->result(null, '', "The Max Results value entered is not valid", "Please fix it", './images/' . 'gray'. '/' . 'warning.png', 'no', null, '');
 
@@ -1919,11 +1916,11 @@ if (mb_strlen($query) < 3 ||
                 }
             } else if ($setting_kind == "RadioTracks") {
                 if (mb_strlen($the_query) == 0) {
-                    $w->result(null, '', "Enter the number of tracks to get when creating a radio Playlist:", "Must be between 1 and 100", './images/' . $theme . '/' . 'settings.png', 'no', null, '');
+                    $w->result(null, '', "Enter the number of tracks to get when creating a radio Playlist:", "Must be between 1 and 100", './images/' . 'settings.png', 'no', null, '');
                 } else {
                     // number radio tracks has been set
                     if (is_numeric($the_query) == true && $the_query > 0 && $the_query <= 100) {
-                        $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, 'RADIO_TRACKS▹' . $the_query /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Number of Radio Tracks will be set to <" . $the_query . ">", "Type enter to validate the Radio Tracks number", './images/' . $theme . '/' . 'settings.png', 'yes', null, '');
+                        $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, 'RADIO_TRACKS▹' . $the_query /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Number of Radio Tracks will be set to <" . $the_query . ">", "Type enter to validate the Radio Tracks number", './images/' . 'settings.png', 'yes', null, '');
                     } else {
                         $w->result(null, '', "The number of tracks value entered is not valid", "Please fix it, it must be a number between 1 and 100", './images/' . 'gray'. '/' . 'warning.png', 'no', null, '');
 
@@ -1970,13 +1967,13 @@ if (mb_strlen($query) < 3 ||
                         'ctrl' => 'Not Available');
                 }
                 $playlists = $featuredPlaylists->playlists;
-                $w->result(null, '', $featuredPlaylists->message, '' . $playlists->total . ' playlists available', './images/' . $theme . '/' . 'info.png', 'no', null, '');
+                $w->result(null, '', $featuredPlaylists->message, '' . $playlists->total . ' playlists available', './images/' . 'info.png', 'no', null, '');
                 $items = $playlists->items;
                 foreach ($items as $playlist) {
                     $tracks = $playlist->tracks;
                     $owner = $playlist->owner;
 
-                    $playlist_artwork_path = getPlaylistArtwork($w, $theme, $playlist->uri, false);
+                    $playlist_artwork_path = getPlaylistArtwork($w,  $playlist->uri, false);
                     $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, $playlist->uri /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, '' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, $playlist->name /* playlist_name */, $playlist_artwork_path /* playlist_artwork_path */, $alfred_playlist_name /* alfred_playlist_name */)), ucfirst($playlist->name) . " (" . $tracks->total . " tracks)", $arrayresult, $playlist_artwork_path, $playlist->uri, 'yes', null, '');
                 }
 
@@ -2021,7 +2018,7 @@ if (mb_strlen($query) < 3 ||
                         'shift' => 'Add album ' . escapeQuery($track->album_name) . ' to Your Music',
                         'ctrl' => 'Search artist ' . escapeQuery($track->artist_name) . ' online');
                 }
-                $track_artwork = getTrackOrAlbumArtwork($w, $theme, $track_uri, false);
+                $track_artwork = getTrackOrAlbumArtwork($w,  $track_uri, false);
                 $w->result(null, serialize(array($track_uri /*track_uri*/, $album_uri /* album_uri */, $artist_uri /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, '' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, escapeQuery($track->artist_name)  /* artist_name */, escapeQuery($track->track_name) /* track_name */, escapeQuery($track->album_name) /* album_name */, $track_artwork /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */)), ucfirst(escapeQuery($track->track_name)) . " ● " . escapeQuery($track->artist_name), $arrayresult, $track_artwork, 'yes', null, '');
             }
 
@@ -2053,17 +2050,17 @@ if (mb_strlen($query) < 3 ||
                     $getPlaylists = "select * from playlists where ownedbyuser=1";
                     $stmt = $db->prepare($getPlaylists);
 
-                    $w->result(null, '', 'Add ' . $type . ' ' . $tmp[1] . ' to Your Music or one of your playlists below..', "Select Your Music or one of your playlists below to add " . $type, './images/' . $theme . '/' . 'add.png', 'no', null, '');
+                    $w->result(null, '', 'Add ' . $type . ' ' . $tmp[1] . ' to Your Music or one of your playlists below..', "Select Your Music or one of your playlists below to add " . $type, './images/' . 'add.png', 'no', null, '');
 
                     // put Alfred Playlist at beginning
                     if ($is_alfred_playlist_active == true) {
                         if ($alfred_playlist_uri != '' && $alfred_playlist_name != '') {
-                            $w->result(null, serialize(array($track_uri /*track_uri*/, $album_uri /* album_uri */, '' /* artist_uri */, $playlist_uri /* playlist_uri */, '' /* spotify_command */, '' /* query */, 'ADD_TO_PLAYLIST▹' . $alfred_playlist_uri . '▹' . $alfred_playlist_name /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, $track_name /* track_name */, $album_name /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, $playlist_name /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "🎵 Alfred Playlist " . " ● " . ucfirst($alfred_playlist_name), "Select the playlist to add the " . $type, './images/' . $theme . '/' . 'alfred_playlist.png', 'yes', null, '');
+                            $w->result(null, serialize(array($track_uri /*track_uri*/, $album_uri /* album_uri */, '' /* artist_uri */, $playlist_uri /* playlist_uri */, '' /* spotify_command */, '' /* query */, 'ADD_TO_PLAYLIST▹' . $alfred_playlist_uri . '▹' . $alfred_playlist_name /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, $track_name /* track_name */, $album_name /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, $playlist_name /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "🎵 Alfred Playlist " . " ● " . ucfirst($alfred_playlist_name), "Select the playlist to add the " . $type, './images/' . 'alfred_playlist.png', 'yes', null, '');
 
                         }
                     }
 
-					$w->result(null, serialize(array($track_uri /*track_uri*/, $album_uri /* album_uri */, '' /* artist_uri */, $playlist_uri /* playlist_uri */, '' /* spotify_command */, '' /* query */, 'ADD_TO_YOUR_MUSIC▹' /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, $track_name /* track_name */, $album_name /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, $playlist_name /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Your Music", "Select to add the " . $type . " to Your Music", './images/' . $theme . '/' . 'allplaylists.png', 'yes', null, '');
+					$w->result(null, serialize(array($track_uri /*track_uri*/, $album_uri /* album_uri */, '' /* artist_uri */, $playlist_uri /* playlist_uri */, '' /* spotify_command */, '' /* query */, 'ADD_TO_YOUR_MUSIC▹' /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, $track_name /* track_name */, $album_name /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, $playlist_name /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Your Music", "Select to add the " . $type . " to Your Music", './images/' . 'allplaylists.png', 'yes', null, '');
                 } else {
                     $getPlaylists = "select * from playlists where ownedbyuser=1 and ( name like :playlist or author like :playlist)";
                     $stmt = $db->prepare($getPlaylists);
@@ -2072,7 +2069,7 @@ if (mb_strlen($query) < 3 ||
 
                 $playlists = $stmt->execute();
             } catch (PDOException $e) {
-                handleDbIssuePdoXml($theme, $db);
+                handleDbIssuePdoXml($db);
                 return;
             }
 
@@ -2095,7 +2092,7 @@ if (mb_strlen($query) < 3 ||
             $theplaylist = $words[2];
 
             if ($setting_kind == "Set Alfred Playlist") {
-                $w->result(null, '', "Set your Alfred playlist", "Select one of your playlists below as your Alfred playlist", './images/' . $theme . '/' . 'settings.png', 'no', null, '');
+                $w->result(null, '', "Set your Alfred playlist", "Select one of your playlists below as your Alfred playlist", './images/' . 'settings.png', 'no', null, '');
 
                 try {
                     if (mb_strlen($theplaylist) < 3) {
@@ -2110,7 +2107,7 @@ if (mb_strlen($query) < 3 ||
                     $playlists = $stmt->execute();
 
                 } catch (PDOException $e) {
-                    handleDbIssuePdoXml($theme, $db);
+                    handleDbIssuePdoXml($db);
                     return;
                 }
 
@@ -2127,9 +2124,9 @@ if (mb_strlen($query) < 3 ||
 
                 $w->result(null, '', "Are you sure?", "This will remove all the tracks in your current Alfred Playlist.", './images/' . 'gray'. '/' . 'warning.png', 'no', null, '');
 
-                $w->result(null, '', "No, cancel", "Return to Alfred Playlist", './images/' . $theme . '/' . 'uncheck.png', 'no', null, 'Alfred Playlist▹');
+                $w->result(null, '', "No, cancel", "Return to Alfred Playlist", './images/' . 'uncheck.png', 'no', null, 'Alfred Playlist▹');
 
-                $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, 'CLEAR_ALFRED_PLAYLIST▹' . $alfred_playlist_uri . '▹' . $alfred_playlist_name /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Yes, go ahead", "This is not undoable", './images/' . $theme . '/' . 'check.png', 'yes', null, '');
+                $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, 'CLEAR_ALFRED_PLAYLIST▹' . $alfred_playlist_uri . '▹' . $alfred_playlist_name /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Yes, go ahead", "This is not undoable", './images/' . 'check.png', 'yes', null, '');
 
             }
         }

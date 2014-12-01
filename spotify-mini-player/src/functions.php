@@ -17,21 +17,24 @@ function playAlfredPlaylist($w)
     //
     // Read settings from DB
     //
-    $getSettings = 'select alfred_playlist_uri,alfred_playlist_name,theme from settings';
+
     $dbfile = $w->data() . '/settings.db';
-    exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
-
-    if ($returnValue != 0) {
-        displayNotificationWithArtwork("Error: Alfred Playlist is not set", './images/' . 'gray'. '/' . 'warning.png');
-        return;
-    }
-
-    foreach ($settings as $setting):
-        $setting = explode("	", $setting);
+    try {
+        $dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
+        $dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $getSettings = 'select alfred_playlist_uri,alfred_playlist_name from settings';
+        $stmt = $dbsettings->prepare($getSettings);
+        $stmt->execute();
+        $setting = $stmt->fetch();
         $alfred_playlist_uri = $setting[0];
         $alfred_playlist_name = $setting[1];
-        $theme = $setting[2];
-    endforeach;
+    } catch (PDOException $e) {
+        handleDbIssuePdoEcho($dbsettings,$w);
+        $dbsettings = null;
+        unlink($w->data() . "/update_library_in_progress");
+        return false;
+    }
+
 
     if ($alfred_playlist_uri == "" || $alfred_playlist_name == "") {
         displayNotificationWithArtwork("Error: Alfred Playlist is not set", './images/' . 'gray'. '/' . 'warning.png');
@@ -41,7 +44,7 @@ function playAlfredPlaylist($w)
 
     exec("osascript -e 'tell application \"Spotify\" to play track \"$alfred_playlist_uri\"'");
 
-    $playlist_artwork_path = getPlaylistArtwork($w, $theme, $alfred_playlist_uri, true, true);
+    $playlist_artwork_path = getPlaylistArtwork($w,  $alfred_playlist_uri, true, true);
     displayNotificationWithArtwork('🔈 Playlist ' . $alfred_playlist_name, $playlist_artwork_path);
 }
 
@@ -58,25 +61,6 @@ function playCurrentArtist($w)
     // get info on current song
     $command_output = exec("./src/track_info.sh 2>&1");
 
-    //
-    // Read settings from DB
-    //
-    $getSettings = 'select theme from settings';
-    $dbfile = $w->data() . '/settings.db';
-    exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
-
-    if ($returnValue != 0) {
-        displayNotificationWithArtwork("Error: cannot read settings", './images/' . 'gray'. '/' . 'warning.png');
-        return;
-    }
-
-    foreach ($settings as $setting):
-
-        $setting = explode("	", $setting);
-
-        $theme = $setting[0];
-    endforeach;
-
     if (substr_count($command_output, '▹') > 0) {
         $results = explode('▹', $command_output);
 
@@ -88,7 +72,7 @@ function playCurrentArtist($w)
             return;
         }
         exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
-        displayNotificationWithArtwork('🔈 Artist ' . escapeQuery($results[1]), getArtistArtwork($w, $theme, $results[1], true));
+        displayNotificationWithArtwork('🔈 Artist ' . escapeQuery($results[1]), getArtistArtwork($w,  $results[1], true));
     } else {
         displayNotificationWithArtwork("Error: No track is playing", './images/' . 'gray'. '/' . 'warning.png');
     }
@@ -106,24 +90,6 @@ function playCurrentAlbum($w)
     // get info on current song
     $command_output = exec("./src/track_info.sh 2>&1");
 
-    //
-    // Read settings from DB
-    //
-    $getSettings = 'select theme from settings';
-    $dbfile = $w->data() . '/settings.db';
-    exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
-
-    if ($returnValue != 0) {
-        displayNotificationWithArtwork("Error: cannot read settings", './images/' . 'gray'. '/' . 'warning.png');
-        return;
-    }
-
-    foreach ($settings as $setting):
-
-        $setting = explode("	", $setting);
-
-        $theme = $setting[0];
-    endforeach;
 
     if (substr_count($command_output, '▹') > 0) {
         $results = explode('▹', $command_output);
@@ -136,7 +102,7 @@ function playCurrentAlbum($w)
             return;
         }
         exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
-        displayNotificationWithArtwork('🔈 Album ' . escapeQuery($results[2]), getTrackOrAlbumArtwork($w, $theme, $results[4], true));
+        displayNotificationWithArtwork('🔈 Album ' . escapeQuery($results[2]), getTrackOrAlbumArtwork($w,  $results[4], true));
     } else {
         displayNotificationWithArtwork("Error: No track is playing", './images/' . 'gray'. '/' . 'warning.png');
     }
@@ -155,20 +121,22 @@ function addCurrentTrackToAlfredPlaylistOrYourMusic($w)
     //
     // Read settings from DB
     //
-    $getSettings = 'select theme,is_alfred_playlist_active from settings';
+
     $dbfile = $w->data() . '/settings.db';
-    exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
-
-    if ($returnValue != 0) {
-        displayNotificationWithArtwork("Error: cannot read settings", './images/' . 'gray'. '/' . 'warning.png');
-        return;
+    try {
+        $dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
+        $dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $getSettings = 'select is_alfred_playlist_active from settings';
+        $stmt = $dbsettings->prepare($getSettings);
+        $stmt->execute();
+        $setting = $stmt->fetch();
+        $is_alfred_playlist_active = $setting[0];
+    } catch (PDOException $e) {
+        handleDbIssuePdoEcho($dbsettings,$w);
+        $dbsettings = null;
+        unlink($w->data() . "/update_library_in_progress");
+        return false;
     }
-
-    foreach ($settings as $setting):
-        $setting = explode("	", $setting);
-        $theme = $setting[0];
-        $is_alfred_playlist_active = $setting[1];
-    endforeach;
 
     if ($is_alfred_playlist_active == true) {
         addCurrentTrackToAlfredPlaylist($w);
@@ -192,24 +160,26 @@ function addCurrentTrackToAlfredPlaylist($w)
     if (substr_count($command_output, '▹') > 0) {
         $results = explode('▹', $command_output);
 
-        //
-        // Read settings from DB
-        //
-        $getSettings = 'select alfred_playlist_uri,alfred_playlist_name,theme from settings';
-        $dbfile = $w->data() . '/settings.db';
-        exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
+	    //
+	    // Read settings from DB
+	    //
 
-        if ($returnValue != 0) {
-            displayNotificationWithArtwork("Error: Alfred Playlist is not set", './images/' . 'gray'. '/' . 'warning.png');
-            return;
-        }
-
-        foreach ($settings as $setting):
-            $setting = explode("	", $setting);
-            $alfred_playlist_uri = $setting[0];
-            $alfred_playlist_name = $setting[1];
-            $theme = $setting[2];
-        endforeach;
+	    $dbfile = $w->data() . '/settings.db';
+	    try {
+	        $dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
+	        $dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	        $getSettings = 'select alfred_playlist_uri,alfred_playlist_name from settings';
+	        $stmt = $dbsettings->prepare($getSettings);
+	        $stmt->execute();
+	        $setting = $stmt->fetch();
+	        $alfred_playlist_uri = $setting[0];
+	        $alfred_playlist_name = $setting[1];
+	    } catch (PDOException $e) {
+	        handleDbIssuePdoEcho($dbsettings,$w);
+	        $dbsettings = null;
+	        unlink($w->data() . "/update_library_in_progress");
+	        return false;
+	    }
 
         if ($alfred_playlist_uri == "" || $alfred_playlist_name == "") {
             displayNotificationWithArtwork("Error: Alfred Playlist is not set", './images/' . 'gray'. '/' . 'warning.png');
@@ -218,7 +188,7 @@ function addCurrentTrackToAlfredPlaylist($w)
         $tmp = explode(':', $results[4]);
         $ret = addTracksToPlaylist($w, $tmp[2], $alfred_playlist_uri, $alfred_playlist_name, false);
         if (is_numeric($ret) && $ret > 0) {
-            displayNotificationWithArtwork('' . $results[0] . ' by ' . $results[1] . ' added to ' . $alfred_playlist_name . ' Alfred Playlist', getTrackOrAlbumArtwork($w, $theme, $results[4], true));
+            displayNotificationWithArtwork('' . $results[0] . ' by ' . $results[1] . ' added to ' . $alfred_playlist_name . ' Alfred Playlist', getTrackOrAlbumArtwork($w,  $results[4], true));
         } else if (is_numeric($ret) && $ret == 0) {
             displayNotificationWithArtwork('Error: ' . $results[0] . ' by ' . $results[1] . ' is already in ' . $alfred_playlist_name . ' Alfred Playlist', './images/' . 'gray'. '/' . 'warning.png');
         }
@@ -239,24 +209,6 @@ function addCurrentTrackToYourMusic($w)
     // get info on current song
     $command_output = exec("./src/track_info.sh 2>&1");
 
-    //
-    // Read settings from DB
-    //
-    $getSettings = 'select theme from settings';
-    $dbfile = $w->data() . '/settings.db';
-    exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
-
-    if ($returnValue != 0) {
-        displayNotificationWithArtwork("Error: Alfred Playlist is not set", './images/' . 'gray'. '/' . 'warning.png');
-        return;
-    }
-
-    foreach ($settings as $setting):
-
-        $setting = explode("	", $setting);
-
-        $theme = $setting[0];
-    endforeach;
 
     if (substr_count($command_output, '▹') > 0) {
         $results = explode('▹', $command_output);
@@ -264,7 +216,7 @@ function addCurrentTrackToYourMusic($w)
         $tmp = explode(':', $results[4]);
         $ret = addTracksToYourMusic($w, $tmp[2], false);
         if (is_numeric($ret) && $ret > 0) {
-            displayNotificationWithArtwork('' . $results[0] . ' by ' . $results[1] . ' added to Your Music', getTrackOrAlbumArtwork($w, $theme, $results[4], true));
+            displayNotificationWithArtwork('' . $results[0] . ' by ' . $results[1] . ' added to Your Music', getTrackOrAlbumArtwork($w,  $results[4], true));
         } else if (is_numeric($ret) && $ret == 0) {
             displayNotificationWithArtwork('Error: ' . $results[0] . ' by ' . $results[1] . ' is already in Your Music', './images/' . 'gray'. '/' . 'warning.png');
         }
@@ -288,7 +240,7 @@ function getRandomTrack($w)
     exec("sqlite3 -separator '	' \"$dbfile\" \"$getTracks\" 2>&1", $tracks, $returnValue);
 
     if ($returnValue != 0) {
-        handleDbIssue($theme);
+        handleDbIssue('gray');
         return "";
     }
 
@@ -333,7 +285,7 @@ function getSpotifyWebAPI($w)
         $dbsettings->query("PRAGMA cache_size=700000");
         $dbsettings->query("PRAGMA compile_options");
     } catch (PDOException $e) {
-        echo "Error[getSpotifyWebAPI]: exception " . $e;
+        handleDbIssuePdoEcho($dbsettings,$w);
         return false;
     }
 
@@ -343,14 +295,14 @@ function getSpotifyWebAPI($w)
 
     } catch (PDOException $e) {
         $dbsettings = null;
-        echo "Error[getSpotifyWebAPI]: exception " . $e;
+        handleDbIssuePdoEcho($dbsettings,$w);
         return false;
     }
 
     try {
         $setting = $stmt->fetch();
     } catch (PDOException $e) {
-        echo "Error[getSpotifyWebAPI]: exception " . $e;
+        handleDbIssuePdoEcho($dbsettings,$w);
         return false;
     }
 
@@ -381,7 +333,7 @@ function getSpotifyWebAPI($w)
 
             } catch (PDOException $e) {
                 $dbsettings = null;;
-                echo "Error[getSpotifyWebAPI]: exception " . $e;
+                handleDbIssuePdoEcho($dbsettings,$w);
                 return false;
             }
 
@@ -410,7 +362,7 @@ function getArtistUriFromTrack($w, $track_uri)
 {
     $api = getSpotifyWebAPI($w);
     if ($api == false) {
-        displayNotification("Error: Cannot get SpotifyWebAPI(");
+        displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/' . 'warning.png');
         return false;
     }
 
@@ -421,7 +373,8 @@ function getArtistUriFromTrack($w, $track_uri)
         $artists = $track->artists;
         $artist = $artists[0];
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        echo "Error(getArtistUriFromTrack): (exception " . $e . ")";
+        echo "Error(getArtistUriFromTrack): (exception " . print_r($e) . ")";
+        handleSpotifyWebAPIException($w);
         return false;
     }
 
@@ -441,7 +394,7 @@ function getAlbumUriFromTrack($w, $track_uri)
 {
     $api = getSpotifyWebAPI($w);
     if ($api == false) {
-        displayNotification("Error: Cannot get SpotifyWebAPI(");
+        displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/' . 'warning.png');
         return false;
     }
 
@@ -451,7 +404,8 @@ function getAlbumUriFromTrack($w, $track_uri)
         $track = $api->getTrack($tmp[2]);
         $album = $track->album;
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        echo "Error(getAlbumUriFromTrack): (exception " . $e . ")";
+        echo "Error(getAlbumUriFromTrack): (exception " . print_r($e) . ")";
+        handleSpotifyWebAPIException($w);
         return false;
     }
 
@@ -471,7 +425,7 @@ function clearPlaylist($w, $playlist_uri, $playlist_name)
 {
     $api = getSpotifyWebAPI($w);
     if ($api == false) {
-        displayNotification("Error: Cannot get SpotifyWebAPI(");
+        displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/' . 'warning.png');
         return false;
     }
 
@@ -480,7 +434,8 @@ function clearPlaylist($w, $playlist_uri, $playlist_name)
         $emptytracks = array();
         $api->replacePlaylistTracks($tmp[2], $tmp[4], $emptytracks);
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        echo "Error(clearPlaylist): playlist uri " . $playlist_uri . " (exception " . $e . ")";
+        echo "Error(clearPlaylist): playlist uri " . $playlist_uri . " (exception " . print_r($e) . ")";
+        handleSpotifyWebAPIException($w);
         return false;
     }
 
@@ -522,29 +477,31 @@ function createRadioArtistPlaylist($w, $artist_name)
 
     $api = getSpotifyWebAPI($w);
     if ($api == false) {
-        displayNotification("Error: Cannot get SpotifyWebAPI(");
+        displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/' . 'warning.png');
         return false;
     }
 
     //
     // Read settings from DB
     //
-    $getSettings = 'select theme,userid,radio_number_tracks,echonest_api_key from settings';
-    $dbfile = $w->data() . '/settings.db';
-    exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
 
-    if ($returnValue != 0) {
-        displayNotificationWithArtwork("Error: cannot read settings", './images/' . 'gray'. '/' . 'warning.png');
-        return;
+    $dbfile = $w->data() . '/settings.db';
+    try {
+        $dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
+        $dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $getSettings = 'select userid,radio_number_tracks,echonest_api_key from settings';
+        $stmt = $dbsettings->prepare($getSettings);
+        $stmt->execute();
+        $setting = $stmt->fetch();
+        $userid = $setting[0];
+        $radio_number_tracks = $setting[1];
+        $echonest_api_key = $setting[2];
+    } catch (PDOException $e) {
+        handleDbIssuePdoEcho($dbsettings,$w);
+        $dbsettings = null;
+        return false;
     }
 
-    foreach ($settings as $setting):
-        $setting = explode("	", $setting);
-        $theme = $setting[0];
-        $userid = $setting[1];
-        $radio_number_tracks = $setting[2];
-        $echonest_api_key = $setting[3];
-    endforeach;
 
     $json = doWebApiRequest($w, 'http://developer.echonest.com/api/v4/playlist/static?api_key=' . $echonest_api_key . '&artist=' . urlencode($artist_name) . '&format=json&results=' . $radio_number_tracks . '&distribution=focused&type=artist-radio&bucket=id:spotify&bucket=tracks');
 
@@ -568,7 +525,8 @@ function createRadioArtistPlaylist($w, $artist_name)
                 'public' => false
             ));
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            echo "Error(createUserPlaylist): radio artist " . $artist_name . " (exception " . $e . ")";
+            echo "Error(createUserPlaylist): radio artist " . $artist_name . " (exception " . print_r($e) . ")";
+            handleSpotifyWebAPIException($w);
             return false;
         }
 
@@ -579,9 +537,12 @@ function createRadioArtistPlaylist($w, $artist_name)
         } else if (is_numeric($ret) && $ret == 0) {
             displayNotification('Error: Playlist ' . $json->name . ' cannot be added');
             return;
+        } else {
+			displayNotificationWithArtwork('Error: Exception occurred. Use debug command','./images/' . 'warning.png');
+            return;
         }
     } else {
-        displayNotification('Error: track was not found in Echo Nest');
+        displayNotificationWithArtwork('Error: track was not found in Echo Nest','./images/' . 'warning.png');
         return false;
     }
 
@@ -604,7 +565,7 @@ function createRadioSongPlaylistForCurrentTrack($w)
         $results = explode('▹', $command_output);
         createRadioSongPlaylist($w, $results[0], $results[4], $results[1]);
     } else {
-        displayNotification("Error: cannot get current track");
+        displayNotificationWithArtwork("Error: cannot get current track",'./images/' . 'warning.png');
     }
 }
 
@@ -624,29 +585,30 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name)
 
     $api = getSpotifyWebAPI($w);
     if ($api == false) {
-        displayNotification("Error: Cannot get SpotifyWebAPI(");
+        displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/' . 'warning.png');
         return false;
     }
 
     //
     // Read settings from DB
     //
-    $getSettings = 'select theme,userid,radio_number_tracks,echonest_api_key from settings';
+
     $dbfile = $w->data() . '/settings.db';
-    exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
-
-    if ($returnValue != 0) {
-        displayNotificationWithArtwork("Error: cannot read settings", './images/' . 'gray'. '/' . 'warning.png');
-        return;
+    try {
+        $dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
+        $dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $getSettings = 'select userid,radio_number_tracks,echonest_api_key from settings';
+        $stmt = $dbsettings->prepare($getSettings);
+        $stmt->execute();
+        $setting = $stmt->fetch();
+        $userid = $setting[0];
+        $radio_number_tracks = $setting[1];
+        $echonest_api_key = $setting[2];
+    } catch (PDOException $e) {
+        handleDbIssuePdoEcho($dbsettings,$w);
+        $dbsettings = null;
+        return false;
     }
-
-    foreach ($settings as $setting):
-        $setting = explode("	", $setting);
-        $theme = $setting[0];
-        $userid = $setting[1];
-        $radio_number_tracks = $setting[2];
-        $echonest_api_key = $setting[3];
-    endforeach;
 
     $json = doWebApiRequest($w, 'http://developer.echonest.com/api/v4/playlist/static?api_key=' . $echonest_api_key . '&song_id=' . $track_uri . '&format=json&results=' . $radio_number_tracks . '&distribution=focused&type=song-radio&bucket=id:spotify&bucket=tracks');
 
@@ -670,7 +632,8 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name)
                 'public' => false
             ));
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            echo "Error(createUserPlaylist): radio song " . escapeQuery($track_name) . " (exception " . $e . ")";
+            echo "Error(createUserPlaylist): radio song " . escapeQuery($track_name) . " (exception " . print_r($e) . ")";
+            handleSpotifyWebAPIException($w);
             return false;
         }
 
@@ -680,6 +643,9 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name)
             return;
         } else if (is_numeric($ret) && $ret == 0) {
             displayNotification('Error: Playlist ' . $json->name . ' cannot be added');
+            return;
+        } else {
+			displayNotificationWithArtwork('Error: Exception occurred. Use debug command','./images/' . 'warning.png');
             return;
         }
     } else {
@@ -703,7 +669,7 @@ function getThePlaylistTracks($w, $playlist_uri)
 {
     $api = getSpotifyWebAPI($w);
     if ($api == false) {
-        displayNotification("Error: Cannot get SpotifyWebAPI(");
+        displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/' . 'warning.png');
         return false;
     }
 
@@ -729,11 +695,12 @@ function getThePlaylistTracks($w, $playlist_uri)
             $offsetGetUserPlaylistTracks += $limitGetUserPlaylistTracks;
         } while ($offsetGetUserPlaylistTracks < $userPlaylistTracks->total);
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        echo "Error(getThePlaylistTracks): playlist uri " . $playlist_uri . " (exception " . $e . ")";
+        echo "Error(getThePlaylistTracks): playlist uri " . $playlist_uri . " (exception " . print_r($e) . ")";
+        handleSpotifyWebAPIException($w);
         return false;
     }
 
-    return $tracks;
+    return array_filter($tracks);
 }
 
 /**
@@ -748,7 +715,7 @@ function getTheAlbumTracks($w, $album_uri)
 {
     $api = getSpotifyWebAPI($w);
     if ($api == false) {
-        displayNotification("Error: Cannot get SpotifyWebAPI(");
+        displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/' . 'warning.png');
         return;
     }
 
@@ -763,11 +730,12 @@ function getTheAlbumTracks($w, $album_uri)
             $tracks[] = $track->id;
         }
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        echo "Error(getTheAlbumTracks): (exception " . $e . ")";
+        echo "Error(getTheAlbumTracks): (exception " . print_r($e) . ")";
+        handleSpotifyWebAPIException($w);
         return false;
     }
 
-    return $tracks;
+    return array_filter($tracks);
 }
 
 
@@ -785,7 +753,7 @@ function addTracksToYourMusic($w, $tracks, $allow_duplicate = true)
 
     $api = getSpotifyWebAPI($w);
     if ($api == false) {
-        displayNotification("Error: Cannot get SpotifyWebAPI(");
+        displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/' . 'warning.png');
         return;
     }
     $tracks = (array)$tracks;
@@ -813,7 +781,8 @@ function addTracksToYourMusic($w, $tracks, $allow_duplicate = true)
 
             $tracks = $tracks_with_no_dup;
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            echo "Error(addTracksToYourMusic): (exception " . $e . ")";
+            echo "Error(addTracksToYourMusic): (exception " . print_r($e) . ")";
+            handleSpotifyWebAPIException($w);
             return false;
         }
     }
@@ -834,7 +803,8 @@ function addTracksToYourMusic($w, $tracks, $allow_duplicate = true)
             } while (count($output) > 0);
 
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            echo "Error(addTracksToYourMusic): (exception " . $e . ")";
+            echo "Error(addTracksToYourMusic): (exception " . print_r($e) . ")";
+            handleSpotifyWebAPIException($w);
             return false;
         }
 
@@ -873,14 +843,14 @@ function addTracksToPlaylist($w, $tracks, $playlist_uri, $playlist_name, $allow_
         $setting = $stmt->fetch();
         $userid = $setting[0];
     } catch (PDOException $e) {
-        echo "Error(addTracksToPlaylist): (exception " . $e . ")";
+        handleDbIssuePdoEcho($dbsettings,$w);
         $dbsettings = null;
         return false;
     }
 
     $api = getSpotifyWebAPI($w);
     if ($api == false) {
-        displayNotification("Error: Cannot get SpotifyWebAPI(");
+        displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/' . 'warning.png');
         return;
     }
 
@@ -897,7 +867,8 @@ function addTracksToPlaylist($w, $tracks, $playlist_uri, $playlist_name, $allow_
 
             $tracks = $tracks_with_no_dup;
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            echo "Error(addTracksToPlaylist): (exception " . $e . ")";
+            echo "Error(addTracksToPlaylist): (exception " . print_r($e) . ")";
+            handleSpotifyWebAPIException($w);
             return false;
         }
     }
@@ -908,6 +879,7 @@ function addTracksToPlaylist($w, $tracks, $playlist_uri, $playlist_name, $allow_
 
             // Note: max 100 Ids
             $offset = 0;
+            $i=0;
             do {
                 $output = array_slice($tracks, $offset, 100);
                 $offset += 100;
@@ -916,11 +888,18 @@ function addTracksToPlaylist($w, $tracks, $playlist_uri, $playlist_name, $allow_
                     $api->addUserPlaylistTracks($userid, $tmp[4], $output, array(
                         'position' => 0
                     ));
+                    $i++;
                 }
-
+/*
+				if($i % 30 === 0) {
+					sleep(60);
+					echo "Info: Throttling in addTracksToPlaylist";
+				}
+*/
             } while (count($output) > 0);
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            echo "Error(addTracksToPlaylist): (exception " . $e . ")";
+            echo "Error(addTracksToPlaylist): (exception " . print_r($e) . ")";
+            handleSpotifyWebAPIException($w);
             return false;
         }
 
@@ -984,11 +963,10 @@ function getFreeTcpPort()
  *
  * @access public
  * @param mixed $db
- * @param mixed $theme
  * @param mixed $track_uri
  * @return void
  */
-function getPlaylistsForTrack($db, $theme, $track_uri)
+function getPlaylistsForTrack($db, $track_uri)
 {
 
     $playlistsfortrack = "";
@@ -1019,7 +997,7 @@ function getPlaylistsForTrack($db, $theme, $track_uri)
 
 
     } catch (PDOException $e) {
-        handleDbIssuePdoXml($theme, $db);
+        handleDbIssuePdoXml($db);
         return $playlistsfortrack;
     }
     return $playlistsfortrack;
@@ -1128,30 +1106,11 @@ function displayNotificationForCurrentTrack($w)
 {
     $command_output = exec("./src/track_info.sh 2>&1");
 
-    //
-    // Read settings from DB
-    //
-    $getSettings = 'select theme from settings';
-    $dbfile = $w->data() . '/settings.db';
-    exec("sqlite3 -separator '	' \"$dbfile\" \"$getSettings\" 2>&1", $settings, $returnValue);
-
-    if ($returnValue != 0) {
-        displayNotificationWithArtwork("Error: cannot read settings", './images/' . 'gray'. '/' . 'warning.png');
-        return;
-    }
-
-    foreach ($settings as $setting):
-
-        $setting = explode("	", $setting);
-
-        $theme = $setting[0];
-    endforeach;
-
     if (substr_count($command_output, '▹') > 0) {
         $results = explode('▹', $command_output);
-        displayNotificationWithArtwork('🔈 ' . escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]), getTrackOrAlbumArtwork($w, $theme, $results[4], true));
+        displayNotificationWithArtwork('🔈 ' . escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]), getTrackOrAlbumArtwork($w,  $results[4], true));
     } else {
-        displayNotification("Error: cannot get current track");
+        displayNotificationWithArtwork("Error: cannot get current track",'./images/' . 'warning.png');
     }
 }
 
@@ -1171,7 +1130,7 @@ function displayLyricsForCurrentTrack()
         $results = explode('▹', $command_output);
         displayLyrics($w, $results[1], $results[0]);
     } else {
-        displayNotification("Error: cannot get current track");
+        displayNotificationWithArtwork("Error: cannot get current track",'./images/' . 'warning.png');
     }
 }
 
@@ -1222,12 +1181,11 @@ function displayLyrics($w, $artist, $title)
  *
  * @access public
  * @param mixed $w
- * @param mixed $theme
  * @param mixed $spotifyURL
  * @param mixed $fetchIfNotPresent
  * @return void
  */
-function getTrackOrAlbumArtwork($w, $theme, $spotifyURL, $fetchIfNotPresent)
+function getTrackOrAlbumArtwork($w, $spotifyURL, $fetchIfNotPresent)
 {
 
     $hrefs = explode(':', $spotifyURL);
@@ -1261,33 +1219,33 @@ function getTrackOrAlbumArtwork($w, $theme, $spotifyURL, $fetchIfNotPresent)
                 $w->request("$artwork", $options);
             } else {
 	            if ($isAlbum) {
-	                return "./images/" . $theme . "/albums.png";
+	                return "./images/" . 'gray' . "/albums.png";
 	            } else {
-	                return "./images/" . $theme . "/tracks.png";
+	                return "./images/" . 'gray' . "/tracks.png";
 	            }
             }
         } else {
             if ($isAlbum) {
-                return "./images/" . $theme . "/albums.png";
+                return "./images/" . 'gray' . "/albums.png";
             } else {
-                return "./images/" . $theme . "/tracks.png";
+                return "./images/" . 'gray' . "/tracks.png";
             }
         }
     } else {
         if (filesize($currentArtwork) == 0) {
             if ($isAlbum) {
-                return "./images/" . $theme . "/albums.png";
+                return "./images/" . 'gray' . "/albums.png";
             } else {
-                return "./images/" . $theme . "/tracks.png";
+                return "./images/" . 'gray' . "/tracks.png";
             }
         }
     }
 
     if (is_numeric($artwork) && $artwork == 0) {
         if ($isAlbum) {
-            return "./images/" . $theme . "/albums.png";
+            return "./images/" . 'gray' . "/albums.png";
         } else {
-            return "./images/" . $theme . "/tracks.png";
+            return "./images/" . 'gray' . "/tracks.png";
         }
     } else {
         return $currentArtwork;
@@ -1300,13 +1258,12 @@ function getTrackOrAlbumArtwork($w, $theme, $spotifyURL, $fetchIfNotPresent)
  *
  * @access public
  * @param mixed $w
- * @param mixed $theme
  * @param mixed $playlistURI
  * @param mixed $fetchIfNotPresent
  * @param bool $forceFetch (default: false)
  * @return void
  */
-function getPlaylistArtwork($w, $theme, $playlistURI, $fetchIfNotPresent, $forceFetch = false)
+function getPlaylistArtwork($w, $playlistURI, $fetchIfNotPresent, $forceFetch = false)
 {
 
     $hrefs = explode(':', $playlistURI);
@@ -1344,19 +1301,19 @@ function getPlaylistArtwork($w, $theme, $playlistURI, $fetchIfNotPresent, $force
 
                 $w->request("$artwork", $options);
             } else {
-            	return "./images/" . $theme . "/playlists.png";
+            	return "./images/" . 'gray' . "/playlists.png";
         	}
         } else {
-            return "./images/" . $theme . "/playlists.png";
+            return "./images/" . 'gray' . "/playlists.png";
         }
     } else {
         if (filesize($currentArtwork) == 0) {
-            return "./images/" . $theme . "/playlists.png";
+            return "./images/" . 'gray' . "/playlists.png";
         }
     }
 
     if (is_numeric($artwork) && $artwork == 0) {
-        return "./images/" . $theme . "/playlists.png";
+        return "./images/" . 'gray' . "/playlists.png";
     } else {
         return $currentArtwork;
     }
@@ -1368,12 +1325,11 @@ function getPlaylistArtwork($w, $theme, $playlistURI, $fetchIfNotPresent, $force
  *
  * @access public
  * @param mixed $w
- * @param mixed $theme
  * @param mixed $artist
  * @param mixed $fetchIfNotPresent
  * @return void
  */
-function getArtistArtwork($w, $theme, $artist, $fetchIfNotPresent)
+function getArtistArtwork($w, $artist, $fetchIfNotPresent)
 {
     $parsedArtist = urlencode(escapeQuery($artist));
 
@@ -1399,19 +1355,19 @@ function getArtistArtwork($w, $theme, $artist, $fetchIfNotPresent)
                 );
                 $w->request("$artwork", $options);
             } else {
-	            return "./images/" . $theme . "/artists.png";
+	            return "./images/" . 'gray' . "/artists.png";
             }
         } else {
-            return "./images/" . $theme . "/artists.png";
+            return "./images/" . 'gray' . "/artists.png";
         }
     } else {
         if (filesize($currentArtwork) == 0) {
-            return "./images/" . $theme . "/artists.png";
+            return "./images/" . 'gray' . "/artists.png";
         }
     }
 
     if (is_numeric($artwork) && $artwork == 0) {
-        return "./images/" . $theme . "/artists.png";
+        return "./images/" . 'gray' . "/artists.png";
     } else {
         return $currentArtwork;
     }
@@ -1507,7 +1463,7 @@ function updateLibrary($w)
 
     $api = getSpotifyWebAPI($w);
     if ($api == false) {
-        displayNotification("Error: Cannot update playlist, authentication issue");
+        displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/' . 'warning.png');
         return false;
     }
 
@@ -1526,13 +1482,12 @@ function updateLibrary($w)
     try {
         $dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
         $dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $getSettings = 'select theme,country_code,userid from settings';
+        $getSettings = 'select country_code,userid from settings';
         $stmt = $dbsettings->prepare($getSettings);
         $stmt->execute();
         $setting = $stmt->fetch();
-        $theme = $setting[0];
-        $country_code = $setting[1];
-        $userid = $setting[2];
+        $country_code = $setting[0];
+        $userid = $setting[1];
     } catch (PDOException $e) {
         handleDbIssuePdoEcho($dbsettings,$w);
         $dbsettings = null;
@@ -1606,7 +1561,8 @@ function updateLibrary($w)
 
         } while ($offsetGetUserPlaylists < $userPlaylists->total);
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        echo "Error(getUserPlaylists): (exception " . $e . ")";
+        echo "Error(getUserPlaylists): (exception " . print_r($e) . ")";
+        handleSpotifyWebAPIException($w);
         return false;
     }
 
@@ -1629,8 +1585,8 @@ function updateLibrary($w)
 
         } while ($offsetGetMySavedTracks < $userMySavedTracks->total);
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        echo "Error(getMySavedTracks): (exception " . $e . ")";
-        handleDbIssuePdoEcho($db,$w);
+        echo "Error(getMySavedTracks): (exception " . print_r($e) . ")";
+        handleSpotifyWebAPIException($w);
         return false;
     }
 
@@ -1655,7 +1611,7 @@ function updateLibrary($w)
         $tracks = $playlist->tracks;
         $owner = $playlist->owner;
 
-        $playlist_artwork_path = getPlaylistArtwork($w, $theme, $playlist->uri, true, true);
+        $playlist_artwork_path = getPlaylistArtwork($w,  $playlist->uri, true, true);
 
         if ("-" . $owner->id . "-" == "-" . $userid . "-") {
             $ownedbyuser = 1;
@@ -1701,9 +1657,9 @@ function updateLibrary($w)
 
                     //
                     // Download artworks
-                    $track_artwork_path = getTrackOrAlbumArtwork($w, $theme, $track->uri, true);
-                    $artist_artwork_path = getArtistArtwork($w, $theme, $artist->name, true);
-                    $album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $album->uri, true);
+                    $track_artwork_path = getTrackOrAlbumArtwork($w,  $track->uri, true);
+                    $artist_artwork_path = getArtistArtwork($w,  $artist->name, true);
+                    $album_artwork_path = getTrackOrAlbumArtwork($w,  $album->uri, true);
 
                     $stmtTrack->bindValue(':mymusic', 0);
                     $stmtTrack->bindValue(':popularity', $track->popularity);
@@ -1734,8 +1690,8 @@ function updateLibrary($w)
 
             } while ($offsetGetUserPlaylistTracks < $userPlaylistTracks->total);
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            echo "Error(getUserPlaylistTracks): playlist id " . $playlist->id . " (exception " . $e . ")";
-            handleDbIssuePdoEcho($db,$w);
+            echo "Error(getUserPlaylistTracks): playlist id " . $playlist->id . " (exception " . print_r($e) . ")";
+            handleSpotifyWebAPIException($w);
             return false;
         }
     }
@@ -1754,9 +1710,9 @@ function updateLibrary($w)
 
         //
         // Download artworks
-        $track_artwork_path = getTrackOrAlbumArtwork($w, $theme, $track->uri, true);
-        $artist_artwork_path = getArtistArtwork($w, $theme, $artist->name, true);
-        $album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $album->uri, true);
+        $track_artwork_path = getTrackOrAlbumArtwork($w,  $track->uri, true);
+        $artist_artwork_path = getArtistArtwork($w,  $artist->name, true);
+        $album_artwork_path = getTrackOrAlbumArtwork($w,  $album->uri, true);
 
         $stmtTrack->bindValue(':mymusic', 1);
         $stmtTrack->bindValue(':popularity', $track->popularity);
@@ -1841,7 +1797,7 @@ function updateLibrary($w)
     }
 
     $elapsed_time = time() - $words[3];
-    displayNotificationWithArtwork("Library created (" . $nb_track . " tracks) - took " . beautifyTime($elapsed_time),'./images/' . $theme . '/' . 'update.png');
+    displayNotificationWithArtwork("Library created (" . $nb_track . " tracks) - took " . beautifyTime($elapsed_time),'./images/' . 'update.png');
 
     unlink($w->data() . "/update_library_in_progress");
     if (file_exists($w->data() . '/library_old.db')) {
@@ -1870,7 +1826,7 @@ function updatePlaylist($w, $playlist_uri, $playlist_name)
 {
     $api = getSpotifyWebAPI($w);
     if ($api == false) {
-        displayNotification("Error: Cannot update playlist, authentication issue");
+        displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/' . 'warning.png');
         return;
     }
 
@@ -1888,13 +1844,12 @@ function updatePlaylist($w, $playlist_uri, $playlist_name)
     try {
         $dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
         $dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $getSettings = 'select theme,country_code,userid from settings';
+        $getSettings = 'select country_code,userid from settings';
         $stmt = $dbsettings->prepare($getSettings);
         $stmt->execute();
         $setting = $stmt->fetch();
-        $theme = $setting[0];
-        $country_code = $setting[1];
-        $userid = $setting[2];
+        $country_code = $setting[0];
+        $userid = $setting[1];
     } catch (PDOException $e) {
         handleDbIssuePdoEcho($dbsettings,$w);
         $dbsettings = null;
@@ -1967,13 +1922,13 @@ function updatePlaylist($w, $playlist_uri, $playlist_name)
 
             } while ($offsetGetUserPlaylistTracks < $userPlaylistTracks->total);
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            echo "Error(getUserPlaylistTracks): playlist id " . $tmp[4] . " (exception " . $e . ")";
-            handleDbIssuePdoEcho($db,$w);
+            echo "Error(getUserPlaylistTracks): playlist id " . $tmp[4] . " (exception " . print_r($e) . ")";
+            handleSpotifyWebAPIException($w);
             return;
         }
 
         $stmtUpdatePlaylists->bindValue(':nb_tracks', $nb_tracktotal);
-        $playlist_artwork_path = getPlaylistArtwork($w, $theme, $playlist_uri, true, true);
+        $playlist_artwork_path = getPlaylistArtwork($w,  $playlist_uri, true, true);
         $stmtUpdatePlaylists->bindValue(':playlist_artwork_path', $playlist_artwork_path);
         $stmtUpdatePlaylists->bindValue(':uri', $playlist_uri);
         $stmtUpdatePlaylists->execute();
@@ -1991,9 +1946,9 @@ function updatePlaylist($w, $playlist_uri, $playlist_name)
 
             //
             // Download artworks
-            $track_artwork_path = getTrackOrAlbumArtwork($w, $theme, $track->uri, true);
-            $artist_artwork_path = getArtistArtwork($w, $theme, $artist->name, true);
-            $album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $album->uri, true);
+            $track_artwork_path = getTrackOrAlbumArtwork($w,  $track->uri, true);
+            $artist_artwork_path = getArtistArtwork($w,  $artist->name, true);
+            $album_artwork_path = getTrackOrAlbumArtwork($w,  $album->uri, true);
 
 
             $stmtTrack->bindValue(':mymusic', 0);
@@ -2100,7 +2055,7 @@ function refreshLibrary($w)
     // Note that a user's collaborative playlists are not currently retrievable.
     $api = getSpotifyWebAPI($w);
     if ($api == false) {
-        displayNotification("Error: Cannot update library, authentication issue");
+        displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/' . 'warning.png');
         return;
     }
     touch($w->data() . "/update_library_in_progress");
@@ -2117,13 +2072,12 @@ function refreshLibrary($w)
     try {
         $dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
         $dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $getSettings = 'select theme,country_code,userid from settings';
+        $getSettings = 'select country_code,userid from settings';
         $stmt = $dbsettings->prepare($getSettings);
         $stmt->execute();
         $setting = $stmt->fetch();
-        $theme = $setting[0];
-        $country_code = $setting[1];
-        $userid = $setting[2];
+        $country_code = $setting[0];
+        $userid = $setting[1];
     } catch (PDOException $e) {
         handleDbIssuePdoEcho($dbsettings,$w);
         $dbsettings = null;
@@ -2195,7 +2149,7 @@ function refreshLibrary($w)
 
             } while ($offsetGetUserPlaylists < $userPlaylists->total);
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            echo "Error(getUserPlaylists): (exception " . $e . ")";
+            echo "Error(getUserPlaylists): (exception " . print_r($e) . ")";
             unlink($w->data() . "/update_library_in_progress");
             unlink($w->data() . "/library_new.db");
             unlink($w->data() . '/settings_tmp.db');
@@ -2226,7 +2180,7 @@ function refreshLibrary($w)
             if ($noresult == true) {
 	            $nb_added_playlists++;
 
-                $playlist_artwork_path = getPlaylistArtwork($w, $theme, $playlist->uri, true, true);
+                $playlist_artwork_path = getPlaylistArtwork($w,  $playlist->uri, true, true);
 
                 if ("-" . $owner->id . "-" == "-" . $userid . "-") {
                     $ownedbyuser = 1;
@@ -2272,9 +2226,9 @@ function refreshLibrary($w)
 
                             //
                             // Download artworks
-                            $track_artwork_path = getTrackOrAlbumArtwork($w, $theme, $track->uri, true);
-                            $artist_artwork_path = getArtistArtwork($w, $theme, $artist->name, true);
-                            $album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $album->uri, true);
+                            $track_artwork_path = getTrackOrAlbumArtwork($w,  $track->uri, true);
+                            $artist_artwork_path = getArtistArtwork($w,  $artist->name, true);
+                            $album_artwork_path = getTrackOrAlbumArtwork($w,  $album->uri, true);
 
                             $stmtTrack->bindValue(':mymusic', 0);
                             $stmtTrack->bindValue(':popularity', $track->popularity);
@@ -2300,8 +2254,8 @@ function refreshLibrary($w)
 
                     } while ($offsetGetUserPlaylistTracks < $userPlaylistTracks->total);
                 } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-                    echo "Error(getUserPlaylistTracks): playlist id " . $playlist->id . " (exception " . $e . ")";
-                    handleDbIssuePdoEcho($db,$w);
+                    echo "Error(getUserPlaylistTracks): playlist id " . $playlist->id . " (exception " . print_r($e) . ")";
+                    handleSpotifyWebAPIException($w);
                     return;
                 }
 
@@ -2359,9 +2313,9 @@ function refreshLibrary($w)
 
                                 //
                                 // Download artworks
-                                $track_artwork_path = getTrackOrAlbumArtwork($w, $theme, $track->uri, true);
-                                $artist_artwork_path = getArtistArtwork($w, $theme, $artist->name, true);
-                                $album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $album->uri, true);
+                                $track_artwork_path = getTrackOrAlbumArtwork($w,  $track->uri, true);
+                                $artist_artwork_path = getArtistArtwork($w,  $artist->name, true);
+                                $album_artwork_path = getTrackOrAlbumArtwork($w,  $album->uri, true);
 
 
                                 $stmtTrack->bindValue(':mymusic', 0);
@@ -2388,11 +2342,11 @@ function refreshLibrary($w)
 
                         } while ($offsetGetUserPlaylistTracks < $userPlaylistTracks->total);
                     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-                        echo "Error(getUserPlaylistTracks): playlist id " . $tmp[4] . " (exception " . $e . ")";
-                        handleDbIssuePdoEcho($db,$w);
+                        echo "Error(getUserPlaylistTracks): playlist id " . $tmp[4] . " (exception " . print_r($e) . ")";
+                        handleSpotifyWebAPIException($w);
                         return;
                     }
-                    displayNotificationWithArtwork('Updated playlist ' . $playlist->name, getPlaylistArtwork($w, $theme, $playlist->uri, true));
+                    displayNotificationWithArtwork('Updated playlist ' . $playlist->name, getPlaylistArtwork($w,  $playlist->uri, true));
                 } else {
                     continue;
                 }
@@ -2424,7 +2378,7 @@ function refreshLibrary($w)
                 $stmtDelete = $db->prepare($deleteFromTracks);
                 $stmtDelete->bindValue(':uri', $playlist_in_db[0]);
                 $stmtDelete->execute();
-                displayNotificationWithArtwork('Removed playlist ' . $playlist_in_db[1], getPlaylistArtwork($w, $theme, $playlist_in_db[0], false));
+                displayNotificationWithArtwork('Removed playlist ' . $playlist_in_db[1], getPlaylistArtwork($w,  $playlist_in_db[0], false));
             }
         }
 
@@ -2446,8 +2400,8 @@ function refreshLibrary($w)
                 $offsetGetMySavedTracks += $limitGetMySavedTracks;
             } while ($offsetGetMySavedTracks < $userMySavedTracks->total);
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            echo "Error(getMySavedTracks): (exception " . $e . ")";
-            handleDbIssuePdoEcho($db,$w);
+            echo "Error(getMySavedTracks): (exception " . print_r($e) . ")";
+            handleSpotifyWebAPIException($w);
             return false;
         }
 		// get current number of track in Your Music
@@ -2480,9 +2434,9 @@ function refreshLibrary($w)
 
                 //
                 // Download artworks
-                $track_artwork_path = getTrackOrAlbumArtwork($w, $theme, $track->uri, true);
-                $artist_artwork_path = getArtistArtwork($w, $theme, $artist->name, true);
-                $album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $album->uri, true);
+                $track_artwork_path = getTrackOrAlbumArtwork($w,  $track->uri, true);
+                $artist_artwork_path = getArtistArtwork($w,  $artist->name, true);
+                $album_artwork_path = getTrackOrAlbumArtwork($w,  $album->uri, true);
 
 
                 $stmtTrack->bindValue(':mymusic', 1);
@@ -2586,7 +2540,7 @@ function refreshLibrary($w)
 	        $message = ' (no change)';
         }
 
-        displayNotificationWithArtwork("Library refreshed" . $message . " - took " . beautifyTime($elapsed_time),'./images/' . $theme . '/' . 'update.png');
+        displayNotificationWithArtwork("Library refreshed" . $message . " - took " . beautifyTime($elapsed_time),'./images/' . 'update.png');
 
         unlink($w->data() . "/update_library_in_progress");
         unlink($w->data() . '/library_old.db');
@@ -2612,7 +2566,7 @@ function updateYourMusic($w)
 
     $api = getSpotifyWebAPI($w);
     if ($api == false) {
-        displayNotification("Error: Cannot update Your Music, authentication issue");
+        displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/' . 'warning.png');
         return;
     }
 
@@ -2630,13 +2584,12 @@ function updateYourMusic($w)
     try {
         $dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
         $dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $getSettings = 'select theme,country_code,userid from settings';
+        $getSettings = 'select country_code,userid from settings';
         $stmt = $dbsettings->prepare($getSettings);
         $stmt->execute();
         $setting = $stmt->fetch();
-        $theme = $setting[0];
-        $country_code = $setting[1];
-        $userid = $setting[2];
+        $country_code = $setting[0];
+        $userid = $setting[1];
     } catch (PDOException $e) {
         handleDbIssuePdoEcho($dbsettings,$w);
         $dbsettings = null;
@@ -2696,9 +2649,9 @@ function updateYourMusic($w)
 
                     //
                     // Download artworks
-                    $track_artwork_path = getTrackOrAlbumArtwork($w, $theme, $track->uri, true);
-                    $artist_artwork_path = getArtistArtwork($w, $theme, $artist->name, true);
-                    $album_artwork_path = getTrackOrAlbumArtwork($w, $theme, $album->uri, true);
+                    $track_artwork_path = getTrackOrAlbumArtwork($w,  $track->uri, true);
+                    $artist_artwork_path = getArtistArtwork($w,  $artist->name, true);
+                    $album_artwork_path = getTrackOrAlbumArtwork($w,  $album->uri, true);
 
 
                     $stmtTrack->bindValue(':mymusic', 1);
@@ -2736,8 +2689,8 @@ function updateYourMusic($w)
 
             } while ($offsetGetMySavedTracks < $userMySavedTracks->total);
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            echo "Error(getMySavedTracks): (exception " . $e . ")";
-            handleDbIssuePdoEcho($db,$w);
+            echo "Error(getMySavedTracks): (exception " . print_r($e) . ")";
+            handleSpotifyWebAPIException($w);
             return false;
         }
 
@@ -2808,19 +2761,41 @@ function updateYourMusic($w)
  * handleDbIssuePdoXml function.
  *
  * @access public
- * @param mixed $theme
  * @param mixed $dbhandle
  * @return void
  */
-function handleDbIssuePdoXml($theme, $dbhandle)
+function handleDbIssuePdoXml($dbhandle)
 {
     $w = new Workflows('com.vdesabou.spotify.mini.player');
     $w->result(uniqid(), '', 'Database Error: ' . $dbhandle->errorInfo()[0] . ' ' . $dbhandle->errorInfo()[1] . ' ' . $dbhandle->errorInfo()[2], '', './images/' . 'gray'. '/' . 'warning.png', 'no', null, '');
     $w->result(uniqid(), '', 'There is a problem with the library, try to re-create it.', 'Select Re-Create Library library below', './images/' . 'gray'. '/' . 'warning.png', 'no', null, '');
-    $w->result(uniqid(), serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'update_library' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Re-Create Library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . $theme . '/' . 'update.png', 'yes', null, '');
+    $w->result(uniqid(), serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'update_library' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Re-Create Library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/' . 'update.png', 'yes', null, '');
     echo $w->toxml();
 }
 
+/**
+ * handleSpotifyWebAPIException function.
+ *
+ * @access public
+ * @param mixed $w
+ * @return void
+ */
+function handleSpotifyWebAPIException($w) {
+	// set back old library
+    if (file_exists($w->data() . "/library_new.db")) {
+	    rename($w->data() . '/library_new.db', $w->data() . '/library.db');
+    }
+
+    if (file_exists($w->data() . '/library_old.db')) {
+        unlink($w->data() . '/library_old.db');
+    }
+
+    if (file_exists($w->data() . '/settings_tmp.db')) {
+        unlink($w->data() . '/settings_tmp.db');
+    }
+
+	displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/' . 'warning.png');
+}
 /**
  * handleDbIssuePdoEcho function.
  *
