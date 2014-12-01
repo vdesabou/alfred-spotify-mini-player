@@ -36,7 +36,7 @@ if (file_exists($w->data() . '/update_library_in_progress')) {
                 $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'kill_update' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Kill update library', 'This will stop the library update', './images/' . 'gray' . '/' . 'kill.png', 'yes', '');
             }
         } else {
-            if ($update_library_in_progress_words[0] == 'Playlist List') {
+            if ($update_library_in_progress_words[0] == 'Refresh Library') {
                 $type = 'playlists';
             } else if ($update_library_in_progress_words[0] == 'Artists') {
                 $type = 'artists';
@@ -277,7 +277,7 @@ if (mb_strlen($query) < 3 ||
             if (startsWith($update_library_in_progress_words[0], 'Init')) {
                 $w->result(null, $w->data() . '/update_library_in_progress', 'Initialization phase since ' . beautifyTime($elapsed_time) . ' : ' . floatToSquares(0), 'waiting for Spotify servers to return required data', './images/' . $theme . '/' . 'update_in_progress.png', 'no', null, '');
             } else {
-                if ($update_library_in_progress_words[0] == 'Playlist List') {
+                if ($update_library_in_progress_words[0] == 'Refresh Library') {
                     $type = 'playlists';
                 } else if ($update_library_in_progress_words[0] == 'Artists') {
                     $type = 'artists';
