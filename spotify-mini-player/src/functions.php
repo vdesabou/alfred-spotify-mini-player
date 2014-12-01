@@ -715,7 +715,8 @@ function getThePlaylistTracks($w, $playlist_uri)
         $limitGetUserPlaylistTracks = 100;
         do {
             $userPlaylistTracks = $api->getUserPlaylistTracks($tmp[2], $tmp[4], array(
-                'fields' => array('items.track(id)'),
+                'fields' => array('total',
+                				  'items.track(id)'),
                 'limit' => $limitGetUserPlaylistTracks,
                 'offset' => $offsetGetUserPlaylistTracks
             ));
@@ -726,7 +727,6 @@ function getThePlaylistTracks($w, $playlist_uri)
             }
 
             $offsetGetUserPlaylistTracks += $limitGetUserPlaylistTracks;
-
         } while ($offsetGetUserPlaylistTracks < $userPlaylistTracks->total);
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
         echo "Error(getThePlaylistTracks): playlist uri " . $playlist_uri . " (exception " . $e . ")";
