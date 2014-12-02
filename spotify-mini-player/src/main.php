@@ -2020,14 +2020,17 @@ if (mb_strlen($query) < 3 ||
                 $type = 'track';
                 $track_name = $tmp[1];
                 $track_uri = $uri;
+                $message = "track " . $track_name;
             } elseif ($href[1] == 'album') {
                 $type = 'album';
                 $album_name = $tmp[1];
                 $album_uri = $uri;
+                $message = "album  " . $album_name;
             } elseif ($href[1] == 'user') {
                 $type = 'playlist';
                 $playlist_name = $tmp[1];
                 $playlist_uri = $uri;
+                $message = "playlist " . $playlist_name;
             }
             $theplaylist = $words[2];
 
@@ -2037,19 +2040,19 @@ if (mb_strlen($query) < 3 ||
                     $getPlaylists = "select * from playlists where ownedbyuser=1";
                     $stmt = $db->prepare($getPlaylists);
 
-                    $w->result(null, '', 'Add ' . $type . ' ' . $tmp[1] . ' to Your Music or one of your playlists below..', "Select Your Music or one of your playlists below to add " . $type, './images/add.png', 'no', null, '');
+                    $w->result(null, '', 'Add ' . $type . ' ' . $tmp[1] . ' to Your Music or one of your playlists below..', "Select Your Music or one of your playlists below to add the " . $message, './images/add.png', 'no', null, '');
 
-					$w->result(null, '', "Create a new playlist ", "Create a new playlist and add the " . $type . " to it" , './images/create_playlist.png', 'no', null, $query . 'Enter Playlist Name▹');
+					$w->result(null, '', "Create a new playlist ", "Create a new playlist and add the " . $message, './images/create_playlist.png', 'no', null, $query . 'Enter Playlist Name▹');
 
                     // put Alfred Playlist at beginning
                     if ($is_alfred_playlist_active == true) {
                         if ($alfred_playlist_uri != '' && $alfred_playlist_name != '') {
-                            $w->result(null, serialize(array($track_uri /*track_uri*/, $album_uri /* album_uri */, '' /* artist_uri */, $playlist_uri /* playlist_uri */, '' /* spotify_command */, '' /* query */, 'ADD_TO_PLAYLIST▹' . $alfred_playlist_uri . '▹' . $alfred_playlist_name /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, $track_name /* track_name */, $album_name /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, $playlist_name /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "🎵 Alfred Playlist " . " ● " . ucfirst($alfred_playlist_name), "Select the playlist to add the " . $type, './images/alfred_playlist.png', 'yes', null, '');
+                            $w->result(null, serialize(array($track_uri /*track_uri*/, $album_uri /* album_uri */, '' /* artist_uri */, $playlist_uri /* playlist_uri */, '' /* spotify_command */, '' /* query */, 'ADD_TO_PLAYLIST▹' . $alfred_playlist_uri . '▹' . $alfred_playlist_name /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, $track_name /* track_name */, $album_name /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, $playlist_name /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "🎵 Alfred Playlist " . " ● " . ucfirst($alfred_playlist_name), "Select the playlist to add the " . $message, './images/alfred_playlist.png', 'yes', null, '');
 
                         }
                     }
 
-					$w->result(null, serialize(array($track_uri /*track_uri*/, $album_uri /* album_uri */, '' /* artist_uri */, $playlist_uri /* playlist_uri */, '' /* spotify_command */, '' /* query */, 'ADD_TO_YOUR_MUSIC▹' /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, $track_name /* track_name */, $album_name /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, $playlist_name /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Your Music", "Select to add the " . $type . " to Your Music", './images/allplaylists.png', 'yes', null, '');
+					$w->result(null, serialize(array($track_uri /*track_uri*/, $album_uri /* album_uri */, '' /* artist_uri */, $playlist_uri /* playlist_uri */, '' /* spotify_command */, '' /* query */, 'ADD_TO_YOUR_MUSIC▹' /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, $track_name /* track_name */, $album_name /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, $playlist_name /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Your Music", "Select to add the " . $message . " to Your Music", './images/allplaylists.png', 'yes', null, '');
                 } else {
                     $getPlaylists = "select * from playlists where ownedbyuser=1 and ( name like :playlist or author like :playlist)";
                     $stmt = $db->prepare($getPlaylists);
@@ -2072,7 +2075,7 @@ if (mb_strlen($query) < 3 ||
                     if (startswith($playlist[1], 'Artist radio for')) {
                         $added = '📻 ';
                     }
-                    $w->result(null, serialize(array($track_uri /*track_uri*/, $album_uri /* album_uri */, '' /* artist_uri */, $playlist_uri /* playlist_uri */, '' /* spotify_command */, '' /* query */, 'ADD_TO_PLAYLIST▹' . $playlist[0] . '▹' . $playlist[1] /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, $track_name /* track_name */, $album_name /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, $playlist_name /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "🎵" . $added . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "Select the playlist to add the " . $type, $playlist[5], 'yes', null, '');
+                    $w->result(null, serialize(array($track_uri /*track_uri*/, $album_uri /* album_uri */, '' /* artist_uri */, $playlist_uri /* playlist_uri */, '' /* spotify_command */, '' /* query */, 'ADD_TO_PLAYLIST▹' . $playlist[0] . '▹' . $playlist[1] /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, $track_name /* track_name */, $album_name /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, $playlist_name /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "🎵" . $added . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "Select the playlist to add the " . $message, $playlist[5], 'yes', null, '');
                 }
             }
         } // end Add
