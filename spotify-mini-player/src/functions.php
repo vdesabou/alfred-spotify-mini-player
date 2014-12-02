@@ -763,7 +763,7 @@ function getTheArtistAlbums($w, $artist_uri, $country_code)
         $limitGetArtistAlbums = 50;
         do {
             $userArtistAlbums = $api->getArtistAlbums($tmp[2],array(
-									            'album_type' => array('album'),
+									            'album_type' => array('album','single','compilation'),
 									            'market' => $country_code,
 									            'limit' => $limitGetArtistAlbums,
 									            'offset' => $offsetGetArtistAlbums
