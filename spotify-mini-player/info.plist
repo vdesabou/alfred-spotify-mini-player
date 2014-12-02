@@ -2841,9 +2841,9 @@ php -f ./src/action.php -- "{query}" "REFRESH_LIBRARY" "REFRESH_LIBRARY" &gt;&gt
 				<key>argumenttype</key>
 				<integer>0</integer>
 				<key>triggerid</key>
-				<string>com.vdesabou.miniplayer.update</string>
+				<string>com.vdesabou.miniplayer.refreshlibrary</string>
 				<key>triggername</key>
-				<string>Update Library</string>
+				<string>Refresh Library</string>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
