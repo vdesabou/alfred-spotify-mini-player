@@ -1250,7 +1250,7 @@ function checkIfResultAlreadyThere($results, $title)
 {
     foreach ($results as $result) {
         if ($result['title']) {
-            if ($result['title'] == $title) {
+            if (strtolower($result['title']) == strtolower($title)) {
                 return true;
             }
         }
