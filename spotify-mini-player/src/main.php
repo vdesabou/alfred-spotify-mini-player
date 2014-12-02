@@ -1168,7 +1168,7 @@ if (mb_strlen($query) < 3 ||
 
                 $w->result(null, '', 'Related Artists', 'Browse related artists', './images/related.png', 'no', null, "OnlineRelated▹" . $artist_uri . "@" . $artist_name);
                 if ($update_in_progress == false) {
-                    $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, $artist_uri /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'radio_artist' /* other_action */, '' /* alfred_playlist_uri */, $artist_name  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Create a Radio Playlist for ' . $artist_name, 'This will create a radio playlist with ' . $radio_number_tracks . ' for the artist', './images/radio_artist.png', 'yes', null, '');
+                    $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, $artist_uri /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'radio_artist' /* other_action */, '' /* alfred_playlist_uri */, $artist_name  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Create a Radio Playlist for ' . $artist_name, 'This will create a radio playlist with ' . $radio_number_tracks . ' tracks for the artist', './images/radio_artist.png', 'yes', null, '');
                 }
 
 				// call to web api, if it fails,
@@ -1295,7 +1295,7 @@ if (mb_strlen($query) < 3 ||
 
                 $w->result(null, '', 'Related Artists', 'Browse related artists', './images/related.png', 'no', null, "OnlineRelated▹" . $artist_uri . "@" . $artist_name);
 
-                $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, $artist_uri /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'radio_artist' /* other_action */, '' /* alfred_playlist_uri */, $artist_name  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Create a Radio Playlist for ' . $artist_name, 'This will create a radio playlist with ' . $radio_number_tracks . ' for the artist', './images/radio_artist.png', 'yes', null, '');
+                $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, $artist_uri /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'radio_artist' /* other_action */, '' /* alfred_playlist_uri */, $artist_name  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Create a Radio Playlist for ' . $artist_name, 'This will create a radio playlist with ' . $radio_number_tracks . ' tracks for the artist', './images/radio_artist.png', 'yes', null, '');
 
                 if ($all_playlists == false) {
                     $getTracks = "select * from tracks where  mymusic=1 and artist_uri=:artist_uri limit " . $max_results;
