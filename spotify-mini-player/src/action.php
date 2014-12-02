@@ -393,6 +393,18 @@ if ($playlist_uri != "" && $other_settings == "") {
 
     } else if ($setting[0] == "ADD_TO_PLAYLIST") {
 
+		//if playlist_uri is notset, then create it
+		if($setting[1] == 'notset') {
+
+			$new_playlist_uri = createTheUserPlaylist($w, $setting[2]);
+
+			if($new_playlist_uri != false) {
+				$setting[1] = $new_playlist_uri;
+			} else {
+				return;
+			}
+		}
+
         // add track to playlist
         if ($track_uri != '') {
             $track_artwork_path = getTrackOrAlbumArtwork($w,  $track_uri, true);

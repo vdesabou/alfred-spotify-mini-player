@@ -445,6 +445,58 @@ function clearPlaylist($w, $playlist_uri, $playlist_name)
     return true;
 }
 
+
+
+/**
+ * createTheUserPlaylist function.
+ *
+ * @access public
+ * @param mixed $w
+ * @param mixed $playlist_name
+ * @return void
+ */
+function createTheUserPlaylist($w, $playlist_name)
+{
+    $api = getSpotifyWebAPI($w);
+    if ($api == false) {
+        displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png');
+        return false;
+    }
+
+    //
+    // Read settings from DB
+    //
+
+    $dbfile = $w->data() . '/settings.db';
+    try {
+        $dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
+        $dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $getSettings = 'select userid from settings';
+        $stmt = $dbsettings->prepare($getSettings);
+        $stmt->execute();
+        $setting = $stmt->fetch();
+        $userid = $setting[0];
+    } catch (PDOException $e) {
+        handleDbIssuePdoEcho($dbsettings,$w);
+        $dbsettings = null;
+        return false;
+    }
+
+    try {
+        $json = $api->createUserPlaylist($userid, array(
+            'name' => $playlist_name,
+            'public' => false
+        ));
+    } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+        echo "Error(createUserPlaylist): createUserPlaylist " . $playlist_name . " (exception " . print_r($e) . ")";
+        handleSpotifyWebAPIException($w);
+        return false;
+    }
+
+    return $json->uri;
+}
+
+
 /**
  * createRadioArtistPlaylistForCurrentArtist function.
  *
@@ -978,8 +1030,8 @@ function addTracksToPlaylist($w, $tracks, $playlist_uri, $playlist_name, $allow_
         }
 
         if ($updatePlaylist) {
-            // refresh playlist
-            updatePlaylist($w, $playlist_uri, $playlist_name);
+            // refresh library
+            refreshLibrary($w);
         }
     }
 
@@ -1886,7 +1938,7 @@ function updateLibrary($w)
     }
 
     $elapsed_time = time() - $words[3];
-    displayNotificationWithArtwork("Library created (" . $nb_track . " tracks) - took " . beautifyTime($elapsed_time),'./images/update.png');
+    displayNotificationWithArtwork("Library (re-)created (" . $nb_track . " tracks) - took " . beautifyTime($elapsed_time),'./images/recreate.png');
 
     unlink($w->data() . "/update_library_in_progress");
     if (file_exists($w->data() . '/library_old.db')) {

@@ -421,7 +421,7 @@ if (mb_strlen($query) < 3 ||
         }
 
         if ($update_in_progress == false) {
-            $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'update_library' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Re-Create your library from scratch', "Do this when refresh library is not working as you would expect", './images/update.png', 'yes', null, '');
+            $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'update_library' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Re-Create your library from scratch', "Do this when refresh library is not working as you would expect", './images/recreate.png', 'yes', null, '');
         }
 
         $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'check_for_update' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Check for workflow update', array(
@@ -2039,6 +2039,8 @@ if (mb_strlen($query) < 3 ||
 
                     $w->result(null, '', 'Add ' . $type . ' ' . $tmp[1] . ' to Your Music or one of your playlists below..', "Select Your Music or one of your playlists below to add " . $type, './images/add.png', 'no', null, '');
 
+					$w->result(null, '', "Create a new playlist ", "Create a new playlist and add the " . $type . " to it" , './images/create_playlist.png', 'no', null, $query . 'Enter Playlist Name▹');
+
                     // put Alfred Playlist at beginning
                     if ($is_alfred_playlist_active == true) {
                         if ($alfred_playlist_uri != '' && $alfred_playlist_name != '') {
@@ -2118,6 +2120,47 @@ if (mb_strlen($query) < 3 ||
             }
         }
         // end of Settings
+    }
+    //
+    // THIRD DELIMITER: Add▹Artist uri▹Enter Playlist Name
+    //
+    ////////////
+    elseif (substr_count($query, '▹') == 3) {
+        $words = explode('▹', $query);
+        $kind = $words[0];
+
+        $tmp = explode('∙', $words[1]);
+        $uri = $tmp[0];
+
+        $href = explode(':', $uri);
+        if ($href[1] == 'track') {
+            $type = 'track';
+            $track_name = $tmp[1];
+            $track_uri = $uri;
+            $message = "track " . $track_name;
+        } elseif ($href[1] == 'album') {
+            $type = 'album';
+            $album_name = $tmp[1];
+            $album_uri = $uri;
+            $message = "album  " . $album_name;
+        } elseif ($href[1] == 'user') {
+            $type = 'playlist';
+            $playlist_name = $tmp[1];
+            $playlist_uri = $uri;
+            $message = "playlist " . $playlist_name;
+        }
+
+        $the_query = $words[3];
+
+        if ($kind == "Add") {
+            if (mb_strlen($the_query) == 0) {
+                $w->result(null, '', "Enter the name of the new playlist: ", "This will create a new playlist with the name entered", './images/create_playlist.png', 'no', null, '');
+            } else {
+                // playlist name has been set
+                $w->result(null, serialize(array($track_uri /*track_uri*/, $album_uri /* album_uri */, '' /* artist_uri */, $playlist_uri /* playlist_uri */, '' /* spotify_command */, '' /* query */, 'ADD_TO_PLAYLIST▹' . 'notset' . '▹' . ltrim(rtrim($the_query)) /* other_settings*/, '' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, $track_name /* track_name */, $album_name /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, $playlist_name /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), "Create playlist " . ltrim(rtrim($the_query)), "This will create the playlist and add the " . $message, './images/add.png', 'yes', null, '');
+
+            }
+	    }
     }
 }
 
