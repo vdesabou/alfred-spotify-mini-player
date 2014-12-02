@@ -602,8 +602,8 @@ if (mb_strlen($query) < 3 ||
                         beautifyTime($track[16] / 1000) . " ● " . $subtitle . $playlistsfortrack,
                         'alt' => 'Play album ' . $track[6] . ' in Spotify',
                         'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
-                        'fn' => 'Add track ' . $track[5] . ' to ' . $alfred_playlist_name,
-                        'shift' => 'Add album ' . $track[6] . ' to ' . $alfred_playlist_name,
+                        'fn' => 'Add track ' . $track[5] . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
+                        'shift' => 'Add album ' . $track[6] . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
                         'ctrl' => 'Search artist ' . $track[7] . ' online');
                 } else {
                     $arrayresult = array(
@@ -909,8 +909,8 @@ if (mb_strlen($query) < 3 ||
                         $subtitle,
                         'alt' => 'Play album ' . escapeQuery($results[2]) . ' in Spotify',
                         'cmd' => 'Play artist ' . escapeQuery($results[1]) . ' in Spotify',
-                        'fn' => 'Add track ' . escapeQuery($results[0]) . ' to ' . $alfred_playlist_name,
-                        'shift' => 'Add album ' . escapeQuery($results[2]) . ' to ' . $alfred_playlist_name,
+                        'fn' => 'Add track ' . escapeQuery($results[0]) . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
+                        'shift' => 'Add album ' . escapeQuery($results[2]) . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
                         'ctrl' => 'Search artist ' . escapeQuery($results[1]) . ' online');
                 } else {
                     $arrayresult = array(
@@ -1121,8 +1121,8 @@ if (mb_strlen($query) < 3 ||
 		                        beautifyTime($track[16] / 1000) . " ● " . $subtitle . $playlistsfortrack,
 		                        'alt' => 'Play album ' . $track[6] . ' in Spotify',
 		                        'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
-		                        'fn' => 'Add track ' . $track[5] . ' to ' . $alfred_playlist_name,
-		                        'shift' => 'Add album ' . $track[6] . ' to ' . $alfred_playlist_name,
+		                        'fn' => 'Add track ' . $track[5] . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
+		                        'shift' => 'Add album ' . $track[6] . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
 		                        'ctrl' => 'Search artist ' . $track[7] . ' online');
 		                } else {
 		                    $arrayresult = array(
@@ -1213,8 +1213,8 @@ if (mb_strlen($query) < 3 ||
                                 beautifyTime($track->duration_ms / 1000) . " ● " . $album_name,
                                 'alt' => 'Play album ' . escapeQuery($album_name) . ' in Spotify',
                                 'cmd' => 'Play artist ' . escapeQuery($artist_name) . ' in Spotify',
-                                'fn' => 'Add track ' . escapeQuery($track->name) . ' to ' . $alfred_playlist_name,
-                                'shift' => 'Add album ' . escapeQuery($album_name) . ' to ' . $alfred_playlist_name,
+                                'fn' => 'Add track ' . escapeQuery($track->name) . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
+                                'shift' => 'Add album ' . escapeQuery($album_name) . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
                                 'ctrl' => 'Search artist ' . escapeQuery($artist_name) . ' online');
                         } else {
                             $arrayresult = array(
@@ -1360,8 +1360,8 @@ if (mb_strlen($query) < 3 ||
                             beautifyTime($track[16] / 1000) . " ● " . $subtitle . $playlistsfortrack,
                             'alt' => 'Play album ' . $track[6] . ' in Spotify',
                             'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
-                            'fn' => 'Add track ' . $track[5] . ' to ' . $alfred_playlist_name,
-                            'shift' => 'Add album ' . $track[6] . ' to ' . $alfred_playlist_name,
+                            'fn' => 'Add track ' . $track[5] . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
+                            'shift' => 'Add album ' . $track[6] . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
                             'ctrl' => 'Search artist ' . $track[7] . ' online');
                     } else {
                         $arrayresult = array(
@@ -1493,8 +1493,8 @@ if (mb_strlen($query) < 3 ||
                             beautifyTime($track[16] / 1000) . " ● " . $subtitle . $playlistsfortrack,
                             'alt' => 'Play album ' . $track[6] . ' in Spotify',
                             'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
-                            'fn' => 'Add track ' . $track[5] . ' to ' . $alfred_playlist_name,
-                            'shift' => 'Add album ' . $track[6] . ' to ' . $alfred_playlist_name,
+                            'fn' => 'Add track ' . $track[5] . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
+                            'shift' => 'Add album ' . $track[6] . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
                             'ctrl' => 'Search artist ' . $track[7] . ' online');
                     } else {
                         $arrayresult = array(
@@ -1651,8 +1651,8 @@ if (mb_strlen($query) < 3 ||
                                     beautifyTime($track[16] / 1000) . " ● " . $subtitle . $playlistsfortrack,
                                     'alt' => 'Play album ' . $track[6] . ' in Spotify',
                                     'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
-                                    'fn' => 'Add track ' . $track[5] . ' to ' . $alfred_playlist_name,
-                                    'shift' => 'Add album ' . $track[6] . ' to ' . $alfred_playlist_name,
+                                    'fn' => 'Add track ' . $track[5] . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
+                                    'shift' => 'Add album ' . $track[6] . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
                                     'ctrl' => 'Search artist ' . $track[7] . ' online');
                             } else {
                                 $arrayresult = array(
@@ -1762,8 +1762,8 @@ if (mb_strlen($query) < 3 ||
                             beautifyTime($track[16] / 1000) . " ● " . $subtitle . $playlistsfortrack,
                             'alt' => 'Play album ' . $track[6] . ' in Spotify',
                             'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
-                            'fn' => 'Add track ' . $track[5] . ' to ' . $alfred_playlist_name,
-                            'shift' => 'Add album ' . $track[6] . ' to ' . $alfred_playlist_name,
+                            'fn' => 'Add track ' . $track[5] . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
+                            'shift' => 'Add album ' . $track[6] . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
                             'ctrl' => 'Search artist ' . $track[7] . ' online');
                     } else {
                         $arrayresult = array(
@@ -1993,8 +1993,8 @@ if (mb_strlen($query) < 3 ||
                         escapeQuery($track->album_name) . " ● " . $track->num_streams . ' streams',
                         'alt' => 'Play album ' . escapeQuery($track->album_name) . ' in Spotify',
                         'cmd' => 'Play artist ' . escapeQuery($track->artist_name) . ' in Spotify',
-                        'fn' => 'Add track ' . escapeQuery($track->track_name) . ' to ' . $alfred_playlist_name,
-                        'shift' => 'Add album ' . escapeQuery($track->album_name) . ' to ' . $alfred_playlist_name,
+                        'fn' => 'Add track ' . escapeQuery($track->track_name) . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
+                        'shift' => 'Add album ' . escapeQuery($track->album_name) . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
                         'ctrl' => 'Search artist ' . escapeQuery($track->artist_name) . ' online');
                 } else {
                     $arrayresult = array(
