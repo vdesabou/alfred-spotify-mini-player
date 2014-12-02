@@ -93,10 +93,10 @@ if ($type == "TRACK" && $other_settings == "") {
 
                 $ret = addTracksToPlaylist($w, $tmp[2], $alfred_playlist_uri, $alfred_playlist_name, false);
                 if (is_numeric($ret) && $ret > 0) {
-                    displayNotificationWithArtwork('' . $track_name . ' by ' . $artist_name . ' added to ' . $alfred_playlist_name, $track_artwork_path);
+                    displayNotificationWithArtwork('' . $track_name . ' by ' . $artist_name . ' added to ' . $alfred_playlist_name . ' Alfred Playlist', $track_artwork_path);
                     return;
                 } else if (is_numeric($ret) && $ret == 0) {
-                    displayNotificationWithArtwork('Error: ' . $track_name . ' by ' . $artist_name . ' is already in ' . $alfred_playlist_name,'./images/warning.png');
+                    displayNotificationWithArtwork('Error: ' . $track_name . ' by ' . $artist_name . ' is already in ' . $alfred_playlist_name . ' Alfred Playlist','./images/warning.png');
                     return;
                 } else {
 					displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png');
@@ -261,10 +261,10 @@ if ($type == "TRACK" && $other_settings == "") {
                 // add album to alfred playlist
                 $ret = addTracksToPlaylist($w, getTheAlbumTracks($w, $album_uri), $alfred_playlist_uri, $alfred_playlist_name, false);
                 if (is_numeric($ret) && $ret > 0) {
-                    displayNotificationWithArtwork('Album ' . $album_name . ' added to ' . $alfred_playlist_name, $album_artwork_path);
+                    displayNotificationWithArtwork('Album ' . $album_name . ' added to ' . $alfred_playlist_name . ' Alfred Playlist', $album_artwork_path);
                     return;
                 } else if (is_numeric($ret) && $ret == 0) {
-                    displayNotificationWithArtwork('Error: Album ' . $album_name . ' is already in ' . $alfred_playlist_name,'./images/warning.png');
+                    displayNotificationWithArtwork('Error: Album ' . $album_name . ' is already in ' . $alfred_playlist_name . ' Alfred Playlist','./images/warning.png');
                     return;
                 } else {
 					displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png');
@@ -319,10 +319,10 @@ if ($type == "TRACK" && $other_settings == "") {
                 // add playlist to alfred playlist
                 $ret = addTracksToPlaylist($w, getThePlaylistTracks($w, $playlist_uri), $alfred_playlist_uri, $alfred_playlist_name, false);
                 if (is_numeric($ret) && $ret > 0) {
-                    displayNotificationWithArtwork('Playlist ' . $playlist_name . ' added to ' . $alfred_playlist_name, $playlist_artwork_path);
+                    displayNotificationWithArtwork('Playlist ' . $playlist_name . ' added to ' . $alfred_playlist_name . ' Alfred Playlist', $playlist_artwork_path);
                     return;
                 } else if (is_numeric($ret) && $ret == 0) {
-                    displayNotificationWithArtwork('Error: Playlist ' . $playlist_name . ' is already in ' . $alfred_playlist_name,'./images/warning.png');
+                    displayNotificationWithArtwork('Error: Playlist ' . $playlist_name . ' is already in ' . $alfred_playlist_name . ' Alfred Playlist','./images/warning.png');
                     return;
                 } else {
 					displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png');
@@ -425,10 +425,10 @@ if ($playlist_uri != "" && $other_settings == "") {
 	        }
             $ret = addTracksToPlaylist($w, $tmp[2], $setting[1], $setting[2], false);
             if (is_numeric($ret) && $ret > 0) {
-                displayNotificationWithArtwork('' . $track_name . ' added to ' . $setting[2], $track_artwork_path);
+                displayNotificationWithArtwork('' . $track_name . ' added to ' . $setting[2] . ' playlist', $track_artwork_path);
                 return;
             } else if (is_numeric($ret) && $ret == 0) {
-                displayNotificationWithArtwork('Error: ' . $track_name . ' is already in ' . $setting[2],'./images/warning.png');
+                displayNotificationWithArtwork('Error: ' . $track_name . ' is already in ' . $setting[2] . ' playlist','./images/warning.png');
                 return;
             } else {
 				displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png');
@@ -439,10 +439,10 @@ if ($playlist_uri != "" && $other_settings == "") {
             $playlist_artwork_path = getPlaylistArtwork($w,  $playlist_uri, true, true);
             $ret = addTracksToPlaylist($w, getThePlaylistTracks($w, $playlist_uri), $setting[1], $setting[2], false);
             if (is_numeric($ret) && $ret > 0) {
-                displayNotificationWithArtwork('Playlist ' . $playlist_name . ' added to ' . $setting[2], $playlist_artwork_path);
+                displayNotificationWithArtwork('Playlist ' . $playlist_name . ' added to ' . $setting[2] . ' playlist', $playlist_artwork_path);
                 return;
             } else if (is_numeric($ret) && $ret == 0) {
-                displayNotificationWithArtwork('Error: Playlist ' . $playlist_name . ' is already in ' . $setting[2],'./images/warning.png');
+                displayNotificationWithArtwork('Error: Playlist ' . $playlist_name . ' is already in ' . $setting[2] . ' playlist','./images/warning.png');
                 return;
             } else {
 				displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png');
@@ -453,10 +453,10 @@ if ($playlist_uri != "" && $other_settings == "") {
             $album_artwork_path = getTrackOrAlbumArtwork($w,  $album_uri, true);
             $ret = addTracksToPlaylist($w, getTheAlbumTracks($w, $album_uri), $setting[1], $setting[2], false);
             if (is_numeric($ret) && $ret > 0) {
-                displayNotificationWithArtwork('Album ' . $album_name . ' added to ' . $setting[2], $album_artwork_path);
+                displayNotificationWithArtwork('Album ' . $album_name . ' added to ' . $setting[2] . ' playlist', $album_artwork_path);
                 return;
             } else if (is_numeric($ret) && $ret == 0) {
-                displayNotificationWithArtwork('Error: Album ' . $album_name . ' is already in ' . $setting[2],'./images/warning.png');
+                displayNotificationWithArtwork('Error: Album ' . $album_name . ' is already in ' . $setting[2] . ' playlist','./images/warning.png');
                 return;
             } else {
 				displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png');
