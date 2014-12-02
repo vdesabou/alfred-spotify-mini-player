@@ -172,8 +172,8 @@ if ($type == "TRACK" && $other_settings == "") {
 } else if ($type == "CURRENT_TRACK_RADIO") {
     createRadioSongPlaylistForCurrentTrack($w);
     return;
-} else if ($type == "QUERY_CURRENT_ARTIST") {
-    queryCurrentArtist($w);
+} else if ($type == "LOOKUP_CURRENT_ARTIST") {
+    lookupCurrentArtist($w);
     return;
 } else if ($type == "PLAY_CURRENT_ARTIST") {
     playCurrentArtist($w);
@@ -616,8 +616,8 @@ if ($playlist_uri != "" && $other_settings == "") {
     } else if ($other_action == "kill_update") {
         killUpdate($w);
         return;
-    } else if ($other_action == "query_current_artist") {
-		queryCurrentArtist($w);
+    } else if ($other_action == "lookup_current_artist") {
+		lookupCurrentArtist($w);
 		return;
     } else if ($other_action == "lyrics") {
         displayLyricsForCurrentTrack();
@@ -743,7 +743,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         }
         return;
 
-    } else if ($other_action == "morefromthisartist") {
+    } else if ($other_action == "lookup_artist") {
 
         if (!$w->internet()) {
             displayNotificationWithArtwork("Error: No internet connection", './images/warning.png');

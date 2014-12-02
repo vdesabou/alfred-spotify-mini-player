@@ -3486,9 +3486,9 @@ php -f ./src/action.php -- "{query}" "ADD_CURRENT_TRACK_TO" "ADD_CURRENT_TRACK_T
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>echo "===== QUERY_CURRENT_ARTIST ========" &gt;&gt; "$alfred_workflow_cache/action.log"
+				<string>echo "===== LOOKUP_CURRENT_ARTIST ========" &gt;&gt; "$alfred_workflow_cache/action.log"
 echo "`date` {query}" &gt;&gt; "$alfred_workflow_cache/action.log"
-php -f ./src/action.php -- "{query}" "QUERY_CURRENT_ARTIST" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+php -f ./src/action.php -- "{query}" "LOOKUP_CURRENT_ARTIST" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -3505,11 +3505,11 @@ php -f ./src/action.php -- "{query}" "QUERY_CURRENT_ARTIST" "" &gt;&gt; "$alfred
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>query_artist_online</string>
+				<string>lookup_artist_online</string>
 				<key>subtext</key>
-				<string>Get online all albums and tracks for current artist</string>
+				<string>☁︎ Query all albums/tracks from this artist online..</string>
 				<key>text</key>
-				<string>Query all albums/tracks for current artist</string>
+				<string>Lookup Current Artist online</string>
 				<key>withspace</key>
 				<false/>
 			</dict>
@@ -3528,9 +3528,9 @@ php -f ./src/action.php -- "{query}" "QUERY_CURRENT_ARTIST" "" &gt;&gt; "$alfred
 				<key>argumenttype</key>
 				<integer>0</integer>
 				<key>triggerid</key>
-				<string>com.vdesabou.miniplayer.querycurrentartist</string>
+				<string>com.vdesabou.miniplayer.lookupcurrentartist</string>
 				<key>triggername</key>
-				<string>Query Artist Online</string>
+				<string>Lookup Artist Online</string>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>

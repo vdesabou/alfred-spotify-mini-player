@@ -51,13 +51,13 @@ function playAlfredPlaylist($w)
 }
 
 /**
- * queryCurrentArtist function.
+ * lookupCurrentArtist function.
  *
  * @access public
  * @param mixed $w
  * @return void
  */
-function queryCurrentArtist($w)
+function lookupCurrentArtist($w)
 {
     // get info on current song
     $command_output = exec("./src/track_info.sh 2>&1");
