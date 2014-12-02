@@ -1995,7 +1995,7 @@ end alfred_script</string>
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>add_current_track</string>
+				<string>add_current_track_to_alfred_playlist_or_your_music</string>
 				<key>subtext</key>
 				<string>Current track will be added to Alfred Playlist or My Music</string>
 				<key>text</key>

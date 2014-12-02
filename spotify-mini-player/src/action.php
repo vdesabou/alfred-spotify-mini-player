@@ -583,7 +583,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         $setSettings = "update settings set is_alfred_playlist_active=0";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotificationWithArtwork("Controlling Your Music", './images/allplaylists.png');
+        displayNotificationWithArtwork("Controlling Your Music", './images/yourmusic.png');
         return;
     } else if ($other_action == "play_track_in_album_context") {
         exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\" in context \"$album_uri\"'");
