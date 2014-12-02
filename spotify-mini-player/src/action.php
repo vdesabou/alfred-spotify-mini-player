@@ -75,7 +75,10 @@ if ($type == "TRACK" && $other_settings == "") {
 		    }
 
             $tmp = explode(':', $track_uri);
-
+	        if($tmp[1] == 'local') {
+	        	displayNotificationWithArtwork('Error: local tracks are not supported','./images/warning.png');
+		        return;
+	        }
             if ($track_artwork_path == "") {
                 $track_artwork_path = getTrackOrAlbumArtwork($w,  $track_uri, true);
             }
@@ -87,6 +90,7 @@ if ($type == "TRACK" && $other_settings == "") {
                 }
 
                 // add track to alfred playlist
+
                 $ret = addTracksToPlaylist($w, $tmp[2], $alfred_playlist_uri, $alfred_playlist_name, false);
                 if (is_numeric($ret) && $ret > 0) {
                     displayNotificationWithArtwork('' . $track_name . ' by ' . $artist_name . ' added to ' . $alfred_playlist_name, $track_artwork_path);
@@ -415,7 +419,10 @@ if ($playlist_uri != "" && $other_settings == "") {
         if ($track_uri != '') {
             $track_artwork_path = getTrackOrAlbumArtwork($w,  $track_uri, true);
             $tmp = explode(':', $track_uri);
-
+	        if($tmp[1] == 'local') {
+	        	displayNotificationWithArtwork('Error: local tracks are not supported','./images/warning.png');
+		        return;
+	        }
             $ret = addTracksToPlaylist($w, $tmp[2], $setting[1], $setting[2], false);
             if (is_numeric($ret) && $ret > 0) {
                 displayNotificationWithArtwork('' . $track_name . ' added to ' . $setting[2], $track_artwork_path);
@@ -462,7 +469,10 @@ if ($playlist_uri != "" && $other_settings == "") {
 			if($track_uri != '') {
 				$track_artwork_path = getTrackOrAlbumArtwork($w,  $track_uri, true);
 				$tmp = explode(':', $track_uri);
-
+		        if($tmp[1] == 'local') {
+		        	displayNotificationWithArtwork('Error: local tracks are not supported','./images/warning.png');
+			        return;
+		        }
 				$ret = addTracksToYourMusic($w, $tmp[2], false);
 				if (is_numeric($ret) && $ret > 0) {
 					displayNotificationWithArtwork('' . $track_name . ' added to Your Music', $track_artwork_path);

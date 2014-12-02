@@ -64,6 +64,11 @@ function queryCurrentArtist($w)
 
     if (substr_count($command_output, '▹') > 0) {
         $results = explode('▹', $command_output);
+        $tmp = explode(':', $results[4]);
+        if($tmp[1] == 'local') {
+        	displayNotificationWithArtwork('Error: local tracks are not supported','./images/warning.png');
+	        return;
+        }
         $artist_uri = getArtistUriFromTrack($w, $results[4]);
         if ($artist_uri == false) {
             return;
@@ -89,9 +94,11 @@ function playCurrentArtist($w)
 
     if (substr_count($command_output, '▹') > 0) {
         $results = explode('▹', $command_output);
-
         $tmp = explode(':', $results[4]);
-
+        if($tmp[1] == 'local') {
+        	displayNotificationWithArtwork('Error: local tracks are not supported','./images/warning.png');
+	        return;
+        }
         $artist_uri = getArtistUriFromTrack($w, $results[4]);
         if ($artist_uri == false) {
             return;
@@ -115,12 +122,13 @@ function playCurrentAlbum($w)
     // get info on current song
     $command_output = exec("./src/track_info.sh 2>&1");
 
-
     if (substr_count($command_output, '▹') > 0) {
         $results = explode('▹', $command_output);
-
         $tmp = explode(':', $results[4]);
-
+        if($tmp[1] == 'local') {
+        	displayNotificationWithArtwork('Error: local tracks are not supported','./images/warning.png');
+	        return;
+        }
         $album_uri = getAlbumUriFromTrack($w, $results[4]);
         if ($album_uri == false) {
             return;
@@ -147,6 +155,11 @@ function addCurrentTrackTo($w)
 
     if (substr_count($command_output, '▹') > 0) {
         $results = explode('▹', $command_output);
+        $tmp = explode(':', $results[4]);
+        if($tmp[1] == 'local') {
+        	displayNotificationWithArtwork('Error: local tracks are not supported','./images/warning.png');
+	        return;
+        }
 		exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Add▹" . $results[4] . "∙" . escapeQuery($results[0]) . '▹' . "\"'");
     } else {
         displayNotificationWithArtwork("Error: No track is playing", './images/warning.png');
@@ -204,6 +217,12 @@ function addCurrentTrackToAlfredPlaylist($w)
     if (substr_count($command_output, '▹') > 0) {
         $results = explode('▹', $command_output);
 
+        $tmp = explode(':', $results[4]);
+        if($tmp[1] == 'local') {
+        	displayNotificationWithArtwork('Error: local tracks are not supported','./images/warning.png');
+	        return;
+        }
+
 	    //
 	    // Read settings from DB
 	    //
@@ -229,6 +248,10 @@ function addCurrentTrackToAlfredPlaylist($w)
             return;
         }
         $tmp = explode(':', $results[4]);
+        if($tmp[1] == 'local') {
+        	displayNotificationWithArtwork('Error: local tracks are not supported','./images/warning.png');
+	        return;
+        }
         $ret = addTracksToPlaylist($w, $tmp[2], $alfred_playlist_uri, $alfred_playlist_name, false);
         if (is_numeric($ret) && $ret > 0) {
             displayNotificationWithArtwork('' . $results[0] . ' by ' . $results[1] . ' added to Alfred Playlist ' . $alfred_playlist_name, getTrackOrAlbumArtwork($w,  $results[4], true));
@@ -254,8 +277,11 @@ function addCurrentTrackToYourMusic($w)
 
     if (substr_count($command_output, '▹') > 0) {
         $results = explode('▹', $command_output);
-
         $tmp = explode(':', $results[4]);
+        if($tmp[1] == 'local') {
+        	displayNotificationWithArtwork('Error: local tracks are not supported','./images/warning.png');
+	        return;
+        }
         $ret = addTracksToYourMusic($w, $tmp[2], false);
         if (is_numeric($ret) && $ret > 0) {
             displayNotificationWithArtwork('' . $results[0] . ' by ' . $results[1] . ' added to Your Music', getTrackOrAlbumArtwork($w,  $results[4], true));
@@ -414,7 +440,11 @@ function getArtistUriFromTrack($w, $track_uri)
     try {
         $tmp = explode(':', $track_uri);
 
-        $track = $api->getTrack($tmp[2]);
+        if($tmp[1] != 'local') {
+        	$track = $api->getTrack($tmp[2]);
+        } else {
+	        displayNotificationWithArtwork('Error: local tracks are not supported','./images/warning.png');
+        }
         $artists = $track->artists;
         $artist = $artists[0];
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
@@ -446,7 +476,11 @@ function getAlbumUriFromTrack($w, $track_uri)
     try {
         $tmp = explode(':', $track_uri);
 
-        $track = $api->getTrack($tmp[2]);
+        if($tmp[1] != 'local') {
+        	$track = $api->getTrack($tmp[2]);
+        } else {
+	        displayNotificationWithArtwork('Error: local tracks are not supported','./images/warning.png');
+        }
         $album = $track->album;
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
         echo "Error(getAlbumUriFromTrack): (exception " . print_r($e) . ")";
@@ -555,6 +589,10 @@ function createRadioArtistPlaylistForCurrentArtist($w)
 
     if (substr_count($command_output, '▹') > 0) {
         $results = explode('▹', $command_output);
+        if($tmp[1] == 'local') {
+        	displayNotificationWithArtwork('Error: local tracks are not supported','./images/warning.png');
+	        return;
+        }
         createRadioArtistPlaylist($w, $results[1]);
     } else {
         displayNotification("Error: cannot get current artist");
@@ -660,6 +698,10 @@ function createRadioSongPlaylistForCurrentTrack($w)
 
     if (substr_count($command_output, '▹') > 0) {
         $results = explode('▹', $command_output);
+        if($tmp[1] == 'local') {
+        	displayNotificationWithArtwork('Error: local tracks are not supported','./images/warning.png');
+	        return;
+        }
         createRadioSongPlaylist($w, $results[0], $results[4], $results[1]);
     } else {
         displayNotificationWithArtwork("Error: cannot get current track",'./images/warning.png');
