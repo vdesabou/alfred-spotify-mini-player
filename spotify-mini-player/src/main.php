@@ -1175,10 +1175,11 @@ if (mb_strlen($query) < 3 ||
 
                 foreach ($albums as $album) {
 
-                    if (checkIfResultAlreadyThere($w->results(), ucfirst($album->name)) == false) {
+                    if (checkIfResultAlreadyThere($w->results(), ucfirst($album->name) . ' (' . count($tracks->items) . ' tracks)') == false) {
 
                         $genre = (count($album->genres) > 0) ? ' ● Genre: ' . implode('|', $album->genres) : '';
-                        $w->result(null, '', ucfirst($album->name), $album->album_type . " by " . $artist_name . ' ● Release date: ' . $album->release_date . $genre, getTrackOrAlbumArtwork($w,  $album->uri, false), 'no', null, "Online▹" . $artist_uri . "@" . $artist_name . "@" . $album->uri . "@" . $album->name);
+                        $tracks = $album->tracks;
+                        $w->result(null, '', ucfirst($album->name) . ' (' . count($tracks->items) . ' tracks)', $album->album_type . " by " . $artist_name . ' ● Release date: ' . $album->release_date . $genre, getTrackOrAlbumArtwork($w,  $album->uri, false), 'no', null, "Online▹" . $artist_uri . "@" . $artist_name . "@" . $album->uri . "@" . $album->name);
                     }
                 }
 
