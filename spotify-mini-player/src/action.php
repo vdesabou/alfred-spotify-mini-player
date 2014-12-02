@@ -205,6 +205,9 @@ if ($type == "TRACK" && $other_settings == "") {
 } else if ($type == "ADD_CURRENT_TRACK") {
     addCurrentTrackToAlfredPlaylistOrYourMusic($w);
     return;
+} else if ($type == "ADD_CURRENT_TRACK_TO") {
+    addCurrentTrackTo($w);
+    return;
 } else if ($type == "ALBUM_OR_PLAYLIST") {
     if ($add_to_option != "") {
 
@@ -644,12 +647,8 @@ if ($playlist_uri != "" && $other_settings == "") {
     } else if ($other_action == "current") {
         displayNotificationForCurrentTrack($w);
         return;
-    } else if ($other_action == "add_current_track") {
-        if ($is_alfred_playlist_active == true) {
-            addCurrentTrackToAlfredPlaylist($w);
-        } else {
-            addCurrentTrackToYourMusic($w);
-        }
+    } else if ($other_action == "add_current_track_to") {
+	    addCurrentTrackTo($w);
         return;
     } else if ($other_action == "previous") {
         exec("osascript -e 'tell application \"Spotify\" to previous track'");

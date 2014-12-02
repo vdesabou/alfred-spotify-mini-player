@@ -110,6 +110,27 @@ function playCurrentAlbum($w)
 
 
 /**
+ * addCurrentTrackTo function.
+ *
+ * @access public
+ * @param mixed $w
+ * @return void
+ */
+function addCurrentTrackTo($w)
+{
+    // get info on current song
+    $command_output = exec("./src/track_info.sh 2>&1");
+
+    if (substr_count($command_output, '▹') > 0) {
+        $results = explode('▹', $command_output);
+		exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Add▹" . $results[4] . "∙" . escapeQuery($results[0]) . '▹' . "\"'");
+    } else {
+        displayNotificationWithArtwork("Error: No track is playing", './images/warning.png');
+    }
+}
+
+
+/**
  * addCurrentTrackToAlfredPlaylistOrYourMusic function.
  *
  * @access public

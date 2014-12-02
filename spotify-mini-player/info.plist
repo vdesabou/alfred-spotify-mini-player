@@ -307,6 +307,17 @@
 				<string></string>
 			</dict>
 		</array>
+		<key>5BB099A1-224D-4702-BBBC-52919BDCCF62</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>E3BCC85B-A326-41C9-BAC9-623BE1865375</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 		<key>5C5C6FFD-4A1B-42C4-AF81-E88A92245DD2</key>
 		<array>
 			<dict>
@@ -428,6 +439,17 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>18496AC4-EA42-444C-A906-642E38259C96</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>7FE5D993-C14D-4B94-9479-B361680F1C40</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>E3BCC85B-A326-41C9-BAC9-623BE1865375</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -931,6 +953,17 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>24B8C827-75F2-4421-A412-D48782DA1DB8</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>F4F5AC18-3C04-4673-9CC3-E563094C9446</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>E3BCC85B-A326-41C9-BAC9-623BE1865375</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -1997,9 +2030,9 @@ end alfred_script</string>
 				<key>keyword</key>
 				<string>add_current_track_to_alfred_playlist_or_your_music</string>
 				<key>subtext</key>
-				<string>Current track will be added to Alfred Playlist or My Music</string>
+				<string>Current track will be added to Alfred Playlist or Your Music</string>
 				<key>text</key>
-				<string>Add current track to Alfred Playlist or My Music</string>
+				<string>Add current track to Alfred Playlist or Your Music</string>
 				<key>withspace</key>
 				<false/>
 			</dict>
@@ -2039,7 +2072,7 @@ php -f ./src/action.php -- "{query}" "ADD_CURRENT_TRACK" "ADD_CURRENT_TRACK" &gt
 				<key>triggerid</key>
 				<string>com.vdesabou.miniplayer.addcurrenttrack</string>
 				<key>triggername</key>
-				<string>Add track</string>
+				<string>Add track to AP or Your Music</string>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
@@ -3330,6 +3363,90 @@ end alfred_script</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>add_current_track_to</string>
+				<key>subtext</key>
+				<string>Current track will be added to Your Music or a chosen playlist</string>
+				<key>text</key>
+				<string>Add current track to ...</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>7FE5D993-C14D-4B94-9479-B361680F1C40</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>echo "===== ADD_CURRENT_TRACK_TO ========" &gt;&gt; "$alfred_workflow_cache/action.log"
+echo "`date` {query}" &gt;&gt; "$alfred_workflow_cache/action.log"
+php -f ./src/action.php -- "{query}" "ADD_CURRENT_TRACK_TO" "ADD_CURRENT_TRACK_TO" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>E3BCC85B-A326-41C9-BAC9-623BE1865375</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string></string>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>triggerid</key>
+				<string>com.vdesabou.miniplayer.addcurrenttrackto</string>
+				<key>triggername</key>
+				<string>Add track to...</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.remote</string>
+			<key>uid</key>
+			<string>F4F5AC18-3C04-4673-9CC3-E563094C9446</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>0</integer>
+				<key>hotkey</key>
+				<integer>0</integer>
+				<key>hotmod</key>
+				<integer>0</integer>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>0</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>5BB099A1-224D-4702-BBBC-52919BDCCF62</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string>Github page:
@@ -3528,6 +3645,11 @@ SOFTWARE.</string>
 			<key>ypos</key>
 			<real>1500</real>
 		</dict>
+		<key>5BB099A1-224D-4702-BBBC-52919BDCCF62</key>
+		<dict>
+			<key>ypos</key>
+			<real>6970</real>
+		</dict>
 		<key>5C5C6FFD-4A1B-42C4-AF81-E88A92245DD2</key>
 		<dict>
 			<key>ypos</key>
@@ -3612,6 +3734,11 @@ SOFTWARE.</string>
 		<dict>
 			<key>ypos</key>
 			<real>320</real>
+		</dict>
+		<key>7FE5D993-C14D-4B94-9479-B361680F1C40</key>
+		<dict>
+			<key>ypos</key>
+			<real>6760</real>
 		</dict>
 		<key>80B80179-E286-4D4A-9FEC-FCBE63AD8AEE</key>
 		<dict>
@@ -3863,6 +3990,11 @@ SOFTWARE.</string>
 			<key>ypos</key>
 			<real>2110</real>
 		</dict>
+		<key>E3BCC85B-A326-41C9-BAC9-623BE1865375</key>
+		<dict>
+			<key>ypos</key>
+			<real>6760</real>
+		</dict>
 		<key>E63EB492-FCE2-42A1-BD38-7EFE4EA77473</key>
 		<dict>
 			<key>ypos</key>
@@ -3912,6 +4044,11 @@ SOFTWARE.</string>
 		<dict>
 			<key>ypos</key>
 			<real>1700</real>
+		</dict>
+		<key>F4F5AC18-3C04-4673-9CC3-E563094C9446</key>
+		<dict>
+			<key>ypos</key>
+			<real>6850</real>
 		</dict>
 		<key>F7D7D2CE-77EE-45C4-ADAA-1B45A6577FFF</key>
 		<dict>
