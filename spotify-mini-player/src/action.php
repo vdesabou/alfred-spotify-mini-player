@@ -168,6 +168,9 @@ if ($type == "TRACK" && $other_settings == "") {
 } else if ($type == "CURRENT_TRACK_RADIO") {
     createRadioSongPlaylistForCurrentTrack($w);
     return;
+} else if ($type == "QUERY_CURRENT_ARTIST") {
+    queryCurrentArtist($w);
+    return;
 } else if ($type == "PLAY_CURRENT_ARTIST") {
     playCurrentArtist($w);
     return;
@@ -603,6 +606,9 @@ if ($playlist_uri != "" && $other_settings == "") {
     } else if ($other_action == "kill_update") {
         killUpdate($w);
         return;
+    } else if ($other_action == "query_current_artist") {
+		queryCurrentArtist($w);
+		return;
     } else if ($other_action == "lyrics") {
         displayLyricsForCurrentTrack();
         return;

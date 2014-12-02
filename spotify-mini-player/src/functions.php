@@ -50,6 +50,30 @@ function playAlfredPlaylist($w)
     displayNotificationWithArtwork('🔈 Alfred Playlist ' . $alfred_playlist_name, $playlist_artwork_path);
 }
 
+/**
+ * queryCurrentArtist function.
+ *
+ * @access public
+ * @param mixed $w
+ * @return void
+ */
+function queryCurrentArtist($w)
+{
+    // get info on current song
+    $command_output = exec("./src/track_info.sh 2>&1");
+
+    if (substr_count($command_output, '▹') > 0) {
+        $results = explode('▹', $command_output);
+        $artist_uri = getArtistUriFromTrack($w, $results[4]);
+        if ($artist_uri == false) {
+            return;
+        }
+        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online▹" . $artist_uri . "@" . escapeQuery($results[1]) . "\"'");
+    } else {
+        displayNotificationWithArtwork("Error: No track is playing", './images/warning.png');
+    }
+}
+
 
 /**
  * playCurrentArtist function.

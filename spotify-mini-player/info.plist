@@ -296,6 +296,17 @@
 				<string></string>
 			</dict>
 		</array>
+		<key>552D77E3-1550-4035-AB49-8B708B081EC9</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>05E1E4AA-E6B1-4DAA-9CB0-36CACDE2DA5B</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 		<key>5AF7EEEC-2E55-482C-8750-4CE6AD752683</key>
 		<array>
 			<dict>
@@ -746,6 +757,17 @@
 				<string></string>
 			</dict>
 		</array>
+		<key>C2D3F56B-0B41-4305-8D17-5B95EFDB8F06</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>05E1E4AA-E6B1-4DAA-9CB0-36CACDE2DA5B</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 		<key>C588A188-D8D3-450F-9020-5EBB563F6B8A</key>
 		<array>
 			<dict>
@@ -839,6 +861,17 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>24B8C827-75F2-4421-A412-D48782DA1DB8</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>D8C53798-B7E2-4A51-AC12-37FEBDB624E0</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>05E1E4AA-E6B1-4DAA-9CB0-36CACDE2DA5B</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -997,25 +1030,6 @@
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>escaping</key>
-				<integer>38</integer>
-				<key>script</key>
-				<string>echo "===== TRACK ========" &gt;&gt; "$alfred_workflow_cache/action.log"
-echo "`date` {query}" &gt;&gt; "$alfred_workflow_cache/action.log"
-php -f ./src/action.php -- "{query}" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
-				<key>type</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>5F3AF2C8-064F-4C10-8D99-22E212825BFE</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>action</key>
 				<integer>0</integer>
 				<key>argument</key>
@@ -1046,16 +1060,16 @@ php -f ./src/action.php -- "{query}" "TRACK" "" &gt;&gt; "$alfred_workflow_cache
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>echo "===== ALBUM ========" &gt;&gt; "$alfred_workflow_cache/action.log"
+				<string>echo "===== TRACK ========" &gt;&gt; "$alfred_workflow_cache/action.log"
 echo "`date` {query}" &gt;&gt; "$alfred_workflow_cache/action.log"
-php -f ./src/action.php -- "{query}" "ALBUM" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+php -f ./src/action.php -- "{query}" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.action.script</string>
 			<key>uid</key>
-			<string>8DF18F9A-B3A5-4B14-8360-AD850CF5C143</string>
+			<string>5F3AF2C8-064F-4C10-8D99-22E212825BFE</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -1075,6 +1089,25 @@ php -f ./src/action.php -- "{query}" "ALBUM" "" &gt;&gt; "$alfred_workflow_cache
 			<string>alfred.workflow.trigger.remote</string>
 			<key>uid</key>
 			<string>39A1935A-37F5-49FA-A860-BCF7765A8C65</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>echo "===== ALBUM ========" &gt;&gt; "$alfred_workflow_cache/action.log"
+echo "`date` {query}" &gt;&gt; "$alfred_workflow_cache/action.log"
+php -f ./src/action.php -- "{query}" "ALBUM" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>8DF18F9A-B3A5-4B14-8360-AD850CF5C143</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -1597,25 +1630,6 @@ php -f ./src/action.php -- "{query}" "PLAY" "" &gt;&gt; "$alfred_workflow_cache/
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>escaping</key>
-				<integer>38</integer>
-				<key>script</key>
-				<string>echo "===== PAUSE ========" &gt;&gt; "$alfred_workflow_cache/action.log"
-echo "`date` {query}" &gt;&gt; "$alfred_workflow_cache/action.log"
-php -f ./src/action.php -- "{query}" "PAUSE" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
-				<key>type</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>24B8C827-75F2-4421-A412-D48782DA1DB8</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
@@ -1631,6 +1645,25 @@ php -f ./src/action.php -- "{query}" "PAUSE" "" &gt;&gt; "$alfred_workflow_cache
 			<string>alfred.workflow.input.keyword</string>
 			<key>uid</key>
 			<string>F4382654-9318-4849-82E4-550AC235148C</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>echo "===== PAUSE ========" &gt;&gt; "$alfred_workflow_cache/action.log"
+echo "`date` {query}" &gt;&gt; "$alfred_workflow_cache/action.log"
+php -f ./src/action.php -- "{query}" "PAUSE" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>24B8C827-75F2-4421-A412-D48782DA1DB8</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -1857,27 +1890,6 @@ end alfred_script</string>
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>argumenttype</key>
-				<integer>2</integer>
-				<key>keyword</key>
-				<string>volmid</string>
-				<key>subtext</key>
-				<string>Set the Spotify Volume to 50%</string>
-				<key>text</key>
-				<string>Set Spotify Volume to 50%</string>
-				<key>withspace</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>F250A59C-0B2D-4A08-9085-9CA0A2FB2DCC</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>applescript</key>
 				<string>on alfred_script(q)
 
@@ -1893,6 +1905,27 @@ end alfred_script</string>
 			<string>alfred.workflow.action.applescript</string>
 			<key>uid</key>
 			<string>2D26D8E2-52A2-4BF9-B693-0D5190C6CC23</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>volmid</string>
+				<key>subtext</key>
+				<string>Set the Spotify Volume to 50%</string>
+				<key>text</key>
+				<string>Set Spotify Volume to 50%</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>F250A59C-0B2D-4A08-9085-9CA0A2FB2DCC</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -1943,6 +1976,23 @@ end alfred_script</string>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>php -f ./src/action.php -- "" "RANDOM" ""</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>05D01A85-8BDC-4FF6-BEBB-BAF26BB5870A</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
@@ -1958,23 +2008,6 @@ end alfred_script</string>
 			<string>alfred.workflow.input.keyword</string>
 			<key>uid</key>
 			<string>8C78472B-13EB-4512-B94D-4BF92867CD92</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>escaping</key>
-				<integer>38</integer>
-				<key>script</key>
-				<string>php -f ./src/action.php -- "" "RANDOM" ""</string>
-				<key>type</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>05D01A85-8BDC-4FF6-BEBB-BAF26BB5870A</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -2025,6 +2058,25 @@ end alfred_script</string>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>echo "===== ADD_CURRENT_TRACK ========" &gt;&gt; "$alfred_workflow_cache/action.log"
+echo "`date` {query}" &gt;&gt; "$alfred_workflow_cache/action.log"
+php -f ./src/action.php -- "{query}" "ADD_CURRENT_TRACK" "ADD_CURRENT_TRACK" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>ECC53637-75AD-4FD2-9605-8E038D04C4BF</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
@@ -2040,25 +2092,6 @@ end alfred_script</string>
 			<string>alfred.workflow.input.keyword</string>
 			<key>uid</key>
 			<string>3F85747B-FC44-4B07-AA6E-3645F0CC0DF7</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>escaping</key>
-				<integer>38</integer>
-				<key>script</key>
-				<string>echo "===== ADD_CURRENT_TRACK ========" &gt;&gt; "$alfred_workflow_cache/action.log"
-echo "`date` {query}" &gt;&gt; "$alfred_workflow_cache/action.log"
-php -f ./src/action.php -- "{query}" "ADD_CURRENT_TRACK" "ADD_CURRENT_TRACK" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
-				<key>type</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>ECC53637-75AD-4FD2-9605-8E038D04C4BF</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -2109,6 +2142,31 @@ php -f ./src/action.php -- "{query}" "ADD_CURRENT_TRACK" "ADD_CURRENT_TRACK" &gt
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<true/>
+				<key>output</key>
+				<integer>0</integer>
+				<key>removeextension</key>
+				<false/>
+				<key>sticky</key>
+				<false/>
+				<key>text</key>
+				<string>{query}</string>
+				<key>title</key>
+				<string>Spotify Mini Player</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.notification</string>
+			<key>uid</key>
+			<string>29A1FCD7-3432-4BFF-89DB-4111B3169AD5</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
@@ -2155,31 +2213,6 @@ end alfred_script</string>
 			<string>alfred.workflow.action.applescript</string>
 			<key>uid</key>
 			<string>CB842E97-4DDD-4663-8630-EAF7407CBA1D</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>lastpathcomponent</key>
-				<false/>
-				<key>onlyshowifquerypopulated</key>
-				<true/>
-				<key>output</key>
-				<integer>0</integer>
-				<key>removeextension</key>
-				<false/>
-				<key>sticky</key>
-				<false/>
-				<key>text</key>
-				<string>{query}</string>
-				<key>title</key>
-				<string>Spotify Mini Player</string>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.output.notification</string>
-			<key>uid</key>
-			<string>29A1FCD7-3432-4BFF-89DB-4111B3169AD5</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -2568,25 +2601,6 @@ php -f ./src/action.php -- "{query}" "CURRENT_ARTIST_RADIO" "" &gt;&gt; "$alfred
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>escaping</key>
-				<integer>38</integer>
-				<key>script</key>
-				<string>echo "===== CURRENT_TRACK_RADIO ========" &gt;&gt; "$alfred_workflow_cache/action.log"
-echo "`date` {query}" &gt;&gt; "$alfred_workflow_cache/action.log"
-php -f ./src/action.php -- "{query}" "CURRENT_TRACK_RADIO" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
-				<key>type</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>E2DF757E-A0B1-43E1-9B5B-9AFF73349323</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
@@ -2602,6 +2616,25 @@ php -f ./src/action.php -- "{query}" "CURRENT_TRACK_RADIO" "" &gt;&gt; "$alfred_
 			<string>alfred.workflow.input.keyword</string>
 			<key>uid</key>
 			<string>455BDE70-BCF4-447F-ABFF-C25D8E5B08B6</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>echo "===== CURRENT_TRACK_RADIO ========" &gt;&gt; "$alfred_workflow_cache/action.log"
+echo "`date` {query}" &gt;&gt; "$alfred_workflow_cache/action.log"
+php -f ./src/action.php -- "{query}" "CURRENT_TRACK_RADIO" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>E2DF757E-A0B1-43E1-9B5B-9AFF73349323</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -2648,6 +2681,27 @@ php -f ./src/action.php -- "{query}" "CURRENT_TRACK_RADIO" "" &gt;&gt; "$alfred_
 			<string>78DD84AE-70E9-4DB5-BF2B-44BC774B4383</string>
 			<key>version</key>
 			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>reset_settings</string>
+				<key>subtext</key>
+				<string>The authentication will have to be done again</string>
+				<key>text</key>
+				<string>Reset settings for Spotify Mini Player</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>B23712E3-4564-4668-BD6D-4D535839CC8C</string>
+			<key>version</key>
+			<integer>0</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -2703,27 +2757,6 @@ if (file_exists($w-&gt;data() . '/settings.db')) {
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>argumenttype</key>
-				<integer>2</integer>
-				<key>keyword</key>
-				<string>reset_settings</string>
-				<key>subtext</key>
-				<string>The authentication will have to be done again</string>
-				<key>text</key>
-				<string>Reset settings for Spotify Mini Player</string>
-				<key>withspace</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>B23712E3-4564-4668-BD6D-4D535839CC8C</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>argument</key>
 				<string></string>
 				<key>argumenttype</key>
@@ -2737,6 +2770,25 @@ if (file_exists($w-&gt;data() . '/settings.db')) {
 			<string>alfred.workflow.trigger.remote</string>
 			<key>uid</key>
 			<string>A0EAB8B1-F034-490F-9534-44ADF572AF4E</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>127</integer>
+				<key>script</key>
+				<string>echo "===== KILL_UPDATE ========" &gt;&gt; "$alfred_workflow_cache/action.log"
+echo "`date` {query}" &gt;&gt; "$alfred_workflow_cache/action.log"
+php -f ./src/action.php -- "{query}" "KILL_UPDATE" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>19215BE5-986E-4AC9-9166-C80872C51DBE</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -2764,19 +2816,13 @@ if (file_exists($w-&gt;data() . '/settings.db')) {
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>escaping</key>
-				<integer>127</integer>
-				<key>script</key>
-				<string>echo "===== KILL_UPDATE ========" &gt;&gt; "$alfred_workflow_cache/action.log"
-echo "`date` {query}" &gt;&gt; "$alfred_workflow_cache/action.log"
-php -f ./src/action.php -- "{query}" "KILL_UPDATE" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
-				<key>type</key>
-				<integer>0</integer>
+				<key>triggerid</key>
+				<string>refresh_library</string>
 			</dict>
 			<key>type</key>
-			<string>alfred.workflow.action.script</string>
+			<string>alfred.workflow.trigger.external</string>
 			<key>uid</key>
-			<string>19215BE5-986E-4AC9-9166-C80872C51DBE</string>
+			<string>A4437594-2A54-42A1-836E-129E46F5DB47</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -2817,19 +2863,6 @@ php -f ./src/action.php -- "{query}" "REFRESH_LIBRARY" "REFRESH_LIBRARY" &gt;&gt
 			<string>alfred.workflow.input.keyword</string>
 			<key>uid</key>
 			<string>2B0C8466-4AED-4272-9C10-50F3BCE88043</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>triggerid</key>
-				<string>refresh_library</string>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.trigger.external</string>
-			<key>uid</key>
-			<string>A4437594-2A54-42A1-836E-129E46F5DB47</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -2913,25 +2946,6 @@ php -f ./src/action.php -- "{query}" "REFRESH_LIBRARY" "REFRESH_LIBRARY" &gt;&gt
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>escaping</key>
-				<integer>38</integer>
-				<key>script</key>
-				<string>echo "===== PLAY_CURRENT_ARTIST ========" &gt;&gt; "$alfred_workflow_cache/action.log"
-echo "`date` {query}" &gt;&gt; "$alfred_workflow_cache/action.log"
-php -f ./src/action.php -- "{query}" "PLAY_CURRENT_ARTIST" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
-				<key>type</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>1A29820A-69D9-458F-9285-76901C21D7F4</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
@@ -2947,6 +2961,25 @@ php -f ./src/action.php -- "{query}" "PLAY_CURRENT_ARTIST" "" &gt;&gt; "$alfred_
 			<string>alfred.workflow.input.keyword</string>
 			<key>uid</key>
 			<string>0B75CF43-8B04-405F-86C3-2FFC59AC4A70</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>echo "===== PLAY_CURRENT_ARTIST ========" &gt;&gt; "$alfred_workflow_cache/action.log"
+echo "`date` {query}" &gt;&gt; "$alfred_workflow_cache/action.log"
+php -f ./src/action.php -- "{query}" "PLAY_CURRENT_ARTIST" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>1A29820A-69D9-458F-9285-76901C21D7F4</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -2997,25 +3030,6 @@ php -f ./src/action.php -- "{query}" "PLAY_CURRENT_ARTIST" "" &gt;&gt; "$alfred_
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>escaping</key>
-				<integer>38</integer>
-				<key>script</key>
-				<string>echo "===== PLAY_CURRENT_ALBUM ========" &gt;&gt; "$alfred_workflow_cache/action.log"
-echo "`date` {query}" &gt;&gt; "$alfred_workflow_cache/action.log"
-php -f ./src/action.php -- "{query}" "PLAY_CURRENT_ALBUM" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
-				<key>type</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>23412027-872A-4639-A9D9-DCFD8D8FF36D</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
@@ -3031,6 +3045,25 @@ php -f ./src/action.php -- "{query}" "PLAY_CURRENT_ALBUM" "" &gt;&gt; "$alfred_w
 			<string>alfred.workflow.input.keyword</string>
 			<key>uid</key>
 			<string>B77F5F98-C065-49A4-BBB1-68ADADDD8E7D</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>echo "===== PLAY_CURRENT_ALBUM ========" &gt;&gt; "$alfred_workflow_cache/action.log"
+echo "`date` {query}" &gt;&gt; "$alfred_workflow_cache/action.log"
+php -f ./src/action.php -- "{query}" "PLAY_CURRENT_ALBUM" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>23412027-872A-4639-A9D9-DCFD8D8FF36D</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -3165,23 +3198,6 @@ php -f ./src/action.php -- "{query}" "PLAY_ALFRED_PLAYLIST" "" &gt;&gt; "$alfred
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>plusspaces</key>
-				<false/>
-				<key>url</key>
-				<string>https://github.com/vdesabou/alfred-spotify-mini-player/issues/new</string>
-				<key>utf8</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.openurl</string>
-			<key>uid</key>
-			<string>899AC4D2-88FA-474F-A075-AFA12F361E2B</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
@@ -3197,6 +3213,23 @@ php -f ./src/action.php -- "{query}" "PLAY_ALFRED_PLAYLIST" "" &gt;&gt; "$alfred
 			<string>alfred.workflow.input.keyword</string>
 			<key>uid</key>
 			<string>794A76A7-BB98-4A83-92BE-386A56875120</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>plusspaces</key>
+				<false/>
+				<key>url</key>
+				<string>https://github.com/vdesabou/alfred-spotify-mini-player/issues/new</string>
+				<key>utf8</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.openurl</string>
+			<key>uid</key>
+			<string>899AC4D2-88FA-474F-A075-AFA12F361E2B</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -3294,23 +3327,6 @@ end alfred_script</string>
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>applescript</key>
-				<string>on alfred_script(q)
-tell application "System Events"	key code 36 -- enterend tell
-end alfred_script</string>
-				<key>cachescript</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.applescript</string>
-			<key>uid</key>
-			<string>F2E80AAC-7BF3-4701-A8FC-FEF2E8D08E15</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>argument</key>
 				<string></string>
 				<key>argumenttype</key>
@@ -3324,6 +3340,23 @@ end alfred_script</string>
 			<string>alfred.workflow.trigger.remote</string>
 			<key>uid</key>
 			<string>78DAB9D1-72A3-4B44-AB3B-D1C71F13DF7A</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>applescript</key>
+				<string>on alfred_script(q)
+tell application "System Events"	key code 36 -- enterend tell
+end alfred_script</string>
+				<key>cachescript</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.applescript</string>
+			<key>uid</key>
+			<string>F2E80AAC-7BF3-4701-A8FC-FEF2E8D08E15</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -3366,6 +3399,25 @@ end alfred_script</string>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>echo "===== ADD_CURRENT_TRACK_TO ========" &gt;&gt; "$alfred_workflow_cache/action.log"
+echo "`date` {query}" &gt;&gt; "$alfred_workflow_cache/action.log"
+php -f ./src/action.php -- "{query}" "ADD_CURRENT_TRACK_TO" "ADD_CURRENT_TRACK_TO" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>E3BCC85B-A326-41C9-BAC9-623BE1865375</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
@@ -3381,25 +3433,6 @@ end alfred_script</string>
 			<string>alfred.workflow.input.keyword</string>
 			<key>uid</key>
 			<string>7FE5D993-C14D-4B94-9479-B361680F1C40</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>escaping</key>
-				<integer>38</integer>
-				<key>script</key>
-				<string>echo "===== ADD_CURRENT_TRACK_TO ========" &gt;&gt; "$alfred_workflow_cache/action.log"
-echo "`date` {query}" &gt;&gt; "$alfred_workflow_cache/action.log"
-php -f ./src/action.php -- "{query}" "ADD_CURRENT_TRACK_TO" "ADD_CURRENT_TRACK_TO" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
-				<key>type</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>E3BCC85B-A326-41C9-BAC9-623BE1865375</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -3447,6 +3480,90 @@ php -f ./src/action.php -- "{query}" "ADD_CURRENT_TRACK_TO" "ADD_CURRENT_TRACK_T
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>echo "===== QUERY_CURRENT_ARTIST ========" &gt;&gt; "$alfred_workflow_cache/action.log"
+echo "`date` {query}" &gt;&gt; "$alfred_workflow_cache/action.log"
+php -f ./src/action.php -- "{query}" "QUERY_CURRENT_ARTIST" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>05E1E4AA-E6B1-4DAA-9CB0-36CACDE2DA5B</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>query_artist_online</string>
+				<key>subtext</key>
+				<string>Get online all albums and tracks for current artist</string>
+				<key>text</key>
+				<string>Query all albums/tracks for current artist</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>552D77E3-1550-4035-AB49-8B708B081EC9</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string></string>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>triggerid</key>
+				<string>com.vdesabou.miniplayer.querycurrentartist</string>
+				<key>triggername</key>
+				<string>Query Artist Online</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.remote</string>
+			<key>uid</key>
+			<string>D8C53798-B7E2-4A51-AC12-37FEBDB624E0</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>0</integer>
+				<key>hotkey</key>
+				<integer>0</integer>
+				<key>hotmod</key>
+				<integer>0</integer>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>0</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>C2D3F56B-0B41-4305-8D17-5B95EFDB8F06</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string>Github page:
@@ -3484,6 +3601,11 @@ SOFTWARE.</string>
 		<dict>
 			<key>ypos</key>
 			<real>2530</real>
+		</dict>
+		<key>05E1E4AA-E6B1-4DAA-9CB0-36CACDE2DA5B</key>
+		<dict>
+			<key>ypos</key>
+			<real>7080</real>
 		</dict>
 		<key>05F86AA1-D3EE-4409-9A58-898B36FFE503</key>
 		<dict>
@@ -3639,6 +3761,11 @@ SOFTWARE.</string>
 		<dict>
 			<key>ypos</key>
 			<real>3260</real>
+		</dict>
+		<key>552D77E3-1550-4035-AB49-8B708B081EC9</key>
+		<dict>
+			<key>ypos</key>
+			<real>7080</real>
 		</dict>
 		<key>5AF7EEEC-2E55-482C-8750-4CE6AD752683</key>
 		<dict>
@@ -3905,6 +4032,11 @@ SOFTWARE.</string>
 			<key>ypos</key>
 			<real>3970</real>
 		</dict>
+		<key>C2D3F56B-0B41-4305-8D17-5B95EFDB8F06</key>
+		<dict>
+			<key>ypos</key>
+			<real>7290</real>
+		</dict>
 		<key>C588A188-D8D3-450F-9020-5EBB563F6B8A</key>
 		<dict>
 			<key>ypos</key>
@@ -3954,6 +4086,11 @@ SOFTWARE.</string>
 		<dict>
 			<key>ypos</key>
 			<real>1860</real>
+		</dict>
+		<key>D8C53798-B7E2-4A51-AC12-37FEBDB624E0</key>
+		<dict>
+			<key>ypos</key>
+			<real>7170</real>
 		</dict>
 		<key>D931B685-B5F8-4BBC-9FCB-D78F9FA0AB66</key>
 		<dict>
