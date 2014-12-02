@@ -1720,11 +1720,19 @@ function updateLibrary($w)
 
                 foreach ($userPlaylistTracks->items as $item) {
                     $track = $item->track;
+
+                    if($track->uri == 'spotify:track:null') {
+	                    // skip
+	                    $nb_track++;
+	                    continue;
+                    }
+
                     if (count($track->available_markets) == 0 || in_array($country_code, $track->available_markets) !== false) {
                         $playable = 1;
                     } else {
                         $playable = 0;
                     }
+
                     $artists = $track->artists;
                     $artist = $artists[0];
                     $album = $track->album;
@@ -1773,6 +1781,13 @@ function updateLibrary($w)
     // Handle Your Music
     foreach ($savedMySavedTracks as $track) {
         $track = $track->track;
+
+        if($track->uri == 'spotify:track:null') {
+            // skip
+            $nb_track++;
+            continue;
+        }
+
         if (count($track->available_markets) == 0 || in_array($country_code, $track->available_markets) !== false) {
             $playable = 1;
         } else {
@@ -2009,6 +2024,13 @@ function updatePlaylist($w, $playlist_uri, $playlist_name)
 
         foreach ($savedPlaylistTracks as $item) {
             $track = $item->track;
+
+            if($track->uri == 'spotify:track:null') {
+                // skip
+                $nb_track++;
+                continue;
+            }
+
             if (count($track->available_markets) == 0 || in_array($country_code, $track->available_markets) !== false) {
                 $playable = 1;
             } else {
@@ -2289,6 +2311,11 @@ function refreshLibrary($w)
 
                         foreach ($userPlaylistTracks->items as $item) {
                             $track = $item->track;
+		                    if($track->uri == 'spotify:track:null') {
+			                    // skip
+			                    $nb_track++;
+			                    continue;
+		                    }
                             if (count($track->available_markets) == 0 || in_array($country_code, $track->available_markets) !== false) {
                                 $playable = 1;
                             } else {
@@ -2376,6 +2403,11 @@ function refreshLibrary($w)
 
                             foreach ($userPlaylistTracks->items as $item) {
                                 $track = $item->track;
+			                    if($track->uri == 'spotify:track:null') {
+				                    // skip
+				                    $nb_track++;
+				                    continue;
+			                    }
                                 if (count($track->available_markets) == 0 || in_array($country_code, $track->available_markets) !== false) {
                                     $playable = 1;
                                 } else {
@@ -2497,6 +2529,11 @@ function refreshLibrary($w)
 
             foreach ($savedMySavedTracks as $item) {
                 $track = $item->track;
+                if($track->uri == 'spotify:track:null') {
+                    // skip
+                    $nb_track++;
+                    continue;
+                }
                 if (count($track->available_markets) == 0 || in_array($country_code, $track->available_markets) !== false) {
                     $playable = 1;
                 } else {
@@ -2712,6 +2749,11 @@ function updateYourMusic($w)
 
                 foreach ($userMySavedTracks->items as $item) {
                     $track = $item->track;
+                    if($track->uri == 'spotify:track:null') {
+	                    // skip
+	                    $nb_track++;
+	                    continue;
+                    }
                     if (count($track->available_markets) == 0 || in_array($country_code, $track->available_markets) !== false) {
                         $playable = 1;
                     } else {
