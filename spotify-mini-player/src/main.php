@@ -296,7 +296,7 @@ if (mb_strlen($query) < 3 ||
         }
 
         $w->result(null, '', 'Current Track', 'Display current track information and browse various options', './images/current_track.png', 'no', null, 'Current Track▹');
-        
+
 		$w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'lookup_current_artist' /* other_action */, '' /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, '' /* $alfred_playlist_name */)), 'Lookup Current Artist online', array(
                 '☁︎ Query all albums/tracks from current artist online..',
                 'alt' => 'Not Available',
@@ -926,6 +926,14 @@ if (mb_strlen($query) < 3 ||
 
             if (substr_count($command_output, '▹') > 0) {
                 $results = explode('▹', $command_output);
+
+                if($results[1] == '' || $results[2] == '') {
+					$w->result(null, 'help', "Current track is not valid: Artist or Album name is missing", "Fill missing information in Spotify and retry again", './images/warning.png', 'no', null, '');
+					echo $w->toxml();
+					return;
+
+                }
+
                 $currentArtistArtwork = getArtistArtwork($w,  $results[1], false);
                 $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
                 $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
@@ -978,7 +986,7 @@ if (mb_strlen($query) < 3 ||
                     $w->result(null, '', "👤 " . ucfirst(escapeQuery($results[1])), "Browse this artist", $currentArtistArtwork, 'no', null, "Artist▹" . $artist_uri . '∙' . escapeQuery($results[1]) . "▹");
                 } else {
                     // artist is not in library
-                    $w->result(null, '', "👤 " . ucfirst(escapeQuery($results[1])), "Browse this artist", $currentArtistArtwork, 'no', null, "Artist▹" . $results[4] . '∙' . escapeQuery($results[1]) . "▹");
+                    $w->result(null, '', "👤 " . ucfirst(escapeQuery($results[1])), "Browse this artist", $currentArtistArtwork, 'no', null, "Artist▹" . 'notset' . '∙' . escapeQuery($results[1]) . "▹");
                 }
 
                 // use track uri here
@@ -1296,15 +1304,17 @@ if (mb_strlen($query) < 3 ||
             //
             $tmp = explode('∙', $words[1]);
             $artist_uri = $tmp[0];
-
-            $href = explode(':', $artist_uri);
-            if ($href[1] == 'track') {
-
-                $track_uri = $artist_uri;
-                $artist_uri = getArtistUriFromTrack($w, $track_uri);
-            }
             $artist_name = $tmp[1];
             $track = $words[2];
+
+            if ($artist_uri == 'notset') {
+                $artist_uri = getArtistUriFromSearch($w, $artist_name, $country_code);
+                if($artist_uri == false) {
+					$w->result(null, 'help', "The artist cannot be retrieved", "", './images/warning.png', 'no', null, '');
+					echo $w->toxml();
+					return;
+                }
+            }
 
             if (mb_strlen($track) < 3) {
                 $artist_artwork_path = getArtistArtwork($w,  $artist_name, true);

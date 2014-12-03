@@ -61,13 +61,14 @@ if ($type == "TRACK" && $other_settings == "") {
 		    try {
 		        $dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
 		        $dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		        $getSettings = 'select is_alfred_playlist_active,alfred_playlist_uri,alfred_playlist_name from settings';
+		        $getSettings = 'select is_alfred_playlist_active,alfred_playlist_uri,alfred_playlist_name,country_code from settings';
 		        $stmt = $dbsettings->prepare($getSettings);
 		        $stmt->execute();
 		        $setting = $stmt->fetch();
 		        $is_alfred_playlist_active = $setting[0];
 		        $alfred_playlist_uri = $setting[1];
 		        $alfred_playlist_name = $setting[2];
+		        $country_code = $settings[3];
 		    } catch (PDOException $e) {
 		        handleDbIssuePdoEcho($dbsettings,$w);
 		        $dbsettings = null;
@@ -76,8 +77,25 @@ if ($type == "TRACK" && $other_settings == "") {
 
             $tmp = explode(':', $track_uri);
 	        if($tmp[1] == 'local') {
-	        	displayNotificationWithArtwork('Error: local tracks are not supported','./images/warning.png');
-		        return;
+				// local track, look it up online
+
+				$query = 'track:' . strtolower($track_name) . ' artist:' . strtolower($artist_name);
+            	$results = searchWebApi($w,$country_code,$query, 'track', 1);
+
+            	if(count($results) > 0) {
+					// only one track returned
+					$track=$results[0];
+					$artists = $track->artists;
+					$artist = $artists[0];
+                	echo "Unknown track $track_uri / $track_name / $artist_name replaced by track: $track->uri / $track->name / $artist->name\n";
+                	$track_uri = $track->uri;
+                	$tmp = explode(':', $track_uri);
+
+            	} else {
+	            	echo "Could not find track: $track_uri / $track_name / $artist_name \n";
+                    displayNotificationWithArtwork('Error: local track ' . $track_name . ' has not online match','./images/warning.png');
+                    return;
+            	}
 	        }
             if ($track_artwork_path == "") {
                 $track_artwork_path = getTrackOrAlbumArtwork($w,  $track_uri, true);
@@ -144,7 +162,7 @@ if ($type == "TRACK" && $other_settings == "") {
 } else if ($type == "ONLINE") {
     if ($artist_uri == "") {
         // case of current song with cmd
-        $artist_uri = getArtistUriFromTrack($w, $track_uri);
+        $artist_uri = getArtistUriFromSearch($w, $artist_name);
         if ($artist_uri == false) {
             displayNotificationWithArtwork("Error: cannot get current artist",'./images/warning.png');
             return;
@@ -350,7 +368,7 @@ if ($type == "TRACK" && $other_settings == "") {
 
     if ($artist_uri == "") {
         // case of current song with cmd
-        $artist_uri = getArtistUriFromTrack($w, $track_uri);
+        $artist_uri = getArtistUriFromSearch($w, $artist_name);
         if ($artist_uri == false) {
             displayNotificationWithArtwork("Error: cannot get current artist",'./images/warning.png');
             return;
@@ -420,8 +438,25 @@ if ($playlist_uri != "" && $other_settings == "") {
             $track_artwork_path = getTrackOrAlbumArtwork($w,  $track_uri, true);
             $tmp = explode(':', $track_uri);
 	        if($tmp[1] == 'local') {
-	        	displayNotificationWithArtwork('Error: local tracks are not supported','./images/warning.png');
-		        return;
+				// local track, look it up online
+
+				$query = 'track:' . strtolower($track_name) . ' artist:' . strtolower($artist_name);
+            	$results = searchWebApi($w,$country_code,$query, 'track', 1);
+
+            	if(count($results) > 0) {
+					// only one track returned
+					$track=$results[0];
+					$artists = $track->artists;
+					$artist = $artists[0];
+                	echo "Unknown track $track_uri / $track_name / $artist_name replaced by track: $track->uri / $track->name / $artist->name\n";
+                	$track_uri = $track->uri;
+                	$tmp = explode(':', $track_uri);
+
+            	} else {
+	            	echo "Could not find track: $track_uri / $track_name / $artist_name \n";
+                    displayNotificationWithArtwork('Error: local track ' . $track_name . ' has not online match','./images/warning.png');
+                    return;
+            	}
 	        }
             $ret = addTracksToPlaylist($w, $tmp[2], $setting[1], $setting[2], false);
             if (is_numeric($ret) && $ret > 0) {
@@ -470,8 +505,25 @@ if ($playlist_uri != "" && $other_settings == "") {
 				$track_artwork_path = getTrackOrAlbumArtwork($w,  $track_uri, true);
 				$tmp = explode(':', $track_uri);
 		        if($tmp[1] == 'local') {
-		        	displayNotificationWithArtwork('Error: local tracks are not supported','./images/warning.png');
-			        return;
+					// local track, look it up online
+
+					$query = 'track:' . strtolower($track_name) . ' artist:' . strtolower($artist_name);
+	            	$results = searchWebApi($w,$country_code,$query, 'track', 1);
+
+	            	if(count($results) > 0) {
+						// only one track returned
+						$track=$results[0];
+						$artists = $track->artists;
+						$artist = $artists[0];
+	                	echo "Unknown track $track_uri / $track_name / $artist_name replaced by track: $track->uri / $track->name / $artist->name\n";
+	                	$track_uri = $track->uri;
+	                	$tmp = explode(':', $track_uri);
+
+	            	} else {
+		            	echo "Could not find track: $track_uri / $track_name / $artist_name \n";
+	                    displayNotificationWithArtwork('Error: local track ' . $track_name . ' has not online match','./images/warning.png');
+	                    return;
+	            	}
 		        }
 				$ret = addTracksToYourMusic($w, $tmp[2], false);
 				if (is_numeric($ret) && $ret > 0) {
@@ -760,6 +812,10 @@ if ($playlist_uri != "" && $other_settings == "") {
     } else if ($other_action == "playalbum") {
         if ($album_uri == "") {
             $album_uri = getAlbumUriFromTrack($w, $track_uri);
+            if ($album_uri == false) {
+                displayNotificationWithArtwork("Error: cannot get album",'./images/warning.png');
+                return;
+            }
         }
         exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
         displayNotificationWithArtwork('🔈 Album ' . $album_name, $album_artwork_path);

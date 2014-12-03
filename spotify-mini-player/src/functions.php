@@ -126,13 +126,9 @@ function lookupCurrentArtist($w)
 
     if (substr_count($command_output, '▹') > 0) {
         $results = explode('▹', $command_output);
-        $tmp = explode(':', $results[4]);
-        if($tmp[1] == 'local') {
-        	displayNotificationWithArtwork('Error: local tracks are not supported','./images/warning.png');
-	        return;
-        }
-        $artist_uri = getArtistUriFromTrack($w, $results[4]);
+        $artist_uri = getArtistUriFromSearch($w, $results[1]);
         if ($artist_uri == false) {
+            displayNotificationWithArtwork("Error: cannot get current artist",'./images/warning.png');
             return;
         }
         exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online▹" . $artist_uri . "@" . escapeQuery($results[1]) . "\"'");
@@ -156,19 +152,15 @@ function playCurrentArtist($w)
 
     if (substr_count($command_output, '▹') > 0) {
         $results = explode('▹', $command_output);
-        $tmp = explode(':', $results[4]);
-        if($tmp[1] == 'local') {
-        	displayNotificationWithArtwork('Error: local tracks are not supported','./images/warning.png');
-	        return;
-        }
-        $artist_uri = getArtistUriFromTrack($w, $results[4]);
+        $artist_uri = getArtistUriFromSearch($w, $results[1]);
         if ($artist_uri == false) {
+            displayNotificationWithArtwork("Error: cannot get current artist",'./images/warning.png');
             return;
         }
         exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
         displayNotificationWithArtwork('🔈 Artist ' . escapeQuery($results[1]), getArtistArtwork($w,  $results[1], true));
     } else {
-        displayNotificationWithArtwork("Error: No track is playing", './images/warning.png');
+        displayNotificationWithArtwork("Error: No artist is playing", './images/warning.png');
     }
 }
 
@@ -187,12 +179,9 @@ function playCurrentAlbum($w)
     if (substr_count($command_output, '▹') > 0) {
         $results = explode('▹', $command_output);
         $tmp = explode(':', $results[4]);
-        if($tmp[1] == 'local') {
-        	displayNotificationWithArtwork('Error: local tracks are not supported','./images/warning.png');
-	        return;
-        }
         $album_uri = getAlbumUriFromTrack($w, $results[4]);
         if ($album_uri == false) {
+	        displayNotificationWithArtwork("Error: cannot get current album",'./images/warning.png');
             return;
         }
         exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
@@ -219,8 +208,41 @@ function addCurrentTrackTo($w)
         $results = explode('▹', $command_output);
         $tmp = explode(':', $results[4]);
         if($tmp[1] == 'local') {
-        	displayNotificationWithArtwork('Error: local tracks are not supported','./images/warning.png');
-	        return;
+		    //
+		    // Read settings from DB
+		    //
+
+		    $dbfile = $w->data() . '/settings.db';
+		    try {
+		        $dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
+		        $dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		        $getSettings = 'select country_code from settings';
+		        $stmt = $dbsettings->prepare($getSettings);
+		        $stmt->execute();
+		        $setting = $stmt->fetch();
+		        $country_code = $setting[0];
+		    } catch (PDOException $e) {
+		        handleDbIssuePdoEcho($dbsettings,$w);
+		        $dbsettings = null;
+		        return false;
+		    }
+			// local track, look it up online
+
+			$query = 'track:' . strtolower($results[0]) . ' artist:' . strtolower($results[1]);
+        	$searchResults = searchWebApi($w,$country_code,$query, 'track', 1);
+
+        	if(count($searchResults) > 0) {
+				// only one track returned
+				$track=$searchResults[0];
+				$artists = $track->artists;
+				$artist = $artists[0];
+            	echo "Unknown track $results[4] / $results[0] / $results[1] replaced by track: $track->uri / $track->name / $artist->name\n";
+            	$results[4] = $track->uri;
+        	} else {
+            	echo "Could not find track: $results[4] / $results[0] / $results[1] \n";
+                displayNotificationWithArtwork('Error: local track ' . escapeQuery($results[0]) . ' has not online match','./images/warning.png');
+                return;
+        	}
         }
 		exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Add▹" . $results[4] . "∙" . escapeQuery($results[0]) . '▹' . "\"'");
     } else {
@@ -279,11 +301,6 @@ function addCurrentTrackToAlfredPlaylist($w)
     if (substr_count($command_output, '▹') > 0) {
         $results = explode('▹', $command_output);
 
-        $tmp = explode(':', $results[4]);
-        if($tmp[1] == 'local') {
-        	displayNotificationWithArtwork('Error: local tracks are not supported','./images/warning.png');
-	        return;
-        }
 
 	    //
 	    // Read settings from DB
@@ -293,12 +310,13 @@ function addCurrentTrackToAlfredPlaylist($w)
 	    try {
 	        $dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
 	        $dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	        $getSettings = 'select alfred_playlist_uri,alfred_playlist_name from settings';
+	        $getSettings = 'select alfred_playlist_uri,alfred_playlist_name,country_code from settings';
 	        $stmt = $dbsettings->prepare($getSettings);
 	        $stmt->execute();
 	        $setting = $stmt->fetch();
 	        $alfred_playlist_uri = $setting[0];
 	        $alfred_playlist_name = $setting[1];
+	        $country_code = $setting[2];
 	    } catch (PDOException $e) {
 	        handleDbIssuePdoEcho($dbsettings,$w);
 	        $dbsettings = null;
@@ -309,11 +327,29 @@ function addCurrentTrackToAlfredPlaylist($w)
             displayNotificationWithArtwork("Error: Alfred Playlist is not set", './images/warning.png');
             return;
         }
+
         $tmp = explode(':', $results[4]);
         if($tmp[1] == 'local') {
-        	displayNotificationWithArtwork('Error: local tracks are not supported','./images/warning.png');
-	        return;
+			// local track, look it up online
+
+			$query = 'track:' . strtolower($results[0]) . ' artist:' . strtolower($results[1]);
+        	$searchResults = searchWebApi($w,$country_code,$query, 'track', 1);
+
+        	if(count($searchResults) > 0) {
+				// only one track returned
+				$track=$searchResults[0];
+				$artists = $track->artists;
+				$artist = $artists[0];
+            	echo "Unknown track $results[4] / $results[0] / $results[1] replaced by track: $track->uri / $track->name / $artist->name\n";
+            	$results[4] = $track->uri;
+        	} else {
+            	echo "Could not find track: $results[4] / $results[0] / $results[1] \n";
+                displayNotificationWithArtwork('Error: local track ' . escapeQuery($results[0]) . ' has not online match','./images/warning.png');
+                return;
+        	}
         }
+
+        $tmp = explode(':', $results[4]);
         $ret = addTracksToPlaylist($w, $tmp[2], $alfred_playlist_uri, $alfred_playlist_name, false);
         if (is_numeric($ret) && $ret > 0) {
             displayNotificationWithArtwork('' . $results[0] . ' by ' . $results[1] . ' added to Alfred Playlist ' . $alfred_playlist_name, getTrackOrAlbumArtwork($w,  $results[4], true));
@@ -341,9 +377,43 @@ function addCurrentTrackToYourMusic($w)
         $results = explode('▹', $command_output);
         $tmp = explode(':', $results[4]);
         if($tmp[1] == 'local') {
-        	displayNotificationWithArtwork('Error: local tracks are not supported','./images/warning.png');
-	        return;
+		    //
+		    // Read settings from DB
+		    //
+
+		    $dbfile = $w->data() . '/settings.db';
+		    try {
+		        $dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
+		        $dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		        $getSettings = 'select country_code from settings';
+		        $stmt = $dbsettings->prepare($getSettings);
+		        $stmt->execute();
+		        $setting = $stmt->fetch();
+		        $country_code = $setting[0];
+		    } catch (PDOException $e) {
+		        handleDbIssuePdoEcho($dbsettings,$w);
+		        $dbsettings = null;
+		        return false;
+		    }
+			// local track, look it up online
+
+			$query = 'track:' . strtolower($results[0]) . ' artist:' . strtolower($results[1]);
+        	$searchResults = searchWebApi($w,$country_code,$query, 'track', 1);
+
+        	if(count($searchResults) > 0) {
+				// only one track returned
+				$track=$searchResults[0];
+				$artists = $track->artists;
+				$artist = $artists[0];
+            	echo "Unknown track $results[4] / $results[0] / $results[1] replaced by track: $track->uri / $track->name / $artist->name\n";
+            	$results[4] = $track->uri;
+        	} else {
+            	echo "Could not find track: $results[4] / $results[0] / $results[1] \n";
+                displayNotificationWithArtwork('Error: local track ' . escapeQuery($results[0]) . ' has not online match','./images/warning.png');
+                return;
+        	}
         }
+        $tmp = explode(':', $results[4]);
         $ret = addTracksToYourMusic($w, $tmp[2], false);
         if (is_numeric($ret) && $ret > 0) {
             displayNotificationWithArtwork('' . $results[0] . ' by ' . $results[1] . ' added to Your Music', getTrackOrAlbumArtwork($w,  $results[4], true));
@@ -484,14 +554,15 @@ function getSpotifyWebAPI($w)
 
 
 /**
- * getArtistUriFromTrack function.
+ * getArtistUriFromSearch function.
  *
  * @access public
  * @param mixed $w
- * @param mixed $track_uri
+ * @param mixed $artist_name
+ * @param mixed $country_code
  * @return void
  */
-function getArtistUriFromTrack($w, $track_uri)
+function getArtistUriFromSearch($w, $artist_name, $country_code = '')
 {
     $api = getSpotifyWebAPI($w);
     if ($api == false) {
@@ -499,24 +570,41 @@ function getArtistUriFromTrack($w, $track_uri)
         return false;
     }
 
-    try {
-        $tmp = explode(':', $track_uri);
+	if($artist_name == '') {
+		return false;
+	}
+	if($country_code == '') {
+	    //
+	    // Read settings from DB
+	    //
 
-        if($tmp[1] != 'local') {
-        	$track = $api->getTrack($tmp[2]);
-        } else {
-	        displayNotificationWithArtwork('Error: local tracks are not supported','./images/warning.png');
-        }
-        $artists = $track->artists;
-        $artist = $artists[0];
-    } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        echo "Error(getArtistUriFromTrack): (exception " . print_r($e) . ")";
-        handleSpotifyWebAPIException($w);
+	    $dbfile = $w->data() . '/settings.db';
+	    try {
+	        $dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
+	        $dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	        $getSettings = 'select country_code from settings';
+	        $stmt = $dbsettings->prepare($getSettings);
+	        $stmt->execute();
+	        $setting = $stmt->fetch();
+	        $country_code = $settings[0];
+	    } catch (PDOException $e) {
+	        handleDbIssuePdoEcho($dbsettings,$w);
+	        $dbsettings = null;
+	        return false;
+	    }
+	}
+	$searchResults = searchWebApi($w,$country_code,$artist_name, 'artist', 1);
+
+	if(count($searchResults) > 0) {
+		// only one artist returned
+		$artist=$searchResults[0];
+	} else {
         return false;
-    }
+	}
 
     return $artist->uri;
 }
+
 
 
 /**
@@ -538,11 +626,27 @@ function getAlbumUriFromTrack($w, $track_uri)
     try {
         $tmp = explode(':', $track_uri);
 
-        if($tmp[1] != 'local') {
-        	$track = $api->getTrack($tmp[2]);
-        } else {
-	        displayNotificationWithArtwork('Error: local tracks are not supported','./images/warning.png');
+        if($tmp[1] == 'local') {
+			// local track, look it up online
+			// spotify:local:The+D%c3%b8:On+My+Shoulders+-+Single:On+My+Shoulders:318
+			// spotify:local:Damien+Rice:B-Sides:Woman+Like+a+Man+%28Live%2c+Unplugged%29:284
+
+			$query = 'track:' . urldecode(strtolower($tmp[4])) . ' artist:' . urldecode(strtolower($tmp[2]));
+        	$results = searchWebApi($w,$country_code,$query, 'track', 1);
+
+        	if(count($results) > 0) {
+				// only one track returned
+				$track=$results[0];
+				$album = $track->album;
+				return $album->uri;
+
+        	} else {
+            	echo "Could not find album from uri: $track_uri\n";
+                return false;
+        	}
         }
+
+        $track = $api->getTrack($tmp[2]);
         $album = $track->album;
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
         echo "Error(getAlbumUriFromTrack): (exception " . print_r($e) . ")";
@@ -651,10 +755,6 @@ function createRadioArtistPlaylistForCurrentArtist($w)
 
     if (substr_count($command_output, '▹') > 0) {
         $results = explode('▹', $command_output);
-        if($tmp[1] == 'local') {
-        	displayNotificationWithArtwork('Error: local tracks are not supported','./images/warning.png');
-	        return;
-        }
         createRadioArtistPlaylist($w, $results[1]);
     } else {
         displayNotification("Error: cannot get current artist");
@@ -760,10 +860,6 @@ function createRadioSongPlaylistForCurrentTrack($w)
 
     if (substr_count($command_output, '▹') > 0) {
         $results = explode('▹', $command_output);
-        if($tmp[1] == 'local') {
-        	displayNotificationWithArtwork('Error: local tracks are not supported','./images/warning.png');
-	        return;
-        }
         createRadioSongPlaylist($w, $results[0], $results[4], $results[1]);
     } else {
         displayNotificationWithArtwork("Error: cannot get current track",'./images/warning.png');
@@ -798,17 +894,37 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name)
     try {
         $dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
         $dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $getSettings = 'select userid,radio_number_tracks,echonest_api_key from settings';
+        $getSettings = 'select userid,radio_number_tracks,echonest_api_key,country_code from settings';
         $stmt = $dbsettings->prepare($getSettings);
         $stmt->execute();
         $setting = $stmt->fetch();
         $userid = $setting[0];
         $radio_number_tracks = $setting[1];
         $echonest_api_key = $setting[2];
+        $country_code = $setting[3];
     } catch (PDOException $e) {
         handleDbIssuePdoEcho($dbsettings,$w);
         $dbsettings = null;
         return false;
+    }
+
+    $tmp = explode(':', $track_uri);
+    if($tmp[1] == 'local') {
+		// local track, look it up online
+		// spotify:local:The+D%c3%b8:On+My+Shoulders+-+Single:On+My+Shoulders:318
+		// spotify:local:Damien+Rice:B-Sides:Woman+Like+a+Man+%28Live%2c+Unplugged%29:284
+
+		$query = 'track:' . urldecode(strtolower($tmp[4])) . ' artist:' . urldecode(strtolower($tmp[2]));
+    	$results = searchWebApi($w,$country_code,$query, 'track', 1);
+
+    	if(count($results) > 0) {
+			// only one track returned
+			$track=$results[0];
+			$track_uri = $track->uri;
+    	} else {
+        	echo "Could not find track from uri: $track_uri\n";
+            return false;
+    	}
     }
 
     $json = doWebApiRequest($w, 'http://developer.echonest.com/api/v4/playlist/static?api_key=' . $echonest_api_key . '&song_id=' . $track_uri . '&format=json&results=' . $radio_number_tracks . '&distribution=focused&type=song-radio&bucket=id:spotify&bucket=tracks');
