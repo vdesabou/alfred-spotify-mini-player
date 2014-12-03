@@ -1591,8 +1591,10 @@ if (mb_strlen($query) < 3 ||
                 $stmt->bindValue(':uri', $theplaylisturi);
 
                 $playlists = $stmt->execute();
-
+				$noresultplaylist = true;
                 while ($playlist = $stmt->fetch()) {
+
+	                $noresultplaylist = false;
                     if (mb_strlen($thetrack) < 3) {
 
                         $subtitle = "Launch Playlist";
@@ -1730,6 +1732,12 @@ if (mb_strlen($query) < 3 ||
                     }
 
                 }
+
+				// can happen only with Alfred Playlist deleted
+		        if($noresultplaylist) {
+		            $w->result(null, 'help', "It seems your Alfred Playlist was deleted", "Choose option below to change it", './images/warning.png', 'no', null, '');
+					$w->result(null, '', "Change your Alfred playlist", "Select one of your playlists below as your Alfred playlist", './images/settings.png', 'no', null, 'Alfred Playlist▹Set Alfred Playlist▹');
+		        }
             } catch (PDOException $e) {
                 handleDbIssuePdoXml($db);
                 return;
