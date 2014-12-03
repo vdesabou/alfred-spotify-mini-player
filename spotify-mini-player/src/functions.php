@@ -5,6 +5,68 @@ require './vendor/autoload.php';
 
 
 
+/**
+ * searchWebApi function.
+ *
+ * @access public
+ * @param mixed $w
+ * @param mixed $country_code
+ * @param mixed $query
+ * @param mixed $type
+ * @return void
+ */
+function searchWebApi($w,$country_code,$query, $type, $limit = 50) {
+    $api = getSpotifyWebAPI($w);
+    if ($api == false) {
+        displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png');
+        return false;
+    }
+
+    $results = array();
+
+    try {
+        $offsetSearch = 0;
+        if($limit != 50) {
+	       $limitSearch = $limit;
+        } else {
+	       $limitSearch = 50;
+        }
+        do {
+            $searchResults = $api->search(	$query,
+            								$type,
+            								array(
+									            'market' => $country_code,
+									            'limit' => $limitSearch,
+									            'offset' => $offsetSearch
+									        ));
+
+			if($type == 'artist') {
+				foreach ($searchResults->artists->items as $item) {
+				    $results[] = $item;
+				}
+			} else if($type == 'track') {
+				foreach ($searchResults->tracks->items as $item) {
+				    $results[] = $item;
+				}
+			} else if($type == 'album') {
+				foreach ($searchResults->albums->items as $item) {
+				    $results[] = $item;
+				}
+			} else if($type == 'playlist') {
+				foreach ($searchResults->playlists->items as $item) {
+				    $results[] = $item;
+				}
+			}
+
+            $offsetSearch += $limitSearch;
+        } while ($offsetSearch < $searchResults->total);
+    } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+        echo "Error(search): (exception " . print_r($e) . ")";
+        handleSpotifyWebAPIException($w);
+        return false;
+    }
+    return $results;
+}
 
 
 /**
@@ -1859,22 +1921,40 @@ function updateLibrary($w)
 
                 foreach ($userPlaylistTracks->items as $item) {
                     $track = $item->track;
-
-                    if($track->uri == 'spotify:track:null') {
-	                    // skip
-	                    $nb_track++;
-	                    continue;
-                    }
-
-                    if (count($track->available_markets) == 0 || in_array($country_code, $track->available_markets) !== false) {
-                        $playable = 1;
-                    } else {
-                        $playable = 0;
-                    }
-
                     $artists = $track->artists;
                     $artist = $artists[0];
                     $album = $track->album;
+
+                    if($track->uri == 'spotify:track:null') {
+
+						// unknown track, look it up online
+						$query = 'track:' . strtolower($track->name) . ' artist:' . strtolower($artist->name);
+	                	$results = searchWebApi($w,$country_code,$query, 'track', 1);
+
+	                	if(count($results) > 0) {
+							// only one track returned
+							$track=$results[0];
+							$artists = $track->artists;
+							$artist = $artists[0];
+		                	echo "Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name\n";
+
+	                	} else {
+		                    // skip
+		                    echo "Skip Unknown track: $track->uri / $track->name / $artist->name / $playlist->name / $playlist->uri \n";
+		                    $nb_track++;
+		                    continue;
+	                	}
+                    }
+
+                    if (count($track->available_markets) == 0) {
+                        $playable = 1;
+
+                    } else if (in_array($country_code, $track->available_markets) !== false) {
+	                    $playable = 1;
+	                }
+	                else {
+                        $playable = 0;
+                    }
 
                     //
                     // Download artworks
@@ -1921,20 +2001,40 @@ function updateLibrary($w)
     foreach ($savedMySavedTracks as $track) {
         $track = $track->track;
 
-        if($track->uri == 'spotify:track:null') {
-            // skip
-            $nb_track++;
-            continue;
-        }
-
-        if (count($track->available_markets) == 0 || in_array($country_code, $track->available_markets) !== false) {
-            $playable = 1;
-        } else {
-            $playable = 0;
-        }
         $artists = $track->artists;
         $artist = $artists[0];
         $album = $track->album;
+
+        if($track->uri == 'spotify:track:null') {
+
+			// unknown track, look it up online
+			$query = 'track:' . strtolower($track->name) . ' artist:' . strtolower($artist->name);
+        	$results = searchWebApi($w,$country_code,$query, 'track', 1);
+
+        	if(count($results) > 0) {
+				// only one track returned
+				$track=$results[0];
+				$artists = $track->artists;
+				$artist = $artists[0];
+            	echo "Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name\n";
+
+        	} else {
+                // skip
+                echo "Skip Unknown track: $track->uri / $track->name / $artist->name / $playlist->name / $playlist->uri \n";
+                $nb_track++;
+                continue;
+        	}
+        }
+
+        if (count($track->available_markets) == 0) {
+            $playable = 1;
+
+        } else if (in_array($country_code, $track->available_markets) !== false) {
+            $playable = 1;
+        }
+        else {
+            $playable = 0;
+        }
 
         //
         // Download artworks
@@ -2164,20 +2264,40 @@ function updatePlaylist($w, $playlist_uri, $playlist_name)
         foreach ($savedPlaylistTracks as $item) {
             $track = $item->track;
 
-            if($track->uri == 'spotify:track:null') {
-                // skip
-                $nb_track++;
-                continue;
-            }
-
-            if (count($track->available_markets) == 0 || in_array($country_code, $track->available_markets) !== false) {
-                $playable = 1;
-            } else {
-                $playable = 0;
-            }
             $artists = $track->artists;
             $artist = $artists[0];
             $album = $track->album;
+
+            if($track->uri == 'spotify:track:null') {
+
+				// unknown track, look it up online
+				$query = 'track:' . strtolower($track->name) . ' artist:' . strtolower($artist->name);
+            	$results = searchWebApi($w,$country_code,$query, 'track', 1);
+
+            	if(count($results) > 0) {
+					// only one track returned
+					$track=$results[0];
+					$artists = $track->artists;
+					$artist = $artists[0];
+                	echo "Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name\n";
+
+            	} else {
+                    // skip
+                    echo "Skip Unknown track: $track->uri / $track->name / $artist->name / $playlist->name / $playlist->uri \n";
+                    $nb_track++;
+                    continue;
+            	}
+            }
+
+            if (count($track->available_markets) == 0) {
+                $playable = 1;
+
+            } else if (in_array($country_code, $track->available_markets) !== false) {
+                $playable = 1;
+            }
+            else {
+                $playable = 0;
+            }
 
             //
             // Download artworks
@@ -2450,19 +2570,40 @@ function refreshLibrary($w)
 
                         foreach ($userPlaylistTracks->items as $item) {
                             $track = $item->track;
+		                    $artists = $track->artists;
+		                    $artist = $artists[0];
+		                    $album = $track->album;
+
 		                    if($track->uri == 'spotify:track:null') {
-			                    // skip
-			                    $nb_track++;
-			                    continue;
+
+								// unknown track, look it up online
+								$query = 'track:' . strtolower($track->name) . ' artist:' . strtolower($artist->name);
+			                	$results = searchWebApi($w,$country_code,$query, 'track', 1);
+
+			                	if(count($results) > 0) {
+									// only one track returned
+									$track=$results[0];
+									$artists = $track->artists;
+									$artist = $artists[0];
+				                	echo "Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name\n";
+
+			                	} else {
+				                    // skip
+				                    echo "Skip Unknown track: $track->uri / $track->name / $artist->name / $playlist->name / $playlist->uri \n";
+				                    $nb_track++;
+				                    continue;
+			                	}
 		                    }
-                            if (count($track->available_markets) == 0 || in_array($country_code, $track->available_markets) !== false) {
-                                $playable = 1;
-                            } else {
-                                $playable = 0;
-                            }
-                            $artists = $track->artists;
-                            $artist = $artists[0];
-                            $album = $track->album;
+
+		                    if (count($track->available_markets) == 0) {
+		                        $playable = 1;
+
+		                    } else if (in_array($country_code, $track->available_markets) !== false) {
+			                    $playable = 1;
+			                }
+			                else {
+		                        $playable = 0;
+		                    }
 
                             //
                             // Download artworks
@@ -2542,19 +2683,40 @@ function refreshLibrary($w)
 
                             foreach ($userPlaylistTracks->items as $item) {
                                 $track = $item->track;
+			                    $artists = $track->artists;
+			                    $artist = $artists[0];
+			                    $album = $track->album;
+
 			                    if($track->uri == 'spotify:track:null') {
-				                    // skip
-				                    $nb_track++;
-				                    continue;
+
+									// unknown track, look it up online
+									$query = 'track:' . strtolower($track->name) . ' artist:' . strtolower($artist->name);
+				                	$results = searchWebApi($w,$country_code,$query, 'track', 1);
+
+				                	if(count($results) > 0) {
+										// only one track returned
+										$track=$results[0];
+										$artists = $track->artists;
+										$artist = $artists[0];
+					                	echo "Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name\n";
+
+				                	} else {
+					                    // skip
+					                    echo "Skip Unknown track: $track->uri / $track->name / $artist->name / $playlist->name / $playlist->uri \n";
+					                    $nb_track++;
+					                    continue;
+				                	}
 			                    }
-                                if (count($track->available_markets) == 0 || in_array($country_code, $track->available_markets) !== false) {
-                                    $playable = 1;
-                                } else {
-                                    $playable = 0;
-                                }
-                                $artists = $track->artists;
-                                $artist = $artists[0];
-                                $album = $track->album;
+
+			                    if (count($track->available_markets) == 0) {
+			                        $playable = 1;
+
+			                    } else if (in_array($country_code, $track->available_markets) !== false) {
+				                    $playable = 1;
+				                }
+				                else {
+			                        $playable = 0;
+			                    }
 
                                 //
                                 // Download artworks
@@ -2668,19 +2830,40 @@ function refreshLibrary($w)
 
             foreach ($savedMySavedTracks as $item) {
                 $track = $item->track;
-                if($track->uri == 'spotify:track:null') {
-                    // skip
-                    $nb_track++;
-                    continue;
-                }
-                if (count($track->available_markets) == 0 || in_array($country_code, $track->available_markets) !== false) {
-                    $playable = 1;
-                } else {
-                    $playable = 0;
-                }
                 $artists = $track->artists;
                 $artist = $artists[0];
                 $album = $track->album;
+
+                if($track->uri == 'spotify:track:null') {
+
+					// unknown track, look it up online
+					$query = 'track:' . strtolower($track->name) . ' artist:' . strtolower($artist->name);
+                	$results = searchWebApi($w,$country_code,$query, 'track', 1);
+
+                	if(count($results) > 0) {
+						// only one track returned
+						$track=$results[0];
+						$artists = $track->artists;
+						$artist = $artists[0];
+	                	echo "Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name\n";
+
+                	} else {
+	                    // skip
+	                    echo "Skip Unknown track: $track->uri / $track->name / $artist->name / $playlist->name / $playlist->uri \n";
+	                    $nb_track++;
+	                    continue;
+                	}
+                }
+
+                if (count($track->available_markets) == 0) {
+                    $playable = 1;
+
+                } else if (in_array($country_code, $track->available_markets) !== false) {
+                    $playable = 1;
+                }
+                else {
+                    $playable = 0;
+                }
 
                 //
                 // Download artworks
@@ -2888,19 +3071,40 @@ function updateYourMusic($w)
 
                 foreach ($userMySavedTracks->items as $item) {
                     $track = $item->track;
-                    if($track->uri == 'spotify:track:null') {
-	                    // skip
-	                    $nb_track++;
-	                    continue;
-                    }
-                    if (count($track->available_markets) == 0 || in_array($country_code, $track->available_markets) !== false) {
-                        $playable = 1;
-                    } else {
-                        $playable = 0;
-                    }
                     $artists = $track->artists;
                     $artist = $artists[0];
                     $album = $track->album;
+
+                    if($track->uri == 'spotify:track:null') {
+
+						// unknown track, look it up online
+						$query = 'track:' . strtolower($track->name) . ' artist:' . strtolower($artist->name);
+	                	$results = searchWebApi($w,$country_code,$query, 'track', 1);
+
+	                	if(count($results) > 0) {
+							// only one track returned
+							$track=$results[0];
+							$artists = $track->artists;
+							$artist = $artists[0];
+		                	echo "Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name\n";
+
+	                	} else {
+		                    // skip
+		                    echo "Skip Unknown track: $track->uri / $track->name / $artist->name / $playlist->name / $playlist->uri \n";
+		                    $nb_track++;
+		                    continue;
+	                	}
+                    }
+
+                    if (count($track->available_markets) == 0) {
+                        $playable = 1;
+
+                    } else if (in_array($country_code, $track->available_markets) !== false) {
+	                    $playable = 1;
+	                }
+	                else {
+                        $playable = 0;
+                    }
 
                     //
                     // Download artworks
