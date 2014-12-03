@@ -2052,11 +2052,11 @@ function updateLibrary($w)
 							$track=$results[0];
 							$artists = $track->artists;
 							$artist = $artists[0];
-		                	echo "Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name\n";
+		                	echo "INFO: Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name\n";
 
 	                	} else {
 		                    // skip
-		                    echo "Skip Unknown track: $track->uri / $track->name / $artist->name / $playlist->name / $playlist->uri \n";
+		                    echo "WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri \n";
 		                    $nb_track++;
 		                    continue;
 	                	}
@@ -2132,11 +2132,11 @@ function updateLibrary($w)
 				$track=$results[0];
 				$artists = $track->artists;
 				$artist = $artists[0];
-            	echo "Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name\n";
+            	echo "INFO: Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name\n";
 
         	} else {
                 // skip
-                echo "Skip Unknown track: $track->uri / $track->name / $artist->name / $playlist->name / $playlist->uri \n";
+		        echo "WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri \n";
                 $nb_track++;
                 continue;
         	}
@@ -2395,11 +2395,11 @@ function updatePlaylist($w, $playlist_uri, $playlist_name)
 					$track=$results[0];
 					$artists = $track->artists;
 					$artist = $artists[0];
-                	echo "Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name\n";
+                	echo "INFO:  Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name\n";
 
             	} else {
                     // skip
-                    echo "Skip Unknown track: $track->uri / $track->name / $artist->name / $playlist->name / $playlist->uri \n";
+		            echo "WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri \n";
                     $nb_track++;
                     continue;
             	}
@@ -2701,11 +2701,11 @@ function refreshLibrary($w)
 									$track=$results[0];
 									$artists = $track->artists;
 									$artist = $artists[0];
-				                	echo "Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name\n";
+				                	echo "INFO: Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name\n";
 
 			                	} else {
 				                    // skip
-				                    echo "Skip Unknown track: $track->uri / $track->name / $artist->name / $playlist->name / $playlist->uri \n";
+									echo "WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri \n";
 				                    $nb_track++;
 				                    continue;
 			                	}
@@ -2814,11 +2814,11 @@ function refreshLibrary($w)
 										$track=$results[0];
 										$artists = $track->artists;
 										$artist = $artists[0];
-					                	echo "Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name\n";
+					                	echo "INFO: Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name\n";
 
 				                	} else {
 					                    // skip
-					                    echo "Skip Unknown track: $track->uri / $track->name / $artist->name / $playlist->name / $playlist->uri \n";
+										echo "WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri \n";
 					                    $nb_track++;
 					                    continue;
 				                	}
@@ -2961,11 +2961,11 @@ function refreshLibrary($w)
 						$track=$results[0];
 						$artists = $track->artists;
 						$artist = $artists[0];
-	                	echo "Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name\n";
+	                	echo "INFO: Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name\n";
 
                 	} else {
 	                    // skip
-	                    echo "Skip Unknown track: $track->uri / $track->name / $artist->name / $playlist->name / $playlist->uri \n";
+		                echo "WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri \n";
 	                    $nb_track++;
 	                    continue;
                 	}
@@ -3202,11 +3202,11 @@ function updateYourMusic($w)
 							$track=$results[0];
 							$artists = $track->artists;
 							$artist = $artists[0];
-		                	echo "Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name\n";
+		                	echo "INFO: Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name\n";
 
 	                	} else {
 		                    // skip
-		                    echo "Skip Unknown track: $track->uri / $track->name / $artist->name / $playlist->name / $playlist->uri \n";
+		                    echo "WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri \n";
 		                    $nb_track++;
 		                    continue;
 	                	}
