@@ -2756,7 +2756,7 @@ function refreshLibrary($w)
                     return;
                 }
 
-                displayNotificationWithArtwork('Added playlist ' . $playlist->name, $playlist_artwork_path);
+                displayNotificationWithArtwork('Added playlist ' . escapeQuery($playlist->name), $playlist_artwork_path);
             } else {
                 // number of tracks has changed or playlist name has changed
                 // update the playlist
@@ -2869,7 +2869,7 @@ function refreshLibrary($w)
                         handleSpotifyWebAPIException($w);
                         return;
                     }
-                    displayNotificationWithArtwork('Updated playlist ' . $playlist->name, getPlaylistArtwork($w,  $playlist->uri, true));
+                    displayNotificationWithArtwork('Updated playlist ' . escapeQuery($playlist->name), getPlaylistArtwork($w,  $playlist->uri, true));
                 } else {
                     continue;
                 }
