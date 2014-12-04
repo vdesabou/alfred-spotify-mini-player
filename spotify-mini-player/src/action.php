@@ -210,7 +210,6 @@ if ($type == "TRACK" && $other_settings == "") {
 		displayNotificationWithArtwork("Error when downloading artworks",'./images/warning.png');
 		return;
 	}
-	displayNotificationWithArtwork("All artworks have been downloaded. Enjoy",'./images/info.png');
     return;
 } else if ($type == "NEXT") {
     exec("osascript -e 'tell application \"Spotify\" to next track'");

@@ -1588,6 +1588,10 @@ No internet connection", './images/warning.png');
 	$in_progress_data = $w->read('download_artworks_in_progress');
 	$words = explode('▹', $in_progress_data);
 	
+    putenv('LANG=fr_FR.UTF-8');
+
+    ini_set('memory_limit', '512M');
+    
     //
     // Get list of artworks to download from DB
     //
@@ -1603,18 +1607,22 @@ No internet connection", './images/warning.png');
         $getCount = 'select count(artist_name) from artists where already_fetched=0';
         $stmt = $dbartworks->prepare($getCount);
         $stmt->execute();
-        $nb_artworks_total = intval($stmt->fetch());
+        $count = $stmt->fetch();
+        $nb_artworks_total += intval($count[0]);
 
         $getCount = 'select count(track_uri) from tracks where already_fetched=0';
         $stmt = $dbartworks->prepare($getCount);
         $stmt->execute();
-        $nb_artworks_total = intval($stmt->fetch());
+        $count = $stmt->fetch();
+        $nb_artworks_total += intval($count[0]);
  
         $getCount = 'select count(album_uri) from albums where already_fetched=0';
         $stmt = $dbartworks->prepare($getCount);
         $stmt->execute();
-        $nb_artworks_total = intval($stmt->fetch());
-               
+        $count = $stmt->fetch();
+        $nb_artworks_total += intval($count[0]);
+           
+        displayNotificationWithArtwork("Start downloading " . $nb_artworks_total . " artworks",'./images/artworks.png');    
         
 		// artists
         $getArtists = "select artist_name from artists where already_fetched=0";
@@ -1648,7 +1656,7 @@ No internet connection", './images/warning.png');
 	        if($ret == false) {
 		        echo "WARN: $artist[0] artwork not found, using default \n";
 	        } else if(!is_string($ret)) {
-		        echo "INFO: $artist[0] artwork was fetched \n";
+		        //echo "INFO: $artist[0] artwork was fetched \n";
 	        } else if (is_string($ret)) {
 		        //echo "INFO: $artist[0] artwork was already there $ret \n";
 	        }
@@ -1673,7 +1681,7 @@ No internet connection", './images/warning.png');
 	        if($ret == false) {
 		        echo "WARN: $track[0] artwork not found, using default \n";
 	        } else if(!is_string($ret)) {
-		        echo "INFO: $track[0] artwork was fetched \n";
+		        //echo "INFO: $track[0] artwork was fetched \n";
 	        } else if (is_string($ret)) {
 		        //echo "INFO: $artist[0] artwork was already there $ret \n";
 	        }
@@ -1698,7 +1706,7 @@ No internet connection", './images/warning.png');
 	        if($ret == false) {
 		        echo "WARN: $album[0] artwork not found, using default \n";
 	        } else if(!is_string($ret)) {
-		        echo "INFO: $album[0] artwork was fetched \n";
+		        //echo "INFO: $album[0] artwork was fetched \n";
 	        } else if (is_string($ret)) {
 		        //echo "INFO: $artist[0] artwork was already there $ret \n";
 	        }
@@ -1707,7 +1715,7 @@ No internet connection", './images/warning.png');
             $stmtUpdateAlbum->execute();
             
 	        $nb_artworks++;
-	        if ($nb_artworks % 10 === 0) {
+	        if ($nb_artworks % 5 === 0) {
 	            $w->write('Download Artworks▹' . $nb_artworks . '▹' . $nb_artworks_total . '▹' . $words[3], 'download_artworks_in_progress');
 	        }
         }
@@ -1720,6 +1728,9 @@ No internet connection", './images/warning.png');
 
 	unlink($w->data() . "/download_artworks_in_progress");
     exec("echo \"END `date` \" >> \"" . $w->cache() . "/action.log\"");
+    
+    $elapsed_time = time() - $words[3];
+    displayNotificationWithArtwork("All artworks have been downloaded (" . $nb_artworks_total . " artworks) - took " . beautifyTime($elapsed_time),'./images/artworks.png');
 
 	return true;
 }
@@ -3841,6 +3852,7 @@ function handleDbIssuePdoEcho($dbhandle,$w)
     }
 
     displayNotificationWithArtwork("Error: DB error " . $dbhandle->errorInfo()[2], './images/warning.png');
+    exit;
 }
 
 

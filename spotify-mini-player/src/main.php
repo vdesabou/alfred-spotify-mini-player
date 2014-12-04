@@ -68,9 +68,9 @@ if (file_exists($w->data() . '/download_artworks_in_progress')) {
 
 
     if ($download_artworks_in_progress_words[2] != 0) {
-        $w->result(null, $w->data() . '/download_artworks_in_progress', $download_artworks_in_progress_words[0] . ' in progress since ' . beautifyTime($elapsed_time) . ' : ' . floatToSquares(intval($download_artworks_in_progress_words[1]) / intval($download_artworks_in_progress_words[2])), $download_artworks_in_progress_words[1] . '/' . $download_artworks_in_progress_words[2] . ' artworks processed so far', './images/download_artworks_in_progress.png', 'no', null, '');
+        $w->result(null, $w->data() . '/download_artworks_in_progress', $download_artworks_in_progress_words[0] . ' in progress since ' . beautifyTime($elapsed_time) . ' : ' . floatToSquares(intval($download_artworks_in_progress_words[1]) / intval($download_artworks_in_progress_words[2])), $download_artworks_in_progress_words[1] . '/' . $download_artworks_in_progress_words[2] . ' artworks processed so far', './images/artworks.png', 'no', null, '');
     } else {
-        $w->result(null, $w->data() . '/download_artworks_in_progress', $download_artworks_in_progress_words[0] . ' in progress since ' . beautifyTime($elapsed_time) . ' : ' . floatToSquares(0), 'No artwork processed so far', './images/download_artworks_in_progress.png', 'no', null, '');
+        $w->result(null, $w->data() . '/download_artworks_in_progress', $download_artworks_in_progress_words[0] . ' in progress since ' . beautifyTime($elapsed_time) . ' : ' . floatToSquares(0), 'No artwork processed so far', './images/artworks.png', 'no', null, '');
     }
 }
 
