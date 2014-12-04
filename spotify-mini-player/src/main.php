@@ -57,6 +57,25 @@ if (file_exists($w->data() . '/update_library_in_progress')) {
 }
 
 //
+// check for download artworks in progress
+$download_artworks_in_progress = false;
+if (file_exists($w->data() . '/download_artworks_in_progress')) {
+    $in_progress_data = $w->read('download_artworks_in_progress');
+    $download_artworks_in_progress_words = explode('▹', $in_progress_data);
+
+    $elapsed_time = time() - $download_artworks_in_progress_words[3];
+    $download_artworks_in_progress = true;
+
+
+    if ($download_artworks_in_progress_words[2] != 0) {
+        $w->result(null, $w->data() . '/download_artworks_in_progress', $download_artworks_in_progress_words[0] . ' in progress since ' . beautifyTime($elapsed_time) . ' : ' . floatToSquares(intval($download_artworks_in_progress_words[1]) / intval($download_artworks_in_progress_words[2])), $download_artworks_in_progress_words[1] . '/' . $download_artworks_in_progress_words[2] . ' artworks processed so far', './images/download_artworks_in_progress.png', 'no', null, '');
+    } else {
+        $w->result(null, $w->data() . '/download_artworks_in_progress', $download_artworks_in_progress_words[0] . ' in progress since ' . beautifyTime($elapsed_time) . ' : ' . floatToSquares(0), 'No artwork processed so far', './images/download_artworks_in_progress.png', 'no', null, '');
+    }
+}
+
+
+//
 // Read settings from DB
 //
 $getSettings = 'select all_playlists,is_spotifious_active,is_alfred_playlist_active,radio_number_tracks,is_lyrics_active,max_results, alfred_playlist_uri,alfred_playlist_name,country_code,theme,last_check_update_time,oauth_client_id,oauth_client_secret,oauth_redirect_uri,oauth_access_token,oauth_expires,oauth_refresh_token,display_name,userid,echonest_api_key from settings';
@@ -218,7 +237,6 @@ if ($dbfile == "") {
 
 try {
     $db = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
-
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $db->query("PRAGMA synchronous = OFF");
     $db->query("PRAGMA journal_mode = OFF");

@@ -1583,6 +1583,11 @@ No internet connection", './images/warning.png');
         return;
     }
 
+	touch($w->data() . "/download_artworks_in_progress");
+	$w->write('Download Artworks▹' . 0 . '▹' . 0 . '▹' . time(), 'download_artworks_in_progress');
+	$in_progress_data = $w->read('download_artworks_in_progress');
+	$words = explode('▹', $in_progress_data);
+	
     //
     // Get list of artworks to download from DB
     //
@@ -1592,6 +1597,25 @@ No internet connection", './images/warning.png');
         $dbartworks = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
         $dbartworks->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+        $nb_artworks_total=0;
+        $nb_artworks=0;
+        
+        $getCount = 'select count(artist_name) from artists where already_fetched=0';
+        $stmt = $dbartworks->prepare($getCount);
+        $stmt->execute();
+        $nb_artworks_total = intval($stmt->fetch());
+
+        $getCount = 'select count(track_uri) from tracks where already_fetched=0';
+        $stmt = $dbartworks->prepare($getCount);
+        $stmt->execute();
+        $nb_artworks_total = intval($stmt->fetch());
+ 
+        $getCount = 'select count(album_uri) from albums where already_fetched=0';
+        $stmt = $dbartworks->prepare($getCount);
+        $stmt->execute();
+        $nb_artworks_total = intval($stmt->fetch());
+               
+        
 		// artists
         $getArtists = "select artist_name from artists where already_fetched=0";
         $stmtGetArtists = $dbartworks->prepare($getArtists);
@@ -1631,6 +1655,11 @@ No internet connection", './images/warning.png');
 
             $stmtUpdateArtist->bindValue(':artist_name', $artist[0]);
             $stmtUpdateArtist->execute();
+            
+	        $nb_artworks++;
+	        if ($nb_artworks % 10 === 0) {
+	            $w->write('Download Artworks▹' . $nb_artworks . '▹' . $nb_artworks_total . '▹' . $words[3], 'download_artworks_in_progress');
+	        }
         }
 
 		////
@@ -1651,6 +1680,11 @@ No internet connection", './images/warning.png');
 
             $stmtUpdateTrack->bindValue(':track_uri', $track[0]);
             $stmtUpdateTrack->execute();
+            
+	        $nb_artworks++;
+	        if ($nb_artworks % 10 === 0) {
+	            $w->write('Download Artworks▹' . $nb_artworks . '▹' . $nb_artworks_total . '▹' . $words[3], 'download_artworks_in_progress');
+	        }
         }
 
 		////
@@ -1671,6 +1705,11 @@ No internet connection", './images/warning.png');
 
             $stmtUpdateAlbum->bindValue(':album_uri', $album[0]);
             $stmtUpdateAlbum->execute();
+            
+	        $nb_artworks++;
+	        if ($nb_artworks % 10 === 0) {
+	            $w->write('Download Artworks▹' . $nb_artworks . '▹' . $nb_artworks_total . '▹' . $words[3], 'download_artworks_in_progress');
+	        }
         }
 
     } catch (PDOException $e) {
@@ -1679,6 +1718,7 @@ No internet connection", './images/warning.png');
         return false;
     }
 
+	unlink($w->data() . "/download_artworks_in_progress");
     exec("echo \"END `date` \" >> \"" . $w->cache() . "/action.log\"");
 
 	return true;
@@ -2082,15 +2122,14 @@ function getArtistArtworkURL($w, $artist)
  */
 function updateLibrary($w)
 {
-    touch($w->data() . "/update_library_in_progress");
-    $w->write('InitLibrary▹' . 0 . '▹' . 0 . '▹' . time(), 'update_library_in_progress');
-
     $api = getSpotifyWebAPI($w);
     if ($api == false) {
         displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png');
         return false;
     }
 
+    touch($w->data() . "/update_library_in_progress");
+    $w->write('InitLibrary▹' . 0 . '▹' . 0 . '▹' . time(), 'update_library_in_progress');
     $in_progress_data = $w->read('update_library_in_progress');
 
 
@@ -2112,7 +2151,6 @@ function updateLibrary($w)
     } catch (PDOException $e) {
         handleDbIssuePdoEcho($dbsettings,$w);
         $dbsettings = null;
-        unlink($w->data() . "/update_library_in_progress");
         return false;
     }
 
@@ -2153,6 +2191,15 @@ function updateLibrary($w)
     try {
         $db = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	    $db->query("PRAGMA synchronous = OFF");
+	    $db->query("PRAGMA journal_mode = OFF");
+	    $db->query("PRAGMA temp_store = MEMORY");
+	    $db->query("PRAGMA count_changes = OFF");
+	    $db->query("PRAGMA PAGE_SIZE = 4096");
+	    $db->query("PRAGMA default_cache_size=700000");
+	    $db->query("PRAGMA cache_size=700000");
+	    $db->query("PRAGMA compile_options");
+	    $db->myDataBaseNameProperty = $dbfile;
     } catch (PDOException $e) {
         handleDbIssuePdoEcho($db,$w);
         $dbsettings = null;
@@ -2169,7 +2216,9 @@ function updateLibrary($w)
     }
     // kill previous process if running
 	exec("pid=$(ps -efx | grep \"php\" | egrep \"DOWNLOAD_ARTWORKS\" | grep -v grep | awk '{print $2}'); if [ \"$pid\" != \"\" ]; then kill -9 \"$pid\";echo \"KILLED `date` PIDs: $pid\"; fi >> \"" . $w->cache() . "/action.log\"");
-
+	if (file_exists($w->data() . '/download_artworks_in_progress')) {
+		unlink($w->data() . "/download_artworks_in_progress");
+	}
 
     try {
         $dbartworks = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
@@ -2177,6 +2226,7 @@ function updateLibrary($w)
     } catch (PDOException $e) {
         handleDbIssuePdoEcho($dbartworks,$w);
         $dbartworks = null;
+        $dbsettings = null;
         $db = null;
         return false;
     }
@@ -2232,40 +2282,70 @@ function updateLibrary($w)
         return false;
     }
 
-    $db->exec("create table tracks (mymusic boolean, popularity int, uri text, album_uri text, artist_uri text, track_name text, album_name text, artist_name text, album_type text, track_artwork_path text, artist_artwork_path text, album_artwork_path text, playlist_name text, playlist_uri text, playable boolean, added_at text, duration_ms int)");
-    $db->exec("CREATE INDEX IndexPlaylistUri ON tracks (playlist_uri)");
-    $db->exec("CREATE INDEX IndexArtistName ON tracks (artist_name)");
-    $db->exec("CREATE INDEX IndexAlbumName ON tracks (album_name)");
-    $db->exec("create table counters (all_tracks int, mymusic_tracks int, all_artists int, mymusic_artists int, all_albums int, mymusic_albums int, playlists int)");
-    $db->exec("create table playlists (uri text PRIMARY KEY NOT NULL, name text, nb_tracks int, author text, username text, playlist_artwork_path text, ownedbyuser boolean)");
-
-	// DB artowrks
-	if($fetch_artworks_existed == false) {
-		$dbartworks->exec("create table artists (artist_name text PRIMARY KEY NOT NULL, already_fetched boolean)");
-		$dbartworks->exec("create table tracks (track_uri text PRIMARY KEY NOT NULL, already_fetched boolean)");
-		$dbartworks->exec("create table albums (album_uri text PRIMARY KEY NOT NULL, already_fetched boolean)");
-	}
-
     // Handle playlists
     $w->write('Create Library▹0▹' . $nb_tracktotal . '▹' . $words[3], 'update_library_in_progress');
 
     $nb_track = 0;
-    $insertPlaylist = "insert into playlists values (:uri,:name,:count_tracks,:owner,:username,:playlist_artwork_path,:ownedbyuser)";
-    $stmtPlaylist = $db->prepare($insertPlaylist);
+    
+	try {
+	    $db->exec("create table tracks (mymusic boolean, popularity int, uri text, album_uri text, artist_uri text, track_name text, album_name text, artist_name text, album_type text, track_artwork_path text, artist_artwork_path text, album_artwork_path text, playlist_name text, playlist_uri text, playable boolean, added_at text, duration_ms int)");
+	    $db->exec("CREATE INDEX IndexPlaylistUri ON tracks (playlist_uri)");
+	    $db->exec("CREATE INDEX IndexArtistName ON tracks (artist_name)");
+	    $db->exec("CREATE INDEX IndexAlbumName ON tracks (album_name)");
+	    $db->exec("create table counters (all_tracks int, mymusic_tracks int, all_artists int, mymusic_artists int, all_albums int, mymusic_albums int, playlists int)");
+	    $db->exec("create table playlists (uri text PRIMARY KEY NOT NULL, name text, nb_tracks int, author text, username text, playlist_artwork_path text, ownedbyuser boolean)");
+	    
+	    $insertPlaylist = "insert into playlists values (:uri,:name,:count_tracks,:owner,:username,:playlist_artwork_path,:ownedbyuser)";
+	    $stmtPlaylist = $db->prepare($insertPlaylist);
+	
+	    $insertTrack = "insert into tracks values (:mymusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_type,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:added_at,:duration_ms)";
+	    $stmtTrack = $db->prepare($insertTrack);
+    } catch (PDOException $e) {
+        handleDbIssuePdoEcho($db,$w);
+        $dbartworks = null;
+        $dbsettings = null;
+        $db = null;
+        return false;
+    }	
 
-    $insertTrack = "insert into tracks values (:mymusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_type,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:added_at,:duration_ms)";
-    $stmtTrack = $db->prepare($insertTrack);
+	// DB artowrks
+	if($fetch_artworks_existed == false) {
+		try {
+			$dbartworks->exec("create table artists (artist_name text PRIMARY KEY NOT NULL, already_fetched boolean)");
+			$dbartworks->exec("create table tracks (track_uri text PRIMARY KEY NOT NULL, already_fetched boolean)");
+			$dbartworks->exec("create table albums (album_uri text PRIMARY KEY NOT NULL, already_fetched boolean)");
+			
+		
+	    } catch (PDOException $e) {
+	        handleDbIssuePdoEcho($dbartworks,$w);
+	        $dbartworks = null;
+	        $dbsettings = null;
+	        $db = null;
+	        return false;
+	    }
+	}
 
-	// artworks
-    $insertArtistArtwork= "insert or ignore into artists values (:artist_name,:already_fetched)";
-    $stmtArtistArtwork = $dbartworks->prepare($insertArtistArtwork);
+	try {
+		// artworks
+	    $insertArtistArtwork= "insert or ignore into artists values (:artist_name,:already_fetched)";
+	    $stmtArtistArtwork = $dbartworks->prepare($insertArtistArtwork);
+	
+	    $insertTrackArtwork= "insert or ignore into tracks values (:track_uri,:already_fetched)";
+	    $stmtTrackArtwork = $dbartworks->prepare($insertTrackArtwork);
+	
+	    $insertAlbumArtwork= "insert or ignore into albums values (:album_uri,:already_fetched)";
+	    $stmtAlbumArtwork = $dbartworks->prepare($insertAlbumArtwork);			
+		
+	} catch (PDOException $e) {
+        handleDbIssuePdoEcho($dbartworks,$w);
+        $dbartworks = null;
+        $dbsettings = null;
+        $db = null;
+        return false;
+	}
 
-    $insertTrackArtwork= "insert or ignore into tracks values (:track_uri,:already_fetched)";
-    $stmtTrackArtwork = $dbartworks->prepare($insertTrackArtwork);
-
-    $insertAlbumArtwork= "insert or ignore into albums values (:album_uri,:already_fetched)";
-    $stmtAlbumArtwork = $dbartworks->prepare($insertAlbumArtwork);
-
+		    
+		    
 	$artworksToDownload = false;
 
     foreach ($savedListPlaylist as $playlist) {
@@ -2280,15 +2360,24 @@ function updateLibrary($w)
             $ownedbyuser = 0;
         }
 
-        $stmtPlaylist->bindValue(':uri', $playlist->uri);
-        $stmtPlaylist->bindValue(':name', escapeQuery($playlist->name));
-        $playlist_tracks = $playlist->tracks;
-        $stmtPlaylist->bindValue(':count_tracks', $playlist_tracks->total);
-        $stmtPlaylist->bindValue(':owner', $owner->id);
-        $stmtPlaylist->bindValue(':username', $owner->id);
-        $stmtPlaylist->bindValue(':playlist_artwork_path', $playlist_artwork_path);
-        $stmtPlaylist->bindValue(':ownedbyuser', $ownedbyuser);
-        $stmtPlaylist->execute();
+		try {
+	        $stmtPlaylist->bindValue(':uri', $playlist->uri);
+	        $stmtPlaylist->bindValue(':name', escapeQuery($playlist->name));
+	        $playlist_tracks = $playlist->tracks;
+	        $stmtPlaylist->bindValue(':count_tracks', $playlist_tracks->total);
+	        $stmtPlaylist->bindValue(':owner', $owner->id);
+	        $stmtPlaylist->bindValue(':username', $owner->id);
+	        $stmtPlaylist->bindValue(':playlist_artwork_path', $playlist_artwork_path);
+	        $stmtPlaylist->bindValue(':ownedbyuser', $ownedbyuser);
+	        $stmtPlaylist->execute();			
+	    } catch (PDOException $e) {
+	        handleDbIssuePdoEcho($db,$w);
+	        $dbartworks = null;
+	        $dbsettings = null;
+	        $db = null;
+	        return false;
+	    }
+
 
         try {
             $offsetGetUserPlaylistTracks = 0;
@@ -2342,51 +2431,66 @@ function updateLibrary($w)
                         $playable = 0;
                     }
 
-                    //
-                    // Download artworks in Fetch later mode
-                    list ($already_present, $track_artwork_path) = getTrackOrAlbumArtwork($w,  $track->uri, true, true);
-                    if($already_present == false) {
-	                    $artworksToDownload = true;
-				        $stmtTrackArtwork->bindValue(':track_uri', $track->uri);
-				        $stmtTrackArtwork->bindValue(':already_fetched', 0);
-				        $stmtTrackArtwork->execute();
-                    }
-
-                    list ($already_present, $artist_artwork_path) = getArtistArtwork($w,  $artist->name, true, true);
-                    if($already_present == false) {
-	                    $artworksToDownload = true;
-				        $stmtArtistArtwork->bindValue(':artist_name', $artist->name);
-				        $stmtArtistArtwork->bindValue(':already_fetched', 0);
-				        $stmtArtistArtwork->execute();
-                    }
-
-                    list ($already_present, $album_artwork_path) = getTrackOrAlbumArtwork($w,  $album->uri, true, true);
-                    if($already_present == false) {
-	                    $artworksToDownload = true;
-				        $stmtAlbumArtwork->bindValue(':album_uri', $album->uri);
-				        $stmtAlbumArtwork->bindValue(':already_fetched', 0);
-				        $stmtAlbumArtwork->execute();
-                    }
-
-                    $stmtTrack->bindValue(':mymusic', 0);
-                    $stmtTrack->bindValue(':popularity', $track->popularity);
-                    $stmtTrack->bindValue(':uri', $track->uri);
-                    $stmtTrack->bindValue(':album_uri', $album->uri);
-                    $stmtTrack->bindValue(':artist_uri', $artist->uri);
-                    $stmtTrack->bindValue(':track_name', escapeQuery($track->name));
-                    $stmtTrack->bindValue(':album_name', escapeQuery($album->name));
-                    $stmtTrack->bindValue(':artist_name', escapeQuery($artist->name));
-                    $stmtTrack->bindValue(':album_type', $album->album_type);
-                    $stmtTrack->bindValue(':track_artwork_path', $track_artwork_path);
-                    $stmtTrack->bindValue(':artist_artwork_path', $artist_artwork_path);
-                    $stmtTrack->bindValue(':album_artwork_path', $album_artwork_path);
-                    $stmtTrack->bindValue(':playlist_name', escapeQuery($playlist->name));
-                    $stmtTrack->bindValue(':playlist_uri', $playlist->uri);
-                    $stmtTrack->bindValue(':playable', $playable);
-                    $stmtTrack->bindValue(':added_at', $item->added_at);
-                    $stmtTrack->bindValue(':duration_ms', $track->duration_ms);
-                    $stmtTrack->execute();
-
+					try {
+	                    //
+	                    // Download artworks in Fetch later mode
+	                    list ($already_present, $track_artwork_path) = getTrackOrAlbumArtwork($w,  $track->uri, true, true);
+	                    if($already_present == false) {
+		                    $artworksToDownload = true;
+					        $stmtTrackArtwork->bindValue(':track_uri', $track->uri);
+					        $stmtTrackArtwork->bindValue(':already_fetched', 0);
+					        $stmtTrackArtwork->execute();
+	                    }
+	
+	                    list ($already_present, $artist_artwork_path) = getArtistArtwork($w,  $artist->name, true, true);
+	                    if($already_present == false) {
+		                    $artworksToDownload = true;
+					        $stmtArtistArtwork->bindValue(':artist_name', $artist->name);
+					        $stmtArtistArtwork->bindValue(':already_fetched', 0);
+					        $stmtArtistArtwork->execute();
+	                    }
+	
+	                    list ($already_present, $album_artwork_path) = getTrackOrAlbumArtwork($w,  $album->uri, true, true);
+	                    if($already_present == false) {
+		                    $artworksToDownload = true;
+					        $stmtAlbumArtwork->bindValue(':album_uri', $album->uri);
+					        $stmtAlbumArtwork->bindValue(':already_fetched', 0);
+					        $stmtAlbumArtwork->execute();
+	                    }
+				    } catch (PDOException $e) {
+				        handleDbIssuePdoEcho($dbartworks,$w);
+				        $dbartworks = null;
+				        $dbsettings = null;
+				        $db = null;
+				        return false;
+				    }
+	    
+					try {
+	                    $stmtTrack->bindValue(':mymusic', 0);
+	                    $stmtTrack->bindValue(':popularity', $track->popularity);
+	                    $stmtTrack->bindValue(':uri', $track->uri);
+	                    $stmtTrack->bindValue(':album_uri', $album->uri);
+	                    $stmtTrack->bindValue(':artist_uri', $artist->uri);
+	                    $stmtTrack->bindValue(':track_name', escapeQuery($track->name));
+	                    $stmtTrack->bindValue(':album_name', escapeQuery($album->name));
+	                    $stmtTrack->bindValue(':artist_name', escapeQuery($artist->name));
+	                    $stmtTrack->bindValue(':album_type', $album->album_type);
+	                    $stmtTrack->bindValue(':track_artwork_path', $track_artwork_path);
+	                    $stmtTrack->bindValue(':artist_artwork_path', $artist_artwork_path);
+	                    $stmtTrack->bindValue(':album_artwork_path', $album_artwork_path);
+	                    $stmtTrack->bindValue(':playlist_name', escapeQuery($playlist->name));
+	                    $stmtTrack->bindValue(':playlist_uri', $playlist->uri);
+	                    $stmtTrack->bindValue(':playable', $playable);
+	                    $stmtTrack->bindValue(':added_at', $item->added_at);
+	                    $stmtTrack->bindValue(':duration_ms', $track->duration_ms);
+	                    $stmtTrack->execute();
+				    } catch (PDOException $e) {
+				        handleDbIssuePdoEcho($db,$w);
+				        $dbartworks = null;
+				        $dbsettings = null;
+				        $db = null;
+				        return false;
+				    }
                     $nb_track++;
                     if ($nb_track % 10 === 0) {
                         $w->write('Create Library▹' . $nb_track . '▹' . $nb_tracktotal . '▹' . $words[3], 'update_library_in_progress');
@@ -2442,51 +2546,67 @@ function updateLibrary($w)
             $playable = 0;
         }
 
-        //
-        // Download artworks in Fetch later mode
-        list ($already_present, $track_artwork_path) = getTrackOrAlbumArtwork($w,  $track->uri, true, true);
-        if($already_present == false) {
-	        $artworksToDownload = true;
-	        $stmtTrackArtwork->bindValue(':track_uri', $track->uri);
-	        $stmtTrackArtwork->bindValue(':already_fetched', 0);
-	        $stmtTrackArtwork->execute();
-        }
+		try {
+            //
+            // Download artworks in Fetch later mode
+            list ($already_present, $track_artwork_path) = getTrackOrAlbumArtwork($w,  $track->uri, true, true);
+            if($already_present == false) {
+                $artworksToDownload = true;
+		        $stmtTrackArtwork->bindValue(':track_uri', $track->uri);
+		        $stmtTrackArtwork->bindValue(':already_fetched', 0);
+		        $stmtTrackArtwork->execute();
+            }
 
-        list ($already_present, $artist_artwork_path) = getArtistArtwork($w,  $artist->name, true, true);
-        if($already_present == false) {
-	        $artworksToDownload = true;
-	        $stmtArtistArtwork->bindValue(':artist_name', $artist->name);
-	        $stmtArtistArtwork->bindValue(':already_fetched', 0);
-	        $stmtArtistArtwork->execute();
-        }
+            list ($already_present, $artist_artwork_path) = getArtistArtwork($w,  $artist->name, true, true);
+            if($already_present == false) {
+                $artworksToDownload = true;
+		        $stmtArtistArtwork->bindValue(':artist_name', $artist->name);
+		        $stmtArtistArtwork->bindValue(':already_fetched', 0);
+		        $stmtArtistArtwork->execute();
+            }
 
-        list ($already_present, $album_artwork_path) = getTrackOrAlbumArtwork($w,  $album->uri, true, true);
-        if($already_present == false) {
-	        $artworksToDownload = true;
-	        $stmtAlbumArtwork->bindValue(':album_uri', $album->uri);
-	        $stmtAlbumArtwork->bindValue(':already_fetched', 0);
-	        $stmtAlbumArtwork->execute();
-        }
+            list ($already_present, $album_artwork_path) = getTrackOrAlbumArtwork($w,  $album->uri, true, true);
+            if($already_present == false) {
+                $artworksToDownload = true;
+		        $stmtAlbumArtwork->bindValue(':album_uri', $album->uri);
+		        $stmtAlbumArtwork->bindValue(':already_fetched', 0);
+		        $stmtAlbumArtwork->execute();
+            }
+	    } catch (PDOException $e) {
+	        handleDbIssuePdoEcho($dbartworks,$w);
+	        $dbartworks = null;
+	        $dbsettings = null;
+	        $db = null;
+	        return false;
+	    }
 
-        $stmtTrack->bindValue(':mymusic', 1);
-        $stmtTrack->bindValue(':popularity', $track->popularity);
-        $stmtTrack->bindValue(':uri', $track->uri);
-        $stmtTrack->bindValue(':album_uri', $album->uri);
-        $stmtTrack->bindValue(':artist_uri', $artist->uri);
-        $stmtTrack->bindValue(':track_name', escapeQuery($track->name));
-        $stmtTrack->bindValue(':album_name', escapeQuery($album->name));
-        $stmtTrack->bindValue(':artist_name', escapeQuery($artist->name));
-        $stmtTrack->bindValue(':album_type', $album->album_type);
-        $stmtTrack->bindValue(':track_artwork_path', $track_artwork_path);
-        $stmtTrack->bindValue(':artist_artwork_path', $artist_artwork_path);
-        $stmtTrack->bindValue(':album_artwork_path', $album_artwork_path);
-        $stmtTrack->bindValue(':playlist_name', '');
-        $stmtTrack->bindValue(':playlist_uri', '');
-        $stmtTrack->bindValue(':playable', $playable);
-        $stmtTrack->bindValue(':added_at', $track->added_at);
-        $stmtTrack->bindValue(':duration_ms', $track->duration_ms);
-        $stmtTrack->execute();
-
+		try {
+            $stmtTrack->bindValue(':mymusic', 1);
+            $stmtTrack->bindValue(':popularity', $track->popularity);
+            $stmtTrack->bindValue(':uri', $track->uri);
+            $stmtTrack->bindValue(':album_uri', $album->uri);
+            $stmtTrack->bindValue(':artist_uri', $artist->uri);
+            $stmtTrack->bindValue(':track_name', escapeQuery($track->name));
+            $stmtTrack->bindValue(':album_name', escapeQuery($album->name));
+            $stmtTrack->bindValue(':artist_name', escapeQuery($artist->name));
+            $stmtTrack->bindValue(':album_type', $album->album_type);
+            $stmtTrack->bindValue(':track_artwork_path', $track_artwork_path);
+            $stmtTrack->bindValue(':artist_artwork_path', $artist_artwork_path);
+            $stmtTrack->bindValue(':album_artwork_path', $album_artwork_path);
+            $stmtTrack->bindValue(':playlist_name', escapeQuery($playlist->name));
+            $stmtTrack->bindValue(':playlist_uri', $playlist->uri);
+            $stmtTrack->bindValue(':playable', $playable);
+            $stmtTrack->bindValue(':added_at', $item->added_at);
+            $stmtTrack->bindValue(':duration_ms', $track->duration_ms);
+            $stmtTrack->execute();
+	    } catch (PDOException $e) {
+	        handleDbIssuePdoEcho($db,$w);
+	        $dbartworks = null;
+	        $dbsettings = null;
+	        $db = null;
+	        return false;
+	    }
+				    
         $nb_track++;
         if ($nb_track % 10 === 0) {
             $w->write('Create Library▹' . $nb_track . '▹' . $nb_tracktotal . '▹' . $words[3], 'update_library_in_progress');
@@ -2546,6 +2666,7 @@ function updateLibrary($w)
     } catch (PDOException $e) {
         handleDbIssuePdoEcho($db,$w);
         $dbsettings = null;
+        $dbartworks = null;
         $db = null;
         return false;
     }
