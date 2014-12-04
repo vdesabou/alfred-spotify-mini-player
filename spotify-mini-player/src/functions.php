@@ -1567,6 +1567,120 @@ function displayLyrics($w, $artist, $title)
     return;
 }
 
+
+/**
+ * downloadArtworks function.
+ *
+ * @access public
+ * @param mixed $w
+ * @return void
+ */
+function downloadArtworks($w) {
+
+    if (!$w->internet()) {
+        displayNotificationWithArtwork("Error: Download Artworks,
+No internet connection", './images/warning.png');
+        return;
+    }
+
+    //
+    // Get list of artworks to download from DB
+    //
+
+    $dbfile = $w->data() . '/fetch_artworks.db';
+    try {
+        $dbartworks = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
+        $dbartworks->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+		// artists
+        $getArtists = "select artist_name from artists where already_fetched=0";
+        $stmtGetArtists = $dbartworks->prepare($getArtists);
+
+		$updateArtist = "update artists set already_fetched=1 where artist_name=:artist_name";
+        $stmtUpdateArtist = $dbartworks->prepare($updateArtist);
+
+		// tracks
+        $getTracks = "select track_uri from tracks where already_fetched=0";
+        $stmtGetTracks = $dbartworks->prepare($getTracks);
+
+		$updateTrack = "update tracks set already_fetched=1 where track_uri=:track_uri";
+        $stmtUpdateTrack = $dbartworks->prepare($updateTrack);
+
+		// albums
+        $getAlbums = "select album_uri from albums where already_fetched=0";
+        $stmtGetAlbums = $dbartworks->prepare($getAlbums);
+
+		$updateAlbum = "update albums set already_fetched=1 where album_uri=:album_uri";
+        $stmtUpdateAlbum = $dbartworks->prepare($updateAlbum);
+
+		////
+		// Artists
+		//
+		$artists = $stmtGetArtists->execute();
+
+        while ($artist = $stmtGetArtists->fetch()) {
+
+			$ret = getArtistArtwork($w, $artist[0], true, false, true);
+	        if($ret == false) {
+		        echo "WARN: $artist[0] artwork not found, using default \n";
+	        } else if(!is_string($ret)) {
+		        echo "INFO: $artist[0] artwork was fetched \n";
+	        } else if (is_string($ret)) {
+		        //echo "INFO: $artist[0] artwork was already there $ret \n";
+	        }
+
+            $stmtUpdateArtist->bindValue(':artist_name', $artist[0]);
+            $stmtUpdateArtist->execute();
+        }
+
+		////
+		// Tracks
+		//
+		$tracks = $stmtGetTracks->execute();
+
+        while ($track = $stmtGetTracks->fetch()) {
+
+			$ret = getTrackOrAlbumArtwork($w, $track[0], true, false, true);
+	        if($ret == false) {
+		        echo "WARN: $track[0] artwork not found, using default \n";
+	        } else if(!is_string($ret)) {
+		        echo "INFO: $track[0] artwork was fetched \n";
+	        } else if (is_string($ret)) {
+		        //echo "INFO: $artist[0] artwork was already there $ret \n";
+	        }
+
+            $stmtUpdateTrack->bindValue(':track_uri', $track[0]);
+            $stmtUpdateTrack->execute();
+        }
+
+		////
+		// Albums
+		//
+		$albums = $stmtGetAlbums->execute();
+
+        while ($album = $stmtGetAlbums->fetch()) {
+
+			$ret = getTrackOrAlbumArtwork($w, $album[0], true, false, true);
+	        if($ret == false) {
+		        echo "WARN: $album[0] artwork not found, using default \n";
+	        } else if(!is_string($ret)) {
+		        echo "INFO: $album[0] artwork was fetched \n";
+	        } else if (is_string($ret)) {
+		        //echo "INFO: $artist[0] artwork was already there $ret \n";
+	        }
+
+            $stmtUpdateAlbum->bindValue(':album_uri', $album[0]);
+            $stmtUpdateAlbum->execute();
+        }
+
+    } catch (PDOException $e) {
+        handleDbIssuePdoEcho($dbartworks,$w);
+        $dbartworks = null;
+        return false;
+    }
+	return true;
+}
+
 /**
  * getTrackOrAlbumArtwork function.
  *
@@ -1576,7 +1690,7 @@ function displayLyrics($w, $artist, $title)
  * @param mixed $fetchIfNotPresent
  * @return void
  */
-function getTrackOrAlbumArtwork($w, $spotifyURL, $fetchIfNotPresent)
+function getTrackOrAlbumArtwork($w, $spotifyURL, $fetchIfNotPresent, $fetchLater = false, $isLaterFetch = false)
 {
 
     $hrefs = explode(':', $spotifyURL);
@@ -1593,6 +1707,17 @@ function getTrackOrAlbumArtwork($w, $spotifyURL, $fetchIfNotPresent)
     $currentArtwork = $w->data() . "/artwork/" . hash('md5', $hrefs[2] . ".png") . "/" . "$hrefs[2].png";
     $artwork = "";
 
+	//
+    if($fetchLater == true) {
+		if (!is_file($currentArtwork)) {
+			return array (false, $currentArtwork);
+		} else {
+			return array (true, $currentArtwork);
+		}
+        // always return currentArtwork
+        return $currentArtwork;
+    }
+
     if (!is_file($currentArtwork) || (is_file($currentArtwork) && filesize($currentArtwork) == 0)) {
         if ($fetchIfNotPresent == true || (is_file($currentArtwork) && filesize($currentArtwork) == 0)) {
             $artwork = getArtworkURL($w, $hrefs[1], $hrefs[2]);
@@ -1608,6 +1733,42 @@ function getTrackOrAlbumArtwork($w, $spotifyURL, $fetchIfNotPresent)
                 );
 
                 $w->request("$artwork", $options);
+
+                if($isLaterFetch == true) {
+	             	return true;
+	            }
+            } else {
+	            if($isLaterFetch == true) {
+	                if (!file_exists($w->data() . "/artwork/" . hash('md5', $hrefs[2] . ".png"))):
+	                    exec("mkdir '" . $w->data() . "/artwork/" . hash('md5', $hrefs[2] . ".png") . "'");
+	                endif;
+
+		            if ($isAlbum) {
+		                copy('./images/albums.png', $currentArtwork);
+		            } else {
+		                copy('./images/tracks.png', $currentArtwork);
+		            }
+		            return false;
+	            } else {
+		            if ($isAlbum) {
+		                return "./images/albums.png";
+		            } else {
+		                return "./images/tracks.png";
+		            }
+	            }
+            }
+        } else {
+            if($isLaterFetch == true) {
+                if (!file_exists($w->data() . "/artwork/" . hash('md5', $hrefs[2] . ".png"))):
+                    exec("mkdir '" . $w->data() . "/artwork/" . hash('md5', $hrefs[2] . ".png") . "'");
+                endif;
+
+	            if ($isAlbum) {
+	                copy('./images/albums.png', $currentArtwork);
+	            } else {
+	                copy('./images/tracks.png', $currentArtwork);
+	            }
+	            return false;
             } else {
 	            if ($isAlbum) {
 	                return "./images/albums.png";
@@ -1615,28 +1776,48 @@ function getTrackOrAlbumArtwork($w, $spotifyURL, $fetchIfNotPresent)
 	                return "./images/tracks.png";
 	            }
             }
-        } else {
-            if ($isAlbum) {
-                return "./images/albums.png";
-            } else {
-                return "./images/tracks.png";
-            }
         }
     } else {
         if (filesize($currentArtwork) == 0) {
-            if ($isAlbum) {
-                return "./images/albums.png";
+            if($isLaterFetch == true) {
+                if (!file_exists($w->data() . "/artwork/" . hash('md5', $hrefs[2] . ".png"))):
+                    exec("mkdir '" . $w->data() . "/artwork/" . hash('md5', $hrefs[2] . ".png") . "'");
+                endif;
+
+	            if ($isAlbum) {
+	                copy('./images/albums.png', $currentArtwork);
+	            } else {
+	                copy('./images/tracks.png', $currentArtwork);
+	            }
+	            return false;
             } else {
-                return "./images/tracks.png";
+	            if ($isAlbum) {
+	                return "./images/albums.png";
+	            } else {
+	                return "./images/tracks.png";
+	            }
             }
         }
     }
 
     if (is_numeric($artwork) && $artwork == 0) {
-        if ($isAlbum) {
-            return "./images/albums.png";
+        if($isLaterFetch == true) {
+            if (!file_exists($w->data() . "/artwork/" . hash('md5', $hrefs[2] . ".png"))):
+                exec("mkdir '" . $w->data() . "/artwork/" . hash('md5', $hrefs[2] . ".png") . "'");
+            endif;
+
+            if ($isAlbum) {
+                copy('./images/albums.png', $currentArtwork);
+            } else {
+                copy('./images/tracks.png', $currentArtwork);
+            }
+            return false;
         } else {
-            return "./images/tracks.png";
+            if ($isAlbum) {
+                return "./images/albums.png";
+            } else {
+                return "./images/tracks.png";
+            }
         }
     } else {
         return $currentArtwork;
@@ -1720,7 +1901,7 @@ function getPlaylistArtwork($w, $playlistURI, $fetchIfNotPresent, $forceFetch = 
  * @param mixed $fetchIfNotPresent
  * @return void
  */
-function getArtistArtwork($w, $artist, $fetchIfNotPresent)
+function getArtistArtwork($w, $artist, $fetchIfNotPresent = false, $fetchLater = false, $isLaterFetch = false)
 {
     $parsedArtist = urlencode(escapeQuery($artist));
 
@@ -1730,6 +1911,17 @@ function getArtistArtwork($w, $artist, $fetchIfNotPresent)
 
     $currentArtwork = $w->data() . "/artwork/" . hash('md5', $parsedArtist . ".png") . "/" . "$parsedArtist.png";
     $artwork = "";
+
+	//
+    if($fetchLater == true) {
+		if (!is_file($currentArtwork)) {
+			return array (false, $currentArtwork);
+		} else {
+			return array (true, $currentArtwork);
+		}
+        // always return currentArtwork
+        return $currentArtwork;
+    }
 
     if (!is_file($currentArtwork) || (is_file($currentArtwork) && filesize($currentArtwork) == 0)) {
         if ($fetchIfNotPresent == true || (is_file($currentArtwork) && filesize($currentArtwork) == 0)) {
@@ -1745,20 +1937,56 @@ function getArtistArtwork($w, $artist, $fetchIfNotPresent)
                     CURLOPT_FILE => $fp
                 );
                 $w->request("$artwork", $options);
+
+                if($isLaterFetch == true) {
+	             	return true;
+	            }
+            } else {
+	            if($isLaterFetch == true) {
+	                if (!file_exists($w->data() . "/artwork/" . hash('md5', $parsedArtist . ".png"))):
+	                    exec("mkdir '" . $w->data() . "/artwork/" . hash('md5', $parsedArtist . ".png") . "'");
+	                endif;
+		            copy('./images/artists.png', $currentArtwork);
+		            return false;
+	            } else {
+		            return "./images/artists.png";
+	            }
+            }
+        } else {
+            if($isLaterFetch == true) {
+                if (!file_exists($w->data() . "/artwork/" . hash('md5', $parsedArtist . ".png"))):
+                    exec("mkdir '" . $w->data() . "/artwork/" . hash('md5', $parsedArtist . ".png") . "'");
+                endif;
+	            copy('./images/artists.png', $currentArtwork);
+	            return false;
             } else {
 	            return "./images/artists.png";
             }
-        } else {
-            return "./images/artists.png";
         }
     } else {
         if (filesize($currentArtwork) == 0) {
-            return "./images/artists.png";
+            if($isLaterFetch == true) {
+                if (!file_exists($w->data() . "/artwork/" . hash('md5', $parsedArtist . ".png"))):
+                    exec("mkdir '" . $w->data() . "/artwork/" . hash('md5', $parsedArtist . ".png") . "'");
+                endif;
+	            copy('./images/artists.png', $currentArtwork);
+	            return false;
+            } else {
+	            return "./images/artists.png";
+            }
         }
     }
 
     if (is_numeric($artwork) && $artwork == 0) {
-        return "./images/artists.png";
+        if($isLaterFetch == true) {
+            if (!file_exists($w->data() . "/artwork/" . hash('md5', $parsedArtist . ".png"))):
+                exec("mkdir '" . $w->data() . "/artwork/" . hash('md5', $parsedArtist . ".png") . "'");
+            endif;
+            copy('./images/artists.png', $currentArtwork);
+            return false;
+        } else {
+            return "./images/artists.png";
+        }
     } else {
         return $currentArtwork;
     }
@@ -1930,6 +2158,24 @@ function updateLibrary($w)
         return false;
     }
 
+	// db for fetch artworks
+    $dbfile = $w->data() . '/fetch_artworks.db';
+    if (file_exists($dbfile)) {
+    	unlink($dbfile);
+    }
+    touch($dbfile);
+
+
+    try {
+        $dbartworks = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
+        $dbartworks->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    } catch (PDOException $e) {
+        handleDbIssuePdoEcho($dbartworks,$w);
+        $dbartworks = null;
+        $db = null;
+        return false;
+    }
+
     // get the total number of tracks
     $nb_tracktotal = 0;
     $savedListPlaylist = array();
@@ -1988,6 +2234,11 @@ function updateLibrary($w)
     $db->exec("create table counters (all_tracks int, mymusic_tracks int, all_artists int, mymusic_artists int, all_albums int, mymusic_albums int, playlists int)");
     $db->exec("create table playlists (uri text PRIMARY KEY NOT NULL, name text, nb_tracks int, author text, username text, playlist_artwork_path text, ownedbyuser boolean)");
 
+	// DB artowrks
+	$dbartworks->exec("create table artists (artist_name text PRIMARY KEY NOT NULL, already_fetched boolean)");
+	$dbartworks->exec("create table tracks (track_uri text PRIMARY KEY NOT NULL, already_fetched boolean)");
+	$dbartworks->exec("create table albums (album_uri text PRIMARY KEY NOT NULL, already_fetched boolean)");
+
     // Handle playlists
     $w->write('Create Library▹0▹' . $nb_tracktotal . '▹' . $words[3], 'update_library_in_progress');
 
@@ -1997,6 +2248,17 @@ function updateLibrary($w)
 
     $insertTrack = "insert into tracks values (:mymusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_type,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:added_at,:duration_ms)";
     $stmtTrack = $db->prepare($insertTrack);
+
+	// artworks
+    $insertArtistArtwork= "insert or ignore into artists values (:artist_name,:already_fetched)";
+    $stmtArtistArtwork = $dbartworks->prepare($insertArtistArtwork);
+
+    $insertTrackArtwork= "insert or ignore into tracks values (:track_uri,:already_fetched)";
+    $stmtTrackArtwork = $dbartworks->prepare($insertTrackArtwork);
+
+    $insertAlbumArtwork= "insert or ignore into albums values (:album_uri,:already_fetched)";
+    $stmtAlbumArtwork = $dbartworks->prepare($insertAlbumArtwork);
+
 
     foreach ($savedListPlaylist as $playlist) {
         $tracks = $playlist->tracks;
@@ -2073,10 +2335,27 @@ function updateLibrary($w)
                     }
 
                     //
-                    // Download artworks
-                    $track_artwork_path = getTrackOrAlbumArtwork($w,  $track->uri, true);
-                    $artist_artwork_path = getArtistArtwork($w,  $artist->name, true);
-                    $album_artwork_path = getTrackOrAlbumArtwork($w,  $album->uri, true);
+                    // Download artworks in Fetch later mode
+                    list ($already_present, $track_artwork_path) = getTrackOrAlbumArtwork($w,  $track->uri, true, true);
+                    if($already_present == false) {
+				        $stmtTrackArtwork->bindValue(':track_uri', $track->uri);
+				        $stmtTrackArtwork->bindValue(':already_fetched', 0);
+				        $stmtTrackArtwork->execute();
+                    }
+
+                    list ($already_present, $artist_artwork_path) = getArtistArtwork($w,  $artist->name, true, true);
+                    if($already_present == false) {
+				        $stmtArtistArtwork->bindValue(':artist_name', $artist->name);
+				        $stmtArtistArtwork->bindValue(':already_fetched', 0);
+				        $stmtArtistArtwork->execute();
+                    }
+
+                    list ($already_present, $album_artwork_path) = getTrackOrAlbumArtwork($w,  $album->uri, true, true);
+                    if($already_present == false) {
+				        $stmtAlbumArtwork->bindValue(':album_uri', $album->uri);
+				        $stmtAlbumArtwork->bindValue(':already_fetched', 0);
+				        $stmtAlbumArtwork->execute();
+                    }
 
                     $stmtTrack->bindValue(':mymusic', 0);
                     $stmtTrack->bindValue(':popularity', $track->popularity);
@@ -2153,10 +2432,27 @@ function updateLibrary($w)
         }
 
         //
-        // Download artworks
-        $track_artwork_path = getTrackOrAlbumArtwork($w,  $track->uri, true);
-        $artist_artwork_path = getArtistArtwork($w,  $artist->name, true);
-        $album_artwork_path = getTrackOrAlbumArtwork($w,  $album->uri, true);
+        // Download artworks in Fetch later mode
+        list ($already_present, $track_artwork_path) = getTrackOrAlbumArtwork($w,  $track->uri, true, true);
+        if($already_present == false) {
+	        $stmtTrackArtwork->bindValue(':track_uri', $track->uri);
+	        $stmtTrackArtwork->bindValue(':already_fetched', 0);
+	        $stmtTrackArtwork->execute();
+        }
+
+        list ($already_present, $artist_artwork_path) = getArtistArtwork($w,  $artist->name, true, true);
+        if($already_present == false) {
+	        $stmtArtistArtwork->bindValue(':artist_name', $artist->name);
+	        $stmtArtistArtwork->bindValue(':already_fetched', 0);
+	        $stmtArtistArtwork->execute();
+        }
+
+        list ($already_present, $album_artwork_path) = getTrackOrAlbumArtwork($w,  $album->uri, true, true);
+        if($already_present == false) {
+	        $stmtAlbumArtwork->bindValue(':album_uri', $album->uri);
+	        $stmtAlbumArtwork->bindValue(':already_fetched', 0);
+	        $stmtAlbumArtwork->execute();
+        }
 
         $stmtTrack->bindValue(':mymusic', 1);
         $stmtTrack->bindValue(':popularity', $track->popularity);

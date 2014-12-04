@@ -603,6 +603,17 @@
 				<string></string>
 			</dict>
 		</array>
+		<key>9CDCECCE-F8C4-4DEF-94C0-8B8738025939</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>69012E37-30CA-45FB-A794-192808BF1663</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 		<key>A0EAB8B1-F034-490F-9534-44ADF572AF4E</key>
 		<array>
 			<dict>
@@ -3564,6 +3575,44 @@ php -f ./src/action.php -- "{query}" "LOOKUP_CURRENT_ARTIST" "" &gt;&gt; "$alfre
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>force_download_artworks</string>
+				<key>text</key>
+				<string>Force download of missing artworks</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>9CDCECCE-F8C4-4DEF-94C0-8B8738025939</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>echo "===== FORCE_DOWNLOAD_ARTWORKS ========" &gt;&gt; "$alfred_workflow_cache/action.log"
+echo "`date` {query}" &gt;&gt; "$alfred_workflow_cache/action.log"
+php -f ./src/action.php -- "{query}" "FORCE_DOWNLOAD_ARTWORKS" "FORCE_DOWNLOAD_ARTWORKS" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>69012E37-30CA-45FB-A794-192808BF1663</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string>Github page:
@@ -3817,6 +3866,11 @@ SOFTWARE.</string>
 			<key>ypos</key>
 			<real>1340</real>
 		</dict>
+		<key>69012E37-30CA-45FB-A794-192808BF1663</key>
+		<dict>
+			<key>ypos</key>
+			<real>7450</real>
+		</dict>
 		<key>69E43FC9-457E-4082-8930-A1B00B6A5514</key>
 		<dict>
 			<key>ypos</key>
@@ -3951,6 +4005,11 @@ SOFTWARE.</string>
 		<dict>
 			<key>ypos</key>
 			<real>5860</real>
+		</dict>
+		<key>9CDCECCE-F8C4-4DEF-94C0-8B8738025939</key>
+		<dict>
+			<key>ypos</key>
+			<real>7450</real>
 		</dict>
 		<key>A0EAB8B1-F034-490F-9534-44ADF572AF4E</key>
 		<dict>
