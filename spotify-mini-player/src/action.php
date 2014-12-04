@@ -205,12 +205,12 @@ if ($type == "TRACK" && $other_settings == "") {
 } else if ($type == "KILL_UPDATE") {
     killUpdate($w);
     return;
-} else if ($type == "FORCE_DOWNLOAD_ARTWORKS") {
+} else if ($type == "DOWNLOAD_ARTWORKS") {
 	if(downloadArtworks($w) == false) {
 		displayNotificationWithArtwork("Error when downloading artworks",'./images/warning.png');
 		return;
 	}
-	displayNotificationWithArtwork("ok!",'./images/warning.png');
+	displayNotificationWithArtwork("All artworks have been downloaded. Enjoy",'./images/info.png');
     return;
 } else if ($type == "NEXT") {
     exec("osascript -e 'tell application \"Spotify\" to next track'");

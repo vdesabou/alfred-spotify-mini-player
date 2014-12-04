@@ -3600,9 +3600,9 @@ php -f ./src/action.php -- "{query}" "LOOKUP_CURRENT_ARTIST" "" &gt;&gt; "$alfre
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>echo "===== FORCE_DOWNLOAD_ARTWORKS ========" &gt;&gt; "$alfred_workflow_cache/action.log"
+				<string>echo "===== DOWNLOAD_ARTWORKS ========" &gt;&gt; "$alfred_workflow_cache/action.log"
 echo "`date` {query}" &gt;&gt; "$alfred_workflow_cache/action.log"
-php -f ./src/action.php -- "{query}" "FORCE_DOWNLOAD_ARTWORKS" "FORCE_DOWNLOAD_ARTWORKS" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+php -f ./src/action.php -- "{query}" "DOWNLOAD_ARTWORKS" "DOWNLOAD_ARTWORKS" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>

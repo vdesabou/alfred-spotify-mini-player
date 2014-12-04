@@ -1678,6 +1678,9 @@ No internet connection", './images/warning.png');
         $dbartworks = null;
         return false;
     }
+
+    exec("echo \"END `date` \" >> \"" . $w->cache() . "/action.log\"");
+
 	return true;
 }
 
@@ -2079,15 +2082,14 @@ function getArtistArtworkURL($w, $artist)
  */
 function updateLibrary($w)
 {
+    touch($w->data() . "/update_library_in_progress");
+    $w->write('InitLibrary▹' . 0 . '▹' . 0 . '▹' . time(), 'update_library_in_progress');
 
     $api = getSpotifyWebAPI($w);
     if ($api == false) {
         displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png');
         return false;
     }
-
-    touch($w->data() . "/update_library_in_progress");
-    $w->write('InitLibrary▹' . 0 . '▹' . 0 . '▹' . time(), 'update_library_in_progress');
 
     $in_progress_data = $w->read('update_library_in_progress');
 
@@ -2159,11 +2161,14 @@ function updateLibrary($w)
     }
 
 	// db for fetch artworks
+	$fetch_artworks_existed = true;
     $dbfile = $w->data() . '/fetch_artworks.db';
-    if (file_exists($dbfile)) {
-    	unlink($dbfile);
+    if (!file_exists($dbfile)) {
+    	touch($dbfile);
+    	$fetch_artworks_existed = false;
     }
-    touch($dbfile);
+    // kill previous process if running
+	exec("pid=$(ps -efx | grep \"php\" | egrep \"DOWNLOAD_ARTWORKS\" | grep -v grep | awk '{print $2}'); if [ \"$pid\" != \"\" ]; then kill -9 \"$pid\";echo \"KILLED `date` PIDs: $pid\"; fi >> \"" . $w->cache() . "/action.log\"");
 
 
     try {
@@ -2235,9 +2240,11 @@ function updateLibrary($w)
     $db->exec("create table playlists (uri text PRIMARY KEY NOT NULL, name text, nb_tracks int, author text, username text, playlist_artwork_path text, ownedbyuser boolean)");
 
 	// DB artowrks
-	$dbartworks->exec("create table artists (artist_name text PRIMARY KEY NOT NULL, already_fetched boolean)");
-	$dbartworks->exec("create table tracks (track_uri text PRIMARY KEY NOT NULL, already_fetched boolean)");
-	$dbartworks->exec("create table albums (album_uri text PRIMARY KEY NOT NULL, already_fetched boolean)");
+	if($fetch_artworks_existed == false) {
+		$dbartworks->exec("create table artists (artist_name text PRIMARY KEY NOT NULL, already_fetched boolean)");
+		$dbartworks->exec("create table tracks (track_uri text PRIMARY KEY NOT NULL, already_fetched boolean)");
+		$dbartworks->exec("create table albums (album_uri text PRIMARY KEY NOT NULL, already_fetched boolean)");
+	}
 
     // Handle playlists
     $w->write('Create Library▹0▹' . $nb_tracktotal . '▹' . $words[3], 'update_library_in_progress');
@@ -2259,6 +2266,7 @@ function updateLibrary($w)
     $insertAlbumArtwork= "insert or ignore into albums values (:album_uri,:already_fetched)";
     $stmtAlbumArtwork = $dbartworks->prepare($insertAlbumArtwork);
 
+	$artworksToDownload = false;
 
     foreach ($savedListPlaylist as $playlist) {
         $tracks = $playlist->tracks;
@@ -2338,6 +2346,7 @@ function updateLibrary($w)
                     // Download artworks in Fetch later mode
                     list ($already_present, $track_artwork_path) = getTrackOrAlbumArtwork($w,  $track->uri, true, true);
                     if($already_present == false) {
+	                    $artworksToDownload = true;
 				        $stmtTrackArtwork->bindValue(':track_uri', $track->uri);
 				        $stmtTrackArtwork->bindValue(':already_fetched', 0);
 				        $stmtTrackArtwork->execute();
@@ -2345,6 +2354,7 @@ function updateLibrary($w)
 
                     list ($already_present, $artist_artwork_path) = getArtistArtwork($w,  $artist->name, true, true);
                     if($already_present == false) {
+	                    $artworksToDownload = true;
 				        $stmtArtistArtwork->bindValue(':artist_name', $artist->name);
 				        $stmtArtistArtwork->bindValue(':already_fetched', 0);
 				        $stmtArtistArtwork->execute();
@@ -2352,6 +2362,7 @@ function updateLibrary($w)
 
                     list ($already_present, $album_artwork_path) = getTrackOrAlbumArtwork($w,  $album->uri, true, true);
                     if($already_present == false) {
+	                    $artworksToDownload = true;
 				        $stmtAlbumArtwork->bindValue(':album_uri', $album->uri);
 				        $stmtAlbumArtwork->bindValue(':already_fetched', 0);
 				        $stmtAlbumArtwork->execute();
@@ -2435,6 +2446,7 @@ function updateLibrary($w)
         // Download artworks in Fetch later mode
         list ($already_present, $track_artwork_path) = getTrackOrAlbumArtwork($w,  $track->uri, true, true);
         if($already_present == false) {
+	        $artworksToDownload = true;
 	        $stmtTrackArtwork->bindValue(':track_uri', $track->uri);
 	        $stmtTrackArtwork->bindValue(':already_fetched', 0);
 	        $stmtTrackArtwork->execute();
@@ -2442,6 +2454,7 @@ function updateLibrary($w)
 
         list ($already_present, $artist_artwork_path) = getArtistArtwork($w,  $artist->name, true, true);
         if($already_present == false) {
+	        $artworksToDownload = true;
 	        $stmtArtistArtwork->bindValue(':artist_name', $artist->name);
 	        $stmtArtistArtwork->bindValue(':already_fetched', 0);
 	        $stmtArtistArtwork->execute();
@@ -2449,6 +2462,7 @@ function updateLibrary($w)
 
         list ($already_present, $album_artwork_path) = getTrackOrAlbumArtwork($w,  $album->uri, true, true);
         if($already_present == false) {
+	        $artworksToDownload = true;
 	        $stmtAlbumArtwork->bindValue(':album_uri', $album->uri);
 	        $stmtAlbumArtwork->bindValue(':already_fetched', 0);
 	        $stmtAlbumArtwork->execute();
@@ -2539,7 +2553,7 @@ function updateLibrary($w)
     $elapsed_time = time() - $words[3];
     displayNotificationWithArtwork("Library (re-)created (" . $nb_track . " tracks) - took " . beautifyTime($elapsed_time),'./images/recreate.png');
 
-    unlink($w->data() . "/update_library_in_progress");
+
     if (file_exists($w->data() . '/library_old.db')) {
         unlink($w->data() . '/library_old.db');
     }
@@ -2547,11 +2561,20 @@ function updateLibrary($w)
     unlink($w->data() . '/settings_tmp.db');
 
     // remove legacy spotify app if needed
-    if (file_exists($w->data() . "/library.db")) {
-        if (file_exists(exec('printf $HOME') . "/Spotify/spotify-app-miniplayer")) {
-            exec("rm -rf " . exec('printf $HOME') . "/Spotify/spotify-app-miniplayer");
-        }
+    if (file_exists(exec('printf $HOME') . "/Spotify/spotify-app-miniplayer")) {
+        exec("rm -rf " . exec('printf $HOME') . "/Spotify/spotify-app-miniplayer");
     }
+
+	// Download artworks in background
+	if($artworksToDownload ==  true) {
+		exec("echo \"===== DOWNLOAD_ARTWORKS ========\" >> \"" . $w->cache() . "/action.log\"");
+
+		exec("echo \"START `date` \" >> \"" . $w->cache() . "/action.log\"");
+
+	    exec("php -f ./src/action.php -- \"\" \"DOWNLOAD_ARTWORKS\" \"DOWNLOAD_ARTWORKS\" >> \"" .  $w->cache() . "/action.log\" 2>&1 & ");
+	}
+
+    unlink($w->data() . "/update_library_in_progress");
 }
 
 
