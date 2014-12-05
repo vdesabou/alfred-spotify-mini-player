@@ -355,7 +355,7 @@ if (mb_strlen($query) < 3 ||
             $w->result(null, '', 'Albums in "Your Music"', 'Browse by album' . ' (' . $mymusic_albums . ' albums)', './images/albums.png', 'no', null, 'Album▹');
         }
 
-        $w->result(null, '', 'Charts', 'Browse charts', './images/numbers.png', 'no', null, 'Charts▹');
+        //$w->result(null, '', 'Charts', 'Browse charts', './images/numbers.png', 'no', null, 'Charts▹');
 
         if ($is_spotifious_active == true) {
             $spotifious_state = 'enabled';
