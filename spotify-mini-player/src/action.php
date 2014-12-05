@@ -586,28 +586,6 @@ if ($playlist_uri != "" && $other_settings == "") {
         return;
     }
 } else if ($other_action != "") {
-    //
-    // Read settings from DB
-    //
-
-    $dbfile = $w->data() . '/settings.db';
-    try {
-        $dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
-        $dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $getSettings = 'select is_alfred_playlist_active,alfred_playlist_uri,alfred_playlist_name from settings';
-        $stmt = $dbsettings->prepare($getSettings);
-        $stmt->execute();
-        $setting = $stmt->fetch();
-        $is_alfred_playlist_active = $setting[0];
-        $alfred_playlist_uri = $setting[1];
-        $alfred_playlist_name = $setting[2];
-    } catch (PDOException $e) {
-        handleDbIssuePdoEcho($dbsettings,$w);
-        $dbsettings = null;
-        return false;
-    }
-
-
     if ($other_action == "disable_all_playlist") {
         $setSettings = "update settings set all_playlists=0";
         $dbfile = $w->data() . "/settings.db";
