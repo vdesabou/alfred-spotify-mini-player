@@ -461,11 +461,22 @@ function addCurrentTrackToYourMusic($w)
  */
 function getRandomTrack($w)
 {
+	// check for library DB
+	$dbfile = "";
+	if (file_exists($w->data() . '/update_library_in_progress')) {
+		if (file_exists($w->data() . '/library_old.db')) {
+			$dbfile = $w->data() . '/library_old.db';
+		}
+	} else {
+		$dbfile = $w->data() . "/library.db";
+	}
+	if ($dbfile == "") {
+	    return false;
+	}
+
     //
     // Get random track from DB
     //
-
-    $dbfile = $w->data() . "/library.db";
     try {
         $db= new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
