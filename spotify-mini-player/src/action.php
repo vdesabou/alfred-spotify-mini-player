@@ -178,9 +178,17 @@ if ($type == "TRACK" && $other_settings == "") {
     displayLyricsForCurrentTrack();
     return;
 } else if ($type == "CURRENT_ARTIST_RADIO") {
+    if (file_exists($w->data() . '/update_library_in_progress')) {
+        displayNotificationWithArtwork("Error: cannot modify library while update is in progress",'./images/warning.png');
+        return;
+    }
     createRadioArtistPlaylistForCurrentArtist($w);
     return;
 } else if ($type == "CURRENT_TRACK_RADIO") {
+    if (file_exists($w->data() . '/update_library_in_progress')) {
+        displayNotificationWithArtwork("Error: cannot modify library while update is in progress",'./images/warning.png');
+        return;
+    }
     createRadioSongPlaylistForCurrentTrack($w);
     return;
 } else if ($type == "LOOKUP_CURRENT_ARTIST") {
@@ -227,9 +235,17 @@ if ($type == "TRACK" && $other_settings == "") {
     refreshLibrary($w);
     return;
 } else if ($type == "ADD_CURRENT_TRACK") {
+    if (file_exists($w->data() . '/update_library_in_progress')) {
+        displayNotificationWithArtwork("Error: cannot modify library while update is in progress",'./images/warning.png');
+        return;
+    }
     addCurrentTrackToAlfredPlaylistOrYourMusic($w);
     return;
 } else if ($type == "ADD_CURRENT_TRACK_TO") {
+    if (file_exists($w->data() . '/update_library_in_progress')) {
+        displayNotificationWithArtwork("Error: cannot modify library while update is in progress",'./images/warning.png');
+        return;
+    }
     addCurrentTrackTo($w);
     return;
 } else if ($type == "ALBUM_OR_PLAYLIST") {
@@ -406,6 +422,11 @@ if ($playlist_uri != "" && $other_settings == "") {
 
     } else if ($setting[0] == "ADD_TO_PLAYLIST") {
 
+	    if (file_exists($w->data() . '/update_library_in_progress')) {
+	        displayNotificationWithArtwork("Error: cannot modify library while update is in progress",'./images/warning.png');
+	        return;
+	    }
+
 		//if playlist_uri is notset, then create it
 		if($setting[1] == 'notset') {
 
@@ -484,7 +505,10 @@ if ($playlist_uri != "" && $other_settings == "") {
             }
         }
     } else if ($setting[0] == "ADD_TO_YOUR_MUSIC") {
-
+		    if (file_exists($w->data() . '/update_library_in_progress')) {
+		        displayNotificationWithArtwork("Error: cannot modify library while update is in progress",'./images/warning.png');
+		        return;
+		    }
 			// add track to your music
 			if($track_uri != '') {
 				$track_artwork_path = getTrackOrAlbumArtwork($w,  $track_uri, true);
@@ -638,6 +662,10 @@ if ($playlist_uri != "" && $other_settings == "") {
         displayLyricsForCurrentTrack();
         return;
     } else if ($other_action == "current_track_radio") {
+	    if (file_exists($w->data() . '/update_library_in_progress')) {
+	        displayNotificationWithArtwork("Error: cannot modify library while update is in progress",'./images/warning.png');
+	        return;
+	    }
         createRadioSongPlaylistForCurrentTrack($w);
         return;
     } else if ($other_action == "play_current_artist") {
@@ -679,6 +707,10 @@ if ($playlist_uri != "" && $other_settings == "") {
         displayNotificationForCurrentTrack($w);
         return;
     } else if ($other_action == "add_current_track_to") {
+	    if (file_exists($w->data() . '/update_library_in_progress')) {
+	        displayNotificationWithArtwork("Error: cannot modify library while update is in progress",'./images/warning.png');
+	        return;
+	    }
 	    addCurrentTrackTo($w);
         return;
     } else if ($other_action == "previous") {
@@ -690,6 +722,10 @@ if ($playlist_uri != "" && $other_settings == "") {
         displayNotificationForCurrentTrack($w);
         return;
     } else if ($other_action == "add_current_track") {
+	    if (file_exists($w->data() . '/update_library_in_progress')) {
+	        displayNotificationWithArtwork("Error: cannot modify library while update is in progress",'./images/warning.png');
+	        return;
+	    }
         addCurrentTrackToAlfredPlaylistOrYourMusic($w);
         return;
     } else if ($other_action == "random") {
@@ -730,12 +766,24 @@ if ($playlist_uri != "" && $other_settings == "") {
         displayNotificationWithArtwork('🔈 Album ' . $album_name, $album_artwork_path);
         return;
     } else if ($other_action == "radio_artist") {
+	    if (file_exists($w->data() . '/update_library_in_progress')) {
+	        displayNotificationWithArtwork("Error: cannot modify library while update is in progress",'./images/warning.png');
+	        return;
+	    }
         createRadioArtistPlaylist($w, $artist_name);
         return;
     } else if ($other_action == "update_library") {
+	    if (file_exists($w->data() . '/update_library_in_progress')) {
+	        displayNotificationWithArtwork("Error: cannot modify library while update is in progress",'./images/warning.png');
+	        return;
+	    }
         updateLibrary($w);
         return;
     } else if ($other_action == "refresh_library") {
+	    if (file_exists($w->data() . '/update_library_in_progress')) {
+	        displayNotificationWithArtwork("Error: cannot modify library while update is in progress",'./images/warning.png');
+	        return;
+	    }
         refreshLibrary($w);
         return;
     }
