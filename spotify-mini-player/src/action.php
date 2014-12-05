@@ -723,62 +723,8 @@ if ($playlist_uri != "" && $other_settings == "") {
         displayNotificationForCurrentTrack($w);
         return;
     } else if (startsWith($other_action, 'display_biography')) {
-
-        $json = doWebApiRequest($w, 'http://developer.echonest.com/api/v4/artist/biographies?api_key=5EG94BIZEGFEY9AL9&id=' . $artist_uri);
-        $response = $json->response;
-        PHPRtfLite::registerAutoloader();
-
-        foreach ($response->biographies as $biography) {
-
-            if ($biography->site == "wikipedia") {
-                $wikipedia = $biography->text;
-            }
-            if ($biography->site == "last.fm") {
-                $lastfm = $biography->text;
-            }
-            $default = 'Source: ' . $biography->site . '\n' . $biography->text;
-        }
-
-        if ($wikipedia) {
-            $text = $wikipedia;
-            $artist = $artist_name . ' (Source: Wikipedia)';
-        } elseif ($lastfm) {
-            $text = $lastfm;
-            $artist = $artist_name . ' (Source: Last.FM)';
-        } else {
-            $text = $default;
-            $artist = $artist_name . ' (Source: ' . $biography->site . ')';
-        }
-        if ($text == "") {
-            $text = "No biography found";
-            $artist = $artist_name;
-        }
-        $output = strip_tags($text);
-
-        $file = $w->cache() . '/biography.rtf';
-
-        $rtf = new PHPRtfLite();
-
-        $section = $rtf->addSection();
-        // centered text
-        $fontTitle = new PHPRtfLite_Font(28, 'Arial', '#000000', '#FFFFFF');
-        $parFormatTitle = new PHPRtfLite_ParFormat(PHPRtfLite_ParFormat::TEXT_ALIGN_CENTER);
-        $section->writeText($artist, $fontTitle, $parFormatTitle);
-
-        $parFormat = new PHPRtfLite_ParFormat();
-        $parFormat->setSpaceAfter(4);
-        $font = new PHPRtfLite_Font(14, 'Arial', '#000000', '#FFFFFF');
-        // write text
-        $section->writeText($output, $font, $parFormat);
-
-        $rtf->save($file);
-        if ($other_action == 'display_biography') {
-            exec("qlmanage -p \"$file\";osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Artist▹" . $artist_uri . "∙" . $artist_name . "▹\"'");
-        } else {
-            exec("qlmanage -p \"$file\";osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online▹" . $artist_uri . "@" . $artist_name . "\"'");
-        }
+	    displayBiography($w, $artist_uri, $artist_name, $other_action);
         return;
-
     } else if ($other_action == "lookup_artist") {
 
         if (!$w->internet()) {
