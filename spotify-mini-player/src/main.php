@@ -251,16 +251,25 @@ try {
     return;
 }
 
-$check_results = checkForUpdate($w, $last_check_update_time, $dbsettings);
-if
-($check_results != null && is_array($check_results)
-) {
-    $w->result(null, '', 'New version ' . $check_results[0] . ' is available', $check_results[2], './images/info.png', 'no', null, '');
-    $w->result(null, $check_results[1], 'Please install the new version in Downloads directory', $check_results[1], 'fileicon:' . $check_results[1], 'no', '', '', 'file');
 
-    echo $w->toxml();
-    return;
+//
+// Check for workflow update
+// Do not do it if update is in progress
+// since it update settings
+//
+if($update_in_progress == false) {
+	$check_results = checkForUpdate($w, $last_check_update_time, $dbsettings);
+	if
+	($check_results != null && is_array($check_results)
+	) {
+	    $w->result(null, '', 'New version ' . $check_results[0] . ' is available', $check_results[2], './images/info.png', 'no', null, '');
+	    $w->result(null, $check_results[1], 'Please install the new version in Downloads directory', $check_results[1], 'fileicon:' . $check_results[1], 'no', '', '', 'file');
+
+	    echo $w->toxml();
+	    return;
+	}
 }
+
 
 // thanks to http://www.alfredforum.com/topic/1788-prevent-flash-of-no-result
 mb_internal_encoding('UTF-8');
