@@ -358,16 +358,30 @@ if (mb_strlen($query) < 3 ||
         } else {
             $alfred_playlist_state = 'Your Music';
         }
-        if ($all_playlists == true) {
-            $w->result(null, '', 'Settings', 'Search scope=<All>, Max results=<' . $max_results . '>, Spotifious is <' . $spotifious_state . '>, Controlling <' . $alfred_playlist_state . '>, Radio tracks=<' . $radio_number_tracks . '>', './images/settings.png', 'no', null, 'Settings▹');
-        } else {
-            $w->result(null, '', 'Settings', 'Search scope=<Your Music>, Max results=<' . $max_results . '>, Spotifious is <' . $spotifious_state . '>, Controlling <' . $alfred_playlist_state . '>, Radio tracks=<' . $radio_number_tracks . '>', './images/settings.png', 'no', null, 'Settings▹');
-        }
+        // do not allow settings if update in progress
+		if($update_in_progress == true) {
+			$w->result(null, '', 'Settings (not available)', 'Settings cannot be changed while an update is in progress', './images/warning.png', 'no', null, '');
+		} else {
+	        if ($all_playlists == true) {
+	            $w->result(null, '', 'Settings', 'Search scope=<All>, Max results=<' . $max_results . '>, Spotifious is <' . $spotifious_state . '>, Controlling <' . $alfred_playlist_state . '>, Radio tracks=<' . $radio_number_tracks . '>', './images/settings.png', 'no', null, 'Settings▹');
+	        } else {
+	            $w->result(null, '', 'Settings', 'Search scope=<Your Music>, Max results=<' . $max_results . '>, Spotifious is <' . $spotifious_state . '>, Controlling <' . $alfred_playlist_state . '>, Radio tracks=<' . $radio_number_tracks . '>', './images/settings.png', 'no', null, 'Settings▹');
+	        }
+		}
+
     }
     //
     // Settings
     //
     elseif (substr_count($query, '▹') == 1) {
+
+		// do not allow settings if update in progress
+		if($update_in_progress == true) {
+			$w->result(null, '', 'Settings (not available)', 'Settings cannot be changed while an update is in progress', './images/warning.png', 'no', null, '');
+
+			echo $w->toxml();
+	        return;
+		}
 
         if ($all_playlists == true) {
             // argument is csv form: track_uri|album_uri|artist_uri|playlist_uri|spotify_command|query|other_settings|other_action|alfred_playlist_uri|artist_name
