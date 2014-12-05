@@ -145,26 +145,18 @@ function searchWebApi($w,$country_code,$query, $type, $limit = 50) {
  */
 function playAlfredPlaylist($w)
 {
-
-    //
-    // Read settings from DB
-    //
-
-    $dbfile = $w->data() . '/settings.db';
-    try {
-        $dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
-        $dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $getSettings = 'select alfred_playlist_uri,alfred_playlist_name from settings';
-        $stmt = $dbsettings->prepare($getSettings);
-        $stmt->execute();
-        $setting = $stmt->fetch();
-        $alfred_playlist_uri = $setting[0];
-        $alfred_playlist_name = $setting[1];
-    } catch (PDOException $e) {
-        handleDbIssuePdoEcho($dbsettings,$w);
-        $dbsettings = null;
-        return false;
+	//
+	// Get Settings from a duplicate DB to avoid clash
+	// with main.php
+	//
+    $setting = getSettingsFromDuplicateDb($w);
+    if($setting == false) {
+	   return false;
     }
+
+	$is_alfred_playlist_active = $setting[2];
+	$alfred_playlist_uri = $setting[6];
+	$alfred_playlist_name = $setting[7];
 
 
     if ($alfred_playlist_uri == "" || $alfred_playlist_name == "") {
@@ -275,24 +267,16 @@ function addCurrentTrackTo($w)
         $results = explode('▹', $command_output);
         $tmp = explode(':', $results[4]);
         if($tmp[1] == 'local') {
-		    //
-		    // Read settings from DB
-		    //
-
-		    $dbfile = $w->data() . '/settings.db';
-		    try {
-		        $dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
-		        $dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		        $getSettings = 'select country_code from settings';
-		        $stmt = $dbsettings->prepare($getSettings);
-		        $stmt->execute();
-		        $setting = $stmt->fetch();
-		        $country_code = $setting[0];
-		    } catch (PDOException $e) {
-		        handleDbIssuePdoEcho($dbsettings,$w);
-		        $dbsettings = null;
-		        return false;
+			//
+			// Get Settings from a duplicate DB to avoid clash
+			// with main.php
+			//
+		    $setting = getSettingsFromDuplicateDb($w);
+		    if($setting == false) {
+			   return false;
 		    }
+			$country_code = $setting[8];
+
 			// local track, look it up online
 
 			$query = 'track:' . strtolower($results[0]) . ' artist:' . strtolower($results[1]);
@@ -327,24 +311,16 @@ function addCurrentTrackTo($w)
  */
 function addCurrentTrackToAlfredPlaylistOrYourMusic($w)
 {
-    //
-    // Read settings from DB
-    //
-
-    $dbfile = $w->data() . '/settings.db';
-    try {
-        $dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
-        $dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $getSettings = 'select is_alfred_playlist_active from settings';
-        $stmt = $dbsettings->prepare($getSettings);
-        $stmt->execute();
-        $setting = $stmt->fetch();
-        $is_alfred_playlist_active = $setting[0];
-    } catch (PDOException $e) {
-        handleDbIssuePdoEcho($dbsettings,$w);
-        $dbsettings = null;
-        return false;
+	//
+	// Get Settings from a duplicate DB to avoid clash
+	// with main.php
+	//
+    $setting = getSettingsFromDuplicateDb($w);
+    if($setting == false) {
+	   return false;
     }
+
+	$is_alfred_playlist_active = $setting[2];
 
     if ($is_alfred_playlist_active == true) {
         addCurrentTrackToAlfredPlaylist($w);
@@ -368,27 +344,20 @@ function addCurrentTrackToAlfredPlaylist($w)
     if (substr_count($command_output, '▹') > 0) {
         $results = explode('▹', $command_output);
 
-
-	    //
-	    // Read settings from DB
-	    //
-
-	    $dbfile = $w->data() . '/settings.db';
-	    try {
-	        $dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
-	        $dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	        $getSettings = 'select alfred_playlist_uri,alfred_playlist_name,country_code from settings';
-	        $stmt = $dbsettings->prepare($getSettings);
-	        $stmt->execute();
-	        $setting = $stmt->fetch();
-	        $alfred_playlist_uri = $setting[0];
-	        $alfred_playlist_name = $setting[1];
-	        $country_code = $setting[2];
-	    } catch (PDOException $e) {
-	        handleDbIssuePdoEcho($dbsettings,$w);
-	        $dbsettings = null;
-	        return false;
+		//
+		// Get Settings from a duplicate DB to avoid clash
+		// with main.php
+		//
+	    $setting = getSettingsFromDuplicateDb($w);
+	    if($setting == false) {
+		   return false;
 	    }
+
+		$is_alfred_playlist_active = $setting[2];
+		$alfred_playlist_uri = $setting[6];
+		$alfred_playlist_name = $setting[7];
+		$country_code = $setting[8];
+
 
         if ($alfred_playlist_uri == "" || $alfred_playlist_name == "") {
             displayNotificationWithArtwork("Error: Alfred Playlist is not set", './images/warning.png');
@@ -444,24 +413,15 @@ function addCurrentTrackToYourMusic($w)
         $results = explode('▹', $command_output);
         $tmp = explode(':', $results[4]);
         if($tmp[1] == 'local') {
-		    //
-		    // Read settings from DB
-		    //
-
-		    $dbfile = $w->data() . '/settings.db';
-		    try {
-		        $dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
-		        $dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		        $getSettings = 'select country_code from settings';
-		        $stmt = $dbsettings->prepare($getSettings);
-		        $stmt->execute();
-		        $setting = $stmt->fetch();
-		        $country_code = $setting[0];
-		    } catch (PDOException $e) {
-		        handleDbIssuePdoEcho($dbsettings,$w);
-		        $dbsettings = null;
-		        return false;
+			//
+			// Get Settings from a duplicate DB to avoid clash
+			// with main.php
+			//
+		    $setting = getSettingsFromDuplicateDb($w);
+		    if($setting == false) {
+			   return false;
 		    }
+			$country_code = $setting[8];
 			// local track, look it up online
 
 			$query = 'track:' . strtolower($results[0]) . ' artist:' . strtolower($results[1]);
@@ -583,6 +543,7 @@ function getSpotifyWebAPI($w)
     $oauth_expires = $setting[4];
     $oauth_refresh_token = $setting[5];
 
+
     $session = new SpotifyWebAPI\Session($oauth_client_id, $oauth_client_secret, $oauth_redirect_uri);
     $session->setRefreshToken($oauth_refresh_token);
     $api = new SpotifyWebAPI\SpotifyWebAPI();
@@ -641,24 +602,16 @@ function getArtistUriFromSearch($w, $artist_name, $country_code = '')
 		return false;
 	}
 	if($country_code == '') {
-	    //
-	    // Read settings from DB
-	    //
-
-	    $dbfile = $w->data() . '/settings.db';
-	    try {
-	        $dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
-	        $dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	        $getSettings = 'select country_code from settings';
-	        $stmt = $dbsettings->prepare($getSettings);
-	        $stmt->execute();
-	        $setting = $stmt->fetch();
-	        $country_code = $settings[0];
-	    } catch (PDOException $e) {
-	        handleDbIssuePdoEcho($dbsettings,$w);
-	        $dbsettings = null;
-	        return false;
+		//
+		// Get Settings from a duplicate DB to avoid clash
+		// with main.php
+		//
+	    $setting = getSettingsFromDuplicateDb($w);
+	    if($setting == false) {
+		   return false;
 	    }
+		$country_code = $setting[8];
+
 	}
 	$searchResults = searchWebApi($w,$country_code,$artist_name, 'artist', 1);
 
@@ -775,24 +728,16 @@ function createTheUserPlaylist($w, $playlist_name)
         return false;
     }
 
-    //
-    // Read settings from DB
-    //
-
-    $dbfile = $w->data() . '/settings.db';
-    try {
-        $dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
-        $dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $getSettings = 'select userid from settings';
-        $stmt = $dbsettings->prepare($getSettings);
-        $stmt->execute();
-        $setting = $stmt->fetch();
-        $userid = $setting[0];
-    } catch (PDOException $e) {
-        handleDbIssuePdoEcho($dbsettings,$w);
-        $dbsettings = null;
-        return false;
+	//
+	// Get Settings from a duplicate DB to avoid clash
+	// with main.php
+	//
+    $setting = getSettingsFromDuplicateDb($w);
+    if($setting == false) {
+	   return false;
     }
+
+	$userid = $setting[18];
 
     try {
         $json = $api->createUserPlaylist($userid, array(
@@ -845,26 +790,19 @@ function createRadioArtistPlaylist($w, $artist_name)
         return false;
     }
 
-    //
-    // Read settings from DB
-    //
-
-    $dbfile = $w->data() . '/settings.db';
-    try {
-        $dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
-        $dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $getSettings = 'select userid,radio_number_tracks,echonest_api_key from settings';
-        $stmt = $dbsettings->prepare($getSettings);
-        $stmt->execute();
-        $setting = $stmt->fetch();
-        $userid = $setting[0];
-        $radio_number_tracks = $setting[1];
-        $echonest_api_key = $setting[2];
-    } catch (PDOException $e) {
-        handleDbIssuePdoEcho($dbsettings,$w);
-        $dbsettings = null;
-        return false;
+	//
+	// Get Settings from a duplicate DB to avoid clash
+	// with main.php
+	//
+    $setting = getSettingsFromDuplicateDb($w);
+    if($setting == false) {
+	   return false;
     }
+
+	$radio_number_tracks = $setting[3];
+	$userid = $setting[18];
+	$echonest_api_key = $setting[19];
+
 
 
     $json = doWebApiRequest($w, 'http://developer.echonest.com/api/v4/playlist/static?api_key=' . $echonest_api_key . '&artist=' . urlencode($artist_name) . '&format=json&results=' . $radio_number_tracks . '&distribution=focused&type=artist-radio&bucket=id:spotify&bucket=tracks');
@@ -953,27 +891,19 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name)
         return false;
     }
 
-    //
-    // Read settings from DB
-    //
-
-    $dbfile = $w->data() . '/settings.db';
-    try {
-        $dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
-        $dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $getSettings = 'select userid,radio_number_tracks,echonest_api_key,country_code from settings';
-        $stmt = $dbsettings->prepare($getSettings);
-        $stmt->execute();
-        $setting = $stmt->fetch();
-        $userid = $setting[0];
-        $radio_number_tracks = $setting[1];
-        $echonest_api_key = $setting[2];
-        $country_code = $setting[3];
-    } catch (PDOException $e) {
-        handleDbIssuePdoEcho($dbsettings,$w);
-        $dbsettings = null;
-        return false;
+	//
+	// Get Settings from a duplicate DB to avoid clash
+	// with main.php
+	//
+    $setting = getSettingsFromDuplicateDb($w);
+    if($setting == false) {
+	   return false;
     }
+
+	$radio_number_tracks = $setting[3];
+	$country_code = $setting[8];
+	$userid = $setting[18];
+	$echonest_api_key = $setting[19];
 
     $tmp = explode(':', $track_uri);
     if($tmp[1] == 'local') {
@@ -1287,24 +1217,15 @@ function addTracksToYourMusic($w, $tracks, $allow_duplicate = true)
  */
 function addTracksToPlaylist($w, $tracks, $playlist_uri, $playlist_name, $allow_duplicate = true, $updatePlaylist = true)
 {
-
-    //
-    // Read settings from DB
-    //
-    $dbfile = $w->data() . '/settings.db';
-    try {
-        $dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
-        $dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $getSettings = 'select userid from settings';
-        $stmt = $dbsettings->prepare($getSettings);
-        $stmt->execute();
-        $setting = $stmt->fetch();
-        $userid = $setting[0];
-    } catch (PDOException $e) {
-        handleDbIssuePdoEcho($dbsettings,$w);
-        $dbsettings = null;
-        return false;
+	//
+	// Get Settings from a duplicate DB to avoid clash
+	// with main.php
+	//
+    $setting = getSettingsFromDuplicateDb($w);
+    if($setting == false) {
+	   return false;
     }
+	$userid = $setting[18];
 
     $api = getSpotifyWebAPI($w);
     if ($api == false) {
@@ -2192,6 +2113,47 @@ function getArtistArtworkURL($w, $artist)
 
 
 /**
+ * getSettingsFromDuplicateDb function.
+ *
+ * @access public
+ * @param mixed $w
+ * @return void
+ */
+function getSettingsFromDuplicateDb($w) {
+
+    //
+    // Read settings from a copy of DB
+    //
+    if (file_exists($w->data() . '/settings_tmp.db')) {
+        $dbfile = $w->data() . '/settings_tmp.db';
+    } else {
+
+	    if(file_exists($w->data() . '/settings.db')) {
+		    copy($w->data() . '/settings.db', $w->data() . '/settings_tmp.db');
+		    $dbfile = $w->data() . '/settings_tmp.db';
+	    } else {
+		    return false;
+	    }
+
+    }
+
+    try {
+        $dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
+        $dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $getSettings = 'select * from settings';
+        $stmt = $dbsettings->prepare($getSettings);
+        $stmt->execute();
+        $setting = $stmt->fetch();
+    } catch (PDOException $e) {
+	    echo "Error(getSettingsFromDuplicateDb): (exception " . print_r($e) . ")\n";
+        handleDbIssuePdoEcho($dbsettings,$w);
+        $dbsettings = null;
+        return false;
+    }
+	return $setting;
+}
+
+/**
  * updateLibrary function.
  *
  * @access public
@@ -2210,31 +2172,16 @@ function updateLibrary($w)
     $w->write('InitLibrary▹' . 0 . '▹' . 0 . '▹' . time(), 'update_library_in_progress');
     $in_progress_data = $w->read('update_library_in_progress');
 
-
-    //
-    // Read settings from a copy of DB
-    //
-
-	//exec("echo \".dump\" | sqlite3 \"" . $w->data() . "/settings.db\" | sqlite3 \"" . $w->data() . "/settings_tmp.db\"");
-
-    copy($w->data() . '/settings.db', $w->data() . '/settings_tmp.db');
-    $dbfile = $w->data() . '/settings_tmp.db';
-    try {
-        $dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
-        $dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $getSettings = 'select country_code,userid from settings';
-        $stmt = $dbsettings->prepare($getSettings);
-        $stmt->execute();
-        $setting = $stmt->fetch();
-        $country_code = $setting[0];
-        $userid = $setting[1];
-    } catch (PDOException $e) {
-	    echo "Error(updateLibrary): (exception " . print_r($e) . ")\n";
-        handleDbIssuePdoEcho($dbsettings,$w);
-        $dbsettings = null;
-        return false;
+	//
+	// Get Settings from a duplicate DB to avoid clash
+	// with main.php
+	//
+    $setting = getSettingsFromDuplicateDb($w);
+    if($setting == false) {
+	   return false;
     }
-
+	$country_code = $setting[8];
+	$userid = $setting[18];
 
     $words = explode('▹', $in_progress_data);
 
@@ -2812,28 +2759,16 @@ function updatePlaylist($w, $playlist_uri, $playlist_name)
 
     $in_progress_data = $w->read('update_library_in_progress');
 
-    //
-    // Read settings from a copy of DB
-    //
-
-    copy($w->data() . '/settings.db', $w->data() . '/settings_tmp.db');
-    $dbfile = $w->data() . '/settings_tmp.db';
-    try {
-        $dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
-        $dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $getSettings = 'select country_code,userid from settings';
-        $stmt = $dbsettings->prepare($getSettings);
-        $stmt->execute();
-        $setting = $stmt->fetch();
-        $country_code = $setting[0];
-        $userid = $setting[1];
-    } catch (PDOException $e) {
-	    echo "Error(updatePlaylist): (exception " . print_r($e) . ")\n";
-        handleDbIssuePdoEcho($dbsettings,$w);
-        $dbsettings = null;
-        unlink($w->data() . "/update_library_in_progress");
-        return false;
+	//
+	// Get Settings from a duplicate DB to avoid clash
+	// with main.php
+	//
+    $setting = getSettingsFromDuplicateDb($w);
+    if($setting == false) {
+	   return false;
     }
+	$country_code = $setting[8];
+	$userid = $setting[18];
 
 
     $words = explode('▹', $in_progress_data);
@@ -3069,28 +3004,16 @@ function refreshLibrary($w)
 
     $in_progress_data = $w->read('update_library_in_progress');
 
-    //
-    // Read settings from a copy of DB
-    //
-
-    copy($w->data() . '/settings.db', $w->data() . '/settings_tmp.db');
-    $dbfile = $w->data() . '/settings_tmp.db';
-    try {
-        $dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
-        $dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $getSettings = 'select country_code,userid from settings';
-        $stmt = $dbsettings->prepare($getSettings);
-        $stmt->execute();
-        $setting = $stmt->fetch();
-        $country_code = $setting[0];
-        $userid = $setting[1];
-    } catch (PDOException $e) {
-	    echo "Error(refreshLibrary): (exception " . print_r($e) . ")\n";
-        handleDbIssuePdoEcho($dbsettings,$w);
-        $dbsettings = null;
-        unlink($w->data() . "/update_library_in_progress");
-        return false;
+	//
+	// Get Settings from a duplicate DB to avoid clash
+	// with main.php
+	//
+    $setting = getSettingsFromDuplicateDb($w);
+    if($setting == false) {
+	   return false;
     }
+	$country_code = $setting[8];
+	$userid = $setting[18];
 
 
     $words = explode('▹', $in_progress_data);
@@ -3661,27 +3584,16 @@ function updateYourMusic($w)
 
     $in_progress_data = $w->read('update_library_in_progress');
 
-    //
-    // Read settings from a copy of DB
-    //
-
-    copy($w->data() . '/settings.db', $w->data() . '/settings_tmp.db');
-    $dbfile = $w->data() . '/settings_tmp.db';
-    try {
-        $dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
-        $dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $getSettings = 'select country_code,userid from settings';
-        $stmt = $dbsettings->prepare($getSettings);
-        $stmt->execute();
-        $setting = $stmt->fetch();
-        $country_code = $setting[0];
-        $userid = $setting[1];
-    } catch (PDOException $e) {
-	    echo "Error(updateYourMusic): (exception " . print_r($e) . ")\n";
-        handleDbIssuePdoEcho($dbsettings,$w);
-        $dbsettings = null;
-        return false;
+	//
+	// Get Settings from a duplicate DB to avoid clash
+	// with main.php
+	//
+    $setting = getSettingsFromDuplicateDb($w);
+    if($setting == false) {
+	   return false;
     }
+	$country_code = $setting[8];
+	$userid = $setting[18];
 
 
     $words = explode('▹', $in_progress_data);
