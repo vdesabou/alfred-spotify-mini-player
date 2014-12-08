@@ -1253,15 +1253,23 @@ if (mb_strlen($query) < 3 ||
 				// it displays an error in main window
 				$albums = getTheArtistAlbums($w, $artist_uri, $country_code);
 
+				$w->result(null, 'help', "Select an album below to browse it", 'singles and compilations are also displayed', './images/info.png', 'no', null, '');
+
+				$noresult=true;
                 foreach ($albums as $album) {
-
                     if (checkIfResultAlreadyThere($w->results(), ucfirst($album->name) . ' (' . count($tracks->items) . ' tracks)') == false) {
-
+						$noresult=true;
                         $genre = (count($album->genres) > 0) ? ' ● Genre: ' . implode('|', $album->genres) : '';
                         $tracks = $album->tracks;
                         $w->result(null, '', ucfirst($album->name) . ' (' . count($tracks->items) . ' tracks)', $album->album_type . " by " . $artist_name . ' ● Release date: ' . $album->release_date . $genre, getTrackOrAlbumArtwork($w,  $album->uri, false), 'no', null, "Online▹" . $artist_uri . "@" . $artist_name . "@" . $album->uri . "@" . $album->name);
                     }
                 }
+
+		        if
+		        ($noresult
+		        ) {
+		            $w->result(null, 'help', "There is no album for this artist", "", './images/warning.png', 'no', null, '');
+		        }
 
             } elseif (substr_count($query, '@') == 3) {
                 //
