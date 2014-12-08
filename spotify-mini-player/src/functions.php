@@ -185,7 +185,13 @@ function lookupCurrentArtist($w)
 
     if (substr_count($command_output, '▹') > 0) {
         $results = explode('▹', $command_output);
-        $artist_uri = getArtistUriFromSearch($w, $results[1]);
+        $tmp = explode(':', $results[4]);
+        if($tmp[1] == 'local') {
+        	$artist_uri = getArtistUriFromSearch($w, $results[1]);
+        } else {
+	        $artist_uri = getArtistUriFromTrack($w, $results[4]);
+        }
+
         if ($artist_uri == false) {
             displayNotificationWithArtwork("Error: cannot get current artist",'./images/warning.png');
             return;
@@ -211,7 +217,12 @@ function playCurrentArtist($w)
 
     if (substr_count($command_output, '▹') > 0) {
         $results = explode('▹', $command_output);
-        $artist_uri = getArtistUriFromSearch($w, $results[1]);
+        $tmp = explode(':', $results[4]);
+        if($tmp[1] == 'local') {
+        	$artist_uri = getArtistUriFromSearch($w, $results[1]);
+        } else {
+	        $artist_uri = getArtistUriFromTrack($w, $results[4]);
+        }
         if ($artist_uri == false) {
             displayNotificationWithArtwork("Error: cannot get current artist",'./images/warning.png');
             return;
@@ -618,6 +629,58 @@ function getSpotifyWebAPI($w)
 }
 
 
+
+
+/**
+ * getArtistUriFromTrack function.
+ *
+ * @access public
+ * @param mixed $w
+ * @param mixed $track_uri
+ * @return void
+ */
+function getArtistUriFromTrack($w, $track_uri)
+{
+    $api = getSpotifyWebAPI($w);
+    if ($api == false) {
+        displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png');
+        return false;
+    }
+
+    try {
+        $tmp = explode(':', $track_uri);
+
+        if($tmp[1] == 'local') {
+			// local track, look it up online
+			// spotify:local:The+D%c3%b8:On+My+Shoulders+-+Single:On+My+Shoulders:318
+			// spotify:local:Damien+Rice:B-Sides:Woman+Like+a+Man+%28Live%2c+Unplugged%29:284
+
+			$query = 'track:' . urldecode(strtolower($tmp[4])) . ' artist:' . urldecode(strtolower($tmp[2]));
+        	$results = searchWebApi($w,$country_code,$query, 'track', 1);
+
+        	if(count($results) > 0) {
+				// only one track returned
+				$track=$results[0];
+				$artists = $track->artists;
+				$artist = $artists[0];
+				return $artist->uri;
+
+        	} else {
+            	echo "Could not find artist from uri: $track_uri\n";
+                return false;
+        	}
+        }
+        $track = $api->getTrack($tmp[2]);
+        $artists = $track->artists;
+        $artist = $artists[0];
+
+        return $artist->uri;
+    } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+        echo "Error(getArtistUriFromTrack): (exception " . print_r($e) . ")";
+        handleSpotifyWebAPIException($w);
+    }
+    return false;
+}
 /**
  * getArtistUriFromSearch function.
  *

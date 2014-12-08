@@ -1031,7 +1031,7 @@ if (mb_strlen($query) < 3 ||
                     $w->result(null, '', "👤 " . ucfirst(escapeQuery($results[1])), "Browse this artist", $currentArtistArtwork, 'no', null, "Artist▹" . $artist_uri . '∙' . escapeQuery($results[1]) . "▹");
                 } else {
                     // artist is not in library
-                    $w->result(null, '', "👤 " . ucfirst(escapeQuery($results[1])), "Browse this artist", $currentArtistArtwork, 'no', null, "Artist▹" . 'notset' . '∙' . escapeQuery($results[1]) . "▹");
+                    $w->result(null, '', "👤 " . ucfirst(escapeQuery($results[1])), "Browse this artist", $currentArtistArtwork, 'no', null, "Artist▹" . $results[4] . '∙' . escapeQuery($results[1]) . "▹");
                 }
 
                 // use track uri here
@@ -1366,14 +1366,18 @@ if (mb_strlen($query) < 3 ||
             $artist_name = $tmp[1];
             $track = $words[2];
 
-            if ($artist_uri == 'notset') {
-                $artist_uri = getArtistUriFromSearch($w, $artist_name, $country_code);
+            $href = explode(':', $artist_uri);
+            if ($href[1] == 'track') {
+
+                $track_uri = $artist_uri;
+                $artist_uri = getArtistUriFromTrack($w, $track_uri);
                 if($artist_uri == false) {
 					$w->result(null, 'help', "The artist cannot be retrieved", "", './images/warning.png', 'no', null, '');
 					echo $w->toxml();
 					return;
                 }
             }
+
 
             if (mb_strlen($track) < 3) {
                 $artist_artwork_path = getArtistArtwork($w,  $artist_name, false);

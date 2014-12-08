@@ -155,7 +155,7 @@ if ($type == "TRACK" && $other_settings == "") {
 } else if ($type == "ONLINE") {
     if ($artist_uri == "") {
         // case of current song with cmd
-        $artist_uri = getArtistUriFromSearch($w, $artist_name);
+        $artist_uri = getArtistUriFromTrack($w, $track_uri);
         if ($artist_uri == false) {
             displayNotificationWithArtwork("Error: cannot get current artist",'./images/warning.png');
             return;
@@ -369,7 +369,7 @@ if ($type == "TRACK" && $other_settings == "") {
 
     if ($artist_uri == "") {
         // case of current song with cmd
-        $artist_uri = getArtistUriFromSearch($w, $artist_name);
+        $artist_uri = getArtistUriFromTrack($w, $track_uri);
         if ($artist_uri == false) {
             displayNotificationWithArtwork("Error: cannot get current artist",'./images/warning.png');
             return;
