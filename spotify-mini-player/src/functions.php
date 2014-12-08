@@ -3145,6 +3145,9 @@ function refreshLibrary($w)
             if ($playlists[2] != $tracks->total || $playlists[1] != escapeQuery($playlist->name)) {
                 $nb_updated_playlists++;
 
+				// force refresh of playlist artwork
+				getPlaylistArtwork($w,  $playlist->uri, true, true);
+
 				try {
 	                if($playlists[1] != escapeQuery($playlist->name)) {
 	                    $updatePlaylistsName = "update playlists set name=:name where uri=:uri";
