@@ -35,6 +35,12 @@ $playlist_artwork_path = $arg[16];
 $alfred_playlist_name = $arg[17];
 
 
+if ($type != "CURRENT") {
+	exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
+}
+
+
+
 if ($add_to_option != "") {
     if (file_exists($w->data() . '/update_library_in_progress')) {
         displayNotificationWithArtwork("Error: cannot modify library while update is in progress",'./images/warning.png');

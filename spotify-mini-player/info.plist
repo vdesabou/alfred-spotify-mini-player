@@ -533,6 +533,17 @@
 				<string></string>
 			</dict>
 		</array>
+		<key>89D8799A-D22A-4A6D-B43D-50B9EADB879D</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>BC672665-5E43-4892-B8D3-BFCBA48E34C4</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 		<key>8C78472B-13EB-4512-B94D-4BF92867CD92</key>
 		<array>
 			<dict>
@@ -2274,6 +2285,33 @@ end alfred_script</string>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>0</integer>
+				<key>hotkey</key>
+				<integer>0</integer>
+				<key>hotmod</key>
+				<integer>0</integer>
+				<key>hotstring</key>
+				<string></string>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>0</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>E63EB492-FCE2-42A1-BD38-7EFE4EA77473</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
@@ -2314,33 +2352,6 @@ php -f ./src/action.php -- "{query}" "NEXT" "" &gt;&gt; "$alfred_workflow_cache/
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>action</key>
-				<integer>0</integer>
-				<key>argument</key>
-				<integer>0</integer>
-				<key>hotkey</key>
-				<integer>0</integer>
-				<key>hotmod</key>
-				<integer>0</integer>
-				<key>hotstring</key>
-				<string></string>
-				<key>leftcursor</key>
-				<false/>
-				<key>modsmode</key>
-				<integer>0</integer>
-				<key>relatedAppsMode</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.trigger.hotkey</string>
-			<key>uid</key>
-			<string>E63EB492-FCE2-42A1-BD38-7EFE4EA77473</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>argument</key>
 				<string></string>
 				<key>argumenttype</key>
@@ -2354,6 +2365,19 @@ php -f ./src/action.php -- "{query}" "NEXT" "" &gt;&gt; "$alfred_workflow_cache/
 			<string>alfred.workflow.trigger.remote</string>
 			<key>uid</key>
 			<string>8339BE15-274E-4A77-A6A0-CEDF30EFD0E5</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>triggerid</key>
+				<string>display_current_track_notification</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.external</string>
+			<key>uid</key>
+			<string>89D8799A-D22A-4A6D-B43D-50B9EADB879D</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -3934,7 +3958,7 @@ SOFTWARE.</string>
 		<key>8339BE15-274E-4A77-A6A0-CEDF30EFD0E5</key>
 		<dict>
 			<key>ypos</key>
-			<real>3420</real>
+			<real>3320</real>
 		</dict>
 		<key>8598A5C9-72B6-4CEF-A498-D6C2ED06DC88</key>
 		<dict>
@@ -3955,6 +3979,11 @@ SOFTWARE.</string>
 		<dict>
 			<key>ypos</key>
 			<real>2990</real>
+		</dict>
+		<key>89D8799A-D22A-4A6D-B43D-50B9EADB879D</key>
+		<dict>
+			<key>ypos</key>
+			<real>3430</real>
 		</dict>
 		<key>8B88B440-38F7-4EBA-9A2E-46779141C889</key>
 		<dict>
@@ -4034,7 +4063,7 @@ SOFTWARE.</string>
 		<key>A4EEDB0D-EEB3-45CE-B8A8-1397DD905470</key>
 		<dict>
 			<key>ypos</key>
-			<real>3110</real>
+			<real>3100</real>
 		</dict>
 		<key>A5C6FE27-E7CE-45C4-ADB0-8B2D0CC39E99</key>
 		<dict>
@@ -4194,7 +4223,7 @@ SOFTWARE.</string>
 		<key>E63EB492-FCE2-42A1-BD38-7EFE4EA77473</key>
 		<dict>
 			<key>ypos</key>
-			<real>3320</real>
+			<real>3200</real>
 		</dict>
 		<key>EB1ED46F-71D7-49D1-B7BB-DA1ECF2F665F</key>
 		<dict>
