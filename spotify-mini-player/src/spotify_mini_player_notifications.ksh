@@ -1,7 +1,5 @@
 #!/bin/ksh
 
-set -e
-
 DATADIR=""
 ACTION=""
 
@@ -58,38 +56,43 @@ EOT
 
 if [ "${ACTION}" = "stop" ]
 then
-	traceit "STOP"
-	pid=$(ps -efx | grep "spotify_mini_player_notifications" | grep -v grep | awk '{print $2}')
-	if [ "$pid" != "" ]
-	then
-		kill "$pid"
-		traceit "INFO: spotify_mini_player_notifications killed $pid"
-	fi
-	exit 0
-else
-	if [ -f "${DATADIR}/spotify_mini_player_notifications.lock" ]; then
-		# the lock file already exists, so what to do?
-		if [ "$(ps -p `cat "${DATADIR}/spotify_mini_player_notifications.lock"` | wc -l)" -gt 1 ]; then
-			# process is still running
-			traceit "INFO: Already running: process `cat "${DATADIR}/spotify_mini_player_notifications.lock"`, `date`"
-			exit 0
-		else
-			# process not running, but lock file not deleted?
 
-			traceit "INFO: orphan lock file warning, process spotify_mini_player_notifications not running."
+	for pid in $(ps -efx | grep "spotify_mini_player_notifications" | grep -v grep | awk '{print $2}')
+	do
+		traceit "STOP < $pid >"
+		if [ "$pid" != "" ]
+		then
+			pkill -P $pid
+			traceit "INFO: spotify_mini_player_notifications killed $pid"
 			rm "${DATADIR}/spotify_mini_player_notifications.lock"
-			traceit "INFO: Lock file deleted. `date`"
-
-			# Now go ahead
 		fi
-	fi
-
-	echo $$ > "${DATADIR}/spotify_mini_player_notifications.lock"
-
-	# call to main function
-	Start
-
-	rm "${DATADIR}/spotify_mini_player_notifications.lock"
+	done
+	return 0
 fi
 
-exit 0
+if [ -f "${DATADIR}/spotify_mini_player_notifications.lock" ]
+then
+	# the lock file already exists, so what to do?
+	if [ "$(ps -p `cat "${DATADIR}/spotify_mini_player_notifications.lock"` | wc -l)" -gt 1 ]
+	then
+		# process is still running
+		traceit "INFO: Already running: process `cat "${DATADIR}/spotify_mini_player_notifications.lock"`, `date`"
+		return 0
+	else
+		# process not running, but lock file not deleted?
+
+		traceit "INFO: orphan lock file warning, process spotify_mini_player_notifications not running."
+		rm "${DATADIR}/spotify_mini_player_notifications.lock"
+		traceit "INFO: Lock file deleted. `date`"
+
+		# Now go ahead
+	fi
+fi
+
+traceit "INFO: creating lock file . `date`"
+echo $$ > "${DATADIR}/spotify_mini_player_notifications.lock"
+
+# call to main function
+Start
+
+rm "${DATADIR}/spotify_mini_player_notifications.lock"

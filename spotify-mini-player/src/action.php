@@ -33,13 +33,14 @@ $album_artwork_path = $arg[14];
 $playlist_name = $arg[15];
 $playlist_artwork_path = $arg[16];
 $alfred_playlist_name = $arg[17];
+$now_playing_notifications = $arg[18];
+$is_alfred_playlist_active = $arg[19];
+$country_code = $arg[20];
+$userid = $arg[21];
 
-
-if ($type != "CURRENT") {
+if ($type != "CURRENT" && $now_playing_notifications == 1) {
 	exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
 }
-
-
 
 if ($add_to_option != "") {
     if (file_exists($w->data() . '/update_library_in_progress')) {
@@ -58,26 +59,9 @@ if ($spotify_command != "" && $type == "TRACK" && $add_to_option == "") {
 if ($type == "TRACK" && $other_settings == "") {
     if ($track_uri != "") {
         if ($add_to_option != "") {
-
-			//
-			// Get Settings from a duplicate DB to avoid clash
-			// with main.php
-			//
-		    $setting = getSettingsFromDuplicateDb($w);
-		    if($setting == false) {
-			   return false;
-		    }
-
-			$is_alfred_playlist_active = $setting[2];
-			$alfred_playlist_uri = $setting[6];
-			$alfred_playlist_name = $setting[7];
-			$country_code = $setting[8];
-
-
             $tmp = explode(':', $track_uri);
 	        if($tmp[1] == 'local') {
 				// local track, look it up online
-
 				$query = 'track:' . strtolower($track_name) . ' artist:' . strtolower($artist_name);
             	$results = searchWebApi($w,$country_code,$query, 'track', 1);
 
@@ -174,11 +158,15 @@ if ($type == "TRACK" && $other_settings == "") {
     $track_uri = getRandomTrack($w);
     if ($track_uri != false) {
         exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
-        displayNotificationForCurrentTrack($w);
+	    if($now_playing_notifications == 0) {
+			displayNotificationForCurrentTrack($w);
+	    }
     }
     return;
 } else if ($type == "CURRENT") {
-    displayNotificationForCurrentTrack($w);
+    if($now_playing_notifications == 0) {
+		displayNotificationForCurrentTrack($w);
+    }
     return;
 } else if ($type == "LYRICS") {
     displayLyricsForCurrentTrack();
@@ -220,15 +208,21 @@ if ($type == "TRACK" && $other_settings == "") {
     return;
 } else if ($type == "NEXT") {
     exec("osascript -e 'tell application \"Spotify\" to next track'");
-    displayNotificationForCurrentTrack($w);
+    if($now_playing_notifications == 0) {
+		displayNotificationForCurrentTrack($w);
+    }
     return;
 } else if ($type == "PREVIOUS") {
     exec("osascript -e 'tell application \"Spotify\" to previous track'");
-    displayNotificationForCurrentTrack($w);
+    if($now_playing_notifications == 0) {
+		displayNotificationForCurrentTrack($w);
+    }
     return;
 } else if ($type == "PLAY") {
     exec("osascript -e 'tell application \"Spotify\" to play'");
-    displayNotificationForCurrentTrack($w);
+    if($now_playing_notifications == 0) {
+		displayNotificationForCurrentTrack($w);
+    }
     return;
 } else if ($type == "PAUSE") {
     exec("osascript -e 'tell application \"Spotify\" to pause'");
@@ -258,21 +252,6 @@ if ($type == "TRACK" && $other_settings == "") {
     if ($add_to_option != "") {
 
         if ($album_name != "") {
-
-			//
-			// Get Settings from a duplicate DB to avoid clash
-			// with main.php
-			//
-		    $setting = getSettingsFromDuplicateDb($w);
-		    if($setting == false) {
-			   return false;
-		    }
-
-			$is_alfred_playlist_active = $setting[2];
-			$alfred_playlist_uri = $setting[6];
-			$alfred_playlist_name = $setting[7];
-			$country_code = $setting[8];
-
             if ($album_uri == "") {
                 // case of current song with shift
                 $album_uri = getAlbumUriFromTrack($w, $track_uri);
@@ -319,21 +298,6 @@ if ($type == "TRACK" && $other_settings == "") {
 
             return;
         } else if ($playlist_uri != "") {
-
-			//
-			// Get Settings from a duplicate DB to avoid clash
-			// with main.php
-			//
-		    $setting = getSettingsFromDuplicateDb($w);
-		    if($setting == false) {
-			   return false;
-		    }
-
-			$is_alfred_playlist_active = $setting[2];
-			$alfred_playlist_uri = $setting[6];
-			$alfred_playlist_name = $setting[7];
-			$country_code = $setting[8];
-
             $playlist_artwork_path = getPlaylistArtwork($w,  $playlist_uri, true, true);
 
             if ($is_alfred_playlist_active == true) {
@@ -619,20 +583,24 @@ if ($playlist_uri != "" && $other_settings == "") {
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
         displayNotificationWithArtwork("Spotifious is now disabled", './images/uncheck.png');
         return;
-    } else if ($other_action == "enable_lyrics") {
+    } else if ($other_action == "enable_now_playing_notifications") {
         $setSettings = "update settings set is_lyrics_active=1";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotificationWithArtwork("Get Lyrics is now enabled", './images/check.png');
+        exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
+        displayNotificationWithArtwork("Now Playing notifications are now enabled", './images/check.png');
         return;
     } else if ($other_action == "search_in_spotifious") {
     	exec("osascript -e 'tell application \"Alfred 2\" to search \"spotifious $original_query\"'");
         return;
-    } else if ($other_action == "disable_lyrics") {
+    } else if ($other_action == "disable_now_playing_notifications") {
         $setSettings = "update settings set is_lyrics_active=0";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotificationWithArtwork("Get Lyrics is now disabled", './images/uncheck.png');
+
+		// stop process
+		exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a stop >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
+        displayNotificationWithArtwork("Now Playing notifications are now disabled", './images/uncheck.png');
         return;
     } else if ($other_action == "enable_alfred_playlist") {
         $setSettings = "update settings set is_alfred_playlist_active=1";
@@ -653,8 +621,10 @@ if ($playlist_uri != "" && $other_settings == "") {
         return;
     } else if ($other_action == "play") {
         exec("osascript -e 'tell application \"Spotify\" to play'");
-        displayNotificationForCurrentTrack($w);
-        return;
+	    if($now_playing_notifications == 0) {
+			displayNotificationForCurrentTrack($w);
+	    }
+	    return;
     } else if ($other_action == "pause") {
         exec("osascript -e 'tell application \"Spotify\" to pause'");
         return;
@@ -710,7 +680,9 @@ if ($playlist_uri != "" && $other_settings == "") {
         }
         return;
     } else if ($other_action == "current") {
-        displayNotificationForCurrentTrack($w);
+	    if($now_playing_notifications == 0) {
+			displayNotificationForCurrentTrack($w);
+	    }
         return;
     } else if ($other_action == "add_current_track_to") {
 	    if (file_exists($w->data() . '/update_library_in_progress')) {
@@ -721,11 +693,15 @@ if ($playlist_uri != "" && $other_settings == "") {
         return;
     } else if ($other_action == "previous") {
         exec("osascript -e 'tell application \"Spotify\" to previous track'");
-        displayNotificationForCurrentTrack($w);
+	    if($now_playing_notifications == 0) {
+			displayNotificationForCurrentTrack($w);
+	    }
         return;
     } else if ($other_action == "next") {
         exec("osascript -e 'tell application \"Spotify\" to next track'");
-        displayNotificationForCurrentTrack($w);
+	    if($now_playing_notifications == 0) {
+			displayNotificationForCurrentTrack($w);
+	    }
         return;
     } else if ($other_action == "add_current_track") {
 	    if (file_exists($w->data() . '/update_library_in_progress')) {
@@ -741,7 +717,9 @@ if ($playlist_uri != "" && $other_settings == "") {
             return;
         }
         exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
-        displayNotificationForCurrentTrack($w);
+	    if($now_playing_notifications == 0) {
+			displayNotificationForCurrentTrack($w);
+	    }
         return;
     } else if (startsWith($other_action, 'display_biography')) {
 	    displayBiography($w, $artist_uri, $artist_name, $other_action);
