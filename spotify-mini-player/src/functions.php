@@ -181,7 +181,7 @@ function playAlfredPlaylist($w)
 function lookupCurrentArtist($w)
 {
     // get info on current song
-    $command_output = exec("./src/track_info.sh 2>&1");
+    $command_output = exec("./src/track_info.ksh 2>&1");
 
     if (substr_count($command_output, '▹') > 0) {
         $results = explode('▹', $command_output);
@@ -213,7 +213,7 @@ function lookupCurrentArtist($w)
 function playCurrentArtist($w)
 {
     // get info on current song
-    $command_output = exec("./src/track_info.sh 2>&1");
+    $command_output = exec("./src/track_info.ksh 2>&1");
 
     if (substr_count($command_output, '▹') > 0) {
         $results = explode('▹', $command_output);
@@ -244,7 +244,7 @@ function playCurrentArtist($w)
 function playCurrentAlbum($w)
 {
     // get info on current song
-    $command_output = exec("./src/track_info.sh 2>&1");
+    $command_output = exec("./src/track_info.ksh 2>&1");
 
     if (substr_count($command_output, '▹') > 0) {
         $results = explode('▹', $command_output);
@@ -272,7 +272,7 @@ function playCurrentAlbum($w)
 function addCurrentTrackTo($w)
 {
     // get info on current song
-    $command_output = exec("./src/track_info.sh 2>&1");
+    $command_output = exec("./src/track_info.ksh 2>&1");
 
     if (substr_count($command_output, '▹') > 0) {
         $results = explode('▹', $command_output);
@@ -350,7 +350,7 @@ function addCurrentTrackToAlfredPlaylistOrYourMusic($w)
 function addCurrentTrackToAlfredPlaylist($w)
 {
     // get info on current song
-    $command_output = exec("./src/track_info.sh 2>&1");
+    $command_output = exec("./src/track_info.ksh 2>&1");
 
     if (substr_count($command_output, '▹') > 0) {
         $results = explode('▹', $command_output);
@@ -418,7 +418,7 @@ function addCurrentTrackToAlfredPlaylist($w)
 function addCurrentTrackToYourMusic($w)
 {
     // get info on current song
-    $command_output = exec("./src/track_info.sh 2>&1");
+    $command_output = exec("./src/track_info.ksh 2>&1");
 
     if (substr_count($command_output, '▹') > 0) {
         $results = explode('▹', $command_output);
@@ -863,7 +863,7 @@ function createTheUserPlaylist($w, $playlist_name)
  */
 function createRadioArtistPlaylistForCurrentArtist($w)
 {
-    $command_output = exec("./src/track_info.sh 2>&1");
+    $command_output = exec("./src/track_info.ksh 2>&1");
 
     if (substr_count($command_output, '▹') > 0) {
         $results = explode('▹', $command_output);
@@ -961,7 +961,7 @@ function createRadioArtistPlaylist($w, $artist_name)
  */
 function createRadioSongPlaylistForCurrentTrack($w)
 {
-    $command_output = exec("./src/track_info.sh 2>&1");
+    $command_output = exec("./src/track_info.ksh 2>&1");
 
     if (substr_count($command_output, '▹') > 0) {
         $results = explode('▹', $command_output);
@@ -1585,7 +1585,7 @@ function displayNotificationWithArtwork($output, $artwork)
  */
 function displayNotificationForCurrentTrack($w)
 {
-    $command_output = exec("./src/track_info.sh 2>&1");
+    $command_output = exec("./src/track_info.ksh 2>&1");
 
     if (substr_count($command_output, '▹') > 0) {
         $results = explode('▹', $command_output);
@@ -1605,7 +1605,7 @@ function displayLyricsForCurrentTrack()
 {
     $w = new Workflows('com.vdesabou.spotify.mini.player');
 
-    $command_output = exec("./src/track_info.sh 2>&1");
+    $command_output = exec("./src/track_info.ksh 2>&1");
 
     if (substr_count($command_output, '▹') > 0) {
         $results = explode('▹', $command_output);
