@@ -1567,13 +1567,13 @@ function displayNotification($output)
  * @param mixed $artwork
  * @return void
  */
-function displayNotificationWithArtwork($output, $artwork)
+function displayNotificationWithArtwork($output, $artwork, $title = 'Spotify Mini Player')
 {
     if ($artwork != "" && file_exists($artwork)) {
         copy($artwork, "/tmp/tmp");
     }
 
-    exec("./terminal-notifier.app/Contents/MacOS/terminal-notifier -title 'Spotify Mini Player' -sender 'com.spotify.miniplayer' -contentImage '/tmp/tmp' -message '" . $output . "'");
+    exec("./terminal-notifier.app/Contents/MacOS/terminal-notifier -title '" . $title . "' -sender 'com.spotify.miniplayer' -contentImage '/tmp/tmp' -message '" . $output . "'");
 }
 
 /**
@@ -1589,7 +1589,7 @@ function displayNotificationForCurrentTrack($w)
 
     if (substr_count($command_output, '▹') > 0) {
         $results = explode('▹', $command_output);
-        displayNotificationWithArtwork('🔈 ' . escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]), getTrackOrAlbumArtwork($w,  $results[4], true));
+        displayNotificationWithArtwork('🔈 ' . escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]), getTrackOrAlbumArtwork($w,  $results[4], true), 'Now Playing (Spotify Mini Player)');
     } else {
         displayNotificationWithArtwork("Error: cannot get current track",'./images/warning.png');
     }
