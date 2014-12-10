@@ -38,7 +38,8 @@ $is_alfred_playlist_active = $arg[19];
 $country_code = $arg[20];
 $userid = $arg[21];
 
-if ($type != "CURRENT" && $now_playing_notifications == 1) {
+
+if ($other_settings != "current" && $now_playing_notifications == 1) {
 	exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
 }
 
@@ -153,100 +154,6 @@ if ($type == "TRACK" && $other_settings == "") {
     }
 
     exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online▹$artist_uri@$artist_name\"'");
-    return;
-} else if ($type == "RANDOM") {
-    $track_uri = getRandomTrack($w);
-    if ($track_uri != false) {
-        exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
-	    if($now_playing_notifications == 0) {
-			displayNotificationForCurrentTrack($w);
-	    }
-    }
-    return;
-} else if ($type == "CURRENT") {
-    if($now_playing_notifications == 0) {
-		displayNotificationForCurrentTrack($w);
-    }
-    return;
-} else if ($type == "LYRICS") {
-    displayLyricsForCurrentTrack();
-    return;
-} else if ($type == "CURRENT_ARTIST_RADIO") {
-    if (file_exists($w->data() . '/update_library_in_progress')) {
-        displayNotificationWithArtwork("Error: cannot modify library while update is in progress",'./images/warning.png');
-        return;
-    }
-    createRadioArtistPlaylistForCurrentArtist($w);
-    return;
-} else if ($type == "CURRENT_TRACK_RADIO") {
-    if (file_exists($w->data() . '/update_library_in_progress')) {
-        displayNotificationWithArtwork("Error: cannot modify library while update is in progress",'./images/warning.png');
-        return;
-    }
-    createRadioSongPlaylistForCurrentTrack($w);
-    return;
-} else if ($type == "LOOKUP_CURRENT_ARTIST") {
-    lookupCurrentArtist($w);
-    return;
-} else if ($type == "PLAY_CURRENT_ARTIST") {
-    playCurrentArtist($w);
-    return;
-} else if ($type == "PLAY_CURRENT_ALBUM") {
-    playCurrentAlbum($w);
-    return;
-} else if ($type == "PLAY_ALFRED_PLAYLIST") {
-    playAlfredPlaylist($w);
-    return;
-} else if ($type == "KILL_UPDATE") {
-    killUpdate($w);
-    return;
-} else if ($type == "DOWNLOAD_ARTWORKS") {
-	if(downloadArtworks($w) == false) {
-		displayNotificationWithArtwork("Error when downloading artworks",'./images/warning.png');
-		return;
-	}
-    return;
-} else if ($type == "NEXT") {
-    exec("osascript -e 'tell application \"Spotify\" to next track'");
-    if($now_playing_notifications == 0) {
-		displayNotificationForCurrentTrack($w);
-    }
-    return;
-} else if ($type == "PREVIOUS") {
-    exec("osascript -e 'tell application \"Spotify\" to previous track'");
-    if($now_playing_notifications == 0) {
-		displayNotificationForCurrentTrack($w);
-    }
-    return;
-} else if ($type == "PLAY") {
-    exec("osascript -e 'tell application \"Spotify\" to play'");
-    if($now_playing_notifications == 0) {
-		displayNotificationForCurrentTrack($w);
-    }
-    return;
-} else if ($type == "PAUSE") {
-    exec("osascript -e 'tell application \"Spotify\" to pause'");
-    return;
-} else if ($type == "REFRESH_LIBRARY") {
-    if (file_exists($w->data() . '/update_library_in_progress')) {
-        displayNotificationWithArtwork("Error: cannot refresh library while another update is in progress", './images/warning.png');
-        return;
-    }
-    refreshLibrary($w);
-    return;
-} else if ($type == "ADD_CURRENT_TRACK") {
-    if (file_exists($w->data() . '/update_library_in_progress')) {
-        displayNotificationWithArtwork("Error: cannot modify library while update is in progress",'./images/warning.png');
-        return;
-    }
-    addCurrentTrackToAlfredPlaylistOrYourMusic($w);
-    return;
-} else if ($type == "ADD_CURRENT_TRACK_TO") {
-    if (file_exists($w->data() . '/update_library_in_progress')) {
-        displayNotificationWithArtwork("Error: cannot modify library while update is in progress",'./images/warning.png');
-        return;
-    }
-    addCurrentTrackTo($w);
     return;
 } else if ($type == "ALBUM_OR_PLAYLIST") {
     if ($add_to_option != "") {
@@ -644,6 +551,13 @@ if ($playlist_uri != "" && $other_settings == "") {
 	    }
         createRadioSongPlaylistForCurrentTrack($w);
         return;
+    } else if ($other_action == "current_artist_radio") {
+	    if (file_exists($w->data() . '/update_library_in_progress')) {
+	        displayNotificationWithArtwork("Error: cannot modify library while update is in progress",'./images/warning.png');
+	        return;
+	    }
+	    createRadioArtistPlaylistForCurrentArtist($w);
+	    return;
     } else if ($other_action == "play_current_artist") {
         playCurrentArtist($w);
         return;
@@ -749,14 +663,23 @@ if ($playlist_uri != "" && $other_settings == "") {
         exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
         displayNotificationWithArtwork('🔈 Album ' . $album_name, $album_artwork_path);
         return;
-    } else if ($other_action == "radio_artist") {
+    } else if ($other_action == "play_current_artist") {
+    	playCurrentArtist($w);
+		return;
+	} else if ($other_action == "play_current_album") {
+    	playCurrentAlbum($w);
+		return;
+	} else if ($other_action == "radio_artist") {
 	    if (file_exists($w->data() . '/update_library_in_progress')) {
 	        displayNotificationWithArtwork("Error: cannot modify library while update is in progress",'./images/warning.png');
 	        return;
 	    }
         createRadioArtistPlaylist($w, $artist_name);
         return;
-    } else if ($other_action == "update_library") {
+    } else if ($other_action == "play_alfred_playlist") {
+    	playAlfredPlaylist($w);
+		return;
+	} else if ($other_action == "update_library") {
 	    if (file_exists($w->data() . '/update_library_in_progress')) {
 	        displayNotificationWithArtwork("Error: cannot modify library while update is in progress",'./images/warning.png');
 	        return;
