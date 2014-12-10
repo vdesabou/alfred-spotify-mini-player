@@ -130,21 +130,12 @@
 		<key>1A88766E-BF4A-48F5-9BD4-D3538634422F</key>
 		<array/>
 		<key>1AEE5DB5-864B-4E72-A724-198E9ADDD7FF</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>2D26D8E2-52A2-4BF9-B693-0D5190C6CC23</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-			</dict>
-		</array>
+		<array/>
 		<key>1BA522F3-B2D0-4F36-B86C-738FB3AC55DD</key>
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>E3215F64-F5B9-4639-93D1-1D643339E2E7</string>
+				<string>1D4F4588-B2AC-4E96-9F87-467BCC69915A</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -166,7 +157,7 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>F7D7D2CE-77EE-45C4-ADAA-1B45A6577FFF</string>
+				<string>1B2600AD-60B1-488D-A1B9-5B9FD2829555</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -184,8 +175,6 @@
 				<string></string>
 			</dict>
 		</array>
-		<key>2D26D8E2-52A2-4BF9-B693-0D5190C6CC23</key>
-		<array/>
 		<key>2DBC505C-4788-4F45-BD15-2DCED7844A60</key>
 		<array>
 			<dict>
@@ -467,6 +456,17 @@
 				<string></string>
 			</dict>
 		</array>
+		<key>7FF09231-F068-4EA0-8537-6C1EB608CA5A</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>10D173E8-E2FD-4A00-B899-8EBEF9017B05</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 		<key>80B80179-E286-4D4A-9FEC-FCBE63AD8AEE</key>
 		<array>
 			<dict>
@@ -557,6 +557,17 @@
 		</array>
 		<key>8DF18F9A-B3A5-4B14-8360-AD850CF5C143</key>
 		<array/>
+		<key>8E4347FE-0FC3-4FF1-AAAF-E0C6CD084BB5</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>10D173E8-E2FD-4A00-B899-8EBEF9017B05</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 		<key>8F478980-199B-45B5-AD41-EBA185446705</key>
 		<array>
 			<dict>
@@ -594,7 +605,7 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>F7D7D2CE-77EE-45C4-ADAA-1B45A6577FFF</string>
+				<string>1B2600AD-60B1-488D-A1B9-5B9FD2829555</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -794,7 +805,7 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>F7D7D2CE-77EE-45C4-ADAA-1B45A6577FFF</string>
+				<string>1B2600AD-60B1-488D-A1B9-5B9FD2829555</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -805,7 +816,7 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>E3215F64-F5B9-4639-93D1-1D643339E2E7</string>
+				<string>1D4F4588-B2AC-4E96-9F87-467BCC69915A</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -860,7 +871,7 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>E3215F64-F5B9-4639-93D1-1D643339E2E7</string>
+				<string>1D4F4588-B2AC-4E96-9F87-467BCC69915A</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -883,17 +894,6 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>05E1E4AA-E6B1-4DAA-9CB0-36CACDE2DA5B</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-			</dict>
-		</array>
-		<key>D931B685-B5F8-4BBC-9FCB-D78F9FA0AB66</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>2D26D8E2-52A2-4BF9-B693-0D5190C6CC23</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -944,8 +944,6 @@
 				<string></string>
 			</dict>
 		</array>
-		<key>E3215F64-F5B9-4639-93D1-1D643339E2E7</key>
-		<array/>
 		<key>E63EB492-FCE2-42A1-BD38-7EFE4EA77473</key>
 		<array>
 			<dict>
@@ -981,17 +979,6 @@
 		</array>
 		<key>ECC53637-75AD-4FD2-9605-8E038D04C4BF</key>
 		<array/>
-		<key>F250A59C-0B2D-4A08-9085-9CA0A2FB2DCC</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>2D26D8E2-52A2-4BF9-B693-0D5190C6CC23</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-			</dict>
-		</array>
 		<key>F4382654-9318-4849-82E4-550AC235148C</key>
 		<array>
 			<dict>
@@ -1014,8 +1001,6 @@
 				<string></string>
 			</dict>
 		</array>
-		<key>F7D7D2CE-77EE-45C4-ADAA-1B45A6577FFF</key>
-		<array/>
 		<key>FA41B848-C24F-44E4-B1F1-D5EF444B01A9</key>
 		<array>
 			<dict>
@@ -1734,9 +1719,9 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>keyword</key>
 				<string>mute</string>
 				<key>subtext</key>
-				<string>Mute Spotify</string>
+				<string>Mute Volume</string>
 				<key>text</key>
-				<string>Mute Spotify Volume</string>
+				<string>Mute System Volume</string>
 				<key>withspace</key>
 				<false/>
 			</dict>
@@ -1750,25 +1735,20 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>applescript</key>
-				<string>on alfred_script(q)
-
-    tell application "Spotify"
-		if sound volume is less than or equal to 0 then
-			set sound volume to 100
-		else
-			set sound volume to 0
-		end if
-    end tell
-
-end alfred_script</string>
-				<key>cachescript</key>
-				<true/>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "mute" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
+echo "===== VOLUME_MUTE ========" &gt;&gt; "$alfred_workflow_cache/action.log"
+echo "`date` $query" &gt;&gt; "$alfred_workflow_cache/action.log"
+php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+				<key>type</key>
+				<integer>0</integer>
 			</dict>
 			<key>type</key>
-			<string>alfred.workflow.action.applescript</string>
+			<string>alfred.workflow.action.script</string>
 			<key>uid</key>
-			<string>F7D7D2CE-77EE-45C4-ADAA-1B45A6577FFF</string>
+			<string>1B2600AD-60B1-488D-A1B9-5B9FD2829555</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -1819,21 +1799,20 @@ end alfred_script</string>
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>applescript</key>
-				<string>on alfred_script(q)
-
-    tell application "Spotify"
-		set sound volume to 100
-    end tell
-
-end alfred_script</string>
-				<key>cachescript</key>
-				<true/>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "volume_increase" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
+echo "===== VOLUME_INCREASE ========" &gt;&gt; "$alfred_workflow_cache/action.log"
+echo "`date` $query" &gt;&gt; "$alfred_workflow_cache/action.log"
+php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+				<key>type</key>
+				<integer>0</integer>
 			</dict>
 			<key>type</key>
-			<string>alfred.workflow.action.applescript</string>
+			<string>alfred.workflow.action.script</string>
 			<key>uid</key>
-			<string>E3215F64-F5B9-4639-93D1-1D643339E2E7</string>
+			<string>1D4F4588-B2AC-4E96-9F87-467BCC69915A</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -1843,11 +1822,11 @@ end alfred_script</string>
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>volmax</string>
+				<string>volume_increase</string>
 				<key>subtext</key>
-				<string>Set the Spotify Volume to Maximum</string>
+				<string>Increase System Volume by 6%</string>
 				<key>text</key>
-				<string>Set Spotify Volume to Maximum</string>
+				<string>Increase System Volume</string>
 				<key>withspace</key>
 				<false/>
 			</dict>
@@ -1866,9 +1845,9 @@ end alfred_script</string>
 				<key>argumenttype</key>
 				<integer>0</integer>
 				<key>triggerid</key>
-				<string>com.vdesabou.miniplayer.volmax</string>
+				<string>com.vdesabou.miniplayer.volumeincrease</string>
 				<key>triggername</key>
-				<string>Volume Max</string>
+				<string>Increase Volume</string>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
@@ -1905,42 +1884,21 @@ end alfred_script</string>
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>applescript</key>
-				<string>on alfred_script(q)
-
-    tell application "Spotify"
-		set sound volume to 50
-    end tell
-
-end alfred_script</string>
-				<key>cachescript</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.applescript</string>
-			<key>uid</key>
-			<string>2D26D8E2-52A2-4BF9-B693-0D5190C6CC23</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>volmid</string>
+				<string>volume_decrease</string>
 				<key>subtext</key>
-				<string>Set the Spotify Volume to 50%</string>
+				<string>Decrease System Volume by 6%</string>
 				<key>text</key>
-				<string>Set Spotify Volume to 50%</string>
+				<string>DecreaseSystem Volume</string>
 				<key>withspace</key>
 				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.input.keyword</string>
 			<key>uid</key>
-			<string>F250A59C-0B2D-4A08-9085-9CA0A2FB2DCC</string>
+			<string>7FF09231-F068-4EA0-8537-6C1EB608CA5A</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -1952,14 +1910,34 @@ end alfred_script</string>
 				<key>argumenttype</key>
 				<integer>0</integer>
 				<key>triggerid</key>
-				<string>com.vdesabou.miniplayer.volmid</string>
+				<string>com.vdesabou.miniplayer.volumedecrease</string>
 				<key>triggername</key>
-				<string>Volume 50%</string>
+				<string>Decrease Volume</string>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
 			<key>uid</key>
-			<string>D931B685-B5F8-4BBC-9FCB-D78F9FA0AB66</string>
+			<string>8E4347FE-0FC3-4FF1-AAAF-E0C6CD084BB5</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "volume_decrease" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
+echo "===== VOLUME_DECREASE ========" &gt;&gt; "$alfred_workflow_cache/action.log"
+echo "`date` $query" &gt;&gt; "$alfred_workflow_cache/action.log"
+php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>10D173E8-E2FD-4A00-B899-8EBEF9017B05</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -3682,6 +3660,11 @@ SOFTWARE.</string>
 			<key>ypos</key>
 			<real>890</real>
 		</dict>
+		<key>10D173E8-E2FD-4A00-B899-8EBEF9017B05</key>
+		<dict>
+			<key>ypos</key>
+			<real>2400</real>
+		</dict>
 		<key>13367FE5-35F7-4B94-8728-CF6F3D9F4C2B</key>
 		<dict>
 			<key>ypos</key>
@@ -3727,10 +3710,20 @@ SOFTWARE.</string>
 			<key>ypos</key>
 			<real>2470</real>
 		</dict>
+		<key>1B2600AD-60B1-488D-A1B9-5B9FD2829555</key>
+		<dict>
+			<key>ypos</key>
+			<real>1920</real>
+		</dict>
 		<key>1BA522F3-B2D0-4F36-B86C-738FB3AC55DD</key>
 		<dict>
 			<key>ypos</key>
 			<real>2160</real>
+		</dict>
+		<key>1D4F4588-B2AC-4E96-9F87-467BCC69915A</key>
+		<dict>
+			<key>ypos</key>
+			<real>2110</real>
 		</dict>
 		<key>1F30DEA9-0A81-4E00-9CF0-E7D086C6B5B0</key>
 		<dict>
@@ -3771,11 +3764,6 @@ SOFTWARE.</string>
 		<dict>
 			<key>ypos</key>
 			<real>4760</real>
-		</dict>
-		<key>2D26D8E2-52A2-4BF9-B693-0D5190C6CC23</key>
-		<dict>
-			<key>ypos</key>
-			<real>2310</real>
 		</dict>
 		<key>2DBC505C-4788-4F45-BD15-2DCED7844A60</key>
 		<dict>
@@ -3937,6 +3925,11 @@ SOFTWARE.</string>
 			<key>ypos</key>
 			<real>6760</real>
 		</dict>
+		<key>7FF09231-F068-4EA0-8537-6C1EB608CA5A</key>
+		<dict>
+			<key>ypos</key>
+			<real>2310</real>
+		</dict>
 		<key>80B80179-E286-4D4A-9FEC-FCBE63AD8AEE</key>
 		<dict>
 			<key>ypos</key>
@@ -3996,6 +3989,11 @@ SOFTWARE.</string>
 		<dict>
 			<key>ypos</key>
 			<real>110</real>
+		</dict>
+		<key>8E4347FE-0FC3-4FF1-AAAF-E0C6CD084BB5</key>
+		<dict>
+			<key>ypos</key>
+			<real>2370</real>
 		</dict>
 		<key>8F478980-199B-45B5-AD41-EBA185446705</key>
 		<dict>
@@ -4167,11 +4165,6 @@ SOFTWARE.</string>
 			<key>ypos</key>
 			<real>7170</real>
 		</dict>
-		<key>D931B685-B5F8-4BBC-9FCB-D78F9FA0AB66</key>
-		<dict>
-			<key>ypos</key>
-			<real>2370</real>
-		</dict>
 		<key>DAE270E5-CA94-4F36-99FE-D8EC996608C0</key>
 		<dict>
 			<key>ypos</key>
@@ -4196,11 +4189,6 @@ SOFTWARE.</string>
 		<dict>
 			<key>ypos</key>
 			<real>4140</real>
-		</dict>
-		<key>E3215F64-F5B9-4639-93D1-1D643339E2E7</key>
-		<dict>
-			<key>ypos</key>
-			<real>2110</real>
 		</dict>
 		<key>E3BCC85B-A326-41C9-BAC9-623BE1865375</key>
 		<dict>
@@ -4242,11 +4230,6 @@ SOFTWARE.</string>
 			<key>ypos</key>
 			<real>5030</real>
 		</dict>
-		<key>F250A59C-0B2D-4A08-9085-9CA0A2FB2DCC</key>
-		<dict>
-			<key>ypos</key>
-			<real>2310</real>
-		</dict>
 		<key>F4382654-9318-4849-82E4-550AC235148C</key>
 		<dict>
 			<key>ypos</key>
@@ -4256,11 +4239,6 @@ SOFTWARE.</string>
 		<dict>
 			<key>ypos</key>
 			<real>6850</real>
-		</dict>
-		<key>F7D7D2CE-77EE-45C4-ADAA-1B45A6577FFF</key>
-		<dict>
-			<key>ypos</key>
-			<real>1920</real>
 		</dict>
 		<key>FA41B848-C24F-44E4-B1F1-D5EF444B01A9</key>
 		<dict>

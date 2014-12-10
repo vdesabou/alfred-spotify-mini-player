@@ -816,7 +816,20 @@ if ($playlist_uri != "" && $other_settings == "") {
         exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
         displayNotificationWithArtwork('🔈 Album ' . $album_name, $album_artwork_path);
         return;
-    } else if ($other_action == "play_current_artist") {
+    } else if ($other_action == "volume_increase") {
+    	exec("osascript -e 'set volume output volume (output volume of (get volume settings) + 6)'");
+		return;
+	} else if ($other_action == "volume_decrease") {
+    	exec("osascript -e 'set volume output volume (output volume of (get volume settings) - 6)'");
+		return;
+	} else if ($other_action == "mute") {
+    	exec("osascript -e 'if output muted of (get volume settings) is equal to true then
+				set volume without output muted
+			else
+				set volume with output muted
+			end if'");
+		return;
+	} else if ($other_action == "play_current_artist") {
     	playCurrentArtist($w);
 		return;
 	} else if ($other_action == "play_current_album") {
