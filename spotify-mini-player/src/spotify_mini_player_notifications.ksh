@@ -56,15 +56,16 @@ EOT
 
 if [ "${ACTION}" = "stop" ]
 then
-
 	for pid in $(ps -efx | grep "spotify_mini_player_notifications" | grep -v grep | awk '{print $2}')
 	do
-		traceit "STOP < $pid >"
 		if [ "$pid" != "" ]
 		then
 			pkill -P $pid
-			traceit "INFO: spotify_mini_player_notifications killed $pid"
-			rm "${DATADIR}/spotify_mini_player_notifications.lock"
+			traceit "INFO: killed PID $pid"
+			if [ -f "${DATADIR}/spotify_mini_player_notifications.lock" ]
+			then
+				rm "${DATADIR}/spotify_mini_player_notifications.lock"
+			fi
 		fi
 	done
 	return 0
@@ -95,4 +96,7 @@ echo $$ > "${DATADIR}/spotify_mini_player_notifications.lock"
 # call to main function
 Start
 
-rm "${DATADIR}/spotify_mini_player_notifications.lock"
+if [ -f "${DATADIR}/spotify_mini_player_notifications.lock" ]
+then
+	rm "${DATADIR}/spotify_mini_player_notifications.lock"
+fi
