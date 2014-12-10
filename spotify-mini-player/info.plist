@@ -1824,9 +1824,9 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>keyword</key>
 				<string>volume_up</string>
 				<key>subtext</key>
-				<string>Increase System Volume by 6%</string>
-				<key>text</key>
 				<string>Increase System Volume</string>
+				<key>text</key>
+				<string>Volume Up</string>
 				<key>withspace</key>
 				<false/>
 			</dict>
@@ -1889,9 +1889,9 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>keyword</key>
 				<string>volume_down</string>
 				<key>subtext</key>
-				<string>Decrease System Volume by 6%</string>
+				<string>Decrease System Volume</string>
 				<key>text</key>
-				<string>DecreaseSystem Volume</string>
+				<string>Volume Down</string>
 				<key>withspace</key>
 				<false/>
 			</dict>
