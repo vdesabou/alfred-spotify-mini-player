@@ -39,10 +39,6 @@ $country_code = $arg[20];
 $userid = $arg[21];
 
 
-if ($other_settings != "current" && $now_playing_notifications == 1) {
-	exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
-}
-
 if ($add_to_option != "") {
     if (file_exists($w->data() . '/update_library_in_progress')) {
         displayNotificationWithArtwork("Error: cannot modify library while update is in progress",'./images/warning.png');
@@ -119,13 +115,50 @@ if ($type == "TRACK" && $other_settings == "") {
 	            }
             }
         } else if ($playlist_uri != "") {
+            // start now playing if needed
+            if ($now_playing_notifications == "") {
+				//
+				// Get Settings from a duplicate DB to avoid clash
+				// with main.php
+				//
+			    $setting = getSettingsFromDuplicateDb($w);
+			    if($setting == false) {
+				   return false;
+			    }
+				$now_playing_notifications = $setting[4];
+
+            }
+			if ($now_playing_notifications == 1) {
+				exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
+			}
             exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\" in context \"$playlist_uri\"'");
-            displayNotificationWithArtwork('🔈 ' . $track_name . ' by ' . ucfirst($artist_name), $track_artwork_path);
+            if($now_playing_notifications == 0) {
+            	displayNotificationWithArtwork('🔈 ' . $track_name . ' by ' . ucfirst($artist_name), $track_artwork_path);
+            }
             return;
         } else {
             if ($other_action == "") {
+
+	            // start now playing if needed
+	            if ($now_playing_notifications == "") {
+					//
+					// Get Settings from a duplicate DB to avoid clash
+					// with main.php
+					//
+				    $setting = getSettingsFromDuplicateDb($w);
+				    if($setting == false) {
+					   return false;
+				    }
+					$now_playing_notifications = $setting[4];
+
+	            }
+				if ($now_playing_notifications == 1) {
+					exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
+				}
                 exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
-                displayNotificationWithArtwork('🔈 ' . $track_name . ' by ' . ucfirst($artist_name), $track_artwork_path);
+                if($now_playing_notifications == 0) {
+                	displayNotificationWithArtwork('🔈 ' . $track_name . ' by ' . ucfirst($artist_name), $track_artwork_path);
+                }
                 return;
             }
         }
@@ -140,6 +173,22 @@ if ($type == "TRACK" && $other_settings == "") {
         }
         $album_artwork_path = getTrackOrAlbumArtwork($w,  $album_uri, true);
     }
+    // start now playing if needed
+    if ($now_playing_notifications == "") {
+		//
+		// Get Settings from a duplicate DB to avoid clash
+		// with main.php
+		//
+	    $setting = getSettingsFromDuplicateDb($w);
+	    if($setting == false) {
+		   return false;
+	    }
+		$now_playing_notifications = $setting[4];
+
+    }
+	if ($now_playing_notifications == 1) {
+		exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
+	}
     exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
     displayNotificationWithArtwork('🔈 Album ' . $album_name . ' by ' . ucfirst($artist_name), $album_artwork_path);
     return;
@@ -254,12 +303,44 @@ if ($type == "TRACK" && $other_settings == "") {
         $artist_artwork_path = getArtistArtwork($w,  $artist_name, true);
     }
 
+    // start now playing if needed
+    if ($now_playing_notifications == "") {
+		//
+		// Get Settings from a duplicate DB to avoid clash
+		// with main.php
+		//
+	    $setting = getSettingsFromDuplicateDb($w);
+	    if($setting == false) {
+		   return false;
+	    }
+		$now_playing_notifications = $setting[4];
+
+    }
+	if ($now_playing_notifications == 1) {
+		exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
+	}
     exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
     displayNotificationWithArtwork('🔈 Artist ' . $artist_name, $artist_artwork_path);
     return;
 }
 
 if ($playlist_uri != "" && $other_settings == "") {
+    // start now playing if needed
+    if ($now_playing_notifications == "") {
+		//
+		// Get Settings from a duplicate DB to avoid clash
+		// with main.php
+		//
+	    $setting = getSettingsFromDuplicateDb($w);
+	    if($setting == false) {
+		   return false;
+	    }
+		$now_playing_notifications = $setting[4];
+
+    }
+	if ($now_playing_notifications == 1) {
+		exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
+	}
     exec("osascript -e 'tell application \"Spotify\" to play track \"$playlist_uri\"'");
     displayNotificationWithArtwork('🔈 Playlist ' . $playlist_name, $playlist_artwork_path);
     return;
@@ -522,15 +603,31 @@ if ($playlist_uri != "" && $other_settings == "") {
         displayNotificationWithArtwork("Controlling Your Music", './images/yourmusic.png');
         return;
     } else if ($other_action == "play_track_in_album_context") {
+        // start now playing if needed
+        if ($now_playing_notifications == "") {
+			//
+			// Get Settings from a duplicate DB to avoid clash
+			// with main.php
+			//
+		    $setting = getSettingsFromDuplicateDb($w);
+		    if($setting == false) {
+			   return false;
+		    }
+			$now_playing_notifications = $setting[4];
+
+        }
+		if ($now_playing_notifications == 1) {
+			exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
+		}
         exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\" in context \"$album_uri\"'");
         $album_artwork_path = getTrackOrAlbumArtwork($w,  $album_uri, true);
-        displayNotificationWithArtwork('🔈 ' . $track_name . ' in album ' . $album_name . ' by ' . ucfirst($artist_name), $album_artwork_path);
+        if($now_playing_notifications == 0) {
+        	displayNotificationWithArtwork('🔈 ' . $track_name . ' in album ' . $album_name . ' by ' . ucfirst($artist_name), $album_artwork_path);
+        }
         return;
     } else if ($other_action == "play") {
         exec("osascript -e 'tell application \"Spotify\" to play'");
-	    if($now_playing_notifications == 0) {
-			displayNotificationForCurrentTrack($w);
-	    }
+		displayNotificationForCurrentTrack($w);
 	    return;
     } else if ($other_action == "pause") {
         exec("osascript -e 'tell application \"Spotify\" to pause'");
@@ -630,6 +727,22 @@ if ($playlist_uri != "" && $other_settings == "") {
             displayNotificationWithArtwork("Error: cannot find a random track",'./images/warning.png');
             return;
         }
+        // start now playing if needed
+        if ($now_playing_notifications == "") {
+			//
+			// Get Settings from a duplicate DB to avoid clash
+			// with main.php
+			//
+		    $setting = getSettingsFromDuplicateDb($w);
+		    if($setting == false) {
+			   return false;
+		    }
+			$now_playing_notifications = $setting[4];
+
+        }
+		if ($now_playing_notifications == 1) {
+			exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
+		}
         exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
 	    if($now_playing_notifications == 0) {
 			displayNotificationForCurrentTrack($w);
@@ -649,6 +762,22 @@ if ($playlist_uri != "" && $other_settings == "") {
         }
         exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online▹" . $artist_uri . "@" . escapeQuery($artist_name) . "\"'");
     } else if ($other_action == "playartist") {
+        // start now playing if needed
+        if ($now_playing_notifications == "") {
+			//
+			// Get Settings from a duplicate DB to avoid clash
+			// with main.php
+			//
+		    $setting = getSettingsFromDuplicateDb($w);
+		    if($setting == false) {
+			   return false;
+		    }
+			$now_playing_notifications = $setting[4];
+
+        }
+		if ($now_playing_notifications == 1) {
+			exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
+		}
         exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
         displayNotificationWithArtwork('🔈 Artist ' . $artist_name, $artist_artwork_path);
         return;
@@ -660,6 +789,22 @@ if ($playlist_uri != "" && $other_settings == "") {
                 return;
             }
         }
+        // start now playing if needed
+        if ($now_playing_notifications == "") {
+			//
+			// Get Settings from a duplicate DB to avoid clash
+			// with main.php
+			//
+		    $setting = getSettingsFromDuplicateDb($w);
+		    if($setting == false) {
+			   return false;
+		    }
+			$now_playing_notifications = $setting[4];
+
+        }
+		if ($now_playing_notifications == 1) {
+			exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
+		}
         exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
         displayNotificationWithArtwork('🔈 Album ' . $album_name, $album_artwork_path);
         return;
