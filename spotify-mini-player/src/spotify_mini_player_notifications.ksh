@@ -64,7 +64,7 @@ try
 			end if
 
 			set old_player_state to player_state
-			delay 5
+			delay 3
 		end repeat
 	end tell
 on error error_message
