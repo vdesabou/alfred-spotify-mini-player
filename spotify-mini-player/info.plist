@@ -155,7 +155,7 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>BFE954F2-D826-42BE-8363-FBDFCF95C5BC</string>
+				<string>51401C92-A6F8-4E2A-AA02-D140984EE916</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -212,7 +212,7 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>ECECD543-4958-47B0-A4C6-B758718C8626</string>
+				<string>13367FE5-35F7-4B94-8728-CF6F3D9F4C2B</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -267,7 +267,7 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>76FC8E26-44F0-4E20-A376-01628F7B28E1</string>
+				<string>25E3EBDF-2CFA-4599-A13B-8C63B3E5329A</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -414,7 +414,7 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>F2E80AAC-7BF3-4701-A8FC-FEF2E8D08E15</string>
+				<string>E59E23E2-837A-4B48-949A-A9EE059186C1</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -3298,17 +3298,17 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>applescript</key>
-				<string>on alfred_script(q)
-tell application "System Events"	key code 125 -- downend tell
-end alfred_script</string>
-				<key>cachescript</key>
-				<true/>
+				<key>escaping</key>
+				<integer>127</integer>
+				<key>script</key>
+				<string>tell application "System Events"	key code 125 -- downend tell</string>
+				<key>type</key>
+				<integer>6</integer>
 			</dict>
 			<key>type</key>
-			<string>alfred.workflow.action.applescript</string>
+			<string>alfred.workflow.action.script</string>
 			<key>uid</key>
-			<string>ECECD543-4958-47B0-A4C6-B758718C8626</string>
+			<string>13367FE5-35F7-4B94-8728-CF6F3D9F4C2B</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -3334,17 +3334,17 @@ end alfred_script</string>
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>applescript</key>
-				<string>on alfred_script(q)
-tell application "System Events"	key code 126 -- upend tell
-end alfred_script</string>
-				<key>cachescript</key>
-				<true/>
+				<key>escaping</key>
+				<integer>127</integer>
+				<key>script</key>
+				<string>tell application "System Events"	key code 126 -- upend tell</string>
+				<key>type</key>
+				<integer>6</integer>
 			</dict>
 			<key>type</key>
-			<string>alfred.workflow.action.applescript</string>
+			<string>alfred.workflow.action.script</string>
 			<key>uid</key>
-			<string>BFE954F2-D826-42BE-8363-FBDFCF95C5BC</string>
+			<string>51401C92-A6F8-4E2A-AA02-D140984EE916</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -3389,17 +3389,34 @@ end alfred_script</string>
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>applescript</key>
-				<string>on alfred_script(q)
-tell application "System Events"	key code 36 -- enterend tell
-end alfred_script</string>
-				<key>cachescript</key>
-				<true/>
+				<key>escaping</key>
+				<integer>127</integer>
+				<key>script</key>
+				<string>tell application "System Events"	key code 36 -- enterend tell</string>
+				<key>type</key>
+				<integer>6</integer>
 			</dict>
 			<key>type</key>
-			<string>alfred.workflow.action.applescript</string>
+			<string>alfred.workflow.action.script</string>
 			<key>uid</key>
-			<string>F2E80AAC-7BF3-4701-A8FC-FEF2E8D08E15</string>
+			<string>E59E23E2-837A-4B48-949A-A9EE059186C1</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>escaping</key>
+				<integer>127</integer>
+				<key>script</key>
+				<string>tell application "System Events"	key code 53 -- escapeend tell</string>
+				<key>type</key>
+				<integer>6</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>25E3EBDF-2CFA-4599-A13B-8C63B3E5329A</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -3419,23 +3436,6 @@ end alfred_script</string>
 			<string>alfred.workflow.trigger.remote</string>
 			<key>uid</key>
 			<string>450AEF8B-BDAA-409C-A0D4-68769545FBCF</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>applescript</key>
-				<string>on alfred_script(q)
-tell application "System Events"	key code 53 -- escapeend tell
-end alfred_script</string>
-				<key>cachescript</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.applescript</string>
-			<key>uid</key>
-			<string>76FC8E26-44F0-4E20-A376-01628F7B28E1</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -3587,6 +3587,21 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>escaping</key>
+				<integer>127</integer>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>8A79410A-507A-498B-B45C-88A16491A184</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>action</key>
 				<integer>0</integer>
 				<key>argument</key>
@@ -3667,6 +3682,11 @@ SOFTWARE.</string>
 			<key>ypos</key>
 			<real>890</real>
 		</dict>
+		<key>13367FE5-35F7-4B94-8728-CF6F3D9F4C2B</key>
+		<dict>
+			<key>ypos</key>
+			<real>6280</real>
+		</dict>
 		<key>15209065-AB33-44E4-ADFC-BAFC5033762E</key>
 		<dict>
 			<key>ypos</key>
@@ -3726,6 +3746,11 @@ SOFTWARE.</string>
 		<dict>
 			<key>ypos</key>
 			<real>1700</real>
+		</dict>
+		<key>25E3EBDF-2CFA-4599-A13B-8C63B3E5329A</key>
+		<dict>
+			<key>ypos</key>
+			<real>6640</real>
 		</dict>
 		<key>2609AC90-5B4D-4043-8F13-D5187B14833F</key>
 		<dict>
@@ -3807,6 +3832,11 @@ SOFTWARE.</string>
 			<key>ypos</key>
 			<real>3260</real>
 		</dict>
+		<key>51401C92-A6F8-4E2A-AA02-D140984EE916</key>
+		<dict>
+			<key>ypos</key>
+			<real>6400</real>
+		</dict>
 		<key>552D77E3-1550-4035-AB49-8B708B081EC9</key>
 		<dict>
 			<key>ypos</key>
@@ -3871,11 +3901,6 @@ SOFTWARE.</string>
 		<dict>
 			<key>ypos</key>
 			<real>3850</real>
-		</dict>
-		<key>76FC8E26-44F0-4E20-A376-01628F7B28E1</key>
-		<dict>
-			<key>ypos</key>
-			<real>6640</real>
 		</dict>
 		<key>77BC9498-F4E6-48BB-919D-D0B64DAFEF26</key>
 		<dict>
@@ -3951,6 +3976,11 @@ SOFTWARE.</string>
 		<dict>
 			<key>ypos</key>
 			<real>3430</real>
+		</dict>
+		<key>8A79410A-507A-498B-B45C-88A16491A184</key>
+		<dict>
+			<key>ypos</key>
+			<real>7200</real>
 		</dict>
 		<key>8B88B440-38F7-4EBA-9A2E-46779141C889</key>
 		<dict>
@@ -4072,11 +4102,6 @@ SOFTWARE.</string>
 			<key>ypos</key>
 			<real>3480</real>
 		</dict>
-		<key>BFE954F2-D826-42BE-8363-FBDFCF95C5BC</key>
-		<dict>
-			<key>ypos</key>
-			<real>6400</real>
-		</dict>
 		<key>C10A975C-0DAE-4A45-AEAB-4E07CF125703</key>
 		<dict>
 			<key>ypos</key>
@@ -4182,6 +4207,11 @@ SOFTWARE.</string>
 			<key>ypos</key>
 			<real>6760</real>
 		</dict>
+		<key>E59E23E2-837A-4B48-949A-A9EE059186C1</key>
+		<dict>
+			<key>ypos</key>
+			<real>6520</real>
+		</dict>
 		<key>E63EB492-FCE2-42A1-BD38-7EFE4EA77473</key>
 		<dict>
 			<key>ypos</key>
@@ -4207,11 +4237,6 @@ SOFTWARE.</string>
 			<key>ypos</key>
 			<real>2700</real>
 		</dict>
-		<key>ECECD543-4958-47B0-A4C6-B758718C8626</key>
-		<dict>
-			<key>ypos</key>
-			<real>6280</real>
-		</dict>
 		<key>F005BD44-180A-4A9A-9339-BE457D1E207F</key>
 		<dict>
 			<key>ypos</key>
@@ -4221,11 +4246,6 @@ SOFTWARE.</string>
 		<dict>
 			<key>ypos</key>
 			<real>2310</real>
-		</dict>
-		<key>F2E80AAC-7BF3-4701-A8FC-FEF2E8D08E15</key>
-		<dict>
-			<key>ypos</key>
-			<real>6520</real>
 		</dict>
 		<key>F4382654-9318-4849-82E4-550AC235148C</key>
 		<dict>
