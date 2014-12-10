@@ -816,10 +816,10 @@ if ($playlist_uri != "" && $other_settings == "") {
         exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
         displayNotificationWithArtwork('🔈 Album ' . $album_name, $album_artwork_path);
         return;
-    } else if ($other_action == "volume_increase") {
+    } else if ($other_action == "volume_up") {
     	exec("osascript -e 'set volume output volume (output volume of (get volume settings) + 6)'");
 		return;
-	} else if ($other_action == "volume_decrease") {
+	} else if ($other_action == "volume_down") {
     	exec("osascript -e 'set volume output volume (output volume of (get volume settings) - 6)'");
 		return;
 	} else if ($other_action == "mute") {

@@ -1822,7 +1822,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>volume_increase</string>
+				<string>volume_up</string>
 				<key>subtext</key>
 				<string>Increase System Volume by 6%</string>
 				<key>text</key>
@@ -1845,9 +1845,9 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>0</integer>
 				<key>triggerid</key>
-				<string>com.vdesabou.miniplayer.volumeincrease</string>
+				<string>com.vdesabou.miniplayer.volumeup</string>
 				<key>triggername</key>
-				<string>Increase Volume</string>
+				<string>Volume Up</string>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
@@ -1887,7 +1887,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>volume_decrease</string>
+				<string>volume_down</string>
 				<key>subtext</key>
 				<string>Decrease System Volume by 6%</string>
 				<key>text</key>
@@ -1910,9 +1910,9 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>0</integer>
 				<key>triggerid</key>
-				<string>com.vdesabou.miniplayer.volumedecrease</string>
+				<string>com.vdesabou.miniplayer.volumedown</string>
 				<key>triggername</key>
-				<string>Decrease Volume</string>
+				<string>Volume Down</string>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
