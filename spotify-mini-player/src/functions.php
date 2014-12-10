@@ -1589,7 +1589,7 @@ function displayNotificationForCurrentTrack($w)
 
     if (substr_count($command_output, '▹') > 0) {
         $results = explode('▹', $command_output);
-        displayNotificationWithArtwork('🔈 ' . escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]), getTrackOrAlbumArtwork($w,  $results[4], true), 'Now Playing (Spotify Mini Player)');
+        displayNotificationWithArtwork('🔈 ' . escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]) . ' in album ' . escapeQuery($results[2]), getTrackOrAlbumArtwork($w,  $results[4], true), 'Now Playing');
     } else {
         displayNotificationWithArtwork("Error: cannot get current track",'./images/warning.png');
     }
