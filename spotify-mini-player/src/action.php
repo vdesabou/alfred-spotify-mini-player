@@ -291,6 +291,12 @@ if ($type == "TRACK" && $other_settings == "") {
             return;
         }
     }
+} else if ($type == "DOWNLOAD_ARTWORKS") {
+	if(downloadArtworks($w) == false) {
+		displayNotificationWithArtwork("Error when downloading artworks",'./images/warning.png', 'Error!');
+		return;
+	}
+    return;
 } else if ($type == "ARTIST") {
 
     if ($artist_uri == "") {
