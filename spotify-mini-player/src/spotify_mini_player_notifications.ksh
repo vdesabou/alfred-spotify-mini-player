@@ -33,7 +33,7 @@ try
 	tell application "Spotify"
 
 		set current_track_url to null
-		set current_player_state to null
+		set old_player_state to null
 
 		repeat until application "Spotify" is not running
 			set track_url to spotify url of current track
@@ -49,15 +49,21 @@ try
 				set player_state to "playing"
 			end if
 
-			if (track_url ≠ current_track_url) or (player_state ≠ current_player_state and player_state is "playing") then
+			if track_url ≠ current_track_url then
 				set current_track_url to spotify url of current track
-				set current_player_state to player_state
 
 				tell application "Alfred 2"
 					run trigger "display_current_track_notification" in workflow "com.vdesabou.spotify.mini.player" with argument track_url
 				end tell
 			end if
 
+			if player_state ≠ old_player_state and player_state is "playing" then
+				tell application "Alfred 2"
+					run trigger "display_current_track_notification" in workflow "com.vdesabou.spotify.mini.player" with argument player_state
+				end tell
+			end if
+
+			set old_player_state to player_state
 			delay 5
 		end repeat
 	end tell

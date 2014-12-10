@@ -627,7 +627,9 @@ if ($playlist_uri != "" && $other_settings == "") {
         return;
     } else if ($other_action == "play") {
         exec("osascript -e 'tell application \"Spotify\" to play'");
-		displayNotificationForCurrentTrack($w);
+        if($now_playing_notifications == 0) {
+			displayNotificationForCurrentTrack($w);
+		}
 	    return;
     } else if ($other_action == "pause") {
         exec("osascript -e 'tell application \"Spotify\" to pause'");
