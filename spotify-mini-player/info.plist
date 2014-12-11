@@ -1802,8 +1802,8 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "volume_increase" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-echo "===== VOLUME_INCREASE ========" &gt;&gt; "$alfred_workflow_cache/action.log"
+				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "volume_up" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
+echo "===== VOLUME_UP ========" &gt;&gt; "$alfred_workflow_cache/action.log"
 echo "`date` $query" &gt;&gt; "$alfred_workflow_cache/action.log"
 php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
 				<key>type</key>
@@ -1927,8 +1927,8 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "volume_decrease" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-echo "===== VOLUME_DECREASE ========" &gt;&gt; "$alfred_workflow_cache/action.log"
+				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "volume_down" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
+echo "===== VOLUME_DOWN ========" &gt;&gt; "$alfred_workflow_cache/action.log"
 echo "`date` $query" &gt;&gt; "$alfred_workflow_cache/action.log"
 php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
 				<key>type</key>
