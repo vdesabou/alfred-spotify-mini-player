@@ -417,23 +417,6 @@ if (mb_strlen($query) < 3 ||
         $w->result(null, '', "Configure Max Number of Results", "Number of results displayed. (it doesn't apply to your playlist list)", './images/numbers.png', 'no', null, 'Settings▹MaxResults▹');
         $w->result(null, '', "Configure Number of Radio tracks", "Number of tracks to get when creating a Radio Playlist.", './images/numbers.png', 'no', null, 'Settings▹RadioTracks▹');
 
-        if ($is_spotifious_active == true) {
-            $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'disable_spotifiuous' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */, $now_playing_notifications /* now_playing_notifications */, $is_alfred_playlist_active /* is_alfred_playlist_active */, $country_code /* country_code*/, $userid /* userid*/)), "Disable Spotifious", array(
-                "Do not display Spotifious in default results",
-                'alt' => 'Not Available',
-                'cmd' => 'Not Available',
-                'shift' => 'Not Available',
-                'fn' => 'Not Available',
-                'ctrl' => 'Not Available'), './images/uncheck.png', 'yes', null, '');
-        } else {
-            $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'enable_spotifiuous' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */, $now_playing_notifications /* now_playing_notifications */, $is_alfred_playlist_active /* is_alfred_playlist_active */, $country_code /* country_code*/, $userid /* userid*/)), "Enable Spotifious", array(
-                "Display Spotifious in default results",
-                'alt' => 'Not Available',
-                'cmd' => 'Not Available',
-                'shift' => 'Not Available',
-                'fn' => 'Not Available',
-                'ctrl' => 'Not Available'), './images/check.png', 'yes', null, '');
-        }
         if ($is_alfred_playlist_active == true) {
             $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'disable_alfred_playlist' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */, $now_playing_notifications /* now_playing_notifications */, $is_alfred_playlist_active /* is_alfred_playlist_active */, $country_code /* country_code*/, $userid /* userid*/)), "Control Your Music", array(
                 "You will control Your Music (if disabled, you control Alfred Playlist)",
@@ -451,6 +434,24 @@ if (mb_strlen($query) < 3 ||
                 'fn' => 'Not Available',
                 'ctrl' => 'Not Available'), './images/alfred_playlist.png', 'yes', null, '');
         }
+
+        if ($is_spotifious_active == true) {
+            $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'disable_spotifiuous' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */, $now_playing_notifications /* now_playing_notifications */, $is_alfred_playlist_active /* is_alfred_playlist_active */, $country_code /* country_code*/, $userid /* userid*/)), "Disable Spotifious", array(
+                "Do not display Spotifious in default results",
+                'alt' => 'Not Available',
+                'cmd' => 'Not Available',
+                'shift' => 'Not Available',
+                'fn' => 'Not Available',
+                'ctrl' => 'Not Available'), './images/disable_spotifious.png', 'yes', null, '');
+        } else {
+            $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'enable_spotifiuous' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */, $now_playing_notifications /* now_playing_notifications */, $is_alfred_playlist_active /* is_alfred_playlist_active */, $country_code /* country_code*/, $userid /* userid*/)), "Enable Spotifious", array(
+                "Display Spotifious in default results",
+                'alt' => 'Not Available',
+                'cmd' => 'Not Available',
+                'shift' => 'Not Available',
+                'fn' => 'Not Available',
+                'ctrl' => 'Not Available'), './images/enable_spotifious.png', 'yes', null, '');
+        }
         if ($now_playing_notifications == true) {
             $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'disable_now_playing_notifications' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */, $now_playing_notifications /* now_playing_notifications */, $is_alfred_playlist_active /* is_alfred_playlist_active */, $country_code /* country_code*/, $userid /* userid*/)), "Disable Now Playing notifications", array(
                 "Do not display notifications for current playing track",
@@ -458,7 +459,7 @@ if (mb_strlen($query) < 3 ||
                 'cmd' => 'Not Available',
                 'shift' => 'Not Available',
                 'fn' => 'Not Available',
-                'ctrl' => 'Not Available'), './images/uncheck.png', 'yes', null, '');
+                'ctrl' => 'Not Available'), './images/disable_now_playing.png', 'yes', null, '');
         } else {
             $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'enable_now_playing_notifications' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */, $now_playing_notifications /* now_playing_notifications */, $is_alfred_playlist_active /* is_alfred_playlist_active */, $country_code /* country_code*/, $userid /* userid*/)), "Enable Now Playing notifications", array(
                 "Display notifications for current playing track",
@@ -466,7 +467,7 @@ if (mb_strlen($query) < 3 ||
                 'cmd' => 'Not Available',
                 'shift' => 'Not Available',
                 'fn' => 'Not Available',
-                'ctrl' => 'Not Available'), './images/check.png', 'yes', null, '');
+                'ctrl' => 'Not Available'), './images/enable_now_playing.png', 'yes', null, '');
         }
 
         if ($update_in_progress == false) {
@@ -2229,7 +2230,7 @@ if (mb_strlen($query) < 3 ||
 
                 $w->result(null, '', "No, cancel", "Return to Alfred Playlist", './images/uncheck.png', 'no', null, 'Alfred Playlist▹');
 
-                $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, 'CLEAR_ALFRED_PLAYLIST▹' . $alfred_playlist_uri . '▹' . $alfred_playlist_name /* other_settings*/, '' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */, $now_playing_notifications /* now_playing_notifications */, $is_alfred_playlist_active /* is_alfred_playlist_active */, $country_code /* country_code*/, $userid /* userid*/)), "Yes, go ahead", "This is not undoable", './images/check.png', 'yes', null, '');
+                $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, 'CLEAR_ALFRED_PLAYLIST▹' . $alfred_playlist_uri . '▹' . $alfred_playlist_name /* other_settings*/, '' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */, $now_playing_notifications /* now_playing_notifications */, $is_alfred_playlist_active /* is_alfred_playlist_active */, $country_code /* country_code*/, $userid /* userid*/)), "Yes, go ahead", "This is undoable", './images/check.png', 'yes', null, '');
 
             }
         }

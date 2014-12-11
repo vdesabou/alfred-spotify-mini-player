@@ -569,20 +569,20 @@ if ($playlist_uri != "" && $other_settings == "") {
         $setSettings = "update settings set is_spotifious_active=1";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotificationWithArtwork("Spotifious is now enabled", './images/check.png');
+        displayNotificationWithArtwork("Spotifious is now enabled", './images/enable_spotifious.png');
         return;
     } else if ($other_action == "disable_spotifiuous") {
         $setSettings = "update settings set is_spotifious_active=0";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotificationWithArtwork("Spotifious is now disabled", './images/uncheck.png');
+        displayNotificationWithArtwork("Spotifious is now disabled", './images/disable_spotifious.png');
         return;
     } else if ($other_action == "enable_now_playing_notifications") {
         $setSettings = "update settings set is_lyrics_active=1";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
         exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
-        displayNotificationWithArtwork("Now Playing notifications are now enabled", './images/check.png');
+        displayNotificationWithArtwork("Now Playing notifications are now enabled", './images/enable_now_playing.png');
         return;
     } else if ($other_action == "search_in_spotifious") {
     	exec("osascript -e 'tell application \"Alfred 2\" to search \"spotifious $original_query\"'");
@@ -594,7 +594,7 @@ if ($playlist_uri != "" && $other_settings == "") {
 
 		// stop process
 		exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a stop >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
-        displayNotificationWithArtwork("Now Playing notifications are now disabled", './images/uncheck.png');
+        displayNotificationWithArtwork("Now Playing notifications are now disabled", './images/disable_now_playing.png');
         return;
     } else if ($other_action == "enable_alfred_playlist") {
         $setSettings = "update settings set is_alfred_playlist_active=1";
