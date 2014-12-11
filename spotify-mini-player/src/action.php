@@ -557,13 +557,13 @@ if ($playlist_uri != "" && $other_settings == "") {
         $setSettings = "update settings set all_playlists=0";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotificationWithArtwork("Search scope set to your music", './images/search.png');
+        displayNotificationWithArtwork("Search scope set to Your Music only", './images/search_scope_yourmusic_only.png');
         return;
     } else if ($other_action == "enable_all_playlist") {
         $setSettings = "update settings set all_playlists=1";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotificationWithArtwork("Search scope set to all playlists", './images/search.png');
+        displayNotificationWithArtwork("Search scope set to your complete library", './images/search.png');
         return;
     } else if ($other_action == "enable_spotifiuous") {
         $setSettings = "update settings set is_spotifious_active=1";
