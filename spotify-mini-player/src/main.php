@@ -917,47 +917,27 @@ if (mb_strlen($query) < 3 ||
         } // search by Album end
         elseif ($kind == "Featured Playlist") {
 
-            if ($country_code == 'FR') {
-                $country_flag = '🇫🇷';
-                $country_name = 'France';
-            } elseif ($country_code == 'IT') {
-                $country_flag = '🇮🇹';
-                $country_name = 'Italy';
-            } else {
-                $country_flag = $country_code;
-                $country_name = $country_code;
-            }
-            $w->result(null, '', $country_flag, 'Browse the current featured playlists in ' . $country_name, './images/star.png', 'no', null, 'Featured Playlist▹' . $country_code . '▹');
+            $w->result(null, '', getCountryName($country_code), 'Browse the current featured playlists in ' . getCountryName($country_code), './images/star.png', 'no', null, 'Featured Playlist▹' . $country_code . '▹');
 
             if ($country_code != 'US') {
-                $w->result(null, '', '🇺🇸', 'Browse the current featured playlists in US', './images/star.png', 'no', null, 'Featured Playlist▹US▹');
+                $w->result(null, '', getCountryName('US'), 'Browse the current featured playlists in ' . getCountryName('US'), './images/star.png', 'no', null, 'Featured Playlist▹US▹');
             }
 
             if ($country_code != 'GB') {
-                $w->result(null, '', '🇬🇧', 'Browse the current featured playlists in UK', './images/star.png', 'no', null, 'Featured Playlist▹GB▹');
+                $w->result(null, '', getCountryName('GB'), 'Browse the current featured playlists in ' . getCountryName('GB'), './images/star.png', 'no', null, 'Featured Playlist▹GB▹');
             }
 
         } // Featured Playlist end
         elseif ($kind == "Charts") {
 
-            if ($country_code == 'FR') {
-                $country_flag = '🇫🇷';
-                $country_name = 'France';
-            } elseif ($country_code == 'IT') {
-                $country_flag = '🇮🇹';
-                $country_name = 'Italy';
-            } else {
-                $country_flag = $country_code;
-                $country_name = $country_code;
-            }
-            $w->result(null, '', $country_flag, 'Browse the current charts in ' . $country_name, './images/numbers.png', 'no', null, 'Charts▹' . $country_code . '▹');
+            $w->result(null, '', getCountryName($country_code), 'Browse the current charts in ' . getCountryName($country_code), './images/numbers.png', 'no', null, 'Charts▹' . $country_code . '▹');
 
             if ($country_code != 'US') {
-                $w->result(null, '', '🇺🇸', 'Browse the current charts in US', './images/numbers.png', 'no', null, 'Charts▹US▹');
+                $w->result(null, '', getCountryName('US'), 'Browse the current charts in ' . getCountryName($country_code), './images/numbers.png', 'no', null, 'Charts▹US▹');
             }
 
             if ($country_code != 'GB') {
-                $w->result(null, '', '🇬🇧', 'Browse the current charts in UK', './images/numbers.png', 'no', null, 'Charts▹GB▹');
+                $w->result(null, '', getCountryName('GB'), 'Browse the current charts in ' . getCountryName($country_code), './images/numbers.png', 'no', null, 'Charts▹GB▹');
             }
 
         } // Charts end

@@ -4071,6 +4071,25 @@ function killUpdate($w)
     displayNotificationWithArtwork("Update library/playlist was killed!", './images/kill.png');
 }
 
+
+
+/**
+ * getCountryName function.
+ *
+ * @access public
+ * @param mixed $cc
+ * @return void
+ */
+function getCountryName($cc) {
+
+	// from http://stackoverflow.com/questions/14599400/how-to-get-iso-3166-1-compatible-country-code
+
+	$country_names = json_decode(file_get_contents("./src/country_names.json")
+, true);
+
+    return $country_names[$cc];
+}
+
 /**
  * beautifyTime function.
  *
