@@ -829,6 +829,24 @@ if ($playlist_uri != "" && $other_settings == "") {
 				set volume with output muted
 			end if'");
 		return;
+	} else if ($other_action == "shuffle") {
+    	$command_output = exec("osascript -e '
+    	tell application \"Spotify\"
+    	if shuffling enabled is true then
+    		if shuffling is true then
+				set shuffling to false
+				return \"Shuffle is now disabled.\"
+			else
+				set shuffling to true
+				return \"Shuffle is now enabled.\"
+			end if
+		else
+			return \"Shuffle is not currently enabled.\"
+		end if
+		end tell'");
+
+		displayNotificationWithArtwork($command_output,'./images/shuffle.png');
+		return;
 	} else if ($other_action == "play_current_artist") {
     	playCurrentArtist($w);
 		return;
