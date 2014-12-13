@@ -1225,6 +1225,77 @@ function getTheArtistAlbums($w, $artist_uri, $country_code)
     return $albums;
 }
 
+/**
+ * getTheNewReleases function.
+ * 
+ * @access public
+ * @param mixed $w
+ * @param mixed $country_code
+ * @param mixed $max_results
+ * @return void
+ */
+function getTheNewReleases($w, $country_code, $max_results = 50)
+{
+    $api = getSpotifyWebAPI($w);
+    if ($api == false) {
+        displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
+        return false;
+    }
+
+    $album_ids = array();
+
+    try {
+        $tmp = explode(':', $artist_uri);
+        $offsetGetNewReleases = 0;
+        $limitGetNewReleases = 50;
+        do {
+            $newReleasesAlbums = $api->getNewReleases(array(
+									            'country' => $country_code,
+									            'limit' => $limitGetNewReleases,
+									            'offset' => $offsetGetNewReleases
+									        ));
+
+            foreach ($newReleasesAlbums->albums->items as $album) {
+                $album_ids[] = $album->id;
+            }
+
+            $offsetGetNewReleases += $limitGetNewReleases;
+        } while ($offsetGetNewReleases < $max_results);
+    } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+	    $w2 = new Workflows('com.vdesabou.spotify.mini.player');
+	    $w2->result(null, '', "Error: Spotify WEB API getNewReleases returned error " . $e->getMessage(), "Try again or report to author", './images/warning.png', 'no', null, '');
+	    echo $w2->toxml();
+        exit;
+    }
+
+
+	$albums = array();
+
+	 try {
+	    // Note: max 20 Ids
+	    $offset = 0;
+	    do {
+	        $output = array_slice($album_ids, $offset, 20);
+	        $offset += 20;
+
+	        if (count($output)) {
+	            $resultGetAlbums = $api->getAlbums($output);
+	            foreach ($resultGetAlbums->albums as $album) {
+	                $albums[] = $album;
+	            }
+	        }
+
+	    } while (count($output) > 0);
+    } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+	    $w2 = new Workflows('com.vdesabou.spotify.mini.player');
+	    $w2->result(null, '', "Error: Spotify WEB API getAlbums from getNewReleases returned error " . $e->getMessage(), "Try again or report to author", './images/warning.png', 'no', null, '');
+	    echo $w2->toxml();
+        exit;
+    }
+
+
+    return $albums;
+}
 
 
 /**
