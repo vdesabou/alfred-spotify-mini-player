@@ -703,6 +703,9 @@ if ($playlist_uri != "" && $other_settings == "") {
 			displayNotificationForCurrentTrack($w);
 	    }
         return;
+    } else if ($other_action == "force_current") {
+		displayNotificationForCurrentTrack($w);
+        return;
     } else if ($other_action == "add_current_track_to") {
 	    if (file_exists($w->data() . '/update_library_in_progress')) {
 	        displayNotificationWithArtwork("Error: cannot modify library while update is in progress",'./images/warning.png', 'Error!');
