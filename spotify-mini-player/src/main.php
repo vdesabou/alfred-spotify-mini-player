@@ -169,6 +169,10 @@ $display_name = $setting[17];
 $userid = $setting[18];
 $echonest_api_key = $setting[19];
 
+
+stathat_ez_count('AlfredSpotifyMiniPlayer', 'workflow used', 1);
+
+
 ////
 // OAUTH checks
 // Check oauth config : Client ID and Client Secret
