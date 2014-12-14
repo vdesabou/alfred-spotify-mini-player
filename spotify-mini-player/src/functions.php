@@ -587,9 +587,7 @@ function getSpotifyWebAPI($w)
 	    $oauth_expires = $setting[4];
 	    $oauth_refresh_token = $setting[5];
 	}
-
-
-
+	
     $session = new SpotifyWebAPI\Session($oauth_client_id, $oauth_client_secret, $oauth_redirect_uri);
     $session->setRefreshToken($oauth_refresh_token);
     $api = new SpotifyWebAPI\SpotifyWebAPI();
@@ -615,9 +613,6 @@ function getSpotifyWebAPI($w)
 	                return false;
 	            }
 			}
-
-            //displayNotification("Token was refreshed");
-
         } else {
             echo "Error[getSpotifyWebAPI]: token could not be refreshed";
             return false;
@@ -869,7 +864,7 @@ function createRadioArtistPlaylistForCurrentArtist($w)
         $results = explode('▹', $command_output);
         createRadioArtistPlaylist($w, $results[1]);
     } else {
-        displayNotification("Error: cannot get current artist");
+        displayNotificationWithArtwork("Error: cannot get current artist",'./images/warning.png', 'Error!');
     }
 }
 
@@ -937,7 +932,7 @@ function createRadioArtistPlaylist($w, $artist_name)
             refreshLibrary($w);
             return;
         } else if (is_numeric($ret) && $ret == 0) {
-            displayNotification('Error: Playlist ' . $json->name . ' cannot be added');
+            displayNotificationWithArtwork('Error: Playlist ' . $json->name . ' cannot be added','./images/warning.png', 'Error!');
             return;
         } else {
 			displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
@@ -1618,19 +1613,6 @@ function checkIfDuplicate($track_ids, $id)
 
 
 /**
- * displayNotification function.
- *
- * @access public
- * @param mixed $output
- * @return void
- */
-function displayNotification($output)
-{
-    exec('./terminal-notifier.app/Contents/MacOS/terminal-notifier -title "Spotify Mini Player" -sender com.spotify.miniplayer -message "' . $output . '"');
-}
-
-
-/**
  * displayNotificationWithArtwork function.
  *
  * @access public
@@ -1638,13 +1620,13 @@ function displayNotification($output)
  * @param mixed $artwork
  * @return void
  */
-function displayNotificationWithArtwork($output, $artwork, $title = 'Spotify Mini Player')
+function displayNotificationWithArtwork($subtitle, $artwork, $title = 'Spotify Mini Player')
 {
     if ($artwork != "" && file_exists($artwork)) {
         copy($artwork, "/tmp/tmp");
     }
 
-    exec("./terminal-notifier.app/Contents/MacOS/terminal-notifier -title '" . $title . "' -sender 'com.spotify.miniplayer' -contentImage '/tmp/tmp' -message '" . $output . "'");
+    exec("./terminal-notifier.app/Contents/MacOS/terminal-notifier -title '" . $title . "' -sender 'com.spotify.miniplayer' -contentImage '/tmp/tmp' -message '" . $subtitle . "'");
 }
 
 /**

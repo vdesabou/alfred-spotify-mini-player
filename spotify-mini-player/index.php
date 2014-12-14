@@ -27,7 +27,7 @@ try {
 	$dbsettings->query("PRAGMA cache_size=700000");
 	$dbsettings->query("PRAGMA compile_options");
 } catch (PDOException $e) {
-	displayNotification("Error[index.php]: cannot set PDO settings");
+	displayNotificationWithArtwork("Error[index.php]: cannot set PDO settings",'./images/warning.png', 'Error!');
 	$dbsettings=null;
 	return;
 }
@@ -37,7 +37,7 @@ try {
 	$settings = $stmt->execute();
 
 } catch (PDOException $e) {
-	displayNotification("Error[index.php]: cannot set prepare settings");
+	displayNotificationWithArtwork("Error[index.php]: cannot set prepare settings",'./images/warning.png', 'Error!');
 	return;
 }
 
@@ -45,7 +45,7 @@ try {
 	$setting = $stmt->fetch();
 }
 catch (PDOException $e) {
-	displayNotification("Error[index.php]: cannot set fetch settings");
+	displayNotificationWithArtwork("Error[index.php]: cannot set fetch settings",'./images/warning.png', 'Error!');
 	return;
 }
 
@@ -69,7 +69,7 @@ try {
 }
 catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 	echo "There was an error during the authentication flow (exception " . $e . ")";
-	displayNotification("Web server killed");
+	displayNotificationWithArtwork("Web server killed",'./images/warning.png', 'Error!');
 	exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk '{print $2}')");
 	return;
 }

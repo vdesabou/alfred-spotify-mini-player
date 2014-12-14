@@ -27,7 +27,7 @@ try {
 	$dbsettings->query("PRAGMA cache_size=700000");
 	$dbsettings->query("PRAGMA compile_options");
 } catch (PDOException $e) {
-	displayNotification("Error[callback.php]: cannot set PDO settings");
+	displayNotificationWithArtwork("Error[callback.php]: cannot set PDO settings",'./images/warning.png', 'Error!');
 	exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk '{print $2}')");
 	$dbsettings=null;
 	return;
@@ -38,7 +38,7 @@ try {
 	$settings = $stmt->execute();
 
 } catch (PDOException $e) {
-	displayNotification("Error[callback.php]: cannot prepare settings");
+	displayNotificationWithArtwork("Error[callback.php]: cannot prepare settings",'./images/warning.png', 'Error!');
 	exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk '{print $2}')");
 	$dbsettings=null;
 	return;
@@ -48,7 +48,7 @@ try {
 	$setting = $stmt->fetch();
 }
 catch (PDOException $e) {
-	displayNotification("Error[callback.php]: cannot fetch settings");
+	displayNotificationWithArtwork("Error[callback.php]: cannot fetch settings",'./images/warning.png', 'Error!');
 	exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk '{print $2}')");
 	return;
 }

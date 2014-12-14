@@ -267,7 +267,7 @@ if ($type == "TRACK" && $other_settings == "") {
 
             if ($is_alfred_playlist_active == true) {
                 if ($playlist_uri == $alfred_playlist_uri) {
-                    displayNotification("Error: cannot add Alfred Playlist " . $alfred_playlist_name . " to itself!");
+                    displayNotificationWithArtwork("Error: cannot add Alfred Playlist " . $alfred_playlist_name . " to itself!",'./images/warning.png', 'Error!');
                     return;
                 }
                 // add playlist to alfred playlist
