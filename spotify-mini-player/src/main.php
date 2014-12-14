@@ -1048,7 +1048,6 @@ if (mb_strlen($query) < 3) {
 		            $subtitle = $track[6];
 
 		            if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " ● " . $track[5]) == false) {
-
 		                $playlistsfortrack = getPlaylistsForTrack($db, $track[2]);
 
 		                if ($is_alfred_playlist_active == true) {
@@ -1379,32 +1378,7 @@ if (mb_strlen($query) < 3) {
 
                 if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " ● " . $track[5]) == false) {
 
-                    $getPlaylistsForTrack = "select playlist_name from tracks where uri=:uri";
-                    try {
-                        $stmt2 = $db->prepare($getPlaylistsForTrack);
-                        $stmt2->bindValue(':uri', '' . $track[2] . '');
-
-                        $stmt2->execute();
-
-                        $playlistsfortrack = "";
-
-                        $noresult2 = true;
-                        while ($playlist = $stmt2->fetch()) {
-                            if
-                            ($noresult2 == true
-                            ) {
-                                $playlistsfortrack = $playlistsfortrack . " ● In playlists: " . $playlist[0];
-                            } else {
-                                $playlistsfortrack = $playlistsfortrack . " ○ " . $playlist[0];
-                            }
-                            $noresult2 = false;
-                        }
-
-
-                    } catch (PDOException $e) {
-                        handleDbIssuePdoXml($db);
-                        return;
-                    }
+					$playlistsfortrack = getPlaylistsForTrack($db, $track[2]);
 
                     if ($is_alfred_playlist_active == true) {
                         $arrayresult = array(
@@ -1514,32 +1488,7 @@ if (mb_strlen($query) < 3) {
 
                 if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " ● " . $track[5]) == false) {
 
-                    $getPlaylistsForTrack = "select playlist_name from tracks where uri=:uri";
-                    try {
-                        $stmt2 = $db->prepare($getPlaylistsForTrack);
-                        $stmt2->bindValue(':uri', '' . $track[2] . '');
-
-                        $stmt2->execute();
-
-                        $playlistsfortrack = "";
-
-                        $noresult2 = true;
-                        while ($playlist = $stmt2->fetch()) {
-                            if
-                            ($noresult2 == true
-                            ) {
-                                $playlistsfortrack = $playlistsfortrack . " ● In playlists: " . $playlist[0];
-                            } else {
-                                $playlistsfortrack = $playlistsfortrack . " ○ " . $playlist[0];
-                            }
-                            $noresult2 = false;
-                        }
-
-
-                    } catch (PDOException $e) {
-                        handleDbIssuePdoXml($db);
-                        return;
-                    }
+					$playlistsfortrack = getPlaylistsForTrack($db, $track[2]);
 
                     if ($is_alfred_playlist_active == true) {
                         $arrayresult = array(
@@ -1676,33 +1625,8 @@ if (mb_strlen($query) < 3) {
                         $subtitle = $track[6];
 
                         if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " ● " . $track[5]) == false) {
-
-                            $getPlaylistsForTrack = "select playlist_name from tracks where uri=:uri";
-                            try {
-                                $stmt2 = $db->prepare($getPlaylistsForTrack);
-                                $stmt2->bindValue(':uri', '' . $track[2] . '');
-
-                                $stmt2->execute();
-
-                                $playlistsfortrack = "";
-
-                                $noresult2 = true;
-                                while ($playlist2 = $stmt2->fetch()) {
-                                    if
-                                    ($noresult2 == true
-                                    ) {
-                                        $playlistsfortrack = $playlistsfortrack . " ● In playlists: " . $playlist2[0];
-                                    } else {
-                                        $playlistsfortrack = $playlistsfortrack . " ○ " . $playlist2[0];
-                                    }
-                                    $noresult2 = false;
-                                }
-
-
-                            } catch (PDOException $e) {
-                                handleDbIssuePdoXml($db);
-                                return;
-                            }
+							$playlistsfortrack = getPlaylistsForTrack($db, $track[2]);
+							
                             if ($is_alfred_playlist_active == true) {
                                 $arrayresult = array(
                                     beautifyTime($track[16] / 1000) . " ● " . $subtitle . $playlistsfortrack,
@@ -1777,30 +1701,8 @@ if (mb_strlen($query) < 3) {
 
                 if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " ● " . $track[5]) == false) {
 
-                    $getPlaylistsForTrack = "select playlist_name from tracks where uri=:uri";
-                    try {
-                        $stmt2 = $db->prepare($getPlaylistsForTrack);
-                        $stmt2->bindValue(':uri', '' . $track[2] . '');
-
-                        $stmt2->execute();
-
-                        $playlistsfortrack = "";
-
-                        $noresult2 = true;
-                        while ($playlist2 = $stmt2->fetch()) {
-                            if
-                            ($noresult2 == true
-                            ) {
-                                $playlistsfortrack = $playlistsfortrack . " ● In playlists: " . $playlist2[0];
-                            } else {
-                                $playlistsfortrack = $playlistsfortrack . " ○ " . $playlist2[0];
-                            }
-                            $noresult2 = false;
-                        }
-                    } catch (PDOException $e) {
-                        handleDbIssuePdoXml($db);
-                        return;
-                    }
+                   	$playlistsfortrack = getPlaylistsForTrack($db, $track[2]);
+                   	
                     if ($is_alfred_playlist_active == true) {
                         $arrayresult = array(
                             beautifyTime($track[16] / 1000) . " ● " . $subtitle . $playlistsfortrack,
