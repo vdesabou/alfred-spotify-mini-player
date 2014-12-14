@@ -437,7 +437,7 @@ if ($playlist_uri != "" && $other_settings == "") {
 
             	} else {
 	            	echo "Could not find track: $track_uri / $track_name / $artist_name \n";
-                    displayNotificationWithArtwork('local track ' . $track_name . ' has not online match','./images/warning.png', 'Error!');
+                    displayNotificationWithArtwork('Local track ' . $track_name . ' has not online match','./images/warning.png', 'Error!');
                     return;
             	}
 	        }
@@ -510,7 +510,7 @@ if ($playlist_uri != "" && $other_settings == "") {
 
 	            	} else {
 		            	echo "Could not find track: $track_uri / $track_name / $artist_name \n";
-	                    displayNotificationWithArtwork('local track ' . $track_name . ' has not online match','./images/warning.png', 'Error!');
+	                    displayNotificationWithArtwork('Local track ' . $track_name . ' has not online match','./images/warning.png', 'Error!');
 	                    return;
 	            	}
 		        }
