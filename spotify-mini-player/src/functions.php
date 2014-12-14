@@ -1660,7 +1660,7 @@ function displayNotificationForCurrentTrack($w)
 
     if (substr_count($command_output, '▹') > 0) {
         $results = explode('▹', $command_output);
-        displayNotificationWithArtwork('🔈 ' . escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]) . ' in album ' . escapeQuery($results[2]), getTrackOrAlbumArtwork($w,  $results[4], true), 'Now Playing');
+        displayNotificationWithArtwork('🔈 ' . escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]) . ' in album ' . escapeQuery($results[2]), getTrackOrAlbumArtwork($w,  $results[4], true), 'Now Playing ' . floatToStars($results[6]/100) .' (' . beautifyTime($results[5]) . ')');
     } else {
         displayNotificationWithArtwork("Error: cannot get current track",'./images/warning.png', 'Error!');
     }
@@ -3846,6 +3846,20 @@ function floatToSquares($decimal)
     $squares = ($decimal < 1) ? floor($decimal * 10) : 10;
     return str_repeat("◼︎", $squares) . str_repeat("◻︎", 10 - $squares);
 }
+
+/**
+ * floatToStars function.
+ *
+ * @access public
+ * @param mixed $decimal
+ * @return void
+ */
+function floatToStars($decimal)
+{
+    $squares = ($decimal < 1) ? floor($decimal * 5) : 5;
+    return str_repeat("★", $squares) . str_repeat("☆", 5 - $squares);
+}
+
 
 
 /**
