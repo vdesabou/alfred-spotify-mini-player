@@ -710,11 +710,10 @@ if (mb_strlen($query) < 3) {
             // display all artists
             $noresult = true;
             while ($track = $stmt->fetch()) {
-
                 $noresult = false;
-
-                if (checkIfResultAlreadyThere($w->results(), "👤 " . ucfirst($track[0])) == false) {
-                    $w->result(null, '', "👤 " . ucfirst($track[0]), "Browse this artist", $track[1], 'no', null, "Artist▹" . $track[2] . '∙' . $track[0] . "▹");
+				$nb_artist_tracks = getNumberOfTracksForArtist($db, $track[2]);
+                if (checkIfResultAlreadyThere($w->results(), "👤 " . ucfirst($track[0]) . ' (' . $nb_artist_tracks . ' tracks)') == false) {
+                    $w->result(null, '', "👤 " . ucfirst($track[0]) . ' (' . $nb_artist_tracks . ' tracks)', "Browse this artist", $track[1], 'no', null, "Artist▹" . $track[2] . '∙' . $track[0] . "▹");
                 }
             }
 
@@ -1777,7 +1776,7 @@ if (mb_strlen($query) < 3) {
             $noresult = true;
             while ($track = $stmt->fetch()) {
                 $noresult = false;
-				$nb_album_tracks = getNumberOfTracksForAlbum($db, $track[3]);
+				$nb_album_tracks = getNumberOfTracksForAlbum($db, $track[3], true);
                 if (checkIfResultAlreadyThere($w->results(), ucfirst($track[0]) . ' (' . $nb_album_tracks . ' tracks)') == false) {
                     $w->result(null, '', ucfirst($track[0]) . ' (' . $nb_album_tracks . ' tracks)', $track[4] . ' by ' . $track[2], $track[1], 'no', null, "Album▹" . $track[3] . '∙' . $track[0] . "▹");
                 }
@@ -1797,10 +1796,10 @@ if (mb_strlen($query) < 3) {
 
             try {
                 if (mb_strlen($artist) < 3) {
-                    $getTracks = "select artist_name,artist_artwork_path,artist_uri from tracks where  mymusic=1 group by artist_name" . " limit " . $max_results;
+                    $getTracks = "select artist_name,artist_artwork_path,artist_uri from tracks where mymusic=1 group by artist_name" . " limit " . $max_results;
                     $stmt = $db->prepare($getTracks);
                 } else {
-                    $getTracks = "select artist_name,artist_artwork_path,artist_uri from tracks where  mymusic=1 and artist_name like :query limit " . $max_results;
+                    $getTracks = "select artist_name,artist_artwork_path,artist_uri from tracks where mymusic=1 and artist_name like :query limit " . $max_results;
                     $stmt = $db->prepare($getTracks);
                     $stmt->bindValue(':query', '%' . $artist . '%');
                 }
@@ -1815,11 +1814,10 @@ if (mb_strlen($query) < 3) {
             // display all artists
             $noresult = true;
             while ($track = $stmt->fetch()) {
-
                 $noresult = false;
-
-                if (checkIfResultAlreadyThere($w->results(), "👤 " . ucfirst($track[0])) == false) {
-                    $w->result(null, '', "👤 " . ucfirst($track[0]), "Browse this artist", $track[1], 'no', null, "Artist▹" . $track[2] . '∙' . $track[0] . "▹");
+				$nb_artist_tracks = getNumberOfTracksForArtist($db, $track[2], true);
+                if (checkIfResultAlreadyThere($w->results(), "👤 " . ucfirst($track[0]) . ' (' . $nb_artist_tracks . ' tracks)') == false) {
+                    $w->result(null, '', "👤 " . ucfirst($track[0]) . ' (' . $nb_artist_tracks . ' tracks)', "Browse this artist", $track[1], 'no', null, "Artist▹" . $track[2] . '∙' . $track[0] . "▹");
                 }
             }
 

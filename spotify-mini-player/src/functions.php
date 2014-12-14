@@ -1558,12 +1558,45 @@ function getPlaylistsForTrack($db, $track_uri)
  * @param mixed $album_uri
  * @return void
  */
-function getNumberOfTracksForAlbum($db, $album_uri)
+function getNumberOfTracksForAlbum($db, $album_uri, $yourmusiconly = false)
 {
-    $getNumberOfTracksForAlbum = "select count(distinct uri) from tracks where album_uri=:album_uri";
+	if($yourmusiconly == false) {
+	    $getNumberOfTracksForAlbum = "select count(distinct uri) from tracks where album_uri=:album_uri";
+	} else {
+		$getNumberOfTracksForAlbum = "select count(distinct uri) from tracks where mymusic=1 and album_uri=:album_uri";
+	}
     try {
         $stmt = $db->prepare($getNumberOfTracksForAlbum);
         $stmt->bindValue(':album_uri', '' . $album_uri . '');
+        $stmt->execute();
+		$nb = $stmt->fetch();
+    } catch (PDOException $e) {
+        handleDbIssuePdoXml($db);
+        return 0;
+    }
+    
+    return $nb[0];
+}
+
+/**
+ * getNumberOfTracksForArtist function.
+ * 
+ * @access public
+ * @param mixed $db
+ * @param mixed $artist_uri
+ * @return void
+ */
+function getNumberOfTracksForArtist($db, $artist_uri, $yourmusiconly = false)
+{
+	if($yourmusiconly == false) {
+		$getNumberOfTracksForArtist = "select count(distinct uri) from tracks where artist_uri=:artist_uri";	
+	} else {
+		$getNumberOfTracksForArtist = "select count(distinct uri) from tracks where mymusic=1 and artist_uri=:artist_uri";
+	}
+    
+    try {
+        $stmt = $db->prepare($getNumberOfTracksForArtist);
+        $stmt->bindValue(':artist_uri', '' . $artist_uri . '');
         $stmt->execute();
 		$nb = $stmt->fetch();
     } catch (PDOException $e) {
