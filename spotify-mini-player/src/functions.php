@@ -1550,6 +1550,29 @@ function getPlaylistsForTrack($db, $track_uri)
     return $playlistsfortrack;
 }
 
+/**
+ * getNumberOfTracksForAlbum function.
+ * 
+ * @access public
+ * @param mixed $db
+ * @param mixed $album_uri
+ * @return void
+ */
+function getNumberOfTracksForAlbum($db, $album_uri)
+{
+    $getNumberOfTracksForAlbum = "select count(distinct uri) from tracks where album_uri=:album_uri";
+    try {
+        $stmt = $db->prepare($getNumberOfTracksForAlbum);
+        $stmt->bindValue(':album_uri', '' . $album_uri . '');
+        $stmt->execute();
+		$nb = $stmt->fetch();
+    } catch (PDOException $e) {
+        handleDbIssuePdoXml($db);
+        return 0;
+    }
+    
+    return $nb[0];
+}
 
 /**
  * escapeQuery function.
