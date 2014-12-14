@@ -800,6 +800,8 @@ if (mb_strlen($query) < 3) {
             if ($country_code != 'GB') {
                 $w->result(null, '', getCountryName('GB'), 'Browse the current charts in ' . getCountryName('GB'), './images/numbers.png', 'no', null, 'Charts▹GB▹');
             }
+            
+            $w->result(null, '', 'Choose Another country', 'Browse the current charts in another country of your choice', './images/numbers.png', 'no', null, 'Charts▹Choose a Country▹');
 
         } // Charts end
         elseif ($kind == "New Releases") {
@@ -2011,40 +2013,52 @@ if (mb_strlen($query) < 3) {
         } // end of Featured Playlist
         elseif ($kind == "Charts") {
             $country = $words[1];
-            $json = doWebApiRequest($w, "http://charts.spotify.com/api/tracks/most_streamed/" . trim($country) . "/weekly/latest");
-
-            foreach ($json->tracks as $track) {
-
-                // format is https://play.spotify.com/track/3WBLQj2qtrKYFDcC5aisLD
-                $href = explode('/', $track->track_url);
-                $track_uri = 'spotify:track:' . $href[4];
-
-                $href = explode('/', $track->album_url);
-                $album_uri = 'spotify:album:' . $href[4];
-
-                $href = explode('/', $track->artist_url);
-                $artist_uri = 'spotify:artist:' . $href[4];
-                if ($is_alfred_playlist_active == true) {
-                    $arrayresult = array(
-                        escapeQuery($track->album_name) . " ● " . $track->num_streams . ' streams',
-                        'alt' => 'Play album ' . escapeQuery($track->album_name) . ' in Spotify',
-                        'cmd' => 'Play artist ' . escapeQuery($track->artist_name) . ' in Spotify',
-                        'fn' => 'Add track ' . escapeQuery($track->track_name) . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
-                        'shift' => 'Add album ' . escapeQuery($track->album_name) . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
-                        'ctrl' => 'Search artist ' . escapeQuery($track->artist_name) . ' online');
-                } else {
-                    $arrayresult = array(
-                        escapeQuery($track->album_name) . " ● " . $track->num_streams . ' streams',
-                        'alt' => 'Play album ' . escapeQuery($track->album_name) . ' in Spotify',
-                        'cmd' => 'Play artist ' . escapeQuery($track->artist_name) . ' in Spotify',
-                        'fn' => 'Add track ' . escapeQuery($track->track_name) . ' to Your Music',
-                        'shift' => 'Add album ' . escapeQuery($track->album_name) . ' to Your Music',
-                        'ctrl' => 'Search artist ' . escapeQuery($track->artist_name) . ' online');
-                }
-                $track_artwork = getTrackOrAlbumArtwork($w,  $track_uri, false);
-                $w->result(null, serialize(array($track_uri /*track_uri*/, $album_uri /* album_uri */, $artist_uri /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, '' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, escapeQuery($track->artist_name)  /* artist_name */, escapeQuery($track->track_name) /* track_name */, escapeQuery($track->album_name) /* album_name */, $track_artwork /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */, $now_playing_notifications /* now_playing_notifications */, $is_alfred_playlist_active /* is_alfred_playlist_active */, $country_code /* country_code*/, $userid /* userid*/)), ucfirst(escapeQuery($track->track_name)) . " ● " . escapeQuery($track->artist_name), $arrayresult, $track_artwork, 'yes', null, '');
+            
+            if($country == 'Choose a Country') {
+	           // list taken from http://charts.spotify.com/docs
+	           $spotify_country_codes = array("ar","at","au","be","bg","ch","cl","co","cr","cz","de","dk","ec","ee","es","fi","fr","gb","gr","gt","hk","hu","ie","is","it","li","lt","lu","lv","mx","my","nl","no","nz","pe","pl","pt","se","sg","sk","sv","tr","tw","us","uy");
+	           	foreach ($spotify_country_codes as $spotify_country_code) {
+		            if (strtoupper($spotify_country_code) != 'US' &&
+		            	strtoupper($spotify_country_code) != 'GB' &&
+		            	strtoupper($spotify_country_code) != strtoupper($country_code)) {
+		                $w->result(null, '', getCountryName(strtoupper($spotify_country_code)), 'Browse the current charts in ' . getCountryName(strtoupper($spotify_country_code)), './images/numbers.png', 'no', null, 'Charts▹' . strtoupper($spotify_country_code) . '▹');
+		            }		           	
+		        }
+            } else {
+	            $json = doWebApiRequest($w, "http://charts.spotify.com/api/tracks/most_streamed/" . trim($country) . "/weekly/latest");
+	
+	            foreach ($json->tracks as $track) {
+	
+	                // format is https://play.spotify.com/track/3WBLQj2qtrKYFDcC5aisLD
+	                $href = explode('/', $track->track_url);
+	                $track_uri = 'spotify:track:' . $href[4];
+	
+	                $href = explode('/', $track->album_url);
+	                $album_uri = 'spotify:album:' . $href[4];
+	
+	                $href = explode('/', $track->artist_url);
+	                $artist_uri = 'spotify:artist:' . $href[4];
+	                if ($is_alfred_playlist_active == true) {
+	                    $arrayresult = array(
+	                        escapeQuery($track->album_name) . " ● " . $track->num_streams . ' streams',
+	                        'alt' => 'Play album ' . escapeQuery($track->album_name) . ' in Spotify',
+	                        'cmd' => 'Play artist ' . escapeQuery($track->artist_name) . ' in Spotify',
+	                        'fn' => 'Add track ' . escapeQuery($track->track_name) . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
+	                        'shift' => 'Add album ' . escapeQuery($track->album_name) . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
+	                        'ctrl' => 'Search artist ' . escapeQuery($track->artist_name) . ' online');
+	                } else {
+	                    $arrayresult = array(
+	                        escapeQuery($track->album_name) . " ● " . $track->num_streams . ' streams',
+	                        'alt' => 'Play album ' . escapeQuery($track->album_name) . ' in Spotify',
+	                        'cmd' => 'Play artist ' . escapeQuery($track->artist_name) . ' in Spotify',
+	                        'fn' => 'Add track ' . escapeQuery($track->track_name) . ' to Your Music',
+	                        'shift' => 'Add album ' . escapeQuery($track->album_name) . ' to Your Music',
+	                        'ctrl' => 'Search artist ' . escapeQuery($track->artist_name) . ' online');
+	                }
+	                $track_artwork = getTrackOrAlbumArtwork($w,  $track_uri, false);
+	                $w->result(null, serialize(array($track_uri /*track_uri*/, $album_uri /* album_uri */, $artist_uri /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, '' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, escapeQuery($track->artist_name)  /* artist_name */, escapeQuery($track->track_name) /* track_name */, escapeQuery($track->album_name) /* album_name */, $track_artwork /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */, $now_playing_notifications /* now_playing_notifications */, $is_alfred_playlist_active /* is_alfred_playlist_active */, $country_code /* country_code*/, $userid /* userid*/)), ucfirst(escapeQuery($track->track_name)) . " ● " . escapeQuery($track->artist_name), $arrayresult, $track_artwork, 'yes', null, '');
+	            }   
             }
-
         } // end of Charts
         elseif ($kind == "New Releases") {
 	        $country = $words[1];
