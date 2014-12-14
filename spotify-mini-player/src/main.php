@@ -816,6 +816,8 @@ if (mb_strlen($query) < 3) {
                 $w->result(null, '', getCountryName('GB'), 'Browse the new album releases in ' . getCountryName('GB'), './images/new_releases.png', 'no', null, 'New Releases▹GB▹');
             }
 
+            $w->result(null, '', 'Choose Another country', 'Browse the new album releases in another country of your choice', './images/new_releases.png', 'no', null, 'New Releases▹Choose a Country▹');
+            
         } // New Releases end
         elseif ($kind == "Current Track") {
             // get info on current song
@@ -2066,8 +2068,19 @@ if (mb_strlen($query) < 3) {
         } // end of Charts
         elseif ($kind == "New Releases") {
 	        $country = $words[1];
-	         
-            if (substr_count($query, '@') == 0) {
+
+            if($country == 'Choose a Country') {
+	           // list taken from http://charts.spotify.com/docs
+	           $spotify_country_codes = array("ar","at","au","be","bg","ch","cl","co","cr","cz","de","dk","ec","ee","es","fi","fr","gb","gr","gt","hk","hu","ie","is","it","li","lt","lu","lv","mx","my","nl","no","nz","pe","pl","pt","se","sg","sk","sv","tr","tw","us","uy");
+	           	foreach ($spotify_country_codes as $spotify_country_code) {
+		            if (strtoupper($spotify_country_code) != 'US' &&
+		            	strtoupper($spotify_country_code) != 'GB' &&
+		            	strtoupper($spotify_country_code) != strtoupper($country_code)) {
+		                $w->result(null, '', getCountryName(strtoupper($spotify_country_code)), 'Browse the new album releases in ' . getCountryName(strtoupper($spotify_country_code)), './images/new_releases.png', 'no', null, 'New Releases▹' . strtoupper($spotify_country_code) . '▹');
+		            }		           	
+		        }
+            } else {	         
+	            if (substr_count($query, '@') == 0) {
                 //
                 // Get New Releases Online
                 //
@@ -2095,54 +2108,55 @@ if (mb_strlen($query) < 3) {
 		        }
 
             } elseif (substr_count($query, '@') == 1) {
-                //
-                // Search Album Online
-                //
-                $tmp = $words[2];
-                $words = explode('@', $tmp);
-                $album_uri = $words[0];
-                $album_name = $words[1];
-
-                $tmp_uri = explode(':', $album_uri);
-
-                $json = doWebApiRequest($w, "https://api.spotify.com/v1/albums/" . $tmp_uri[2] . "/tracks");
-
-                $album_artwork_path = getTrackOrAlbumArtwork($w,  $album_uri, false);
-                $w->result(null, serialize(array('' /*track_uri*/, $album_uri /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'playalbum' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, '' /* artist_name */, '' /* track_name */, $album_name /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, $album_artwork_path /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */, $now_playing_notifications /* now_playing_notifications */, $is_alfred_playlist_active /* is_alfred_playlist_active */, $country_code /* country_code*/, $userid /* userid*/)), "💿 " . escapeQuery($album_name), 'Play album', $album_artwork_path, 'yes', null, '');
-
-				if($update_in_progress == false) {
-               		$w->result(null, '', 'Add album ' . escapeQuery($album_name) . ' to...', 'This will add current track to Your Music or a playlist you will choose in next step', './images/add.png', 'no', null, 'Add▹' . $album_uri . '∙' . escapeQuery($album_name) . '▹');
-				}
-
-
-                $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-                $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
-                $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
-                foreach ($json->items as $track) {
-
-                    if (count($track->available_markets) == 0 || in_array($country_code, $track->available_markets) !== false) {
-                        $track_artwork = getTrackOrAlbumArtwork($w,  $track->uri, false);
-                        if ($is_alfred_playlist_active == true) {
-                            $arrayresult = array(
-                                beautifyTime($track->duration_ms / 1000) . " ● " . $album_name,
-                                'alt' => 'Play album ' . escapeQuery($album_name) . ' in Spotify',
-                                'cmd' => 'Play artist ' . escapeQuery($track->artists[0]->name) . ' in Spotify',
-                                'fn' => 'Add track ' . escapeQuery($track->name) . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
-                                'shift' => 'Add album ' . escapeQuery($album_name) . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
-                                'ctrl' => 'Search artist ' . escapeQuery($track->artists[0]->name) . ' online');
-                        } else {
-                            $arrayresult = array(
-                                beautifyTime($track->duration_ms / 1000) . " ● " . escapeQuery($album_name),
-                                'alt' => 'Play album ' . escapeQuery($album_name) . ' in Spotify',
-                                'cmd' => 'Play artist ' . escapeQuery($track->artists[0]->name) . ' in Spotify',
-                                'fn' => 'Add track ' . escapeQuery($track->name) . ' to Your Music',
-                                'shift' => 'Add album ' . escapeQuery(album_name) . ' to Your Music',
-                                'ctrl' => 'Search artist ' . escapeQuery($track->artists[0]->name) . ' online');
-                        }
-                        $w->result(null, serialize(array($track->uri /*track_uri*/, $album_uri /* album_uri */, $track->artists[0]->uri /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'play_track_in_album_context' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, $track->artists[0]->name  /* artist_name */, $track->name /* track_name */, $album_name /* album_name */, $track_artwork /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */, $now_playing_notifications /* now_playing_notifications */, $is_alfred_playlist_active /* is_alfred_playlist_active */, $country_code /* country_code*/, $userid /* userid*/)), escapeQuery(ucfirst($track->artists[0]->name)) . " ● " . escapeQuery($track->name), $arrayresult, $track_artwork, 'yes', null, '');
-                    }
-                }
-            }
+	                //
+	                // Search Album Online
+	                //
+	                $tmp = $words[2];
+	                $words = explode('@', $tmp);
+	                $album_uri = $words[0];
+	                $album_name = $words[1];
+	
+	                $tmp_uri = explode(':', $album_uri);
+	
+	                $json = doWebApiRequest($w, "https://api.spotify.com/v1/albums/" . $tmp_uri[2] . "/tracks");
+	
+	                $album_artwork_path = getTrackOrAlbumArtwork($w,  $album_uri, false);
+	                $w->result(null, serialize(array('' /*track_uri*/, $album_uri /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'playalbum' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, '' /* artist_name */, '' /* track_name */, $album_name /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, $album_artwork_path /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */, $now_playing_notifications /* now_playing_notifications */, $is_alfred_playlist_active /* is_alfred_playlist_active */, $country_code /* country_code*/, $userid /* userid*/)), "💿 " . escapeQuery($album_name), 'Play album', $album_artwork_path, 'yes', null, '');
+	
+					if($update_in_progress == false) {
+	               		$w->result(null, '', 'Add album ' . escapeQuery($album_name) . ' to...', 'This will add current track to Your Music or a playlist you will choose in next step', './images/add.png', 'no', null, 'Add▹' . $album_uri . '∙' . escapeQuery($album_name) . '▹');
+					}
+	
+	
+	                $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
+	                $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
+	                $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
+	                foreach ($json->items as $track) {
+	
+	                    if (count($track->available_markets) == 0 || in_array($country_code, $track->available_markets) !== false) {
+	                        $track_artwork = getTrackOrAlbumArtwork($w,  $track->uri, false);
+	                        if ($is_alfred_playlist_active == true) {
+	                            $arrayresult = array(
+	                                beautifyTime($track->duration_ms / 1000) . " ● " . $album_name,
+	                                'alt' => 'Play album ' . escapeQuery($album_name) . ' in Spotify',
+	                                'cmd' => 'Play artist ' . escapeQuery($track->artists[0]->name) . ' in Spotify',
+	                                'fn' => 'Add track ' . escapeQuery($track->name) . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
+	                                'shift' => 'Add album ' . escapeQuery($album_name) . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
+	                                'ctrl' => 'Search artist ' . escapeQuery($track->artists[0]->name) . ' online');
+	                        } else {
+	                            $arrayresult = array(
+	                                beautifyTime($track->duration_ms / 1000) . " ● " . escapeQuery($album_name),
+	                                'alt' => 'Play album ' . escapeQuery($album_name) . ' in Spotify',
+	                                'cmd' => 'Play artist ' . escapeQuery($track->artists[0]->name) . ' in Spotify',
+	                                'fn' => 'Add track ' . escapeQuery($track->name) . ' to Your Music',
+	                                'shift' => 'Add album ' . escapeQuery(album_name) . ' to Your Music',
+	                                'ctrl' => 'Search artist ' . escapeQuery($track->artists[0]->name) . ' online');
+	                        }
+	                        $w->result(null, serialize(array($track->uri /*track_uri*/, $album_uri /* album_uri */, $track->artists[0]->uri /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'play_track_in_album_context' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, $track->artists[0]->name  /* artist_name */, $track->name /* track_name */, $album_name /* album_name */, $track_artwork /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */, $now_playing_notifications /* now_playing_notifications */, $is_alfred_playlist_active /* is_alfred_playlist_active */, $country_code /* country_code*/, $userid /* userid*/)), escapeQuery(ucfirst($track->artists[0]->name)) . " ● " . escapeQuery($track->name), $arrayresult, $track_artwork, 'yes', null, '');
+	                    }
+	                }
+	            }
+	        }
 
         } // New Releases mode end
         elseif ($kind == "Add") {
