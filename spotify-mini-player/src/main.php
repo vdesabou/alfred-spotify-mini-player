@@ -2027,8 +2027,11 @@ if (mb_strlen($query) < 3) {
             } else {
 	            $json = doWebApiRequest($w, "http://charts.spotify.com/api/tracks/most_streamed/" . trim($country) . "/weekly/latest");
 	
+				$nb_results=0;
 	            foreach ($json->tracks as $track) {
-	
+					if($nb_results > $max_results) {
+						break;
+					}
 	                // format is https://play.spotify.com/track/3WBLQj2qtrKYFDcC5aisLD
 	                $href = explode('/', $track->track_url);
 	                $track_uri = 'spotify:track:' . $href[4];
@@ -2057,6 +2060,7 @@ if (mb_strlen($query) < 3) {
 	                }
 	                $track_artwork = getTrackOrAlbumArtwork($w,  $track_uri, false);
 	                $w->result(null, serialize(array($track_uri /*track_uri*/, $album_uri /* album_uri */, $artist_uri /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, '' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, escapeQuery($track->artist_name)  /* artist_name */, escapeQuery($track->track_name) /* track_name */, escapeQuery($track->album_name) /* album_name */, $track_artwork /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */, $now_playing_notifications /* now_playing_notifications */, $is_alfred_playlist_active /* is_alfred_playlist_active */, $country_code /* country_code*/, $userid /* userid*/)), ucfirst(escapeQuery($track->track_name)) . " ● " . escapeQuery($track->artist_name), $arrayresult, $track_artwork, 'yes', null, '');
+	                $nb_results++;
 	            }   
             }
         } // end of Charts
