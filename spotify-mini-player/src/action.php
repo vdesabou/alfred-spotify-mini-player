@@ -41,7 +41,7 @@ $userid = $arg[21];
 
 if ($add_to_option != "") {
     if (file_exists($w->data() . '/update_library_in_progress')) {
-        displayNotificationWithArtwork("Error: cannot modify library while update is in progress",'./images/warning.png', 'Error!');
+        displayNotificationWithArtwork("Cannot modify library while update is in progress",'./images/warning.png', 'Error!');
         return;
     }
 }
@@ -73,7 +73,7 @@ if ($type == "TRACK" && $other_settings == "") {
 
             	} else {
 	            	echo "Could not find track: $track_uri / $track_name / $artist_name \n";
-                    displayNotificationWithArtwork('Error: local track ' . $track_name . ' has not online match','./images/warning.png', 'Error!');
+                    displayNotificationWithArtwork('Local track ' . $track_name . ' has not online match','./images/warning.png', 'Error!');
                     return;
             	}
 	        }
@@ -83,7 +83,7 @@ if ($type == "TRACK" && $other_settings == "") {
             if ($is_alfred_playlist_active == true) {
 
                 if ($alfred_playlist_uri == "" || $alfred_playlist_name == "") {
-                    displayNotificationWithArtwork("Error: Alfred Playlist is not set", './images/warning.png');
+                    displayNotificationWithArtwork("Alfred Playlist is not set", './images/warning.png');
                     return;
                 }
 
@@ -92,13 +92,13 @@ if ($type == "TRACK" && $other_settings == "") {
                 $ret = addTracksToPlaylist($w, $tmp[2], $alfred_playlist_uri, $alfred_playlist_name, false);
                 stathat_ez_count('AlfredSpotifyMiniPlayer', 'add', 1);
                 if (is_numeric($ret) && $ret > 0) {
-                    displayNotificationWithArtwork('' . $track_name . ' by ' . $artist_name . ' added to ' . $alfred_playlist_name . ' Alfred Playlist', $track_artwork_path);
+                    displayNotificationWithArtwork('' . $track_name . ' by ' . $artist_name . ' added to ' . $alfred_playlist_name . ' Alfred Playlist', $track_artwork_path, 'Add Track to Alfred Playlist');
                     return;
                 } else if (is_numeric($ret) && $ret == 0) {
-                    displayNotificationWithArtwork('Error: ' . $track_name . ' by ' . $artist_name . ' is already in ' . $alfred_playlist_name . ' Alfred Playlist','./images/warning.png', 'Error!');
+                    displayNotificationWithArtwork('' . $track_name . ' by ' . $artist_name . ' is already in ' . $alfred_playlist_name . ' Alfred Playlist','./images/warning.png', 'Error!');
                     return;
                 } else {
-					displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
+					displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
 	                return;
 	            }
             } else {
@@ -106,13 +106,13 @@ if ($type == "TRACK" && $other_settings == "") {
                 $ret = addTracksToYourMusic($w, $tmp[2], false);
                 stathat_ez_count('AlfredSpotifyMiniPlayer', 'add', 1);
                 if (is_numeric($ret) && $ret > 0) {
-                    displayNotificationWithArtwork('' . $track_name . ' by ' . $artist_name . ' added to Your Music', $track_artwork_path);
+                    displayNotificationWithArtwork('' . $track_name . ' by ' . $artist_name . ' added to Your Music', $track_artwork_path, 'Add Track to Your Music');
                     return;
                 } else if (is_numeric($ret) && $ret == 0) {
-                    displayNotificationWithArtwork('Error: ' . $track_name . ' by ' . $artist_name . ' is already in Your Music','./images/warning.png', 'Error!');
+                    displayNotificationWithArtwork('' . $track_name . ' by ' . $artist_name . ' is already in Your Music','./images/warning.png', 'Error!');
                     return;
                 } else {
-					displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
+					displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
 	                return;
 	            }
             }
@@ -173,7 +173,7 @@ if ($type == "TRACK" && $other_settings == "") {
         // case of current song with alt
         $album_uri = getAlbumUriFromTrack($w, $track_uri);
         if ($album_uri == false) {
-            displayNotificationWithArtwork("Error: cannot get current album",'./images/warning.png', 'Error!');
+            displayNotificationWithArtwork("Cannot get current album",'./images/warning.png', 'Error!');
             return;
         }
         $album_artwork_path = getTrackOrAlbumArtwork($w,  $album_uri, true);
@@ -203,7 +203,7 @@ if ($type == "TRACK" && $other_settings == "") {
         // case of current song with cmd
         $artist_uri = getArtistUriFromTrack($w, $track_uri);
         if ($artist_uri == false) {
-            displayNotificationWithArtwork("Error: cannot get current artist",'./images/warning.png', 'Error!');
+            displayNotificationWithArtwork("Cannot get current artist",'./images/warning.png', 'Error!');
             return;
         }
     }
@@ -219,7 +219,7 @@ if ($type == "TRACK" && $other_settings == "") {
                 // case of current song with shift
                 $album_uri = getAlbumUriFromTrack($w, $track_uri);
                 if ($album_uri == false) {
-                    displayNotificationWithArtwork("Error: cannot get current album",'./images/warning.png', 'Error!');
+                    displayNotificationWithArtwork("Cannot get current album",'./images/warning.png', 'Error!');
                     return;
                 }
                 $album_artwork_path = getTrackOrAlbumArtwork($w,  $album_uri, true);
@@ -228,7 +228,7 @@ if ($type == "TRACK" && $other_settings == "") {
             if ($is_alfred_playlist_active == true) {
 
                 if ($alfred_playlist_uri == "" || $alfred_playlist_name == "") {
-                    displayNotificationWithArtwork("Error: Alfred Playlist is not set", './images/warning.png');
+                    displayNotificationWithArtwork("Alfred Playlist is not set", './images/warning.png');
                     return;
                 }
 
@@ -236,13 +236,13 @@ if ($type == "TRACK" && $other_settings == "") {
                 $ret = addTracksToPlaylist($w, getTheAlbumTracks($w, $album_uri), $alfred_playlist_uri, $alfred_playlist_name, false);
                 stathat_ez_count('AlfredSpotifyMiniPlayer', 'add', 1);
                 if (is_numeric($ret) && $ret > 0) {
-                    displayNotificationWithArtwork('Album ' . $album_name . ' added to ' . $alfred_playlist_name . ' Alfred Playlist', $album_artwork_path);
+                    displayNotificationWithArtwork('Album ' . $album_name . ' added to ' . $alfred_playlist_name . ' Alfred Playlist', $album_artwork_path, 'Add Album to Alfred Playlist');
                     return;
                 } else if (is_numeric($ret) && $ret == 0) {
-                    displayNotificationWithArtwork('Error: Album ' . $album_name . ' is already in ' . $alfred_playlist_name . ' Alfred Playlist','./images/warning.png', 'Error!');
+                    displayNotificationWithArtwork('Album ' . $album_name . ' is already in ' . $alfred_playlist_name . ' Alfred Playlist','./images/warning.png', 'Error!');
                     return;
                 } else {
-					displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
+					displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
 	                return;
 	            }
             } else {
@@ -250,13 +250,13 @@ if ($type == "TRACK" && $other_settings == "") {
                 $ret = addTracksToYourMusic($w, getTheAlbumTracks($w, $album_uri), false);
                 stathat_ez_count('AlfredSpotifyMiniPlayer', 'add', 1);
                 if (is_numeric($ret) && $ret > 0) {
-                    displayNotificationWithArtwork('Album ' . $album_name . ' added to Your Music', $album_artwork_path);
+                    displayNotificationWithArtwork('Album ' . $album_name . ' added to Your Music', $album_artwork_path, 'Add Album to Your Music');
                     return;
                 } else if (is_numeric($ret) && $ret == 0) {
-                    displayNotificationWithArtwork('Error: Album ' . $album_name . ' is already in Your Music','./images/warning.png', 'Error!');
+                    displayNotificationWithArtwork('Album ' . $album_name . ' is already in Your Music','./images/warning.png', 'Error!');
                     return;
                 } else {
-					displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
+					displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
 	                return;
 	            }
             }
@@ -267,20 +267,20 @@ if ($type == "TRACK" && $other_settings == "") {
 
             if ($is_alfred_playlist_active == true) {
                 if ($playlist_uri == $alfred_playlist_uri) {
-                    displayNotificationWithArtwork("Error: cannot add Alfred Playlist " . $alfred_playlist_name . " to itself!",'./images/warning.png', 'Error!');
+                    displayNotificationWithArtwork("Cannot add Alfred Playlist " . $alfred_playlist_name . " to itself!",'./images/warning.png', 'Error!');
                     return;
                 }
                 // add playlist to alfred playlist
                 $ret = addTracksToPlaylist($w, getThePlaylistTracks($w, $playlist_uri), $alfred_playlist_uri, $alfred_playlist_name, false);
                 stathat_ez_count('AlfredSpotifyMiniPlayer', 'add', 1);
                 if (is_numeric($ret) && $ret > 0) {
-                    displayNotificationWithArtwork('Playlist ' . $playlist_name . ' added to ' . $alfred_playlist_name . ' Alfred Playlist', $playlist_artwork_path);
+                    displayNotificationWithArtwork('Playlist ' . $playlist_name . ' added to ' . $alfred_playlist_name . ' Alfred Playlist', $playlist_artwork_path, 'Add Playlist to Alfred Playlist');
                     return;
                 } else if (is_numeric($ret) && $ret == 0) {
-                    displayNotificationWithArtwork('Error: Playlist ' . $playlist_name . ' is already in ' . $alfred_playlist_name . ' Alfred Playlist','./images/warning.png', 'Error!');
+                    displayNotificationWithArtwork('Playlist ' . $playlist_name . ' is already in ' . $alfred_playlist_name . ' Alfred Playlist','./images/warning.png', 'Error!');
                     return;
                 } else {
-					displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
+					displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
 	                return;
 	            }
             } else {
@@ -288,13 +288,13 @@ if ($type == "TRACK" && $other_settings == "") {
                 $ret = addTracksToYourMusic($w, getThePlaylistTracks($w, $playlist_uri), false);
                 stathat_ez_count('AlfredSpotifyMiniPlayer', 'add', 1);
                 if (is_numeric($ret) && $ret > 0) {
-                    displayNotificationWithArtwork('Playlist ' . $playlist_name . ' added to Your Music', $playlist_artwork_path);
+                    displayNotificationWithArtwork('Playlist ' . $playlist_name . ' added to Your Music', $playlist_artwork_path, 'Add Playlist to Your Music');
                     return;
                 } else if (is_numeric($ret) && $ret == 0) {
-                    displayNotificationWithArtwork('Error: Playlist ' . $playlist_name . ' is already in Your Music','./images/warning.png', 'Error!');
+                    displayNotificationWithArtwork('Playlist ' . $playlist_name . ' is already in Your Music','./images/warning.png', 'Error!');
                     return;
                 } else {
-					displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
+					displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
 	                return;
 	            }
             }
@@ -314,7 +314,7 @@ if ($type == "TRACK" && $other_settings == "") {
         // case of current song with cmd
         $artist_uri = getArtistUriFromTrack($w, $track_uri);
         if ($artist_uri == false) {
-            displayNotificationWithArtwork("Error: cannot get current artist",'./images/warning.png', 'Error!');
+            displayNotificationWithArtwork("Cannot get current artist",'./images/warning.png', 'Error!');
             return;
         }
         $artist_artwork_path = getArtistArtwork($w,  $artist_name, true);
@@ -337,7 +337,7 @@ if ($type == "TRACK" && $other_settings == "") {
 		exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
 	}
     exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
-    displayNotificationWithArtwork('🔈 Artist ' . $artist_name, $artist_artwork_path);
+    displayNotificationWithArtwork('🔈 Artist ' . $artist_name, $artist_artwork_path, 'Play Artist');
     stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
     return;
 }
@@ -360,7 +360,7 @@ if ($playlist_uri != "" && $other_settings == "") {
 		exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
 	}
     exec("osascript -e 'tell application \"Spotify\" to play track \"$playlist_uri\"'");
-    displayNotificationWithArtwork('🔈 Playlist ' . $playlist_name, $playlist_artwork_path);
+    displayNotificationWithArtwork('🔈 Playlist ' . $playlist_name, $playlist_artwork_path, 'Launch Playlist');
     stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
     return;
 } else if ($other_settings != "") {
@@ -369,38 +369,38 @@ if ($playlist_uri != "" && $other_settings == "") {
         $setSettings = "update settings set max_results=" . $setting[1];
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotificationWithArtwork("Max results set to $setting[1]",'./images/settings.png');
+        displayNotificationWithArtwork("Max results set to $setting[1]",'./images/settings.png', 'Settings');
         return;
     } else if ($setting[0] == "RADIO_TRACKS") {
         $setSettings = "update settings set radio_number_tracks=" . $setting[1];
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotificationWithArtwork("Radio track number set to $setting[1]",'./images/settings.png');
+        displayNotificationWithArtwork("Radio track number set to $setting[1]",'./images/settings.png', 'Settings');
         return;
     } else if ($setting[0] == "Oauth_Client_ID") {
         $setSettings = 'update settings set oauth_client_id=\"' . $setting[1] . '\"';
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotificationWithArtwork("Client ID set to $setting[1]",'./images/settings.png');
+        displayNotificationWithArtwork("Client ID set to $setting[1]",'./images/settings.png', 'Settings');
         return;
     } else if ($setting[0] == "Oauth_Client_SECRET") {
         $setSettings = 'update settings set oauth_client_secret=\"' . $setting[1] . '\"';
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotificationWithArtwork("Client Secret set to $setting[1]",'./images/settings.png');
+        displayNotificationWithArtwork("Client Secret set to $setting[1]",'./images/settings.png', 'Settings');
         return;
     } else if ($setting[0] == "ALFRED_PLAYLIST") {
         $setSettings = 'update settings set alfred_playlist_uri=\"' . $setting[1] . '\"' . ',alfred_playlist_name=\"' . $setting[2] . '\"';
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 
-        displayNotificationWithArtwork('Alfred Playlist set to ' . $setting[2], getPlaylistArtwork($w,  $setting[1], true));
+        displayNotificationWithArtwork('Alfred Playlist set to ' . $setting[2], getPlaylistArtwork($w,  $setting[1], true), 'Settings');
         return;
 
     } else if ($setting[0] == "ADD_TO_PLAYLIST") {
 
 	    if (file_exists($w->data() . '/update_library_in_progress')) {
-	        displayNotificationWithArtwork("Error: cannot modify library while update is in progress",'./images/warning.png', 'Error!');
+	        displayNotificationWithArtwork("Cannot modify library while update is in progress",'./images/warning.png', 'Error!');
 	        return;
 	    }
 
@@ -437,20 +437,20 @@ if ($playlist_uri != "" && $other_settings == "") {
 
             	} else {
 	            	echo "Could not find track: $track_uri / $track_name / $artist_name \n";
-                    displayNotificationWithArtwork('Error: local track ' . $track_name . ' has not online match','./images/warning.png', 'Error!');
+                    displayNotificationWithArtwork('local track ' . $track_name . ' has not online match','./images/warning.png', 'Error!');
                     return;
             	}
 	        }
             $ret = addTracksToPlaylist($w, $tmp[2], $setting[1], $setting[2], false);
             stathat_ez_count('AlfredSpotifyMiniPlayer', 'add', 1);
             if (is_numeric($ret) && $ret > 0) {
-                displayNotificationWithArtwork('' . $track_name . ' added to ' . $setting[2] . ' playlist', $track_artwork_path);
+                displayNotificationWithArtwork('' . $track_name . ' added to ' . $setting[2] . ' playlist', $track_artwork_path, 'Add Track to Playlist');
                 return;
             } else if (is_numeric($ret) && $ret == 0) {
-                displayNotificationWithArtwork('Error: ' . $track_name . ' is already in ' . $setting[2] . ' playlist','./images/warning.png', 'Error!');
+                displayNotificationWithArtwork('' . $track_name . ' is already in ' . $setting[2] . ' playlist','./images/warning.png', 'Error!');
                 return;
             } else {
-				displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
+				displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
                 return;
             }
         } // add playlist to playlist
@@ -459,13 +459,13 @@ if ($playlist_uri != "" && $other_settings == "") {
             $ret = addTracksToPlaylist($w, getThePlaylistTracks($w, $playlist_uri), $setting[1], $setting[2], false);
             stathat_ez_count('AlfredSpotifyMiniPlayer', 'add', 1);
             if (is_numeric($ret) && $ret > 0) {
-                displayNotificationWithArtwork('Playlist ' . $playlist_name . ' added to ' . $setting[2] . ' playlist', $playlist_artwork_path);
+                displayNotificationWithArtwork('Playlist ' . $playlist_name . ' added to ' . $setting[2] . ' playlist', $playlist_artwork_path, 'Add Playlist to Playlist');
                 return;
             } else if (is_numeric($ret) && $ret == 0) {
-                displayNotificationWithArtwork('Error: Playlist ' . $playlist_name . ' is already in ' . $setting[2] . ' playlist','./images/warning.png', 'Error!');
+                displayNotificationWithArtwork('Playlist ' . $playlist_name . ' is already in ' . $setting[2] . ' playlist','./images/warning.png', 'Error!');
                 return;
             } else {
-				displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
+				displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
                 return;
             }
         } // add album to playlist
@@ -474,19 +474,19 @@ if ($playlist_uri != "" && $other_settings == "") {
             $ret = addTracksToPlaylist($w, getTheAlbumTracks($w, $album_uri), $setting[1], $setting[2], false);
             stathat_ez_count('AlfredSpotifyMiniPlayer', 'add', 1);
             if (is_numeric($ret) && $ret > 0) {
-                displayNotificationWithArtwork('Album ' . $album_name . ' added to ' . $setting[2] . ' playlist', $album_artwork_path);
+                displayNotificationWithArtwork('Album ' . $album_name . ' added to ' . $setting[2] . ' playlist', $album_artwork_path, 'Add Album to Playlist');
                 return;
             } else if (is_numeric($ret) && $ret == 0) {
-                displayNotificationWithArtwork('Error: Album ' . $album_name . ' is already in ' . $setting[2] . ' playlist','./images/warning.png', 'Error!');
+                displayNotificationWithArtwork('Album ' . $album_name . ' is already in ' . $setting[2] . ' playlist','./images/warning.png', 'Error!');
                 return;
             } else {
-				displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
+				displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
                 return;
             }
         }
     } else if ($setting[0] == "ADD_TO_YOUR_MUSIC") {
 		    if (file_exists($w->data() . '/update_library_in_progress')) {
-		        displayNotificationWithArtwork("Error: cannot modify library while update is in progress",'./images/warning.png', 'Error!');
+		        displayNotificationWithArtwork("Cannot modify library while update is in progress",'./images/warning.png', 'Error!');
 		        return;
 		    }
 			// add track to your music
@@ -510,20 +510,20 @@ if ($playlist_uri != "" && $other_settings == "") {
 
 	            	} else {
 		            	echo "Could not find track: $track_uri / $track_name / $artist_name \n";
-	                    displayNotificationWithArtwork('Error: local track ' . $track_name . ' has not online match','./images/warning.png', 'Error!');
+	                    displayNotificationWithArtwork('local track ' . $track_name . ' has not online match','./images/warning.png', 'Error!');
 	                    return;
 	            	}
 		        }
 				$ret = addTracksToYourMusic($w, $tmp[2], false);
 				stathat_ez_count('AlfredSpotifyMiniPlayer', 'add', 1);
 				if (is_numeric($ret) && $ret > 0) {
-					displayNotificationWithArtwork('' . $track_name . ' added to Your Music', $track_artwork_path);
+					displayNotificationWithArtwork('' . $track_name . ' added to Your Music', $track_artwork_path, 'Add Track to Your Music');
 					return;
 				} else if (is_numeric($ret) && $ret == 0) {
-					displayNotificationWithArtwork('Error: ' . $track_name . ' is already in Your Music','./images/warning.png', 'Error!');
+					displayNotificationWithArtwork('' . $track_name . ' is already in Your Music','./images/warning.png', 'Error!');
 					return;
 				} else {
-					displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
+					displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
 	                return;
             	}
 			} // add playlist to your music
@@ -532,13 +532,13 @@ if ($playlist_uri != "" && $other_settings == "") {
 				$ret = addTracksToYourMusic($w, getThePlaylistTracks($w, $playlist_uri), false);
 				stathat_ez_count('AlfredSpotifyMiniPlayer', 'add', 1);
 				if (is_numeric($ret) && $ret > 0) {
-					displayNotificationWithArtwork('Playlist ' . $playlist_name . ' added to Your Music', $playlist_artwork_path);
+					displayNotificationWithArtwork('Playlist ' . $playlist_name . ' added to Your Music', $playlist_artwork_path, 'Add Playlist to Your Music');
 					return;
 				} else if (is_numeric($ret) && $ret == 0) {
-					displayNotificationWithArtwork('Error: Playlist ' . $playlist_name . ' is already in Your Music','./images/warning.png', 'Error!');
+					displayNotificationWithArtwork('Playlist ' . $playlist_name . ' is already in Your Music','./images/warning.png', 'Error!');
 					return;
 				} else {
-					displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
+					displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
 	                return;
 	            }
 			} // add album to your music
@@ -547,13 +547,13 @@ if ($playlist_uri != "" && $other_settings == "") {
 				$ret = addTracksToYourMusic($w, getTheAlbumTracks($w, $album_uri), false);
 				stathat_ez_count('AlfredSpotifyMiniPlayer', 'add', 1);
 				if (is_numeric($ret) && $ret > 0) {
-					displayNotificationWithArtwork('Album ' . $album_name . ' added to Your Music', $album_artwork_path);
+					displayNotificationWithArtwork('Album ' . $album_name . ' added to Your Music', $album_artwork_path, 'Add Album to Your Music');
 					return;
 				} else if (is_numeric($ret) && $ret == 0) {
-					displayNotificationWithArtwork('Error: Album ' . $album_name . ' is already in Your Music','./images/warning.png', 'Error!');
+					displayNotificationWithArtwork('Album ' . $album_name . ' is already in Your Music','./images/warning.png', 'Error!');
 					return;
 				} else {
-					displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
+					displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
 	                return;
 	            }
 			}
@@ -562,12 +562,12 @@ if ($playlist_uri != "" && $other_settings == "") {
         return;
     } else if ($setting[0] == "CLEAR_ALFRED_PLAYLIST") {
         if ($setting[1] == "" || $setting[2] == "") {
-            displayNotificationWithArtwork("Error: Alfred Playlist is not set", './images/warning.png');
+            displayNotificationWithArtwork("Alfred Playlist is not set", './images/warning.png');
             return;
         }
 
         if (clearPlaylist($w, $setting[1], $setting[2])) {
-            displayNotificationWithArtwork('Alfred Playlist ' . $setting[2] . ' was cleared', getPlaylistArtwork($w,  $setting[1], true));
+            displayNotificationWithArtwork('Alfred Playlist ' . $setting[2] . ' was cleared', getPlaylistArtwork($w,  $setting[1], true), 'Clear Alfred Playlist');
         }
         return;
     }
@@ -576,32 +576,32 @@ if ($playlist_uri != "" && $other_settings == "") {
         $setSettings = "update settings set all_playlists=0";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotificationWithArtwork("Search scope set to Your Music only", './images/search_scope_yourmusic_only.png');
+        displayNotificationWithArtwork("Search scope set to Your Music only", './images/search_scope_yourmusic_only.png', 'Settings');
         return;
     } else if ($other_action == "enable_all_playlist") {
         $setSettings = "update settings set all_playlists=1";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotificationWithArtwork("Search scope set to your complete library", './images/search.png');
+        displayNotificationWithArtwork("Search scope set to your complete library", './images/search.png', 'Settings');
         return;
     } else if ($other_action == "enable_spotifiuous") {
         $setSettings = "update settings set is_spotifious_active=1";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotificationWithArtwork("Spotifious is now enabled", './images/enable_spotifious.png');
+        displayNotificationWithArtwork("Spotifious is now enabled", './images/enable_spotifious.png', 'Settings');
         return;
     } else if ($other_action == "disable_spotifiuous") {
         $setSettings = "update settings set is_spotifious_active=0";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotificationWithArtwork("Spotifious is now disabled", './images/disable_spotifious.png');
+        displayNotificationWithArtwork("Spotifious is now disabled", './images/disable_spotifious.png', 'Settings');
         return;
     } else if ($other_action == "enable_now_playing_notifications") {
         $setSettings = "update settings set is_lyrics_active=1";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
         exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
-        displayNotificationWithArtwork("Now Playing notifications are now enabled", './images/enable_now_playing.png');
+        displayNotificationWithArtwork("Now Playing notifications are now enabled", './images/enable_now_playing.png', 'Settings');
         return;
     } else if ($other_action == "search_in_spotifious") {
     	exec("osascript -e 'tell application \"Alfred 2\" to search \"spotifious $original_query\"'");
@@ -613,19 +613,19 @@ if ($playlist_uri != "" && $other_settings == "") {
 
 		// stop process
 		exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a stop >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
-        displayNotificationWithArtwork("Now Playing notifications are now disabled", './images/disable_now_playing.png');
+        displayNotificationWithArtwork("Now Playing notifications are now disabled", './images/disable_now_playing.png', 'Settings');
         return;
     } else if ($other_action == "enable_alfred_playlist") {
         $setSettings = "update settings set is_alfred_playlist_active=1";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotificationWithArtwork("Controlling Alfred Playlist", './images/alfred_playlist.png');
+        displayNotificationWithArtwork("Controlling Alfred Playlist", './images/alfred_playlist.png', 'Settings');
         return;
     } else if ($other_action == "disable_alfred_playlist") {
         $setSettings = "update settings set is_alfred_playlist_active=0";
         $dbfile = $w->data() . "/settings.db";
         exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotificationWithArtwork("Controlling Your Music", './images/yourmusic.png');
+        displayNotificationWithArtwork("Controlling Your Music", './images/yourmusic.png', 'Settings');
         return;
     } else if ($other_action == "play_track_in_album_context") {
         // start now playing if needed
@@ -647,7 +647,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\" in context \"$album_uri\"'");
         $album_artwork_path = getTrackOrAlbumArtwork($w,  $album_uri, true);
         if($now_playing_notifications == 0) {
-        	displayNotificationWithArtwork('🔈 ' . $track_name . ' in album ' . $album_name . ' by ' . ucfirst($artist_name), $album_artwork_path);
+        	displayNotificationWithArtwork('🔈 ' . $track_name . ' in album ' . $album_name . ' by ' . ucfirst($artist_name), $album_artwork_path, 'Play Track from Album');
         }
         stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
         return;
@@ -672,7 +672,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         return;
     } else if ($other_action == "current_track_radio") {
 	    if (file_exists($w->data() . '/update_library_in_progress')) {
-	        displayNotificationWithArtwork("Error: cannot modify library while update is in progress",'./images/warning.png', 'Error!');
+	        displayNotificationWithArtwork("Cannot modify library while update is in progress",'./images/warning.png', 'Error!');
 	        return;
 	    }
         createRadioSongPlaylistForCurrentTrack($w);
@@ -680,7 +680,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         return;
     } else if ($other_action == "current_artist_radio") {
 	    if (file_exists($w->data() . '/update_library_in_progress')) {
-	        displayNotificationWithArtwork("Error: cannot modify library while update is in progress",'./images/warning.png', 'Error!');
+	        displayNotificationWithArtwork("Cannot modify library while update is in progress",'./images/warning.png', 'Error!');
 	        return;
 	    }
 	    createRadioArtistPlaylistForCurrentArtist($w);
@@ -702,7 +702,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         return;
     } else if ($other_action == "check_for_update") {
         if (!$w->internet()) {
-            displayNotificationWithArtwork("Error: No internet connection", './images/warning.png');
+            displayNotificationWithArtwork("No internet connection", './images/warning.png');
             return;
         }
 
@@ -718,9 +718,9 @@ if ($playlist_uri != "" && $other_settings == "") {
         }
         $check_results = checkForUpdate($w, 0, $dbsettings);
         if ($check_results != null && is_array($check_results)) {
-            displayNotificationWithArtwork('New version ' . $check_results[0] . ' is available in Downloads directory ', './images/check_update.png');
+            displayNotificationWithArtwork('New version ' . $check_results[0] . ' is available in Downloads directory ', './images/check_update.png', 'Update Available!');
         } else if ($check_results == null) {
-            displayNotificationWithArtwork('No update available', './images/check_update.png');
+            displayNotificationWithArtwork('No update available', './images/check_update.png', 'No Update');
         }
         return;
     } else if ($other_action == "current") {
@@ -733,7 +733,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         return;
     } else if ($other_action == "add_current_track_to") {
 	    if (file_exists($w->data() . '/update_library_in_progress')) {
-	        displayNotificationWithArtwork("Error: cannot modify library while update is in progress",'./images/warning.png', 'Error!');
+	        displayNotificationWithArtwork("Cannot modify library while update is in progress",'./images/warning.png', 'Error!');
 	        return;
 	    }
 	    addCurrentTrackTo($w);
@@ -752,7 +752,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         return;
     } else if ($other_action == "add_current_track") {
 	    if (file_exists($w->data() . '/update_library_in_progress')) {
-	        displayNotificationWithArtwork("Error: cannot modify library while update is in progress",'./images/warning.png', 'Error!');
+	        displayNotificationWithArtwork("Cannot modify library while update is in progress",'./images/warning.png', 'Error!');
 	        return;
 	    }
         addCurrentTrackToAlfredPlaylistOrYourMusic($w);
@@ -761,7 +761,7 @@ if ($playlist_uri != "" && $other_settings == "") {
     } else if ($other_action == "random") {
         $track_uri = getRandomTrack($w);
         if ($track_uri == false) {
-            displayNotificationWithArtwork("Error: cannot find a random track",'./images/warning.png', 'Error!');
+            displayNotificationWithArtwork("Cannot find a random track",'./images/warning.png', 'Error!');
             return;
         }
         // start now playing if needed
@@ -792,7 +792,7 @@ if ($playlist_uri != "" && $other_settings == "") {
     } else if ($other_action == "lookup_artist") {
 
         if (!$w->internet()) {
-            displayNotificationWithArtwork("Error: No internet connection", './images/warning.png');
+            displayNotificationWithArtwork("No internet connection", './images/warning.png', 'Error!');
             return;
         }
         if ($artist_uri == "") {
@@ -819,14 +819,14 @@ if ($playlist_uri != "" && $other_settings == "") {
 			exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
 		}
         exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
-        displayNotificationWithArtwork('🔈 Artist ' . $artist_name, $artist_artwork_path);
+        displayNotificationWithArtwork('🔈 Artist ' . $artist_name, $artist_artwork_path, 'Play Artist');
         stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
         return;
     } else if ($other_action == "playalbum") {
         if ($album_uri == "") {
             $album_uri = getAlbumUriFromTrack($w, $track_uri);
             if ($album_uri == false) {
-                displayNotificationWithArtwork("Error: cannot get album",'./images/warning.png', 'Error!');
+                displayNotificationWithArtwork("Cannot get album",'./images/warning.png', 'Error!');
                 return;
             }
         }
@@ -847,7 +847,7 @@ if ($playlist_uri != "" && $other_settings == "") {
 			exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
 		}
         exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
-        displayNotificationWithArtwork('🔈 Album ' . $album_name, $album_artwork_path);
+        displayNotificationWithArtwork('🔈 Album ' . $album_name, $album_artwork_path, 'Play Album');
         stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
         return;
     } else if ($other_action == "volume_up") {
@@ -879,11 +879,11 @@ if ($playlist_uri != "" && $other_settings == "") {
 		end if
 		end tell'");
 
-		displayNotificationWithArtwork($command_output,'./images/shuffle.png');
+		displayNotificationWithArtwork($command_output,'./images/shuffle.png', 'Shuffle');
 		return;
 	} else if ($other_action == "radio_artist") {
 	    if (file_exists($w->data() . '/update_library_in_progress')) {
-	        displayNotificationWithArtwork("Error: cannot modify library while update is in progress",'./images/warning.png', 'Error!');
+	        displayNotificationWithArtwork("Cannot modify library while update is in progress",'./images/warning.png', 'Error!');
 	        return;
 	    }
         createRadioArtistPlaylist($w, $artist_name);
@@ -895,7 +895,7 @@ if ($playlist_uri != "" && $other_settings == "") {
 		return;
 	} else if ($other_action == "update_library") {
 	    if (file_exists($w->data() . '/update_library_in_progress')) {
-	        displayNotificationWithArtwork("Error: cannot modify library while update is in progress",'./images/warning.png', 'Error!');
+	        displayNotificationWithArtwork("Cannot modify library while update is in progress",'./images/warning.png', 'Error!');
 	        return;
 	    }
         updateLibrary($w);
@@ -903,7 +903,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         return;
     } else if ($other_action == "refresh_library") {
 	    if (file_exists($w->data() . '/update_library_in_progress')) {
-	        displayNotificationWithArtwork("Error: cannot modify library while update is in progress",'./images/warning.png', 'Error!');
+	        displayNotificationWithArtwork("Cannot modify library while update is in progress",'./images/warning.png', 'Error!');
 	        return;
 	    }
         refreshLibrary($w);

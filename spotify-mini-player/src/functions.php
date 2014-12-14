@@ -85,7 +85,7 @@ function displayBiography($w,$artist_uri,$artist_name,$other_action) {
 function searchWebApi($w,$country_code,$query, $type, $limit = 50) {
     $api = getSpotifyWebAPI($w);
     if ($api == false) {
-        displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
+        displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
         return false;
     }
 
@@ -160,7 +160,7 @@ function playAlfredPlaylist($w)
 
 
     if ($alfred_playlist_uri == "" || $alfred_playlist_name == "") {
-        displayNotificationWithArtwork("Error: Alfred Playlist is not set", './images/warning.png');
+        displayNotificationWithArtwork("Alfred Playlist is not set", './images/warning.png');
         return;
     }
 
@@ -168,7 +168,7 @@ function playAlfredPlaylist($w)
     exec("osascript -e 'tell application \"Spotify\" to play track \"$alfred_playlist_uri\"'");
 
     $playlist_artwork_path = getPlaylistArtwork($w,  $alfred_playlist_uri, true, true);
-    displayNotificationWithArtwork('🔈 Alfred Playlist ' . $alfred_playlist_name, $playlist_artwork_path);
+    displayNotificationWithArtwork('🔈 Alfred Playlist ' . $alfred_playlist_name, $playlist_artwork_path,'Play Alfred Playlist');
 }
 
 /**
@@ -193,12 +193,12 @@ function lookupCurrentArtist($w)
         }
 
         if ($artist_uri == false) {
-            displayNotificationWithArtwork("Error: cannot get current artist",'./images/warning.png', 'Error!');
+            displayNotificationWithArtwork("Cannot get current artist",'./images/warning.png', 'Error!');
             return;
         }
         exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online▹" . $artist_uri . "@" . escapeQuery($results[1]) . "\"'");
     } else {
-        displayNotificationWithArtwork("Error: No track is playing", './images/warning.png');
+        displayNotificationWithArtwork("No track is playing", './images/warning.png');
     }
 }
 
@@ -224,13 +224,13 @@ function playCurrentArtist($w)
 	        $artist_uri = getArtistUriFromTrack($w, $results[4]);
         }
         if ($artist_uri == false) {
-            displayNotificationWithArtwork("Error: cannot get current artist",'./images/warning.png', 'Error!');
+            displayNotificationWithArtwork("Cannot get current artist",'./images/warning.png', 'Error!');
             return;
         }
         exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
-        displayNotificationWithArtwork('🔈 Artist ' . escapeQuery($results[1]), getArtistArtwork($w,  $results[1], true));
+        displayNotificationWithArtwork('🔈 Artist ' . escapeQuery($results[1]), getArtistArtwork($w,  $results[1], true), 'Play Current Artist');
     } else {
-        displayNotificationWithArtwork("Error: No artist is playing", './images/warning.png');
+        displayNotificationWithArtwork("No artist is playing", './images/warning.png');
     }
 }
 
@@ -251,13 +251,13 @@ function playCurrentAlbum($w)
         $tmp = explode(':', $results[4]);
         $album_uri = getAlbumUriFromTrack($w, $results[4]);
         if ($album_uri == false) {
-	        displayNotificationWithArtwork("Error: cannot get current album",'./images/warning.png', 'Error!');
+	        displayNotificationWithArtwork("Cannot get current album",'./images/warning.png', 'Error!');
             return;
         }
         exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
-        displayNotificationWithArtwork('🔈 Album ' . escapeQuery($results[2]), getTrackOrAlbumArtwork($w,  $results[4], true));
+        displayNotificationWithArtwork('🔈 Album ' . escapeQuery($results[2]), getTrackOrAlbumArtwork($w,  $results[4], true), 'Play Current Album');
     } else {
-        displayNotificationWithArtwork("Error: No track is playing", './images/warning.png');
+        displayNotificationWithArtwork("No track is playing", './images/warning.png');
     }
 }
 
@@ -290,7 +290,7 @@ function addCurrentTrackTo($w)
 
 			// local track, look it up online
 
-			$query = 'track:' . strtolower($results[0]) . ' artist:' . strtolower($results[1]);
+			$query = 'track:' . strtolower(escapeQuery($results[0])) . ' artist:' . strtolower(escapeQuery($results[1]));
         	$searchResults = searchWebApi($w,$country_code,$query, 'track', 1);
 
         	if(count($searchResults) > 0) {
@@ -302,13 +302,13 @@ function addCurrentTrackTo($w)
             	$results[4] = $track->uri;
         	} else {
             	echo "Could not find track: $results[4] / $results[0] / $results[1] \n";
-                displayNotificationWithArtwork('Error: local track ' . escapeQuery($results[0]) . ' has not online match','./images/warning.png', 'Error!');
+                displayNotificationWithArtwork('Local track ' . escapeQuery($results[0]) . ' has not online match','./images/warning.png', 'Error!');
                 return;
         	}
         }
 		exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Add▹" . $results[4] . "∙" . escapeQuery($results[0]) . '▹' . "\"'");
     } else {
-        displayNotificationWithArtwork("Error: No track is playing", './images/warning.png');
+        displayNotificationWithArtwork("No track is playing", './images/warning.png');
     }
 }
 
@@ -371,7 +371,7 @@ function addCurrentTrackToAlfredPlaylist($w)
 
 
         if ($alfred_playlist_uri == "" || $alfred_playlist_name == "") {
-            displayNotificationWithArtwork("Error: Alfred Playlist is not set", './images/warning.png');
+            displayNotificationWithArtwork("Alfred Playlist is not set", './images/warning.png');
             return;
         }
 
@@ -379,7 +379,7 @@ function addCurrentTrackToAlfredPlaylist($w)
         if($tmp[1] == 'local') {
 			// local track, look it up online
 
-			$query = 'track:' . strtolower($results[0]) . ' artist:' . strtolower($results[1]);
+			$query = 'track:' . strtolower(escapeQuery($results[0])) . ' artist:' . strtolower(escapeQuery($results[1]));
         	$searchResults = searchWebApi($w,$country_code,$query, 'track', 1);
 
         	if(count($searchResults) > 0) {
@@ -391,7 +391,7 @@ function addCurrentTrackToAlfredPlaylist($w)
             	$results[4] = $track->uri;
         	} else {
             	echo "Could not find track: $results[4] / $results[0] / $results[1] \n";
-                displayNotificationWithArtwork('Error: local track ' . escapeQuery($results[0]) . ' has not online match','./images/warning.png', 'Error!');
+                displayNotificationWithArtwork('Local track ' . escapeQuery($results[0]) . ' has not online match','./images/warning.png', 'Error!');
                 return;
         	}
         }
@@ -399,12 +399,12 @@ function addCurrentTrackToAlfredPlaylist($w)
         $tmp = explode(':', $results[4]);
         $ret = addTracksToPlaylist($w, $tmp[2], $alfred_playlist_uri, $alfred_playlist_name, false);
         if (is_numeric($ret) && $ret > 0) {
-            displayNotificationWithArtwork('' . $results[0] . ' by ' . $results[1] . ' added to Alfred Playlist ' . $alfred_playlist_name, getTrackOrAlbumArtwork($w,  $results[4], true));
+            displayNotificationWithArtwork('' . escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]) . ' added to Alfred Playlist ' . $alfred_playlist_name, getTrackOrAlbumArtwork($w,  $results[4], true), 'Add Current Track to Alfred Playlist');
         } else if (is_numeric($ret) && $ret == 0) {
-            displayNotificationWithArtwork('Error: ' . $results[0] . ' by ' . $results[1] . ' is already in Alfred Playlist ' . $alfred_playlist_name, './images/warning.png');
+            displayNotificationWithArtwork('' . escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]) . ' is already in Alfred Playlist ' . $alfred_playlist_name, './images/warning.png', 'Error!');
         }
     } else {
-        displayNotificationWithArtwork("Error: No track is playing", './images/warning.png');
+        displayNotificationWithArtwork("No track is playing", './images/warning.png', 'Error!');
     }
 }
 
@@ -435,7 +435,7 @@ function addCurrentTrackToYourMusic($w)
 			$country_code = $setting[8];
 			// local track, look it up online
 
-			$query = 'track:' . strtolower($results[0]) . ' artist:' . strtolower($results[1]);
+			$query = 'track:' . strtolower(escapeQuery($results[0])) . ' artist:' . strtolower(escapeQuery($results[1]));
         	$searchResults = searchWebApi($w,$country_code,$query, 'track', 1);
 
         	if(count($searchResults) > 0) {
@@ -447,19 +447,19 @@ function addCurrentTrackToYourMusic($w)
             	$results[4] = $track->uri;
         	} else {
             	echo "Could not find track: $results[4] / $results[0] / $results[1] \n";
-                displayNotificationWithArtwork('Error: local track ' . escapeQuery($results[0]) . ' has not online match','./images/warning.png', 'Error!');
+                displayNotificationWithArtwork('Local track ' . escapeQuery($results[0]) . ' has not online match','./images/warning.png', 'Error!');
                 return;
         	}
         }
         $tmp = explode(':', $results[4]);
         $ret = addTracksToYourMusic($w, $tmp[2], false);
         if (is_numeric($ret) && $ret > 0) {
-            displayNotificationWithArtwork('' . $results[0] . ' by ' . $results[1] . ' added to Your Music', getTrackOrAlbumArtwork($w,  $results[4], true));
+            displayNotificationWithArtwork('' . escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]) . ' added to Your Music', getTrackOrAlbumArtwork($w,  $results[4], true), 'Add Current Track to Your Music');
         } else if (is_numeric($ret) && $ret == 0) {
-            displayNotificationWithArtwork('Error: ' . $results[0] . ' by ' . $results[1] . ' is already in Your Music', './images/warning.png');
+            displayNotificationWithArtwork('' . escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]) . ' is already in Your Music', './images/warning.png');
         }
     } else {
-        displayNotificationWithArtwork("Error: No track is playing", './images/warning.png');
+        displayNotificationWithArtwork("No track is playing", './images/warning.png', 'Error!');
     }
 }
 
@@ -515,7 +515,7 @@ function getSpotifyWebAPI($w)
 {
 
     if (!$w->internet()) {
-        displayNotificationWithArtwork("Error: No internet connection", './images/warning.png');
+        displayNotificationWithArtwork("No internet connection", './images/warning.png');
         return false;
     }
 
@@ -638,7 +638,7 @@ function getArtistUriFromTrack($w, $track_uri)
 {
     $api = getSpotifyWebAPI($w);
     if ($api == false) {
-        displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
+        displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
         return false;
     }
 
@@ -689,7 +689,7 @@ function getArtistUriFromSearch($w, $artist_name, $country_code = '')
 {
     $api = getSpotifyWebAPI($w);
     if ($api == false) {
-        displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
+        displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
         return false;
     }
 
@@ -734,7 +734,7 @@ function getAlbumUriFromTrack($w, $track_uri)
 {
     $api = getSpotifyWebAPI($w);
     if ($api == false) {
-        displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
+        displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
         return false;
     }
 
@@ -785,7 +785,7 @@ function clearPlaylist($w, $playlist_uri, $playlist_name)
 {
     $api = getSpotifyWebAPI($w);
     if ($api == false) {
-        displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
+        displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
         return false;
     }
 
@@ -819,7 +819,7 @@ function createTheUserPlaylist($w, $playlist_name)
 {
     $api = getSpotifyWebAPI($w);
     if ($api == false) {
-        displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
+        displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
         return false;
     }
 
@@ -864,7 +864,7 @@ function createRadioArtistPlaylistForCurrentArtist($w)
         $results = explode('▹', $command_output);
         createRadioArtistPlaylist($w, $results[1]);
     } else {
-        displayNotificationWithArtwork("Error: cannot get current artist",'./images/warning.png', 'Error!');
+        displayNotificationWithArtwork("Cannot get current artist",'./images/warning.png', 'Error!');
     }
 }
 
@@ -881,7 +881,7 @@ function createRadioArtistPlaylist($w, $artist_name)
 
     $api = getSpotifyWebAPI($w);
     if ($api == false) {
-        displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
+        displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
         return false;
     }
 
@@ -932,14 +932,14 @@ function createRadioArtistPlaylist($w, $artist_name)
             refreshLibrary($w);
             return;
         } else if (is_numeric($ret) && $ret == 0) {
-            displayNotificationWithArtwork('Error: Playlist ' . $json->name . ' cannot be added','./images/warning.png', 'Error!');
+            displayNotificationWithArtwork('Playlist ' . $json->name . ' cannot be added','./images/warning.png', 'Error!');
             return;
         } else {
-			displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
+			displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
             return;
         }
     } else {
-        displayNotificationWithArtwork('Error: track was not found in Echo Nest','./images/warning.png', 'Error!');
+        displayNotificationWithArtwork('Track was not found in Echo Nest','./images/warning.png', 'Error!');
         return false;
     }
 
@@ -962,7 +962,7 @@ function createRadioSongPlaylistForCurrentTrack($w)
         $results = explode('▹', $command_output);
         createRadioSongPlaylist($w, $results[0], $results[4], $results[1]);
     } else {
-        displayNotificationWithArtwork("Error: cannot get current track",'./images/warning.png', 'Error!');
+        displayNotificationWithArtwork("Cannot get current track",'./images/warning.png', 'Error!');
     }
 }
 
@@ -982,7 +982,7 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name)
 
     $api = getSpotifyWebAPI($w);
     if ($api == false) {
-        displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
+        displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
         return false;
     }
 
@@ -1051,14 +1051,14 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name)
             refreshLibrary($w);
             return;
         } else if (is_numeric($ret) && $ret == 0) {
-            displayNotificationWithArtwork('Error: Playlist ' . $json->name . ' cannot be added','./images/warning.png', 'Error!');
+            displayNotificationWithArtwork('Playlist ' . $json->name . ' cannot be added','./images/warning.png', 'Error!');
             return;
         } else {
-			displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
+			displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
             return;
         }
     } else {
-        displayNotificationWithArtwork('Error: track was not found in Echo Nest','./images/warning.png', 'Error!');
+        displayNotificationWithArtwork('track was not found in Echo Nest','./images/warning.png', 'Error!');
         return false;
     }
 
@@ -1078,7 +1078,7 @@ function getThePlaylistTracks($w, $playlist_uri)
 {
     $api = getSpotifyWebAPI($w);
     if ($api == false) {
-        displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
+        displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
         return false;
     }
 
@@ -1124,7 +1124,7 @@ function getTheAlbumTracks($w, $album_uri)
 {
     $api = getSpotifyWebAPI($w);
     if ($api == false) {
-        displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
+        displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
         return;
     }
 
@@ -1160,7 +1160,7 @@ function getTheArtistAlbums($w, $artist_uri, $country_code)
 {
     $api = getSpotifyWebAPI($w);
     if ($api == false) {
-        displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
+        displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
         return false;
     }
 
@@ -1233,7 +1233,7 @@ function getTheNewReleases($w, $country_code, $max_results = 50)
 {
     $api = getSpotifyWebAPI($w);
     if ($api == false) {
-        displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
+        displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
         return false;
     }
 
@@ -1307,7 +1307,7 @@ function addTracksToYourMusic($w, $tracks, $allow_duplicate = true)
 
     $api = getSpotifyWebAPI($w);
     if ($api == false) {
-        displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
+        displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
         return;
     }
     $tracks = (array)$tracks;
@@ -1397,7 +1397,7 @@ function addTracksToPlaylist($w, $tracks, $playlist_uri, $playlist_name, $allow_
 
     $api = getSpotifyWebAPI($w);
     if ($api == false) {
-        displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
+        displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
         return;
     }
 
@@ -1644,7 +1644,7 @@ function displayNotificationForCurrentTrack($w)
         $results = explode('▹', $command_output);
         displayNotificationWithArtwork('🔈 ' . escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]) . ' in album ' . escapeQuery($results[2]), getTrackOrAlbumArtwork($w,  $results[4], true), 'Now Playing ' . floatToStars($results[6]/100) .' (' . beautifyTime($results[5]) . ')');
     } else {
-        displayNotificationWithArtwork("Error: cannot get current track",'./images/warning.png', 'Error!');
+        displayNotificationWithArtwork("Cannot get current track",'./images/warning.png', 'Error!');
     }
 }
 
@@ -1664,7 +1664,7 @@ function displayLyricsForCurrentTrack()
         $results = explode('▹', $command_output);
         displayLyrics($w, $results[1], $results[0]);
     } else {
-        displayNotificationWithArtwork("Error: cannot get current track",'./images/warning.png', 'Error!');
+        displayNotificationWithArtwork("Cannot get current track",'./images/warning.png', 'Error!');
     }
 }
 
@@ -1680,7 +1680,7 @@ function displayLyricsForCurrentTrack()
 function displayLyrics($w, $artist, $title)
 {
     if (!$w->internet()) {
-        displayNotificationWithArtwork("Error: No internet connection", './images/warning.png');
+        displayNotificationWithArtwork("No internet connection", './images/warning.png');
         return;
     }
     $output = getLyrics($w, $artist, $title);
@@ -1721,7 +1721,7 @@ function displayLyrics($w, $artist, $title)
 function downloadArtworks($w) {
 
     if (!$w->internet()) {
-        displayNotificationWithArtwork("Error: Download Artworks,
+        displayNotificationWithArtwork("Download Artworks,
 No internet connection", './images/warning.png');
         return;
     }
@@ -2319,7 +2319,7 @@ function updateLibrary($w)
 {
     $api = getSpotifyWebAPI($w);
     if ($api == false) {
-        displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
+        displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
         return false;
     }
 
@@ -2903,7 +2903,7 @@ function refreshLibrary($w)
     // Note that a user's collaborative playlists are not currently retrievable.
     $api = getSpotifyWebAPI($w);
     if ($api == false) {
-        displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
+        displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
         return;
     }
     touch($w->data() . "/update_library_in_progress");
@@ -3254,7 +3254,7 @@ function refreshLibrary($w)
                 return;
             }
 
-            displayNotificationWithArtwork('Added playlist ' . escapeQuery($playlist->name), $playlist_artwork_path);
+            displayNotificationWithArtwork('Added playlist ' . escapeQuery($playlist->name), $playlist_artwork_path, 'Refresh Library');
         } else {
             // number of tracks has changed or playlist name has changed
             // update the playlist
@@ -3426,7 +3426,7 @@ function refreshLibrary($w)
                     handleSpotifyWebAPIException($w);
                     return;
                 }
-                displayNotificationWithArtwork('Updated playlist ' . escapeQuery($playlist->name), getPlaylistArtwork($w,  $playlist->uri, true));
+                displayNotificationWithArtwork('Updated playlist ' . escapeQuery($playlist->name), getPlaylistArtwork($w,  $playlist->uri, true), 'Refresh Library');
             } else {
                 continue;
             }
@@ -3459,7 +3459,7 @@ function refreshLibrary($w)
 	            $stmtDelete = $db->prepare($deleteFromTracks);
 	            $stmtDelete->bindValue(':uri', $playlist_in_db[0]);
 	            $stmtDelete->execute();
-	            displayNotificationWithArtwork('Removed playlist ' . $playlist_in_db[1], getPlaylistArtwork($w,  $playlist_in_db[0], false));
+	            displayNotificationWithArtwork('Removed playlist ' . $playlist_in_db[1], getPlaylistArtwork($w,  $playlist_in_db[0], false), 'Refresh Library');
 	        }
 	    }
     } catch (PDOException $e) {
@@ -3781,7 +3781,7 @@ function handleSpotifyWebAPIException($w) {
         unlink($w->data() . '/settings_tmp.db');
     }
 
-	displayNotificationWithArtwork('Error: Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
+	displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
 }
 /**
  * handleDbIssuePdoEcho function.
@@ -3811,7 +3811,7 @@ function handleDbIssuePdoEcho($dbhandle,$w)
         unlink($w->data() . '/settings_tmp.db');
     }
 
-    displayNotificationWithArtwork("Error: DB error " . $dbhandle->errorInfo()[2], './images/warning.png');
+    displayNotificationWithArtwork("DB error " . $dbhandle->errorInfo()[2], './images/warning.png');
     exit;
 }
 
@@ -4019,7 +4019,7 @@ No internet connection", './images/warning.png');
 
         // get local information
         if (!file_exists('./packal/package.xml')) {
-            displayNotificationWithArtwork("Error: this release has not been downloaded from Packal",'./images/warning.png', 'Error!');
+            displayNotificationWithArtwork("this release has not been downloaded from Packal",'./images/warning.png', 'Error!');
             return 1;
         }
         $xml = $w->read('./packal/package.xml');
@@ -4135,7 +4135,7 @@ function killUpdate($w)
 
     exec("kill -9 $(ps -efx | grep \"php\" | egrep \"update_|php -S localhost:15298|ADDTOPLAYLIST|UPDATE_\" | grep -v grep | awk '{print $2}')");
 
-    displayNotificationWithArtwork("Update library/playlist was killed!", './images/kill.png');
+    displayNotificationWithArtwork("Update library was killed", './images/kill.png', 'Kill Update Library ');
 }
 
 
