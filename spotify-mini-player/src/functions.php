@@ -2882,7 +2882,7 @@ function updateLibrary($w)
     }
 
     $elapsed_time = time() - $words[3];
-    displayNotificationWithArtwork("Library (re-)created (" . $nb_track . " tracks) - took " . beautifyTime($elapsed_time),'./images/recreate.png');
+    displayNotificationWithArtwork("took " . beautifyTime($elapsed_time),'./images/recreate.png', "Library (re-)created (" . $nb_track . " tracks)");
 
 
     if (file_exists($w->data() . '/library_old.db')) {
@@ -3731,16 +3731,16 @@ function refreshLibrary($w)
     }
 
     if($changedPlaylists && $changedYourMusic) {
-        $message = ' (Playlists: ' . $addedMsg . ' ' . $removedMsg . ' ' . $updatedMsg . ' ' . $yourMusicMsg . ')';
+        $message = 'Playlists: ' . $addedMsg . ' ' . $removedMsg . ' ' . $updatedMsg . ' ' . $yourMusicMsg;
     } elseif($changedPlaylists) {
-        $message = ' (Playlists: ' . $addedMsg . ' ' . $removedMsg . ' ' . $updatedMsg . ')';
+        $message = 'Playlists: ' . $addedMsg . ' ' . $removedMsg . ' ' . $updatedMsg;
     } elseif($changedYourMusic) {
-        $message = ' (' . $yourMusicMsg . ')'; ;
+        $message = $yourMusicMsg;
     } else {
-        $message = ' (no change)';
+        $message = 'No change';
     }
 
-    displayNotificationWithArtwork("Library refreshed" . $message . " - took " . beautifyTime($elapsed_time),'./images/update.png');
+    displayNotificationWithArtwork($message . " - took " . beautifyTime($elapsed_time),'./images/update.png','Library refreshed');
 
 
     if (file_exists($w->data() . '/library_old.db')) {
