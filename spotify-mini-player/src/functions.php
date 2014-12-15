@@ -2334,14 +2334,12 @@ function getSettingsFromDuplicateDb($w) {
     if (file_exists($w->data() . '/settings_tmp.db')) {
         $dbfile = $w->data() . '/settings_tmp.db';
     } else {
-
 	    if(file_exists($w->data() . '/settings.db')) {
 		    copy($w->data() . '/settings.db', $w->data() . '/settings_tmp.db');
 		    $dbfile = $w->data() . '/settings_tmp.db';
 	    } else {
 		    return false;
 	    }
-
     }
 
     try {
@@ -2357,6 +2355,8 @@ function getSettingsFromDuplicateDb($w) {
         $dbsettings = null;
         return false;
     }
+    unlink($w->data() . '/settings_tmp.db');
+
 	return $setting;
 }
 
@@ -2923,7 +2923,6 @@ function updateLibrary($w)
         unlink($w->data() . '/library_old.db');
     }
     rename($w->data() . '/library_new.db', $w->data() . '/library.db');
-    unlink($w->data() . '/settings_tmp.db');
 
     // remove legacy spotify app if needed
     if (file_exists(exec('printf $HOME') . "/Spotify/spotify-app-miniplayer")) {
@@ -3115,7 +3114,6 @@ function refreshLibrary($w)
         echo "Error(getUserPlaylists): (exception " . print_r($e) . ")\n";
         unlink($w->data() . "/update_library_in_progress");
         unlink($w->data() . "/library_new.db");
-        unlink($w->data() . '/settings_tmp.db');
     }
 
 	// consider Your Music as a playlist for progress bar
@@ -3781,7 +3779,6 @@ function refreshLibrary($w)
         unlink($w->data() . '/library_old.db');
     }
     rename($w->data() . '/library_new.db', $w->data() . '/library.db');
-    unlink($w->data() . '/settings_tmp.db');
 
 	// Download artworks in background
 	if($artworksToDownload ==  true) {
