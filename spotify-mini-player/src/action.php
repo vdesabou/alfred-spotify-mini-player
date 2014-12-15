@@ -134,7 +134,7 @@ if ($type == "TRACK" && $other_settings == "") {
 				exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
 			}
             exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\" in context \"$playlist_uri\"'");
-          
+
             if($now_playing_notifications == 0) {
             	displayNotificationWithArtwork('🔈 ' . $track_name . ' by ' . ucfirst($artist_name), $track_artwork_path);
             }
@@ -699,29 +699,6 @@ if ($playlist_uri != "" && $other_settings == "") {
         exec("php -S localhost:15298 > \"$cache_log\" 2>&1 &");
         sleep(2);
         exec("open http://localhost:15298");
-        return;
-    } else if ($other_action == "check_for_update") {
-        if (!$w->internet()) {
-            displayNotificationWithArtwork("No internet connection", './images/warning.png');
-            return;
-        }
-
-        $dbfile = $w->data() . '/settings.db';
-
-        try {
-            $dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
-            $dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        } catch (PDOException $e) {
-            handleDbIssuePdoEcho($dbsettings,$w);
-            $dbsettings = null;
-            return;
-        }
-        $check_results = checkForUpdate($w, 0, $dbsettings);
-        if ($check_results != null && is_array($check_results)) {
-            displayNotificationWithArtwork('New version ' . $check_results[0] . ' is available in Downloads directory ', './images/check_update.png', 'Update Available!');
-        } else if ($check_results == null) {
-            displayNotificationWithArtwork('No update available', './images/check_update.png', 'No Update');
-        }
         return;
     } else if ($other_action == "current") {
 	    if($now_playing_notifications == 0) {

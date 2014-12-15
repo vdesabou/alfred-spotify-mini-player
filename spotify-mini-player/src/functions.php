@@ -587,7 +587,7 @@ function getSpotifyWebAPI($w)
 	    $oauth_expires = $setting[4];
 	    $oauth_refresh_token = $setting[5];
 	}
-	
+
     $session = new SpotifyWebAPI\Session($oauth_client_id, $oauth_client_secret, $oauth_redirect_uri);
     $session->setRefreshToken($oauth_refresh_token);
     $api = new SpotifyWebAPI\SpotifyWebAPI();
@@ -1222,7 +1222,7 @@ function getTheArtistAlbums($w, $artist_uri, $country_code)
 
 /**
  * getTheNewReleases function.
- * 
+ *
  * @access public
  * @param mixed $w
  * @param mixed $country_code
@@ -1552,7 +1552,7 @@ function getPlaylistsForTrack($db, $track_uri)
 
 /**
  * getNumberOfTracksForAlbum function.
- * 
+ *
  * @access public
  * @param mixed $db
  * @param mixed $album_uri
@@ -1574,13 +1574,13 @@ function getNumberOfTracksForAlbum($db, $album_uri, $yourmusiconly = false)
         handleDbIssuePdoXml($db);
         return 0;
     }
-    
+
     return $nb[0];
 }
 
 /**
  * getNumberOfTracksForArtist function.
- * 
+ *
  * @access public
  * @param mixed $db
  * @param mixed $artist_uri
@@ -1589,11 +1589,11 @@ function getNumberOfTracksForAlbum($db, $album_uri, $yourmusiconly = false)
 function getNumberOfTracksForArtist($db, $artist_uri, $yourmusiconly = false)
 {
 	if($yourmusiconly == false) {
-		$getNumberOfTracksForArtist = "select count(distinct uri) from tracks where artist_uri=:artist_uri";	
+		$getNumberOfTracksForArtist = "select count(distinct uri) from tracks where artist_uri=:artist_uri";
 	} else {
 		$getNumberOfTracksForArtist = "select count(distinct uri) from tracks where mymusic=1 and artist_uri=:artist_uri";
 	}
-    
+
     try {
         $stmt = $db->prepare($getNumberOfTracksForArtist);
         $stmt->bindValue(':artist_uri', '' . $artist_uri . '');
@@ -1603,7 +1603,7 @@ function getNumberOfTracksForArtist($db, $artist_uri, $yourmusiconly = false)
         handleDbIssuePdoXml($db);
         return 0;
     }
-    
+
     return $nb[0];
 }
 
@@ -4061,22 +4061,19 @@ function strip_string($string)
  */
 function checkForUpdate($w, $last_check_update_time, $dbsettings)
 {
-
     if (time() - $last_check_update_time > 86400) {
         // update last_check_update_time
         $setSettings = "update settings set last_check_update_time=" . time();
         $dbsettings->exec($setSettings);
 
         if (!$w->internet()) {
-            displayNotificationWithArtwork("Check for update error:
-No internet connection", './images/warning.png');
-            return;
+            return "Check for update error:
+No internet connection";
         }
 
         // get local information
         if (!file_exists('./packal/package.xml')) {
-            displayNotificationWithArtwork("this release has not been downloaded from Packal",'./images/warning.png', 'Error!');
-            return 1;
+            return "This release has not been downloaded from Packal";
         }
         $xml = $w->read('./packal/package.xml');
         $workflow = new SimpleXMLElement($xml);
@@ -4087,9 +4084,8 @@ No internet connection", './images/warning.png');
         $jsonDataRemote = $w->request($remote_json);
 
         if (empty($jsonDataRemote)) {
-            displayNotificationWithArtwork("Check for update error:
-the export.json " . $remote_json . " file cannot be found",'./images/warning.png');
-            return 1;
+			return "Check for update error:
+the export.json " . $remote_json . " file cannot be found";
         }
 
         $json = json_decode($jsonDataRemote, true);
@@ -4111,9 +4107,8 @@ the export.json " . $remote_json . " file cannot be found",'./images/warning.png
             }
 
         } else {
-            displayNotificationWithArtwork("Check for update error:
-remote.json error",'./images/warning.png');
-            return 1;
+            return "Check for update error:
+remote.json error";
         }
 
     }
@@ -4245,7 +4240,7 @@ function startswith($haystack, $needle)
 
 /**
  * searchCommandsFastAccess function.
- * 
+ *
  * @access public
  * @param mixed $w
  * @param mixed $query
@@ -4275,12 +4270,12 @@ function searchCommandsFastAccess($w,$query,$setting)
 	$display_name = $setting[17];
 	$userid = $setting[18];
 	$echonest_api_key = $setting[19];
-	
+
 	if (mb_strlen($query) < 3) {
 	    ////////
 	    //
 	    //	Fast Access to commands
-	    //////////////			
+	    //////////////
         $w->result('SpotifyMiniPlayer_' . 'next', serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'next' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */, $now_playing_notifications /* now_playing_notifications */, $is_alfred_playlist_active /* is_alfred_playlist_active */, $country_code /* country_code*/, $userid /* userid*/)), 'Next Track', 'Play the next track in Spotify', './images/next.png', 'yes', '');
 
         $w->result('SpotifyMiniPlayer_' . 'previous', serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'previous' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */, $now_playing_notifications /* now_playing_notifications */, $is_alfred_playlist_active /* is_alfred_playlist_active */, $country_code /* country_code*/, $userid /* userid*/)), 'Previous Track', 'Play the previous track in Spotify', './images/previous.png', 'yes', '');
@@ -4324,7 +4319,7 @@ function searchCommandsFastAccess($w,$query,$setting)
 
         $w->result('SpotifyMiniPlayer_' . 'volume_down', serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'volume_down' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */, $now_playing_notifications /* now_playing_notifications */, $is_alfred_playlist_active /* is_alfred_playlist_active */, $country_code /* country_code*/, $userid /* userid*/)), 'Volume Down', 'Decrease System Volume', './images/volume_down.png', 'yes', '');
 
-       $w->result('SpotifyMiniPlayer_' . 'volume_up', serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'volume_up' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */, $now_playing_notifications /* now_playing_notifications */, $is_alfred_playlist_active /* is_alfred_playlist_active */, $country_code /* country_code*/, $userid /* userid*/)), 'Volume Up', 'Increase System Volume', './images/volume_up.png', 'yes', '');		
+       $w->result('SpotifyMiniPlayer_' . 'volume_up', serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'volume_up' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */, $now_playing_notifications /* now_playing_notifications */, $is_alfred_playlist_active /* is_alfred_playlist_active */, $country_code /* country_code*/, $userid /* userid*/)), 'Volume Up', 'Increase System Volume', './images/volume_up.png', 'yes', '');
 	} else {
 	    //
 	    // Search commands for fast access
@@ -4351,7 +4346,7 @@ function searchCommandsFastAccess($w,$query,$setting)
 	            'ctrl' => 'Not Available'), './images/online_artist.png', 'yes', '');
 	    } else if (strpos(strtolower('play'), strtolower($query)) !== false) {
 	        $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'play' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */, $now_playing_notifications /* now_playing_notifications */, $is_alfred_playlist_active /* is_alfred_playlist_active */, $country_code /* country_code*/, $userid /* userid*/)), 'Play', 'Play the current Spotify track', './images/play.png', 'yes', '');
-	
+
 	        $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'play_current_artist' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */, $now_playing_notifications /* now_playing_notifications */, $is_alfred_playlist_active /* is_alfred_playlist_active */, $country_code /* country_code*/, $userid /* userid*/)), 'Play current artist', 'Play the current artist', './images/artists.png', 'yes', null, '');
 	        $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'play_current_album' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */, $now_playing_notifications /* now_playing_notifications */, $is_alfred_playlist_active /* is_alfred_playlist_active */, $country_code /* country_code*/, $userid /* userid*/)), 'Play current album', 'Play the current album', './images/albums.png', 'yes', null, '');
 	    } else if (strpos(strtolower('pause'), strtolower($query)) !== false) {
@@ -4386,8 +4381,8 @@ function searchCommandsFastAccess($w,$query,$setting)
 	    } else if (strpos(strtolower('volume_up'), strtolower($query)) !== false) {
 	       $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'volume_up' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */, $now_playing_notifications /* now_playing_notifications */, $is_alfred_playlist_active /* is_alfred_playlist_active */, $country_code /* country_code*/, $userid /* userid*/)), 'Volume Up', 'Increase System Volume', './images/volume_up.png', 'yes', '');
 	    }
-    } 
-    return $w;	
+    }
+    return $w;
 }
 
 ///////////////
@@ -4398,7 +4393,7 @@ function searchCommandsFastAccess($w,$query,$setting)
 
 /**
  * do_post_request function.
- * 
+ *
  * @access public
  * @param mixed $url
  * @param mixed $data
@@ -4428,7 +4423,7 @@ function do_post_request($url, $data, $optional_headers = null)
 
 /**
  * do_async_post_request function.
- * 
+ *
  * @access public
  * @param mixed $url
  * @param mixed $params
@@ -4461,7 +4456,7 @@ function do_async_post_request($url, $params)
 
 /**
  * stathat_count function.
- * 
+ *
  * @access public
  * @param mixed $stat_key
  * @param mixed $user_key
@@ -4475,7 +4470,7 @@ function stathat_count($stat_key, $user_key, $count)
 
 /**
  * stathat_value function.
- * 
+ *
  * @access public
  * @param mixed $stat_key
  * @param mixed $user_key
@@ -4489,7 +4484,7 @@ function stathat_value($stat_key, $user_key, $value)
 
 /**
  * stathat_ez_count function.
- * 
+ *
  * @access public
  * @param mixed $email
  * @param mixed $stat_name
@@ -4503,7 +4498,7 @@ function stathat_ez_count($email, $stat_name, $count)
 
 /**
  * stathat_ez_value function.
- * 
+ *
  * @access public
  * @param mixed $email
  * @param mixed $stat_name
@@ -4517,7 +4512,7 @@ function stathat_ez_value($email, $stat_name, $value)
 
 /**
  * stathat_count_sync function.
- * 
+ *
  * @access public
  * @param mixed $stat_key
  * @param mixed $user_key
@@ -4531,7 +4526,7 @@ function stathat_count_sync($stat_key, $user_key, $count)
 
 /**
  * stathat_value_sync function.
- * 
+ *
  * @access public
  * @param mixed $stat_key
  * @param mixed $user_key
@@ -4545,7 +4540,7 @@ function stathat_value_sync($stat_key, $user_key, $value)
 
 /**
  * stathat_ez_count_sync function.
- * 
+ *
  * @access public
  * @param mixed $email
  * @param mixed $stat_name
@@ -4559,7 +4554,7 @@ function stathat_ez_count_sync($email, $stat_name, $count)
 
 /**
  * stathat_ez_value_sync function.
- * 
+ *
  * @access public
  * @param mixed $email
  * @param mixed $stat_name
