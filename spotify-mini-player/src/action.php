@@ -762,7 +762,7 @@ if ($playlist_uri != "" && $other_settings == "") {
 			displayNotificationForCurrentTrack($w);
 	    }
         return;
-    } else if (startsWith($other_action, 'display_biography')) {
+    } else if ($other_action == "display_biography") {
 	    displayBiography($w, $artist_uri, $artist_name, $other_action);
 	    stathat_ez_count('AlfredSpotifyMiniPlayer', 'display biography', 1);
         return;

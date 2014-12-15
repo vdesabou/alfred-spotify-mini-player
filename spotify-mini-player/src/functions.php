@@ -64,11 +64,7 @@ function displayBiography($w,$artist_uri,$artist_name,$other_action) {
     $section->writeText($output, $font, $parFormat);
 
     $rtf->save($file);
-    if ($other_action == 'display_biography') {
-        exec("qlmanage -p \"$file\";osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Artist▹" . $artist_uri . "∙" . $artist_name . "▹\"'");
-    } else {
-        exec("qlmanage -p \"$file\";osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online▹" . $artist_uri . "@" . $artist_name . "\"'");
-    }
+    exec("qlmanage -p \"$file\"");
 }
 
 
