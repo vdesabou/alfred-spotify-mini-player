@@ -2928,16 +2928,6 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 		</dict>
 		<dict>
 			<key>config</key>
-			<dict/>
-			<key>type</key>
-			<string>alfred.workflow.action.browseinalfred</string>
-			<key>uid</key>
-			<string>F005BD44-180A-4A9A-9339-BE457D1E207F</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
 			<dict>
 				<key>argumenttype</key>
 				<integer>2</integer>
@@ -2981,6 +2971,16 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 			<string>alfred.workflow.trigger.remote</string>
 			<key>uid</key>
 			<string>873EF61A-BD03-4946-87B0-C7AE5DFC5E5B</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict/>
+			<key>type</key>
+			<string>alfred.workflow.action.browseinalfred</string>
+			<key>uid</key>
+			<string>F005BD44-180A-4A9A-9339-BE457D1E207F</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -3469,6 +3469,23 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>escaping</key>
+				<integer>127</integer>
+				<key>script</key>
+				<string>tell application "System Events"	key code 53 -- escapeend tell</string>
+				<key>type</key>
+				<integer>6</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>25E3EBDF-2CFA-4599-A13B-8C63B3E5329A</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>argument</key>
 				<string></string>
 				<key>argumenttype</key>
@@ -3488,17 +3505,19 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>escaping</key>
-				<integer>127</integer>
-				<key>script</key>
-				<string>tell application "System Events"	key code 53 -- escapeend tell</string>
-				<key>type</key>
-				<integer>6</integer>
+				<key>argument</key>
+				<string></string>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>triggerid</key>
+				<string>com.vdesabou.miniplayer.keyenter</string>
+				<key>triggername</key>
+				<string>Key Enter</string>
 			</dict>
 			<key>type</key>
-			<string>alfred.workflow.action.script</string>
+			<string>alfred.workflow.trigger.remote</string>
 			<key>uid</key>
-			<string>25E3EBDF-2CFA-4599-A13B-8C63B3E5329A</string>
+			<string>78DAB9D1-72A3-4B44-AB3B-D1C71F13DF7A</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -3516,25 +3535,6 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 			<string>alfred.workflow.action.script</string>
 			<key>uid</key>
 			<string>E59E23E2-837A-4B48-949A-A9EE059186C1</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argument</key>
-				<string></string>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>triggerid</key>
-				<string>com.vdesabou.miniplayer.keyenter</string>
-				<key>triggername</key>
-				<string>Key Enter</string>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.trigger.remote</string>
-			<key>uid</key>
-			<string>78DAB9D1-72A3-4B44-AB3B-D1C71F13DF7A</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -3751,7 +3751,7 @@ SOFTWARE.</string>
 		<key>25E3EBDF-2CFA-4599-A13B-8C63B3E5329A</key>
 		<dict>
 			<key>ypos</key>
-			<real>8290</real>
+			<real>8280</real>
 		</dict>
 		<key>2609AC90-5B4D-4043-8F13-D5187B14833F</key>
 		<dict>
@@ -3826,7 +3826,7 @@ SOFTWARE.</string>
 		<key>51401C92-A6F8-4E2A-AA02-D140984EE916</key>
 		<dict>
 			<key>ypos</key>
-			<real>8840</real>
+			<real>8850</real>
 		</dict>
 		<key>552D77E3-1550-4035-AB49-8B708B081EC9</key>
 		<dict>
@@ -4206,7 +4206,7 @@ SOFTWARE.</string>
 		<key>E59E23E2-837A-4B48-949A-A9EE059186C1</key>
 		<dict>
 			<key>ypos</key>
-			<real>8460</real>
+			<real>8470</real>
 		</dict>
 		<key>E63EB492-FCE2-42A1-BD38-7EFE4EA77473</key>
 		<dict>
@@ -4236,7 +4236,7 @@ SOFTWARE.</string>
 		<key>F005BD44-180A-4A9A-9339-BE457D1E207F</key>
 		<dict>
 			<key>ypos</key>
-			<real>6480</real>
+			<real>6490</real>
 		</dict>
 		<key>F4382654-9318-4849-82E4-550AC235148C</key>
 		<dict>

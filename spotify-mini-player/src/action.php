@@ -557,7 +557,7 @@ if ($playlist_uri != "" && $other_settings == "") {
 	                return;
 	            }
 			}
-	} else if ($setting[0] == "Open_Url") {
+	} else if ($setting[0] == "Open") {
         exec("open \"$setting[1]\"");
         return;
     } else if ($setting[0] == "CLEAR_ALFRED_PLAYLIST") {
