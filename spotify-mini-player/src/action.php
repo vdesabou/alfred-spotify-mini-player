@@ -765,7 +765,11 @@ if ($playlist_uri != "" && $other_settings == "") {
 	    }
         return;
     } else if ($other_action == "display_biography") {
-	    displayBiography($w, $artist_uri, $artist_name, $other_action);
+	    displayBiography($w, $artist_uri, $artist_name);
+	    stathat_ez_count('AlfredSpotifyMiniPlayer', 'display biography', 1);
+        return;
+    } else if ($other_action == "display_current_artist_biography") {
+	    displayCurrentArtistBiography($w);
 	    stathat_ez_count('AlfredSpotifyMiniPlayer', 'display biography', 1);
         return;
     } else if ($other_action == "lookup_artist") {

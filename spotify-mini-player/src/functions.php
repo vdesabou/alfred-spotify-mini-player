@@ -14,7 +14,7 @@ require './vendor/autoload.php';
  * @param mixed $other_action
  * @return void
  */
-function displayBiography($w,$artist_uri,$artist_name,$other_action) {
+function displayBiography($w,$artist_uri,$artist_name) {
 
     $json = doWebApiRequest($w, 'http://developer.echonest.com/api/v4/artist/biographies?api_key=5EG94BIZEGFEY9AL9&id=' . $artist_uri);
     $response = $json->response;
@@ -198,6 +198,35 @@ function lookupCurrentArtist($w)
     }
 }
 
+/**
+ * displayCurrentArtistBiography function.
+ *
+ * @access public
+ * @param mixed $w
+ * @return void
+ */
+function displayCurrentArtistBiography($w)
+{
+    // get info on current song
+    $command_output = exec("./src/track_info.ksh 2>&1");
+
+    if (substr_count($command_output, '▹') > 0) {
+        $results = explode('▹', $command_output);
+        $tmp = explode(':', $results[4]);
+        if($tmp[1] == 'local') {
+        	$artist_uri = getArtistUriFromSearch($w, $results[1]);
+        } else {
+	        $artist_uri = getArtistUriFromTrack($w, $results[4]);
+        }
+        if ($artist_uri == false) {
+            displayNotificationWithArtwork("Cannot get current artist",'./images/warning.png', 'Error!');
+            return;
+        }
+        displayBiography($w,$artist_uri,escapeQuery($results[1]));
+    } else {
+        displayNotificationWithArtwork("No artist is playing", './images/warning.png');
+    }
+}
 
 /**
  * playCurrentArtist function.
