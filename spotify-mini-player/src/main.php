@@ -535,9 +535,7 @@ if (mb_strlen($query) < 3) {
             }
         }
 
-        if
-        ($noresult
-        ) {
+        if($noresult) {
             $w->result(null, 'help', "There is no result for your search", "", './images/warning.png', 'no', null, '');
         }
 
@@ -991,7 +989,7 @@ if (mb_strlen($query) < 3) {
 		        //
 		        // Search artists
 		        //
-		        $getTracks = "select artist_name,artist_uri,artist_artwork_path from tracks where  mymusic=1 and artist_name like :artist_name limit " . $max_results;
+		        $getTracks = "select artist_name,artist_uri,artist_artwork_path from tracks where mymusic=1 and artist_name like :artist_name limit " . $max_results;
 
 		        try {
 		            $stmt = $db->prepare($getTracks);
@@ -1066,9 +1064,7 @@ if (mb_strlen($query) < 3) {
 		            }
 		        }
 
-		        if
-		        ($noresult
-		        ) {
+		        if ($noresult) {
 		            $w->result(null, 'help', "There is no result for your search", "", './images/warning.png', 'no', null, '');
 		        }
             }
@@ -1111,9 +1107,7 @@ if (mb_strlen($query) < 3) {
                     }
                 }
 
-		        if
-		        ($noresult
-		        ) {
+		        if ($noresult) {
 		            $w->result(null, 'help', "There is no album for this artist", "", './images/warning.png', 'no', null, '');
 		        }
 
@@ -1333,8 +1327,6 @@ if (mb_strlen($query) < 3) {
 					return;
                 }
             }
-
-
             if (mb_strlen($track) < 3) {
                 $artist_artwork_path = getArtistArtwork($w,  $artist_name, false);
                 $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, $artist_uri /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'playartist' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, $artist_name  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, $artist_artwork_path /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */, $now_playing_notifications /* now_playing_notifications */, $is_alfred_playlist_active /* is_alfred_playlist_active */, $country_code /* country_code*/, $userid /* userid*/)), "👤 " . $artist_name, 'Play artist', $artist_artwork_path, 'yes', null, '');
@@ -1350,16 +1342,16 @@ if (mb_strlen($query) < 3) {
                 	$w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, $artist_uri /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'radio_artist' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, $artist_name  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */, $now_playing_notifications /* now_playing_notifications */, $is_alfred_playlist_active /* is_alfred_playlist_active */, $country_code /* country_code*/, $userid /* userid*/)), 'Create a Radio Playlist for ' . $artist_name, 'This will create a radio playlist with ' . $radio_number_tracks . ' tracks for the artist', './images/radio_artist.png', 'yes', null, '');
                 }
 
-                if ($all_playlists == false) {
-                    $getTracks = "select * from tracks where  mymusic=1 and artist_uri=:artist_uri limit " . $max_results;
+                if ($all_playlists == false || count($tmp) == 3) {
+                    $getTracks = "select * from tracks where mymusic=1 and artist_uri=:artist_uri limit " . $max_results;
                 } else {
                     $getTracks = "select * from tracks where  artist_uri=:artist_uri limit " . $max_results;
                 }
                 $stmt = $db->prepare($getTracks);
                 $stmt->bindValue(':artist_uri', $artist_uri);
             } else {
-                if ($all_playlists == false) {
-                    $getTracks = "select * from tracks where  mymusic=1 and (artist_uri=:artist_uri and track_name like :track)" . " limit " . $max_results;
+                if ($all_playlists == false || count($tmp) == 3) {
+                    $getTracks = "select * from tracks where mymusic=1 and (artist_uri=:artist_uri and track_name like :track)" . " limit " . $max_results;
                 } else {
                     $getTracks = "select * from tracks where  artist_uri=:artist_uri and track_name like :track limit " . $max_results;
                 }
@@ -1373,9 +1365,7 @@ if (mb_strlen($query) < 3) {
             $noresult = true;
             while ($track = $stmt->fetch()) {
 
-                if
-                ($noresult == true
-                ) {
+                if($noresult == true) {
                     $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
                     $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
                     $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
@@ -1443,12 +1433,11 @@ if (mb_strlen($query) < 3) {
             $tmp = explode('∙', $words[1]);
             $album_uri = $tmp[0];
             $album_name = $tmp[1];
-
             $track = $words[2];
 
             try {
                 if (mb_strlen($track) < 3) {
-                    if ($all_playlists == false) {
+                    if ($all_playlists == false || count($tmp) == 3) {
                         $getTracks = "select * from tracks where  mymusic=1 and album_uri=:album_uri limit " . $max_results;
                     } else {
                         $getTracks = "select * from tracks where  album_uri=:album_uri limit " . $max_results;
@@ -1456,7 +1445,7 @@ if (mb_strlen($query) < 3) {
                     $stmt = $db->prepare($getTracks);
                     $stmt->bindValue(':album_uri', $album_uri);
                 } else {
-                    if ($all_playlists == false) {
+                    if ($all_playlists == false || count($tmp) == 3) {
                         $getTracks = "select * from tracks where  mymusic=1 and (album_uri=:album_uri and track_name like :track limit " . $max_results;
                     } else {
                         $getTracks = "select * from tracks where  album_uri=:album_uri and track_name like :track limit " . $max_results;
@@ -1681,13 +1670,11 @@ if (mb_strlen($query) < 3) {
             $thetrack = $words[2];
 
             if (mb_strlen($thetrack) < 3) {
-                $getTracks = "select * from tracks where  mymusic=:mymusic limit " . $max_results;
+                $getTracks = "select * from tracks where mymusic=1 limit " . $max_results;
                 $stmt = $db->prepare($getTracks);
-                $stmt->bindValue(':mymusic', 1);
             } else {
-                $getTracks = "select * from tracks where  mymusic=:mymusic and (artist_name like :track or album_name like :track or track_name like :track)" . " limit " . $max_results;
+                $getTracks = "select * from tracks where mymusic=1 and (artist_name like :track or album_name like :track or track_name like :track)" . " limit " . $max_results;
                 $stmt = $db->prepare($getTracks);
-                $stmt->bindValue(':mymusic', 1);
                 $stmt->bindValue(':track', '%' . $thetrack . '%');
             }
 
@@ -1731,9 +1718,7 @@ if (mb_strlen($query) < 3) {
                 }
             }
 
-            if
-            ($noresult
-            ) {
+            if($noresult) {
                 $w->result(null, 'help', "There is no result for your search", "", './images/warning.png', 'no', null, '');
 
             }
@@ -1787,13 +1772,11 @@ if (mb_strlen($query) < 3) {
                 $noresult = false;
 				$nb_album_tracks = getNumberOfTracksForAlbum($db, $track[3], true);
                 if (checkIfResultAlreadyThere($w->results(), ucfirst($track[0]) . ' (' . $nb_album_tracks . ' tracks)') == false) {
-                    $w->result(null, '', ucfirst($track[0]) . ' (' . $nb_album_tracks . ' tracks)', $track[4] . ' by ' . $track[2], $track[1], 'no', null, "Album▹" . $track[3] . '∙' . $track[0] . "▹");
+                    $w->result(null, '', ucfirst($track[0]) . ' (' . $nb_album_tracks . ' tracks)', $track[4] . ' by ' . $track[2], $track[1], 'no', null, "Album▹" . $track[3] . '∙' . $track[0] . '∙' . ' ★ ' . "▹");
                 }
             }
 
-            if
-            ($noresult
-            ) {
+            if($noresult) {
                 $w->result(null, 'help', "There is no result for your search", "", './images/warning.png', 'no', null, '');
             }
         } // end of Your Music▹Albums▹
@@ -1826,13 +1809,11 @@ if (mb_strlen($query) < 3) {
                 $noresult = false;
 				$nb_artist_tracks = getNumberOfTracksForArtist($db, $track[2], true);
                 if (checkIfResultAlreadyThere($w->results(), "👤 " . ucfirst($track[0]) . ' (' . $nb_artist_tracks . ' tracks)') == false) {
-                    $w->result(null, '', "👤 " . ucfirst($track[0]) . ' (' . $nb_artist_tracks . ' tracks)', "Browse this artist", $track[1], 'no', null, "Artist▹" . $track[2] . '∙' . $track[0] . "▹");
+                    $w->result(null, '', "👤 " . ucfirst($track[0]) . ' (' . $nb_artist_tracks . ' tracks)', "Browse this artist", $track[1], 'no', null, "Artist▹" . $track[2] . '∙' . $track[0] . '∙' . ' ★ ' . "▹");
                 }
             }
 
-            if
-            ($noresult
-            ) {
+            if($noresult) {
                 $w->result(null, 'help', "There is no result for your search", "", './images/warning.png', 'no', null, '');
             }
         } // end of Your Music▹Artists▹
@@ -2020,9 +2001,7 @@ if (mb_strlen($query) < 3) {
                     }
                 }
 
-		        if
-		        ($noresult
-		        ) {
+		        if ($noresult) {
 		            $w->result(null, 'help', "There is no album for this artist", "", './images/warning.png', 'no', null, '');
 		        }
 
