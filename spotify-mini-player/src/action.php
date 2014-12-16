@@ -831,9 +831,11 @@ if ($playlist_uri != "" && $other_settings == "") {
         return;
     } else if ($other_action == "volume_up") {
     	exec("osascript -e 'set volume output volume (output volume of (get volume settings) + 6)'");
+    	displayNotificationWithArtwork("Volume has been increased",'./images/volume_up.png', 'Volume Up');
 		return;
 	} else if ($other_action == "volume_down") {
     	exec("osascript -e 'set volume output volume (output volume of (get volume settings) - 6)'");
+    	displayNotificationWithArtwork("Volume has been decreased",'./images/volume_down.png', 'Volume Down');
 		return;
 	} else if ($other_action == "mute") {
     	exec("osascript -e 'if output muted of (get volume settings) is equal to true then
