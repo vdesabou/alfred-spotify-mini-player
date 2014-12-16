@@ -4424,6 +4424,9 @@ function do_post_request($url, $data, $optional_headers = null)
  */
 function do_async_post_request($url, $params)
 {
+		//avoid warnings like this PHP Warning:  fsockopen(): unable to connect to localhost (Connection refused)
+	-	error_reporting(~E_ALL);
+
         foreach ($params as $key => &$val) {
                 if (is_array($val)) $val = implode(',', $val);
                 $post_params[] = $key.'='.urlencode($val);
@@ -4432,19 +4435,21 @@ function do_async_post_request($url, $params)
 
         $parts=parse_url($url);
 
-        $fp = fsockopen($parts['host'],
+        $fp = @fsockopen($parts['host'],
                 isset($parts['port'])?$parts['port']:80,
                 $errno, $errstr, 30);
 
-        $out = "POST ".$parts['path']." HTTP/1.1\r\n";
-        $out.= "Host: ".$parts['host']."\r\n";
-        $out.= "Content-Type: application/x-www-form-urlencoded\r\n";
-        $out.= "Content-Length: ".strlen($post_string)."\r\n";
-        $out.= "Connection: Close\r\n\r\n";
-        if (isset($post_string)) $out.= $post_string;
+		if(!$fp) {
+	        $out = "POST ".$parts['path']." HTTP/1.1\r\n";
+	        $out.= "Host: ".$parts['host']."\r\n";
+	        $out.= "Content-Type: application/x-www-form-urlencoded\r\n";
+	        $out.= "Content-Length: ".strlen($post_string)."\r\n";
+	        $out.= "Connection: Close\r\n\r\n";
+	        if (isset($post_string)) $out.= $post_string;
 
-        fwrite($fp, $out);
-        fclose($fp);
+	        fwrite($fp, $out);
+	        fclose($fp);
+		}
 }
 
 /**
