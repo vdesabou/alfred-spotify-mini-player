@@ -2014,6 +2014,8 @@ function getTrackOrAlbumArtwork($w, $spotifyURL, $fetchIfNotPresent, $fetchLater
 
                 if($isLaterFetch == true) {
 	             	return true;
+	            } else {
+		            stathat_ez_count('AlfredSpotifyMiniPlayer', 'artworks', 1);
 	            }
             } else {
 	            if($isLaterFetch == true) {
