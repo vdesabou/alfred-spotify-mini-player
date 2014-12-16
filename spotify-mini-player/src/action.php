@@ -842,11 +842,14 @@ if ($playlist_uri != "" && $other_settings == "") {
     	displayNotificationWithArtwork("Volume has been decreased",'./images/volume_down.png', 'Volume Down');
 		return;
 	} else if ($other_action == "mute") {
-    	exec("osascript -e 'if output muted of (get volume settings) is equal to true then
+    	$command_output = exec("osascript -e 'if output muted of (get volume settings) is equal to true then
 				set volume without output muted
+				return \"Volume is unmuted.\"
 			else
 				set volume with output muted
+				return \"Volume is muted.\"
 			end if'");
+		displayNotificationWithArtwork($command_output,'./images/mute.png', 'Mute');
 		return;
 	} else if ($other_action == "shuffle") {
     	$command_output = exec("osascript -e '
