@@ -1586,9 +1586,9 @@ function getPlaylistsForTrack($db, $track_uri)
 function getNumberOfTracksForAlbum($db, $album_uri, $yourmusiconly = false)
 {
 	if($yourmusiconly == false) {
-	    $getNumberOfTracksForAlbum = "select count(distinct uri) from tracks where album_uri=:album_uri";
+	    $getNumberOfTracksForAlbum = "select count(distinct track_name) from tracks where album_uri=:album_uri";
 	} else {
-		$getNumberOfTracksForAlbum = "select count(distinct uri) from tracks where mymusic=1 and album_uri=:album_uri";
+		$getNumberOfTracksForAlbum = "select count(distinct track_name) from tracks where mymusic=1 and album_uri=:album_uri";
 	}
     try {
         $stmt = $db->prepare($getNumberOfTracksForAlbum);
@@ -1614,9 +1614,9 @@ function getNumberOfTracksForAlbum($db, $album_uri, $yourmusiconly = false)
 function getNumberOfTracksForArtist($db, $artist_uri, $yourmusiconly = false)
 {
 	if($yourmusiconly == false) {
-		$getNumberOfTracksForArtist = "select count(distinct uri) from tracks where artist_uri=:artist_uri";
+		$getNumberOfTracksForArtist = "select count(distinct track_name) from tracks where artist_uri=:artist_uri";
 	} else {
-		$getNumberOfTracksForArtist = "select count(distinct uri) from tracks where mymusic=1 and artist_uri=:artist_uri";
+		$getNumberOfTracksForArtist = "select count(distinct track_name) from tracks where mymusic=1 and artist_uri=:artist_uri";
 	}
 
     try {
