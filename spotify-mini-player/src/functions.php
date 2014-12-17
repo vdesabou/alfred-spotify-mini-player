@@ -1825,161 +1825,166 @@ function displayLyrics($w, $artist, $title)
  */
 function downloadArtworks($w) {
 
-    if (!$w->internet()) {
-        displayNotificationWithArtwork("Download Artworks,
+if (!$w->internet()) {
+    displayNotificationWithArtwork("Download Artworks,
 No internet connection", './images/warning.png');
-        return;
-    }
+    return;
+}
 
-	touch($w->data() . "/download_artworks_in_progress");
-	$w->write('Download Artworks▹' . 0 . '▹' . 0 . '▹' . time(), 'download_artworks_in_progress');
-	$in_progress_data = $w->read('download_artworks_in_progress');
-	$words = explode('▹', $in_progress_data);
+touch($w->data() . "/download_artworks_in_progress");
+$w->write('Download Artworks▹' . 0 . '▹' . 0 . '▹' . time(), 'download_artworks_in_progress');
+$in_progress_data = $w->read('download_artworks_in_progress');
+$words = explode('▹', $in_progress_data);
 
-    putenv('LANG=fr_FR.UTF-8');
+putenv('LANG=fr_FR.UTF-8');
 
-    ini_set('memory_limit', '512M');
+ini_set('memory_limit', '512M');
 
-    //
-    // Get list of artworks to download from DB
-    //
+//
+// Get list of artworks to download from DB
+//
+    $nb_artworks_total=0;
+    $nb_artworks=0;
 
     $dbfile = $w->data() . '/fetch_artworks.db';
-    try {
-        $dbartworks = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
-        $dbartworks->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    if(file_exists($dbfile)) {
+	    try {
+	        $dbartworks = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
+	        $dbartworks->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        $nb_artworks_total=0;
-        $nb_artworks=0;
+	        $getCount = 'select count(artist_name) from artists where already_fetched=0';
+	        $stmt = $dbartworks->prepare($getCount);
+	        $stmt->execute();
+	        $count = $stmt->fetch();
+	        $nb_artworks_total += intval($count[0]);
 
-        $getCount = 'select count(artist_name) from artists where already_fetched=0';
-        $stmt = $dbartworks->prepare($getCount);
-        $stmt->execute();
-        $count = $stmt->fetch();
-        $nb_artworks_total += intval($count[0]);
+	        $getCount = 'select count(track_uri) from tracks where already_fetched=0';
+	        $stmt = $dbartworks->prepare($getCount);
+	        $stmt->execute();
+	        $count = $stmt->fetch();
+	        $nb_artworks_total += intval($count[0]);
 
-        $getCount = 'select count(track_uri) from tracks where already_fetched=0';
-        $stmt = $dbartworks->prepare($getCount);
-        $stmt->execute();
-        $count = $stmt->fetch();
-        $nb_artworks_total += intval($count[0]);
+	        $getCount = 'select count(album_uri) from albums where already_fetched=0';
+	        $stmt = $dbartworks->prepare($getCount);
+	        $stmt->execute();
+	        $count = $stmt->fetch();
+	        $nb_artworks_total += intval($count[0]);
 
-        $getCount = 'select count(album_uri) from albums where already_fetched=0';
-        $stmt = $dbartworks->prepare($getCount);
-        $stmt->execute();
-        $count = $stmt->fetch();
-        $nb_artworks_total += intval($count[0]);
+			if($nb_artworks_total != 0) {
+				displayNotificationWithArtwork("Start downloading " . $nb_artworks_total . " artworks",'./images/artworks.png');
 
-        displayNotificationWithArtwork("Start downloading " . $nb_artworks_total . " artworks",'./images/artworks.png');
+				// artists
+		        $getArtists = "select artist_name from artists where already_fetched=0";
+		        $stmtGetArtists = $dbartworks->prepare($getArtists);
 
-		// artists
-        $getArtists = "select artist_name from artists where already_fetched=0";
-        $stmtGetArtists = $dbartworks->prepare($getArtists);
+				$updateArtist = "update artists set already_fetched=1 where artist_name=:artist_name";
+		        $stmtUpdateArtist = $dbartworks->prepare($updateArtist);
 
-		$updateArtist = "update artists set already_fetched=1 where artist_name=:artist_name";
-        $stmtUpdateArtist = $dbartworks->prepare($updateArtist);
+				// tracks
+		        $getTracks = "select track_uri from tracks where already_fetched=0";
+		        $stmtGetTracks = $dbartworks->prepare($getTracks);
 
-		// tracks
-        $getTracks = "select track_uri from tracks where already_fetched=0";
-        $stmtGetTracks = $dbartworks->prepare($getTracks);
+				$updateTrack = "update tracks set already_fetched=1 where track_uri=:track_uri";
+		        $stmtUpdateTrack = $dbartworks->prepare($updateTrack);
 
-		$updateTrack = "update tracks set already_fetched=1 where track_uri=:track_uri";
-        $stmtUpdateTrack = $dbartworks->prepare($updateTrack);
+				// albums
+		        $getAlbums = "select album_uri from albums where already_fetched=0";
+		        $stmtGetAlbums = $dbartworks->prepare($getAlbums);
 
-		// albums
-        $getAlbums = "select album_uri from albums where already_fetched=0";
-        $stmtGetAlbums = $dbartworks->prepare($getAlbums);
+				$updateAlbum = "update albums set already_fetched=1 where album_uri=:album_uri";
+		        $stmtUpdateAlbum = $dbartworks->prepare($updateAlbum);
 
-		$updateAlbum = "update albums set already_fetched=1 where album_uri=:album_uri";
-        $stmtUpdateAlbum = $dbartworks->prepare($updateAlbum);
+				////
+				// Artists
+				//
+				$artists = $stmtGetArtists->execute();
 
-		////
-		// Artists
-		//
-		$artists = $stmtGetArtists->execute();
+		        while ($artist = $stmtGetArtists->fetch()) {
 
-        while ($artist = $stmtGetArtists->fetch()) {
+					$ret = getArtistArtwork($w, $artist[0], true, false, true);
+			        if($ret == false) {
+				        echo "WARN: $artist[0] artwork not found, using default \n";
+			        } else if(!is_string($ret)) {
+				        //echo "INFO: $artist[0] artwork was fetched \n";
+			        } else if (is_string($ret)) {
+				        //echo "INFO: $artist[0] artwork was already there $ret \n";
+			        }
 
-			$ret = getArtistArtwork($w, $artist[0], true, false, true);
-	        if($ret == false) {
-		        echo "WARN: $artist[0] artwork not found, using default \n";
-	        } else if(!is_string($ret)) {
-		        //echo "INFO: $artist[0] artwork was fetched \n";
-	        } else if (is_string($ret)) {
-		        //echo "INFO: $artist[0] artwork was already there $ret \n";
-	        }
+		            $stmtUpdateArtist->bindValue(':artist_name', $artist[0]);
+		            $stmtUpdateArtist->execute();
 
-            $stmtUpdateArtist->bindValue(':artist_name', $artist[0]);
-            $stmtUpdateArtist->execute();
+			        $nb_artworks++;
+			        if ($nb_artworks % 10 === 0) {
+			            $w->write('Download Artworks▹' . $nb_artworks . '▹' . $nb_artworks_total . '▹' . $words[3], 'download_artworks_in_progress');
+			        }
+		        }
 
-	        $nb_artworks++;
-	        if ($nb_artworks % 10 === 0) {
-	            $w->write('Download Artworks▹' . $nb_artworks . '▹' . $nb_artworks_total . '▹' . $words[3], 'download_artworks_in_progress');
-	        }
-        }
+				////
+				// Tracks
+				//
+				$tracks = $stmtGetTracks->execute();
 
-		////
-		// Tracks
-		//
-		$tracks = $stmtGetTracks->execute();
+		        while ($track = $stmtGetTracks->fetch()) {
 
-        while ($track = $stmtGetTracks->fetch()) {
+					$ret = getTrackOrAlbumArtwork($w, $track[0], true, false, true);
+			        if($ret == false) {
+				        echo "WARN: $track[0] artwork not found, using default \n";
+			        } else if(!is_string($ret)) {
+				        //echo "INFO: $track[0] artwork was fetched \n";
+			        } else if (is_string($ret)) {
+				        //echo "INFO: $artist[0] artwork was already there $ret \n";
+			        }
 
-			$ret = getTrackOrAlbumArtwork($w, $track[0], true, false, true);
-	        if($ret == false) {
-		        echo "WARN: $track[0] artwork not found, using default \n";
-	        } else if(!is_string($ret)) {
-		        //echo "INFO: $track[0] artwork was fetched \n";
-	        } else if (is_string($ret)) {
-		        //echo "INFO: $artist[0] artwork was already there $ret \n";
-	        }
+		            $stmtUpdateTrack->bindValue(':track_uri', $track[0]);
+		            $stmtUpdateTrack->execute();
 
-            $stmtUpdateTrack->bindValue(':track_uri', $track[0]);
-            $stmtUpdateTrack->execute();
+			        $nb_artworks++;
+			        if ($nb_artworks % 10 === 0) {
+			            $w->write('Download Artworks▹' . $nb_artworks . '▹' . $nb_artworks_total . '▹' . $words[3], 'download_artworks_in_progress');
+			        }
+		        }
 
-	        $nb_artworks++;
-	        if ($nb_artworks % 10 === 0) {
-	            $w->write('Download Artworks▹' . $nb_artworks . '▹' . $nb_artworks_total . '▹' . $words[3], 'download_artworks_in_progress');
-	        }
-        }
+				////
+				// Albums
+				//
+				$albums = $stmtGetAlbums->execute();
 
-		////
-		// Albums
-		//
-		$albums = $stmtGetAlbums->execute();
+		        while ($album = $stmtGetAlbums->fetch()) {
 
-        while ($album = $stmtGetAlbums->fetch()) {
+					$ret = getTrackOrAlbumArtwork($w, $album[0], true, false, true);
+			        if($ret == false) {
+				        echo "WARN: $album[0] artwork not found, using default \n";
+			        } else if(!is_string($ret)) {
+				        //echo "INFO: $album[0] artwork was fetched \n";
+			        } else if (is_string($ret)) {
+				        //echo "INFO: $artist[0] artwork was already there $ret \n";
+			        }
 
-			$ret = getTrackOrAlbumArtwork($w, $album[0], true, false, true);
-	        if($ret == false) {
-		        echo "WARN: $album[0] artwork not found, using default \n";
-	        } else if(!is_string($ret)) {
-		        //echo "INFO: $album[0] artwork was fetched \n";
-	        } else if (is_string($ret)) {
-		        //echo "INFO: $artist[0] artwork was already there $ret \n";
-	        }
+		            $stmtUpdateAlbum->bindValue(':album_uri', $album[0]);
+		            $stmtUpdateAlbum->execute();
 
-            $stmtUpdateAlbum->bindValue(':album_uri', $album[0]);
-            $stmtUpdateAlbum->execute();
-
-	        $nb_artworks++;
-	        if ($nb_artworks % 5 === 0) {
-	            $w->write('Download Artworks▹' . $nb_artworks . '▹' . $nb_artworks_total . '▹' . $words[3], 'download_artworks_in_progress');
-	        }
-        }
-
-    } catch (PDOException $e) {
-        handleDbIssuePdoEcho($dbartworks,$w);
-        $dbartworks = null;
-        return false;
+			        $nb_artworks++;
+			        if ($nb_artworks % 5 === 0) {
+			            $w->write('Download Artworks▹' . $nb_artworks . '▹' . $nb_artworks_total . '▹' . $words[3], 'download_artworks_in_progress');
+			        }
+		        }
+			}
+	    } catch (PDOException $e) {
+	        handleDbIssuePdoEcho($dbartworks,$w);
+	        $dbartworks = null;
+	        return false;
+	    }
     }
 
 	unlink($w->data() . "/download_artworks_in_progress");
     exec("echo \"END `date` \" >> \"" . $w->cache() . "/action.log\"");
 
-    $elapsed_time = time() - $words[3];
-    displayNotificationWithArtwork("All artworks have been downloaded (" . $nb_artworks_total . " artworks) - took " . beautifyTime($elapsed_time),'./images/artworks.png');
-	stathat_ez_count('AlfredSpotifyMiniPlayer', 'artworks', $nb_artworks_total);
+	if($nb_artworks_total != 0) {
+	    $elapsed_time = time() - $words[3];
+	    displayNotificationWithArtwork("All artworks have been downloaded (" . $nb_artworks_total . " artworks) - took " . beautifyTime($elapsed_time),'./images/artworks.png');
+		stathat_ez_count('AlfredSpotifyMiniPlayer', 'artworks', $nb_artworks_total);
+	}
+
 	return true;
 }
 
@@ -2507,7 +2512,11 @@ function updateLibrary($w)
     	$fetch_artworks_existed = false;
     }
     // kill previous process if running
-	exec("pid=$(ps -efx | grep \"php\" | egrep \"DOWNLOAD_ARTWORKS\" | grep -v grep | awk '{print $2}'); if [ \"$pid\" != \"\" ]; then kill -9 \"$pid\";echo \"KILLED `date` PIDs: $pid\"; fi >> \"" . $w->cache() . "/action.log\"");
+	$pid = exec("ps -efx | grep \"php\" | egrep \"DOWNLOAD_ARTWORKS\" | grep -v grep | awk '{print $2}'");
+	if($pid != "") {
+		echo "KILL Download daemon <$pid>\n";
+		$ret = exec("kill -9 \"$pid\"");
+	}
 	if (file_exists($w->data() . '/download_artworks_in_progress')) {
 		unlink($w->data() . "/download_artworks_in_progress");
 	}
@@ -3050,7 +3059,11 @@ function refreshLibrary($w)
     	$fetch_artworks_existed = false;
     }
     // kill previous process if running
-	exec("pid=$(ps -efx | grep \"php\" | egrep \"DOWNLOAD_ARTWORKS\" | grep -v grep | awk '{print $2}'); if [ \"$pid\" != \"\" ]; then kill -9 \"$pid\";echo \"KILLED `date` PIDs: $pid\"; fi >> \"" . $w->cache() . "/action.log\"");
+	$pid = exec("ps -efx | grep \"php\" | egrep \"DOWNLOAD_ARTWORKS\" | grep -v grep | awk '{print $2}'");
+	if($pid != "") {
+		echo "KILL Download daemon <$pid>\n";
+		$ret = exec("kill -9 \"$pid\"");
+	}
 	if (file_exists($w->data() . '/download_artworks_in_progress')) {
 		unlink($w->data() . "/download_artworks_in_progress");
 	}
@@ -3860,13 +3873,9 @@ function refreshLibrary($w)
     rename($w->data() . '/library_new.db', $w->data() . '/library.db');
 
 	// Download artworks in background
-	if($artworksToDownload ==  true) {
-		exec("echo \"===== DOWNLOAD_ARTWORKS ========\" >> \"" . $w->cache() . "/action.log\"");
-
-		exec("echo \"START `date` \" >> \"" . $w->cache() . "/action.log\"");
-
-	    exec("php -f ./src/action.php -- \"\" \"DOWNLOAD_ARTWORKS\" \"DOWNLOAD_ARTWORKS\" >> \"" .  $w->cache() . "/action.log\" 2>&1 & ");
-	}
+	exec("echo \"===== DOWNLOAD_ARTWORKS DURING REFRESH LIBRARY ========\" >> \"" . $w->cache() . "/action.log\"");
+	exec("echo \"START `date` \" >> \"" . $w->cache() . "/action.log\"");
+    exec("php -f ./src/action.php -- \"\" \"DOWNLOAD_ARTWORKS\" \"DOWNLOAD_ARTWORKS\" >> \"" .  $w->cache() . "/action.log\" 2>&1 & ");
 
     unlink($w->data() . "/update_library_in_progress");
 }
