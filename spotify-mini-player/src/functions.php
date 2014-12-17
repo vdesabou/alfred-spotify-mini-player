@@ -323,7 +323,8 @@ function addCurrentTrackTo($w)
 				$track=$searchResults[0];
 				$artists = $track->artists;
 				$artist = $artists[0];
-            	echo "Unknown track $results[4] / $results[0] / $results[1] replaced by track: $track->uri / $track->name / $artist->name\n";
+				$album = $track->album;
+            	echo "Unknown track $results[4] / $results[0] / $results[1] replaced by track: $track->uri / $track->name / $artist->name / $album->uri\n";
             	$results[4] = $track->uri;
         	} else {
             	echo "Could not find track: $results[4] / $results[0] / $results[1] \n";
@@ -412,7 +413,8 @@ function addCurrentTrackToAlfredPlaylist($w)
 				$track=$searchResults[0];
 				$artists = $track->artists;
 				$artist = $artists[0];
-            	echo "Unknown track $results[4] / $results[0] / $results[1] replaced by track: $track->uri / $track->name / $artist->name\n";
+				$album = $track->album;
+            	echo "Unknown track $results[4] / $results[0] / $results[1] replaced by track: $track->uri / $track->name / $artist->name / $album->uri\n";
             	$results[4] = $track->uri;
         	} else {
             	echo "Could not find track: $results[4] / $results[0] / $results[1] \n";
@@ -468,7 +470,8 @@ function addCurrentTrackToYourMusic($w)
 				$track=$searchResults[0];
 				$artists = $track->artists;
 				$artist = $artists[0];
-            	echo "Unknown track $results[4] / $results[0] / $results[1] replaced by track: $track->uri / $track->name / $artist->name\n";
+				$album = $track->album;
+            	echo "Unknown track $results[4] / $results[0] / $results[1] replaced by track: $track->uri / $track->name / $artist->name / $album->uri\n";
             	$results[4] = $track->uri;
         	} else {
             	echo "Could not find track: $results[4] / $results[0] / $results[1] \n";
@@ -2708,8 +2711,8 @@ function updateLibrary($w)
 							$track=$results[0];
 							$artists = $track->artists;
 							$artist = $artists[0];
-		                	echo "INFO: Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name\n";
-
+							$album = $track->album;
+		                	echo "INFO: Unknown track $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name / $album->uri \n";
 	                	} else {
 		                    // skip
 		                    echo "WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri \n";
@@ -2825,7 +2828,8 @@ function updateLibrary($w)
 				$track=$results[0];
 				$artists = $track->artists;
 				$artist = $artists[0];
-            	echo "INFO: Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name\n";
+				$album = $track->album;
+		      	echo "INFO: Unknown track $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name / $album->uri \n";
 
         	} else {
                 // skip
@@ -3274,8 +3278,8 @@ function refreshLibrary($w)
 								$track=$results[0];
 								$artists = $track->artists;
 								$artist = $artists[0];
-			                	echo "INFO: Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name\n";
-
+								$album = $track->album;
+								echo "INFO: Unknown track $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name / $album->uri \n";
 		                	} else {
 			                    // skip
 								echo "WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri \n";
@@ -3671,8 +3675,8 @@ function refreshLibrary($w)
 					$track=$results[0];
 					$artists = $track->artists;
 					$artist = $artists[0];
-                	echo "INFO: Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name\n";
-
+					$album = $track->album;
+		            echo "INFO: Unknown track $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name / $album->uri \n";
             	} else {
                     // skip
 	                echo "WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri \n";
