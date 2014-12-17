@@ -841,7 +841,7 @@ function clearPlaylist($w, $playlist_uri, $playlist_name)
     try {
         $tmp = explode(':', $playlist_uri);
         $emptytracks = array();
-        $api->replacePlaylistTracks($tmp[2], $tmp[4], $emptytracks);
+        $api->replacePlaylistTracks(urlencode($tmp[2]), $tmp[4], $emptytracks);
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
         echo "Error(clearPlaylist): playlist uri " . $playlist_uri . " (exception " . print_r($e) . ")\n";
         handleSpotifyWebAPIException($w);
@@ -884,7 +884,7 @@ function createTheUserPlaylist($w, $playlist_name)
 	$userid = $setting[18];
 
     try {
-        $json = $api->createUserPlaylist($userid, array(
+        $json = $api->createUserPlaylist(urlencode($userid), array(
             'name' => $playlist_name,
             'public' => false
         ));
@@ -1138,7 +1138,7 @@ function getThePlaylistTracks($w, $playlist_uri)
         $offsetGetUserPlaylistTracks = 0;
         $limitGetUserPlaylistTracks = 100;
         do {
-            $userPlaylistTracks = $api->getUserPlaylistTracks($tmp[2], $tmp[4], array(
+            $userPlaylistTracks = $api->getUserPlaylistTracks(urlencode($tmp[2]), $tmp[4], array(
                 'fields' => array('total',
                 				  'items.track(id)'),
                 'limit' => $limitGetUserPlaylistTracks,
@@ -1481,7 +1481,7 @@ function addTracksToPlaylist($w, $tracks, $playlist_uri, $playlist_name, $allow_
                 $offset += 100;
 
                 if (count($output)) {
-                    $api->addUserPlaylistTracks($userid, $tmp[4], $output, array(
+                    $api->addUserPlaylistTracks(urlencode($userid), $tmp[4], $output, array(
                         'position' => 0
                     ));
                     $i++;
@@ -2540,7 +2540,7 @@ function updateLibrary($w)
         $offsetGetUserPlaylists = 0;
         $limitGetUserPlaylists = 50;
         do {
-            $userPlaylists = $api->getUserPlaylists($userid, array(
+            $userPlaylists = $api->getUserPlaylists(urlencode($userid), array(
                 'limit' => $limitGetUserPlaylists,
                 'offset' => $offsetGetUserPlaylists
             ));
@@ -2692,7 +2692,7 @@ function updateLibrary($w)
 			        displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
 			        return false;
 			    }
-                $userPlaylistTracks = $api->getUserPlaylistTracks($owner->id, $playlist->id, array(
+                $userPlaylistTracks = $api->getUserPlaylistTracks(urlencode($owner->id), $playlist->id, array(
                     'fields' => array('total',
                         'items(added_at)',
                         'items.track(available_markets,duration_ms,uri,popularity,name)',
@@ -3169,7 +3169,7 @@ function refreshLibrary($w)
         $offsetGetUserPlaylists = 0;
         $limitGetUserPlaylists = 50;
         do {
-            $userPlaylists = $api->getUserPlaylists($userid, array(
+            $userPlaylists = $api->getUserPlaylists(urlencode($userid), array(
                 'limit' => $limitGetUserPlaylists,
                 'offset' => $offsetGetUserPlaylists
             ));
@@ -3262,7 +3262,7 @@ function refreshLibrary($w)
 				        displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
 				        return false;
 				    }
-                    $userPlaylistTracks = $api->getUserPlaylistTracks($owner->id, $playlist->id, array(
+                    $userPlaylistTracks = $api->getUserPlaylistTracks(urlencode($owner->id), $playlist->id, array(
                         'fields' => array(
                             'total',
                             'items(added_at)',
@@ -3427,7 +3427,7 @@ function refreshLibrary($w)
 					        displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
 					        return false;
 					    }
-                        $userPlaylistTracks = $api->getUserPlaylistTracks($tmp[2], $tmp[4], array(
+                        $userPlaylistTracks = $api->getUserPlaylistTracks(urlencode($tmp[2]), $tmp[4], array(
                             'fields' => array(
                                 'total',
                                 'items(added_at)',
