@@ -2709,26 +2709,37 @@ function updateLibrary($w)
                     $artist = $artists[0];
                     $album = $track->album;
 
-                    if($track->uri == 'spotify:track:null') {
+					// This is a known issue
+					// http://stackoverflow.com/questions/27533743/local-tracks-returned-as-null-by-spotify-web-api?noredirect=1#comment43496449_27533743
+					// Remove workaround as too much impacting
+					if($track->uri == 'spotify:track:null') {
+						echo "WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri \n";
+	                    $nb_track++;
+	                    continue;							
+					}
+							
+/*
+	                    if($track->uri == 'spotify:track:null') {
+							
+							// unknown track, look it up online
+							$query = 'track:' . strtolower($track->name) . ' artist:' . strtolower($artist->name);
+		                	$results = searchWebApi($w,$country_code,$query, 'track', 1);
 
-						// unknown track, look it up online
-						$query = 'track:' . strtolower($track->name) . ' artist:' . strtolower($artist->name);
-	                	$results = searchWebApi($w,$country_code,$query, 'track', 1);
+		                	if(count($results) > 0) {
+								// only one track returned
+								$track=$results[0];
+								$artists = $track->artists;
+								$artist = $artists[0];
+			                	echo "INFO: Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name\n";
 
-	                	if(count($results) > 0) {
-							// only one track returned
-							$track=$results[0];
-							$artists = $track->artists;
-							$artist = $artists[0];
-							$album = $track->album;
-		                	echo "INFO: Unknown track $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name / $album->uri \n";
-	                	} else {
-		                    // skip
-		                    echo "WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri \n";
-		                    $nb_track++;
-		                    continue;
-	                	}
-                    }
+		                	} else {
+			                    // skip
+								echo "WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri \n";
+			                    $nb_track++;
+			                    continue;
+		                	}
+	                    }
+*/
 
                     if (count($track->available_markets) == 0) {
                         $playable = 1;
@@ -2826,27 +2837,37 @@ function updateLibrary($w)
         $artist = $artists[0];
         $album = $track->album;
 
-        if($track->uri == 'spotify:track:null') {
+		// This is a known issue
+		// http://stackoverflow.com/questions/27533743/local-tracks-returned-as-null-by-spotify-web-api?noredirect=1#comment43496449_27533743
+		// Remove workaround as too much impacting
+		if($track->uri == 'spotify:track:null') {
+			echo "WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri \n";
+            $nb_track++;
+            continue;							
+		}
+							
+/*
+	                    if($track->uri == 'spotify:track:null') {
+							
+							// unknown track, look it up online
+							$query = 'track:' . strtolower($track->name) . ' artist:' . strtolower($artist->name);
+		                	$results = searchWebApi($w,$country_code,$query, 'track', 1);
 
-			// unknown track, look it up online
-			$query = 'track:' . strtolower($track->name) . ' artist:' . strtolower($artist->name);
-        	$results = searchWebApi($w,$country_code,$query, 'track', 1);
+		                	if(count($results) > 0) {
+								// only one track returned
+								$track=$results[0];
+								$artists = $track->artists;
+								$artist = $artists[0];
+			                	echo "INFO: Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name\n";
 
-        	if(count($results) > 0) {
-				// only one track returned
-				$track=$results[0];
-				$artists = $track->artists;
-				$artist = $artists[0];
-				$album = $track->album;
-		      	echo "INFO: Unknown track $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name / $album->uri \n";
-
-        	} else {
-                // skip
-		        echo "WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri \n";
-                $nb_track++;
-                continue;
-        	}
-        }
+		                	} else {
+			                    // skip
+								echo "WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri \n";
+			                    $nb_track++;
+			                    continue;
+		                	}
+	                    }
+*/
 
         if (count($track->available_markets) == 0) {
             $playable = 1;
@@ -3280,8 +3301,18 @@ function refreshLibrary($w)
 	                    $artist = $artists[0];
 	                    $album = $track->album;
 
+						// This is a known issue
+						// http://stackoverflow.com/questions/27533743/local-tracks-returned-as-null-by-spotify-web-api?noredirect=1#comment43496449_27533743
+						// Remove workaround as too much impacting
+						if($track->uri == 'spotify:track:null') {
+							echo "WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri \n";
+		                    $nb_track++;
+		                    continue;							
+						}
+							
+/*
 	                    if($track->uri == 'spotify:track:null') {
-
+							
 							// unknown track, look it up online
 							$query = 'track:' . strtolower($track->name) . ' artist:' . strtolower($artist->name);
 		                	$results = searchWebApi($w,$country_code,$query, 'track', 1);
@@ -3291,8 +3322,8 @@ function refreshLibrary($w)
 								$track=$results[0];
 								$artists = $track->artists;
 								$artist = $artists[0];
-								$album = $track->album;
-								echo "INFO: Unknown track $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name / $album->uri \n";
+			                	echo "INFO: Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name\n";
+
 		                	} else {
 			                    // skip
 								echo "WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri \n";
@@ -3300,6 +3331,7 @@ function refreshLibrary($w)
 			                    continue;
 		                	}
 	                    }
+*/
 
 	                    if (count($track->available_markets) == 0) {
 	                        $playable = 1;
@@ -3458,26 +3490,37 @@ function refreshLibrary($w)
 		                    $artist = $artists[0];
 		                    $album = $track->album;
 
-		                    if($track->uri == 'spotify:track:null') {
+							// This is a known issue
+							// http://stackoverflow.com/questions/27533743/local-tracks-returned-as-null-by-spotify-web-api?noredirect=1#comment43496449_27533743
+							// Remove workaround as too much impacting
+							if($track->uri == 'spotify:track:null') {
+								echo "WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri \n";
+			                    $nb_track++;
+			                    continue;							
+							}
+							
+/*
+	                    if($track->uri == 'spotify:track:null') {
+							
+							// unknown track, look it up online
+							$query = 'track:' . strtolower($track->name) . ' artist:' . strtolower($artist->name);
+		                	$results = searchWebApi($w,$country_code,$query, 'track', 1);
 
-								// unknown track, look it up online
-								$query = 'track:' . strtolower($track->name) . ' artist:' . strtolower($artist->name);
-			                	$results = searchWebApi($w,$country_code,$query, 'track', 1);
+		                	if(count($results) > 0) {
+								// only one track returned
+								$track=$results[0];
+								$artists = $track->artists;
+								$artist = $artists[0];
+			                	echo "INFO: Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name\n";
 
-			                	if(count($results) > 0) {
-									// only one track returned
-									$track=$results[0];
-									$artists = $track->artists;
-									$artist = $artists[0];
-				                	echo "INFO: Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name\n";
-
-			                	} else {
-				                    // skip
-									echo "WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri \n";
-				                    $nb_track++;
-				                    continue;
-			                	}
-		                    }
+		                	} else {
+			                    // skip
+								echo "WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri \n";
+			                    $nb_track++;
+			                    continue;
+		                	}
+	                    }
+*/
 
 		                    if (count($track->available_markets) == 0) {
 		                        $playable = 1;
@@ -3677,26 +3720,37 @@ function refreshLibrary($w)
             $artist = $artists[0];
             $album = $track->album;
 
-            if($track->uri == 'spotify:track:null') {
+			// This is a known issue
+			// http://stackoverflow.com/questions/27533743/local-tracks-returned-as-null-by-spotify-web-api?noredirect=1#comment43496449_27533743
+			// Remove workaround as too much impacting
+			if($track->uri == 'spotify:track:null') {
+				echo "WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri \n";
+                $nb_track++;
+                continue;							
+			}
+							
+/*
+	                    if($track->uri == 'spotify:track:null') {
+							
+							// unknown track, look it up online
+							$query = 'track:' . strtolower($track->name) . ' artist:' . strtolower($artist->name);
+		                	$results = searchWebApi($w,$country_code,$query, 'track', 1);
 
-				// unknown track, look it up online
-				$query = 'track:' . strtolower($track->name) . ' artist:' . strtolower($artist->name);
-            	$results = searchWebApi($w,$country_code,$query, 'track', 1);
+		                	if(count($results) > 0) {
+								// only one track returned
+								$track=$results[0];
+								$artists = $track->artists;
+								$artist = $artists[0];
+			                	echo "INFO: Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name\n";
 
-            	if(count($results) > 0) {
-					// only one track returned
-					$track=$results[0];
-					$artists = $track->artists;
-					$artist = $artists[0];
-					$album = $track->album;
-		            echo "INFO: Unknown track $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name / $album->uri \n";
-            	} else {
-                    // skip
-	                echo "WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri \n";
-                    $nb_track++;
-                    continue;
-            	}
-            }
+		                	} else {
+			                    // skip
+								echo "WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri \n";
+			                    $nb_track++;
+			                    continue;
+		                	}
+	                    }
+*/
 
             if (count($track->available_markets) == 0) {
                 $playable = 1;
