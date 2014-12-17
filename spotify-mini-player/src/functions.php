@@ -618,26 +618,47 @@ function getSpotifyWebAPI($w)
     $api = new SpotifyWebAPI\SpotifyWebAPI();
 
     // Check if refresh token necessary
-    if (time() - $oauth_expires > 3100) {
+    // if token validity < 20 minutes
+    if (time() - $oauth_expires > 2400) {
         if ($session->refreshToken()) {
 
             $oauth_access_token = $session->getAccessToken();
 
-			if($update_in_progress == false) {
-	            // Set new token to settings
-	            $updateSettings = "update settings set oauth_access_token=:oauth_access_token,oauth_expires=:oauth_expires";
-	            try {
-	                $stmt = $dbsettings->prepare($updateSettings);
-	                $stmt->bindValue(':oauth_access_token', $session->getAccessToken());
-	                $stmt->bindValue(':oauth_expires', time());
-	                $stmt->execute();
+	        // Set new token to settings
+	        $updateSettings = "update settings set oauth_access_token=:oauth_access_token,oauth_expires=:oauth_expires";
 
-	            } catch (PDOException $e) {
-	                $dbsettings = null;;
-	                handleDbIssuePdoEcho($dbsettings,$w);
-	                return false;
-	            }
+			if($update_in_progress == true) {
+				// during update use backup DB
+			    $dbfile = $w->data() . '/settings_tmp.db';
+
+			    try {
+			        $dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
+			        $dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			        $dbsettings->query("PRAGMA synchronous = OFF");
+			        $dbsettings->query("PRAGMA journal_mode = OFF");
+			        $dbsettings->query("PRAGMA temp_store = MEMORY");
+			        $dbsettings->query("PRAGMA count_changes = OFF");
+			        $dbsettings->query("PRAGMA PAGE_SIZE = 4096");
+			        $dbsettings->query("PRAGMA default_cache_size=700000");
+			        $dbsettings->query("PRAGMA cache_size=700000");
+			        $dbsettings->query("PRAGMA compile_options");
+			    } catch (PDOException $e) {
+			        handleDbIssuePdoEcho($dbsettings,$w);
+			        return false;
+			    }
 			}
+
+            try {
+                $stmt = $dbsettings->prepare($updateSettings);
+                $stmt->bindValue(':oauth_access_token', $session->getAccessToken());
+                $stmt->bindValue(':oauth_expires', time());
+                $stmt->execute();
+
+            } catch (PDOException $e) {
+                $dbsettings = null;;
+                handleDbIssuePdoEcho($dbsettings,$w);
+                return false;
+            }
         } else {
             echo "Error[getSpotifyWebAPI]: token could not be refreshed";
             return false;
@@ -2653,6 +2674,12 @@ function updateLibrary($w)
             $offsetGetUserPlaylistTracks = 0;
             $limitGetUserPlaylistTracks = 100;
             do {
+	            // refresh api
+			    $api = getSpotifyWebAPI($w);
+			    if ($api == false) {
+			        displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
+			        return false;
+			    }
                 $userPlaylistTracks = $api->getUserPlaylistTracks($owner->id, $playlist->id, array(
                     'fields' => array('total',
                         'items(added_at)',
@@ -2982,7 +3009,6 @@ function updateLibrary($w)
  */
 function refreshLibrary($w)
 {
-    // Note that a user's collaborative playlists are not currently retrievable.
     $api = getSpotifyWebAPI($w);
     if ($api == false) {
         displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
@@ -3213,6 +3239,12 @@ function refreshLibrary($w)
                 $offsetGetUserPlaylistTracks = 0;
                 $limitGetUserPlaylistTracks = 100;
                 do {
+		            // refresh api
+				    $api = getSpotifyWebAPI($w);
+				    if ($api == false) {
+				        displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
+				        return false;
+				    }
                     $userPlaylistTracks = $api->getUserPlaylistTracks($owner->id, $playlist->id, array(
                         'fields' => array(
                             'total',
@@ -3372,6 +3404,12 @@ function refreshLibrary($w)
                     $offsetGetUserPlaylistTracks = 0;
                     $limitGetUserPlaylistTracks = 100;
                     do {
+			            // refresh api
+					    $api = getSpotifyWebAPI($w);
+					    if ($api == false) {
+					        displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
+					        return false;
+					    }
                         $userPlaylistTracks = $api->getUserPlaylistTracks($tmp[2], $tmp[4], array(
                             'fields' => array(
                                 'total',
@@ -3559,6 +3597,12 @@ function refreshLibrary($w)
         $offsetGetMySavedTracks = 0;
         $limitGetMySavedTracks = 50;
         do {
+            // refresh api
+		    $api = getSpotifyWebAPI($w);
+		    if ($api == false) {
+		        displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
+		        return false;
+		    }
             $userMySavedTracks = $api->getMySavedTracks(array(
                 'limit' => $limitGetMySavedTracks,
                 'offset' => $offsetGetMySavedTracks
