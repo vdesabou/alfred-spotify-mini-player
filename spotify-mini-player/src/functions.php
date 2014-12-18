@@ -2646,7 +2646,6 @@ function updateLibrary($w)
 			    logMsg("Error(updateLibrary): (exception " . print_r($e) . ")");
 		        handleDbIssuePdoEcho($db,$w);
 		        $dbartworks = null;
-		        $dbsettings = null;
 		        $db = null;
 		        return false;
 		    }
@@ -2995,7 +2994,7 @@ function refreshLibrary($w)
 	    $deleteFromTracks = "delete from tracks where playlist_uri=:playlist_uri";
 	    $stmtDeleteFromTracks = $db->prepare($deleteFromTracks);
 
-	    $updatePlaylistsNbTracks = "update playlists set nb_tracks=:nb_tracks and nb_playable_tracks=:nb_playable_tracks where uri=:uri";
+	    $updatePlaylistsNbTracks = "update playlists set nb_tracks=:nb_tracks,nb_playable_tracks=:nb_playable_tracks where uri=:uri";
 	    $stmtUpdatePlaylistsNbTracks = $db->prepare($updatePlaylistsNbTracks);
 
 	    $deleteFromTracksYourMusic = "delete from tracks where mymusic=:mymusic";
@@ -3228,7 +3227,6 @@ function refreshLibrary($w)
 				    logMsg("Error(refreshLibrary): (exception " . print_r($e) . ")");
 			        handleDbIssuePdoEcho($db,$w);
 			        $dbartworks = null;
-			        $dbsettings = null;
 			        $db = null;
 			        return;
 			    }
@@ -3399,7 +3397,6 @@ function refreshLibrary($w)
 							    logMsg("Error(refreshLibrary): (exception " . print_r($e) . ")");
 						        handleDbIssuePdoEcho($db,$w);
 						        $dbartworks = null;
-
 						        $db = null;
 						        return;
 						    }
@@ -3419,7 +3416,6 @@ function refreshLibrary($w)
 					    logMsg("Error(refreshLibrary): (exception " . print_r($e) . ")");
 				        handleDbIssuePdoEcho($db,$w);
 				        $dbartworks = null;
-				        $dbsettings = null;
 				        $db = null;
 				        return;
 				    }
@@ -3428,7 +3424,7 @@ function refreshLibrary($w)
                     handleSpotifyWebAPIException($w);
                     return;
                 }
-                displayNotificationWithArtwork('Updated playlist ' . escapeQuery($playlist->name), getPlaylistArtwork($w,  $playlist->uri, true), 'Refresh Library');
+                displayNotificationWithArtwork('Updated playlist ' .  escapeQuery($playlist->name), getPlaylistArtwork($w,  $playlist->uri, true), 'Refresh Library');
             } else {
                 continue;
             }

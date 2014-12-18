@@ -85,7 +85,7 @@ if ($type == "TRACK" && $other_settings == "") {
             if ($is_alfred_playlist_active == true) {
 
                 if ($alfred_playlist_uri == "" || $alfred_playlist_name == "") {
-                    displayNotificationWithArtwork("Alfred Playlist is not set", './images/warning.png');
+                    displayNotificationWithArtwork("Alfred Playlist is not set", './images/warning.png', 'Error!');
                     return;
                 }
 
@@ -218,7 +218,7 @@ if ($type == "TRACK" && $other_settings == "") {
             if ($is_alfred_playlist_active == true) {
 
                 if ($alfred_playlist_uri == "" || $alfred_playlist_name == "") {
-                    displayNotificationWithArtwork("Alfred Playlist is not set", './images/warning.png');
+                    displayNotificationWithArtwork("Alfred Playlist is not set", './images/warning.png', 'Error!');
                     return;
                 }
 
@@ -558,7 +558,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         return;
     } else if ($setting[0] == "CLEAR_ALFRED_PLAYLIST") {
         if ($setting[1] == "" || $setting[2] == "") {
-            displayNotificationWithArtwork("Alfred Playlist is not set", './images/warning.png');
+            displayNotificationWithArtwork("Alfred Playlist is not set", './images/warning.png', 'Error!');
             return;
         }
 
