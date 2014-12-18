@@ -208,7 +208,7 @@ mb_internal_encoding('UTF-8');
 // Fast access to commands
 //
 if (startsWith($query, ' ')) {
-	$w = searchCommandsFastAccess($w,ltrim($query),$setting);
+	$w = searchCommandsFastAccess($w,ltrim($query),$settings);
 	echo $w->toxml();
 	return;
 }

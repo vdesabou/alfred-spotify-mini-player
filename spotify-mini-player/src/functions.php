@@ -142,25 +142,19 @@ function searchWebApi($w,$country_code,$query, $type, $limit = 50) {
 function playAlfredPlaylist($w)
 {
 	//
-	// Get Settings from a duplicate DB to avoid clash
-	// with main.php
+	// Read settings from JSON
 	//
-    $setting = getSettingsFromDuplicateDb($w);
-    if($setting == false) {
-	   return false;
-    }
-
-	$is_alfred_playlist_active = $setting[2];
-	$alfred_playlist_uri = $setting[6];
-	$alfred_playlist_name = $setting[7];
-
+	
+	$settings = getSettings($w);
+	
+	$is_alfred_playlist_active = $settings->is_alfred_playlist_active;
+	$alfred_playlist_uri = $settings->alfred_playlist_uri;
+	$alfred_playlist_name = $settings->alfred_playlist_name;
 
     if ($alfred_playlist_uri == "" || $alfred_playlist_name == "") {
         displayNotificationWithArtwork("Alfred Playlist is not set", './images/warning.png');
         return;
     }
-
-
     exec("osascript -e 'tell application \"Spotify\" to play track \"$alfred_playlist_uri\"'");
 
     $playlist_artwork_path = getPlaylistArtwork($w,  $alfred_playlist_uri, true, true);
@@ -302,17 +296,15 @@ function addCurrentTrackTo($w)
     if (substr_count($command_output, '▹') > 0) {
         $results = explode('▹', $command_output);
         $tmp = explode(':', $results[4]);
-        if($tmp[1] == 'local') {
+        if($tmp[1] == 'local') {			
 			//
-			// Get Settings from a duplicate DB to avoid clash
-			// with main.php
+			// Read settings from JSON
 			//
-		    $setting = getSettingsFromDuplicateDb($w);
-		    if($setting == false) {
-			   return false;
-		    }
-			$country_code = $setting[8];
-
+			
+			$settings = getSettings($w);
+			
+			$country_code = $settings->country_code;
+			
 			// local track, look it up online
 
 			$query = 'track:' . strtolower(escapeQuery($results[0])) . ' artist:' . strtolower(escapeQuery($results[1]));
@@ -349,15 +341,12 @@ function addCurrentTrackTo($w)
 function addCurrentTrackToAlfredPlaylistOrYourMusic($w)
 {
 	//
-	// Get Settings from a duplicate DB to avoid clash
-	// with main.php
+	// Read settings from JSON
 	//
-    $setting = getSettingsFromDuplicateDb($w);
-    if($setting == false) {
-	   return false;
-    }
-
-	$is_alfred_playlist_active = $setting[2];
+	
+	$settings = getSettings($w);
+	
+	$is_alfred_playlist_active = $settings->is_alfred_playlist_active;
 
     if ($is_alfred_playlist_active == true) {
         addCurrentTrackToAlfredPlaylist($w);
@@ -379,23 +368,18 @@ function addCurrentTrackToAlfredPlaylist($w)
     $command_output = exec("./src/track_info.ksh 2>&1");
 
     if (substr_count($command_output, '▹') > 0) {
-        $results = explode('▹', $command_output);
-
+        $results = explode('▹', $command_output);		
 		//
-		// Get Settings from a duplicate DB to avoid clash
-		// with main.php
+		// Read settings from JSON
 		//
-	    $setting = getSettingsFromDuplicateDb($w);
-	    if($setting == false) {
-		   return false;
-	    }
-
-		$is_alfred_playlist_active = $setting[2];
-		$alfred_playlist_uri = $setting[6];
-		$alfred_playlist_name = $setting[7];
-		$country_code = $setting[8];
-
-
+		
+		$settings = getSettings($w);
+		
+		$is_alfred_playlist_active = $settings->is_alfred_playlist_active;
+		$alfred_playlist_uri = $settings->alfred_playlist_uri;
+		$alfred_playlist_name = $settings->alfred_playlist_name;
+		$country_code = $settings->country_code;
+	
         if ($alfred_playlist_uri == "" || $alfred_playlist_name == "") {
             displayNotificationWithArtwork("Alfred Playlist is not set", './images/warning.png');
             return;
@@ -452,14 +436,11 @@ function addCurrentTrackToYourMusic($w)
         $tmp = explode(':', $results[4]);
         if($tmp[1] == 'local') {
 			//
-			// Get Settings from a duplicate DB to avoid clash
-			// with main.php
+			// Read settings from JSON
 			//
-		    $setting = getSettingsFromDuplicateDb($w);
-		    if($setting == false) {
-			   return false;
-		    }
-			$country_code = $setting[8];
+			
+			$settings = getSettings($w);
+			$country_code = $settings->country_code;
 			// local track, look it up online
 
 			$query = 'track:' . strtolower(escapeQuery($results[0])) . ' artist:' . strtolower(escapeQuery($results[1]));
@@ -663,15 +644,12 @@ function getArtistUriFromSearch($w, $artist_name, $country_code = '')
 	}
 	if($country_code == '') {
 		//
-		// Get Settings from a duplicate DB to avoid clash
-		// with main.php
+		// Read settings from JSON
 		//
-	    $setting = getSettingsFromDuplicateDb($w);
-	    if($setting == false) {
-		   return false;
-	    }
-		$country_code = $setting[8];
-
+		
+		$settings = getSettings($w);
+		
+		$country_code = $settings->country_code;
 	}
 	$searchResults = searchWebApi($w,$country_code,$artist_name, 'artist', 1);
 
@@ -789,15 +767,11 @@ function createTheUserPlaylist($w, $playlist_name)
     }
 
 	//
-	// Get Settings from a duplicate DB to avoid clash
-	// with main.php
+	// Read settings from JSON
 	//
-    $setting = getSettingsFromDuplicateDb($w);
-    if($setting == false) {
-	   return false;
-    }
-
-	$userid = $setting[18];
+	
+	$settings = getSettings($w);	
+	$userid = $settings->userid;
 
     try {
         $json = $api->createUserPlaylist(urlencode($userid), array(
@@ -849,21 +823,15 @@ function createRadioArtistPlaylist($w, $artist_name)
         displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
         return false;
     }
-
+    	
 	//
-	// Get Settings from a duplicate DB to avoid clash
-	// with main.php
+	// Read settings from JSON
 	//
-    $setting = getSettingsFromDuplicateDb($w);
-    if($setting == false) {
-	   return false;
-    }
-
-	$radio_number_tracks = $setting[3];
-	$userid = $setting[18];
-	$echonest_api_key = $setting[19];
-
-
+	
+	$settings = getSettings($w);
+	$radio_number_tracks = $settings->radio_number_tracks;
+	$userid = $settings->userid;
+	$echonest_api_key = $settings->echonest_api_key;
 
     $json = doWebApiRequest($w, 'http://developer.echonest.com/api/v4/playlist/static?api_key=' . $echonest_api_key . '&artist=' . urlencode($artist_name) . '&format=json&results=' . $radio_number_tracks . '&distribution=focused&type=artist-radio&bucket=id:spotify&bucket=tracks');
 
@@ -952,18 +920,14 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name)
     }
 
 	//
-	// Get Settings from a duplicate DB to avoid clash
-	// with main.php
+	// Read settings from JSON
 	//
-    $setting = getSettingsFromDuplicateDb($w);
-    if($setting == false) {
-	   return false;
-    }
-
-	$radio_number_tracks = $setting[3];
-	$country_code = $setting[8];
-	$userid = $setting[18];
-	$echonest_api_key = $setting[19];
+	
+	$settings = getSettings($w);
+	$radio_number_tracks = $settings->radio_number_tracks;
+	$userid = $settings->userid;
+	$echonest_api_key = $settings->echonest_api_key;
+	$country_code = $settings->country_code;
 
     $tmp = explode(':', $track_uri);
     if($tmp[1] == 'local') {
@@ -1295,7 +1259,6 @@ function addTracksToYourMusic($w, $tracks, $allow_duplicate = true)
                         }
                     }
                 }
-
             } while (count($output) > 0);
 
             $tracks = $tracks_with_no_dup;
@@ -1351,15 +1314,12 @@ function addTracksToYourMusic($w, $tracks, $allow_duplicate = true)
 function addTracksToPlaylist($w, $tracks, $playlist_uri, $playlist_name, $allow_duplicate = true, $refreshLibrary = true)
 {
 	//
-	// Get Settings from a duplicate DB to avoid clash
-	// with main.php
+	// Read settings from JSON
 	//
-    $setting = getSettingsFromDuplicateDb($w);
-    if($setting == false) {
-	   return false;
-    }
-	$userid = $setting[18];
-
+	
+	$settings = getSettings($w);
+	$userid = $settings->userid;
+	
     $api = getSpotifyWebAPI($w);
     if ($api == false) {
         displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
@@ -1480,7 +1440,6 @@ function getFreeTcpPort()
  */
 function getPlaylistsForTrack($db, $track_uri)
 {
-
     $playlistsfortrack = "";
     $getPlaylistsForTrack = "select distinct playlist_name from tracks where uri=:uri";
     try {
@@ -1741,24 +1700,24 @@ function displayLyrics($w, $artist, $title)
  */
 function downloadArtworks($w) {
 
-if (!$w->internet()) {
-    displayNotificationWithArtwork("Download Artworks,
-No internet connection", './images/warning.png');
-    return;
-}
-
-touch($w->data() . "/download_artworks_in_progress");
-$w->write('Download Artworks▹' . 0 . '▹' . 0 . '▹' . time(), 'download_artworks_in_progress');
-$in_progress_data = $w->read('download_artworks_in_progress');
-$words = explode('▹', $in_progress_data);
-
-putenv('LANG=fr_FR.UTF-8');
-
-ini_set('memory_limit', '512M');
-
-//
-// Get list of artworks to download from DB
-//
+	if (!$w->internet()) {
+	    displayNotificationWithArtwork("Download Artworks,
+	No internet connection", './images/warning.png');
+	    return;
+	}
+	
+	touch($w->data() . "/download_artworks_in_progress");
+	$w->write('Download Artworks▹' . 0 . '▹' . 0 . '▹' . time(), 'download_artworks_in_progress');
+	$in_progress_data = $w->read('download_artworks_in_progress');
+	$words = explode('▹', $in_progress_data);
+	
+	putenv('LANG=fr_FR.UTF-8');
+	
+	ini_set('memory_limit', '512M');
+	
+	//
+	// Get list of artworks to download from DB
+	//
     $nb_artworks_total=0;
     $nb_artworks=0;
 
@@ -3826,6 +3785,8 @@ function handleSpotifyWebAPIException($w) {
     }
 
 	displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
+	
+	exit;
 }
 /**
  * handleDbIssuePdoEcho function.
@@ -4226,32 +4187,30 @@ function startswith($haystack, $needle)
  * @access public
  * @param mixed $w
  * @param mixed $query
- * @param mixed $setting
+ * @param mixed $settings
  * @return void
  */
-function searchCommandsFastAccess($w,$query,$setting)
+function searchCommandsFastAccess($w,$query,$settings)
 {
-	$all_playlists = $setting[0];
-	$is_spotifious_active = $setting[1];
-	$is_alfred_playlist_active = $setting[2];
-	$radio_number_tracks = $setting[3];
-	$now_playing_notifications = $setting[4]; // instead of is_lyrics_active
-	$max_results = $setting[5];
-	$alfred_playlist_uri = $setting[6];
-	$alfred_playlist_name = $setting[7];
-	$country_code = $setting[8];
-	// Theme is deprecated
-	//$theme = $setting[9];
-	$last_check_update_time = $setting[10];
-	$oauth_client_id = $setting[11];
-	$oauth_client_secret = $setting[12];
-	$oauth_redirect_uri = $setting[13];
-	$oauth_access_token = $setting[14];
-	$oauth_expires = $setting[15];
-	$oauth_refresh_token = $setting[16];
-	$display_name = $setting[17];
-	$userid = $setting[18];
-	$echonest_api_key = $setting[19];
+	$all_playlists = $settings->all_playlists;
+	$is_spotifious_active = $settings->is_spotifious_active;
+	$is_alfred_playlist_active = $settings->is_alfred_playlist_active;
+	$radio_number_tracks = $settings->radio_number_tracks;
+	$now_playing_notifications = $settings->now_playing_notifications;
+	$max_results = $settings->max_results;
+	$alfred_playlist_uri = $settings->alfred_playlist_uri;
+	$alfred_playlist_name = $settings->alfred_playlist_name;
+	$country_code = $settings->country_code;
+	$last_check_update_time = $settings->last_check_update_time;
+	$oauth_client_id = $settings->oauth_client_id;
+	$oauth_client_secret = $settings->oauth_client_secret;
+	$oauth_redirect_uri = $settings->oauth_redirect_uri;
+	$oauth_access_token = $settings->oauth_access_token;
+	$oauth_expires = $settings->oauth_expires;
+	$oauth_refresh_token = $settings->oauth_refresh_token;
+	$display_name = $settings->display_name;
+	$userid = $settings->userid;
+	$echonest_api_key = $settings->echonest_api_key;
 
 	if (mb_strlen($query) < 3) {
 	    ////////
