@@ -359,7 +359,7 @@ if (mb_strlen($query) < 3) {
         //
         // Search in Playlists
         //
-        $getPlaylists = "select * from playlists where name like :query";
+        $getPlaylists = "select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks from playlists where name like :query";
 
         try {
             $stmt = $db->prepare($getPlaylists);
@@ -376,7 +376,7 @@ if (mb_strlen($query) < 3) {
             if (startswith($playlist[1], 'Artist radio for')) {
                 $added = '📻 ';
             }
-            $w->result(null, '', "🎵" . $added . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
+            $w->result(null, '', "🎵" . $added . ucfirst($playlist[1]) . " (" . $playlist[7] . " tracks)", "by " . $playlist[3] . " (" . $playlist[4] . ")", $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
         }
 
         //
@@ -504,10 +504,10 @@ if (mb_strlen($query) < 3) {
             $theplaylist = $words[1];
             try {
                 if (mb_strlen($theplaylist) < 3) {
-                    $getPlaylists = "select * from playlists";
+                    $getPlaylists = "select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks from playlists";
                     $stmt = $db->prepare($getPlaylists);
                 } else {
-                    $getPlaylists = "select * from playlists where (name like :query or author like :query)";
+                    $getPlaylists = "select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks from playlists where (name like :query or author like :query)";
                     $stmt = $db->prepare($getPlaylists);
                     $stmt->bindValue(':query', '%' . $theplaylist . '%');
                 }
@@ -525,7 +525,7 @@ if (mb_strlen($query) < 3) {
                     $noresult = false;
 
                     if (startswith($playlist[1], 'Artist radio for')) {
-                        $w->result(null, '', "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
+                        $w->result(null, '', "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[7] . " tracks)", "by " . $playlist[3], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
                     }
                 }
             } elseif ($query == "Playlist▹Song radio") {
@@ -534,7 +534,7 @@ if (mb_strlen($query) < 3) {
                     $noresult = false;
 
                     if (startswith($playlist[1], 'Song radio for')) {
-                        $w->result(null, '', "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
+                        $w->result(null, '', "🎵 " . ucfirst($playlist[1]) . " (" . $playlist[7] . " tracks)", "by " . $playlist[3], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
                     }
                 }
             } else {
@@ -569,7 +569,7 @@ if (mb_strlen($query) < 3) {
                 foreach ($savedPlaylists as $playlist) {
                     $noresult = false;
                     $added = ' ';
-                    $w->result(null, '', "🎵" . $added . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
+                    $w->result(null, '', "🎵" . $added . ucfirst($playlist[1]) . " (" . $playlist[7] . " tracks)", "by " . $playlist[3], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
                 }
             }
 
@@ -859,7 +859,7 @@ if (mb_strlen($query) < 3) {
 
                     while ($track = $stmtgetTracks->fetch()) {
 
-                        $getPlaylists = "select * from playlists where uri=:uri";
+                        $getPlaylists = "select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks from playlists where uri=:uri";
 
                         try {
                             $stmtGetPlaylists = $db->prepare($getPlaylists);
@@ -877,8 +877,8 @@ if (mb_strlen($query) < 3) {
                             if (startswith($playlist[1], 'Artist radio for')) {
                                 $added = '📻 ';
                             }
-                            if (checkIfResultAlreadyThere($w->results(), "🎵" . $added . "In playlist " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)") == false) {
-                                $w->result(null, '', "🎵" . $added . "In playlist " . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "by " . $playlist[3], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
+                            if (checkIfResultAlreadyThere($w->results(), "🎵" . $added . "In playlist " . ucfirst($playlist[1]) . " (" . $playlist[7] . " tracks)") == false) {
+                                $w->result(null, '', "🎵" . $added . "In playlist " . ucfirst($playlist[1]) . " (" . $playlist[7] . " tracks)", "by " . $playlist[3], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
                             }
                         }
                     }
@@ -1477,7 +1477,7 @@ if (mb_strlen($query) < 3) {
             //
             $theplaylisturi = $words[1];
             $thetrack = $words[2];
-            $getPlaylists = "select * from playlists where uri=:uri";
+            $getPlaylists = "select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks from playlists where uri=:uri";
 
             try {
                 $stmt = $db->prepare($getPlaylists);
@@ -1518,7 +1518,7 @@ if (mb_strlen($query) < 3) {
                         if (startswith($playlist[1], 'Artist radio for')) {
                             $added = '📻 ';
                         }
-                        $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, $playlist[0] /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, '' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, $playlist[1] /* playlist_name */, $playlist[5] /* playlist_artwork_path */, $alfred_playlist_name /* alfred_playlist_name */)), "🎵" . $added . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks), by " . $playlist[3], $arrayresult, $playlist[5], 'yes', null, '');
+                        $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, $playlist[0] /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, '' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, $playlist[1] /* playlist_name */, $playlist[5] /* playlist_artwork_path */, $alfred_playlist_name /* alfred_playlist_name */)), "🎵" . $added . ucfirst($playlist[1]) . " (" . $playlist[7] . " tracks), by " . $playlist[3], $arrayresult, $playlist[5], 'yes', null, '');
 
                         $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, 'activate (open location "' . $playlist[0] . '")' /* spotify_command */, '' /* query */, '' /* other_settings*/, '' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */, $now_playing_notifications /* now_playing_notifications */, $is_alfred_playlist_active /* is_alfred_playlist_active */, $country_code /* country_code*/, $userid /* userid*/)), "Open playlist " . escapeQuery($playlist[1]) . " in Spotify", "This will open the playlist in Spotify", './images/spotify.png', 'yes', null, '');
 
@@ -2022,7 +2022,7 @@ if (mb_strlen($query) < 3) {
 
             try {
                 if (mb_strlen($theplaylist) < 3) {
-                    $getPlaylists = "select * from playlists where ownedbyuser=1";
+                    $getPlaylists = "select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks from playlists where ownedbyuser=1";
                     $stmt = $db->prepare($getPlaylists);
 
                     $w->result(null, '', 'Add ' . $type . ' ' . $tmp[1] . ' to Your Music or one of your playlists below..', "Select Your Music or one of your playlists below to add the " . $message, './images/add.png', 'no', null, '');
@@ -2039,7 +2039,7 @@ if (mb_strlen($query) < 3) {
 
 					$w->result(null, serialize(array($track_uri /*track_uri*/, $album_uri /* album_uri */, '' /* artist_uri */, $playlist_uri /* playlist_uri */, '' /* spotify_command */, '' /* query */, 'ADD_TO_YOUR_MUSIC▹' /* other_settings*/, '' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, ''  /* artist_name */, $track_name /* track_name */, $album_name /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, $playlist_name /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */, $now_playing_notifications /* now_playing_notifications */, $is_alfred_playlist_active /* is_alfred_playlist_active */, $country_code /* country_code*/, $userid /* userid*/)), "Your Music", "Select to add the " . $message . " to Your Music", './images/yourmusic.png', 'yes', null, '');
                 } else {
-                    $getPlaylists = "select * from playlists where ownedbyuser=1 and ( name like :playlist or author like :playlist)";
+                    $getPlaylists = "select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks from playlists where ownedbyuser=1 and ( name like :playlist or author like :playlist)";
                     $stmt = $db->prepare($getPlaylists);
                     $stmt->bindValue(':playlist', '%' . $theplaylist . '%');
                 }
@@ -2060,7 +2060,7 @@ if (mb_strlen($query) < 3) {
                     if (startswith($playlist[1], 'Artist radio for')) {
                         $added = '📻 ';
                     }
-                    $w->result(null, serialize(array($track_uri /*track_uri*/, $album_uri /* album_uri */, '' /* artist_uri */, $playlist_uri /* playlist_uri */, '' /* spotify_command */, '' /* query */, 'ADD_TO_PLAYLIST▹' . $playlist[0] . '▹' . $playlist[1] /* other_settings*/, '' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, ''  /* artist_name */, $track_name /* track_name */, $album_name /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, $playlist_name /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */, $now_playing_notifications /* now_playing_notifications */, $is_alfred_playlist_active /* is_alfred_playlist_active */, $country_code /* country_code*/, $userid /* userid*/)), "🎵" . $added . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "Select the playlist to add the " . $message, $playlist[5], 'yes', null, '');
+                    $w->result(null, serialize(array($track_uri /*track_uri*/, $album_uri /* album_uri */, '' /* artist_uri */, $playlist_uri /* playlist_uri */, '' /* spotify_command */, '' /* query */, 'ADD_TO_PLAYLIST▹' . $playlist[0] . '▹' . $playlist[1] /* other_settings*/, '' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, ''  /* artist_name */, $track_name /* track_name */, $album_name /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, $playlist_name /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */, $now_playing_notifications /* now_playing_notifications */, $is_alfred_playlist_active /* is_alfred_playlist_active */, $country_code /* country_code*/, $userid /* userid*/)), "🎵" . $added . ucfirst($playlist[1]) . " (" . $playlist[7] . " tracks)", "Select the playlist to add the " . $message, $playlist[5], 'yes', null, '');
                 }
             }
         } // end Add
@@ -2073,10 +2073,10 @@ if (mb_strlen($query) < 3) {
 
                 try {
                     if (mb_strlen($theplaylist) < 3) {
-                        $getPlaylists = "select * from playlists where ownedbyuser=1";
+                        $getPlaylists = "select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks from playlists where ownedbyuser=1";
                         $stmt = $db->prepare($getPlaylists);
                     } else {
-                        $getPlaylists = "select * from playlists where ownedbyuser=1 and ( name like :playlist or author like :playlist)";
+                        $getPlaylists = "select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks from playlists where ownedbyuser=1 and ( name like :playlist or author like :playlist)";
                         $stmt = $db->prepare($getPlaylists);
                         $stmt->bindValue(':playlist', '%' . $theplaylist . '%');
                     }
@@ -2094,7 +2094,7 @@ if (mb_strlen($query) < 3) {
                     if (startswith($playlist[1], 'Artist radio for')) {
                         $added = '📻 ';
                     }
-                    $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, 'ALFRED_PLAYLIST▹' . $playlist[0] . '▹' . $playlist[1] /* other_settings*/, '' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */, $now_playing_notifications /* now_playing_notifications */, $is_alfred_playlist_active /* is_alfred_playlist_active */, $country_code /* country_code*/, $userid /* userid*/)), "🎵" . $added . ucfirst($playlist[1]) . " (" . $playlist[2] . " tracks)", "Select the playlist to set it as your Alfred Playlist", $playlist[5], 'yes', null, '');
+                    $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, 'ALFRED_PLAYLIST▹' . $playlist[0] . '▹' . $playlist[1] /* other_settings*/, '' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */, $now_playing_notifications /* now_playing_notifications */, $is_alfred_playlist_active /* is_alfred_playlist_active */, $country_code /* country_code*/, $userid /* userid*/)), "🎵" . $added . ucfirst($playlist[1]) . " (" . $playlist[7] . " tracks)", "Select the playlist to set it as your Alfred Playlist", $playlist[5], 'yes', null, '');
 
                 }
             } elseif ($setting_kind == "Confirm Clear Alfred Playlist") {

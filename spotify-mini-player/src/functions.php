@@ -124,7 +124,7 @@ function searchWebApi($w,$country_code,$query, $type, $limit = 50) {
             $offsetSearch += $limitSearch;
         } while ($offsetSearch < $searchResults->total);
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        echo "Error(search): (exception " . print_r($e) . ")\n";
+        logMsg("Error(search): (exception " . print_r($e) . ")");
         handleSpotifyWebAPIException($w);
         return false;
     }
@@ -324,10 +324,10 @@ function addCurrentTrackTo($w)
 				$artists = $track->artists;
 				$artist = $artists[0];
 				$album = $track->album;
-            	echo "Unknown track $results[4] / $results[0] / $results[1] replaced by track: $track->uri / $track->name / $artist->name / $album->uri\n";
+            	logMsg("Unknown track $results[4] / $results[0] / $results[1] replaced by track: $track->uri / $track->name / $artist->name / $album->uri");
             	$results[4] = $track->uri;
         	} else {
-            	echo "Could not find track: $results[4] / $results[0] / $results[1] \n";
+            	logMsg("Could not find track: $results[4] / $results[0] / $results[1] ");
                 displayNotificationWithArtwork('Local track ' . escapeQuery($results[0]) . ' has not online match','./images/warning.png', 'Error!');
                 return;
         	}
@@ -414,10 +414,10 @@ function addCurrentTrackToAlfredPlaylist($w)
 				$artists = $track->artists;
 				$artist = $artists[0];
 				$album = $track->album;
-            	echo "Unknown track $results[4] / $results[0] / $results[1] replaced by track: $track->uri / $track->name / $artist->name / $album->uri\n";
+            	logMsg("Unknown track $results[4] / $results[0] / $results[1] replaced by track: $track->uri / $track->name / $artist->name / $album->uri");
             	$results[4] = $track->uri;
         	} else {
-            	echo "Could not find track: $results[4] / $results[0] / $results[1] \n";
+            	logMsg("Could not find track: $results[4] / $results[0] / $results[1] ");
                 displayNotificationWithArtwork('Local track ' . escapeQuery($results[0]) . ' has not online match','./images/warning.png', 'Error!');
                 return;
         	}
@@ -471,10 +471,10 @@ function addCurrentTrackToYourMusic($w)
 				$artists = $track->artists;
 				$artist = $artists[0];
 				$album = $track->album;
-            	echo "Unknown track $results[4] / $results[0] / $results[1] replaced by track: $track->uri / $track->name / $artist->name / $album->uri\n";
+            	logMsg("Unknown track $results[4] / $results[0] / $results[1] replaced by track: $track->uri / $track->name / $artist->name / $album->uri");
             	$results[4] = $track->uri;
         	} else {
-            	echo "Could not find track: $results[4] / $results[0] / $results[1] \n";
+            	logMsg("Could not find track: $results[4] / $results[0] / $results[1] ");
                 displayNotificationWithArtwork('Local track ' . escapeQuery($results[0]) . ' has not online match','./images/warning.png', 'Error!');
                 return;
         	}
@@ -626,7 +626,7 @@ function getArtistUriFromTrack($w, $track_uri)
 				return $artist->uri;
 
         	} else {
-            	echo "Could not find artist from uri: $track_uri\n";
+            	logMsg("Could not find artist from uri: $track_uri");
                 return false;
         	}
         }
@@ -721,7 +721,7 @@ function getAlbumUriFromTrack($w, $track_uri)
 				return $album->uri;
 
         	} else {
-            	echo "Could not find album from uri: $track_uri\n";
+            	logMsg("Could not find album from uri: $track_uri");
                 return false;
         	}
         }
@@ -729,7 +729,7 @@ function getAlbumUriFromTrack($w, $track_uri)
         $track = $api->getTrack($tmp[2]);
         $album = $track->album;
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        echo "Error(getAlbumUriFromTrack): (exception " . print_r($e) . ")\n";
+        logMsg("Error(getAlbumUriFromTrack): (exception " . print_r($e) . ")");
         handleSpotifyWebAPIException($w);
         return false;
     }
@@ -759,7 +759,7 @@ function clearPlaylist($w, $playlist_uri, $playlist_name)
         $emptytracks = array();
         $api->replacePlaylistTracks(urlencode($tmp[2]), $tmp[4], $emptytracks);
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        echo "Error(clearPlaylist): playlist uri " . $playlist_uri . " (exception " . print_r($e) . ")\n";
+        logMsg("Error(clearPlaylist): playlist uri " . $playlist_uri . " (exception " . print_r($e) . ")");
         handleSpotifyWebAPIException($w);
         return false;
     }
@@ -805,7 +805,7 @@ function createTheUserPlaylist($w, $playlist_name)
             'public' => false
         ));
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        echo "Error(createUserPlaylist): createUserPlaylist " . $playlist_name . " (exception " . print_r($e) . ")\n";
+        logMsg("Error(createUserPlaylist): createUserPlaylist " . $playlist_name . " (exception " . print_r($e) . ")");
         handleSpotifyWebAPIException($w);
         return false;
     }
@@ -887,7 +887,7 @@ function createRadioArtistPlaylist($w, $artist_name)
                 'public' => false
             ));
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            echo "Error(createUserPlaylist): radio artist " . $artist_name . " (exception " . print_r($e) . ")\n";
+            logMsg("Error(createUserPlaylist): radio artist " . $artist_name . " (exception " . print_r($e) . ")");
             handleSpotifyWebAPIException($w);
             return false;
         }
@@ -979,7 +979,7 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name)
 			$track=$results[0];
 			$track_uri = $track->uri;
     	} else {
-        	echo "Could not find track from uri: $track_uri\n";
+        	logMsg("Could not find track from uri: $track_uri");
             return false;
     	}
     }
@@ -1006,7 +1006,7 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name)
                 'public' => false
             ));
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            echo "Error(createUserPlaylist): radio song " . escapeQuery($track_name) . " (exception " . print_r($e) . ")\n";
+            logMsg("Error(createUserPlaylist): radio song " . escapeQuery($track_name) . " (exception " . print_r($e) . ")");
             handleSpotifyWebAPIException($w);
             return false;
         }
@@ -1069,7 +1069,7 @@ function getThePlaylistTracks($w, $playlist_uri)
             $offsetGetUserPlaylistTracks += $limitGetUserPlaylistTracks;
         } while ($offsetGetUserPlaylistTracks < $userPlaylistTracks->total);
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        echo "Error(getThePlaylistTracks): playlist uri " . $playlist_uri . " (exception " . print_r($e) . ")\n";
+        logMsg("Error(getThePlaylistTracks): playlist uri " . $playlist_uri . " (exception " . print_r($e) . ")");
         handleSpotifyWebAPIException($w);
         return false;
     }
@@ -1104,7 +1104,7 @@ function getTheAlbumTracks($w, $album_uri)
             $tracks[] = $track->id;
         }
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        echo "Error(getTheAlbumTracks): (exception " . print_r($e) . ")\n";
+        logMsg("Error(getTheAlbumTracks): (exception " . print_r($e) . ")");
         handleSpotifyWebAPIException($w);
         return false;
     }
@@ -1300,7 +1300,7 @@ function addTracksToYourMusic($w, $tracks, $allow_duplicate = true)
 
             $tracks = $tracks_with_no_dup;
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            echo "Error(addTracksToYourMusic): (exception " . print_r($e) . ")\n";
+            logMsg("Error(addTracksToYourMusic): (exception " . print_r($e) . ")");
             handleSpotifyWebAPIException($w);
             return false;
         }
@@ -1322,7 +1322,7 @@ function addTracksToYourMusic($w, $tracks, $allow_duplicate = true)
             } while (count($output) > 0);
 
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            echo "Error(addTracksToYourMusic): (exception " . print_r($e) . ")\n";
+            logMsg("Error(addTracksToYourMusic): (exception " . print_r($e) . ")");
             handleSpotifyWebAPIException($w);
             return false;
         }
@@ -1379,7 +1379,7 @@ function addTracksToPlaylist($w, $tracks, $playlist_uri, $playlist_name, $allow_
 
             $tracks = $tracks_with_no_dup;
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            echo "Error(addTracksToPlaylist): (exception " . print_r($e) . ")\n";
+            logMsg("Error(addTracksToPlaylist): (exception " . print_r($e) . ")");
             handleSpotifyWebAPIException($w);
             return false;
         }
@@ -1410,7 +1410,7 @@ function addTracksToPlaylist($w, $tracks, $playlist_uri, $playlist_name, $allow_
 */
             } while (count($output) > 0);
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            echo "Error(addTracksToPlaylist): (exception " . print_r($e) . ")\n";
+            logMsg("Error(addTracksToPlaylist): (exception " . print_r($e) . ")");
             handleSpotifyWebAPIException($w);
             return false;
         }
@@ -1819,11 +1819,11 @@ ini_set('memory_limit', '512M');
 
 					$ret = getArtistArtwork($w, $artist[0], true, false, true);
 			        if($ret == false) {
-				        echo "WARN: $artist[0] artwork not found, using default \n";
+				        logMsg("WARN: $artist[0] artwork not found, using default");
 			        } else if(!is_string($ret)) {
-				        //echo "INFO: $artist[0] artwork was fetched \n";
+				        //logMsg("INFO: $artist[0] artwork was fetched ");
 			        } else if (is_string($ret)) {
-				        //echo "INFO: $artist[0] artwork was already there $ret \n";
+				        //logMsg("INFO: $artist[0] artwork was already there $ret ");
 			        }
 
 		            $stmtUpdateArtist->bindValue(':artist_name', $artist[0]);
@@ -1844,11 +1844,11 @@ ini_set('memory_limit', '512M');
 
 					$ret = getTrackOrAlbumArtwork($w, $track[0], true, false, true);
 			        if($ret == false) {
-				        echo "WARN: $track[0] artwork not found, using default \n";
+				        logMsg("WARN: $track[0] artwork not found, using default");
 			        } else if(!is_string($ret)) {
-				        //echo "INFO: $track[0] artwork was fetched \n";
+				        //logMsg("INFO: $track[0] artwork was fetched ");
 			        } else if (is_string($ret)) {
-				        //echo "INFO: $artist[0] artwork was already there $ret \n";
+				        //logMsg("INFO: $artist[0] artwork was already there $ret ");
 			        }
 
 		            $stmtUpdateTrack->bindValue(':track_uri', $track[0]);
@@ -1869,11 +1869,11 @@ ini_set('memory_limit', '512M');
 
 					$ret = getTrackOrAlbumArtwork($w, $album[0], true, false, true);
 			        if($ret == false) {
-				        echo "WARN: $album[0] artwork not found, using default \n";
+				        logMsg("WARN: $album[0] artwork not found, using default ");
 			        } else if(!is_string($ret)) {
-				        //echo "INFO: $album[0] artwork was fetched \n";
+				        //logMsg("INFO: $album[0] artwork was fetched ");
 			        } else if (is_string($ret)) {
-				        //echo "INFO: $artist[0] artwork was already there $ret \n";
+				        //logMsg("INFO: $artist[0] artwork was already there $ret ");
 			        }
 
 		            $stmtUpdateAlbum->bindValue(':album_uri', $album[0]);
@@ -1893,8 +1893,8 @@ ini_set('memory_limit', '512M');
     }
 
 	unlink($w->data() . "/download_artworks_in_progress");
-    exec("echo \"END `date` \" >> \"" . $w->cache() . "/action.log\"");
 
+	logMsg("End of Download Artworks");
 	if($nb_artworks_total != 0) {
 	    $elapsed_time = time() - $words[3];
 	    displayNotificationWithArtwork("All artworks have been downloaded (" . $nb_artworks_total . " artworks) - took " . beautifyTime($elapsed_time),'./images/artworks.png');
@@ -2384,7 +2384,7 @@ function updateLibrary($w)
     // kill previous process if running
 	$pid = exec("ps -efx | grep \"php\" | egrep \"DOWNLOAD_ARTWORKS\" | grep -v grep | awk '{print $2}'");
 	if($pid != "") {
-		echo "KILL Download daemon <$pid>\n";
+		logMsg("KILL Download daemon <$pid>");
 		$ret = exec("kill -9 \"$pid\"");
 	}
 	if (file_exists($w->data() . '/download_artworks_in_progress')) {
@@ -2395,7 +2395,7 @@ function updateLibrary($w)
         $dbartworks = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
         $dbartworks->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     } catch (PDOException $e) {
-	    echo "Error(updateLibrary): (exception " . print_r($e) . ")\n";
+	    logMsg("Error(updateLibrary): (exception " . print_r($e) . ")");
         handleDbIssuePdoEcho($dbartworks,$w);
         $dbartworks = null;
         $db = null;
@@ -2404,6 +2404,7 @@ function updateLibrary($w)
 
     // get the total number of tracks
     $nb_tracktotal = 0;
+    $nb_skipped = 0;
     $savedListPlaylist = array();
     try {
         $offsetGetUserPlaylists = 0;
@@ -2424,7 +2425,7 @@ function updateLibrary($w)
 
         } while ($offsetGetUserPlaylists < $userPlaylists->total);
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        echo "Error(getUserPlaylists): (exception " . print_r($e) . ")\n";
+        logMsg("Error(getUserPlaylists): (exception " . print_r($e) . ")");
         handleSpotifyWebAPIException($w);
         return false;
     }
@@ -2448,7 +2449,7 @@ function updateLibrary($w)
 
         } while ($offsetGetMySavedTracks < $userMySavedTracks->total);
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        echo "Error(getMySavedTracks): (exception " . print_r($e) . ")\n";
+        logMsg("Error(getMySavedTracks): (exception " . print_r($e) . ")");
         handleSpotifyWebAPIException($w);
         return false;
     }
@@ -2464,15 +2465,15 @@ function updateLibrary($w)
 	    $db->exec("CREATE INDEX IndexArtistName ON tracks (artist_name)");
 	    $db->exec("CREATE INDEX IndexAlbumName ON tracks (album_name)");
 	    $db->exec("create table counters (all_tracks int, mymusic_tracks int, all_artists int, mymusic_artists int, all_albums int, mymusic_albums int, playlists int)");
-	    $db->exec("create table playlists (uri text PRIMARY KEY NOT NULL, name text, nb_tracks int, author text, username text, playlist_artwork_path text, ownedbyuser boolean)");
+	    $db->exec("create table playlists (uri text PRIMARY KEY NOT NULL, name text, nb_tracks int, author text, username text, playlist_artwork_path text, ownedbyuser boolean, nb_playable_tracks int)");
 
-	    $insertPlaylist = "insert into playlists values (:uri,:name,:count_tracks,:owner,:username,:playlist_artwork_path,:ownedbyuser)";
+	    $insertPlaylist = "insert into playlists values (:uri,:name,:nb_tracks,:owner,:username,:playlist_artwork_path,:ownedbyuser,:nb_playable_tracks)";
 	    $stmtPlaylist = $db->prepare($insertPlaylist);
 
 	    $insertTrack = "insert into tracks values (:mymusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_type,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:added_at,:duration_ms)";
 	    $stmtTrack = $db->prepare($insertTrack);
     } catch (PDOException $e) {
-	    echo "Error(updateLibrary): (exception " . print_r($e) . ")\n";
+	    logMsg("Error(updateLibrary): (exception " . print_r($e) . ")");
         handleDbIssuePdoEcho($db,$w);
         $dbartworks = null;
         $db = null;
@@ -2488,7 +2489,7 @@ function updateLibrary($w)
 
 
 	    } catch (PDOException $e) {
-		    echo "Error(updateLibrary): (exception " . print_r($e) . ")\n";
+		    logMsg("Error(updateLibrary): (exception " . print_r($e) . ")");
 	        handleDbIssuePdoEcho($dbartworks,$w);
 	        $dbartworks = null;
 	        $db = null;
@@ -2508,7 +2509,7 @@ function updateLibrary($w)
 	    $stmtAlbumArtwork = $dbartworks->prepare($insertAlbumArtwork);
 
 	} catch (PDOException $e) {
-		echo "Error(updateLibrary): (exception " . print_r($e) . ")\n";
+		logMsg("Error(updateLibrary): (exception " . print_r($e) . ")");
         handleDbIssuePdoEcho($dbartworks,$w);
         $dbartworks = null;
         $db = null;
@@ -2517,6 +2518,8 @@ function updateLibrary($w)
 	$artworksToDownload = false;
 
     foreach ($savedListPlaylist as $playlist) {
+
+	    $nb_track_playlist=0;
         $tracks = $playlist->tracks;
         $owner = $playlist->owner;
 
@@ -2527,24 +2530,6 @@ function updateLibrary($w)
         } else {
             $ownedbyuser = 0;
         }
-
-		try {
-	        $stmtPlaylist->bindValue(':uri', $playlist->uri);
-	        $stmtPlaylist->bindValue(':name', escapeQuery($playlist->name));
-	        $playlist_tracks = $playlist->tracks;
-	        $stmtPlaylist->bindValue(':count_tracks', $playlist_tracks->total);
-	        $stmtPlaylist->bindValue(':owner', $owner->id);
-	        $stmtPlaylist->bindValue(':username', $owner->id);
-	        $stmtPlaylist->bindValue(':playlist_artwork_path', $playlist_artwork_path);
-	        $stmtPlaylist->bindValue(':ownedbyuser', $ownedbyuser);
-	        $stmtPlaylist->execute();
-	    } catch (PDOException $e) {
-		    echo "Error(updateLibrary): (exception " . print_r($e) . ")\n";
-	        handleDbIssuePdoEcho($db,$w);
-	        $dbartworks = null;
-	        $db = null;
-	        return false;
-	    }
 
 
         try {
@@ -2578,8 +2563,9 @@ function updateLibrary($w)
 					// http://stackoverflow.com/questions/27533743/local-tracks-returned-as-null-by-spotify-web-api?noredirect=1#comment43496449_27533743
 					// Remove workaround as too much impacting
 					if($track->uri == 'spotify:track:null') {
-						echo "WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri \n";
+						logMsg("WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri");
 	                    $nb_track++;
+	                    $nb_skipped++;
 	                    continue;
 					}
 
@@ -2595,11 +2581,11 @@ function updateLibrary($w)
 								$track=$results[0];
 								$artists = $track->artists;
 								$artist = $artists[0];
-			                	echo "INFO: Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name\n";
+			                	logMsg("INFO: Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name");
 
 		                	} else {
 			                    // skip
-								echo "WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri \n";
+								logMsg("WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri ");
 			                    $nb_track++;
 			                    continue;
 		                	}
@@ -2643,7 +2629,7 @@ function updateLibrary($w)
 					        $stmtAlbumArtwork->execute();
 	                    }
 				    } catch (PDOException $e) {
-					    echo "Error(updateLibrary): (exception " . print_r($e) . ")\n";
+					    logMsg("Error(updateLibrary): (exception " . print_r($e) . ")");
 				        handleDbIssuePdoEcho($dbartworks,$w);
 				        $dbartworks = null;
 				        $db = null;
@@ -2670,13 +2656,14 @@ function updateLibrary($w)
 	                    $stmtTrack->bindValue(':duration_ms', $track->duration_ms);
 	                    $stmtTrack->execute();
 				    } catch (PDOException $e) {
-					    echo "Error(updateLibrary): (exception " . print_r($e) . ")\n";
+					    logMsg("Error(updateLibrary): (exception " . print_r($e) . ")");
 				        handleDbIssuePdoEcho($db,$w);
 				        $dbartworks = null;
 				        $db = null;
 				        return false;
 				    }
                     $nb_track++;
+                    $nb_track_playlist++;
                     if ($nb_track % 10 === 0) {
                         $w->write('Create Library▹' . $nb_track . '▹' . $nb_tracktotal . '▹' . $words[3], 'update_library_in_progress');
                     }
@@ -2685,8 +2672,28 @@ function updateLibrary($w)
                 $offsetGetUserPlaylistTracks += $limitGetUserPlaylistTracks;
 
             } while ($offsetGetUserPlaylistTracks < $userPlaylistTracks->total);
+
+			try {
+		        $stmtPlaylist->bindValue(':uri', $playlist->uri);
+		        $stmtPlaylist->bindValue(':name', escapeQuery($playlist->name));
+		        $stmtPlaylist->bindValue(':nb_tracks', $playlist->tracks->total);
+		        $stmtPlaylist->bindValue(':owner', $owner->id);
+		        $stmtPlaylist->bindValue(':username', $owner->id);
+		        $stmtPlaylist->bindValue(':playlist_artwork_path', $playlist_artwork_path);
+		        $stmtPlaylist->bindValue(':ownedbyuser', $ownedbyuser);
+		        $stmtPlaylist->bindValue(':nb_playable_tracks', $nb_track_playlist);
+		        $stmtPlaylist->execute();
+		    } catch (PDOException $e) {
+			    logMsg("Error(updateLibrary): (exception " . print_r($e) . ")");
+		        handleDbIssuePdoEcho($db,$w);
+		        $dbartworks = null;
+		        $dbsettings = null;
+		        $db = null;
+		        return false;
+		    }
+
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            echo "Error(getUserPlaylistTracks): playlist id " . $playlist->id . " (exception " . print_r($e) . ")\n";
+            logMsg("Error(getUserPlaylistTracks): playlist id " . $playlist->id . " (exception " . print_r($e) . ")");
             handleSpotifyWebAPIException($w);
             return false;
         }
@@ -2704,8 +2711,9 @@ function updateLibrary($w)
 		// http://stackoverflow.com/questions/27533743/local-tracks-returned-as-null-by-spotify-web-api?noredirect=1#comment43496449_27533743
 		// Remove workaround as too much impacting
 		if($track->uri == 'spotify:track:null') {
-			echo "WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri \n";
+			logMsg("WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri");
             $nb_track++;
+            $nb_skipped++;
             continue;
 		}
 
@@ -2721,11 +2729,11 @@ function updateLibrary($w)
 								$track=$results[0];
 								$artists = $track->artists;
 								$artist = $artists[0];
-			                	echo "INFO: Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name\n";
+			                	logMsg("INFO: Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name");
 
 		                	} else {
 			                    // skip
-								echo "WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri \n";
+								logMsg("WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri ");
 			                    $nb_track++;
 			                    continue;
 		                	}
@@ -2769,7 +2777,7 @@ function updateLibrary($w)
 		        $stmtAlbumArtwork->execute();
             }
 	    } catch (PDOException $e) {
-		    echo "Error(updateLibrary): (exception " . print_r($e) . ")\n";
+		    logMsg("Error(updateLibrary): (exception " . print_r($e) . ")");
 	        handleDbIssuePdoEcho($dbartworks,$w);
 	        $dbartworks = null;
 	        $db = null;
@@ -2796,7 +2804,7 @@ function updateLibrary($w)
             $stmtTrack->bindValue(':duration_ms', $track->duration_ms);
             $stmtTrack->execute();
 	    } catch (PDOException $e) {
-		    echo "Error(updateLibrary): (exception " . print_r($e) . ")\n";
+		    logMsg("Error(updateLibrary): (exception " . print_r($e) . ")");
 	        handleDbIssuePdoEcho($db,$w);
 	        $dbartworks = null;
 	        $db = null;
@@ -2860,7 +2868,7 @@ function updateLibrary($w)
         $stmt->execute();
 
     } catch (PDOException $e) {
-	    echo "Error(updateLibrary): (exception " . print_r($e) . ")\n";
+	    logMsg("Error(updateLibrary): (exception " . print_r($e) . ")");
         handleDbIssuePdoEcho($db,$w);
         $dbartworks = null;
         $db = null;
@@ -2868,8 +2876,11 @@ function updateLibrary($w)
     }
 
     $elapsed_time = time() - $words[3];
-    displayNotificationWithArtwork("took " . beautifyTime($elapsed_time),'./images/recreate.png', "Library (re-)created (" . $nb_track . " tracks)");
-
+    if($nb_skipped == 0) {
+    	displayNotificationWithArtwork(" " . $nb_track . " tracks - took " . beautifyTime($elapsed_time),'./images/recreate.png', "Library (re-)created");
+    } else {
+   		displayNotificationWithArtwork(" " . $nb_track . " tracks / " . $nb_skipped . " skipped - took " . beautifyTime($elapsed_time),'./images/recreate.png', "Library (re-)created");
+    }
 
     if (file_exists($w->data() . '/library_old.db')) {
         unlink($w->data() . '/library_old.db');
@@ -2887,10 +2898,6 @@ function updateLibrary($w)
 
 	// Download artworks in background
 	if($artworksToDownload ==  true) {
-		exec("echo \"===== DOWNLOAD_ARTWORKS ========\" >> \"" . $w->cache() . "/action.log\"");
-
-		exec("echo \"START `date` \" >> \"" . $w->cache() . "/action.log\"");
-
 	    exec("php -f ./src/action.php -- \"\" \"DOWNLOAD_ARTWORKS\" \"DOWNLOAD_ARTWORKS\" >> \"" .  $w->cache() . "/action.log\" 2>&1 & ");
 	}
 
@@ -2944,7 +2951,7 @@ function refreshLibrary($w)
     // kill previous process if running
 	$pid = exec("ps -efx | grep \"php\" | egrep \"DOWNLOAD_ARTWORKS\" | grep -v grep | awk '{print $2}'");
 	if($pid != "") {
-		echo "KILL Download daemon <$pid>\n";
+		logMsg("KILL Download daemon <$pid>");
 		$ret = exec("kill -9 \"$pid\"");
 	}
 	if (file_exists($w->data() . '/download_artworks_in_progress')) {
@@ -2955,7 +2962,7 @@ function refreshLibrary($w)
         $dbartworks = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
         $dbartworks->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     } catch (PDOException $e) {
-	    echo "Error(refreshLibrary): (exception " . print_r($e) . ")\n";
+	    logMsg("Error(refreshLibrary): (exception " . print_r($e) . ")");
         handleDbIssuePdoEcho($dbartworks,$w);
         $dbartworks = null;
         $db = null;
@@ -2971,7 +2978,7 @@ function refreshLibrary($w)
 
 
 	    } catch (PDOException $e) {
-		    echo "Error(updateLibrary): (exception " . print_r($e) . ")\n";
+		    logMsg("Error(updateLibrary): (exception " . print_r($e) . ")");
 	        handleDbIssuePdoEcho($dbartworks,$w);
 	        $dbartworks = null;
 	        $db = null;
@@ -2991,7 +2998,7 @@ function refreshLibrary($w)
 	    $stmtAlbumArtwork = $dbartworks->prepare($insertAlbumArtwork);
 
 	} catch (PDOException $e) {
-		echo "Error(updateLibrary): (exception " . print_r($e) . ")\n";
+		logMsg("Error(updateLibrary): (exception " . print_r($e) . ")");
         handleDbIssuePdoEcho($dbartworks,$w);
         $dbartworks = null;
         $db = null;
@@ -3020,7 +3027,7 @@ function refreshLibrary($w)
 	    $getPlaylists = "select * from playlists where uri=:uri";
 	    $stmtGetPlaylists = $db->prepare($getPlaylists);
 
-	    $insertPlaylist = "insert into playlists values (:uri,:name,:count_tracks,:owner,:username,:playlist_artwork_path,:ownedbyuser)";
+	    $insertPlaylist = "insert into playlists values (:uri,:name,:nb_tracks,:owner,:username,:playlist_artwork_path,:ownedbyuser,:nb_playable_tracks)";
 	    $stmtPlaylist = $db->prepare($insertPlaylist);
 
 	    $insertTrack = "insert into tracks values (:mymusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_type,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:added_at,:duration_ms)";
@@ -3029,13 +3036,13 @@ function refreshLibrary($w)
 	    $deleteFromTracks = "delete from tracks where playlist_uri=:playlist_uri";
 	    $stmtDeleteFromTracks = $db->prepare($deleteFromTracks);
 
-	    $updatePlaylistsNbTracks = "update playlists set nb_tracks=:nb_tracks where uri=:uri";
+	    $updatePlaylistsNbTracks = "update playlists set nb_tracks=:nb_tracks and nb_playable_tracks=:nb_playable_tracks where uri=:uri";
 	    $stmtUpdatePlaylistsNbTracks = $db->prepare($updatePlaylistsNbTracks);
 
 	    $deleteFromTracksYourMusic = "delete from tracks where mymusic=:mymusic";
 	    $stmtDeleteFromTracksYourMusic = $db->prepare($deleteFromTracksYourMusic);
     } catch (PDOException $e) {
-	    echo "Error(refreshLibrary): (exception " . print_r($e) . ")\n";
+	    logMsg("Error(refreshLibrary): (exception " . print_r($e) . ")");
         handleDbIssuePdoEcho($db,$w);
         $dbartworks = null;
         $db = null;
@@ -3064,7 +3071,7 @@ function refreshLibrary($w)
 
         } while ($offsetGetUserPlaylists < $userPlaylists->total);
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        echo "Error(getUserPlaylists): (exception " . print_r($e) . ")\n";
+        logMsg("Error(getUserPlaylists): (exception " . print_r($e) . ")");
         unlink($w->data() . "/update_library_in_progress");
         unlink($w->data() . "/library_new.db");
     }
@@ -3091,7 +3098,7 @@ function refreshLibrary($w)
 	            break;
 	        }
 	    } catch (PDOException $e) {
-		    echo "Error(refreshLibrary): (exception " . print_r($e) . ")\n";
+		    logMsg("Error(refreshLibrary): (exception " . print_r($e) . ")");
 	        handleDbIssuePdoEcho($db,$w);
 	        $dbartworks = null;
 	        $db = null;
@@ -3112,24 +3119,7 @@ function refreshLibrary($w)
             }
 
 			try {
-	            $stmtPlaylist->bindValue(':uri', $playlist->uri);
-	            $stmtPlaylist->bindValue(':name', escapeQuery($playlist->name));
-	            $stmtPlaylist->bindValue(':count_tracks', $tracks->total);
-	            $stmtPlaylist->bindValue(':owner', $owner->id);
-	            $stmtPlaylist->bindValue(':username', $owner->id);
-	            $stmtPlaylist->bindValue(':playlist_artwork_path', $playlist_artwork_path);
-	            $stmtPlaylist->bindValue(':ownedbyuser', $ownedbyuser);
-	            $stmtPlaylist->execute();
-		    } catch (PDOException $e) {
-			    echo "Error(refreshLibrary): (exception " . print_r($e) . ")\n";
-		        handleDbIssuePdoEcho($db,$w);
-		        $dbartworks = null;
-		        $db = null;
-		        return;
-		    }
-
-
-            try {
+	            $nb_track_playlist = 0;
                 $offsetGetUserPlaylistTracks = 0;
                 $limitGetUserPlaylistTracks = 100;
                 do {
@@ -3161,8 +3151,7 @@ function refreshLibrary($w)
 						// http://stackoverflow.com/questions/27533743/local-tracks-returned-as-null-by-spotify-web-api?noredirect=1#comment43496449_27533743
 						// Remove workaround as too much impacting
 						if($track->uri == 'spotify:track:null') {
-							echo "WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri \n";
-		                    $nb_track++;
+							logMsg("WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri");
 		                    continue;
 						}
 
@@ -3178,11 +3167,11 @@ function refreshLibrary($w)
 								$track=$results[0];
 								$artists = $track->artists;
 								$artist = $artists[0];
-			                	echo "INFO: Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name\n";
+			                	logMsg("INFO: Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name");
 
 		                	} else {
 			                    // skip
-								echo "WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri \n";
+								logMsg("WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri ");
 			                    $nb_track++;
 			                    continue;
 		                	}
@@ -3226,7 +3215,7 @@ function refreshLibrary($w)
 						        $stmtAlbumArtwork->execute();
 		                    }
 					    } catch (PDOException $e) {
-						    echo "Error(updateLibrary): (exception " . print_r($e) . ")\n";
+						    logMsg("Error(updateLibrary): (exception " . print_r($e) . ")");
 					        handleDbIssuePdoEcho($dbartworks,$w);
 					        $dbartworks = null;
 					        $db = null;
@@ -3253,19 +3242,39 @@ function refreshLibrary($w)
 	                        $stmtTrack->bindValue(':duration_ms', $track->duration_ms);
 	                        $stmtTrack->execute();
 					    } catch (PDOException $e) {
-						    echo "Error(refreshLibrary): (exception " . print_r($e) . ")\n";
+						    logMsg("Error(refreshLibrary): (exception " . print_r($e) . ")");
 					        handleDbIssuePdoEcho($db,$w);
 					        $dbartworks = null;
 					        $db = null;
 					        return;
 					    }
+					     $nb_track_playlist++;
                     }
 
                     $offsetGetUserPlaylistTracks += $limitGetUserPlaylistTracks;
 
                 } while ($offsetGetUserPlaylistTracks < $userPlaylistTracks->total);
+
+				try {
+		            $stmtPlaylist->bindValue(':uri', $playlist->uri);
+		            $stmtPlaylist->bindValue(':name', escapeQuery($playlist->name));
+		            $stmtPlaylist->bindValue(':nb_tracks', $tracks->total);
+		            $stmtPlaylist->bindValue(':owner', $owner->id);
+		            $stmtPlaylist->bindValue(':username', $owner->id);
+		            $stmtPlaylist->bindValue(':playlist_artwork_path', $playlist_artwork_path);
+		            $stmtPlaylist->bindValue(':ownedbyuser', $ownedbyuser);
+		            $stmtPlaylist->bindValue(':nb_playable_tracks', $nb_track_playlist);
+		            $stmtPlaylist->execute();
+			    } catch (PDOException $e) {
+				    logMsg("Error(refreshLibrary): (exception " . print_r($e) . ")");
+			        handleDbIssuePdoEcho($db,$w);
+			        $dbartworks = null;
+			        $dbsettings = null;
+			        $db = null;
+			        return;
+			    }
             } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-                echo "Error(getUserPlaylistTracks): playlist id " . $playlist->id . " (exception " . print_r($e) . ")\n";
+                logMsg("Error(getUserPlaylistTracks): playlist id " . $playlist->id . " (exception " . print_r($e) . ")");
                 handleSpotifyWebAPIException($w);
                 return;
             }
@@ -3293,7 +3302,7 @@ function refreshLibrary($w)
 	                $stmtDeleteFromTracks->bindValue(':playlist_uri', $playlist->uri);
 	                $stmtDeleteFromTracks->execute();
 			    } catch (PDOException $e) {
-				    echo "Error(refreshLibrary): (exception " . print_r($e) . ")\n";
+				    logMsg("Error(refreshLibrary): (exception " . print_r($e) . ")");
 			        handleDbIssuePdoEcho($db,$w);
 			        $dbartworks = null;
 			        $db = null;
@@ -3303,6 +3312,7 @@ function refreshLibrary($w)
                 $tmp = explode(':', $playlist->uri);
 
                 try {
+	                $nb_track_playlist = 0;
                     $offsetGetUserPlaylistTracks = 0;
                     $limitGetUserPlaylistTracks = 100;
                     do {
@@ -3324,18 +3334,6 @@ function refreshLibrary($w)
                             'offset' => $offsetGetUserPlaylistTracks
                         ));
 
-						try {
-	                        $stmtUpdatePlaylistsNbTracks->bindValue(':nb_tracks', $userPlaylistTracks->total);
-	                        $stmtUpdatePlaylistsNbTracks->bindValue(':uri', $playlist->uri);
-	                        $stmtUpdatePlaylistsNbTracks->execute();
-					    } catch (PDOException $e) {
-						    echo "Error(refreshLibrary): (exception " . print_r($e) . ")\n";
-					        handleDbIssuePdoEcho($db,$w);
-					        $dbartworks = null;
-					        $db = null;
-					        return;
-					    }
-
                         foreach ($userPlaylistTracks->items as $item) {
                             $track = $item->track;
 		                    $artists = $track->artists;
@@ -3346,7 +3344,7 @@ function refreshLibrary($w)
 							// http://stackoverflow.com/questions/27533743/local-tracks-returned-as-null-by-spotify-web-api?noredirect=1#comment43496449_27533743
 							// Remove workaround as too much impacting
 							if($track->uri == 'spotify:track:null') {
-								echo "WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri \n";
+								logMsg("WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri");
 			                    $nb_track++;
 			                    continue;
 							}
@@ -3363,11 +3361,11 @@ function refreshLibrary($w)
 								$track=$results[0];
 								$artists = $track->artists;
 								$artist = $artists[0];
-			                	echo "INFO: Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name\n";
+			                	logMsg("INFO: Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name");
 
 		                	} else {
 			                    // skip
-								echo "WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri \n";
+								logMsg("WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri ");
 			                    $nb_track++;
 			                    continue;
 		                	}
@@ -3411,7 +3409,7 @@ function refreshLibrary($w)
 							        $stmtAlbumArtwork->execute();
 			                    }
 						    } catch (PDOException $e) {
-							    echo "Error(updateLibrary): (exception " . print_r($e) . ")\n";
+							    logMsg("Error(updateLibrary): (exception " . print_r($e) . ")");
 						        handleDbIssuePdoEcho($dbartworks,$w);
 						        $dbartworks = null;
 						        $db = null;
@@ -3439,20 +3437,35 @@ function refreshLibrary($w)
 	                            $stmtTrack->bindValue(':duration_ms', $track->duration_ms);
 	                            $stmtTrack->execute();
 						    } catch (PDOException $e) {
-							    echo "Error(refreshLibrary): (exception " . print_r($e) . ")\n";
+							    logMsg("Error(refreshLibrary): (exception " . print_r($e) . ")");
 						        handleDbIssuePdoEcho($db,$w);
 						        $dbartworks = null;
 
 						        $db = null;
 						        return;
 						    }
+						    $nb_track_playlist++;
                         }
 
                         $offsetGetUserPlaylistTracks += $limitGetUserPlaylistTracks;
 
                     } while ($offsetGetUserPlaylistTracks < $userPlaylistTracks->total);
+
+					try {
+                        $stmtUpdatePlaylistsNbTracks->bindValue(':nb_tracks', $userPlaylistTracks->total);
+                        $stmtUpdatePlaylistsNbTracks->bindValue(':nb_playable_tracks', $nb_track_playlist);
+                        $stmtUpdatePlaylistsNbTracks->bindValue(':uri', $playlist->uri);
+                        $stmtUpdatePlaylistsNbTracks->execute();
+				    } catch (PDOException $e) {
+					    logMsg("Error(refreshLibrary): (exception " . print_r($e) . ")");
+				        handleDbIssuePdoEcho($db,$w);
+				        $dbartworks = null;
+				        $dbsettings = null;
+				        $db = null;
+				        return;
+				    }
                 } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-                    echo "Error(getUserPlaylistTracks): playlist id " . $tmp[4] . " (exception " . print_r($e) . ")\n";
+                    logMsg("Error(getUserPlaylistTracks): playlist id " . $tmp[4] . " (exception " . print_r($e) . ")");
                     handleSpotifyWebAPIException($w);
                     return;
                 }
@@ -3493,7 +3506,7 @@ function refreshLibrary($w)
 	        }
 	    }
     } catch (PDOException $e) {
-	    echo "Error(refreshLibrary): (exception " . print_r($e) . ")\n";
+	    logMsg("Error(refreshLibrary): (exception " . print_r($e) . ")");
         handleDbIssuePdoEcho($db,$w);
         $dbartworks = null;
         $db = null;
@@ -3525,7 +3538,7 @@ function refreshLibrary($w)
             $offsetGetMySavedTracks += $limitGetMySavedTracks;
         } while ($offsetGetMySavedTracks < $userMySavedTracks->total);
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        echo "Error(getMySavedTracks): (exception " . print_r($e) . ")\n";
+        logMsg("Error(getMySavedTracks): (exception " . print_r($e) . ")");
         handleSpotifyWebAPIException($w);
         return false;
     }
@@ -3536,7 +3549,7 @@ function refreshLibrary($w)
 	    $stmt->execute();
 	    $mymusic_tracks = $stmt->fetch();
     } catch (PDOException $e) {
-	    echo "Error(refreshLibrary): (exception " . print_r($e) . ")\n";
+	    logMsg("Error(refreshLibrary): (exception " . print_r($e) . ")");
         handleDbIssuePdoEcho($db,$w);
         $db = null;
         return;
@@ -3555,7 +3568,7 @@ function refreshLibrary($w)
 			$stmtDeleteFromTracksYourMusic->bindValue(':mymusic', 1);
 			$stmtDeleteFromTracksYourMusic->execute();
 	    } catch (PDOException $e) {
-		    echo "Error(refreshLibrary): (exception " . print_r($e) . ")\n";
+		    logMsg("Error(refreshLibrary): (exception " . print_r($e) . ")");
 	        handleDbIssuePdoEcho($db,$w);
 	        $db = null;
 	        return;
@@ -3572,7 +3585,7 @@ function refreshLibrary($w)
 			// http://stackoverflow.com/questions/27533743/local-tracks-returned-as-null-by-spotify-web-api?noredirect=1#comment43496449_27533743
 			// Remove workaround as too much impacting
 			if($track->uri == 'spotify:track:null') {
-				echo "WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri \n";
+				logMsg("WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri");
                 $nb_track++;
                 continue;
 			}
@@ -3589,11 +3602,11 @@ function refreshLibrary($w)
 								$track=$results[0];
 								$artists = $track->artists;
 								$artist = $artists[0];
-			                	echo "INFO: Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name\n";
+			                	logMsg("INFO: Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name");
 
 		                	} else {
 			                    // skip
-								echo "WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri \n";
+								logMsg("WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri ");
 			                    $nb_track++;
 			                    continue;
 		                	}
@@ -3637,7 +3650,7 @@ function refreshLibrary($w)
 			        $stmtAlbumArtwork->execute();
                 }
 		    } catch (PDOException $e) {
-			    echo "Error(updateLibrary): (exception " . print_r($e) . ")\n";
+			    logMsg("Error(updateLibrary): (exception " . print_r($e) . ")");
 		        handleDbIssuePdoEcho($dbartworks,$w);
 		        $dbartworks = null;
 		        $db = null;
@@ -3664,7 +3677,7 @@ function refreshLibrary($w)
 	            $stmtTrack->bindValue(':duration_ms', $track->duration_ms);
 	            $stmtTrack->execute();
 		     } catch (PDOException $e) {
-			    echo "Error(refreshLibrary): (exception " . print_r($e) . ")\n";
+			    logMsg("Error(refreshLibrary): (exception " . print_r($e) . ")");
 		        handleDbIssuePdoEcho($db,$w);
 		        $db = null;
 		        return;
@@ -3723,7 +3736,7 @@ function refreshLibrary($w)
         $stmt->execute();
 
     } catch (PDOException $e) {
-	    echo "Error(updateLibrary): (exception " . print_r($e) . ")\n";
+	    logMsg("Error(updateLibrary): (exception " . print_r($e) . ")");
         handleDbIssuePdoEcho($db,$w);
         $dbartworks = null;
         $db = null;
@@ -3772,8 +3785,7 @@ function refreshLibrary($w)
     rename($w->data() . '/library_new.db', $w->data() . '/library.db');
 
 	// Download artworks in background
-	exec("echo \"===== DOWNLOAD_ARTWORKS DURING REFRESH LIBRARY ========\" >> \"" . $w->cache() . "/action.log\"");
-	exec("echo \"START `date` \" >> \"" . $w->cache() . "/action.log\"");
+	logMsg("========DOWNLOAD_ARTWORKS DURING REFRESH LIBRARY ========");
     exec("php -f ./src/action.php -- \"\" \"DOWNLOAD_ARTWORKS\" \"DOWNLOAD_ARTWORKS\" >> \"" .  $w->cache() . "/action.log\" 2>&1 & ");
 
     unlink($w->data() . "/update_library_in_progress");
@@ -4420,6 +4432,22 @@ function updateSetting($w,$setting_name,$setting_new_value) {
 
 	return $ret;
 }
+
+/**
+ * logMsg function.
+ *
+ * @access public
+ * @param mixed $w
+ * @param mixed $msg
+ * @return void
+ */
+function logMsg($msg) {
+	date_default_timezone_set('UTC');
+    $date = date( 'Y-m-d H:i:s', time() );
+    file_put_contents( 'php://stderr', "$date" .
+      "|{$msg}" . PHP_EOL );
+}
+
 
 ///////////////
 //
