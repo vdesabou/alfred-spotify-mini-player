@@ -2715,12 +2715,12 @@ function updateLibrary($w)
 					if($track->uri == 'spotify:track:null') {
 						echo "WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri \n";
 	                    $nb_track++;
-	                    continue;							
+	                    continue;
 					}
-							
+
 /*
 	                    if($track->uri == 'spotify:track:null') {
-							
+
 							// unknown track, look it up online
 							$query = 'track:' . strtolower($track->name) . ' artist:' . strtolower($artist->name);
 		                	$results = searchWebApi($w,$country_code,$query, 'track', 1);
@@ -2843,12 +2843,12 @@ function updateLibrary($w)
 		if($track->uri == 'spotify:track:null') {
 			echo "WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri \n";
             $nb_track++;
-            continue;							
+            continue;
 		}
-							
+
 /*
 	                    if($track->uri == 'spotify:track:null') {
-							
+
 							// unknown track, look it up online
 							$query = 'track:' . strtolower($track->name) . ' artist:' . strtolower($artist->name);
 		                	$results = searchWebApi($w,$country_code,$query, 'track', 1);
@@ -3307,12 +3307,12 @@ function refreshLibrary($w)
 						if($track->uri == 'spotify:track:null') {
 							echo "WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri \n";
 		                    $nb_track++;
-		                    continue;							
+		                    continue;
 						}
-							
+
 /*
 	                    if($track->uri == 'spotify:track:null') {
-							
+
 							// unknown track, look it up online
 							$query = 'track:' . strtolower($track->name) . ' artist:' . strtolower($artist->name);
 		                	$results = searchWebApi($w,$country_code,$query, 'track', 1);
@@ -3496,12 +3496,12 @@ function refreshLibrary($w)
 							if($track->uri == 'spotify:track:null') {
 								echo "WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri \n";
 			                    $nb_track++;
-			                    continue;							
+			                    continue;
 							}
-							
+
 /*
 	                    if($track->uri == 'spotify:track:null') {
-							
+
 							// unknown track, look it up online
 							$query = 'track:' . strtolower($track->name) . ' artist:' . strtolower($artist->name);
 		                	$results = searchWebApi($w,$country_code,$query, 'track', 1);
@@ -3726,12 +3726,12 @@ function refreshLibrary($w)
 			if($track->uri == 'spotify:track:null') {
 				echo "WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri \n";
                 $nb_track++;
-                continue;							
+                continue;
 			}
-							
+
 /*
 	                    if($track->uri == 'spotify:track:null') {
-							
+
 							// unknown track, look it up online
 							$query = 'track:' . strtolower($track->name) . ' artist:' . strtolower($artist->name);
 		                	$results = searchWebApi($w,$country_code,$query, 'track', 1);
@@ -4197,13 +4197,17 @@ function strip_string($string)
 function checkForUpdate($w, $last_check_update_time, $dbsettings)
 {
     if (time() - $last_check_update_time > 86400) {
+
         // update last_check_update_time
-        $setSettings = "update settings set last_check_update_time=" . time();
-        $dbsettings->exec($setSettings);
+
+	    $ret = updateSetting($w,'last_check_update_time',time());
+	    if($ret == false) {
+		 	return "Error while updating settings";
+	    }
+
 
         if (!$w->internet()) {
-            return "Check for update error:
-No internet connection";
+            return "No internet connection !";
         }
 
         // get local information
@@ -4219,8 +4223,7 @@ No internet connection";
         $jsonDataRemote = $w->request($remote_json);
 
         if (empty($jsonDataRemote)) {
-			return "Check for update error:
-the export.json " . $remote_json . " file cannot be found";
+			return "The export.json " . $remote_json . " file cannot be found";
         }
 
         $json = json_decode($jsonDataRemote, true);
@@ -4242,8 +4245,7 @@ the export.json " . $remote_json . " file cannot be found";
             }
 
         } else {
-            return "Check for update error:
-remote.json error";
+            return "Cannot read remote.json";
         }
 
     }
@@ -4518,6 +4520,72 @@ function searchCommandsFastAccess($w,$query,$setting)
 	    }
     }
     return $w;
+}
+
+/**
+ * getSettings function.
+ *
+ * @access public
+ * @param mixed $w
+ * @return void
+ */
+function getSettings($w) {
+	$settings = $w->read('settings.json');
+
+	if($settings == false) {
+		$default = array(
+                 'all_playlists' => true,
+                 'is_spotifious_active' => false,
+                 'is_alfred_playlist_active' => true,
+                 'radio_number_tracks' => 30,
+                 'now_playing_notifications' => true,
+                 'max_results' => 50,
+                 'alfred_playlist_uri' => '',
+                 'alfred_playlist_name' => '',
+                 'country_code' => '',
+                 'last_check_update_time' => 0,
+                 'oauth_client_id' => '',
+                 'oauth_client_secret' => '',
+                 'oauth_redirect_uri' => 'http://localhost:15298/callback.php',
+                 'oauth_access_token' => '',
+                 'oauth_expires' => 0,
+                 'oauth_refresh_token' => '',
+                 'display_name' => '',
+                 'userid' => '',
+                 'echonest_api_key' => '5EG94BIZEGFEY9AL9'
+             );
+
+		$ret = $w->write($default,'settings.json');
+		displayNotificationWithArtwork("Settings have been set to default",'./images/info.png', 'Settings reset');
+
+		$settings = $w->read('settings.json');
+	}
+
+	return $settings;
+}
+
+/**
+ * updateSetting function.
+ *
+ * @access public
+ * @param mixed $w
+ * @param mixed $setting_name
+ * @return void
+ */
+function updateSetting($w,$setting_name,$setting_new_value) {
+	$settings = $w->read('settings.json');
+	$new_settings = array();
+
+	foreach ($settings as $key => $value) {
+		if($key == $setting_name) {
+			$new_settings[$key] = $setting_new_value;
+		} else {
+			$new_settings[$key] = $value;
+		}
+	}
+	$ret = $w->write($new_settings,'settings.json');
+
+	return $ret;
 }
 
 ///////////////

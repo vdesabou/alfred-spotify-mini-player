@@ -368,35 +368,49 @@ if ($playlist_uri != "" && $other_settings == "") {
 } else if ($other_settings != "") {
     $setting = explode('▹', $other_settings);
     if ($setting[0] == "MAX_RESULTS") {
-        $setSettings = "update settings set max_results=" . $setting[1];
-        $dbfile = $w->data() . "/settings.db";
-        exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotificationWithArtwork("Max results set to $setting[1]",'./images/settings.png', 'Settings');
-        return;
+	    $ret = updateSetting($w,'max_results',$setting[1]);
+	    if($ret == true) {
+		    displayNotificationWithArtwork('Max results set to ' . $setting[1], './images/settings.png', 'Settings');
+	    } else {
+		 	displayNotificationWithArtwork("Error while updating settings",'./images/settings.png', 'Error!');
+	    }
+	    return;
     } else if ($setting[0] == "RADIO_TRACKS") {
-        $setSettings = "update settings set radio_number_tracks=" . $setting[1];
-        $dbfile = $w->data() . "/settings.db";
-        exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotificationWithArtwork("Radio track number set to $setting[1]",'./images/settings.png', 'Settings');
-        return;
+	    $ret = updateSetting($w,'radio_number_tracks',$setting[1]);
+	    if($ret == true) {
+		    displayNotificationWithArtwork('Radio track number set to ' . $setting[1], './images/settings.png', 'Settings');
+	    } else {
+		 	displayNotificationWithArtwork("Error while updating settings",'./images/settings.png', 'Error!');
+	    }
+	    return;
     } else if ($setting[0] == "Oauth_Client_ID") {
-        $setSettings = 'update settings set oauth_client_id=\"' . $setting[1] . '\"';
-        $dbfile = $w->data() . "/settings.db";
-        exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotificationWithArtwork("Client ID set to $setting[1]",'./images/settings.png', 'Settings');
+	    $ret = updateSetting($w,'oauth_client_id',$setting[1]);
+	    if($ret == true) {
+		    displayNotificationWithArtwork("Client ID set to $setting[1]",'./images/settings.png', 'Settings');
+	    } else {
+		 	displayNotificationWithArtwork("Error while updating settings",'./images/settings.png', 'Error!');
+	    }
         return;
     } else if ($setting[0] == "Oauth_Client_SECRET") {
-        $setSettings = 'update settings set oauth_client_secret=\"' . $setting[1] . '\"';
-        $dbfile = $w->data() . "/settings.db";
-        exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotificationWithArtwork("Client Secret set to $setting[1]",'./images/settings.png', 'Settings');
+	    $ret = updateSetting($w,'oauth_client_secret',$setting[1]);
+	    if($ret == true) {
+		    displayNotificationWithArtwork("Client Secret set to $setting[1]",'./images/settings.png', 'Settings');
+	    } else {
+		 	displayNotificationWithArtwork("Error while updating settings",'./images/settings.png', 'Error!');
+	    }
         return;
     } else if ($setting[0] == "ALFRED_PLAYLIST") {
-        $setSettings = 'update settings set alfred_playlist_uri=\"' . $setting[1] . '\"' . ',alfred_playlist_name=\"' . $setting[2] . '\"';
-        $dbfile = $w->data() . "/settings.db";
-        exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-
-        displayNotificationWithArtwork('Alfred Playlist set to ' . $setting[2], getPlaylistArtwork($w,  $setting[1], true), 'Settings');
+	    $ret = updateSetting($w,'alfred_playlist_uri',$setting[1]);
+	    if($ret == true) {
+		    $ret = updateSetting($w,'alfred_playlist_name',$setting[2]);
+		    if($ret == true) {
+			   	displayNotificationWithArtwork('Alfred Playlist set to ' . $setting[2], getPlaylistArtwork($w,  $setting[1], true), 'Settings');
+		    } else {
+			 	displayNotificationWithArtwork("Error while updating settings",'./images/settings.png', 'Error!');
+		    }
+	    } else {
+		 	displayNotificationWithArtwork("Error while updating settings",'./images/settings.png', 'Error!');
+	    }
         return;
 
     } else if ($setting[0] == "ADD_TO_PLAYLIST") {

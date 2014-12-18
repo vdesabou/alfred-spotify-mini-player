@@ -74,100 +74,31 @@ if (file_exists($w->data() . '/download_artworks_in_progress')) {
     }
 }
 
-
 //
-// Read settings from DB
+// Read settings from JSON
 //
-$getSettings = 'select all_playlists,is_spotifious_active,is_alfred_playlist_active,radio_number_tracks,is_lyrics_active,max_results, alfred_playlist_uri,alfred_playlist_name,country_code,theme,last_check_update_time,oauth_client_id,oauth_client_secret,oauth_redirect_uri,oauth_access_token,oauth_expires,oauth_refresh_token,display_name,userid,echonest_api_key from settings';
-$dbsettingsfile = $w->data() . '/settings.db';
 
-try {
-    $dbsettings = new PDO("sqlite:$dbsettingsfile", "", "", array(PDO::ATTR_PERSISTENT => true));
-    $dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $dbsettings->query("PRAGMA synchronous = OFF");
-    $dbsettings->query("PRAGMA journal_mode = OFF");
-    $dbsettings->query("PRAGMA temp_store = MEMORY");
-    $dbsettings->query("PRAGMA count_changes = OFF");
-    $dbsettings->query("PRAGMA PAGE_SIZE = 4096");
-    $dbsettings->query("PRAGMA default_cache_size=700000");
-    $dbsettings->query("PRAGMA cache_size=700000");
-    $dbsettings->query("PRAGMA compile_options");
-} catch (PDOException $e) {
-    handleDbIssuePdoXml($dbsettings);
-    $dbsettings = null;
-    return;
-}
+$settings = getSettings($w);
 
-try {
-    $stmt = $dbsettings->prepare($getSettings);
-    $settings = $stmt->execute();
-
-} catch (PDOException $e) {
-    if (file_exists($w->data() . '/settings.db')) {
-        unlink($w->data() . '/settings.db');
-    }
-}
-
-//
-// Create settings.db with default values if needed
-//
-if (!file_exists($w->data() . '/settings.db')) {
-    touch($w->data() . '/settings.db');
-    try {
-        $dbsettings = new PDO("sqlite:$dbsettingsfile", "", "", null);
-        $dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-        $dbsettings->exec("create table settings (all_playlists boolean, is_spotifious_active boolean, is_alfred_playlist_active boolean, radio_number_tracks int, is_lyrics_active boolean, max_results int, alfred_playlist_uri text, alfred_playlist_name text, country_code text, theme text, last_check_update_time int, oauth_client_id text,oauth_client_secret text,oauth_redirect_uri text,oauth_access_token text,oauth_expires int,oauth_refresh_token text,display_name text,userid text, echonest_api_key text)");
-        $dbsettings->exec("insert into settings values (1,0,1,30,1,50,\"\",\"\",\"\",\"gray\",0,\"\",\"\",\"http://localhost:15298/callback.php\",\"\",0,\"\",\"\",\"\",\"5EG94BIZEGFEY9AL9\")");
-
-        $dbsettings->query("PRAGMA synchronous = OFF");
-        $dbsettings->query("PRAGMA journal_mode = OFF");
-        $dbsettings->query("PRAGMA temp_store = MEMORY");
-        $dbsettings->query("PRAGMA count_changes = OFF");
-        $dbsettings->query("PRAGMA PAGE_SIZE = 4096");
-        $dbsettings->query("PRAGMA default_cache_size=700000");
-        $dbsettings->query("PRAGMA cache_size=700000");
-        $dbsettings->query("PRAGMA compile_options");
-
-        $stmt = $dbsettings->prepare($getSettings);
-
-        $w->result(null, '', 'Settings have been reset to default values', 'Please invoke again the workflow now to enjoy the Spotify Mini Player', './images/warning.png', 'no', null, '');
-        echo $w->toxml();
-        return;
-
-    } catch (PDOException $e) {
-        handleDbIssuePdoXml($dbsettings);
-        return;
-    }
-}
-
-try {
-    $setting = $stmt->fetch();
-} catch (PDOException $e) {
-    handleDbIssuePdoXml($dbsettings);
-    return;
-}
-$all_playlists = $setting[0];
-$is_spotifious_active = $setting[1];
-$is_alfred_playlist_active = $setting[2];
-$radio_number_tracks = $setting[3];
-$now_playing_notifications = $setting[4]; // instead of is_lyrics_active
-$max_results = $setting[5];
-$alfred_playlist_uri = $setting[6];
-$alfred_playlist_name = $setting[7];
-$country_code = $setting[8];
-// Theme is deprecated
-//$theme = $setting[9];
-$last_check_update_time = $setting[10];
-$oauth_client_id = $setting[11];
-$oauth_client_secret = $setting[12];
-$oauth_redirect_uri = $setting[13];
-$oauth_access_token = $setting[14];
-$oauth_expires = $setting[15];
-$oauth_refresh_token = $setting[16];
-$display_name = $setting[17];
-$userid = $setting[18];
-$echonest_api_key = $setting[19];
+$all_playlists = $settings->all_playlists;
+$is_spotifious_active = $settings->is_spotifious_active;
+$is_alfred_playlist_active = $settings->is_alfred_playlist_active;
+$radio_number_tracks = $settings->radio_number_tracks;
+$now_playing_notifications = $settings->now_playing_notifications;
+$max_results = $settings->max_results;
+$alfred_playlist_uri = $settings->alfred_playlist_uri;
+$alfred_playlist_name = $settings->alfred_playlist_name;
+$country_code = $settings->country_code;
+$last_check_update_time = $settings->last_check_update_time;
+$oauth_client_id = $settings->oauth_client_id;
+$oauth_client_secret = $settings->oauth_client_secret;
+$oauth_redirect_uri = $settings->oauth_redirect_uri;
+$oauth_access_token = $settings->oauth_access_token;
+$oauth_expires = $settings->oauth_expires;
+$oauth_refresh_token = $settings->oauth_refresh_token;
+$display_name = $settings->display_name;
+$userid = $settings->userid;
+$echonest_api_key = $settings->echonest_api_key;
 
 
 ////

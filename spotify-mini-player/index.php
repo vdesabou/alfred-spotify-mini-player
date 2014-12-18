@@ -10,55 +10,22 @@ $w = new Workflows('com.vdesabou.spotify.mini.player');
 
 
 //
-// Read settings from DB
+// Read settings from JSON
 //
-$getSettings = 'select oauth_client_id,oauth_client_secret,oauth_redirect_uri,oauth_access_token from settings';
-$dbfile = $w->data() . '/settings.db';
 
-try {
-	$dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
-	$dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	$dbsettings->query("PRAGMA synchronous = OFF");
-	$dbsettings->query("PRAGMA journal_mode = OFF");
-	$dbsettings->query("PRAGMA temp_store = MEMORY");
-	$dbsettings->query("PRAGMA count_changes = OFF");
-	$dbsettings->query("PRAGMA PAGE_SIZE = 4096");
-	$dbsettings->query("PRAGMA default_cache_size=700000");
-	$dbsettings->query("PRAGMA cache_size=700000");
-	$dbsettings->query("PRAGMA compile_options");
-} catch (PDOException $e) {
-	displayNotificationWithArtwork("Error[index.php]: cannot set PDO settings",'./images/warning.png', 'Error!');
-	$dbsettings=null;
-	return;
-}
+$settings = getSettings($w);
 
-try {
-	$stmt = $dbsettings->prepare($getSettings);
-	$settings = $stmt->execute();
-
-} catch (PDOException $e) {
-	displayNotificationWithArtwork("Error[index.php]: cannot set prepare settings",'./images/warning.png', 'Error!');
-	return;
-}
-
-try {
-	$setting = $stmt->fetch();
-}
-catch (PDOException $e) {
-	displayNotificationWithArtwork("Error[index.php]: cannot set fetch settings",'./images/warning.png', 'Error!');
-	return;
-}
-
-$oauth_client_id = $setting[0];
-$oauth_client_secret = $setting[1];
-$oauth_redirect_uri = $setting[2];
+$oauth_client_id = $settings->oauth_client_id;
+$oauth_client_secret = $settings->oauth_client_secret;
+$oauth_redirect_uri = $settings->oauth_redirect_uri;
 
 try {
 	$session = new SpotifyWebAPI\Session($oauth_client_id, $oauth_client_secret, $oauth_redirect_uri);
 
 	// Get the authorization URL and send the user there
 	header('Location: ' . $session->getAuthorizeUrl(array(
-				'scope' => array(   'user-library-read',
+				'scope' => array(
+					'user-library-read',
 					'user-read-email',
 					'user-read-private',
 					'user-library-modify',
