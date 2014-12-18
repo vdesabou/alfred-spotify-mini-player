@@ -541,80 +541,23 @@ function getRandomTrack($w)
  */
 function getSpotifyWebAPI($w)
 {
-
     if (!$w->internet()) {
         displayNotificationWithArtwork("No internet connection", './images/warning.png');
         return false;
     }
 
+	//
+	// Read settings from JSON
+	//
 
-	// in case of library update, we don't want to use settings.db
-	// in order to avoid clash
-	$update_in_progress = false;
-	if (file_exists($w->data() . '/update_library_in_progress')) {
-		$update_in_progress = true;
-	 	//
-		// Get Settings from a duplicate DB to avoid clash
-		// with main.php
-		//
-	    $setting = getSettingsFromDuplicateDb($w);
-	    if($setting == false) {
-		   return false;
-	    }
-		$oauth_client_id = $setting[11];
-		$oauth_client_secret = $setting[12];
-		$oauth_redirect_uri = $setting[13];
-		$oauth_access_token = $setting[14];
-		$oauth_expires = $setting[15];
-		$oauth_refresh_token = $setting[16];
-	} else {
+	$settings = getSettings($w);
 
-	    //
-	    // Read settings from DB
-	    //
-	    $getSettings = 'select oauth_client_id,oauth_client_secret,oauth_redirect_uri,oauth_access_token,oauth_expires,oauth_refresh_token from settings';
-	    $dbfile = $w->data() . '/settings.db';
-
-	    try {
-	        $dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
-	        $dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	        $dbsettings->query("PRAGMA synchronous = OFF");
-	        $dbsettings->query("PRAGMA journal_mode = OFF");
-	        $dbsettings->query("PRAGMA temp_store = MEMORY");
-	        $dbsettings->query("PRAGMA count_changes = OFF");
-	        $dbsettings->query("PRAGMA PAGE_SIZE = 4096");
-	        $dbsettings->query("PRAGMA default_cache_size=700000");
-	        $dbsettings->query("PRAGMA cache_size=700000");
-	        $dbsettings->query("PRAGMA compile_options");
-	    } catch (PDOException $e) {
-	        handleDbIssuePdoEcho($dbsettings,$w);
-	        return false;
-	    }
-
-	    try {
-	        $stmt = $dbsettings->prepare($getSettings);
-	        $settings = $stmt->execute();
-
-	    } catch (PDOException $e) {
-	        $dbsettings = null;
-	        handleDbIssuePdoEcho($dbsettings,$w);
-	        return false;
-	    }
-
-	    try {
-	        $setting = $stmt->fetch();
-	    } catch (PDOException $e) {
-	        handleDbIssuePdoEcho($dbsettings,$w);
-	        return false;
-	    }
-
-	    $oauth_client_id = $setting[0];
-	    $oauth_client_secret = $setting[1];
-	    $oauth_redirect_uri = $setting[2];
-	    $oauth_access_token = $setting[3];
-	    $oauth_expires = $setting[4];
-	    $oauth_refresh_token = $setting[5];
-	}
+	$oauth_client_id = $settings->oauth_client_id;
+	$oauth_client_secret = $settings->oauth_client_secret;
+	$oauth_redirect_uri = $settings->oauth_redirect_uri;
+	$oauth_access_token = $settings->oauth_access_token;
+	$oauth_expires = $settings->oauth_expires;
+	$oauth_refresh_token = $settings->oauth_refresh_token;
 
     $session = new SpotifyWebAPI\Session($oauth_client_id, $oauth_client_secret, $oauth_redirect_uri);
     $session->setRefreshToken($oauth_refresh_token);
@@ -625,43 +568,16 @@ function getSpotifyWebAPI($w)
     if (time() - $oauth_expires > 2400) {
         if ($session->refreshToken()) {
 
-            $oauth_access_token = $session->getAccessToken();
+			 // Set new token to settings
+		    $ret = updateSetting($w,'oauth_access_token',$session->getAccessToken());
+		    if($ret == false) {
+			 	return false;
+		    }
 
-	        // Set new token to settings
-	        $updateSettings = "update settings set oauth_access_token=:oauth_access_token,oauth_expires=:oauth_expires";
-
-			if($update_in_progress == true) {
-				// during update use backup DB
-			    $dbfile = $w->data() . '/settings_tmp.db';
-
-			    try {
-			        $dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
-			        $dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-			        $dbsettings->query("PRAGMA synchronous = OFF");
-			        $dbsettings->query("PRAGMA journal_mode = OFF");
-			        $dbsettings->query("PRAGMA temp_store = MEMORY");
-			        $dbsettings->query("PRAGMA count_changes = OFF");
-			        $dbsettings->query("PRAGMA PAGE_SIZE = 4096");
-			        $dbsettings->query("PRAGMA default_cache_size=700000");
-			        $dbsettings->query("PRAGMA cache_size=700000");
-			        $dbsettings->query("PRAGMA compile_options");
-			    } catch (PDOException $e) {
-			        handleDbIssuePdoEcho($dbsettings,$w);
-			        return false;
-			    }
-			}
-
-            try {
-                $stmt = $dbsettings->prepare($updateSettings);
-                $stmt->bindValue(':oauth_access_token', $session->getAccessToken());
-                $stmt->bindValue(':oauth_expires', time());
-                $stmt->execute();
-
-            } catch (PDOException $e) {
-                $dbsettings = null;;
-                handleDbIssuePdoEcho($dbsettings,$w);
-                return false;
-            }
+		    $ret = updateSetting($w,'oauth_expires',time());
+		    if($ret == false) {
+			 	return false;
+		    }
         } else {
             echo "Error[getSpotifyWebAPI]: token could not be refreshed";
             return false;
@@ -2380,47 +2296,6 @@ function getArtistArtworkURL($w, $artist)
 
 
 /**
- * getSettingsFromDuplicateDb function.
- *
- * @access public
- * @param mixed $w
- * @return void
- */
-function getSettingsFromDuplicateDb($w) {
-
-    //
-    // Read settings from a copy of DB
-    //
-    if (file_exists($w->data() . '/settings_tmp.db')) {
-        $dbfile = $w->data() . '/settings_tmp.db';
-    } else {
-	    if(file_exists($w->data() . '/settings.db')) {
-		    copy($w->data() . '/settings.db', $w->data() . '/settings_tmp.db');
-		    $dbfile = $w->data() . '/settings_tmp.db';
-	    } else {
-		    return false;
-	    }
-    }
-
-    try {
-        $dbsettings = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
-        $dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $getSettings = 'select * from settings';
-        $stmt = $dbsettings->prepare($getSettings);
-        $stmt->execute();
-        $setting = $stmt->fetch();
-    } catch (PDOException $e) {
-	    echo "Error(getSettingsFromDuplicateDb): (exception " . print_r($e) . ")\n";
-        handleDbIssuePdoEcho($dbsettings,$w);
-        $dbsettings = null;
-        return false;
-    }
-    unlink($w->data() . '/settings_tmp.db');
-
-	return $setting;
-}
-
-/**
  * updateLibrary function.
  *
  * @access public
@@ -2440,15 +2315,13 @@ function updateLibrary($w)
     $in_progress_data = $w->read('update_library_in_progress');
 
 	//
-	// Get Settings from a duplicate DB to avoid clash
-	// with main.php
+	// Read settings from JSON
 	//
-    $setting = getSettingsFromDuplicateDb($w);
-    if($setting == false) {
-	   return false;
-    }
-	$country_code = $setting[8];
-	$userid = $setting[18];
+
+	$settings = getSettings($w);
+
+	$country_code = $settings->country_code;
+	$userid = $settings->userid;
 
     $words = explode('▹', $in_progress_data);
 
@@ -2475,7 +2348,6 @@ function updateLibrary($w)
     ini_set('memory_limit', '512M');
 
     if (file_exists($w->data() . '/library.db')) {
-		//exec("echo \".dump\" | sqlite3 \"" . $w->data() . "/library.db\" | sqlite3 \"" . $w->data() . "/library_old.db\"");
         rename($w->data() . '/library.db', $w->data() . '/library_old.db');
     }
     if (file_exists($w->data() . '/library_new.db')) {
@@ -2495,11 +2367,9 @@ function updateLibrary($w)
 	    $db->query("PRAGMA default_cache_size=700000");
 	    $db->query("PRAGMA cache_size=700000");
 	    $db->query("PRAGMA compile_options");
-	    $db->myDataBaseNameProperty = $dbfile;
     } catch (PDOException $e) {
 	    echo "Error(updateLibrary): (exception " . print_r($e) . ")\n";
         handleDbIssuePdoEcho($db,$w);
-        $dbsettings = null;
         $db = null;
         return false;
     }
@@ -2528,7 +2398,6 @@ function updateLibrary($w)
 	    echo "Error(updateLibrary): (exception " . print_r($e) . ")\n";
         handleDbIssuePdoEcho($dbartworks,$w);
         $dbartworks = null;
-        $dbsettings = null;
         $db = null;
         return false;
     }
@@ -2606,7 +2475,6 @@ function updateLibrary($w)
 	    echo "Error(updateLibrary): (exception " . print_r($e) . ")\n";
         handleDbIssuePdoEcho($db,$w);
         $dbartworks = null;
-        $dbsettings = null;
         $db = null;
         return false;
     }
@@ -2623,7 +2491,6 @@ function updateLibrary($w)
 		    echo "Error(updateLibrary): (exception " . print_r($e) . ")\n";
 	        handleDbIssuePdoEcho($dbartworks,$w);
 	        $dbartworks = null;
-	        $dbsettings = null;
 	        $db = null;
 	        return false;
 	    }
@@ -2644,7 +2511,6 @@ function updateLibrary($w)
 		echo "Error(updateLibrary): (exception " . print_r($e) . ")\n";
         handleDbIssuePdoEcho($dbartworks,$w);
         $dbartworks = null;
-        $dbsettings = null;
         $db = null;
         return false;
 	}
@@ -2676,7 +2542,6 @@ function updateLibrary($w)
 		    echo "Error(updateLibrary): (exception " . print_r($e) . ")\n";
 	        handleDbIssuePdoEcho($db,$w);
 	        $dbartworks = null;
-	        $dbsettings = null;
 	        $db = null;
 	        return false;
 	    }
@@ -2781,7 +2646,6 @@ function updateLibrary($w)
 					    echo "Error(updateLibrary): (exception " . print_r($e) . ")\n";
 				        handleDbIssuePdoEcho($dbartworks,$w);
 				        $dbartworks = null;
-				        $dbsettings = null;
 				        $db = null;
 				        return false;
 				    }
@@ -2809,7 +2673,6 @@ function updateLibrary($w)
 					    echo "Error(updateLibrary): (exception " . print_r($e) . ")\n";
 				        handleDbIssuePdoEcho($db,$w);
 				        $dbartworks = null;
-				        $dbsettings = null;
 				        $db = null;
 				        return false;
 				    }
@@ -2909,7 +2772,6 @@ function updateLibrary($w)
 		    echo "Error(updateLibrary): (exception " . print_r($e) . ")\n";
 	        handleDbIssuePdoEcho($dbartworks,$w);
 	        $dbartworks = null;
-	        $dbsettings = null;
 	        $db = null;
 	        return false;
 	    }
@@ -2937,7 +2799,6 @@ function updateLibrary($w)
 		    echo "Error(updateLibrary): (exception " . print_r($e) . ")\n";
 	        handleDbIssuePdoEcho($db,$w);
 	        $dbartworks = null;
-	        $dbsettings = null;
 	        $db = null;
 	        return false;
 	    }
@@ -3001,7 +2862,6 @@ function updateLibrary($w)
     } catch (PDOException $e) {
 	    echo "Error(updateLibrary): (exception " . print_r($e) . ")\n";
         handleDbIssuePdoEcho($db,$w);
-        $dbsettings = null;
         $dbartworks = null;
         $db = null;
         return false;
@@ -3019,6 +2879,10 @@ function updateLibrary($w)
     // remove legacy spotify app if needed
     if (file_exists(exec('printf $HOME') . "/Spotify/spotify-app-miniplayer")) {
         exec("rm -rf " . exec('printf $HOME') . "/Spotify/spotify-app-miniplayer");
+    }
+    // remove legacy settings.db if needed
+    if (file_exists($w->data() . '/settings.db')) {
+        unlink($w->data() . '/settings.db');
     }
 
 	// Download artworks in background
@@ -3054,15 +2918,13 @@ function refreshLibrary($w)
     $in_progress_data = $w->read('update_library_in_progress');
 
 	//
-	// Get Settings from a duplicate DB to avoid clash
-	// with main.php
+	// Read settings from JSON
 	//
-    $setting = getSettingsFromDuplicateDb($w);
-    if($setting == false) {
-	   return false;
-    }
-	$country_code = $setting[8];
-	$userid = $setting[18];
+
+	$settings = getSettings($w);
+
+	$country_code = $settings->country_code;
+	$userid = $settings->userid;
 
     $words = explode('▹', $in_progress_data);
 
@@ -3096,7 +2958,6 @@ function refreshLibrary($w)
 	    echo "Error(refreshLibrary): (exception " . print_r($e) . ")\n";
         handleDbIssuePdoEcho($dbartworks,$w);
         $dbartworks = null;
-        $dbsettings = null;
         $db = null;
         return false;
     }
@@ -3113,7 +2974,6 @@ function refreshLibrary($w)
 		    echo "Error(updateLibrary): (exception " . print_r($e) . ")\n";
 	        handleDbIssuePdoEcho($dbartworks,$w);
 	        $dbartworks = null;
-	        $dbsettings = null;
 	        $db = null;
 	        return false;
 	    }
@@ -3134,7 +2994,6 @@ function refreshLibrary($w)
 		echo "Error(updateLibrary): (exception " . print_r($e) . ")\n";
         handleDbIssuePdoEcho($dbartworks,$w);
         $dbartworks = null;
-        $dbsettings = null;
         $db = null;
         return false;
 	}
@@ -3179,7 +3038,6 @@ function refreshLibrary($w)
 	    echo "Error(refreshLibrary): (exception " . print_r($e) . ")\n";
         handleDbIssuePdoEcho($db,$w);
         $dbartworks = null;
-        $dbsettings = null;
         $db = null;
         return;
     }
@@ -3236,7 +3094,6 @@ function refreshLibrary($w)
 		    echo "Error(refreshLibrary): (exception " . print_r($e) . ")\n";
 	        handleDbIssuePdoEcho($db,$w);
 	        $dbartworks = null;
-	        $dbsettings = null;
 	        $db = null;
 	        return;
 	    }
@@ -3267,7 +3124,6 @@ function refreshLibrary($w)
 			    echo "Error(refreshLibrary): (exception " . print_r($e) . ")\n";
 		        handleDbIssuePdoEcho($db,$w);
 		        $dbartworks = null;
-		        $dbsettings = null;
 		        $db = null;
 		        return;
 		    }
@@ -3373,7 +3229,6 @@ function refreshLibrary($w)
 						    echo "Error(updateLibrary): (exception " . print_r($e) . ")\n";
 					        handleDbIssuePdoEcho($dbartworks,$w);
 					        $dbartworks = null;
-					        $dbsettings = null;
 					        $db = null;
 					        return false;
 					    }
@@ -3401,7 +3256,6 @@ function refreshLibrary($w)
 						    echo "Error(refreshLibrary): (exception " . print_r($e) . ")\n";
 					        handleDbIssuePdoEcho($db,$w);
 					        $dbartworks = null;
-					        $dbsettings = null;
 					        $db = null;
 					        return;
 					    }
@@ -3442,7 +3296,6 @@ function refreshLibrary($w)
 				    echo "Error(refreshLibrary): (exception " . print_r($e) . ")\n";
 			        handleDbIssuePdoEcho($db,$w);
 			        $dbartworks = null;
-			        $dbsettings = null;
 			        $db = null;
 			        return;
 			    }
@@ -3479,7 +3332,6 @@ function refreshLibrary($w)
 						    echo "Error(refreshLibrary): (exception " . print_r($e) . ")\n";
 					        handleDbIssuePdoEcho($db,$w);
 					        $dbartworks = null;
-					        $dbsettings = null;
 					        $db = null;
 					        return;
 					    }
@@ -3562,7 +3414,6 @@ function refreshLibrary($w)
 							    echo "Error(updateLibrary): (exception " . print_r($e) . ")\n";
 						        handleDbIssuePdoEcho($dbartworks,$w);
 						        $dbartworks = null;
-						        $dbsettings = null;
 						        $db = null;
 						        return false;
 						    }
@@ -3591,7 +3442,7 @@ function refreshLibrary($w)
 							    echo "Error(refreshLibrary): (exception " . print_r($e) . ")\n";
 						        handleDbIssuePdoEcho($db,$w);
 						        $dbartworks = null;
-						        $dbsettings = null;
+
 						        $db = null;
 						        return;
 						    }
@@ -3645,7 +3496,6 @@ function refreshLibrary($w)
 	    echo "Error(refreshLibrary): (exception " . print_r($e) . ")\n";
         handleDbIssuePdoEcho($db,$w);
         $dbartworks = null;
-        $dbsettings = null;
         $db = null;
         return;
     }
@@ -3688,7 +3538,6 @@ function refreshLibrary($w)
     } catch (PDOException $e) {
 	    echo "Error(refreshLibrary): (exception " . print_r($e) . ")\n";
         handleDbIssuePdoEcho($db,$w);
-        $dbsettings = null;
         $db = null;
         return;
     }
@@ -3708,7 +3557,6 @@ function refreshLibrary($w)
 	    } catch (PDOException $e) {
 		    echo "Error(refreshLibrary): (exception " . print_r($e) . ")\n";
 	        handleDbIssuePdoEcho($db,$w);
-	        $dbsettings = null;
 	        $db = null;
 	        return;
 	    }
@@ -3792,7 +3640,6 @@ function refreshLibrary($w)
 			    echo "Error(updateLibrary): (exception " . print_r($e) . ")\n";
 		        handleDbIssuePdoEcho($dbartworks,$w);
 		        $dbartworks = null;
-		        $dbsettings = null;
 		        $db = null;
 		        return false;
 		    }
@@ -3819,7 +3666,6 @@ function refreshLibrary($w)
 		     } catch (PDOException $e) {
 			    echo "Error(refreshLibrary): (exception " . print_r($e) . ")\n";
 		        handleDbIssuePdoEcho($db,$w);
-		        $dbsettings = null;
 		        $db = null;
 		        return;
 		    }
@@ -3879,7 +3725,6 @@ function refreshLibrary($w)
     } catch (PDOException $e) {
 	    echo "Error(updateLibrary): (exception " . print_r($e) . ")\n";
         handleDbIssuePdoEcho($db,$w);
-        $dbsettings = null;
         $dbartworks = null;
         $db = null;
         return false;
@@ -3968,10 +3813,6 @@ function handleSpotifyWebAPIException($w) {
         unlink($w->data() . '/library_old.db');
     }
 
-    if (file_exists($w->data() . '/settings_tmp.db')) {
-        unlink($w->data() . '/settings_tmp.db');
-    }
-
 	displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
 }
 /**
@@ -3996,10 +3837,6 @@ function handleDbIssuePdoEcho($dbhandle,$w)
 
     if (file_exists($w->data() . '/library_old.db')) {
         unlink($w->data() . '/library_old.db');
-    }
-
-    if (file_exists($w->data() . '/settings_tmp.db')) {
-        unlink($w->data() . '/settings_tmp.db');
     }
 
     displayNotificationWithArtwork("DB error " . $dbhandle->errorInfo()[2], './images/warning.png');
@@ -4194,7 +4031,7 @@ function strip_string($string)
  * @param mixed $last_check_update_time
  * @return void
  */
-function checkForUpdate($w, $last_check_update_time, $dbsettings)
+function checkForUpdate($w, $last_check_update_time)
 {
     if (time() - $last_check_update_time > 86400) {
 
@@ -4315,10 +4152,6 @@ function killUpdate($w)
 
     if (file_exists($w->data() . '/library_old.db')) {
         unlink($w->data() . '/library_old.db');
-    }
-
-    if (file_exists($w->data() . '/settings_tmp.db')) {
-        unlink($w->data() . '/settings_tmp.db');
     }
 
     exec("kill -9 $(ps -efx | grep \"php\" | egrep \"update_|php -S localhost:15298|ADDTOPLAYLIST|UPDATE_\" | grep -v grep | awk '{print $2}')");

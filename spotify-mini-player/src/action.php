@@ -122,22 +122,18 @@ if ($type == "TRACK" && $other_settings == "") {
             // start now playing if needed
             if ($now_playing_notifications == "") {
 				//
-				// Get Settings from a duplicate DB to avoid clash
-				// with main.php
+				// Read settings from JSON
 				//
-			    $setting = getSettingsFromDuplicateDb($w);
-			    if($setting == false) {
-				   return false;
-			    }
-				$now_playing_notifications = $setting[4];
 
+				$settings = getSettings($w);
+				$now_playing_notifications = $settings->now_playing_notifications;
             }
-			if ($now_playing_notifications == 1) {
+			if ($now_playing_notifications == true) {
 				exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
 			}
             exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\" in context \"$playlist_uri\"'");
 
-            if($now_playing_notifications == 0) {
+            if($now_playing_notifications == true) {
             	displayNotificationWithArtwork('🔈 ' . $track_name . ' by ' . ucfirst($artist_name), $track_artwork_path);
             }
             stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
@@ -148,21 +144,17 @@ if ($type == "TRACK" && $other_settings == "") {
 	            // start now playing if needed
 	            if ($now_playing_notifications == "") {
 					//
-					// Get Settings from a duplicate DB to avoid clash
-					// with main.php
+					// Read settings from JSON
 					//
-				    $setting = getSettingsFromDuplicateDb($w);
-				    if($setting == false) {
-					   return false;
-				    }
-					$now_playing_notifications = $setting[4];
 
+					$settings = getSettings($w);
+					$now_playing_notifications = $settings->now_playing_notifications;
 	            }
-				if ($now_playing_notifications == 1) {
+				if ($now_playing_notifications == true) {
 					exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
 				}
                 exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
-                if($now_playing_notifications == 0) {
+                if($now_playing_notifications == false) {
                 	displayNotificationWithArtwork('🔈 ' . $track_name . ' by ' . ucfirst($artist_name), $track_artwork_path);
                 }
                 stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
@@ -183,17 +175,13 @@ if ($type == "TRACK" && $other_settings == "") {
     // start now playing if needed
     if ($now_playing_notifications == "") {
 		//
-		// Get Settings from a duplicate DB to avoid clash
-		// with main.php
+		// Read settings from JSON
 		//
-	    $setting = getSettingsFromDuplicateDb($w);
-	    if($setting == false) {
-		   return false;
-	    }
-		$now_playing_notifications = $setting[4];
 
+		$settings = getSettings($w);
+		$now_playing_notifications = $settings->now_playing_notifications;
     }
-	if ($now_playing_notifications == 1) {
+	if ($now_playing_notifications == true) {
 		exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
 	}
     exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
@@ -325,17 +313,13 @@ if ($type == "TRACK" && $other_settings == "") {
     // start now playing if needed
     if ($now_playing_notifications == "") {
 		//
-		// Get Settings from a duplicate DB to avoid clash
-		// with main.php
+		// Read settings from JSON
 		//
-	    $setting = getSettingsFromDuplicateDb($w);
-	    if($setting == false) {
-		   return false;
-	    }
-		$now_playing_notifications = $setting[4];
 
+		$settings = getSettings($w);
+		$now_playing_notifications = $settings->now_playing_notifications;
     }
-	if ($now_playing_notifications == 1) {
+	if ($now_playing_notifications == true) {
 		exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
 	}
     exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
@@ -348,17 +332,13 @@ if ($playlist_uri != "" && $other_settings == "") {
     // start now playing if needed
     if ($now_playing_notifications == "") {
 		//
-		// Get Settings from a duplicate DB to avoid clash
-		// with main.php
+		// Read settings from JSON
 		//
-	    $setting = getSettingsFromDuplicateDb($w);
-	    if($setting == false) {
-		   return false;
-	    }
-		$now_playing_notifications = $setting[4];
 
+		$settings = getSettings($w);
+		$now_playing_notifications = $settings->now_playing_notifications;
     }
-	if ($now_playing_notifications == 1) {
+	if ($now_playing_notifications == true) {
 		exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
 	}
     exec("osascript -e 'tell application \"Spotify\" to play track \"$playlist_uri\"'");
@@ -589,87 +569,98 @@ if ($playlist_uri != "" && $other_settings == "") {
     }
 } else if ($other_action != "") {
     if ($other_action == "disable_all_playlist") {
-        $setSettings = "update settings set all_playlists=0";
-        $dbfile = $w->data() . "/settings.db";
-        exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotificationWithArtwork("Search scope set to Your Music only", './images/search_scope_yourmusic_only.png', 'Settings');
+	    $ret = updateSetting($w,'all_playlists',false);
+	    if($ret == true) {
+		    displayNotificationWithArtwork("Search scope set to Your Music only", './images/search_scope_yourmusic_only.png', 'Settings');
+	    } else {
+		 	displayNotificationWithArtwork("Error while updating settings",'./images/settings.png', 'Error!');
+	    }
         return;
     } else if ($other_action == "enable_all_playlist") {
-        $setSettings = "update settings set all_playlists=1";
-        $dbfile = $w->data() . "/settings.db";
-        exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotificationWithArtwork("Search scope set to your complete library", './images/search.png', 'Settings');
+	    $ret = updateSetting($w,'all_playlists',true);
+	    if($ret == true) {
+       		displayNotificationWithArtwork("Search scope set to your complete library", './images/search.png', 'Settings');
+	    } else {
+		 	displayNotificationWithArtwork("Error while updating settings",'./images/settings.png', 'Error!');
+	    }
         return;
     } else if ($other_action == "enable_spotifiuous") {
-        $setSettings = "update settings set is_spotifious_active=1";
-        $dbfile = $w->data() . "/settings.db";
-        exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotificationWithArtwork("Spotifious is now enabled", './images/enable_spotifious.png', 'Settings');
+	    $ret = updateSetting($w,'is_spotifious_active',true);
+	    if($ret == true) {
+        	displayNotificationWithArtwork("Spotifious is now enabled", './images/enable_spotifious.png', 'Settings');
+	    } else {
+		 	displayNotificationWithArtwork("Error while updating settings",'./images/settings.png', 'Error!');
+	    }
         return;
     } else if ($other_action == "disable_spotifiuous") {
-        $setSettings = "update settings set is_spotifious_active=0";
-        $dbfile = $w->data() . "/settings.db";
-        exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotificationWithArtwork("Spotifious is now disabled", './images/disable_spotifious.png', 'Settings');
+	    $ret = updateSetting($w,'is_spotifious_active',false);
+	    if($ret == true) {
+        	displayNotificationWithArtwork("Spotifious is now disabled", './images/disable_spotifious.png', 'Settings');
+	    } else {
+		 	displayNotificationWithArtwork("Error while updating settings",'./images/settings.png', 'Error!');
+	    }
         return;
     } else if ($other_action == "enable_now_playing_notifications") {
-        $setSettings = "update settings set is_lyrics_active=1";
-        $dbfile = $w->data() . "/settings.db";
-        exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
-        displayNotificationWithArtwork("Now Playing notifications are now enabled", './images/enable_now_playing.png', 'Settings');
+	    $ret = updateSetting($w,'now_playing_notifications',true);
+	    if($ret == true) {
+        	displayNotificationWithArtwork("Now Playing notifications are now enabled", './images/enable_now_playing.png', 'Settings');
+	    } else {
+		 	displayNotificationWithArtwork("Error while updating settings",'./images/settings.png', 'Error!');
+	    }
         return;
     } else if ($other_action == "search_in_spotifious") {
     	exec("osascript -e 'tell application \"Alfred 2\" to search \"spotifious $original_query\"'");
         return;
     } else if ($other_action == "disable_now_playing_notifications") {
-        $setSettings = "update settings set is_lyrics_active=0";
-        $dbfile = $w->data() . "/settings.db";
-        exec("sqlite3 \"$dbfile\" \"$setSettings\"");
 
+	    $ret = updateSetting($w,'now_playing_notifications',false);
+	    if($ret == true) {
+        	displayNotificationWithArtwork("Now Playing notifications are now disabled", './images/disable_now_playing.png', 'Settings');
+	    } else {
+		 	displayNotificationWithArtwork("Error while updating settings",'./images/settings.png', 'Error!');
+	    }
 		// stop process
 		exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a stop >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
-        displayNotificationWithArtwork("Now Playing notifications are now disabled", './images/disable_now_playing.png', 'Settings');
         return;
     } else if ($other_action == "enable_alfred_playlist") {
-        $setSettings = "update settings set is_alfred_playlist_active=1";
-        $dbfile = $w->data() . "/settings.db";
-        exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotificationWithArtwork("Controlling Alfred Playlist", './images/alfred_playlist.png', 'Settings');
+	    $ret = updateSetting($w,'is_alfred_playlist_active',true);
+	    if($ret == true) {
+        	displayNotificationWithArtwork("Controlling Alfred Playlist", './images/alfred_playlist.png', 'Settings');
+	    } else {
+		 	displayNotificationWithArtwork("Error while updating settings",'./images/settings.png', 'Error!');
+	    }
         return;
     } else if ($other_action == "disable_alfred_playlist") {
-        $setSettings = "update settings set is_alfred_playlist_active=0";
-        $dbfile = $w->data() . "/settings.db";
-        exec("sqlite3 \"$dbfile\" \"$setSettings\"");
-        displayNotificationWithArtwork("Controlling Your Music", './images/yourmusic.png', 'Settings');
+	    $ret = updateSetting($w,'is_alfred_playlist_active',false);
+	    if($ret == true) {
+        	displayNotificationWithArtwork("Controlling Your Music", './images/yourmusic.png', 'Settings');
+	    } else {
+		 	displayNotificationWithArtwork("Error while updating settings",'./images/settings.png', 'Error!');
+	    }
         return;
     } else if ($other_action == "play_track_in_album_context") {
         // start now playing if needed
         if ($now_playing_notifications == "") {
 			//
-			// Get Settings from a duplicate DB to avoid clash
-			// with main.php
+			// Read settings from JSON
 			//
-		    $setting = getSettingsFromDuplicateDb($w);
-		    if($setting == false) {
-			   return false;
-		    }
-			$now_playing_notifications = $setting[4];
 
+			$settings = getSettings($w);
+			$now_playing_notifications = $settings->now_playing_notifications;
         }
-		if ($now_playing_notifications == 1) {
+		if ($now_playing_notifications == true) {
 			exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
 		}
         exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\" in context \"$album_uri\"'");
         $album_artwork_path = getTrackOrAlbumArtwork($w,  $album_uri, true);
-        if($now_playing_notifications == 0) {
+        if($now_playing_notifications == true) {
         	displayNotificationWithArtwork('🔈 ' . $track_name . ' in album ' . $album_name . ' by ' . ucfirst($artist_name), $album_artwork_path, 'Play Track from Album');
         }
         stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
         return;
     } else if ($other_action == "play") {
         exec("osascript -e 'tell application \"Spotify\" to play'");
-        if($now_playing_notifications == 0) {
+        if($now_playing_notifications == true) {
 			displayNotificationForCurrentTrack($w);
 		}
 	    return;
@@ -717,7 +708,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         exec("open http://localhost:15298");
         return;
     } else if ($other_action == "current") {
-	    if($now_playing_notifications == 0) {
+	    if($now_playing_notifications == true) {
 			displayNotificationForCurrentTrack($w);
 	    }
         return;
@@ -733,13 +724,13 @@ if ($playlist_uri != "" && $other_settings == "") {
         return;
     } else if ($other_action == "previous") {
         exec("osascript -e 'tell application \"Spotify\" to previous track'");
-	    if($now_playing_notifications == 0) {
+	    if($now_playing_notifications == true) {
 			displayNotificationForCurrentTrack($w);
 	    }
         return;
     } else if ($other_action == "next") {
         exec("osascript -e 'tell application \"Spotify\" to next track'");
-	    if($now_playing_notifications == 0) {
+	    if($now_playing_notifications == true) {
 			displayNotificationForCurrentTrack($w);
 	    }
         return;
@@ -760,21 +751,17 @@ if ($playlist_uri != "" && $other_settings == "") {
         // start now playing if needed
         if ($now_playing_notifications == "") {
 			//
-			// Get Settings from a duplicate DB to avoid clash
-			// with main.php
+			// Read settings from JSON
 			//
-		    $setting = getSettingsFromDuplicateDb($w);
-		    if($setting == false) {
-			   return false;
-		    }
-			$now_playing_notifications = $setting[4];
 
+			$settings = getSettings($w);
+			$now_playing_notifications = $settings->now_playing_notifications;
         }
-		if ($now_playing_notifications == 1) {
+		if ($now_playing_notifications == true) {
 			exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
 		}
         exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
-	    if($now_playing_notifications == 0) {
+	    if($now_playing_notifications == true) {
 			displayNotificationForCurrentTrack($w);
 	    }
         return;
@@ -802,17 +789,13 @@ if ($playlist_uri != "" && $other_settings == "") {
         // start now playing if needed
         if ($now_playing_notifications == "") {
 			//
-			// Get Settings from a duplicate DB to avoid clash
-			// with main.php
+			// Read settings from JSON
 			//
-		    $setting = getSettingsFromDuplicateDb($w);
-		    if($setting == false) {
-			   return false;
-		    }
-			$now_playing_notifications = $setting[4];
 
+			$settings = getSettings($w);
+			$now_playing_notifications = $settings->now_playing_notifications;
         }
-		if ($now_playing_notifications == 1) {
+		if ($now_playing_notifications == true) {
 			exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
 		}
         exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
@@ -830,17 +813,13 @@ if ($playlist_uri != "" && $other_settings == "") {
         // start now playing if needed
         if ($now_playing_notifications == "") {
 			//
-			// Get Settings from a duplicate DB to avoid clash
-			// with main.php
+			// Read settings from JSON
 			//
-		    $setting = getSettingsFromDuplicateDb($w);
-		    if($setting == false) {
-			   return false;
-		    }
-			$now_playing_notifications = $setting[4];
 
+			$settings = getSettings($w);
+			$now_playing_notifications = $settings->now_playing_notifications;
         }
-		if ($now_playing_notifications == 1) {
+		if ($now_playing_notifications == true) {
 			exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
 		}
         exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");

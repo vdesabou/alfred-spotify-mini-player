@@ -2810,8 +2810,8 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 require_once './src/workflows.php';
 $w = new Workflows('com.vdesabou.spotify.mini.player');
 
-if (file_exists($w-&gt;data() . '/settings.db')) {
-	unlink($w-&gt;data() . '/settings.db');
+if (file_exists($w-&gt;data() . '/settings.json')) {
+	unlink($w-&gt;data() . '/settings.json');
 	echo "Settings have been deleted";
 } else {
 	echo "Error: Settings do not exist";

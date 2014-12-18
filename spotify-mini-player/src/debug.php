@@ -20,10 +20,10 @@ if (file_exists($w->data() . "/update_library_in_progress")) {
     $output = $output . "Library update in progress: " . "the file" . $w->data() . "/update_library_in_progress is present\n";
 }
 
-if (!file_exists($w->data() . "/settings.db")) {
-    $output = $output . "The directory" . $w->data() . "/settings.db is not present\n";
+if (!file_exists($w->data() . "/settings.json")) {
+    $output = $output . "The file" . $w->data() . "/settings.json is not present\n";
 } else {
-    copy($w->data() . "/settings.db", $w->home() . "/Downloads/spot_mini_debug/settings.db");
+    copy($w->data() . "/settings.json", $w->home() . "/Downloads/spot_mini_debug/settings.json");
 }
 
 copy_directory($w->cache(), $w->home() . "/Downloads/spot_mini_debug/cache");

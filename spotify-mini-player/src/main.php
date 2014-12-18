@@ -190,7 +190,7 @@ try {
 // since it update settings
 //
 if($update_in_progress == false) {
-	$check_results = checkForUpdate($w, $last_check_update_time, $dbsettings);
+	$check_results = checkForUpdate($w, $last_check_update_time);
 	if($check_results != null && is_array($check_results)) {
 	    $w->result(null, '', 'New version ' . $check_results[0] . ' is available', $check_results[2], './images/info.png', 'no', null, '');
 	    $w->result(null, $check_results[1], 'Please install the new version in Downloads directory', $check_results[1], 'fileicon:' . $check_results[1], 'no', '', '', 'file');
@@ -1209,7 +1209,7 @@ if (mb_strlen($query) < 3) {
 	        $w->result(null, '', 'Check for workflow update', 'Note this is automatically done otherwise once per day', './images/check_update.png', 'no', null, 'Check for update, please wait..' . '▹');
         } // end Settings
 	    elseif ($kind == "Check for update, please wait..") {
-			$check_results = checkForUpdate($w,0,$dbsettings);
+			$check_results = checkForUpdate($w,0);
 			if($check_results != null && is_array($check_results)) {
 			    $w->result(null, '', 'New version ' . $check_results[0] . ' is available !', $check_results[2], './images/info.png', 'no', null, '');
 				$w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, 'Open▹' . $check_results[1] /* other_settings*/, '' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */, $now_playing_notifications /* now_playing_notifications */, $is_alfred_playlist_active /* is_alfred_playlist_active */, $country_code /* country_code*/, $userid /* userid*/)), 'Click to open and install the new version', "This will open the new version of the Spotify Mini Player workflow", './images/alfred-workflow-icon.png', 'yes', null, '');
