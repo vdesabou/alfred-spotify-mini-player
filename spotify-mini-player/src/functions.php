@@ -4447,8 +4447,9 @@ function do_post_request($url, $data, $optional_headers = null)
  */
 function do_async_post_request($url, $params)
 {
-		//avoid warnings like this PHP Warning:  fsockopen(): unable to connect to localhost (Connection refused)
-	-	error_reporting(~E_ALL);
+		// avoid warnings like this PHP Warning:  
+		// fsockopen(): unable to connect to localhost (Connection refused)
+		error_reporting(~E_ALL);
 
         foreach ($params as $key => &$val) {
                 if (is_array($val)) $val = implode(',', $val);
