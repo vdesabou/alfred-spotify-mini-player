@@ -185,7 +185,7 @@ if ($type == "TRACK" && $other_settings == "") {
 		exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
 	}
     exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
-    displayNotificationWithArtwork('🔈 Album ' . $album_name . ' by ' . ucfirst($artist_name), $album_artwork_path);
+    displayNotificationWithArtwork('🔈 Album ' . $album_name . ' by ' . ucfirst($artist_name), $album_artwork_path, 'Play Album');
     stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
     return;
 } else if ($type == "ONLINE") {
