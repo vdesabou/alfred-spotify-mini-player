@@ -133,7 +133,7 @@ if ($type == "TRACK" && $other_settings == "") {
 			}
             exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\" in context \"$playlist_uri\"'");
 
-            if($now_playing_notifications == true) {
+            if($now_playing_notifications == false) {
             	displayNotificationWithArtwork('🔈 ' . $track_name . ' by ' . ucfirst($artist_name), $track_artwork_path);
             }
             stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
@@ -653,14 +653,14 @@ if ($playlist_uri != "" && $other_settings == "") {
 		}
         exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\" in context \"$album_uri\"'");
         $album_artwork_path = getTrackOrAlbumArtwork($w,  $album_uri, true);
-        if($now_playing_notifications == true) {
+        if($now_playing_notifications == false) {
         	displayNotificationWithArtwork('🔈 ' . $track_name . ' in album ' . $album_name . ' by ' . ucfirst($artist_name), $album_artwork_path, 'Play Track from Album');
         }
         stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
         return;
     } else if ($other_action == "play") {
         exec("osascript -e 'tell application \"Spotify\" to play'");
-        if($now_playing_notifications == true) {
+        if($now_playing_notifications == false) {
 			displayNotificationForCurrentTrack($w);
 		}
 	    return;
@@ -708,11 +708,6 @@ if ($playlist_uri != "" && $other_settings == "") {
         exec("open http://localhost:15298");
         return;
     } else if ($other_action == "current") {
-	    if($now_playing_notifications == true) {
-			displayNotificationForCurrentTrack($w);
-	    }
-        return;
-    } else if ($other_action == "force_current") {
 		displayNotificationForCurrentTrack($w);
         return;
     } else if ($other_action == "add_current_track_to") {
@@ -730,7 +725,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         return;
     } else if ($other_action == "next") {
         exec("osascript -e 'tell application \"Spotify\" to next track'");
-	    if($now_playing_notifications == true) {
+	    if($now_playing_notifications == false) {
 			displayNotificationForCurrentTrack($w);
 	    }
         return;
@@ -761,7 +756,7 @@ if ($playlist_uri != "" && $other_settings == "") {
 			exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
 		}
         exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
-	    if($now_playing_notifications == true) {
+	    if($now_playing_notifications == false) {
 			displayNotificationForCurrentTrack($w);
 	    }
         return;
