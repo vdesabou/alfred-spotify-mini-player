@@ -62,6 +62,8 @@ try {
 					'user-read-email',
 					'user-read-private',
 					'user-library-modify',
+					'user-follow-modify',
+					'user-follow-read',
 					'playlist-read-private',
 					'playlist-modify-public',
 					'playlist-modify-private'),
