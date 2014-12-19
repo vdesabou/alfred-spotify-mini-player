@@ -1853,7 +1853,7 @@ function downloadArtworks($w) {
 	logMsg("End of Download Artworks");
 	if($nb_artworks_total != 0) {
 	    $elapsed_time = time() - $words[3];
-	    displayNotificationWithArtwork("All artworks have been downloaded (" . $nb_artworks_total . " artworks) - took " . beautifyTime($elapsed_time),'./images/artworks.png');
+	    displayNotificationWithArtwork("All artworks have been downloaded (" . $nb_artworks_total . " artworks) - took " . beautifyTime($elapsed_time,true),'./images/artworks.png');
 		stathat_ez_count('AlfredSpotifyMiniPlayer', 'artworks', $nb_artworks_total);
 	}
 
@@ -2638,7 +2638,7 @@ function updateLibrary($w)
 		        $stmtPlaylist->bindValue(':playlist_artwork_path', $playlist_artwork_path);
 		        $stmtPlaylist->bindValue(':ownedbyuser', $ownedbyuser);
 		        $stmtPlaylist->bindValue(':nb_playable_tracks', $nb_track_playlist);
-		        $stmtPlaylist->bindValue(':duration_playlist', beautifyTime($duration_playlist / 1000));
+		        $stmtPlaylist->bindValue(':duration_playlist', beautifyTime($duration_playlist / 1000, true));
 		        $stmtPlaylist->execute();
 		    } catch (PDOException $e) {
 			    logMsg("Error(updateLibrary): (exception " . print_r($e) . ")");
@@ -2833,9 +2833,9 @@ function updateLibrary($w)
 
     $elapsed_time = time() - $words[3];
     if($nb_skipped == 0) {
-    	displayNotificationWithArtwork(" " . $nb_track . " tracks - took " . beautifyTime($elapsed_time),'./images/recreate.png', "Library (re-)created");
+    	displayNotificationWithArtwork(" " . $nb_track . " tracks - took " . beautifyTime($elapsed_time,true),'./images/recreate.png', "Library (re-)created");
     } else {
-   		displayNotificationWithArtwork(" " . $nb_track . " tracks / " . $nb_skipped . " skipped - took " . beautifyTime($elapsed_time),'./images/recreate.png', "Library (re-)created");
+   		displayNotificationWithArtwork(" " . $nb_track . " tracks / " . $nb_skipped . " skipped - took " . beautifyTime($elapsed_time,true),'./images/recreate.png', "Library (re-)created");
     }
 
     if (file_exists($w->data() . '/library_old.db')) {
@@ -3219,7 +3219,7 @@ function refreshLibrary($w)
 		            $stmtPlaylist->bindValue(':playlist_artwork_path', $playlist_artwork_path);
 		            $stmtPlaylist->bindValue(':ownedbyuser', $ownedbyuser);
 		            $stmtPlaylist->bindValue(':nb_playable_tracks', $nb_track_playlist);
-		            $stmtPlaylist->bindValue(':duration_playlist', beautifyTime($duration_playlist / 1000));
+		            $stmtPlaylist->bindValue(':duration_playlist', beautifyTime($duration_playlist / 1000, true));
 		            $stmtPlaylist->execute();
 			    } catch (PDOException $e) {
 				    logMsg("Error(refreshLibrary): (exception " . print_r($e) . ")");
@@ -3412,7 +3412,7 @@ function refreshLibrary($w)
 					try {
                         $stmtUpdatePlaylistsNbTracks->bindValue(':nb_tracks', $userPlaylistTracks->total);
                         $stmtUpdatePlaylistsNbTracks->bindValue(':nb_playable_tracks', $nb_track_playlist);
-                        $stmtUpdatePlaylistsNbTracks->bindValue(':duration_playlist', beautifyTime($duration_playlist / 1000));
+                        $stmtUpdatePlaylistsNbTracks->bindValue(':duration_playlist', beautifyTime($duration_playlist / 1000, true));
                         $stmtUpdatePlaylistsNbTracks->bindValue(':uri', $playlist->uri);
                         $stmtUpdatePlaylistsNbTracks->execute();
 				    } catch (PDOException $e) {
@@ -3734,7 +3734,7 @@ function refreshLibrary($w)
         $message = 'No change';
     }
 
-    displayNotificationWithArtwork($message . " - took " . beautifyTime($elapsed_time),'./images/update.png','Library refreshed');
+    displayNotificationWithArtwork($message . " - took " . beautifyTime($elapsed_time,true),'./images/update.png','Library refreshed');
 
 
     if (file_exists($w->data() . '/library_old.db')) {
@@ -4155,18 +4155,30 @@ function getCountryName($cc) {
  *
  * @access public
  * @param mixed $seconds
+ * @param bool $withText (default: false)
  * @return void
  */
-function beautifyTime($seconds)
+function beautifyTime($seconds, $withText = false)
 {
-	$ret = gmdate("H●i●s", $seconds);
-	$tmp = explode('●',$ret);
-	if($tmp[0] == 0) {
-		return "$tmp[1] min $tmp[2] sec";
-	} else if($tmp[1] == 0){
-		return "$tmp[2] sec";
+	if($withText == true) {
+		$ret = gmdate("H●i●s", $seconds);
+		$tmp = explode('●',$ret);
+		if($tmp[0] == '00' && $tmp[1] != '00') {
+			$min = ltrim($tmp[1],0);
+			return "$min min $tmp[2] sec";
+		} else if($tmp[1] == '00'){
+			$sec = ltrim($tmp[2],0);
+			if($sec == '') {
+				$sec = 0;
+			}
+			return "$sec sec";
+		} else {
+			$hr = ltrim($tmp[0],0);
+			$min = ltrim($tmp[1],0);
+			return "$hr hr $min min";
+		}
 	} else {
-		return "$tmp[0] hr $tmp[1] min";
+		return ltrim(gmdate('i:s',$seconds), 0);
 	}
 }
 
