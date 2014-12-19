@@ -557,6 +557,161 @@ function addCurrentTrackToYourMusic($w)
 }
 
 /**
+ * addTracksToYourMusic function.
+ *
+ * @access public
+ * @param mixed $w
+ * @param mixed $tracks
+ * @param bool $allow_duplicate (default: true)
+ * @return void
+ */
+function addTracksToYourMusic($w, $tracks, $allow_duplicate = true)
+{
+	$api = getSpotifyWebAPI($w);
+    $tracks = (array)$tracks;
+    $tracks_with_no_dup = array();
+    $tracks_contain = array();
+    if (!$allow_duplicate) {
+        try {
+            // Note: max 50 Ids
+            $offset = 0;
+            do {
+                $output = array_slice($tracks, $offset, 50);
+                $offset += 50;
+
+                if (count($output)) {
+			        // refresh api
+			        $api = getSpotifyWebAPI($w,true,$api);
+                    $tracks_contain = $api->myTracksContains($output);
+                    for ($i = 0; $i < count($output); $i++) {
+                        if (!$tracks_contain[$i]) {
+                            $tracks_with_no_dup[] = $output[$i];
+                        }
+                    }
+                }
+            } while (count($output) > 0);
+
+            $tracks = $tracks_with_no_dup;
+        } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+            logMsg("Error(addTracksToYourMusic): (exception " . print_r($e) . ")");
+            handleSpotifyWebAPIException($w);
+            return false;
+        }
+    }
+
+    if (count($tracks) != 0) {
+
+        try {
+            $offset = 0;
+            do {
+                $output = array_slice($tracks, $offset, 50);
+                $offset += 50;
+
+                if (count($output)) {
+			        // refresh api
+			        $api = getSpotifyWebAPI($w,true,$api);
+                    $api->addMyTracks($output);
+                }
+
+            } while (count($output) > 0);
+
+        } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+            logMsg("Error(addTracksToYourMusic): (exception " . print_r($e) . ")");
+            handleSpotifyWebAPIException($w);
+            return false;
+        }
+
+        // refresh library
+        refreshLibrary($w);
+    }
+
+    return count($tracks);
+}
+
+
+
+/**
+ * addTracksToPlaylist function.
+ *
+ * @access public
+ * @param mixed $w
+ * @param mixed $tracks
+ * @param mixed $playlist_uri
+ * @param mixed $playlist_name
+ * @param bool $allow_duplicate (default: true)
+ * @param bool $refreshLibrary (default: true)
+ * @return void
+ */
+function addTracksToPlaylist($w, $tracks, $playlist_uri, $playlist_name, $allow_duplicate = true, $refreshLibrary = true)
+{
+	$api = getSpotifyWebAPI($w);
+	//
+	// Read settings from JSON
+	//
+	$settings = getSettings($w);
+	$userid = $settings->userid;
+
+    $tracks_with_no_dup = array();
+    if (!$allow_duplicate) {
+        try {
+            $playlist_tracks = getThePlaylistTracks($w, $playlist_uri);
+
+            foreach ((array)$tracks as $track) {
+                if (!checkIfDuplicate($playlist_tracks, $track)) {
+                    $tracks_with_no_dup[] = $track;
+                }
+            }
+
+            $tracks = $tracks_with_no_dup;
+        } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+            logMsg("Error(addTracksToPlaylist): (exception " . print_r($e) . ")");
+            handleSpotifyWebAPIException($w);
+            return false;
+        }
+    }
+
+    if (count($tracks) != 0) {
+        try {
+            $tmp = explode(':', $playlist_uri);
+
+            // Note: max 100 Ids
+            $offset = 0;
+            $i=0;
+            do {
+                $output = array_slice($tracks, $offset, 100);
+                $offset += 100;
+
+                if (count($output)) {
+			        // refresh api
+			        $api = getSpotifyWebAPI($w,true,$api);
+                    $api->addUserPlaylistTracks(urlencode($userid), $tmp[4], $output, array(
+                        'position' => 0
+                    ));
+                    $i++;
+                }
+/*
+				if($i % 30 === 0) {
+					sleep(60);
+					echo "Info: Throttling in addTracksToPlaylist";
+				}
+*/
+            } while (count($output) > 0);
+        } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+            logMsg("Error(addTracksToPlaylist): (exception " . print_r($e) . ")");
+            handleSpotifyWebAPIException($w);
+            return false;
+        }
+
+        if ($refreshLibrary) {
+            // refresh library
+            refreshLibrary($w);
+        }
+    }
+
+    return count($tracks);
+}
+
+/**
  * getRandomTrack function.
  *
  * @access public
@@ -1204,158 +1359,6 @@ function getTheNewReleases($w, $country_code, $max_results = 50)
     return $albums;
 }
 
-
-/**
- * addTracksToYourMusic function.
- *
- * @access public
- * @param mixed $w
- * @param mixed $tracks
- * @param bool $allow_duplicate (default: true)
- * @return void
- */
-function addTracksToYourMusic($w, $tracks, $allow_duplicate = true)
-{
-    $tracks = (array)$tracks;
-    $tracks_with_no_dup = array();
-    $tracks_contain = array();
-    if (!$allow_duplicate) {
-        try {
-            // Note: max 50 Ids
-            $offset = 0;
-            do {
-                $output = array_slice($tracks, $offset, 50);
-                $offset += 50;
-
-                if (count($output)) {
-			        // refresh api
-					$api = getSpotifyWebAPI($w);
-                    $tracks_contain = $api->myTracksContains($output);
-                    for ($i = 0; $i < count($output); $i++) {
-                        if (!$tracks_contain[$i]) {
-                            $tracks_with_no_dup[] = $output[$i];
-                        }
-                    }
-                }
-            } while (count($output) > 0);
-
-            $tracks = $tracks_with_no_dup;
-        } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            logMsg("Error(addTracksToYourMusic): (exception " . print_r($e) . ")");
-            handleSpotifyWebAPIException($w);
-            return false;
-        }
-    }
-
-    if (count($tracks) != 0) {
-
-        try {
-            $offset = 0;
-            do {
-                $output = array_slice($tracks, $offset, 50);
-                $offset += 50;
-
-                if (count($output)) {
-			        // refresh api
-			        $api = getSpotifyWebAPI($w,true,$api);
-                    $api->addMyTracks($output);
-                }
-
-            } while (count($output) > 0);
-
-        } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            logMsg("Error(addTracksToYourMusic): (exception " . print_r($e) . ")");
-            handleSpotifyWebAPIException($w);
-            return false;
-        }
-
-        // refresh library
-        refreshLibrary($w);
-    }
-
-    return count($tracks);
-}
-
-
-
-/**
- * addTracksToPlaylist function.
- *
- * @access public
- * @param mixed $w
- * @param mixed $tracks
- * @param mixed $playlist_uri
- * @param mixed $playlist_name
- * @param bool $allow_duplicate (default: true)
- * @param bool $refreshLibrary (default: true)
- * @return void
- */
-function addTracksToPlaylist($w, $tracks, $playlist_uri, $playlist_name, $allow_duplicate = true, $refreshLibrary = true)
-{
-	//
-	// Read settings from JSON
-	//
-	$settings = getSettings($w);
-	$userid = $settings->userid;
-
-    $tracks_with_no_dup = array();
-    if (!$allow_duplicate) {
-        try {
-            $playlist_tracks = getThePlaylistTracks($w, $playlist_uri);
-
-            foreach ((array)$tracks as $track) {
-                if (!checkIfDuplicate($playlist_tracks, $track)) {
-                    $tracks_with_no_dup[] = $track;
-                }
-            }
-
-            $tracks = $tracks_with_no_dup;
-        } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            logMsg("Error(addTracksToPlaylist): (exception " . print_r($e) . ")");
-            handleSpotifyWebAPIException($w);
-            return false;
-        }
-    }
-
-    if (count($tracks) != 0) {
-        try {
-            $tmp = explode(':', $playlist_uri);
-
-            // Note: max 100 Ids
-            $offset = 0;
-            $i=0;
-            do {
-                $output = array_slice($tracks, $offset, 100);
-                $offset += 100;
-
-                if (count($output)) {
-					$api = getSpotifyWebAPI($w);
-                    $api->addUserPlaylistTracks(urlencode($userid), $tmp[4], $output, array(
-                        'position' => 0
-                    ));
-                    $i++;
-                }
-/*
-				if($i % 30 === 0) {
-					sleep(60);
-					echo "Info: Throttling in addTracksToPlaylist";
-				}
-*/
-            } while (count($output) > 0);
-        } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            logMsg("Error(addTracksToPlaylist): (exception " . print_r($e) . ")");
-            handleSpotifyWebAPIException($w);
-            return false;
-        }
-
-        if ($refreshLibrary) {
-            // refresh library
-            refreshLibrary($w);
-        }
-    }
-
-    return count($tracks);
-}
 
 
 /**
