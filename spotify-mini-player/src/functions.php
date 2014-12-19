@@ -5,6 +5,95 @@ require './vendor/autoload.php';
 
 
 /**
+ * getSpotifyWebAPI function.
+ *
+ * @access public
+ * @param mixed $w
+ * @param bool $exitOnError (default: true)
+ * @return void
+ */
+function getSpotifyWebAPI($w, $exitOnError = true, $old_api = null)
+{
+	//
+	// Read settings from JSON
+	//
+	$settings = getSettings($w);
+	$oauth_client_id = $settings->oauth_client_id;
+	$oauth_client_secret = $settings->oauth_client_secret;
+	$oauth_redirect_uri = $settings->oauth_redirect_uri;
+	$oauth_access_token = $settings->oauth_access_token;
+	$oauth_expires = $settings->oauth_expires;
+	$oauth_refresh_token = $settings->oauth_refresh_token;
+
+	if($old_api == null) {
+		// create a new api object
+	    $session = new SpotifyWebAPI\Session($oauth_client_id, $oauth_client_secret, $oauth_redirect_uri);
+	    $session->setRefreshToken($oauth_refresh_token);
+	    $api = new SpotifyWebAPI\SpotifyWebAPI();
+	}
+
+    // Check if refresh token necessary
+    // if token validity < 20 minutes
+    if (time() - $oauth_expires > 2400) {
+
+		if($old_api != null) {
+			// when refresh needed:
+			// create a new api object (even if api not null)
+		    $session = new SpotifyWebAPI\Session($oauth_client_id, $oauth_client_secret, $oauth_redirect_uri);
+		    $session->setRefreshToken($oauth_refresh_token);
+		    $api = new SpotifyWebAPI\SpotifyWebAPI();
+		}
+	    logMsg("Info: token needs to be refreshed");
+        if ($session->refreshToken() == true) {
+
+	        $oauth_access_token = $session->getAccessToken();
+			 // Set new token to settings
+		    $ret = updateSetting($w,'oauth_access_token',$oauth_access_token);
+		    if($ret == false) {
+			    logMsg("Error: cannot set oauth_access_token in getSpotifyWebAPI");
+		        if($exitOnError == true) {
+			        // handle error and exit
+			        handleSpotifyWebAPIException($w);
+		        } else {
+			        return false;
+		        }
+		    }
+
+		    $ret = updateSetting($w,'oauth_expires',time());
+		    if($ret == false) {
+			    logMsg("Error: cannot set oauth_expires in getSpotifyWebAPI");
+		        if($exitOnError == true) {
+			        // handle error and exit
+			        handleSpotifyWebAPIException($w);
+		        } else {
+			        return false;
+		        }
+		    }
+		    logMsg("Info: token was refreshed");
+		    $api->setAccessToken($oauth_access_token);
+        } else {
+		    logMsg("Error: token could not be refreshed in getSpotifyWebAPI");
+	        if($exitOnError == true) {
+		        // handle error and exit
+		        handleSpotifyWebAPIException($w);
+	        } else {
+		        return false;
+	        }
+        }
+    } else {
+	    // no need to refresh, the old api is
+	    // stil valid
+	    if($old_api != null) {
+		    $api = $old_api;
+	    } else {
+			// set the access token for the new api
+		  	$api->setAccessToken($oauth_access_token);
+	    }
+    }
+    return $api;
+}
+
+/**
  * displayBiography function.
  *
  * @access public
@@ -79,12 +168,6 @@ function displayBiography($w,$artist_uri,$artist_name) {
  * @return void
  */
 function searchWebApi($w,$country_code,$query, $type, $limit = 50) {
-    $api = getSpotifyWebAPI($w);
-    if ($api == false) {
-        displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
-        return false;
-    }
-
     $results = array();
 
     try {
@@ -95,6 +178,7 @@ function searchWebApi($w,$country_code,$query, $type, $limit = 50) {
 	       $limitSearch = 50;
         }
         do {
+	        $api = getSpotifyWebAPI($w);
             $searchResults = $api->search(	$query,
             								$type,
             								array(
@@ -513,62 +597,6 @@ function getRandomTrack($w)
     return $thetrackuri;
 }
 
-/**
- * getSpotifyWebAPI function.
- *
- * @access public
- * @param mixed $w
- * @return api, false if error
- */
-function getSpotifyWebAPI($w)
-{
-    if (!$w->internet()) {
-        displayNotificationWithArtwork("No internet connection", './images/warning.png');
-        return false;
-    }
-
-	//
-	// Read settings from JSON
-	//
-
-	$settings = getSettings($w);
-
-	$oauth_client_id = $settings->oauth_client_id;
-	$oauth_client_secret = $settings->oauth_client_secret;
-	$oauth_redirect_uri = $settings->oauth_redirect_uri;
-	$oauth_access_token = $settings->oauth_access_token;
-	$oauth_expires = $settings->oauth_expires;
-	$oauth_refresh_token = $settings->oauth_refresh_token;
-
-    $session = new SpotifyWebAPI\Session($oauth_client_id, $oauth_client_secret, $oauth_redirect_uri);
-    $session->setRefreshToken($oauth_refresh_token);
-    $api = new SpotifyWebAPI\SpotifyWebAPI();
-
-    // Check if refresh token necessary
-    // if token validity < 20 minutes
-    if (time() - $oauth_expires > 2400) {
-        if ($session->refreshToken()) {
-			 // Set new token to settings
-		    $ret = updateSetting($w,'oauth_access_token',$session->getAccessToken());
-		    if($ret == false) {
-			 	return false;
-		    }
-
-		    $ret = updateSetting($w,'oauth_expires',time());
-		    if($ret == false) {
-			 	return false;
-		    }
-        } else {
-            echo "Error[getSpotifyWebAPI]: token could not be refreshed";
-            return false;
-        }
-    }
-    $api->setAccessToken($oauth_access_token);
-    return $api;
-}
-
-
-
 
 /**
  * getArtistUriFromTrack function.
@@ -580,12 +608,6 @@ function getSpotifyWebAPI($w)
  */
 function getArtistUriFromTrack($w, $track_uri)
 {
-    $api = getSpotifyWebAPI($w);
-    if ($api == false) {
-        displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
-        return false;
-    }
-
     try {
         $tmp = explode(':', $track_uri);
 
@@ -609,6 +631,7 @@ function getArtistUriFromTrack($w, $track_uri)
                 return false;
         	}
         }
+        $api = getSpotifyWebAPI($w);
         $track = $api->getTrack($tmp[2]);
         $artists = $track->artists;
         $artist = $artists[0];
@@ -632,11 +655,6 @@ function getArtistUriFromTrack($w, $track_uri)
 function getArtistUriFromSearch($w, $artist_name, $country_code = '')
 {
     $api = getSpotifyWebAPI($w);
-    if ($api == false) {
-        displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
-        return false;
-    }
-
 	if($artist_name == '') {
 		return false;
 	}
@@ -673,12 +691,6 @@ function getArtistUriFromSearch($w, $artist_name, $country_code = '')
  */
 function getAlbumUriFromTrack($w, $track_uri)
 {
-    $api = getSpotifyWebAPI($w);
-    if ($api == false) {
-        displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
-        return false;
-    }
-
     try {
         $tmp = explode(':', $track_uri);
 
@@ -701,7 +713,7 @@ function getAlbumUriFromTrack($w, $track_uri)
                 return false;
         	}
         }
-
+		$api = getSpotifyWebAPI($w);
         $track = $api->getTrack($tmp[2]);
         $album = $track->album;
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
@@ -724,15 +736,11 @@ function getAlbumUriFromTrack($w, $track_uri)
  */
 function clearPlaylist($w, $playlist_uri, $playlist_name)
 {
-    $api = getSpotifyWebAPI($w);
-    if ($api == false) {
-        displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
-        return false;
-    }
 
     try {
         $tmp = explode(':', $playlist_uri);
         $emptytracks = array();
+        $api = getSpotifyWebAPI($w);
         $api->replacePlaylistTracks(urlencode($tmp[2]), $tmp[4], $emptytracks);
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
         logMsg("Error(clearPlaylist): playlist uri " . $playlist_uri . " (exception " . print_r($e) . ")");
@@ -758,12 +766,6 @@ function clearPlaylist($w, $playlist_uri, $playlist_name)
  */
 function createTheUserPlaylist($w, $playlist_name)
 {
-    $api = getSpotifyWebAPI($w);
-    if ($api == false) {
-        displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
-        return false;
-    }
-
 	//
 	// Read settings from JSON
 	//
@@ -772,6 +774,7 @@ function createTheUserPlaylist($w, $playlist_name)
 	$userid = $settings->userid;
 
     try {
+	    $api = getSpotifyWebAPI($w);
         $json = $api->createUserPlaylist(urlencode($userid), array(
             'name' => $playlist_name,
             'public' => false
@@ -815,13 +818,6 @@ function createRadioArtistPlaylistForCurrentArtist($w)
  */
 function createRadioArtistPlaylist($w, $artist_name)
 {
-
-    $api = getSpotifyWebAPI($w);
-    if ($api == false) {
-        displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
-        return false;
-    }
-
 	//
 	// Read settings from JSON
 	//
@@ -848,6 +844,7 @@ function createRadioArtistPlaylist($w, $artist_name)
 
     if (count($newplaylisttracks) > 0) {
         try {
+	        $api = getSpotifyWebAPI($w);
             $json = $api->createUserPlaylist($userid, array(
                 'name' => 'Artist radio for ' . escapeQuery($artist_name),
                 'public' => false
@@ -910,13 +907,6 @@ function createRadioSongPlaylistForCurrentTrack($w)
  */
 function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name)
 {
-
-    $api = getSpotifyWebAPI($w);
-    if ($api == false) {
-        displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
-        return false;
-    }
-
 	//
 	// Read settings from JSON
 	//
@@ -963,6 +953,7 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name)
 
     if (count($newplaylisttracks) > 0) {
         try {
+	        $api = getSpotifyWebAPI($w);
             $json = $api->createUserPlaylist($userid, array(
                 'name' => 'Song radio for ' . escapeQuery($track_name) . ' by ' . escapeQuery($artist_name),
                 'public' => false
@@ -1003,19 +994,13 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name)
  */
 function getThePlaylistTracks($w, $playlist_uri)
 {
-    $api = getSpotifyWebAPI($w);
-    if ($api == false) {
-        displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
-        return false;
-    }
-
     $tracks = array();
-
     try {
         $tmp = explode(':', $playlist_uri);
         $offsetGetUserPlaylistTracks = 0;
         $limitGetUserPlaylistTracks = 100;
         do {
+			$api = getSpotifyWebAPI($w);
             $userPlaylistTracks = $api->getUserPlaylistTracks(urlencode($tmp[2]), $tmp[4], array(
                 'fields' => array('total',
                 				  'items.track(id)'),
@@ -1049,17 +1034,11 @@ function getThePlaylistTracks($w, $playlist_uri)
  */
 function getTheAlbumTracks($w, $album_uri)
 {
-    $api = getSpotifyWebAPI($w);
-    if ($api == false) {
-        displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
-        return;
-    }
-
     $tracks = array();
-
     try {
         $tmp = explode(':', $album_uri);
 
+		$api = getSpotifyWebAPI($w);
         $json = $api->getAlbumTracks($tmp[2]);
 
         foreach ($json->items as $track) {
@@ -1085,12 +1064,6 @@ function getTheAlbumTracks($w, $album_uri)
  */
 function getTheArtistAlbums($w, $artist_uri, $country_code)
 {
-    $api = getSpotifyWebAPI($w);
-    if ($api == false) {
-        displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
-        return false;
-    }
-
     $album_ids = array();
 
     try {
@@ -1098,6 +1071,13 @@ function getTheArtistAlbums($w, $artist_uri, $country_code)
         $offsetGetArtistAlbums = 0;
         $limitGetArtistAlbums = 50;
         do {
+		    $api = getSpotifyWebAPI($w,false);
+		    if ($api == false) {
+			    $w2 = new Workflows('com.vdesabou.spotify.mini.player');
+			    $w2->result(null, '', "Error: an error happened when using Spotify WEB API", "Try again or report to author", './images/warning.png', 'no', null, '');
+			    echo $w2->toxml();
+		        exit;
+		    }
             $userArtistAlbums = $api->getArtistAlbums($tmp[2],array(
 									            'album_type' => array('album','single','compilation'),
 									            'market' => $country_code,
@@ -1129,6 +1109,8 @@ function getTheArtistAlbums($w, $artist_uri, $country_code)
 	        $offset += 20;
 
 	        if (count($output)) {
+		        // refresh api
+		        $api = getSpotifyWebAPI($w,true,$api);
 	            $resultGetAlbums = $api->getAlbums($output);
 	            foreach ($resultGetAlbums->albums as $album) {
 	                $albums[] = $album;
@@ -1158,12 +1140,6 @@ function getTheArtistAlbums($w, $artist_uri, $country_code)
  */
 function getTheNewReleases($w, $country_code, $max_results = 50)
 {
-    $api = getSpotifyWebAPI($w);
-    if ($api == false) {
-        displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
-        return false;
-    }
-
     $album_ids = array();
 
     try {
@@ -1171,6 +1147,13 @@ function getTheNewReleases($w, $country_code, $max_results = 50)
         $offsetGetNewReleases = 0;
         $limitGetNewReleases = 50;
         do {
+		    $api = getSpotifyWebAPI($w,false);
+		    if ($api == false) {
+			    $w2 = new Workflows('com.vdesabou.spotify.mini.player');
+			    $w2->result(null, '', "Error: an error happened when using Spotify WEB API", "Try again or report to author", './images/warning.png', 'no', null, '');
+			    echo $w2->toxml();
+		        exit;
+		    }
             $newReleasesAlbums = $api->getNewReleases(array(
 									            'country' => $country_code,
 									            'limit' => $limitGetNewReleases,
@@ -1201,6 +1184,8 @@ function getTheNewReleases($w, $country_code, $max_results = 50)
 	        $offset += 20;
 
 	        if (count($output)) {
+		        // refresh api
+		        $api = getSpotifyWebAPI($w,true,$api);
 	            $resultGetAlbums = $api->getAlbums($output);
 	            foreach ($resultGetAlbums->albums as $album) {
 	                $albums[] = $album;
@@ -1210,7 +1195,7 @@ function getTheNewReleases($w, $country_code, $max_results = 50)
 	    } while (count($output) > 0);
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 	    $w2 = new Workflows('com.vdesabou.spotify.mini.player');
-	    $w2->result(null, '', "Error: Spotify WEB API getAlbums from getNewReleases returned error " . $e->getMessage(), "Try again or report to author", './images/warning.png', 'no', null, '');
+	    $w2->result(null, '', "Error: Spotify WEB API getNewReleases from getNewReleases returned error " . $e->getMessage(), "Try again or report to author", './images/warning.png', 'no', null, '');
 	    echo $w2->toxml();
         exit;
     }
@@ -1231,18 +1216,11 @@ function getTheNewReleases($w, $country_code, $max_results = 50)
  */
 function addTracksToYourMusic($w, $tracks, $allow_duplicate = true)
 {
-
-    $api = getSpotifyWebAPI($w);
-    if ($api == false) {
-        displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
-        return;
-    }
     $tracks = (array)$tracks;
     $tracks_with_no_dup = array();
     $tracks_contain = array();
     if (!$allow_duplicate) {
         try {
-
             // Note: max 50 Ids
             $offset = 0;
             do {
@@ -1250,6 +1228,8 @@ function addTracksToYourMusic($w, $tracks, $allow_duplicate = true)
                 $offset += 50;
 
                 if (count($output)) {
+			        // refresh api
+					$api = getSpotifyWebAPI($w);
                     $tracks_contain = $api->myTracksContains($output);
                     for ($i = 0; $i < count($output); $i++) {
                         if (!$tracks_contain[$i]) {
@@ -1276,8 +1256,9 @@ function addTracksToYourMusic($w, $tracks, $allow_duplicate = true)
                 $offset += 50;
 
                 if (count($output)) {
+			        // refresh api
+			        $api = getSpotifyWebAPI($w,true,$api);
                     $api->addMyTracks($output);
-
                 }
 
             } while (count($output) > 0);
@@ -1314,15 +1295,8 @@ function addTracksToPlaylist($w, $tracks, $playlist_uri, $playlist_name, $allow_
 	//
 	// Read settings from JSON
 	//
-
 	$settings = getSettings($w);
 	$userid = $settings->userid;
-
-    $api = getSpotifyWebAPI($w);
-    if ($api == false) {
-        displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
-        return;
-    }
 
     $tracks_with_no_dup = array();
     if (!$allow_duplicate) {
@@ -1355,6 +1329,7 @@ function addTracksToPlaylist($w, $tracks, $playlist_uri, $playlist_name, $allow_
                 $offset += 100;
 
                 if (count($output)) {
+					$api = getSpotifyWebAPI($w);
                     $api->addUserPlaylistTracks(urlencode($userid), $tmp[4], $output, array(
                         'position' => 0
                     ));
@@ -2258,12 +2233,6 @@ function getArtistArtworkURL($w, $artist)
  */
 function updateLibrary($w)
 {
-    $api = getSpotifyWebAPI($w);
-    if ($api == false) {
-        displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
-        return false;
-    }
-
     touch($w->data() . "/update_library_in_progress");
     $w->write('InitLibrary▹' . 0 . '▹' . 0 . '▹' . time() . '▹' . 'starting', 'update_library_in_progress');
     $in_progress_data = $w->read('update_library_in_progress');
@@ -2271,7 +2240,6 @@ function updateLibrary($w)
 	//
 	// Read settings from JSON
 	//
-
 	$settings = getSettings($w);
 	$country_code = $settings->country_code;
 	$userid = $settings->userid;
@@ -2355,6 +2323,8 @@ function updateLibrary($w)
         return false;
     }
 
+	$api = getSpotifyWebAPI($w);
+
     // get the total number of tracks
     $nb_tracktotal = 0;
     $nb_skipped = 0;
@@ -2363,6 +2333,8 @@ function updateLibrary($w)
         $offsetGetUserPlaylists = 0;
         $limitGetUserPlaylists = 50;
         do {
+	        // refresh api
+	        $api = getSpotifyWebAPI($w,true,$api);
             $userPlaylists = $api->getUserPlaylists(urlencode($userid), array(
                 'limit' => $limitGetUserPlaylists,
                 'offset' => $offsetGetUserPlaylists
@@ -2387,6 +2359,8 @@ function updateLibrary($w)
         $offsetGetMySavedTracks = 0;
         $limitGetMySavedTracks = 50;
         do {
+	        // refresh api
+	        $api = getSpotifyWebAPI($w,true,$api);
             $userMySavedTracks = $api->getMySavedTracks(array(
                 'limit' => $limitGetMySavedTracks,
                 'offset' => $offsetGetMySavedTracks
@@ -2467,6 +2441,8 @@ function updateLibrary($w)
 	}
 	$artworksToDownload = false;
 
+	$api = getSpotifyWebAPI($w);
+
     foreach ($savedListPlaylist as $playlist) {
 		$duration_playlist=0;
 	    $nb_track_playlist=0;
@@ -2486,12 +2462,8 @@ function updateLibrary($w)
             $offsetGetUserPlaylistTracks = 0;
             $limitGetUserPlaylistTracks = 100;
             do {
-	            // refresh api
-			    $api = getSpotifyWebAPI($w);
-			    if ($api == false) {
-			        displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
-			        return false;
-			    }
+		        // refresh api
+		        $api = getSpotifyWebAPI($w,true,$api);
                 $userPlaylistTracks = $api->getUserPlaylistTracks(urlencode($owner->id), $playlist->id, array(
                     'fields' => array('total',
                         'items(added_at)',
@@ -2866,11 +2838,6 @@ function updateLibrary($w)
  */
 function refreshLibrary($w)
 {
-    $api = getSpotifyWebAPI($w);
-    if ($api == false) {
-        displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
-        return;
-    }
     touch($w->data() . "/update_library_in_progress");
     $w->write('InitRefreshLibrary▹' . 0 . '▹' . 0 . '▹' . time() . '▹' . 'starting', 'update_library_in_progress');
 
@@ -2999,12 +2966,13 @@ function refreshLibrary($w)
         return;
     }
 
-
 	$savedListPlaylist = array();
     try {
         $offsetGetUserPlaylists = 0;
         $limitGetUserPlaylists = 50;
         do {
+	        // refresh api
+	        $api = getSpotifyWebAPI($w,true,$api);
             $userPlaylists = $api->getUserPlaylists(urlencode($userid), array(
                 'limit' => $limitGetUserPlaylists,
                 'offset' => $offsetGetUserPlaylists
@@ -3072,12 +3040,8 @@ function refreshLibrary($w)
                 $offsetGetUserPlaylistTracks = 0;
                 $limitGetUserPlaylistTracks = 100;
                 do {
-		            // refresh api
-				    $api = getSpotifyWebAPI($w);
-				    if ($api == false) {
-				        displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
-				        return false;
-				    }
+			        // refresh api
+			        $api = getSpotifyWebAPI($w,true,$api);
                     $userPlaylistTracks = $api->getUserPlaylistTracks(urlencode($owner->id), $playlist->id, array(
                         'fields' => array(
                             'total',
@@ -3268,12 +3232,8 @@ function refreshLibrary($w)
                     $offsetGetUserPlaylistTracks = 0;
                     $limitGetUserPlaylistTracks = 100;
                     do {
-			            // refresh api
-					    $api = getSpotifyWebAPI($w);
-					    if ($api == false) {
-					        displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
-					        return false;
-					    }
+				        // refresh api
+				        $api = getSpotifyWebAPI($w,true,$api);
                         $userPlaylistTracks = $api->getUserPlaylistTracks(urlencode($tmp[2]), $tmp[4], array(
                             'fields' => array(
                                 'total',
@@ -3474,12 +3434,8 @@ function refreshLibrary($w)
         $offsetGetMySavedTracks = 0;
         $limitGetMySavedTracks = 50;
         do {
-            // refresh api
-		    $api = getSpotifyWebAPI($w);
-		    if ($api == false) {
-		        displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
-		        return false;
-		    }
+	        // refresh api
+	        $api = getSpotifyWebAPI($w,true,$api);
             $userMySavedTracks = $api->getMySavedTracks(array(
                 'limit' => $limitGetMySavedTracks,
                 'offset' => $offsetGetMySavedTracks
@@ -3770,13 +3726,18 @@ function handleDbIssuePdoXml($dbhandle)
  * @return void
  */
 function handleSpotifyWebAPIException($w) {
-	// set back old library
-    if (file_exists($w->data() . "/library_new.db")) {
-	    rename($w->data() . '/library_new.db', $w->data() . '/library.db');
+    if (file_exists($w->data() . '/update_library_in_progress')) {
+        unlink($w->data() . '/update_library_in_progress');
     }
 
+	// remove the new library (it failed)
+    if (file_exists($w->data() . "/library_new.db")) {
+		unlink($w->data() . '/library_new.db');
+    }
+
+	// set back old library
     if (file_exists($w->data() . '/library_old.db')) {
-        unlink($w->data() . '/library_old.db');
+        rename($w->data() . '/library_old.db', $w->data() . '/library.db');
     }
 
 	displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');

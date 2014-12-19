@@ -1787,7 +1787,7 @@ if (mb_strlen($query) < 3) {
 		            }
 		        }
             } else {
-	            $api = getSpotifyWebAPI($w);
+	            $api = getSpotifyWebAPI($w, false);
 	            if ($api == false) {
 	                $w->result(null, 'help', "Internal issue (getSpotifyWebAPI)", "", './images/warning.png', 'no', null, '');
 	                echo $w->toxml();
