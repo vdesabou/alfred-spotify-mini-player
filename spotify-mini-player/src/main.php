@@ -77,9 +77,7 @@ if (file_exists($w->data() . '/download_artworks_in_progress')) {
 //
 // Read settings from JSON
 //
-
 $settings = getSettings($w);
-
 $all_playlists = $settings->all_playlists;
 $is_spotifious_active = $settings->is_spotifious_active;
 $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
@@ -144,10 +142,9 @@ if ($oauth_access_token == '' && substr_count($query, '▹') == 0) {
     return;
 }
 
-
-// check for library DB
+//
+// Check for library DB to use
 $dbfile = "";
-
 if ($update_in_progress == false &&
     file_exists($w->data() . '/library.db')
 ) {
@@ -165,8 +162,6 @@ if ($dbfile == "") {
     echo $w->toxml();
     return;
 }
-
-
 try {
     $db = new PDO("sqlite:$dbfile", "", "", array(PDO::ATTR_PERSISTENT => true));
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -182,7 +177,6 @@ try {
     handleDbIssuePdoXml($db);
     return;
 }
-
 
 //
 // Check for workflow update
@@ -213,7 +207,8 @@ if (startsWith($query, ' ')) {
 	return;
 }
 
-
+//
+// Start processing
 //
 if (mb_strlen($query) < 3) {
 
@@ -234,11 +229,11 @@ if (mb_strlen($query) < 3) {
     }
 
     $all_tracks = $counter[0];
-    $mymusic_tracks = $counter[1];
+    $yourmusic_tracks = $counter[1];
     $all_artists = $counter[2];
-    $mymusic_artists = $counter[3];
+    $yourmusic_artists = $counter[3];
     $all_albums = $counter[4];
-    $mymusic_albums = $counter[5];
+    $yourmusic_albums = $counter[5];
     $nb_playlists = $counter[6];
 
     if ($update_in_progress == true) {
@@ -263,7 +258,7 @@ if (mb_strlen($query) < 3) {
     if ($all_playlists == true) {
         $w->result(null, '', 'Search for music in "Your Music" and your ' . $nb_playlists . ' playlists', 'Begin typing at least 3 characters to start search in your ' . $all_tracks . ' tracks', './images/search.png', 'no', null, '');
     } else {
-        $w->result(null, '', 'Search for music in "Your Music" only', 'Begin typing at least 3 characters to start search in your ' . $mymusic_tracks . ' tracks', './images/search_scope_yourmusic_only.png', 'no', null, '');
+        $w->result(null, '', 'Search for music in "Your Music" only', 'Begin typing at least 3 characters to start search in your ' . $yourmusic_tracks . ' tracks', './images/search_scope_yourmusic_only.png', 'no', null, '');
     }
 
     $w->result(null, '', 'Current Track', 'Display current track information and browse various options', './images/current_track.png', 'no', null, 'Current Track▹');
@@ -290,13 +285,13 @@ if (mb_strlen($query) < 3) {
 
     }
     $w->result(null, '', 'Playlists', 'Browse by playlist' . ' (' . $nb_playlists . ' playlists)', './images/playlists.png', 'no', null, 'Playlist▹');
-    $w->result(null, '', 'Your Music', 'Browse Your Music' . ' (' . $mymusic_tracks . ' tracks ● ' . $mymusic_albums . '  albums ● ' . $mymusic_artists . ' artists)', './images/yourmusic.png', 'no', null, 'Your Music▹');
+    $w->result(null, '', 'Your Music', 'Browse Your Music' . ' (' . $yourmusic_tracks . ' tracks ● ' . $yourmusic_albums . '  albums ● ' . $yourmusic_artists . ' artists)', './images/yourmusic.png', 'no', null, 'Your Music▹');
     if ($all_playlists == true) {
         $w->result(null, '', 'Artists', 'Browse by artist' . ' (' . $all_artists . ' artists)', './images/artists.png', 'no', null, 'Artist▹');
         $w->result(null, '', 'Albums', 'Browse by album' . ' (' . $all_albums . ' albums)', './images/albums.png', 'no', null, 'Album▹');
     } else {
-        $w->result(null, '', 'Artists in "Your Music"', 'Browse by artist' . ' (' . $mymusic_artists . ' artists)', './images/artists.png', 'no', null, 'Artist▹');
-        $w->result(null, '', 'Albums in "Your Music"', 'Browse by album' . ' (' . $mymusic_albums . ' albums)', './images/albums.png', 'no', null, 'Album▹');
+        $w->result(null, '', 'Artists in "Your Music"', 'Browse by artist' . ' (' . $yourmusic_artists . ' artists)', './images/artists.png', 'no', null, 'Artist▹');
+        $w->result(null, '', 'Albums in "Your Music"', 'Browse by album' . ' (' . $yourmusic_albums . ' albums)', './images/albums.png', 'no', null, 'Album▹');
     }
 
     //$w->result(null, '', 'Charts', 'Browse charts', './images/numbers.png', 'no', null, 'Charts▹');
@@ -376,14 +371,14 @@ if (mb_strlen($query) < 3) {
             if (startswith($playlist[1], 'Artist radio for')) {
                 $added = '📻 ';
             }
-            $w->result(null, '', "🎵" . $added . ucfirst($playlist[1]) . " ● by " . $playlist[3], $playlist[7] . " tracks ● " . $playlist[8], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
+            $w->result(null, '', "🎵" . $added . ucfirst($playlist[1]), "by " . $playlist[3] . " ● " . $playlist[7] . " tracks ● " . $playlist[8], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
         }
 
         //
         // Search artists
         //
         if ($all_playlists == false) {
-            $getTracks = "select artist_name,artist_uri,artist_artwork_path from tracks where  mymusic=1 and artist_name like :artist_name limit " . $max_results;
+            $getTracks = "select artist_name,artist_uri,artist_artwork_path from tracks where  yourmusic=1 and artist_name like :artist_name limit " . $max_results;
         } else {
             $getTracks = "select artist_name,artist_uri,artist_artwork_path from tracks where  artist_name like :artist_name limit " . $max_results;
         }
@@ -410,7 +405,7 @@ if (mb_strlen($query) < 3) {
         // Search everything
         //
         if ($all_playlists == false) {
-            $getTracks = "select * from tracks where  mymusic=1 and (artist_name like :query or album_name like :query or track_name like :query)" . " limit " . $max_results;
+            $getTracks = "select * from tracks where  yourmusic=1 and (artist_name like :query or album_name like :query or track_name like :query)" . " limit " . $max_results;
         } else {
             $getTracks = "select * from tracks where  (artist_name like :query or album_name like :query or track_name like :query)" . " limit " . $max_results;
         }
@@ -525,7 +520,7 @@ if (mb_strlen($query) < 3) {
                     $noresult = false;
 
                     if (startswith($playlist[1], 'Artist radio for')) {
-                        $w->result(null, '', "🎵 " . ucfirst($playlist[1]) . " ● by " . $playlist[3], $playlist[7] . " tracks ● " . $playlist[8], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
+                        $w->result(null, '', "🎵 " . ucfirst($playlist[1]), "by " . $playlist[3] . " ● " . $playlist[7] . " tracks ● " . $playlist[8], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
                     }
                 }
             } elseif ($query == "Playlist▹Song radio") {
@@ -534,7 +529,7 @@ if (mb_strlen($query) < 3) {
                     $noresult = false;
 
                     if (startswith($playlist[1], 'Song radio for')) {
-                        $w->result(null, '', "🎵 " . ucfirst($playlist[1]) . " ● by " . $playlist[3], $playlist[7] . " tracks ● " . $playlist[8], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
+                        $w->result(null, '', "🎵 " . ucfirst($playlist[1]), "by " . $playlist[3] . " ● " . $playlist[7] . " tracks ● " . $playlist[8], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
                     }
                 }
             } else {
@@ -569,7 +564,7 @@ if (mb_strlen($query) < 3) {
                 foreach ($savedPlaylists as $playlist) {
                     $noresult = false;
                     $added = ' ';
-                    $w->result(null, '', "🎵" . $added . ucfirst($playlist[1]) . " ● by " . $playlist[3], $playlist[7] . " tracks ● " . $playlist[8], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
+                    $w->result(null, '', "🎵" . $added . ucfirst($playlist[1]), "by " . $playlist[3] . " ● " . $playlist[7] . " tracks ● " . $playlist[8], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
                 }
             }
 
@@ -609,14 +604,14 @@ if (mb_strlen($query) < 3) {
             try {
                 if (mb_strlen($artist) < 3) {
                     if ($all_playlists == false) {
-                        $getTracks = "select artist_name,artist_artwork_path,artist_uri from tracks where  mymusic=1 group by artist_name" . " limit " . $max_results;
+                        $getTracks = "select artist_name,artist_artwork_path,artist_uri from tracks where  yourmusic=1 group by artist_name" . " limit " . $max_results;
                     } else {
                         $getTracks = "select artist_name,artist_artwork_path,artist_uri from tracks  group by artist_name" . " limit " . $max_results;
                     }
                     $stmt = $db->prepare($getTracks);
                 } else {
                     if ($all_playlists == false) {
-                        $getTracks = "select artist_name,artist_artwork_path,artist_uri from tracks where  mymusic=1 and artist_name like :query limit " . $max_results;
+                        $getTracks = "select artist_name,artist_artwork_path,artist_uri from tracks where  yourmusic=1 and artist_name like :query limit " . $max_results;
                     } else {
                         $getTracks = "select artist_name,artist_artwork_path,artist_uri from tracks where  artist_name like :query limit " . $max_results;
                     }
@@ -660,14 +655,14 @@ if (mb_strlen($query) < 3) {
             try {
                 if (mb_strlen($album) < 3) {
                     if ($all_playlists == false) {
-                        $getTracks = "select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where  mymusic=1 group by album_name" . " limit " . $max_results;
+                        $getTracks = "select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where  yourmusic=1 group by album_name" . " limit " . $max_results;
                     } else {
                         $getTracks = "select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks  group by album_name" . " limit " . $max_results;
                     }
                     $stmt = $db->prepare($getTracks);
                 } else {
                     if ($all_playlists == false) {
-                        $getTracks = "select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where  mymusic=1 and album_name like :query limit " . $max_results;
+                        $getTracks = "select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where  yourmusic=1 and album_name like :query limit " . $max_results;
                     } else {
                         $getTracks = "select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where  album_name like :query limit " . $max_results;
                     }
@@ -877,8 +872,8 @@ if (mb_strlen($query) < 3) {
                             if (startswith($playlist[1], 'Artist radio for')) {
                                 $added = '📻 ';
                             }
-                            if (checkIfResultAlreadyThere($w->results(), "🎵" . $added . "In playlist " . " ● by " . $playlist[3], $playlist[7] . " tracks ● " . $playlist[8]) == false) {
-                                $w->result(null, '', "🎵" . $added . "In playlist " . ucfirst($playlist[1]) . " ● by " . $playlist[3], $playlist[7] . " tracks ● " . $playlist[8], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
+                            if (checkIfResultAlreadyThere($w->results(), "🎵" . $added . "In playlist " . ucfirst($playlist[1])) == false) {
+                                $w->result(null, '', "🎵" . $added . "In playlist " . ucfirst($playlist[1]), "by " . $playlist[3] . " ● " . $playlist[7] . " tracks ● " . $playlist[8], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
                             }
                         }
                     }
@@ -905,22 +900,22 @@ if (mb_strlen($query) < 3) {
 	            }
 
 	            $all_tracks = $counter[0];
-	            $mymusic_tracks = $counter[1];
+	            $yourmusic_tracks = $counter[1];
 	            $all_artists = $counter[2];
-	            $mymusic_artists = $counter[3];
+	            $yourmusic_artists = $counter[3];
 	            $all_albums = $counter[4];
-	            $mymusic_albums = $counter[5];
+	            $yourmusic_albums = $counter[5];
 	            $nb_playlists = $counter[6];
 
-	            $w->result(null, '', 'Tracks', 'Browse your ' . $mymusic_tracks . ' tracks in Your Music', './images/tracks.png', 'no', null, 'Your Music▹Tracks▹');
-	            $w->result(null, '', 'Albums', 'Browse your ' . $mymusic_albums . ' albums in Your Music', './images/albums.png', 'no', null, 'Your Music▹Albums▹');
-	            $w->result(null, '', 'Artists', 'Browse your ' . $mymusic_artists . ' artists in Your Music', './images/artists.png', 'no', null, 'Your Music▹Artists▹');
+	            $w->result(null, '', 'Tracks', 'Browse your ' . $yourmusic_tracks . ' tracks in Your Music', './images/tracks.png', 'no', null, 'Your Music▹Tracks▹');
+	            $w->result(null, '', 'Albums', 'Browse your ' . $yourmusic_albums . ' albums in Your Music', './images/albums.png', 'no', null, 'Your Music▹Albums▹');
+	            $w->result(null, '', 'Artists', 'Browse your ' . $yourmusic_artists . ' artists in Your Music', './images/artists.png', 'no', null, 'Your Music▹Artists▹');
 
             } else {
 		        //
 		        // Search artists
 		        //
-		        $getTracks = "select artist_name,artist_uri,artist_artwork_path from tracks where mymusic=1 and artist_name like :artist_name limit " . $max_results;
+		        $getTracks = "select artist_name,artist_uri,artist_artwork_path from tracks where yourmusic=1 and artist_name like :artist_name limit " . $max_results;
 
 		        try {
 		            $stmt = $db->prepare($getTracks);
@@ -944,7 +939,7 @@ if (mb_strlen($query) < 3) {
 		        //
 		        // Search everything
 		        //
-		        $getTracks = "select * from tracks where  mymusic=1 and (artist_name like :query or album_name like :query or track_name like :query)" . " limit " . $max_results;
+		        $getTracks = "select * from tracks where  yourmusic=1 and (artist_name like :query or album_name like :query or track_name like :query)" . " limit " . $max_results;
 
 		        try {
 		            $stmt = $db->prepare($getTracks);
@@ -1274,7 +1269,7 @@ if (mb_strlen($query) < 3) {
                 }
 
                 if ($all_playlists == false || count($tmp) == 3) {
-                    $getTracks = "select * from tracks where mymusic=1 and artist_uri=:artist_uri limit " . $max_results;
+                    $getTracks = "select * from tracks where yourmusic=1 and artist_uri=:artist_uri limit " . $max_results;
                 } else {
                     $getTracks = "select * from tracks where  artist_uri=:artist_uri limit " . $max_results;
                 }
@@ -1282,7 +1277,7 @@ if (mb_strlen($query) < 3) {
                 $stmt->bindValue(':artist_uri', $artist_uri);
             } else {
                 if ($all_playlists == false || count($tmp) == 3) {
-                    $getTracks = "select * from tracks where mymusic=1 and (artist_uri=:artist_uri and track_name like :track)" . " limit " . $max_results;
+                    $getTracks = "select * from tracks where yourmusic=1 and (artist_uri=:artist_uri and track_name like :track)" . " limit " . $max_results;
                 } else {
                     $getTracks = "select * from tracks where  artist_uri=:artist_uri and track_name like :track limit " . $max_results;
                 }
@@ -1369,7 +1364,7 @@ if (mb_strlen($query) < 3) {
             try {
                 if (mb_strlen($track) < 3) {
                     if ($all_playlists == false || count($tmp) == 3) {
-                        $getTracks = "select * from tracks where  mymusic=1 and album_uri=:album_uri limit " . $max_results;
+                        $getTracks = "select * from tracks where  yourmusic=1 and album_uri=:album_uri limit " . $max_results;
                     } else {
                         $getTracks = "select * from tracks where  album_uri=:album_uri limit " . $max_results;
                     }
@@ -1377,7 +1372,7 @@ if (mb_strlen($query) < 3) {
                     $stmt->bindValue(':album_uri', $album_uri);
                 } else {
                     if ($all_playlists == false || count($tmp) == 3) {
-                        $getTracks = "select * from tracks where  mymusic=1 and (album_uri=:album_uri and track_name like :track limit " . $max_results;
+                        $getTracks = "select * from tracks where  yourmusic=1 and (album_uri=:album_uri and track_name like :track limit " . $max_results;
                     } else {
                         $getTracks = "select * from tracks where  album_uri=:album_uri and track_name like :track limit " . $max_results;
                     }
@@ -1601,10 +1596,10 @@ if (mb_strlen($query) < 3) {
             $thetrack = $words[2];
 
             if (mb_strlen($thetrack) < 3) {
-                $getTracks = "select * from tracks where mymusic=1 limit " . $max_results;
+                $getTracks = "select * from tracks where yourmusic=1 limit " . $max_results;
                 $stmt = $db->prepare($getTracks);
             } else {
-                $getTracks = "select * from tracks where mymusic=1 and (artist_name like :track or album_name like :track or track_name like :track)" . " limit " . $max_results;
+                $getTracks = "select * from tracks where yourmusic=1 and (artist_name like :track or album_name like :track or track_name like :track)" . " limit " . $max_results;
                 $stmt = $db->prepare($getTracks);
                 $stmt->bindValue(':track', '%' . $thetrack . '%');
             }
@@ -1682,10 +1677,10 @@ if (mb_strlen($query) < 3) {
             $album = $words[2];
             try {
                 if (mb_strlen($album) < 3) {
-                    $getTracks = "select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where  mymusic=1 group by album_name" . " limit " . $max_results;
+                    $getTracks = "select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where  yourmusic=1 group by album_name" . " limit " . $max_results;
                     $stmt = $db->prepare($getTracks);
                 } else {
-                    $getTracks = "select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where  mymusic=1 and album_name like :query limit " . $max_results;
+                    $getTracks = "select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where  yourmusic=1 and album_name like :query limit " . $max_results;
                     $stmt = $db->prepare($getTracks);
                     $stmt->bindValue(':query', '%' . $album . '%');
                 }
@@ -1719,10 +1714,10 @@ if (mb_strlen($query) < 3) {
 
             try {
                 if (mb_strlen($artist) < 3) {
-                    $getTracks = "select artist_name,artist_artwork_path,artist_uri from tracks where mymusic=1 group by artist_name" . " limit " . $max_results;
+                    $getTracks = "select artist_name,artist_artwork_path,artist_uri from tracks where yourmusic=1 group by artist_name" . " limit " . $max_results;
                     $stmt = $db->prepare($getTracks);
                 } else {
-                    $getTracks = "select artist_name,artist_artwork_path,artist_uri from tracks where mymusic=1 and artist_name like :query limit " . $max_results;
+                    $getTracks = "select artist_name,artist_artwork_path,artist_uri from tracks where yourmusic=1 and artist_name like :query limit " . $max_results;
                     $stmt = $db->prepare($getTracks);
                     $stmt->bindValue(':query', '%' . $artist . '%');
                 }
