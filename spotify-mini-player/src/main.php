@@ -30,7 +30,7 @@ if (file_exists($w->data() . '/update_library_in_progress')) {
             if
             ($elapsed_time < 300
             ) {
-                $w->result(null, $w->data() . '/update_library_in_progress', 'Initialization phase since ' . beautifyTime($elapsed_time,true) . ' : ' . floatToSquares(0), 'waiting for Spotify servers to return required data', './images/update_in_progress.png', 'no', null, '');
+                $w->result(null, $w->data() . '/update_library_in_progress', 'Initialization phase since ' . beautifyTime($elapsed_time,true) . ' : ' . floatToSquares(0), 'Waiting for Spotify servers to return required data', './images/update_in_progress.png', 'no', null, '');
             } else {
                 $w->result(null, '', 'There is a problem, the initialization phase last more than 5 minutes', 'Choose kill update library below', './images/warning.png', 'no', null, '');
                 $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'kill_update' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */, $now_playing_notifications /* now_playing_notifications */, $is_alfred_playlist_active /* is_alfred_playlist_active */, $country_code /* country_code*/, $userid /* userid*/)), 'Kill update library', 'This will stop the library update', './images/kill.png', 'yes', '');
@@ -45,7 +45,7 @@ if (file_exists($w->data() . '/update_library_in_progress')) {
             }
 
             if ($update_library_in_progress_words[2] != 0) {
-                $w->result(null, $w->data() . '/update_library_in_progress', $update_library_in_progress_words[0] . ' in progress since ' . beautifyTime($elapsed_time,true) . ' : ' . floatToSquares(intval($update_library_in_progress_words[1]) / intval($update_library_in_progress_words[2])), $update_library_in_progress_words[1] . '/' . $update_library_in_progress_words[2] . ' ' . $type . ' processed so far', './images/update_in_progress.png', 'no', null, '');
+                $w->result(null, $w->data() . '/update_library_in_progress', $update_library_in_progress_words[0] . ' in progress since ' . beautifyTime($elapsed_time,true) . ' : ' . floatToSquares(intval($update_library_in_progress_words[1]) / intval($update_library_in_progress_words[2])), $update_library_in_progress_words[1] . '/' . $update_library_in_progress_words[2] . ' ' . $type . ' processed so far. Currently processing <' . $update_library_in_progress_words[4] . '>', './images/update_in_progress.png', 'no', null, '');
             } else {
                 $w->result(null, $w->data() . '/update_library_in_progress', $update_library_in_progress_words[0] . ' in progress since ' . beautifyTime($elapsed_time,true) . ' : ' . floatToSquares(0), 'No ' . $type . ' processed so far', './images/update_in_progress.png', 'no', null, '');
             }
@@ -243,7 +243,7 @@ if (mb_strlen($query) < 3) {
 
     if ($update_in_progress == true) {
         if (startsWith($update_library_in_progress_words[0], 'Init')) {
-            $w->result(null, $w->data() . '/update_library_in_progress', 'Initialization phase since ' . beautifyTime($elapsed_time,true) . ' : ' . floatToSquares(0), 'waiting for Spotify servers to return required data', './images/update_in_progress.png', 'no', null, '');
+            $w->result(null, $w->data() . '/update_library_in_progress', 'Initialization phase since ' . beautifyTime($elapsed_time,true) . ' : ' . floatToSquares(0), 'Waiting for Spotify servers to return required data', './images/update_in_progress.png', 'no', null, '');
         } else {
             if ($update_library_in_progress_words[0] == 'Refresh Library') {
                 $type = 'playlists';
@@ -254,7 +254,7 @@ if (mb_strlen($query) < 3) {
             }
 
             if ($update_library_in_progress_words[2] != 0) {
-                $w->result(null, $w->data() . '/update_library_in_progress', $update_library_in_progress_words[0] . ' update in progress since ' . beautifyTime($elapsed_time,true) . ' : ' . floatToSquares(intval($update_library_in_progress_words[1]) / intval($update_library_in_progress_words[2])), $update_library_in_progress_words[1] . '/' . $update_library_in_progress_words[2] . ' ' . $type . ' processed so far', './images/update_in_progress.png', 'no', null, '');
+                $w->result(null, $w->data() . '/update_library_in_progress', $update_library_in_progress_words[0] . ' update in progress since ' . beautifyTime($elapsed_time,true) . ' : ' . floatToSquares(intval($update_library_in_progress_words[1]) / intval($update_library_in_progress_words[2])), $update_library_in_progress_words[1] . '/' . $update_library_in_progress_words[2] . ' ' . $type . ' processed so far. Currently processing <' . $update_library_in_progress_words[4] . '>', './images/update_in_progress.png', 'no', null, '');
             } else {
                 $w->result(null, $w->data() . '/update_library_in_progress', $update_library_in_progress_words[0] . ' update in progress since ' . beautifyTime($elapsed_time,true) . ' : ' . floatToSquares(0), 'No ' . $type . ' processed so far', './images/update_in_progress.png', 'no', null, '');
             }

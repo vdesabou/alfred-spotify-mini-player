@@ -2267,7 +2267,7 @@ function updateLibrary($w)
     }
 
     touch($w->data() . "/update_library_in_progress");
-    $w->write('InitLibrary▹' . 0 . '▹' . 0 . '▹' . time(), 'update_library_in_progress');
+    $w->write('InitLibrary▹' . 0 . '▹' . 0 . '▹' . time() . '▹' . 'starting', 'update_library_in_progress');
     $in_progress_data = $w->read('update_library_in_progress');
 
 	//
@@ -2411,7 +2411,7 @@ function updateLibrary($w)
     }
 
     // Handle playlists
-    $w->write('Create Library▹0▹' . $nb_tracktotal . '▹' . $words[3], 'update_library_in_progress');
+    $w->write('Create Library▹0▹' . $nb_tracktotal . '▹' . $words[3] . '▹' . 'starting', 'update_library_in_progress');
 
     $nb_track = 0;
 
@@ -2621,7 +2621,7 @@ function updateLibrary($w)
                     $nb_track++;
                     $nb_track_playlist++;
                     if ($nb_track % 10 === 0) {
-                        $w->write('Create Library▹' . $nb_track . '▹' . $nb_tracktotal . '▹' . $words[3], 'update_library_in_progress');
+                        $w->write('Create Library▹' . $nb_track . '▹' . $nb_tracktotal . '▹' . $words[3] . '▹' . escapeQuery($playlist->name), 'update_library_in_progress');
                     }
                 }
 
@@ -2769,7 +2769,7 @@ function updateLibrary($w)
 
         $nb_track++;
         if ($nb_track % 10 === 0) {
-            $w->write('Create Library▹' . $nb_track . '▹' . $nb_tracktotal . '▹' . $words[3], 'update_library_in_progress');
+            $w->write('Create Library▹' . $nb_track . '▹' . $nb_tracktotal . '▹' . $words[3] . '▹' . 'Your Music', 'update_library_in_progress');
         }
     }
 
@@ -2876,7 +2876,7 @@ function refreshLibrary($w)
         return;
     }
     touch($w->data() . "/update_library_in_progress");
-    $w->write('InitRefreshLibrary▹' . 0 . '▹' . 0 . '▹' . time(), 'update_library_in_progress');
+    $w->write('InitRefreshLibrary▹' . 0 . '▹' . 0 . '▹' . time() . '▹' . 'starting', 'update_library_in_progress');
 
     $in_progress_data = $w->read('update_library_in_progress');
 
@@ -3038,7 +3038,7 @@ function refreshLibrary($w)
         $owner = $playlist->owner;
 
         $nb_playlist++;
-        $w->write('Refresh Library▹' . $nb_playlist . '▹' . $nb_playlist_total . '▹' . $words[3], 'update_library_in_progress');
+        $w->write('Refresh Library▹' . $nb_playlist . '▹' . $nb_playlist_total . '▹' . $words[3] . '▹' . escapeQuery($playlist->name), 'update_library_in_progress');
 
 		try {
 	        // Loop on existing playlists in library
@@ -3519,7 +3519,7 @@ function refreshLibrary($w)
 		$your_music_updated=true;
 		// Your Music has changed, update it
         $nb_playlist++;
-        $w->write('Refresh Library▹' . $nb_playlist . '▹' . $nb_playlist_total . '▹' . $words[3], 'update_library_in_progress');
+        $w->write('Refresh Library▹' . $nb_playlist . '▹' . $nb_playlist_total . '▹' . $words[3] . '▹' . 'Your Music', 'update_library_in_progress');
 
 		// delete tracks
 		try {
