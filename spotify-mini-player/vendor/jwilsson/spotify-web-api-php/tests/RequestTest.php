@@ -64,4 +64,25 @@ class RequestTest extends PHPUnit_Framework_TestCase
 
         $response = $this->request->send('GET', 'https://api.spotify.com/v1/albums/NON_EXISTING_ALBUM');
     }
+
+    public function testSetReturnAssoc()
+    {
+        $request = new SpotifyWebAPI\Request();
+        $this->assertFalse($request->getReturnAssoc());
+
+        $request->setReturnAssoc(true);
+        $this->assertTrue($request->getReturnAssoc());
+
+        $request->setReturnAssoc(false);
+        $this->assertFalse($request->getReturnAssoc());
+    }
+
+    public function testSendReturnAssoc()
+    {
+        $request = new SpotifyWebAPI\Request();
+        $request->setReturnAssoc(true);
+
+        $response = $request->send('GET', 'https://api.spotify.com/v1/albums/7u6zL7kqpgLPISZYXNTgYk');
+        $this->assertArrayHasKey('id', $response['body']);
+    }
 }

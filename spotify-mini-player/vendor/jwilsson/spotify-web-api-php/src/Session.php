@@ -44,7 +44,7 @@ class Session
      * - boolean show_dialog Optional. Whether or not to force the user to always approve the app. Default is false.
      * - string state Optional. A CSRF token.
      *
-     * @return string
+     * @return string The authorization URL.
      */
     public function getAuthorizeUrl($options = array())
     {
@@ -70,7 +70,7 @@ class Session
     /**
      * Get the access token.
      *
-     * @return string
+     * @return string The access token.
      */
     public function getAccessToken()
     {
@@ -80,7 +80,7 @@ class Session
     /**
      * Get the client ID.
      *
-     * @return string
+     * @return string The client ID.
      */
     public function getClientId()
     {
@@ -90,7 +90,7 @@ class Session
     /**
      * Get the client secret.
      *
-     * @return string
+     * @return string The client secret.
      */
     public function getClientSecret()
     {
@@ -100,7 +100,7 @@ class Session
     /**
      * Get the number of seconds before the access token expires.
      *
-     * @return int
+     * @return int The expires time.
      */
     public function getExpires()
     {
@@ -110,7 +110,7 @@ class Session
     /**
      * Get the client's redirect URI.
      *
-     * @return string
+     * @return string The redirect URI.
      */
     public function getRedirectUri()
     {
@@ -120,7 +120,7 @@ class Session
     /**
      * Get the refresh token.
      *
-     * @return string
+     * @return string The refresh token.
      */
     public function getRefreshToken()
     {
@@ -130,7 +130,7 @@ class Session
     /**
      * Refresh a access token.
      *
-     * @return bool
+     * @return bool Whether the access token was successfully refreshed.
      */
     public function refreshToken()
     {
@@ -163,7 +163,7 @@ class Session
      *
      * @param array $scope Optional. Scope(s) to request from the user.
      *
-     * @return bool
+     * @return bool Whether a access token was successfully granted.
      */
     public function requestCredentialsToken($scope = array())
     {
@@ -196,7 +196,7 @@ class Session
      *
      * @param string $code The authorization code from Spotify.
      *
-     * @return bool
+     * @return bool Whether a access token was successfully granted.
      */
     public function requestToken($code)
     {

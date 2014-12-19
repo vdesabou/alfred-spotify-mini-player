@@ -17,66 +17,12 @@ This is a PHP implementation of the [Spotify Web API](https://developer.spotify.
 PHP 5.3 or greater.
 
 ## Installation
-1. If you're already using [Composer](https://getcomposer.org/) then you'll just need to include `jwilsson/spotify-web-api-php` as a dependency. Otherwise, download the library and include the files.
-2. Create a new app at https://developer.spotify.com/
-3. Enter your app credentials.
-4. Call the API!
 
-## Usage
-Depending on the API methods you're planning on using you can choose between authenticating the user or just go.
+Please refer to the [documentation](http://jwilsson.github.io/spotify-web-api-php/) for installation and usage instructions.
 
-### Authenticating a user
+## Examples
 
-#### Using Authorization Code Flow
-
-```php
-require 'vendor/autoload.php';
-
-$session = new SpotifyWebAPI\Session('CLIENT_ID', 'CLIENT_SECRET', 'REDIRECT_URI');
-
-// Get the authorization URL and send the user there
-header('Location: ' . $session->getAuthorizeUrl(array('scope' => array('scope-1', 'scope-2'))));
-```
-
-When receiving a request back to your redirect URI:
-
-```php
-require 'vendor/autoload.php';
-
-$session = new SpotifyWebAPI\Session('CLIENT_ID', 'CLIENT_SECRET', 'REDIRECT_URI');
-$api = new SpotifyWebAPI\SpotifyWebAPI();
-
-// Request a access token using the code from Spotify
-$session->requestToken($_GET['code']);
-$accessToken = $session->getAccessToken(); // We're good to go!
-
-// Set the code on the API wrapper
-$api->setAccessToken($accessToken);
-```
-
-#### Using Client Credentials Flow
-```php
-require 'vendor/autoload.php';
-
-$session = new SpotifyWebAPI\Session('CLIENT_ID', 'CLIENT_SECRET', 'REDIRECT_URI');
-
-// Request a access token with optional scopes
-$session->requestCredentialsToken(array('scope-1', 'scope-2'));
-$accessToken = $session->getAccessToken(); // We're good to go!
-
-// Set the code on the API wrapper
-$api->setAccessToken($accessToken);
-```
-
-### Making API calls
-
-```php
-$track = $api->getTrack('7EjyzZcbLxW7PaaLua9Ksb');
-
-print_r($track);
-```
-
-## More examples
+*We're in the middle of moving these examples to the [new site](http://jwilsson.github.io/spotify-web-api-php/examples/).*
 
 Add tracks to a user's library
 
@@ -320,4 +266,7 @@ Update a user's playlist
 $api->updateUserPlaylist('username', 'playlist_id', array('name' => 'New name'));
 ```
 
-Browse through `src/spotifywebapi.php` and look at the tests for more methods and examples.
+Browse through `src/SpotifyWebAPI.php` and look at the tests for more methods and examples.
+
+## License
+MIT license. Please see [LICENSE.md](LICENSE.md) for more information.

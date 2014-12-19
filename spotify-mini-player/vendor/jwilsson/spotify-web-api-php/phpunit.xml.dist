@@ -10,11 +10,21 @@
          stopOnFailure="false"
          syntaxCheck="false"
          bootstrap="./phpunit.php"
+         verbose="true"
 >
     <testsuites>
         <testsuite name="Spotify Web API Test Suite">
             <directory>./tests/</directory>
+            <exclude>./tests/SessionTest.php</exclude>
+        </testsuite>
+
+        <testsuite name="Spotify Web API Integration Tests">
+            <directory>./tests/</directory>
         </testsuite>
     </testsuites>
+
+    <logging>
+        <log type="coverage-clover" target="build/logs/clover.xml" />
+    </logging>
 
 </phpunit>

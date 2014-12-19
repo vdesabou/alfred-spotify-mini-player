@@ -367,4 +367,24 @@ class SpotifyWebAPITest extends PHPUnit_Framework_TestCase
 
         $this->assertTrue($response);
     }
+
+    public function testSetReturnAssoc()
+    {
+        $request = $this->getMock('SpotifyWebAPI\Request');
+        $request->expects($this->once())->method('setReturnAssoc')->with(true);
+
+        $api = new SpotifyWebAPI\SpotifyWebAPI($request);
+        $api->setReturnAssoc(true);
+    }
+
+    public function testGetReturnAssoc()
+    {
+        $request = $this->getMock('SpotifyWebAPI\Request');
+        $request->expects($this->once())
+            ->method('getReturnAssoc')
+            ->willReturn(true);
+
+        $api = new SpotifyWebAPI\SpotifyWebAPI($request);
+        $this->assertTrue($api->getReturnAssoc(true));
+    }
 }

@@ -16,6 +16,6 @@ if (isset($_GET['code'])) {
     print_r($api->me());
 } else {
     header('Location: ' . $session->getAuthorizeUrl(array(
-        'scope' => array('user-read-email')
+        'scope' => array('user-read-email', 'user-library-modify')
     )));
 }
