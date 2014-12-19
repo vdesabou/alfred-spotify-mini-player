@@ -4439,10 +4439,6 @@ function do_post_request($url, $data, $optional_headers = null)
  */
 function do_async_post_request($url, $params)
 {
-		// avoid warnings like this PHP Warning:
-		// fsockopen(): unable to connect to localhost (Connection refused)
-		error_reporting(~E_ALL);
-
         foreach ($params as $key => &$val) {
                 if (is_array($val)) $val = implode(',', $val);
                 $post_params[] = $key.'='.urlencode($val);
@@ -4455,7 +4451,7 @@ function do_async_post_request($url, $params)
                 isset($parts['port'])?$parts['port']:80,
                 $errno, $errstr, 30);
 
-		if(!$fp) {
+		if($fp) {
 	        $out = "POST ".$parts['path']." HTTP/1.1\r\n";
 	        $out.= "Host: ".$parts['host']."\r\n";
 	        $out.= "Content-Type: application/x-www-form-urlencoded\r\n";
@@ -4465,6 +4461,8 @@ function do_async_post_request($url, $params)
 
 	        fwrite($fp, $out);
 	        fclose($fp);
+		} else {
+			logMsg("Error: Problem when updating stat with stathat");
 		}
 }
 
