@@ -15,6 +15,7 @@ $query = escapeQuery($argv[1]);
 // thanks to http://www.alfredforum.com/topic/1788-prevent-flash-of-no-result
 $query = iconv('UTF-8-MAC', 'UTF-8', $query);
 
+
 //
 // check for library update in progress
 $update_in_progress = false;
@@ -1012,7 +1013,10 @@ if (mb_strlen($query) < 3) {
 
                 $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, $artist_uri /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'display_biography' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, $artist_name  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */, $now_playing_notifications /* now_playing_notifications */, $is_alfred_playlist_active /* is_alfred_playlist_active */, $country_code /* country_code*/, $userid /* userid*/)), 'Display biography', 'This will display the artist biography', './images/biography.png', 'yes', null, '');
 
+                $w->result(null, '', 'Follow/Unfollow Artist', 'Display options to follow/unfollow the artist', './images/follow.png', 'no', null, "Follow/Unfollow▹" . $artist_uri . "@" . $artist_name);
+
                 $w->result(null, '', 'Related Artists', 'Browse related artists', './images/related.png', 'no', null, "OnlineRelated▹" . $artist_uri . "@" . $artist_name);
+
                 if ($update_in_progress == false) {
                     $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, $artist_uri /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'radio_artist' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, $artist_name  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */, $now_playing_notifications /* now_playing_notifications */, $is_alfred_playlist_active /* is_alfred_playlist_active */, $country_code /* country_code*/, $userid /* userid*/)), 'Create a Radio Playlist for ' . $artist_name, 'This will create a radio playlist with ' . $radio_number_tracks . ' tracks for the artist', './images/radio_artist.png', 'yes', null, '');
                 }
@@ -1110,6 +1114,99 @@ if (mb_strlen($query) < 3) {
                 }
             }
         } // end OnlineRelated
+        elseif ($kind == "Follow/Unfollow") {
+            if (substr_count($query, '@') == 1) {
+                //
+                // Follow / Unfollow artist Option menu
+                //
+                $tmp = $words[1];
+                $words = explode('@', $tmp);
+                $artist_uri = $words[0];
+                $tmp_uri = explode(':', $artist_uri);
+
+                $artist_name = $words[1];
+
+	            $api = getSpotifyWebAPI($w, false);
+	            if ($api == false) {
+	                $w->result(null, 'help', "Internal issue (getSpotifyWebAPI)", "", './images/warning.png', 'no', null, '');
+	                echo $w->toxml();
+	                return;
+	            }
+
+	            try {
+	                $isArtistFollowed = $api->currentUserFollows(
+		                'artist',
+		                $tmp_uri[2]
+	                );
+
+					$artist_artwork_path = getArtistArtwork($w,  $artist_name, false);
+					if(!$isArtistFollowed[0]) {
+						$w->result(null, '', 'Follow artist ' .$artist_name, 'You are not currently following the artist', $artist_artwork_path, 'no', null, "Follow▹" . $artist_uri . "@" . $artist_name);
+					} else {
+						$w->result(null, '', 'Unfollow artist ' .$artist_name, 'You are currently following the artist', $artist_artwork_path, 'no', null, "Unfollow▹" . $artist_uri . "@" . $artist_name);
+					}
+
+	            } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+	                $w->result(null, 'help', "Exception occurred", "" . $e, './images/warning.png', 'no', null, '');
+	                echo $w->toxml();
+	                return;
+	            }
+            }
+        } // end Follow/Unfollow
+        elseif ($kind == "Follow" || $kind == "Unfollow") {
+            if (substr_count($query, '@') == 1) {
+                //
+                // Follow / Unfollow actions
+                //
+                $tmp = $words[1];
+                $words = explode('@', $tmp);
+                $artist_uri = $words[0];
+                $tmp_uri = explode(':', $artist_uri);
+
+                $artist_name = $words[1];
+
+	            $api = getSpotifyWebAPI($w, false);
+	            if ($api == false) {
+	                $w->result(null, 'help', "Internal issue (getSpotifyWebAPI)", "", './images/warning.png', 'no', null, '');
+	                echo $w->toxml();
+	                return;
+	            }
+
+				if($kind == "Follow") {
+					$follow=true;
+				} else {
+					$follow=false;
+				}
+	            try {
+
+		            if($follow) {
+		                $ret = $api->followArtistsOrUsers(
+			                'artist',
+			                $tmp_uri[2]
+		                );
+		            } else {
+		                $ret = $api->unfollowArtistsOrUsers(
+			                'artist',
+			                $tmp_uri[2]
+		                );
+		            }
+
+					if($ret) {
+						if($follow) {
+							$w->result(null, '', 'Success!', 'You are now following the artist ' . $artist_name, './images/info.png', 'no', null, '');
+						} else {
+							$w->result(null, '', 'Success!', 'You are no more following the artist ' . $artist_name, './images/info.png', 'no', null, '');
+						}
+					} else {
+						$w->result(null, '', 'Error!', 'An error happened, try again or report to the author', './images/warning.png', 'no', null, '');
+					}
+	            } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+	                $w->result(null, 'help', "Exception occurred", "" . $e, './images/warning.png', 'no', null, '');
+	                echo $w->toxml();
+	                return;
+	            }
+            }
+        } // end Follow
         elseif ($kind == "Settings") {
 			// do not allow settings if update in progress
 			if($update_in_progress == true) {
@@ -1261,6 +1358,7 @@ if (mb_strlen($query) < 3) {
 
                 $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, $artist_uri /* artist_uri */, '' /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, 'display_biography' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, $artist_name  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, '' /* playlist_name */, '' /* playlist_artwork_path */, $alfred_playlist_name /* $alfred_playlist_name */, $now_playing_notifications /* now_playing_notifications */, $is_alfred_playlist_active /* is_alfred_playlist_active */, $country_code /* country_code*/, $userid /* userid*/)), 'Display biography', 'This will display the artist biography', './images/biography.png', 'yes', null, '');
 
+                $w->result(null, '', 'Follow/Unfollow Artist', 'Display options to follow/unfollow the artist', './images/follow.png', 'no', null, "Follow/Unfollow▹" . $artist_uri . "@" . $artist_name);
 
                 $w->result(null, '', 'Related Artists', 'Browse related artists', './images/related.png', 'no', null, "OnlineRelated▹" . $artist_uri . "@" . $artist_name);
 
@@ -1829,7 +1927,7 @@ if (mb_strlen($query) < 3) {
 	                    $owner = $playlist->owner;
 
 	                    $playlist_artwork_path = getPlaylistArtwork($w,  $playlist->uri, false);
-	                    $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, $playlist->uri /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, '' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, $playlist->name /* playlist_name */, $playlist_artwork_path /* playlist_artwork_path */, $alfred_playlist_name /* alfred_playlist_name */)), ucfirst($playlist->name) . " (" . $tracks->total . " tracks)", $arrayresult, $playlist_artwork_path, $playlist->uri, 'yes', null, '');
+	                    $w->result(null, serialize(array('' /*track_uri*/, '' /* album_uri */, '' /* artist_uri */, $playlist->uri /* playlist_uri */, '' /* spotify_command */, '' /* query */, '' /* other_settings*/, '' /* other_action */, $alfred_playlist_uri /* alfred_playlist_uri */, ''  /* artist_name */, '' /* track_name */, '' /* album_name */, '' /* track_artwork_path */, '' /* artist_artwork_path */, '' /* album_artwork_path */, $playlist->name /* playlist_name */, $playlist_artwork_path /* playlist_artwork_path */, $alfred_playlist_name /* alfred_playlist_name */)), ucfirst($playlist->name) . " (" . $tracks->total . " tracks)", $arrayresult, $playlist_artwork_path, 'yes', null, '');
 	                }
 
 	            } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
