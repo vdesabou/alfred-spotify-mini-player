@@ -3745,9 +3745,9 @@ function handleSpotifyWebAPIException($w,$e) {
         rename($w->data() . '/library_old.db', $w->data() . '/library.db');
     }
 
-	displayNotificationWithArtwork('Exception: ' . $e->getMessage() . ' use spot_mini_debug command','./images/warning.png', 'Error!');
+	displayNotificationWithArtwork('Web API Exception: ' . $e->getMessage() . ' use spot_mini_debug command','./images/warning.png', 'Error!');
 
-	exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug " . $e->getMessage() . "\"'");
+	exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug Web API Exception: " . escapeQuery($e->getMessage()) . "\"'");
 
 	exit;
 }
@@ -3761,7 +3761,8 @@ function handleSpotifyWebAPIException($w,$e) {
  */
 function handleDbIssuePdoEcho($dbhandle,$w)
 {
-    echo 'Database Error: ' . $dbhandle->errorInfo()[0] . ' ' . $dbhandle->errorInfo()[1] . ' ' . $dbhandle->errorInfo()[2] . '\n';
+    echo 'DB Exception: ' . $dbhandle->errorInfo()[0] . ' ' . $dbhandle->errorInfo()[1] . ' ' . $dbhandle->errorInfo()[2] . '\n';
+
     if (file_exists($w->data() . '/update_library_in_progress')) {
         unlink($w->data() . '/update_library_in_progress');
     }
@@ -3775,7 +3776,10 @@ function handleDbIssuePdoEcho($dbhandle,$w)
         unlink($w->data() . '/library_old.db');
     }
 
-    displayNotificationWithArtwork("DB error " . $dbhandle->errorInfo()[2], './images/warning.png');
+    displayNotificationWithArtwork("DB Exception: " . $dbhandle->errorInfo()[2], './images/warning.png');
+
+	exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug DB Exception: " . escapeQuery($dbhandle->errorInfo()[2]) . "\"'");
+
     exit;
 }
 
