@@ -3,11 +3,15 @@
 // Turn off all error reporting
 error_reporting(0);
 
-
 // Load and use David Ferguson's Workflows.php class
 require_once './src/workflows.php';
 $w = new Workflows('com.vdesabou.spotify.mini.player');
 
+$query = $argv[1];
+
+if (mb_strlen($query) > 1) {
+	$w->result(null, '', 'Exception occurred: ' . $query, 'Open issue with spot_mini_issue and send spot_mini_debug.tgz to the author (helmut.perchue at gmail.com)', './images/warning.png', 'no', null, '');
+}
 
 exec("mkdir -p ~/Downloads/spot_mini_debug");
 
@@ -50,6 +54,8 @@ exec("cd ~/Downloads;tar cfz spot_mini_debug.tgz spot_mini_debug");
 $val = $w->home() . '/Downloads/spot_mini_debug.tgz';
 
 $w->result(uniqid(), $val, 'Browse to generated tgz file', $val, 'fileicon:' . $val, 'yes', null, 'file');
+
+$w->result(null, '', 'Quick access to workflow folders:', '', './images/info.png', 'no', null, '');
 
 $val = $w->data();
 

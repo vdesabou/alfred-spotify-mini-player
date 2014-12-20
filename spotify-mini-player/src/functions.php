@@ -53,7 +53,7 @@ function getSpotifyWebAPI($w, $exitOnError = true, $old_api = null)
 			    logMsg("Error: cannot set oauth_access_token in getSpotifyWebAPI");
 		        if($exitOnError == true) {
 			        // handle error and exit
-			        handleSpotifyWebAPIException($w);
+			        handleSpotifyWebAPIException($w,$e);
 		        } else {
 			        return false;
 		        }
@@ -64,7 +64,7 @@ function getSpotifyWebAPI($w, $exitOnError = true, $old_api = null)
 			    logMsg("Error: cannot set oauth_expires in getSpotifyWebAPI");
 		        if($exitOnError == true) {
 			        // handle error and exit
-			        handleSpotifyWebAPIException($w);
+			        handleSpotifyWebAPIException($w,$e);
 		        } else {
 			        return false;
 		        }
@@ -75,7 +75,7 @@ function getSpotifyWebAPI($w, $exitOnError = true, $old_api = null)
 		    logMsg("Error: token could not be refreshed in getSpotifyWebAPI");
 	        if($exitOnError == true) {
 		        // handle error and exit
-		        handleSpotifyWebAPIException($w);
+		        handleSpotifyWebAPIException($w,$e);
 	        } else {
 		        return false;
 	        }
@@ -209,7 +209,7 @@ function searchWebApi($w,$country_code,$query, $type, $limit = 50) {
         } while ($offsetSearch < $searchResults->total);
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
         logMsg("Error(search): (exception " . print_r($e) . ")");
-        handleSpotifyWebAPIException($w);
+        handleSpotifyWebAPIException($w,$e);
         return false;
     }
     return $results;
@@ -594,7 +594,7 @@ function addTracksToYourMusic($w, $tracks, $allow_duplicate = true)
             $tracks = $tracks_with_no_dup;
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
             logMsg("Error(addTracksToYourMusic): (exception " . print_r($e) . ")");
-            handleSpotifyWebAPIException($w);
+            handleSpotifyWebAPIException($w,$e);
             return false;
         }
     }
@@ -617,7 +617,7 @@ function addTracksToYourMusic($w, $tracks, $allow_duplicate = true)
 
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
             logMsg("Error(addTracksToYourMusic): (exception " . print_r($e) . ")");
-            handleSpotifyWebAPIException($w);
+            handleSpotifyWebAPIException($w,$e);
             return false;
         }
 
@@ -665,7 +665,7 @@ function addTracksToPlaylist($w, $tracks, $playlist_uri, $playlist_name, $allow_
             $tracks = $tracks_with_no_dup;
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
             logMsg("Error(addTracksToPlaylist): (exception " . print_r($e) . ")");
-            handleSpotifyWebAPIException($w);
+            handleSpotifyWebAPIException($w,$e);
             return false;
         }
     }
@@ -698,7 +698,7 @@ function addTracksToPlaylist($w, $tracks, $playlist_uri, $playlist_name, $allow_
             } while (count($output) > 0);
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
             logMsg("Error(addTracksToPlaylist): (exception " . print_r($e) . ")");
-            handleSpotifyWebAPIException($w);
+            handleSpotifyWebAPIException($w,$e);
             return false;
         }
 
@@ -794,7 +794,7 @@ function getArtistUriFromTrack($w, $track_uri)
         return $artist->uri;
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
         echo "Error(getArtistUriFromTrack): (exception " . print_r($e) . ")";
-        handleSpotifyWebAPIException($w);
+        handleSpotifyWebAPIException($w,$e);
     }
     return false;
 }
@@ -873,7 +873,7 @@ function getAlbumUriFromTrack($w, $track_uri)
         $album = $track->album;
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
         logMsg("Error(getAlbumUriFromTrack): (exception " . print_r($e) . ")");
-        handleSpotifyWebAPIException($w);
+        handleSpotifyWebAPIException($w,$e);
         return false;
     }
 
@@ -899,7 +899,7 @@ function clearPlaylist($w, $playlist_uri, $playlist_name)
         $api->replacePlaylistTracks(urlencode($tmp[2]), $tmp[4], $emptytracks);
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
         logMsg("Error(clearPlaylist): playlist uri " . $playlist_uri . " (exception " . print_r($e) . ")");
-        handleSpotifyWebAPIException($w);
+        handleSpotifyWebAPIException($w,$e);
         return false;
     }
 
@@ -936,7 +936,7 @@ function createTheUserPlaylist($w, $playlist_name)
         ));
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
         logMsg("Error(createUserPlaylist): createUserPlaylist " . $playlist_name . " (exception " . print_r($e) . ")");
-        handleSpotifyWebAPIException($w);
+        handleSpotifyWebAPIException($w,$e);
         return false;
     }
 
@@ -1006,7 +1006,7 @@ function createRadioArtistPlaylist($w, $artist_name)
             ));
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
             logMsg("Error(createUserPlaylist): radio artist " . $artist_name . " (exception " . print_r($e) . ")");
-            handleSpotifyWebAPIException($w);
+            handleSpotifyWebAPIException($w,$e);
             return false;
         }
 
@@ -1016,9 +1016,6 @@ function createRadioArtistPlaylist($w, $artist_name)
             return;
         } else if (is_numeric($ret) && $ret == 0) {
             displayNotificationWithArtwork('Playlist ' . $json->name . ' cannot be added','./images/warning.png', 'Error!');
-            return;
-        } else {
-			displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
             return;
         }
     } else {
@@ -1115,7 +1112,7 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name)
             ));
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
             logMsg("Error(createUserPlaylist): radio song " . escapeQuery($track_name) . " (exception " . print_r($e) . ")");
-            handleSpotifyWebAPIException($w);
+            handleSpotifyWebAPIException($w,$e);
             return false;
         }
 
@@ -1125,9 +1122,6 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name)
             return;
         } else if (is_numeric($ret) && $ret == 0) {
             displayNotificationWithArtwork('Playlist ' . $json->name . ' cannot be added','./images/warning.png', 'Error!');
-            return;
-        } else {
-			displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
             return;
         }
     } else {
@@ -1172,7 +1166,7 @@ function getThePlaylistTracks($w, $playlist_uri)
         } while ($offsetGetUserPlaylistTracks < $userPlaylistTracks->total);
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
         logMsg("Error(getThePlaylistTracks): playlist uri " . $playlist_uri . " (exception " . print_r($e) . ")");
-        handleSpotifyWebAPIException($w);
+        handleSpotifyWebAPIException($w,$e);
         return false;
     }
 
@@ -1201,7 +1195,7 @@ function getTheAlbumTracks($w, $album_uri)
         }
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
         logMsg("Error(getTheAlbumTracks): (exception " . print_r($e) . ")");
-        handleSpotifyWebAPIException($w);
+        handleSpotifyWebAPIException($w,$e);
         return false;
     }
 
@@ -2353,7 +2347,7 @@ function updateLibrary($w)
         } while ($offsetGetUserPlaylists < $userPlaylists->total);
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
         logMsg("Error(getUserPlaylists): (exception " . print_r($e) . ")");
-        handleSpotifyWebAPIException($w);
+        handleSpotifyWebAPIException($w,$e);
         return false;
     }
 
@@ -2379,7 +2373,7 @@ function updateLibrary($w)
         } while ($offsetGetMySavedTracks < $userMySavedTracks->total);
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
         logMsg("Error(getMySavedTracks): (exception " . print_r($e) . ")");
-        handleSpotifyWebAPIException($w);
+        handleSpotifyWebAPIException($w,$e);
         return false;
     }
 
@@ -2621,7 +2615,7 @@ function updateLibrary($w)
 
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
             logMsg("Error(getUserPlaylistTracks): playlist id " . $playlist->id . " (exception " . print_r($e) . ")");
-            handleSpotifyWebAPIException($w);
+            handleSpotifyWebAPIException($w,$e);
             return false;
         }
     }
@@ -2993,8 +2987,7 @@ function refreshLibrary($w)
         } while ($offsetGetUserPlaylists < $userPlaylists->total);
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
         logMsg("Error(getUserPlaylists): (exception " . print_r($e) . ")");
-        unlink($w->data() . "/update_library_in_progress");
-        unlink($w->data() . "/library_new.db");
+        handleSpotifyWebAPIException($w,$e);
     }
 
 	// consider Your Music as a playlist for progress bar
@@ -3193,7 +3186,7 @@ function refreshLibrary($w)
 			    }
             } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
                 logMsg("Error(getUserPlaylistTracks): playlist id " . $playlist->id . " (exception " . print_r($e) . ")");
-                handleSpotifyWebAPIException($w);
+                handleSpotifyWebAPIException($w,$e);
                 return;
             }
 
@@ -3383,7 +3376,7 @@ function refreshLibrary($w)
 				    }
                 } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
                     logMsg("Error(getUserPlaylistTracks): playlist id " . $tmp[4] . " (exception " . print_r($e) . ")");
-                    handleSpotifyWebAPIException($w);
+                    handleSpotifyWebAPIException($w,$e);
                     return;
                 }
                 displayNotificationWithArtwork('Updated playlist ' .  escapeQuery($playlist->name), getPlaylistArtwork($w,  $playlist->uri, true), 'Refresh Library');
@@ -3442,7 +3435,7 @@ function refreshLibrary($w)
         ));
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
         logMsg("Error(getMySavedTracks): (exception " . print_r($e) . ")");
-        handleSpotifyWebAPIException($w);
+        handleSpotifyWebAPIException($w,$e);
         return false;
     }
 
@@ -3603,7 +3596,7 @@ function refreshLibrary($w)
 	        } while ($offsetGetMySavedTracks < $userMySavedTracks->total);
 	    } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 	        logMsg("Error(getMySavedTracks): (exception " . print_r($e) . ")");
-	        handleSpotifyWebAPIException($w);
+	        handleSpotifyWebAPIException($w,$e);
 	        return false;
 	    }
     }
@@ -3734,9 +3727,10 @@ function handleDbIssuePdoXml($dbhandle)
  *
  * @access public
  * @param mixed $w
+ * @param mixed $e
  * @return void
  */
-function handleSpotifyWebAPIException($w) {
+function handleSpotifyWebAPIException($w,$e) {
     if (file_exists($w->data() . '/update_library_in_progress')) {
         unlink($w->data() . '/update_library_in_progress');
     }
@@ -3751,7 +3745,9 @@ function handleSpotifyWebAPIException($w) {
         rename($w->data() . '/library_old.db', $w->data() . '/library.db');
     }
 
-	displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
+	displayNotificationWithArtwork('Exception: ' . $e->getMessage() . ' use spot_mini_debug command','./images/warning.png', 'Error!');
+
+	exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug " . $e->getMessage() . "\"'");
 
 	exit;
 }

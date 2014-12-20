@@ -2760,7 +2760,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>reset_settings</string>
+				<string>spot_mini_reset_settings</string>
 				<key>subtext</key>
 				<string>The authentication will have to be done again</string>
 				<key>text</key>
@@ -2871,7 +2871,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>kill_update</string>
+				<string>spot_mini_kill</string>
 				<key>subtext</key>
 				<string>use it if the library update seems stuck</string>
 				<key>text</key>
@@ -2963,23 +2963,23 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 			<key>config</key>
 			<dict>
 				<key>argumenttype</key>
-				<integer>2</integer>
+				<integer>1</integer>
 				<key>escaping</key>
-				<integer>127</integer>
+				<integer>38</integer>
 				<key>keyword</key>
-				<string>debug</string>
+				<string>spot_mini_debug</string>
 				<key>runningsubtext</key>
 				<string>Wait for it...</string>
 				<key>script</key>
-				<string>php -f ./src/debug.php</string>
+				<string>php -f ./src/debug.php -- "{query}"</string>
 				<key>subtext</key>
-				<string>Send the generated tgz file to the workflow author</string>
+				<string>Please send the generated tgz file to the workflow author</string>
 				<key>title</key>
 				<string>Debug tools for Spotify Mini Player</string>
 				<key>type</key>
 				<integer>0</integer>
 				<key>withspace</key>
-				<false/>
+				<true/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.input.scriptfilter</string>
@@ -3278,7 +3278,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>issue</string>
+				<string>spot_mini_issue</string>
 				<key>subtext</key>
 				<string>This will open the GitHub page</string>
 				<key>text</key>

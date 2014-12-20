@@ -99,10 +99,7 @@ if ($type == "TRACK" && $other_settings == "") {
                 } else if (is_numeric($ret) && $ret == 0) {
                     displayNotificationWithArtwork('' . $track_name . ' by ' . $artist_name . ' is already in ' . $alfred_playlist_name . ' Alfred Playlist','./images/warning.png', 'Error!');
                     return;
-                } else {
-					displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
-	                return;
-	            }
+                }
             } else {
                 // add track to your music
                 $ret = addTracksToYourMusic($w, $tmp[2], false);
@@ -113,10 +110,7 @@ if ($type == "TRACK" && $other_settings == "") {
                 } else if (is_numeric($ret) && $ret == 0) {
                     displayNotificationWithArtwork('' . $track_name . ' by ' . $artist_name . ' is already in Your Music','./images/warning.png', 'Error!');
                     return;
-                } else {
-					displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
-	                return;
-	            }
+                }
             }
         } else if ($playlist_uri != "") {
             // start now playing if needed
@@ -231,10 +225,7 @@ if ($type == "TRACK" && $other_settings == "") {
                 } else if (is_numeric($ret) && $ret == 0) {
                     displayNotificationWithArtwork('Album ' . $album_name . ' is already in ' . $alfred_playlist_name . ' Alfred Playlist','./images/warning.png', 'Error!');
                     return;
-                } else {
-					displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
-	                return;
-	            }
+                }
             } else {
                 // add album to your music
                 $ret = addTracksToYourMusic($w, getTheAlbumTracks($w, $album_uri), false);
@@ -245,10 +236,7 @@ if ($type == "TRACK" && $other_settings == "") {
                 } else if (is_numeric($ret) && $ret == 0) {
                     displayNotificationWithArtwork('Album ' . $album_name . ' is already in Your Music','./images/warning.png', 'Error!');
                     return;
-                } else {
-					displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
-	                return;
-	            }
+                }
             }
 
             return;
@@ -269,10 +257,7 @@ if ($type == "TRACK" && $other_settings == "") {
                 } else if (is_numeric($ret) && $ret == 0) {
                     displayNotificationWithArtwork('Playlist ' . $playlist_name . ' is already in ' . $alfred_playlist_name . ' Alfred Playlist','./images/warning.png', 'Error!');
                     return;
-                } else {
-					displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
-	                return;
-	            }
+                }
             } else {
                 // add playlist to your music
                 $ret = addTracksToYourMusic($w, getThePlaylistTracks($w, $playlist_uri), false);
@@ -283,10 +268,7 @@ if ($type == "TRACK" && $other_settings == "") {
                 } else if (is_numeric($ret) && $ret == 0) {
                     displayNotificationWithArtwork('Playlist ' . $playlist_name . ' is already in Your Music','./images/warning.png', 'Error!');
                     return;
-                } else {
-					displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
-	                return;
-	            }
+                }
             }
 
             return;
@@ -445,9 +427,6 @@ if ($playlist_uri != "" && $other_settings == "") {
             } else if (is_numeric($ret) && $ret == 0) {
                 displayNotificationWithArtwork('' . $track_name . ' is already in ' . $setting[2] . ' playlist','./images/warning.png', 'Error!');
                 return;
-            } else {
-				displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
-                return;
             }
         } // add playlist to playlist
         elseif ($playlist_uri != '') {
@@ -460,9 +439,6 @@ if ($playlist_uri != "" && $other_settings == "") {
             } else if (is_numeric($ret) && $ret == 0) {
                 displayNotificationWithArtwork('Playlist ' . $playlist_name . ' is already in ' . $setting[2] . ' playlist','./images/warning.png', 'Error!');
                 return;
-            } else {
-				displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
-                return;
             }
         } // add album to playlist
         elseif ($album_uri != '') {
@@ -474,9 +450,6 @@ if ($playlist_uri != "" && $other_settings == "") {
                 return;
             } else if (is_numeric($ret) && $ret == 0) {
                 displayNotificationWithArtwork('Album ' . $album_name . ' is already in ' . $setting[2] . ' playlist','./images/warning.png', 'Error!');
-                return;
-            } else {
-				displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
                 return;
             }
         }
@@ -518,10 +491,7 @@ if ($playlist_uri != "" && $other_settings == "") {
 				} else if (is_numeric($ret) && $ret == 0) {
 					displayNotificationWithArtwork('' . $track_name . ' is already in Your Music','./images/warning.png', 'Error!');
 					return;
-				} else {
-					displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
-	                return;
-            	}
+				}
 			} // add playlist to your music
 			elseif ($playlist_uri != '') {
 				$playlist_artwork_path = getPlaylistArtwork($w,  $playlist_uri, true, true);
@@ -533,10 +503,7 @@ if ($playlist_uri != "" && $other_settings == "") {
 				} else if (is_numeric($ret) && $ret == 0) {
 					displayNotificationWithArtwork('Playlist ' . $playlist_name . ' is already in Your Music','./images/warning.png', 'Error!');
 					return;
-				} else {
-					displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
-	                return;
-	            }
+				}
 			} // add album to your music
 			elseif ($album_uri != '') {
 				$album_artwork_path = getTrackOrAlbumArtwork($w,  $album_uri, true);
@@ -548,10 +515,7 @@ if ($playlist_uri != "" && $other_settings == "") {
 				} else if (is_numeric($ret) && $ret == 0) {
 					displayNotificationWithArtwork('Album ' . $album_name . ' is already in Your Music','./images/warning.png', 'Error!');
 					return;
-				} else {
-					displayNotificationWithArtwork('Exception occurred. Use debug command to get tgz file and then open an issue','./images/warning.png', 'Error!');
-	                return;
-	            }
+				}
 			}
 	} else if ($setting[0] == "Open") {
         exec("open \"$setting[1]\"");
