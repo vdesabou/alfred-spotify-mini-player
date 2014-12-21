@@ -105,6 +105,7 @@ function getBiography($w, $artist_uri, $artist_name)
 {
     $json     = doWebApiRequest($w, 'http://developer.echonest.com/api/v4/artist/biographies?api_key=5EG94BIZEGFEY9AL9&id=' . $artist_uri);
     $response = $json->response;
+    PHPRtfLite::registerAutoloader();
 
     foreach ($response->biographies as $biography) {
         if ($biography->site == "wikipedia") {
