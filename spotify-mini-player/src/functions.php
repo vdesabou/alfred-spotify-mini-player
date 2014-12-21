@@ -4031,7 +4031,11 @@ function getLyrics($w, $artist, $title)
 	        case JSON_ERROR_SYNTAX:
 	            return array(false,'');
 	        case JSON_ERROR_NONE:
-	            return array($uri,$json->lyrics->attributes->lyrics_body);
+	        	if($json->lyrics->attributes->lyrics_body == '') {
+		        	return array(false,'');
+	        	} else {
+		        	return array($uri,$json->lyrics->attributes->lyrics_body);
+	        	}
 	    }
 
     }
