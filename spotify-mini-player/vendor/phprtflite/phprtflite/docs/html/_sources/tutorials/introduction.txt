@@ -1,0 +1,20 @@
+.. introduction:
+
+************
+Introduction
+************
+
+Labber sülz
+
+Products can also be created:
+
+.. code-block:: php
+
+    <?php
+    $newProductName = "My Product";
+    
+    $product = new Product();
+    $product->name = $newProductName;
+    
+    $entityManager->persist($product);
+    $entityManager->flush();

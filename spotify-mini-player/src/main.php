@@ -1157,7 +1157,7 @@ if (mb_strlen($query) < 3) {
                 )), "💿 " . escapeQuery($results[2]), 'Play album', $album_artwork_path, 'yes', null, '');
 
 
-                $w->result(null, '', "Get Lyrics for track " . escapeQuery($results[0]), "This will fetch lyrics online", './images/lyrics.png', 'no', null, "Lyrics▹" . $results[4] . "∙" . escapeQuery($results[1]) . '∙' . escapeQuery($results[0]));
+                $w->result(null, '', "Get Lyrics for track " . escapeQuery($results[0]), "This will fetch lyrics onlineg", './images/lyrics.png', 'no', null, "Lyrics▹" . $results[4] . "∙" . escapeQuery($results[1]) . '∙' . escapeQuery($results[0]));
 
                 if ($update_in_progress == false) {
                     $w->result(null, '', 'Add track ' . escapeQuery($results[0]) . ' to...', 'This will add current track to Your Music or a playlist you will choose in next step', './images/add.png', 'no', null, 'Add▹' . $results[4] . '∙' . escapeQuery($results[0]) . '▹');
@@ -1423,8 +1423,31 @@ if (mb_strlen($query) < 3) {
                     /* userid*/
                 )), "👤 " . $artist_name, 'Play artist', $artist_artwork_path, 'yes', null, '');
 
-
-                $w->result(null, '', "Display biography " . escapeQuery($results[0]), "This will display the artist biography", './images/biography.png', 'no', null, "Biography▹" . $artist_uri . '∙' . escapeQuery($artist_name));
+                $w->result(null, serialize(array(
+                    '' /*track_uri*/ ,
+                    '' /* album_uri */ ,
+                    $artist_uri /* artist_uri */ ,
+                    '' /* playlist_uri */ ,
+                    '' /* spotify_command */ ,
+                    '' /* query */ ,
+                    '' /* other_settings*/ ,
+                    'display_biography' /* other_action */ ,
+                    $alfred_playlist_uri /* alfred_playlist_uri */ ,
+                    $artist_name /* artist_name */ ,
+                    '' /* track_name */ ,
+                    '' /* album_name */ ,
+                    '' /* track_artwork_path */ ,
+                    '' /* artist_artwork_path */ ,
+                    '' /* album_artwork_path */ ,
+                    '' /* playlist_name */ ,
+                    '' /* playlist_artwork_path */ ,
+                    $alfred_playlist_name /* $alfred_playlist_name */ ,
+                    $now_playing_notifications /* now_playing_notifications */ ,
+                    $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
+                    $country_code /* country_code*/ ,
+                    $userid
+                    /* userid*/
+                )), 'Display biography', 'This will display the artist biography', './images/biography.png', 'yes', null, '');
 
                 $w->result(null, '', 'Follow/Unfollow Artist', 'Display options to follow/unfollow the artist', './images/follow.png', 'no', null, "Follow/Unfollow▹" . $artist_uri . "@" . $artist_name);
 
@@ -1615,6 +1638,8 @@ if (mb_strlen($query) < 3) {
 				list($lyrics_url, $lyrics) = getLyrics($w, $artist_name, $track_name);
 
 				if($lyrics_url != false) {
+					$lyrics_sentances = explode("\n", $lyrics);
+
                     $w->result(null, serialize(array(
                         '' /*track_uri*/ ,
                         '' /* album_uri */ ,
@@ -1641,7 +1666,6 @@ if (mb_strlen($query) < 3) {
                         /* userid*/
                     )), 'See lyrics for ' . $track_name . ' by ' .  $artist_name . ' online', "This will open your default browser", './images/lyrics.png', 'yes', null, '');
 
-					$lyrics_sentances = explode("\n", $lyrics);
 					$track_artwork = getTrackOrAlbumArtwork($w, $track_uri, false);
 					for ($i = 0; $i < count($lyrics_sentances); $i++) {
 						$w->result(null, '', $lyrics_sentances[$i], '', $track_artwork, 'no', null, '');
@@ -1653,62 +1677,6 @@ if (mb_strlen($query) < 3) {
 				}
             }
         } // end Lyrics
-            elseif ($kind == "Biography") {
-            if (substr_count($query, '∙') == 1) {
-                //
-                // Search Lyrics
-                //
-                $tmp         = $words[1];
-                $words       = explode('∙', $tmp);
-                $artist_uri   = $words[0];
-                $artist_name = $words[1];
-
-				list($biography_url, $source ,$biography) = getBiography($w, $artist_uri, $artist_name);
-
-				if($biography_url != false) {
-
-                    $w->result(null, serialize(array(
-                        '' /*track_uri*/ ,
-                        '' /* album_uri */ ,
-                        '' /* artist_uri */ ,
-                        '' /* playlist_uri */ ,
-                        '' /* spotify_command */ ,
-                        '' /* query */ ,
-                        'Open▹' . $biography_url /* other_settings*/ ,
-                        '' /* other_action */ ,
-                        $alfred_playlist_uri /* alfred_playlist_uri */ ,
-                        '' /* artist_name */ ,
-                        '' /* track_name */ ,
-                        '' /* album_name */ ,
-                        '' /* track_artwork_path */ ,
-                        '' /* artist_artwork_path */ ,
-                        '' /* album_artwork_path */ ,
-                        '' /* playlist_name */ ,
-                        '' /* playlist_artwork_path */ ,
-                        $alfred_playlist_name /* $alfred_playlist_name */ ,
-                        $now_playing_notifications /* now_playing_notifications */ ,
-                        $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
-                        $country_code /* country_code*/ ,
-                        $userid
-                        /* userid*/
-                    )), 'See biography for ' . $artist_name . ' on ' . $source, "This will open your default browser", './images/biography.png', 'yes', null, '');
-
-					$wrapped = wordwrap($biography, 82, "\n", false);
-
-					$biography_sentances = explode("\n", $wrapped);
-
-
-					$artist_artwork_path = getArtistArtwork($w, $artist_name, false);
-					for ($i = 0; $i < count($biography_sentances); $i++) {
-						$w->result(null, '', $biography_sentances[$i], '', $artist_artwork_path, 'no', null, '');
-					}
-				} else {
-                    $w->result(null, 'help', "No biography found!", "", './images/warning.png', 'no', null, '');
-                    echo $w->toxml();
-                    return;
-				}
-            }
-        } // end Biography
             elseif ($kind == "Follow/Unfollow") {
             if (substr_count($query, '@') == 1) {
                 //
@@ -2291,7 +2259,32 @@ if (mb_strlen($query) < 3) {
                     /* userid*/
                 )), "👤 " . $artist_name, '☁︎ Query all albums/tracks from this artist online..', './images/online_artist.png', 'yes', null, '');
 
-                $w->result(null, '', "Display biography " . escapeQuery($results[0]), "This will display the artist biography", './images/biography.png', 'no', null, "Biography▹" . $artist_uri . '∙' . escapeQuery($artist_name));
+
+                $w->result(null, serialize(array(
+                    '' /*track_uri*/ ,
+                    '' /* album_uri */ ,
+                    $artist_uri /* artist_uri */ ,
+                    '' /* playlist_uri */ ,
+                    '' /* spotify_command */ ,
+                    '' /* query */ ,
+                    '' /* other_settings*/ ,
+                    'display_biography' /* other_action */ ,
+                    $alfred_playlist_uri /* alfred_playlist_uri */ ,
+                    $artist_name /* artist_name */ ,
+                    '' /* track_name */ ,
+                    '' /* album_name */ ,
+                    '' /* track_artwork_path */ ,
+                    '' /* artist_artwork_path */ ,
+                    '' /* album_artwork_path */ ,
+                    '' /* playlist_name */ ,
+                    '' /* playlist_artwork_path */ ,
+                    $alfred_playlist_name /* $alfred_playlist_name */ ,
+                    $now_playing_notifications /* now_playing_notifications */ ,
+                    $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
+                    $country_code /* country_code*/ ,
+                    $userid
+                    /* userid*/
+                )), 'Display biography', 'This will display the artist biography', './images/biography.png', 'yes', null, '');
 
                 $w->result(null, '', 'Follow/Unfollow Artist', 'Display options to follow/unfollow the artist', './images/follow.png', 'no', null, "Follow/Unfollow▹" . $artist_uri . "@" . $artist_name);
 

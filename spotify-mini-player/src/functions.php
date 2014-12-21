@@ -101,7 +101,7 @@ function getSpotifyWebAPI($w, $exitOnError = true, $old_api = null)
  * @param mixed $other_action
  * @return void
  */
-function getBiography($w, $artist_uri, $artist_name)
+function displayBiography($w, $artist_uri, $artist_name)
 {
     $json     = doWebApiRequest($w, 'http://developer.echonest.com/api/v4/artist/biographies?api_key=5EG94BIZEGFEY9AL9&id=' . $artist_uri);
     $response = $json->response;
@@ -110,36 +110,47 @@ function getBiography($w, $artist_uri, $artist_name)
     foreach ($response->biographies as $biography) {
         if ($biography->site == "wikipedia") {
             $wikipedia = $biography->text;
-            $wikipedia_url = $biography->url;
         }
         if ($biography->site == "last.fm") {
             $lastfm = $biography->text;
-            $lastfm_url = $biography->url;
         }
         $default = 'Source: ' . $biography->site . '\n' . $biography->text;
-        $default_url = $biography->url;
     }
 
     if ($wikipedia) {
         $text   = $wikipedia;
-        $source = 'Wikipedia';
-        $url = $wikipedia_url;
+        $artist = $artist_name . ' (Source: Wikipedia)';
     } elseif ($lastfm) {
         $text   = $lastfm;
-        $source = 'Last.FM';
-        $url = $lastfm_url;
+        $artist = $artist_name . ' (Source: Last.FM)';
     } else {
         $text   = $default;
-        $source = $biography->site;
-        $url = $default_url;
+        $artist = $artist_name . ' (Source: ' . $biography->site . ')';
     }
     if ($text == "") {
-        return array(false,'','');
+        $text   = "No biography found";
+        $artist = $artist_name;
     }
-
     $output = strip_tags($text);
 
-	return array($url, $source, $output);
+    $file = $w->cache() . '/biography.rtf';
+
+    $rtf = new PHPRtfLite();
+
+    $section        = $rtf->addSection();
+    // centered text
+    $fontTitle      = new PHPRtfLite_Font(28, 'Arial', '#000000', '#FFFFFF');
+    $parFormatTitle = new PHPRtfLite_ParFormat(PHPRtfLite_ParFormat::TEXT_ALIGN_CENTER);
+    $section->writeText($artist, $fontTitle, $parFormatTitle);
+
+    $parFormat = new PHPRtfLite_ParFormat();
+    $parFormat->setSpaceAfter(4);
+    $font = new PHPRtfLite_Font(14, 'Arial', '#000000', '#FFFFFF');
+    // write text
+    $section->writeText($output, $font, $parFormat);
+
+    $rtf->save($file);
+    exec("qlmanage -p \"$file\"");
 }
 
 /**
@@ -273,12 +284,6 @@ function lookupCurrentArtist($w)
  */
 function displayCurrentArtistBiography($w)
 {
-    if (!$w->internet()) {
-        displayNotificationWithArtwork("No internet connection", './images/warning.png');
-
-        return;
-    }
-
     // get info on current song
     $command_output = exec("./src/track_info.ksh 2>&1");
 
@@ -295,7 +300,7 @@ function displayCurrentArtistBiography($w)
 
             return;
         }
-		exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Biography▹" . $artist_uri . "∙" . escapeQuery($results[1]) . "\"'");
+        displayBiography($w, $artist_uri, escapeQuery($results[1]));
     } else {
         displayNotificationWithArtwork("No artist is playing", './images/warning.png');
     }
@@ -1592,11 +1597,12 @@ function displayNotificationForCurrentTrack($w)
  * displayLyricsForCurrentTrack function.
  *
  * @access public
- * @param mixed $w
  * @return void
  */
-function displayLyricsForCurrentTrack($w)
+function displayLyricsForCurrentTrack()
 {
+    $w = new Workflows('com.vdesabou.spotify.mini.player');
+
     if (!$w->internet()) {
         displayNotificationWithArtwork("No internet connection", './images/warning.png');
 

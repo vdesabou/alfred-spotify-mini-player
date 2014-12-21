@@ -1,0 +1,13 @@
+Footnotes / Endnotes
+*********************
+
+The difference between foot- and endnotes is that footnotes appear directly after the section where they are defined while endnotes appear at the  page bottom. There is no difference in the handling. They can be defined for tables cells and sections.
+
+Foot note example:
+
+.. code-block:: php
+
+    <?php
+    $section->writeText('Text ...');
+    $section->addFootnote('This is the footnote text');
+    $section->writeText('Text after footnote mark ...');
