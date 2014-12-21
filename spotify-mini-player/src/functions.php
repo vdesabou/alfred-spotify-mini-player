@@ -3999,44 +3999,41 @@ function getLyrics($w, $artist, $title)
     $query_title = str_replace(' ', '-', $query_title);
     $query_title = rtrim($query_title, '-');
 
-    $uri = strtolower('http://www.lyrics.com/' . $query_title . '-lyrics-' . $query_artist . '.html');
+    $uri = strtolower('https://www.musixmatch.com/fr/paroles/' . $query_artist . '/' . $query_title);
+
 
     $error    = false;
     $no_match = false;
 
-    $file = $w->request($uri);
+    $options = array(
+        CURLOPT_FOLLOWLOCATION => 1,
+        CURLOPT_TIMEOUT => 5
+    );
 
-    preg_match('/<div id="lyric_space">(.*?)<\/div>/s', $file, $lyrics);
+    $file = $w->request($uri, $options);
+
+    preg_match('/<script>var __mxmProps = (.*?)<\/script>/s', $file, $lyrics);
 
     $lyrics = (empty($lyrics[1])) ? '' : $lyrics[1];
 
     if (empty($file)) {
-        $error = true;
-    } elseif (empty($lyrics) || stristr($lyrics, 'we do not have the lyric for this song') || stristr($lyrics, 'lyrics are currently unavailable') || stristr($lyrics, 'your name will be printed as part of the credit')) {
+        return array(false,'');
+    } elseif ($lyrics == '') {
         $no_match = true;
-    } else {
-        if (strstr($lyrics, 'Ã') && strstr($lyrics, '©')) {
-            $lyrics = utf8_decode($lyrics);
-        }
-
-        $lyrics = trim(str_replace('<br />', '<br>', $lyrics));
-
-        if (strstr($lyrics, '<br>---')) {
-            $lyrics = strstr($lyrics, '<br>---', true);
-        }
-    }
-
-    if ($error) {
-        return array(false,'');
-    } elseif ($no_match) {
         return array(false,'');
     } else {
-        $lyrics = strip_tags($lyrics);
-        if ($lyrics == "") {
-            return array(false,'');
-        } else {
-            return array($uri,$lyrics);
-        }
+	    $json   = json_decode($lyrics);
+	    switch (json_last_error()) {
+	        case JSON_ERROR_DEPTH:
+	            return array(false,'');
+	        case JSON_ERROR_CTRL_CHAR:
+	            return array(false,'');
+	        case JSON_ERROR_SYNTAX:
+	            return array(false,'');
+	        case JSON_ERROR_NONE:
+	            return array($uri,$json->lyrics->attributes->lyrics_body);
+	    }
+
     }
 }
 
