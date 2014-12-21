@@ -4,7 +4,6 @@
 //error_reporting(0);
 
 require './src/functions.php';
-require_once './vendor/phprtflite/phprtflite/lib/PHPRtfLite.php';
 
 // Load and use David Ferguson's Workflows.php class
 require_once './src/workflows.php';
