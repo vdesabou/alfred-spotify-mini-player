@@ -639,7 +639,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         lookupCurrentArtist($w);
         return;
     } else if ($other_action == "lyrics") {
-        displayLyricsForCurrentTrack();
+        displayLyricsForCurrentTrack($w);
         return;
     } else if ($other_action == "current_track_radio") {
         if (file_exists($w->data() . '/update_library_in_progress')) {
