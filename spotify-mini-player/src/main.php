@@ -690,6 +690,34 @@ if (mb_strlen($query) < 3) {
             $w->result(null, 'help', "There is no result for your search", "", './images/warning.png', 'no', null, '');
         }
 
+        //
+        // Search albums
+        //
+        if ($all_playlists == false) {
+            $getTracks = "select album_name,album_uri,album_artwork_path from tracks where  yourmusic=1 and album_name like :artist_name limit " . $max_results;
+        } else {
+            $getTracks = "select album_name,album_uri,album_artwork_path from tracks where  album_name like :album_name limit " . $max_results;
+        }
+
+        try {
+            $stmt = $db->prepare($getTracks);
+            $stmt->bindValue(':album_name', '%' . $query . '%');
+
+            $tracks = $stmt->execute();
+
+        }
+        catch (PDOException $e) {
+            handleDbIssuePdoXml($db);
+            return;
+        }
+
+        while ($track = $stmt->fetch()) {
+
+            if (checkIfResultAlreadyThere($w->results(), "💿 " . ucfirst($track[0])) == false) {
+                $w->result(null, '', "💿 " . ucfirst($track[0]), "Browse this album", $track[2], 'no', null, "Album▹" . $track[1] . '∙' . $track[0] . "▹");
+            }
+        }
+
         $w->result(null, serialize(array(
             '' /*track_uri*/ ,
             '' /* album_uri */ ,
