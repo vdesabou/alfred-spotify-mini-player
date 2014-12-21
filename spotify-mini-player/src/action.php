@@ -69,12 +69,12 @@ if ($type == "TRACK" && $other_settings == "") {
 					$track=$results[0];
 					$artists = $track->artists;
 					$artist = $artists[0];
-                	echo "Unknown track $track_uri / $track_name / $artist_name replaced by track: $track->uri / $track->name / $artist->name\n";
+                	logMsg("Unknown track $track_uri / $track_name / $artist_name replaced by track: $track->uri / $track->name / $artist->name");
                 	$track_uri = $track->uri;
                 	$tmp = explode(':', $track_uri);
 
             	} else {
-	            	echo "Could not find track: $track_uri / $track_name / $artist_name \n";
+	            	logMsg("Could not find track: $track_uri / $track_name / $artist_name");
                     displayNotificationWithArtwork('Local track ' . $track_name . ' has not online match','./images/warning.png', 'Error!');
                     return;
             	}
@@ -409,12 +409,12 @@ if ($playlist_uri != "" && $other_settings == "") {
 					$track=$results[0];
 					$artists = $track->artists;
 					$artist = $artists[0];
-                	echo "Unknown track $track_uri / $track_name / $artist_name replaced by track: $track->uri / $track->name / $artist->name\n";
+                	logMsg("Unknown track $track_uri / $track_name / $artist_name replaced by track: $track->uri / $track->name / $artist->name");
                 	$track_uri = $track->uri;
                 	$tmp = explode(':', $track_uri);
 
             	} else {
-	            	echo "Could not find track: $track_uri / $track_name / $artist_name \n";
+	            	logMsg("Could not find track: $track_uri / $track_name / $artist_name");
                     displayNotificationWithArtwork('Local track ' . $track_name . ' has not online match','./images/warning.png', 'Error!');
                     return;
             	}
@@ -473,12 +473,12 @@ if ($playlist_uri != "" && $other_settings == "") {
 						$track=$results[0];
 						$artists = $track->artists;
 						$artist = $artists[0];
-	                	echo "Unknown track $track_uri / $track_name / $artist_name replaced by track: $track->uri / $track->name / $artist->name\n";
+	                	logMsg("Unknown track $track_uri / $track_name / $artist_name replaced by track: $track->uri / $track->name / $artist->name");
 	                	$track_uri = $track->uri;
 	                	$tmp = explode(':', $track_uri);
 
 	            	} else {
-		            	echo "Could not find track: $track_uri / $track_name / $artist_name \n";
+		            	logMsg("Could not find track: $track_uri / $track_name / $artist_name");
 	                    displayNotificationWithArtwork('Local track ' . $track_name . ' has not online match','./images/warning.png', 'Error!');
 	                    return;
 	            	}
