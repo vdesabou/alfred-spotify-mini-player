@@ -1184,6 +1184,8 @@ if (mb_strlen($query) < 3) {
                     /* userid*/
                 )), "💿 " . escapeQuery($results[2]), 'Play album', $album_artwork_path, 'yes', null, '');
 
+				$w->result(null, '', "💿 " . ucfirst(escapeQuery($results[2])), '☁︎ Query all tracks from this album online..', './images/online_album.png', 'no', null, "Online▹" . "@@" . $results[4]  . '@' . escapeQuery($results[2]));
+
 
                 $w->result(null, '', "Get Lyrics for track " . escapeQuery($results[0]), "This will fetch lyrics online", './images/lyrics.png', 'no', null, "Lyrics▹" . $results[4] . "∙" . escapeQuery($results[1]) . '∙' . escapeQuery($results[0]));
 
@@ -1540,6 +1542,18 @@ if (mb_strlen($query) < 3) {
                 $album_uri   = $words[2];
                 $album_name  = $words[3];
 
+	            $href = explode(':', $album_uri);
+	            if ($href[1] == 'track') {
+
+	                $track_uri  = $album_uri;
+	                $album_uri = getAlbumUriFromTrack($w, $track_uri);
+	                if ($album_uri == false) {
+	                    $w->result(null, 'help', "The album cannot be retrieved", "", './images/warning.png', 'no', null, '');
+	                    echo $w->toxml();
+	                    return;
+	                }
+	            }
+
                 $tmp_uri = explode(':', $album_uri);
 
                 $json = doWebApiRequest($w, "https://api.spotify.com/v1/albums/" . $tmp_uri[2] . "/tracks");
@@ -1572,7 +1586,7 @@ if (mb_strlen($query) < 3) {
                 )), "💿 " . escapeQuery($album_name), 'Play album', $album_artwork_path, 'yes', null, '');
 
                 if ($update_in_progress == false) {
-                    $w->result(null, '', 'Add album ' . escapeQuery($album_name) . ' to...', 'This will add current track to Your Music or a playlist you will choose in next step', './images/add.png', 'no', null, 'Add▹' . $album_uri . '∙' . escapeQuery($album_name) . '▹');
+                    $w->result(null, '', 'Add album ' . escapeQuery($album_name) . ' to...', 'This will add the album to Your Music or a playlist you will choose in next step', './images/add.png', 'no', null, 'Add▹' . $album_uri . '∙' . escapeQuery($album_name) . '▹');
                 }
 
 
@@ -2517,6 +2531,18 @@ if (mb_strlen($query) < 3) {
             $album_name = $tmp[1];
             $track      = $words[2];
 
+            $href = explode(':', $album_uri);
+            if ($href[1] == 'track') {
+
+                $track_uri  = $album_uri;
+                $album_uri = getAlbumUriFromTrack($w, $track_uri);
+                if ($album_uri == false) {
+                    $w->result(null, 'help', "The album cannot be retrieved", "", './images/warning.png', 'no', null, '');
+                    echo $w->toxml();
+                    return;
+                }
+            }
+
             try {
                 if (mb_strlen($track) < 3) {
                     if ($all_playlists == false || count($tmp) == 3) {
@@ -2572,8 +2598,10 @@ if (mb_strlen($query) < 3) {
                 /* userid*/
             )), "💿 " . $album_name, 'Play album', $album_artwork_path, 'yes', null, '');
 
+            $w->result(null, '', "💿 " . ucfirst($album_name), '☁︎ Query all tracks from this album online..', './images/online_album.png', 'no', null, "Online▹" . "@@" . $album_uri . '@' . $album_name);
+
             if ($update_in_progress == false) {
-                $w->result(null, '', 'Add album ' . escapeQuery($album_name) . ' to...', 'This will add current track to Your Music or a playlist you will choose in next step', './images/add.png', 'no', null, 'Add▹' . $album_uri . '∙' . escapeQuery($album_name) . '▹');
+                $w->result(null, '', 'Add album ' . escapeQuery($album_name) . ' to...', 'This will add the album to Your Music or a playlist you will choose in next step', './images/add.png', 'no', null, 'Add▹' . $album_uri . '∙' . escapeQuery($album_name) . '▹');
             }
 
             $noresult = true;
@@ -2840,7 +2868,7 @@ if (mb_strlen($query) < 3) {
                         )), "Open playlist " . escapeQuery($playlist[1]) . " in Spotify", "This will open the playlist in Spotify", './images/spotify.png', 'yes', null, '');
 
                         if ($update_in_progress == false) {
-                            $w->result(null, '', 'Add playlist ' . escapeQuery($playlist[1]) . ' to...', 'This will add current track to Your Music or a playlist you will choose in next step', './images/add.png', 'no', null, 'Add▹' . $playlist[0] . '∙' . escapeQuery($playlist[1]) . '▹');
+                            $w->result(null, '', 'Add playlist ' . escapeQuery($playlist[1]) . ' to...', 'This will add the playlist to Your Music or a playlist you will choose in next step', './images/add.png', 'no', null, 'Add▹' . $playlist[0] . '∙' . escapeQuery($playlist[1]) . '▹');
                         }
 
                         $getTracks = "select * from tracks where  playlist_uri=:theplaylisturi limit " . $max_results;
@@ -3622,7 +3650,7 @@ if (mb_strlen($query) < 3) {
                     )), "💿 " . escapeQuery($album_name), 'Play album', $album_artwork_path, 'yes', null, '');
 
                     if ($update_in_progress == false) {
-                        $w->result(null, '', 'Add album ' . escapeQuery($album_name) . ' to...', 'This will add current track to Your Music or a playlist you will choose in next step', './images/add.png', 'no', null, 'Add▹' . $album_uri . '∙' . escapeQuery($album_name) . '▹');
+                        $w->result(null, '', 'Add album ' . escapeQuery($album_name) . ' to...', 'This will add the album to Your Music or a playlist you will choose in next step', './images/add.png', 'no', null, 'Add▹' . $album_uri . '∙' . escapeQuery($album_name) . '▹');
                     }
 
 

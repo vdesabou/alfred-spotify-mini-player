@@ -4212,28 +4212,32 @@ function getCountryName($cc)
  */
 function beautifyTime($seconds, $withText = false)
 {
-    if ($withText == true) {
-        $ret = gmdate("H●i●s", $seconds);
-        $tmp = explode('●', $ret);
-        if ($tmp[0] == '00' && $tmp[1] != '00') {
-            $min = ltrim($tmp[1], 0);
+    $ret = gmdate("H●i●s", $seconds);
+    $tmp = explode('●', $ret);
+    if ($tmp[0] == '00' && $tmp[1] != '00') {
+        $min = ltrim($tmp[1], 0);
 
-            return "$min min $tmp[2] sec";
-        } elseif ($tmp[1] == '00') {
-            $sec = ltrim($tmp[2], 0);
-            if ($sec == '') {
-                $sec = 0;
-            }
-
-            return "$sec sec";
+		if ($withText == true) {
+        	return "$min min $tmp[2] sec";
         } else {
-            $hr  = ltrim($tmp[0], 0);
-            $min = ltrim($tmp[1], 0);
+	        return "$min:$tmp[2]";
+        }
+    } elseif ($tmp[1] == '00') {
+        $sec = ltrim($tmp[2], 0);
+        if ($sec == '') {
+            $sec = 0;
+        }
 
-            return "$hr hr $min min";
+		if ($withText == true) {
+        	return "$sec sec";
+        } else {
+	        return "0:$tmp[2]";
         }
     } else {
-        return ltrim(gmdate('i:s', $seconds), 0);
+        $hr  = ltrim($tmp[0], 0);
+        $min = ltrim($tmp[1], 0);
+
+        return "$hr hr $min min";
     }
 }
 
