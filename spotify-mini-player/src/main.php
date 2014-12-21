@@ -1157,7 +1157,7 @@ if (mb_strlen($query) < 3) {
                 )), "💿 " . escapeQuery($results[2]), 'Play album', $album_artwork_path, 'yes', null, '');
 
 
-                $w->result(null, '', "Get Lyrics for track " . escapeQuery($results[0]), "This will fetch lyrics onlineg", './images/lyrics.png', 'no', null, "Lyrics▹" . $results[4] . "∙" . escapeQuery($results[1]) . '∙' . escapeQuery($results[0]));
+                $w->result(null, '', "Get Lyrics for track " . escapeQuery($results[0]), "This will fetch lyrics online", './images/lyrics.png', 'no', null, "Lyrics▹" . $results[4] . "∙" . escapeQuery($results[1]) . '∙' . escapeQuery($results[0]));
 
                 if ($update_in_progress == false) {
                     $w->result(null, '', 'Add track ' . escapeQuery($results[0]) . ' to...', 'This will add current track to Your Music or a playlist you will choose in next step', './images/add.png', 'no', null, 'Add▹' . $results[4] . '∙' . escapeQuery($results[0]) . '▹');
@@ -1638,8 +1638,6 @@ if (mb_strlen($query) < 3) {
 				list($lyrics_url, $lyrics) = getLyrics($w, $artist_name, $track_name);
 
 				if($lyrics_url != false) {
-					$lyrics_sentances = explode("\n", $lyrics);
-
                     $w->result(null, serialize(array(
                         '' /*track_uri*/ ,
                         '' /* album_uri */ ,
@@ -1667,6 +1665,10 @@ if (mb_strlen($query) < 3) {
                     )), 'See lyrics for ' . $track_name . ' by ' .  $artist_name . ' online', "This will open your default browser", './images/lyrics.png', 'yes', null, '');
 
 					$track_artwork = getTrackOrAlbumArtwork($w, $track_uri, false);
+
+					$wrapped = wordwrap($lyrics, 70, "\n", false);
+					$lyrics_sentances = explode("\n", $wrapped);
+
 					for ($i = 0; $i < count($lyrics_sentances); $i++) {
 						$w->result(null, '', $lyrics_sentances[$i], '', $track_artwork, 'no', null, '');
 					}
