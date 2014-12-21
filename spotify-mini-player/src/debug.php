@@ -10,7 +10,7 @@ $w = new Workflows('com.vdesabou.spotify.mini.player');
 $query = $argv[1];
 
 if (mb_strlen($query) > 1) {
-	$w->result(null, '', 'Exception occurred: ' . $query, 'Open issue with spot_mini_issue and send spot_mini_debug.tgz to the author (helmut.perchue at gmail.com)', './images/warning.png', 'no', null, '');
+    $w->result(null, '', 'Exception occurred: ' . $query, 'Open issue with spot_mini_issue and send spot_mini_debug.tgz to the author (helmut.perchue at gmail.com)', './images/warning.png', 'no', null, '');
 }
 
 exec("mkdir -p ~/Downloads/spot_mini_debug");
