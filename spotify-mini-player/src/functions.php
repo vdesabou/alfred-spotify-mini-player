@@ -1603,59 +1603,23 @@ function displayLyricsForCurrentTrack()
 {
     $w = new Workflows('com.vdesabou.spotify.mini.player');
 
-    $command_output = exec("./src/track_info.ksh 2>&1");
-
-    if (substr_count($command_output, '▹') > 0) {
-        $results = explode('▹', $command_output);
-        displayLyrics($w, $results[1], $results[0]);
-    } else {
-        displayNotificationWithArtwork("Cannot get current track", './images/warning.png', 'Error!');
-    }
-}
-
-/**
- * displayLyrics function.
- *
- * @access public
- * @param mixed $w
- * @param mixed $artist
- * @param mixed $title
- * @return void
- */
-function displayLyrics($w, $artist, $title)
-{
     if (!$w->internet()) {
         displayNotificationWithArtwork("No internet connection", './images/warning.png');
 
         return;
     }
-    $output = getLyrics($w, $artist, $title);
 
-    if ($output != false) {
-        PHPRtfLite::registerAutoloader();
+    $command_output = exec("./src/track_info.ksh 2>&1");
 
-        $file = $w->cache() . '/lyrics.rtf';
+    if (substr_count($command_output, '▹') > 0) {
+        $results = explode('▹', $command_output);
 
-        $rtf = new PHPRtfLite();
-
-        $section        = $rtf->addSection();
-        // centered text
-        $fontTitle      = new PHPRtfLite_Font(28, 'Arial', '#000000', '#FFFFFF');
-        $parFormatTitle = new PHPRtfLite_ParFormat(PHPRtfLite_ParFormat::TEXT_ALIGN_CENTER);
-        $section->writeText($title . ' by ' . $artist, $fontTitle, $parFormatTitle);
-
-        $parFormat = new PHPRtfLite_ParFormat();
-        $parFormat->setSpaceAfter(4);
-        $font = new PHPRtfLite_Font(14, 'Arial', '#000000', '#FFFFFF');
-        // write text
-        $section->writeText($output, $font, $parFormat);
-
-        $rtf->save($file);
-        exec("qlmanage -p \"$file\"");
+		exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Lyrics▹" . $results[4] . "∙" . escapeQuery($results[1]) . "∙" . escapeQuery($results[0]) . "\"'");
+    } else {
+        displayNotificationWithArtwork("Cannot get current track", './images/warning.png', 'Error!');
     }
-
-    return;
 }
+
 
 /**
  * downloadArtworks function.
@@ -4063,20 +4027,15 @@ function getLyrics($w, $artist, $title)
     }
 
     if ($error) {
-        displayNotificationWithArtwork("Timeout or failure. Try again", './images/warning.png', 'Error!');
+        return array(false,'');
     } elseif ($no_match) {
-        displayNotificationWithArtwork("Sorry there is no match for this track", './images/warning.png', 'Error!');
+        return array(false,'');
     } else {
         $lyrics = strip_tags($lyrics);
-
-        //$lyrics = (strlen($lyrics) > 1303) ? substr($lyrics,0,1300).'...' : $lyrics;
-
         if ($lyrics == "") {
-            displayNotificationWithArtwork("Sorry there is no match for this track", './images/warning.png', 'Error!');
-
-            return false;
+            return array(false,'');
         } else {
-            return "$lyrics";
+            return array($uri,$lyrics);
         }
     }
 }

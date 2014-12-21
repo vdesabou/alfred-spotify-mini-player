@@ -16,6 +16,8 @@ $query = escapeQuery($argv[1]);
 $query = iconv('UTF-8-MAC', 'UTF-8', $query);
 
 
+
+
 //
 // check for library update in progress
 $update_in_progress = false;
@@ -1155,40 +1157,7 @@ if (mb_strlen($query) < 3) {
                 )), "💿 " . escapeQuery($results[2]), 'Play album', $album_artwork_path, 'yes', null, '');
 
 
-                $w->result(null, serialize(array(
-                    '' /*track_uri*/ ,
-                    '' /* album_uri */ ,
-                    '' /* artist_uri */ ,
-                    '' /* playlist_uri */ ,
-                    '' /* spotify_command */ ,
-                    '' /* query */ ,
-                    '' /* other_settings*/ ,
-                    'lyrics' /* other_action */ ,
-                    $alfred_playlist_uri /* alfred_playlist_uri */ ,
-                    '' /* artist_name */ ,
-                    '' /* track_name */ ,
-                    '' /* album_name */ ,
-                    '' /* track_artwork_path */ ,
-                    '' /* artist_artwork_path */ ,
-                    '' /* album_artwork_path */ ,
-                    '' /* playlist_name */ ,
-                    '' /* playlist_artwork_path */ ,
-                    $alfred_playlist_name /* $alfred_playlist_name */ ,
-                    $now_playing_notifications /* now_playing_notifications */ ,
-                    $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
-                    $country_code /* country_code*/ ,
-                    $userid
-                    /* userid*/
-                )), "Get Lyrics for track " . escapeQuery($results[0]), array(
-                    'This will fetch lyrics on lyrics.com',
-                    'alt' => 'Not Available',
-                    'cmd' => 'Not Available',
-                    'shift' => 'Not Available',
-                    'fn' => 'Not Available',
-                    'ctrl' => 'Not Available'
-                ), './images/lyrics.png', 'yes', null, '');
-
-
+                $w->result(null, '', "Get Lyrics for track " . escapeQuery($results[0]), "This will fetch lyrics on lyrics.com", './images/lyrics.png', 'no', null, "Lyrics▹" . $results[4] . "∙" . escapeQuery($results[1]) . '∙' . escapeQuery($results[0]));
 
                 if ($update_in_progress == false) {
                     $w->result(null, '', 'Add track ' . escapeQuery($results[0]) . ' to...', 'This will add current track to Your Music or a playlist you will choose in next step', './images/add.png', 'no', null, 'Add▹' . $results[4] . '∙' . escapeQuery($results[0]) . '▹');
@@ -1655,6 +1624,59 @@ if (mb_strlen($query) < 3) {
                 }
             }
         } // end OnlineRelated
+            elseif ($kind == "Lyrics") {
+            if (substr_count($query, '∙') == 2) {
+                //
+                // Search Lyrics
+                //
+                $tmp         = $words[1];
+                $words       = explode('∙', $tmp);
+                $track_uri   = $words[0];
+                $artist_name = $words[1];
+                $track_name  = $words[2];
+
+				list($lyrics_url, $lyrics) = getLyrics($w, $artist_name, $track_name);
+
+				if($lyrics_url != false) {
+					$lyrics_sentances = explode("\n", $lyrics);
+
+                    $w->result(null, serialize(array(
+                        '' /*track_uri*/ ,
+                        '' /* album_uri */ ,
+                        '' /* artist_uri */ ,
+                        '' /* playlist_uri */ ,
+                        '' /* spotify_command */ ,
+                        '' /* query */ ,
+                        'Open▹' . $lyrics_url /* other_settings*/ ,
+                        '' /* other_action */ ,
+                        $alfred_playlist_uri /* alfred_playlist_uri */ ,
+                        '' /* artist_name */ ,
+                        '' /* track_name */ ,
+                        '' /* album_name */ ,
+                        '' /* track_artwork_path */ ,
+                        '' /* artist_artwork_path */ ,
+                        '' /* album_artwork_path */ ,
+                        '' /* playlist_name */ ,
+                        '' /* playlist_artwork_path */ ,
+                        $alfred_playlist_name /* $alfred_playlist_name */ ,
+                        $now_playing_notifications /* now_playing_notifications */ ,
+                        $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
+                        $country_code /* country_code*/ ,
+                        $userid
+                        /* userid*/
+                    )), 'See lyrics for ' . $track_name . ' by ' .  $artist_name . ' on lyrics.com', "This will open the lyrics.com page with your default browser", './images/lyrics.png', 'yes', null, '');
+
+					$track_artwork = getTrackOrAlbumArtwork($w, $track_uri, false);
+					for ($i = 0; $i < count($lyrics_sentances); $i++) {
+						$w->result(null, '', $lyrics_sentances[$i], '', $track_artwork, 'no', null, '');
+					}
+				} else {
+                    $w->result(null, 'help', "No lyrics found!", "", './images/warning.png', 'no', null, '');
+                    echo $w->toxml();
+                    return;
+				}
+            }
+        } // end Lyrics
             elseif ($kind == "Follow/Unfollow") {
             if (substr_count($query, '@') == 1) {
                 //
