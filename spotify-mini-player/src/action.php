@@ -324,6 +324,9 @@ if ($playlist_uri != "" && $other_settings == "") {
         exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
     }
     exec("osascript -e 'tell application \"Spotify\" to play track \"$playlist_uri\"'");
+    if($playlist_artwork_path == '') {
+	    $playlist_artwork_path = getPlaylistArtwork($w,  $playlist_uri, true, false);
+    }
     displayNotificationWithArtwork('🔈 Playlist ' . $playlist_name, $playlist_artwork_path, 'Launch Playlist');
     stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
     return;

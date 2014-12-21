@@ -1383,7 +1383,7 @@ if (mb_strlen($query) < 3) {
                     $w->result(null, 'help', "There is no result for your search", "", './images/warning.png', 'no', null, '');
                 }
             }
-        } // Featured Your Music end
+        } // end Your Music end
             elseif ($kind == "Online") {
             if (substr_count($query, '@') == 1) {
                 //
@@ -3333,7 +3333,7 @@ if (mb_strlen($query) < 3) {
                             '' /* artist_artwork_path */ ,
                             '' /* album_artwork_path */ ,
                             $playlist->name /* playlist_name */ ,
-                            $playlist_artwork_path /* playlist_artwork_path */ ,
+                            '' /* playlist_artwork_path */ ,
                             $alfred_playlist_name
                             /* alfred_playlist_name */
                         )), ucfirst($playlist->name) . " (" . $tracks->total . " tracks)", $arrayresult, $playlist_artwork_path, 'yes', null, '');
