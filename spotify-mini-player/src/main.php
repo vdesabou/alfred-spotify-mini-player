@@ -3476,10 +3476,17 @@ if (mb_strlen($query) < 3) {
                 $json = doWebApiRequest($w, "http://charts.spotify.com/api/tracks/most_streamed/" . trim($country) . "/weekly/latest");
 
                 $nb_results = 0;
+                $noresult = true;
                 foreach ($json->tracks as $track) {
                     if ($nb_results > $max_results) {
                         break;
                     }
+		            if ($noresult) {
+		                $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
+		                $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
+		                $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
+		            }
+		            $noresult = false;
                     // format is https://play.spotify.com/track/3WBLQj2qtrKYFDcC5aisLD
                     $href      = explode('/', $track->track_url);
                     $track_uri = 'spotify:track:' . $href[4];
