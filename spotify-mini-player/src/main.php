@@ -1678,7 +1678,7 @@ if (mb_strlen($query) < 3) {
                 $track_name  = $words[2];
 
 				list($lyrics_url, $lyrics) = getLyrics($w, $artist_name, $track_name);
-
+				stathat_ez_count('AlfredSpotifyMiniPlayer', 'lyrics', 1);
 				if($lyrics_url != false) {
                     $w->result(null, serialize(array(
                         '' /*track_uri*/ ,
