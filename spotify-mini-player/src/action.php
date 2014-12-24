@@ -523,6 +523,9 @@ if ($playlist_uri != "" && $other_settings == "") {
     } else if ($setting[0] == "Open") {
         exec("open \"$setting[1]\"");
         return;
+    } else if ($setting[0] == "Reveal") {
+        exec("open -R \"$setting[1]\"");
+        return;
     } else if ($setting[0] == "CLEAR_ALFRED_PLAYLIST") {
         if ($setting[1] == "" || $setting[2] == "") {
             displayNotificationWithArtwork("Alfred Playlist is not set", './images/warning.png', 'Error!');

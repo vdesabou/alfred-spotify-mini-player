@@ -871,7 +871,7 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>F005BD44-180A-4A9A-9339-BE457D1E207F</string>
+				<string>5F3AF2C8-064F-4C10-8D99-22E212825BFE</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -1544,6 +1544,54 @@ php -f ./src/action.php -- "{query}" "ONLINE" "" &gt;&gt; "$alfred_workflow_cach
 			<string>7934F80C-2281-449C-9A89-7BC422D659D7</string>
 			<key>version</key>
 			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>keyword</key>
+				<string>spot_mini_debug</string>
+				<key>runningsubtext</key>
+				<string>Wait for it...</string>
+				<key>script</key>
+				<string>php -f ./src/debug.php -- "{query}"</string>
+				<key>subtext</key>
+				<string>Please send the generated tgz file to the workflow author</string>
+				<key>title</key>
+				<string>Debug tools for Spotify Mini Player</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>CEF36AB9-7CC2-4765-BF84-751E88B69023</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string></string>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>triggerid</key>
+				<string>com.vdesabou.miniplayer.debug</string>
+				<key>triggername</key>
+				<string>Debug</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.remote</string>
+			<key>uid</key>
+			<string>873EF61A-BD03-4946-87B0-C7AE5DFC5E5B</string>
+			<key>version</key>
+			<integer>0</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -2962,64 +3010,6 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>argumenttype</key>
-				<integer>1</integer>
-				<key>escaping</key>
-				<integer>38</integer>
-				<key>keyword</key>
-				<string>spot_mini_debug</string>
-				<key>runningsubtext</key>
-				<string>Wait for it...</string>
-				<key>script</key>
-				<string>php -f ./src/debug.php -- "{query}"</string>
-				<key>subtext</key>
-				<string>Please send the generated tgz file to the workflow author</string>
-				<key>title</key>
-				<string>Debug tools for Spotify Mini Player</string>
-				<key>type</key>
-				<integer>0</integer>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.scriptfilter</string>
-			<key>uid</key>
-			<string>CEF36AB9-7CC2-4765-BF84-751E88B69023</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argument</key>
-				<string></string>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>triggerid</key>
-				<string>com.vdesabou.miniplayer.debug</string>
-				<key>triggername</key>
-				<string>Debug</string>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.trigger.remote</string>
-			<key>uid</key>
-			<string>873EF61A-BD03-4946-87B0-C7AE5DFC5E5B</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict/>
-			<key>type</key>
-			<string>alfred.workflow.action.browseinalfred</string>
-			<key>uid</key>
-			<string>F005BD44-180A-4A9A-9339-BE457D1E207F</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>argument</key>
 				<string></string>
 				<key>argumenttype</key>
@@ -4067,7 +4057,7 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 		<key>873EF61A-BD03-4946-87B0-C7AE5DFC5E5B</key>
 		<dict>
 			<key>ypos</key>
-			<real>6490</real>
+			<real>1560</real>
 		</dict>
 		<key>899AC4D2-88FA-474F-A075-AFA12F361E2B</key>
 		<dict>
@@ -4252,7 +4242,7 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 		<key>CEF36AB9-7CC2-4765-BF84-751E88B69023</key>
 		<dict>
 			<key>ypos</key>
-			<real>6490</real>
+			<real>1560</real>
 		</dict>
 		<key>CF46537F-6F59-40DB-A643-72A7BB952840</key>
 		<dict>
@@ -4348,11 +4338,6 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 		<dict>
 			<key>ypos</key>
 			<real>9060</real>
-		</dict>
-		<key>F005BD44-180A-4A9A-9339-BE457D1E207F</key>
-		<dict>
-			<key>ypos</key>
-			<real>6490</real>
 		</dict>
 		<key>F4382654-9318-4849-82E4-550AC235148C</key>
 		<dict>
