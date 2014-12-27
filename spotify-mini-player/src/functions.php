@@ -4370,6 +4370,39 @@ function searchCommandsFastAccess($w, $query, $settings)
             'fn' => 'Not Available',
             'ctrl' => 'Not Available'
         ), './images/online_artist.png', 'yes', '');
+        
+        $w->result('SpotifyMiniPlayer_' . 'lyrics', serialize(array(
+            '' /*track_uri*/ ,
+            '' /* album_uri */ ,
+            '' /* artist_uri */ ,
+            '' /* playlist_uri */ ,
+            '' /* spotify_command */ ,
+            '' /* query */ ,
+            '' /* other_settings*/ ,
+            'lyrics' /* other_action */ ,
+            $alfred_playlist_uri /* alfred_playlist_uri */ ,
+            '' /* artist_name */ ,
+            '' /* track_name */ ,
+            '' /* album_name */ ,
+            '' /* track_artwork_path */ ,
+            '' /* artist_artwork_path */ ,
+            '' /* album_artwork_path */ ,
+            '' /* playlist_name */ ,
+            '' /* playlist_artwork_path */ ,
+            $alfred_playlist_name /* $alfred_playlist_name */ ,
+            $now_playing_notifications /* now_playing_notifications */ ,
+            $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
+            $country_code /* country_code*/ ,
+            $userid
+            /* userid*/
+        )), 'Get Lyrics for current track', array(
+            'Get current track lyrics',
+            'alt' => 'Not Available',
+            'cmd' => 'Not Available',
+            'shift' => 'Not Available',
+            'fn' => 'Not Available',
+            'ctrl' => 'Not Available'
+        ), './images/lyrics.png', 'yes', '');
 
         $w->result('SpotifyMiniPlayer_' . 'play', serialize(array(
             '' /*track_uri*/ ,
@@ -4794,7 +4827,7 @@ function searchCommandsFastAccess($w, $query, $settings)
                 $userid
                 /* userid*/
             )), 'Previous Track', 'Play the previous track in Spotify', './images/previous.png', 'yes', '');
-        } elseif (strpos(strtolower('lookup'), strtolower($query)) !== false) {
+        } elseif (strpos(strtolower('previous'), strtolower($query)) !== false) {
             $w->result(null, serialize(array(
                 '' /*track_uri*/ ,
                 '' /* album_uri */ ,
@@ -4803,7 +4836,7 @@ function searchCommandsFastAccess($w, $query, $settings)
                 '' /* spotify_command */ ,
                 '' /* query */ ,
                 '' /* other_settings*/ ,
-                'lookup_current_artist' /* other_action */ ,
+                'previous' /* other_action */ ,
                 $alfred_playlist_uri /* alfred_playlist_uri */ ,
                 '' /* artist_name */ ,
                 '' /* track_name */ ,
@@ -4819,14 +4852,40 @@ function searchCommandsFastAccess($w, $query, $settings)
                 $country_code /* country_code*/ ,
                 $userid
                 /* userid*/
-            )), 'Lookup Current Artist online', array(
-                '☁︎ Query all albums/tracks from current artist online..',
+            )), 'Previous Track', 'Play the previous track in Spotify', './images/previous.png', 'yes', '');
+        } elseif (strpos(strtolower('lyrics'), strtolower($query)) !== false) {
+            $w->result(null, serialize(array(
+                '' /*track_uri*/ ,
+                '' /* album_uri */ ,
+                '' /* artist_uri */ ,
+                '' /* playlist_uri */ ,
+                '' /* spotify_command */ ,
+                '' /* query */ ,
+                '' /* other_settings*/ ,
+                'lyrics' /* other_action */ ,
+                $alfred_playlist_uri /* alfred_playlist_uri */ ,
+                '' /* artist_name */ ,
+                '' /* track_name */ ,
+                '' /* album_name */ ,
+                '' /* track_artwork_path */ ,
+                '' /* artist_artwork_path */ ,
+                '' /* album_artwork_path */ ,
+                '' /* playlist_name */ ,
+                '' /* playlist_artwork_path */ ,
+                $alfred_playlist_name /* $alfred_playlist_name */ ,
+                $now_playing_notifications /* now_playing_notifications */ ,
+                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
+                $country_code /* country_code*/ ,
+                $userid
+                /* userid*/
+            )), 'Get Lyrics for current track', array(
+                'Get current track lyrics',
                 'alt' => 'Not Available',
                 'cmd' => 'Not Available',
                 'shift' => 'Not Available',
                 'fn' => 'Not Available',
                 'ctrl' => 'Not Available'
-            ), './images/online_artist.png', 'yes', '');
+            ), './images/lyrics.png', 'yes', '');
         } elseif (strpos(strtolower('query'), strtolower($query)) !== false) {
             $w->result(null, serialize(array(
                 '' /*track_uri*/ ,
