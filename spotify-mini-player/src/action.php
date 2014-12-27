@@ -646,7 +646,6 @@ if ($playlist_uri != "" && $other_settings == "") {
         return;
     } else if ($other_action == "lyrics") {
         displayLyricsForCurrentTrack();
-        stathat_ez_count('AlfredSpotifyMiniPlayer', 'lyrics', 1);
         return;
     } else if ($other_action == "current_track_radio") {
         if (file_exists($w->data() . '/update_library_in_progress')) {
