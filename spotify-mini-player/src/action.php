@@ -554,22 +554,6 @@ if ($playlist_uri != "" && $other_settings == "") {
             displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
         }
         return;
-    } else if ($other_action == "enable_spotifiuous") {
-        $ret = updateSetting($w, 'is_spotifious_active', true);
-        if ($ret == true) {
-            displayNotificationWithArtwork("Spotifious is now enabled", './images/enable_spotifious.png', 'Settings');
-        } else {
-            displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
-        }
-        return;
-    } else if ($other_action == "disable_spotifiuous") {
-        $ret = updateSetting($w, 'is_spotifious_active', false);
-        if ($ret == true) {
-            displayNotificationWithArtwork("Spotifious is now disabled", './images/disable_spotifious.png', 'Settings');
-        } else {
-            displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
-        }
-        return;
     } else if ($other_action == "enable_now_playing_notifications") {
         $ret = updateSetting($w, 'now_playing_notifications', true);
         if ($ret == true) {
@@ -577,9 +561,6 @@ if ($playlist_uri != "" && $other_settings == "") {
         } else {
             displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
         }
-        return;
-    } else if ($other_action == "search_in_spotifious") {
-        exec("osascript -e 'tell application \"Alfred 2\" to search \"spotifious $original_query\"'");
         return;
     } else if ($other_action == "disable_now_playing_notifications") {
 

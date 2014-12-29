@@ -161,9 +161,11 @@ function displayBiography($w, $artist_uri, $artist_name)
  * @param mixed $country_code
  * @param mixed $query
  * @param mixed $type
+ * @param int $limit (default: 50)
+ * @param bool $actionMode (default: true)
  * @return void
  */
-function searchWebApi($w, $country_code, $query, $type, $limit = 50)
+function searchWebApi($w, $country_code, $query, $type, $limit = 50, $actionMode = true)
 {
     $results = array();
 
@@ -204,8 +206,14 @@ function searchWebApi($w, $country_code, $query, $type, $limit = 50)
         } while ($offsetSearch < $searchResults->total);
     }
     catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        logMsg("Error(search): (exception " . print_r($e) . ")");
-        handleSpotifyWebAPIException($w, $e);
+        if($actionMode == true) {
+	        logMsg("Error(search): (exception " . print_r($e) . ")");
+        	handleSpotifyWebAPIException($w, $e);
+        } else {
+	        $w2 = new Workflows('com.vdesabou.spotify.mini.player');
+	        $w2->result(null, '', "Error: Spotify WEB API returned error " . $e->getMessage(), "Try again or report to author", './images/warning.png', 'no', null, '');
+	        echo $w2->toxml();
+        }
 
         return false;
     }
@@ -4262,7 +4270,6 @@ function startswith($haystack, $needle)
 function searchCommandsFastAccess($w, $query, $settings)
 {
     $all_playlists             = $settings->all_playlists;
-    $is_spotifious_active      = $settings->is_spotifious_active;
     $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
     $radio_number_tracks       = $settings->radio_number_tracks;
     $now_playing_notifications = $settings->now_playing_notifications;
@@ -5357,7 +5364,6 @@ function getSettings($w)
 
 	        $migrated = array(
 	            'all_playlists' => ((boolean)$setting[0]),
-	            'is_spotifious_active' => ((boolean)$setting[1]),
 	            'is_alfred_playlist_active' => ((boolean)$setting[2]),
 	            'radio_number_tracks' => $setting[3],
 	            'now_playing_notifications' => true,
@@ -5393,7 +5399,6 @@ function getSettings($w)
     if ($settings == false) {
         $default = array(
             'all_playlists' => true,
-            'is_spotifious_active' => false,
             'is_alfred_playlist_active' => true,
             'radio_number_tracks' => 30,
             'now_playing_notifications' => true,
