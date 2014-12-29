@@ -2475,34 +2475,34 @@ function updateLibrary($w)
                     // This is a known issue
                     // http://stackoverflow.com/questions/27533743/local-tracks-returned-as-null-by-spotify-web-api?noredirect=1#comment43496449_27533743
                     if ($track->uri == 'spotify:track:null') {
-	                    
+
 	                    if($lookup_local_tracks_online == false) {
 	                        logMsg("WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri");
 	                        $nb_track++;
 	                        $nb_skipped++;
-	                        continue;		                    
+	                        continue;
 	                    } else {
 		                    // unknown track, look it up online
 		                    $query = 'track:' . strtolower($track->name) . ' artist:' . strtolower($artist->name);
 		                    $results = searchWebApi($w,$country_code,$query, 'track', 1);
-		
+
 		                    if(count($results) > 0) {
 		                    // only one track returned
 		                    $track=$results[0];
 		                    $artists = $track->artists;
 		                    $artist = $artists[0];
 		                    logMsg("INFO: Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name");
-		
+
 		                    } else {
 		                    // skip
 		                    logMsg("WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri ");
 		                    $nb_track++;
 		                    $nb_skipped++;
 		                    continue;
-		                    }         
+		                    }
 	                    }
                     }
-                   
+
                     if (count($track->available_markets) == 0) {
                         $playable = 1;
                     } elseif (in_array($country_code, $track->available_markets) !== false) {
@@ -2629,12 +2629,12 @@ function updateLibrary($w)
         // This is a known issue
         // http://stackoverflow.com/questions/27533743/local-tracks-returned-as-null-by-spotify-web-api?noredirect=1#comment43496449_27533743
         if ($track->uri == 'spotify:track:null') {
-            
+
             if($lookup_local_tracks_online == false) {
                 logMsg("WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri");
                 $nb_track++;
                 $nb_skipped++;
-                continue;		                    
+                continue;
             } else {
                 // unknown track, look it up online
                 $query = 'track:' . strtolower($track->name) . ' artist:' . strtolower($artist->name);
@@ -2653,7 +2653,7 @@ function updateLibrary($w)
                 $nb_track++;
                 $nb_skipped++;
                 continue;
-                }         
+                }
             }
         }
 
@@ -3069,27 +3069,27 @@ function refreshLibrary($w)
 	                    // This is a known issue
 	                    // http://stackoverflow.com/questions/27533743/local-tracks-returned-as-null-by-spotify-web-api?noredirect=1#comment43496449_27533743
 	                    if ($track->uri == 'spotify:track:null') {
-		                    
+
 		                    if($lookup_local_tracks_online == false) {
 		                        logMsg("WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri");
-		                        continue;		                    
+		                        continue;
 		                    } else {
 			                    // unknown track, look it up online
 			                    $query = 'track:' . strtolower($track->name) . ' artist:' . strtolower($artist->name);
 			                    $results = searchWebApi($w,$country_code,$query, 'track', 1);
-			
+
 			                    if(count($results) > 0) {
 			                    // only one track returned
 			                    $track=$results[0];
 			                    $artists = $track->artists;
 			                    $artist = $artists[0];
 			                    logMsg("INFO: Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name");
-			
+
 			                    } else {
 			                    // skip
 			                    logMsg("WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri ");
 			                    continue;
-			                    }         
+			                    }
 		                    }
 	                    }
 
@@ -3263,33 +3263,33 @@ function refreshLibrary($w)
                             $artist  = $artists[0];
                             $album   = $track->album;
 
-                            
+
 		                    // This is a known issue
 		                    // http://stackoverflow.com/questions/27533743/local-tracks-returned-as-null-by-spotify-web-api?noredirect=1#comment43496449_27533743
 		                    if ($track->uri == 'spotify:track:null') {
-			                    
+
 			                    if($lookup_local_tracks_online == false) {
 			                        logMsg("WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri");
 			                        $nb_track++;
-			                        continue;		                    
+			                        continue;
 			                    } else {
 				                    // unknown track, look it up online
 				                    $query = 'track:' . strtolower($track->name) . ' artist:' . strtolower($artist->name);
 				                    $results = searchWebApi($w,$country_code,$query, 'track', 1);
-				
+
 				                    if(count($results) > 0) {
 				                    // only one track returned
 				                    $track=$results[0];
 				                    $artists = $track->artists;
 				                    $artist = $artists[0];
 				                    logMsg("INFO: Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name");
-				
+
 				                    } else {
 				                    // skip
 				                    logMsg("WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri ");
 				                    $nb_track++;
 				                    continue;
-				                    }         
+				                    }
 			                    }
 		                    }
 
@@ -3515,29 +3515,29 @@ function refreshLibrary($w)
                     // This is a known issue
                     // http://stackoverflow.com/questions/27533743/local-tracks-returned-as-null-by-spotify-web-api?noredirect=1#comment43496449_27533743
                     if ($track->uri == 'spotify:track:null') {
-	                    
+
 	                    if($lookup_local_tracks_online == false) {
 	                        logMsg("WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri");
 	                        $nb_track++;
-	                        continue;		                    
+	                        continue;
 	                    } else {
 		                    // unknown track, look it up online
 		                    $query = 'track:' . strtolower($track->name) . ' artist:' . strtolower($artist->name);
 		                    $results = searchWebApi($w,$country_code,$query, 'track', 1);
-		
+
 		                    if(count($results) > 0) {
 		                    // only one track returned
 		                    $track=$results[0];
 		                    $artists = $track->artists;
 		                    $artist = $artists[0];
 		                    logMsg("INFO: Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name");
-		
+
 		                    } else {
 		                    // skip
 		                    logMsg("WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri ");
 		                    $nb_track++;
 		                    continue;
-		                    }         
+		                    }
 	                    }
                     }
 
@@ -4370,7 +4370,7 @@ function searchCommandsFastAccess($w, $query, $settings)
             'fn' => 'Not Available',
             'ctrl' => 'Not Available'
         ), './images/online_artist.png', 'yes', '');
-        
+
         $w->result('SpotifyMiniPlayer_' . 'lyrics', serialize(array(
             '' /*track_uri*/ ,
             '' /* album_uri */ ,
@@ -5330,6 +5330,64 @@ function searchCommandsFastAccess($w, $query, $settings)
  */
 function getSettings($w)
 {
+	if(file_exists($w->data() . '/settings.db') &&
+		!file_exists($w->data() . '/settings.json')) {
+		// migrate settings.db to settings.json
+		//
+		// Read settings from DB
+		//
+		$getSettings = 'select all_playlists,is_spotifious_active,is_alfred_playlist_active,radio_number_tracks,is_lyrics_active,max_results, alfred_playlist_uri,alfred_playlist_name,country_code,theme,last_check_update_time,oauth_client_id,oauth_client_secret,oauth_redirect_uri,oauth_access_token,oauth_expires,oauth_refresh_token,display_name,userid,echonest_api_key from settings';
+		$dbsettingsfile = $w->data() . '/settings.db';
+
+		try {
+		    $dbsettings = new PDO("sqlite:$dbsettingsfile", "", "", array(PDO::ATTR_PERSISTENT => true));
+		    $dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		    $dbsettings->query("PRAGMA synchronous = OFF");
+		    $dbsettings->query("PRAGMA journal_mode = OFF");
+		    $dbsettings->query("PRAGMA temp_store = MEMORY");
+		    $dbsettings->query("PRAGMA count_changes = OFF");
+		    $dbsettings->query("PRAGMA PAGE_SIZE = 4096");
+		    $dbsettings->query("PRAGMA default_cache_size=700000");
+		    $dbsettings->query("PRAGMA cache_size=700000");
+		    $dbsettings->query("PRAGMA compile_options");
+
+		    $stmt = $dbsettings->prepare($getSettings);
+		    $settings = $stmt->execute();
+		    $setting = $stmt->fetch();
+
+	        $migrated = array(
+	            'all_playlists' => ((boolean)$setting[0]),
+	            'is_spotifious_active' => ((boolean)$setting[1]),
+	            'is_alfred_playlist_active' => ((boolean)$setting[2]),
+	            'radio_number_tracks' => $setting[3],
+	            'now_playing_notifications' => true,
+	            'max_results' => $setting[5],
+	            'alfred_playlist_uri' => $setting[6],
+	            'alfred_playlist_name' => $setting[7],
+	            'country_code' => $setting[8],
+	            'last_check_update_time' => $setting[10],
+	            'oauth_client_id' => $setting[11],
+	            'oauth_client_secret' => $setting[12],
+	            'oauth_redirect_uri' => 'http://localhost:15298/callback.php',
+	            'oauth_access_token' => $setting[14],
+	            'oauth_expires' => $setting[15],
+	            'oauth_refresh_token' => $setting[16],
+	            'display_name' => $setting[17],
+	            'userid' => $setting[18],
+	            'echonest_api_key' => '5EG94BIZEGFEY9AL9',
+	            'lookup_local_tracks_online' => false,
+	        );
+
+	        $ret = $w->write($migrated, 'settings.json');
+		} catch (PDOException $e) {
+			logMsg("Error(getSettings): (exception " . print_r($e) . ")");
+		}
+
+	    if (file_exists($w->data() . '/settings.db')) {
+	        unlink($w->data() . '/settings.db');
+	    }
+	}
+
     $settings = $w->read('settings.json');
 
     if ($settings == false) {
