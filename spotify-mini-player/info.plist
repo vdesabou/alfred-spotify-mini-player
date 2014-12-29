@@ -1208,6 +1208,14 @@ php -f ./src/action.php -- "{query}" "ARTIST" "" &gt;&gt; "$alfred_workflow_cach
 				<integer>38</integer>
 				<key>keyword</key>
 				<string>spot_mini</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<true/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>2</integer>
 				<key>runningsubtext</key>
 				<string>Wait for it...</string>
 				<key>script</key>
@@ -1554,6 +1562,14 @@ php -f ./src/action.php -- "{query}" "ONLINE" "" &gt;&gt; "$alfred_workflow_cach
 				<integer>38</integer>
 				<key>keyword</key>
 				<string>spot_mini_debug</string>
+				<key>queuedelaycustom</key>
+				<integer>1</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<false/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
 				<key>runningsubtext</key>
 				<string>Wait for it...</string>
 				<key>script</key>
