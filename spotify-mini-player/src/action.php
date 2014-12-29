@@ -734,6 +734,14 @@ if ($playlist_uri != "" && $other_settings == "") {
         displayBiography($w, $artist_uri, $artist_name);
         stathat_ez_count('AlfredSpotifyMiniPlayer', 'display biography', 1);
         return;
+    } else if ($other_action == "reset_settings") {
+	    if (file_exists($w->data() . '/settings.json')) {
+	        unlink($w->data() . '/settings.json');
+	        $settings = getSettings($w);
+	    } else {
+		    displayNotificationWithArtwork("Settings file does not exist ", './images/warning.png', 'Error!');
+	    }
+        return;
     } else if ($other_action == "display_current_artist_biography") {
         displayCurrentArtistBiography($w);
         stathat_ez_count('AlfredSpotifyMiniPlayer', 'display biography', 1);

@@ -175,17 +175,6 @@
 				<string></string>
 			</dict>
 		</array>
-		<key>2DBC505C-4788-4F45-BD15-2DCED7844A60</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>3860554B-B36E-423F-98CC-1FC7212CEDDA</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-			</dict>
-		</array>
 		<key>2FC567E2-E6C5-4A91-B42E-1996532B78C9</key>
 		<array>
 			<dict>
@@ -640,7 +629,7 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>2DBC505C-4788-4F45-BD15-2DCED7844A60</string>
+				<string>F2B24FB4-386C-4562-99D2-E4162D26AB4A</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -750,7 +739,7 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>2DBC505C-4788-4F45-BD15-2DCED7844A60</string>
+				<string>F2B24FB4-386C-4562-99D2-E4162D26AB4A</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -2842,51 +2831,20 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>lastpathcomponent</key>
-				<false/>
-				<key>onlyshowifquerypopulated</key>
-				<false/>
-				<key>output</key>
-				<integer>0</integer>
-				<key>removeextension</key>
-				<false/>
-				<key>sticky</key>
-				<false/>
-				<key>text</key>
-				<string>{query}</string>
-				<key>title</key>
-				<string>Spotify Mini Player</string>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.output.notification</string>
-			<key>uid</key>
-			<string>3860554B-B36E-423F-98CC-1FC7212CEDDA</string>
-			<key>version</key>
-			<integer>0</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>// Load and use David Ferguson's Workflows.php class
-require_once './src/workflows.php';
-$w = new Workflows('com.vdesabou.spotify.mini.player');
-
-if (file_exists($w-&gt;data() . '/settings.json')) {
-	unlink($w-&gt;data() . '/settings.json');
-	echo "Settings have been deleted";
-} else {
-	echo "Error: Settings do not exist";
-}</string>
+				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "reset_settings" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
+echo "===== RESET_SETTINGS ========" &gt;&gt; "$alfred_workflow_cache/action.log"
+echo "`date` $query" &gt;&gt; "$alfred_workflow_cache/action.log"
+php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
 				<key>type</key>
-				<integer>1</integer>
+				<integer>0</integer>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.action.script</string>
 			<key>uid</key>
-			<string>2DBC505C-4788-4F45-BD15-2DCED7844A60</string>
+			<string>F2B24FB4-386C-4562-99D2-E4162D26AB4A</string>
 			<key>version</key>
 			<integer>0</integer>
 		</dict>
@@ -3875,11 +3833,6 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<key>ypos</key>
 			<real>8990</real>
 		</dict>
-		<key>2DBC505C-4788-4F45-BD15-2DCED7844A60</key>
-		<dict>
-			<key>ypos</key>
-			<real>5830</real>
-		</dict>
 		<key>2FC567E2-E6C5-4A91-B42E-1996532B78C9</key>
 		<dict>
 			<key>ypos</key>
@@ -3899,11 +3852,6 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 		<dict>
 			<key>ypos</key>
 			<real>2870</real>
-		</dict>
-		<key>3860554B-B36E-423F-98CC-1FC7212CEDDA</key>
-		<dict>
-			<key>ypos</key>
-			<real>5830</real>
 		</dict>
 		<key>39A1935A-37F5-49FA-A860-BCF7765A8C65</key>
 		<dict>
@@ -4354,6 +4302,11 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 		<dict>
 			<key>ypos</key>
 			<real>9060</real>
+		</dict>
+		<key>F2B24FB4-386C-4562-99D2-E4162D26AB4A</key>
+		<dict>
+			<key>ypos</key>
+			<real>5830</real>
 		</dict>
 		<key>F4382654-9318-4849-82E4-550AC235148C</key>
 		<dict>
