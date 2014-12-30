@@ -8,10 +8,10 @@ require './vendor/autoload.php';
  *
  * @access public
  * @param mixed $w
- * @param bool $exitOnError (default: true)
+ * @param bool $actionMode (default: true)
  * @return void
  */
-function getSpotifyWebAPI($w, $exitOnError = true, $old_api = null)
+function getSpotifyWebAPI($w, $actionMode = true, $old_api = null)
 {
     //
     // Read settings from JSON
@@ -41,15 +41,14 @@ function getSpotifyWebAPI($w, $exitOnError = true, $old_api = null)
             $session->setRefreshToken($oauth_refresh_token);
             $api = new SpotifyWebAPI\SpotifyWebAPI();
         }
-        logMsg("Info: token needs to be refreshed");
         if ($session->refreshToken() == true) {
             $oauth_access_token = $session->getAccessToken();
             // Set new token to settings
             $ret                = updateSetting($w, 'oauth_access_token', $oauth_access_token);
             if ($ret == false) {
-                logMsg("Error: cannot set oauth_access_token in getSpotifyWebAPI");
-                if ($exitOnError == true) {
+                if ($actionMode == true) {
                     // handle error and exit
+                    logMsg("Error: cannot set oauth_access_token in getSpotifyWebAPI");
                     handleSpotifyWebAPIException($w, $e);
                 } else {
                     return false;
@@ -58,20 +57,22 @@ function getSpotifyWebAPI($w, $exitOnError = true, $old_api = null)
 
             $ret = updateSetting($w, 'oauth_expires', time());
             if ($ret == false) {
-                logMsg("Error: cannot set oauth_expires in getSpotifyWebAPI");
-                if ($exitOnError == true) {
+                if ($actionMode == true) {
                     // handle error and exit
+                    logMsg("Error: cannot set oauth_expires in getSpotifyWebAPI");
                     handleSpotifyWebAPIException($w, $e);
                 } else {
                     return false;
                 }
             }
-            logMsg("Info: token was refreshed");
+            if ($actionMode == true) {
+            	logMsg("Info: token was refreshed");
+            }
             $api->setAccessToken($oauth_access_token);
         } else {
-            logMsg("Error: token could not be refreshed in getSpotifyWebAPI");
-            if ($exitOnError == true) {
+            if ($actionMode == true) {
                 // handle error and exit
+                logMsg("Error: token could not be refreshed in getSpotifyWebAPI");
                 handleSpotifyWebAPIException($w, $e);
             } else {
                 return false;

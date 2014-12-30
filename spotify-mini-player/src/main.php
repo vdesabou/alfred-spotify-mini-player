@@ -467,7 +467,7 @@ if (mb_strlen($query) < 3) {
         'ctrl' => 'Not Available'
     ), './images/online_artist.png', 'yes', '');
 
-	$w->result(null, '', 'Search online', 'You can search tracks, artists and playlists online, i.e not in your library', './images/online.png', 'no', null, 'Search Online▹');
+	$w->result(null, '', 'Search online', 'You can search tracks, artists, albums and playlists online, i.e not in your library', './images/online.png', 'no', null, 'Search Online▹');
 
     if ($is_alfred_playlist_active == true) {
         if ($alfred_playlist_name != "") {
@@ -986,7 +986,7 @@ if (mb_strlen($query) < 3) {
 
 					if($kind == "Search Online") {
 
-                    	$w->result(null, 'help', "Search for playlists, artists or tracks online, i.e not in your library", "Begin typing at least 3 characters to start search online. This is using slow Spotify API, be patient.", './images/info.png', 'no', null, '');
+                    	$w->result(null, 'help', "Search for playlists, artists, albums or tracks online, i.e not in your library", "Begin typing at least 3 characters to start search online. This is using slow Spotify API, be patient.", './images/info.png', 'no', null, '');
 
 						$w->result(null, null, "Search for playlists only", array(
 			                'This will search for playlists online, i.e not in your library',
@@ -997,6 +997,15 @@ if (mb_strlen($query) < 3) {
 			                'ctrl' => 'Not Available'
 			            ), './images/playlists.png', 'no', null, 'Search Playlists Online▹');
 
+						$w->result(null, null, "Search for tracks only", array(
+			                'This will search for tracks online, i.e not in your library',
+			                'alt' => 'Not Available',
+			                'cmd' => 'Not Available',
+			                'shift' => 'Not Available',
+			                'fn' => 'Not Available',
+			                'ctrl' => 'Not Available'
+			            ), './images/tracks.png', 'no', null, 'Search Tracks Online▹');
+
 						$w->result(null, null, "Search for artists only", array(
 			                'This will search for artists online, i.e not in your library',
 			                'alt' => 'Not Available',
@@ -1006,33 +1015,38 @@ if (mb_strlen($query) < 3) {
 			                'ctrl' => 'Not Available'
 			            ), './images/artists.png', 'no', null, 'Search Artists Online▹');
 
-						$w->result(null, null, "Search for tracks only", array(
-			                'This will search for tracks online, i.e not in your library',
+						$w->result(null, null, "Search for albums only", array(
+			                'This will search for albums online, i.e not in your library',
 			                'alt' => 'Not Available',
 			                'cmd' => 'Not Available',
 			                'shift' => 'Not Available',
 			                'fn' => 'Not Available',
 			                'ctrl' => 'Not Available'
-			            ), './images/tracks.png', 'no', null, 'Search Tracks Online▹');
+			            ), './images/albums.png', 'no', null, 'Search Albums Online▹');
 					} elseif($kind == "Search Playlists Online") {
                     	$w->result(null, 'help', "Search playlists online, i.e not in your library", "Begin typing at least 3 characters to start search online. This is using slow Spotify API, be patient.", './images/info.png', 'no', null, '');
 		            } elseif($kind == "Search Artists Online") {
                     	$w->result(null, 'help', "Search artists online, i.e not in your library", "Begin typing at least 3 characters to start search online. This is using slow Spotify API, be patient.", './images/info.png', 'no', null, '');
 		            } elseif($kind == "Search Tracks Online") {
                     	$w->result(null, 'help', "Search tracks online, i.e not in your library", "Begin typing at least 3 characters to start search online. This is using slow Spotify API, be patient.", './images/info.png', 'no', null, '');
+		            } elseif($kind == "Search Albums Online") {
+                    	$w->result(null, 'help', "Search albums online, i.e not in your library", "Begin typing at least 3 characters to start search online. This is using slow Spotify API, be patient.", './images/info.png', 'no', null, '');
 		            }
                 } else {
 
 	                $search_playlists = false;
 	                $search_artists = false;
+	                $search_albums = false;
 	                $search_tracks = false;
 
 	                if($kind == "Search Online") {
 		                $search_playlists = true;
 		                $search_artists = true;
+		                $search_albums = true;
 		                $search_tracks = true;
 		                $search_playlists_limit = 8;
 		                $search_artists_limit = 5;
+		                $search_albums_limit = 5;
 		                $search_tracks_limit = 20;
 		            } elseif($kind == "Search Playlists Online") {
 		                $search_playlists = true;
@@ -1040,6 +1054,9 @@ if (mb_strlen($query) < 3) {
 		            } elseif($kind == "Search Artists Online") {
 		                $search_artists = true;
 		                $search_artists_limit = ($max_results <= 50) ?$max_results : 50;
+		            } elseif($kind == "Search Albums Online") {
+		                $search_albums = true;
+		                $search_albums_limit = ($max_results <= 50) ?$max_results : 50;
 		            } elseif($kind == "Search Tracks Online") {
 		                $search_tracks = true;
 		                $search_tracks_limit = ($max_results <= 50) ?$max_results : 50;
@@ -1059,7 +1076,40 @@ if (mb_strlen($query) < 3) {
 		                foreach ($results as $artist) {
 			                if (checkIfResultAlreadyThere($w->results(), "👤 " . escapeQuery(ucfirst($artist->name))) == false) {
 								$noresult = false;
-			                    $w->result(null, '', "👤 " . escapeQuery(ucfirst($artist->name)), "Browse this artist", getArtistArtwork($w, $artist->name, false), 'no', null, "Artist▹" . $artist->uri . '∙' . escapeQuery($artist->name) . "▹");
+			                    $w->result(null, '', "👤 " . escapeQuery(ucfirst($artist->name)), "Browse this artist", getArtistArtwork($w, $artist->name, false), 'no', null, "Online▹" . $artist->uri . '@' . escapeQuery($artist->name));
+			                }
+			            }
+		            }
+
+		            if($search_albums == true) {
+						// Search Albums
+						//
+
+		                // call to web api, if it fails,
+		                // it displays an error in main window
+						$query   = 'album:' . strtolower($the_query);
+		                $results = searchWebApi($w, $country_code, $query, 'album', $search_albums_limit, false);
+
+			            $api                = getSpotifyWebAPI($w, false);
+			            if ($api == false) {
+			                $w->result(null, 'help', "Internal issue (getSpotifyWebAPI)", "", './images/warning.png', 'no', null, '');
+			                echo $w->toxml();
+			                return;
+			            }
+
+		                foreach ($results as $album) {
+			                if (checkIfResultAlreadyThere($w->results(),  escapeQuery(ucfirst($album->name))) == false) {
+								$noresult = false;
+
+								try {
+									$full_album = $api->getAlbum($album->id);
+								}
+							    catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+					                $w->result(null, 'help', "Exception occurred", "" . $e->getMessage(), './images/warning.png', 'no', null, '');
+					                echo $w->toxml();
+					                return;
+							    }
+			                    $w->result(null, '', escapeQuery(ucfirst($album->name)) . ' (' . $full_album->tracks->total . ' tracks)', $album->album_type . ' by ' . escapeQuery($full_album->artists[0]->name), getTrackOrAlbumArtwork($w, $album->uri, false), 'no', null, 'Online▹' . $full_album->artists[0]->uri . '@' . escapeQuery($full_album->artists[0]->name) .'@' . $album->uri . '@' . escapeQuery($album->name));
 			                }
 			            }
 		            }
@@ -3004,7 +3054,7 @@ if (mb_strlen($query) < 3) {
             $theplaylistname = $tmp[1];
             $thetrack        = $words[2];
 
-            $api                = getSpotifyWebAPI($w, false, $api);
+            $api                = getSpotifyWebAPI($w, false);
             if ($api == false) {
                 $w->result(null, 'help', "Internal issue (getSpotifyWebAPI)", "", './images/warning.png', 'no', null, '');
                 echo $w->toxml();
