@@ -350,18 +350,13 @@ catch (PDOException $e) {
 
 //
 // Check for workflow update
-// Do not do it if update is in progress
-// since it update settings
-//
-if ($update_in_progress == false) {
-    $check_results = checkForUpdate($w, $last_check_update_time);
-    if ($check_results != null && is_array($check_results)) {
-        $w->result(null, '', 'New version ' . $check_results[0] . ' is available', $check_results[2], './images/info.png', 'no', null, '');
-        $w->result(null, $check_results[1], 'Please install the new version in Downloads directory', $check_results[1], 'fileicon:' . $check_results[1], 'no', '', '', 'file');
+$check_results = checkForUpdate($w, $last_check_update_time);
+if ($check_results != null && is_array($check_results)) {
+    $w->result(null, '', 'New version ' . $check_results[0] . ' is available', $check_results[2], './images/info.png', 'no', null, '');
+    $w->result(null, $check_results[1], 'Please install the new version in Downloads directory', $check_results[1], 'fileicon:' . $check_results[1], 'no', '', '', 'file');
 
-        echo $w->toxml();
-        return;
-    }
+    echo $w->toxml();
+    return;
 }
 
 
@@ -467,7 +462,7 @@ if (mb_strlen($query) < 3) {
         'ctrl' => 'Not Available'
     ), './images/online_artist.png', 'yes', '');
 
-	$w->result(null, '', 'Search online', 'You can search tracks, artists, albums and playlists online, i.e not in your library', './images/online.png', 'no', null, 'Search Online▹');
+	$w->result(null, '', 'Search online', '☁︎ You can search tracks, artists, albums and playlists online, i.e not in your library', './images/online.png', 'no', null, 'Search Online▹');
 
     if ($is_alfred_playlist_active == true) {
         if ($alfred_playlist_name != "") {
