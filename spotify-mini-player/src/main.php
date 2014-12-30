@@ -1074,55 +1074,8 @@ if (mb_strlen($query) < 3) {
 		                $results = searchWebApi($w, $country_code, $query, 'playlist', $search_playlists_limit, false);
 
 		                foreach ($results as $playlist) {
-
 							$noresult = false;
-
-			                $subtitle = "Launch Playlist";
-			                if ($is_alfred_playlist_active == true) {
-			                    $arrayresult = array(
-			                        $subtitle,
-			                        'alt' => 'Not Available',
-			                        'cmd' => 'Not Available',
-			                        'shift' => 'Add playlist ' . escapeQuery(ucfirst($playlist->name)) . ' to your Alfred Playlist',
-			                        'fn' => 'Not Available',
-			                        'ctrl' => 'Not Available'
-			                    );
-			                } else {
-			                    $arrayresult = array(
-			                        $subtitle,
-			                        'alt' => 'Not Available',
-			                        'cmd' => 'Not Available',
-			                        'shift' => 'Add playlist ' . escapeQuery(ucfirst($playlist->name)) . ' to Your Music',
-			                        'fn' => 'Not Available',
-			                        'ctrl' => 'Not Available'
-			                    );
-			                }
-
-		                    $tracks = $playlist->tracks;
-		                    $owner  = $playlist->owner;
-
-		                    $playlist_artwork_path = getPlaylistArtwork($w, $playlist->uri, false);
-		                    $w->result(null, serialize(array(
-		                        '' /*track_uri*/ ,
-		                        '' /* album_uri */ ,
-		                        '' /* artist_uri */ ,
-		                        $playlist->uri /* playlist_uri */ ,
-		                        '' /* spotify_command */ ,
-		                        '' /* query */ ,
-		                        '' /* other_settings*/ ,
-		                        '' /* other_action */ ,
-		                        $alfred_playlist_uri /* alfred_playlist_uri */ ,
-		                        '' /* artist_name */ ,
-		                        '' /* track_name */ ,
-		                        '' /* album_name */ ,
-		                        '' /* track_artwork_path */ ,
-		                        '' /* artist_artwork_path */ ,
-		                        '' /* album_artwork_path */ ,
-		                        escapeQuery($playlist->name) /* playlist_name */ ,
-		                        '' /* playlist_artwork_path */ ,
-		                        $alfred_playlist_name
-		                        /* alfred_playlist_name */
-		                    )), escapeQuery(ucfirst($playlist->name)) . ' by ' . $playlist->owner->id . " (" . $tracks->total . " tracks)", $arrayresult, $playlist_artwork_path, 'yes', null, '');
+		                    $w->result(null, '', "🎵" . escapeQuery($playlist->name), "by " . $playlist->owner->id . " ● " . $playlist->tracks->total . " tracks", getPlaylistArtwork($w, $playlist->uri, false), 'no', null, "Online Playlist▹" . $playlist->uri . '∙' . escapeQuery($playlist->name) . "▹");
 
 			            }
 		            }
@@ -1954,7 +1907,7 @@ if (mb_strlen($query) < 3) {
 
                 }
                 catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-                    $w->result(null, 'help', "Exception occurred", "" . $e, './images/warning.png', 'no', null, '');
+                    $w->result(null, 'help', "Exception occurred", "" . $e->getMessage(), './images/warning.png', 'no', null, '');
                     echo $w->toxml();
                     return;
                 }
@@ -2003,7 +1956,7 @@ if (mb_strlen($query) < 3) {
                     }
                 }
                 catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-                    $w->result(null, 'help', "Exception occurred", "" . $e, './images/warning.png', 'no', null, '');
+                    $w->result(null, 'help', "Exception occurred", "" . $e->getMessage(), './images/warning.png', 'no', null, '');
                     echo $w->toxml();
                     return;
                 }
@@ -2916,8 +2869,7 @@ if (mb_strlen($query) < 3) {
                             $playlist[5] /* playlist_artwork_path */ ,
                             $alfred_playlist_name
                             /* alfred_playlist_name */
-                        )), "🎵" . $added . ucfirst($playlist[1]) . " (" . $playlist[7] . " tracks), by " . $playlist[3], $arrayresult, $playlist[5], 'yes', null, '');
-
+                        )), "🎵" . $added . ucfirst($playlist[1]) . " by " . $playlist[3] . " ● " . $playlist[7] . " tracks ● " . $playlist[8], $arrayresult, $playlist[5], 'yes', null, '');
                         $w->result(null, serialize(array(
                             '' /*track_uri*/ ,
                             '' /* album_uri */ ,
@@ -3039,6 +2991,218 @@ if (mb_strlen($query) < 3) {
                 return;
             }
         } // end of tracks by Playlist
+            elseif ($kind == "Online Playlist") {
+            //
+            // display tracks for selected online playlist
+            //
+            $tmp = explode('∙', $words[1]);
+            $theplaylisturi  = $tmp[0];
+            $url = explode(':', $theplaylisturi);
+            $owner_id = $url[2];
+            $playlist_id = $url[4];
+
+            $theplaylistname = $tmp[1];
+            $thetrack        = $words[2];
+
+            $api                = getSpotifyWebAPI($w, false, $api);
+            if ($api == false) {
+                $w->result(null, 'help', "Internal issue (getSpotifyWebAPI)", "", './images/warning.png', 'no', null, '');
+                echo $w->toxml();
+                return;
+            }
+
+			$savedPlaylistTracks = array();
+			$duration_playlist = 0;
+			$nb_tracks = 0;
+			try {
+	            $offsetGetUserPlaylistTracks = 0;
+	            $limitGetUserPlaylistTracks  = 100;
+	            do {
+	                // refresh api
+	                $api                = getSpotifyWebAPI($w, false, $api);
+		            if ($api == false) {
+		                $w->result(null, 'help', "Internal issue (getSpotifyWebAPI)", "", './images/warning.png', 'no', null, '');
+		                echo $w->toxml();
+		                return;
+		            }
+
+	                $userPlaylistTracks = $api->getUserPlaylistTracks(urlencode($owner_id), $playlist_id, array(
+	                    'fields' => array(
+	                        'total',
+	                        'items(added_at)',
+	                        'items.track(available_markets,duration_ms,uri,popularity,name)',
+	                        'items.track.album(album_type,images,uri,name)',
+	                        'items.track.artists(name,uri)'
+	                    ),
+	                    'limit' => $limitGetUserPlaylistTracks,
+	                    'offset' => $offsetGetUserPlaylistTracks
+	                ));
+
+	                foreach ($userPlaylistTracks->items as $item) {
+	                    $track   = $item->track;
+	                    // This is a known issue
+	                    // http://stackoverflow.com/questions/27533743/local-tracks-returned-as-null-by-spotify-web-api?noredirect=1#comment43496449_27533743
+	                    if ($track->uri == 'spotify:track:null') {
+							//skip
+							continue;
+	                    }
+
+						$savedPlaylistTracks[] = $track;
+						$nb_tracks += 1;
+	                    $duration_playlist += $track->duration_ms;
+	                }
+	                $offsetGetUserPlaylistTracks += $limitGetUserPlaylistTracks;
+	            } while ($offsetGetUserPlaylistTracks < $userPlaylistTracks->total);
+	        }
+	        catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+                $w->result(null, 'help', "Exception occurred", "" . $e->getMessage(), './images/warning.png', 'no', null, '');
+                echo $w->toxml();
+                return;
+	        }
+
+
+            $subtitle = "Launch Playlist";
+            if ($is_alfred_playlist_active == true) {
+                $subtitle = "$subtitle ,⇧ ▹ add playlist to ♫";
+            }
+
+            if ($is_alfred_playlist_active == true) {
+                $arrayresult = array(
+                    $subtitle,
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Add playlist ' . ucfirst($theplaylistname) . ' to your Alfred Playlist',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available'
+                );
+            } else {
+                $arrayresult = array(
+                    $subtitle,
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Add playlist ' . ucfirst($theplaylistname) . ' to Your Music',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available'
+                );
+            }
+            $playlist_artwork_path = getPlaylistArtwork($w, $theplaylisturi, false);
+            $w->result(null, serialize(array(
+                '' /*track_uri*/ ,
+                '' /* album_uri */ ,
+                '' /* artist_uri */ ,
+                $theplaylisturi /* playlist_uri */ ,
+                '' /* spotify_command */ ,
+                '' /* query */ ,
+                '' /* other_settings*/ ,
+                '' /* other_action */ ,
+                $alfred_playlist_uri /* alfred_playlist_uri */ ,
+                '' /* artist_name */ ,
+                '' /* track_name */ ,
+                '' /* album_name */ ,
+                '' /* track_artwork_path */ ,
+                '' /* artist_artwork_path */ ,
+                '' /* album_artwork_path */ ,
+                $theplaylistname /* playlist_name */ ,
+                $playlist_artwork_path /* playlist_artwork_path */ ,
+                $alfred_playlist_name
+                /* alfred_playlist_name */
+            )), "🎵"  . ucfirst($theplaylistname) . " by " . $owner_id . " ● " . $nb_tracks . " tracks ● " . beautifyTime($duration_playlist / 1000, true), $arrayresult, $playlist_artwork_path, 'yes', null, '');
+
+
+            $w->result(null, serialize(array(
+                '' /*track_uri*/ ,
+                '' /* album_uri */ ,
+                '' /* artist_uri */ ,
+                '' /* playlist_uri */ ,
+                'activate (open location "' . $theplaylisturi . '")' /* spotify_command */ ,
+                '' /* query */ ,
+                '' /* other_settings*/ ,
+                '' /* other_action */ ,
+                $alfred_playlist_uri /* alfred_playlist_uri */ ,
+                '' /* artist_name */ ,
+                '' /* track_name */ ,
+                '' /* album_name */ ,
+                '' /* track_artwork_path */ ,
+                '' /* artist_artwork_path */ ,
+                '' /* album_artwork_path */ ,
+                '' /* playlist_name */ ,
+                '' /* playlist_artwork_path */ ,
+                $alfred_playlist_name /* $alfred_playlist_name */ ,
+                $now_playing_notifications /* now_playing_notifications */ ,
+                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
+                $country_code /* country_code*/ ,
+                $userid
+                /* userid*/
+            )), "Open playlist " . $theplaylistname . " in Spotify", "This will open the playlist in Spotify", './images/spotify.png', 'yes', null, '');
+
+            if ($update_in_progress == false) {
+                $w->result(null, '', 'Add playlist ' . $theplaylistname . ' to...', 'This will add the playlist to Your Music or a playlist you will choose in next step', './images/add.png', 'no', null, 'Add▹' . $theplaylisturi . '∙' . $theplaylistname . '▹');
+            }
+
+			$noresult = true;
+			$nb_results = 0;
+            foreach ( $savedPlaylistTracks as $track) {
+                if ($nb_results > $max_results) {
+                    break;
+                }
+                if ($noresult) {
+                    $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
+                    $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
+                    $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
+                }
+                $noresult = false;
+                $artists = $track->artists;
+                $artist  = $artists[0];
+                $album   = $track->album;
+
+                if ($is_alfred_playlist_active == true) {
+                    $arrayresult = array(
+                        beautifyTime($track->duration_ms / 1000) . " ● " . escapeQuery($album->name),
+                        'alt' => 'Play album ' . escapeQuery($album->name) . ' in Spotify',
+                        'cmd' => 'Play artist ' . escapeQuery($artist->name) . ' in Spotify',
+                        'fn' => 'Add track ' . escapeQuery($track->name) . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
+                        'shift' => 'Add album ' . escapeQuery($album->name) . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
+                        'ctrl' => 'Search artist ' . escapeQuery($artist->name) . ' online'
+                    );
+                } else {
+                    $arrayresult = array(
+                        beautifyTime($track->duration_ms / 1000) . " ● " . escapeQuery($album->name),
+                        'alt' => 'Play album ' . escapeQuery($album->name) . ' in Spotify',
+                        'cmd' => 'Play artist ' . escapeQuery($artist->name) . ' in Spotify',
+                        'fn' => 'Add track ' . escapeQuery($track->name) . ' to Your Music',
+                        'shift' => 'Add album ' . escapeQuery($album->name) . ' to Your Music',
+                        'ctrl' => 'Search artist ' . escapeQuery($artist->name) . ' online'
+                    );
+                }
+                $track_artwork_path = getTrackOrAlbumArtwork($w, $track->uri, false);
+                $w->result(null, serialize(array(
+                    $track->uri /*track_uri*/ ,
+                    $album->uri /* album_uri */ ,
+                    $artist->uri /* artist_uri */ ,
+                    $theplaylisturi /* playlist_uri */ ,
+                    '' /* spotify_command */ ,
+                    '' /* query */ ,
+                    '' /* other_settings*/ ,
+                    '' /* other_action */ ,
+                    $alfred_playlist_uri /* alfred_playlist_uri */ ,
+                    escapeQuery($artist->name) /* artist_name */ ,
+                    escapeQuery($track->name) /* track_name */ ,
+                    escapeQuery($album->name) /* album_name */ ,
+                    $track_artwork_path /* track_artwork_path */ ,
+                    '' /* artist_artwork_path */ ,
+                    '' /* album_artwork_path */ ,
+                    '' /* playlist_name */ ,
+                    '' /* playlist_artwork_path */ ,
+                    $alfred_playlist_name /* $alfred_playlist_name */ ,
+                    $now_playing_notifications /* now_playing_notifications */ ,
+                    $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
+                    $country_code /* country_code*/ ,
+                    $userid
+                    /* userid*/
+                )), ucfirst(escapeQuery($artist->name)) . " ● " . escapeQuery($track->name), $arrayresult, $track_artwork_path, 'yes', null, '');
+                $nb_results++;
+            }
+        } // end of Online Playlist
             elseif ($kind == "Your Music" && $words[1] == "Tracks") {
             //
             // display tracks for Your Music
@@ -3419,36 +3583,12 @@ if (mb_strlen($query) < 3) {
                     $w->result(null, '', $featuredPlaylists->message, '' . $playlists->total . ' playlists available', './images/info.png', 'no', null, '');
                     $items = $playlists->items;
                     foreach ($items as $playlist) {
-                        $tracks = $playlist->tracks;
-                        $owner  = $playlist->owner;
-
-                        $playlist_artwork_path = getPlaylistArtwork($w, $playlist->uri, false);
-                        $w->result(null, serialize(array(
-                            '' /*track_uri*/ ,
-                            '' /* album_uri */ ,
-                            '' /* artist_uri */ ,
-                            $playlist->uri /* playlist_uri */ ,
-                            '' /* spotify_command */ ,
-                            '' /* query */ ,
-                            '' /* other_settings*/ ,
-                            '' /* other_action */ ,
-                            $alfred_playlist_uri /* alfred_playlist_uri */ ,
-                            '' /* artist_name */ ,
-                            '' /* track_name */ ,
-                            '' /* album_name */ ,
-                            '' /* track_artwork_path */ ,
-                            '' /* artist_artwork_path */ ,
-                            '' /* album_artwork_path */ ,
-                            escapeQuery($playlist->name) /* playlist_name */ ,
-                            '' /* playlist_artwork_path */ ,
-                            $alfred_playlist_name
-                            /* alfred_playlist_name */
-                        )), escapeQuery(ucfirst($playlist->name)) . " (" . $tracks->total . " tracks)", $arrayresult, $playlist_artwork_path, 'yes', null, '');
+		                $w->result(null, '', "🎵" . escapeQuery($playlist->name), "by " . $playlist->owner->id . " ● " . $playlist->tracks->total . " tracks", getPlaylistArtwork($w, $playlist->uri, false), 'no', null, "Online Playlist▹" . $playlist->uri . '∙' . escapeQuery($playlist->name) . "▹");
                     }
 
                 }
                 catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-                    $w->result(null, 'help', "Exception occurred", "" . $e, './images/warning.png', 'no', null, '');
+                    $w->result(null, 'help', "Exception occurred", "" . $e->getMessage(), './images/warning.png', 'no', null, '');
                     echo $w->toxml();
                     return;
                 }
@@ -3723,7 +3863,7 @@ if (mb_strlen($query) < 3) {
 	                        $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
 	                    }
 	                    $noresult = false;
-                            $track_artwork = getTrackOrAlbumArtwork($w, $track->uri, false);
+                            $track_artwork_path = getTrackOrAlbumArtwork($w, $track->uri, false);
                             if ($is_alfred_playlist_active == true) {
                                 $arrayresult = array(
                                     beautifyTime($track->duration_ms / 1000) . " ● " . $album_name,
@@ -3756,7 +3896,7 @@ if (mb_strlen($query) < 3) {
                                 $track->artists[0]->name /* artist_name */ ,
                                 $track->name /* track_name */ ,
                                 $album_name /* album_name */ ,
-                                $track_artwork /* track_artwork_path */ ,
+                                $track_artwork_path /* track_artwork_path */ ,
                                 '' /* artist_artwork_path */ ,
                                 '' /* album_artwork_path */ ,
                                 '' /* playlist_name */ ,
@@ -3767,7 +3907,7 @@ if (mb_strlen($query) < 3) {
                                 $country_code /* country_code*/ ,
                                 $userid
                                 /* userid*/
-                            )), escapeQuery(ucfirst($track->artists[0]->name)) . " ● " . escapeQuery($track->name), $arrayresult, $track_artwork, 'yes', null, '');
+                            )), escapeQuery(ucfirst($track->artists[0]->name)) . " ● " . escapeQuery($track->name), $arrayresult, $track_artwork_path, 'yes', null, '');
                         }
                     }
                 }
