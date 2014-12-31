@@ -1,7 +1,5 @@
 <?php
 
-require_once './src/workflows.php';
-
 /**
  * oAuthChecks function.
  *
@@ -2232,12 +2230,14 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
 			$query   = 'album:' . strtolower($the_query);
             $results = searchWebApi($w, $country_code, $query, 'album', $search_albums_limit, false);
 
-            $api                = getSpotifyWebAPI($w, false);
-            if ($api == false) {
-                $w->result(null, 'help', "Internal issue (getSpotifyWebAPI)", "", './images/warning.png', 'no', null, '');
+			try {
+            	$api = getSpotifyWebAPI($w);
+            }
+		    catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+                $w->result(null, 'help', "Exception occurred", "" . $e->getMessage(), './images/warning.png', 'no', null, '');
                 echo $w->toxml();
                 return;
-            }
+		    }
 
             foreach ($results as $album) {
                 if (checkIfResultAlreadyThere($w->results(),  escapeQuery(ucfirst($album->name))) == false) {
@@ -3322,14 +3322,8 @@ function firstDelimiterFollowUnfollow($w, $query, $settings, $db, $update_in_pro
 
         $artist_name = $words[1];
 
-        $api = getSpotifyWebAPI($w, false);
-        if ($api == false) {
-            $w->result(null, 'help', "Internal issue (getSpotifyWebAPI)", "", './images/warning.png', 'no', null, '');
-            echo $w->toxml();
-            return;
-        }
-
         try {
+	        $api                = getSpotifyWebAPI($w);
             $isArtistFollowed = $api->currentUserFollows('artist', $tmp_uri[2]);
 
             $artist_artwork_path = getArtistArtwork($w, $artist_name, false);
@@ -3394,20 +3388,13 @@ function firstDelimiterFollowOrUnfollow($w, $query, $settings, $db, $update_in_p
 
         $artist_name = $words[1];
 
-        $api = getSpotifyWebAPI($w, false);
-        if ($api == false) {
-            $w->result(null, 'help', "Internal issue (getSpotifyWebAPI)", "", './images/warning.png', 'no', null, '');
-            echo $w->toxml();
-            return;
-        }
-
         if ($kind == "Follow") {
             $follow = true;
         } else {
             $follow = false;
         }
         try {
-
+			$api = getSpotifyWebAPI($w);
             if ($follow) {
                 $ret = $api->followArtistsOrUsers('artist', $tmp_uri[2]);
             } else {
@@ -4658,29 +4645,16 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
 
     $theplaylistname = $tmp[1];
     $thetrack        = $words[2];
-
-    $api                = getSpotifyWebAPI($w, false);
-    if ($api == false) {
-        $w->result(null, 'help', "Internal issue (getSpotifyWebAPI)", "", './images/warning.png', 'no', null, '');
-        echo $w->toxml();
-        return;
-    }
-
 	$savedPlaylistTracks = array();
 	$duration_playlist = 0;
 	$nb_tracks = 0;
 	try {
+		$api = getSpotifyWebAPI($w);
         $offsetGetUserPlaylistTracks = 0;
         $limitGetUserPlaylistTracks  = 100;
         do {
             // refresh api
             $api                = getSpotifyWebAPI($w, false, $api);
-            if ($api == false) {
-                $w->result(null, 'help', "Internal issue (getSpotifyWebAPI)", "", './images/warning.png', 'no', null, '');
-                echo $w->toxml();
-                return;
-            }
-
             $userPlaylistTracks = $api->getUserPlaylistTracks(urlencode($owner_id), $playlist_id, array(
                 'fields' => array(
                     'total',
@@ -5372,14 +5346,8 @@ function secondDelimiterFeaturedPlaylist($w, $query, $settings, $db, $update_in_
             }
         }
     } else {
-        $api = getSpotifyWebAPI($w, false);
-        if ($api == false) {
-            $w->result(null, 'help', "Internal issue (getSpotifyWebAPI)", "", './images/warning.png', 'no', null, '');
-            echo $w->toxml();
-            return;
-        }
-
         try {
+	        $api = getSpotifyWebAPI($w);
             $featuredPlaylists = $api->getFeaturedPlaylists(array(
                 'country' => $country,
                 'limit' => 0,
