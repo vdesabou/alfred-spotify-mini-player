@@ -3619,8 +3619,8 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
 	    'ctrl' => 'Not Available'
 	), './images/search.png', 'yes', null, '');
 	}
-	$w->result(null, '', "Configure Max Number of Results", "Number of results displayed. (does not apply for the list of your playlists)", './images/results_numbers.png', 'no', null, 'Settings▹MaxResults▹');
-	$w->result(null, '', "Configure Number of Radio tracks", "Number of tracks to get when creating a Radio Playlist.", './images/radio_numbers.png', 'no', null, 'Settings▹RadioTracks▹');
+	$w->result(null, '', "Configure Max Number of Results (currently " . $max_results . ")", "Number of results displayed (it does not apply to the list of your playlists)", './images/results_numbers.png', 'no', null, 'Settings▹MaxResults▹');
+	$w->result(null, '', "Configure Number of Radio tracks (currently " . $radio_number_tracks . ")", "Number of tracks when creating a Radio Playlist.", './images/radio_numbers.png', 'no', null, 'Settings▹RadioTracks▹');
 
 
 	if ($now_playing_notifications == true) {
@@ -3745,7 +3745,7 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
 	    $userid
 	    /* userid*/
 	)), "Disable lookup for local tracks online", array(
-	    "If you disable this, workflow will not try to find a match online for your local tracks",
+	    "If disabled, the workflow will skip local tracks during library updates",
 	    'alt' => 'Not Available',
 	    'cmd' => 'Not Available',
 	    'shift' => 'Not Available',
@@ -3778,7 +3778,7 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
 	    $userid
 	    /* userid*/
 	)), "Enable lookup for local tracks online", array(
-	    "If you enable this, workflow will try to find a match online for your local tracks. Refresh library would take longer to execute.",
+	    "If enabled, the workflow will try to find a match online for your local tracks (Update library would take longer to execute)",
 	    'alt' => 'Not Available',
 	    'cmd' => 'Not Available',
 	    'shift' => 'Not Available',
@@ -3787,7 +3787,7 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
 	), './images/enable_lookup_local_tracks_online.png', 'yes', null, '');
 	}
 
-	$w->result(null, '', 'Check for workflow update', 'Note this is automatically done otherwise once per day', './images/check_update.png', 'no', null, 'Check for update...' . '▹');
+	$w->result(null, '', 'Check for workflow update', 'Last checked: ' . beautifyTime(time() - $last_check_update_time, true) . ' (note this is automatically done otherwise once per day)', './images/check_update.png', 'no', null, 'Check for update...' . '▹');
 }
 
 /**
