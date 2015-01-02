@@ -3453,6 +3453,7 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
     $display_name              = $settings->display_name;
     $userid                    = $settings->userid;
     $echonest_api_key          = $settings->echonest_api_key;
+	$lookup_local_tracks_online = $settings->lookup_local_tracks_online;
 
 	if ($update_in_progress == false) {
 	$w->result(null, serialize(array(
@@ -3716,6 +3717,74 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
 	    $userid
 	    /* userid*/
 	)), 'Re-Create your library from scratch', "Do this when refresh library is not working as you would expect", './images/recreate.png', 'yes', null, '');
+	}
+
+	if ($lookup_local_tracks_online == true) {
+	$w->result(null, serialize(array(
+	    '' /*track_uri*/ ,
+	    '' /* album_uri */ ,
+	    '' /* artist_uri */ ,
+	    '' /* playlist_uri */ ,
+	    '' /* spotify_command */ ,
+	    '' /* query */ ,
+	    '' /* other_settings*/ ,
+	    'disable_lookup_local_tracks_online' /* other_action */ ,
+	    $alfred_playlist_uri /* alfred_playlist_uri */ ,
+	    '' /* artist_name */ ,
+	    '' /* track_name */ ,
+	    '' /* album_name */ ,
+	    '' /* track_artwork_path */ ,
+	    '' /* artist_artwork_path */ ,
+	    '' /* album_artwork_path */ ,
+	    '' /* playlist_name */ ,
+	    '' /* playlist_artwork_path */ ,
+	    $alfred_playlist_name /* $alfred_playlist_name */ ,
+	    $now_playing_notifications /* now_playing_notifications */ ,
+	    $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
+	    $country_code /* country_code*/ ,
+	    $userid
+	    /* userid*/
+	)), "Disable lookup for local tracks online", array(
+	    "If you disable this, workflow will not try to find a match online for your local tracks",
+	    'alt' => 'Not Available',
+	    'cmd' => 'Not Available',
+	    'shift' => 'Not Available',
+	    'fn' => 'Not Available',
+	    'ctrl' => 'Not Available'
+	), './images/disable_lookup_local_tracks_online.png', 'yes', null, '');
+	} else {
+	$w->result(null, serialize(array(
+	    '' /*track_uri*/ ,
+	    '' /* album_uri */ ,
+	    '' /* artist_uri */ ,
+	    '' /* playlist_uri */ ,
+	    '' /* spotify_command */ ,
+	    '' /* query */ ,
+	    '' /* other_settings*/ ,
+	    'enable_lookup_local_tracks_online' /* other_action */ ,
+	    $alfred_playlist_uri /* alfred_playlist_uri */ ,
+	    '' /* artist_name */ ,
+	    '' /* track_name */ ,
+	    '' /* album_name */ ,
+	    '' /* track_artwork_path */ ,
+	    '' /* artist_artwork_path */ ,
+	    '' /* album_artwork_path */ ,
+	    '' /* playlist_name */ ,
+	    '' /* playlist_artwork_path */ ,
+	    $alfred_playlist_name /* $alfred_playlist_name */ ,
+	    $now_playing_notifications /* now_playing_notifications */ ,
+	    $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
+	    $country_code /* country_code*/ ,
+	    $userid
+	    /* userid*/
+	)), "Enable lookup for local tracks online", array(
+	    "If you enable this, workflow will try to find a match online for your local tracks. Refresh library would take longer to execute.",
+	    'alt' => 'Not Available',
+	    'cmd' => 'Not Available',
+	    'shift' => 'Not Available',
+	    'fn' => 'Not Available',
+	    'ctrl' => 'Not Available'
+	), './images/enable_lookup_local_tracks_online.png', 'yes', null, '');
 	}
 
 	$w->result(null, '', 'Check for workflow update', 'Note this is automatically done otherwise once per day', './images/check_update.png', 'no', null, 'Check for update...' . '▹');

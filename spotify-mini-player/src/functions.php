@@ -4256,10 +4256,10 @@ function getSettings($w)
 		    $setting = $stmt->fetch();
 
 	        $migrated = array(
-	            'all_playlists' => ((boolean)$setting[0]),
-	            'is_alfred_playlist_active' => ((boolean)$setting[2]),
+	            'all_playlists' => $setting[0],
+	            'is_alfred_playlist_active' => $setting[2],
 	            'radio_number_tracks' => $setting[3],
-	            'now_playing_notifications' => true,
+	            'now_playing_notifications' => 1,
 	            'max_results' => $setting[5],
 	            'alfred_playlist_uri' => $setting[6],
 	            'alfred_playlist_name' => $setting[7],
@@ -4274,7 +4274,7 @@ function getSettings($w)
 	            'display_name' => $setting[17],
 	            'userid' => $setting[18],
 	            'echonest_api_key' => '5EG94BIZEGFEY9AL9',
-	            'lookup_local_tracks_online' => false,
+	            'lookup_local_tracks_online' => 0,
 	        );
 
 	        $ret = $w->write($migrated, 'settings.json');
@@ -4291,10 +4291,10 @@ function getSettings($w)
 
     if ($settings == false) {
         $default = array(
-            'all_playlists' => true,
-            'is_alfred_playlist_active' => true,
+            'all_playlists' => 1,
+            'is_alfred_playlist_active' => 1,
             'radio_number_tracks' => 30,
-            'now_playing_notifications' => true,
+            'now_playing_notifications' => 1,
             'max_results' => 50,
             'alfred_playlist_uri' => '',
             'alfred_playlist_name' => '',
@@ -4309,7 +4309,7 @@ function getSettings($w)
             'display_name' => '',
             'userid' => '',
             'echonest_api_key' => '5EG94BIZEGFEY9AL9',
-            'lookup_local_tracks_online' => false,
+            'lookup_local_tracks_online' => 0,
         );
 
         $ret = $w->write($default, 'settings.json');

@@ -589,6 +589,22 @@ if ($playlist_uri != "" && $other_settings == "") {
             displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
         }
         return;
+    } else if ($other_action == "enable_lookup_local_tracks_online") {
+        $ret = updateSetting($w, 'lookup_local_tracks_online', true);
+        if ($ret == true) {
+            displayNotificationWithArtwork("Lookup for local tracks online is enabled", './images/enable_lookup_local_tracks_online.png', 'Settings');
+        } else {
+            displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
+        }
+        return;
+    } else if ($other_action == "disable_lookup_local_tracks_online") {
+        $ret = updateSetting($w, 'lookup_local_tracks_online', false);
+        if ($ret == true) {
+            displayNotificationWithArtwork("Lookup for local tracks online is disabled", './images/disable_lookup_local_tracks_online.png', 'Settings');
+        } else {
+            displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
+        }
+        return;
     } else if ($other_action == "play_track_in_album_context") {
         // start now playing if needed
         if ($now_playing_notifications == "") {
