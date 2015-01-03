@@ -1091,6 +1091,32 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 $userid
                 /* userid*/
             )), 'Add current track to...', 'Current track will be added to Your Music or a playlist of your choice', './images/add_to.png', 'yes', '');
+            
+            $w->result('SpotifyMiniPlayer_' . 'remove_current_track_from', serialize(array(
+                '' /*track_uri*/ ,
+                '' /* album_uri */ ,
+                '' /* artist_uri */ ,
+                '' /* playlist_uri */ ,
+                '' /* spotify_command */ ,
+                '' /* query */ ,
+                '' /* other_settings*/ ,
+                'remove_current_track_from' /* other_action */ ,
+                $alfred_playlist_uri /* alfred_playlist_uri */ ,
+                '' /* artist_name */ ,
+                '' /* track_name */ ,
+                '' /* album_name */ ,
+                '' /* track_artwork_path */ ,
+                '' /* artist_artwork_path */ ,
+                '' /* album_artwork_path */ ,
+                '' /* playlist_name */ ,
+                '' /* playlist_artwork_path */ ,
+                $alfred_playlist_name /* $alfred_playlist_name */ ,
+                $now_playing_notifications /* now_playing_notifications */ ,
+                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
+                $country_code /* country_code*/ ,
+                $userid
+                /* userid*/
+            )), 'Remove current track from...', 'Current track will be removed from Your Music or a playlist of your choice', './images/remove_from.png', 'yes', '');
         }
 
         $w->result('SpotifyMiniPlayer_' . 'mute', serialize(array(
@@ -1635,6 +1661,34 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                     $userid
                     /* userid*/
                 )), 'Add current track to...', 'Current track will be added to Your Music or a playlist of your choice', './images/add_to.png', 'yes', '');
+            }
+        } elseif (strpos(strtolower('remove'), strtolower($query)) !== false) {
+            if ($update_in_progress == false) {
+	            $w->result('SpotifyMiniPlayer_' . 'remove_current_track_from', serialize(array(
+	                '' /*track_uri*/ ,
+	                '' /* album_uri */ ,
+	                '' /* artist_uri */ ,
+	                '' /* playlist_uri */ ,
+	                '' /* spotify_command */ ,
+	                '' /* query */ ,
+	                '' /* other_settings*/ ,
+	                'remove_current_track_from' /* other_action */ ,
+	                $alfred_playlist_uri /* alfred_playlist_uri */ ,
+	                '' /* artist_name */ ,
+	                '' /* track_name */ ,
+	                '' /* album_name */ ,
+	                '' /* track_artwork_path */ ,
+	                '' /* artist_artwork_path */ ,
+	                '' /* album_artwork_path */ ,
+	                '' /* playlist_name */ ,
+	                '' /* playlist_artwork_path */ ,
+	                $alfred_playlist_name /* $alfred_playlist_name */ ,
+	                $now_playing_notifications /* now_playing_notifications */ ,
+	                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
+	                $country_code /* country_code*/ ,
+	                $userid
+	                /* userid*/
+	            )), 'Remove current track from...', 'Current track will be removed from Your Music or a playlist of your choice', './images/remove_from.png', 'yes', '');
             }
         } elseif (strpos(strtolower('mute'), strtolower($query)) !== false) {
             $w->result(null, serialize(array(
@@ -2602,6 +2656,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
         if ($update_in_progress == false) {
             $w->result(null, '', 'Add track ' . escapeQuery($results[0]) . ' to...', 'This will add current track to Your Music or a playlist you will choose in next step', './images/add.png', 'no', null, 'Add▹' . $results[4] . '∙' . escapeQuery($results[0]) . '▹');
 
+            $w->result(null, '', 'Remove track ' . escapeQuery($results[0]) . ' from...', 'This will remove current track from Your Music or a playlist you will choose in next step', './images/remove.png', 'no', null, 'Remove▹' . $results[4] . '∙' . escapeQuery($results[0]) . '▹');
 
             $w->result(null, serialize(array(
                 '' /*track_uri*/ ,
@@ -6027,6 +6082,159 @@ function secondDelimiterAdd($w, $query, $settings, $db, $update_in_progress)
                 /* userid*/
             )), "🎵" . $added . ucfirst($playlist[1]), $playlist[7] . " tracks ● " . $playlist[8] . " ● Select the playlist to add the " . $message, $playlist[5], 'yes', null, '');
         }
+    }
+}
+
+/**
+ * secondDelimiterRemove function.
+ * 
+ * @access public
+ * @param mixed $w
+ * @param mixed $query
+ * @param mixed $settings
+ * @param mixed $db
+ * @param mixed $update_in_progress
+ * @return void
+ */
+function secondDelimiterRemove($w, $query, $settings, $db, $update_in_progress)
+{
+    $words = explode('▹', $query);
+    $kind  = $words[0];
+
+    $all_playlists             = $settings->all_playlists;
+    $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
+    $radio_number_tracks       = $settings->radio_number_tracks;
+    $now_playing_notifications = $settings->now_playing_notifications;
+    $max_results               = $settings->max_results;
+    $alfred_playlist_uri       = $settings->alfred_playlist_uri;
+    $alfred_playlist_name      = $settings->alfred_playlist_name;
+    $country_code              = $settings->country_code;
+    $last_check_update_time    = $settings->last_check_update_time;
+    $oauth_client_id           = $settings->oauth_client_id;
+    $oauth_client_secret       = $settings->oauth_client_secret;
+    $oauth_redirect_uri        = $settings->oauth_redirect_uri;
+    $oauth_access_token        = $settings->oauth_access_token;
+    $oauth_expires             = $settings->oauth_expires;
+    $oauth_refresh_token       = $settings->oauth_refresh_token;
+    $display_name              = $settings->display_name;
+    $userid                    = $settings->userid;
+    $echonest_api_key          = $settings->echonest_api_key;
+
+    if ($update_in_progress == true) {
+        $w->result(null, '', 'Cannot remove tracks while update is in progress', 'Please retry when update is finished', './images/warning.png', 'no', null, '');
+
+        echo $w->toxml();
+        return;
+    }
+
+    $tmp = explode('∙', $words[1]);
+    $uri = $tmp[0];
+    // it is necessarly a track:
+    $type       = 'track';
+    $track_name = $tmp[1];
+    $track_uri  = $uri;
+    $message    = "track " . $track_name; 
+    $theplaylist = $words[2];
+
+	$noresult = true;
+    $getPlaylistsForTrack = "select distinct playlist_uri from tracks where uri=:uri";
+    try {
+        $stmt = $db->prepare($getPlaylistsForTrack);
+        $stmt->bindValue(':uri', '' . $track_uri . '');
+        $stmt->execute();
+
+        while ($playlistsForTrack = $stmt->fetch()) {
+            if ($playlistsForTrack[0] == "") {
+				if($noresult == true) {	
+	           		$w->result(null, '', 'Remove ' . $type . ' ' . $tmp[1] . ' from Your Music or one of your playlists below..', "Select Your Music or one of your playlists below to remove the " . $message, './images/add.png', 'no', null, '');
+	            }            
+	            // Your Music
+	            $w->result(null, serialize(array(
+	                $track_uri /*track_uri*/ ,
+	                $album_uri /* album_uri */ ,
+	                '' /* artist_uri */ ,
+	                $playlist_uri /* playlist_uri */ ,
+	                '' /* spotify_command */ ,
+	                '' /* query */ ,
+	                'REMOVE_FROM_YOUR_MUSIC▹' /* other_settings*/ ,
+	                '' /* other_action */ ,
+	                $alfred_playlist_uri /* alfred_playlist_uri */ ,
+	                '' /* artist_name */ ,
+	                $track_name /* track_name */ ,
+	                $album_name /* album_name */ ,
+	                '' /* track_artwork_path */ ,
+	                '' /* artist_artwork_path */ ,
+	                '' /* album_artwork_path */ ,
+	                $playlist_name /* playlist_name */ ,
+	                '' /* playlist_artwork_path */ ,
+	                $alfred_playlist_name /* $alfred_playlist_name */ ,
+	                $now_playing_notifications /* now_playing_notifications */ ,
+	                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
+	                $country_code /* country_code*/ ,
+	                $userid
+	                /* userid*/
+	            )), "Your Music", "Select to remove the " . $message . " from Your Music", './images/yourmusic.png', 'yes', null, '');	
+	            $noresult = false;			
+            } else {
+		        if (mb_strlen($theplaylist) < 3) {
+		            $getPlaylists = "select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist from playlists where ownedbyuser=1 and uri=:playlist_uri";
+		            $stmtGetPlaylists         = $db->prepare($getPlaylists);
+					$stmtGetPlaylists->bindValue(':playlist_uri', $playlistsForTrack[0]);
+		        } else {
+		            $getPlaylists = "select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist from playlists where ownedbyuser=1 and ( name like :playlist or author like :playlist) and uri=:playlist_uri";
+		            $stmtGetPlaylists         = $db->prepare($getPlaylists);
+		            $stmtGetPlaylists->bindValue(':playlist_uri', $playlistsForTrack[0]);
+		            $stmtGetPlaylists->bindValue(':playlist', '%' . $theplaylist . '%');
+		        }
+		
+		        $playlists = $stmtGetPlaylists->execute();
+		        
+			    while ($playlist = $stmtGetPlaylists->fetch()) {
+					if($noresult == true) {	
+		           		$w->result(null, '', 'Remove ' . $type . ' ' . $tmp[1] . ' from Your Music or one of your playlists below..', "Select Your Music or one of your playlists below to remove the " . $message, './images/add.png', 'no', null, '');
+		            }
+		            $added = ' ';
+		            if (startswith($playlist[1], 'Artist radio for')) {
+		                $added = '📻 ';
+		            }
+		            $w->result(null, serialize(array(
+		                $track_uri /*track_uri*/ ,
+		                $album_uri /* album_uri */ ,
+		                '' /* artist_uri */ ,
+		                $playlist_uri /* playlist_uri */ ,
+		                '' /* spotify_command */ ,
+		                '' /* query */ ,
+		                'REMOVE_FROM_PLAYLIST▹' . $playlist[0] . '▹' . $playlist[1] /* other_settings*/ ,
+		                '' /* other_action */ ,
+		                $alfred_playlist_uri /* alfred_playlist_uri */ ,
+		                '' /* artist_name */ ,
+		                $track_name /* track_name */ ,
+		                $album_name /* album_name */ ,
+		                '' /* track_artwork_path */ ,
+		                '' /* artist_artwork_path */ ,
+		                '' /* album_artwork_path */ ,
+		                $playlist_name /* playlist_name */ ,
+		                '' /* playlist_artwork_path */ ,
+		                $alfred_playlist_name /* $alfred_playlist_name */ ,
+		                $now_playing_notifications /* now_playing_notifications */ ,
+		                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
+		                $country_code /* country_code*/ ,
+		                $userid
+		                /* userid*/
+		            )), "🎵" . $added . ucfirst($playlist[1]), $playlist[7] . " tracks ● " . $playlist[8] . " ● Select the playlist to remove the " . $message, $playlist[5], 'yes', null, '');
+		            $noresult = false;
+			    }	            
+
+            }
+        }
+    }
+    catch (PDOException $e) {
+        handleDbIssuePdoXml($db);
+        return;
+    }
+
+    if ($noresult) {
+        $w->result(null, 'help', "The current track is not in Your Music or one of your playlists", "", './images/warning.png', 'no', null, '');
     }
 }
 

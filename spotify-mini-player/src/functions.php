@@ -407,6 +407,27 @@ function addCurrentTrackTo($w)
 }
 
 /**
+ * removeCurrentTrackFrom function.
+ * 
+ * @access public
+ * @param mixed $w
+ * @return void
+ */
+function removeCurrentTrackFrom($w)
+{
+    // get info on current song
+    $command_output = exec("./src/track_info.ksh 2>&1");
+
+    if (substr_count($command_output, '▹') > 0) {
+        $results = explode('▹', $command_output);
+        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Remove▹" . $results[4] . "∙" . escapeQuery($results[0]) . '▹' . "\"'");
+    } else {
+        displayNotificationWithArtwork("No track is playing", './images/warning.png');
+    }
+}
+
+
+/**
  * addCurrentTrackToAlfredPlaylistOrYourMusic function.
  *
  * @access public
@@ -696,6 +717,81 @@ function addTracksToPlaylist($w, $tracks, $playlist_uri, $playlist_name, $allow_
     }
 
     return count($tracks);
+}
+
+/**
+ * removeTrackFromPlaylist function.
+ * 
+ * @access public
+ * @param mixed $w
+ * @param mixed $track_uri
+ * @param mixed $playlist_uri
+ * @param mixed $playlist_name
+ * @param bool $refreshLibrary (default: true)
+ * @return void
+ */
+function removeTrackFromPlaylist($w, $track_uri, $playlist_uri, $playlist_name, $refreshLibrary = true)
+{
+    //
+    // Read settings from JSON
+    //
+    $settings = getSettings($w);
+    $userid   = $settings->userid;
+
+    try {
+        $api      = getSpotifyWebAPI($w);
+        $tmp = explode(':', $playlist_uri);		
+		$api->deletePlaylistTracks(urlencode($userid), $tmp[4], array(
+            array(
+                'id' => $track_uri,
+            )
+        ));        
+    }
+    catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+        logMsg("Error(removeTrackFromPlaylist): (exception " . print_r($e) . ")");
+        handleSpotifyWebAPIException($w, $e);
+        return false;
+    }
+
+    if ($refreshLibrary) {
+        refreshLibrary($w);
+    }
+
+    return true;
+}
+
+/**
+ * removeTrackFromYourMusic function.
+ * 
+ * @access public
+ * @param mixed $w
+ * @param mixed $track_uri
+ * @param bool $refreshLibrary (default: true)
+ * @return void
+ */
+function removeTrackFromYourMusic($w, $track_uri, $refreshLibrary = true)
+{
+    //
+    // Read settings from JSON
+    //
+    $settings = getSettings($w);
+    $userid   = $settings->userid;
+
+    try {
+        $api      = getSpotifyWebAPI($w);
+		$api->deleteMyTracks($track_uri);    
+    }
+    catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+        logMsg("Error(removeTrackFromYourMusic): (exception " . print_r($e) . ")");
+        handleSpotifyWebAPIException($w, $e);
+        return false;
+    }
+
+    if ($refreshLibrary) {
+        refreshLibrary($w);
+    }
+
+    return true;
 }
 
 /**
@@ -2685,8 +2781,8 @@ function updateLibrary($w)
             $stmtTrack->bindValue(':track_artwork_path', $track_artwork_path);
             $stmtTrack->bindValue(':artist_artwork_path', $artist_artwork_path);
             $stmtTrack->bindValue(':album_artwork_path', $album_artwork_path);
-            $stmtTrack->bindValue(':playlist_name', escapeQuery($playlist->name));
-            $stmtTrack->bindValue(':playlist_uri', $playlist->uri);
+            $stmtTrack->bindValue(':playlist_name', '');
+            $stmtTrack->bindValue(':playlist_uri', '');
             $stmtTrack->bindValue(':playable', $playable);
             $stmtTrack->bindValue(':added_at', $item->added_at);
             $stmtTrack->bindValue(':duration', beautifyTime($track->duration_ms / 1000));

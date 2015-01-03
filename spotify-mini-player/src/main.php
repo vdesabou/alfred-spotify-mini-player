@@ -329,6 +329,9 @@ if (mb_strlen($query) < 3) {
         elseif ($kind == "Add") {
 			secondDelimiterAdd($w, $query, $settings, $db, $update_in_progress);
         }
+        elseif ($kind == "Remove") {
+			secondDelimiterRemove($w, $query, $settings, $db, $update_in_progress);
+        }
         elseif ($kind == "Alfred Playlist") {
 	        secondDelimiterAlfredPlaylist($w, $query, $settings, $db, $update_in_progress);
         }

@@ -456,6 +456,23 @@ if ($playlist_uri != "" && $other_settings == "") {
                 return;
             }
         }
+    } else if ($setting[0] == "REMOVE_FROM_PLAYLIST") {
+
+        if (file_exists($w->data() . '/update_library_in_progress')) {
+            displayNotificationWithArtwork("Cannot modify library while update is in progress", './images/warning.png', 'Error!');
+            return;
+        }
+        // remove track from playlist
+        if ($track_uri != '') {
+            $track_artwork_path = getTrackOrAlbumArtwork($w, $track_uri, true);
+            $tmp                = explode(':', $track_uri);
+            $ret = removeTrackFromPlaylist($w, $tmp[2], $setting[1], $setting[2]);
+            stathat_ez_count('AlfredSpotifyMiniPlayer', 'remove', 1);
+            if ($ret == true) {
+                displayNotificationWithArtwork('' . $track_name . ' removed from ' . $setting[2] . ' playlist', $track_artwork_path, 'Remove Track from Playlist');
+                return;
+            }
+        }
     } else if ($setting[0] == "ADD_TO_YOUR_MUSIC") {
         if (file_exists($w->data() . '/update_library_in_progress')) {
             displayNotificationWithArtwork("Cannot modify library while update is in progress", './images/warning.png', 'Error!');
@@ -517,6 +534,23 @@ if ($playlist_uri != "" && $other_settings == "") {
                 return;
             } else if (is_numeric($ret) && $ret == 0) {
                 displayNotificationWithArtwork('Album ' . $album_name . ' is already in Your Music', './images/warning.png', 'Error!');
+                return;
+            }
+        }
+    } else if ($setting[0] == "REMOVE_FROM_YOUR_MUSIC") {
+
+        if (file_exists($w->data() . '/update_library_in_progress')) {
+            displayNotificationWithArtwork("Cannot modify library while update is in progress", './images/warning.png', 'Error!');
+            return;
+        }
+        // remove track from your music
+        if ($track_uri != '') {
+            $track_artwork_path = getTrackOrAlbumArtwork($w, $track_uri, true);
+            $tmp                = explode(':', $track_uri);
+            $ret = removeTrackFromYourMusic($w, $tmp[2]);
+            stathat_ez_count('AlfredSpotifyMiniPlayer', 'remove', 1);
+            if ($ret == true) {
+                displayNotificationWithArtwork('' . $track_name . ' removed from Your Music', $track_artwork_path, 'Remove Track from Your Music');
                 return;
             }
         }
@@ -683,6 +717,13 @@ if ($playlist_uri != "" && $other_settings == "") {
             return;
         }
         addCurrentTrackTo($w);
+        return;
+    } else if ($other_action == "remove_current_track_from") {
+        if (file_exists($w->data() . '/update_library_in_progress')) {
+            displayNotificationWithArtwork("Cannot modify library while update is in progress", './images/warning.png', 'Error!');
+            return;
+        }
+        removeCurrentTrackFrom($w);
         return;
     } else if ($other_action == "previous") {
         exec("osascript -e 'tell application \"Spotify\" to previous track'");
