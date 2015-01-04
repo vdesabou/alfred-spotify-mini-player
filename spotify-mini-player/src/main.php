@@ -265,7 +265,7 @@ if (mb_strlen($query) < 3) {
 	    	$history = array();
 	    }
 	    array_push($history,substr($query, 0, strrpos( $query, '▹')) . '▹');
-		$w->write($history, 'history.json');
+		$w->write(array_unique($history), 'history.json');
 			 			
 	    ////////////
 	    //
