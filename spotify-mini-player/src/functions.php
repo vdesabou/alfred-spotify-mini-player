@@ -408,7 +408,7 @@ function addCurrentTrackTo($w)
 
 /**
  * removeCurrentTrackFrom function.
- * 
+ *
  * @access public
  * @param mixed $w
  * @return void
@@ -721,7 +721,7 @@ function addTracksToPlaylist($w, $tracks, $playlist_uri, $playlist_name, $allow_
 
 /**
  * removeTrackFromPlaylist function.
- * 
+ *
  * @access public
  * @param mixed $w
  * @param mixed $track_uri
@@ -740,12 +740,12 @@ function removeTrackFromPlaylist($w, $track_uri, $playlist_uri, $playlist_name, 
 
     try {
         $api      = getSpotifyWebAPI($w);
-        $tmp = explode(':', $playlist_uri);		
+        $tmp = explode(':', $playlist_uri);
 		$api->deletePlaylistTracks(urlencode($userid), $tmp[4], array(
             array(
                 'id' => $track_uri,
             )
-        ));        
+        ));
     }
     catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
         logMsg("Error(removeTrackFromPlaylist): (exception " . print_r($e) . ")");
@@ -762,7 +762,7 @@ function removeTrackFromPlaylist($w, $track_uri, $playlist_uri, $playlist_name, 
 
 /**
  * removeTrackFromYourMusic function.
- * 
+ *
  * @access public
  * @param mixed $w
  * @param mixed $track_uri
@@ -779,7 +779,7 @@ function removeTrackFromYourMusic($w, $track_uri, $refreshLibrary = true)
 
     try {
         $api      = getSpotifyWebAPI($w);
-		$api->deleteMyTracks($track_uri);    
+		$api->deleteMyTracks($track_uri);
     }
     catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
         logMsg("Error(removeTrackFromYourMusic): (exception " . print_r($e) . ")");
@@ -1289,14 +1289,24 @@ function getTheAlbumTracks($w, $album_uri)
 {
     $tracks = array();
     try {
-        $tmp = explode(':', $album_uri);
+	    $api                   = getSpotifyWebAPI($w);
+        $tmp                   = explode(':', $album_uri);
+        $offsetGetAlbumTracks  = 0;
+        $limitGetAlbumTracks  = 50;
+        do {
+	        // refresh api
+            $api = getSpotifyWebAPI($w, $api);
+            $albumTracks = $api->getAlbumTracks($tmp[2], array(
+                'limit' => $limitGetAlbumTracks,
+                'offset' => $offsetGetAlbumTracks
+            ));
 
-        $api  = getSpotifyWebAPI($w);
-        $json = $api->getAlbumTracks($tmp[2]);
+            foreach ($albumTracks->items as $track) {
+                $tracks[] = $track->id;
+            }
+            $offsetGetAlbumTracks += $limitGetAlbumTracks;
+        } while ($offsetGetAlbumTracks < $albumTracks->total);
 
-        foreach ($json->items as $track) {
-            $tracks[] = $track->id;
-        }
     }
     catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
         logMsg("Error(getTheAlbumTracks): (exception " . print_r($e) . ")");
@@ -1381,6 +1391,48 @@ function getTheArtistAlbums($w, $artist_uri, $country_code)
     }
 
     return $albums;
+}
+
+/**
+ * getTheAlbumFullTracks function.
+ *
+ * @access public
+ * @param mixed $w
+ * @param mixed $album_uri
+ * @return void
+ */
+function getTheAlbumFullTracks($w, $album_uri)
+{
+    $tracks = array();
+
+    try {
+	    $api                   = getSpotifyWebAPI($w);
+        $tmp                   = explode(':', $album_uri);
+        $offsetGetAlbumTracks  = 0;
+        $limitGetAlbumTracks  = 50;
+        do {
+	        // refresh api
+            $api = getSpotifyWebAPI($w, $api);
+            $albumTracks = $api->getAlbumTracks($tmp[2], array(
+                'limit' => $limitGetAlbumTracks,
+                'offset' => $offsetGetAlbumTracks
+            ));
+
+            foreach ($albumTracks->items as $track) {
+                $tracks[] = $track;
+            }
+
+            $offsetGetAlbumTracks += $limitGetAlbumTracks;
+        } while ($offsetGetAlbumTracks < $albumTracks->total);
+    }
+    catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+        $w2 = new Workflows('com.vdesabou.spotify.mini.player');
+        $w2->result(null, '', "Error: Spotify WEB API getAlbumTracks returned error " . $e->getMessage(), "Try again or report to author", './images/warning.png', 'no', null, '');
+        echo $w2->toxml();
+        exit;
+    }
+
+    return $tracks;
 }
 
 /**

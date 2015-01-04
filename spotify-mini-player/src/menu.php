@@ -1091,7 +1091,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 $userid
                 /* userid*/
             )), 'Add current track to...', 'Current track will be added to Your Music or a playlist of your choice', './images/add_to.png', 'yes', '');
-            
+
             $w->result('SpotifyMiniPlayer_' . 'remove_current_track_from', serialize(array(
                 '' /*track_uri*/ ,
                 '' /* album_uri */ ,
@@ -3080,7 +3080,6 @@ function firstDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
 
         $href = explode(':', $album_uri);
         if ($href[1] == 'track') {
-
             $track_uri  = $album_uri;
             $album_uri = getAlbumUriFromTrack($w, $track_uri);
             if ($album_uri == false) {
@@ -3089,10 +3088,6 @@ function firstDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
                 return;
             }
         }
-
-        $tmp_uri = explode(':', $album_uri);
-
-        $json = doWebApiRequest($w, "https://api.spotify.com/v1/albums/" . $tmp_uri[2] . "/tracks");
 
         $album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, false);
         $w->result(null, serialize(array(
@@ -3125,9 +3120,12 @@ function firstDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
             $w->result(null, '', 'Add album ' . escapeQuery($album_name) . ' to...', 'This will add the album to Your Music or a playlist you will choose in next step', './images/add.png', 'no', null, 'Add▹' . $album_uri . '∙' . escapeQuery($album_name) . '▹');
         }
 
+        // call to web api, if it fails,
+        // it displays an error in main window
+		$tracks = getTheAlbumFullTracks($w, $album_uri);
 
         $noresult = true;
-        foreach ($json->items as $track) {
+        foreach ($tracks as $track) {
 
             if (count($track->available_markets) == 0 || in_array($country_code, $track->available_markets) !== false) {
 
@@ -6087,7 +6085,7 @@ function secondDelimiterAdd($w, $query, $settings, $db, $update_in_progress)
 
 /**
  * secondDelimiterRemove function.
- * 
+ *
  * @access public
  * @param mixed $w
  * @param mixed $query
@@ -6133,7 +6131,7 @@ function secondDelimiterRemove($w, $query, $settings, $db, $update_in_progress)
     $type       = 'track';
     $track_name = $tmp[1];
     $track_uri  = $uri;
-    $message    = "track " . $track_name; 
+    $message    = "track " . $track_name;
     $theplaylist = $words[2];
 
 	$noresult = true;
@@ -6145,9 +6143,9 @@ function secondDelimiterRemove($w, $query, $settings, $db, $update_in_progress)
 
         while ($playlistsForTrack = $stmt->fetch()) {
             if ($playlistsForTrack[0] == "") {
-				if($noresult == true) {	
+				if($noresult == true) {
 	           		$w->result(null, '', 'Remove ' . $type . ' ' . $tmp[1] . ' from Your Music or one of your playlists below..', "Select Your Music or one of your playlists below to remove the " . $message, './images/add.png', 'no', null, '');
-	            }            
+	            }
 	            // Your Music
 	            $w->result(null, serialize(array(
 	                $track_uri /*track_uri*/ ,
@@ -6173,8 +6171,8 @@ function secondDelimiterRemove($w, $query, $settings, $db, $update_in_progress)
 	                $country_code /* country_code*/ ,
 	                $userid
 	                /* userid*/
-	            )), "Your Music", "Select to remove the " . $message . " from Your Music", './images/yourmusic.png', 'yes', null, '');	
-	            $noresult = false;			
+	            )), "Your Music", "Select to remove the " . $message . " from Your Music", './images/yourmusic.png', 'yes', null, '');
+	            $noresult = false;
             } else {
 		        if (mb_strlen($theplaylist) < 3) {
 		            $getPlaylists = "select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist from playlists where ownedbyuser=1 and uri=:playlist_uri";
@@ -6186,11 +6184,11 @@ function secondDelimiterRemove($w, $query, $settings, $db, $update_in_progress)
 		            $stmtGetPlaylists->bindValue(':playlist_uri', $playlistsForTrack[0]);
 		            $stmtGetPlaylists->bindValue(':playlist', '%' . $theplaylist . '%');
 		        }
-		
+
 		        $playlists = $stmtGetPlaylists->execute();
-		        
+
 			    while ($playlist = $stmtGetPlaylists->fetch()) {
-					if($noresult == true) {	
+					if($noresult == true) {
 		           		$w->result(null, '', 'Remove ' . $type . ' ' . $tmp[1] . ' from Your Music or one of your playlists below..', "Select Your Music or one of your playlists below to remove the " . $message, './images/add.png', 'no', null, '');
 		            }
 		            $added = ' ';
@@ -6223,7 +6221,7 @@ function secondDelimiterRemove($w, $query, $settings, $db, $update_in_progress)
 		                /* userid*/
 		            )), "🎵" . $added . ucfirst($playlist[1]), $playlist[7] . " tracks ● " . $playlist[8] . " ● Select the playlist to remove the " . $message, $playlist[5], 'yes', null, '');
 		            $noresult = false;
-			    }	            
+			    }
 
             }
         }
