@@ -469,36 +469,13 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress)
 
         if ($noresult) {
             $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-            $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
+            $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
             $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
         }
         $noresult = false;
         $subtitle = $track[6];
 
         if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " ● " . $track[5]) == false) {
-
-            $playlistsfortrack = getPlaylistsForTrack($db, $track[2]);
-
-            if ($is_alfred_playlist_active == true) {
-                $arrayresult = array(
-                    $track[16] . " ● " . $subtitle . $playlistsfortrack,
-                    'alt' => 'Play album ' . $track[6] . ' in Spotify',
-                    'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
-                    'fn' => 'Add track ' . $track[5] . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
-                    'shift' => 'Add album ' . $track[6] . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
-                    'ctrl' => 'Search artist ' . $track[7] . ' online'
-                );
-            } else {
-                $arrayresult = array(
-                    $track[16] . " ● " . $subtitle . $playlistsfortrack,
-                    'alt' => 'Play album ' . $track[6] . ' in Spotify',
-                    'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
-                    'fn' => 'Add track ' . $track[5] . ' to Your Music',
-                    'shift' => 'Add album ' . $track[6] . ' to Your Music',
-                    'ctrl' => 'Search artist ' . $track[7] . ' online'
-                );
-            }
-
             $w->result(null, serialize(array(
                 $track[2] /*track_uri*/ ,
                 $track[3] /* album_uri */ ,
@@ -523,7 +500,14 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress)
                 $country_code /* country_code*/ ,
                 $userid
                 /* userid*/
-            )), ucfirst($track[7]) . " ● " . $track[5], $arrayresult, $track[9], 'yes', array(
+            )), ucfirst($track[7]) . " ● " . $track[5], array(
+                $track[16] . " ● " . $subtitle . getPlaylistsForTrack($db, $track[2]),
+                'alt' => 'Play album ' . $track[6] . ' in Spotify',
+                'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
+                'fn' => 'Add track ' . $track[5] . ' to ...',
+                'shift' => 'Add album ' . $track[6] . ' to ...',
+                'ctrl' => 'Search artist ' . $track[7] . ' online'
+            ), $track[9], 'yes', array(
                 'copy' => ucfirst($track[7]) . " ● " . $track[5],
                 'largetype' => ucfirst($track[7]) . " ● " . $track[5]
             ), '');
@@ -2340,7 +2324,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
 
                 if ($first == true) {
                     $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-                    $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
+                    $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
                     $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
                 }
                 $first = false;
@@ -2350,25 +2334,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
                 $artists = $track->artists;
                 $artist  = $artists[0];
                 $album   = $track->album;
-                if ($is_alfred_playlist_active == true) {
-                    $arrayresult = array(
-                        beautifyTime($track->duration_ms / 1000) . " ● " . escapeQuery($album->name),
-                        'alt' => 'Play album ' . escapeQuery($album->name) . ' in Spotify',
-                        'cmd' => 'Play artist ' . escapeQuery($artist->name) . ' in Spotify',
-                        'fn' => 'Add track ' . escapeQuery($track->name) . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
-                        'shift' => 'Add album ' . escapeQuery($album->name) . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
-                        'ctrl' => 'Search artist ' . escapeQuery($artist->name) . ' online'
-                    );
-                } else {
-                    $arrayresult = array(
-                        beautifyTime($track->duration_ms / 1000) . " ● " . escapeQuery($album->name),
-                        'alt' => 'Play album ' . escapeQuery($album->name) . ' in Spotify',
-                        'cmd' => 'Play artist ' . escapeQuery($artist->name) . ' in Spotify',
-                        'fn' => 'Add track ' . escapeQuery($track->name) . ' to Your Music',
-                        'shift' => 'Add album ' . escapeQuery($album->name) . ' to Your Music',
-                        'ctrl' => 'Search artist ' . escapeQuery($artist->name) . ' online'
-                    );
-                }
+
                 $w->result(null, serialize(array(
                     $track->uri /*track_uri*/ ,
                     $album->uri /* album_uri */ ,
@@ -2393,7 +2359,14 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
                     $country_code /* country_code*/ ,
                     $userid
                     /* userid*/
-                )), escapeQuery(ucfirst($artist->name)) . " ● " . escapeQuery($track->name), $arrayresult, $track_artwork, 'yes', null, '');
+                )), escapeQuery(ucfirst($artist->name)) . " ● " . escapeQuery($track->name), array(
+                        beautifyTime($track->duration_ms / 1000) . " ● " . escapeQuery($album->name),
+                        'alt' => 'Play album ' . escapeQuery($album->name) . ' in Spotify',
+                        'cmd' => 'Play artist ' . escapeQuery($artist->name) . ' in Spotify',
+                        'fn' => 'Add track ' . escapeQuery($track->name) . ' to ...',
+                        'shift' => 'Add album ' . escapeQuery($album->name) . ' to ...',
+                        'ctrl' => 'Search artist ' . escapeQuery($artist->name) . ' online'
+                    ), $track_artwork, 'yes', null, '');
             }
         }
 
@@ -2515,27 +2488,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
 
         $currentArtistArtwork = getArtistArtwork($w, $results[1], false);
         $subtitle             = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-        $subtitle             = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
-        if ($is_alfred_playlist_active == true) {
-            $arrayresult = array(
-                $subtitle,
-                'alt' => 'Play album ' . escapeQuery($results[2]) . ' in Spotify',
-                'cmd' => 'Play artist ' . escapeQuery($results[1]) . ' in Spotify',
-                'fn' => 'Add track ' . escapeQuery($results[0]) . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
-                'shift' => 'Add album ' . escapeQuery($results[2]) . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
-                'ctrl' => 'Search artist ' . escapeQuery($results[1]) . ' online'
-            );
-        } else {
-            $arrayresult = array(
-                $subtitle,
-                'alt' => 'Play album ' . escapeQuery($results[2]) . ' in Spotify',
-                'cmd' => 'Play artist ' . escapeQuery($results[1]) . ' in Spotify',
-                'fn' => 'Add track ' . escapeQuery($results[0]) . ' to Your Music',
-                'shift' => 'Add album ' . escapeQuery($results[2]) . ' to Your Music',
-                'ctrl' => 'Search artist ' . escapeQuery($results[1]) . ' online'
-            );
-        }
-
+        $subtitle             = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
         if ($results[3] == "playing") {
             $w->result(null, serialize(array(
                 $results[4] /*track_uri*/ ,
@@ -2561,7 +2514,14 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                 $country_code /* country_code*/ ,
                 $userid
                 /* userid*/
-            )), " " . escapeQuery($results[0]) . " ● " . escapeQuery($results[1]) . " ● " . escapeQuery($results[2]) . " ● " . floatToStars($results[6] / 100) . ' (' . beautifyTime($results[5]) . ')', $arrayresult, ($results[3] == "playing") ? './images/pause.png' : './images/play.png', 'yes', null, '');
+            )), " " . escapeQuery($results[0]) . " ● " . escapeQuery($results[1]) . " ● " . escapeQuery($results[2]) . " ● " . floatToStars($results[6] / 100) . ' (' . beautifyTime($results[5]) . ')', array(
+                $subtitle,
+                'alt' => 'Play album ' . escapeQuery($results[2]) . ' in Spotify',
+                'cmd' => 'Play artist ' . escapeQuery($results[1]) . ' in Spotify',
+                'fn' => 'Add track ' . escapeQuery($results[0]) . ' to ...',
+                'shift' => 'Add album ' . escapeQuery($results[2]) . ' to ...',
+                'ctrl' => 'Search artist ' . escapeQuery($results[1]) . ' online'
+            ), ($results[3] == "playing") ? './images/pause.png' : './images/play.png', 'yes', null, '');
 
         } else {
             $w->result(null, serialize(array(
@@ -2849,34 +2809,13 @@ function firstDelimiterYourMusic($w, $query, $settings, $db, $update_in_progress
 
             if ($noresult == true) {
                 $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-                $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
+                $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
                 $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
             }
             $noresult = false;
             $subtitle = $track[6];
 
             if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " ● " . $track[5]) == false) {
-                $playlistsfortrack = getPlaylistsForTrack($db, $track[2]);
-
-                if ($is_alfred_playlist_active == true) {
-                    $arrayresult = array(
-                        $track[16] . " ● " . $subtitle . $playlistsfortrack,
-                        'alt' => 'Play album ' . $track[6] . ' in Spotify',
-                        'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
-                        'fn' => 'Add track ' . $track[5] . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
-                        'shift' => 'Add album ' . $track[6] . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
-                        'ctrl' => 'Search artist ' . $track[7] . ' online'
-                    );
-                } else {
-                    $arrayresult = array(
-                        $track[16] . " ● " . $subtitle . $playlistsfortrack,
-                        'alt' => 'Play album ' . $track[6] . ' in Spotify',
-                        'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
-                        'fn' => 'Add track ' . $track[5] . ' to Your Music',
-                        'shift' => 'Add album ' . $track[6] . ' to Your Music',
-                        'ctrl' => 'Search artist ' . $track[7] . ' online'
-                    );
-                }
 
                 $w->result(null, serialize(array(
                     $track[2] /*track_uri*/ ,
@@ -2902,7 +2841,14 @@ function firstDelimiterYourMusic($w, $query, $settings, $db, $update_in_progress
                     $country_code /* country_code*/ ,
                     $userid
                     /* userid*/
-                )), ucfirst($track[7]) . " ● " . $track[5], $arrayresult, $track[9], 'yes', array(
+                )), ucfirst($track[7]) . " ● " . $track[5], $arrayresult = array(
+                        $track[16] . " ● " . $subtitle . getPlaylistsForTrack($db, $track[2]),
+                        'alt' => 'Play album ' . $track[6] . ' in Spotify',
+                        'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
+                        'fn' => 'Add track ' . $track[5] . ' to ...',
+                        'shift' => 'Add album ' . $track[6] . ' to ...',
+                        'ctrl' => 'Search artist ' . $track[7] . ' online'
+                    ), $track[9], 'yes', array(
                     'copy' => ucfirst($track[7]) . " ● " . $track[5],
                     'largetype' => ucfirst($track[7]) . " ● " . $track[5]
                 ), '');
@@ -3671,7 +3617,7 @@ function secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
 
         if ($noresult) {
             $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-            $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
+            $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
             $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
         }
         $noresult = false;
@@ -3679,27 +3625,6 @@ function secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
 
         if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " ● " . $track[5]) == false) {
 
-            $playlistsfortrack = getPlaylistsForTrack($db, $track[2]);
-
-            if ($is_alfred_playlist_active == true) {
-                $arrayresult = array(
-                    $track[16] . " ● " . $subtitle . $playlistsfortrack,
-                    'alt' => 'Play album ' . $track[6] . ' in Spotify',
-                    'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
-                    'fn' => 'Add track ' . $track[5] . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
-                    'shift' => 'Add album ' . $track[6] . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
-                    'ctrl' => 'Search artist ' . $track[7] . ' online'
-                );
-            } else {
-                $arrayresult = array(
-                    $track[16] . " ● " . $subtitle . $playlistsfortrack,
-                    'alt' => 'Play album ' . $track[6] . ' in Spotify',
-                    'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
-                    'fn' => 'Add track ' . $track[5] . ' to Your Music',
-                    'shift' => 'Add album ' . $track[6] . ' to Your Music',
-                    'ctrl' => 'Search artist ' . $track[7] . ' online'
-                );
-            }
             $w->result(null, serialize(array(
                 $track[2] /*track_uri*/ ,
                 $track[3] /* album_uri */ ,
@@ -3724,7 +3649,14 @@ function secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
                 $country_code /* country_code*/ ,
                 $userid
                 /* userid*/
-            )), ucfirst($track[7]) . " ● " . $track[5], $arrayresult, $track[9], 'yes', null, '');
+            )), ucfirst($track[7]) . " ● " . $track[5], array(
+                    $track[16] . " ● " . $subtitle . getPlaylistsForTrack($db, $track[2]),
+                    'alt' => 'Play album ' . $track[6] . ' in Spotify',
+                    'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
+                    'fn' => 'Add track ' . $track[5] . ' to ...',
+                    'shift' => 'Add album ' . $track[6] . ' to ...',
+                    'ctrl' => 'Search artist ' . $track[7] . ' online'
+                ), $track[9], 'yes', null, '');
         }
     }
 
@@ -3904,7 +3836,7 @@ function secondDelimiterAlbums($w, $query, $settings, $db, $update_in_progress)
 
         if ($noresult == true) {
             $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-            $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
+            $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
             $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
         }
         $noresult = false;
@@ -3912,27 +3844,6 @@ function secondDelimiterAlbums($w, $query, $settings, $db, $update_in_progress)
 
         if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " ● " . $track[5]) == false) {
 
-            $playlistsfortrack = getPlaylistsForTrack($db, $track[2]);
-
-            if ($is_alfred_playlist_active == true) {
-                $arrayresult = array(
-                    $track[16] . " ● " . $subtitle . $playlistsfortrack,
-                    'alt' => 'Play album ' . $track[6] . ' in Spotify',
-                    'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
-                    'fn' => 'Add track ' . $track[5] . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
-                    'shift' => 'Add album ' . $track[6] . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
-                    'ctrl' => 'Search artist ' . $track[7] . ' online'
-                );
-            } else {
-                $arrayresult = array(
-                    $track[16] . " ● " . $subtitle . $playlistsfortrack,
-                    'alt' => 'Play album ' . $track[6] . ' in Spotify',
-                    'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
-                    'fn' => 'Add track ' . $track[5] . ' to Your Music',
-                    'shift' => 'Add album ' . $track[6] . ' to Your Music',
-                    'ctrl' => 'Search artist ' . $track[7] . ' online'
-                );
-            }
             $w->result(null, serialize(array(
                 $track[2] /*track_uri*/ ,
                 $track[3] /* album_uri */ ,
@@ -3957,7 +3868,14 @@ function secondDelimiterAlbums($w, $query, $settings, $db, $update_in_progress)
                 $country_code /* country_code*/ ,
                 $userid
                 /* userid*/
-            )), ucfirst($track[7]) . " ● " . $track[5], $arrayresult, $track[9], 'yes', null, '');
+            )), ucfirst($track[7]) . " ● " . $track[5], array(
+                    $track[16] . " ● " . $subtitle . getPlaylistsForTrack($db, $track[2]),
+                    'alt' => 'Play album ' . $track[6] . ' in Spotify',
+                    'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
+                    'fn' => 'Add track ' . $track[5] . ' to ...',
+                    'shift' => 'Add album ' . $track[6] . ' to ...',
+                    'ctrl' => 'Search artist ' . $track[7] . ' online'
+                ), $track[9], 'yes', null, '');
         }
     }
 
@@ -4087,27 +4005,7 @@ function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progres
 
                 $subtitle = "Launch Playlist";
                 if ($is_alfred_playlist_active == true && $playlist[1] != $alfred_playlist_name) {
-                    $subtitle = "$subtitle ,⇧ ▹ add playlist to ♫";
-                }
-
-                if ($is_alfred_playlist_active == true) {
-                    $arrayresult = array(
-                        $subtitle,
-                        'alt' => 'Not Available',
-                        'cmd' => 'Not Available',
-                        'shift' => 'Add playlist ' . ucfirst($playlist[1]) . ' to your Alfred Playlist',
-                        'fn' => 'Not Available',
-                        'ctrl' => 'Not Available'
-                    );
-                } else {
-                    $arrayresult = array(
-                        $subtitle,
-                        'alt' => 'Not Available',
-                        'cmd' => 'Not Available',
-                        'shift' => 'Add playlist ' . ucfirst($playlist[1]) . ' to Your Music',
-                        'fn' => 'Not Available',
-                        'ctrl' => 'Not Available'
-                    );
+                    $subtitle = "$subtitle ,⇧ ▹ add playlist to ...";
                 }
                 $added = ' ';
                 if (startswith($playlist[1], 'Artist radio for')) {
@@ -4133,7 +4031,14 @@ function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progres
                     $playlist[5] /* playlist_artwork_path */ ,
                     $alfred_playlist_name
                     /* alfred_playlist_name */
-                )), "🎵" . $added . ucfirst($playlist[1]) . " by " . $playlist[3] . " ● " . $playlist[7] . " tracks ● " . $playlist[8], $arrayresult, $playlist[5], 'yes', null, '');
+                )), "🎵" . $added . ucfirst($playlist[1]) . " by " . $playlist[3] . " ● " . $playlist[7] . " tracks ● " . $playlist[8], array(
+                        $subtitle,
+                        'alt' => 'Not Available',
+                        'cmd' => 'Not Available',
+                        'shift' => 'Add playlist ' . ucfirst($playlist[1]) . ' to your Alfred Playlist',
+                        'fn' => 'Not Available',
+                        'ctrl' => 'Not Available'
+                    ), $playlist[5], 'yes', null, '');
                 $w->result(null, serialize(array(
                     '' /*track_uri*/ ,
                     '' /* album_uri */ ,
@@ -4181,34 +4086,14 @@ function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progres
 
                 if ($noresult) {
                     $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-                    $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
+                    $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
                     $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
                 }
                 $noresult = false;
                 $subtitle = $track[6];
 
                 if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " ● " . $track[5]) == false) {
-                    $playlistsfortrack = getPlaylistsForTrack($db, $track[2]);
 
-                    if ($is_alfred_playlist_active == true) {
-                        $arrayresult = array(
-                            $track[16] . " ● " . $subtitle . $playlistsfortrack,
-                            'alt' => 'Play album ' . $track[6] . ' in Spotify',
-                            'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
-                            'fn' => 'Add track ' . $track[5] . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
-                            'shift' => 'Add album ' . $track[6] . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
-                            'ctrl' => 'Search artist ' . $track[7] . ' online'
-                        );
-                    } else {
-                        $arrayresult = array(
-                            $track[16] . " ● " . $subtitle . $playlistsfortrack,
-                            'alt' => 'Play album ' . $track[6] . ' in Spotify',
-                            'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
-                            'fn' => 'Add track ' . $track[5] . ' to Your Music',
-                            'shift' => 'Add album ' . $track[6] . ' to Your Music',
-                            'ctrl' => 'Search artist ' . $track[7] . ' online'
-                        );
-                    }
                     $w->result(null, serialize(array(
                         $track[2] /*track_uri*/ ,
                         $track[3] /* album_uri */ ,
@@ -4233,7 +4118,14 @@ function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progres
                         $country_code /* country_code*/ ,
                         $userid
                         /* userid*/
-                    )), ucfirst($track[7]) . " ● " . $track[5], $arrayresult, $track[9], 'yes', null, '');
+                    )), ucfirst($track[7]) . " ● " . $track[5], array(
+                    $track[16] . " ● " . $subtitle . getPlaylistsForTrack($db, $track[2]),
+                    'alt' => 'Play album ' . $track[6] . ' in Spotify',
+                    'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
+                    'fn' => 'Add track ' . $track[5] . ' to ...',
+                    'shift' => 'Add album ' . $track[6] . ' to ...',
+                    'ctrl' => 'Search artist ' . $track[7] . ' online'
+                ), $track[9], 'yes', null, '');
 
                 }
             }
@@ -4471,30 +4363,11 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
 
                 if ($noresult == true) {
                     $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-                    $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
+                    $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
                     $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
                 }
                 $noresult = false;
                 $track_artwork = getTrackOrAlbumArtwork($w, $track->uri, false);
-                if ($is_alfred_playlist_active == true) {
-                    $arrayresult = array(
-                        beautifyTime($track->duration_ms / 1000) . " ● " . $album_name,
-                        'alt' => 'Play album ' . escapeQuery($album_name) . ' in Spotify',
-                        'cmd' => 'Play artist ' . escapeQuery($artist_name) . ' in Spotify',
-                        'fn' => 'Add track ' . escapeQuery($track->name) . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
-                        'shift' => 'Add album ' . escapeQuery($album_name) . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
-                        'ctrl' => 'Search artist ' . escapeQuery($artist_name) . ' online'
-                    );
-                } else {
-                    $arrayresult = array(
-                        beautifyTime($track->duration_ms / 1000) . " ● " . escapeQuery($album_name),
-                        'alt' => 'Play album ' . escapeQuery($album_name) . ' in Spotify',
-                        'cmd' => 'Play artist ' . escapeQuery($artist_name) . ' in Spotify',
-                        'fn' => 'Add track ' . escapeQuery($track->name) . ' to Your Music',
-                        'shift' => 'Add album ' . escapeQuery(album_name) . ' to Your Music',
-                        'ctrl' => 'Search artist ' . escapeQuery($artist_name) . ' online'
-                    );
-                }
                 $w->result(null, serialize(array(
                     $track->uri /*track_uri*/ ,
                     $album_uri /* album_uri */ ,
@@ -4519,7 +4392,14 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
                     $country_code /* country_code*/ ,
                     $userid
                     /* userid*/
-                )), escapeQuery(ucfirst($artist_name)) . " ● " . escapeQuery($track->name), $arrayresult, $track_artwork, 'yes', null, '');
+                )), escapeQuery(ucfirst($artist_name)) . " ● " . escapeQuery($track->name), array(
+                        beautifyTime($track->duration_ms / 1000) . " ● " . $album_name,
+                        'alt' => 'Play album ' . escapeQuery($album_name) . ' in Spotify',
+                        'cmd' => 'Play artist ' . escapeQuery($artist_name) . ' in Spotify',
+                        'fn' => 'Add track ' . escapeQuery($track->name) . ' to ...',
+                        'shift' => 'Add album ' . escapeQuery($album_name) . ' to ...',
+                        'ctrl' => 'Search artist ' . escapeQuery($artist_name) . ' online'
+                    ), $track_artwork, 'yes', null, '');
             }
         }
     }
@@ -4672,27 +4552,7 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
 
     $subtitle = "Launch Playlist";
     if ($is_alfred_playlist_active == true) {
-        $subtitle = "$subtitle ,⇧ ▹ add playlist to ♫";
-    }
-
-    if ($is_alfred_playlist_active == true) {
-        $arrayresult = array(
-            $subtitle,
-            'alt' => 'Not Available',
-            'cmd' => 'Not Available',
-            'shift' => 'Add playlist ' . ucfirst($theplaylistname) . ' to your Alfred Playlist',
-            'fn' => 'Not Available',
-            'ctrl' => 'Not Available'
-        );
-    } else {
-        $arrayresult = array(
-            $subtitle,
-            'alt' => 'Not Available',
-            'cmd' => 'Not Available',
-            'shift' => 'Add playlist ' . ucfirst($theplaylistname) . ' to Your Music',
-            'fn' => 'Not Available',
-            'ctrl' => 'Not Available'
-        );
+        $subtitle = "$subtitle ,⇧ ▹ add playlist to ...";
     }
     $playlist_artwork_path = getPlaylistArtwork($w, $theplaylisturi, false);
     $w->result(null, serialize(array(
@@ -4715,7 +4575,14 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
         $playlist_artwork_path /* playlist_artwork_path */ ,
         $alfred_playlist_name
         /* alfred_playlist_name */
-    )), "🎵"  . ucfirst($theplaylistname) . " by " . $owner_id . " ● " . $nb_tracks . " tracks ● " . beautifyTime($duration_playlist / 1000, true), $arrayresult, $playlist_artwork_path, 'yes', null, '');
+    )), "🎵"  . ucfirst($theplaylistname) . " by " . $owner_id . " ● " . $nb_tracks . " tracks ● " . beautifyTime($duration_playlist / 1000, true), array(
+            $subtitle,
+            'alt' => 'Not Available',
+            'cmd' => 'Not Available',
+            'shift' => 'Add playlist ' . ucfirst($theplaylistname) . ' to your Alfred Playlist',
+            'fn' => 'Not Available',
+            'ctrl' => 'Not Available'
+        ), $playlist_artwork_path, 'yes', null, '');
 
 
     $w->result(null, serialize(array(
@@ -4756,7 +4623,7 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
         }
         if ($noresult) {
             $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-            $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
+            $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
             $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
         }
         $noresult = false;
@@ -4764,25 +4631,6 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
         $artist  = $artists[0];
         $album   = $track->album;
 
-        if ($is_alfred_playlist_active == true) {
-            $arrayresult = array(
-                beautifyTime($track->duration_ms / 1000) . " ● " . escapeQuery($album->name),
-                'alt' => 'Play album ' . escapeQuery($album->name) . ' in Spotify',
-                'cmd' => 'Play artist ' . escapeQuery($artist->name) . ' in Spotify',
-                'fn' => 'Add track ' . escapeQuery($track->name) . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
-                'shift' => 'Add album ' . escapeQuery($album->name) . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
-                'ctrl' => 'Search artist ' . escapeQuery($artist->name) . ' online'
-            );
-        } else {
-            $arrayresult = array(
-                beautifyTime($track->duration_ms / 1000) . " ● " . escapeQuery($album->name),
-                'alt' => 'Play album ' . escapeQuery($album->name) . ' in Spotify',
-                'cmd' => 'Play artist ' . escapeQuery($artist->name) . ' in Spotify',
-                'fn' => 'Add track ' . escapeQuery($track->name) . ' to Your Music',
-                'shift' => 'Add album ' . escapeQuery($album->name) . ' to Your Music',
-                'ctrl' => 'Search artist ' . escapeQuery($artist->name) . ' online'
-            );
-        }
         $track_artwork_path = getTrackOrAlbumArtwork($w, $track->uri, false);
         $w->result(null, serialize(array(
             $track->uri /*track_uri*/ ,
@@ -4808,7 +4656,14 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
             $country_code /* country_code*/ ,
             $userid
             /* userid*/
-        )), ucfirst(escapeQuery($artist->name)) . " ● " . escapeQuery($track->name), $arrayresult, $track_artwork_path, 'yes', null, '');
+        )), ucfirst(escapeQuery($artist->name)) . " ● " . escapeQuery($track->name), array(
+                beautifyTime($track->duration_ms / 1000) . " ● " . escapeQuery($album->name),
+                'alt' => 'Play album ' . escapeQuery($album->name) . ' in Spotify',
+                'cmd' => 'Play artist ' . escapeQuery($artist->name) . ' in Spotify',
+                'fn' => 'Add track ' . escapeQuery($track->name) . ' to ...',
+                'shift' => 'Add album ' . escapeQuery($album->name) . ' to ...',
+                'ctrl' => 'Search artist ' . escapeQuery($artist->name) . ' online'
+            ), $track_artwork_path, 'yes', null, '');
         $nb_results++;
     }
 }
@@ -4869,35 +4724,13 @@ function secondDelimiterYourMusicTracks($w, $query, $settings, $db, $update_in_p
 
         if ($noresult) {
             $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-            $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
+            $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
             $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
         }
         $noresult = false;
         $subtitle = $track[6];
 
         if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " ● " . $track[5]) == false) {
-
-            $playlistsfortrack = getPlaylistsForTrack($db, $track[2]);
-
-            if ($is_alfred_playlist_active == true) {
-                $arrayresult = array(
-                    $track[16] . " ● " . $subtitle . $playlistsfortrack,
-                    'alt' => 'Play album ' . $track[6] . ' in Spotify',
-                    'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
-                    'fn' => 'Add track ' . $track[5] . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
-                    'shift' => 'Add album ' . $track[6] . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
-                    'ctrl' => 'Search artist ' . $track[7] . ' online'
-                );
-            } else {
-                $arrayresult = array(
-                    $track[16] . " ● " . $subtitle . $playlistsfortrack,
-                    'alt' => 'Play album ' . $track[6] . ' in Spotify',
-                    'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
-                    'fn' => 'Add track ' . $track[5] . ' to Your Music',
-                    'shift' => 'Add album ' . $track[6] . ' to Your Music',
-                    'ctrl' => 'Search artist ' . $track[7] . ' online'
-                );
-            }
             $w->result(null, serialize(array(
                 $track[2] /*track_uri*/ ,
                 $track[3] /* album_uri */ ,
@@ -4922,7 +4755,14 @@ function secondDelimiterYourMusicTracks($w, $query, $settings, $db, $update_in_p
                 $country_code /* country_code*/ ,
                 $userid
                 /* userid*/
-            )), ucfirst($track[7]) . " ● " . $track[5], $arrayresult, $track[9], 'yes', null, '');
+            )), ucfirst($track[7]) . " ● " . $track[5], array(
+                    $track[16] . " ● " . $subtitle . getPlaylistsForTrack($db, $track[2]),
+                    'alt' => 'Play album ' . $track[6] . ' in Spotify',
+                    'cmd' => 'Play artist ' . $track[7] . ' in Spotify',
+                    'fn' => 'Add track ' . $track[5] . ' to ...',
+                    'shift' => 'Add album ' . $track[6] . ' to ...',
+                    'ctrl' => 'Search artist ' . $track[7] . ' online'
+                ), $track[9], 'yes', null, '');
         }
     }
 
@@ -5337,25 +5177,6 @@ function secondDelimiterFeaturedPlaylist($w, $query, $settings, $db, $update_in_
             ));
 
             $subtitle = "Launch Playlist";
-            if ($is_alfred_playlist_active == true) {
-                $arrayresult = array(
-                    $subtitle,
-                    'alt' => 'Not Available',
-                    'cmd' => 'Not Available',
-                    'shift' => 'Add playlist ' . escapeQuery(ucfirst($playlist->name)) . ' to your Alfred Playlist',
-                    'fn' => 'Not Available',
-                    'ctrl' => 'Not Available'
-                );
-            } else {
-                $arrayresult = array(
-                    $subtitle,
-                    'alt' => 'Not Available',
-                    'cmd' => 'Not Available',
-                    'shift' => 'Add playlist ' . escapeQuery(ucfirst($playlist->name)) . ' to Your Music',
-                    'fn' => 'Not Available',
-                    'ctrl' => 'Not Available'
-                );
-            }
             $playlists = $featuredPlaylists->playlists;
             $w->result(null, '', $featuredPlaylists->message, '' . $playlists->total . ' playlists available', './images/info.png', 'no', null, '');
             $items = $playlists->items;
@@ -5474,7 +5295,7 @@ function secondDelimiterCharts($w, $query, $settings, $db, $update_in_progress)
             }
             if ($noresult) {
                 $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-                $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
+                $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
                 $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
             }
             $noresult = false;
@@ -5487,25 +5308,6 @@ function secondDelimiterCharts($w, $query, $settings, $db, $update_in_progress)
 
             $href       = explode('/', $track->artist_url);
             $artist_uri = 'spotify:artist:' . $href[4];
-            if ($is_alfred_playlist_active == true) {
-                $arrayresult = array(
-                    escapeQuery($track->album_name) . " ● " . $track->num_streams . ' streams',
-                    'alt' => 'Play album ' . escapeQuery($track->album_name) . ' in Spotify',
-                    'cmd' => 'Play artist ' . escapeQuery($track->artist_name) . ' in Spotify',
-                    'fn' => 'Add track ' . escapeQuery($track->track_name) . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
-                    'shift' => 'Add album ' . escapeQuery($track->album_name) . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
-                    'ctrl' => 'Search artist ' . escapeQuery($track->artist_name) . ' online'
-                );
-            } else {
-                $arrayresult = array(
-                    escapeQuery($track->album_name) . " ● " . $track->num_streams . ' streams',
-                    'alt' => 'Play album ' . escapeQuery($track->album_name) . ' in Spotify',
-                    'cmd' => 'Play artist ' . escapeQuery($track->artist_name) . ' in Spotify',
-                    'fn' => 'Add track ' . escapeQuery($track->track_name) . ' to Your Music',
-                    'shift' => 'Add album ' . escapeQuery($track->album_name) . ' to Your Music',
-                    'ctrl' => 'Search artist ' . escapeQuery($track->artist_name) . ' online'
-                );
-            }
             $track_artwork = getTrackOrAlbumArtwork($w, $track_uri, false);
             $w->result(null, serialize(array(
                 $track_uri /*track_uri*/ ,
@@ -5531,7 +5333,14 @@ function secondDelimiterCharts($w, $query, $settings, $db, $update_in_progress)
                 $country_code /* country_code*/ ,
                 $userid
                 /* userid*/
-            )), ucfirst(escapeQuery($track->track_name)) . " ● " . escapeQuery($track->artist_name), $arrayresult, $track_artwork, 'yes', null, '');
+            )), ucfirst(escapeQuery($track->track_name)) . " ● " . escapeQuery($track->artist_name), array(
+                    escapeQuery($track->album_name) . " ● " . $track->num_streams . ' streams',
+                    'alt' => 'Play album ' . escapeQuery($track->album_name) . ' in Spotify',
+                    'cmd' => 'Play artist ' . escapeQuery($track->artist_name) . ' in Spotify',
+                    'fn' => 'Add track ' . escapeQuery($track->track_name) . ' to ...',
+                    'shift' => 'Add album ' . escapeQuery($track->album_name) . ' to ...',
+                    'ctrl' => 'Search artist ' . escapeQuery($track->artist_name) . ' online'
+                ), $track_artwork, 'yes', null, '');
             $nb_results++;
         }
     }
@@ -5706,30 +5515,11 @@ function secondDelimiterNewReleases($w, $query, $settings, $db, $update_in_progr
 
                 if ($noresult == true) {
                     $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-                    $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
+                    $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
                     $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
                 }
                 $noresult = false;
                     $track_artwork_path = getTrackOrAlbumArtwork($w, $track->uri, false);
-                    if ($is_alfred_playlist_active == true) {
-                        $arrayresult = array(
-                            beautifyTime($track->duration_ms / 1000) . " ● " . $album_name,
-                            'alt' => 'Play album ' . escapeQuery($album_name) . ' in Spotify',
-                            'cmd' => 'Play artist ' . escapeQuery($track->artists[0]->name) . ' in Spotify',
-                            'fn' => 'Add track ' . escapeQuery($track->name) . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
-                            'shift' => 'Add album ' . escapeQuery($album_name) . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
-                            'ctrl' => 'Search artist ' . escapeQuery($track->artists[0]->name) . ' online'
-                        );
-                    } else {
-                        $arrayresult = array(
-                            beautifyTime($track->duration_ms / 1000) . " ● " . escapeQuery($album_name),
-                            'alt' => 'Play album ' . escapeQuery($album_name) . ' in Spotify',
-                            'cmd' => 'Play artist ' . escapeQuery($track->artists[0]->name) . ' in Spotify',
-                            'fn' => 'Add track ' . escapeQuery($track->name) . ' to Your Music',
-                            'shift' => 'Add album ' . escapeQuery(album_name) . ' to Your Music',
-                            'ctrl' => 'Search artist ' . escapeQuery($track->artists[0]->name) . ' online'
-                        );
-                    }
                     $w->result(null, serialize(array(
                         $track->uri /*track_uri*/ ,
                         $album_uri /* album_uri */ ,
@@ -5754,7 +5544,14 @@ function secondDelimiterNewReleases($w, $query, $settings, $db, $update_in_progr
                         $country_code /* country_code*/ ,
                         $userid
                         /* userid*/
-                    )), escapeQuery(ucfirst($track->artists[0]->name)) . " ● " . escapeQuery($track->name), $arrayresult, $track_artwork_path, 'yes', null, '');
+                    )), escapeQuery(ucfirst($track->artists[0]->name)) . " ● " . escapeQuery($track->name), array(
+                            beautifyTime($track->duration_ms / 1000) . " ● " . $album_name,
+                            'alt' => 'Play album ' . escapeQuery($album_name) . ' in Spotify',
+                            'cmd' => 'Play artist ' . escapeQuery($track->artists[0]->name) . ' in Spotify',
+                            'fn' => 'Add track ' . escapeQuery($track->name) . ' to ...',
+                            'shift' => 'Add album ' . escapeQuery($album_name) . ' to ...',
+                            'ctrl' => 'Search artist ' . escapeQuery($track->artists[0]->name) . ' online'
+                        ), $track_artwork_path, 'yes', null, '');
                 }
             }
         }

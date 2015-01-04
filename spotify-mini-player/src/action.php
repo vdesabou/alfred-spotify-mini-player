@@ -49,7 +49,6 @@ if ($add_to_option != "") {
 }
 
 if ($spotify_command != "" && $type == "TRACK" && $add_to_option == "") {
-
     $spotify_command = str_replace("\\", "", $spotify_command);
     exec("osascript -e 'tell application \"Spotify\" to $spotify_command'");
     return;
@@ -79,46 +78,14 @@ if ($type == "TRACK" && $other_settings == "") {
                     return;
                 }
             }
-            if ($track_artwork_path == "") {
-                $track_artwork_path = getTrackOrAlbumArtwork($w, $track_uri, true);
-            }
-            if ($is_alfred_playlist_active == true) {
-
-                if ($alfred_playlist_uri == "" || $alfred_playlist_name == "") {
-                    displayNotificationWithArtwork("Alfred Playlist is not set", './images/warning.png', 'Error!');
-                    return;
-                }
-
-                // add track to alfred playlist
-
-                $ret = addTracksToPlaylist($w, $tmp[2], $alfred_playlist_uri, $alfred_playlist_name, false);
-                stathat_ez_count('AlfredSpotifyMiniPlayer', 'add', 1);
-                if (is_numeric($ret) && $ret > 0) {
-                    displayNotificationWithArtwork('' . $track_name . ' by ' . $artist_name . ' added to ' . $alfred_playlist_name . ' Alfred Playlist', $track_artwork_path, 'Add Track to Alfred Playlist');
-                    return;
-                } else if (is_numeric($ret) && $ret == 0) {
-                    displayNotificationWithArtwork('' . $track_name . ' by ' . $artist_name . ' is already in ' . $alfred_playlist_name . ' Alfred Playlist', './images/warning.png', 'Error!');
-                    return;
-                }
-            } else {
-                // add track to your music
-                $ret = addTracksToYourMusic($w, $tmp[2], false);
-                stathat_ez_count('AlfredSpotifyMiniPlayer', 'add', 1);
-                if (is_numeric($ret) && $ret > 0) {
-                    displayNotificationWithArtwork('' . $track_name . ' by ' . $artist_name . ' added to Your Music', $track_artwork_path, 'Add Track to Your Music');
-                    return;
-                } else if (is_numeric($ret) && $ret == 0) {
-                    displayNotificationWithArtwork('' . $track_name . ' by ' . $artist_name . ' is already in Your Music', './images/warning.png', 'Error!');
-                    return;
-                }
-            }
+            exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Add▹" . $track_uri . "∙" . escapeQuery($track_name) . '▹' . "\"'");
+			return;
         } else if ($playlist_uri != "") {
             // start now playing if needed
             if ($now_playing_notifications == "") {
                 //
                 // Read settings from JSON
                 //
-
                 $settings                  = getSettings($w);
                 $now_playing_notifications = $settings->now_playing_notifications;
             }
@@ -134,13 +101,11 @@ if ($type == "TRACK" && $other_settings == "") {
             return;
         } else {
             if ($other_action == "") {
-
                 // start now playing if needed
                 if ($now_playing_notifications == "") {
                     //
                     // Read settings from JSON
                     //
-
                     $settings                  = getSettings($w);
                     $now_playing_notifications = $settings->now_playing_notifications;
                 }
@@ -171,7 +136,6 @@ if ($type == "TRACK" && $other_settings == "") {
         //
         // Read settings from JSON
         //
-
         $settings                  = getSettings($w);
         $now_playing_notifications = $settings->now_playing_notifications;
     }
@@ -196,7 +160,6 @@ if ($type == "TRACK" && $other_settings == "") {
     return;
 } else if ($type == "ALBUM_OR_PLAYLIST") {
     if ($add_to_option != "") {
-
         if ($album_name != "") {
             if ($album_uri == "") {
                 // case of current song with shift
@@ -207,70 +170,11 @@ if ($type == "TRACK" && $other_settings == "") {
                 }
                 $album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, true);
             }
-
-            if ($is_alfred_playlist_active == true) {
-
-                if ($alfred_playlist_uri == "" || $alfred_playlist_name == "") {
-                    displayNotificationWithArtwork("Alfred Playlist is not set", './images/warning.png', 'Error!');
-                    return;
-                }
-
-                // add album to alfred playlist
-                $ret = addTracksToPlaylist($w, getTheAlbumTracks($w, $album_uri), $alfred_playlist_uri, $alfred_playlist_name, false);
-                stathat_ez_count('AlfredSpotifyMiniPlayer', 'add', 1);
-                if (is_numeric($ret) && $ret > 0) {
-                    displayNotificationWithArtwork('Album ' . $album_name . ' added to ' . $alfred_playlist_name . ' Alfred Playlist', $album_artwork_path, 'Add Album to Alfred Playlist');
-                    return;
-                } else if (is_numeric($ret) && $ret == 0) {
-                    displayNotificationWithArtwork('Album ' . $album_name . ' is already in ' . $alfred_playlist_name . ' Alfred Playlist', './images/warning.png', 'Error!');
-                    return;
-                }
-            } else {
-                // add album to your music
-                $ret = addTracksToYourMusic($w, getTheAlbumTracks($w, $album_uri), false);
-                stathat_ez_count('AlfredSpotifyMiniPlayer', 'add', 1);
-                if (is_numeric($ret) && $ret > 0) {
-                    displayNotificationWithArtwork('Album ' . $album_name . ' added to Your Music', $album_artwork_path, 'Add Album to Your Music');
-                    return;
-                } else if (is_numeric($ret) && $ret == 0) {
-                    displayNotificationWithArtwork('Album ' . $album_name . ' is already in Your Music', './images/warning.png', 'Error!');
-                    return;
-                }
-            }
-
-            return;
+            exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Add▹" . $album_uri . "∙" . escapeQuery($album_name) . '▹' . "\"'");
+			return;
         } else if ($playlist_uri != "") {
-            $playlist_artwork_path = getPlaylistArtwork($w, $playlist_uri, true, true);
-
-            if ($is_alfred_playlist_active == true) {
-                if ($playlist_uri == $alfred_playlist_uri) {
-                    displayNotificationWithArtwork("Cannot add Alfred Playlist " . $alfred_playlist_name . " to itself!", './images/warning.png', 'Error!');
-                    return;
-                }
-                // add playlist to alfred playlist
-                $ret = addTracksToPlaylist($w, getThePlaylistTracks($w, $playlist_uri), $alfred_playlist_uri, $alfred_playlist_name, false);
-                stathat_ez_count('AlfredSpotifyMiniPlayer', 'add', 1);
-                if (is_numeric($ret) && $ret > 0) {
-                    displayNotificationWithArtwork('Playlist ' . $playlist_name . ' added to ' . $alfred_playlist_name . ' Alfred Playlist', $playlist_artwork_path, 'Add Playlist to Alfred Playlist');
-                    return;
-                } else if (is_numeric($ret) && $ret == 0) {
-                    displayNotificationWithArtwork('Playlist ' . $playlist_name . ' is already in ' . $alfred_playlist_name . ' Alfred Playlist', './images/warning.png', 'Error!');
-                    return;
-                }
-            } else {
-                // add playlist to your music
-                $ret = addTracksToYourMusic($w, getThePlaylistTracks($w, $playlist_uri), false);
-                stathat_ez_count('AlfredSpotifyMiniPlayer', 'add', 1);
-                if (is_numeric($ret) && $ret > 0) {
-                    displayNotificationWithArtwork('Playlist ' . $playlist_name . ' added to Your Music', $playlist_artwork_path, 'Add Playlist to Your Music');
-                    return;
-                } else if (is_numeric($ret) && $ret == 0) {
-                    displayNotificationWithArtwork('Playlist ' . $playlist_name . ' is already in Your Music', './images/warning.png', 'Error!');
-                    return;
-                }
-            }
-
-            return;
+            exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Add▹" . $playlist_uri . "∙" . escapeQuery($playlist_name) . '▹' . "\"'");
+			return;
         }
     }
 } else if ($type == "DOWNLOAD_ARTWORKS") {
@@ -296,7 +200,6 @@ if ($type == "TRACK" && $other_settings == "") {
         //
         // Read settings from JSON
         //
-
         $settings                  = getSettings($w);
         $now_playing_notifications = $settings->now_playing_notifications;
     }
@@ -315,7 +218,6 @@ if ($playlist_uri != "" && $other_settings == "") {
         //
         // Read settings from JSON
         //
-
         $settings                  = getSettings($w);
         $now_playing_notifications = $settings->now_playing_notifications;
     }
@@ -383,8 +285,7 @@ if ($playlist_uri != "" && $other_settings == "") {
             displayNotificationWithArtwork("Cannot modify library while update is in progress", './images/warning.png', 'Error!');
             return;
         }
-
-        //if playlist_uri is notset, then create it
+        // if playlist_uri is notset, then create it
         if ($setting[1] == 'notset') {
 
             $new_playlist_uri = createTheUserPlaylist($w, $setting[2]);
