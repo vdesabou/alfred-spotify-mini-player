@@ -1699,25 +1699,6 @@ function checkIfResultAlreadyThere($results, $title)
 }
 
 /**
- * checkIfDuplicate function.
- *
- * @access public
- * @param mixed $track_ids
- * @param mixed $id
- * @return void
- */
-function checkIfDuplicate($track_ids, $id)
-{
-    foreach ($track_ids as $track_id) {
-        if ($track_id == $id) {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-/**
  * displayNotificationWithArtwork function.
  *
  * @access public
