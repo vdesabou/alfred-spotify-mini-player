@@ -1222,7 +1222,7 @@ php -f ./src/action.php -- "{query}" "ARTIST" "" &gt;&gt; "$alfred_workflow_cach
 				<key>argument</key>
 				<integer>3</integer>
 				<key>argumenttext</key>
-				<string>Alfred Playlist▹</string>
+				<string>✧Alfred Playlist▹</string>
 				<key>hotkey</key>
 				<integer>12</integer>
 				<key>hotmod</key>
@@ -1303,7 +1303,7 @@ php -f ./src/action.php -- "{query}" "ALBUM_OR_PLAYLIST" "ADDTOPLAYLIST" &gt;&gt
 			<key>config</key>
 			<dict>
 				<key>argument</key>
-				<string>Alfred Playlist▹</string>
+				<string>✧Alfred Playlist▹</string>
 				<key>argumenttype</key>
 				<integer>3</integer>
 				<key>triggerid</key>
@@ -1345,7 +1345,7 @@ php -f ./src/action.php -- "{query}" "TRACK" "ADDTOPLAYLIST" &gt;&gt; "$alfred_w
 				<key>argument</key>
 				<integer>3</integer>
 				<key>argumenttext</key>
-				<string>Settings▹</string>
+				<string>✧Settings▹</string>
 				<key>hotkey</key>
 				<integer>1</integer>
 				<key>hotmod</key>
@@ -1390,7 +1390,7 @@ php -f ./src/action.php -- "{query}" "ONLINE" "" &gt;&gt; "$alfred_workflow_cach
 			<key>config</key>
 			<dict>
 				<key>argument</key>
-				<string>Settings▹</string>
+				<string>✧Settings▹</string>
 				<key>argumenttype</key>
 				<integer>3</integer>
 				<key>triggerid</key>
@@ -1413,7 +1413,7 @@ php -f ./src/action.php -- "{query}" "ONLINE" "" &gt;&gt; "$alfred_workflow_cach
 				<key>argument</key>
 				<integer>3</integer>
 				<key>argumenttext</key>
-				<string>Playlist▹</string>
+				<string>✧Playlist▹</string>
 				<key>hotkey</key>
 				<integer>35</integer>
 				<key>hotmod</key>
@@ -1438,7 +1438,7 @@ php -f ./src/action.php -- "{query}" "ONLINE" "" &gt;&gt; "$alfred_workflow_cach
 			<key>config</key>
 			<dict>
 				<key>argument</key>
-				<string>Playlist▹</string>
+				<string>✧Playlist▹</string>
 				<key>argumenttype</key>
 				<integer>3</integer>
 				<key>triggerid</key>
@@ -1461,7 +1461,7 @@ php -f ./src/action.php -- "{query}" "ONLINE" "" &gt;&gt; "$alfred_workflow_cach
 				<key>argument</key>
 				<integer>3</integer>
 				<key>argumenttext</key>
-				<string>Current Track▹</string>
+				<string>✧Current Track▹</string>
 				<key>hotkey</key>
 				<integer>8</integer>
 				<key>hotmod</key>
@@ -1486,7 +1486,7 @@ php -f ./src/action.php -- "{query}" "ONLINE" "" &gt;&gt; "$alfred_workflow_cach
 			<key>config</key>
 			<dict>
 				<key>argument</key>
-				<string>Current Track▹</string>
+				<string>✧Current Track▹</string>
 				<key>argumenttype</key>
 				<integer>3</integer>
 				<key>triggerid</key>
@@ -1509,7 +1509,7 @@ php -f ./src/action.php -- "{query}" "ONLINE" "" &gt;&gt; "$alfred_workflow_cach
 				<key>argument</key>
 				<integer>3</integer>
 				<key>argumenttext</key>
-				<string>Charts▹</string>
+				<string>✧Charts▹</string>
 				<key>hotkey</key>
 				<integer>0</integer>
 				<key>hotmod</key>
@@ -1534,7 +1534,7 @@ php -f ./src/action.php -- "{query}" "ONLINE" "" &gt;&gt; "$alfred_workflow_cach
 			<key>config</key>
 			<dict>
 				<key>argument</key>
-				<string>Charts▹</string>
+				<string>✧Charts▹</string>
 				<key>argumenttype</key>
 				<integer>3</integer>
 				<key>triggerid</key>
@@ -1553,7 +1553,7 @@ php -f ./src/action.php -- "{query}" "ONLINE" "" &gt;&gt; "$alfred_workflow_cach
 			<key>config</key>
 			<dict>
 				<key>argument</key>
-				<string>New Releases▹</string>
+				<string>✧New Releases▹</string>
 				<key>argumenttype</key>
 				<integer>3</integer>
 				<key>triggerid</key>
@@ -1576,7 +1576,7 @@ php -f ./src/action.php -- "{query}" "ONLINE" "" &gt;&gt; "$alfred_workflow_cach
 				<key>argument</key>
 				<integer>3</integer>
 				<key>argumenttext</key>
-				<string>New Releases▹</string>
+				<string>✧New Releases▹</string>
 				<key>hotkey</key>
 				<integer>0</integer>
 				<key>hotmod</key>
@@ -1601,7 +1601,7 @@ php -f ./src/action.php -- "{query}" "ONLINE" "" &gt;&gt; "$alfred_workflow_cach
 			<key>config</key>
 			<dict>
 				<key>argument</key>
-				<string>Search Online▹</string>
+				<string>✧Search Online▹</string>
 				<key>argumenttype</key>
 				<integer>3</integer>
 				<key>triggerid</key>
@@ -1624,7 +1624,7 @@ php -f ./src/action.php -- "{query}" "ONLINE" "" &gt;&gt; "$alfred_workflow_cach
 				<key>argument</key>
 				<integer>3</integer>
 				<key>argumenttext</key>
-				<string>Search Online▹</string>
+				<string>✧Search Online▹</string>
 				<key>hotkey</key>
 				<integer>31</integer>
 				<key>hotmod</key>

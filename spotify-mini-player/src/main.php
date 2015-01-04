@@ -6,7 +6,7 @@
 require './src/functions.php';
 require './src/menu.php';
 
-//$begin_time = computeTime();
+// $begin_time = computeTime();
 
 // Load and use David Ferguson's Workflows.php class
 require_once './src/workflows.php';
@@ -205,17 +205,24 @@ if (startsWith($query, ' ')) {
     return;
 }
 
-if (mb_strlen($query) < 3) {
-	$w->write('', 'previousState');
-	$w->write('', 'newState');
+// Specific case for hotkeys, in order to reset history
+if (substr_count($query, '✧') == 1) {	
+	// empty history
+	$w->write(array(), 'history.json');
+	$query = ltrim($query, '✧');	
+}
 
+if (mb_strlen($query) < 3) {
+	// empty history
+	$w->write(array(), 'history.json');
+	
     ////////////
     //
     // MAIN MENU
     //
     ////////////
 	mainMenu($w, $query, $settings, $db, $update_in_progress);
-} else {
+} else {	
     $w->result(null, serialize(array(
         '' /*track_uri*/ ,
         '' /* album_uri */ ,
@@ -239,7 +246,7 @@ if (mb_strlen($query) < 3) {
         '' /* is_alfred_playlist_active */ ,
         '' /* country_code*/ ,
         '' /* userid*/
-    )), 'Go Back', "Return to previous step", './images/' . $theme . '/' . 'back.png', 'yes', null, '');
+    )), 'Go Back', "Return to previous step", './images/back.png', 'yes', null, '');
 
     ////////////
     //
@@ -250,143 +257,146 @@ if (mb_strlen($query) < 3) {
 		searchCategoriesFastAccess($w, $query, $settings, $db, $update_in_progress);
 		searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progress);
         mainSearch($w, $query, $settings, $db, $update_in_progress);
-     }
-    ////////////
-    //
-    // FIRST DELIMITER
-    //
-    ////////////
-    elseif (substr_count($query, '▹') == 1) {
-		$w->write($w->read('newState'), 'previousState');
-		$w->write(substr($query, 0, strrpos( $query, '▹')) . '▹', 'newState');
+    } else {
+	    //
+	    // Handle History
+		$history = $w->read('history.json');
+	    if ($history == false) {
+	    	$history = array();
+	    }
+	    array_push($history,substr($query, 0, strrpos( $query, '▹')) . '▹');
+		$w->write($history, 'history.json');
+			 			
+	    ////////////
+	    //
+	    // FIRST DELIMITER
+	    //
+	    ////////////
+	    if (substr_count($query, '▹') == 1) {	
+	        $words = explode('▹', $query);
+	        $kind  = $words[0];
+	        if ($kind == "Playlist") {
+		        firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress);
+	        }
+	        elseif ($kind == "Alfred Playlist") {
+		        firstDelimiterAlfredPlaylist($w, $query, $settings, $db, $update_in_progress);
+	        }
+	        elseif ($kind == "Artist") {
+				firstDelimiterArtists($w, $query, $settings, $db, $update_in_progress);
+	        }
+	        elseif ($kind == "Album") {
+				firstDelimiterAlbums($w, $query, $settings, $db, $update_in_progress);
+	        }
+	        elseif ($kind == "Featured Playlist") {
+				firstDelimiterFeaturedPlaylist($w, $query, $settings, $db, $update_in_progress);
+	        }
+	        elseif (startswith($kind,"Search")) {
+				firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progress);
+	        }
+	        elseif ($kind == "Charts") {
+				firstDelimiterCharts($w, $query, $settings, $db, $update_in_progress);
+	        }
+	        elseif ($kind == "New Releases") {
+				firstDelimiterNewReleases($w, $query, $settings, $db, $update_in_progress);
+	        }
+	        elseif ($kind == "Current Track") {
+		        firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progress);
+	        }
+	        elseif ($kind == "Your Music") {
+				firstDelimiterYourMusic($w, $query, $settings, $db, $update_in_progress);
+	        }
+	        elseif ($kind == "Lyrics") {
+		        firstDelimiterLyrics($w, $query, $settings, $db, $update_in_progress);
+	        }
+	        elseif ($kind == "Settings") {
+				firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress);
+	        }
+	        elseif ($kind == "Check for update...") {
+		        firstDelimiterCheckForUpdate($w, $query, $settings, $db, $update_in_progress);
+	        }
+	    }
+	    ////////////
+	    //
+	    // SECOND DELIMITER
+	    //
+	    ////////////
+	        elseif (substr_count($query, '▹') == 2) {
+		        
+	        $words = explode('▹', $query);
+	        $kind  = $words[0];
+	        if ($kind == "Artist") {
+		        secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress);
+	        }
+	        elseif ($kind == "Album") {
+		        secondDelimiterAlbums($w, $query, $settings, $db, $update_in_progress);
+	        }
+	        elseif ($kind == "Playlist") {
+		        secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress);
+	        }
+	        elseif ($kind == "Online") {
+		        secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress);
+	        }
+	        elseif ($kind == "OnlineRelated") {
+				secondDelimiterOnlineRelated($w, $query, $settings, $db, $update_in_progress);
+	        }
+	        elseif ($kind == "Online Playlist") {
+		        secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_progress);
+	        }
+	         elseif ($kind == "Your Music" && $words[1] == "Tracks") {
+		        secondDelimiterYourMusicTracks($w, $query, $settings, $db, $update_in_progress);
+	        }
+	        elseif ($kind == "Your Music" && $words[1] == "Albums") {
+				secondDelimiterYourMusicAlbums($w, $query, $settings, $db, $update_in_progress);
+	        }
+	        elseif ($kind == "Your Music" && $words[1] == "Artists") {
+		        secondDelimiterYourMusicArtists($w, $query, $settings, $db, $update_in_progress);
+	        }
+	        elseif ($kind == "Settings") {
+		        secondDelimiterSettings($w, $query, $settings, $db, $update_in_progress);
+	        }
+	        elseif ($kind == "Featured Playlist") {
+		        secondDelimiterFeaturedPlaylist($w, $query, $settings, $db, $update_in_progress);
+	        }
+	        elseif ($kind == "Charts") {
+		        secondDelimiterCharts($w, $query, $settings, $db, $update_in_progress);
+	        }
+	        elseif ($kind == "New Releases") {
+		        secondDelimiterNewReleases($w, $query, $settings, $db, $update_in_progress);
+	        }
+	        elseif ($kind == "Add") {
+				secondDelimiterAdd($w, $query, $settings, $db, $update_in_progress);
+	        }
+	        elseif ($kind == "Remove") {
+				secondDelimiterRemove($w, $query, $settings, $db, $update_in_progress);
+	        }
+	        elseif ($kind == "Alfred Playlist") {
+		        secondDelimiterAlfredPlaylist($w, $query, $settings, $db, $update_in_progress);
+	        }
+	        elseif ($kind == "Follow/Unfollow") {
+				secondDelimiterFollowUnfollow($w, $query, $settings, $db, $update_in_progress);
+	        }
+	        elseif ($kind == "Follow" || $kind == "Unfollow") {
+		        secondDelimiterFollowOrUnfollow($w, $query, $settings, $db, $update_in_progress);
+	        }
+	    }
+	    ////////////
+	    //
+	    // THIRD DELIMITER
+	    //
+	    ////////////
+	    elseif (substr_count($query, '▹') == 3) {
 
-        $words = explode('▹', $query);
-        $kind  = $words[0];
-        if ($kind == "Playlist") {
-	        firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress);
-        }
-        elseif ($kind == "Alfred Playlist") {
-	        firstDelimiterAlfredPlaylist($w, $query, $settings, $db, $update_in_progress);
-        }
-        elseif ($kind == "Artist") {
-			firstDelimiterArtists($w, $query, $settings, $db, $update_in_progress);
-        }
-        elseif ($kind == "Album") {
-			firstDelimiterAlbums($w, $query, $settings, $db, $update_in_progress);
-        }
-        elseif ($kind == "Featured Playlist") {
-			firstDelimiterFeaturedPlaylist($w, $query, $settings, $db, $update_in_progress);
-        }
-        elseif (startswith($kind,"Search")) {
-			firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progress);
-        }
-        elseif ($kind == "Charts") {
-			firstDelimiterCharts($w, $query, $settings, $db, $update_in_progress);
-        }
-        elseif ($kind == "New Releases") {
-			firstDelimiterNewReleases($w, $query, $settings, $db, $update_in_progress);
-        }
-        elseif ($kind == "Current Track") {
-	        firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progress);
-        }
-        elseif ($kind == "Your Music") {
-			firstDelimiterYourMusic($w, $query, $settings, $db, $update_in_progress);
-        }
-        elseif ($kind == "Lyrics") {
-	        firstDelimiterLyrics($w, $query, $settings, $db, $update_in_progress);
-        }
-        elseif ($kind == "Settings") {
-			firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress);
-        }
-        elseif ($kind == "Check for update...") {
-	        firstDelimiterCheckForUpdate($w, $query, $settings, $db, $update_in_progress);
-        }
-    }
-    ////////////
-    //
-    // SECOND DELIMITER
-    //
-    ////////////
-        elseif (substr_count($query, '▹') == 2) {
-		$w->write($w->read('newState'), 'previousState');
-		$w->write(substr($query, 0, strrpos( $query, '▹')) . '▹', 'newState');
-
-        $words = explode('▹', $query);
-        $kind  = $words[0];
-        if ($kind == "Artist") {
-	        secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress);
-        }
-        elseif ($kind == "Album") {
-	        secondDelimiterAlbums($w, $query, $settings, $db, $update_in_progress);
-        }
-        elseif ($kind == "Playlist") {
-	        secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress);
-        }
-        elseif ($kind == "Online") {
-	        secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress);
-        }
-        elseif ($kind == "OnlineRelated") {
-			secondDelimiterOnlineRelated($w, $query, $settings, $db, $update_in_progress);
-        }
-        elseif ($kind == "Online Playlist") {
-	        secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_progress);
-        }
-         elseif ($kind == "Your Music" && $words[1] == "Tracks") {
-	        secondDelimiterYourMusicTracks($w, $query, $settings, $db, $update_in_progress);
-        }
-        elseif ($kind == "Your Music" && $words[1] == "Albums") {
-			secondDelimiterYourMusicAlbums($w, $query, $settings, $db, $update_in_progress);
-        }
-        elseif ($kind == "Your Music" && $words[1] == "Artists") {
-	        secondDelimiterYourMusicArtists($w, $query, $settings, $db, $update_in_progress);
-        }
-        elseif ($kind == "Settings") {
-	        secondDelimiterSettings($w, $query, $settings, $db, $update_in_progress);
-        }
-        elseif ($kind == "Featured Playlist") {
-	        secondDelimiterFeaturedPlaylist($w, $query, $settings, $db, $update_in_progress);
-        }
-        elseif ($kind == "Charts") {
-	        secondDelimiterCharts($w, $query, $settings, $db, $update_in_progress);
-        }
-        elseif ($kind == "New Releases") {
-	        secondDelimiterNewReleases($w, $query, $settings, $db, $update_in_progress);
-        }
-        elseif ($kind == "Add") {
-			secondDelimiterAdd($w, $query, $settings, $db, $update_in_progress);
-        }
-        elseif ($kind == "Remove") {
-			secondDelimiterRemove($w, $query, $settings, $db, $update_in_progress);
-        }
-        elseif ($kind == "Alfred Playlist") {
-	        secondDelimiterAlfredPlaylist($w, $query, $settings, $db, $update_in_progress);
-        }
-        elseif ($kind == "Follow/Unfollow") {
-			secondDelimiterFollowUnfollow($w, $query, $settings, $db, $update_in_progress);
-        }
-        elseif ($kind == "Follow" || $kind == "Unfollow") {
-	        secondDelimiterFollowOrUnfollow($w, $query, $settings, $db, $update_in_progress);
-        }
-    }
-    ////////////
-    //
-    // THIRD DELIMITER
-    //
-    ////////////
-    elseif (substr_count($query, '▹') == 3) {
-		$w->write($w->read('newState'), 'previousState');
-		$w->write(substr($query, 0, strrpos( $query, '▹')) . '▹', 'newState');
-
-        $words = explode('▹', $query);
-        $kind  = $words[0];
-        if ($kind == "Add") {
-	        thirdDelimiterAdd($w, $query, $settings, $db, $update_in_progress);
-        }
+	        $words = explode('▹', $query);
+	        $kind  = $words[0];
+	        if ($kind == "Add") {
+		        thirdDelimiterAdd($w, $query, $settings, $db, $update_in_progress);
+	        }
+	    }   
     }
 }
-
+/*
+$end_time = computeTime();
+$total_temp = ($end_time-$begin_time);
+$w->result(null, 'debug', "Processed in " . $total_temp*1000 . ' ms', '', './images/info.png', 'no', null, '');
+*/
 echo $w->toxml();
-
-//$end_time = computeTime();
-//$total_temp = ($end_time-$begin_time);
-//echo "$total_temp\n";

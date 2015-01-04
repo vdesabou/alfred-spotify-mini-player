@@ -2270,7 +2270,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
             foreach ($results as $artist) {
                 if (checkIfResultAlreadyThere($w->results(), "👤 " . escapeQuery(ucfirst($artist->name))) == false) {
 					$noresult = false;
-                    $w->result(null, '', "👤 " . escapeQuery(ucfirst($artist->name)), "Browse this artist", getArtistArtwork($w, $artist->name, false), 'no', null, "Online▹" . $artist->uri . '@' . escapeQuery($artist->name));
+                    $w->result(null, '', "👤 " . escapeQuery(ucfirst($artist->name)), "Browse this artist", getArtistArtwork($w, $artist->name, false), 'no', null, "Online▹" . $artist->uri . '@' . escapeQuery($artist->name) . '▹');
                 }
             }
         }
@@ -2321,7 +2321,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
 
             foreach ($results as $playlist) {
 				$noresult = false;
-                $w->result(null, '', "🎵" . escapeQuery($playlist->name), "by " . $playlist->owner->id . " ● " . $playlist->tracks->total . " tracks", getPlaylistArtwork($w, $playlist->uri, false), 'no', null, "Online Playlist▹" . $playlist->uri . '∙' . escapeQuery($playlist->name) . "▹");
+                $w->result(null, '', "🎵" . escapeQuery($playlist->name), "by " . $playlist->owner->id . " ● " . $playlist->tracks->total . " tracks", getPlaylistArtwork($w, $playlist->uri, false), 'no', null, "Online Playlist▹" . $playlist->uri . '∙' . escapeQuery($playlist->name) . '▹');
 
             }
         }

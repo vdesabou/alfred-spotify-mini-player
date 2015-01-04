@@ -784,7 +784,15 @@ if ($playlist_uri != "" && $other_settings == "") {
         stathat_ez_count('AlfredSpotifyMiniPlayer', 'display biography', 1);
         return;
     } else if ($other_action == "go_back") {
-	    $query  = $w->read('previousState');
+   		$history = $w->read('history.json');
+
+	    if ($history == false) {
+	    	displayNotificationWithArtwork("No history yet", './images/warning.png', 'Error!');
+	    }
+	    $query = array_pop($history);
+	    // pop twice
+	    $query = array_pop($history);
+		$w->write($history, 'history.json');
 	    exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini $query\"'");
         return;
     } else if ($other_action == "lookup_artist") {
