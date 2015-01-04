@@ -5606,7 +5606,7 @@ function secondDelimiterCharts($w, $query, $settings, $db, $update_in_progress)
             }
         }
     } else {
-        $json = doWebApiRequest($w, "http://charts.spotify.com/api/tracks/most_streamed/" . trim($country) . "/weekly/latest");
+        $json = doJsonRequest($w, "http://charts.spotify.com/api/tracks/most_streamed/" . trim($country) . "/weekly/latest", false);
 
         $nb_results = 0;
         $noresult = true;

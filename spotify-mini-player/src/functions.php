@@ -85,7 +85,14 @@ function getSpotifyWebAPI($w, $old_api = null)
  */
 function displayBiography($w, $artist_uri, $artist_name)
 {
-    $json     = doWebApiRequest($w, 'http://developer.echonest.com/api/v4/artist/biographies?api_key=5EG94BIZEGFEY9AL9&id=' . $artist_uri);
+    //
+    // Read settings from JSON
+    //
+
+    $settings            = getSettings($w);
+    $echonest_api_key    = $settings->echonest_api_key;
+
+    $json     = doJsonRequest($w, 'http://developer.echonest.com/api/v4/artist/biographies?api_key=' . $echonest_api_key . '&id=' . $artist_uri);
     $response = $json->response;
     PHPRtfLite::registerAutoloader();
 
@@ -1072,7 +1079,7 @@ function createRadioArtistPlaylist($w, $artist_name)
     $userid              = $settings->userid;
     $echonest_api_key    = $settings->echonest_api_key;
 
-    $json = doWebApiRequest($w, 'http://developer.echonest.com/api/v4/playlist/static?api_key=' . $echonest_api_key . '&artist=' . urlencode($artist_name) . '&format=json&results=' . $radio_number_tracks . '&distribution=focused&type=artist-radio&bucket=id:spotify&bucket=tracks');
+    $json = doJsonRequest($w, 'http://developer.echonest.com/api/v4/playlist/static?api_key=' . $echonest_api_key . '&artist=' . urlencode($artist_name) . '&format=json&results=' . $radio_number_tracks . '&distribution=focused&type=artist-radio&bucket=id:spotify&bucket=tracks');
 
     $response = $json->response;
 
@@ -1113,7 +1120,7 @@ function createRadioArtistPlaylist($w, $artist_name)
             return;
         }
     } else {
-        displayNotificationWithArtwork('Track was not found in Echo Nest', './images/warning.png', 'Error!');
+        displayNotificationWithArtwork('Artist was not found in Echo Nest', './images/warning.png', 'Error!');
 
         return false;
     }
@@ -1182,7 +1189,7 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name)
         }
     }
 
-    $json = doWebApiRequest($w, 'http://developer.echonest.com/api/v4/playlist/static?api_key=' . $echonest_api_key . '&song_id=' . $track_uri . '&format=json&results=' . $radio_number_tracks . '&distribution=focused&type=song-radio&bucket=id:spotify&bucket=tracks');
+    $json = doJsonRequest($w, 'http://developer.echonest.com/api/v4/playlist/static?api_key=' . $echonest_api_key . '&song_id=' . $track_uri . '&format=json&results=' . $radio_number_tracks . '&distribution=focused&type=song-radio&bucket=id:spotify&bucket=tracks');
 
     $response = $json->response;
 
@@ -1223,7 +1230,7 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name)
             return;
         }
     } else {
-        displayNotificationWithArtwork('track was not found in Echo Nest', './images/warning.png', 'Error!');
+        displayNotificationWithArtwork('Track was not found in Echo Nest', './images/warning.png', 'Error!');
 
         return false;
     }
@@ -4265,44 +4272,56 @@ function checkForUpdate($w, $last_check_update_time)
 }
 
 /**
- * doWebApiRequest function.
+ * doJsonRequest function.
  *
  * @access public
  * @param mixed $w
  * @param mixed $url
+ * @param bool $actionMode (default: true)
  * @return void
  */
-function doWebApiRequest($w, $url)
+function doJsonRequest($w, $url, $actionMode = true)
 {
-    $json = $w->request($url);
+    if (!$w->internet()) {
+	    if($actionMode == true) {
+	        displayNotificationWithArtwork("No internet connection", './images/warning.png');
 
+	        exit;
+	    } else {
+	        $w->result(null, '', "Error: No internet connection", $url, './images/warning.png', 'no', null, '');
+	        echo $w->toxml();
+	        exit;
+	    }
+    }
+
+    $json = $w->request($url);
     if (empty($json)) {
-        $w->result(null, '', "Error: Spotify WEB API returned empty result", $url, './images/warning.png', 'no', null, '');
-        echo $w->toxml();
-        exit;
+	    if($actionMode == true) {
+	        displayNotificationWithArtwork("Error: JSON request returned empty result", './images/warning.png');
+
+	        exit;
+	    } else {
+	        $w->result(null, '', "Error: JSON request returned empty result", $url, './images/warning.png', 'no', null, '');
+	        echo $w->toxml();
+	        exit;
+	    }
     }
 
     $json = json_decode($json);
     switch (json_last_error()) {
-        case JSON_ERROR_DEPTH:
-            $w->result(null, '', "There was an error when retrieving online information", "Maximum stack depth exceeded", './images/warning.png', 'no', null, '');
-            echo $w->toxml();
-            exit;
-        case JSON_ERROR_CTRL_CHAR:
-            $w->result(null, '', "There was an error when retrieving online information", "Unexpected control character found", './images/warning.png', 'no', null, '');
-            echo $w->toxml();
-            exit;
-        case JSON_ERROR_SYNTAX:
-            $w->result(null, '', "There was an error when retrieving online information", "Syntax error, malformed JSON", './images/warning.png', 'no', null, '');
-            echo $w->toxml();
-            exit;
         case JSON_ERROR_NONE:
             return $json;
-    }
+        default:
+		    if($actionMode == true) {
+		        displayNotificationWithArtwork("Error: JSON request returned error " . json_last_error() . ' (' . json_last_error_msg() . ')', './images/warning.png');
 
-    $w->result(null, '', "Error: Spotify WEB API returned error " . json_last_error(), "Try again or report to author", './images/warning.png', 'no', null, '');
-    echo $w->toxml();
-    exit;
+		        exit;
+		    } else {
+				$w->result(null, '', "Error: JSON request returned error " . json_last_error() . ' (' . json_last_error_msg() . ')', "Try again or report to author", './images/warning.png', 'no', null, '');
+	            echo $w->toxml();
+	            exit;
+		    }
+    }
 }
 
 /**
