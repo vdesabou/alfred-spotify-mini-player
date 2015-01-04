@@ -191,8 +191,7 @@ if ($type == "TRACK" && $other_settings == "") {
             return;
         }
     }
-
-    exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online▹$artist_uri@$artist_name\"'");
+    exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online▹" . $artist_uri . "@" . escapeQuery($artist_name) . '▹' . "\"'");
     stathat_ez_count('AlfredSpotifyMiniPlayer', 'lookup online', 1);
     return;
 } else if ($type == "ALBUM_OR_PLAYLIST") {
@@ -784,6 +783,10 @@ if ($playlist_uri != "" && $other_settings == "") {
         displayCurrentArtistBiography($w);
         stathat_ez_count('AlfredSpotifyMiniPlayer', 'display biography', 1);
         return;
+    } else if ($other_action == "go_back") {
+	    $query  = $w->read('previousState');
+	    exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini $query\"'");
+        return;
     } else if ($other_action == "lookup_artist") {
 
         if (!$w->internet()) {
@@ -793,7 +796,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         if ($artist_uri == "") {
             $artist_uri = getArtistUriFromTrack($w, $track_uri);
         }
-        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online▹" . $artist_uri . "@" . escapeQuery($artist_name) . "\"'");
+        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online▹" . $artist_uri . "@" . escapeQuery($artist_name) . '▹' . "\"'");
         stathat_ez_count('AlfredSpotifyMiniPlayer', 'lookup online', 1);
         return;
     } else if ($other_action == "playartist") {

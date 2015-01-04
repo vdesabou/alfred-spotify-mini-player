@@ -206,6 +206,9 @@ if (startsWith($query, ' ')) {
 }
 
 if (mb_strlen($query) < 3) {
+	$w->write('', 'previousState');
+	$w->write('', 'newState');
+
     ////////////
     //
     // MAIN MENU
@@ -213,6 +216,31 @@ if (mb_strlen($query) < 3) {
     ////////////
 	mainMenu($w, $query, $settings, $db, $update_in_progress);
 } else {
+    $w->result(null, serialize(array(
+        '' /*track_uri*/ ,
+        '' /* album_uri */ ,
+        '' /* artist_uri */ ,
+        '' /* playlist_uri */ ,
+        '' /* spotify_command */ ,
+        '' /* query */ ,
+        '' /* other_settings*/ ,
+        'go_back' /* other_action */ ,
+        '' /* alfred_playlist_uri */ ,
+        '' /* artist_name */ ,
+        '' /* track_name */ ,
+        '' /* album_name */ ,
+        '' /* track_artwork_path */ ,
+        '' /* artist_artwork_path */ ,
+        '' /* album_artwork_path */ ,
+        '' /* playlist_name */ ,
+        '' /* playlist_artwork_path */ ,
+        '' /* $alfred_playlist_name */ ,
+        '' /* now_playing_notifications */ ,
+        '' /* is_alfred_playlist_active */ ,
+        '' /* country_code*/ ,
+        '' /* userid*/
+    )), 'Go Back', "Return to previous step", './images/' . $theme . '/' . 'back.png', 'yes', null, '');
+
     ////////////
     //
     // NO DELIMITER
@@ -229,9 +257,11 @@ if (mb_strlen($query) < 3) {
     //
     ////////////
     elseif (substr_count($query, '▹') == 1) {
+		$w->write($w->read('newState'), 'previousState');
+		$w->write(substr($query, 0, strrpos( $query, '▹')) . '▹', 'newState');
+
         $words = explode('▹', $query);
         $kind  = $words[0];
-
         if ($kind == "Playlist") {
 	        firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress);
         }
@@ -262,20 +292,8 @@ if (mb_strlen($query) < 3) {
         elseif ($kind == "Your Music") {
 			firstDelimiterYourMusic($w, $query, $settings, $db, $update_in_progress);
         }
-        elseif ($kind == "Online") {
-	        firstDelimiterOnline($w, $query, $settings, $db, $update_in_progress);
-        }
-        elseif ($kind == "OnlineRelated") {
-			firstDelimiterOnlineRelated($w, $query, $settings, $db, $update_in_progress);
-        }
         elseif ($kind == "Lyrics") {
 	        firstDelimiterLyrics($w, $query, $settings, $db, $update_in_progress);
-        }
-        elseif ($kind == "Follow/Unfollow") {
-			firstDelimiterFollowUnfollow($w, $query, $settings, $db, $update_in_progress);
-        }
-        elseif ($kind == "Follow" || $kind == "Unfollow") {
-	        firstDelimiterFollowOrUnfollow($w, $query, $settings, $db, $update_in_progress);
         }
         elseif ($kind == "Settings") {
 			firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress);
@@ -290,6 +308,8 @@ if (mb_strlen($query) < 3) {
     //
     ////////////
         elseif (substr_count($query, '▹') == 2) {
+		$w->write($w->read('newState'), 'previousState');
+		$w->write(substr($query, 0, strrpos( $query, '▹')) . '▹', 'newState');
 
         $words = explode('▹', $query);
         $kind  = $words[0];
@@ -301,6 +321,12 @@ if (mb_strlen($query) < 3) {
         }
         elseif ($kind == "Playlist") {
 	        secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress);
+        }
+        elseif ($kind == "Online") {
+	        secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress);
+        }
+        elseif ($kind == "OnlineRelated") {
+			secondDelimiterOnlineRelated($w, $query, $settings, $db, $update_in_progress);
         }
         elseif ($kind == "Online Playlist") {
 	        secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_progress);
@@ -335,6 +361,12 @@ if (mb_strlen($query) < 3) {
         elseif ($kind == "Alfred Playlist") {
 	        secondDelimiterAlfredPlaylist($w, $query, $settings, $db, $update_in_progress);
         }
+        elseif ($kind == "Follow/Unfollow") {
+			secondDelimiterFollowUnfollow($w, $query, $settings, $db, $update_in_progress);
+        }
+        elseif ($kind == "Follow" || $kind == "Unfollow") {
+	        secondDelimiterFollowOrUnfollow($w, $query, $settings, $db, $update_in_progress);
+        }
     }
     ////////////
     //
@@ -342,6 +374,8 @@ if (mb_strlen($query) < 3) {
     //
     ////////////
     elseif (substr_count($query, '▹') == 3) {
+		$w->write($w->read('newState'), 'previousState');
+		$w->write(substr($query, 0, strrpos( $query, '▹')) . '▹', 'newState');
 
         $words = explode('▹', $query);
         $kind  = $words[0];

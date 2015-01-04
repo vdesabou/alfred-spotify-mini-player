@@ -266,7 +266,7 @@ function lookupCurrentArtist($w)
 
             return;
         }
-        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online▹" . $artist_uri . "@" . escapeQuery($results[1]) . "\"'");
+        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online▹" . $artist_uri . "@" . escapeQuery($results[1]) . '▹' . "\"'");
     } else {
         displayNotificationWithArtwork("No track is playing", './images/warning.png');
     }

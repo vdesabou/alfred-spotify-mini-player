@@ -2305,7 +2305,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
 		                echo $w->toxml();
 		                return;
 				    }
-                    $w->result(null, '', escapeQuery(ucfirst($album->name)) . ' (' . $full_album->tracks->total . ' tracks)', $album->album_type . ' by ' . escapeQuery($full_album->artists[0]->name), getTrackOrAlbumArtwork($w, $album->uri, false), 'no', null, 'Online▹' . $full_album->artists[0]->uri . '@' . escapeQuery($full_album->artists[0]->name) .'@' . $album->uri . '@' . escapeQuery($album->name));
+                    $w->result(null, '', escapeQuery(ucfirst($album->name)) . ' (' . $full_album->tracks->total . ' tracks)', $album->album_type . ' by ' . escapeQuery($full_album->artists[0]->name), getTrackOrAlbumArtwork($w, $album->uri, false), 'no', null, 'Online▹' . $full_album->artists[0]->uri . '@' . escapeQuery($full_album->artists[0]->name) .'@' . $album->uri . '@' . escapeQuery($album->name) . '▹');
                 }
             }
         }
@@ -2648,7 +2648,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
         )), "💿 " . escapeQuery($results[2]), 'Play album', $album_artwork_path, 'yes', null, '');
 
 		// use track uri here
-		$w->result(null, '', "💿 " . ucfirst(escapeQuery($results[2])), '☁︎ Query all tracks from this album online..', './images/online_album.png', 'no', null, "Online▹" . $results[4] . '@' . escapeQuery($results[1]) . '@' . $results[4]  . '@' . escapeQuery($results[2]));
+		$w->result(null, '', "💿 " . ucfirst(escapeQuery($results[2])), '☁︎ Query all tracks from this album online..', './images/online_album.png', 'no', null, "Online▹" . $results[4] . '@' . escapeQuery($results[1]) . '@' . $results[4]  . '@' . escapeQuery($results[2]) . '▹');
 
 
         $w->result(null, '', "Get Lyrics for track " . escapeQuery($results[0]), "This will fetch lyrics online", './images/lyrics.png', 'no', null, "Lyrics▹" . $results[4] . "∙" . escapeQuery($results[1]) . '∙' . escapeQuery($results[0]));
@@ -2917,329 +2917,6 @@ function firstDelimiterYourMusic($w, $query, $settings, $db, $update_in_progress
 }
 
 /**
- * firstDelimiterOnline function.
- *
- * @access public
- * @param mixed $w
- * @param mixed $query
- * @param mixed $settings
- * @param mixed $db
- * @param mixed $update_in_progress
- * @return void
- */
-function firstDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
-{
-    $words = explode('▹', $query);
-    $kind  = $words[0];
-
-    $all_playlists             = $settings->all_playlists;
-    $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
-    $radio_number_tracks       = $settings->radio_number_tracks;
-    $now_playing_notifications = $settings->now_playing_notifications;
-    $max_results               = $settings->max_results;
-    $alfred_playlist_uri       = $settings->alfred_playlist_uri;
-    $alfred_playlist_name      = $settings->alfred_playlist_name;
-    $country_code              = $settings->country_code;
-    $last_check_update_time    = $settings->last_check_update_time;
-    $oauth_client_id           = $settings->oauth_client_id;
-    $oauth_client_secret       = $settings->oauth_client_secret;
-    $oauth_redirect_uri        = $settings->oauth_redirect_uri;
-    $oauth_access_token        = $settings->oauth_access_token;
-    $oauth_expires             = $settings->oauth_expires;
-    $oauth_refresh_token       = $settings->oauth_refresh_token;
-    $display_name              = $settings->display_name;
-    $userid                    = $settings->userid;
-    $echonest_api_key          = $settings->echonest_api_key;
-
-   if (substr_count($query, '@') == 1) {
-        //
-        // Search Artist Online
-        //
-        $tmp        = $words[1];
-        $words      = explode('@', $tmp);
-        $artist_uri = $words[0];
-        $tmp_uri    = explode(':', $artist_uri);
-
-        $artist_name = $words[1];
-
-        $artist_artwork_path = getArtistArtwork($w, $artist_name, false);
-        $w->result(null, serialize(array(
-            '' /*track_uri*/ ,
-            '' /* album_uri */ ,
-            $artist_uri /* artist_uri */ ,
-            '' /* playlist_uri */ ,
-            '' /* spotify_command */ ,
-            '' /* query */ ,
-            '' /* other_settings*/ ,
-            'playartist' /* other_action */ ,
-            $alfred_playlist_uri /* alfred_playlist_uri */ ,
-            $artist_name /* artist_name */ ,
-            '' /* track_name */ ,
-            '' /* album_name */ ,
-            '' /* track_artwork_path */ ,
-            $artist_artwork_path /* artist_artwork_path */ ,
-            '' /* album_artwork_path */ ,
-            '' /* playlist_name */ ,
-            '' /* playlist_artwork_path */ ,
-            $alfred_playlist_name /* $alfred_playlist_name */ ,
-            $now_playing_notifications /* now_playing_notifications */ ,
-            $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
-            $country_code /* country_code*/ ,
-            $userid
-            /* userid*/
-        )), "👤 " . $artist_name, 'Play artist', $artist_artwork_path, 'yes', null, '');
-
-        $w->result(null, serialize(array(
-            '' /*track_uri*/ ,
-            '' /* album_uri */ ,
-            $artist_uri /* artist_uri */ ,
-            '' /* playlist_uri */ ,
-            '' /* spotify_command */ ,
-            '' /* query */ ,
-            '' /* other_settings*/ ,
-            'display_biography' /* other_action */ ,
-            $alfred_playlist_uri /* alfred_playlist_uri */ ,
-            $artist_name /* artist_name */ ,
-            '' /* track_name */ ,
-            '' /* album_name */ ,
-            '' /* track_artwork_path */ ,
-            '' /* artist_artwork_path */ ,
-            '' /* album_artwork_path */ ,
-            '' /* playlist_name */ ,
-            '' /* playlist_artwork_path */ ,
-            $alfred_playlist_name /* $alfred_playlist_name */ ,
-            $now_playing_notifications /* now_playing_notifications */ ,
-            $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
-            $country_code /* country_code*/ ,
-            $userid
-            /* userid*/
-        )), 'Display biography', 'This will display the artist biography', './images/biography.png', 'yes', null, '');
-
-        $w->result(null, '', 'Follow/Unfollow Artist', 'Display options to follow/unfollow the artist', './images/follow.png', 'no', null, "Follow/Unfollow▹" . $artist_uri . "@" . $artist_name);
-
-        $w->result(null, '', 'Related Artists', 'Browse related artists', './images/related.png', 'no', null, "OnlineRelated▹" . $artist_uri . "@" . $artist_name);
-
-        if ($update_in_progress == false) {
-            $w->result(null, serialize(array(
-                '' /*track_uri*/ ,
-                '' /* album_uri */ ,
-                $artist_uri /* artist_uri */ ,
-                '' /* playlist_uri */ ,
-                '' /* spotify_command */ ,
-                '' /* query */ ,
-                '' /* other_settings*/ ,
-                'radio_artist' /* other_action */ ,
-                $alfred_playlist_uri /* alfred_playlist_uri */ ,
-                $artist_name /* artist_name */ ,
-                '' /* track_name */ ,
-                '' /* album_name */ ,
-                '' /* track_artwork_path */ ,
-                '' /* artist_artwork_path */ ,
-                '' /* album_artwork_path */ ,
-                '' /* playlist_name */ ,
-                '' /* playlist_artwork_path */ ,
-                $alfred_playlist_name /* $alfred_playlist_name */ ,
-                $now_playing_notifications /* now_playing_notifications */ ,
-                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
-                $country_code /* country_code*/ ,
-                $userid
-                /* userid*/
-            )), 'Create a Radio Playlist for ' . $artist_name, 'This will create a radio playlist with ' . $radio_number_tracks . ' tracks for the artist', './images/radio_artist.png', 'yes', null, '');
-        }
-
-        // call to web api, if it fails,
-        // it displays an error in main window
-        $albums = getTheArtistAlbums($w, $artist_uri, $country_code);
-
-        $w->result(null, 'help', "Select an album below to browse it", 'singles and compilations are also displayed', './images/info.png', 'no', null, '');
-
-        $noresult = true;
-        foreach ($albums as $album) {
-            if (checkIfResultAlreadyThere($w->results(), ucfirst($album->name) . ' (' . count($tracks->items) . ' tracks)') == false) {
-                $noresult = false;
-                $genre    = (count($album->genres) > 0) ? ' ● Genre: ' . implode('|', $album->genres) : '';
-                $tracks   = $album->tracks;
-                $w->result(null, '', ucfirst($album->name) . ' (' . count($tracks->items) . ' tracks)', $album->album_type . " by " . $artist_name . ' ● Release date: ' . $album->release_date . $genre, getTrackOrAlbumArtwork($w, $album->uri, false), 'no', null, "Online▹" . $artist_uri . "@" . $artist_name . "@" . $album->uri . "@" . $album->name);
-            }
-        }
-
-        if ($noresult) {
-            $w->result(null, 'help', "There is no album for this artist", "", './images/warning.png', 'no', null, '');
-        }
-
-    } elseif (substr_count($query, '@') == 3) {
-        //
-        // Search Album Online
-        //
-        $tmp         = $words[1];
-        $words       = explode('@', $tmp);
-        $artist_uri  = $words[0];
-        $artist_name = $words[1];
-        $album_uri   = $words[2];
-        $album_name  = $words[3];
-
-        $href = explode(':', $album_uri);
-        if ($href[1] == 'track') {
-            $track_uri  = $album_uri;
-            $album_uri = getAlbumUriFromTrack($w, $track_uri);
-            if ($album_uri == false) {
-                $w->result(null, 'help', "The album cannot be retrieved", "", './images/warning.png', 'no', null, '');
-                echo $w->toxml();
-                return;
-            }
-        }
-
-        $album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, false);
-        $w->result(null, serialize(array(
-            '' /*track_uri*/ ,
-            $album_uri /* album_uri */ ,
-            '' /* artist_uri */ ,
-            '' /* playlist_uri */ ,
-            '' /* spotify_command */ ,
-            '' /* query */ ,
-            '' /* other_settings*/ ,
-            'playalbum' /* other_action */ ,
-            $alfred_playlist_uri /* alfred_playlist_uri */ ,
-            '' /* artist_name */ ,
-            '' /* track_name */ ,
-            $album_name /* album_name */ ,
-            '' /* track_artwork_path */ ,
-            '' /* artist_artwork_path */ ,
-            $album_artwork_path /* album_artwork_path */ ,
-            '' /* playlist_name */ ,
-            '' /* playlist_artwork_path */ ,
-            $alfred_playlist_name /* $alfred_playlist_name */ ,
-            $now_playing_notifications /* now_playing_notifications */ ,
-            $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
-            $country_code /* country_code*/ ,
-            $userid
-            /* userid*/
-        )), "💿 " . escapeQuery($album_name), 'Play album', $album_artwork_path, 'yes', null, '');
-
-        if ($update_in_progress == false) {
-            $w->result(null, '', 'Add album ' . escapeQuery($album_name) . ' to...', 'This will add the album to Your Music or a playlist you will choose in next step', './images/add.png', 'no', null, 'Add▹' . $album_uri . '∙' . escapeQuery($album_name) . '▹');
-        }
-
-        // call to web api, if it fails,
-        // it displays an error in main window
-		$tracks = getTheAlbumFullTracks($w, $album_uri);
-
-        $noresult = true;
-        foreach ($tracks as $track) {
-
-            if (count($track->available_markets) == 0 || in_array($country_code, $track->available_markets) !== false) {
-
-                if ($noresult == true) {
-                    $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-                    $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
-                    $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
-                }
-                $noresult = false;
-                $track_artwork = getTrackOrAlbumArtwork($w, $track->uri, false);
-                if ($is_alfred_playlist_active == true) {
-                    $arrayresult = array(
-                        beautifyTime($track->duration_ms / 1000) . " ● " . $album_name,
-                        'alt' => 'Play album ' . escapeQuery($album_name) . ' in Spotify',
-                        'cmd' => 'Play artist ' . escapeQuery($artist_name) . ' in Spotify',
-                        'fn' => 'Add track ' . escapeQuery($track->name) . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
-                        'shift' => 'Add album ' . escapeQuery($album_name) . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
-                        'ctrl' => 'Search artist ' . escapeQuery($artist_name) . ' online'
-                    );
-                } else {
-                    $arrayresult = array(
-                        beautifyTime($track->duration_ms / 1000) . " ● " . escapeQuery($album_name),
-                        'alt' => 'Play album ' . escapeQuery($album_name) . ' in Spotify',
-                        'cmd' => 'Play artist ' . escapeQuery($artist_name) . ' in Spotify',
-                        'fn' => 'Add track ' . escapeQuery($track->name) . ' to Your Music',
-                        'shift' => 'Add album ' . escapeQuery(album_name) . ' to Your Music',
-                        'ctrl' => 'Search artist ' . escapeQuery($artist_name) . ' online'
-                    );
-                }
-                $w->result(null, serialize(array(
-                    $track->uri /*track_uri*/ ,
-                    $album_uri /* album_uri */ ,
-                    $artist_uri /* artist_uri */ ,
-                    '' /* playlist_uri */ ,
-                    '' /* spotify_command */ ,
-                    '' /* query */ ,
-                    '' /* other_settings*/ ,
-                    'play_track_in_album_context' /* other_action */ ,
-                    $alfred_playlist_uri /* alfred_playlist_uri */ ,
-                    $artist_name /* artist_name */ ,
-                    $track->name /* track_name */ ,
-                    $album_name /* album_name */ ,
-                    $track_artwork /* track_artwork_path */ ,
-                    '' /* artist_artwork_path */ ,
-                    '' /* album_artwork_path */ ,
-                    '' /* playlist_name */ ,
-                    '' /* playlist_artwork_path */ ,
-                    $alfred_playlist_name /* $alfred_playlist_name */ ,
-                    $now_playing_notifications /* now_playing_notifications */ ,
-                    $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
-                    $country_code /* country_code*/ ,
-                    $userid
-                    /* userid*/
-                )), escapeQuery(ucfirst($artist_name)) . " ● " . escapeQuery($track->name), $arrayresult, $track_artwork, 'yes', null, '');
-            }
-        }
-    }
-}
-
-/**
- * firstDelimiterOnlineRelated function.
- *
- * @access public
- * @param mixed $w
- * @param mixed $query
- * @param mixed $settings
- * @param mixed $db
- * @param mixed $update_in_progress
- * @return void
- */
-function firstDelimiterOnlineRelated($w, $query, $settings, $db, $update_in_progress)
-{
-    $words = explode('▹', $query);
-    $kind  = $words[0];
-
-    $all_playlists             = $settings->all_playlists;
-    $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
-    $radio_number_tracks       = $settings->radio_number_tracks;
-    $now_playing_notifications = $settings->now_playing_notifications;
-    $max_results               = $settings->max_results;
-    $alfred_playlist_uri       = $settings->alfred_playlist_uri;
-    $alfred_playlist_name      = $settings->alfred_playlist_name;
-    $country_code              = $settings->country_code;
-    $last_check_update_time    = $settings->last_check_update_time;
-    $oauth_client_id           = $settings->oauth_client_id;
-    $oauth_client_secret       = $settings->oauth_client_secret;
-    $oauth_redirect_uri        = $settings->oauth_redirect_uri;
-    $oauth_access_token        = $settings->oauth_access_token;
-    $oauth_expires             = $settings->oauth_expires;
-    $oauth_refresh_token       = $settings->oauth_refresh_token;
-    $display_name              = $settings->display_name;
-    $userid                    = $settings->userid;
-    $echonest_api_key          = $settings->echonest_api_key;
-
-   if (substr_count($query, '@') == 1) {
-        //
-        // Search Related Artist Online
-        //
-        $tmp        = $words[1];
-        $words      = explode('@', $tmp);
-        $artist_uri = $words[0];
-        $artist_name = $words[1];
-
-        // call to web api, if it fails,
-        // it displays an error in main window
-		$relateds = getTheArtistRelatedArtists($w, trim($artist_uri));
-
-        foreach ($relateds as $related) {
-            $w->result(null, '', "👤 " . ucfirst($related->name), '☁︎ Query all albums/tracks from this artist online..', getArtistArtwork($w, $related->name, false), 'no', null, "Online▹" . $related->uri . "@" . $related->name);
-        }
-    }
-}
-
-/**
  * firstDelimiterLyrics function.
  *
  * @access public
@@ -3329,148 +3006,6 @@ function firstDelimiterLyrics($w, $query, $settings, $db, $update_in_progress)
     }
 }
 
-/**
- * firstDelimiterFollowUnfollow function.
- *
- * @access public
- * @param mixed $w
- * @param mixed $query
- * @param mixed $settings
- * @param mixed $db
- * @param mixed $update_in_progress
- * @return void
- */
-function firstDelimiterFollowUnfollow($w, $query, $settings, $db, $update_in_progress)
-{
-    $words = explode('▹', $query);
-    $kind  = $words[0];
-
-    $all_playlists             = $settings->all_playlists;
-    $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
-    $radio_number_tracks       = $settings->radio_number_tracks;
-    $now_playing_notifications = $settings->now_playing_notifications;
-    $max_results               = $settings->max_results;
-    $alfred_playlist_uri       = $settings->alfred_playlist_uri;
-    $alfred_playlist_name      = $settings->alfred_playlist_name;
-    $country_code              = $settings->country_code;
-    $last_check_update_time    = $settings->last_check_update_time;
-    $oauth_client_id           = $settings->oauth_client_id;
-    $oauth_client_secret       = $settings->oauth_client_secret;
-    $oauth_redirect_uri        = $settings->oauth_redirect_uri;
-    $oauth_access_token        = $settings->oauth_access_token;
-    $oauth_expires             = $settings->oauth_expires;
-    $oauth_refresh_token       = $settings->oauth_refresh_token;
-    $display_name              = $settings->display_name;
-    $userid                    = $settings->userid;
-    $echonest_api_key          = $settings->echonest_api_key;
-
-    if (substr_count($query, '@') == 1) {
-        //
-        // Follow / Unfollow artist Option menu
-        //
-        $tmp        = $words[1];
-        $words      = explode('@', $tmp);
-        $artist_uri = $words[0];
-        $tmp_uri    = explode(':', $artist_uri);
-
-        $artist_name = $words[1];
-
-        try {
-	        $api                = getSpotifyWebAPI($w);
-            $isArtistFollowed = $api->currentUserFollows('artist', $tmp_uri[2]);
-
-            $artist_artwork_path = getArtistArtwork($w, $artist_name, false);
-            if (!$isArtistFollowed[0]) {
-                $w->result(null, '', 'Follow artist ' . $artist_name, 'You are not currently following the artist', $artist_artwork_path, 'no', null, "Follow▹" . $artist_uri . "@" . $artist_name);
-            } else {
-                $w->result(null, '', 'Unfollow artist ' . $artist_name, 'You are currently following the artist', $artist_artwork_path, 'no', null, "Unfollow▹" . $artist_uri . "@" . $artist_name);
-            }
-
-        }
-        catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            $w->result(null, 'help', "Exception occurred", "" . $e->getMessage(), './images/warning.png', 'no', null, '');
-            echo $w->toxml();
-            return;
-        }
-    }
-}
-
-/**
- * firstDelimiterFollowOrUnfollow function.
- *
- * @access public
- * @param mixed $w
- * @param mixed $query
- * @param mixed $settings
- * @param mixed $db
- * @param mixed $update_in_progress
- * @return void
- */
-function firstDelimiterFollowOrUnfollow($w, $query, $settings, $db, $update_in_progress)
-{
-    $words = explode('▹', $query);
-    $kind  = $words[0];
-
-    $all_playlists             = $settings->all_playlists;
-    $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
-    $radio_number_tracks       = $settings->radio_number_tracks;
-    $now_playing_notifications = $settings->now_playing_notifications;
-    $max_results               = $settings->max_results;
-    $alfred_playlist_uri       = $settings->alfred_playlist_uri;
-    $alfred_playlist_name      = $settings->alfred_playlist_name;
-    $country_code              = $settings->country_code;
-    $last_check_update_time    = $settings->last_check_update_time;
-    $oauth_client_id           = $settings->oauth_client_id;
-    $oauth_client_secret       = $settings->oauth_client_secret;
-    $oauth_redirect_uri        = $settings->oauth_redirect_uri;
-    $oauth_access_token        = $settings->oauth_access_token;
-    $oauth_expires             = $settings->oauth_expires;
-    $oauth_refresh_token       = $settings->oauth_refresh_token;
-    $display_name              = $settings->display_name;
-    $userid                    = $settings->userid;
-    $echonest_api_key          = $settings->echonest_api_key;
-
-    if (substr_count($query, '@') == 1) {
-        //
-        // Follow / Unfollow actions
-        //
-        $tmp        = $words[1];
-        $words      = explode('@', $tmp);
-        $artist_uri = $words[0];
-        $tmp_uri    = explode(':', $artist_uri);
-
-        $artist_name = $words[1];
-
-        if ($kind == "Follow") {
-            $follow = true;
-        } else {
-            $follow = false;
-        }
-        try {
-			$api = getSpotifyWebAPI($w);
-            if ($follow) {
-                $ret = $api->followArtistsOrUsers('artist', $tmp_uri[2]);
-            } else {
-                $ret = $api->unfollowArtistsOrUsers('artist', $tmp_uri[2]);
-            }
-
-            if ($ret) {
-                if ($follow) {
-                    $w->result(null, '', 'Success!', 'You are now following the artist ' . $artist_name, './images/info.png', 'no', null, '');
-                } else {
-                    $w->result(null, '', 'Success!', 'You are no more following the artist ' . $artist_name, './images/info.png', 'no', null, '');
-                }
-            } else {
-                $w->result(null, '', 'Error!', 'An error happened, try again or report to the author', './images/warning.png', 'no', null, '');
-            }
-        }
-        catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            $w->result(null, 'help', "Exception occurred", "" . $e->getMessage(), './images/warning.png', 'no', null, '');
-            echo $w->toxml();
-            return;
-        }
-    }
-}
 
 /**
  * firstDelimiterSettings function.
@@ -4079,9 +3614,9 @@ function secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
             /* userid*/
         )), 'Display biography', 'This will display the artist biography', './images/biography.png', 'yes', null, '');
 
-        $w->result(null, '', 'Follow/Unfollow Artist', 'Display options to follow/unfollow the artist', './images/follow.png', 'no', null, "Follow/Unfollow▹" . $artist_uri . "@" . $artist_name);
+        $w->result(null, '', 'Follow/Unfollow Artist', 'Display options to follow/unfollow the artist', './images/follow.png', 'no', null, "Follow/Unfollow▹" . $artist_uri . "@" . $artist_name . '▹');
 
-        $w->result(null, '', 'Related Artists', 'Browse related artists', './images/related.png', 'no', null, "OnlineRelated▹" . $artist_uri . "@" . $artist_name);
+        $w->result(null, '', 'Related Artists', 'Browse related artists', './images/related.png', 'no', null, "OnlineRelated▹" . $artist_uri . "@" . $artist_name . '▹');
 
         if ($update_in_progress == false) {
             $w->result(null, serialize(array(
@@ -4358,7 +3893,7 @@ function secondDelimiterAlbums($w, $query, $settings, $db, $update_in_progress)
         return;
     }
 
-    $w->result(null, '', "💿 " . ucfirst($album_name), '☁︎ Query all tracks from this album online..', './images/online_album.png', 'no', null, "Online▹" . $onetrack[0] . '@' . $onetrack[1] . '@' . $album_uri . '@' . $album_name);
+    $w->result(null, '', "💿 " . ucfirst($album_name), '☁︎ Query all tracks from this album online..', './images/online_album.png', 'no', null, "Online▹" . $onetrack[0] . '@' . $onetrack[1] . '@' . $album_uri . '@' . $album_name . '▹');
 
     if ($update_in_progress == false) {
         $w->result(null, '', 'Add album ' . escapeQuery($album_name) . ' to...', 'This will add the album to Your Music or a playlist you will choose in next step', './images/add.png', 'no', null, 'Add▹' . $album_uri . '∙' . escapeQuery($album_name) . '▹');
@@ -4718,6 +4253,329 @@ function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progres
     catch (PDOException $e) {
         handleDbIssuePdoXml($db);
         return;
+    }
+}
+
+/**
+ * secondDelimiterOnline function.
+ *
+ * @access public
+ * @param mixed $w
+ * @param mixed $query
+ * @param mixed $settings
+ * @param mixed $db
+ * @param mixed $update_in_progress
+ * @return void
+ */
+function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
+{
+    $words = explode('▹', $query);
+    $kind  = $words[0];
+
+    $all_playlists             = $settings->all_playlists;
+    $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
+    $radio_number_tracks       = $settings->radio_number_tracks;
+    $now_playing_notifications = $settings->now_playing_notifications;
+    $max_results               = $settings->max_results;
+    $alfred_playlist_uri       = $settings->alfred_playlist_uri;
+    $alfred_playlist_name      = $settings->alfred_playlist_name;
+    $country_code              = $settings->country_code;
+    $last_check_update_time    = $settings->last_check_update_time;
+    $oauth_client_id           = $settings->oauth_client_id;
+    $oauth_client_secret       = $settings->oauth_client_secret;
+    $oauth_redirect_uri        = $settings->oauth_redirect_uri;
+    $oauth_access_token        = $settings->oauth_access_token;
+    $oauth_expires             = $settings->oauth_expires;
+    $oauth_refresh_token       = $settings->oauth_refresh_token;
+    $display_name              = $settings->display_name;
+    $userid                    = $settings->userid;
+    $echonest_api_key          = $settings->echonest_api_key;
+
+   if (substr_count($query, '@') == 1) {
+        //
+        // Search Artist Online
+        //
+        $tmp        = $words[1];
+        $words      = explode('@', $tmp);
+        $artist_uri = $words[0];
+        $tmp_uri    = explode(':', $artist_uri);
+
+        $artist_name = $words[1];
+
+        $artist_artwork_path = getArtistArtwork($w, $artist_name, false);
+        $w->result(null, serialize(array(
+            '' /*track_uri*/ ,
+            '' /* album_uri */ ,
+            $artist_uri /* artist_uri */ ,
+            '' /* playlist_uri */ ,
+            '' /* spotify_command */ ,
+            '' /* query */ ,
+            '' /* other_settings*/ ,
+            'playartist' /* other_action */ ,
+            $alfred_playlist_uri /* alfred_playlist_uri */ ,
+            $artist_name /* artist_name */ ,
+            '' /* track_name */ ,
+            '' /* album_name */ ,
+            '' /* track_artwork_path */ ,
+            $artist_artwork_path /* artist_artwork_path */ ,
+            '' /* album_artwork_path */ ,
+            '' /* playlist_name */ ,
+            '' /* playlist_artwork_path */ ,
+            $alfred_playlist_name /* $alfred_playlist_name */ ,
+            $now_playing_notifications /* now_playing_notifications */ ,
+            $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
+            $country_code /* country_code*/ ,
+            $userid
+            /* userid*/
+        )), "👤 " . $artist_name, 'Play artist', $artist_artwork_path, 'yes', null, '');
+
+        $w->result(null, serialize(array(
+            '' /*track_uri*/ ,
+            '' /* album_uri */ ,
+            $artist_uri /* artist_uri */ ,
+            '' /* playlist_uri */ ,
+            '' /* spotify_command */ ,
+            '' /* query */ ,
+            '' /* other_settings*/ ,
+            'display_biography' /* other_action */ ,
+            $alfred_playlist_uri /* alfred_playlist_uri */ ,
+            $artist_name /* artist_name */ ,
+            '' /* track_name */ ,
+            '' /* album_name */ ,
+            '' /* track_artwork_path */ ,
+            '' /* artist_artwork_path */ ,
+            '' /* album_artwork_path */ ,
+            '' /* playlist_name */ ,
+            '' /* playlist_artwork_path */ ,
+            $alfred_playlist_name /* $alfred_playlist_name */ ,
+            $now_playing_notifications /* now_playing_notifications */ ,
+            $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
+            $country_code /* country_code*/ ,
+            $userid
+            /* userid*/
+        )), 'Display biography', 'This will display the artist biography', './images/biography.png', 'yes', null, '');
+
+        $w->result(null, '', 'Follow/Unfollow Artist', 'Display options to follow/unfollow the artist', './images/follow.png', 'no', null, "Follow/Unfollow▹" . $artist_uri . "@" . $artist_name . '▹');
+
+        $w->result(null, '', 'Related Artists', 'Browse related artists', './images/related.png', 'no', null, "OnlineRelated▹" . $artist_uri . "@" . $artist_name . '▹');
+
+        if ($update_in_progress == false) {
+            $w->result(null, serialize(array(
+                '' /*track_uri*/ ,
+                '' /* album_uri */ ,
+                $artist_uri /* artist_uri */ ,
+                '' /* playlist_uri */ ,
+                '' /* spotify_command */ ,
+                '' /* query */ ,
+                '' /* other_settings*/ ,
+                'radio_artist' /* other_action */ ,
+                $alfred_playlist_uri /* alfred_playlist_uri */ ,
+                $artist_name /* artist_name */ ,
+                '' /* track_name */ ,
+                '' /* album_name */ ,
+                '' /* track_artwork_path */ ,
+                '' /* artist_artwork_path */ ,
+                '' /* album_artwork_path */ ,
+                '' /* playlist_name */ ,
+                '' /* playlist_artwork_path */ ,
+                $alfred_playlist_name /* $alfred_playlist_name */ ,
+                $now_playing_notifications /* now_playing_notifications */ ,
+                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
+                $country_code /* country_code*/ ,
+                $userid
+                /* userid*/
+            )), 'Create a Radio Playlist for ' . $artist_name, 'This will create a radio playlist with ' . $radio_number_tracks . ' tracks for the artist', './images/radio_artist.png', 'yes', null, '');
+        }
+
+        // call to web api, if it fails,
+        // it displays an error in main window
+        $albums = getTheArtistAlbums($w, $artist_uri, $country_code);
+
+        $w->result(null, 'help', "Select an album below to browse it", 'singles and compilations are also displayed', './images/info.png', 'no', null, '');
+
+        $noresult = true;
+        foreach ($albums as $album) {
+            if (checkIfResultAlreadyThere($w->results(), ucfirst($album->name) . ' (' . count($tracks->items) . ' tracks)') == false) {
+                $noresult = false;
+                $genre    = (count($album->genres) > 0) ? ' ● Genre: ' . implode('|', $album->genres) : '';
+                $tracks   = $album->tracks;
+                $w->result(null, '', ucfirst($album->name) . ' (' . count($tracks->items) . ' tracks)', $album->album_type . " by " . $artist_name . ' ● Release date: ' . $album->release_date . $genre, getTrackOrAlbumArtwork($w, $album->uri, false), 'no', null, "Online▹" . $artist_uri . "@" . $artist_name . "@" . $album->uri . "@" . $album->name . '▹');
+            }
+        }
+
+        if ($noresult) {
+            $w->result(null, 'help', "There is no album for this artist", "", './images/warning.png', 'no', null, '');
+        }
+
+    } elseif (substr_count($query, '@') == 3) {
+        //
+        // Search Album Online
+        //
+        $tmp         = $words[1];
+        $words       = explode('@', $tmp);
+        $artist_uri  = $words[0];
+        $artist_name = $words[1];
+        $album_uri   = $words[2];
+        $album_name  = $words[3];
+
+        $href = explode(':', $album_uri);
+        if ($href[1] == 'track') {
+            $track_uri  = $album_uri;
+            $album_uri = getAlbumUriFromTrack($w, $track_uri);
+            if ($album_uri == false) {
+                $w->result(null, 'help', "The album cannot be retrieved", "", './images/warning.png', 'no', null, '');
+                echo $w->toxml();
+                return;
+            }
+        }
+
+        $album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, false);
+        $w->result(null, serialize(array(
+            '' /*track_uri*/ ,
+            $album_uri /* album_uri */ ,
+            '' /* artist_uri */ ,
+            '' /* playlist_uri */ ,
+            '' /* spotify_command */ ,
+            '' /* query */ ,
+            '' /* other_settings*/ ,
+            'playalbum' /* other_action */ ,
+            $alfred_playlist_uri /* alfred_playlist_uri */ ,
+            '' /* artist_name */ ,
+            '' /* track_name */ ,
+            $album_name /* album_name */ ,
+            '' /* track_artwork_path */ ,
+            '' /* artist_artwork_path */ ,
+            $album_artwork_path /* album_artwork_path */ ,
+            '' /* playlist_name */ ,
+            '' /* playlist_artwork_path */ ,
+            $alfred_playlist_name /* $alfred_playlist_name */ ,
+            $now_playing_notifications /* now_playing_notifications */ ,
+            $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
+            $country_code /* country_code*/ ,
+            $userid
+            /* userid*/
+        )), "💿 " . escapeQuery($album_name), 'Play album', $album_artwork_path, 'yes', null, '');
+
+        if ($update_in_progress == false) {
+            $w->result(null, '', 'Add album ' . escapeQuery($album_name) . ' to...', 'This will add the album to Your Music or a playlist you will choose in next step', './images/add.png', 'no', null, 'Add▹' . $album_uri . '∙' . escapeQuery($album_name) . '▹');
+        }
+
+        // call to web api, if it fails,
+        // it displays an error in main window
+		$tracks = getTheAlbumFullTracks($w, $album_uri);
+
+        $noresult = true;
+        foreach ($tracks as $track) {
+
+            if (count($track->available_markets) == 0 || in_array($country_code, $track->available_markets) !== false) {
+
+                if ($noresult == true) {
+                    $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
+                    $subtitle = "$subtitle fn (add track to ♫) ⇧ (add album to ♫)";
+                    $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
+                }
+                $noresult = false;
+                $track_artwork = getTrackOrAlbumArtwork($w, $track->uri, false);
+                if ($is_alfred_playlist_active == true) {
+                    $arrayresult = array(
+                        beautifyTime($track->duration_ms / 1000) . " ● " . $album_name,
+                        'alt' => 'Play album ' . escapeQuery($album_name) . ' in Spotify',
+                        'cmd' => 'Play artist ' . escapeQuery($artist_name) . ' in Spotify',
+                        'fn' => 'Add track ' . escapeQuery($track->name) . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
+                        'shift' => 'Add album ' . escapeQuery($album_name) . ' to ' . $alfred_playlist_name . ' Alfred Playlist',
+                        'ctrl' => 'Search artist ' . escapeQuery($artist_name) . ' online'
+                    );
+                } else {
+                    $arrayresult = array(
+                        beautifyTime($track->duration_ms / 1000) . " ● " . escapeQuery($album_name),
+                        'alt' => 'Play album ' . escapeQuery($album_name) . ' in Spotify',
+                        'cmd' => 'Play artist ' . escapeQuery($artist_name) . ' in Spotify',
+                        'fn' => 'Add track ' . escapeQuery($track->name) . ' to Your Music',
+                        'shift' => 'Add album ' . escapeQuery(album_name) . ' to Your Music',
+                        'ctrl' => 'Search artist ' . escapeQuery($artist_name) . ' online'
+                    );
+                }
+                $w->result(null, serialize(array(
+                    $track->uri /*track_uri*/ ,
+                    $album_uri /* album_uri */ ,
+                    $artist_uri /* artist_uri */ ,
+                    '' /* playlist_uri */ ,
+                    '' /* spotify_command */ ,
+                    '' /* query */ ,
+                    '' /* other_settings*/ ,
+                    'play_track_in_album_context' /* other_action */ ,
+                    $alfred_playlist_uri /* alfred_playlist_uri */ ,
+                    $artist_name /* artist_name */ ,
+                    $track->name /* track_name */ ,
+                    $album_name /* album_name */ ,
+                    $track_artwork /* track_artwork_path */ ,
+                    '' /* artist_artwork_path */ ,
+                    '' /* album_artwork_path */ ,
+                    '' /* playlist_name */ ,
+                    '' /* playlist_artwork_path */ ,
+                    $alfred_playlist_name /* $alfred_playlist_name */ ,
+                    $now_playing_notifications /* now_playing_notifications */ ,
+                    $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
+                    $country_code /* country_code*/ ,
+                    $userid
+                    /* userid*/
+                )), escapeQuery(ucfirst($artist_name)) . " ● " . escapeQuery($track->name), $arrayresult, $track_artwork, 'yes', null, '');
+            }
+        }
+    }
+}
+
+/**
+ * secondDelimiterOnlineRelated function.
+ *
+ * @access public
+ * @param mixed $w
+ * @param mixed $query
+ * @param mixed $settings
+ * @param mixed $db
+ * @param mixed $update_in_progress
+ * @return void
+ */
+function secondDelimiterOnlineRelated($w, $query, $settings, $db, $update_in_progress)
+{
+    $words = explode('▹', $query);
+    $kind  = $words[0];
+
+    $all_playlists             = $settings->all_playlists;
+    $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
+    $radio_number_tracks       = $settings->radio_number_tracks;
+    $now_playing_notifications = $settings->now_playing_notifications;
+    $max_results               = $settings->max_results;
+    $alfred_playlist_uri       = $settings->alfred_playlist_uri;
+    $alfred_playlist_name      = $settings->alfred_playlist_name;
+    $country_code              = $settings->country_code;
+    $last_check_update_time    = $settings->last_check_update_time;
+    $oauth_client_id           = $settings->oauth_client_id;
+    $oauth_client_secret       = $settings->oauth_client_secret;
+    $oauth_redirect_uri        = $settings->oauth_redirect_uri;
+    $oauth_access_token        = $settings->oauth_access_token;
+    $oauth_expires             = $settings->oauth_expires;
+    $oauth_refresh_token       = $settings->oauth_refresh_token;
+    $display_name              = $settings->display_name;
+    $userid                    = $settings->userid;
+    $echonest_api_key          = $settings->echonest_api_key;
+
+   if (substr_count($query, '@') == 1) {
+        //
+        // Search Related Artist Online
+        //
+        $tmp        = $words[1];
+        $words      = explode('@', $tmp);
+        $artist_uri = $words[0];
+        $artist_name = $words[1];
+
+        // call to web api, if it fails,
+        // it displays an error in main window
+		$relateds = getTheArtistRelatedArtists($w, trim($artist_uri));
+
+        foreach ($relateds as $related) {
+            $w->result(null, '', "👤 " . ucfirst($related->name), '☁︎ Query all albums/tracks from this artist online..', getArtistArtwork($w, $related->name, false), 'no', null, "Online▹" . $related->uri . "@" . $related->name . '▹');
+        }
     }
 }
 
@@ -6362,6 +6220,152 @@ function secondDelimiterAlfredPlaylist($w, $query, $settings, $db, $update_in_pr
 
     }
 }
+
+/**
+ * secondDelimiterFollowUnfollow function.
+ *
+ * @access public
+ * @param mixed $w
+ * @param mixed $query
+ * @param mixed $settings
+ * @param mixed $db
+ * @param mixed $update_in_progress
+ * @return void
+ */
+function secondDelimiterFollowUnfollow($w, $query, $settings, $db, $update_in_progress)
+{
+    $words = explode('▹', $query);
+    $kind  = $words[0];
+
+    $all_playlists             = $settings->all_playlists;
+    $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
+    $radio_number_tracks       = $settings->radio_number_tracks;
+    $now_playing_notifications = $settings->now_playing_notifications;
+    $max_results               = $settings->max_results;
+    $alfred_playlist_uri       = $settings->alfred_playlist_uri;
+    $alfred_playlist_name      = $settings->alfred_playlist_name;
+    $country_code              = $settings->country_code;
+    $last_check_update_time    = $settings->last_check_update_time;
+    $oauth_client_id           = $settings->oauth_client_id;
+    $oauth_client_secret       = $settings->oauth_client_secret;
+    $oauth_redirect_uri        = $settings->oauth_redirect_uri;
+    $oauth_access_token        = $settings->oauth_access_token;
+    $oauth_expires             = $settings->oauth_expires;
+    $oauth_refresh_token       = $settings->oauth_refresh_token;
+    $display_name              = $settings->display_name;
+    $userid                    = $settings->userid;
+    $echonest_api_key          = $settings->echonest_api_key;
+
+    if (substr_count($query, '@') == 1) {
+        //
+        // Follow / Unfollow artist Option menu
+        //
+        $tmp        = $words[1];
+        $words      = explode('@', $tmp);
+        $artist_uri = $words[0];
+        $tmp_uri    = explode(':', $artist_uri);
+
+        $artist_name = $words[1];
+
+        try {
+	        $api                = getSpotifyWebAPI($w);
+            $isArtistFollowed = $api->currentUserFollows('artist', $tmp_uri[2]);
+
+            $artist_artwork_path = getArtistArtwork($w, $artist_name, false);
+            if (!$isArtistFollowed[0]) {
+                $w->result(null, '', 'Follow artist ' . $artist_name, 'You are not currently following the artist', $artist_artwork_path, 'no', null, "Follow▹" . $artist_uri . "@" . $artist_name . '▹');
+            } else {
+                $w->result(null, '', 'Unfollow artist ' . $artist_name, 'You are currently following the artist', $artist_artwork_path, 'no', null, "Unfollow▹" . $artist_uri . "@" . $artist_name . '▹');
+            }
+
+        }
+        catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+            $w->result(null, 'help', "Exception occurred", "" . $e->getMessage(), './images/warning.png', 'no', null, '');
+            echo $w->toxml();
+            return;
+        }
+    }
+}
+
+/**
+ * secondDelimiterFollowOrUnfollow function.
+ *
+ * @access public
+ * @param mixed $w
+ * @param mixed $query
+ * @param mixed $settings
+ * @param mixed $db
+ * @param mixed $update_in_progress
+ * @return void
+ */
+function secondDelimiterFollowOrUnfollow($w, $query, $settings, $db, $update_in_progress)
+{
+    $words = explode('▹', $query);
+    $kind  = $words[0];
+
+    $all_playlists             = $settings->all_playlists;
+    $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
+    $radio_number_tracks       = $settings->radio_number_tracks;
+    $now_playing_notifications = $settings->now_playing_notifications;
+    $max_results               = $settings->max_results;
+    $alfred_playlist_uri       = $settings->alfred_playlist_uri;
+    $alfred_playlist_name      = $settings->alfred_playlist_name;
+    $country_code              = $settings->country_code;
+    $last_check_update_time    = $settings->last_check_update_time;
+    $oauth_client_id           = $settings->oauth_client_id;
+    $oauth_client_secret       = $settings->oauth_client_secret;
+    $oauth_redirect_uri        = $settings->oauth_redirect_uri;
+    $oauth_access_token        = $settings->oauth_access_token;
+    $oauth_expires             = $settings->oauth_expires;
+    $oauth_refresh_token       = $settings->oauth_refresh_token;
+    $display_name              = $settings->display_name;
+    $userid                    = $settings->userid;
+    $echonest_api_key          = $settings->echonest_api_key;
+
+    if (substr_count($query, '@') == 1) {
+        //
+        // Follow / Unfollow actions
+        //
+        $tmp        = $words[1];
+        $words      = explode('@', $tmp);
+        $artist_uri = $words[0];
+        $tmp_uri    = explode(':', $artist_uri);
+
+        $artist_name = $words[1];
+
+        if ($kind == "Follow") {
+            $follow = true;
+        } else {
+            $follow = false;
+        }
+        try {
+			$api = getSpotifyWebAPI($w);
+            if ($follow) {
+                $ret = $api->followArtistsOrUsers('artist', $tmp_uri[2]);
+            } else {
+                $ret = $api->unfollowArtistsOrUsers('artist', $tmp_uri[2]);
+            }
+
+            if ($ret) {
+                if ($follow) {
+                    displayNotificationWithArtwork('You are now following the artist ' . $artist_name, './images/follow.png', 'Follow');
+                    exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Artist▹" . $artist_uri . "∙" . escapeQuery($artist_name) . '▹' . "\"'");
+                } else {
+                    displayNotificationWithArtwork('You are no more following the artist ' . $artist_name, './images/follow.png', 'Unfollow');
+                    exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Artist▹" . $artist_uri . "∙" . escapeQuery($artist_name) . '▹' . "\"'");
+                }
+            } else {
+                $w->result(null, '', 'Error!', 'An error happened, try again or report to the author', './images/warning.png', 'no', null, '');
+            }
+        }
+        catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+            $w->result(null, 'help', "Exception occurred", "" . $e->getMessage(), './images/warning.png', 'no', null, '');
+            echo $w->toxml();
+            return;
+        }
+    }
+}
+
 
 /**
  * thirdDelimiterAdd function.
