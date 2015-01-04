@@ -5805,10 +5805,6 @@ function secondDelimiterNewReleases($w, $query, $settings, $db, $update_in_progr
             $album_uri  = $words[0];
             $album_name = $words[1];
 
-            $tmp_uri = explode(':', $album_uri);
-
-            $json = doWebApiRequest($w, "https://api.spotify.com/v1/albums/" . $tmp_uri[2] . "/tracks");
-
             $album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, false);
             $w->result(null, serialize(array(
                 '' /*track_uri*/ ,
@@ -5841,8 +5837,12 @@ function secondDelimiterNewReleases($w, $query, $settings, $db, $update_in_progr
             }
 
 
-            $noresult = true;
-            foreach ($json->items as $track) {
+	        // call to web api, if it fails,
+	        // it displays an error in main window
+			$tracks = getTheAlbumFullTracks($w, $album_uri);
+
+	        $noresult = true;
+	        foreach ($tracks as $track) {
 
                 if (count($track->available_markets) == 0 || in_array($country_code, $track->available_markets) !== false) {
 
