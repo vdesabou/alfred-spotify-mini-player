@@ -1436,6 +1436,38 @@ function getTheAlbumFullTracks($w, $album_uri)
 }
 
 /**
+ * getTheArtistRelatedArtists function.
+ *
+ * @access public
+ * @param mixed $w
+ * @param mixed $artist_uri
+ * @return void
+ */
+function getTheArtistRelatedArtists($w, $artist_uri)
+{
+    $relateds = array();
+
+    try {
+	    $api                   = getSpotifyWebAPI($w);
+        $tmp                   = explode(':', $artist_uri);
+
+        $relatedArtists = $api->getArtistRelatedArtists($tmp[2]);
+
+        foreach ($relatedArtists->artists as $related) {
+            $relateds[] = $related;
+        }
+    }
+    catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+        $w2 = new Workflows('com.vdesabou.spotify.mini.player');
+        $w2->result(null, '', "Error: Spotify WEB API getArtistRelatedArtists returned error " . $e->getMessage(), "Try again or report to author", './images/warning.png', 'no', null, '');
+        echo $w2->toxml();
+        exit;
+    }
+
+    return $relateds;
+}
+
+/**
  * getTheNewReleases function.
  *
  * @access public

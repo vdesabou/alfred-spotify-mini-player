@@ -3227,13 +3227,13 @@ function firstDelimiterOnlineRelated($w, $query, $settings, $db, $update_in_prog
         $tmp        = $words[1];
         $words      = explode('@', $tmp);
         $artist_uri = $words[0];
-        $tmp_uri    = explode(':', $artist_uri);
-
         $artist_name = $words[1];
 
-        $json = doWebApiRequest($w, "https://api.spotify.com/v1/artists/" . trim($tmp_uri[2]) . "/related-artists");
+        // call to web api, if it fails,
+        // it displays an error in main window
+		$relateds = getTheArtistRelatedArtists($w, trim($artist_uri));
 
-        foreach ($json->artists as $related) {
+        foreach ($relateds as $related) {
             $w->result(null, '', "👤 " . ucfirst($related->name), '☁︎ Query all albums/tracks from this artist online..', getArtistArtwork($w, $related->name, false), 'no', null, "Online▹" . $related->uri . "@" . $related->name);
         }
     }
