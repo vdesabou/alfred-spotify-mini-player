@@ -350,9 +350,9 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress)
         $alfred_playlist_state = 'Your Music';
     }
     if ($all_playlists == true) {
-        $w->result(null, '', 'Settings', 'Search scope=<All>, Max results=<' . $max_results . '>, Controlling <' . $alfred_playlist_state . '>, Radio tracks=<' . $radio_number_tracks . '>', './images/settings.png', 'no', null, 'Settings▹');
+        $w->result(null, '', 'Settings', 'User=' . $userid . ', Search scope=<All>, Max results=<' . $max_results . '>, Controlling <' . $alfred_playlist_state . '>, Radio tracks=<' . $radio_number_tracks . '>', './images/settings.png', 'no', null, 'Settings▹');
     } else {
-        $w->result(null, '', 'Settings', 'Search scope=<Your Music>, Max results=<' . $max_results . '>, Controlling <' . $alfred_playlist_state . '>, Radio tracks=<' . $radio_number_tracks . '>', './images/settings.png', 'no', null, 'Settings▹');
+        $w->result(null, '', 'Settings', 'User=' . $userid . ', Search scope=<Your Music>, Max results=<' . $max_results . '>, Controlling <' . $alfred_playlist_state . '>, Radio tracks=<' . $radio_number_tracks . '>', './images/settings.png', 'no', null, 'Settings▹');
     }
 }
 
