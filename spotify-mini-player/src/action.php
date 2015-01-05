@@ -467,7 +467,7 @@ if ($playlist_uri != "" && $other_settings == "") {
     }
 } else if ($other_action != "") {
     if ($other_action == "disable_all_playlist") {
-        $ret = updateSetting($w, 'all_playlists', false);
+        $ret = updateSetting($w, 'all_playlists', 0);
         if ($ret == true) {
             displayNotificationWithArtwork("Search scope set to Your Music only", './images/search_scope_yourmusic_only.png', 'Settings');
         } else {
@@ -475,7 +475,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         }
         return;
     } else if ($other_action == "enable_all_playlist") {
-        $ret = updateSetting($w, 'all_playlists', true);
+        $ret = updateSetting($w, 'all_playlists', 1);
         if ($ret == true) {
             displayNotificationWithArtwork("Search scope set to your complete library", './images/search.png', 'Settings');
         } else {
@@ -483,7 +483,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         }
         return;
     } else if ($other_action == "enable_now_playing_notifications") {
-        $ret = updateSetting($w, 'now_playing_notifications', true);
+        $ret = updateSetting($w, 'now_playing_notifications', 1);
         if ($ret == true) {
             displayNotificationWithArtwork("Now Playing notifications are now enabled", './images/enable_now_playing.png', 'Settings');
         } else {
@@ -492,7 +492,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         return;
     } else if ($other_action == "disable_now_playing_notifications") {
 
-        $ret = updateSetting($w, 'now_playing_notifications', false);
+        $ret = updateSetting($w, 'now_playing_notifications', 0);
         if ($ret == true) {
             displayNotificationWithArtwork("Now Playing notifications are now disabled", './images/disable_now_playing.png', 'Settings');
         } else {
@@ -502,7 +502,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a stop >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
         return;
     } else if ($other_action == "enable_alfred_playlist") {
-        $ret = updateSetting($w, 'is_alfred_playlist_active', true);
+        $ret = updateSetting($w, 'is_alfred_playlist_active', 1);
         if ($ret == true) {
             displayNotificationWithArtwork("Controlling Alfred Playlist", './images/alfred_playlist.png', 'Settings');
         } else {
@@ -510,7 +510,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         }
         return;
     } else if ($other_action == "disable_alfred_playlist") {
-        $ret = updateSetting($w, 'is_alfred_playlist_active', false);
+        $ret = updateSetting($w, 'is_alfred_playlist_active', 0);
         if ($ret == true) {
             displayNotificationWithArtwork("Controlling Your Music", './images/yourmusic.png', 'Settings');
         } else {
@@ -518,7 +518,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         }
         return;
     } else if ($other_action == "enable_lookup_local_tracks_online") {
-        $ret = updateSetting($w, 'lookup_local_tracks_online', true);
+        $ret = updateSetting($w, 'lookup_local_tracks_online', 1);
         if ($ret == true) {
             displayNotificationWithArtwork("Lookup for local tracks online is enabled", './images/enable_lookup_local_tracks_online.png', 'Settings');
         } else {
@@ -526,7 +526,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         }
         return;
     } else if ($other_action == "disable_lookup_local_tracks_online") {
-        $ret = updateSetting($w, 'lookup_local_tracks_online', false);
+        $ret = updateSetting($w, 'lookup_local_tracks_online', 0);
         if ($ret == true) {
             displayNotificationWithArtwork("Lookup for local tracks online is disabled", './images/disable_lookup_local_tracks_online.png', 'Settings');
         } else {
