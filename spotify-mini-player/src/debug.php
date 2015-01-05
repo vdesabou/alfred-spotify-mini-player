@@ -25,7 +25,7 @@ if (file_exists($w->data() . "/update_library_in_progress")) {
 }
 
 if (!file_exists($w->data() . "/settings.json")) {
-    $output = $output . "The file" . $w->data() . "/settings.json is not present\n";
+    $output = $output . "The file " . $w->data() . "/settings.json is not present\n";
 } else {
     copy($w->data() . "/settings.json", $w->home() . "/Downloads/spot_mini_debug/settings.json");
 }
@@ -33,11 +33,23 @@ if (!file_exists($w->data() . "/settings.json")) {
 copy_directory($w->cache(), $w->home() . "/Downloads/spot_mini_debug/cache");
 
 if (!file_exists($w->data() . "/library.db")) {
-    $output = $output . "The file" . $w->data() . "/library.db is not present\n";
+    $output = $output . "The file " . $w->data() . "/library.db is not present\n";
 } else {
     copy($w->data() . "/library.db", $w->home() . "/Downloads/spot_mini_debug/library.db");
 }
 
+if (!file_exists($w->data() . "/history.json")) {
+    $output = $output . "The file " . $w->data() . "/history.json is not present\n";
+} else {
+    copy($w->data() . "/history.json", $w->home() . "/Downloads/spot_mini_debug/history.json");
+}
+
+$val = exec('pwd');
+if (!file_exists($val . "/packal/package.xml")) {
+    $output = $output . "The file " . $val . "/packal/package.xml is not present\n";
+} else {
+    copy($val . "/packal/package.xml", $w->home() . "/Downloads/spot_mini_debug/package.xml");
+}
 
 $output = $output . exec("uname -a");
 $output = $output . "\n";
