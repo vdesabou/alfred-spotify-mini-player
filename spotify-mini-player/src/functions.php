@@ -1802,6 +1802,12 @@ function downloadArtworks($w)
     $in_progress_data = $w->read('download_artworks_in_progress');
     $words            = explode('▹', $in_progress_data);
     
+    //
+    // Read settings from JSON
+    //
+    $settings            = getSettings($w);
+	$userid              = $settings->userid;
+	   
     putenv('LANG=fr_FR.UTF-8');
     
     ini_set('memory_limit', '512M');
@@ -1949,7 +1955,9 @@ function downloadArtworks($w)
     if ($nb_artworks_total != 0) {
         $elapsed_time = time() - $words[3];
         displayNotificationWithArtwork("All artworks have been downloaded (" . $nb_artworks_total . " artworks) - took " . beautifyTime($elapsed_time, true), './images/artworks.png', 'Artworks');
-        stathat_ez_count('AlfredSpotifyMiniPlayer', 'artworks', $nb_artworks_total);
+		if($userid != 'vdesabou') {
+			stathat_ez_count('AlfredSpotifyMiniPlayer', 'artworks', $nb_artworks_total);  
+		}
     }
     
     return true;

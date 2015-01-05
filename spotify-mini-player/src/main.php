@@ -16,8 +16,6 @@ $query = escapeQuery($argv[1]);
 // thanks to http://www.alfredforum.com/topic/1788-prevent-flash-of-no-result
 $query = iconv('UTF-8-MAC', 'UTF-8', $query);
 
-stathat_ez_count('AlfredSpotifyMiniPlayer', 'workflow used', 1);
-
 //
 // check for library update in progress
 $update_in_progress = false;
