@@ -38,9 +38,6 @@ $is_alfred_playlist_active = $arg[19];
 $country_code              = $arg[20];
 $userid                    = $arg[21];
 
-// consider workflow used when action is invoked
-stathat_ez_count('AlfredSpotifyMiniPlayer', 'workflow used', 1);
-
 if ($add_to_option != "") {
     if (file_exists($w->data() . '/update_library_in_progress')) {
         displayNotificationWithArtwork("Cannot modify library while update is in progress", './images/warning.png', 'Error!');

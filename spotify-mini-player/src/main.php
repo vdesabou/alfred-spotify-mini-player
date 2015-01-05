@@ -16,17 +16,19 @@ $query = escapeQuery($argv[1]);
 // thanks to http://www.alfredforum.com/topic/1788-prevent-flash-of-no-result
 $query = iconv('UTF-8-MAC', 'UTF-8', $query);
 
+stathat_ez_count('AlfredSpotifyMiniPlayer', 'workflow used', 1);
+
 //
 // check for library update in progress
 $update_in_progress = false;
 if (file_exists($w->data() . '/update_library_in_progress')) {
     $in_progress_data                 = $w->read('update_library_in_progress');
     $update_library_in_progress_words = explode('▹', $in_progress_data);
-    
+
     $elapsed_time       = time() - $update_library_in_progress_words[3];
     $update_in_progress = true;
     if (!file_exists($w->data() . '/library_old.db')) {
-        
+
         if (startsWith($update_library_in_progress_words[0], 'Init')) {
             if ($elapsed_time < 300) {
                 $w->result(null, $w->data() . '/update_library_in_progress', 'Initialization phase since ' . beautifyTime($elapsed_time, true) . ' : ' . floatToSquares(0), 'Waiting for Spotify servers to return required data', './images/update_in_progress.png', 'no', null, '');
@@ -66,14 +68,14 @@ if (file_exists($w->data() . '/update_library_in_progress')) {
             } else {
                 $type = 'tracks';
             }
-            
+
             if ($update_library_in_progress_words[2] != 0) {
                 $w->result(null, $w->data() . '/update_library_in_progress', $update_library_in_progress_words[0] . ' in progress since ' . beautifyTime($elapsed_time, true) . ' : ' . floatToSquares(intval($update_library_in_progress_words[1]) / intval($update_library_in_progress_words[2])), $update_library_in_progress_words[1] . '/' . $update_library_in_progress_words[2] . ' ' . $type . ' processed so far. Currently processing <' . $update_library_in_progress_words[4] . '>', './images/update_in_progress.png', 'no', null, '');
             } else {
                 $w->result(null, $w->data() . '/update_library_in_progress', $update_library_in_progress_words[0] . ' in progress since ' . beautifyTime($elapsed_time, true) . ' : ' . floatToSquares(0), 'No ' . $type . ' processed so far', './images/update_in_progress.png', 'no', null, '');
             }
         }
-        
+
         echo $w->toxml();
         return;
     }
@@ -187,7 +189,7 @@ $check_results = checkForUpdate($w, $last_check_update_time);
 if ($check_results != null && is_array($check_results)) {
     $w->result(null, '', 'New version ' . $check_results[0] . ' is available', $check_results[2], './images/info.png', 'no', null, '');
     $w->result(null, $check_results[1], 'Please install the new version in Downloads directory', $check_results[1], 'fileicon:' . $check_results[1], 'no', '', '', 'file');
-    
+
     echo $w->toxml();
     return;
 }
@@ -215,7 +217,7 @@ if (substr_count($query, '✧') == 1) {
 if (mb_strlen($query) < 3) {
     // empty history
     $w->write(array(), 'history.json');
-    
+
     ////////////
     //
     // MAIN MENU
@@ -248,7 +250,7 @@ if (mb_strlen($query) < 3) {
         ''
         /* userid*/
     )), 'Go Back', "Return to previous step", './images/back.png', 'yes', null, '');
-    
+
     ////////////
     //
     // NO DELIMITER
@@ -267,7 +269,7 @@ if (mb_strlen($query) < 3) {
         }
         array_push($history, substr($query, 0, strrpos($query, '▹')) . '▹');
         $w->write(array_unique($history), 'history.json');
-        
+
         ////////////
         //
         // FIRST DELIMITER
@@ -310,7 +312,7 @@ if (mb_strlen($query) < 3) {
         //
         ////////////
         elseif (substr_count($query, '▹') == 2) {
-            
+
             $words = explode('▹', $query);
             $kind  = $words[0];
             if ($kind == "Artist") {
@@ -351,13 +353,13 @@ if (mb_strlen($query) < 3) {
                 secondDelimiterFollowOrUnfollow($w, $query, $settings, $db, $update_in_progress);
             }
         }
-        ///////////        
+        ///////////
         //
-        // THIRD DELIMITER  
+        // THIRD DELIMITER
         //
         ////////////
             elseif (substr_count($query, '▹') == 3) {
-            
+
             $words = explode('▹', $query);
             $kind  = $words[0];
             if ($kind == "Add") {
