@@ -615,6 +615,41 @@ function searchCategoriesFastAccess($w, $query, $settings, $db, $update_in_progr
         $w->result(null, '', 'Albums', 'Browse by album', './images/albums.png', 'no', null, 'Album▹');
     } elseif (strpos(strtolower('charts'), strtolower($query)) !== false) {
         $w->result(null, '', 'Charts', 'Browse charts', './images/numbers.png', 'no', null, 'Charts▹');
+    } elseif (strpos(strtolower('lookup current artist online'), strtolower($query)) !== false) {
+	    $w->result(null, serialize(array(
+	        '' /*track_uri*/ ,
+	        '' /* album_uri */ ,
+	        '' /* artist_uri */ ,
+	        '' /* playlist_uri */ ,
+	        '' /* spotify_command */ ,
+	        '' /* query */ ,
+	        '' /* other_settings*/ ,
+	        'lookup_current_artist' /* other_action */ ,
+	        $alfred_playlist_uri /* alfred_playlist_uri */ ,
+	        '' /* artist_name */ ,
+	        '' /* track_name */ ,
+	        '' /* album_name */ ,
+	        '' /* track_artwork_path */ ,
+	        '' /* artist_artwork_path */ ,
+	        '' /* album_artwork_path */ ,
+	        '' /* playlist_name */ ,
+	        '' /* playlist_artwork_path */ ,
+	        $alfred_playlist_name /* $alfred_playlist_name */ ,
+	        $now_playing_notifications /* now_playing_notifications */ ,
+	        $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
+	        $country_code /* country_code*/ ,
+	        $userid
+	        /* userid*/
+	    )), 'Lookup Current Artist online', array(
+	        '☁︎ Query all albums/tracks from current artist online..',
+	        'alt' => 'Not Available',
+	        'cmd' => 'Not Available',
+	        'shift' => 'Not Available',
+	        'fn' => 'Not Available',
+	        'ctrl' => 'Not Available'
+	    ), './images/online_artist.png', 'yes', '');
+    }  elseif (strpos(strtolower('search online'), strtolower($query)) !== false) 	{
+        $w->result(null, '', 'Search online', '☁︎ You can search tracks, artists, albums and playlists online, i.e not in your library', './images/online.png', 'no', null, 'Search Online▹');
     } elseif (strpos(strtolower('new releases'), strtolower($query)) !== false) {
         $w->result(null, '', 'New Releases', 'Browse new album releases', './images/new_releases.png', 'no', null, 'New Releases▹');
     } elseif (strpos(strtolower('artists'), strtolower($query)) !== false) {
@@ -623,9 +658,9 @@ function searchCategoriesFastAccess($w, $query, $settings, $db, $update_in_progr
         $w->result(null, '', 'Alfred Playlist (currently set to <' . $alfred_playlist_name . '>)', 'Choose one of your playlists and add tracks, album, playlist to it directly from the workflow', './images/alfred_playlist.png', 'no', null, 'Alfred Playlist▹');
     } elseif (strpos(strtolower('settings'), strtolower($query)) !== false) {
         $w->result(null, '', 'Settings', 'Go to settings', './images/settings.png', 'no', null, 'Settings▹');
-    } elseif (strpos(strtolower('featured'), strtolower($query)) !== false) {
+    } elseif (strpos(strtolower('featured playlist'), strtolower($query)) !== false) {
         $w->result(null, '', 'Featured Playlist', 'Browse the current featured playlists', './images/star.png', 'no', null, 'Featured Playlist▹');
-    } elseif (strpos(strtolower('yourmusic'), strtolower($query)) !== false) {
+    } elseif (strpos(strtolower('your music'), strtolower($query)) !== false) {
         $w->result(null, '', 'Your Music', 'Browse Your Music', './images/tracks.png', 'no', null, 'Your Music▹');
     } elseif (strpos(strtolower('current track'), strtolower($query)) !== false) {
         $w->result(null, '', 'Current Track', 'Display current track information and browse various options', './images/tracks.png', 'no', null, 'Current Track▹');
