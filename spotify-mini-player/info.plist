@@ -3882,7 +3882,15 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 		</dict>
 	</array>
 	<key>readme</key>
-	<string>Github page:
+	<string>Web Site:
+
+http://alfred-spotify-mini-player.com/known-issues
+
+Twitter Account:
+
+@TheMiniPlayer
+
+Github page:
 
 https://github.com/vdesabou/alfred-spotify-mini-player
 
