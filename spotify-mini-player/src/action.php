@@ -62,7 +62,7 @@ if ($type == "TRACK" && $other_settings == "") {
                 // local track, look it up online
                 $query   = 'track:' . strtolower($track_name) . ' artist:' . strtolower($artist_name);
                 $results = searchWebApi($w, $country_code, $query, 'track', 1);
-                
+
                 if (count($results) > 0) {
                     // only one track returned
                     $track   = $results[0];
@@ -71,7 +71,7 @@ if ($type == "TRACK" && $other_settings == "") {
                     logMsg("Unknown track $track_uri / $track_name / $artist_name replaced by track: $track->uri / $track->name / $artist->name");
                     $track_uri = $track->uri;
                     $tmp       = explode(':', $track_uri);
-                    
+
                 } else {
                     logMsg("Could not find track: $track_uri / $track_name / $artist_name");
                     displayNotificationWithArtwork('Local track ' . $track_name . ' has not online match', './images/warning.png', 'Error!');
@@ -93,7 +93,7 @@ if ($type == "TRACK" && $other_settings == "") {
                 exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
             }
             exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\" in context \"$playlist_uri\"'");
-            
+
             if ($now_playing_notifications == false) {
                 displayNotificationWithArtwork('🔈 ' . $track_name . ' by ' . ucfirst($artist_name), $track_artwork_path);
             }
@@ -184,7 +184,7 @@ if ($type == "TRACK" && $other_settings == "") {
     }
     return;
 } else if ($type == "ARTIST") {
-    
+
     if ($artist_uri == "") {
         // case of current song with cmd
         $artist_uri = getArtistUriFromTrack($w, $track_uri);
@@ -194,7 +194,7 @@ if ($type == "TRACK" && $other_settings == "") {
         }
         $artist_artwork_path = getArtistArtwork($w, $artist_name, true);
     }
-    
+
     // start now playing if needed
     if ($now_playing_notifications == "") {
         //
@@ -278,35 +278,32 @@ if ($playlist_uri != "" && $other_settings == "") {
             displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
         }
         return;
-        
+
     } else if ($setting[0] == "ADD_TO_PLAYLIST") {
-        
+
         if (file_exists($w->data() . '/update_library_in_progress')) {
             displayNotificationWithArtwork("Cannot modify library while update is in progress", './images/warning.png', 'Error!');
             return;
         }
         // if playlist_uri is notset, then create it
         if ($setting[1] == 'notset') {
-            
             $new_playlist_uri = createTheUserPlaylist($w, $setting[2]);
-            
             if ($new_playlist_uri != false) {
                 $setting[1] = $new_playlist_uri;
             } else {
                 return;
             }
         }
-        
+
         // add track to playlist
         if ($track_uri != '') {
             $track_artwork_path = getTrackOrAlbumArtwork($w, $track_uri, true);
             $tmp                = explode(':', $track_uri);
             if ($tmp[1] == 'local') {
                 // local track, look it up online
-                
                 $query   = 'track:' . strtolower($track_name) . ' artist:' . strtolower($artist_name);
                 $results = searchWebApi($w, $country_code, $query, 'track', 1);
-                
+
                 if (count($results) > 0) {
                     // only one track returned
                     $track   = $results[0];
@@ -315,7 +312,7 @@ if ($playlist_uri != "" && $other_settings == "") {
                     logMsg("Unknown track $track_uri / $track_name / $artist_name replaced by track: $track->uri / $track->name / $artist->name");
                     $track_uri = $track->uri;
                     $tmp       = explode(':', $track_uri);
-                    
+
                 } else {
                     logMsg("Could not find track: $track_uri / $track_name / $artist_name");
                     displayNotificationWithArtwork('Local track ' . $track_name . ' has not online match', './images/warning.png', 'Error!');
@@ -323,7 +320,7 @@ if ($playlist_uri != "" && $other_settings == "") {
                 }
             }
             $ret = addTracksToPlaylist($w, $tmp[2], $setting[1], $setting[2], false);
-            stathat_ez_count('AlfredSpotifyMiniPlayer', 'add', 1);
+            stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);
             if (is_numeric($ret) && $ret > 0) {
                 displayNotificationWithArtwork('' . $track_name . ' added to ' . $setting[2] . ' playlist', $track_artwork_path, 'Add Track to Playlist');
                 return;
@@ -335,7 +332,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         elseif ($playlist_uri != '') {
             $playlist_artwork_path = getPlaylistArtwork($w, $playlist_uri, true, true);
             $ret                   = addTracksToPlaylist($w, getThePlaylistTracks($w, $playlist_uri), $setting[1], $setting[2], false);
-            stathat_ez_count('AlfredSpotifyMiniPlayer', 'add', 1);
+            stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);
             if (is_numeric($ret) && $ret > 0) {
                 displayNotificationWithArtwork('Playlist ' . $playlist_name . ' added to ' . $setting[2] . ' playlist', $playlist_artwork_path, 'Add Playlist to Playlist');
                 return;
@@ -347,7 +344,7 @@ if ($playlist_uri != "" && $other_settings == "") {
             elseif ($album_uri != '') {
             $album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, true);
             $ret                = addTracksToPlaylist($w, getTheAlbumTracks($w, $album_uri), $setting[1], $setting[2], false);
-            stathat_ez_count('AlfredSpotifyMiniPlayer', 'add', 1);
+            stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);
             if (is_numeric($ret) && $ret > 0) {
                 displayNotificationWithArtwork('Album ' . $album_name . ' added to ' . $setting[2] . ' playlist', $album_artwork_path, 'Add Album to Playlist');
                 return;
@@ -357,7 +354,7 @@ if ($playlist_uri != "" && $other_settings == "") {
             }
         }
     } else if ($setting[0] == "REMOVE_FROM_PLAYLIST") {
-        
+
         if (file_exists($w->data() . '/update_library_in_progress')) {
             displayNotificationWithArtwork("Cannot modify library while update is in progress", './images/warning.png', 'Error!');
             return;
@@ -367,7 +364,7 @@ if ($playlist_uri != "" && $other_settings == "") {
             $track_artwork_path = getTrackOrAlbumArtwork($w, $track_uri, true);
             $tmp                = explode(':', $track_uri);
             $ret                = removeTrackFromPlaylist($w, $tmp[2], $setting[1], $setting[2]);
-            stathat_ez_count('AlfredSpotifyMiniPlayer', 'remove', 1);
+            stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);
             if ($ret == true) {
                 displayNotificationWithArtwork('' . $track_name . ' removed from ' . $setting[2] . ' playlist', $track_artwork_path, 'Remove Track from Playlist');
                 return;
@@ -384,10 +381,10 @@ if ($playlist_uri != "" && $other_settings == "") {
             $tmp                = explode(':', $track_uri);
             if ($tmp[1] == 'local') {
                 // local track, look it up online
-                
+
                 $query   = 'track:' . strtolower($track_name) . ' artist:' . strtolower($artist_name);
                 $results = searchWebApi($w, $country_code, $query, 'track', 1);
-                
+
                 if (count($results) > 0) {
                     // only one track returned
                     $track   = $results[0];
@@ -396,7 +393,7 @@ if ($playlist_uri != "" && $other_settings == "") {
                     logMsg("Unknown track $track_uri / $track_name / $artist_name replaced by track: $track->uri / $track->name / $artist->name");
                     $track_uri = $track->uri;
                     $tmp       = explode(':', $track_uri);
-                    
+
                 } else {
                     logMsg("Could not find track: $track_uri / $track_name / $artist_name");
                     displayNotificationWithArtwork('Local track ' . $track_name . ' has not online match', './images/warning.png', 'Error!');
@@ -404,7 +401,7 @@ if ($playlist_uri != "" && $other_settings == "") {
                 }
             }
             $ret = addTracksToYourMusic($w, $tmp[2], false);
-            stathat_ez_count('AlfredSpotifyMiniPlayer', 'add', 1);
+            stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);
             if (is_numeric($ret) && $ret > 0) {
                 displayNotificationWithArtwork('' . $track_name . ' added to Your Music', $track_artwork_path, 'Add Track to Your Music');
                 return;
@@ -416,7 +413,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         elseif ($playlist_uri != '') {
             $playlist_artwork_path = getPlaylistArtwork($w, $playlist_uri, true, true);
             $ret                   = addTracksToYourMusic($w, getThePlaylistTracks($w, $playlist_uri), false);
-            stathat_ez_count('AlfredSpotifyMiniPlayer', 'add', 1);
+            stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);
             if (is_numeric($ret) && $ret > 0) {
                 displayNotificationWithArtwork('Playlist ' . $playlist_name . ' added to Your Music', $playlist_artwork_path, 'Add Playlist to Your Music');
                 return;
@@ -428,7 +425,7 @@ if ($playlist_uri != "" && $other_settings == "") {
             elseif ($album_uri != '') {
             $album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, true);
             $ret                = addTracksToYourMusic($w, getTheAlbumTracks($w, $album_uri), false);
-            stathat_ez_count('AlfredSpotifyMiniPlayer', 'add', 1);
+            stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);
             if (is_numeric($ret) && $ret > 0) {
                 displayNotificationWithArtwork('Album ' . $album_name . ' added to Your Music', $album_artwork_path, 'Add Album to Your Music');
                 return;
@@ -438,7 +435,7 @@ if ($playlist_uri != "" && $other_settings == "") {
             }
         }
     } else if ($setting[0] == "REMOVE_FROM_YOUR_MUSIC") {
-        
+
         if (file_exists($w->data() . '/update_library_in_progress')) {
             displayNotificationWithArtwork("Cannot modify library while update is in progress", './images/warning.png', 'Error!');
             return;
@@ -448,7 +445,7 @@ if ($playlist_uri != "" && $other_settings == "") {
             $track_artwork_path = getTrackOrAlbumArtwork($w, $track_uri, true);
             $tmp                = explode(':', $track_uri);
             $ret                = removeTrackFromYourMusic($w, $tmp[2]);
-            stathat_ez_count('AlfredSpotifyMiniPlayer', 'remove', 1);
+            stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);
             if ($ret == true) {
                 displayNotificationWithArtwork('' . $track_name . ' removed from Your Music', $track_artwork_path, 'Remove Track from Your Music');
                 return;
@@ -465,7 +462,7 @@ if ($playlist_uri != "" && $other_settings == "") {
             displayNotificationWithArtwork("Alfred Playlist is not set", './images/warning.png', 'Error!');
             return;
         }
-        
+
         if (clearPlaylist($w, $setting[1], $setting[2])) {
             displayNotificationWithArtwork('Alfred Playlist ' . $setting[2] . ' was cleared', getPlaylistArtwork($w, $setting[1], true), 'Clear Alfred Playlist');
         }
@@ -497,7 +494,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         }
         return;
     } else if ($other_action == "disable_now_playing_notifications") {
-        
+
         $ret = updateSetting($w, 'now_playing_notifications', false);
         if ($ret == true) {
             displayNotificationWithArtwork("Now Playing notifications are now disabled", './images/disable_now_playing.png', 'Settings');
@@ -545,7 +542,7 @@ if ($playlist_uri != "" && $other_settings == "") {
             //
             // Read settings from JSON
             //
-            
+
             $settings                  = getSettings($w);
             $now_playing_notifications = $settings->now_playing_notifications;
         }
@@ -643,7 +640,7 @@ if ($playlist_uri != "" && $other_settings == "") {
             return;
         }
         addCurrentTrackToAlfredPlaylistOrYourMusic($w);
-        stathat_ez_count('AlfredSpotifyMiniPlayer', 'add', 1);
+        stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);
         return;
     } else if ($other_action == "random") {
         $track_uri = getRandomTrack($w);
@@ -656,7 +653,7 @@ if ($playlist_uri != "" && $other_settings == "") {
             //
             // Read settings from JSON
             //
-            
+
             $settings                  = getSettings($w);
             $now_playing_notifications = $settings->now_playing_notifications;
         }
@@ -686,7 +683,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         return;
     } else if ($other_action == "go_back") {
         $history = $w->read('history.json');
-        
+
         if ($history == false) {
             displayNotificationWithArtwork("No history yet", './images/warning.png', 'Error!');
         }
@@ -697,7 +694,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini $query\"'");
         return;
     } else if ($other_action == "lookup_artist") {
-        
+
         if (!$w->internet()) {
             displayNotificationWithArtwork("No internet connection", './images/warning.png', 'Error!');
             return;
@@ -714,7 +711,7 @@ if ($playlist_uri != "" && $other_settings == "") {
             //
             // Read settings from JSON
             //
-            
+
             $settings                  = getSettings($w);
             $now_playing_notifications = $settings->now_playing_notifications;
         }
@@ -738,7 +735,7 @@ if ($playlist_uri != "" && $other_settings == "") {
             //
             // Read settings from JSON
             //
-            
+
             $settings                  = getSettings($w);
             $now_playing_notifications = $settings->now_playing_notifications;
         }
@@ -782,7 +779,7 @@ if ($playlist_uri != "" && $other_settings == "") {
 			return \"Shuffle is not currently enabled.\"
 		end if
 		end tell'");
-        
+
         displayNotificationWithArtwork($command_output, './images/shuffle.png', 'Shuffle');
         return;
     } else if ($other_action == "radio_artist") {
