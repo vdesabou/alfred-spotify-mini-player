@@ -1,8 +1,6 @@
 <?php
 
-// Turn off all error reporting
-error_reporting(0);
-
+require './src/functions.php';
 // Load and use David Ferguson's Workflows.php class
 require_once './src/workflows.php';
 $w = new Workflows('com.vdesabou.spotify.mini.player');
@@ -179,28 +177,5 @@ $w->result(null, serialize(array(
 
 
 echo $w->toxml();
-function copy_directory($source, $destination)
-{
-    if (is_dir($source)) {
-        @mkdir($destination);
-        $directory = dir($source);
-        while (FALSE !== ($readdirectory = $directory->read())) {
-            if ($readdirectory == '.' || $readdirectory == '..') {
-                continue;
-            }
-            $PathDir = $source . '/' . $readdirectory;
-            if (is_dir($PathDir)) {
-                copy_directory($PathDir, $destination . '/' . $readdirectory);
-                continue;
-            }
-            copy($PathDir, $destination . '/' . $readdirectory);
-        }
-
-        $directory->close();
-    } else {
-        copy($source, $destination);
-    }
-}
-
 
 ?>

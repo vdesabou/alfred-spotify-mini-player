@@ -4591,6 +4591,37 @@ function logMsg($msg)
     file_put_contents('php://stderr', "$date" . "|{$msg}" . PHP_EOL);
 }
 
+/**
+ * copy_directory function.
+ * 
+ * @access public
+ * @param mixed $source
+ * @param mixed $destination
+ * @return void
+ */
+function copy_directory($source, $destination)
+{
+    if (is_dir($source)) {
+        @mkdir($destination);
+        $directory = dir($source);
+        while (FALSE !== ($readdirectory = $directory->read())) {
+            if ($readdirectory == '.' || $readdirectory == '..') {
+                continue;
+            }
+            $PathDir = $source . '/' . $readdirectory;
+            if (is_dir($PathDir)) {
+                copy_directory($PathDir, $destination . '/' . $readdirectory);
+                continue;
+            }
+            copy($PathDir, $destination . '/' . $readdirectory);
+        }
+
+        $directory->close();
+    } else {
+        copy($source, $destination);
+    }
+}
+
 ///////////////
 //
 // StatHat integration
