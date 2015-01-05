@@ -1104,11 +1104,11 @@
 	<key>createdby</key>
 	<string>vdesabou</string>
 	<key>description</key>
-	<string>iTunes mini player for Spotify</string>
+	<string>Control your Spotify library at your fingertips</string>
 	<key>disabled</key>
 	<false/>
 	<key>name</key>
-	<string>Spotify Mini Player 6</string>
+	<string>Spotify Mini Player</string>
 	<key>objects</key>
 	<array>
 		<dict>
@@ -3572,7 +3572,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>escaping</key>
 				<integer>127</integer>
 				<key>script</key>
-				<string>tell application "System Events"	key code 53 -- escapeend tell</string>
+				<string>tell application "System Events"	key code 74 -- escapeend tell</string>
 				<key>type</key>
 				<integer>6</integer>
 			</dict>
