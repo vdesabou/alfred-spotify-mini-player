@@ -8,7 +8,7 @@ $w = new Workflows('com.vdesabou.spotify.mini.player');
 $query = $argv[1];
 
 if (mb_strlen($query) > 1) {
-    $w->result(null, '', 'Exception occurred: ' . $query, 'Open issue with spot_mini_issue and send spot_mini_debug.tgz to the author (alfred.spotify.mini.player@gmail.com)', './images/warning.png', 'no', null, '');
+    $w->result(null, '', 'Exception occurred: ' . $query, 'Use the Send an email to the author option below to send generated spot_mini_debug.tgz', './images/warning.png', 'no', null, '');
 }
 
 exec("mkdir -p ~/Downloads/spot_mini_debug");
@@ -42,11 +42,10 @@ if (!file_exists($w->data() . "/history.json")) {
     copy($w->data() . "/history.json", $w->home() . "/Downloads/spot_mini_debug/history.json");
 }
 
-$val = exec('pwd');
-if (!file_exists($val . "/packal/package.xml")) {
-    $output = $output . "The file " . $val . "/packal/package.xml is not present\n";
+if (!file_exists(exec('pwd') . "/packal/package.xml")) {
+    $output = $output . "The file " . exec('pwd') . "/packal/package.xml is not present\n";
 } else {
-    copy($val . "/packal/package.xml", $w->home() . "/Downloads/spot_mini_debug/package.xml");
+    copy(exec('pwd') . "/packal/package.xml", $w->home() . "/Downloads/spot_mini_debug/package.xml");
 }
 
 $output = $output . exec("uname -a");
@@ -61,8 +60,6 @@ file_put_contents($w->home() . "/Downloads/spot_mini_debug/debug.log", $output);
 
 exec("cd ~/Downloads;tar cfz spot_mini_debug.tgz spot_mini_debug");
 
-$val = $w->home() . '/Downloads/spot_mini_debug.tgz';
-
 $w->result(null, serialize(array(
     '' /*track_uri*/ ,
     '' /* album_uri */ ,
@@ -70,7 +67,7 @@ $w->result(null, serialize(array(
     '' /* playlist_uri */ ,
     '' /* spotify_command */ ,
     '' /* query */ ,
-    'Reveal▹' . $val /* other_settings*/ ,
+    'Reveal▹' . $w->home() . '/Downloads/spot_mini_debug.tgz' /* other_settings*/ ,
     '' /* other_action */ ,
     '' /* alfred_playlist_uri */ ,
     '' /* artist_name */ ,
@@ -86,14 +83,35 @@ $w->result(null, serialize(array(
     '' /* is_alfred_playlist_active */ ,
     '' /* country_code*/ ,
     ''/* userid*/
-)), 'Browse to generated tgz file', "This will reveal the tgz file in Finder", 'fileicon:' . $val, 'yes', null, '');
+)), 'Browse to generated tgz file', "This will reveal the tgz file in Finder", 'fileicon:' . $w->home() . '/Downloads/spot_mini_debug.tgz', 'yes', null, '');
 
+$w->result(null, serialize(array(
+    '' /*track_uri*/ ,
+    '' /* album_uri */ ,
+    '' /* artist_uri */ ,
+    '' /* playlist_uri */ ,
+    '' /* spotify_command */ ,
+    '' /* query */ ,
+    'Open▹' . 'mailto:alfred.spotify.mini.player@gmail.com' /* other_settings*/ ,
+    '' /* other_action */ ,
+    '' /* alfred_playlist_uri */ ,
+    '' /* artist_name */ ,
+    '' /* track_name */ ,
+    '' /* album_name */ ,
+    '' /* track_artwork_path */ ,
+    '' /* artist_artwork_path */ ,
+    '' /* album_artwork_path */ ,
+    '' /* playlist_name */ ,
+    '' /* playlist_artwork_path */ ,
+    '' /* $alfred_playlist_name */ ,
+    '' /* now_playing_notifications */ ,
+    '' /* is_alfred_playlist_active */ ,
+    '' /* country_code*/ ,
+    ''/* userid*/
+)), 'Send an email to the author', "This will open your default mail application, please attach the generated spot_mini_debug.tgz file.", './images/mail.png', 'yes', null, '');
 
 $w->result(null, '', 'Quick access to workflow folders:', '', './images/info.png', 'no', null, '');
 
-$val = $w->data();
-
-
 $w->result(null, serialize(array(
     '' /*track_uri*/ ,
     '' /* album_uri */ ,
@@ -101,7 +119,7 @@ $w->result(null, serialize(array(
     '' /* playlist_uri */ ,
     '' /* spotify_command */ ,
     '' /* query */ ,
-    'Open▹' . $val /* other_settings*/ ,
+    'Open▹' . $w->data() /* other_settings*/ ,
     '' /* other_action */ ,
     '' /* alfred_playlist_uri */ ,
     '' /* artist_name */ ,
@@ -117,10 +135,7 @@ $w->result(null, serialize(array(
     '' /* is_alfred_playlist_active */ ,
     '' /* country_code*/ ,
     ''/* userid*/
-)), 'Browse to App Support Folder', "This will open the folder in Finder", 'fileicon:' . $val, 'yes', null, '');
-
-
-$val = $w->cache();
+)), 'Browse to App Support Folder', "This will open the folder in Finder", 'fileicon:' . $w->data(), 'yes', null, '');
 
 $w->result(null, serialize(array(
     '' /*track_uri*/ ,
@@ -129,7 +144,7 @@ $w->result(null, serialize(array(
     '' /* playlist_uri */ ,
     '' /* spotify_command */ ,
     '' /* query */ ,
-    'Open▹' . $val /* other_settings*/ ,
+    'Open▹' . $w->cache() /* other_settings*/ ,
     '' /* other_action */ ,
     '' /* alfred_playlist_uri */ ,
     '' /* artist_name */ ,
@@ -145,10 +160,7 @@ $w->result(null, serialize(array(
     '' /* is_alfred_playlist_active */ ,
     '' /* country_code*/ ,
     ''/* userid*/
-)), 'Browse to Workflow Cache Folder', "This will open the folder in Finder", 'fileicon:' . $val, 'yes', null, '');
-
-
-$val = exec('pwd');
+)), 'Browse to Workflow Cache Folder', "This will open the folder in Finder", 'fileicon:' . $w->cache(), 'yes', null, '');
 
 $w->result(null, serialize(array(
     '' /*track_uri*/ ,
@@ -157,7 +169,7 @@ $w->result(null, serialize(array(
     '' /* playlist_uri */ ,
     '' /* spotify_command */ ,
     '' /* query */ ,
-    'Open▹' . $val /* other_settings*/ ,
+    'Open▹' . exec('pwd') /* other_settings*/ ,
     '' /* other_action */ ,
     '' /* alfred_playlist_uri */ ,
     '' /* artist_name */ ,
@@ -173,7 +185,7 @@ $w->result(null, serialize(array(
     '' /* is_alfred_playlist_active */ ,
     '' /* country_code*/ ,
     ''/* userid*/
-)), 'Browse to Alfred workflow folder', "This will open the folder in Finder", 'fileicon:' . $val, 'yes', null, '');
+)), 'Browse to Alfred workflow folder', "This will open the folder in Finder", 'fileicon:' . exec('pwd'), 'yes', null, '');
 
 
 echo $w->toxml();
