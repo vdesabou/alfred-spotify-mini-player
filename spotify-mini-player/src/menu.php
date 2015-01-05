@@ -15,7 +15,7 @@ function oAuthChecks($w, $query, $settings, $db, $update_in_progress)
 {
     $words = explode('▹', $query);
     $kind  = $words[0];
-    
+
     $all_playlists             = $settings->all_playlists;
     $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
     $radio_number_tracks       = $settings->radio_number_tracks;
@@ -34,7 +34,7 @@ function oAuthChecks($w, $query, $settings, $db, $update_in_progress)
     $display_name              = $settings->display_name;
     $userid                    = $settings->userid;
     $echonest_api_key          = $settings->echonest_api_key;
-    
+
     ////
     // OAUTH checks
     // Check oauth config : Client ID and Client Secret
@@ -98,7 +98,7 @@ function oAuthChecks($w, $query, $settings, $db, $update_in_progress)
         echo $w->toxml();
         return;
     }
-    
+
     if ($oauth_client_secret == '' && substr_count($query, '▹') == 0) {
         if (mb_strlen($query) == 0) {
             $w->result(null, '', 'Your Application Client Secret is missing!', 'Get it from your Spotify Application and enter it here', './images/settings.png', 'no', null, '');
@@ -161,7 +161,7 @@ function oAuthChecks($w, $query, $settings, $db, $update_in_progress)
         echo $w->toxml();
         return;
     }
-    
+
     if ($oauth_access_token == '' && substr_count($query, '▹') == 0) {
         $w->result(null, serialize(array(
             '' /*track_uri*/ ,
@@ -215,7 +215,7 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress)
 {
     $words = explode('▹', $query);
     $kind  = $words[0];
-    
+
     $all_playlists             = $settings->all_playlists;
     $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
     $radio_number_tracks       = $settings->radio_number_tracks;
@@ -234,7 +234,7 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress)
     $display_name              = $settings->display_name;
     $userid                    = $settings->userid;
     $echonest_api_key          = $settings->echonest_api_key;
-    
+
     ////////
     //
     // MAIN MENU
@@ -242,16 +242,16 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress)
     $getCounters = 'select * from counters';
     try {
         $stmt = $db->prepare($getCounters);
-        
+
         $counters = $stmt->execute();
         $counter  = $stmt->fetch();
-        
+
     }
     catch (PDOException $e) {
         handleDbIssuePdoXml($db);
         return;
     }
-    
+
     $all_tracks        = $counter[0];
     $yourmusic_tracks  = $counter[1];
     $all_artists       = $counter[2];
@@ -259,7 +259,7 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress)
     $all_albums        = $counter[4];
     $yourmusic_albums  = $counter[5];
     $nb_playlists      = $counter[6];
-    
+
     if ($update_in_progress == true) {
         if (startsWith($update_library_in_progress_words[0], 'Init')) {
             $w->result(null, $w->data() . '/update_library_in_progress', 'Initialization phase since ' . beautifyTime($elapsed_time, true) . ' : ' . floatToSquares(0), 'Waiting for Spotify servers to return required data', './images/update_in_progress.png', 'no', null, '');
@@ -271,7 +271,7 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress)
             } else {
                 $type = 'tracks';
             }
-            
+
             if ($update_library_in_progress_words[2] != 0) {
                 $w->result(null, $w->data() . '/update_library_in_progress', $update_library_in_progress_words[0] . ' update in progress since ' . beautifyTime($elapsed_time, true) . ' : ' . floatToSquares(intval($update_library_in_progress_words[1]) / intval($update_library_in_progress_words[2])), $update_library_in_progress_words[1] . '/' . $update_library_in_progress_words[2] . ' ' . $type . ' processed so far. Currently processing <' . $update_library_in_progress_words[4] . '>', './images/update_in_progress.png', 'no', null, '');
             } else {
@@ -284,9 +284,9 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress)
     } else {
         $w->result(null, '', 'Search for music in "Your Music" only', 'Begin typing at least 3 characters to start search in your ' . $yourmusic_tracks . ' tracks', './images/search_scope_yourmusic_only.png', 'no', null, '');
     }
-    
+
     $w->result(null, '', 'Current Track', 'Display current track information and browse various options', './images/current_track.png', 'no', null, 'Current Track▹');
-    
+
     $w->result(null, serialize(array(
         '' /*track_uri*/ ,
         '' /* album_uri */ ,
@@ -319,9 +319,9 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress)
         'fn' => 'Not Available',
         'ctrl' => 'Not Available'
     ), './images/online_artist.png', 'yes', '');
-    
+
     $w->result(null, '', 'Search online', '☁︎ You can search tracks, artists, albums and playlists online, i.e not in your library', './images/online.png', 'no', null, 'Search Online▹');
-    
+
     if ($is_alfred_playlist_active == true) {
         if ($alfred_playlist_name != "") {
             $title = 'Alfred Playlist ● ' . $alfred_playlist_name;
@@ -330,7 +330,7 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress)
             $title = 'Alfred Playlist ● not set';
             $w->result(null, '', $title, 'Choose one of your playlists and add tracks, album, playlist to it directly from the workflow', './images/alfred_playlist.png', 'no', null, 'Alfred Playlist▹Set Alfred Playlist▹');
         }
-        
+
     }
     $w->result(null, '', 'Playlists', 'Browse by playlist' . ' (' . $nb_playlists . ' playlists)', './images/playlists.png', 'no', null, 'Playlist▹');
     $w->result(null, '', 'Your Music', 'Browse Your Music' . ' (' . $yourmusic_tracks . ' tracks ● ' . $yourmusic_albums . '  albums ● ' . $yourmusic_artists . ' artists)', './images/yourmusic.png', 'no', null, 'Your Music▹');
@@ -341,9 +341,9 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress)
         $w->result(null, '', 'Artists in "Your Music"', 'Browse by artist' . ' (' . $yourmusic_artists . ' artists)', './images/artists.png', 'no', null, 'Artist▹');
         $w->result(null, '', 'Albums in "Your Music"', 'Browse by album' . ' (' . $yourmusic_albums . ' albums)', './images/albums.png', 'no', null, 'Album▹');
     }
-    
+
     //$w->result(null, '', 'Charts', 'Browse charts', './images/numbers.png', 'no', null, 'Charts▹');
-    
+
     if ($is_alfred_playlist_active == true) {
         $alfred_playlist_state = 'Alfred Playlist';
     } else {
@@ -371,7 +371,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress)
 {
     $words = explode('▹', $query);
     $kind  = $words[0];
-    
+
     $all_playlists             = $settings->all_playlists;
     $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
     $radio_number_tracks       = $settings->radio_number_tracks;
@@ -390,23 +390,23 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress)
     $display_name              = $settings->display_name;
     $userid                    = $settings->userid;
     $echonest_api_key          = $settings->echonest_api_key;
-    
+
     //
     // Search in Playlists
     //
     $getPlaylists = "select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist from playlists where name like :query";
-    
+
     try {
         $stmt = $db->prepare($getPlaylists);
         $stmt->bindValue(':query', '%' . $query . '%');
         $playlists = $stmt->execute();
-        
+
     }
     catch (PDOException $e) {
         handleDbIssuePdoXml($db);
         return;
     }
-    
+
     while ($playlist = $stmt->fetch()) {
         $added = ' ';
         if (startswith($playlist[1], 'Artist radio for')) {
@@ -414,7 +414,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress)
         }
         $w->result(null, '', "🎵" . $added . ucfirst($playlist[1]), "by " . $playlist[3] . " ● " . $playlist[7] . " tracks ● " . $playlist[8], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
     }
-    
+
     //
     // Search artists
     //
@@ -423,26 +423,26 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress)
     } else {
         $getTracks = "select artist_name,artist_uri,artist_artwork_path from tracks where artist_name like :artist_name limit " . $max_results;
     }
-    
+
     try {
         $stmt = $db->prepare($getTracks);
         $stmt->bindValue(':artist_name', '%' . $query . '%');
-        
+
         $tracks = $stmt->execute();
-        
+
     }
     catch (PDOException $e) {
         handleDbIssuePdoXml($db);
         return;
     }
-    
+
     while ($track = $stmt->fetch()) {
-        
+
         if (checkIfResultAlreadyThere($w->results(), "👤 " . ucfirst($track[0])) == false) {
             $w->result(null, '', "👤 " . ucfirst($track[0]), "Browse this artist", $track[2], 'no', null, "Artist▹" . $track[1] . '∙' . $track[0] . "▹");
         }
     }
-    
+
     //
     // Search everything
     //
@@ -451,22 +451,22 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress)
     } else {
         $getTracks = "select * from tracks where (artist_name like :query or album_name like :query or track_name like :query)" . " limit " . $max_results;
     }
-    
+
     try {
         $stmt = $db->prepare($getTracks);
         $stmt->bindValue(':query', '%' . $query . '%');
-        
+
         $tracks = $stmt->execute();
-        
+
     }
     catch (PDOException $e) {
         handleDbIssuePdoXml($db);
         return;
     }
-    
+
     $noresult = true;
     while ($track = $stmt->fetch()) {
-        
+
         if ($noresult) {
             $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
             $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
@@ -474,7 +474,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress)
         }
         $noresult = false;
         $subtitle = $track[6];
-        
+
         if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " ● " . $track[5]) == false) {
             $w->result(null, serialize(array(
                 $track[2] /*track_uri*/ ,
@@ -511,14 +511,14 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress)
                 'copy' => ucfirst($track[7]) . " ● " . $track[5],
                 'largetype' => ucfirst($track[7]) . " ● " . $track[5]
             ), '');
-            
+
         }
     }
-    
+
     if ($noresult) {
         $w->result(null, 'help', "There is no result for your search", "", './images/warning.png', 'no', null, '');
     }
-    
+
     //
     // Search albums
     //
@@ -527,26 +527,26 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress)
     } else {
         $getTracks = "select album_name,album_uri,album_artwork_path from tracks where album_name like :album_name limit " . $max_results;
     }
-    
+
     try {
         $stmt = $db->prepare($getTracks);
         $stmt->bindValue(':album_name', '%' . $query . '%');
-        
+
         $tracks = $stmt->execute();
-        
+
     }
     catch (PDOException $e) {
         handleDbIssuePdoXml($db);
         return;
     }
-    
+
     while ($track = $stmt->fetch()) {
-        
+
         if (checkIfResultAlreadyThere($w->results(), "💿 " . ucfirst($track[0])) == false) {
             $w->result(null, '', "💿 " . ucfirst($track[0]), "Browse this album", $track[2], 'no', null, "Album▹" . $track[1] . '∙' . $track[0] . "▹");
         }
     }
-    
+
     $w->result(null, serialize(array(
         '' /*track_uri*/ ,
         '' /* album_uri */ ,
@@ -579,7 +579,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress)
         'fn' => 'Not Available',
         'ctrl' => 'Not Available'
     ), './images/spotify.png', 'yes', null, '');
-    
+
     $w->result(null, null, "Search for " . $query . " online", array(
         'This will search online, i.e not in your library',
         'alt' => 'Not Available',
@@ -605,7 +605,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress)
 function searchCategoriesFastAccess($w, $query, $settings, $db, $update_in_progress)
 {
     $alfred_playlist_name = $settings->alfred_playlist_name;
-    
+
     //
     // Search categories for fast access
     //
@@ -663,7 +663,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
     $display_name              = $settings->display_name;
     $userid                    = $settings->userid;
     $echonest_api_key          = $settings->echonest_api_key;
-    
+
     if (mb_strlen($query) < 3) {
         ////////
         //
@@ -694,7 +694,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
             $userid
             /* userid*/
         )), 'Next Track', 'Play the next track in Spotify', './images/next.png', 'yes', '');
-        
+
         $w->result('SpotifyMiniPlayer_' . 'previous', serialize(array(
             '' /*track_uri*/ ,
             '' /* album_uri */ ,
@@ -720,7 +720,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
             $userid
             /* userid*/
         )), 'Previous Track', 'Play the previous track in Spotify', './images/previous.png', 'yes', '');
-        
+
         $w->result('SpotifyMiniPlayer_' . 'lookup_current_artist', serialize(array(
             '' /*track_uri*/ ,
             '' /* album_uri */ ,
@@ -753,7 +753,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
             'fn' => 'Not Available',
             'ctrl' => 'Not Available'
         ), './images/online_artist.png', 'yes', '');
-        
+
         $w->result('SpotifyMiniPlayer_' . 'lyrics', serialize(array(
             '' /*track_uri*/ ,
             '' /* album_uri */ ,
@@ -786,7 +786,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
             'fn' => 'Not Available',
             'ctrl' => 'Not Available'
         ), './images/lyrics.png', 'yes', '');
-        
+
         $w->result('SpotifyMiniPlayer_' . 'play', serialize(array(
             '' /*track_uri*/ ,
             '' /* album_uri */ ,
@@ -812,7 +812,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
             $userid
             /* userid*/
         )), 'Play', 'Play the current Spotify track', './images/play.png', 'yes', '');
-        
+
         $w->result('SpotifyMiniPlayer_' . 'play_current_artist', serialize(array(
             '' /*track_uri*/ ,
             '' /* album_uri */ ,
@@ -863,7 +863,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
             $userid
             /* userid*/
         )), 'Play current album', 'Play the current album', './images/albums.png', 'yes', null, '');
-        
+
         $w->result('SpotifyMiniPlayer_' . 'pause', serialize(array(
             '' /*track_uri*/ ,
             '' /* album_uri */ ,
@@ -889,7 +889,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
             $userid
             /* userid*/
         )), 'Pause', 'Pause the current Spotify track', './images/pause.png', 'yes', '');
-        
+
         $w->result('SpotifyMiniPlayer_' . 'current', serialize(array(
             '' /*track_uri*/ ,
             '' /* album_uri */ ,
@@ -915,7 +915,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
             $userid
             /* userid*/
         )), 'Get Current Track info', 'Get current track information', './images/info.png', 'yes', '');
-        
+
         $w->result('SpotifyMiniPlayer_' . 'random', serialize(array(
             '' /*track_uri*/ ,
             '' /* album_uri */ ,
@@ -941,7 +941,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
             $userid
             /* userid*/
         )), 'Random Track', 'Play random track', './images/random.png', 'yes', '');
-        
+
         $w->result('SpotifyMiniPlayer_' . 'shuffle', serialize(array(
             '' /*track_uri*/ ,
             '' /* album_uri */ ,
@@ -967,7 +967,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
             $userid
             /* userid*/
         )), 'Shuffle', 'Activate/Deactivate shuffling in Spotify', './images/shuffle.png', 'yes', '');
-        
+
         if ($update_in_progress == false) {
             $w->result('SpotifyMiniPlayer_' . 'refresh_library', serialize(array(
                 '' /*track_uri*/ ,
@@ -995,7 +995,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 /* userid*/
             )), "Refresh your library", "Do this when your library has changed (outside the scope of this workflow)", './images/update.png', 'yes', null, '');
         }
-        
+
         if ($update_in_progress == false) {
             if ($is_alfred_playlist_active == true) {
                 $w->result('SpotifyMiniPlayer_' . 'add_current_track', serialize(array(
@@ -1075,7 +1075,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 $userid
                 /* userid*/
             )), 'Add current track to...', 'Current track will be added to Your Music or a playlist of your choice', './images/add_to.png', 'yes', '');
-            
+
             $w->result('SpotifyMiniPlayer_' . 'remove_current_track_from', serialize(array(
                 '' /*track_uri*/ ,
                 '' /* album_uri */ ,
@@ -1102,7 +1102,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 /* userid*/
             )), 'Remove current track from...', 'Current track will be removed from Your Music or a playlist of your choice', './images/remove_from.png', 'yes', '');
         }
-        
+
         $w->result('SpotifyMiniPlayer_' . 'mute', serialize(array(
             '' /*track_uri*/ ,
             '' /* album_uri */ ,
@@ -1128,7 +1128,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
             $userid
             /* userid*/
         )), 'Mute/Unmute System Volume', 'Mute/Unmute Volume', './images/mute.png', 'yes', '');
-        
+
         $w->result('SpotifyMiniPlayer_' . 'volume_down', serialize(array(
             '' /*track_uri*/ ,
             '' /* album_uri */ ,
@@ -1154,7 +1154,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
             $userid
             /* userid*/
         )), 'Volume Down', 'Decrease System Volume', './images/volume_down.png', 'yes', '');
-        
+
         $w->result('SpotifyMiniPlayer_' . 'volume_up', serialize(array(
             '' /*track_uri*/ ,
             '' /* album_uri */ ,
@@ -1354,7 +1354,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 $userid
                 /* userid*/
             )), 'Play', 'Play the current Spotify track', './images/play.png', 'yes', '');
-            
+
             $w->result(null, serialize(array(
                 '' /*track_uri*/ ,
                 '' /* album_uri */ ,
@@ -1771,7 +1771,7 @@ function firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress
 {
     $words = explode('▹', $query);
     $kind  = $words[0];
-    
+
     $all_playlists             = $settings->all_playlists;
     $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
     $radio_number_tracks       = $settings->radio_number_tracks;
@@ -1790,7 +1790,7 @@ function firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress
     $display_name              = $settings->display_name;
     $userid                    = $settings->userid;
     $echonest_api_key          = $settings->echonest_api_key;
-    
+
     //
     // Search playlists
     //
@@ -1804,29 +1804,29 @@ function firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress
             $stmt         = $db->prepare($getPlaylists);
             $stmt->bindValue(':query', '%' . $theplaylist . '%');
         }
-        
+
         $playlists = $stmt->execute();
     }
     catch (PDOException $e) {
         handleDbIssuePdoXml($db);
         return;
     }
-    
+
     $noresult = true;
     if ($query == "Playlist▹Artist radio") {
         while ($playlist = $stmt->fetch()) {
-            
+
             $noresult = false;
-            
+
             if (startswith($playlist[1], 'Artist radio for')) {
                 $w->result(null, '', "🎵 " . ucfirst($playlist[1]), "by " . $playlist[3] . " ● " . $playlist[7] . " tracks ● " . $playlist[8], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
             }
         }
     } elseif ($query == "Playlist▹Song radio") {
         while ($playlist = $stmt->fetch()) {
-            
+
             $noresult = false;
-            
+
             if (startswith($playlist[1], 'Song radio for')) {
                 $w->result(null, '', "🎵 " . ucfirst($playlist[1]), "by " . $playlist[3] . " ● " . $playlist[7] . " tracks ● " . $playlist[8], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
             }
@@ -1836,20 +1836,20 @@ function firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress
         $nb_artist_radio_playlist = 0;
         $nb_song_radio_playlist   = 0;
         while ($playlist = $stmt->fetch()) {
-            
+
             if (startswith($playlist[1], 'Artist radio for')) {
                 $nb_artist_radio_playlist++;
                 continue;
             }
-            
+
             if (startswith($playlist[1], 'Song radio for')) {
                 $nb_song_radio_playlist++;
                 continue;
             }
-            
+
             $savedPlaylists[] = $playlist;
         }
-        
+
         if (mb_strlen($theplaylist) < 3) {
             if ($nb_artist_radio_playlist > 0) {
                 $w->result(null, '', "Browse your artist radio playlists (" . $nb_artist_radio_playlist . " playlists)", "Display all your artist radio playlists", './images/radio_artist.png', 'no', null, "Playlist▹Artist radio");
@@ -1859,14 +1859,14 @@ function firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress
             }
             $w->result(null, '', 'Featured Playlists', 'Browse the current featured playlists', './images/star.png', 'no', null, 'Featured Playlist▹');
         }
-        
+
         foreach ($savedPlaylists as $playlist) {
             $noresult = false;
             $added    = ' ';
             $w->result(null, '', "🎵" . $added . ucfirst($playlist[1]), "by " . $playlist[3] . " ● " . $playlist[7] . " tracks ● " . $playlist[8], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
         }
     }
-    
+
     if ($noresult) {
         $w->result(null, 'help', "There is no result for your search", "", './images/warning.png', 'no', null, '');
     }
@@ -1887,7 +1887,7 @@ function firstDelimiterAlfredPlaylist($w, $query, $settings, $db, $update_in_pro
 {
     $words = explode('▹', $query);
     $kind  = $words[0];
-    
+
     $all_playlists             = $settings->all_playlists;
     $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
     $radio_number_tracks       = $settings->radio_number_tracks;
@@ -1906,19 +1906,19 @@ function firstDelimiterAlfredPlaylist($w, $query, $settings, $db, $update_in_pro
     $display_name              = $settings->display_name;
     $userid                    = $settings->userid;
     $echonest_api_key          = $settings->echonest_api_key;
-    
+
     //
     // Alfred Playlist
     //
     $playlist = $words[1];
-    
+
     $r = explode(':', $alfred_playlist_uri);
-    
+
     $w->result(null, '', "Browse your Alfred playlist (" . $alfred_playlist_name . " by " . $r[2] . ")", "You can change the playlist by selecting Change your Alfred playlist below", getPlaylistArtwork($w, $alfred_playlist_uri, false), 'no', null, 'Playlist▹' . $alfred_playlist_uri . '▹');
-    
+
     if ($update_in_progress == false) {
         $w->result(null, '', "Change your Alfred playlist", "Select one of your playlists below as your Alfred playlist", './images/settings.png', 'no', null, 'Alfred Playlist▹Set Alfred Playlist▹');
-        
+
         if (strtolower($r[3]) != strtolower('Starred')) {
             $w->result(null, '', "Clear your Alfred Playlist", "This will remove all the tracks in your current Alfred Playlist", './images/uncheck.png', 'no', null, 'Alfred Playlist▹Confirm Clear Alfred Playlist▹');
         }
@@ -1940,7 +1940,7 @@ function firstDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
 {
     $words = explode('▹', $query);
     $kind  = $words[0];
-    
+
     $all_playlists             = $settings->all_playlists;
     $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
     $radio_number_tracks       = $settings->radio_number_tracks;
@@ -1959,12 +1959,12 @@ function firstDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
     $display_name              = $settings->display_name;
     $userid                    = $settings->userid;
     $echonest_api_key          = $settings->echonest_api_key;
-    
+
     //
     // Search artists
     //
     $artist = $words[1];
-    
+
     try {
         if (mb_strlen($artist) < 3) {
             if ($all_playlists == false) {
@@ -1982,15 +1982,15 @@ function firstDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
             $stmt = $db->prepare($getTracks);
             $stmt->bindValue(':query', '%' . $artist . '%');
         }
-        
+
         $tracks = $stmt->execute();
-        
+
     }
     catch (PDOException $e) {
         handleDbIssuePdoXml($db);
         return;
     }
-    
+
     // display all artists
     $noresult = true;
     while ($track = $stmt->fetch()) {
@@ -2000,7 +2000,7 @@ function firstDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
             $w->result(null, '', "👤 " . ucfirst($track[0]) . ' (' . $nb_artist_tracks . ' tracks)', "Browse this artist", $track[1], 'no', null, "Artist▹" . $track[2] . '∙' . $track[0] . "▹");
         }
     }
-    
+
     if ($noresult) {
         $w->result(null, 'help', "There is no result for your search", "", './images/warning.png', 'no', null, '');
     }
@@ -2021,7 +2021,7 @@ function firstDelimiterAlbums($w, $query, $settings, $db, $update_in_progress)
 {
     $words = explode('▹', $query);
     $kind  = $words[0];
-    
+
     $all_playlists             = $settings->all_playlists;
     $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
     $radio_number_tracks       = $settings->radio_number_tracks;
@@ -2040,10 +2040,10 @@ function firstDelimiterAlbums($w, $query, $settings, $db, $update_in_progress)
     $display_name              = $settings->display_name;
     $userid                    = $settings->userid;
     $echonest_api_key          = $settings->echonest_api_key;
-    
+
     // New Releases menu
     $w->result(null, '', 'New Releases', 'Browse new album releases', './images/new_releases.png', 'no', null, 'New Releases▹');
-    
+
     //
     // Search albums
     //
@@ -2065,15 +2065,15 @@ function firstDelimiterAlbums($w, $query, $settings, $db, $update_in_progress)
             $stmt = $db->prepare($getTracks);
             $stmt->bindValue(':query', '%' . $album . '%');
         }
-        
+
         $tracks = $stmt->execute();
-        
+
     }
     catch (PDOException $e) {
         handleDbIssuePdoXml($db);
         return;
     }
-    
+
     // display all albums
     $noresult = true;
     while ($track = $stmt->fetch()) {
@@ -2083,7 +2083,7 @@ function firstDelimiterAlbums($w, $query, $settings, $db, $update_in_progress)
             $w->result(null, '', ucfirst($track[0]) . ' (' . $nb_album_tracks . ' tracks)', $track[4] . ' by ' . $track[2], $track[1], 'no', null, "Album▹" . $track[3] . '∙' . $track[0] . "▹");
         }
     }
-    
+
     if ($noresult) {
         $w->result(null, 'help', "There is no result for your search", "", './images/warning.png', 'no', null, '');
     }
@@ -2104,19 +2104,19 @@ function firstDelimiterFeaturedPlaylist($w, $query, $settings, $db, $update_in_p
 {
     $words = explode('▹', $query);
     $kind  = $words[0];
-    
+
     $country_code = $settings->country_code;
-    
+
     $w->result(null, '', getCountryName($country_code), 'Browse the current featured playlists in ' . getCountryName($country_code), './images/star.png', 'no', null, 'Featured Playlist▹' . $country_code . '▹');
-    
+
     if ($country_code != 'US') {
         $w->result(null, '', getCountryName('US'), 'Browse the current featured playlists in ' . getCountryName('US'), './images/star.png', 'no', null, 'Featured Playlist▹US▹');
     }
-    
+
     if ($country_code != 'GB') {
         $w->result(null, '', getCountryName('GB'), 'Browse the current featured playlists in ' . getCountryName('GB'), './images/star.png', 'no', null, 'Featured Playlist▹GB▹');
     }
-    
+
     $w->result(null, '', 'Choose Another country', 'Browse the current featured playlists in another country of your choice', './images/star.png', 'no', null, 'Featured Playlist▹Choose a Country▹');
 }
 
@@ -2135,7 +2135,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
 {
     $words = explode('▹', $query);
     $kind  = $words[0];
-    
+
     $all_playlists             = $settings->all_playlists;
     $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
     $radio_number_tracks       = $settings->radio_number_tracks;
@@ -2154,18 +2154,18 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
     $display_name              = $settings->display_name;
     $userid                    = $settings->userid;
     $echonest_api_key          = $settings->echonest_api_key;
-    
+
     //
     // Search online
     //
     $the_query = $words[1];
-    
+
     if (mb_strlen($the_query) < 3) {
-        
+
         if ($kind == "Search Online") {
-            
+
             $w->result(null, 'help', "Search for playlists, artists, albums or tracks online, i.e not in your library", "Begin typing at least 3 characters to start search online. This is using slow Spotify API, be patient.", './images/info.png', 'no', null, '');
-            
+
             $w->result(null, null, "Search for playlists only", array(
                 'This will search for playlists online, i.e not in your library',
                 'alt' => 'Not Available',
@@ -2174,7 +2174,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
                 'fn' => 'Not Available',
                 'ctrl' => 'Not Available'
             ), './images/playlists.png', 'no', null, 'Search Playlists Online▹');
-            
+
             $w->result(null, null, "Search for tracks only", array(
                 'This will search for tracks online, i.e not in your library',
                 'alt' => 'Not Available',
@@ -2183,7 +2183,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
                 'fn' => 'Not Available',
                 'ctrl' => 'Not Available'
             ), './images/tracks.png', 'no', null, 'Search Tracks Online▹');
-            
+
             $w->result(null, null, "Search for artists only", array(
                 'This will search for artists online, i.e not in your library',
                 'alt' => 'Not Available',
@@ -2192,7 +2192,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
                 'fn' => 'Not Available',
                 'ctrl' => 'Not Available'
             ), './images/artists.png', 'no', null, 'Search Artists Online▹');
-            
+
             $w->result(null, null, "Search for albums only", array(
                 'This will search for albums online, i.e not in your library',
                 'alt' => 'Not Available',
@@ -2211,12 +2211,12 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
             $w->result(null, 'help', "Search albums online, i.e not in your library", "Begin typing at least 3 characters to start search online. This is using slow Spotify API, be patient.", './images/info.png', 'no', null, '');
         }
     } else {
-        
+
         $search_playlists = false;
         $search_artists   = false;
         $search_albums    = false;
         $search_tracks    = false;
-        
+
         if ($kind == "Search Online") {
             $search_playlists       = true;
             $search_artists         = true;
@@ -2239,18 +2239,18 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
             $search_tracks       = true;
             $search_tracks_limit = ($max_results <= 50) ? $max_results : 50;
         }
-        
+
         $noresult = true;
-        
+
         if ($search_artists == true) {
             // Search Artists
             //
-            
+
             // call to web api, if it fails,
             // it displays an error in main window
             $query   = 'artist:' . strtolower($the_query);
             $results = searchWebApi($w, $country_code, $query, 'artist', $search_artists_limit, false);
-            
+
             foreach ($results as $artist) {
                 if (checkIfResultAlreadyThere($w->results(), "👤 " . escapeQuery(ucfirst($artist->name))) == false) {
                     $noresult = false;
@@ -2258,16 +2258,16 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
                 }
             }
         }
-        
+
         if ($search_albums == true) {
             // Search Albums
             //
-            
+
             // call to web api, if it fails,
             // it displays an error in main window
             $query   = 'album:' . strtolower($the_query);
             $results = searchWebApi($w, $country_code, $query, 'album', $search_albums_limit, false);
-            
+
             try {
                 $api = getSpotifyWebAPI($w);
             }
@@ -2276,11 +2276,11 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
                 echo $w->toxml();
                 return;
             }
-            
+
             foreach ($results as $album) {
                 if (checkIfResultAlreadyThere($w->results(), escapeQuery(ucfirst($album->name))) == false) {
                     $noresult = false;
-                    
+
                     try {
                         $full_album = $api->getAlbum($album->id);
                     }
@@ -2293,35 +2293,35 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
                 }
             }
         }
-        
+
         if ($search_playlists == true) {
             // Search Playlists
             //
-            
+
             // call to web api, if it fails,
             // it displays an error in main window
             $query   = 'playlist:' . strtolower($the_query);
             $results = searchWebApi($w, $country_code, $query, 'playlist', $search_playlists_limit, false);
-            
+
             foreach ($results as $playlist) {
                 $noresult = false;
                 $w->result(null, '', "🎵" . escapeQuery($playlist->name), "by " . $playlist->owner->id . " ● " . $playlist->tracks->total . " tracks", getPlaylistArtwork($w, $playlist->uri, false), 'no', null, "Online Playlist▹" . $playlist->uri . '∙' . escapeQuery($playlist->name) . '▹');
-                
+
             }
         }
-        
+
         if ($search_tracks == true) {
             // Search Tracks
             //
-            
+
             // call to web api, if it fails,
             // it displays an error in main window
             $query   = 'track:' . strtolower($the_query);
             $results = searchWebApi($w, $country_code, $query, 'track', $search_tracks_limit, false);
-            
+
             $first = true;
             foreach ($results as $track) {
-                
+
                 if ($first == true) {
                     $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
                     $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
@@ -2330,11 +2330,11 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
                 $first         = false;
                 $noresult      = false;
                 $track_artwork = getTrackOrAlbumArtwork($w, $track->uri, false);
-                
+
                 $artists = $track->artists;
                 $artist  = $artists[0];
                 $album   = $track->album;
-                
+
                 $w->result(null, serialize(array(
                     $track->uri /*track_uri*/ ,
                     $album->uri /* album_uri */ ,
@@ -2369,7 +2369,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
                 ), $track_artwork, 'yes', null, '');
             }
         }
-        
+
         if ($noresult) {
             $w->result(null, 'help', "There is no result for this search", "", './images/warning.png', 'no', null, '');
         }
@@ -2391,19 +2391,19 @@ function firstDelimiterCharts($w, $query, $settings, $db, $update_in_progress)
 {
     $words = explode('▹', $query);
     $kind  = $words[0];
-    
+
     $country_code = $settings->country_code;
-    
+
     $w->result(null, '', getCountryName($country_code), 'Browse the current charts in ' . getCountryName($country_code), './images/numbers.png', 'no', null, 'Charts▹' . $country_code . '▹');
-    
+
     if ($country_code != 'US') {
         $w->result(null, '', getCountryName('US'), 'Browse the current charts in ' . getCountryName('US'), './images/numbers.png', 'no', null, 'Charts▹US▹');
     }
-    
+
     if ($country_code != 'GB') {
         $w->result(null, '', getCountryName('GB'), 'Browse the current charts in ' . getCountryName('GB'), './images/numbers.png', 'no', null, 'Charts▹GB▹');
     }
-    
+
     $w->result(null, '', 'Choose Another country', 'Browse the current charts in another country of your choice', './images/numbers.png', 'no', null, 'Charts▹Choose a Country▹');
 }
 
@@ -2422,19 +2422,19 @@ function firstDelimiterNewReleases($w, $query, $settings, $db, $update_in_progre
 {
     $words = explode('▹', $query);
     $kind  = $words[0];
-    
+
     $country_code = $settings->country_code;
-    
+
     $w->result(null, '', getCountryName($country_code), 'Browse the new album releases in ' . getCountryName($country_code), './images/new_releases.png', 'no', null, 'New Releases▹' . $country_code . '▹');
-    
+
     if ($country_code != 'US') {
         $w->result(null, '', getCountryName('US'), 'Browse the new album releases in ' . getCountryName('US'), './images/new_releases.png', 'no', null, 'New Releases▹US▹');
     }
-    
+
     if ($country_code != 'GB') {
         $w->result(null, '', getCountryName('GB'), 'Browse the new album releases in ' . getCountryName('GB'), './images/new_releases.png', 'no', null, 'New Releases▹GB▹');
     }
-    
+
     $w->result(null, '', 'Choose Another country', 'Browse the new album releases in another country of your choice', './images/new_releases.png', 'no', null, 'New Releases▹Choose a Country▹');
 }
 
@@ -2453,7 +2453,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
 {
     $words = explode('▹', $query);
     $kind  = $words[0];
-    
+
     $all_playlists             = $settings->all_playlists;
     $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
     $radio_number_tracks       = $settings->radio_number_tracks;
@@ -2472,20 +2472,20 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
     $display_name              = $settings->display_name;
     $userid                    = $settings->userid;
     $echonest_api_key          = $settings->echonest_api_key;
-    
+
     // get info on current song
     $command_output = exec("./src/track_info.ksh 2>&1");
-    
+
     if (substr_count($command_output, '▹') > 0) {
         $results = explode('▹', $command_output);
-        
+
         if ($results[1] == '' || $results[2] == '') {
             $w->result(null, 'help', "Current track is not valid: Artist or Album name is missing", "Fill missing information in Spotify and retry again", './images/warning.png', 'no', null, '');
             echo $w->toxml();
             return;
-            
+
         }
-        
+
         $currentArtistArtwork = getArtistArtwork($w, $results[1], false);
         $subtitle             = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
         $subtitle             = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
@@ -2522,7 +2522,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                 'shift' => 'Add album ' . escapeQuery($results[2]) . ' to ...',
                 'ctrl' => 'Search artist ' . escapeQuery($results[1]) . ' online'
             ), ($results[3] == "playing") ? './images/pause.png' : './images/play.png', 'yes', null, '');
-            
+
         } else {
             $w->result(null, serialize(array(
                 $results[4] /*track_uri*/ ,
@@ -2550,35 +2550,35 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                 /* userid*/
             )), " " . escapeQuery($results[0]) . " ● " . escapeQuery($results[1]) . " ● " . escapeQuery($results[2]) . " ● " . floatToStars($results[6] / 100) . ' (' . beautifyTime($results[5]) . ')', $arrayresult, ($results[3] == "playing") ? './images/pause.png' : './images/play.png', 'yes', null, '');
         }
-        
-        
+
+
         $getTracks = "select artist_name,artist_uri from tracks where artist_name=:artist_name limit " . 1;
-        
+
         try {
             $stmt = $db->prepare($getTracks);
             $stmt->bindValue(':artist_name', escapeQuery($results[1]));
             $tracks = $stmt->execute();
-            
+
         }
         catch (PDOException $e) {
             handleDbIssuePdoXml($db);
             return;
         }
-        
+
         // check if artist is in library
         $noresult = true;
         while ($track = $stmt->fetch()) {
             $artist_uri = $track[1];
             $noresult   = false;
         }
-        
+
         if ($noresult == false) {
             $w->result(null, '', "👤 " . ucfirst(escapeQuery($results[1])), "Browse this artist", $currentArtistArtwork, 'no', null, "Artist▹" . $artist_uri . '∙' . escapeQuery($results[1]) . "▹");
         } else {
             // artist is not in library
             $w->result(null, '', "👤 " . ucfirst(escapeQuery($results[1])), "Browse this artist", $currentArtistArtwork, 'no', null, "Artist▹" . $results[4] . '∙' . escapeQuery($results[1]) . "▹");
         }
-        
+
         // use track uri here
         $album_artwork_path = getTrackOrAlbumArtwork($w, $results[4], false);
         $w->result(null, serialize(array(
@@ -2606,18 +2606,18 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
             $userid
             /* userid*/
         )), "💿 " . escapeQuery($results[2]), 'Play album', $album_artwork_path, 'yes', null, '');
-        
+
         // use track uri here
         $w->result(null, '', "💿 " . ucfirst(escapeQuery($results[2])), '☁︎ Query all tracks from this album online..', './images/online_album.png', 'no', null, "Online▹" . $results[4] . '@' . escapeQuery($results[1]) . '@' . $results[4] . '@' . escapeQuery($results[2]) . '▹');
-        
-        
+
+
         $w->result(null, '', "Get Lyrics for track " . escapeQuery($results[0]), "This will fetch lyrics online", './images/lyrics.png', 'no', null, "Lyrics▹" . $results[4] . "∙" . escapeQuery($results[1]) . '∙' . escapeQuery($results[0]));
-        
+
         if ($update_in_progress == false) {
             $w->result(null, '', 'Add track ' . escapeQuery($results[0]) . ' to...', 'This will add current track to Your Music or a playlist you will choose in next step', './images/add.png', 'no', null, 'Add▹' . $results[4] . '∙' . escapeQuery($results[0]) . '▹');
-            
+
             $w->result(null, '', 'Remove track ' . escapeQuery($results[0]) . ' from...', 'This will remove current track from Your Music or a playlist you will choose in next step', './images/remove.png', 'no', null, 'Remove▹' . $results[4] . '∙' . escapeQuery($results[0]) . '▹');
-            
+
             $w->result(null, serialize(array(
                 '' /*track_uri*/ ,
                 '' /* album_uri */ ,
@@ -2651,37 +2651,37 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                 'ctrl' => 'Not Available'
             ), './images/radio_song.png', 'yes', null, '');
         }
-        
+
         if ($all_playlists == true) {
             $getTracks = "select playlist_uri from tracks where uri=:uri limit " . $max_results;
-            
+
             try {
                 $stmtgetTracks = $db->prepare($getTracks);
                 $stmtgetTracks->bindValue(':uri', $results[4]);
                 $stmtgetTracks->execute();
-                
+
             }
             catch (PDOException $e) {
                 handleDbIssuePdoXml($db);
                 return;
             }
-            
+
             while ($track = $stmtgetTracks->fetch()) {
-                
+
                 $getPlaylists = "select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist from playlists where uri=:uri";
-                
+
                 try {
                     $stmtGetPlaylists = $db->prepare($getPlaylists);
                     $stmtGetPlaylists->bindValue(':uri', $track[0]);
-                    
+
                     $playlists = $stmtGetPlaylists->execute();
-                    
+
                 }
                 catch (PDOException $e) {
                     handleDbIssuePdoXml($db);
                     return;
                 }
-                
+
                 while ($playlist = $stmtGetPlaylists->fetch()) {
                     $added = ' ';
                     if (startswith($playlist[1], 'Artist radio for')) {
@@ -2696,7 +2696,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
     } else {
         $w->result(null, 'help', "There is no track currently playing", "Launch a track and come back here", './images/warning.png', 'no', null, '');
     }
-    
+
 }
 
 /**
@@ -2714,7 +2714,7 @@ function firstDelimiterYourMusic($w, $query, $settings, $db, $update_in_progress
 {
     $words = explode('▹', $query);
     $kind  = $words[0];
-    
+
     $all_playlists             = $settings->all_playlists;
     $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
     $radio_number_tracks       = $settings->radio_number_tracks;
@@ -2733,23 +2733,23 @@ function firstDelimiterYourMusic($w, $query, $settings, $db, $update_in_progress
     $display_name              = $settings->display_name;
     $userid                    = $settings->userid;
     $echonest_api_key          = $settings->echonest_api_key;
-    
+
     $thequery = $words[1];
-    
+
     if (mb_strlen($thequery) < 3) {
         $getCounters = 'select * from counters';
         try {
             $stmt = $db->prepare($getCounters);
-            
+
             $counters = $stmt->execute();
             $counter  = $stmt->fetch();
-            
+
         }
         catch (PDOException $e) {
             handleDbIssuePdoXml($db);
             return;
         }
-        
+
         $all_tracks        = $counter[0];
         $yourmusic_tracks  = $counter[1];
         $all_artists       = $counter[2];
@@ -2757,23 +2757,23 @@ function firstDelimiterYourMusic($w, $query, $settings, $db, $update_in_progress
         $all_albums        = $counter[4];
         $yourmusic_albums  = $counter[5];
         $nb_playlists      = $counter[6];
-        
+
         $w->result(null, '', 'Tracks', 'Browse your ' . $yourmusic_tracks . ' tracks in Your Music', './images/tracks.png', 'no', null, 'Your Music▹Tracks▹');
         $w->result(null, '', 'Albums', 'Browse your ' . $yourmusic_albums . ' albums in Your Music', './images/albums.png', 'no', null, 'Your Music▹Albums▹');
         $w->result(null, '', 'Artists', 'Browse your ' . $yourmusic_artists . ' artists in Your Music', './images/artists.png', 'no', null, 'Your Music▹Artists▹');
-        
+
     } else {
         //
         // Search artists
         //
         $getTracks = "select artist_name,artist_uri,artist_artwork_path from tracks where yourmusic=1 and artist_name like :artist_name limit " . $max_results;
-        
+
         try {
             $stmt = $db->prepare($getTracks);
             $stmt->bindValue(':artist_name', '%' . $thequery . '%');
-            
+
             $tracks = $stmt->execute();
-            
+
         }
         catch (PDOException $e) {
             handleDbIssuePdoXml($db);
@@ -2781,32 +2781,32 @@ function firstDelimiterYourMusic($w, $query, $settings, $db, $update_in_progress
         }
         $noresult = true;
         while ($track = $stmt->fetch()) {
-            
+
             if (checkIfResultAlreadyThere($w->results(), "👤 " . ucfirst($track[0])) == false) {
                 $noresult = false;
                 $w->result(null, '', "👤 " . ucfirst($track[0]), "Browse this artist", $track[2], 'no', null, "Artist▹" . $track[1] . '∙' . $track[0] . "▹");
             }
         }
-        
+
         //
         // Search everything
         //
         $getTracks = "select * from tracks where yourmusic=1 and (artist_name like :query or album_name like :query or track_name like :query)" . " limit " . $max_results;
-        
+
         try {
             $stmt = $db->prepare($getTracks);
             $stmt->bindValue(':query', '%' . $thequery . '%');
-            
+
             $tracks = $stmt->execute();
-            
+
         }
         catch (PDOException $e) {
             handleDbIssuePdoXml($db);
             return;
         }
-        
+
         while ($track = $stmt->fetch()) {
-            
+
             if ($noresult == true) {
                 $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
                 $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
@@ -2814,9 +2814,9 @@ function firstDelimiterYourMusic($w, $query, $settings, $db, $update_in_progress
             }
             $noresult = false;
             $subtitle = $track[6];
-            
+
             if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " ● " . $track[5]) == false) {
-                
+
                 $w->result(null, serialize(array(
                     $track[2] /*track_uri*/ ,
                     $track[3] /* album_uri */ ,
@@ -2852,10 +2852,10 @@ function firstDelimiterYourMusic($w, $query, $settings, $db, $update_in_progress
                     'copy' => ucfirst($track[7]) . " ● " . $track[5],
                     'largetype' => ucfirst($track[7]) . " ● " . $track[5]
                 ), '');
-                
+
             }
         }
-        
+
         if ($noresult) {
             $w->result(null, 'help', "There is no result for your search", "", './images/warning.png', 'no', null, '');
         }
@@ -2877,7 +2877,7 @@ function firstDelimiterLyrics($w, $query, $settings, $db, $update_in_progress)
 {
     $words = explode('▹', $query);
     $kind  = $words[0];
-    
+
     $all_playlists             = $settings->all_playlists;
     $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
     $radio_number_tracks       = $settings->radio_number_tracks;
@@ -2896,7 +2896,7 @@ function firstDelimiterLyrics($w, $query, $settings, $db, $update_in_progress)
     $display_name              = $settings->display_name;
     $userid                    = $settings->userid;
     $echonest_api_key          = $settings->echonest_api_key;
-    
+
     if (substr_count($query, '∙') == 2) {
         //
         // Search Lyrics
@@ -2906,7 +2906,7 @@ function firstDelimiterLyrics($w, $query, $settings, $db, $update_in_progress)
         $track_uri   = $words[0];
         $artist_name = $words[1];
         $track_name  = $words[2];
-        
+
         list($lyrics_url, $lyrics) = getLyrics($w, $artist_name, $track_name);
         stathat_ez_count('AlfredSpotifyMiniPlayer', 'lyrics', 1);
         if ($lyrics_url != false) {
@@ -2935,12 +2935,12 @@ function firstDelimiterLyrics($w, $query, $settings, $db, $update_in_progress)
                 $userid
                 /* userid*/
             )), 'See lyrics for ' . $track_name . ' by ' . $artist_name . ' online', "This will open your default browser", './images/lyrics.png', 'yes', null, '');
-            
+
             $track_artwork = getTrackOrAlbumArtwork($w, $track_uri, false);
-            
+
             $wrapped          = wordwrap($lyrics, 70, "\n", false);
             $lyrics_sentances = explode("\n", $wrapped);
-            
+
             for ($i = 0; $i < count($lyrics_sentances); $i++) {
                 $w->result(null, '', $lyrics_sentances[$i], '', $track_artwork, 'no', null, '');
             }
@@ -2968,7 +2968,7 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
 {
     $words = explode('▹', $query);
     $kind  = $words[0];
-    
+
     $all_playlists              = $settings->all_playlists;
     $is_alfred_playlist_active  = $settings->is_alfred_playlist_active;
     $radio_number_tracks        = $settings->radio_number_tracks;
@@ -2988,7 +2988,7 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
     $userid                     = $settings->userid;
     $echonest_api_key           = $settings->echonest_api_key;
     $lookup_local_tracks_online = $settings->lookup_local_tracks_online;
-    
+
     if ($update_in_progress == false) {
         $w->result(null, serialize(array(
             '' /*track_uri*/ ,
@@ -3016,7 +3016,7 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
             /* userid*/
         )), "Refresh your library", "Do this when your library has changed (outside the scope of this workflow)", './images/update.png', 'yes', null, '');
     }
-    
+
     if ($is_alfred_playlist_active == true) {
         $w->result(null, serialize(array(
             '' /*track_uri*/ ,
@@ -3084,7 +3084,7 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
             'ctrl' => 'Not Available'
         ), './images/alfred_playlist.png', 'yes', null, '');
     }
-    
+
     if ($all_playlists == true) {
         $w->result(null, serialize(array(
             '' /*track_uri*/ ,
@@ -3118,7 +3118,7 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
             'fn' => 'Not Available',
             'ctrl' => 'Not Available'
         ), './images/search_scope_yourmusic_only.png', 'yes', null, '');
-        
+
     } else {
         $w->result(null, serialize(array(
             '' /*track_uri*/ ,
@@ -3155,8 +3155,8 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
     }
     $w->result(null, '', "Configure Max Number of Results (currently " . $max_results . ")", "Number of results displayed (it does not apply to the list of your playlists)", './images/results_numbers.png', 'no', null, 'Settings▹MaxResults▹');
     $w->result(null, '', "Configure Number of Radio tracks (currently " . $radio_number_tracks . ")", "Number of tracks when creating a Radio Playlist.", './images/radio_numbers.png', 'no', null, 'Settings▹RadioTracks▹');
-    
-    
+
+
     if ($now_playing_notifications == true) {
         $w->result(null, serialize(array(
             '' /*track_uri*/ ,
@@ -3224,7 +3224,7 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
             'ctrl' => 'Not Available'
         ), './images/enable_now_playing.png', 'yes', null, '');
     }
-    
+
     if ($update_in_progress == false) {
         $w->result(null, serialize(array(
             '' /*track_uri*/ ,
@@ -3252,7 +3252,7 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
             /* userid*/
         )), 'Re-Create your library from scratch', "Do this when refresh library is not working as you would expect", './images/recreate.png', 'yes', null, '');
     }
-    
+
     if ($lookup_local_tracks_online == true) {
         $w->result(null, serialize(array(
             '' /*track_uri*/ ,
@@ -3320,7 +3320,7 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
             'ctrl' => 'Not Available'
         ), './images/enable_lookup_local_tracks_online.png', 'yes', null, '');
     }
-    
+
     $w->result(null, '', 'Check for workflow update', 'Last checked: ' . beautifyTime(time() - $last_check_update_time, true) . ' ago (note this is automatically done otherwise once per day)', './images/check_update.png', 'no', null, 'Check for update...' . '▹');
 }
 
@@ -3339,7 +3339,7 @@ function firstDelimiterCheckForUpdate($w, $query, $settings, $db, $update_in_pro
 {
     $words = explode('▹', $query);
     $kind  = $words[0];
-    
+
     $all_playlists             = $settings->all_playlists;
     $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
     $radio_number_tracks       = $settings->radio_number_tracks;
@@ -3358,7 +3358,7 @@ function firstDelimiterCheckForUpdate($w, $query, $settings, $db, $update_in_pro
     $display_name              = $settings->display_name;
     $userid                    = $settings->userid;
     $echonest_api_key          = $settings->echonest_api_key;
-    
+
     $check_results = checkForUpdate($w, 0);
     if ($check_results != null && is_array($check_results)) {
         $w->result(null, '', 'New version ' . $check_results[0] . ' is available !', $check_results[2], './images/info.png', 'no', null, '');
@@ -3387,8 +3387,8 @@ function firstDelimiterCheckForUpdate($w, $query, $settings, $db, $update_in_pro
             $userid
             /* userid*/
         )), 'Click to open and install the new version', "This will open the new version of the Spotify Mini Player workflow", './images/alfred-workflow-icon.png', 'yes', null, '');
-        
-        
+
+
     } elseif ($check_results == null) {
         $w->result(null, '', 'No update available', 'You are good to go!', './images/info.png', 'no', null, '');
     } else {
@@ -3420,7 +3420,7 @@ function firstDelimiterCheckForUpdate($w, $query, $settings, $db, $update_in_pro
                 /* userid*/
             )), 'Download workflow from Packal', "This will open the Spotify Mini Player Packal page with your default browser", './images/packal.png', 'yes', null, '');
         }
-        
+
     }
     echo $w->toxml();
     return;
@@ -3441,7 +3441,7 @@ function secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
 {
     $words = explode('▹', $query);
     $kind  = $words[0];
-    
+
     $all_playlists             = $settings->all_playlists;
     $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
     $radio_number_tracks       = $settings->radio_number_tracks;
@@ -3460,7 +3460,7 @@ function secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
     $display_name              = $settings->display_name;
     $userid                    = $settings->userid;
     $echonest_api_key          = $settings->echonest_api_key;
-    
+
     //
     // display tracks for selected artists
     //
@@ -3468,10 +3468,10 @@ function secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
     $artist_uri  = $tmp[0];
     $artist_name = $tmp[1];
     $track       = $words[2];
-    
+
     $href = explode(':', $artist_uri);
     if ($href[1] == 'track') {
-        
+
         $track_uri  = $artist_uri;
         $artist_uri = getArtistUriFromTrack($w, $track_uri);
         if ($artist_uri == false) {
@@ -3532,8 +3532,8 @@ function secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
             $userid
             /* userid*/
         )), "👤 " . $artist_name, '☁︎ Query all albums/tracks from this artist online..', './images/online_artist.png', 'yes', null, '');
-        
-        
+
+
         $w->result(null, serialize(array(
             '' /*track_uri*/ ,
             '' /* album_uri */ ,
@@ -3559,11 +3559,11 @@ function secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
             $userid
             /* userid*/
         )), 'Display biography', 'This will display the artist biography', './images/biography.png', 'yes', null, '');
-        
+
         $w->result(null, '', 'Follow/Unfollow Artist', 'Display options to follow/unfollow the artist', './images/follow.png', 'no', null, "Follow/Unfollow▹" . $artist_uri . "@" . $artist_name . '▹');
-        
+
         $w->result(null, '', 'Related Artists', 'Browse related artists', './images/related.png', 'no', null, "OnlineRelated▹" . $artist_uri . "@" . $artist_name . '▹');
-        
+
         if ($update_in_progress == false) {
             $w->result(null, serialize(array(
                 '' /*track_uri*/ ,
@@ -3591,7 +3591,7 @@ function secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
                 /* userid*/
             )), 'Create a Radio Playlist for ' . $artist_name, 'This will create a radio playlist with ' . $radio_number_tracks . ' tracks for the artist', './images/radio_artist.png', 'yes', null, '');
         }
-        
+
         if ($all_playlists == false || count($tmp) == 3) {
             $getTracks = "select * from tracks where yourmusic=1 and artist_uri=:artist_uri limit " . $max_results;
         } else {
@@ -3609,12 +3609,12 @@ function secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
         $stmt->bindValue(':artist_uri', $artist_uri);
         $stmt->bindValue(':track', '%' . $track . '%');
     }
-    
+
     $tracks = $stmt->execute();
-    
+
     $noresult = true;
     while ($track = $stmt->fetch()) {
-        
+
         if ($noresult) {
             $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
             $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
@@ -3622,9 +3622,9 @@ function secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
         }
         $noresult = false;
         $subtitle = $track[6];
-        
+
         if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " ● " . $track[5]) == false) {
-            
+
             $w->result(null, serialize(array(
                 $track[2] /*track_uri*/ ,
                 $track[3] /* album_uri */ ,
@@ -3659,16 +3659,16 @@ function secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
             ), $track[9], 'yes', null, '');
         }
     }
-    
+
     if ($noresult) {
         if (mb_strlen($track) < 3) {
             $w->result(null, 'help', "There is no track in your library for the artist " . escapeQuery($artist_name), "Choose one of the options above", './images/info.png', 'no', null, '');
         } else {
             $w->result(null, 'help', "There is no result for your search", "", './images/warning.png', 'no', null, '');
         }
-        
+
     }
-    
+
     $w->result(null, serialize(array(
         '' /*track_uri*/ ,
         '' /* album_uri */ ,
@@ -3718,7 +3718,7 @@ function secondDelimiterAlbums($w, $query, $settings, $db, $update_in_progress)
 {
     $words = explode('▹', $query);
     $kind  = $words[0];
-    
+
     $all_playlists             = $settings->all_playlists;
     $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
     $radio_number_tracks       = $settings->radio_number_tracks;
@@ -3737,7 +3737,7 @@ function secondDelimiterAlbums($w, $query, $settings, $db, $update_in_progress)
     $display_name              = $settings->display_name;
     $userid                    = $settings->userid;
     $echonest_api_key          = $settings->echonest_api_key;
-    
+
     //
     // display tracks for selected album
     //
@@ -3745,10 +3745,10 @@ function secondDelimiterAlbums($w, $query, $settings, $db, $update_in_progress)
     $album_uri  = $tmp[0];
     $album_name = $tmp[1];
     $track      = $words[2];
-    
+
     $href = explode(':', $album_uri);
     if ($href[1] == 'track') {
-        
+
         $track_uri = $album_uri;
         $album_uri = getAlbumUriFromTrack($w, $track_uri);
         if ($album_uri == false) {
@@ -3757,7 +3757,7 @@ function secondDelimiterAlbums($w, $query, $settings, $db, $update_in_progress)
             return;
         }
     }
-    
+
     try {
         if (mb_strlen($track) < 3) {
             if ($all_playlists == false || count($tmp) == 3) {
@@ -3777,15 +3777,15 @@ function secondDelimiterAlbums($w, $query, $settings, $db, $update_in_progress)
             $stmt->bindValue(':album_uri', $album_uri);
             $stmt->bindValue(':track', '%' . $track . '%');
         }
-        
+
         $tracks = $stmt->execute();
-        
+
     }
     catch (PDOException $e) {
         handleDbIssuePdoXml($db);
         return;
     }
-    
+
     $album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, false);
     $w->result(null, serialize(array(
         '' /*track_uri*/ ,
@@ -3812,7 +3812,7 @@ function secondDelimiterAlbums($w, $query, $settings, $db, $update_in_progress)
         $userid
         /* userid*/
     )), "💿 " . $album_name, 'Play album', $album_artwork_path, 'yes', null, '');
-    
+
     try {
         $getArtist     = "select artist_uri,artist_name from tracks where album_uri=:album_uri limit 1";
         $stmtGetArtist = $db->prepare($getArtist);
@@ -3824,16 +3824,16 @@ function secondDelimiterAlbums($w, $query, $settings, $db, $update_in_progress)
         handleDbIssuePdoXml($db);
         return;
     }
-    
+
     $w->result(null, '', "💿 " . ucfirst($album_name), '☁︎ Query all tracks from this album online..', './images/online_album.png', 'no', null, "Online▹" . $onetrack[0] . '@' . $onetrack[1] . '@' . $album_uri . '@' . $album_name . '▹');
-    
+
     if ($update_in_progress == false) {
         $w->result(null, '', 'Add album ' . escapeQuery($album_name) . ' to...', 'This will add the album to Your Music or a playlist you will choose in next step', './images/add.png', 'no', null, 'Add▹' . $album_uri . '∙' . escapeQuery($album_name) . '▹');
     }
-    
+
     $noresult = true;
     while ($track = $stmt->fetch()) {
-        
+
         if ($noresult == true) {
             $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
             $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
@@ -3841,9 +3841,9 @@ function secondDelimiterAlbums($w, $query, $settings, $db, $update_in_progress)
         }
         $noresult = false;
         $subtitle = $track[6];
-        
+
         if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " ● " . $track[5]) == false) {
-            
+
             $w->result(null, serialize(array(
                 $track[2] /*track_uri*/ ,
                 $track[3] /* album_uri */ ,
@@ -3878,10 +3878,10 @@ function secondDelimiterAlbums($w, $query, $settings, $db, $update_in_progress)
             ), $track[9], 'yes', null, '');
         }
     }
-    
+
     if ($noresult) {
         $w->result(null, 'help', "There is no result for your search", "", './images/warning.png', 'no', null, '');
-        
+
         $w->result(null, serialize(array(
             '' /*track_uri*/ ,
             '' /* album_uri */ ,
@@ -3965,7 +3965,7 @@ function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progres
 {
     $words = explode('▹', $query);
     $kind  = $words[0];
-    
+
     $all_playlists             = $settings->all_playlists;
     $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
     $radio_number_tracks       = $settings->radio_number_tracks;
@@ -3984,25 +3984,25 @@ function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progres
     $display_name              = $settings->display_name;
     $userid                    = $settings->userid;
     $echonest_api_key          = $settings->echonest_api_key;
-    
+
     //
     // display tracks for selected playlist
     //
     $theplaylisturi = $words[1];
     $thetrack       = $words[2];
     $getPlaylists   = "select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist from playlists where uri=:uri";
-    
+
     try {
         $stmt = $db->prepare($getPlaylists);
         $stmt->bindValue(':uri', $theplaylisturi);
-        
+
         $playlists        = $stmt->execute();
         $noresultplaylist = true;
         while ($playlist = $stmt->fetch()) {
-            
+
             $noresultplaylist = false;
             if (mb_strlen($thetrack) < 3) {
-                
+
                 $subtitle = "Launch Playlist";
                 if ($is_alfred_playlist_active == true && $playlist[1] != $alfred_playlist_name) {
                     $subtitle = "$subtitle ,⇧ ▹ add playlist to ...";
@@ -4064,11 +4064,11 @@ function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progres
                     $userid
                     /* userid*/
                 )), "Open playlist " . escapeQuery($playlist[1]) . " in Spotify", "This will open the playlist in Spotify", './images/spotify.png', 'yes', null, '');
-                
+
                 if ($update_in_progress == false) {
                     $w->result(null, '', 'Add playlist ' . escapeQuery($playlist[1]) . ' to...', 'This will add the playlist to Your Music or a playlist you will choose in next step', './images/add.png', 'no', null, 'Add▹' . $playlist[0] . '∙' . escapeQuery($playlist[1]) . '▹');
                 }
-                
+
                 $getTracks = "select * from tracks where playlist_uri=:theplaylisturi limit " . $max_results;
                 $stmt      = $db->prepare($getTracks);
                 $stmt->bindValue(':theplaylisturi', $theplaylisturi);
@@ -4078,12 +4078,12 @@ function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progres
                 $stmt->bindValue(':theplaylisturi', $theplaylisturi);
                 $stmt->bindValue(':track', '%' . $thetrack . '%');
             }
-            
+
             $tracks = $stmt->execute();
-            
+
             $noresult = true;
             while ($track = $stmt->fetch()) {
-                
+
                 if ($noresult) {
                     $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
                     $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
@@ -4091,9 +4091,9 @@ function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progres
                 }
                 $noresult = false;
                 $subtitle = $track[6];
-                
+
                 if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " ● " . $track[5]) == false) {
-                    
+
                     $w->result(null, serialize(array(
                         $track[2] /*track_uri*/ ,
                         $track[3] /* album_uri */ ,
@@ -4126,16 +4126,16 @@ function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progres
                         'shift' => 'Add album ' . $track[6] . ' to ...',
                         'ctrl' => 'Search artist ' . $track[7] . ' online'
                     ), $track[9], 'yes', null, '');
-                    
+
                 }
             }
-            
+
             if ($noresult) {
                 $w->result(null, 'help', "There is no result for your search", "", './images/warning.png', 'no', null, '');
-                
+
             }
         }
-        
+
         // can happen only with Alfred Playlist deleted
         if ($noresultplaylist) {
             $w->result(null, 'help', "It seems your Alfred Playlist was deleted", "Choose option below to change it", './images/warning.png', 'no', null, '');
@@ -4163,7 +4163,7 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
 {
     $words = explode('▹', $query);
     $kind  = $words[0];
-    
+
     $all_playlists             = $settings->all_playlists;
     $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
     $radio_number_tracks       = $settings->radio_number_tracks;
@@ -4182,7 +4182,7 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
     $display_name              = $settings->display_name;
     $userid                    = $settings->userid;
     $echonest_api_key          = $settings->echonest_api_key;
-    
+
     if (substr_count($query, '@') == 1) {
         //
         // Search Artist Online
@@ -4191,9 +4191,9 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
         $words      = explode('@', $tmp);
         $artist_uri = $words[0];
         $tmp_uri    = explode(':', $artist_uri);
-        
+
         $artist_name = $words[1];
-        
+
         $artist_artwork_path = getArtistArtwork($w, $artist_name, false);
         $w->result(null, serialize(array(
             '' /*track_uri*/ ,
@@ -4220,7 +4220,7 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
             $userid
             /* userid*/
         )), "👤 " . $artist_name, 'Play artist', $artist_artwork_path, 'yes', null, '');
-        
+
         $w->result(null, serialize(array(
             '' /*track_uri*/ ,
             '' /* album_uri */ ,
@@ -4246,11 +4246,11 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
             $userid
             /* userid*/
         )), 'Display biography', 'This will display the artist biography', './images/biography.png', 'yes', null, '');
-        
+
         $w->result(null, '', 'Follow/Unfollow Artist', 'Display options to follow/unfollow the artist', './images/follow.png', 'no', null, "Follow/Unfollow▹" . $artist_uri . "@" . $artist_name . '▹');
-        
+
         $w->result(null, '', 'Related Artists', 'Browse related artists', './images/related.png', 'no', null, "OnlineRelated▹" . $artist_uri . "@" . $artist_name . '▹');
-        
+
         if ($update_in_progress == false) {
             $w->result(null, serialize(array(
                 '' /*track_uri*/ ,
@@ -4278,13 +4278,13 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
                 /* userid*/
             )), 'Create a Radio Playlist for ' . $artist_name, 'This will create a radio playlist with ' . $radio_number_tracks . ' tracks for the artist', './images/radio_artist.png', 'yes', null, '');
         }
-        
+
         // call to web api, if it fails,
         // it displays an error in main window
         $albums = getTheArtistAlbums($w, $artist_uri, $country_code);
-        
+
         $w->result(null, 'help', "Select an album below to browse it", 'singles and compilations are also displayed', './images/info.png', 'no', null, '');
-        
+
         $noresult = true;
         foreach ($albums as $album) {
             if (checkIfResultAlreadyThere($w->results(), ucfirst($album->name) . ' (' . count($tracks->items) . ' tracks)') == false) {
@@ -4294,11 +4294,11 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
                 $w->result(null, '', ucfirst($album->name) . ' (' . count($tracks->items) . ' tracks)', $album->album_type . " by " . $artist_name . ' ● Release date: ' . $album->release_date . $genre, getTrackOrAlbumArtwork($w, $album->uri, false), 'no', null, "Online▹" . $artist_uri . "@" . $artist_name . "@" . $album->uri . "@" . $album->name . '▹');
             }
         }
-        
+
         if ($noresult) {
             $w->result(null, 'help', "There is no album for this artist", "", './images/warning.png', 'no', null, '');
         }
-        
+
     } elseif (substr_count($query, '@') == 3) {
         //
         // Search Album Online
@@ -4309,7 +4309,7 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
         $artist_name = $words[1];
         $album_uri   = $words[2];
         $album_name  = $words[3];
-        
+
         $href = explode(':', $album_uri);
         if ($href[1] == 'track') {
             $track_uri = $album_uri;
@@ -4320,7 +4320,7 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
                 return;
             }
         }
-        
+
         $album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, false);
         $w->result(null, serialize(array(
             '' /*track_uri*/ ,
@@ -4347,20 +4347,20 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
             $userid
             /* userid*/
         )), "💿 " . escapeQuery($album_name), 'Play album', $album_artwork_path, 'yes', null, '');
-        
+
         if ($update_in_progress == false) {
             $w->result(null, '', 'Add album ' . escapeQuery($album_name) . ' to...', 'This will add the album to Your Music or a playlist you will choose in next step', './images/add.png', 'no', null, 'Add▹' . $album_uri . '∙' . escapeQuery($album_name) . '▹');
         }
-        
+
         // call to web api, if it fails,
         // it displays an error in main window
         $tracks = getTheAlbumFullTracks($w, $album_uri);
-        
+
         $noresult = true;
         foreach ($tracks as $track) {
-            
+
             if (count($track->available_markets) == 0 || in_array($country_code, $track->available_markets) !== false) {
-                
+
                 if ($noresult == true) {
                     $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
                     $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
@@ -4420,7 +4420,7 @@ function secondDelimiterOnlineRelated($w, $query, $settings, $db, $update_in_pro
 {
     $words = explode('▹', $query);
     $kind  = $words[0];
-    
+
     $all_playlists             = $settings->all_playlists;
     $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
     $radio_number_tracks       = $settings->radio_number_tracks;
@@ -4439,7 +4439,7 @@ function secondDelimiterOnlineRelated($w, $query, $settings, $db, $update_in_pro
     $display_name              = $settings->display_name;
     $userid                    = $settings->userid;
     $echonest_api_key          = $settings->echonest_api_key;
-    
+
     if (substr_count($query, '@') == 1) {
         //
         // Search Related Artist Online
@@ -4448,11 +4448,11 @@ function secondDelimiterOnlineRelated($w, $query, $settings, $db, $update_in_pro
         $words       = explode('@', $tmp);
         $artist_uri  = $words[0];
         $artist_name = $words[1];
-        
+
         // call to web api, if it fails,
         // it displays an error in main window
         $relateds = getTheArtistRelatedArtists($w, trim($artist_uri));
-        
+
         foreach ($relateds as $related) {
             $w->result(null, '', "👤 " . ucfirst($related->name), '☁︎ Query all albums/tracks from this artist online..', getArtistArtwork($w, $related->name, false), 'no', null, "Online▹" . $related->uri . "@" . $related->name . '▹');
         }
@@ -4474,7 +4474,7 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
 {
     $words = explode('▹', $query);
     $kind  = $words[0];
-    
+
     $all_playlists             = $settings->all_playlists;
     $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
     $radio_number_tracks       = $settings->radio_number_tracks;
@@ -4493,7 +4493,7 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
     $display_name              = $settings->display_name;
     $userid                    = $settings->userid;
     $echonest_api_key          = $settings->echonest_api_key;
-    
+
     //
     // display tracks for selected online playlist
     //
@@ -4502,7 +4502,7 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
     $url            = explode(':', $theplaylisturi);
     $owner_id       = $url[2];
     $playlist_id    = $url[4];
-    
+
     $theplaylistname     = $tmp[1];
     $thetrack            = $words[2];
     $savedPlaylistTracks = array();
@@ -4526,7 +4526,7 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
                 'limit' => $limitGetUserPlaylistTracks,
                 'offset' => $offsetGetUserPlaylistTracks
             ));
-            
+
             foreach ($userPlaylistTracks->items as $item) {
                 $track = $item->track;
                 // This is a known issue
@@ -4535,7 +4535,7 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
                     //skip
                     continue;
                 }
-                
+
                 $savedPlaylistTracks[] = $track;
                 $nb_tracks += 1;
                 $duration_playlist += $track->duration_ms;
@@ -4548,8 +4548,8 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
         echo $w->toxml();
         return;
     }
-    
-    
+
+
     $subtitle = "Launch Playlist";
     if ($is_alfred_playlist_active == true) {
         $subtitle = "$subtitle ,⇧ ▹ add playlist to ...";
@@ -4583,8 +4583,8 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
         'fn' => 'Not Available',
         'ctrl' => 'Not Available'
     ), $playlist_artwork_path, 'yes', null, '');
-    
-    
+
+
     $w->result(null, serialize(array(
         '' /*track_uri*/ ,
         '' /* album_uri */ ,
@@ -4610,11 +4610,11 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
         $userid
         /* userid*/
     )), "Open playlist " . $theplaylistname . " in Spotify", "This will open the playlist in Spotify", './images/spotify.png', 'yes', null, '');
-    
+
     if ($update_in_progress == false) {
         $w->result(null, '', 'Add playlist ' . $theplaylistname . ' to...', 'This will add the playlist to Your Music or a playlist you will choose in next step', './images/add.png', 'no', null, 'Add▹' . $theplaylisturi . '∙' . $theplaylistname . '▹');
     }
-    
+
     $noresult   = true;
     $nb_results = 0;
     foreach ($savedPlaylistTracks as $track) {
@@ -4630,7 +4630,7 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
         $artists  = $track->artists;
         $artist   = $artists[0];
         $album    = $track->album;
-        
+
         $track_artwork_path = getTrackOrAlbumArtwork($w, $track->uri, false);
         $w->result(null, serialize(array(
             $track->uri /*track_uri*/ ,
@@ -4683,7 +4683,7 @@ function secondDelimiterYourMusicTracks($w, $query, $settings, $db, $update_in_p
 {
     $words = explode('▹', $query);
     $kind  = $words[0];
-    
+
     $all_playlists             = $settings->all_playlists;
     $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
     $radio_number_tracks       = $settings->radio_number_tracks;
@@ -4702,12 +4702,12 @@ function secondDelimiterYourMusicTracks($w, $query, $settings, $db, $update_in_p
     $display_name              = $settings->display_name;
     $userid                    = $settings->userid;
     $echonest_api_key          = $settings->echonest_api_key;
-    
+
     //
     // display tracks for Your Music
     //
     $thetrack = $words[2];
-    
+
     if (mb_strlen($thetrack) < 3) {
         $getTracks = "select * from tracks where yourmusic=1 limit " . $max_results;
         $stmt      = $db->prepare($getTracks);
@@ -4716,12 +4716,12 @@ function secondDelimiterYourMusicTracks($w, $query, $settings, $db, $update_in_p
         $stmt      = $db->prepare($getTracks);
         $stmt->bindValue(':track', '%' . $thetrack . '%');
     }
-    
+
     $tracks = $stmt->execute();
-    
+
     $noresult = true;
     while ($track = $stmt->fetch()) {
-        
+
         if ($noresult) {
             $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
             $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
@@ -4729,7 +4729,7 @@ function secondDelimiterYourMusicTracks($w, $query, $settings, $db, $update_in_p
         }
         $noresult = false;
         $subtitle = $track[6];
-        
+
         if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " ● " . $track[5]) == false) {
             $w->result(null, serialize(array(
                 $track[2] /*track_uri*/ ,
@@ -4765,12 +4765,12 @@ function secondDelimiterYourMusicTracks($w, $query, $settings, $db, $update_in_p
             ), $track[9], 'yes', null, '');
         }
     }
-    
+
     if ($noresult) {
         $w->result(null, 'help', "There is no result for your search", "", './images/warning.png', 'no', null, '');
-        
+
     }
-    
+
     if (mb_strlen($thetrack) > 0) {
         $w->result(null, serialize(array(
             '' /*track_uri*/ ,
@@ -4804,7 +4804,7 @@ function secondDelimiterYourMusicTracks($w, $query, $settings, $db, $update_in_p
             'fn' => 'Not Available',
             'ctrl' => 'Not Available'
         ), './images/spotify.png', 'yes', null, '');
-        
+
         $w->result(null, null, "Search for " . $query . " online", array(
             'This will search online, i.e not in your library',
             'alt' => 'Not Available',
@@ -4831,7 +4831,7 @@ function secondDelimiterYourMusicAlbums($w, $query, $settings, $db, $update_in_p
 {
     $words = explode('▹', $query);
     $kind  = $words[0];
-    
+
     $all_playlists             = $settings->all_playlists;
     $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
     $radio_number_tracks       = $settings->radio_number_tracks;
@@ -4850,7 +4850,7 @@ function secondDelimiterYourMusicAlbums($w, $query, $settings, $db, $update_in_p
     $display_name              = $settings->display_name;
     $userid                    = $settings->userid;
     $echonest_api_key          = $settings->echonest_api_key;
-    
+
     //
     // Search albums
     //
@@ -4864,15 +4864,15 @@ function secondDelimiterYourMusicAlbums($w, $query, $settings, $db, $update_in_p
             $stmt      = $db->prepare($getTracks);
             $stmt->bindValue(':query', '%' . $album . '%');
         }
-        
+
         $tracks = $stmt->execute();
-        
+
     }
     catch (PDOException $e) {
         handleDbIssuePdoXml($db);
         return;
     }
-    
+
     // display all albums
     $noresult = true;
     while ($track = $stmt->fetch()) {
@@ -4882,7 +4882,7 @@ function secondDelimiterYourMusicAlbums($w, $query, $settings, $db, $update_in_p
             $w->result(null, '', ucfirst($track[0]) . ' (' . $nb_album_tracks . ' tracks)', $track[4] . ' by ' . $track[2], $track[1], 'no', null, "Album▹" . $track[3] . '∙' . $track[0] . '∙' . ' ★ ' . "▹");
         }
     }
-    
+
     if ($noresult) {
         $w->result(null, 'help', "There is no result for your search", "", './images/warning.png', 'no', null, '');
     }
@@ -4903,7 +4903,7 @@ function secondDelimiterYourMusicArtists($w, $query, $settings, $db, $update_in_
 {
     $words = explode('▹', $query);
     $kind  = $words[0];
-    
+
     $all_playlists             = $settings->all_playlists;
     $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
     $radio_number_tracks       = $settings->radio_number_tracks;
@@ -4922,12 +4922,12 @@ function secondDelimiterYourMusicArtists($w, $query, $settings, $db, $update_in_
     $display_name              = $settings->display_name;
     $userid                    = $settings->userid;
     $echonest_api_key          = $settings->echonest_api_key;
-    
+
     //
     // Search artists
     //
     $artist = $words[2];
-    
+
     try {
         if (mb_strlen($artist) < 3) {
             $getTracks = "select artist_name,artist_artwork_path,artist_uri from tracks where yourmusic=1 group by artist_name" . " limit " . $max_results;
@@ -4937,15 +4937,15 @@ function secondDelimiterYourMusicArtists($w, $query, $settings, $db, $update_in_
             $stmt      = $db->prepare($getTracks);
             $stmt->bindValue(':query', '%' . $artist . '%');
         }
-        
+
         $tracks = $stmt->execute();
-        
+
     }
     catch (PDOException $e) {
         handleDbIssuePdoXml($db);
         return;
     }
-    
+
     // display all artists
     $noresult = true;
     while ($track = $stmt->fetch()) {
@@ -4955,7 +4955,7 @@ function secondDelimiterYourMusicArtists($w, $query, $settings, $db, $update_in_
             $w->result(null, '', "👤 " . ucfirst($track[0]) . ' (' . $nb_artist_tracks . ' tracks)', "Browse this artist", $track[1], 'no', null, "Artist▹" . $track[2] . '∙' . $track[0] . '∙' . ' ★ ' . "▹");
         }
     }
-    
+
     if ($noresult) {
         $w->result(null, 'help', "There is no result for your search", "", './images/warning.png', 'no', null, '');
     }
@@ -4976,7 +4976,7 @@ function secondDelimiterSettings($w, $query, $settings, $db, $update_in_progress
 {
     $words = explode('▹', $query);
     $kind  = $words[0];
-    
+
     $all_playlists             = $settings->all_playlists;
     $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
     $radio_number_tracks       = $settings->radio_number_tracks;
@@ -4995,10 +4995,10 @@ function secondDelimiterSettings($w, $query, $settings, $db, $update_in_progress
     $display_name              = $settings->display_name;
     $userid                    = $settings->userid;
     $echonest_api_key          = $settings->echonest_api_key;
-    
+
     $setting_kind = $words[1];
     $the_query    = $words[2];
-    
+
     if ($setting_kind == "MaxResults") {
         if (mb_strlen($the_query) == 0) {
             $w->result(null, '', "Enter the Max Results number (must be greater than 0):", "Recommendation is between 10 to 100", './images/settings.png', 'no', null, '');
@@ -5032,7 +5032,7 @@ function secondDelimiterSettings($w, $query, $settings, $db, $update_in_progress
                 )), "Max Results will be set to <" . $the_query . ">", "Type enter to validate the Max Results", './images/settings.png', 'yes', null, '');
             } else {
                 $w->result(null, '', "The Max Results value entered is not valid", "Please fix it", './images/warning.png', 'no', null, '');
-                
+
             }
         }
     } elseif ($setting_kind == "RadioTracks") {
@@ -5068,7 +5068,7 @@ function secondDelimiterSettings($w, $query, $settings, $db, $update_in_progress
                 )), "Number of Radio Tracks will be set to <" . $the_query . ">", "Type enter to validate the Radio Tracks number", './images/settings.png', 'yes', null, '');
             } else {
                 $w->result(null, '', "The number of tracks value entered is not valid", "Please fix it, it must be a number between 1 and 100", './images/warning.png', 'no', null, '');
-                
+
             }
         }
     }
@@ -5089,7 +5089,7 @@ function secondDelimiterFeaturedPlaylist($w, $query, $settings, $db, $update_in_
 {
     $words = explode('▹', $query);
     $kind  = $words[0];
-    
+
     $all_playlists             = $settings->all_playlists;
     $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
     $radio_number_tracks       = $settings->radio_number_tracks;
@@ -5108,9 +5108,9 @@ function secondDelimiterFeaturedPlaylist($w, $query, $settings, $db, $update_in_
     $display_name              = $settings->display_name;
     $userid                    = $settings->userid;
     $echonest_api_key          = $settings->echonest_api_key;
-    
+
     $country = $words[1];
-    
+
     if ($country == 'Choose a Country') {
         // list taken from http://charts.spotify.com/docs
         $spotify_country_codes = array(
@@ -5175,7 +5175,7 @@ function secondDelimiterFeaturedPlaylist($w, $query, $settings, $db, $update_in_
                 'offset' => 0,
                 'timestamp' => ''
             ));
-            
+
             $subtitle  = "Launch Playlist";
             $playlists = $featuredPlaylists->playlists;
             $w->result(null, '', $featuredPlaylists->message, '' . $playlists->total . ' playlists available', './images/info.png', 'no', null, '');
@@ -5183,7 +5183,7 @@ function secondDelimiterFeaturedPlaylist($w, $query, $settings, $db, $update_in_
             foreach ($items as $playlist) {
                 $w->result(null, '', "🎵" . escapeQuery($playlist->name), "by " . $playlist->owner->id . " ● " . $playlist->tracks->total . " tracks", getPlaylistArtwork($w, $playlist->uri, false), 'no', null, "Online Playlist▹" . $playlist->uri . '∙' . escapeQuery($playlist->name) . "▹");
             }
-            
+
         }
         catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
             $w->result(null, 'help', "Exception occurred", "" . $e->getMessage(), './images/warning.png', 'no', null, '');
@@ -5208,7 +5208,7 @@ function secondDelimiterCharts($w, $query, $settings, $db, $update_in_progress)
 {
     $words = explode('▹', $query);
     $kind  = $words[0];
-    
+
     $all_playlists             = $settings->all_playlists;
     $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
     $radio_number_tracks       = $settings->radio_number_tracks;
@@ -5227,9 +5227,9 @@ function secondDelimiterCharts($w, $query, $settings, $db, $update_in_progress)
     $display_name              = $settings->display_name;
     $userid                    = $settings->userid;
     $echonest_api_key          = $settings->echonest_api_key;
-    
+
     $country = $words[1];
-    
+
     if ($country == 'Choose a Country') {
         // list taken from http://charts.spotify.com/docs
         $spotify_country_codes = array(
@@ -5286,7 +5286,7 @@ function secondDelimiterCharts($w, $query, $settings, $db, $update_in_progress)
         }
     } else {
         $json = doJsonRequest($w, "http://charts.spotify.com/api/tracks/most_streamed/" . trim($country) . "/weekly/latest", false);
-        
+
         $nb_results = 0;
         $noresult   = true;
         foreach ($json->tracks as $track) {
@@ -5302,10 +5302,10 @@ function secondDelimiterCharts($w, $query, $settings, $db, $update_in_progress)
             // format is https://play.spotify.com/track/3WBLQj2qtrKYFDcC5aisLD
             $href      = explode('/', $track->track_url);
             $track_uri = 'spotify:track:' . $href[4];
-            
+
             $href      = explode('/', $track->album_url);
             $album_uri = 'spotify:album:' . $href[4];
-            
+
             $href          = explode('/', $track->artist_url);
             $artist_uri    = 'spotify:artist:' . $href[4];
             $track_artwork = getTrackOrAlbumArtwork($w, $track_uri, false);
@@ -5361,7 +5361,7 @@ function secondDelimiterNewReleases($w, $query, $settings, $db, $update_in_progr
 {
     $words = explode('▹', $query);
     $kind  = $words[0];
-    
+
     $all_playlists             = $settings->all_playlists;
     $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
     $radio_number_tracks       = $settings->radio_number_tracks;
@@ -5380,9 +5380,9 @@ function secondDelimiterNewReleases($w, $query, $settings, $db, $update_in_progr
     $display_name              = $settings->display_name;
     $userid                    = $settings->userid;
     $echonest_api_key          = $settings->echonest_api_key;
-    
+
     $country = $words[1];
-    
+
     if ($country == 'Choose a Country') {
         // list taken from http://charts.spotify.com/docs
         $spotify_country_codes = array(
@@ -5442,13 +5442,13 @@ function secondDelimiterNewReleases($w, $query, $settings, $db, $update_in_progr
             //
             // Get New Releases Online
             //
-            
+
             // call to web api, if it fails,
             // it displays an error in main window
             $albums = getTheNewReleases($w, $country, $max_results);
-            
+
             $w->result(null, 'help', "Select an album below to browse it", 'singles and compilations are also displayed', './images/info.png', 'no', null, '');
-            
+
             $noresult = true;
             foreach ($albums as $album) {
                 if (checkIfResultAlreadyThere($w->results(), ucfirst($album->name) . ' (' . count($tracks->items) . ' tracks)') == false) {
@@ -5458,11 +5458,11 @@ function secondDelimiterNewReleases($w, $query, $settings, $db, $update_in_progr
                     $w->result(null, '', ucfirst($album->name) . ' (' . count($tracks->items) . ' tracks)', $album->album_type . " by " . $album->artists[0]->name . ' ● Release date: ' . $album->release_date . $genre, getTrackOrAlbumArtwork($w, $album->uri, false), 'no', null, "New Releases▹" . $country . '▹' . $album->uri . "@" . $album->name);
                 }
             }
-            
+
             if ($noresult) {
                 $w->result(null, 'help', "There is no album for this artist", "", './images/warning.png', 'no', null, '');
             }
-            
+
         } elseif (substr_count($query, '@') == 1) {
             //
             // Search Album Online
@@ -5471,7 +5471,7 @@ function secondDelimiterNewReleases($w, $query, $settings, $db, $update_in_progr
             $words      = explode('@', $tmp);
             $album_uri  = $words[0];
             $album_name = $words[1];
-            
+
             $album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, false);
             $w->result(null, serialize(array(
                 '' /*track_uri*/ ,
@@ -5498,21 +5498,21 @@ function secondDelimiterNewReleases($w, $query, $settings, $db, $update_in_progr
                 $userid
                 /* userid*/
             )), "💿 " . escapeQuery($album_name), 'Play album', $album_artwork_path, 'yes', null, '');
-            
+
             if ($update_in_progress == false) {
                 $w->result(null, '', 'Add album ' . escapeQuery($album_name) . ' to...', 'This will add the album to Your Music or a playlist you will choose in next step', './images/add.png', 'no', null, 'Add▹' . $album_uri . '∙' . escapeQuery($album_name) . '▹');
             }
-            
-            
+
+
             // call to web api, if it fails,
             // it displays an error in main window
             $tracks = getTheAlbumFullTracks($w, $album_uri);
-            
+
             $noresult = true;
             foreach ($tracks as $track) {
-                
+
                 if (count($track->available_markets) == 0 || in_array($country_code, $track->available_markets) !== false) {
-                    
+
                     if ($noresult == true) {
                         $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
                         $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
@@ -5573,7 +5573,7 @@ function secondDelimiterAdd($w, $query, $settings, $db, $update_in_progress)
 {
     $words = explode('▹', $query);
     $kind  = $words[0];
-    
+
     $all_playlists             = $settings->all_playlists;
     $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
     $radio_number_tracks       = $settings->radio_number_tracks;
@@ -5592,17 +5592,17 @@ function secondDelimiterAdd($w, $query, $settings, $db, $update_in_progress)
     $display_name              = $settings->display_name;
     $userid                    = $settings->userid;
     $echonest_api_key          = $settings->echonest_api_key;
-    
+
     if ($update_in_progress == true) {
         $w->result(null, '', 'Cannot add tracks/albums/playlists while update is in progress', 'Please retry when update is finished', './images/warning.png', 'no', null, '');
-        
+
         echo $w->toxml();
         return;
     }
-    
+
     $tmp = explode('∙', $words[1]);
     $uri = $tmp[0];
-    
+
     $href = explode(':', $uri);
     if ($href[1] == 'track') {
         $type       = 'track';
@@ -5621,17 +5621,17 @@ function secondDelimiterAdd($w, $query, $settings, $db, $update_in_progress)
         $message       = "playlist " . $playlist_name;
     }
     $theplaylist = $words[2];
-    
-    
+
+
     try {
         if (mb_strlen($theplaylist) < 3) {
             $getPlaylists = "select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist from playlists where ownedbyuser=1";
             $stmt         = $db->prepare($getPlaylists);
-            
+
             $w->result(null, '', 'Add ' . $type . ' ' . $tmp[1] . ' to Your Music or one of your playlists below..', "Select Your Music or one of your playlists below to add the " . $message, './images/add.png', 'no', null, '');
-            
+
             $w->result(null, '', "Create a new playlist ", "Create a new playlist and add the " . $message, './images/create_playlist.png', 'no', null, $query . 'Enter Playlist Name▹');
-            
+
             // put Alfred Playlist at beginning
             if ($is_alfred_playlist_active == true) {
                 if ($alfred_playlist_uri != '' && $alfred_playlist_name != '') {
@@ -5660,10 +5660,10 @@ function secondDelimiterAdd($w, $query, $settings, $db, $update_in_progress)
                         $userid
                         /* userid*/
                     )), "🎵 Alfred Playlist " . " ● " . ucfirst($alfred_playlist_name), "Select the playlist to add the " . $message, './images/alfred_playlist.png', 'yes', null, '');
-                    
+
                 }
             }
-            
+
             $w->result(null, serialize(array(
                 $track_uri /*track_uri*/ ,
                 $album_uri /* album_uri */ ,
@@ -5694,16 +5694,16 @@ function secondDelimiterAdd($w, $query, $settings, $db, $update_in_progress)
             $stmt         = $db->prepare($getPlaylists);
             $stmt->bindValue(':playlist', '%' . $theplaylist . '%');
         }
-        
+
         $playlists = $stmt->execute();
     }
     catch (PDOException $e) {
         handleDbIssuePdoXml($db);
         return;
     }
-    
+
     while ($playlist = $stmt->fetch()) {
-        
+
         if (($playlist[0] != $alfred_playlist_uri && (mb_strlen($theplaylist) < 3)) || (mb_strlen($theplaylist) >= 3)) {
             $added = ' ';
             if (startswith($playlist[1], 'Artist radio for')) {
@@ -5753,7 +5753,7 @@ function secondDelimiterRemove($w, $query, $settings, $db, $update_in_progress)
 {
     $words = explode('▹', $query);
     $kind  = $words[0];
-    
+
     $all_playlists             = $settings->all_playlists;
     $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
     $radio_number_tracks       = $settings->radio_number_tracks;
@@ -5772,14 +5772,14 @@ function secondDelimiterRemove($w, $query, $settings, $db, $update_in_progress)
     $display_name              = $settings->display_name;
     $userid                    = $settings->userid;
     $echonest_api_key          = $settings->echonest_api_key;
-    
+
     if ($update_in_progress == true) {
         $w->result(null, '', 'Cannot remove tracks while update is in progress', 'Please retry when update is finished', './images/warning.png', 'no', null, '');
-        
+
         echo $w->toxml();
         return;
     }
-    
+
     $tmp         = explode('∙', $words[1]);
     $uri         = $tmp[0];
     // it is necessarly a track:
@@ -5788,14 +5788,14 @@ function secondDelimiterRemove($w, $query, $settings, $db, $update_in_progress)
     $track_uri   = $uri;
     $message     = "track " . $track_name;
     $theplaylist = $words[2];
-    
+
     $noresult             = true;
     $getPlaylistsForTrack = "select distinct playlist_uri from tracks where uri=:uri";
     try {
         $stmt = $db->prepare($getPlaylistsForTrack);
         $stmt->bindValue(':uri', '' . $track_uri . '');
         $stmt->execute();
-        
+
         while ($playlistsForTrack = $stmt->fetch()) {
             if ($playlistsForTrack[0] == "") {
                 if ($noresult == true) {
@@ -5839,9 +5839,9 @@ function secondDelimiterRemove($w, $query, $settings, $db, $update_in_progress)
                     $stmtGetPlaylists->bindValue(':playlist_uri', $playlistsForTrack[0]);
                     $stmtGetPlaylists->bindValue(':playlist', '%' . $theplaylist . '%');
                 }
-                
+
                 $playlists = $stmtGetPlaylists->execute();
-                
+
                 while ($playlist = $stmtGetPlaylists->fetch()) {
                     if ($noresult == true) {
                         $w->result(null, '', 'Remove ' . $type . ' ' . $tmp[1] . ' from Your Music or one of your playlists below..', "Select Your Music or one of your playlists below to remove the " . $message, './images/add.png', 'no', null, '');
@@ -5877,7 +5877,7 @@ function secondDelimiterRemove($w, $query, $settings, $db, $update_in_progress)
                     )), "🎵" . $added . ucfirst($playlist[1]), $playlist[7] . " tracks ● " . $playlist[8] . " ● Select the playlist to remove the " . $message, $playlist[5], 'yes', null, '');
                     $noresult = false;
                 }
-                
+
             }
         }
     }
@@ -5885,7 +5885,7 @@ function secondDelimiterRemove($w, $query, $settings, $db, $update_in_progress)
         handleDbIssuePdoXml($db);
         return;
     }
-    
+
     if ($noresult) {
         $w->result(null, 'help', "The current track is not in Your Music or one of your playlists", "", './images/warning.png', 'no', null, '');
     }
@@ -5906,7 +5906,7 @@ function secondDelimiterAlfredPlaylist($w, $query, $settings, $db, $update_in_pr
 {
     $words = explode('▹', $query);
     $kind  = $words[0];
-    
+
     $all_playlists             = $settings->all_playlists;
     $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
     $radio_number_tracks       = $settings->radio_number_tracks;
@@ -5925,13 +5925,13 @@ function secondDelimiterAlfredPlaylist($w, $query, $settings, $db, $update_in_pr
     $display_name              = $settings->display_name;
     $userid                    = $settings->userid;
     $echonest_api_key          = $settings->echonest_api_key;
-    
+
     $setting_kind = $words[1];
     $theplaylist  = $words[2];
-    
+
     if ($setting_kind == "Set Alfred Playlist") {
         $w->result(null, '', "Set your Alfred playlist", "Select one of your playlists below as your Alfred playlist", './images/settings.png', 'no', null, '');
-        
+
         try {
             if (mb_strlen($theplaylist) < 3) {
                 $getPlaylists = "select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist from playlists where ownedbyuser=1";
@@ -5941,17 +5941,17 @@ function secondDelimiterAlfredPlaylist($w, $query, $settings, $db, $update_in_pr
                 $stmt         = $db->prepare($getPlaylists);
                 $stmt->bindValue(':playlist', '%' . $theplaylist . '%');
             }
-            
+
             $playlists = $stmt->execute();
-            
+
         }
         catch (PDOException $e) {
             handleDbIssuePdoXml($db);
             return;
         }
-        
+
         while ($playlist = $stmt->fetch()) {
-            
+
             $added = ' ';
             if (startswith($playlist[1], 'Artist radio for')) {
                 $added = '📻 ';
@@ -5981,14 +5981,14 @@ function secondDelimiterAlfredPlaylist($w, $query, $settings, $db, $update_in_pr
                 $userid
                 /* userid*/
             )), "🎵" . $added . ucfirst($playlist[1]), $playlist[7] . " tracks ● " . $playlist[8] . " ● Select the playlist to set it as your Alfred Playlist", $playlist[5], 'yes', null, '');
-            
+
         }
     } elseif ($setting_kind == "Confirm Clear Alfred Playlist") {
-        
+
         $w->result(null, '', "Are you sure?", "This will remove all the tracks in your current Alfred Playlist.", './images/warning.png', 'no', null, '');
-        
+
         $w->result(null, '', "No, cancel", "Return to Alfred Playlist", './images/uncheck.png', 'no', null, 'Alfred Playlist▹');
-        
+
         $w->result(null, serialize(array(
             '' /*track_uri*/ ,
             '' /* album_uri */ ,
@@ -6014,7 +6014,7 @@ function secondDelimiterAlfredPlaylist($w, $query, $settings, $db, $update_in_pr
             $userid
             /* userid*/
         )), "Yes, go ahead", "This is undoable", './images/check.png', 'yes', null, '');
-        
+
     }
 }
 
@@ -6033,7 +6033,7 @@ function secondDelimiterFollowUnfollow($w, $query, $settings, $db, $update_in_pr
 {
     $words = explode('▹', $query);
     $kind  = $words[0];
-    
+
     $all_playlists             = $settings->all_playlists;
     $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
     $radio_number_tracks       = $settings->radio_number_tracks;
@@ -6052,7 +6052,7 @@ function secondDelimiterFollowUnfollow($w, $query, $settings, $db, $update_in_pr
     $display_name              = $settings->display_name;
     $userid                    = $settings->userid;
     $echonest_api_key          = $settings->echonest_api_key;
-    
+
     if (substr_count($query, '@') == 1) {
         //
         // Follow / Unfollow artist Option menu
@@ -6061,20 +6061,20 @@ function secondDelimiterFollowUnfollow($w, $query, $settings, $db, $update_in_pr
         $words      = explode('@', $tmp);
         $artist_uri = $words[0];
         $tmp_uri    = explode(':', $artist_uri);
-        
+
         $artist_name = $words[1];
-        
+
         try {
             $api              = getSpotifyWebAPI($w);
             $isArtistFollowed = $api->currentUserFollows('artist', $tmp_uri[2]);
-            
+
             $artist_artwork_path = getArtistArtwork($w, $artist_name, false);
             if (!$isArtistFollowed[0]) {
                 $w->result(null, '', 'Follow artist ' . $artist_name, 'You are not currently following the artist', $artist_artwork_path, 'no', null, "Follow▹" . $artist_uri . "@" . $artist_name . '▹');
             } else {
                 $w->result(null, '', 'Unfollow artist ' . $artist_name, 'You are currently following the artist', $artist_artwork_path, 'no', null, "Unfollow▹" . $artist_uri . "@" . $artist_name . '▹');
             }
-            
+
         }
         catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
             $w->result(null, 'help', "Exception occurred", "" . $e->getMessage(), './images/warning.png', 'no', null, '');
@@ -6099,7 +6099,7 @@ function secondDelimiterFollowOrUnfollow($w, $query, $settings, $db, $update_in_
 {
     $words = explode('▹', $query);
     $kind  = $words[0];
-    
+
     $all_playlists             = $settings->all_playlists;
     $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
     $radio_number_tracks       = $settings->radio_number_tracks;
@@ -6118,7 +6118,7 @@ function secondDelimiterFollowOrUnfollow($w, $query, $settings, $db, $update_in_
     $display_name              = $settings->display_name;
     $userid                    = $settings->userid;
     $echonest_api_key          = $settings->echonest_api_key;
-    
+
     if (substr_count($query, '@') == 1) {
         //
         // Follow / Unfollow actions
@@ -6127,9 +6127,9 @@ function secondDelimiterFollowOrUnfollow($w, $query, $settings, $db, $update_in_
         $words      = explode('@', $tmp);
         $artist_uri = $words[0];
         $tmp_uri    = explode(':', $artist_uri);
-        
+
         $artist_name = $words[1];
-        
+
         if ($kind == "Follow") {
             $follow = true;
         } else {
@@ -6142,7 +6142,7 @@ function secondDelimiterFollowOrUnfollow($w, $query, $settings, $db, $update_in_
             } else {
                 $ret = $api->unfollowArtistsOrUsers('artist', $tmp_uri[2]);
             }
-            
+
             if ($ret) {
                 if ($follow) {
                     displayNotificationWithArtwork('You are now following the artist ' . $artist_name, './images/follow.png', 'Follow');
@@ -6179,7 +6179,7 @@ function thirdDelimiterAdd($w, $query, $settings, $db, $update_in_progress)
 {
     $words = explode('▹', $query);
     $kind  = $words[0];
-    
+
     $all_playlists             = $settings->all_playlists;
     $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
     $radio_number_tracks       = $settings->radio_number_tracks;
@@ -6198,10 +6198,10 @@ function thirdDelimiterAdd($w, $query, $settings, $db, $update_in_progress)
     $display_name              = $settings->display_name;
     $userid                    = $settings->userid;
     $echonest_api_key          = $settings->echonest_api_key;
-    
+
     $tmp = explode('∙', $words[1]);
     $uri = $tmp[0];
-    
+
     $href = explode(':', $uri);
     if ($href[1] == 'track') {
         $type       = 'track';
@@ -6219,18 +6219,76 @@ function thirdDelimiterAdd($w, $query, $settings, $db, $update_in_progress)
         $playlist_uri  = $uri;
         $message       = "playlist " . $playlist_name;
     }
-    
+
     $the_query = $words[3];
-    
+
     if ($update_in_progress == true) {
         $w->result(null, '', 'Cannot add tracks/albums/playlists while update is in progress', 'Please retry when update is finished', './images/warning.png', 'no', null, '');
-        
+
         echo $w->toxml();
         return;
     }
-    
+
     if (mb_strlen($the_query) == 0) {
         $w->result(null, '', "Enter the name of the new playlist: ", "This will create a new playlist with the name entered", './images/create_playlist.png', 'no', null, '');
+
+        $w->result(null, 'help', "Or choose an alternative below", "Some playlists names are proposed below", './images/info.png', 'no', null, '');
+
+        if($album_name != "") {
+	        $w->result(null, serialize(array(
+	            $track_uri /*track_uri*/ ,
+	            $album_uri /* album_uri */ ,
+	            '' /* artist_uri */ ,
+	            $playlist_uri /* playlist_uri */ ,
+	            '' /* spotify_command */ ,
+	            '' /* query */ ,
+	            'ADD_TO_PLAYLIST▹' . 'notset' . '▹' . $album_name /* other_settings*/ ,
+	            '' /* other_action */ ,
+	            $alfred_playlist_uri /* alfred_playlist_uri */ ,
+	            '' /* artist_name */ ,
+	            $track_name /* track_name */ ,
+	            $album_name /* album_name */ ,
+	            '' /* track_artwork_path */ ,
+	            '' /* artist_artwork_path */ ,
+	            '' /* album_artwork_path */ ,
+	            $playlist_name /* playlist_name */ ,
+	            '' /* playlist_artwork_path */ ,
+	            $alfred_playlist_name /* $alfred_playlist_name */ ,
+	            $now_playing_notifications /* now_playing_notifications */ ,
+	            $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
+	            $country_code /* country_code*/ ,
+	            $userid
+	            /* userid*/
+	        )), "Create a playlist named '" . $album_name . "'", 'This will create a playlist ' . $album_name . ' with content of the album', './images/add.png', 'yes', null, '');
+        }
+
+        if($playlist_name != "") {
+	        $w->result(null, serialize(array(
+	            $track_uri /*track_uri*/ ,
+	            $album_uri /* album_uri */ ,
+	            '' /* artist_uri */ ,
+	            $playlist_uri /* playlist_uri */ ,
+	            '' /* spotify_command */ ,
+	            '' /* query */ ,
+	            'ADD_TO_PLAYLIST▹' . 'notset' . '▹' . $playlist_name /* other_settings*/ ,
+	            '' /* other_action */ ,
+	            $alfred_playlist_uri /* alfred_playlist_uri */ ,
+	            '' /* artist_name */ ,
+	            $track_name /* track_name */ ,
+	            $album_name /* album_name */ ,
+	            '' /* track_artwork_path */ ,
+	            '' /* artist_artwork_path */ ,
+	            '' /* album_artwork_path */ ,
+	            $playlist_name /* playlist_name */ ,
+	            '' /* playlist_artwork_path */ ,
+	            $alfred_playlist_name /* $alfred_playlist_name */ ,
+	            $now_playing_notifications /* now_playing_notifications */ ,
+	            $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
+	            $country_code /* country_code*/ ,
+	            $userid
+	            /* userid*/
+	        )), "Create a copy of playlist named '" . $playlist_name . "'", 'This will copy the existing playlist ' . $playlist_name . ' to a new one (this is useful until Spotify WEB API allows to subscribe to playlist', './images/add.png', 'yes', null, '');
+        }
     } else {
         // playlist name has been set
         $w->result(null, serialize(array(
