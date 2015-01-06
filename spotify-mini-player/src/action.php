@@ -1,11 +1,6 @@
 <?php
 
-// Turn off all error reporting
-//error_reporting(0);
-
 require './src/functions.php';
-require_once './vendor/phprtflite/phprtflite/lib/PHPRtfLite.php';
-
 // Load and use David Ferguson's Workflows.php class
 require_once './src/workflows.php';
 $w = new Workflows('com.vdesabou.spotify.mini.player');
@@ -39,7 +34,7 @@ $country_code              = $arg[20];
 $userid                    = $arg[21];
 
 if($userid != 'vdesabou') {
-	stathat_ez_count('AlfredSpotifyMiniPlayer', 'workflow used', 1);  
+	stathat_ez_count('AlfredSpotifyMiniPlayer', 'workflow used', 1);
 }
 
 if ($add_to_option != "") {
@@ -99,7 +94,7 @@ if ($type == "TRACK" && $other_settings == "") {
                 displayNotificationWithArtwork('🔈 ' . $track_name . ' by ' . ucfirst($artist_name), $track_artwork_path);
             }
             if($userid != 'vdesabou') {
-	        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);  
+	        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
             }
             return;
         } else {
@@ -120,7 +115,7 @@ if ($type == "TRACK" && $other_settings == "") {
                     displayNotificationWithArtwork('🔈 ' . $track_name . ' by ' . ucfirst($artist_name), $track_artwork_path);
                 }
 	            if($userid != 'vdesabou') {
-		        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);  
+		        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
 	            }
                 return;
             }
@@ -150,7 +145,7 @@ if ($type == "TRACK" && $other_settings == "") {
     exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
     displayNotificationWithArtwork('🔈 Album ' . $album_name . ' by ' . ucfirst($artist_name), $album_artwork_path, 'Play Album');
     if($userid != 'vdesabou') {
-    	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);  
+    	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
     }
     return;
 } else if ($type == "ONLINE") {
@@ -218,7 +213,7 @@ if ($type == "TRACK" && $other_settings == "") {
     exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
     displayNotificationWithArtwork('🔈 Artist ' . $artist_name, $artist_artwork_path, 'Play Artist');
     if($userid != 'vdesabou') {
-    	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);  
+    	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
     }
     return;
 }
@@ -241,7 +236,7 @@ if ($playlist_uri != "" && $other_settings == "") {
     }
     displayNotificationWithArtwork('🔈 Playlist ' . $playlist_name, $playlist_artwork_path, 'Launch Playlist');
     if($userid != 'vdesabou') {
-    	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);  
+    	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
     }
     return;
 } else if ($other_settings != "") {
@@ -334,7 +329,7 @@ if ($playlist_uri != "" && $other_settings == "") {
             }
             $ret = addTracksToPlaylist($w, $tmp[2], $setting[1], $setting[2], false);
             if($userid != 'vdesabou') {
-	        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);  
+	        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);
             }
             if (is_numeric($ret) && $ret > 0) {
                 displayNotificationWithArtwork('' . $track_name . ' added to ' . $setting[2] . ' playlist', $track_artwork_path, 'Add Track to Playlist');
@@ -348,7 +343,7 @@ if ($playlist_uri != "" && $other_settings == "") {
             $playlist_artwork_path = getPlaylistArtwork($w, $playlist_uri, true, true);
             $ret                   = addTracksToPlaylist($w, getThePlaylistTracks($w, $playlist_uri), $setting[1], $setting[2], false);
             if($userid != 'vdesabou') {
-	        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);  
+	        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);
             }
             if (is_numeric($ret) && $ret > 0) {
                 displayNotificationWithArtwork('Playlist ' . $playlist_name . ' added to ' . $setting[2] . ' playlist', $playlist_artwork_path, 'Add Playlist to Playlist');
@@ -362,7 +357,7 @@ if ($playlist_uri != "" && $other_settings == "") {
             $album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, true);
             $ret                = addTracksToPlaylist($w, getTheAlbumTracks($w, $album_uri), $setting[1], $setting[2], false);
             if($userid != 'vdesabou') {
-	        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);  
+	        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);
             }
             if (is_numeric($ret) && $ret > 0) {
                 displayNotificationWithArtwork('Album ' . $album_name . ' added to ' . $setting[2] . ' playlist', $album_artwork_path, 'Add Album to Playlist');
@@ -384,7 +379,7 @@ if ($playlist_uri != "" && $other_settings == "") {
             $tmp                = explode(':', $track_uri);
             $ret                = removeTrackFromPlaylist($w, $tmp[2], $setting[1], $setting[2]);
             if($userid != 'vdesabou') {
-	        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);  
+	        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);
             }
             if ($ret == true) {
                 displayNotificationWithArtwork('' . $track_name . ' removed from ' . $setting[2] . ' playlist', $track_artwork_path, 'Remove Track from Playlist');
@@ -423,7 +418,7 @@ if ($playlist_uri != "" && $other_settings == "") {
             }
             $ret = addTracksToYourMusic($w, $tmp[2], false);
             if($userid != 'vdesabou') {
-	        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);  
+	        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);
             }
             if (is_numeric($ret) && $ret > 0) {
                 displayNotificationWithArtwork('' . $track_name . ' added to Your Music', $track_artwork_path, 'Add Track to Your Music');
@@ -437,7 +432,7 @@ if ($playlist_uri != "" && $other_settings == "") {
             $playlist_artwork_path = getPlaylistArtwork($w, $playlist_uri, true, true);
             $ret                   = addTracksToYourMusic($w, getThePlaylistTracks($w, $playlist_uri), false);
             if($userid != 'vdesabou') {
-	        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);  
+	        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);
             }
             if (is_numeric($ret) && $ret > 0) {
                 displayNotificationWithArtwork('Playlist ' . $playlist_name . ' added to Your Music', $playlist_artwork_path, 'Add Playlist to Your Music');
@@ -451,7 +446,7 @@ if ($playlist_uri != "" && $other_settings == "") {
             $album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, true);
             $ret                = addTracksToYourMusic($w, getTheAlbumTracks($w, $album_uri), false);
             if($userid != 'vdesabou') {
-	        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);  
+	        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);
             }
             if (is_numeric($ret) && $ret > 0) {
                 displayNotificationWithArtwork('Album ' . $album_name . ' added to Your Music', $album_artwork_path, 'Add Album to Your Music');
@@ -473,7 +468,7 @@ if ($playlist_uri != "" && $other_settings == "") {
             $tmp                = explode(':', $track_uri);
             $ret                = removeTrackFromYourMusic($w, $tmp[2]);
             if($userid != 'vdesabou') {
-	        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);  
+	        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);
             }
             if ($ret == true) {
                 displayNotificationWithArtwork('' . $track_name . ' removed from Your Music', $track_artwork_path, 'Remove Track from Your Music');
@@ -584,7 +579,7 @@ if ($playlist_uri != "" && $other_settings == "") {
             displayNotificationWithArtwork('🔈 ' . $track_name . ' in album ' . $album_name . ' by ' . ucfirst($artist_name), $album_artwork_path, 'Play Track from Album');
         }
         if($userid != 'vdesabou') {
-        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);  
+        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
         }
         return;
     } else if ($other_action == "play") {
@@ -599,14 +594,14 @@ if ($playlist_uri != "" && $other_settings == "") {
     } else if ($other_action == "kill_update") {
         killUpdate($w);
         if($userid != 'vdesabou') {
-        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'kill update', 1);  
+        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'kill update', 1);
         }
         return;
     } else if ($other_action == "lookup_current_artist") {
         lookupCurrentArtist($w);
         return;
     } else if ($other_action == "lyrics") {
-        displayLyricsForCurrentTrack();
+        displayLyricsForCurrentTrack($w);
         return;
     } else if ($other_action == "current_track_radio") {
         if (file_exists($w->data() . '/update_library_in_progress')) {
@@ -615,7 +610,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         }
         createRadioSongPlaylistForCurrentTrack($w);
         if($userid != 'vdesabou') {
-        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'radio', 1);  
+        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'radio', 1);
         }
         return;
     } else if ($other_action == "current_artist_radio") {
@@ -625,19 +620,19 @@ if ($playlist_uri != "" && $other_settings == "") {
         }
         createRadioArtistPlaylistForCurrentArtist($w);
         if($userid != 'vdesabou') {
-        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'radio', 1);  
+        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'radio', 1);
         }
         return;
     } else if ($other_action == "play_current_artist") {
         playCurrentArtist($w);
         if($userid != 'vdesabou') {
-        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);  
+        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
         }
         return;
     } else if ($other_action == "play_current_album") {
         playCurrentAlbum($w);
         if($userid != 'vdesabou') {
-        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);  
+        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
         }
         return;
     } else if ($other_action == "Oauth_Login") {
@@ -682,7 +677,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         }
         addCurrentTrackToAlfredPlaylistOrYourMusic($w);
         if($userid != 'vdesabou') {
-        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);  
+        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);
         }
         return;
     } else if ($other_action == "random") {
@@ -711,7 +706,7 @@ if ($playlist_uri != "" && $other_settings == "") {
     } else if ($other_action == "display_biography") {
         displayBiography($w, $artist_uri, $artist_name);
         if($userid != 'vdesabou') {
-        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'display biography', 1);  
+        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'display biography', 1);
         }
         return;
     } else if ($other_action == "reset_settings") {
@@ -723,8 +718,9 @@ if ($playlist_uri != "" && $other_settings == "") {
         }
         return;
     } else if ($other_action == "display_current_artist_biography") {
+	    displayCurrentArtistBiography($w);
         if($userid != 'vdesabou') {
-        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'display biography', 1);  
+        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'display biography', 1);
         }
         return;
     } else if ($other_action == "go_back") {
@@ -750,7 +746,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         }
         exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online▹" . $artist_uri . "@" . escapeQuery($artist_name) . '▹' . "\"'");
         if($userid != 'vdesabou') {
-        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'lookup online', 1);  
+        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'lookup online', 1);
         }
         return;
     } else if ($other_action == "playartist") {
@@ -769,7 +765,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
         displayNotificationWithArtwork('🔈 Artist ' . $artist_name, $artist_artwork_path, 'Play Artist');
         if($userid != 'vdesabou') {
-        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);  
+        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
         }
         return;
     } else if ($other_action == "playalbum") {
@@ -795,7 +791,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
         displayNotificationWithArtwork('🔈 Album ' . $album_name, $album_artwork_path, 'Play Album');
         if($userid != 'vdesabou') {
-        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);  
+        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
         }
         return;
     } else if ($other_action == "volume_up") {
@@ -841,13 +837,13 @@ if ($playlist_uri != "" && $other_settings == "") {
         }
         createRadioArtistPlaylist($w, $artist_name);
         if($userid != 'vdesabou') {
-        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'radio', 1);  
+        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'radio', 1);
         }
         return;
     } else if ($other_action == "play_alfred_playlist") {
         playAlfredPlaylist($w);
         if($userid != 'vdesabou') {
-        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);  
+        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
         }
         return;
     } else if ($other_action == "update_library") {
@@ -857,7 +853,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         }
         updateLibrary($w);
         if($userid != 'vdesabou') {
-        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'update library', 1);  
+        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'update library', 1);
         }
         return;
     } else if ($other_action == "refresh_library") {
@@ -867,7 +863,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         }
         refreshLibrary($w);
         if($userid != 'vdesabou') {
-        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'update library', 1);  
+        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'update library', 1);
         }
         return;
     }

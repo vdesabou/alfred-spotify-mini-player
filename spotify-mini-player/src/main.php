@@ -349,6 +349,8 @@ if (mb_strlen($query) < 3) {
                 secondDelimiterFollowUnfollow($w, $query, $settings, $db, $update_in_progress);
             } elseif ($kind == "Follow" || $kind == "Unfollow") {
                 secondDelimiterFollowOrUnfollow($w, $query, $settings, $db, $update_in_progress);
+            } elseif ($kind == "Biography") {
+                secondDelimiterDisplayBiography($w, $query, $settings, $db, $update_in_progress);
             }
         }
         ///////////

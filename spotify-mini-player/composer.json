@@ -1,6 +1,5 @@
 {
     "require": {
-        "jwilsson/spotify-web-api-php": "*",
-        "phprtflite/phprtflite" : "*"
+        "jwilsson/spotify-web-api-php": "*"
     }
 }
