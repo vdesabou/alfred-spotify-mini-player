@@ -87,7 +87,6 @@ function getBiography($w, $artist_uri, $artist_name)
     //
     // Read settings from JSON
     //
-
     $settings         = getSettings($w);
     $echonest_api_key = $settings->echonest_api_key;
 
@@ -120,11 +119,14 @@ function getBiography($w, $artist_uri, $artist_name)
         $url = $default_url;
     }
     if ($text == "") {
-        return array(false,'','');
+        return array(false,'','','');
     }
     $output = strip_tags($text);
 
-	return array($url, $source, $output);
+    // Get URLs of artist, if available
+    $json     = doJsonRequest($w, 'http://developer.echonest.com/api/v4/artist/urls?api_key=' . $echonest_api_key . '&id=' . $artist_uri);
+
+	return array($url, $source, $output, $json->response->urls->twitter_url, $json->response->urls->official_url);
 }
 
 /**

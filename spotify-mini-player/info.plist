@@ -3716,7 +3716,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>display_current_artist_biography</string>
+				<string>biography</string>
 				<key>subtext</key>
 				<string>Get biography from this artist..</string>
 				<key>text</key>
@@ -3737,7 +3737,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "display_current_artist_biography" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
+				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "biography" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
 echo "===== DISPLAY CURRENT ARTIST BIOGRAPHY ========" &gt;&gt; "$alfred_workflow_cache/action.log"
 echo "`date` $query" &gt;&gt; "$alfred_workflow_cache/action.log"
 php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>

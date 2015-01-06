@@ -703,12 +703,6 @@ if ($playlist_uri != "" && $other_settings == "") {
             displayNotificationForCurrentTrack($w);
         }
         return;
-    } else if ($other_action == "display_biography") {
-        displayBiography($w, $artist_uri, $artist_name);
-        if($userid != 'vdesabou') {
-        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'display biography', 1);
-        }
-        return;
     } else if ($other_action == "reset_settings") {
         if (file_exists($w->data() . '/settings.json')) {
             unlink($w->data() . '/settings.json');
@@ -717,7 +711,7 @@ if ($playlist_uri != "" && $other_settings == "") {
             displayNotificationWithArtwork("Settings file does not exist ", './images/warning.png', 'Error!');
         }
         return;
-    } else if ($other_action == "display_current_artist_biography") {
+    } else if ($other_action == "biography") {
 	    displayCurrentArtistBiography($w);
         if($userid != 'vdesabou') {
         	stathat_ez_count('AlfredSpotifyMiniPlayer', 'display biography', 1);
