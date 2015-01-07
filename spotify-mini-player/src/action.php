@@ -88,6 +88,7 @@ if ($type == "TRACK" && $other_settings == "") {
             if ($now_playing_notifications == true) {
                 exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
             }
+            exec("./src/track_info.ksh 2>&1");
             exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\" in context \"$playlist_uri\"'");
 
             if ($now_playing_notifications == false) {
@@ -110,6 +111,7 @@ if ($type == "TRACK" && $other_settings == "") {
                 if ($now_playing_notifications == true) {
                     exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
                 }
+                exec("./src/track_info.ksh 2>&1");
                 exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
                 if ($now_playing_notifications == false) {
                     displayNotificationWithArtwork('🔈 ' . $track_name . ' by ' . ucfirst($artist_name), $track_artwork_path);
@@ -142,6 +144,7 @@ if ($type == "TRACK" && $other_settings == "") {
     if ($now_playing_notifications == true) {
         exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
     }
+    exec("./src/track_info.ksh 2>&1");
     exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
     displayNotificationWithArtwork('🔈 Album ' . $album_name . ' by ' . ucfirst($artist_name), $album_artwork_path, 'Play Album');
     if($userid != 'vdesabou') {
@@ -210,6 +213,7 @@ if ($type == "TRACK" && $other_settings == "") {
     if ($now_playing_notifications == true) {
         exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
     }
+    exec("./src/track_info.ksh 2>&1");
     exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
     displayNotificationWithArtwork('🔈 Artist ' . $artist_name, $artist_artwork_path, 'Play Artist');
     if($userid != 'vdesabou') {
@@ -230,6 +234,7 @@ if ($playlist_uri != "" && $other_settings == "") {
     if ($now_playing_notifications == true) {
         exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
     }
+    exec("./src/track_info.ksh 2>&1");
     exec("osascript -e 'tell application \"Spotify\" to play track \"$playlist_uri\"'");
     if ($playlist_artwork_path == '') {
         $playlist_artwork_path = getPlaylistArtwork($w, $playlist_uri, true, false);
@@ -573,6 +578,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         if ($now_playing_notifications == true) {
             exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
         }
+        exec("./src/track_info.ksh 2>&1");
         exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\" in context \"$album_uri\"'");
         $album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, true);
         if ($now_playing_notifications == false) {
@@ -583,6 +589,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         }
         return;
     } else if ($other_action == "play") {
+	    exec("./src/track_info.ksh 2>&1");
         exec("osascript -e 'tell application \"Spotify\" to play'");
         if ($now_playing_notifications == false) {
             displayNotificationForCurrentTrack($w);
@@ -698,6 +705,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         if ($now_playing_notifications == true) {
             exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
         }
+        exec("./src/track_info.ksh 2>&1");
         exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
         if ($now_playing_notifications == false) {
             displayNotificationForCurrentTrack($w);
@@ -756,6 +764,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         if ($now_playing_notifications == true) {
             exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
         }
+        exec("./src/track_info.ksh 2>&1");
         exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
         displayNotificationWithArtwork('🔈 Artist ' . $artist_name, $artist_artwork_path, 'Play Artist');
         if($userid != 'vdesabou') {
@@ -782,6 +791,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         if ($now_playing_notifications == true) {
             exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
         }
+        exec("./src/track_info.ksh 2>&1");
         exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
         displayNotificationWithArtwork('🔈 Album ' . $album_name, $album_artwork_path, 'Play Album');
         if($userid != 'vdesabou') {
