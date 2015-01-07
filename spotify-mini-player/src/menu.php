@@ -50,7 +50,6 @@ function oAuthChecks($w, $query, $settings, $db, $update_in_progress)
                 '' /* query */ ,
                 'Open▹' . 'https://developer.spotify.com/my-applications/#!/applications' /* other_settings*/ ,
                 '' /* other_action */ ,
-                $alfred_playlist_uri /* alfred_playlist_uri */ ,
                 '' /* artist_name */ ,
                 '' /* track_name */ ,
                 '' /* album_name */ ,
@@ -58,13 +57,7 @@ function oAuthChecks($w, $query, $settings, $db, $update_in_progress)
                 '' /* artist_artwork_path */ ,
                 '' /* album_artwork_path */ ,
                 '' /* playlist_name */ ,
-                '' /* playlist_artwork_path */ ,
-                $alfred_playlist_name /* $alfred_playlist_name */ ,
-                $now_playing_notifications /* now_playing_notifications */ ,
-                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
-                $country_code /* country_code*/ ,
-                $userid
-                /* userid*/
+                '' /* playlist_artwork_path */
             )), 'Open Spotify Application page to get required information', "This will open the Application page with your default browser", './images/spotify.png', 'yes', null, '');
         } elseif (mb_strlen($query) != 32) {
             $w->result(null, '', 'The Application Client ID does not seem valid!', 'The length is not 32. Make sure to copy the Client ID from https://developer.spotify.com/my-applications', './images/warning.png', 'no', null, '');
@@ -78,7 +71,6 @@ function oAuthChecks($w, $query, $settings, $db, $update_in_progress)
                 '' /* query */ ,
                 'Oauth_Client_ID▹' . rtrim(ltrim($query)) /* other_settings*/ ,
                 '' /* other_action */ ,
-                $alfred_playlist_uri /* alfred_playlist_uri */ ,
                 '' /* artist_name */ ,
                 '' /* track_name */ ,
                 '' /* album_name */ ,
@@ -86,13 +78,7 @@ function oAuthChecks($w, $query, $settings, $db, $update_in_progress)
                 '' /* artist_artwork_path */ ,
                 '' /* album_artwork_path */ ,
                 '' /* playlist_name */ ,
-                '' /* playlist_artwork_path */ ,
-                $alfred_playlist_name /* $alfred_playlist_name */ ,
-                $now_playing_notifications /* now_playing_notifications */ ,
-                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
-                $country_code /* country_code*/ ,
-                $userid
-                /* userid*/
+                '' /* playlist_artwork_path */
             )), "Application Client ID will be set to <" . rtrim(ltrim($query)) . ">", "Type enter to validate the Application Client ID", './images/settings.png', 'yes', null, '');
         }
         echo $w->toxml();
@@ -111,7 +97,6 @@ function oAuthChecks($w, $query, $settings, $db, $update_in_progress)
                 '' /* query */ ,
                 'Open▹' . 'https://developer.spotify.com/my-applications/#!/applications' /* other_settings*/ ,
                 '' /* other_action */ ,
-                $alfred_playlist_uri /* alfred_playlist_uri */ ,
                 '' /* artist_name */ ,
                 '' /* track_name */ ,
                 '' /* album_name */ ,
@@ -119,13 +104,7 @@ function oAuthChecks($w, $query, $settings, $db, $update_in_progress)
                 '' /* artist_artwork_path */ ,
                 '' /* album_artwork_path */ ,
                 '' /* playlist_name */ ,
-                '' /* playlist_artwork_path */ ,
-                $alfred_playlist_name /* $alfred_playlist_name */ ,
-                $now_playing_notifications /* now_playing_notifications */ ,
-                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
-                $country_code /* country_code*/ ,
-                $userid
-                /* userid*/
+                '' /* playlist_artwork_path */
             )), 'Open Spotify Application page to get required information', "This will open the Application page with your default browser", './images/spotify.png', 'yes', null, '');
         } elseif (mb_strlen($query) != 32) {
             $w->result(null, '', 'The Application Client Secret does not seem valid!', 'The length is not 32. Make sure to copy the Client Secret from https://developer.spotify.com/my-applications', './images/warning.png', 'no', null, '');
@@ -141,7 +120,6 @@ function oAuthChecks($w, $query, $settings, $db, $update_in_progress)
                 '' /* query */ ,
                 'Oauth_Client_SECRET▹' . rtrim(ltrim($query)) /* other_settings*/ ,
                 '' /* other_action */ ,
-                $alfred_playlist_uri /* alfred_playlist_uri */ ,
                 '' /* artist_name */ ,
                 '' /* track_name */ ,
                 '' /* album_name */ ,
@@ -149,13 +127,7 @@ function oAuthChecks($w, $query, $settings, $db, $update_in_progress)
                 '' /* artist_artwork_path */ ,
                 '' /* album_artwork_path */ ,
                 '' /* playlist_name */ ,
-                '' /* playlist_artwork_path */ ,
-                $alfred_playlist_name /* $alfred_playlist_name */ ,
-                $now_playing_notifications /* now_playing_notifications */ ,
-                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
-                $country_code /* country_code*/ ,
-                $userid
-                /* userid*/
+                '' /* playlist_artwork_path */
             )), "Application Client Secret will be set to <" . rtrim(ltrim($query)) . ">", "Type enter to validate the Application Client Secret", './images/settings.png', 'yes', null, '');
         }
         echo $w->toxml();
@@ -485,7 +457,6 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress)
                 '' /* query */ ,
                 '' /* other_settings*/ ,
                 '' /* other_action */ ,
-                $alfred_playlist_uri /* alfred_playlist_uri */ ,
                 $track[7] /* artist_name */ ,
                 $track[5] /* track_name */ ,
                 $track[6] /* album_name */ ,
@@ -493,13 +464,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress)
                 $track[10] /* artist_artwork_path */ ,
                 $track[11] /* album_artwork_path */ ,
                 '' /* playlist_name */ ,
-                '' /* playlist_artwork_path */ ,
-                $alfred_playlist_name /* $alfred_playlist_name */ ,
-                $now_playing_notifications /* now_playing_notifications */ ,
-                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
-                $country_code /* country_code*/ ,
-                $userid
-                /* userid*/
+                '' /* playlist_artwork_path */
             )), ucfirst($track[7]) . " ● " . $track[5], array(
                 $track[16] . " ● " . $subtitle . getPlaylistsForTrack($db, $track[2]),
                 'alt' => 'Play album ' . $track[6] . ' in Spotify',
@@ -1057,7 +1022,6 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 '' /* query */ ,
                 '' /* other_settings*/ ,
                 'refresh_library' /* other_action */ ,
-                $alfred_playlist_uri /* alfred_playlist_uri */ ,
                 '' /* artist_name */ ,
                 '' /* track_name */ ,
                 '' /* album_name */ ,
@@ -1065,13 +1029,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 '' /* artist_artwork_path */ ,
                 '' /* album_artwork_path */ ,
                 '' /* playlist_name */ ,
-                '' /* playlist_artwork_path */ ,
-                $alfred_playlist_name /* $alfred_playlist_name */ ,
-                $now_playing_notifications /* now_playing_notifications */ ,
-                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
-                $country_code /* country_code*/ ,
-                $userid
-                /* userid*/
+                '' /* playlist_artwork_path */
             )), "Refresh your library", "Do this when your library has changed (outside the scope of this workflow)", './images/update.png', 'yes', null, '');
         }
 
@@ -1138,7 +1096,6 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 '' /* query */ ,
                 '' /* other_settings*/ ,
                 'add_current_track_to' /* other_action */ ,
-                $alfred_playlist_uri /* alfred_playlist_uri */ ,
                 '' /* artist_name */ ,
                 '' /* track_name */ ,
                 '' /* album_name */ ,
@@ -1146,13 +1103,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 '' /* artist_artwork_path */ ,
                 '' /* album_artwork_path */ ,
                 '' /* playlist_name */ ,
-                '' /* playlist_artwork_path */ ,
-                $alfred_playlist_name /* $alfred_playlist_name */ ,
-                $now_playing_notifications /* now_playing_notifications */ ,
-                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
-                $country_code /* country_code*/ ,
-                $userid
-                /* userid*/
+                '' /* playlist_artwork_path */
             )), 'Add current track to...', 'Current track will be added to Your Music or a playlist of your choice', './images/add_to.png', 'yes', '');
 
             $w->result('SpotifyMiniPlayer_' . 'remove_current_track_from', serialize(array(
@@ -1164,7 +1115,6 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 '' /* query */ ,
                 '' /* other_settings*/ ,
                 'remove_current_track_from' /* other_action */ ,
-                $alfred_playlist_uri /* alfred_playlist_uri */ ,
                 '' /* artist_name */ ,
                 '' /* track_name */ ,
                 '' /* album_name */ ,
@@ -1172,13 +1122,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 '' /* artist_artwork_path */ ,
                 '' /* album_artwork_path */ ,
                 '' /* playlist_name */ ,
-                '' /* playlist_artwork_path */ ,
-                $alfred_playlist_name /* $alfred_playlist_name */ ,
-                $now_playing_notifications /* now_playing_notifications */ ,
-                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
-                $country_code /* country_code*/ ,
-                $userid
-                /* userid*/
+                '' /* playlist_artwork_path */
             )), 'Remove current track from...', 'Current track will be removed from Your Music or a playlist of your choice', './images/remove_from.png', 'yes', '');
         }
 
@@ -1273,7 +1217,6 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 '' /* query */ ,
                 '' /* other_settings*/ ,
                 'next' /* other_action */ ,
-                $alfred_playlist_uri /* alfred_playlist_uri */ ,
                 '' /* artist_name */ ,
                 '' /* track_name */ ,
                 '' /* album_name */ ,
@@ -1281,13 +1224,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 '' /* artist_artwork_path */ ,
                 '' /* album_artwork_path */ ,
                 '' /* playlist_name */ ,
-                '' /* playlist_artwork_path */ ,
-                $alfred_playlist_name /* $alfred_playlist_name */ ,
-                $now_playing_notifications /* now_playing_notifications */ ,
-                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
-                $country_code /* country_code*/ ,
-                $userid
-                /* userid*/
+                '' /* playlist_artwork_path */
             )), 'Next Track', 'Play the next track in Spotify', './images/next.png', 'yes', '');
         }
         if (strpos(strtolower('previous'), strtolower($query)) !== false) {
@@ -1300,7 +1237,6 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 '' /* query */ ,
                 '' /* other_settings*/ ,
                 'previous' /* other_action */ ,
-                $alfred_playlist_uri /* alfred_playlist_uri */ ,
                 '' /* artist_name */ ,
                 '' /* track_name */ ,
                 '' /* album_name */ ,
@@ -1308,13 +1244,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 '' /* artist_artwork_path */ ,
                 '' /* album_artwork_path */ ,
                 '' /* playlist_name */ ,
-                '' /* playlist_artwork_path */ ,
-                $alfred_playlist_name /* $alfred_playlist_name */ ,
-                $now_playing_notifications /* now_playing_notifications */ ,
-                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
-                $country_code /* country_code*/ ,
-                $userid
-                /* userid*/
+                '' /* playlist_artwork_path */
             )), 'Previous Track', 'Play the previous track in Spotify', './images/previous.png', 'yes', '');
         }
         if (strpos(strtolower('previous'), strtolower($query)) !== false) {
@@ -1327,7 +1257,6 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 '' /* query */ ,
                 '' /* other_settings*/ ,
                 'previous' /* other_action */ ,
-                $alfred_playlist_uri /* alfred_playlist_uri */ ,
                 '' /* artist_name */ ,
                 '' /* track_name */ ,
                 '' /* album_name */ ,
@@ -1335,13 +1264,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 '' /* artist_artwork_path */ ,
                 '' /* album_artwork_path */ ,
                 '' /* playlist_name */ ,
-                '' /* playlist_artwork_path */ ,
-                $alfred_playlist_name /* $alfred_playlist_name */ ,
-                $now_playing_notifications /* now_playing_notifications */ ,
-                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
-                $country_code /* country_code*/ ,
-                $userid
-                /* userid*/
+                '' /* playlist_artwork_path */
             )), 'Previous Track', 'Play the previous track in Spotify', './images/previous.png', 'yes', '');
         }
         if (strpos(strtolower('lyrics'), strtolower($query)) !== false) {
@@ -1354,7 +1277,6 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 '' /* query */ ,
                 '' /* other_settings*/ ,
                 'lyrics' /* other_action */ ,
-                $alfred_playlist_uri /* alfred_playlist_uri */ ,
                 '' /* artist_name */ ,
                 '' /* track_name */ ,
                 '' /* album_name */ ,
@@ -1362,13 +1284,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 '' /* artist_artwork_path */ ,
                 '' /* album_artwork_path */ ,
                 '' /* playlist_name */ ,
-                '' /* playlist_artwork_path */ ,
-                $alfred_playlist_name /* $alfred_playlist_name */ ,
-                $now_playing_notifications /* now_playing_notifications */ ,
-                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
-                $country_code /* country_code*/ ,
-                $userid
-                /* userid*/
+                '' /* playlist_artwork_path */
             )), 'Get Lyrics for current track', array(
                 'Get current track lyrics',
                 'alt' => 'Not Available',
@@ -1424,7 +1340,6 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 '' /* query */ ,
                 '' /* other_settings*/ ,
                 'lookup_current_artist' /* other_action */ ,
-                $alfred_playlist_uri /* alfred_playlist_uri */ ,
                 '' /* artist_name */ ,
                 '' /* track_name */ ,
                 '' /* album_name */ ,
@@ -1432,13 +1347,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 '' /* artist_artwork_path */ ,
                 '' /* album_artwork_path */ ,
                 '' /* playlist_name */ ,
-                '' /* playlist_artwork_path */ ,
-                $alfred_playlist_name /* $alfred_playlist_name */ ,
-                $now_playing_notifications /* now_playing_notifications */ ,
-                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
-                $country_code /* country_code*/ ,
-                $userid
-                /* userid*/
+                '' /* playlist_artwork_path */
             )), 'Lookup Current Artist online', array(
                 '☁︎ Query all albums/tracks from current artist online..',
                 'alt' => 'Not Available',
@@ -1458,7 +1367,6 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 '' /* query */ ,
                 '' /* other_settings*/ ,
                 'play' /* other_action */ ,
-                $alfred_playlist_uri /* alfred_playlist_uri */ ,
                 '' /* artist_name */ ,
                 '' /* track_name */ ,
                 '' /* album_name */ ,
@@ -1466,13 +1374,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 '' /* artist_artwork_path */ ,
                 '' /* album_artwork_path */ ,
                 '' /* playlist_name */ ,
-                '' /* playlist_artwork_path */ ,
-                $alfred_playlist_name /* $alfred_playlist_name */ ,
-                $now_playing_notifications /* now_playing_notifications */ ,
-                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
-                $country_code /* country_code*/ ,
-                $userid
-                /* userid*/
+                '' /* playlist_artwork_path */
             )), 'Play', 'Play the current Spotify track', './images/play.png', 'yes', '');
 
             $w->result(null, serialize(array(
@@ -1484,7 +1386,6 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 '' /* query */ ,
                 '' /* other_settings*/ ,
                 'play_current_artist' /* other_action */ ,
-                $alfred_playlist_uri /* alfred_playlist_uri */ ,
                 '' /* artist_name */ ,
                 '' /* track_name */ ,
                 '' /* album_name */ ,
@@ -1492,13 +1393,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 '' /* artist_artwork_path */ ,
                 '' /* album_artwork_path */ ,
                 '' /* playlist_name */ ,
-                '' /* playlist_artwork_path */ ,
-                $alfred_playlist_name /* $alfred_playlist_name */ ,
-                $now_playing_notifications /* now_playing_notifications */ ,
-                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
-                $country_code /* country_code*/ ,
-                $userid
-                /* userid*/
+                '' /* playlist_artwork_path */
             )), 'Play current artist', 'Play the current artist', './images/artists.png', 'yes', null, '');
             $w->result(null, serialize(array(
                 '' /*track_uri*/ ,
@@ -1509,7 +1404,6 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 '' /* query */ ,
                 '' /* other_settings*/ ,
                 'play_current_album' /* other_action */ ,
-                $alfred_playlist_uri /* alfred_playlist_uri */ ,
                 '' /* artist_name */ ,
                 '' /* track_name */ ,
                 '' /* album_name */ ,
@@ -1517,13 +1411,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 '' /* artist_artwork_path */ ,
                 '' /* album_artwork_path */ ,
                 '' /* playlist_name */ ,
-                '' /* playlist_artwork_path */ ,
-                $alfred_playlist_name /* $alfred_playlist_name */ ,
-                $now_playing_notifications /* now_playing_notifications */ ,
-                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
-                $country_code /* country_code*/ ,
-                $userid
-                /* userid*/
+                '' /* playlist_artwork_path */
             )), 'Play current album', 'Play the current album', './images/albums.png', 'yes', null, '');
         }
         if (strpos(strtolower('pause'), strtolower($query)) !== false) {
@@ -1536,7 +1424,6 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 '' /* query */ ,
                 '' /* other_settings*/ ,
                 'pause' /* other_action */ ,
-                $alfred_playlist_uri /* alfred_playlist_uri */ ,
                 '' /* artist_name */ ,
                 '' /* track_name */ ,
                 '' /* album_name */ ,
@@ -1544,13 +1431,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 '' /* artist_artwork_path */ ,
                 '' /* album_artwork_path */ ,
                 '' /* playlist_name */ ,
-                '' /* playlist_artwork_path */ ,
-                $alfred_playlist_name /* $alfred_playlist_name */ ,
-                $now_playing_notifications /* now_playing_notifications */ ,
-                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
-                $country_code /* country_code*/ ,
-                $userid
-                /* userid*/
+                '' /* playlist_artwork_path */
             )), 'Pause', 'Pause the current Spotify track', './images/pause.png', 'yes', '');
         }
         if (strpos(strtolower('current'), strtolower($query)) !== false) {
@@ -1563,7 +1444,6 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 '' /* query */ ,
                 '' /* other_settings*/ ,
                 'current' /* other_action */ ,
-                $alfred_playlist_uri /* alfred_playlist_uri */ ,
                 '' /* artist_name */ ,
                 '' /* track_name */ ,
                 '' /* album_name */ ,
@@ -1571,13 +1451,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 '' /* artist_artwork_path */ ,
                 '' /* album_artwork_path */ ,
                 '' /* playlist_name */ ,
-                '' /* playlist_artwork_path */ ,
-                $alfred_playlist_name /* $alfred_playlist_name */ ,
-                $now_playing_notifications /* now_playing_notifications */ ,
-                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
-                $country_code /* country_code*/ ,
-                $userid
-                /* userid*/
+                '' /* playlist_artwork_path */
             )), 'Get Current Track info', 'Get current track information', './images/info.png', 'yes', '');
         }
         if (strpos(strtolower('random'), strtolower($query)) !== false) {
@@ -1590,7 +1464,6 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 '' /* query */ ,
                 '' /* other_settings*/ ,
                 'random' /* other_action */ ,
-                $alfred_playlist_uri /* alfred_playlist_uri */ ,
                 '' /* artist_name */ ,
                 '' /* track_name */ ,
                 '' /* album_name */ ,
@@ -1598,13 +1471,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 '' /* artist_artwork_path */ ,
                 '' /* album_artwork_path */ ,
                 '' /* playlist_name */ ,
-                '' /* playlist_artwork_path */ ,
-                $alfred_playlist_name /* $alfred_playlist_name */ ,
-                $now_playing_notifications /* now_playing_notifications */ ,
-                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
-                $country_code /* country_code*/ ,
-                $userid
-                /* userid*/
+                '' /* playlist_artwork_path */
             )), 'Random Track', 'Play random track', './images/random.png', 'yes', '');
         }
         if (strpos(strtolower('shuffle'), strtolower($query)) !== false) {
@@ -1617,7 +1484,6 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 '' /* query */ ,
                 '' /* other_settings*/ ,
                 'shuffle' /* other_action */ ,
-                $alfred_playlist_uri /* alfred_playlist_uri */ ,
                 '' /* artist_name */ ,
                 '' /* track_name */ ,
                 '' /* album_name */ ,
@@ -1625,13 +1491,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 '' /* artist_artwork_path */ ,
                 '' /* album_artwork_path */ ,
                 '' /* playlist_name */ ,
-                '' /* playlist_artwork_path */ ,
-                $alfred_playlist_name /* $alfred_playlist_name */ ,
-                $now_playing_notifications /* now_playing_notifications */ ,
-                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
-                $country_code /* country_code*/ ,
-                $userid
-                /* userid*/
+                '' /* playlist_artwork_path */
             )), 'Shuffle', 'Activate/Deactivate shuffling in Spotify', './images/shuffle.png', 'yes', '');
         }
         if (strpos(strtolower('refresh'), strtolower($query)) !== false) {
@@ -1813,7 +1673,6 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 '' /* query */ ,
                 '' /* other_settings*/ ,
                 'mute' /* other_action */ ,
-                $alfred_playlist_uri /* alfred_playlist_uri */ ,
                 '' /* artist_name */ ,
                 '' /* track_name */ ,
                 '' /* album_name */ ,
@@ -1821,13 +1680,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 '' /* artist_artwork_path */ ,
                 '' /* album_artwork_path */ ,
                 '' /* playlist_name */ ,
-                '' /* playlist_artwork_path */ ,
-                $alfred_playlist_name /* $alfred_playlist_name */ ,
-                $now_playing_notifications /* now_playing_notifications */ ,
-                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
-                $country_code /* country_code*/ ,
-                $userid
-                /* userid*/
+                '' /* playlist_artwork_path */
             )), 'Mute/Unmute System Volume', 'Mute/Unmute Volume', './images/mute.png', 'yes', '');
         }
         if (strpos(strtolower('volume_down'), strtolower($query)) !== false) {
@@ -1840,7 +1693,6 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 '' /* query */ ,
                 '' /* other_settings*/ ,
                 'volume_down' /* other_action */ ,
-                $alfred_playlist_uri /* alfred_playlist_uri */ ,
                 '' /* artist_name */ ,
                 '' /* track_name */ ,
                 '' /* album_name */ ,
@@ -1848,13 +1700,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 '' /* artist_artwork_path */ ,
                 '' /* album_artwork_path */ ,
                 '' /* playlist_name */ ,
-                '' /* playlist_artwork_path */ ,
-                $alfred_playlist_name /* $alfred_playlist_name */ ,
-                $now_playing_notifications /* now_playing_notifications */ ,
-                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
-                $country_code /* country_code*/ ,
-                $userid
-                /* userid*/
+                '' /* playlist_artwork_path */
             )), 'Volume Down', 'Decrease System Volume', './images/volume_down.png', 'yes', '');
         }
         if (strpos(strtolower('volume_up'), strtolower($query)) !== false) {
@@ -1867,7 +1713,6 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 '' /* query */ ,
                 '' /* other_settings*/ ,
                 'volume_up' /* other_action */ ,
-                $alfred_playlist_uri /* alfred_playlist_uri */ ,
                 '' /* artist_name */ ,
                 '' /* track_name */ ,
                 '' /* album_name */ ,
@@ -1875,13 +1720,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 '' /* artist_artwork_path */ ,
                 '' /* album_artwork_path */ ,
                 '' /* playlist_name */ ,
-                '' /* playlist_artwork_path */ ,
-                $alfred_playlist_name /* $alfred_playlist_name */ ,
-                $now_playing_notifications /* now_playing_notifications */ ,
-                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
-                $country_code /* country_code*/ ,
-                $userid
-                /* userid*/
+                '' /* playlist_artwork_path */
             )), 'Volume Up', 'Increase System Volume', './images/volume_up.png', 'yes', '');
         }
     }
@@ -2630,7 +2469,6 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                 '' /* query */ ,
                 '' /* other_settings*/ ,
                 'pause' /* other_action */ ,
-                $alfred_playlist_uri /* alfred_playlist_uri */ ,
                 escapeQuery($results[1]) /* artist_name */ ,
                 escapeQuery($results[0]) /* track_name */ ,
                 escapeQuery($results[2]) /* album_name */ ,
@@ -2638,13 +2476,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                 '' /* artist_artwork_path */ ,
                 '' /* album_artwork_path */ ,
                 '' /* playlist_name */ ,
-                '' /* playlist_artwork_path */ ,
-                $alfred_playlist_name /* $alfred_playlist_name */ ,
-                $now_playing_notifications /* now_playing_notifications */ ,
-                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
-                $country_code /* country_code*/ ,
-                $userid
-                /* userid*/
+                '' /* playlist_artwork_path */
             )), " " . escapeQuery($results[0]) . " ● " . escapeQuery($results[1]) . " ● " . escapeQuery($results[2]) . " ● " . floatToStars($results[6] / 100) . ' (' . beautifyTime($results[5]) . ')', array(
                 $subtitle,
                 'alt' => 'Play album ' . escapeQuery($results[2]) . ' in Spotify',
@@ -2664,7 +2496,6 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                 '' /* query */ ,
                 '' /* other_settings*/ ,
                 'play' /* other_action */ ,
-                $alfred_playlist_uri /* alfred_playlist_uri */ ,
                 escapeQuery($results[1]) /* artist_name */ ,
                 escapeQuery($results[0]) /* track_name */ ,
                 escapeQuery($results[2]) /* album_name */ ,
@@ -2672,13 +2503,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                 '' /* artist_artwork_path */ ,
                 '' /* album_artwork_path */ ,
                 '' /* playlist_name */ ,
-                '' /* playlist_artwork_path */ ,
-                $alfred_playlist_name /* $alfred_playlist_name */ ,
-                $now_playing_notifications /* now_playing_notifications */ ,
-                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
-                $country_code /* country_code*/ ,
-                $userid
-                /* userid*/
+                '' /* playlist_artwork_path */
             )), " " . escapeQuery($results[0]) . " ● " . escapeQuery($results[1]) . " ● " . escapeQuery($results[2]) . " ● " . floatToStars($results[6] / 100) . ' (' . beautifyTime($results[5]) . ')', $arrayresult, ($results[3] == "playing") ? './images/pause.png' : './images/play.png', 'yes', null, '');
         }
 
@@ -2758,7 +2583,6 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                 '' /* query */ ,
                 '' /* other_settings*/ ,
                 'current_track_radio' /* other_action */ ,
-                $alfred_playlist_uri /* alfred_playlist_uri */ ,
                 '' /* artist_name */ ,
                 '' /* track_name */ ,
                 '' /* album_name */ ,
@@ -2766,13 +2590,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                 '' /* artist_artwork_path */ ,
                 '' /* album_artwork_path */ ,
                 '' /* playlist_name */ ,
-                '' /* playlist_artwork_path */ ,
-                $alfred_playlist_name /* $alfred_playlist_name */ ,
-                $now_playing_notifications /* now_playing_notifications */ ,
-                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
-                $country_code /* country_code*/ ,
-                $userid
-                /* userid*/
+                '' /* playlist_artwork_path */
             )), "Create a Song Radio Playlist based on " . escapeQuery($results[0]), array(
                 'This will create a song radio playlist with ' . $radio_number_tracks . ' tracks for the current track',
                 'alt' => 'Not Available',
@@ -3052,7 +2870,6 @@ function firstDelimiterLyrics($w, $query, $settings, $db, $update_in_progress)
                 '' /* query */ ,
                 'Open▹' . $lyrics_url /* other_settings*/ ,
                 '' /* other_action */ ,
-                $alfred_playlist_uri /* alfred_playlist_uri */ ,
                 '' /* artist_name */ ,
                 '' /* track_name */ ,
                 '' /* album_name */ ,
@@ -3060,13 +2877,7 @@ function firstDelimiterLyrics($w, $query, $settings, $db, $update_in_progress)
                 '' /* artist_artwork_path */ ,
                 '' /* album_artwork_path */ ,
                 '' /* playlist_name */ ,
-                '' /* playlist_artwork_path */ ,
-                $alfred_playlist_name /* $alfred_playlist_name */ ,
-                $now_playing_notifications /* now_playing_notifications */ ,
-                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
-                $country_code /* country_code*/ ,
-                $userid
-                /* userid*/
+                '' /* playlist_artwork_path */
             )), 'See lyrics for ' . $track_name . ' by ' . $artist_name . ' online', "This will open your default browser", './images/lyrics.png', 'yes', null, '');
 
             $track_artwork = getTrackOrAlbumArtwork($w, $track_uri, false);
@@ -3536,7 +3347,6 @@ function firstDelimiterCheckForUpdate($w, $query, $settings, $db, $update_in_pro
                 '' /* query */ ,
                 'Open▹' . 'http://www.packal.org/workflow/spotify-mini-player' /* other_settings*/ ,
                 '' /* other_action */ ,
-                $alfred_playlist_uri /* alfred_playlist_uri */ ,
                 '' /* artist_name */ ,
                 '' /* track_name */ ,
                 '' /* album_name */ ,
@@ -3544,13 +3354,7 @@ function firstDelimiterCheckForUpdate($w, $query, $settings, $db, $update_in_pro
                 '' /* artist_artwork_path */ ,
                 '' /* album_artwork_path */ ,
                 '' /* playlist_name */ ,
-                '' /* playlist_artwork_path */ ,
-                $alfred_playlist_name /* $alfred_playlist_name */ ,
-                $now_playing_notifications /* now_playing_notifications */ ,
-                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
-                $country_code /* country_code*/ ,
-                $userid
-                /* userid*/
+                '' /* playlist_artwork_path */
             )), 'Download workflow from Packal', "This will open the Spotify Mini Player Packal page with your default browser", './images/packal.png', 'yes', null, '');
         }
 
@@ -3683,7 +3487,6 @@ function secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
                 '' /* query */ ,
                 '' /* other_settings*/ ,
                 'radio_artist' /* other_action */ ,
-                $alfred_playlist_uri /* alfred_playlist_uri */ ,
                 $artist_name /* artist_name */ ,
                 '' /* track_name */ ,
                 '' /* album_name */ ,
@@ -3691,13 +3494,7 @@ function secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
                 '' /* artist_artwork_path */ ,
                 '' /* album_artwork_path */ ,
                 '' /* playlist_name */ ,
-                '' /* playlist_artwork_path */ ,
-                $alfred_playlist_name /* $alfred_playlist_name */ ,
-                $now_playing_notifications /* now_playing_notifications */ ,
-                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
-                $country_code /* country_code*/ ,
-                $userid
-                /* userid*/
+                '' /* playlist_artwork_path */
             )), 'Create a Radio Playlist for ' . $artist_name, 'This will create a radio playlist with ' . $radio_number_tracks . ' tracks for the artist', './images/radio_artist.png', 'yes', null, '');
         }
 
@@ -3743,7 +3540,6 @@ function secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
                 '' /* query */ ,
                 '' /* other_settings*/ ,
                 '' /* other_action */ ,
-                $alfred_playlist_uri /* alfred_playlist_uri */ ,
                 $track[7] /* artist_name */ ,
                 $track[5] /* track_name */ ,
                 $track[6] /* album_name */ ,
@@ -3751,13 +3547,7 @@ function secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
                 $track[10] /* artist_artwork_path */ ,
                 $track[11] /* album_artwork_path */ ,
                 '' /* playlist_name */ ,
-                '' /* playlist_artwork_path */ ,
-                $alfred_playlist_name /* $alfred_playlist_name */ ,
-                $now_playing_notifications /* now_playing_notifications */ ,
-                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
-                $country_code /* country_code*/ ,
-                $userid
-                /* userid*/
+                '' /* playlist_artwork_path */
             )), ucfirst($track[7]) . " ● " . $track[5], array(
                 $track[16] . " ● " . $subtitle . getPlaylistsForTrack($db, $track[2]),
                 'alt' => 'Play album ' . $track[6] . ' in Spotify',
@@ -3962,7 +3752,6 @@ function secondDelimiterAlbums($w, $query, $settings, $db, $update_in_progress)
                 '' /* query */ ,
                 '' /* other_settings*/ ,
                 'play_track_in_album_context' /* other_action */ ,
-                $alfred_playlist_uri /* alfred_playlist_uri */ ,
                 $track[7] /* artist_name */ ,
                 $track[5] /* track_name */ ,
                 $track[6] /* album_name */ ,
@@ -3970,13 +3759,7 @@ function secondDelimiterAlbums($w, $query, $settings, $db, $update_in_progress)
                 $track[10] /* artist_artwork_path */ ,
                 $track[11] /* album_artwork_path */ ,
                 '' /* playlist_name */ ,
-                '' /* playlist_artwork_path */ ,
-                $alfred_playlist_name /* $alfred_playlist_name */ ,
-                $now_playing_notifications /* now_playing_notifications */ ,
-                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
-                $country_code /* country_code*/ ,
-                $userid
-                /* userid*/
+                '' /* playlist_artwork_path */
             )), ucfirst($track[7]) . " ● " . $track[5], array(
                 $track[16] . " ● " . $subtitle . getPlaylistsForTrack($db, $track[2]),
                 'alt' => 'Play album ' . $track[6] . ' in Spotify',
@@ -4346,7 +4129,6 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
                 '' /* query */ ,
                 '' /* other_settings*/ ,
                 'radio_artist' /* other_action */ ,
-                $alfred_playlist_uri /* alfred_playlist_uri */ ,
                 $artist_name /* artist_name */ ,
                 '' /* track_name */ ,
                 '' /* album_name */ ,
@@ -4354,13 +4136,7 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
                 '' /* artist_artwork_path */ ,
                 '' /* album_artwork_path */ ,
                 '' /* playlist_name */ ,
-                '' /* playlist_artwork_path */ ,
-                $alfred_playlist_name /* $alfred_playlist_name */ ,
-                $now_playing_notifications /* now_playing_notifications */ ,
-                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
-                $country_code /* country_code*/ ,
-                $userid
-                /* userid*/
+                '' /* playlist_artwork_path */
             )), 'Create a Radio Playlist for ' . $artist_name, 'This will create a radio playlist with ' . $radio_number_tracks . ' tracks for the artist', './images/radio_artist.png', 'yes', null, '');
         }
 
@@ -4825,7 +4601,6 @@ function secondDelimiterYourMusicTracks($w, $query, $settings, $db, $update_in_p
                 '' /* query */ ,
                 '' /* other_settings*/ ,
                 '' /* other_action */ ,
-                $alfred_playlist_uri /* alfred_playlist_uri */ ,
                 $track[7] /* artist_name */ ,
                 $track[5] /* track_name */ ,
                 $track[6] /* album_name */ ,
@@ -4833,13 +4608,7 @@ function secondDelimiterYourMusicTracks($w, $query, $settings, $db, $update_in_p
                 $track[10] /* artist_artwork_path */ ,
                 $track[11] /* album_artwork_path */ ,
                 '' /* playlist_name */ ,
-                '' /* playlist_artwork_path */ ,
-                $alfred_playlist_name /* $alfred_playlist_name */ ,
-                $now_playing_notifications /* now_playing_notifications */ ,
-                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
-                $country_code /* country_code*/ ,
-                $userid
-                /* userid*/
+                '' /* playlist_artwork_path */
             )), ucfirst($track[7]) . " ● " . $track[5], array(
                 $track[16] . " ● " . $subtitle . getPlaylistsForTrack($db, $track[2]),
                 'alt' => 'Play album ' . $track[6] . ' in Spotify',
@@ -5403,7 +5172,6 @@ function secondDelimiterCharts($w, $query, $settings, $db, $update_in_progress)
                 '' /* query */ ,
                 '' /* other_settings*/ ,
                 '' /* other_action */ ,
-                $alfred_playlist_uri /* alfred_playlist_uri */ ,
                 escapeQuery($track->artist_name) /* artist_name */ ,
                 escapeQuery($track->track_name) /* track_name */ ,
                 escapeQuery($track->album_name) /* album_name */ ,
@@ -5411,13 +5179,7 @@ function secondDelimiterCharts($w, $query, $settings, $db, $update_in_progress)
                 '' /* artist_artwork_path */ ,
                 '' /* album_artwork_path */ ,
                 '' /* playlist_name */ ,
-                '' /* playlist_artwork_path */ ,
-                $alfred_playlist_name /* $alfred_playlist_name */ ,
-                $now_playing_notifications /* now_playing_notifications */ ,
-                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
-                $country_code /* country_code*/ ,
-                $userid
-                /* userid*/
+                '' /* playlist_artwork_path */
             )), ucfirst(escapeQuery($track->track_name)) . " ● " . escapeQuery($track->artist_name), array(
                 escapeQuery($track->album_name) . " ● " . $track->num_streams . ' streams',
                 'alt' => 'Play album ' . escapeQuery($track->album_name) . ' in Spotify',
@@ -5567,7 +5329,6 @@ function secondDelimiterNewReleases($w, $query, $settings, $db, $update_in_progr
                 '' /* query */ ,
                 '' /* other_settings*/ ,
                 'playalbum' /* other_action */ ,
-                $alfred_playlist_uri /* alfred_playlist_uri */ ,
                 '' /* artist_name */ ,
                 '' /* track_name */ ,
                 $album_name /* album_name */ ,
@@ -5575,13 +5336,7 @@ function secondDelimiterNewReleases($w, $query, $settings, $db, $update_in_progr
                 '' /* artist_artwork_path */ ,
                 $album_artwork_path /* album_artwork_path */ ,
                 '' /* playlist_name */ ,
-                '' /* playlist_artwork_path */ ,
-                $alfred_playlist_name /* $alfred_playlist_name */ ,
-                $now_playing_notifications /* now_playing_notifications */ ,
-                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
-                $country_code /* country_code*/ ,
-                $userid
-                /* userid*/
+                '' /* playlist_artwork_path */
             )), "💿 " . escapeQuery($album_name), 'Play album', $album_artwork_path, 'yes', null, '');
 
             if ($update_in_progress == false) {
@@ -5758,7 +5513,6 @@ function secondDelimiterAdd($w, $query, $settings, $db, $update_in_progress)
                 '' /* query */ ,
                 'ADD_TO_YOUR_MUSIC▹' /* other_settings*/ ,
                 '' /* other_action */ ,
-                $alfred_playlist_uri /* alfred_playlist_uri */ ,
                 '' /* artist_name */ ,
                 $track_name /* track_name */ ,
                 $album_name /* album_name */ ,
@@ -5766,13 +5520,7 @@ function secondDelimiterAdd($w, $query, $settings, $db, $update_in_progress)
                 '' /* artist_artwork_path */ ,
                 '' /* album_artwork_path */ ,
                 $playlist_name /* playlist_name */ ,
-                '' /* playlist_artwork_path */ ,
-                $alfred_playlist_name /* $alfred_playlist_name */ ,
-                $now_playing_notifications /* now_playing_notifications */ ,
-                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
-                $country_code /* country_code*/ ,
-                $userid
-                /* userid*/
+                '' /* playlist_artwork_path */
             )), "Your Music", "Select to add the " . $message . " to Your Music", './images/yourmusic.png', 'yes', null, '');
         } else {
             $getPlaylists = "select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist from playlists where ownedbyuser=1 and ( name like :playlist or author like :playlist)";
@@ -5803,7 +5551,6 @@ function secondDelimiterAdd($w, $query, $settings, $db, $update_in_progress)
                 '' /* query */ ,
                 'ADD_TO_PLAYLIST▹' . $playlist[0] . '▹' . $playlist[1] /* other_settings*/ ,
                 '' /* other_action */ ,
-                $alfred_playlist_uri /* alfred_playlist_uri */ ,
                 '' /* artist_name */ ,
                 $track_name /* track_name */ ,
                 $album_name /* album_name */ ,
@@ -5811,13 +5558,7 @@ function secondDelimiterAdd($w, $query, $settings, $db, $update_in_progress)
                 '' /* artist_artwork_path */ ,
                 '' /* album_artwork_path */ ,
                 $playlist_name /* playlist_name */ ,
-                '' /* playlist_artwork_path */ ,
-                $alfred_playlist_name /* $alfred_playlist_name */ ,
-                $now_playing_notifications /* now_playing_notifications */ ,
-                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
-                $country_code /* country_code*/ ,
-                $userid
-                /* userid*/
+                '' /* playlist_artwork_path */
             )), "🎵" . $added . ucfirst($playlist[1]), $playlist[7] . " tracks ● " . $playlist[8] . " ● Select the playlist to add the " . $message, $playlist[5], 'yes', null, '');
         }
     }
@@ -6050,7 +5791,6 @@ function secondDelimiterAlfredPlaylist($w, $query, $settings, $db, $update_in_pr
                 '' /* query */ ,
                 'ALFRED_PLAYLIST▹' . $playlist[0] . '▹' . $playlist[1] /* other_settings*/ ,
                 '' /* other_action */ ,
-                $alfred_playlist_uri /* alfred_playlist_uri */ ,
                 '' /* artist_name */ ,
                 '' /* track_name */ ,
                 '' /* album_name */ ,
@@ -6058,13 +5798,7 @@ function secondDelimiterAlfredPlaylist($w, $query, $settings, $db, $update_in_pr
                 '' /* artist_artwork_path */ ,
                 '' /* album_artwork_path */ ,
                 '' /* playlist_name */ ,
-                '' /* playlist_artwork_path */ ,
-                $alfred_playlist_name /* $alfred_playlist_name */ ,
-                $now_playing_notifications /* now_playing_notifications */ ,
-                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
-                $country_code /* country_code*/ ,
-                $userid
-                /* userid*/
+                '' /* playlist_artwork_path */
             )), "🎵" . $added . ucfirst($playlist[1]), $playlist[7] . " tracks ● " . $playlist[8] . " ● Select the playlist to set it as your Alfred Playlist", $playlist[5], 'yes', null, '');
 
         }
@@ -6371,7 +6105,6 @@ function secondDelimiterDisplayBiography($w, $query, $settings, $db, $update_in_
                 '' /* query */ ,
                 'Open▹' . $biography_url /* other_settings*/ ,
                 '' /* other_action */ ,
-                $alfred_playlist_uri /* alfred_playlist_uri */ ,
                 '' /* artist_name */ ,
                 '' /* track_name */ ,
                 '' /* album_name */ ,
@@ -6379,13 +6112,7 @@ function secondDelimiterDisplayBiography($w, $query, $settings, $db, $update_in_
                 '' /* artist_artwork_path */ ,
                 '' /* album_artwork_path */ ,
                 '' /* playlist_name */ ,
-                '' /* playlist_artwork_path */ ,
-                $alfred_playlist_name /* $alfred_playlist_name */ ,
-                $now_playing_notifications /* now_playing_notifications */ ,
-                $is_alfred_playlist_active /* is_alfred_playlist_active */ ,
-                $country_code /* country_code*/ ,
-                $userid
-                /* userid*/
+                '' /* playlist_artwork_path */
             )), 'See biography for ' . $artist_name . ' on ' . $source, "This will open your default browser", $image, 'yes', null, '');
 
 			$wrapped = wordwrap($biography, 70, "\n", false);

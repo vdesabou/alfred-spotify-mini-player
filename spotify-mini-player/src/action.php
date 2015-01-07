@@ -18,22 +18,28 @@ $spotify_command           = $arg[4];
 $original_query            = $arg[5];
 $other_settings            = $arg[6];
 $other_action              = $arg[7];
-$alfred_playlist_uri       = $arg[8];
-$artist_name               = $arg[9];
-$track_name                = $arg[10];
-$album_name                = $arg[11];
-$track_artwork_path        = $arg[12];
-$artist_artwork_path       = $arg[13];
-$album_artwork_path        = $arg[14];
-$playlist_name             = $arg[15];
-$playlist_artwork_path     = $arg[16];
-$alfred_playlist_name      = $arg[17];
-$now_playing_notifications = $arg[18];
-$is_alfred_playlist_active = $arg[19];
-$country_code              = $arg[20];
-$userid                    = $arg[21];
+$artist_name               = $arg[8];
+$track_name                = $arg[9];
+$album_name                = $arg[10];
+$track_artwork_path        = $arg[11];
+$artist_artwork_path       = $arg[12];
+$album_artwork_path        = $arg[13];
+$playlist_name             = $arg[14];
+$playlist_artwork_path     = $arg[15];
 
-if($userid != 'vdesabou') {
+
+//
+// Read settings from JSON
+//
+$settings                  = getSettings($w);
+$is_alfred_playlist_active = $settings->is_alfred_playlist_active;
+$now_playing_notifications = $settings->now_playing_notifications;
+$alfred_playlist_uri       = $settings->alfred_playlist_uri;
+$alfred_playlist_name      = $settings->alfred_playlist_name;
+$country_code              = $settings->country_code;
+$userid                    = $settings->userid;
+
+if($userid != 'vdesabou' && $other_action != "current") {
 	stathat_ez_count('AlfredSpotifyMiniPlayer', 'workflow used', 1);
 }
 
