@@ -103,7 +103,6 @@ if ($type == "TRACK" && $other_settings == "") {
             if($userid != 'vdesabou') {
 	        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
             }
-            addTrackToPlayQueue($w, $track_uri, $track_name, $country_code);
             return;
         } else {
             if ($other_action == "") {
@@ -582,7 +581,6 @@ if ($playlist_uri != "" && $other_settings == "") {
             //
             // Read settings from JSON
             //
-
             $settings                  = getSettings($w);
             $now_playing_notifications = $settings->now_playing_notifications;
         }

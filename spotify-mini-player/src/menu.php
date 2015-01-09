@@ -252,7 +252,7 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress)
 
     $w->result(null, '', 'Current Track', 'Display current track information and browse various options', './images/current_track.png', 'no', null, 'Current Track▹');
 
-    $w->result(null, '', 'Play Queue', '', './images/play_queue.png', 'no', null, 'Play Queue▹');
+    $w->result(null, '', 'Play Queue', 'Get the current play queue. Always use the workflow to launch tracks, otherwise play queue will be empty', './images/play_queue.png', 'no', null, 'Play Queue▹');
 
     $w->result(null, serialize(array(
         '' /*track_uri*/ ,
@@ -3127,8 +3127,11 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
             } elseif ($playqueue->type == 'album') {
 	            $album_uri = $playqueue->uri;
 	            $album_name = $playqueue->name;
+            } elseif ($playqueue->type == 'track') {
+	            $track_uri = $playqueue->uri;
+	            $track_name = $playqueue->name;
             }
-            $w->result(null, 'help', "Playing from: " . ucfirst($playqueue->type) . ' ' . $playqueue->name, '', './images/info.png', 'no', null, '');
+            $w->result(null, 'help', "Playing from: " . ucfirst($playqueue->type) . ' ' . $playqueue->name, '', './images/play_queue.png', 'no', null, '');
 
             $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
             $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
@@ -3168,7 +3171,7 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
     }
 
     if ($noresult) {
-        $w->result(null, 'help', "There is no track in the play queue", "", './images/warning.png', 'no', null, '');
+        $w->result(null, 'help', "There is no track in the play queue", "Make sure to always use the workflow to launch tracks, playlists, etc..", './images/warning.png', 'no', null, '');
     }
 }
 

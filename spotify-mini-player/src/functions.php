@@ -174,13 +174,25 @@ function addTrackToPlayQueue($w, $track_uri, $track_name, $country_code) {
 		);
     } else {
 	    $newtracks = array();
-	    array_unshift($playqueue->tracks , $track);
-		$newplayqueue = array(
-		    "type" => $playqueue->type,
-		    "uri" => $playqueue->uri,
-		    "name" => $playqueue->name,
-		    "tracks" => $playqueue->tracks,
-		);
+	    // remove current track
+	    array_shift($playqueue->tracks);
+	    // add new track at beginning
+	    array_unshift($playqueue->tracks, $track);
+	    if($playqueue->type != '') {
+			$newplayqueue = array(
+			    "type" => $playqueue->type,
+			    "uri" => $playqueue->uri,
+			    "name" => $playqueue->name,
+			    "tracks" => $playqueue->tracks,
+			);
+	    } else {
+			$newplayqueue = array(
+			    "type" => "track",
+			    "uri" => $track_uri,
+			    "name" => $track_name,
+			    "tracks" => $playqueue->tracks,
+			);
+	    }
     }
 	$w->write($newplayqueue, 'playqueue.json');
 }
@@ -212,12 +224,22 @@ function removeCurrentTrackFromPlayQueue($w) {
 				$newtracks[] = $track;
 			}
 	    }
-		$newplayqueue = array(
-		    "type" => $playqueue->type,
-		    "uri" => $playqueue->uri,
-		    "name" => $playqueue->name,
-		    "tracks" => $newtracks,
-		);
+	    if($found == false) {
+			$newplayqueue = array(
+			    "type" => '',
+			    "uri" => '',
+			    "name" => '',
+			    "tracks" => $newtracks,
+			);
+			displayNotificationWithArtwork("Play Queue has been reset", './images/warning.png', 'Error!');
+	    } else {
+			$newplayqueue = array(
+			    "type" => $playqueue->type,
+			    "uri" => $playqueue->uri,
+			    "name" => $playqueue->name,
+			    "tracks" => $newtracks,
+			);
+	    }
 	    $w->write($newplayqueue, 'playqueue.json');
     } else {
 	    displayNotificationWithArtwork("No track is playing", './images/warning.png');
