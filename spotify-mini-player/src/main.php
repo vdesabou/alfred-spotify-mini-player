@@ -302,6 +302,8 @@ if (mb_strlen($query) < 3) {
                 firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress);
             } elseif ($kind == "Check for update...") {
                 firstDelimiterCheckForUpdate($w, $query, $settings, $db, $update_in_progress);
+            } elseif ($kind == "Play Queue") {
+                firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress);
             }
         }
         ////////////

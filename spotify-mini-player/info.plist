@@ -2598,7 +2598,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "current" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
 echo "===== CURRENT ========" &gt;&gt; "$alfred_workflow_cache/action.log"
 echo "`date` $query" {query} &gt;&gt; "$alfred_workflow_cache/action.log"
-php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+php -f ./src/action.php -- "$query" "{query}" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>

@@ -103,6 +103,7 @@ if ($type == "TRACK" && $other_settings == "") {
             if($userid != 'vdesabou') {
 	        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
             }
+            addTrackToPlayQueue($w, $track_uri, $track_name, $country_code);
             return;
         } else {
             if ($other_action == "") {
@@ -125,6 +126,7 @@ if ($type == "TRACK" && $other_settings == "") {
 	            if($userid != 'vdesabou') {
 		        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
 	            }
+	            addTrackToPlayQueue($w, $track_uri, $track_name, $country_code);
                 return;
             }
         }
@@ -156,6 +158,7 @@ if ($type == "TRACK" && $other_settings == "") {
     if($userid != 'vdesabou') {
     	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
     }
+    addAlbumToPlayQueue($w, $album_uri, $album_name);
     return;
 } else if ($type == "ONLINE") {
     if ($artist_uri == "") {
@@ -225,6 +228,7 @@ if ($type == "TRACK" && $other_settings == "") {
     if($userid != 'vdesabou') {
     	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
     }
+    addArtistToPlayQueue($w, $artist_uri, $artist_name, $country_code);
     return;
 }
 
@@ -249,6 +253,7 @@ if ($playlist_uri != "" && $other_settings == "") {
     if($userid != 'vdesabou') {
     	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
     }
+    addPlaylistToPlayQueue($w, $playlist_uri, $playlist_name);
     return;
 } else if ($other_settings != "") {
     $setting = explode('▹', $other_settings);
@@ -593,6 +598,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         if($userid != 'vdesabou') {
         	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
         }
+        addAlbumToPlayQueue($w, $album_uri, $album_name);
         return;
     } else if ($other_action == "play") {
 	    exec("./src/track_info.ksh 2>&1");
@@ -656,6 +662,9 @@ if ($playlist_uri != "" && $other_settings == "") {
         return;
     } else if ($other_action == "current") {
         displayNotificationForCurrentTrack($w);
+        if($type != "playing") {
+	        removeCurrentTrackFromPlayQueue($w);
+        }
         return;
     } else if ($other_action == "add_current_track_to") {
         if (file_exists($w->data() . '/update_library_in_progress')) {
@@ -776,6 +785,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         if($userid != 'vdesabou') {
         	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
         }
+        addArtistToPlayQueue($w, $artist_uri, $artist_name, $country_code);
         return;
     } else if ($other_action == "playalbum") {
         if ($album_uri == "") {
@@ -803,6 +813,7 @@ if ($playlist_uri != "" && $other_settings == "") {
         if($userid != 'vdesabou') {
         	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
         }
+        addAlbumToPlayQueue($w, $album_uri, $album_name);
         return;
     } else if ($other_action == "volume_up") {
         exec("osascript -e 'set volume output volume (output volume of (get volume settings) + 6)'");

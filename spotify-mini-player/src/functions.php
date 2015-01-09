@@ -74,6 +74,157 @@ function getSpotifyWebAPI($w, $old_api = null)
 }
 
 /**
+ * addPlaylistToPlayQueue function.
+ *
+ * @access public
+ * @param mixed $w
+ * @param mixed $playlist_uri
+ * @param mixed $playlist_name
+ * @return void
+ */
+function addPlaylistToPlayQueue($w, $playlist_uri, $playlist_name) {
+	$tracks = getThePlaylistFullTracks($w, $playlist_uri);
+	if($tracks == false) {
+		displayNotificationWithArtwork("Cannot get tracks for playlist " . $playlist_name, './images/warning.png', 'Error!');
+		return false;
+	}
+	$playqueue = array(
+	    "type" => "playlist",
+	    "uri" => $playlist_uri,
+	    "name" => $playlist_name,
+	    "tracks" => $tracks,
+	);
+	$w->write($playqueue, 'playqueue.json');
+}
+
+/**
+ * addAlbumToPlayQueue function.
+ *
+ * @access public
+ * @param mixed $w
+ * @param mixed $album_uri
+ * @param mixed $album_name
+ * @return void
+ */
+function addAlbumToPlayQueue($w, $album_uri, $album_name) {
+	$tracks = getTheAlbumFullTracks($w, $album_uri);
+	if($tracks == false) {
+		displayNotificationWithArtwork("Cannot get tracks for album " . $album_name, './images/warning.png', 'Error!');
+		return false;
+	}
+	$playqueue = array(
+	    "type" => "album",
+	    "uri" => $album_uri,
+	    "name" => $album_name,
+	    "tracks" => $tracks,
+	);
+	$w->write($playqueue, 'playqueue.json');
+}
+
+/**
+ * addArtistToPlayQueue function.
+ *
+ * @access public
+ * @param mixed $w
+ * @param mixed $artist_uri
+ * @param mixed $artist_name
+ * @param mixed $country_code
+ * @return void
+ */
+function addArtistToPlayQueue($w, $artist_uri, $artist_name, $country_code) {
+	$tracks = getTheArtistFullTracks($w, $artist_uri, $country_code);
+	if($tracks == false) {
+		displayNotificationWithArtwork("Cannot get tracks for artist " . $artist_name, './images/warning.png', 'Error!');
+		return false;
+	}
+	$playqueue = array(
+	    "type" => "artist",
+	    "uri" => $artist_uri,
+	    "name" => $artist_name,
+	    "tracks" => $tracks,
+	);
+	$w->write($playqueue, 'playqueue.json');
+}
+
+/**
+ * addTrackToPlayQueue function.
+ *
+ * @access public
+ * @param mixed $w
+ * @param mixed $track_uri
+ * @param mixed $track_name
+ * @param mixed $country_code
+ * @return void
+ */
+function addTrackToPlayQueue($w, $track_uri, $track_name, $country_code) {
+	$tracks = array();
+	$track = getTheFullTrack($w, $track_uri, $country_code);
+	if($track == false) {
+		displayNotificationWithArtwork("Cannot get track " . $track_name, './images/warning.png', 'Error!');
+		return false;
+	}
+	$tracks[] = $track;
+    $playqueue = $w->read('playqueue.json');
+    if ($playqueue == false) {
+		$newplayqueue = array(
+		    "type" => "track",
+		    "uri" => $track_uri,
+		    "name" => $track_name,
+		    "tracks" => $tracks,
+		);
+    } else {
+	    $newtracks = array();
+	    array_unshift($playqueue->tracks , $track);
+		$newplayqueue = array(
+		    "type" => $playqueue->type,
+		    "uri" => $playqueue->uri,
+		    "name" => $playqueue->name,
+		    "tracks" => $playqueue->tracks,
+		);
+    }
+	$w->write($newplayqueue, 'playqueue.json');
+}
+
+/**
+ * removeCurrentTrackFromPlayQueue function.
+ *
+ * @access public
+ * @param mixed $w
+ * @return void
+ */
+function removeCurrentTrackFromPlayQueue($w) {
+    $playqueue = $w->read('playqueue.json');
+
+    if ($playqueue == false) {
+        displayNotificationWithArtwork("No play queue yet", './images/warning.png', 'Error!');
+    }
+    $command_output = exec("./src/track_info.ksh 2>&1");
+
+    if (substr_count($command_output, '▹') > 0) {
+        $results = explode('▹', $command_output);
+	    $newtracks = array();
+	    $found = false;
+		foreach ($playqueue->tracks as $track) {
+			if($track->uri == $results[4]) {
+				$found = true;
+			}
+			if($found == true) {
+				$newtracks[] = $track;
+			}
+	    }
+		$newplayqueue = array(
+		    "type" => $playqueue->type,
+		    "uri" => $playqueue->uri,
+		    "name" => $playqueue->name,
+		    "tracks" => $newtracks,
+		);
+	    $w->write($newplayqueue, 'playqueue.json');
+    } else {
+	    displayNotificationWithArtwork("No track is playing", './images/warning.png');
+    }
+}
+
+/**
  * getBiography function.
  *
  * @access public
@@ -1393,15 +1544,17 @@ function getTheArtistAlbums($w, $artist_uri, $country_code)
     return $albums;
 }
 
+
 /**
  * getTheAlbumFullTracks function.
  *
  * @access public
  * @param mixed $w
  * @param mixed $album_uri
+ * @param bool $actionMode (default: true)
  * @return void
  */
-function getTheAlbumFullTracks($w, $album_uri)
+function getTheAlbumFullTracks($w, $album_uri, $actionMode = false)
 {
     $tracks = array();
 
@@ -1426,13 +1579,141 @@ function getTheAlbumFullTracks($w, $album_uri)
         } while ($offsetGetAlbumTracks < $albumTracks->total);
     }
     catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        $w2 = new Workflows('com.vdesabou.spotify.mini.player');
-        $w2->result(null, '', "Error: Spotify WEB API getAlbumTracks returned error " . $e->getMessage(), "Try again or report to author", './images/warning.png', 'no', null, '');
-        echo $w2->toxml();
-        exit;
+	    if($actionMode == false) {
+	        $w2 = new Workflows('com.vdesabou.spotify.mini.player');
+	        $w2->result(null, '', "Error: Spotify WEB API getAlbumTracks returned error " . $e->getMessage(), "Try again or report to author", './images/warning.png', 'no', null, '');
+	        echo $w2->toxml();
+	        exit;
+	    } else {
+		    echo "Error(getTheAlbumFullTracks): (exception " . print_r($e) . ")";
+		    handleSpotifyWebAPIException($w, $e);
+		    return false;
+	    }
     }
 
     return $tracks;
+}
+
+/**
+ * getThePlaylistFullTracks function.
+ *
+ * @access public
+ * @param mixed $w
+ * @param mixed $playlist_uri
+ * @return void
+ */
+function getThePlaylistFullTracks($w, $playlist_uri)
+{
+    $tracks = array();
+    try {
+        $api                         = getSpotifyWebAPI($w);
+        $tmp                         = explode(':', $playlist_uri);
+        $offsetGetUserPlaylistTracks = 0;
+        $limitGetUserPlaylistTracks  = 100;
+        do {
+            // refresh api
+            $api                = getSpotifyWebAPI($w, $api);
+            $userPlaylistTracks = $api->getUserPlaylistTracks(urlencode($tmp[2]), $tmp[4], array(
+                        'fields' => array(
+                            'total',
+                            'items(added_at)',
+                            'items.track(available_markets,duration_ms,uri,popularity,name)',
+                            'items.track.album(album_type,images,uri,name)',
+                            'items.track.artists(name,uri)'
+                        ),
+                'limit' => $limitGetUserPlaylistTracks,
+                'offset' => $offsetGetUserPlaylistTracks
+            ));
+
+            foreach ($userPlaylistTracks->items as $item) {
+                $tracks[] = $item->track;
+            }
+
+            $offsetGetUserPlaylistTracks += $limitGetUserPlaylistTracks;
+        } while ($offsetGetUserPlaylistTracks < $userPlaylistTracks->total);
+    }
+    catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+        logMsg("Error(getThePlaylistFullTracks): playlist uri " . $playlist_uri . " (exception " . print_r($e) . ")");
+        handleSpotifyWebAPIException($w, $e);
+
+        return false;
+    }
+
+    return $tracks;
+}
+
+/**
+ * getTheArtistFullTracks function.
+ *
+ * @access public
+ * @param mixed $w
+ * @param mixed $artist_uri
+ * @param mixed $country_code
+ * @return void
+ */
+function getTheArtistFullTracks($w, $artist_uri, $country_code)
+{
+    $tracks = array();
+    try {
+        $api                         = getSpotifyWebAPI($w);
+        $tmp                         = explode(':', $artist_uri);
+        $artistTopTracks = $api->getArtistTopTracks($tmp[2], $country_code);
+
+        foreach ($artistTopTracks->tracks as $track) {
+            $tracks[] = $track;
+        }
+    }
+    catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+        logMsg("Error(getTheArtistFullTracks): artist uri " . $artist_uri . " (exception " . print_r($e) . ")");
+        handleSpotifyWebAPIException($w, $e);
+
+        return false;
+    }
+
+    return $tracks;
+}
+
+/**
+ * getTheFullTrack function.
+ *
+ * @access public
+ * @param mixed $w
+ * @param mixed $track_uri
+ * @param mixed $country_code
+ * @return void
+ */
+function getTheFullTrack($w, $track_uri, $country_code)
+{
+    try {
+        $tmp = explode(':', $track_uri);
+
+        if ($tmp[1] == 'local') {
+            // local track, look it up online
+            // spotify:local:The+D%c3%b8:On+My+Shoulders+-+Single:On+My+Shoulders:318
+            // spotify:local:Damien+Rice:B-Sides:Woman+Like+a+Man+%28Live%2c+Unplugged%29:284
+
+            $query   = 'track:' . urldecode(strtolower($tmp[4])) . ' artist:' . urldecode(strtolower($tmp[2]));
+            $results = searchWebApi($w, $country_code, $query, 'track', 1);
+
+            if (count($results) > 0) {
+                // only one track returned
+                $track   = $results[0];
+                return $track;
+            } else {
+                logMsg("Could not find track from uri: $track_uri");
+                return false;
+            }
+        }
+        $api     = getSpotifyWebAPI($w);
+        $track   = $api->getTrack($tmp[2]);
+        return $track;
+    }
+    catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+        echo "Error(getTheFullTrack): (exception " . print_r($e) . ")";
+        handleSpotifyWebAPIException($w, $e);
+    }
+
+    return false;
 }
 
 /**
