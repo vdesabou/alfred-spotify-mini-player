@@ -103,6 +103,9 @@ if ($type == "TRACK" && $other_settings == "") {
             if($userid != 'vdesabou') {
 	        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
             }
+		    if ($now_playing_notifications == true) {
+			    addPlaylistToPlayQueue($w, $playlist_uri, $playlist_name);
+			}
             return;
         } else {
             if ($other_action == "") {
