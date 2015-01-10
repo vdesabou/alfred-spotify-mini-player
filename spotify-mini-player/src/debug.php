@@ -42,6 +42,12 @@ if (!file_exists($w->data() . "/history.json")) {
     copy($w->data() . "/history.json", $w->home() . "/Downloads/spot_mini_debug/history.json");
 }
 
+if (!file_exists($w->data() . "/playqueue.json")) {
+    $output = $output . "The file " . $w->data() . "/playqueue.json is not present\n";
+} else {
+    copy($w->data() . "/playqueue.json", $w->home() . "/Downloads/spot_mini_debug/playqueue.json");
+}
+
 if (!file_exists(exec('pwd') . "/packal/package.xml")) {
     $output = $output . "The file " . exec('pwd') . "/packal/package.xml is not present\n";
 } else {
