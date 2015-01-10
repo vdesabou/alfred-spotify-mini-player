@@ -3189,6 +3189,7 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
         return;
     }
     $noresult = true;
+    $nb_tracks           = 0;
 	foreach ($playqueue->tracks as $track) {
         if ($noresult == true) {
             $added = '🔈 ';
@@ -3207,6 +3208,11 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
             $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
             $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
             $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
+        }
+        $max_tracks_displayed = 150;
+        if($nb_tracks >= $max_tracks_displayed) {
+	    	$w->result(null, 'help', "[...] " . (count($playqueue->tracks) - $max_tracks_displayed) . " additional tracks are in the queue", "A maximum of " . $max_tracks_displayed . " tracks is displayed." , './images/info.png', 'no', null, '');
+	    	break; 
         }
         if(isset($track->album->name)) {
 	        $album_name = $track->album->name;
@@ -3239,6 +3245,7 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
         ), $track_artwork, 'yes', null, '');
         $noresult      = false;
         $added = '';
+        $nb_tracks += 1;
     }
 
     if ($noresult) {
