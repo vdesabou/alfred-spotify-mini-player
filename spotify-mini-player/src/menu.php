@@ -555,6 +555,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress)
 function searchCategoriesFastAccess($w, $query, $settings, $db, $update_in_progress)
 {
     $alfred_playlist_name = $settings->alfred_playlist_name;
+    $now_playing_notifications = $settings->now_playing_notifications;
 
     //
     // Search categories for fast access
@@ -603,6 +604,11 @@ function searchCategoriesFastAccess($w, $query, $settings, $db, $update_in_progr
     }
     if (strpos(strtolower('artists'), strtolower($query)) !== false) {
         $w->result(null, '', 'Artists', 'Browse by artist', './images/artists.png', 'no', null, 'Artist▹');
+    }
+    if (strpos(strtolower('play queue'), strtolower($query)) !== false) {
+		if ($now_playing_notifications == true) {
+	    	$w->result(null, '', 'Play Queue', 'Get the current play queue. Always use the workflow to launch tracks, otherwise play queue will be empty', './images/play_queue.png', 'no', null, 'Play Queue▹');
+		}
     }
     if (strpos(strtolower('alfred'), strtolower($query)) !== false) {
         $w->result(null, '', 'Alfred Playlist (currently set to <' . $alfred_playlist_name . '>)', 'Choose one of your playlists and add tracks, album, playlist to it directly from the workflow', './images/alfred_playlist.png', 'no', null, 'Alfred Playlist▹');
