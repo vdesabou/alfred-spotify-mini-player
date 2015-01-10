@@ -3037,6 +3037,25 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
     }
 
     $w->result(null, '', 'Check for workflow update', 'Last checked: ' . beautifyTime(time() - $last_check_update_time, true) . ' ago (note this is automatically done otherwise once per day)', './images/check_update.png', 'no', null, 'Check for update...' . '▹');
+
+    $w->result(null, serialize(array(
+        '' /*track_uri*/ ,
+        '' /* album_uri */ ,
+        '' /* artist_uri */ ,
+        '' /* playlist_uri */ ,
+        '' /* spotify_command */ ,
+        '' /* query */ ,
+        'Open▹' . 'http://alfred-spotify-mini-player.com' /* other_settings*/ ,
+        '' /* other_action */ ,
+        '' /* artist_name */ ,
+        '' /* track_name */ ,
+        '' /* album_name */ ,
+        '' /* track_artwork_path */ ,
+        '' /* artist_artwork_path */ ,
+        '' /* album_artwork_path */ ,
+        '' /* playlist_name */ ,
+        '' /* playlist_artwork_path */
+    )), 'Go to the website alfred-spotify-mini-player.com', "Find out all information on the workflow on the website", './images/website.png', 'yes', null, '');
 }
 
 /**
