@@ -231,7 +231,6 @@ function removeCurrentTrackFromPlayQueue($w) {
 			    "name" => '',
 			    "tracks" => $newtracks,
 			);
-			displayNotificationWithArtwork("Play Queue has been reset", './images/warning.png', 'Error!');
 	    } else {
 			$newplayqueue = array(
 			    "type" => $playqueue->type,
