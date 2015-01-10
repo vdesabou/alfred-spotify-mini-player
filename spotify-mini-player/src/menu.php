@@ -930,7 +930,14 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 '' /* album_artwork_path */ ,
                 '' /* playlist_name */ ,
                 '' /* playlist_artwork_path */
-            )), "Refresh your library", "Do this when your library has changed (outside the scope of this workflow)", './images/update.png', 'yes', null, '');
+            )), "Refresh your library", array(
+        'Do this when your library has changed (outside the scope of this workflow)',
+        'alt' => 'Not Available',
+        'cmd' => 'Not Available',
+        'shift' => 'Not Available',
+        'fn' => 'Not Available',
+        'ctrl' => 'Not Available'
+    ), './images/update.png', 'yes', null, '');
         }
 
         if ($update_in_progress == false) {
@@ -1375,7 +1382,14 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                     '' /* album_artwork_path */ ,
                     '' /* playlist_name */ ,
                     '' /* playlist_artwork_path */
-                )), "Refresh your library", "Do this when your library has changed (outside the scope of this workflow)", './images/update.png', 'yes', null, '');
+                )), "Refresh your library", array(
+        'Do this when your library has changed (outside the scope of this workflow)',
+        'alt' => 'Not Available',
+        'cmd' => 'Not Available',
+        'shift' => 'Not Available',
+        'fn' => 'Not Available',
+        'ctrl' => 'Not Available'
+    ), './images/update.png', 'yes', null, '');
             }
         }
         if (strpos(strtolower('update'), strtolower($query)) !== false) {
@@ -1398,7 +1412,14 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                     '' /* album_artwork_path */ ,
                     '' /* playlist_name */ ,
                     '' /* playlist_artwork_path */
-                )), "Refresh your library", "Do this when your library has changed (outside the scope of this workflow)", './images/update.png', 'yes', null, '');
+                )), "Refresh your library", array(
+        'Do this when your library has changed (outside the scope of this workflow)',
+        'alt' => 'Not Available',
+        'cmd' => 'Not Available',
+        'shift' => 'Not Available',
+        'fn' => 'Not Available',
+        'ctrl' => 'Not Available'
+    ), './images/update.png', 'yes', null, '');
             }
         }
         if (strpos(strtolower('add'), strtolower($query)) !== false) {
@@ -2757,7 +2778,14 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
             '' /* album_artwork_path */ ,
             '' /* playlist_name */ ,
             '' /* playlist_artwork_path */
-        )), "Refresh your library", "Do this when your library has changed (outside the scope of this workflow)", './images/update.png', 'yes', null, '');
+        )), "Refresh your library", array(
+        'Do this when your library has changed (outside the scope of this workflow)',
+        'alt' => 'Not Available',
+        'cmd' => 'Not Available',
+        'shift' => 'Not Available',
+        'fn' => 'Not Available',
+        'ctrl' => 'Not Available'
+    ), './images/update.png', 'yes', null, '');
     }
 
     if ($is_alfred_playlist_active == true) {
@@ -2944,7 +2972,14 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
             '' /* album_artwork_path */ ,
             '' /* playlist_name */ ,
             '' /* playlist_artwork_path */
-        )), 'Re-Create your library from scratch', "Do this when refresh library is not working as you would expect", './images/recreate.png', 'yes', null, '');
+        )), 'Re-Create your library from scratch', array(
+        'Do this when refresh library is not working as you would expect',
+        'alt' => 'Not Available',
+        'cmd' => 'Not Available',
+        'shift' => 'Not Available',
+        'fn' => 'Not Available',
+        'ctrl' => 'Not Available'
+    ), './images/recreate.png', 'yes', null, '');
     }
 
     if ($lookup_local_tracks_online == true) {
