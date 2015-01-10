@@ -3111,12 +3111,10 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
 
     $playqueue = $w->read('playqueue.json');
     if ($playqueue == false) {
-		$w->result(null, 'help', "There is no track in the play queue", "", './images/warning.png', 'no', null, '');
+        $w->result(null, 'help', "There is no track in the play queue", "Make sure to always use the workflow to launch tracks, playlists, etc..", './images/warning.png', 'no', null, '');
         echo $w->toxml();
         return;
-
     }
-
     $noresult = true;
 	foreach ($playqueue->tracks as $track) {
         if ($noresult == true) {
@@ -3131,7 +3129,7 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
 	            $track_uri = $playqueue->uri;
 	            $track_name = $playqueue->name;
             }
-            $w->result(null, 'help', "Playing from: " . ucfirst($playqueue->type) . ' ' . $playqueue->name, '', './images/play_queue.png', 'no', null, '');
+            $w->result(null, 'help', "Playing from: " . ucfirst($playqueue->type) . ' ' . $playqueue->name, count($playqueue->tracks) . ' tracks queued', './images/play_queue.png', 'no', null, '');
 
             $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
             $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
