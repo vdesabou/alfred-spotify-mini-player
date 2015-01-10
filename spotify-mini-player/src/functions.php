@@ -91,7 +91,7 @@ function addPlaylistToPlayQueue($w, $playlist_uri, $playlist_name) {
 	$playqueue = array(
 	    "type" => "playlist",
 	    "uri" => $playlist_uri,
-	    "name" => $playlist_name,
+	    "name" => escapeQuery($playlist_name),
 	    "tracks" => $tracks,
 	);
 	$w->write($playqueue, 'playqueue.json');
@@ -115,7 +115,7 @@ function addAlbumToPlayQueue($w, $album_uri, $album_name) {
 	$playqueue = array(
 	    "type" => "album",
 	    "uri" => $album_uri,
-	    "name" => $album_name,
+	    "name" => escapeQuery($album_name),
 	    "tracks" => $tracks,
 	);
 	$w->write($playqueue, 'playqueue.json');
@@ -140,7 +140,7 @@ function addArtistToPlayQueue($w, $artist_uri, $artist_name, $country_code) {
 	$playqueue = array(
 	    "type" => "artist",
 	    "uri" => $artist_uri,
-	    "name" => $artist_name,
+	    "name" => escapeQuery($artist_name),
 	    "tracks" => $tracks,
 	);
 	$w->write($playqueue, 'playqueue.json');
@@ -169,7 +169,7 @@ function addTrackToPlayQueue($w, $track_uri, $track_name, $country_code) {
 		$newplayqueue = array(
 		    "type" => "track",
 		    "uri" => $track_uri,
-		    "name" => $track_name,
+		    "name" => escapeQuery($track_name),
 		    "tracks" => $tracks,
 		);
     } else {
@@ -189,7 +189,7 @@ function addTrackToPlayQueue($w, $track_uri, $track_name, $country_code) {
 			$newplayqueue = array(
 			    "type" => "track",
 			    "uri" => $track_uri,
-			    "name" => $track_name,
+			    "name" => escapeQuery($track_name),
 			    "tracks" => $playqueue->tracks,
 			);
 	    }
@@ -996,20 +996,18 @@ function getRandomTrack($w)
             PDO::ATTR_PERSISTENT => true
         ));
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $getTracks = "select uri from tracks order by random() limit 1";
+        $getTracks = "select uri,track_name from tracks order by random() limit 1";
         $stmt      = $db->prepare($getTracks);
         $stmt->execute();
         $track       = $stmt->fetch();
         $thetrackuri = $track[0];
+        $thetrackname = $track[1];
     }
     catch (PDOException $e) {
         handleDbIssuePdoEcho($db, $w);
-        $db = null;
-
-        return false;
     }
 
-    return $thetrackuri;
+    return array($thetrackuri,$thetrackname);
 }
 
 /**

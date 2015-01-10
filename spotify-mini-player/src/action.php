@@ -716,17 +716,12 @@ if ($playlist_uri != "" && $other_settings == "") {
         }
         return;
     } else if ($other_action == "random") {
-        $track_uri = getRandomTrack($w);
-        if ($track_uri == false) {
-            displayNotificationWithArtwork("Cannot find a random track", './images/warning.png', 'Error!');
-            return;
-        }
+        list($track_uri, $track_name) = getRandomTrack($w);
         // start now playing if needed
         if ($now_playing_notifications == "") {
             //
             // Read settings from JSON
             //
-
             $settings                  = getSettings($w);
             $now_playing_notifications = $settings->now_playing_notifications;
         }
@@ -737,6 +732,9 @@ if ($playlist_uri != "" && $other_settings == "") {
         exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
         if ($now_playing_notifications == false) {
             displayNotificationForCurrentTrack($w);
+        }
+        if ($now_playing_notifications == true) {
+        	addTrackToPlayQueue($w, $track_uri, $track_name, $country_code);
         }
         return;
     } else if ($other_action == "reset_settings") {
