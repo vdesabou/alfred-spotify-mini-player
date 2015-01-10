@@ -252,7 +252,9 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress)
 
     $w->result(null, '', 'Current Track', 'Display current track information and browse various options', './images/current_track.png', 'no', null, 'Current Track▹');
 
-    $w->result(null, '', 'Play Queue', 'Get the current play queue. Always use the workflow to launch tracks, otherwise play queue will be empty', './images/play_queue.png', 'no', null, 'Play Queue▹');
+	if ($now_playing_notifications == true) {
+    	$w->result(null, '', 'Play Queue', 'Get the current play queue. Always use the workflow to launch tracks, otherwise play queue will be empty', './images/play_queue.png', 'no', null, 'Play Queue▹');
+	}
 
     $w->result(null, serialize(array(
         '' /*track_uri*/ ,
@@ -2883,7 +2885,7 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
             '' /* playlist_name */ ,
             '' /* playlist_artwork_path */
         )), "Disable Now Playing notifications", array(
-            "Do not display notifications for current playing track",
+            "Do not display notifications for current playing track (Play Queue will also be disabled)",
             'alt' => 'Not Available',
             'cmd' => 'Not Available',
             'shift' => 'Not Available',
@@ -2909,7 +2911,7 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
             '' /* playlist_name */ ,
             '' /* playlist_artwork_path */
         )), "Enable Now Playing notifications", array(
-            "Display notifications for current playing track",
+            "Display notifications for current playing track (Play Queue will be enabled)",
             'alt' => 'Not Available',
             'cmd' => 'Not Available',
             'shift' => 'Not Available',
@@ -3085,6 +3087,17 @@ function firstDelimiterCheckForUpdate($w, $query, $settings, $db, $update_in_pro
 }
 
 
+/**
+ * firstDelimiterPlayQueue function.
+ *
+ * @access public
+ * @param mixed $w
+ * @param mixed $query
+ * @param mixed $settings
+ * @param mixed $db
+ * @param mixed $update_in_progress
+ * @return void
+ */
 function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress)
 {
     $words = explode('▹', $query);
