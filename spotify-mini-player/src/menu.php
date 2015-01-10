@@ -3818,10 +3818,8 @@ function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progres
             }
 
             $tracks = $stmt->execute();
-
             $noresult = true;
             while ($track = $stmt->fetch()) {
-
                 if ($noresult) {
                     $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
                     $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
@@ -3829,9 +3827,7 @@ function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progres
                 }
                 $noresult = false;
                 $subtitle = $track[6];
-
                 if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " ● " . $track[5]) == false) {
-
                     $w->result(null, serialize(array(
                         $track[2] /*track_uri*/ ,
                         $track[3] /* album_uri */ ,
@@ -3841,14 +3837,13 @@ function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progres
                         '' /* query */ ,
                         '' /* other_settings*/ ,
                         '' /* other_action */ ,
-
                         $track[7] /* artist_name */ ,
                         $track[5] /* track_name */ ,
                         $track[6] /* album_name */ ,
                         $track[9] /* track_artwork_path */ ,
                         $track[10] /* artist_artwork_path */ ,
                         $track[11] /* album_artwork_path */ ,
-                        '' /* playlist_name */ ,
+                        $playlist[1] /* playlist_name */ ,
                         '' /* playlist_artwork_path */
                     )), ucfirst($track[7]) . " ● " . $track[5], array(
                         $track[16] . " ● " . $subtitle . getPlaylistsForTrack($db, $track[2]),
