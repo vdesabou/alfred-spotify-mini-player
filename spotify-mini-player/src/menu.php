@@ -4040,43 +4040,39 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
 
         $noresult = true;
         foreach ($tracks as $track) {
+            if ($noresult == true) {
+                $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
+                $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
+                $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
+            }
+            $noresult      = false;
+            $track_artwork = getTrackOrAlbumArtwork($w, $track->uri, false);
+            $w->result(null, serialize(array(
+                $track->uri /*track_uri*/ ,
+                $album_uri /* album_uri */ ,
+                $artist_uri /* artist_uri */ ,
+                '' /* playlist_uri */ ,
+                '' /* spotify_command */ ,
+                '' /* query */ ,
+                '' /* other_settings*/ ,
+                'play_track_in_album_context' /* other_action */ ,
 
-            //if (count($track->available_markets) == 0 || in_array($country_code, $track->available_markets) !== false) {
-
-                if ($noresult == true) {
-                    $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-                    $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
-                    $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
-                }
-                $noresult      = false;
-                $track_artwork = getTrackOrAlbumArtwork($w, $track->uri, false);
-                $w->result(null, serialize(array(
-                    $track->uri /*track_uri*/ ,
-                    $album_uri /* album_uri */ ,
-                    $artist_uri /* artist_uri */ ,
-                    '' /* playlist_uri */ ,
-                    '' /* spotify_command */ ,
-                    '' /* query */ ,
-                    '' /* other_settings*/ ,
-                    'play_track_in_album_context' /* other_action */ ,
-
-                    $artist_name /* artist_name */ ,
-                    $track->name /* track_name */ ,
-                    $album_name /* album_name */ ,
-                    $track_artwork /* track_artwork_path */ ,
-                    '' /* artist_artwork_path */ ,
-                    '' /* album_artwork_path */ ,
-                    '' /* playlist_name */ ,
-                    '' /* playlist_artwork_path */
-                )), escapeQuery(ucfirst($artist_name)) . " ● " . escapeQuery($track->name), array(
-                    beautifyTime($track->duration_ms / 1000) . " ● " . $album_name,
-                    'alt' => 'Play album ' . escapeQuery($album_name) . ' in Spotify',
-                    'cmd' => 'Play artist ' . escapeQuery($artist_name) . ' in Spotify',
-                    'fn' => 'Add track ' . escapeQuery($track->name) . ' to ...',
-                    'shift' => 'Add album ' . escapeQuery($album_name) . ' to ...',
-                    'ctrl' => 'Search artist ' . escapeQuery($artist_name) . ' online'
-                ), $track_artwork, 'yes', null, '');
-            //}
+                $artist_name /* artist_name */ ,
+                $track->name /* track_name */ ,
+                $album_name /* album_name */ ,
+                $track_artwork /* track_artwork_path */ ,
+                '' /* artist_artwork_path */ ,
+                '' /* album_artwork_path */ ,
+                '' /* playlist_name */ ,
+                '' /* playlist_artwork_path */
+            )), escapeQuery(ucfirst($artist_name)) . " ● " . escapeQuery($track->name), array(
+                beautifyTime($track->duration_ms / 1000) . " ● " . $album_name,
+                'alt' => 'Play album ' . escapeQuery($album_name) . ' in Spotify',
+                'cmd' => 'Play artist ' . escapeQuery($artist_name) . ' in Spotify',
+                'fn' => 'Add track ' . escapeQuery($track->name) . ' to ...',
+                'shift' => 'Add album ' . escapeQuery($album_name) . ' to ...',
+                'ctrl' => 'Search artist ' . escapeQuery($artist_name) . ' online'
+            ), $track_artwork, 'yes', null, '');
         }
     }
 }
@@ -4195,7 +4191,7 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
                 'fields' => array(
                     'total',
                     'items(added_at)',
-                    'items.track(available_markets,duration_ms,uri,popularity,name)',
+                    'items.track(duration_ms,uri,popularity,name)',
                     'items.track.album(album_type,images,uri,name)',
                     'items.track.artists(name,uri)'
                 ),
@@ -5134,43 +5130,39 @@ function secondDelimiterNewReleases($w, $query, $settings, $db, $update_in_progr
 
             $noresult = true;
             foreach ($tracks as $track) {
+                if ($noresult == true) {
+                    $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
+                    $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
+                    $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
+                }
+                $noresult           = false;
+                $track_artwork_path = getTrackOrAlbumArtwork($w, $track->uri, false);
+                $w->result(null, serialize(array(
+                    $track->uri /*track_uri*/ ,
+                    $album_uri /* album_uri */ ,
+                    $track->artists[0]->uri /* artist_uri */ ,
+                    '' /* playlist_uri */ ,
+                    '' /* spotify_command */ ,
+                    '' /* query */ ,
+                    '' /* other_settings*/ ,
+                    'play_track_in_album_context' /* other_action */ ,
 
-                //if (count($track->available_markets) == 0 || in_array($country_code, $track->available_markets) !== false) {
-
-                    if ($noresult == true) {
-                        $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-                        $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
-                        $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
-                    }
-                    $noresult           = false;
-                    $track_artwork_path = getTrackOrAlbumArtwork($w, $track->uri, false);
-                    $w->result(null, serialize(array(
-                        $track->uri /*track_uri*/ ,
-                        $album_uri /* album_uri */ ,
-                        $track->artists[0]->uri /* artist_uri */ ,
-                        '' /* playlist_uri */ ,
-                        '' /* spotify_command */ ,
-                        '' /* query */ ,
-                        '' /* other_settings*/ ,
-                        'play_track_in_album_context' /* other_action */ ,
-
-                        $track->artists[0]->name /* artist_name */ ,
-                        $track->name /* track_name */ ,
-                        $album_name /* album_name */ ,
-                        $track_artwork_path /* track_artwork_path */ ,
-                        '' /* artist_artwork_path */ ,
-                        '' /* album_artwork_path */ ,
-                        '' /* playlist_name */ ,
-                        '' /* playlist_artwork_path */
-                    )), escapeQuery(ucfirst($track->artists[0]->name)) . " ● " . escapeQuery($track->name), array(
-                        beautifyTime($track->duration_ms / 1000) . " ● " . $album_name,
-                        'alt' => 'Play album ' . escapeQuery($album_name) . ' in Spotify',
-                        'cmd' => 'Play artist ' . escapeQuery($track->artists[0]->name) . ' in Spotify',
-                        'fn' => 'Add track ' . escapeQuery($track->name) . ' to ...',
-                        'shift' => 'Add album ' . escapeQuery($album_name) . ' to ...',
-                        'ctrl' => 'Search artist ' . escapeQuery($track->artists[0]->name) . ' online'
-                    ), $track_artwork_path, 'yes', null, '');
-                //}
+                    $track->artists[0]->name /* artist_name */ ,
+                    $track->name /* track_name */ ,
+                    $album_name /* album_name */ ,
+                    $track_artwork_path /* track_artwork_path */ ,
+                    '' /* artist_artwork_path */ ,
+                    '' /* album_artwork_path */ ,
+                    '' /* playlist_name */ ,
+                    '' /* playlist_artwork_path */
+                )), escapeQuery(ucfirst($track->artists[0]->name)) . " ● " . escapeQuery($track->name), array(
+                    beautifyTime($track->duration_ms / 1000) . " ● " . $album_name,
+                    'alt' => 'Play album ' . escapeQuery($album_name) . ' in Spotify',
+                    'cmd' => 'Play artist ' . escapeQuery($track->artists[0]->name) . ' in Spotify',
+                    'fn' => 'Add track ' . escapeQuery($track->name) . ' to ...',
+                    'shift' => 'Add album ' . escapeQuery($album_name) . ' to ...',
+                    'ctrl' => 'Search artist ' . escapeQuery($track->artists[0]->name) . ' online'
+                ), $track_artwork_path, 'yes', null, '');
             }
         }
     }
