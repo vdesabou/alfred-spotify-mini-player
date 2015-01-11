@@ -226,6 +226,8 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress)
     $nb_playlists      = $counter[6];
 
     if ($update_in_progress == true) {
+	    $in_progress_data                 = $w->read('update_library_in_progress');
+	    $update_library_in_progress_words = explode('▹', $in_progress_data);
         if (startsWith($update_library_in_progress_words[0], 'Init')) {
             $w->result(null, $w->data() . '/update_library_in_progress', 'Initialization phase since ' . beautifyTime($elapsed_time, true) . ' : ' . floatToSquares(0), 'Waiting for Spotify servers to return required data', './images/update_in_progress.png', 'no', null, '');
         } else {
