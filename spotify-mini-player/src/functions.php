@@ -2836,9 +2836,9 @@ function updateLibrary($w)
         $db->exec("CREATE INDEX IndexArtistName ON tracks (artist_name)");
         $db->exec("CREATE INDEX IndexAlbumName ON tracks (album_name)");
         $db->exec("create table counters (all_tracks int, yourmusic_tracks int, all_artists int, yourmusic_artists int, all_albums int, yourmusic_albums int, playlists int)");
-        $db->exec("create table playlists (uri text PRIMARY KEY NOT NULL, name text, nb_tracks int, author text, username text, playlist_artwork_path text, ownedbyuser boolean, nb_playable_tracks int, duration_playlist text, nb_times_played int)");
+        $db->exec("create table playlists (uri text PRIMARY KEY NOT NULL, name text, nb_tracks int, author text, username text, playlist_artwork_path text, ownedbyuser boolean, nb_playable_tracks int, duration_playlist text, nb_times_played int, collaborative boolean, public boolean)");
 
-        $insertPlaylist = "insert into playlists values (:uri,:name,:nb_tracks,:owner,:username,:playlist_artwork_path,:ownedbyuser,:nb_playable_tracks,:duration_playlist,:nb_times_played)";
+        $insertPlaylist = "insert into playlists values (:uri,:name,:nb_tracks,:owner,:username,:playlist_artwork_path,:ownedbyuser,:nb_playable_tracks,:duration_playlist,:nb_times_played,:collaborative,:public)";
         $stmtPlaylist   = $db->prepare($insertPlaylist);
 
         $insertTrack = "insert into tracks values (:yourmusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_type,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:added_at,:duration,:nb_times_played)";
@@ -3057,6 +3057,8 @@ function updateLibrary($w)
                 $stmtPlaylist->bindValue(':nb_playable_tracks', $nb_track_playlist);
                 $stmtPlaylist->bindValue(':duration_playlist', beautifyTime($duration_playlist / 1000, true));
                 $stmtPlaylist->bindValue(':nb_times_played', 0);
+                $stmtPlaylist->bindValue(':collaborative', $playlist->collaborative);
+                $stmtPlaylist->bindValue(':public', $playlist->public);
                 $stmtPlaylist->execute();
             }
             catch (PDOException $e) {
@@ -3064,14 +3066,12 @@ function updateLibrary($w)
                 handleDbIssuePdoEcho($db, $w);
                 $dbartworks = null;
                 $db         = null;
-
                 return false;
             }
         }
         catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
             logMsg("Error(getUserPlaylistTracks): playlist id " . $playlist->id . " (exception " . print_r($e) . ")");
             handleSpotifyWebAPIException($w, $e);
-
             return false;
         }
     }
@@ -3406,7 +3406,7 @@ function refreshLibrary($w)
         $getPlaylists     = "select * from playlists where uri=:uri";
         $stmtGetPlaylists = $db->prepare($getPlaylists);
 
-        $insertPlaylist = "insert into playlists values (:uri,:name,:nb_tracks,:owner,:username,:playlist_artwork_path,:ownedbyuser,:nb_playable_tracks,:duration_playlist,:nb_times_played)";
+        $insertPlaylist = "insert into playlists values (:uri,:name,:nb_tracks,:owner,:username,:playlist_artwork_path,:ownedbyuser,:nb_playable_tracks,:duration_playlist,:nb_times_played,:collaborative,:public)";
         $stmtPlaylist   = $db->prepare($insertPlaylist);
 
         $insertTrack = "insert into tracks values (:yourmusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_type,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:added_at,:duration,:nb_times_played)";
@@ -3643,6 +3643,8 @@ function refreshLibrary($w)
                     $stmtPlaylist->bindValue(':nb_playable_tracks', $nb_track_playlist);
                     $stmtPlaylist->bindValue(':duration_playlist', beautifyTime($duration_playlist / 1000, true));
                     $stmtPlaylist->bindValue(':nb_times_played', 0);
+	                $stmtPlaylist->bindValue(':collaborative', $playlist->collaborative);
+	                $stmtPlaylist->bindValue(':public', $playlist->public);
                     $stmtPlaylist->execute();
                 }
                 catch (PDOException $e) {
@@ -3650,7 +3652,6 @@ function refreshLibrary($w)
                     handleDbIssuePdoEcho($db, $w);
                     $dbartworks = null;
                     $db         = null;
-
                     return;
                 }
             }

@@ -359,7 +359,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress)
     //
     // Search in Playlists
     //
-    $getPlaylists = "select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist from playlists where name like :query";
+    $getPlaylists = "select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist,collaborative,public from playlists where name like :query";
 
     try {
         $stmt = $db->prepare($getPlaylists);
@@ -377,7 +377,12 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress)
         if (startswith($playlist[1], 'Artist radio for')) {
             $added = '📻 ';
         }
-        $w->result(null, '', "🎵" . $added . ucfirst($playlist[1]), "by " . $playlist[3] . " ● " . $playlist[7] . " tracks ● " . $playlist[8], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
+        if($playlist[10]) {
+	        $public_status = 'public';
+	    } else {
+		    $public_status = 'private';
+		}
+        $w->result(null, '', "🎵" . $added . ucfirst($playlist[1]), $public_status . " playlist by " . $playlist[3] . " ● " . $playlist[7] . " tracks ● " . $playlist[8], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
     }
 
     //
@@ -1615,10 +1620,10 @@ function firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress
     $theplaylist = $words[1];
     try {
         if (mb_strlen($theplaylist) < 3) {
-            $getPlaylists = "select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist from playlists";
+            $getPlaylists = "select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist,collaborative,public from playlists";
             $stmt         = $db->prepare($getPlaylists);
         } else {
-            $getPlaylists = "select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist from playlists where (name like :query or author like :query)";
+            $getPlaylists = "select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist,collaborative,public from playlists where (name like :query or author like :query)";
             $stmt         = $db->prepare($getPlaylists);
             $stmt->bindValue(':query', '%' . $theplaylist . '%');
         }
@@ -1633,20 +1638,26 @@ function firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress
     $noresult = true;
     if ($query == "Playlist▹Artist radio") {
         while ($playlist = $stmt->fetch()) {
-
             $noresult = false;
-
+	        if($playlist[10]) {
+		        $public_status = 'public';
+		    } else {
+			    $public_status = 'private';
+			}
             if (startswith($playlist[1], 'Artist radio for')) {
-                $w->result(null, '', "🎵 " . ucfirst($playlist[1]), "by " . $playlist[3] . " ● " . $playlist[7] . " tracks ● " . $playlist[8], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
+                $w->result(null, '', "🎵 " . ucfirst($playlist[1]), $public_status . " playlist by " . $playlist[3] . " ● " . $playlist[7] . " tracks ● " . $playlist[8], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
             }
         }
     } elseif ($query == "Playlist▹Song radio") {
         while ($playlist = $stmt->fetch()) {
-
             $noresult = false;
-
+	        if($playlist[10]) {
+		        $public_status = 'public';
+		    } else {
+			    $public_status = 'private';
+			}
             if (startswith($playlist[1], 'Song radio for')) {
-                $w->result(null, '', "🎵 " . ucfirst($playlist[1]), "by " . $playlist[3] . " ● " . $playlist[7] . " tracks ● " . $playlist[8], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
+                $w->result(null, '', "🎵 " . ucfirst($playlist[1]), $public_status . " playlist by " . $playlist[3] . " ● " . $playlist[7] . " tracks ● " . $playlist[8], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
             }
         }
     } else {
@@ -1681,7 +1692,12 @@ function firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress
         foreach ($savedPlaylists as $playlist) {
             $noresult = false;
             $added    = ' ';
-            $w->result(null, '', "🎵" . $added . ucfirst($playlist[1]), "by " . $playlist[3] . " ● " . $playlist[7] . " tracks ● " . $playlist[8], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
+	        if($playlist[10]) {
+		        $public_status = 'public';
+		    } else {
+			    $public_status = 'private';
+			}
+            $w->result(null, '', "🎵" . $added . ucfirst($playlist[1]), $public_status . " playlist by " . $playlist[3] . " ● " . $playlist[7] . " tracks ● " . $playlist[8], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
         }
     }
 
@@ -2454,7 +2470,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
 		            // The track is in Your Music
 	                $w->result(null, '', 'In "Your Music"', "The track is in Your Music", './images/yourmusic.png', 'no', null, "Your Music▹Tracks▹" . escapeQuery($results[0]));
 	            } else {
-	                $getPlaylists = "select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist from playlists where uri=:uri";
+	                $getPlaylists = "select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist,collaborative,public from playlists where uri=:uri";
 
 	                try {
 	                    $stmtGetPlaylists = $db->prepare($getPlaylists);
@@ -2472,7 +2488,12 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
 	                        $added = '📻 ';
 	                    }
 	                    if (checkIfResultAlreadyThere($w->results(), "🎵" . $added . "In playlist " . ucfirst($playlist[1])) == false) {
-	                        $w->result(null, '', "🎵" . $added . "In playlist " . ucfirst($playlist[1]), "by " . $playlist[3] . " ● " . $playlist[7] . " tracks ● " . $playlist[8], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
+					        if($playlist[10]) {
+						        $public_status = 'public';
+						    } else {
+							    $public_status = 'private';
+							}
+	                        $w->result(null, '', "🎵" . $added . "In playlist " . ucfirst($playlist[1]), $public_status . " playlist by " . $playlist[3] . " ● " . $playlist[7] . " tracks ● " . $playlist[8], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
 	                    }
 	                }
 	            }
