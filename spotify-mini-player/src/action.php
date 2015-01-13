@@ -1,7 +1,6 @@
 <?php
 
 require './src/functions.php';
-// Load and use David Ferguson's Workflows.php class
 require_once './src/workflows.php';
 $w = new Workflows('com.vdesabou.spotify.mini.player');
 

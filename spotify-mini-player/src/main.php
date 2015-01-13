@@ -1,14 +1,8 @@
 <?php
 
-// Turn off all error reporting
-//error_reporting(0);
-
+// $begin_time = computeTime();
 require './src/functions.php';
 require './src/menu.php';
-
-// $begin_time = computeTime();
-
-// Load and use David Ferguson's Workflows.php class
 require_once './src/workflows.php';
 $w = new Workflows('com.vdesabou.spotify.mini.player');
 
@@ -26,7 +20,6 @@ if (file_exists($w->data() . '/update_library_in_progress')) {
     $elapsed_time       = time() - $update_library_in_progress_words[3];
     $update_in_progress = true;
     if (!file_exists($w->data() . '/library_old.db')) {
-
         if (startsWith($update_library_in_progress_words[0], 'Init')) {
             if ($elapsed_time < 300) {
                 $w->result(null, $w->data() . '/update_library_in_progress', 'Initialization phase since ' . beautifyTime($elapsed_time, true) . ' : ' . floatToSquares(0), 'Waiting for Spotify servers to return required data', './images/update_in_progress.png', 'no', null, '');
@@ -73,7 +66,6 @@ if (file_exists($w->data() . '/update_library_in_progress')) {
                 $w->result(null, $w->data() . '/update_library_in_progress', $update_library_in_progress_words[0] . ' in progress since ' . beautifyTime($elapsed_time, true) . ' : ' . floatToSquares(0), 'No ' . $type . ' processed so far', './images/update_in_progress.png', 'no', null, '');
             }
         }
-
         echo $w->toxml();
         return;
     }
