@@ -2438,12 +2438,10 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
 
         if ($all_playlists == true) {
             $getTracks = "select playlist_uri from tracks where uri=:uri limit " . $max_results;
-
             try {
                 $stmtgetTracks = $db->prepare($getTracks);
                 $stmtgetTracks->bindValue(':uri', $results[4]);
                 $stmtgetTracks->execute();
-
             }
             catch (PDOException $e) {
                 handleDbIssuePdoXml($db);
@@ -2452,29 +2450,32 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
 
             while ($track = $stmtgetTracks->fetch()) {
 
-                $getPlaylists = "select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist from playlists where uri=:uri";
+	            if($track[0] == '') {
+		            // The track is in Your Music
+	                $w->result(null, '', 'In "Your Music"', "The track is in Your Music", './images/yourmusic.png', 'no', null, "Your Music▹Tracks▹" . escapeQuery($results[0]));
+	            } else {
+	                $getPlaylists = "select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist from playlists where uri=:uri";
 
-                try {
-                    $stmtGetPlaylists = $db->prepare($getPlaylists);
-                    $stmtGetPlaylists->bindValue(':uri', $track[0]);
+	                try {
+	                    $stmtGetPlaylists = $db->prepare($getPlaylists);
+	                    $stmtGetPlaylists->bindValue(':uri', $track[0]);
+	                    $playlists = $stmtGetPlaylists->execute();
+	                }
+	                catch (PDOException $e) {
+	                    handleDbIssuePdoXml($db);
+	                    return;
+	                }
 
-                    $playlists = $stmtGetPlaylists->execute();
-
-                }
-                catch (PDOException $e) {
-                    handleDbIssuePdoXml($db);
-                    return;
-                }
-
-                while ($playlist = $stmtGetPlaylists->fetch()) {
-                    $added = ' ';
-                    if (startswith($playlist[1], 'Artist radio for')) {
-                        $added = '📻 ';
-                    }
-                    if (checkIfResultAlreadyThere($w->results(), "🎵" . $added . "In playlist " . ucfirst($playlist[1])) == false) {
-                        $w->result(null, '', "🎵" . $added . "In playlist " . ucfirst($playlist[1]), "by " . $playlist[3] . " ● " . $playlist[7] . " tracks ● " . $playlist[8], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
-                    }
-                }
+	                while ($playlist = $stmtGetPlaylists->fetch()) {
+	                    $added = ' ';
+	                    if (startswith($playlist[1], 'Artist radio for')) {
+	                        $added = '📻 ';
+	                    }
+	                    if (checkIfResultAlreadyThere($w->results(), "🎵" . $added . "In playlist " . ucfirst($playlist[1])) == false) {
+	                        $w->result(null, '', "🎵" . $added . "In playlist " . ucfirst($playlist[1]), "by " . $playlist[3] . " ● " . $playlist[7] . " tracks ● " . $playlist[8], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
+	                    }
+	                }
+	            }
             }
         }
     } else {
@@ -3214,7 +3215,7 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
         $max_tracks_displayed = 150;
         if($nb_tracks >= $max_tracks_displayed) {
 	    	$w->result(null, 'help', "[...] " . (count($playqueue->tracks) - $max_tracks_displayed) . " additional tracks are in the queue", "A maximum of " . $max_tracks_displayed . " tracks is displayed." , './images/info.png', 'no', null, '');
-	    	break; 
+	    	break;
         }
         if(isset($track->album->name)) {
 	        $album_name = $track->album->name;
