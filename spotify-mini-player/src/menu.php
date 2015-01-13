@@ -4453,14 +4453,14 @@ function secondDelimiterYourMusicTracks($w, $query, $settings, $db, $update_in_p
             'ctrl' => 'Not Available'
         ), './images/spotify.png', 'yes', null, '');
 
-        $w->result(null, null, "Search for " . $query . " online", array(
+        $w->result(null, null, "Search for " . $thetrack . " online", array(
             'This will search online, i.e not in your library',
             'alt' => 'Not Available',
             'cmd' => 'Not Available',
             'shift' => 'Not Available',
             'fn' => 'Not Available',
             'ctrl' => 'Not Available'
-        ), './images/online.png', 'no', null, 'Search Online▹' . $query);
+        ), './images/online.png', 'no', null, 'Search Online▹' . $thetrack);
     }
 }
 
