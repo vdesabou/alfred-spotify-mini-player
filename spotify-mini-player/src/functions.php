@@ -4659,6 +4659,10 @@ function killUpdate($w)
         unlink($w->data() . '/update_library_in_progress');
     }
 
+    if (file_exists($w->data() . '/download_artworks_in_progress')) {
+        unlink($w->data() . "/download_artworks_in_progress");
+    }
+
     // remove the new library (it failed)
     if (file_exists($w->data() . "/library_new.db")) {
         unlink($w->data() . '/library_new.db');
