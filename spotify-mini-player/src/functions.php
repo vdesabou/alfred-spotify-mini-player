@@ -74,6 +74,33 @@ function getSpotifyWebAPI($w, $old_api = null)
 }
 
 /**
+ * followThePlaylist function.
+ *
+ * @access public
+ * @param mixed $w
+ * @param mixed $playlist_uri
+ * @return void
+ */
+function followThePlaylist($w,$playlist_uri) {
+    try {
+        $tmp                         = explode(':', $playlist_uri);
+        $api    = getSpotifyWebAPI($w);
+        $ret = $api->followPlaylist(urlencode($tmp[2]), $tmp[4], array('public' => false));
+        if($ret == true) {
+            // refresh library
+            refreshLibrary($w);
+        }
+    }
+    catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+        logMsg("Error(followThePlaylist): (exception " . print_r($e) . ")");
+        handleSpotifyWebAPIException($w, $e);
+        return false;
+    }
+}
+
+/**
+ * unfollowThePlaylist function.
+ *
  * @access public
  * @param mixed $w
  * @param mixed $playlist_uri
@@ -95,6 +122,7 @@ function unfollowThePlaylist($w,$playlist_uri) {
         return false;
     }
 }
+
 /**
  * addPlaylistToPlayQueue function.
  *

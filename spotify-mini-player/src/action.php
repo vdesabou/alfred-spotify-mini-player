@@ -632,6 +632,9 @@ if ($playlist_uri != "" && $other_settings == "" && $other_action == "") {
     } else if ($other_action == "unfollow_playlist") {
         unfollowThePlaylist($w,$playlist_uri);
         return;
+    } else if ($other_action == "follow_playlist") {
+        followThePlaylist($w,$playlist_uri);
+        return;
     } else if ($other_action == "lyrics") {
         displayLyricsForCurrentTrack($w);
         return;

@@ -3830,7 +3830,7 @@ function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progres
                 }
 
                 if ($update_in_progress == false) {
-                    $w->result(null, '', 'Delete playlist ' . escapeQuery($playlist[1]), 'A confirmation will be asked in next step', './images/uncheck.png', 'no', null, 'Confirm Delete Playlist▹' . $playlist[0] . '∙' . escapeQuery($playlist[1]) . '▹');
+                    $w->result(null, '', 'Remove playlist ' . escapeQuery($playlist[1]), 'A confirmation will be asked in next step', './images/uncheck.png', 'no', null, 'Confirm Remove Playlist▹' . $playlist[0] . '∙' . escapeQuery($playlist[1]) . '▹');
                 }
                 $getTracks = "select * from tracks where playlist_uri=:theplaylisturi limit " . $max_results;
                 $stmt      = $db->prepare($getTracks);
@@ -4303,7 +4303,24 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
     )), "Open playlist " . $theplaylistname . " in Spotify", "This will open the playlist in Spotify", './images/spotify.png', 'yes', null, '');
 
     if ($update_in_progress == false) {
-        $w->result(null, '', 'Add playlist ' . $theplaylistname . ' to...', 'This will add the playlist to Your Music or a playlist you will choose in next step', './images/add.png', 'no', null, 'Add▹' . $theplaylisturi . '∙' . $theplaylistname . '▹');
+        $w->result(null, serialize(array(
+            '' /*track_uri*/ ,
+            '' /* album_uri */ ,
+            '' /* artist_uri */ ,
+            $theplaylisturi /* playlist_uri */ ,
+            '' /* spotify_command */ ,
+            '' /* query */ ,
+            '' /* other_settings*/ ,
+            'follow_playlist' /* other_action */ ,
+            '' /* artist_name */ ,
+            '' /* track_name */ ,
+            '' /* album_name */ ,
+            '' /* track_artwork_path */ ,
+            '' /* artist_artwork_path */ ,
+            '' /* album_artwork_path */ ,
+            $theplaylistname /* playlist_name */ ,
+            '' /* playlist_artwork_path */
+        )), 'Follow playlist ' . $theplaylistname , "This will add the playlist to your library", './images/follow.png', 'yes', null, '');
     }
 
     $noresult   = true;
@@ -5888,7 +5905,7 @@ function secondDelimiterDisplayBiography($w, $query, $settings, $db, $update_in_
 }
 
 /**
- * secondDelimiterDisplayConfirmDeletePlaylist function.
+ * secondDelimiterDisplayConfirmRemovePlaylist function.
  *
  * @access public
  * @param mixed $w
@@ -5898,7 +5915,7 @@ function secondDelimiterDisplayBiography($w, $query, $settings, $db, $update_in_
  * @param mixed $update_in_progress
  * @return void
  */
-function secondDelimiterDisplayConfirmDeletePlaylist($w, $query, $settings, $db, $update_in_progress)
+function secondDelimiterDisplayConfirmRemovePlaylist($w, $query, $settings, $db, $update_in_progress)
 {
     $words = explode('▹', $query);
     $kind  = $words[0];
@@ -5927,7 +5944,7 @@ function secondDelimiterDisplayConfirmDeletePlaylist($w, $query, $settings, $db,
         $words       = explode('∙', $tmp);
         $playlist_uri   = $words[0];
         $playlist_name = $words[1];
-        $w->result(null, '', "Are you sure?", "This will delete the playlist from your library.", './images/warning.png', 'no', null, '');
+        $w->result(null, '', "Are you sure?", "This will remove the playlist from your library.", './images/warning.png', 'no', null, '');
 
         $w->result(null, '', "No, cancel", "Return to the playlist menu", './images/uncheck.png', 'no', null, 'Playlist▹' . $playlist_uri . '▹');
 
@@ -5948,7 +5965,7 @@ function secondDelimiterDisplayConfirmDeletePlaylist($w, $query, $settings, $db,
             '' /* album_artwork_path */ ,
             $playlist_name /* playlist_name */ ,
             '' /* playlist_artwork_path */
-        )), "Yes, go ahead", "You can always recover a deleted playlist by choosing option below", './images/check.png', 'yes', null, '');
+        )), "Yes, go ahead", "You can always recover a removed playlist by choosing option below", './images/check.png', 'yes', null, '');
 
         $w->result(null, serialize(array(
             '' /*track_uri*/ ,
