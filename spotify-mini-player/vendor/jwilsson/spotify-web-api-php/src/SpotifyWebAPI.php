@@ -767,8 +767,8 @@ class SpotifyWebAPI
     {
         $ids = implode(',', (array) $ids);
         $options = array(
-        	'ids' => $ids,
-        	'type' => $type);
+            'ids' => $ids,
+            'type' => $type);
         $headers = $this->authHeaders();
 
         $response = $this->request->api('GET', '/v1/me/following/contains', $options, $headers);
@@ -826,6 +826,55 @@ class SpotifyWebAPI
         $response = $this->request->api('DELETE', $uri, $ids, $headers);
 
         return $response['status'] == 204;
+    }
+
+    /**
+     * Add the current user as a follower of a playlist.
+     * Requires a valid access token.
+     * https://developer.spotify.com/web-api/follow-playlist/
+     *
+     * @param string $userId ID of the user who owns the playlist.
+     * @param string $playlistId ID of the playlist to follow.
+     * @param bool $public whether your want to follow the playlist publicly or not
+     *
+     * @return bool Whether it worked or not.
+     */
+    public function followPlaylist($userId, $playlistId, $public)
+    {
+        $isPublic = array('public' => $public);
+        $isPublic = json_encode($isPublic);
+
+        $headers = $this->authHeaders();
+        $headers['Content-Type'] = 'application/json';
+
+        $uri = '/v1/users/' . $userId . '/playlists/' . $playlistId . '/followers';
+
+        $response = $this->request->api('PUT', $uri, $isPublic, $headers);
+
+        return $response['status'] == 200;
+    }
+
+
+    /**
+     * Remove the current user as a follower of a playlist.
+     * Requires a valid access token.
+     * https://developer.spotify.com/web-api/unfollow-playlist/
+     *
+     * @param string $userId ID of the user who owns the playlist.
+     * @param string $playlistId ID of the playlist to unfollow
+     *
+     * @return bool Whether it worked or not.
+     */
+    public function unfollowPlaylist($userId, $playlistId)
+    {
+        $headers = $this->authHeaders();
+        $headers['Content-Type'] = 'application/json';
+
+        $uri = '/v1/users/' . $userId . '/playlists/' . $playlistId . '/followers';
+
+        $response = $this->request->api('DELETE', $uri, null, $headers);
+
+        return $response['status'] == 200;
     }
 
     /**

@@ -266,6 +266,62 @@ Update a user's playlist
 $api->updateUserPlaylist('username', 'playlist_id', array('name' => 'New name'));
 ```
 
+Follow/Unfollow artist or user
+
+```php
+
+$api->followArtistsOrUsers('artist','74ASZWbe4lXaubB36ztrGX');
+
+$api->unfollowArtistsOrUsers('artist','74ASZWbe4lXaubB36ztrGX');
+
+$api->followArtistsOrUsers('artist',array('74ASZWbe4lXaubB36ztrGX','2t9yJDJIEtvPmr2iRIdqBf'));
+
+$api->followArtistsOrUsers('user',array('spotify','spotify_france'));
+
+$api->unfollowArtistsOrUsers('user',array('spotify','spotify_france'));
+```
+
+Check if current user follows artist or user
+
+```php
+
+$follows = $api->currentUserFollows('user',
+    'spotify,spotify_france'
+);
+
+var_dump($follows);
+
+$follows = $api->currentUserFollows('artist','74ASZWbe4lXaubB36ztrGX');
+
+var_dump($follows);
+```
+
+Follow publicly a playlist
+
+```php
+
+$api->followPlaylist('username', 'playlist_id', true);
+
+```
+
+Follow privately a playlist
+
+```php
+
+$api->followPlaylist('username', 'playlist_id', false);
+
+```
+
+Unfollow a playlist
+
+```php
+
+$api->unfollowPlaylist('username', 'playlist_id');
+
+```
+
+
+
 Browse through `src/SpotifyWebAPI.php` and look at the tests for more methods and examples.
 
 ## License
