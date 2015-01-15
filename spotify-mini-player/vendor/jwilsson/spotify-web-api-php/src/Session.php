@@ -18,12 +18,12 @@ class Session
      *
      * @param string $clientId The client ID.
      * @param string $clientSecret The client secret.
-     * @param string $redirectUri The redirect URI.
+     * @param string $redirectUri Optional. The redirect URI.
      * @param Request $request Optional. The Request object to use.
      *
      * @return void
      */
-    public function __construct($clientId, $clientSecret, $redirectUri, $request = null)
+    public function __construct($clientId, $clientSecret, $redirectUri = '', $request = null)
     {
         $this->setClientId($clientId);
         $this->setClientSecret($clientSecret);
