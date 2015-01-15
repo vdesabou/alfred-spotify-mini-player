@@ -454,7 +454,7 @@ class SpotifyWebAPITest extends PHPUnit_Framework_TestCase
     public function testFollowPlaylistPublicly()
     {
         $api = $this->setupMock(200);
-        $response = $api->followPlaylist('mcgurk', $this->playlistID, true);
+        $response = $api->followPlaylist('mcgurk', $this->playlistID, array());
 
         $this->assertTrue($response);
     }
@@ -462,7 +462,7 @@ class SpotifyWebAPITest extends PHPUnit_Framework_TestCase
     public function testFollowPlaylistPrivately()
     {
         $api = $this->setupMock(200);
-        $response = $api->followPlaylist('mcgurk', $this->playlistID, false);
+        $response = $api->followPlaylist('mcgurk', $this->playlistID, array('public' => false));
 
         $this->assertTrue($response);
     }

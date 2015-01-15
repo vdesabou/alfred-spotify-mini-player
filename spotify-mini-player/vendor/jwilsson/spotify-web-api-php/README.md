@@ -300,7 +300,7 @@ Follow publicly a playlist
 
 ```php
 
-$api->followPlaylist('username', 'playlist_id', true);
+$api->followPlaylist('username', 'playlist_id', array('public' => true));
 
 ```
 
@@ -308,7 +308,7 @@ Follow privately a playlist
 
 ```php
 
-$api->followPlaylist('username', 'playlist_id', false);
+$api->followPlaylist('username', 'playlist_id', array('public' => false));
 
 ```
 
