@@ -239,7 +239,7 @@ if ($type == "TRACK" && $other_settings == "") {
     return;
 }
 
-if ($playlist_uri != "" && $other_settings == "") {
+if ($playlist_uri != "" && $other_settings == "" && $other_action == "") {
     // start now playing if needed
     if ($now_playing_notifications == "") {
         //
@@ -628,6 +628,9 @@ if ($playlist_uri != "" && $other_settings == "") {
         return;
     } else if ($other_action == "lookup_current_artist") {
         lookupCurrentArtist($w);
+        return;
+    } else if ($other_action == "unfollow_playlist") {
+        unfollowThePlaylist($w,$playlist_uri);
         return;
     } else if ($other_action == "lyrics") {
         displayLyricsForCurrentTrack($w);

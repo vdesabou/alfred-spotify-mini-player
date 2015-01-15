@@ -74,6 +74,28 @@ function getSpotifyWebAPI($w, $old_api = null)
 }
 
 /**
+ * @access public
+ * @param mixed $w
+ * @param mixed $playlist_uri
+ * @return void
+ */
+function unfollowThePlaylist($w,$playlist_uri) {
+    try {
+        $tmp                         = explode(':', $playlist_uri);
+        $api    = getSpotifyWebAPI($w);
+        $ret = $api->unfollowPlaylist(urlencode($tmp[2]), $tmp[4]);
+        if($ret == true) {
+            // refresh library
+            refreshLibrary($w);
+        }
+    }
+    catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+        logMsg("Error(unfollowPlaylist): (exception " . print_r($e) . ")");
+        handleSpotifyWebAPIException($w, $e);
+        return false;
+    }
+}
+/**
  * addPlaylistToPlayQueue function.
  *
  * @access public

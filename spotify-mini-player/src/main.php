@@ -345,6 +345,8 @@ if (mb_strlen($query) < 3) {
                 secondDelimiterFollowOrUnfollow($w, $query, $settings, $db, $update_in_progress);
             } elseif ($kind == "Biography") {
                 secondDelimiterDisplayBiography($w, $query, $settings, $db, $update_in_progress);
+            } elseif ($kind == "Confirm Delete Playlist") {
+                secondDelimiterDisplayConfirmDeletePlaylist($w, $query, $settings, $db, $update_in_progress);
             }
         }
         ///////////

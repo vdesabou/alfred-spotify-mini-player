@@ -3796,9 +3796,7 @@ function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progres
                     '' /* artist_artwork_path */ ,
                     '' /* album_artwork_path */ ,
                     $playlist[1] /* playlist_name */ ,
-                    $playlist[5] /* playlist_artwork_path */ ,
-                    $alfred_playlist_name
-                    /* alfred_playlist_name */
+                    $playlist[5] /* playlist_artwork_path */
                 )), "🎵" . $added . ucfirst($playlist[1]) . " by " . $playlist[3] . " ● " . $playlist[7] . " tracks ● " . $playlist[8], array(
                     $subtitle,
                     'alt' => 'Not Available',
@@ -3831,6 +3829,9 @@ function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progres
                     $w->result(null, '', 'Add playlist ' . escapeQuery($playlist[1]) . ' to...', 'This will add the playlist to Your Music or a playlist you will choose in next step', './images/add.png', 'no', null, 'Add▹' . $playlist[0] . '∙' . escapeQuery($playlist[1]) . '▹');
                 }
 
+                if ($update_in_progress == false) {
+                    $w->result(null, '', 'Delete playlist ' . escapeQuery($playlist[1]), 'A confirmation will be asked in next step', './images/uncheck.png', 'no', null, 'Confirm Delete Playlist▹' . $playlist[0] . '∙' . escapeQuery($playlist[1]) . '▹');
+                }
                 $getTracks = "select * from tracks where playlist_uri=:theplaylisturi limit " . $max_results;
                 $stmt      = $db->prepare($getTracks);
                 $stmt->bindValue(':theplaylisturi', $theplaylisturi);
@@ -5886,6 +5887,89 @@ function secondDelimiterDisplayBiography($w, $query, $settings, $db, $update_in_
     }
 }
 
+/**
+ * secondDelimiterDisplayConfirmDeletePlaylist function.
+ *
+ * @access public
+ * @param mixed $w
+ * @param mixed $query
+ * @param mixed $settings
+ * @param mixed $db
+ * @param mixed $update_in_progress
+ * @return void
+ */
+function secondDelimiterDisplayConfirmDeletePlaylist($w, $query, $settings, $db, $update_in_progress)
+{
+    $words = explode('▹', $query);
+    $kind  = $words[0];
+
+    $all_playlists             = $settings->all_playlists;
+    $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
+    $radio_number_tracks       = $settings->radio_number_tracks;
+    $now_playing_notifications = $settings->now_playing_notifications;
+    $max_results               = $settings->max_results;
+    $alfred_playlist_uri       = $settings->alfred_playlist_uri;
+    $alfred_playlist_name      = $settings->alfred_playlist_name;
+    $country_code              = $settings->country_code;
+    $last_check_update_time    = $settings->last_check_update_time;
+    $oauth_client_id           = $settings->oauth_client_id;
+    $oauth_client_secret       = $settings->oauth_client_secret;
+    $oauth_redirect_uri        = $settings->oauth_redirect_uri;
+    $oauth_access_token        = $settings->oauth_access_token;
+    $oauth_expires             = $settings->oauth_expires;
+    $oauth_refresh_token       = $settings->oauth_refresh_token;
+    $display_name              = $settings->display_name;
+    $userid                    = $settings->userid;
+    $echonest_api_key          = $settings->echonest_api_key;
+
+    if (substr_count($query, '∙') == 1) {
+        $tmp         = $words[1];
+        $words       = explode('∙', $tmp);
+        $playlist_uri   = $words[0];
+        $playlist_name = $words[1];
+        $w->result(null, '', "Are you sure?", "This will delete the playlist from your library.", './images/warning.png', 'no', null, '');
+
+        $w->result(null, '', "No, cancel", "Return to the playlist menu", './images/uncheck.png', 'no', null, 'Playlist▹' . $playlist_uri . '▹');
+
+        $w->result(null, serialize(array(
+            '' /*track_uri*/ ,
+            '' /* album_uri */ ,
+            '' /* artist_uri */ ,
+            $playlist_uri /* playlist_uri */ ,
+            '' /* spotify_command */ ,
+            '' /* query */ ,
+            '' /* other_settings*/ ,
+            'unfollow_playlist' /* other_action */ ,
+            '' /* artist_name */ ,
+            '' /* track_name */ ,
+            '' /* album_name */ ,
+            '' /* track_artwork_path */ ,
+            '' /* artist_artwork_path */ ,
+            '' /* album_artwork_path */ ,
+            $playlist_name /* playlist_name */ ,
+            '' /* playlist_artwork_path */
+        )), "Yes, go ahead", "You can always recover a deleted playlist by choosing option below", './images/check.png', 'yes', null, '');
+
+        $w->result(null, serialize(array(
+            '' /*track_uri*/ ,
+            '' /* album_uri */ ,
+            '' /* artist_uri */ ,
+            '' /* playlist_uri */ ,
+            '' /* spotify_command */ ,
+            '' /* query */ ,
+            'Open▹' . 'https://www.spotify.com/us/account/recover-playlists/' /* other_settings*/ ,
+            '' /* other_action */ ,
+            '' /* artist_name */ ,
+            '' /* track_name */ ,
+            '' /* album_name */ ,
+            '' /* track_artwork_path */ ,
+            '' /* artist_artwork_path */ ,
+            '' /* album_artwork_path */ ,
+            '' /* playlist_name */ ,
+            '' /* playlist_artwork_path */
+        )), 'Open Spotify web page to recover any of your playlists', "This will open the Spotify page with your default browser", './images/spotify.png', 'yes', null, '');
+    }
+}
 
 /**
  * thirdDelimiterAdd function.
