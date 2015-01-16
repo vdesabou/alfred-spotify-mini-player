@@ -2783,6 +2783,7 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
     $userid                     = $settings->userid;
     $echonest_api_key           = $settings->echonest_api_key;
     $lookup_local_tracks_online = $settings->lookup_local_tracks_online;
+    $is_public_playlists        = $settings->is_public_playlists;
 
     if ($update_in_progress == false) {
         $w->result(null, serialize(array(
@@ -3058,6 +3059,60 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
             'fn' => 'Not Available',
             'ctrl' => 'Not Available'
         ), './images/enable_lookup_local_tracks_online.png', 'yes', null, '');
+    }
+
+    if ($is_public_playlists == true) {
+        $w->result(null, serialize(array(
+            '' /*track_uri*/ ,
+            '' /* album_uri */ ,
+            '' /* artist_uri */ ,
+            '' /* playlist_uri */ ,
+            '' /* spotify_command */ ,
+            '' /* query */ ,
+            '' /* other_settings*/ ,
+            'disable_public_playlists' /* other_action */ ,
+            '' /* artist_name */ ,
+            '' /* track_name */ ,
+            '' /* album_name */ ,
+            '' /* track_artwork_path */ ,
+            '' /* artist_artwork_path */ ,
+            '' /* album_artwork_path */ ,
+            '' /* playlist_name */ ,
+            '' /* playlist_artwork_path */
+        )), "Automatically make new playlists private", array(
+            "If disabled, the workflow will mark new playlists (created or followed) as private",
+            'alt' => 'Not Available',
+            'cmd' => 'Not Available',
+            'shift' => 'Not Available',
+            'fn' => 'Not Available',
+            'ctrl' => 'Not Available'
+        ), './images/disable_public_playlists.png', 'yes', null, '');
+    } else {
+        $w->result(null, serialize(array(
+            '' /*track_uri*/ ,
+            '' /* album_uri */ ,
+            '' /* artist_uri */ ,
+            '' /* playlist_uri */ ,
+            '' /* spotify_command */ ,
+            '' /* query */ ,
+            '' /* other_settings*/ ,
+            'enable_public_playlists' /* other_action */ ,
+            '' /* artist_name */ ,
+            '' /* track_name */ ,
+            '' /* album_name */ ,
+            '' /* track_artwork_path */ ,
+            '' /* artist_artwork_path */ ,
+            '' /* album_artwork_path */ ,
+            '' /* playlist_name */ ,
+            '' /* playlist_artwork_path */
+        )), "Automatically make new playlists public", array(
+            "If enabled, the workflow will mark new playlists (created or followed) as public",
+            'alt' => 'Not Available',
+            'cmd' => 'Not Available',
+            'shift' => 'Not Available',
+            'fn' => 'Not Available',
+            'ctrl' => 'Not Available'
+        ), './images/enable_public_playlists.png', 'yes', null, '');
     }
 
     $w->result(null, '', 'Check for workflow update', 'Last checked: ' . beautifyTime(time() - $last_check_update_time, true) . ' ago (note this is automatically done otherwise once per day)', './images/check_update.png', 'no', null, 'Check for update...' . '▹');

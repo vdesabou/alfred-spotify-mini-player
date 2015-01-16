@@ -585,6 +585,22 @@ if ($playlist_uri != "" && $other_settings == "" && $other_action == "") {
             displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
         }
         return;
+    } else if ($other_action == "enable_public_playlists") {
+        $ret = updateSetting($w, 'is_public_playlists', 1);
+        if ($ret == true) {
+            displayNotificationWithArtwork("New playlists will be now public", './images/enable_public_playlists.png', 'Settings');
+        } else {
+            displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
+        }
+        return;
+    } else if ($other_action == "disable_public_playlists") {
+        $ret = updateSetting($w, 'is_public_playlists', 0);
+        if ($ret == true) {
+            displayNotificationWithArtwork("New playlists will be now private", './images/disable_public_playlists.png', 'Settings');
+        } else {
+            displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
+        }
+        return;
     } else if ($other_action == "play_track_in_album_context") {
         // start now playing if needed
         if ($now_playing_notifications == "") {

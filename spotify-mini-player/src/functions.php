@@ -82,10 +82,21 @@ function getSpotifyWebAPI($w, $old_api = null)
  * @return void
  */
 function followThePlaylist($w,$playlist_uri) {
+    //
+    // Read settings from JSON
+    //
+
+    $settings            = getSettings($w);
+    $is_public_playlists = $settings->is_public_playlists;
+
+    $public = false;
+    if($is_public_playlists) {
+        $public = true;
+    }
     try {
         $tmp                         = explode(':', $playlist_uri);
         $api    = getSpotifyWebAPI($w);
-        $ret = $api->followPlaylist(urlencode($tmp[2]), $tmp[4], array('public' => false));
+        $ret = $api->followPlaylist(urlencode($tmp[2]), $tmp[4], array('public' => $public));
         if($ret == true) {
             // refresh library
             refreshLibrary($w);
@@ -1236,12 +1247,17 @@ function createTheUserPlaylist($w, $playlist_name)
 
     $settings = getSettings($w);
     $userid   = $settings->userid;
+    $is_public_playlists        = $settings->is_public_playlists;
 
+    $public = false;
+    if($is_public_playlists) {
+        $public = true;
+    }
     try {
         $api  = getSpotifyWebAPI($w);
         $json = $api->createUserPlaylist(urlencode($userid), array(
             'name' => $playlist_name,
-            'public' => false
+            'public' => $public
         ));
     }
     catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
@@ -1291,6 +1307,12 @@ function createRadioArtistPlaylist($w, $artist_name)
     $radio_number_tracks = $settings->radio_number_tracks;
     $userid              = $settings->userid;
     $echonest_api_key    = $settings->echonest_api_key;
+    $is_public_playlists = $settings->is_public_playlists;
+
+    $public = false;
+    if($is_public_playlists) {
+        $public = true;
+    }
 
     $json = doJsonRequest($w, 'http://developer.echonest.com/api/v4/playlist/static?api_key=' . $echonest_api_key . '&artist=' . urlencode($artist_name) . '&format=json&results=' . $radio_number_tracks . '&distribution=focused&type=artist-radio&bucket=id:spotify&bucket=tracks');
 
@@ -1312,7 +1334,7 @@ function createRadioArtistPlaylist($w, $artist_name)
             $api  = getSpotifyWebAPI($w);
             $json = $api->createUserPlaylist($userid, array(
                 'name' => 'Artist radio for ' . escapeQuery($artist_name),
-                'public' => false
+                'public' => $public
             ));
         }
         catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
@@ -1381,6 +1403,12 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name)
     $userid              = $settings->userid;
     $echonest_api_key    = $settings->echonest_api_key;
     $country_code        = $settings->country_code;
+    $is_public_playlists = $settings->is_public_playlists;
+
+    $public = false;
+    if($is_public_playlists) {
+        $public = true;
+    }
 
     $tmp = explode(':', $track_uri);
     if ($tmp[1] == 'local') {
@@ -1422,7 +1450,7 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name)
             $api  = getSpotifyWebAPI($w);
             $json = $api->createUserPlaylist($userid, array(
                 'name' => 'Song radio for ' . escapeQuery($track_name) . ' by ' . escapeQuery($artist_name),
-                'public' => false
+                'public' => $public
             ));
         }
         catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
@@ -4850,7 +4878,8 @@ function getSettings($w)
                 'display_name' => $setting[17],
                 'userid' => $setting[18],
                 'echonest_api_key' => '5EG94BIZEGFEY9AL9',
-                'lookup_local_tracks_online' => 0
+                'lookup_local_tracks_online' => 0,
+                'is_public_playlists' => 0
             );
 
             $ret = $w->write($migrated, 'settings.json');
@@ -4886,7 +4915,8 @@ function getSettings($w)
             'display_name' => '',
             'userid' => '',
             'echonest_api_key' => '5EG94BIZEGFEY9AL9',
-            'lookup_local_tracks_online' => 0
+            'lookup_local_tracks_online' => 0,
+            'is_public_playlists' => 0
         );
 
         $ret = $w->write($default, 'settings.json');
