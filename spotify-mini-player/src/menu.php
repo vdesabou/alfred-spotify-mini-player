@@ -948,6 +948,44 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
         }
 
         if ($update_in_progress == false) {
+            $w->result('SpotifyMiniPlayer_' . 'current_artist_radio', serialize(array(
+                '' /*track_uri*/ ,
+                '' /* album_uri */ ,
+                '' /* artist_uri */ ,
+                '' /* playlist_uri */ ,
+                '' /* spotify_command */ ,
+                '' /* query */ ,
+                '' /* other_settings*/ ,
+                'current_artist_radio' /* other_action */ ,
+                '' /* artist_name */ ,
+                '' /* track_name */ ,
+                '' /* album_name */ ,
+                '' /* track_artwork_path */ ,
+                '' /* artist_artwork_path */ ,
+                '' /* album_artwork_path */ ,
+                '' /* playlist_name */ ,
+                '' /* playlist_artwork_path */
+            )), 'Create artist radio playlist for current artist', 'Create artist radio playlist', './images/radio_artist.png', 'yes', '');
+
+            $w->result('SpotifyMiniPlayer_' . 'current_track_radio', serialize(array(
+                '' /*track_uri*/ ,
+                '' /* album_uri */ ,
+                '' /* artist_uri */ ,
+                '' /* playlist_uri */ ,
+                '' /* spotify_command */ ,
+                '' /* query */ ,
+                '' /* other_settings*/ ,
+                'current_track_radio' /* other_action */ ,
+                '' /* artist_name */ ,
+                '' /* track_name */ ,
+                '' /* album_name */ ,
+                '' /* track_artwork_path */ ,
+                '' /* artist_artwork_path */ ,
+                '' /* album_artwork_path */ ,
+                '' /* playlist_name */ ,
+                '' /* playlist_artwork_path */
+            )), 'Create song radio playlist for current track', 'Create song radio playlist', './images/radio_song.png', 'yes', '');
+
             if ($is_alfred_playlist_active == true) {
                 $w->result('SpotifyMiniPlayer_' . 'add_current_track', serialize(array(
                     '' /*track_uri*/ ,
@@ -1429,8 +1467,8 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
     ), './images/update.png', 'yes', null, '');
             }
         }
-        if (strpos(strtolower('add'), strtolower($query)) !== false) {
-            if ($update_in_progress == false) {
+        if ($update_in_progress == false) {
+            if (strpos(strtolower('add'), strtolower($query)) !== false) {
                 if ($is_alfred_playlist_active == true) {
                     $w->result(null, serialize(array(
                         '' /*track_uri*/ ,
@@ -1492,9 +1530,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                     '' /* playlist_artwork_path */
                 )), 'Add current track to...', 'Current track will be added to Your Music or a playlist of your choice', './images/add_to.png', 'yes', '');
             }
-        }
-        if (strpos(strtolower('remove'), strtolower($query)) !== false) {
-            if ($update_in_progress == false) {
+            if (strpos(strtolower('remove'), strtolower($query)) !== false) {
                 $w->result('SpotifyMiniPlayer_' . 'remove_current_track_from', serialize(array(
                     '' /*track_uri*/ ,
                     '' /* album_uri */ ,
@@ -1514,6 +1550,45 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                     '' /* playlist_name */ ,
                     '' /* playlist_artwork_path */
                 )), 'Remove current track from...', 'Current track will be removed from Your Music or a playlist of your choice', './images/remove_from.png', 'yes', '');
+            }
+            if (strpos(strtolower('radio'), strtolower($query)) !== false) {
+                $w->result('SpotifyMiniPlayer_' . 'current_artist_radio', serialize(array(
+                    '' /*track_uri*/ ,
+                    '' /* album_uri */ ,
+                    '' /* artist_uri */ ,
+                    '' /* playlist_uri */ ,
+                    '' /* spotify_command */ ,
+                    '' /* query */ ,
+                    '' /* other_settings*/ ,
+                    'current_artist_radio' /* other_action */ ,
+                    '' /* artist_name */ ,
+                    '' /* track_name */ ,
+                    '' /* album_name */ ,
+                    '' /* track_artwork_path */ ,
+                    '' /* artist_artwork_path */ ,
+                    '' /* album_artwork_path */ ,
+                    '' /* playlist_name */ ,
+                    '' /* playlist_artwork_path */
+                )), 'Create artist radio playlist for current artist', 'Create artist radio playlist', './images/radio_artist.png', 'yes', '');
+
+                $w->result('SpotifyMiniPlayer_' . 'current_track_radio', serialize(array(
+                    '' /*track_uri*/ ,
+                    '' /* album_uri */ ,
+                    '' /* artist_uri */ ,
+                    '' /* playlist_uri */ ,
+                    '' /* spotify_command */ ,
+                    '' /* query */ ,
+                    '' /* other_settings*/ ,
+                    'current_track_radio' /* other_action */ ,
+                    '' /* artist_name */ ,
+                    '' /* track_name */ ,
+                    '' /* album_name */ ,
+                    '' /* track_artwork_path */ ,
+                    '' /* artist_artwork_path */ ,
+                    '' /* album_artwork_path */ ,
+                    '' /* playlist_name */ ,
+                    '' /* playlist_artwork_path */
+                )), 'Create song radio playlist for current track', 'Create song radio playlist', './images/radio_song.png', 'yes', '');
             }
         }
         if (strpos(strtolower('mute'), strtolower($query)) !== false) {
