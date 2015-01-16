@@ -35,6 +35,7 @@ function oAuthChecks($w, $query, $settings, $db, $update_in_progress)
     $userid                    = $settings->userid;
     $echonest_api_key          = $settings->echonest_api_key;
 
+
     ////
     // OAUTH checks
     // Check oauth config : Client ID and Client Secret
@@ -2375,6 +2376,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
     $display_name              = $settings->display_name;
     $userid                    = $settings->userid;
     $echonest_api_key          = $settings->echonest_api_key;
+    $is_public_playlists        = $settings->is_public_playlists;
 
     // get info on current song
     $command_output = exec("./src/track_info.ksh 2>&1");
@@ -2500,6 +2502,10 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
 
             $w->result(null, '', 'Remove track ' . escapeQuery($results[0]) . ' from...', 'This will remove current track from Your Music or a playlist you will choose in next step', './images/remove.png', 'no', null, 'Remove▹' . $results[4] . '∙' . escapeQuery($results[0]) . '▹');
 
+            $privacy_status = 'private';
+            if($is_public_playlists) {
+                $privacy_status = 'public';
+            }
             $w->result(null, serialize(array(
                 '' /*track_uri*/ ,
                 '' /* album_uri */ ,
@@ -2518,7 +2524,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                 '' /* playlist_name */ ,
                 '' /* playlist_artwork_path */
             )), "Create a Song Radio Playlist based on " . escapeQuery($results[0]), array(
-                'This will create a song radio playlist with ' . $radio_number_tracks . ' tracks for the current track',
+                'This will create a ' . $privacy_status . ' song radio playlist with ' . $radio_number_tracks . ' tracks for the current track',
                 'alt' => 'Not Available',
                 'cmd' => 'Not Available',
                 'shift' => 'Not Available',
@@ -3444,6 +3450,7 @@ function secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
     $display_name              = $settings->display_name;
     $userid                    = $settings->userid;
     $echonest_api_key          = $settings->echonest_api_key;
+    $is_public_playlists        = $settings->is_public_playlists;
 
     //
     // display tracks for selected artists
@@ -3511,6 +3518,10 @@ function secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
         $w->result(null, '', 'Related Artists', 'Browse related artists', './images/related.png', 'no', null, "OnlineRelated▹" . $artist_uri . "@" . $artist_name . '▹');
 
         if ($update_in_progress == false) {
+            $privacy_status = 'private';
+            if($is_public_playlists) {
+                $privacy_status = 'public';
+            }
             $w->result(null, serialize(array(
                 '' /*track_uri*/ ,
                 '' /* album_uri */ ,
@@ -3528,7 +3539,7 @@ function secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
                 '' /* album_artwork_path */ ,
                 '' /* playlist_name */ ,
                 '' /* playlist_artwork_path */
-            )), 'Create a Radio Playlist for ' . $artist_name, 'This will create a radio playlist with ' . $radio_number_tracks . ' tracks for the artist', './images/radio_artist.png', 'yes', null, '');
+            )), 'Create a Radio Playlist for ' . $artist_name, 'This will create a ' . $privacy_status . ' radio playlist with ' . $radio_number_tracks . ' tracks for the artist', './images/radio_artist.png', 'yes', null, '');
         }
 
         if ($all_playlists == false || count($tmp) == 3) {
@@ -4320,6 +4331,7 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
     $display_name              = $settings->display_name;
     $userid                    = $settings->userid;
     $echonest_api_key          = $settings->echonest_api_key;
+    $is_public_playlists        = $settings->is_public_playlists;
 
     //
     // display tracks for selected online playlist
@@ -4433,6 +4445,12 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
     )), "Open playlist " . $theplaylistname . " in Spotify", "This will open the playlist in Spotify", './images/spotify.png', 'yes', null, '');
 
     if ($update_in_progress == false) {
+        $added = 'privately';
+        $privacy_status = 'private';
+        if($is_public_playlists) {
+            $added = 'publicly';
+            $privacy_status = 'public';
+        }
         $w->result(null, serialize(array(
             '' /*track_uri*/ ,
             '' /* album_uri */ ,
@@ -4450,7 +4468,7 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
             '' /* album_artwork_path */ ,
             $theplaylistname /* playlist_name */ ,
             '' /* playlist_artwork_path */
-        )), 'Follow playlist ' . $theplaylistname , "This will add the playlist to your library", './images/follow.png', 'yes', null, '');
+        )), 'Follow ' . $added . ' playlist ' . $theplaylistname , "This will add the playlist (marked as " . $privacy_status . ") to your library", './images/follow.png', 'yes', null, '');
     }
 
     $noresult   = true;
@@ -5374,6 +5392,7 @@ function secondDelimiterAdd($w, $query, $settings, $db, $update_in_progress)
     $display_name              = $settings->display_name;
     $userid                    = $settings->userid;
     $echonest_api_key          = $settings->echonest_api_key;
+    $is_public_playlists        = $settings->is_public_playlists;
 
     if ($update_in_progress == true) {
         $w->result(null, '', 'Cannot add tracks/albums/playlists while update is in progress', 'Please retry when update is finished', './images/warning.png', 'no', null, '');
@@ -5412,7 +5431,11 @@ function secondDelimiterAdd($w, $query, $settings, $db, $update_in_progress)
 
             $w->result(null, '', 'Add ' . $type . ' ' . $tmp[1] . ' to Your Music or one of your playlists below..', "Select Your Music or one of your playlists below to add the " . $message, './images/add.png', 'no', null, '');
 
-            $w->result(null, '', "Create a new playlist ", "Create a new playlist and add the " . $message, './images/create_playlist.png', 'no', null, $query . 'Enter Playlist Name▹');
+            $privacy_status = 'private';
+            if($is_public_playlists) {
+                $privacy_status = 'public';
+            }
+            $w->result(null, '', "Create a new playlist ", "Create a new " . $privacy_status . " playlist and add the " . $message, './images/create_playlist.png', 'no', null, $query . 'Enter Playlist Name▹');
 
             // put Alfred Playlist at beginning
             if ($is_alfred_playlist_active == true) {
@@ -6152,6 +6175,7 @@ function thirdDelimiterAdd($w, $query, $settings, $db, $update_in_progress)
     $display_name              = $settings->display_name;
     $userid                    = $settings->userid;
     $echonest_api_key          = $settings->echonest_api_key;
+    $is_public_playlists        = $settings->is_public_playlists;
 
     $tmp = explode('∙', $words[1]);
     $uri = $tmp[0];
@@ -6184,7 +6208,11 @@ function thirdDelimiterAdd($w, $query, $settings, $db, $update_in_progress)
     }
 
     if (mb_strlen($the_query) == 0) {
-        $w->result(null, '', "Enter the name of the new playlist: ", "This will create a new playlist with the name entered", './images/create_playlist.png', 'no', null, '');
+        $privacy_status = 'private';
+        if($is_public_playlists) {
+            $privacy_status = 'public';
+        }
+        $w->result(null, '', "Enter the name of the new playlist: ", "This will create a new " . $privacy_status . " playlist with the name entered", './images/create_playlist.png', 'no', null, '');
 
         $w->result(null, 'help', "Or choose an alternative below", "Some playlists names are proposed below", './images/info.png', 'no', null, '');
 
