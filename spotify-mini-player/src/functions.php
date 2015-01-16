@@ -4940,13 +4940,18 @@ function updateSetting($w, $setting_name, $setting_new_value)
 {
     $settings     = $w->read('settings.json');
     $new_settings = array();
+    $found = false;
 
     foreach ($settings as $key => $value) {
         if ($key == $setting_name) {
             $new_settings[$key] = $setting_new_value;
+            $found = true;
         } else {
             $new_settings[$key] = $value;
         }
+    }
+    if($found == false) {
+        $new_settings[$setting_name] = $setting_new_value;
     }
     $ret = $w->write($new_settings, 'settings.json');
 
