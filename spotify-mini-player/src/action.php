@@ -90,9 +90,7 @@ if ($type == "TRACK" && $other_settings == "") {
                 $settings                  = getSettings($w);
                 $now_playing_notifications = $settings->now_playing_notifications;
             }
-            if ($now_playing_notifications == true) {
-                exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
-            }
+            exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
             exec("./src/track_info.ksh 2>&1");
             exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\" in context \"$playlist_uri\"'");
 
@@ -116,9 +114,7 @@ if ($type == "TRACK" && $other_settings == "") {
                     $settings                  = getSettings($w);
                     $now_playing_notifications = $settings->now_playing_notifications;
                 }
-                if ($now_playing_notifications == true) {
-                    exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
-                }
+                exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
                 exec("./src/track_info.ksh 2>&1");
                 exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
                 if ($now_playing_notifications == false) {
@@ -127,9 +123,7 @@ if ($type == "TRACK" && $other_settings == "") {
 	            if($userid != 'vdesabou') {
 		        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
 	            }
-	            if ($now_playing_notifications == true) {
-	            	addTrackToPlayQueue($w, $track_uri, $track_name, $country_code);
-	            }
+	            addTrackToPlayQueue($w, $track_uri, $track_name, $country_code);
                 return;
             }
         }
@@ -144,26 +138,14 @@ if ($type == "TRACK" && $other_settings == "") {
         }
         $album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, true);
     }
-    // start now playing if needed
-    if ($now_playing_notifications == "") {
-        //
-        // Read settings from JSON
-        //
-        $settings                  = getSettings($w);
-        $now_playing_notifications = $settings->now_playing_notifications;
-    }
-    if ($now_playing_notifications == true) {
-        exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
-    }
+    exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
     exec("./src/track_info.ksh 2>&1");
     exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
     displayNotificationWithArtwork('🔈 Album ' . $album_name . ' by ' . ucfirst($artist_name), $album_artwork_path, 'Play Album');
     if($userid != 'vdesabou') {
     	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
     }
-    if ($now_playing_notifications == true) {
-	    addAlbumToPlayQueue($w, $album_uri, $album_name);
-	}
+    addAlbumToPlayQueue($w, $album_uri, $album_name);
     return;
 } else if ($type == "ONLINE") {
     if ($artist_uri == "") {
@@ -215,42 +197,19 @@ if ($type == "TRACK" && $other_settings == "") {
         }
         $artist_artwork_path = getArtistArtwork($w, $artist_name, true);
     }
-
-    // start now playing if needed
-    if ($now_playing_notifications == "") {
-        //
-        // Read settings from JSON
-        //
-        $settings                  = getSettings($w);
-        $now_playing_notifications = $settings->now_playing_notifications;
-    }
-    if ($now_playing_notifications == true) {
-        exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
-    }
+    exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
     exec("./src/track_info.ksh 2>&1");
     exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
     displayNotificationWithArtwork('🔈 Artist ' . $artist_name, $artist_artwork_path, 'Play Artist');
     if($userid != 'vdesabou') {
     	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
     }
-    if ($now_playing_notifications == true) {
-	    addArtistToPlayQueue($w, $artist_uri, $artist_name, $country_code);
-	}
+	addArtistToPlayQueue($w, $artist_uri, $artist_name, $country_code);
     return;
 }
 
 if ($playlist_uri != "" && $other_settings == "" && $other_action == "") {
-    // start now playing if needed
-    if ($now_playing_notifications == "") {
-        //
-        // Read settings from JSON
-        //
-        $settings                  = getSettings($w);
-        $now_playing_notifications = $settings->now_playing_notifications;
-    }
-    if ($now_playing_notifications == true) {
-        exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
-    }
+    exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
     exec("./src/track_info.ksh 2>&1");
     exec("osascript -e 'tell application \"Spotify\" to play track \"$playlist_uri\"'");
     if ($playlist_artwork_path == '') {
@@ -260,9 +219,7 @@ if ($playlist_uri != "" && $other_settings == "" && $other_action == "") {
     if($userid != 'vdesabou') {
     	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
     }
-    if ($now_playing_notifications == true) {
-	    addPlaylistToPlayQueue($w, $playlist_uri, $playlist_name);
-	}
+	addPlaylistToPlayQueue($w, $playlist_uri, $playlist_name);
     return;
 } else if ($other_settings != "") {
     $setting = explode('▹', $other_settings);
@@ -543,15 +500,12 @@ if ($playlist_uri != "" && $other_settings == "" && $other_action == "") {
         }
         return;
     } else if ($other_action == "disable_now_playing_notifications") {
-
         $ret = updateSetting($w, 'now_playing_notifications', 0);
         if ($ret == true) {
             displayNotificationWithArtwork("Now Playing notifications are now disabled", './images/disable_now_playing.png', 'Settings');
         } else {
             displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
         }
-        // stop process
-        exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a stop >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
         return;
     } else if ($other_action == "enable_alfred_playlist") {
         $ret = updateSetting($w, 'is_alfred_playlist_active', 1);
@@ -610,9 +564,7 @@ if ($playlist_uri != "" && $other_settings == "" && $other_action == "") {
             $settings                  = getSettings($w);
             $now_playing_notifications = $settings->now_playing_notifications;
         }
-        if ($now_playing_notifications == true) {
-            exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
-        }
+        exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
         exec("./src/track_info.ksh 2>&1");
         exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\" in context \"$album_uri\"'");
         $album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, true);
@@ -622,9 +574,7 @@ if ($playlist_uri != "" && $other_settings == "" && $other_action == "") {
         if($userid != 'vdesabou') {
         	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
         }
-        if ($now_playing_notifications == true) {
-        	addAlbumToPlayQueue($w, $album_uri, $album_name);
-        }
+        addAlbumToPlayQueue($w, $album_uri, $album_name);
         return;
     } else if ($other_action == "play") {
 	    exec("./src/track_info.ksh 2>&1");
@@ -693,11 +643,12 @@ if ($playlist_uri != "" && $other_settings == "" && $other_action == "") {
         exec("open http://localhost:15298");
         return;
     } else if ($other_action == "current") {
-        displayNotificationForCurrentTrack($w);
+        if ($now_playing_notifications == true ||
+            ($now_playing_notifications == false && $type == "")) {
+            displayNotificationForCurrentTrack($w);
+        }
         if($type != "playing") {
-	        if ($now_playing_notifications == true) {
-	       		removeCurrentTrackFromPlayQueue($w);
-	       	}
+	       	removeCurrentTrackFromPlayQueue($w);
         }
         return;
     } else if ($other_action == "add_current_track_to") {
@@ -746,17 +697,13 @@ if ($playlist_uri != "" && $other_settings == "" && $other_action == "") {
             $settings                  = getSettings($w);
             $now_playing_notifications = $settings->now_playing_notifications;
         }
-        if ($now_playing_notifications == true) {
-            exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
-        }
+        exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
         exec("./src/track_info.ksh 2>&1");
         exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
         if ($now_playing_notifications == false) {
             displayNotificationForCurrentTrack($w);
         }
-        if ($now_playing_notifications == true) {
-        	addTrackToPlayQueue($w, $track_uri, $track_name, $country_code);
-        }
+        addTrackToPlayQueue($w, $track_uri, $track_name, $country_code);
         return;
     } else if ($other_action == "reset_settings") {
         if (file_exists($w->data() . '/settings.json')) {
@@ -799,27 +746,14 @@ if ($playlist_uri != "" && $other_settings == "" && $other_action == "") {
         }
         return;
     } else if ($other_action == "playartist") {
-        // start now playing if needed
-        if ($now_playing_notifications == "") {
-            //
-            // Read settings from JSON
-            //
-
-            $settings                  = getSettings($w);
-            $now_playing_notifications = $settings->now_playing_notifications;
-        }
-        if ($now_playing_notifications == true) {
-            exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
-        }
+        exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
         exec("./src/track_info.ksh 2>&1");
         exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
         displayNotificationWithArtwork('🔈 Artist ' . $artist_name, $artist_artwork_path, 'Play Artist');
         if($userid != 'vdesabou') {
         	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
         }
-        if ($now_playing_notifications == true) {
-	        addArtistToPlayQueue($w, $artist_uri, $artist_name, $country_code);
-	    }
+	    addArtistToPlayQueue($w, $artist_uri, $artist_name, $country_code);
         return;
     } else if ($other_action == "playalbum") {
         if ($album_uri == "") {
@@ -829,27 +763,14 @@ if ($playlist_uri != "" && $other_settings == "" && $other_action == "") {
                 return;
             }
         }
-        // start now playing if needed
-        if ($now_playing_notifications == "") {
-            //
-            // Read settings from JSON
-            //
-
-            $settings                  = getSettings($w);
-            $now_playing_notifications = $settings->now_playing_notifications;
-        }
-        if ($now_playing_notifications == true) {
-            exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
-        }
+        exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
         exec("./src/track_info.ksh 2>&1");
         exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
         displayNotificationWithArtwork('🔈 Album ' . $album_name, $album_artwork_path, 'Play Album');
         if($userid != 'vdesabou') {
         	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
         }
-        if ($now_playing_notifications == true) {
-	        addAlbumToPlayQueue($w, $album_uri, $album_name);
-	    }
+        addAlbumToPlayQueue($w, $album_uri, $album_name);
         return;
     } else if ($other_action == "volume_up") {
         exec("osascript -e 'set volume output volume (output volume of (get volume settings) + 6)'");

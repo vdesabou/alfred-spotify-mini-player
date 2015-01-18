@@ -255,9 +255,7 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress)
 
     $w->result(null, '', 'Current Track', 'Display current track information and browse various options', './images/current_track.png', 'no', null, 'Current Track▹');
 
-	if ($now_playing_notifications == true) {
-    	$w->result(null, '', 'Play Queue', 'Get the current play queue. Always use the workflow to launch tracks, otherwise play queue will be empty', './images/play_queue.png', 'no', null, 'Play Queue▹');
-	}
+    $w->result(null, '', 'Play Queue', 'Get the current play queue. Always use the workflow to launch tracks, otherwise play queue will be empty', './images/play_queue.png', 'no', null, 'Play Queue▹');
 
     $w->result(null, serialize(array(
         '' /*track_uri*/ ,
@@ -3025,7 +3023,7 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
             '' /* playlist_name */ ,
             '' /* playlist_artwork_path */
         )), "Disable Now Playing notifications", array(
-            "Do not display notifications for current playing track (Play Queue will also be disabled)",
+            "Do not display notifications for current playing track",
             'alt' => 'Not Available',
             'cmd' => 'Not Available',
             'shift' => 'Not Available',
@@ -3051,7 +3049,7 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
             '' /* playlist_name */ ,
             '' /* playlist_artwork_path */
         )), "Enable Now Playing notifications", array(
-            "Display notifications for current playing track (Play Queue will be enabled)",
+            "Display notifications for current playing track",
             'alt' => 'Not Available',
             'cmd' => 'Not Available',
             'shift' => 'Not Available',
