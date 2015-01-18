@@ -100,12 +100,10 @@ if ($type == "TRACK" && $other_settings == "") {
             if($userid != 'vdesabou') {
 	        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
             }
-		    if ($now_playing_notifications == true) {
-			    addPlaylistToPlayQueue($w, $playlist_uri, $playlist_name);
-			}
+			addPlaylistToPlayQueue($w, $playlist_uri, $playlist_name);
             return;
         } else {
-            if ($other_action == "") {
+            if ($other_action == "" || $other_action == "play_track_from_play_queue") {
                 // start now playing if needed
                 if ($now_playing_notifications == "") {
                     //
@@ -123,7 +121,9 @@ if ($type == "TRACK" && $other_settings == "") {
 	            if($userid != 'vdesabou') {
 		        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
 	            }
-	            addTrackToPlayQueue($w, $track_uri, $track_name, $country_code);
+                if($other_action == "") {
+                    addTrackToPlayQueue($w, $track_uri, $track_name, $country_code);
+                }
                 return;
             }
         }
@@ -468,7 +468,6 @@ if ($playlist_uri != "" && $other_settings == "" && $other_action == "") {
             displayNotificationWithArtwork("Alfred Playlist is not set", './images/warning.png', 'Error!');
             return;
         }
-
         if (clearPlaylist($w, $setting[1], $setting[2])) {
             displayNotificationWithArtwork('Alfred Playlist ' . $setting[2] . ' was cleared', getPlaylistArtwork($w, $setting[1], true), 'Clear Alfred Playlist');
         }
@@ -648,7 +647,7 @@ if ($playlist_uri != "" && $other_settings == "" && $other_action == "") {
             displayNotificationForCurrentTrack($w);
         }
         if($type != "playing") {
-	       	removeCurrentTrackFromPlayQueue($w);
+	       	updateCurrentTrackIndexFromPlayQueue($w);
         }
         return;
     } else if ($other_action == "add_current_track_to") {

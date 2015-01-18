@@ -3346,23 +3346,35 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
         echo $w->toxml();
         return;
     }
+    $command_output = exec("osascript -e '
+    tell application \"Spotify\"
+    if shuffling enabled is true then
+        if shuffling is true then
+            return \"enabled\"
+        else
+            return \"disabled\"
+        end if
+    else
+        return \"disabled\"
+    end if
+    end tell'");
+    if ($command_output == "enabled") {
+        $w->result(null, 'help', "Shuffle is enabled", "The order of tracks presented below is not relevant", './images/warning.png', 'no', null, '');
+    }
     $noresult = true;
     $nb_tracks           = 0;
-	foreach ($playqueue->tracks as $track) {
+    for($i = $playqueue->current_track_index; $i < count($playqueue->tracks);$i++){
+        $track = $playqueue->tracks[$i];
         if ($noresult == true) {
             $added = '🔈 ';
             if($playqueue->type == 'playlist') {
-	            $playlist_uri = $playqueue->uri;
 	            $playlist_name = $playqueue->name;
             } elseif ($playqueue->type == 'album') {
-	            $album_uri = $playqueue->uri;
 	            $album_name = $playqueue->name;
             } elseif ($playqueue->type == 'track') {
-	            $track_uri = $playqueue->uri;
 	            $track_name = $playqueue->name;
             }
-            $w->result(null, 'help', "Playing from: " . ucfirst($playqueue->type) . ' ' . $playqueue->name, count($playqueue->tracks) . ' tracks queued', './images/play_queue.png', 'no', null, '');
-
+            $w->result(null, 'help', "Playing from: " . ucfirst($playqueue->type) . ' ' . $playqueue->name, 'Track ' . ($playqueue->current_track_index + 1) . ' on '. count($playqueue->tracks) . ' tracks queued', './images/play_queue.png', 'no', null, '');
             $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
             $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
             $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
@@ -3378,13 +3390,13 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
         $track_artwork = getTrackOrAlbumArtwork($w, $track->uri, false);
         $w->result(null, serialize(array(
             $track->uri /*track_uri*/ ,
-            $album_uri /* album_uri */ ,
-            $artist_uri /* artist_uri */ ,
-            $playlist_uri /* playlist_uri */ ,
+            '' /* album_uri */ ,
+            '' /* artist_uri */ ,
+            '' /* playlist_uri */ ,
             '' /* spotify_command */ ,
             '' /* query */ ,
             '' /* other_settings*/ ,
-            '' /* other_action */ ,
+            'play_track_from_play_queue' /* other_action */ ,
             escapeQuery($track->artists[0]->name) /* artist_name */ ,
             escapeQuery($track->name) /* track_name */ ,
             escapeQuery($album_name) /* album_name */ ,

@@ -153,6 +153,7 @@ function addPlaylistToPlayQueue($w, $playlist_uri, $playlist_name) {
 	    "type" => "playlist",
 	    "uri" => $playlist_uri,
 	    "name" => escapeQuery($playlist_name),
+        "current_track_index" => 0,
 	    "tracks" => $tracks,
 	);
 	$w->write($playqueue, 'playqueue.json');
@@ -177,6 +178,7 @@ function addAlbumToPlayQueue($w, $album_uri, $album_name) {
 	    "type" => "album",
 	    "uri" => $album_uri,
 	    "name" => escapeQuery($album_name),
+        "current_track_index" => 0,
 	    "tracks" => $tracks,
 	);
 	$w->write($playqueue, 'playqueue.json');
@@ -202,6 +204,7 @@ function addArtistToPlayQueue($w, $artist_uri, $artist_name, $country_code) {
 	    "type" => "artist",
 	    "uri" => $artist_uri,
 	    "name" => escapeQuery($artist_name),
+        "current_track_index" => 0,
 	    "tracks" => $tracks,
 	);
 	$w->write($playqueue, 'playqueue.json');
@@ -224,26 +227,25 @@ function addTrackToPlayQueue($w, $track_uri, $track_name, $country_code) {
 		displayNotificationWithArtwork("Cannot get track " . $track_name, './images/warning.png', 'Error!');
 		return false;
 	}
-	$tracks[] = $track;
     $playqueue = $w->read('playqueue.json');
     if ($playqueue == false) {
+        $tracks[] = $track;
 		$newplayqueue = array(
 		    "type" => "track",
 		    "uri" => $track_uri,
 		    "name" => escapeQuery($track_name),
+            "current_track_index" => 0,
 		    "tracks" => $tracks,
 		);
     } else {
-	    $newtracks = array();
-	    // remove current track
-	    array_shift($playqueue->tracks);
-	    // add new track at beginning
-	    array_unshift($playqueue->tracks, $track);
+        // replace current track by new track
+        $playqueue->tracks[$playqueue->current_track_index] = $track;
 	    if($playqueue->type != '') {
 			$newplayqueue = array(
 			    "type" => $playqueue->type,
 			    "uri" => $playqueue->uri,
 			    "name" => $playqueue->name,
+                "current_track_index" => $playqueue->current_track_index,
 			    "tracks" => $playqueue->tracks,
 			);
 	    } else {
@@ -251,6 +253,7 @@ function addTrackToPlayQueue($w, $track_uri, $track_name, $country_code) {
 			    "type" => "track",
 			    "uri" => $track_uri,
 			    "name" => escapeQuery($track_name),
+                "current_track_index" => $playqueue->current_track_index,
 			    "tracks" => $playqueue->tracks,
 			);
 	    }
@@ -259,45 +262,47 @@ function addTrackToPlayQueue($w, $track_uri, $track_name, $country_code) {
 }
 
 /**
- * removeCurrentTrackFromPlayQueue function.
+ * updateCurrentTrackIndexFromPlayQueue function.
  *
  * @access public
  * @param mixed $w
  * @return void
  */
-function removeCurrentTrackFromPlayQueue($w) {
+function updateCurrentTrackIndexFromPlayQueue($w) {
     $playqueue = $w->read('playqueue.json');
-
     if ($playqueue == false) {
         displayNotificationWithArtwork("No play queue yet", './images/warning.png', 'Error!');
     }
     $command_output = exec("./src/track_info.ksh 2>&1");
-
     if (substr_count($command_output, '▹') > 0) {
         $results = explode('▹', $command_output);
-	    $newtracks = array();
 	    $found = false;
+        $i = 0;
 		foreach ($playqueue->tracks as $track) {
-			if($track->uri == $results[4]) {
+			if(escapeQuery($track->name) == escapeQuery($results[0]) &&
+               escapeQuery($track->artists[0]->name) == escapeQuery($results[1])) {
 				$found = true;
+                break;
 			}
-			if($found == true) {
-				$newtracks[] = $track;
-			}
+            $i++;
 	    }
 	    if($found == false) {
+            // empty queue
 			$newplayqueue = array(
 			    "type" => '',
 			    "uri" => '',
 			    "name" => '',
-			    "tracks" => $newtracks,
+                "current_track_index" => 0,
+			    "tracks" => array(),
 			);
+            displayNotificationWithArtwork("Play Queue has been reset!", './images/warning.png', 'Error!');
 	    } else {
 			$newplayqueue = array(
 			    "type" => $playqueue->type,
 			    "uri" => $playqueue->uri,
 			    "name" => $playqueue->name,
-			    "tracks" => $newtracks,
+                "current_track_index" => $i,
+			    "tracks" => $playqueue->tracks,
 			);
 	    }
 	    $w->write($newplayqueue, 'playqueue.json');
