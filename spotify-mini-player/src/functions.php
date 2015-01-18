@@ -74,6 +74,35 @@ function getSpotifyWebAPI($w, $old_api = null)
 }
 
 /**
+ * setThePlaylistPrivacy function.
+ *
+ * @access public
+ * @param mixed $w
+ * @param mixed $playlist_uri
+ * @param mixed $playlist_name
+ * @param boolean $public
+ * @return void
+ */
+function setThePlaylistPrivacy($w,$playlist_uri,$playlist_name,$public) {
+    try {
+        $tmp                         = explode(':', $playlist_uri);
+        $api    = getSpotifyWebAPI($w);
+        $ret = $api->updateUserPlaylist(urlencode($tmp[2]), $tmp[4], array( 'name' =>  escapeQuery($playlist_name),
+                                                                            'public' => $public));
+        if($ret == true) {
+            // refresh library
+            refreshLibrary($w);
+        }
+    }
+    catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+        logMsg("Error(updateUserPlaylist): (exception " . print_r($e) . ")");
+        handleSpotifyWebAPIException($w, $e);
+        return false;
+    }
+}
+
+
+/**
  * followThePlaylist function.
  *
  * @access public
@@ -3016,7 +3045,6 @@ function updateLibrary($w)
                     // This is a known issue
                     // http://stackoverflow.com/questions/27533743/local-tracks-returned-as-null-by-spotify-web-api?noredirect=1#comment43496449_27533743
                     if ($track->uri == 'spotify:track:null') {
-
                         if ($lookup_local_tracks_online == false) {
                             logMsg("WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri");
                             $nb_track++;
@@ -3162,7 +3190,6 @@ function updateLibrary($w)
     // Handle Your Music
     foreach ($savedMySavedTracks as $track) {
         $track = $track->track;
-
         $artists = $track->artists;
         $artist  = $artists[0];
         $album   = $track->album;
@@ -3170,7 +3197,6 @@ function updateLibrary($w)
         // This is a known issue
         // http://stackoverflow.com/questions/27533743/local-tracks-returned-as-null-by-spotify-web-api?noredirect=1#comment43496449_27533743
         if ($track->uri == 'spotify:track:null') {
-
             if ($lookup_local_tracks_online == false) {
                 logMsg("WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri");
                 $nb_track++;
@@ -3498,7 +3524,7 @@ function refreshLibrary($w)
         $deleteFromTracks     = "delete from tracks where playlist_uri=:playlist_uri";
         $stmtDeleteFromTracks = $db->prepare($deleteFromTracks);
 
-        $updatePlaylistsNbTracks     = "update playlists set nb_tracks=:nb_tracks,nb_playable_tracks=:nb_playable_tracks,duration_playlist=:duration_playlist where uri=:uri";
+        $updatePlaylistsNbTracks     = "update playlists set nb_tracks=:nb_tracks,nb_playable_tracks=:nb_playable_tracks,duration_playlist=:duration_playlist,public=:public where uri=:uri";
         $stmtUpdatePlaylistsNbTracks = $db->prepare($updatePlaylistsNbTracks);
 
         $deleteFromTracksYourMusic     = "delete from tracks where yourmusic=:yourmusic";
@@ -3509,7 +3535,6 @@ function refreshLibrary($w)
         handleDbIssuePdoEcho($db, $w);
         $dbartworks = null;
         $db         = null;
-
         return;
     }
 
@@ -3747,9 +3772,10 @@ function refreshLibrary($w)
 
             displayNotificationWithArtwork('Added playlist ' . escapeQuery($playlist->name), $playlist_artwork_path, 'Refresh Library');
         } else {
-            // number of tracks has changed or playlist name has changed
+            // number of tracks has changed or playlist name has changed or the privacy has changed
             // update the playlist
-            if ($playlists[2] != $tracks->total || $playlists[1] != escapeQuery($playlist->name)) {
+            if ($playlists[2] != $tracks->total || $playlists[1] != escapeQuery($playlist->name) ||
+                (($playlists[11] == '' && $playlist->public == true) || ($playlists[11] == true && $playlist->public == ''))) {
                 $nb_updated_playlists++;
 
                 // force refresh of playlist artwork
@@ -3773,7 +3799,6 @@ function refreshLibrary($w)
                     handleDbIssuePdoEcho($db, $w);
                     $dbartworks = null;
                     $db         = null;
-
                     return;
                 }
 
@@ -3804,8 +3829,6 @@ function refreshLibrary($w)
                             $artists = $track->artists;
                             $artist  = $artists[0];
                             $album   = $track->album;
-
-
                             // This is a known issue
                             // http://stackoverflow.com/questions/27533743/local-tracks-returned-as-null-by-spotify-web-api?noredirect=1#comment43496449_27533743
                             if ($track->uri == 'spotify:track:null') {
@@ -3921,6 +3944,7 @@ function refreshLibrary($w)
                         $stmtUpdatePlaylistsNbTracks->bindValue(':nb_playable_tracks', $nb_track_playlist);
                         $stmtUpdatePlaylistsNbTracks->bindValue(':duration_playlist', beautifyTime($duration_playlist / 1000, true));
                         $stmtUpdatePlaylistsNbTracks->bindValue(':uri', $playlist->uri);
+                        $stmtUpdatePlaylistsNbTracks->bindValue(':public', $playlist->public);
                         $stmtUpdatePlaylistsNbTracks->execute();
                     }
                     catch (PDOException $e) {
@@ -4222,7 +4246,6 @@ function refreshLibrary($w)
         handleDbIssuePdoEcho($db, $w);
         $dbartworks = null;
         $db         = null;
-
         return false;
     }
 

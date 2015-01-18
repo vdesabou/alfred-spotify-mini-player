@@ -127,6 +127,19 @@ if ($type == "TRACK" && $other_settings == "") {
                 return;
             }
         }
+    } elseif ($playlist_uri != "") {
+        exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
+        exec("./src/track_info.ksh 2>&1");
+        exec("osascript -e 'tell application \"Spotify\" to play track \"$playlist_uri\"'");
+        if ($playlist_artwork_path == '') {
+            $playlist_artwork_path = getPlaylistArtwork($w, $playlist_uri, true, false);
+        }
+        displayNotificationWithArtwork('🔈 Playlist ' . $playlist_name, $playlist_artwork_path, 'Launch Playlist');
+        if($userid != 'vdesabou') {
+            stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
+        }
+        addPlaylistToPlayQueue($w, $playlist_uri, $playlist_name);
+        return;
     }
 } else if ($type == "ALBUM") {
     if ($album_uri == "") {
@@ -186,41 +199,48 @@ if ($type == "TRACK" && $other_settings == "") {
         return;
     }
     return;
-} else if ($type == "ARTIST") {
-
-    if ($artist_uri == "") {
-        // case of current song with cmd
-        $artist_uri = getArtistUriFromTrack($w, $track_uri);
-        if ($artist_uri == false) {
-            displayNotificationWithArtwork("Cannot get current artist", './images/warning.png', 'Error!');
+} else if ($type == "ARTIST_OR_PLAYLIST_PRIVACY") {
+    if($artist_name != "") {
+        if ($artist_uri == "") {
+            // case of current song with cmd
+            $artist_uri = getArtistUriFromTrack($w, $track_uri);
+            if ($artist_uri == false) {
+                displayNotificationWithArtwork("Cannot get current artist", './images/warning.png', 'Error!');
+                return;
+            }
+            $artist_artwork_path = getArtistArtwork($w, $artist_name, true);
+        }
+        exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
+        exec("./src/track_info.ksh 2>&1");
+        exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
+        displayNotificationWithArtwork('🔈 Artist ' . $artist_name, $artist_artwork_path, 'Play Artist');
+        if($userid != 'vdesabou') {
+            stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
+        }
+        addArtistToPlayQueue($w, $artist_uri, $artist_name, $country_code);
+        return;
+    } elseif($playlist_uri != "") {
+        // case cmd on playlist: change privacy
+        // in other_action, the privacy is set
+        $tmp = explode(':', $playlist_uri);
+        if($userid != $tmp[2]) {
+            displayNotificationWithArtwork("You cannot update a playlist you don’t own", './images/warning.png', 'Error!');
             return;
         }
-        $artist_artwork_path = getArtistArtwork($w, $artist_name, true);
+        if($other_action == 'set_playlist_privacy_to_public') {
+            $public = true;
+            $msgPublic = 'public';
+        } elseif ($other_action == 'set_playlist_privacy_to_private') {
+            $public = false;
+            $msgPublic = 'private';
+        } else {
+            displayNotificationWithArtwork("Error when changing playlist privacy", './images/warning.png', 'Error!');
+            return;
+        }
+        setThePlaylistPrivacy($w,$playlist_uri,$playlist_name,$public);
+        displayNotificationWithArtwork("Playlist is now " . $msgPublic, './images/disable_public_playlists.png', 'Change playlist privacy');
+        return;
     }
-    exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
-    exec("./src/track_info.ksh 2>&1");
-    exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
-    displayNotificationWithArtwork('🔈 Artist ' . $artist_name, $artist_artwork_path, 'Play Artist');
-    if($userid != 'vdesabou') {
-    	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
-    }
-	addArtistToPlayQueue($w, $artist_uri, $artist_name, $country_code);
-    return;
-}
-
-if ($playlist_uri != "" && $other_settings == "" && $other_action == "") {
-    exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
-    exec("./src/track_info.ksh 2>&1");
-    exec("osascript -e 'tell application \"Spotify\" to play track \"$playlist_uri\"'");
-    if ($playlist_artwork_path == '') {
-        $playlist_artwork_path = getPlaylistArtwork($w, $playlist_uri, true, false);
-    }
-    displayNotificationWithArtwork('🔈 Playlist ' . $playlist_name, $playlist_artwork_path, 'Launch Playlist');
-    if($userid != 'vdesabou') {
-    	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
-    }
-	addPlaylistToPlayQueue($w, $playlist_uri, $playlist_name);
-    return;
 } else if ($other_settings != "") {
     $setting = explode('▹', $other_settings);
     if ($setting[0] == "MAX_RESULTS") {
@@ -270,7 +290,6 @@ if ($playlist_uri != "" && $other_settings == "" && $other_action == "") {
         return;
 
     } else if ($setting[0] == "ADD_TO_PLAYLIST") {
-
         if (file_exists($w->data() . '/update_library_in_progress')) {
             displayNotificationWithArtwork("Cannot modify library while update is in progress", './images/warning.png', 'Error!');
             return;
@@ -284,7 +303,6 @@ if ($playlist_uri != "" && $other_settings == "" && $other_action == "") {
                 return;
             }
         }
-
         // add track to playlist
         if ($track_uri != '') {
             $track_artwork_path = getTrackOrAlbumArtwork($w, $track_uri, true);

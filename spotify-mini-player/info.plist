@@ -1186,6 +1186,8 @@
 				<string>com.vdesabou.miniplayer.show</string>
 				<key>triggername</key>
 				<string>Show Workflow</string>
+				<key>workflowonly</key>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
@@ -1217,7 +1219,7 @@
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f ./src/action.php -- "{query}" "ARTIST" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+				<string>php -f ./src/action.php -- "{query}" "ARTIST_OR_PLAYLIST_PRIVACY" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -1326,6 +1328,8 @@
 				<string>com.vdesabou.miniplayer.alfredplaylist</string>
 				<key>triggername</key>
 				<string>Show Alfred Playlist</string>
+				<key>workflowonly</key>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
@@ -1413,6 +1417,8 @@
 				<string>com.vdesabou.miniplayer.settings</string>
 				<key>triggername</key>
 				<string>Show Settings</string>
+				<key>workflowonly</key>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
@@ -1465,6 +1471,8 @@
 				<string>com.vdesabou.miniplayer.playlists</string>
 				<key>triggername</key>
 				<string>Show Playlists</string>
+				<key>workflowonly</key>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
@@ -1517,6 +1525,8 @@
 				<string>com.vdesabou.miniplayer.currenttrack</string>
 				<key>triggername</key>
 				<string>Show Current Track</string>
+				<key>workflowonly</key>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
@@ -1569,6 +1579,8 @@
 				<string>com.vdesabou.miniplayer.showcharts</string>
 				<key>triggername</key>
 				<string>Show Charts</string>
+				<key>workflowonly</key>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
@@ -1588,6 +1600,8 @@
 				<string>com.vdesabou.miniplayer.shownewreleases</string>
 				<key>triggername</key>
 				<string>Show New Releases</string>
+				<key>workflowonly</key>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
@@ -1636,6 +1650,8 @@
 				<string>com.vdesabou.miniplayer.showsearchonline</string>
 				<key>triggername</key>
 				<string>Show Search Online</string>
+				<key>workflowonly</key>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
@@ -1688,6 +1704,8 @@
 				<string>com.vdesabou.miniplayer.showplayqueue</string>
 				<key>triggername</key>
 				<string>Show Play Queue</string>
+				<key>workflowonly</key>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
@@ -1777,6 +1795,8 @@
 				<string>com.vdesabou.miniplayer.debug</string>
 				<key>triggername</key>
 				<string>Debug</string>
+				<key>workflowonly</key>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
@@ -1796,6 +1816,8 @@
 				<string>com.vdesabou.miniplayer.mute</string>
 				<key>triggername</key>
 				<string>Mute/Unmute</string>
+				<key>workflowonly</key>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
@@ -1879,6 +1901,8 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<string>com.vdesabou.miniplayer.volumeup</string>
 				<key>triggername</key>
 				<string>Volume Up</string>
+				<key>workflowonly</key>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
@@ -2001,6 +2025,8 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<string>com.vdesabou.miniplayer.volumedown</string>
 				<key>triggername</key>
 				<string>Volume Down</string>
+				<key>workflowonly</key>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
@@ -2062,6 +2088,8 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<string>com.vdesabou.miniplayer.random</string>
 				<key>triggername</key>
 				<string>Random Track</string>
+				<key>workflowonly</key>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
@@ -2147,6 +2175,8 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<string>com.vdesabou.miniplayer.addcurrenttrack</string>
 				<key>triggername</key>
 				<string>Add track to AP or Your Music</string>
+				<key>workflowonly</key>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
@@ -2255,6 +2285,8 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<string>com.vdesabou.miniplayer.pause</string>
 				<key>triggername</key>
 				<string>Pause</string>
+				<key>workflowonly</key>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
@@ -2274,6 +2306,8 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<string>com.vdesabou.miniplayer.play</string>
 				<key>triggername</key>
 				<string>Play</string>
+				<key>workflowonly</key>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
@@ -2358,6 +2392,8 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<string>com.vdesabou.miniplayer.shuffle</string>
 				<key>triggername</key>
 				<string>Activate Shuffle</string>
+				<key>workflowonly</key>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
@@ -2507,6 +2543,8 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<string>com.vdesabou.miniplayer.previous</string>
 				<key>triggername</key>
 				<string>Previous Track</string>
+				<key>workflowonly</key>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
@@ -2592,6 +2630,8 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<string>com.vdesabou.miniplayer.next</string>
 				<key>triggername</key>
 				<string>Next Track</string>
+				<key>workflowonly</key>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
@@ -2624,6 +2664,8 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<string>com.vdesabou.miniplayer.current</string>
 				<key>triggername</key>
 				<string>Current Track Info</string>
+				<key>workflowonly</key>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
@@ -2707,6 +2749,8 @@ php -f ./src/action.php -- "$query" "{query}" "" &gt;&gt; "$alfred_workflow_cach
 				<string>com.vdesabou.miniplayer.lyrics</string>
 				<key>triggername</key>
 				<string>Lyrics</string>
+				<key>workflowonly</key>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
@@ -2792,6 +2836,8 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<string>com.vdesabou.miniplayer.artistradio</string>
 				<key>triggername</key>
 				<string>Create Artist Radio</string>
+				<key>workflowonly</key>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
@@ -2877,6 +2923,8 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<string>com.vdesabou.miniplayer.songadio</string>
 				<key>triggername</key>
 				<string>Create Song Radio</string>
+				<key>workflowonly</key>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
@@ -3003,6 +3051,8 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<string>com.vdesabou.miniplayer.reset</string>
 				<key>triggername</key>
 				<string>Reset Settings</string>
+				<key>workflowonly</key>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
@@ -3063,6 +3113,8 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<string>com.vdesabou.miniplayer.refreshlibrary</string>
 				<key>triggername</key>
 				<string>Refresh Library</string>
+				<key>workflowonly</key>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
@@ -3136,6 +3188,8 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<string>com.vdesabou.miniplayer.playartist</string>
 				<key>triggername</key>
 				<string>Play Artist</string>
+				<key>workflowonly</key>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
@@ -3221,6 +3275,8 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<string>com.vdesabou.miniplayer.playalbum</string>
 				<key>triggername</key>
 				<string>Play Album</string>
+				<key>workflowonly</key>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
@@ -3306,6 +3362,8 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<string>com.vdesabou.miniplayer.playalfredplaylist</string>
 				<key>triggername</key>
 				<string>Play Alfred Playlist</string>
+				<key>workflowonly</key>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
@@ -3429,6 +3487,8 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<string>com.vdesabou.miniplayer.issue</string>
 				<key>triggername</key>
 				<string>Report Issue</string>
+				<key>workflowonly</key>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
@@ -3448,6 +3508,8 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<string>com.vdesabou.miniplayer.addcurrenttrackto</string>
 				<key>triggername</key>
 				<string>Add track to...</string>
+				<key>workflowonly</key>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
@@ -3533,6 +3595,8 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<string>com.vdesabou.miniplayer.lookupcurrentartist</string>
 				<key>triggername</key>
 				<string>Lookup Artist Online</string>
+				<key>workflowonly</key>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
@@ -3635,6 +3699,8 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<string>com.vdesabou.miniplayer.keyescape</string>
 				<key>triggername</key>
 				<string>Key Escape</string>
+				<key>workflowonly</key>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
@@ -3654,6 +3720,8 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<string>com.vdesabou.miniplayer.keyenter</string>
 				<key>triggername</key>
 				<string>Key Enter</string>
+				<key>workflowonly</key>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
@@ -3707,6 +3775,8 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<string>com.vdesabou.miniplayer.keydown</string>
 				<key>triggername</key>
 				<string>Key Down</string>
+				<key>workflowonly</key>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
@@ -3743,6 +3813,8 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<string>com.vdesabou.miniplayer.keyup</string>
 				<key>triggername</key>
 				<string>Key Up</string>
+				<key>workflowonly</key>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
@@ -3803,6 +3875,8 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<string>com.vdesabou.miniplayer.displaycurrentartistbiography</string>
 				<key>triggername</key>
 				<string>Display Artist Biography</string>
+				<key>workflowonly</key>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>
@@ -3847,6 +3921,8 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<string>com.vdesabou.miniplayer.removecurrenttrackfrom</string>
 				<key>triggername</key>
 				<string>Remove track from...</string>
+				<key>workflowonly</key>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.trigger.remote</string>

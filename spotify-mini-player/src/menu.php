@@ -3910,7 +3910,7 @@ function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progres
     //
     $theplaylisturi = $words[1];
     $thetrack       = $words[2];
-    $getPlaylists   = "select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist from playlists where uri=:uri";
+    $getPlaylists   = "select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist,collaborative,public from playlists where uri=:uri";
 
     try {
         $stmt = $db->prepare($getPlaylists);
@@ -3919,15 +3919,21 @@ function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progres
         $playlists        = $stmt->execute();
         $noresultplaylist = true;
         while ($playlist = $stmt->fetch()) {
-
             $noresultplaylist = false;
             if (mb_strlen($thetrack) < 3) {
-
-                $subtitle = "Launch Playlist";
-                if ($is_alfred_playlist_active == true && $playlist[1] != $alfred_playlist_name) {
-                    $subtitle = "$subtitle ,⇧ ▹ add playlist to ...";
+                if($playlist[10]) {
+                    $public_status_contrary = 'private';
+                } else {
+                    $public_status_contrary = 'public';
                 }
+                $subtitle = "Launch Playlist";
+                $subtitle = $subtitle . " ,⇧ ▹ add playlist to ...,  ⌥ ▹ change playlist privacy to " . $public_status_contrary;
                 $added = ' ';
+                if($userid == $playlist[4]) {
+                    $cmdMsg = 'Change playlist privacy to ' . $public_status_contrary;
+                } else {
+                    $cmdMsg = 'Not Available';
+                }
                 if (startswith($playlist[1], 'Artist radio for')) {
                     $added = '📻 ';
                 }
@@ -3939,7 +3945,7 @@ function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progres
                     '' /* spotify_command */ ,
                     '' /* query */ ,
                     '' /* other_settings*/ ,
-                    '' /* other_action */ ,
+                    'set_playlist_privacy_to_' . $public_status_contrary /* other_action */ ,
                     '' /* artist_name */ ,
                     '' /* track_name */ ,
                     '' /* album_name */ ,
@@ -3951,8 +3957,8 @@ function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progres
                 )), "🎵" . $added . ucfirst($playlist[1]) . " by " . $playlist[3] . " ● " . $playlist[7] . " tracks ● " . $playlist[8], array(
                     $subtitle,
                     'alt' => 'Not Available',
-                    'cmd' => 'Not Available',
-                    'shift' => 'Add playlist ' . ucfirst($playlist[1]) . ' to your Alfred Playlist',
+                    'cmd' => $cmdMsg,
+                    'shift' => 'Add playlist ' . ucfirst($playlist[1]) . ' to ...',
                     'fn' => 'Not Available',
                     'ctrl' => 'Not Available'
                 ), $playlist[5], 'yes', null, '');
