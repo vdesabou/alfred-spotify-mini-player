@@ -55,7 +55,8 @@ if ($spotify_command != "" && $type == "TRACK" && $add_to_option == "") {
     return;
 }
 
-if ($type == "TRACK" && $other_settings == "") {
+if ($type == "TRACK" && $other_settings == "" &&
+    (startsWith($other_action, 'set_playlist_privacy_to_') || $other_action == "play_track_from_play_queue" || $other_action == "")) {
     if ($track_uri != "") {
         if ($add_to_option != "") {
             $tmp = explode(':', $track_uri);
@@ -457,7 +458,6 @@ if ($type == "TRACK" && $other_settings == "") {
             }
         }
     } else if ($setting[0] == "REMOVE_FROM_YOUR_MUSIC") {
-
         if (file_exists($w->data() . '/update_library_in_progress')) {
             displayNotificationWithArtwork("Cannot modify library while update is in progress", './images/warning.png', 'Error!');
             return;
