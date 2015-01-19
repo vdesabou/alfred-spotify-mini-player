@@ -4473,7 +4473,6 @@ function getLyrics($w, $artist, $title)
 {
     $query_artist = $artist;
     $query_title  = $title;
-
     if (stristr($query_artist, 'feat.')) {
         $query_artist = stristr($query_artist, 'feat.', true);
     } elseif (stristr($query_artist, 'featuring')) {
@@ -4561,22 +4560,17 @@ function getLyrics($w, $artist, $title)
     $query_title = rtrim($query_title, '-');
 
     $uri = strtolower('https://www.musixmatch.com/fr/paroles/' . $query_artist . '/' . $query_title);
-
-
     $error    = false;
     $no_match = false;
 
     $options = array(
         CURLOPT_FOLLOWLOCATION => 1,
-        CURLOPT_TIMEOUT => 5
+        CURLOPT_TIMEOUT => 5,
+        CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13'
     );
-
     $file = $w->request($uri, $options);
-
     preg_match('/<script>var __mxmProps = (.*?)<\/script>/s', $file, $lyrics);
-
     $lyrics = (empty($lyrics[1])) ? '' : $lyrics[1];
-
     if (empty($file)) {
         return array(
             false,
@@ -4619,7 +4613,6 @@ function getLyrics($w, $artist, $title)
                     );
                 }
         }
-
     }
 }
 
