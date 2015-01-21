@@ -308,7 +308,9 @@ function updateCurrentTrackIndexFromPlayQueue($w) {
 	    $found = false;
         $i = 0;
 		foreach ($playqueue->tracks as $track) {
-			if(escapeQuery($track->name) == escapeQuery($results[0]) &&
+            $track_name = cleanupTrackName($track->name);
+            $current_track_name = cleanupTrackName($results[0]);
+			if(escapeQuery($track_name) == escapeQuery($current_track_name) &&
                escapeQuery($track->artists[0]->name) == escapeQuery($results[1])) {
 				$found = true;
                 break;
@@ -4442,6 +4444,53 @@ function mb_unserialize($string)
     return unserialize($string);
 }
 
+
+/**
+ *
+ * */
+function cleanupTrackName($track_name) {
+    return str_ireplace(array(
+        'acoustic version',
+        'new album version',
+        'original album version',
+        'album version',
+        'bonus track',
+        'clean version',
+        'club mix',
+        'demo version',
+        'extended mix',
+        'extended outro',
+        'extended version',
+        'extended',
+        'explicit version',
+        'explicit',
+        '(live)',
+        '- live',
+        'live version',
+        'lp mix',
+        '(original)',
+        'original edit',
+        'original mix edit',
+        'original version',
+        '(radio)',
+        'radio edit',
+        'remix edit',
+        'radio mix',
+        'remastered version',
+        're-mastered version',
+        'remastered digital version',
+        're-mastered digital version',
+        'remastered',
+        'remaster',
+        'remixed version',
+        'remix',
+        'single version',
+        'studio version',
+        'version acustica',
+        'versión acústica',
+        'vocal edit'
+    ), '', $track_name);
+}
 /*
 
 This function was mostly taken from SpotCommander.
@@ -4489,46 +4538,7 @@ function getLyrics($w, $artist, $title)
     $query_artist = str_replace(' - ', '-', $query_artist);
     $query_artist = str_replace(' ', '-', $query_artist);
 
-    $query_title = str_ireplace(array(
-        'acoustic version',
-        'new album version',
-        'original album version',
-        'album version',
-        'bonus track',
-        'clean version',
-        'club mix',
-        'demo version',
-        'extended mix',
-        'extended outro',
-        'extended version',
-        'extended',
-        'explicit version',
-        'explicit',
-        '(live)',
-        '- live',
-        'live version',
-        'lp mix',
-        '(original)',
-        'original edit',
-        'original mix edit',
-        'original version',
-        '(radio)',
-        'radio edit',
-        'radio mix',
-        'remastered version',
-        're-mastered version',
-        'remastered digital version',
-        're-mastered digital version',
-        'remastered',
-        'remaster',
-        'remixed version',
-        'remix',
-        'single version',
-        'studio version',
-        'version acustica',
-        'versión acústica',
-        'vocal edit'
-    ), '', $query_title);
+    $query_title = cleanupTrackName($query_title);
 
     if (stristr($query_title, 'feat.')) {
         $query_title = stristr($query_title, 'feat.', true);
