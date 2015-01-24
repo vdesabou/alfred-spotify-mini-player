@@ -173,6 +173,9 @@ function unfollowThePlaylist($w,$playlist_uri) {
  * @return void
  */
 function addPlaylistToPlayQueue($w, $playlist_uri, $playlist_name) {
+    if (!$w->internet()) {
+        return false;
+    }
 	$tracks = getThePlaylistFullTracks($w, $playlist_uri);
 	if($tracks == false) {
 		displayNotificationWithArtwork("Cannot get tracks for playlist " . $playlist_name, './images/warning.png', 'Error!');
@@ -198,6 +201,9 @@ function addPlaylistToPlayQueue($w, $playlist_uri, $playlist_name) {
  * @return void
  */
 function addAlbumToPlayQueue($w, $album_uri, $album_name) {
+    if (!$w->internet()) {
+        return false;
+    }
 	$tracks = getTheAlbumFullTracks($w, $album_uri);
 	if($tracks == false) {
 		displayNotificationWithArtwork("Cannot get tracks for album " . $album_name, './images/warning.png', 'Error!');
@@ -224,6 +230,9 @@ function addAlbumToPlayQueue($w, $album_uri, $album_name) {
  * @return void
  */
 function addArtistToPlayQueue($w, $artist_uri, $artist_name, $country_code) {
+    if (!$w->internet()) {
+        return false;
+    }
 	$tracks = getTheArtistFullTracks($w, $artist_uri, $country_code);
 	if($tracks == false) {
 		displayNotificationWithArtwork("Cannot get tracks for artist " . $artist_name, './images/warning.png', 'Error!');
@@ -250,6 +259,9 @@ function addArtistToPlayQueue($w, $artist_uri, $artist_name, $country_code) {
  * @return void
  */
 function addTrackToPlayQueue($w, $track_uri, $track_name, $country_code) {
+    if (!$w->internet()) {
+        return false;
+    }
 	$tracks = array();
 	$track = getTheFullTrack($w, $track_uri, $country_code);
 	if($track == false) {
@@ -307,9 +319,9 @@ function updateCurrentTrackIndexFromPlayQueue($w) {
         $results = explode('▹', $command_output);
 	    $found = false;
         $i = 0;
+        $current_track_name = cleanupTrackName($results[0]);
 		foreach ($playqueue->tracks as $track) {
             $track_name = cleanupTrackName($track->name);
-            $current_track_name = cleanupTrackName($results[0]);
 			if(escapeQuery($track_name) == escapeQuery($current_track_name) &&
                escapeQuery($track->artists[0]->name) == escapeQuery($results[1])) {
 				$found = true;
@@ -327,6 +339,7 @@ function updateCurrentTrackIndexFromPlayQueue($w) {
 			    "tracks" => array(),
 			);
             displayNotificationWithArtwork("Play Queue has been reset!", './images/warning.png', 'Error!');
+            logMsg("INFO: " . $track_name . " - " . $current_track_name);
 	    } else {
 			$newplayqueue = array(
 			    "type" => $playqueue->type,
@@ -539,7 +552,6 @@ function displayCurrentArtistBiography($w)
 {
     if (!$w->internet()) {
         displayNotificationWithArtwork("No internet connection", './images/warning.png');
-
         return;
     }
 
