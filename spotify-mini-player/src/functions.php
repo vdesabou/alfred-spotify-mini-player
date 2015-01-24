@@ -339,7 +339,6 @@ function updateCurrentTrackIndexFromPlayQueue($w) {
 			    "tracks" => array(),
 			);
             displayNotificationWithArtwork("Play Queue has been reset!", './images/warning.png', 'Error!');
-            logMsg("INFO: " . $track_name . " - " . $current_track_name);
 	    } else {
 			$newplayqueue = array(
 			    "type" => $playqueue->type,
