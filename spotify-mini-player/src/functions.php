@@ -4587,7 +4587,7 @@ function getLyrics($w, $artist, $title)
 
     $options = array(
         CURLOPT_FOLLOWLOCATION => 1,
-        CURLOPT_TIMEOUT => 5,
+        CURLOPT_TIMEOUT => 10,
         CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13'
     );
     $file = $w->request($uri, $options);
