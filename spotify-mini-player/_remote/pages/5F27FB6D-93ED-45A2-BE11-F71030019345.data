@@ -25,7 +25,7 @@
 			<key>actionuid</key>
 			<string>remote.alfred.runworkflow</string>
 			<key>buttoniconid</key>
-			<string>F35A86F4-2605-4836-8B70-8AD7768B068F</string>
+			<string>A6374417-A3FC-4360-9913-504F7A21F4F1</string>
 			<key>buttonlabel</key>
 			<string>Create Artist Radio</string>
 			<key>itemuid</key>
@@ -42,7 +42,7 @@
 			<key>actionuid</key>
 			<string>remote.alfred.runworkflow</string>
 			<key>buttoniconid</key>
-			<string>C4FED5BC-C8F3-4EAB-92DC-2E8D928A789E</string>
+			<string>83D8A06D-1B1C-4B90-A00A-5B5E575DF7E8</string>
 			<key>buttonlabel</key>
 			<string>Create Song Radio</string>
 			<key>itemuid</key>
@@ -59,7 +59,7 @@
 			<key>actionuid</key>
 			<string>remote.alfred.runworkflow</string>
 			<key>buttoniconid</key>
-			<string>C9F61C4E-4D53-414F-AB17-0EA3ABDDDB1B</string>
+			<string>8B60A0B6-910F-4B63-A0B1-953D9A99990F</string>
 			<key>buttonlabel</key>
 			<string>Lyrics</string>
 			<key>itemuid</key>
@@ -76,7 +76,7 @@
 			<key>actionuid</key>
 			<string>remote.alfred.runworkflow</string>
 			<key>buttoniconid</key>
-			<string>BD9AEDD6-38F5-4451-A3B8-3603278C021D</string>
+			<string>D834784F-B286-4D4C-9C0E-9CDB58670AAC</string>
 			<key>buttonlabel</key>
 			<string>Display Artist Biography</string>
 			<key>itemuid</key>
@@ -93,7 +93,7 @@
 			<key>actionuid</key>
 			<string>remote.alfred.runworkflow</string>
 			<key>buttoniconid</key>
-			<string>39C753EA-9397-469C-9262-3669E995C82A</string>
+			<string>58AF0E83-EC70-42B2-AED5-DB7DF65C043C</string>
 			<key>buttonlabel</key>
 			<string>Current Track Info</string>
 			<key>itemuid</key>
@@ -110,7 +110,7 @@
 			<key>actionuid</key>
 			<string>remote.alfred.runworkflow</string>
 			<key>buttoniconid</key>
-			<string>73B17B4D-885A-445C-A6A5-D1F2FCBABEC9</string>
+			<string>AF86DFA1-E6C7-4C2B-BD00-66614B6CFE81</string>
 			<key>buttonlabel</key>
 			<string>Refresh Library</string>
 			<key>itemuid</key>
@@ -127,7 +127,7 @@
 			<key>actionuid</key>
 			<string>remote.alfred.runworkflow</string>
 			<key>buttoniconid</key>
-			<string>B88766DD-41F6-410C-B4D4-4705F3F02757</string>
+			<string>FDAEECD4-DE40-443C-89F9-B46D5592D8C4</string>
 			<key>buttonlabel</key>
 			<string>Report Issue</string>
 			<key>itemuid</key>
@@ -144,7 +144,7 @@
 			<key>actionuid</key>
 			<string>remote.alfred.runworkflow</string>
 			<key>buttoniconid</key>
-			<string>8A4C33EA-5D23-4EC0-AAC7-D767BA74D78D</string>
+			<string>707403B7-FF4A-4995-99F3-AB2B5F39B34F</string>
 			<key>buttonlabel</key>
 			<string>Debug</string>
 			<key>itemuid</key>
@@ -161,7 +161,7 @@
 			<key>actionuid</key>
 			<string>remote.alfred.runworkflow</string>
 			<key>buttoniconid</key>
-			<string>138DBE8D-C35F-4578-B7CE-370D37DB3F94</string>
+			<string>2737969D-A8B4-4550-8568-3C926D36DD81</string>
 			<key>buttonlabel</key>
 			<string>Add track to AP or Your Music</string>
 			<key>itemuid</key>
@@ -178,7 +178,7 @@
 			<key>actionuid</key>
 			<string>remote.alfred.runworkflow</string>
 			<key>buttoniconid</key>
-			<string>5859CDE9-E998-40A4-A17E-F776B3CA201D</string>
+			<string>4FE5620A-FB79-440E-8633-B8148EE1191E</string>
 			<key>buttonlabel</key>
 			<string>Add track to...</string>
 			<key>itemuid</key>
@@ -195,7 +195,7 @@
 			<key>actionuid</key>
 			<string>remote.alfred.runworkflow</string>
 			<key>buttoniconid</key>
-			<string>ED7FDBA2-5C7D-417B-9BD0-3F9E535A12B5</string>
+			<string>CED135C7-B958-4C68-8C47-956FBAA9086A</string>
 			<key>buttonlabel</key>
 			<string>Remove track from...</string>
 			<key>itemuid</key>
@@ -212,7 +212,7 @@
 			<key>actionuid</key>
 			<string>remote.alfred.runworkflow</string>
 			<key>buttoniconid</key>
-			<string>96DF3783-374F-42F9-9B8E-A0D74374CB6F</string>
+			<string>D427D63A-3C3A-420D-87D5-46185FE361E3</string>
 			<key>buttonlabel</key>
 			<string>Lookup Artist Online</string>
 			<key>itemuid</key>
@@ -232,7 +232,7 @@
 			<key>actionuid</key>
 			<string>remote.alfred.runworkflow</string>
 			<key>buttoniconid</key>
-			<string>53145A12-755D-4852-AF9A-9BDF71A5FDCC</string>
+			<string>83F461DC-A47F-4407-92C3-BF269BB49953</string>
 			<key>buttonlabel</key>
 			<string>Reset Settings</string>
 			<key>itemuid</key>

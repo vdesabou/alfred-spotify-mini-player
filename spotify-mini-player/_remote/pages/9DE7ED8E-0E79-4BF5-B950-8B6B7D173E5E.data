@@ -25,7 +25,7 @@
 			<key>actionuid</key>
 			<string>remote.alfred.runworkflow</string>
 			<key>buttoniconid</key>
-			<string>A6BBBE3F-E81C-4929-BD70-9525914FC2A9</string>
+			<string>0A68CDEA-F3B5-4CE4-83FB-E4AAE3B86ACC</string>
 			<key>buttonlabel</key>
 			<string>Show Workflow</string>
 			<key>itemuid</key>
@@ -42,7 +42,7 @@
 			<key>actionuid</key>
 			<string>remote.alfred.runworkflow</string>
 			<key>buttoniconid</key>
-			<string>E753D795-99FF-4CF5-8C88-A64FEE3E3F66</string>
+			<string>178DD46F-F3E2-4105-B579-2ED25639AF43</string>
 			<key>buttonlabel</key>
 			<string>Show Alfred Playlist</string>
 			<key>itemuid</key>
@@ -59,7 +59,7 @@
 			<key>actionuid</key>
 			<string>remote.alfred.runworkflow</string>
 			<key>buttoniconid</key>
-			<string>4FB5763A-202D-49C9-AF0F-27419DA12779</string>
+			<string>D51D9C70-68AF-4D63-ABD0-09906D9B1EC9</string>
 			<key>buttonlabel</key>
 			<string>Show Playlists</string>
 			<key>itemuid</key>
@@ -76,7 +76,7 @@
 			<key>actionuid</key>
 			<string>remote.alfred.runworkflow</string>
 			<key>buttoniconid</key>
-			<string>5CEB5713-5FC3-46B9-AB68-F87B593581BD</string>
+			<string>19E641F3-FE15-4058-9597-255FDDAA4F48</string>
 			<key>buttonlabel</key>
 			<string>Show Settings</string>
 			<key>itemuid</key>
@@ -94,7 +94,7 @@
 			<key>actionuid</key>
 			<string>remote.alfred.runworkflow</string>
 			<key>buttoniconid</key>
-			<string>1764ECB6-AF11-41AF-9C0F-49CC7E611C30</string>
+			<string>EA114C5E-A6A7-479E-BDB8-17E9C3163B53</string>
 			<key>buttonlabel</key>
 			<string>Show Current Track</string>
 			<key>itemuid</key>
@@ -111,7 +111,7 @@
 			<key>actionuid</key>
 			<string>remote.alfred.runworkflow</string>
 			<key>buttoniconid</key>
-			<string>4FAC7EFF-664C-4D38-BB7B-2CA4D0AE3BDA</string>
+			<string>9BBC3697-171F-4A04-95C6-E5B2BC55A6CF</string>
 			<key>buttonlabel</key>
 			<string>Show Charts</string>
 			<key>itemuid</key>
@@ -128,7 +128,7 @@
 			<key>actionuid</key>
 			<string>remote.alfred.runworkflow</string>
 			<key>buttoniconid</key>
-			<string>3B0DC843-BB4A-4C2D-8E42-607476AF6B2A</string>
+			<string>F14D664A-48D5-4232-A6CD-772F3361630B</string>
 			<key>buttonlabel</key>
 			<string>Show New Releases</string>
 			<key>itemuid</key>
@@ -145,7 +145,7 @@
 			<key>actionuid</key>
 			<string>remote.alfred.runworkflow</string>
 			<key>buttoniconid</key>
-			<string>DC215ECF-E917-4C59-BEDA-0C8E38A12B8F</string>
+			<string>5C18A3F0-C5CC-4B8D-B71E-B00B420CA2DC</string>
 			<key>buttonlabel</key>
 			<string>Key Up</string>
 			<key>itemuid</key>
@@ -162,7 +162,7 @@
 			<key>actionuid</key>
 			<string>remote.alfred.runworkflow</string>
 			<key>buttoniconid</key>
-			<string>26135AB5-D75B-4F83-A4E6-2EFE4D09924B</string>
+			<string>DF3FC215-4E94-472D-91B2-9D94A3B8632F</string>
 			<key>buttonlabel</key>
 			<string>Key Enter</string>
 			<key>itemuid</key>
@@ -180,7 +180,7 @@
 			<key>actionuid</key>
 			<string>remote.alfred.runworkflow</string>
 			<key>buttoniconid</key>
-			<string>03A082FF-DACC-41C8-A09F-4CFB6EB36340</string>
+			<string>569B0F42-A04A-40B7-9E86-EA1C61EF0AE5</string>
 			<key>buttonlabel</key>
 			<string>Show Play Queue</string>
 			<key>itemuid</key>
@@ -197,7 +197,7 @@
 			<key>actionuid</key>
 			<string>remote.alfred.runworkflow</string>
 			<key>buttoniconid</key>
-			<string>0E59C1A0-79EC-415F-B59E-6595C772ED5F</string>
+			<string>6D35BFAD-C96C-4BF8-B76B-5C4BB4313DF9</string>
 			<key>buttonlabel</key>
 			<string>Key Down</string>
 			<key>itemuid</key>
@@ -214,7 +214,7 @@
 			<key>actionuid</key>
 			<string>remote.alfred.runworkflow</string>
 			<key>buttoniconid</key>
-			<string>2548768E-8133-42CA-AA07-1660A046171D</string>
+			<string>89CD46BC-7C18-4D85-A23B-CF5F93273B1A</string>
 			<key>buttonlabel</key>
 			<string>Key Escape</string>
 			<key>itemuid</key>
@@ -232,7 +232,7 @@
 			<key>actionuid</key>
 			<string>remote.alfred.runworkflow</string>
 			<key>buttoniconid</key>
-			<string>F3FED383-4865-4B34-9304-7F10D76A529C</string>
+			<string>9045D879-6632-4113-9915-85534EBECBB1</string>
 			<key>buttonlabel</key>
 			<string>Show Search Online</string>
 			<key>itemuid</key>

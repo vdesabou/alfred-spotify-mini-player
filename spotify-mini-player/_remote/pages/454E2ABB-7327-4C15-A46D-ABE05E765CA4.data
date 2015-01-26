@@ -25,7 +25,7 @@
 			<key>actionuid</key>
 			<string>remote.alfred.runworkflow</string>
 			<key>buttoniconid</key>
-			<string>3FF8904A-E056-455A-84CE-59BBC40BB9E3</string>
+			<string>27BDEB50-2E71-474D-B329-30EBFB7BC663</string>
 			<key>buttonlabel</key>
 			<string>Play Artist</string>
 			<key>itemuid</key>
@@ -42,7 +42,7 @@
 			<key>actionuid</key>
 			<string>remote.alfred.runworkflow</string>
 			<key>buttoniconid</key>
-			<string>A5EEF3D3-C5DB-48CD-92D3-D98BE481E6FA</string>
+			<string>D191C6F2-CF3A-4F3A-AEDB-9D8B03EA7EC9</string>
 			<key>buttonlabel</key>
 			<string>Play Album</string>
 			<key>itemuid</key>
@@ -59,7 +59,7 @@
 			<key>actionuid</key>
 			<string>remote.alfred.runworkflow</string>
 			<key>buttoniconid</key>
-			<string>678EE20E-52CE-47CC-B4C3-3816E94365E3</string>
+			<string>48A69ED5-BBD6-46BE-911E-343562F6F343</string>
 			<key>buttonlabel</key>
 			<string>Play Alfred Playlist</string>
 			<key>itemuid</key>
@@ -76,7 +76,7 @@
 			<key>actionuid</key>
 			<string>remote.alfred.runworkflow</string>
 			<key>buttoniconid</key>
-			<string>45853900-D2E9-4CB0-8E67-6F6D7F3BDF86</string>
+			<string>577A4640-8D94-4813-9223-B355BE7FE1BD</string>
 			<key>buttonlabel</key>
 			<string>Activate Shuffle</string>
 			<key>itemuid</key>
@@ -95,7 +95,7 @@
 			<key>actionuid</key>
 			<string>remote.alfred.runworkflow</string>
 			<key>buttoniconid</key>
-			<string>13E9207C-2399-4251-B84F-0994FA935DFE</string>
+			<string>E8BE74B6-2928-4513-A0BC-B88EBF839ABD</string>
 			<key>buttonlabel</key>
 			<string>Mute/Unmute</string>
 			<key>itemuid</key>
@@ -112,7 +112,7 @@
 			<key>actionuid</key>
 			<string>remote.alfred.runworkflow</string>
 			<key>buttoniconid</key>
-			<string>051EC71E-50F5-4827-978B-71CDDA8B2F97</string>
+			<string>7B851F74-D949-400B-9149-D7FC73029031</string>
 			<key>buttonlabel</key>
 			<string>Random Track</string>
 			<key>itemuid</key>
@@ -131,7 +131,7 @@
 			<key>actionuid</key>
 			<string>remote.alfred.runworkflow</string>
 			<key>buttoniconid</key>
-			<string>0FCD767C-2D35-43FF-BDAD-F00627281204</string>
+			<string>5365AF85-EDB1-4789-9ABD-B272A8C96AA0</string>
 			<key>buttonlabel</key>
 			<string>Volume Down</string>
 			<key>itemuid</key>
@@ -148,7 +148,7 @@
 			<key>actionuid</key>
 			<string>remote.alfred.runworkflow</string>
 			<key>buttoniconid</key>
-			<string>CD70F093-696A-4C75-B8EF-602360904360</string>
+			<string>924A7250-A8D3-4944-BDEF-74B3DD32DC75</string>
 			<key>buttonlabel</key>
 			<string>Volume Up</string>
 			<key>itemuid</key>
@@ -165,7 +165,7 @@
 			<key>actionuid</key>
 			<string>remote.alfred.runworkflow</string>
 			<key>buttoniconid</key>
-			<string>3E214D4B-B746-4C34-BB0F-32978D35CCF6</string>
+			<string>4368A343-21A8-44C7-96F9-4870FA1C2EFB</string>
 			<key>buttonlabel</key>
 			<string>Previous Track</string>
 			<key>itemuid</key>
@@ -182,7 +182,7 @@
 			<key>actionuid</key>
 			<string>remote.alfred.runworkflow</string>
 			<key>buttoniconid</key>
-			<string>27DEE85E-3ABC-4F25-B0A0-A998FD95EE31</string>
+			<string>CC39269A-4977-48A1-8427-F9CFC2AE8EED</string>
 			<key>buttonlabel</key>
 			<string>Play</string>
 			<key>itemuid</key>
@@ -199,7 +199,7 @@
 			<key>actionuid</key>
 			<string>remote.alfred.runworkflow</string>
 			<key>buttoniconid</key>
-			<string>2ABBE794-9F58-42E2-831F-9D387CD336C6</string>
+			<string>AEC59638-4779-4470-9A6A-E32992498ED2</string>
 			<key>buttonlabel</key>
 			<string>Pause</string>
 			<key>itemuid</key>
@@ -216,7 +216,7 @@
 			<key>actionuid</key>
 			<string>remote.alfred.runworkflow</string>
 			<key>buttoniconid</key>
-			<string>43F007BB-3A55-4414-8BC5-E48659ED5360</string>
+			<string>749D3ABB-38FB-4EFB-9E3D-881C5AF5CAC9</string>
 			<key>buttonlabel</key>
 			<string>Next Track</string>
 			<key>itemuid</key>
