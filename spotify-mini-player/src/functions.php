@@ -1976,6 +1976,35 @@ function computeTime()
 }
 
 /**
+ * truncateStr function.
+ *
+ * @access public
+ * @param mixed $input
+ * @param mixed $length
+ * @return void
+ */
+function truncateStr($input, $length)
+{
+    // only truncate if input is actually longer than $length
+    if(strlen($input) > $length)
+    {
+        // check if there are any spaces at all and if the last one is within
+        // the given length if so truncate at space else truncate at length.
+        if(strrchr($input, " ") && strrchr($input, " ") < $length)
+        {
+            return substr( $input, 0, strrpos( substr( $input, 0, $length), ' ' ) )."…";
+        }
+        else
+        {
+            return substr( $input, 0, $length )."…";
+        }
+    }
+    else
+    {
+        return $input;
+    }
+}
+/**
  * getPlaylistsForTrack function.
  *
  * @access public
@@ -1998,13 +2027,13 @@ function getPlaylistsForTrack($db, $track_uri)
                 if ($playlist[0] == "") {
                     $playlistsfortrack = $playlistsfortrack . " ● ♫ : " . 'Your Music';
                 } else {
-                    $playlistsfortrack = $playlistsfortrack . " ● ♫ : " . $playlist[0];
+                    $playlistsfortrack = $playlistsfortrack . " ● ♫ : " . truncateStr($playlist[0],30);
                 }
             } else {
                 if ($playlist[0] == "") {
                     $playlistsfortrack = $playlistsfortrack . " ○ " . 'Your Music';
                 } else {
-                    $playlistsfortrack = $playlistsfortrack . " ○ " . $playlist[0];
+                    $playlistsfortrack = $playlistsfortrack . " ○ " . truncateStr($playlist[0],30);
                 }
             }
             $noresult = false;
