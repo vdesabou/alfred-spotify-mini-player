@@ -45,9 +45,6 @@ Please refer to the [WIKI](https://github.com/vdesabou/alfred-spotify-mini-playe
 * [Terminal-Notifier](https://github.com/alloy/terminal-notifier)
 * [Spotifious workflow](https://github.com/citelao/Spotify-for-Alfred)
 
- ## License
- 
- MIT license.
 
 ## Download the workflow on Packal
 
