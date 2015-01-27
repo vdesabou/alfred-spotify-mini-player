@@ -1,8 +1,10 @@
-Find all information here:-
 
-[alfred-spotify-mini-player.com site](http://alfred-spotify-mini-player.com)
+# alfred-spotify-mini-player.com
+
+Find all information here [alfred-spotify-mini-player.com](http://alfred-spotify-mini-player.com)
 
 
+# Example:
 
 ![Screenshot](http://alfred-spotify-mini-player.com/images/index1.gif)
 
