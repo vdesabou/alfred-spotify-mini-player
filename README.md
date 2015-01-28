@@ -1,8 +1,13 @@
 
 # alfred-spotify-mini-player.com
 
-Find all information here [alfred-spotify-mini-player.com](http://alfred-spotify-mini-player.com)
+# Download
 
+Find all information and download the workflow [here](http://alfred-spotify-mini-player.com)
+
+# Setup
+
+Follow steps [here](http://alfred-spotify-mini-player.com/setup)
 
 # Features
 
