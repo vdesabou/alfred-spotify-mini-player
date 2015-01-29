@@ -320,15 +320,18 @@ function updateCurrentTrackIndexFromPlayQueue($w) {
 	    $found = false;
         $i = 0;
         $current_track_name = cleanupTrackName($results[0]);
-		foreach ($playqueue->tracks as $track) {
-            $track_name = cleanupTrackName($track->name);
-			if(escapeQuery($track_name) == escapeQuery($current_track_name) &&
-               escapeQuery($track->artists[0]->name) == escapeQuery($results[1])) {
-				$found = true;
-                break;
-			}
-            $i++;
-	    }
+        if(count($playqueue->tracks) > 0) {
+            foreach ($playqueue->tracks as $track) {
+                $track_name = cleanupTrackName($track->name);
+                if(escapeQuery($track_name) == escapeQuery($current_track_name) &&
+                   escapeQuery($track->artists[0]->name) == escapeQuery($results[1])) {
+                    $found = true;
+                    break;
+                }
+                $i++;
+            }
+        }
+
 	    if($found == false) {
             // empty queue
 			$newplayqueue = array(
@@ -2920,6 +2923,23 @@ function updateLibrary($w)
         return false;
     }
 
+    // DB artowrks
+    if ($fetch_artworks_existed == false) {
+        try {
+            $dbartworks->exec("create table artists (artist_name text PRIMARY KEY NOT NULL, already_fetched boolean)");
+            $dbartworks->exec("create table tracks (track_uri text PRIMARY KEY NOT NULL, already_fetched boolean)");
+            $dbartworks->exec("create table albums (album_uri text PRIMARY KEY NOT NULL, already_fetched boolean)");
+        }
+        catch (PDOException $e) {
+            logMsg("Error(updateLibrary): (exception " . print_r($e) . ")");
+            handleDbIssuePdoEcho($dbartworks, $w);
+            $dbartworks = null;
+            $db         = null;
+
+            return false;
+        }
+    }
+
     // get the total number of tracks
     $nb_tracktotal     = 0;
     $nb_skipped        = 0;
@@ -3005,23 +3025,6 @@ function updateLibrary($w)
         $db         = null;
 
         return false;
-    }
-
-    // DB artowrks
-    if ($fetch_artworks_existed == false) {
-        try {
-            $dbartworks->exec("create table artists (artist_name text PRIMARY KEY NOT NULL, already_fetched boolean)");
-            $dbartworks->exec("create table tracks (track_uri text PRIMARY KEY NOT NULL, already_fetched boolean)");
-            $dbartworks->exec("create table albums (album_uri text PRIMARY KEY NOT NULL, already_fetched boolean)");
-        }
-        catch (PDOException $e) {
-            logMsg("Error(updateLibrary): (exception " . print_r($e) . ")");
-            handleDbIssuePdoEcho($dbartworks, $w);
-            $dbartworks = null;
-            $db         = null;
-
-            return false;
-        }
     }
 
     try {
@@ -3539,10 +3542,7 @@ function refreshLibrary($w)
         return false;
     }
     $artworksToDownload = false;
-
-    if (file_exists($w->data() . '/library.db')) {
-        rename($w->data() . '/library.db', $w->data() . '/library_old.db');
-    }
+    rename($w->data() . '/library.db', $w->data() . '/library_old.db');
     copy($w->data() . '/library_old.db', $w->data() . '/library_new.db');
     $dbfile = $w->data() . '/library_new.db';
 
