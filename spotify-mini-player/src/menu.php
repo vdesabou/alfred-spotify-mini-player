@@ -83,7 +83,7 @@ function oAuthChecks($w, $query, $settings, $db, $update_in_progress)
             )), "Application Client ID will be set to <" . rtrim(ltrim($query)) . ">", "Type enter to validate the Application Client ID", './images/settings.png', 'yes', null, '');
         }
         echo $w->toxml();
-        return;
+        exit;
     }
 
     if ($oauth_client_secret == '' && substr_count($query, '▹') == 0) {
@@ -132,7 +132,7 @@ function oAuthChecks($w, $query, $settings, $db, $update_in_progress)
             )), "Application Client Secret will be set to <" . rtrim(ltrim($query)) . ">", "Type enter to validate the Application Client Secret", './images/settings.png', 'yes', null, '');
         }
         echo $w->toxml();
-        return;
+        exit;
     }
 
     if ($oauth_access_token == '' && substr_count($query, '▹') == 0) {
@@ -162,7 +162,7 @@ function oAuthChecks($w, $query, $settings, $db, $update_in_progress)
             'ctrl' => 'Not Available'
         ), './images/settings.png', 'yes', null, '');
         echo $w->toxml();
-        return;
+        exit;
     }
 }
 
