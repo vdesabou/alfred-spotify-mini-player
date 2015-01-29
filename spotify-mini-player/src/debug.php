@@ -35,6 +35,19 @@ if (!file_exists($w->data() . "/library.db")) {
     copy($w->data() . "/library.db", $w->home() . "/Downloads/spot_mini_debug/library.db");
 }
 
+if (file_exists($w->data() . "/library_new.db")) {
+    $output = $output . "The file " . $w->data() . "/library_new.db is not present\n";
+} else {
+    copy($w->data() . "/library_new.db", $w->home() . "/Downloads/spot_mini_debug/library_new.db");
+}
+
+if (file_exists($w->data() . "/library_old.db")) {
+    $output = $output . "The file " . $w->data() . "/library_old.db is not present\n";
+} else {
+    copy($w->data() . "/library_old.db", $w->home() . "/Downloads/spot_mini_debug/library_old.db");
+}
+
+
 if (!file_exists($w->data() . "/history.json")) {
     $output = $output . "The file " . $w->data() . "/history.json is not present\n";
 } else {
