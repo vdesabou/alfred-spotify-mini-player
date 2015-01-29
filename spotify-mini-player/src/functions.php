@@ -2982,7 +2982,6 @@ function updateLibrary($w)
                     }
                     $nb_retry++;
                     sleep(5);
-                    sleep(5);
                 } else {
                      handleSpotifyWebAPIException($w, $e);
                      $retry = false;
