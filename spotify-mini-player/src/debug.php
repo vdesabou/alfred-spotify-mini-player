@@ -29,6 +29,12 @@ if (!file_exists($w->data() . "/settings.json")) {
 
 copy_directory($w->cache(), $w->home() . "/Downloads/spot_mini_debug/cache");
 
+if (!file_exists($w->data() . "/fetch_artworks.db")) {
+    $output = $output . "The file " . $w->data() . "/fetch_artworks.db is not present\n";
+} else {
+    copy($w->data() . "/fetch_artworks.db", $w->home() . "/Downloads/spot_mini_debug/fetch_artworks.db");
+}
+
 if (!file_exists($w->data() . "/library.db")) {
     $output = $output . "The file " . $w->data() . "/library.db is not present\n";
 } else {
