@@ -3442,6 +3442,11 @@ function updateLibrary($w)
  */
 function refreshLibrary($w)
 {
+    if (!file_exists($w->data() . '/library.db')) {
+        displayNotificationWithArtwork("Refresh library called while library does not exist", './images/warning.png');
+        return;
+    }
+
     touch($w->data() . "/update_library_in_progress");
     $w->write('InitRefreshLibrary▹' . 0 . '▹' . 0 . '▹' . time() . '▹' . 'starting', 'update_library_in_progress');
 
