@@ -221,7 +221,7 @@ class Workflows
                     endif;
                 elseif ($key == 'subtitle'):
                     if (gettype($b[$key]) == 'array'):
-                        $subtitle_types = ['shift', 'fn', 'ctrl', 'alt', 'cmd'];
+                        $subtitle_types = array('shift', 'fn', 'ctrl', 'alt', 'cmd');
                         $subtitles = $b[$key];
                         $subtitle_keys = array_keys($subtitles);
 
@@ -235,7 +235,7 @@ class Workflows
                         $c->$key = $b[$key];
                     endif;
                 elseif ($key == 'text' && gettype($b[$key]) == 'array'):
-                    $text_types = ['copy', 'largetype'];
+                    $text_types = array('copy', 'largetype');
                     $texts = $b[$key];
                     $text_keys = array_keys($texts);
 
