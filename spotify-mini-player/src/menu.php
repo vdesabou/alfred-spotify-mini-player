@@ -1082,7 +1082,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
             '' /* album_artwork_path */ ,
             '' /* playlist_name */ ,
             '' /* playlist_artwork_path */
-        )), 'Mute/Unmute System Volume', 'Mute/Unmute Volume', './images/mute.png', 'yes', '');
+        )), 'Mute/Unmute Spotify Volume', 'Mute/Unmute Volume', './images/mute.png', 'yes', '');
 
         $w->result('SpotifyMiniPlayer_' . 'volume_down', serialize(array(
             '' /*track_uri*/ ,
@@ -1101,7 +1101,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
             '' /* album_artwork_path */ ,
             '' /* playlist_name */ ,
             '' /* playlist_artwork_path */
-        )), 'Volume Down', 'Decrease System Volume', './images/volume_down.png', 'yes', '');
+        )), 'Volume Down', 'Decrease Spotify Volume', './images/volume_down.png', 'yes', '');
 
         $w->result('SpotifyMiniPlayer_' . 'volume_up', serialize(array(
             '' /*track_uri*/ ,
@@ -1120,7 +1120,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
             '' /* album_artwork_path */ ,
             '' /* playlist_name */ ,
             '' /* playlist_artwork_path */
-        )), 'Volume Up', 'Increase System Volume', './images/volume_up.png', 'yes', '');
+        )), 'Volume Up', 'Increase Spotify Volume', './images/volume_up.png', 'yes', '');
     } else {
         //
         // Search commands for fast access
@@ -1608,7 +1608,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 '' /* album_artwork_path */ ,
                 '' /* playlist_name */ ,
                 '' /* playlist_artwork_path */
-            )), 'Mute/Unmute System Volume', 'Mute/Unmute Volume', './images/mute.png', 'yes', '');
+            )), 'Mute/Unmute Spotify Volume', 'Mute/Unmute Volume', './images/mute.png', 'yes', '');
         }
         if (strpos(strtolower('volume_down'), strtolower($query)) !== false) {
             $w->result(null, serialize(array(
@@ -1628,7 +1628,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 '' /* album_artwork_path */ ,
                 '' /* playlist_name */ ,
                 '' /* playlist_artwork_path */
-            )), 'Volume Down', 'Decrease System Volume', './images/volume_down.png', 'yes', '');
+            )), 'Volume Down', 'Decrease Spotify Volume', './images/volume_down.png', 'yes', '');
         }
         if (strpos(strtolower('volume_up'), strtolower($query)) !== false) {
             $w->result(null, serialize(array(
@@ -1648,7 +1648,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 '' /* album_artwork_path */ ,
                 '' /* playlist_name */ ,
                 '' /* playlist_artwork_path */
-            )), 'Volume Up', 'Increase System Volume', './images/volume_up.png', 'yes', '');
+            )), 'Volume Up', 'Increase Spotify Volume', './images/volume_up.png', 'yes', '');
         }
     }
 }

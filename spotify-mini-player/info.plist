@@ -1836,7 +1836,7 @@
 				<key>subtext</key>
 				<string>Mute/Unmute Volume</string>
 				<key>text</key>
-				<string>Mute/Unmute System Volume</string>
+				<string>Mute/Unmute Spotify Volume</string>
 				<key>withspace</key>
 				<false/>
 			</dict>
@@ -1937,7 +1937,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>keyword</key>
 				<string>volume_up</string>
 				<key>subtext</key>
-				<string>Increase System Volume</string>
+				<string>Increase Spotify Volume</string>
 				<key>text</key>
 				<string>Volume Up</string>
 				<key>withspace</key>
@@ -2001,7 +2001,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>keyword</key>
 				<string>volume_down</string>
 				<key>subtext</key>
-				<string>Decrease System Volume</string>
+				<string>Decrease Spotify Volume</string>
 				<key>text</key>
 				<string>Volume Down</string>
 				<key>withspace</key>

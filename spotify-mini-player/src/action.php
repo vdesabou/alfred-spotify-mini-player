@@ -790,21 +790,31 @@ if ($type == "TRACK" && $other_settings == "" &&
         addAlbumToPlayQueue($w, $album_uri, $album_name);
         return;
     } else if ($other_action == "volume_up") {
-        exec("osascript -e 'set volume output volume (output volume of (get volume settings) + 6)'");
-        displayNotificationWithArtwork("Volume has been increased", './images/volume_up.png', 'Volume Up');
+        exec("osascript -e 'tell application \"Spotify\"
+                if it is running then
+                    set sound volume to (sound volume * 1.1)
+                end if
+            end tell'");
+        displayNotificationWithArtwork("Spotify volume has been increased", './images/volume_up.png', 'Volume Up');
         return;
     } else if ($other_action == "volume_down") {
-        exec("osascript -e 'set volume output volume (output volume of (get volume settings) - 6)'");
-        displayNotificationWithArtwork("Volume has been decreased", './images/volume_down.png', 'Volume Down');
+        exec("osascript -e 'tell application \"Spotify\"
+                if it is running then
+                    set sound volume to (sound volume * 0.9)
+                end if
+            end tell'");
+        displayNotificationWithArtwork("Spotify volume has been decreased", './images/volume_down.png', 'Volume Down');
         return;
     } else if ($other_action == "mute") {
-        $command_output = exec("osascript -e 'if output muted of (get volume settings) is equal to true then
-				set volume without output muted
-				return \"Volume is unmuted.\"
-			else
-				set volume with output muted
-				return \"Volume is muted.\"
-			end if'");
+        $command_output = exec("osascript -e 'tell application \"Spotify\"
+                if sound volume is less than or equal to 0 then
+                    set sound volume to 100
+                    return \"Spotify volume is unmuted.\"
+                else
+                    set sound volume to 0
+                    return \"Spotify volume is muted.\"
+                end if
+            end tell'");
         displayNotificationWithArtwork($command_output, './images/mute.png', 'Mute');
         return;
     } else if ($other_action == "shuffle") {
