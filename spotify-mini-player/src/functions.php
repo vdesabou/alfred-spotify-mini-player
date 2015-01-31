@@ -2892,22 +2892,20 @@ function updateLibrary($w)
     }
 
     // db for fetch artworks
-    $fetch_artworks_existed = true;
-    $dbfile                 = $w->data() . '/fetch_artworks.db';
-    if (!file_exists($dbfile)) {
-        touch($dbfile);
-        $fetch_artworks_existed = false;
-    }
     // kill previous process if running
     $pid = exec("ps -efx | grep \"php\" | egrep \"DOWNLOAD_ARTWORKS\" | grep -v grep | awk '{print $2}'");
     if ($pid != "") {
         logMsg("KILL Download daemon <$pid>");
         $ret = exec("kill -9 \"$pid\"");
     }
+    $dbfile                 = $w->data() . '/fetch_artworks.db';
+    if (file_exists($dbfile)) {
+        unlink($dbfile);
+        touch($dbfile);
+    }
     if (file_exists($w->data() . '/download_artworks_in_progress')) {
         unlink($w->data() . "/download_artworks_in_progress");
     }
-
     try {
         $dbartworks = new PDO("sqlite:$dbfile", "", "", array(
             PDO::ATTR_PERSISTENT => true
@@ -2924,20 +2922,18 @@ function updateLibrary($w)
     }
 
     // DB artowrks
-    if ($fetch_artworks_existed == false) {
-        try {
-            $dbartworks->exec("create table artists (artist_name text PRIMARY KEY NOT NULL, already_fetched boolean)");
-            $dbartworks->exec("create table tracks (track_uri text PRIMARY KEY NOT NULL, already_fetched boolean)");
-            $dbartworks->exec("create table albums (album_uri text PRIMARY KEY NOT NULL, already_fetched boolean)");
-        }
-        catch (PDOException $e) {
-            logMsg("Error(updateLibrary): (exception " . print_r($e) . ")");
-            handleDbIssuePdoEcho($dbartworks, $w);
-            $dbartworks = null;
-            $db         = null;
+    try {
+        $dbartworks->exec("create table artists (artist_name text PRIMARY KEY NOT NULL, already_fetched boolean)");
+        $dbartworks->exec("create table tracks (track_uri text PRIMARY KEY NOT NULL, already_fetched boolean)");
+        $dbartworks->exec("create table albums (album_uri text PRIMARY KEY NOT NULL, already_fetched boolean)");
+    }
+    catch (PDOException $e) {
+        logMsg("Error(updateLibrary): (exception " . print_r($e) . ")");
+        handleDbIssuePdoEcho($dbartworks, $w);
+        $dbartworks = null;
+        $db         = null;
 
-            return false;
-        }
+        return false;
     }
 
     // get the total number of tracks
