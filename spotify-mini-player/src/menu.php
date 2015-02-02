@@ -35,7 +35,6 @@ function oAuthChecks($w, $query, $settings, $db, $update_in_progress)
     $userid                    = $settings->userid;
     $echonest_api_key          = $settings->echonest_api_key;
 
-
     ////
     // OAUTH checks
     // Check oauth config : Client ID and Client Secret
@@ -60,6 +59,25 @@ function oAuthChecks($w, $query, $settings, $db, $update_in_progress)
                 '' /* playlist_name */ ,
                 '' /* playlist_artwork_path */
             )), 'Open Spotify Application page to get required information', "This will open the Application page with your default browser", './images/spotify.png', 'yes', null, '');
+            $w->result(null, serialize(array(
+                '' /*track_uri*/ ,
+                '' /* album_uri */ ,
+                '' /* artist_uri */ ,
+                '' /* playlist_uri */ ,
+                '' /* spotify_command */ ,
+                '' /* query */ ,
+                'Open▹' . 'http://alfred-spotify-mini-player.com/setup/' /* other_settings*/ ,
+                '' /* other_action */ ,
+                '' /* artist_name */ ,
+                '' /* track_name */ ,
+                '' /* album_name */ ,
+                '' /* track_artwork_path */ ,
+                '' /* artist_artwork_path */ ,
+                '' /* album_artwork_path */ ,
+                '' /* playlist_name */ ,
+                '' /* playlist_artwork_path */
+            )), 'Go to the website alfred-spotify-mini-player.com to see setup tutorial', "This will open the Application page with your default browser", './images/website.png', 'yes', null, '');
+
         } elseif (mb_strlen($query) != 32) {
             $w->result(null, '', 'The Application Client ID does not seem valid!', 'The length is not 32. Make sure to copy the Client ID from https://developer.spotify.com/my-applications', './images/warning.png', 'no', null, '');
         } else {
@@ -107,6 +125,24 @@ function oAuthChecks($w, $query, $settings, $db, $update_in_progress)
                 '' /* playlist_name */ ,
                 '' /* playlist_artwork_path */
             )), 'Open Spotify Application page to get required information', "This will open the Application page with your default browser", './images/spotify.png', 'yes', null, '');
+            $w->result(null, serialize(array(
+                '' /*track_uri*/ ,
+                '' /* album_uri */ ,
+                '' /* artist_uri */ ,
+                '' /* playlist_uri */ ,
+                '' /* spotify_command */ ,
+                '' /* query */ ,
+                'Open▹' . 'http://alfred-spotify-mini-player.com/setup/' /* other_settings*/ ,
+                '' /* other_action */ ,
+                '' /* artist_name */ ,
+                '' /* track_name */ ,
+                '' /* album_name */ ,
+                '' /* track_artwork_path */ ,
+                '' /* artist_artwork_path */ ,
+                '' /* album_artwork_path */ ,
+                '' /* playlist_name */ ,
+                '' /* playlist_artwork_path */
+            )), 'Go to the website alfred-spotify-mini-player.com to see setup tutorial', "This will open the Application page with your default browser", './images/website.png', 'yes', null, '');
         } elseif (mb_strlen($query) != 32) {
             $w->result(null, '', 'The Application Client Secret does not seem valid!', 'The length is not 32. Make sure to copy the Client Secret from https://developer.spotify.com/my-applications', './images/warning.png', 'no', null, '');
         } elseif ($query == $oauth_client_id) {
@@ -161,6 +197,24 @@ function oAuthChecks($w, $query, $settings, $db, $update_in_progress)
             'fn' => 'Not Available',
             'ctrl' => 'Not Available'
         ), './images/settings.png', 'yes', null, '');
+        $w->result(null, serialize(array(
+            '' /*track_uri*/ ,
+            '' /* album_uri */ ,
+            '' /* artist_uri */ ,
+            '' /* playlist_uri */ ,
+            '' /* spotify_command */ ,
+            '' /* query */ ,
+            'Open▹' . 'http://alfred-spotify-mini-player.com/setup/' /* other_settings*/ ,
+            '' /* other_action */ ,
+            '' /* artist_name */ ,
+            '' /* track_name */ ,
+            '' /* album_name */ ,
+            '' /* track_artwork_path */ ,
+            '' /* artist_artwork_path */ ,
+            '' /* album_artwork_path */ ,
+            '' /* playlist_name */ ,
+            '' /* playlist_artwork_path */
+        )), 'Go to the website alfred-spotify-mini-player.com to see setup tutorial', "This will open the Application page with your default browser", './images/website.png', 'yes', null, '');
         echo $w->toxml();
         exit;
     }

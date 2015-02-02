@@ -37,6 +37,15 @@ $alfred_playlist_uri       = $settings->alfred_playlist_uri;
 $alfred_playlist_name      = $settings->alfred_playlist_name;
 $country_code              = $settings->country_code;
 $userid                    = $settings->userid;
+$oauth_client_id           = $settings->oauth_client_id;
+$oauth_client_secret       = $settings->oauth_client_secret;
+$oauth_redirect_uri        = $settings->oauth_redirect_uri;
+$oauth_access_token        = $settings->oauth_access_token;
+
+if (($other_settings != "Oauth_Client_ID▹" || $other_settings != "Oauth_Client_SECRET▹" || $other_action != "Oauth_Login") && ($oauth_client_id == '' || $oauth_client_secret == '' || $oauth_access_token == '')) {
+    exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini \"'");
+    return;
+}
 
 if($userid != 'vdesabou' && $other_action != "current") {
 	stathat_ez_count('AlfredSpotifyMiniPlayer', 'workflow used', 1);
