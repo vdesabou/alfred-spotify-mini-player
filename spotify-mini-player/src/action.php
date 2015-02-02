@@ -42,10 +42,18 @@ $oauth_client_secret       = $settings->oauth_client_secret;
 $oauth_redirect_uri        = $settings->oauth_redirect_uri;
 $oauth_access_token        = $settings->oauth_access_token;
 
-if (($other_settings != "Oauth_Client_ID▹" || $other_settings != "Oauth_Client_SECRET▹" || $other_action != "Oauth_Login") && ($oauth_client_id == '' || $oauth_client_secret == '' || $oauth_access_token == '')) {
-    exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini \"'");
-    return;
+if($oauth_client_id == '' || $oauth_client_secret == '' || $oauth_access_token == '') {
+    if ($other_settings != '' && (startsWith($other_settings, 'Oauth_Client') === false && startsWith($other_settings, 'Open') === false)) {
+        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini \"'");
+        return;
+    }
+
+    if($other_action != '' && $other_action != 'Oauth_Login') {
+        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini \"'");
+        return;
+    }
 }
+
 
 if($userid != 'vdesabou' && $other_action != "current") {
 	stathat_ez_count('AlfredSpotifyMiniPlayer', 'workflow used', 1);
