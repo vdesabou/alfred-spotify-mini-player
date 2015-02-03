@@ -2969,7 +2969,7 @@ function updateLibrary($w)
                 logMsg("Error(getUserPlaylists): retry " . $nb_retry . " (exception " . print_r($e) . ")");
 
                 if($e->getCode() == 429 || $e->getCode() == 404 || $e->getCode() == 500
-                    || $e->getCode() == 502 || $e->getCode() == 503) {
+                    || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 0) {
                     // retry
                     if($nb_retry > 5) {
                          handleSpotifyWebAPIException($w, $e);
@@ -3015,7 +3015,7 @@ function updateLibrary($w)
                 logMsg("Error(getMySavedTracks): retry " . $nb_retry . " (exception " . print_r($e) . ")");
 
                 if($e->getCode() == 429 || $e->getCode() == 404 || $e->getCode() == 500
-                    || $e->getCode() == 502 || $e->getCode() == 503) {
+                    || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 0) {
                     // retry
                     if($nb_retry > 5) {
                          handleSpotifyWebAPIException($w, $e);
@@ -3137,7 +3137,7 @@ function updateLibrary($w)
                     logMsg("Error(getUserPlaylists): retry " . $nb_retry . " (exception " . print_r($e) . ")");
 
                     if($e->getCode() == 429 || $e->getCode() == 404 || $e->getCode() == 500
-                        || $e->getCode() == 502 || $e->getCode() == 503) {
+                        || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 0) {
                         // retry
                         if($nb_retry > 5) {
                              handleSpotifyWebAPIException($w, $e);
@@ -3672,7 +3672,7 @@ function refreshLibrary($w)
                 logMsg("Error(getUserPlaylists): retry " . $nb_retry . " (exception " . print_r($e) . ")");
 
                 if($e->getCode() == 429 || $e->getCode() == 404 || $e->getCode() == 500
-                    || $e->getCode() == 502 || $e->getCode() == 503) {
+                    || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 0) {
                     // retry
                     if($nb_retry > 5) {
                          handleSpotifyWebAPIException($w, $e);
@@ -3767,7 +3767,7 @@ function refreshLibrary($w)
                         logMsg("Error(getUserPlaylistTracks): retry " . $nb_retry . " (exception " . print_r($e) . ")");
 
                         if($e->getCode() == 429 || $e->getCode() == 404 || $e->getCode() == 500
-                            || $e->getCode() == 502 || $e->getCode() == 503) {
+                            || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 0) {
                             // retry
                             if($nb_retry > 5) {
                                  handleSpotifyWebAPIException($w, $e);
@@ -3983,7 +3983,7 @@ function refreshLibrary($w)
                             logMsg("Error(getUserPlaylistTracks): retry " . $nb_retry . " (exception " . print_r($e) . ")");
 
                             if($e->getCode() == 429 || $e->getCode() == 404 || $e->getCode() == 500
-                                || $e->getCode() == 502 || $e->getCode() == 503) {
+                                || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 0) {
                                 // retry
                                 if($nb_retry > 5) {
                                      handleSpotifyWebAPIException($w, $e);
@@ -4197,7 +4197,7 @@ function refreshLibrary($w)
             logMsg("Error(getMySavedTracks): retry " . $nb_retry . " (exception " . print_r($e) . ")");
 
             if($e->getCode() == 429 || $e->getCode() == 404 || $e->getCode() == 500
-                || $e->getCode() == 502 || $e->getCode() == 503) {
+                || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 0) {
                 // retry
                 if($nb_retry > 5) {
                      handleSpotifyWebAPIException($w, $e);
@@ -4268,7 +4268,7 @@ function refreshLibrary($w)
                     logMsg("Error(getMySavedTracks): retry " . $nb_retry . " (exception " . print_r($e) . ")");
 
                     if($e->getCode() == 429 || $e->getCode() == 404 || $e->getCode() == 500
-                        || $e->getCode() == 502 || $e->getCode() == 503) {
+                        || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 0) {
                         // retry
                         if($nb_retry > 5) {
                              handleSpotifyWebAPIException($w, $e);
