@@ -741,7 +741,11 @@ if ($type == "TRACK" && $other_settings == "" &&
         return;
     } else if ($other_action == "reset_settings") {
         if (file_exists($w->data() . '/settings.json')) {
-            unlink($w->data() . '/settings.json');
+            $ret = unlink($w->data() . '/settings.json');
+            if($ret == false) {
+                displayNotificationWithArtwork("Error when deleting settings file", './images/warning.png', 'Error!');
+                return;
+            }
             $settings = getSettings($w);
         } else {
             displayNotificationWithArtwork("Settings file does not exist ", './images/warning.png', 'Error!');
