@@ -950,13 +950,11 @@ function addTracksToPlaylist($w, $tracks, $playlist_uri, $playlist_name, $allow_
     $tracks_with_no_dup = array();
     if (!$allow_duplicate) {
         $playlist_tracks = getThePlaylistTracks($w, $playlist_uri);
-
         foreach ((array) $tracks as $track) {
             if (!checkIfDuplicate($playlist_tracks, $track)) {
                 $tracks_with_no_dup[] = $track;
             }
         }
-
         $tracks = $tracks_with_no_dup;
     }
 
@@ -1540,6 +1538,13 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name)
 function getThePlaylistTracks($w, $playlist_uri)
 {
     $tracks = array();
+    //
+    // Read settings from JSON
+    //
+
+    $settings = getSettings($w);
+
+    $country_code = $settings->country_code;
     try {
         $api                         = getSpotifyWebAPI($w);
         $tmp                         = explode(':', $playlist_uri);
@@ -1551,15 +1556,18 @@ function getThePlaylistTracks($w, $playlist_uri)
             $userPlaylistTracks = $api->getUserPlaylistTracks(urlencode($tmp[2]), $tmp[4], array(
                 'fields' => array(
                     'total',
-                    'items.track(id)'
+                    'items.track(id,is_playable)'
                 ),
                 'limit' => $limitGetUserPlaylistTracks,
-                'offset' => $offsetGetUserPlaylistTracks
+                'offset' => $offsetGetUserPlaylistTracks,
+                'market' => $country_code
             ));
 
             foreach ($userPlaylistTracks->items as $item) {
                 $track    = $item->track;
-                $tracks[] = $track->id;
+                if($track->is_playable) {
+                    $tracks[] = $track->id;
+                }
             }
 
             $offsetGetUserPlaylistTracks += $limitGetUserPlaylistTracks;
@@ -1568,10 +1576,8 @@ function getThePlaylistTracks($w, $playlist_uri)
     catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
         logMsg("Error(getThePlaylistTracks): playlist uri " . $playlist_uri . " (exception " . print_r($e) . ")");
         handleSpotifyWebAPIException($w, $e);
-
         return false;
     }
-
     return array_filter($tracks);
 }
 
@@ -1704,6 +1710,13 @@ function getTheArtistAlbums($w, $artist_uri, $country_code)
 function getTheAlbumFullTracks($w, $album_uri, $actionMode = false)
 {
     $tracks = array();
+    //
+    // Read settings from JSON
+    //
+
+    $settings = getSettings($w);
+
+    $country_code = $settings->country_code;
 
     try {
         $api                  = getSpotifyWebAPI($w);
@@ -1715,7 +1728,8 @@ function getTheAlbumFullTracks($w, $album_uri, $actionMode = false)
             $api         = getSpotifyWebAPI($w, $api);
             $albumTracks = $api->getAlbumTracks($tmp[2], array(
                 'limit' => $limitGetAlbumTracks,
-                'offset' => $offsetGetAlbumTracks
+                'offset' => $offsetGetAlbumTracks,
+                'market' => $country_code
             ));
 
             foreach ($albumTracks->items as $track) {
@@ -1764,7 +1778,7 @@ function getThePlaylistFullTracks($w, $playlist_uri)
                         'fields' => array(
                             'total',
                             'items(added_at)',
-                            'items.track(available_markets,duration_ms,uri,popularity,name)',
+                            'items.track(is_playable,duration_ms,uri,popularity,name)',
                             'items.track.album(album_type,images,uri,name)',
                             'items.track.artists(name,uri)'
                         ),
@@ -3007,7 +3021,8 @@ function updateLibrary($w)
                 $api               = getSpotifyWebAPI($w, $api);
                 $userMySavedTracks = $api->getMySavedTracks(array(
                     'limit' => $limitGetMySavedTracks,
-                    'offset' => $offsetGetMySavedTracks
+                    'offset' => $offsetGetMySavedTracks,
+                    'market' => $country_code
                 ));
                 $retry = false;
             }
@@ -3124,12 +3139,13 @@ function updateLibrary($w)
                         'fields' => array(
                             'total',
                             'items(added_at)',
-                            'items.track(available_markets,duration_ms,uri,popularity,name)',
+                            'items.track(is_playable,duration_ms,uri,popularity,name)',
                             'items.track.album(album_type,images,uri,name)',
                             'items.track.artists(name,uri)'
                         ),
                         'limit' => $limitGetUserPlaylistTracks,
-                        'offset' => $offsetGetUserPlaylistTracks
+                        'offset' => $offsetGetUserPlaylistTracks,
+                        'market' => $country_code
                     ));
                     $retry = false;
                 }
@@ -3190,14 +3206,11 @@ function updateLibrary($w)
                     }
                 }
 
-                if (count($track->available_markets) == 0) {
-                    $playable = 1;
-                } elseif (in_array($country_code, $track->available_markets) !== false) {
+                if($track->is_playable) {
                     $playable = 1;
                 } else {
                     $playable = 0;
                 }
-
                 try {
                     //
                     // Download artworks in Fetch later mode
@@ -3336,9 +3349,7 @@ function updateLibrary($w)
             }
         }
 
-        if (count($track->available_markets) == 0) {
-            $playable = 1;
-        } elseif (in_array($country_code, $track->available_markets) !== false) {
+        if($track->is_playable) {
             $playable = 1;
         } else {
             $playable = 0;
@@ -3754,12 +3765,13 @@ function refreshLibrary($w)
                             'fields' => array(
                                 'total',
                                 'items(added_at)',
-                                'items.track(available_markets,duration_ms,uri,popularity,name)',
+                                'items.track(is_playable,duration_ms,uri,popularity,name)',
                                 'items.track.album(album_type,images,uri,name)',
                                 'items.track.artists(name,uri)'
                             ),
                             'limit' => $limitGetUserPlaylistTracks,
-                            'offset' => $offsetGetUserPlaylistTracks
+                            'offset' => $offsetGetUserPlaylistTracks,
+                            'market' => $country_code
                         ));
                         $retry = false;
                     }
@@ -3816,10 +3828,7 @@ function refreshLibrary($w)
                             }
                         }
                     }
-
-                    if (count($track->available_markets) == 0) {
-                        $playable = 1;
-                    } elseif (in_array($country_code, $track->available_markets) !== false) {
+                    if($track->is_playable) {
                         $playable = 1;
                     } else {
                         $playable = 0;
@@ -3970,12 +3979,13 @@ function refreshLibrary($w)
                                 'fields' => array(
                                     'total',
                                     'items(added_at)',
-                                    'items.track(available_markets,duration_ms,uri,popularity,name)',
+                                    'items.track(is_playable,duration_ms,uri,popularity,name)',
                                     'items.track.album(album_type,images,uri,name)',
                                     'items.track.artists(name,uri)'
                                 ),
                                 'limit' => $limitGetUserPlaylistTracks,
-                                'offset' => $offsetGetUserPlaylistTracks
+                                'offset' => $offsetGetUserPlaylistTracks,
+                                'market' => $country_code
                             ));
                             $retry = false;
                         }
@@ -4034,9 +4044,7 @@ function refreshLibrary($w)
                             }
                         }
 
-                        if (count($track->available_markets) == 0) {
-                            $playable = 1;
-                        } elseif (in_array($country_code, $track->available_markets) !== false) {
+                        if($track->is_playable) {
                             $playable = 1;
                         } else {
                             $playable = 0;
@@ -4260,7 +4268,8 @@ function refreshLibrary($w)
                     $api               = getSpotifyWebAPI($w, $api);
                     $userMySavedTracks = $api->getMySavedTracks(array(
                         'limit' => $limitGetMySavedTracks,
-                        'offset' => $offsetGetMySavedTracks
+                        'offset' => $offsetGetMySavedTracks,
+                        'market' => $country_code
                     ));
                     $retry = false;
                 }
@@ -4320,9 +4329,7 @@ function refreshLibrary($w)
                     }
                 }
 
-                if (count($track->available_markets) == 0) {
-                    $playable = 1;
-                } elseif (in_array($country_code, $track->available_markets) !== false) {
+                if($track->is_playable) {
                     $playable = 1;
                 } else {
                     $playable = 0;
