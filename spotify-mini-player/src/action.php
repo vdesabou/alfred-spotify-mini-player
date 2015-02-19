@@ -758,13 +758,25 @@ if ($type == "TRACK" && $other_settings == "" &&
         return;
     } else if ($other_action == "reset_settings") {
         if (file_exists($w->data() . '/settings.json')) {
-            $ret = unlink($w->data() . '/settings.json');
-            if($ret == false) {
-                displayNotificationWithArtwork("Error when deleting settings file", './images/warning.png', 'Error!');
-                return;
+            if(is_link($w->data() . '/settings.json')) {
+                logMsg("INFO: symlink settings file");
+                $ret = unlink(readlink($w->data() . '/settings.json'));
+                if($ret == false) {
+                    logMsg("ERROR: Error when deleting symlink settings file");
+                    displayNotificationWithArtwork("Error when deleting settings file", './images/warning.png', 'Error!');
+                    return;
+                }
+            } else {
+                $ret = unlink($w->data() . '/settings.json');
+                if($ret == false) {
+                    logMsg("ERROR: Error when deleting settings file");
+                    displayNotificationWithArtwork("Error when deleting settings file", './images/warning.png', 'Error!');
+                    return;
+                }
             }
             $settings = getSettings($w);
         } else {
+            logMsg("ERROR: Settings file does not exist");
             displayNotificationWithArtwork("Settings file does not exist ", './images/warning.png', 'Error!');
         }
         return;
