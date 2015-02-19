@@ -82,8 +82,40 @@
 			<key>itemuid</key>
 			<string>609138A1-0456-4EC6-B728-DEBC191BE29F</string>
 		</dict>
-		<dict/>
-		<dict/>
+		<dict>
+			<key>actionconfig</key>
+			<dict>
+				<key>autoworkflowuid</key>
+				<true/>
+				<key>triggerid</key>
+				<string>com.vdesabou.miniplayer.random</string>
+			</dict>
+			<key>actionuid</key>
+			<string>remote.alfred.runworkflow</string>
+			<key>buttoniconid</key>
+			<string>3690378D-02F4-4BF9-BC91-975F3739542B</string>
+			<key>buttonlabel</key>
+			<string>Random Track</string>
+			<key>itemuid</key>
+			<string>27015EAB-A58E-4DCB-B3A0-54B8E2A1A8AD</string>
+		</dict>
+		<dict>
+			<key>actionconfig</key>
+			<dict>
+				<key>autoworkflowuid</key>
+				<true/>
+				<key>triggerid</key>
+				<string>com.vdesabou.miniplayer.randomalbum</string>
+			</dict>
+			<key>actionuid</key>
+			<string>remote.alfred.runworkflow</string>
+			<key>buttoniconid</key>
+			<string>2375184C-CC97-4763-A846-D2FAB1259FD1</string>
+			<key>buttonlabel</key>
+			<string>Random Album</string>
+			<key>itemuid</key>
+			<string>C7B51235-8FAF-4607-BF3B-493E3E1ACEC6</string>
+		</dict>
 		<dict>
 			<key>actionconfig</key>
 			<dict>
@@ -101,23 +133,7 @@
 			<key>itemuid</key>
 			<string>FE5DC9FF-211E-4EE9-9881-52A92FFF8055</string>
 		</dict>
-		<dict>
-			<key>actionconfig</key>
-			<dict>
-				<key>autoworkflowuid</key>
-				<true/>
-				<key>triggerid</key>
-				<string>com.vdesabou.miniplayer.random</string>
-			</dict>
-			<key>actionuid</key>
-			<string>remote.alfred.runworkflow</string>
-			<key>buttoniconid</key>
-			<string>7B851F74-D949-400B-9149-D7FC73029031</string>
-			<key>buttonlabel</key>
-			<string>Random Track</string>
-			<key>itemuid</key>
-			<string>27015EAB-A58E-4DCB-B3A0-54B8E2A1A8AD</string>
-		</dict>
+		<dict/>
 		<dict/>
 		<dict/>
 		<dict>
