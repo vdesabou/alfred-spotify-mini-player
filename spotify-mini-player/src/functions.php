@@ -1120,6 +1120,51 @@ function getRandomTrack($w)
 }
 
 /**
+ * getRandomAlbum function.
+ *
+ * @access public
+ * @param mixed $w
+ * @return void
+ */
+function getRandomAlbum($w)
+{
+    // check for library DB
+    $dbfile = "";
+    if (file_exists($w->data() . '/update_library_in_progress')) {
+        if (file_exists($w->data() . '/library_old.db')) {
+            $dbfile = $w->data() . '/library_old.db';
+        }
+    } else {
+        $dbfile = $w->data() . "/library.db";
+    }
+    if ($dbfile == "") {
+        return false;
+    }
+
+    //
+    // Get random album from DB
+    //
+    try {
+        $db = new PDO("sqlite:$dbfile", "", "", array(
+            PDO::ATTR_PERSISTENT => true
+        ));
+        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $getTracks = "select album_uri,album_name,artist_name from tracks order by random() limit 1";
+        $stmt      = $db->prepare($getTracks);
+        $stmt->execute();
+        $track       = $stmt->fetch();
+        $thealbumuri = $track[0];
+        $thealbumname = $track[1];
+        $theartistname = $track[2];
+    }
+    catch (PDOException $e) {
+        handleDbIssuePdoEcho($db, $w);
+    }
+
+    return array($thealbumuri,$thealbumname,$theartistname);
+}
+
+/**
  * getArtistUriFromTrack function.
  *
  * @access public

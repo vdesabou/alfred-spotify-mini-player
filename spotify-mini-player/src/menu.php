@@ -955,6 +955,25 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
             '' /* playlist_artwork_path */
         )), 'Random Track', 'Play random track', './images/random.png', 'yes', '');
 
+        $w->result('SpotifyMiniPlayer_' . 'random_album', serialize(array(
+            '' /*track_uri*/ ,
+            '' /* album_uri */ ,
+            '' /* artist_uri */ ,
+            '' /* playlist_uri */ ,
+            '' /* spotify_command */ ,
+            '' /* query */ ,
+            '' /* other_settings*/ ,
+            'random_album' /* other_action */ ,
+            '' /* artist_name */ ,
+            '' /* track_name */ ,
+            '' /* album_name */ ,
+            '' /* track_artwork_path */ ,
+            '' /* artist_artwork_path */ ,
+            '' /* album_artwork_path */ ,
+            '' /* playlist_name */ ,
+            '' /* playlist_artwork_path */
+        )), 'Random Album', 'Play random album', './images/random_album.png', 'yes', '');
+
         $w->result('SpotifyMiniPlayer_' . 'shuffle', serialize(array(
             '' /*track_uri*/ ,
             '' /* album_uri */ ,
@@ -1441,6 +1460,25 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 '' /* playlist_name */ ,
                 '' /* playlist_artwork_path */
             )), 'Random Track', 'Play random track', './images/random.png', 'yes', '');
+
+            $w->result(null, serialize(array(
+                '' /*track_uri*/ ,
+                '' /* album_uri */ ,
+                '' /* artist_uri */ ,
+                '' /* playlist_uri */ ,
+                '' /* spotify_command */ ,
+                '' /* query */ ,
+                '' /* other_settings*/ ,
+                'random_album' /* other_action */ ,
+                '' /* artist_name */ ,
+                '' /* track_name */ ,
+                '' /* album_name */ ,
+                '' /* track_artwork_path */ ,
+                '' /* artist_artwork_path */ ,
+                '' /* album_artwork_path */ ,
+                '' /* playlist_name */ ,
+                '' /* playlist_artwork_path */
+            )), 'Random Album', 'Play random album', './images/random_album.png', 'yes', '');
         }
         if (strpos(strtolower('shuffle'), strtolower($query)) !== false) {
             $w->result(null, serialize(array(

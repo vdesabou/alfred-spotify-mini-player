@@ -739,7 +739,22 @@ if ($type == "TRACK" && $other_settings == "" &&
         if ($now_playing_notifications == false) {
             displayNotificationForCurrentTrack($w);
         }
+        if($userid != 'vdesabou') {
+            stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
+        }
         addTrackToPlayQueue($w, $track_uri, $track_name, $country_code);
+        return;
+    } else if ($other_action == "random_album") {
+        list($album_uri, $album_name, $theartistname) = getRandomAlbum($w);
+        // start now playing if needed
+        exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
+        exec("./src/track_info.ksh 2>&1");
+        exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
+        displayNotificationWithArtwork('🔈 Album ' . $album_name . ' by ' . $theartistname, getTrackOrAlbumArtwork($w, $album_uri, true), 'Play Random Album');
+        if($userid != 'vdesabou') {
+            stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
+        }
+        addAlbumToPlayQueue($w, $album_uri, $album_name);
         return;
     } else if ($other_action == "reset_settings") {
         if (file_exists($w->data() . '/settings.json')) {
