@@ -48,7 +48,7 @@ if($oauth_client_id == '' || $oauth_client_secret == '' || $oauth_access_token =
         return;
     }
 
-    if($other_action != '' && $other_action != 'Oauth_Login') {
+    if($other_action != '' && $other_action != 'Oauth_Login' && $other_action != 'current') {
         exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini \"'");
         return;
     }
