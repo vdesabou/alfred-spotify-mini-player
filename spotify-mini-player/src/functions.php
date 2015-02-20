@@ -3030,7 +3030,7 @@ function updateLibrary($w)
                 if($e->getCode() == 429 || $e->getCode() == 404 || $e->getCode() == 500
                     || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 0) {
                     // retry
-                    if($nb_retry > 5) {
+                    if($nb_retry > 10) {
                          handleSpotifyWebAPIException($w, $e);
                          $retry = false;
                          return false;
@@ -3077,7 +3077,7 @@ function updateLibrary($w)
                 if($e->getCode() == 429 || $e->getCode() == 404 || $e->getCode() == 500
                     || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 0) {
                     // retry
-                    if($nb_retry > 5) {
+                    if($nb_retry > 10) {
                          handleSpotifyWebAPIException($w, $e);
                          $retry = false;
                          return false;
@@ -3200,7 +3200,7 @@ function updateLibrary($w)
                     if($e->getCode() == 429 || $e->getCode() == 404 || $e->getCode() == 500
                         || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 0) {
                         // retry
-                        if($nb_retry > 5) {
+                        if($nb_retry > 10) {
                              handleSpotifyWebAPIException($w, $e);
                              $retry = false;
                              return false;
@@ -3730,7 +3730,7 @@ function refreshLibrary($w)
                 if($e->getCode() == 429 || $e->getCode() == 404 || $e->getCode() == 500
                     || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 0) {
                     // retry
-                    if($nb_retry > 5) {
+                    if($nb_retry > 10) {
                          handleSpotifyWebAPIException($w, $e);
                          $retry = false;
                          return false;
@@ -3826,7 +3826,7 @@ function refreshLibrary($w)
                         if($e->getCode() == 429 || $e->getCode() == 404 || $e->getCode() == 500
                             || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 0) {
                             // retry
-                            if($nb_retry > 5) {
+                            if($nb_retry > 10) {
                                  handleSpotifyWebAPIException($w, $e);
                                  $retry = false;
                                  return false;
@@ -4040,7 +4040,7 @@ function refreshLibrary($w)
                             if($e->getCode() == 429 || $e->getCode() == 404 || $e->getCode() == 500
                                 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 0) {
                                 // retry
-                                if($nb_retry > 5) {
+                                if($nb_retry > 10) {
                                      handleSpotifyWebAPIException($w, $e);
                                      $retry = false;
                                      return false;
@@ -4252,7 +4252,7 @@ function refreshLibrary($w)
             if($e->getCode() == 429 || $e->getCode() == 404 || $e->getCode() == 500
                 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 0) {
                 // retry
-                if($nb_retry > 5) {
+                if($nb_retry > 10) {
                      handleSpotifyWebAPIException($w, $e);
                      $retry = false;
                      return false;
@@ -4324,7 +4324,7 @@ function refreshLibrary($w)
                     if($e->getCode() == 429 || $e->getCode() == 404 || $e->getCode() == 500
                         || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 0) {
                         // retry
-                        if($nb_retry > 5) {
+                        if($nb_retry > 10) {
                              handleSpotifyWebAPIException($w, $e);
                              $retry = false;
                              return false;
