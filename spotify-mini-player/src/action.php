@@ -671,6 +671,13 @@ if ($type == "TRACK" && $other_settings == "" &&
         }
         return;
     } else if ($other_action == "Oauth_Login") {
+        // check PHP version
+        $version = explode('.',phpversion());
+        if($version[1] < 6) {
+            displayNotificationWithArtwork("PHP 5.4.0 or later is required for authentication", './images/warning.png', 'Error!');
+            exec("open http://alfred-spotify-mini-player.com/known-issues/#php_requirement");
+            return;
+        }
         exec("kill -9 $(ps -efx | grep \"php\" | egrep \"php -S localhost:15298\" | grep -v grep | awk '{print $2}')");
         sleep(1);
         $cache_log = $w->cache() . '/spotify_mini_player_web_server.log';
