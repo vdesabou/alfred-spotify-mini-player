@@ -5430,11 +5430,11 @@ function secondDelimiterNewReleases($w, $query, $settings, $db, $update_in_progr
 
             $noresult = true;
             foreach ($albums as $album) {
-                if (checkIfResultAlreadyThere($w->results(), ucfirst($album->name) . ' (' . count($tracks->items) . ' tracks)') == false) {
+                if (checkIfResultAlreadyThere($w->results(), ucfirst($album->name) . ' (' . count($album->tracks->items) . ' tracks)') == false) {
                     $noresult = false;
                     $genre    = (count($album->genres) > 0) ? ' ● Genre: ' . implode('|', $album->genres) : '';
                     $tracks   = $album->tracks;
-                    $w->result(null, '', ucfirst($album->name) . ' (' . count($tracks->items) . ' tracks)', $album->album_type . " by " . $album->artists[0]->name . ' ● Release date: ' . $album->release_date . $genre, getTrackOrAlbumArtwork($w, $album->uri, false), 'no', null, "New Releases▹" . $country . '▹' . $album->uri . "@" . $album->name);
+                    $w->result(null, '', ucfirst($album->name) . ' (' . count($album->tracks->items) . ' tracks)', $album->album_type . " by " . $album->artists[0]->name . ' ● Release date: ' . $album->release_date . $genre, getTrackOrAlbumArtwork($w, $album->uri, false), 'no', null, "New Releases▹" . $country . '▹' . $album->uri . "@" . $album->name);
                 }
             }
 
