@@ -2637,6 +2637,7 @@ function getTrackOrAlbumArtwork($w, $spotifyURL, $fetchIfNotPresent, $fetchLater
 function getPlaylistArtwork($w, $playlistURI, $fetchIfNotPresent, $forceFetch = false)
 {
     $hrefs = explode(':', $playlistURI);
+    $artwork = '';
 
     if (!file_exists($w->data() . "/artwork")):
         exec("mkdir '" . $w->data() . "/artwork'");
