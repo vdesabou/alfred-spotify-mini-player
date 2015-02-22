@@ -440,40 +440,34 @@ function searchWebApi($w, $country_code, $query, $type, $limit = 50, $actionMode
     $results = array();
 
     try {
-        $offsetSearch = 0;
         if ($limit != 50) {
             $limitSearch = $limit;
         } else {
             $limitSearch = 50;
         }
-        do {
-            $api           = getSpotifyWebAPI($w);
-            $searchResults = $api->search($query, $type, array(
-                'market' => $country_code,
-                'limit' => $limitSearch,
-                'offset' => $offsetSearch
-            ));
+        $api           = getSpotifyWebAPI($w);
+        $searchResults = $api->search($query, $type, array(
+            'market' => $country_code,
+            'limit' => $limitSearch
+        ));
 
-            if ($type == 'artist') {
-                foreach ($searchResults->artists->items as $item) {
-                    $results[] = $item;
-                }
-            } elseif ($type == 'track') {
-                foreach ($searchResults->tracks->items as $item) {
-                    $results[] = $item;
-                }
-            } elseif ($type == 'album') {
-                foreach ($searchResults->albums->items as $item) {
-                    $results[] = $item;
-                }
-            } elseif ($type == 'playlist') {
-                foreach ($searchResults->playlists->items as $item) {
-                    $results[] = $item;
-                }
+        if ($type == 'artist') {
+            foreach ($searchResults->artists->items as $item) {
+                $results[] = $item;
             }
-
-            $offsetSearch += $limitSearch;
-        } while ($offsetSearch < $searchResults->total);
+        } elseif ($type == 'track') {
+            foreach ($searchResults->tracks->items as $item) {
+                $results[] = $item;
+            }
+        } elseif ($type == 'album') {
+            foreach ($searchResults->albums->items as $item) {
+                $results[] = $item;
+            }
+        } elseif ($type == 'playlist') {
+            foreach ($searchResults->playlists->items as $item) {
+                $results[] = $item;
+            }
+        }
     }
     catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
         if ($actionMode == true) {
