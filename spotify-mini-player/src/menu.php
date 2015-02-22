@@ -4297,11 +4297,11 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
 
         $noresult = true;
         foreach ($albums as $album) {
-            if (checkIfResultAlreadyThere($w->results(), ucfirst($album->name) . ' (' . count($tracks->items) . ' tracks)') == false) {
+            if (checkIfResultAlreadyThere($w->results(), ucfirst($album->name) . ' (' . count($album->tracks->items) . ' tracks)') == false) {
                 $noresult = false;
                 $genre    = (count($album->genres) > 0) ? ' ● Genre: ' . implode('|', $album->genres) : '';
                 $tracks   = $album->tracks;
-                $w->result(null, '', ucfirst($album->name) . ' (' . count($tracks->items) . ' tracks)', $album->album_type . " by " . $artist_name . ' ● Release date: ' . $album->release_date . $genre, getTrackOrAlbumArtwork($w, $album->uri, false), 'no', null, "Online▹" . $artist_uri . "@" . $artist_name . "@" . $album->uri . "@" . $album->name . '▹');
+                $w->result(null, '', ucfirst($album->name) . ' (' . count($album->tracks->items) . ' tracks)', $album->album_type . " by " . $artist_name . ' ● Release date: ' . $album->release_date . $genre, getTrackOrAlbumArtwork($w, $album->uri, false), 'no', null, "Online▹" . $artist_uri . "@" . $artist_name . "@" . $album->uri . "@" . $album->name . '▹');
             }
         }
 
