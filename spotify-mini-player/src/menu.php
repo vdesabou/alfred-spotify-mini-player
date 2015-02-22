@@ -5566,6 +5566,13 @@ function secondDelimiterAdd($w, $query, $settings, $db, $update_in_progress)
     $tmp = explode('∙', $words[1]);
     $uri = $tmp[0];
 
+    $track_name = '';
+    $track_uri = '';
+    $album_name = '';
+    $album_uri = '';
+    $playlist_name = '';
+    $playlist_uri = '';
+
     $href = explode(':', $uri);
     if ($href[1] == 'track') {
         $type       = 'track';
