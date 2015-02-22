@@ -4743,7 +4743,7 @@ function secondDelimiterYourMusicTracks($w, $query, $settings, $db, $update_in_p
                     $track[2] /*track_uri*/ ,
                     $track[3] /* album_uri */ ,
                     $track[4] /* artist_uri */ ,
-                    $theplaylisturi /* playlist_uri */ ,
+                    '' /* playlist_uri */ ,
                     '' /* spotify_command */ ,
                     '' /* query */ ,
                     '' /* other_settings*/ ,
