@@ -1969,7 +1969,6 @@ function getTheNewReleases($w, $country_code, $max_results = 50)
 
     try {
         $api                  = getSpotifyWebAPI($w);
-        $tmp                  = explode(':', $artist_uri);
         $offsetGetNewReleases = 0;
         $limitGetNewReleases  = 50;
         do {
