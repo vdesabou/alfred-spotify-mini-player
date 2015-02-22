@@ -110,7 +110,7 @@ $userid                    = $settings->userid;
 $echonest_api_key          = $settings->echonest_api_key;
 
 // Check that user is logged
-oAuthChecks($w, $query, $settings, $db, $update_in_progress);
+oAuthChecks($w, $query, $settings, $update_in_progress);
 
 //
 // Check for library DB to use

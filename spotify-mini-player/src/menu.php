@@ -7,11 +7,10 @@
  * @param mixed $w
  * @param mixed $query
  * @param mixed $settings
- * @param mixed $db
  * @param mixed $update_in_progress
  * @return void
  */
-function oAuthChecks($w, $query, $settings, $db, $update_in_progress)
+function oAuthChecks($w, $query, $settings, $update_in_progress)
 {
     $words = explode('▹', $query);
     $kind  = $words[0];
