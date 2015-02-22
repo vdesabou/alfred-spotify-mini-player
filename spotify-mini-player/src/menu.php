@@ -2531,7 +2531,14 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                 '' /* album_artwork_path */ ,
                 '' /* playlist_name */ ,
                 '' /* playlist_artwork_path */
-            )), " " . escapeQuery($results[0]) . " ● " . escapeQuery($results[1]) . " ● " . escapeQuery($results[2]) . " ● " . floatToStars($results[6] / 100) . ' (' . beautifyTime($results[5]) . ')', $arrayresult, ($results[3] == "playing") ? './images/pause.png' : './images/play.png', 'yes', null, '');
+            )), " " . escapeQuery($results[0]) . " ● " . escapeQuery($results[1]) . " ● " . escapeQuery($results[2]) . " ● " . floatToStars($results[6] / 100) . ' (' . beautifyTime($results[5]) . ')', array(
+                $subtitle,
+                'alt' => 'Play album ' . escapeQuery($results[2]) . ' in Spotify',
+                'cmd' => 'Play artist ' . escapeQuery($results[1]) . ' in Spotify',
+                'fn' => 'Add track ' . escapeQuery($results[0]) . ' to ...',
+                'shift' => 'Add album ' . escapeQuery($results[2]) . ' to ...',
+                'ctrl' => 'Search artist ' . escapeQuery($results[1]) . ' online'
+            ), ($results[3] == "playing") ? './images/pause.png' : './images/play.png', 'yes', null, '');
         }
 
 
