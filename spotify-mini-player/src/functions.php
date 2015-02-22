@@ -410,7 +410,17 @@ function getBiography($w, $artist_uri, $artist_name)
     // Get URLs of artist, if available
     $json     = doJsonRequest($w, 'http://developer.echonest.com/api/v4/artist/urls?api_key=' . $echonest_api_key . '&id=' . $artist_uri);
 
-	return array($url, $source, $output, $json->response->urls->twitter_url, $json->response->urls->official_url);
+    $twitter_url = '';
+    if(isset($json->response->urls->twitter_url)) {
+        $twitter_url = $json->response->urls->twitter_url;
+    }
+
+    $official_url = '';
+    if(isset($json->response->urls->official_url)) {
+        $official_url = $json->response->urls->official_url;
+    }
+
+	return array($url, $source, $output, $twitter_url, $official_url);
 }
 
 /**
