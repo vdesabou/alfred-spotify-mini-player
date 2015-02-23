@@ -754,6 +754,34 @@ class SpotifyWebAPI
     }
 
     /**
+     * Check if a user is following a playlist
+     * Requires a valid access token.
+     * https://developer.spotify.com/web-api/check-user-following-playlist/
+     *
+     * @param string $ownerId User ID of the playlist owner.
+     * @param string $playlistId ID of the playlist.
+     * @param $options array|object Options for the check.
+     * - ids array Required. IDs of the user(s) to check for.
+     *
+     * @return array Whether each user is following the playlist.
+     */
+    public function userFollowsPlaylist($ownerId, $playlistId, $options)
+    {
+        $defaults = array(
+            'ids' => array()
+        );
+
+        $options = array_merge($defaults, (array) $options);
+        $options['ids'] = implode(',', $options['ids']);
+        $headers = $this->authHeaders();
+
+        $url = '/v1/users/' . $ownerId . '/playlists/' . $playlistId . '/followers/contains';
+        $response = $this->request->api('GET', $url, $options, $headers);
+
+        return $response['body'];
+    }
+
+    /**
      * Check to see if the current user is following one or more artists or other Spotify users
      * Requires a valid access token.
      * https://developer.spotify.com/web-api/check-current-user-follows/
@@ -835,12 +863,12 @@ class SpotifyWebAPI
      *
      * @param string $userId ID of the user who owns the playlist.
      * @param string $playlistId ID of the playlist to follow.
-     * @param array|object $options Options for the followed playlist.
+     * @param array|object $options Optional. Options for the followed playlist.
      * - public bool Optional. Whether the followed playlist should be public or not.
      *
      * @return bool Whether it worked or not.
      */
-    public function followPlaylist($userId, $playlistId, $options)
+    public function followPlaylist($userId, $playlistId, $options = array())
     {
         $defaults = array(
             'public' => true
