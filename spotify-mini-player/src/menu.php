@@ -362,6 +362,8 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress)
 
     //$w->result(null, '', 'Charts', 'Browse charts', './images/numbers.png', 'no', null, 'Charts▹');
 
+    $w->result(null, '', 'Browse', 'Browse Spotify by categories, as in the Spotify player’s “Browse” tab', './images/browse.png', 'no', null, 'Browse▹');
+
     if ($is_alfred_playlist_active == true) {
         $alfred_playlist_state = 'Alfred Playlist';
     } else {
@@ -630,6 +632,9 @@ function searchCategoriesFastAccess($w, $query, $settings, $db, $update_in_progr
     }
     if (strpos(strtolower('charts'), strtolower($query)) !== false) {
         $w->result(null, '', 'Charts', 'Browse charts', './images/numbers.png', 'no', null, 'Charts▹');
+    }
+    if (strpos(strtolower('browse'), strtolower($query)) !== false) {
+        $w->result(null, '', 'Browse', 'Browse Spotify by categories, as in the Spotify player’s “Browse” tab', './images/browse.png', 'no', null, 'Browse▹');
     }
     if (strpos(strtolower('lookup current artist online'), strtolower($query)) !== false) {
 	    $w->result(null, serialize(array(
@@ -2812,7 +2817,6 @@ function firstDelimiterYourMusic($w, $query, $settings, $db, $update_in_progress
                     '' /* query */ ,
                     '' /* other_settings*/ ,
                     '' /* other_action */ ,
-
                     $track[7] /* artist_name */ ,
                     $track[5] /* track_name */ ,
                     $track[6] /* album_name */ ,
@@ -3562,7 +3566,36 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
 }
 
 
+/**
+ * firstDelimiterBrowse function.
+ *
+ * @access public
+ * @param mixed $w
+ * @param mixed $query
+ * @param mixed $settings
+ * @param mixed $db
+ * @param mixed $update_in_progress
+ * @return void
+ */
+function firstDelimiterBrowse($w, $query, $settings, $db, $update_in_progress)
+{
+    $words = explode('▹', $query);
+    $kind  = $words[0];
 
+    $country_code = $settings->country_code;
+
+    $w->result(null, '', getCountryName($country_code), 'Browse the Spotify categories in ' . getCountryName($country_code), './images/browse.png', 'no', null, 'Browse▹' . $country_code . '▹');
+
+    if ($country_code != 'US') {
+        $w->result(null, '', getCountryName('US'), 'Browse the Spotify categories in ' . getCountryName('US'), './images/browse.png', 'no', null, 'Browse▹US▹');
+    }
+
+    if ($country_code != 'GB') {
+        $w->result(null, '', getCountryName('GB'), 'Browse the Spotify categories in ' . getCountryName('GB'), './images/browse.png', 'no', null, 'Browse▹GB▹');
+    }
+
+    $w->result(null, '', 'Choose Another country', 'Browse the Spotify categories in another country of your choice', './images/browse.png', 'no', null, 'Browse▹Choose a Country▹');
+}
 
 /**
  * secondDelimiterArtists function.
@@ -6319,6 +6352,127 @@ function secondDelimiterDisplayConfirmRemovePlaylist($w, $query, $settings, $db,
 }
 
 /**
+ * secondDelimiterBrowse function.
+ *
+ * @access public
+ * @param mixed $w
+ * @param mixed $query
+ * @param mixed $settings
+ * @param mixed $db
+ * @param mixed $update_in_progress
+ * @return void
+ */
+function secondDelimiterBrowse($w, $query, $settings, $db, $update_in_progress)
+{
+    $words = explode('▹', $query);
+    $kind  = $words[0];
+
+    $all_playlists             = $settings->all_playlists;
+    $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
+    $radio_number_tracks       = $settings->radio_number_tracks;
+    $now_playing_notifications = $settings->now_playing_notifications;
+    $max_results               = $settings->max_results;
+    $alfred_playlist_uri       = $settings->alfred_playlist_uri;
+    $alfred_playlist_name      = $settings->alfred_playlist_name;
+    $country_code              = $settings->country_code;
+    $last_check_update_time    = $settings->last_check_update_time;
+    $oauth_client_id           = $settings->oauth_client_id;
+    $oauth_client_secret       = $settings->oauth_client_secret;
+    $oauth_redirect_uri        = $settings->oauth_redirect_uri;
+    $oauth_access_token        = $settings->oauth_access_token;
+    $oauth_expires             = $settings->oauth_expires;
+    $oauth_refresh_token       = $settings->oauth_refresh_token;
+    $display_name              = $settings->display_name;
+    $userid                    = $settings->userid;
+    $echonest_api_key          = $settings->echonest_api_key;
+
+    $country = $words[1];
+
+    if ($country == 'Choose a Country') {
+        // list taken from http://charts.spotify.com/docs
+        $spotify_country_codes = array(
+            "ar",
+            "at",
+            "au",
+            "be",
+            "bg",
+            "ch",
+            "cl",
+            "co",
+            "cr",
+            "cz",
+            "de",
+            "dk",
+            "ec",
+            "ee",
+            "es",
+            "fi",
+            "fr",
+            "gb",
+            "gr",
+            "gt",
+            "hk",
+            "hu",
+            "ie",
+            "is",
+            "it",
+            "li",
+            "lt",
+            "lu",
+            "lv",
+            "mx",
+            "my",
+            "nl",
+            "no",
+            "nz",
+            "pe",
+            "pl",
+            "pt",
+            "se",
+            "sg",
+            "sk",
+            "sv",
+            "tr",
+            "tw",
+            "us",
+            "uy"
+        );
+        foreach ($spotify_country_codes as $spotify_country_code) {
+            if (strtoupper($spotify_country_code) != 'US' && strtoupper($spotify_country_code) != 'GB' && strtoupper($spotify_country_code) != strtoupper($country_code)) {
+                $w->result(null, '', getCountryName(strtoupper($spotify_country_code)), 'Browse the Spotify categories in ' . getCountryName(strtoupper($spotify_country_code)), './images/browse.png', 'no', null, 'Browse▹' . strtoupper($spotify_country_code) . '▹');
+            }
+        }
+    } else {
+        try {
+            $offsetListCategories = 0;
+            $limitListCategories  = 50;
+            do {
+                // refresh api
+                $api                = getSpotifyWebAPI($w, $api);
+                $listCategories = $api->getListCategories(array(
+                    'country' => $country,
+                    'limit' => $limitListCategories,
+                    'locale' => '',
+                    'offset' => $offsetListCategories
+                ));
+
+                $offsetListCategories += $limitListCategories;
+            } while ($offsetListCategories < $listCategories->total);
+
+            foreach ($listCategories->categories->items as $category) {
+                $w->result(null, '', escapeQuery($category->name), "Browse this category", getCategoryArtwork($w, $category->id, $category->icons[0]->url, true, false), 'no', null, "Browse▹" . $country . "▹" . $category->id . "▹");
+            }
+
+        }
+        catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+            $w->result(null, 'help', "Exception occurred", "" . $e->getMessage(), './images/warning.png', 'no', null, '');
+            echo $w->toxml();
+            return;
+        }
+    }
+}
+
+/**
  * thirdDelimiterAdd function.
  *
  * @access public
@@ -6463,5 +6617,72 @@ function thirdDelimiterAdd($w, $query, $settings, $db, $update_in_progress)
             $playlist_name /* playlist_name */ ,
             '' /* playlist_artwork_path */
         )), "Create playlist " . ltrim(rtrim($the_query)), "This will create the playlist and add the " . $message, './images/add.png', 'yes', null, '');
+    }
+}
+
+/**
+ * thirdDelimiterBrowse function.
+ *
+ * @access public
+ * @param mixed $w
+ * @param mixed $query
+ * @param mixed $settings
+ * @param mixed $db
+ * @param mixed $update_in_progress
+ * @return void
+ */
+function thirdDelimiterBrowse($w, $query, $settings, $db, $update_in_progress)
+{
+    $words = explode('▹', $query);
+    $kind  = $words[0];
+
+    $all_playlists             = $settings->all_playlists;
+    $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
+    $radio_number_tracks       = $settings->radio_number_tracks;
+    $now_playing_notifications = $settings->now_playing_notifications;
+    $max_results               = $settings->max_results;
+    $alfred_playlist_uri       = $settings->alfred_playlist_uri;
+    $alfred_playlist_name      = $settings->alfred_playlist_name;
+    $country_code              = $settings->country_code;
+    $last_check_update_time    = $settings->last_check_update_time;
+    $oauth_client_id           = $settings->oauth_client_id;
+    $oauth_client_secret       = $settings->oauth_client_secret;
+    $oauth_redirect_uri        = $settings->oauth_redirect_uri;
+    $oauth_access_token        = $settings->oauth_access_token;
+    $oauth_expires             = $settings->oauth_expires;
+    $oauth_refresh_token       = $settings->oauth_refresh_token;
+    $display_name              = $settings->display_name;
+    $userid                    = $settings->userid;
+    $echonest_api_key          = $settings->echonest_api_key;
+
+    $country = $words[1];
+    $category = $words[2];
+
+    try {
+        $offsetCategoryPlaylists = 0;
+        $limitCategoryPlaylists  = 50;
+        do {
+            // refresh api
+            $api                = getSpotifyWebAPI($w, $api);
+            $listPlaylists = $api->getCategoryPlaylists($category, array(
+                'country' => $country,
+                'limit' => $limitCategoryPlaylists,
+                'offset' => $offsetCategoryPlaylists
+            ));
+
+            $subtitle  = "Launch Playlist";
+            $playlists = $listPlaylists->playlists;
+            $items = $playlists->items;
+            foreach ($items as $playlist) {
+                $w->result(null, '', "🎵" . escapeQuery($playlist->name), "by " . $playlist->owner->id . " ● " . $playlist->tracks->total . " tracks", getPlaylistArtwork($w, $playlist->uri, false), 'no', null, "Online Playlist▹" . $playlist->uri . '∙' . escapeQuery($playlist->name) . "▹");
+            }
+
+            $offsetCategoryPlaylists += $limitCategoryPlaylists;
+        } while ($offsetCategoryPlaylists < $listPlaylists->total);
+    }
+    catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+        $w->result(null, 'help', "Exception occurred", "" . $e->getMessage(), './images/warning.png', 'no', null, '');
+        echo $w->toxml();
+        return;
     }
 }

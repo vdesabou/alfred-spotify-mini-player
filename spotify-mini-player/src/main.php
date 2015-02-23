@@ -296,6 +296,8 @@ if (mb_strlen($query) < 3) {
                 firstDelimiterCheckForUpdate($w, $query, $settings, $db, $update_in_progress);
             } elseif ($kind == "Play Queue") {
                 firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress);
+            } elseif ($kind == "Browse") {
+                firstDelimiterBrowse($w, $query, $settings, $db, $update_in_progress);
             }
         }
         ////////////
@@ -347,6 +349,8 @@ if (mb_strlen($query) < 3) {
                 secondDelimiterDisplayBiography($w, $query, $settings, $db, $update_in_progress);
             } elseif ($kind == "Confirm Remove Playlist") {
                 secondDelimiterDisplayConfirmRemovePlaylist($w, $query, $settings, $db, $update_in_progress);
+            } elseif ($kind == "Browse") {
+                secondDelimiterBrowse($w, $query, $settings, $db, $update_in_progress);
             }
         }
         ///////////
@@ -360,6 +364,8 @@ if (mb_strlen($query) < 3) {
             $kind  = $words[0];
             if ($kind == "Add") {
                 thirdDelimiterAdd($w, $query, $settings, $db, $update_in_progress);
+            } elseif ($kind == "Browse") {
+                thirdDelimiterBrowse($w, $query, $settings, $db, $update_in_progress);
             }
         }
     }

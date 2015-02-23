@@ -2693,6 +2693,49 @@ function getPlaylistArtwork($w, $playlistURI, $fetchIfNotPresent, $forceFetch = 
 }
 
 /**
+ * getCategoryArtwork function.
+ *
+ * @access public
+ * @param mixed $w
+ * @param mixed $categoryId
+ * @param mixed $categoryURI
+ * @param mixed $fetchIfNotPresent
+ * @param bool $forceFetch (default: false)
+ * @return void
+ */
+function getCategoryArtwork($w, $categoryId, $categoryURI, $fetchIfNotPresent, $forceFetch = false)
+{
+    if (!file_exists($w->data() . "/artwork")):
+        exec("mkdir '" . $w->data() . "/artwork'");
+    endif;
+
+    $currentArtwork = $w->data() . "/artwork/" . hash('md5', $categoryId . ".jpg") . "/" . "$categoryId.jpg";
+
+    if (!is_file($currentArtwork) || (is_file($currentArtwork) && filesize($currentArtwork) == 0) || $forceFetch) {
+        if ($fetchIfNotPresent == true || (is_file($currentArtwork) && filesize($currentArtwork) == 0) || $forceFetch) {
+                if (!file_exists($w->data() . "/artwork/" . hash('md5', $categoryId . ".jpg"))):
+                    exec("mkdir '" . $w->data() . "/artwork/" . hash('md5', $categoryId . ".jpg") . "'");
+                endif;
+                $fp      = fopen($currentArtwork, 'w+');
+                $options = array(
+                    CURLOPT_FILE => $fp,
+                    CURLOPT_FOLLOWLOCATION => 1,
+                    CURLOPT_TIMEOUT => 5
+                );
+                $w->request("$categoryURI", $options);
+        } else {
+            return "./images/browse.png";
+        }
+    } else {
+        if (filesize($currentArtwork) == 0) {
+            return "./images/browse.png";
+        }
+    }
+
+    return $currentArtwork;
+}
+
+/**
  * getArtistArtwork function.
  *
  * @access public

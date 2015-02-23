@@ -410,6 +410,100 @@ class SpotifyWebAPI
     }
 
     /**
+     * Get a List of Categories.
+     * Get a list of categories used to tag items in Spotify (on, for example, the Spotify player’s “Browse” tab
+     * Requires a valid access token.
+     * https://developer.spotify.com/web-api/get-list-categories/
+     *
+     * @param array|object $options Optional. Options for the categories.
+     * - string locale Optional. An lowercase ISO 639 language code and an uppercase ISO 3166-1 alpha-2 country code. Separated by an underscore. Show categories in this language.
+     * - string country Optional. An ISO 3166-1 alpha-2 country code. Show categories from this country.
+     * - int limit Optional. Limit the number of categories.
+     * - int offset Optional. Number of categories to skip.
+     *
+     * @return array|object The list of categories. Type is controlled by SpotifyWebAPI::setReturnAssoc().
+     */
+    public function getListCategories($options = array())
+    {
+        $defaults = array(
+            'country' => '',
+            'limit' => 0,
+            'locale' => '',
+            'offset' => 0
+        );
+
+        $options = array_merge($defaults, (array) $options);
+        $options = array_filter($options);
+
+        $headers = $this->authHeaders();
+        $response = $this->request->api('GET', '/v1/browse/categories', $options, $headers);
+
+        return $response['body'];
+    }
+
+    /**
+     * Get a Category.
+     * Get a single category used to tag items in Spotify (on, for example, the Spotify player’s “Browse” tab).
+     * Requires a valid access token.
+     * https://developer.spotify.com/web-api/get-category/
+     *
+     * @param string $categoryId The Spotify ID for the category.
+     *
+     * @param array|object $options Optional. Options for the category.
+     * - string locale Optional. An lowercase ISO 639 language code and an uppercase ISO 3166-1 alpha-2 country code. Separated by an underscore. Show category in this language.
+     * - string country Optional. An ISO 3166-1 alpha-2 country code. Show category from this country.
+     *
+     * @return array|object The category. Type is controlled by SpotifyWebAPI::setReturnAssoc().
+     */
+    public function getCategory($categoryId, $options = array())
+    {
+        $defaults = array(
+            'country' => '',
+            'locale' => ''
+        );
+
+        $options = array_merge($defaults, (array) $options);
+        $options = array_filter($options);
+
+        $headers = $this->authHeaders();
+        $response = $this->request->api('GET', '/v1/browse/categories' . $categoryId, $options, $headers);
+
+        return $response['body'];
+    }
+
+    /**
+     * Get a Category’s Playlists.
+     * Get a list of Spotify playlists tagged with a particular category.
+     * Requires a valid access token.
+     * https://developer.spotify.com/web-api/get-categorys-playlists/
+     *
+     * @param string $categoryId The Spotify ID for the category.
+     *
+     * @param array|object $options Optional. Options for the category's playlists.
+     * - string country Optional. An ISO 3166-1 alpha-2 country code. Show category playlists from this country.
+     * - int limit Optional. Limit the number of playlists.
+     * - int offset Optional. Number of playlists to skip.
+     *
+     * @return array|object The list of playlists. Type is controlled by SpotifyWebAPI::setReturnAssoc().
+     */
+    public function getCategoryPlaylists($categoryId, $options = array())
+    {
+        $defaults = array(
+            'country' => '',
+            'limit' => 0,
+            'offset' => 0
+        );
+
+        $options = array_merge($defaults, (array) $options);
+        $options = array_filter($options);
+
+        $headers = $this->authHeaders();
+        $response = $this->request->api('GET', '/v1/browse/categories/' . $categoryId . '/playlists', $options, $headers);
+
+        return $response['body'];
+    }
+
+    /**
      * Get new releases.
      * Requires a valid access token.
      * https://developer.spotify.com/web-api/get-list-new-releases/
