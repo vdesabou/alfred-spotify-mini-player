@@ -6449,7 +6449,7 @@ function secondDelimiterBrowse($w, $query, $settings, $db, $update_in_progress)
             do {
                 // refresh api
                 $api                = getSpotifyWebAPI($w, $api);
-                $listCategories = $api->getListCategories(array(
+                $listCategories = $api->getCategoriesList(array(
                     'country' => $country,
                     'limit' => $limitListCategories,
                     'locale' => '',

@@ -423,7 +423,7 @@ class SpotifyWebAPI
      *
      * @return array|object The list of categories. Type is controlled by SpotifyWebAPI::setReturnAssoc().
      */
-    public function getListCategories($options = array())
+    public function getCategoriesList($options = array())
     {
         $defaults = array(
             'country' => '',
