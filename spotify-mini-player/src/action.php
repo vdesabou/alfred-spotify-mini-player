@@ -541,6 +541,22 @@ if ($type == "TRACK" && $other_settings == "" &&
             displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
         }
         return;
+    }  else if ($other_action == "enable_quick_mode") {
+        $ret = updateSetting($w, 'quick_mode', 1);
+        if ($ret == true) {
+            displayNotificationWithArtwork("Quick Mode is now enabled", './images/enable_quick_mode.png', 'Settings');
+        } else {
+            displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
+        }
+        return;
+    } else if ($other_action == "disable_quick_mode") {
+        $ret = updateSetting($w, 'quick_mode', 0);
+        if ($ret == true) {
+            displayNotificationWithArtwork("Quick Mode is now disabled", './images/disable_quick_mode.png', 'Settings');
+        } else {
+            displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
+        }
+        return;
     } else if ($other_action == "enable_alfred_playlist") {
         $ret = updateSetting($w, 'is_alfred_playlist_active', 1);
         if ($ret == true) {

@@ -5250,12 +5250,20 @@ function getSettings($w)
             'userid' => '',
             'echonest_api_key' => '5EG94BIZEGFEY9AL9',
             'lookup_local_tracks_online' => 0,
-            'is_public_playlists' => 0
+            'is_public_playlists' => 0,
+            'quick_mode' => 0
         );
 
         $ret = $w->write($default, 'settings.json');
         displayNotificationWithArtwork("Settings have been set to default", './images/info.png', 'Settings reset');
 
+        $settings = $w->read('settings.json');
+    }
+
+    // add quick_mode if needed
+    if(!isset($settings->quick_mode)) {
+        displayNotificationWithArtwork("quick_mode not set ", './images/.png', 'Kill Update Library ');
+        updateSetting($w, 'quick_mode', 0);
         $settings = $w->read('settings.json');
     }
 
