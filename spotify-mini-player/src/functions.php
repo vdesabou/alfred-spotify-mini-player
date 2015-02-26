@@ -5262,7 +5262,6 @@ function getSettings($w)
 
     // add quick_mode if needed
     if(!isset($settings->quick_mode)) {
-        displayNotificationWithArtwork("quick_mode not set ", './images/.png', 'Kill Update Library ');
         updateSetting($w, 'quick_mode', 0);
         $settings = $w->read('settings.json');
     }
