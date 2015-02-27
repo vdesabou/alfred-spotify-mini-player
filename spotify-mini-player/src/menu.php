@@ -562,14 +562,13 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress)
         $quick_mode_text = '⚡️';
     }
     while ($track = $stmt->fetch()) {
-        if ($noresult) {
-            $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-            $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
-            $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
-        }
+        // if ($noresult) {
+        //     $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
+        //     $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
+        //     $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
+        // }
         $noresult = false;
         $subtitle = $track[6];
-
         if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " ● " . $track[5]) == false) {
             if($track[14] == true) {
                 $w->result(null, serialize(array(
@@ -2358,7 +2357,6 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
         if ($search_albums == true) {
             // Search Albums
             //
-
             // call to web api, if it fails,
             // it displays an error in main window
             $query   = 'album:' . strtolower($the_query);
@@ -2409,21 +2407,18 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
         if ($search_tracks == true) {
             // Search Tracks
             //
-
             // call to web api, if it fails,
             // it displays an error in main window
             $query   = 'track:' . strtolower($the_query);
             $results = searchWebApi($w, $country_code, $query, 'track', $search_tracks_limit, false);
-
             $first = true;
             foreach ($results as $track) {
-
-                if ($first == true) {
-                    $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-                    $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
-                    $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
-                }
-                $first         = false;
+                // if ($first == true) {
+                //     $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
+                //     $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
+                //     $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
+                // }
+                // $first         = false;
                 $noresult      = false;
                 $track_artwork = getTrackOrAlbumArtwork($w, $track->uri, false);
 
@@ -2886,12 +2881,11 @@ function firstDelimiterYourMusic($w, $query, $settings, $db, $update_in_progress
         }
 
         while ($track = $stmt->fetch()) {
-
-            if ($noresult == true) {
-                $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-                $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
-                $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
-            }
+            // if ($noresult == true) {
+            //     $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
+            //     $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
+            //     $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
+            // }
             $noresult = false;
             $subtitle = $track[6];
 
@@ -3642,9 +3636,9 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
 	            $track_name = $playqueue->name;
             }
             $w->result(null, 'help', "Playing from: " . ucfirst($playqueue->type) . ' ' . $playqueue->name, 'Track ' . ($playqueue->current_track_index + 1) . ' on '. count($playqueue->tracks) . ' tracks queued', './images/play_queue.png', 'no', null, '');
-            $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-            $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
-            $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
+            // $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
+            // $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
+            // $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
         }
         $max_tracks_displayed = 150;
         if($nb_tracks >= $max_tracks_displayed) {
@@ -3884,17 +3878,14 @@ function secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
         $stmt->bindValue(':artist_uri', $artist_uri);
         $stmt->bindValue(':track', '%' . $track . '%');
     }
-
     $tracks = $stmt->execute();
-
     $noresult = true;
     while ($track = $stmt->fetch()) {
-
-        if ($noresult) {
-            $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-            $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
-            $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
-        }
+        // if ($noresult) {
+        //     $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
+        //     $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
+        //     $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
+        // }
         $noresult = false;
         $subtitle = $track[6];
 
@@ -4089,15 +4080,13 @@ function secondDelimiterAlbums($w, $query, $settings, $db, $update_in_progress)
     if ($update_in_progress == false) {
         $w->result(null, '', 'Add album ' . escapeQuery($album_name) . ' to...', 'This will add the album to Your Music or a playlist you will choose in next step', './images/add.png', 'no', null, 'Add▹' . $album_uri . '∙' . escapeQuery($album_name) . '▹');
     }
-
     $noresult = true;
     while ($track = $stmt->fetch()) {
-
-        if ($noresult == true) {
-            $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-            $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
-            $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
-        }
+        // if ($noresult == true) {
+        //     $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
+        //     $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
+        //     $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
+        // }
         $noresult = false;
         $subtitle = $track[6];
 
@@ -4323,11 +4312,11 @@ function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progres
             $tracks = $stmt->execute();
             $noresult = true;
             while ($track = $stmt->fetch()) {
-                if ($noresult) {
-                    $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-                    $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
-                    $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
-                }
+                // if ($noresult) {
+                //     $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
+                //     $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
+                //     $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
+                // }
                 $noresult = false;
                 $subtitle = $track[6];
                 if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]) . " ● " . $track[5]) == false) {
@@ -4545,11 +4534,11 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
         $tracks = getTheAlbumFullTracks($w, $album_uri);
         $noresult = true;
         foreach ($tracks as $track) {
-            if ($noresult == true) {
-                $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-                $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
-                $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
-            }
+            // if ($noresult == true) {
+            //     $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
+            //     $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
+            //     $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
+            // }
             if($track->is_playable) {
                 $noresult      = false;
                 $track_artwork = getTrackOrAlbumArtwork($w, $track->uri, false);
@@ -4818,11 +4807,11 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
         if ($nb_results > $max_results) {
             break;
         }
-        if ($noresult) {
-            $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-            $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
-            $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
-        }
+        // if ($noresult) {
+        //     $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
+        //     $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
+        //     $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
+        // }
         $noresult = false;
         $artists  = $track->artists;
         $artist   = $artists[0];
@@ -4913,12 +4902,11 @@ function secondDelimiterYourMusicTracks($w, $query, $settings, $db, $update_in_p
 
     $noresult = true;
     while ($track = $stmt->fetch()) {
-
-        if ($noresult) {
-            $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-            $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
-            $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
-        }
+        // if ($noresult) {
+        //     $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
+        //     $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
+        //     $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
+        // }
         $noresult = false;
         $subtitle = $track[6];
 
@@ -5464,12 +5452,12 @@ function secondDelimiterCharts($w, $query, $settings, $db, $update_in_progress)
             if ($nb_results > $max_results) {
                 break;
             }
-            if ($noresult) {
-                $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-                $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
-                $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
-            }
-            $noresult  = false;
+            // if ($noresult) {
+            //     $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
+            //     $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
+            //     $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
+            // }
+            // $noresult  = false;
             // format is https://play.spotify.com/track/3WBLQj2qtrKYFDcC5aisLD
             $href      = explode('/', $track->track_url);
             $track_uri = 'spotify:track:' . $href[4];
@@ -5667,12 +5655,12 @@ function secondDelimiterNewReleases($w, $query, $settings, $db, $update_in_progr
 
             $noresult = true;
             foreach ($tracks as $track) {
-                if ($noresult == true) {
-                    $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-                    $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
-                    $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
-                }
-                $noresult           = false;
+                // if ($noresult == true) {
+                //     $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
+                //     $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
+                //     $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
+                // }
+                // $noresult           = false;
                 $track_artwork_path = getTrackOrAlbumArtwork($w, $track->uri, false);
                 $w->result(null, serialize(array(
                     $track->uri /*track_uri*/ ,
