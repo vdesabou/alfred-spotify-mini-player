@@ -304,12 +304,12 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress)
     }
     $quick_mode_text = '';
     if($quick_mode) {
-        $quick_mode_text = '⚡️';
+        $quick_mode_text = ' ● ⚡ Quick Mode is active';
     }
     if ($all_playlists == true) {
-        $w->result(null, '', 'Search for music in "Your Music" and your ' . $nb_playlists . ' playlists', $quick_mode_text . 'Begin typing at least 3 characters to start search in your ' . $all_tracks . ' tracks', './images/search.png', 'no', null, '');
+        $w->result(null, '', 'Search for music in "Your Music" and your ' . $nb_playlists . ' playlists', 'Begin typing at least 3 characters to start search in your ' . $all_tracks . ' tracks' . $quick_mode_text, './images/search.png', 'no', null, '');
     } else {
-        $w->result(null, '', 'Search for music in "Your Music" only', $quick_mode_text . 'Begin typing at least 3 characters to start search in your ' . $yourmusic_tracks . ' tracks', './images/search_scope_yourmusic_only.png', 'no', null, '');
+        $w->result(null, '', 'Search for music in "Your Music" only', 'Begin typing at least 3 characters to start search in your ' . $yourmusic_tracks . ' tracks' . $quick_mode_text, './images/search_scope_yourmusic_only.png', 'no', null, '');
     }
 
     $w->result(null, '', 'Current Track', 'Display current track information and browse various options', './images/current_track.png', 'no', null, 'Current Track▹');
