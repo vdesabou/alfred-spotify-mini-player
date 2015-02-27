@@ -215,31 +215,34 @@ if (mb_strlen($query) < 3) {
     ////////////
     mainMenu($w, $query, $settings, $db, $update_in_progress);
 } else {
-    $w->result(null, serialize(array(
-        '' /*track_uri*/ ,
-        '' /* album_uri */ ,
-        '' /* artist_uri */ ,
-        '' /* playlist_uri */ ,
-        '' /* spotify_command */ ,
-        '' /* query */ ,
-        '' /* other_settings*/ ,
-        'go_back' /* other_action */ ,
-        '' /* alfred_playlist_uri */ ,
-        '' /* artist_name */ ,
-        '' /* track_name */ ,
-        '' /* album_name */ ,
-        '' /* track_artwork_path */ ,
-        '' /* artist_artwork_path */ ,
-        '' /* album_artwork_path */ ,
-        '' /* playlist_name */ ,
-        '' /* playlist_artwork_path */ ,
-        '' /* $alfred_playlist_name */ ,
-        '' /* now_playing_notifications */ ,
-        '' /* is_alfred_playlist_active */ ,
-        '' /* country_code*/ ,
-        ''
-        /* userid*/
-    )), 'Go Back', "Return to previous step", './images/back.png', 'yes', null, '');
+    // Go Back button appears only when typing 'bb'
+    if (substr_count($query, 'bb') == 1) {
+        $w->result(null, serialize(array(
+            '' /*track_uri*/ ,
+            '' /* album_uri */ ,
+            '' /* artist_uri */ ,
+            '' /* playlist_uri */ ,
+            '' /* spotify_command */ ,
+            '' /* query */ ,
+            '' /* other_settings*/ ,
+            'go_back' /* other_action */ ,
+            '' /* alfred_playlist_uri */ ,
+            '' /* artist_name */ ,
+            '' /* track_name */ ,
+            '' /* album_name */ ,
+            '' /* track_artwork_path */ ,
+            '' /* artist_artwork_path */ ,
+            '' /* album_artwork_path */ ,
+            '' /* playlist_name */ ,
+            '' /* playlist_artwork_path */ ,
+            '' /* $alfred_playlist_name */ ,
+            '' /* now_playing_notifications */ ,
+            '' /* is_alfred_playlist_active */ ,
+            '' /* country_code*/ ,
+            ''
+            /* userid*/
+        )), 'Go Back', "Return to previous step", './images/back.png', 'yes', null, '');
+    }
 
     ////////////
     //
