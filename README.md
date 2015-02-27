@@ -1,5 +1,5 @@
 
-# alfred-spotify-mini-player.com
+# alfred-spotify-mini-player
 
 # Download
 
@@ -11,7 +11,7 @@ Follow steps [here](http://alfred-spotify-mini-player.com/setup)
 
 # Features
 
-[![Screenshot](https://raw.githubusercontent.com/vdesabou/alfred-spotify-mini-player/0d8bc334d26a40a20fa09c83c6a59f45ac6caf96/images/features.jpg)](http://alfred-spotify-mini-player.com/#features)
+[![Screenshot](https://raw.githubusercontent.com/vdesabou/alfred-spotify-mini-player/gh-pages/images/features.jpg)](http://alfred-spotify-mini-player.com/#features)
 
 # Example
 
