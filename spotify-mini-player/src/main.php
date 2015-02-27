@@ -1,9 +1,10 @@
 <?php
 
-// $begin_time = computeTime();
 require './src/functions.php';
 require './src/menu.php';
 require_once './src/workflows.php';
+// $begin_time = computeTime();
+error_reporting(0);
 $w = new Workflows('com.vdesabou.spotify.mini.player');
 
 $query = escapeQuery($argv[1]);
