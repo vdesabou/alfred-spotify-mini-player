@@ -3095,9 +3095,10 @@ function updateLibrary($w)
         foreach ($userPlaylists->items as $playlist) {
             $tracks = $playlist->tracks;
             $nb_tracktotal += $tracks->total;
-            $savedListPlaylist[] = $playlist;
+            if($playlist->name != "") {
+                $savedListPlaylist[] = $playlist;
+            }
         }
-
         $offsetGetUserPlaylists += $limitGetUserPlaylists;
     } while ($offsetGetUserPlaylists < $userPlaylists->total);
 
@@ -3794,10 +3795,11 @@ function refreshLibrary($w)
         $nb_playlist_total = $userPlaylists->total;
 
         foreach ($userPlaylists->items as $playlist) {
-            $savedListPlaylist[] = $playlist;
-            $nb_tracktotal += $tracks->total;
+            if($playlist->name != "") {
+                $savedListPlaylist[] = $playlist;
+                $nb_tracktotal += $tracks->total;
+            }
         }
-
         $offsetGetUserPlaylists += $limitGetUserPlaylists;
     } while ($offsetGetUserPlaylists < $userPlaylists->total);
 
