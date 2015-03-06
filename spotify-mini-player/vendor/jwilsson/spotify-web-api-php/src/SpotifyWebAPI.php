@@ -466,7 +466,7 @@ class SpotifyWebAPI
         $options = array_filter($options);
 
         $headers = $this->authHeaders();
-        $response = $this->request->api('GET', '/v1/browse/categories' . $categoryId, $options, $headers);
+        $response = $this->request->api('GET', '/v1/browse/categories/' . $categoryId, $options, $headers);
 
         return $response['body'];
     }
@@ -741,6 +741,49 @@ class SpotifyWebAPI
         $response = $this->request->api('GET', '/v1/me/tracks/contains', $options, $headers);
 
         return $response['body'];
+    }
+
+    /**
+     * Reorder tracks in a user's playlist
+     * Requires a valid access token.
+     * https://developer.spotify.com/web-api/reorder-playlists-tracks/
+     *
+     * @param string $userId ID of the user.
+     * @param string $playlistId ID of the playlist.
+     * @param array|object $options Options for the new .
+     * - int range_start Position of the first track to be reordered.
+     * - int range_length Optional. The amount of tracks to be reordered.
+     * - int insert_before Position where the tracks should be inserted.
+     * - string $snapshotId Optional. The playlist's snapshot ID.
+     *
+     * @return string|bool A new snapshot ID or false if the tracks weren't reordered.
+     */
+    public function reorderPlaylistTracks($userId, $playlistId, $options)
+    {
+        $defaults = array(
+            'range_start' => '',
+            'range_length' => 1,
+            'insert_before' => '',
+            'snapshot_id' => ''
+        );
+
+        $options = array_merge($defaults, (array) $options);
+        $options = array_filter($options);
+        $options = json_encode($options);
+
+        $headers = $this->authHeaders();
+        $headers['Content-Type'] = 'application/json';
+
+        $uri = '/v1/users/' . $userId . '/playlists/' . $playlistId . '/tracks';
+
+        $response = $this->request->api('PUT', $uri, $options, $headers);
+        $response = $response['body'];
+
+        if (isset($response->snapshot_id)) {
+            return $response->snapshot_id;
+        }
+
+        return false;
     }
 
     /**
