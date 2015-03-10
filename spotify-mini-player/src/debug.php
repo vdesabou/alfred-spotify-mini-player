@@ -104,7 +104,8 @@ $output = $output . exec("sw_vers -productVersion");
 $output = $output . "\n";
 $output = $output . exec("sysctl hw.memsize");
 $output = $output . "\n";
-
+$output = $output . exec("osascript -e 'tell application \"Spotify\" to version'");
+$output = $output . "\n";
 
 file_put_contents($w->home() . "/Downloads/spot_mini_debug/debug.log", $output);
 
