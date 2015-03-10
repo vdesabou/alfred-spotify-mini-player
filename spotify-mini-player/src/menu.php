@@ -5931,9 +5931,9 @@ function secondDelimiterRemove($w, $query, $settings, $db, $update_in_progress)
                 // Your Music
                 $w->result(null, serialize(array(
                     $track_uri /*track_uri*/ ,
-                    $album_uri /* album_uri */ ,
+                    '' /* album_uri */ ,
                     '' /* artist_uri */ ,
-                    $playlist_uri /* playlist_uri */ ,
+                    '' /* playlist_uri */ ,
                     '' /* spotify_command */ ,
                     '' /* query */ ,
                     'REMOVE_FROM_YOUR_MUSIC▹' /* other_settings*/ ,
@@ -5941,11 +5941,11 @@ function secondDelimiterRemove($w, $query, $settings, $db, $update_in_progress)
 
                     '' /* artist_name */ ,
                     $track_name /* track_name */ ,
-                    $album_name /* album_name */ ,
+                    '' /* album_name */ ,
                     '' /* track_artwork_path */ ,
                     '' /* artist_artwork_path */ ,
                     '' /* album_artwork_path */ ,
-                    $playlist_name /* playlist_name */ ,
+                    '' /* playlist_name */ ,
                     '' /* playlist_artwork_path */
                 )), "Your Music", "Select to remove the " . $message . " from Your Music", './images/yourmusic.png', 'yes', null, '');
                 $noresult = false;
@@ -5973,9 +5973,9 @@ function secondDelimiterRemove($w, $query, $settings, $db, $update_in_progress)
                     }
                     $w->result(null, serialize(array(
                         $track_uri /*track_uri*/ ,
-                        $album_uri /* album_uri */ ,
+                        '' /* album_uri */ ,
                         '' /* artist_uri */ ,
-                        $playlist_uri /* playlist_uri */ ,
+                        '' /* playlist_uri */ ,
                         '' /* spotify_command */ ,
                         '' /* query */ ,
                         'REMOVE_FROM_PLAYLIST▹' . $playlist[0] . '▹' . $playlist[1] /* other_settings*/ ,
@@ -5983,11 +5983,11 @@ function secondDelimiterRemove($w, $query, $settings, $db, $update_in_progress)
 
                         '' /* artist_name */ ,
                         $track_name /* track_name */ ,
-                        $album_name /* album_name */ ,
+                        '' /* album_name */ ,
                         '' /* track_artwork_path */ ,
                         '' /* artist_artwork_path */ ,
                         '' /* album_artwork_path */ ,
-                        $playlist_name /* playlist_name */ ,
+                        '' /* playlist_name */ ,
                         '' /* playlist_artwork_path */
                     )), "🎵" . $added . ucfirst($playlist[1]), $playlist[7] . " tracks ● " . $playlist[8] . " ● Select the playlist to remove the " . $message, $playlist[5], 'yes', null, '');
                     $noresult = false;
