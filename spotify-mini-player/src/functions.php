@@ -4916,15 +4916,24 @@ function getLyrics($w, $artist, $title)
                     ''
                 );
             case JSON_ERROR_NONE:
-                if ($json->lyrics->attributes->lyrics_body == '') {
+                if(isset($json->lyrics) &&
+                    isset($json->lyrics->attributes) &&
+                    isset($json->lyrics->attributes->lyrics_body)) {
+                    if ($json->lyrics->attributes->lyrics_body == '') {
+                        return array(
+                            false,
+                            ''
+                        );
+                    } else {
+                        return array(
+                            $uri,
+                            $json->lyrics->attributes->lyrics_body
+                        );
+                    }
+                } else {
                     return array(
                         false,
                         ''
-                    );
-                } else {
-                    return array(
-                        $uri,
-                        $json->lyrics->attributes->lyrics_body
                     );
                 }
         }
