@@ -3624,6 +3624,9 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
     }
     $noresult = true;
     $nb_tracks           = 0;
+    $track_name = '';
+    $album_name = '';
+    $playlist_name = '';
     for($i = $playqueue->current_track_index; $i < count($playqueue->tracks);$i++){
         $track = $playqueue->tracks[$i];
         if ($noresult == true) {
