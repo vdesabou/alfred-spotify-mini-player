@@ -6599,6 +6599,7 @@ function secondDelimiterBrowse($w, $query, $settings, $db, $update_in_progress)
         }
     } else {
         try {
+            $api    = getSpotifyWebAPI($w);
             $offsetListCategories = 0;
             $limitListCategories  = 50;
             do {
@@ -6610,9 +6611,8 @@ function secondDelimiterBrowse($w, $query, $settings, $db, $update_in_progress)
                     'locale' => '',
                     'offset' => $offsetListCategories
                 ));
-
                 $offsetListCategories += $limitListCategories;
-            } while ($offsetListCategories < $listCategories->total);
+            } while ($offsetListCategories < $listCategories->categories->total);
 
             foreach ($listCategories->categories->items as $category) {
                 $w->result(null, '', escapeQuery($category->name), "Browse this category", getCategoryArtwork($w, $category->id, $category->icons[0]->url, true, false), 'no', null, "Browse▹" . $country . "▹" . $category->id . "▹");
