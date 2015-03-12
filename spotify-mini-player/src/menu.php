@@ -613,7 +613,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress)
     // Search albums
     //
     if ($all_playlists == false) {
-        $getTracks = "select album_name,album_uri,album_artwork_path from tracks where yourmusic=1 and album_name like :artist_name limit " . $max_results;
+        $getTracks = "select album_name,album_uri,album_artwork_path from tracks where yourmusic=1 and :album_name like :artist_name limit " . $max_results;
     } else {
         $getTracks = "select album_name,album_uri,album_artwork_path from tracks where album_name like :album_name limit " . $max_results;
     }
