@@ -2521,9 +2521,7 @@ function downloadArtworks($w)
             return false;
         }
     }
-
-    unlink($w->data() . "/download_artworks_in_progress");
-
+    deleteTheFile($w->data() . "/download_artworks_in_progress");
     logMsg("End of Download Artworks");
     if ($nb_artworks_total != 0) {
         $elapsed_time = time() - $words[3];
@@ -3031,9 +3029,7 @@ function updateLibrary($w)
     if (file_exists($w->data() . '/library.db')) {
         rename($w->data() . '/library.db', $w->data() . '/library_old.db');
     }
-    if (file_exists($w->data() . '/library_new.db')) {
-        unlink($w->data() . "/library_new.db");
-    }
+    deleteTheFile($w->data() . '/library_new.db');
     $dbfile = $w->data() . '/library_new.db';
     touch($dbfile);
 
@@ -3068,11 +3064,11 @@ function updateLibrary($w)
     }
     $dbfile                 = $w->data() . '/fetch_artworks.db';
     if (file_exists($dbfile)) {
-        unlink($dbfile);
+        deleteTheFile($dbfile);
         touch($dbfile);
     }
     if (file_exists($w->data() . '/download_artworks_in_progress')) {
-        unlink($w->data() . "/download_artworks_in_progress");
+        deleteTheFile($w->data() . '/download_artworks_in_progress');
     }
     try {
         $dbartworks = new PDO("sqlite:$dbfile", "", "", array(
@@ -3648,7 +3644,7 @@ function updateLibrary($w)
     }
 
     if (file_exists($w->data() . '/library_old.db')) {
-        unlink($w->data() . '/library_old.db');
+        deleteTheFile($w->data() . '/library_old.db');
     }
     rename($w->data() . '/library_new.db', $w->data() . '/library.db');
 
@@ -3658,15 +3654,14 @@ function updateLibrary($w)
     }
     // remove legacy settings.db if needed
     if (file_exists($w->data() . '/settings.db')) {
-        unlink($w->data() . '/settings.db');
+        deleteTheFile($w->data() . '/settings.db');
     }
 
     // Download artworks in background
     if ($artworksToDownload == true) {
         exec("php -f ./src/action.php -- \"\" \"DOWNLOAD_ARTWORKS\" \"DOWNLOAD_ARTWORKS\" >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
     }
-
-    unlink($w->data() . "/update_library_in_progress");
+    deleteTheFile($w->data() . '/update_library_in_progress');
 }
 
 /**
@@ -3720,7 +3715,7 @@ function refreshLibrary($w)
         $ret = exec("kill -9 \"$pid\"");
     }
     if (file_exists($w->data() . '/download_artworks_in_progress')) {
-        unlink($w->data() . "/download_artworks_in_progress");
+        deleteTheFile($w->data() . '/download_artworks_in_progress');
     }
 
     try {
@@ -4654,7 +4649,7 @@ function refreshLibrary($w)
     displayNotificationWithArtwork($message . " - took " . beautifyTime($elapsed_time, true), './images/update.png', 'Library refreshed');
 
     if (file_exists($w->data() . '/library_old.db')) {
-        unlink($w->data() . '/library_old.db');
+        deleteTheFile($w->data() . '/library_old.db');
     }
     rename($w->data() . '/library_new.db', $w->data() . '/library.db');
 
@@ -4662,7 +4657,7 @@ function refreshLibrary($w)
     logMsg("========DOWNLOAD_ARTWORKS DURING REFRESH LIBRARY ========");
     exec("php -f ./src/action.php -- \"\" \"DOWNLOAD_ARTWORKS\" \"DOWNLOAD_ARTWORKS\" >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
 
-    unlink($w->data() . "/update_library_in_progress");
+    deleteTheFile($w->data() . '/update_library_in_progress');
 }
 
 /**
@@ -4716,7 +4711,7 @@ function handleDbIssuePdoEcho($dbhandle, $w)
     logMsg('DB Exception: ' . $errorInfo[0] . ' ' . $errorInfo[1] . ' ' . $errorInfo[2]);
 
     if (file_exists($w->data() . '/update_library_in_progress')) {
-        unlink($w->data() . '/update_library_in_progress');
+        deleteTheFile($w->data() . '/update_library_in_progress');
     }
 
     // set back old library
@@ -4725,7 +4720,7 @@ function handleDbIssuePdoEcho($dbhandle, $w)
     }
 
     if (file_exists($w->data() . '/library_old.db')) {
-        unlink($w->data() . '/library_old.db');
+        deleteTheFile($w->data() . '/library_old.db');
     }
 
     displayNotificationWithArtwork("DB Exception: " . $errorInfo[2], './images/warning.png');
@@ -4746,12 +4741,12 @@ function handleDbIssuePdoEcho($dbhandle, $w)
 function handleSpotifyWebAPIException($w, $e)
 {
     if (file_exists($w->data() . '/update_library_in_progress')) {
-        unlink($w->data() . '/update_library_in_progress');
+        deleteTheFile($w->data() . '/update_library_in_progress');
     }
 
     // remove the new library (it failed)
     if (file_exists($w->data() . "/library_new.db")) {
-        unlink($w->data() . '/library_new.db');
+        deleteTheFile($w->data() . '/library_new.db');
     }
 
     // set back old library
@@ -5140,27 +5135,31 @@ function doJsonRequest($w, $url, $actionMode = true)
  */
 function killUpdate($w)
 {
-    if (file_exists($w->data() . '/update_library_in_progress')) {
-        unlink($w->data() . '/update_library_in_progress');
-    }
-
-    if (file_exists($w->data() . '/download_artworks_in_progress')) {
-        unlink($w->data() . "/download_artworks_in_progress");
-    }
-
-    // remove the new library (it failed)
-    if (file_exists($w->data() . "/library_new.db")) {
-        unlink($w->data() . '/library_new.db');
-    }
-
-    // set back old library
-    if (file_exists($w->data() . '/library_old.db')) {
-        rename($w->data() . '/library_old.db', $w->data() . '/library.db');
-    }
+    deleteTheFile($w->data() . '/update_library_in_progress');
+    deleteTheFile($w->data() . '/download_artworks_in_progress');
+    deleteTheFile($w->data() . '/library_new.db');
+    deleteTheFile($w->data() . '/library_old.db');
 
     exec("kill -9 $(ps -efx | grep \"php\" | egrep \"update_|php -S localhost:15298|ADDTOPLAYLIST|UPDATE_|DOWNLOAD_ARTWORKS\" | grep -v grep | awk '{print $2}')");
 
     displayNotificationWithArtwork("Update library was killed", './images/kill.png', 'Kill Update Library ');
+}
+
+/**
+ * deleteTheFile function.
+ *
+ * @access public
+ * @param mixed $filename
+ * @return void
+ */
+function deleteTheFile($filename) {
+    @chmod($filename, 0777);
+    @unlink(realpath($filename));
+
+    if(is_file($filename)) {
+       logMsg("Error(deleteTheFile): file was locked (or permissions error) " . realpath($filename) . " permissions: " . decoct(fileperms(realpath($filename)) & 0777));
+       displayNotificationWithArtwork("Problem deleting " . $filename, './images/warning.png', 'Delete File');
+    }
 }
 
 /**
@@ -5173,9 +5172,7 @@ function killUpdate($w)
 function getCountryName($cc)
 {
     // from http://stackoverflow.com/questions/14599400/how-to-get-iso-3166-1-compatible-country-code
-
     $country_names = json_decode(file_get_contents("./src/country_names.json"), true);
-
     return $country_names[$cc];
 }
 
@@ -5294,10 +5291,7 @@ function getSettings($w)
         catch (PDOException $e) {
             logMsg("Error(getSettings): (exception " . print_r($e) . ")");
         }
-
-        if (file_exists($w->data() . '/settings.db')) {
-            unlink($w->data() . '/settings.db');
-        }
+        deleteTheFile($w->data() . '/settings.db');
     }
 
     $settings = $w->read('settings.json');
