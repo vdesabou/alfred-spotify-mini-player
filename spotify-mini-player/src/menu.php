@@ -6816,6 +6816,7 @@ function thirdDelimiterBrowse($w, $query, $settings, $db, $update_in_progress)
     try {
         $offsetCategoryPlaylists = 0;
         $limitCategoryPlaylists  = 50;
+        $api    = getSpotifyWebAPI($w);
         do {
             // refresh api
             $api                = getSpotifyWebAPI($w, $api);
@@ -6833,7 +6834,7 @@ function thirdDelimiterBrowse($w, $query, $settings, $db, $update_in_progress)
             }
 
             $offsetCategoryPlaylists += $limitCategoryPlaylists;
-        } while ($offsetCategoryPlaylists < $listPlaylists->total);
+        } while ($offsetCategoryPlaylists < $listPlaylists->playlists->total);
     }
     catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
         $w->result(null, 'help', "Exception occurred", "" . $e->getMessage(), './images/warning.png', 'no', null, '');
