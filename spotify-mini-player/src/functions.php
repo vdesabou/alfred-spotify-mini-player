@@ -314,9 +314,15 @@ function updateCurrentTrackIndexFromPlayQueue($w) {
     if ($playqueue == false) {
         displayNotificationWithArtwork("No play queue yet", './images/warning.png', 'Error!');
     }
-    $command_output = exec("./src/track_info.ksh 2>&1");
-    if (substr_count($command_output, '▹') > 0) {
-        $results = explode('▹', $command_output);
+    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+    if($retVal != 0) {
+        displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+        return;
+    }
+
+    if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
+        $results = explode('▹', $retArr[0]);
 	    $found = false;
         $i = 0;
         $current_track_name = cleanupTrackName($results[0]);
@@ -525,10 +531,15 @@ function playAlfredPlaylist($w)
 function lookupCurrentArtist($w)
 {
     // get info on current song
-    $command_output = exec("./src/track_info.ksh 2>&1");
+    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+    if($retVal != 0) {
+        displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+        return;
+    }
 
-    if (substr_count($command_output, '▹') > 0) {
-        $results = explode('▹', $command_output);
+    if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
+        $results = explode('▹', $retArr[0]);
         $tmp     = explode(':', $results[4]);
         if ($tmp[1] == 'local') {
             $artist_uri = getArtistUriFromSearch($w, $results[1]);
@@ -562,10 +573,15 @@ function displayCurrentArtistBiography($w)
     }
 
     // get info on current song
-    $command_output = exec("./src/track_info.ksh 2>&1");
+    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+    if($retVal != 0) {
+        displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+        return;
+    }
 
-    if (substr_count($command_output, '▹') > 0) {
-        $results = explode('▹', $command_output);
+    if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
+        $results = explode('▹', $retArr[0]);
         $tmp     = explode(':', $results[4]);
         if ($tmp[1] == 'local') {
             $artist_uri = getArtistUriFromSearch($w, $results[1]);
@@ -593,10 +609,15 @@ function displayCurrentArtistBiography($w)
 function playCurrentArtist($w)
 {
     // get info on current song
-    $command_output = exec("./src/track_info.ksh 2>&1");
+    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+    if($retVal != 0) {
+        displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+        return;
+    }
 
-    if (substr_count($command_output, '▹') > 0) {
-        $results = explode('▹', $command_output);
+    if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
+        $results = explode('▹', $retArr[0]);
         $tmp     = explode(':', $results[4]);
         if ($tmp[1] == 'local') {
             $artist_uri = getArtistUriFromSearch($w, $results[1]);
@@ -625,10 +646,15 @@ function playCurrentArtist($w)
 function playCurrentAlbum($w)
 {
     // get info on current song
-    $command_output = exec("./src/track_info.ksh 2>&1");
+    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+    if($retVal != 0) {
+        displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+        return;
+    }
 
-    if (substr_count($command_output, '▹') > 0) {
-        $results   = explode('▹', $command_output);
+    if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
+        $results = explode('▹', $retArr[0]);
         $tmp       = explode(':', $results[4]);
         $album_uri = getAlbumUriFromTrack($w, $results[4]);
         if ($album_uri == false) {
@@ -653,20 +679,22 @@ function playCurrentAlbum($w)
 function addCurrentTrackTo($w)
 {
     // get info on current song
-    $command_output = exec("./src/track_info.ksh 2>&1");
+    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+    if($retVal != 0) {
+        displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+        return;
+    }
 
-    if (substr_count($command_output, '▹') > 0) {
-        $results = explode('▹', $command_output);
+    if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
+        $results = explode('▹', $retArr[0]);
         $tmp     = explode(':', $results[4]);
         if ($tmp[1] == 'local') {
             //
             // Read settings from JSON
             //
-
             $settings = getSettings($w);
-
             $country_code = $settings->country_code;
-
             // local track, look it up online
 
             $query         = 'track:' . strtolower(escapeQuery($results[0])) . ' artist:' . strtolower(escapeQuery($results[1]));
@@ -703,10 +731,15 @@ function addCurrentTrackTo($w)
 function removeCurrentTrackFrom($w)
 {
     // get info on current song
-    $command_output = exec("./src/track_info.ksh 2>&1");
+    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+    if($retVal != 0) {
+        displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+        return;
+    }
 
-    if (substr_count($command_output, '▹') > 0) {
-        $results = explode('▹', $command_output);
+    if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
+        $results = explode('▹', $retArr[0]);
         exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Remove▹" . $results[4] . "∙" . escapeQuery($results[0]) . '▹' . "\"'");
     } else {
         displayNotificationWithArtwork("No track is playing", './images/warning.png');
@@ -748,10 +781,15 @@ function addCurrentTrackToAlfredPlaylistOrYourMusic($w)
 function addCurrentTrackToAlfredPlaylist($w)
 {
     // get info on current song
-    $command_output = exec("./src/track_info.ksh 2>&1");
+    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+    if($retVal != 0) {
+        displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+        return;
+    }
 
-    if (substr_count($command_output, '▹') > 0) {
-        $results = explode('▹', $command_output);
+    if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
+        $results = explode('▹', $retArr[0]);
         //
         // Read settings from JSON
         //
@@ -814,10 +852,15 @@ function addCurrentTrackToAlfredPlaylist($w)
 function addCurrentTrackToYourMusic($w)
 {
     // get info on current song
-    $command_output = exec("./src/track_info.ksh 2>&1");
+    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+    if($retVal != 0) {
+        displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+        return;
+    }
 
-    if (substr_count($command_output, '▹') > 0) {
-        $results = explode('▹', $command_output);
+    if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
+        $results = explode('▹', $retArr[0]);
         $tmp     = explode(':', $results[4]);
         if ($tmp[1] == 'local') {
             //
@@ -1376,10 +1419,15 @@ function createTheUserPlaylist($w, $playlist_name)
  */
 function createRadioArtistPlaylistForCurrentArtist($w)
 {
-    $command_output = exec("./src/track_info.ksh 2>&1");
+    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+    if($retVal != 0) {
+        displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+        return;
+    }
 
-    if (substr_count($command_output, '▹') > 0) {
-        $results = explode('▹', $command_output);
+    if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
+        $results = explode('▹', $retArr[0]);
         createRadioArtistPlaylist($w, $results[1]);
     } else {
         displayNotificationWithArtwork("Cannot get current artist", './images/warning.png', 'Error!');
@@ -1469,10 +1517,15 @@ function createRadioArtistPlaylist($w, $artist_name)
  */
 function createRadioSongPlaylistForCurrentTrack($w)
 {
-    $command_output = exec("./src/track_info.ksh 2>&1");
+    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+    if($retVal != 0) {
+        displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+        return;
+    }
 
-    if (substr_count($command_output, '▹') > 0) {
-        $results = explode('▹', $command_output);
+    if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
+        $results = explode('▹', $retArr[0]);
         createRadioSongPlaylist($w, $results[0], $results[4], $results[1]);
     } else {
         displayNotificationWithArtwork("Cannot get current track", './images/warning.png', 'Error!');
@@ -2255,10 +2308,15 @@ function displayNotificationWithArtwork($subtitle, $artwork, $title = 'Spotify M
  */
 function displayNotificationForCurrentTrack($w)
 {
-    $command_output = exec("./src/track_info.ksh 2>&1");
+    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+    if($retVal != 0) {
+        displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+        return;
+    }
 
-    if (substr_count($command_output, '▹') > 0) {
-        $results = explode('▹', $command_output);
+    if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
+        $results = explode('▹', $retArr[0]);
         displayNotificationWithArtwork('🔈 ' . escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]) . ' in album ' . escapeQuery($results[2]), getTrackOrAlbumArtwork($w, $results[4], true), 'Now Playing ' . floatToStars($results[6] / 100) . ' (' . beautifyTime($results[5]) . ')');
     } else {
         displayNotificationWithArtwork("Cannot get current track", './images/warning.png', 'Error!');
@@ -2280,11 +2338,15 @@ function displayLyricsForCurrentTrack($w)
         return;
     }
 
-    $command_output = exec("./src/track_info.ksh 2>&1");
+    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+    if($retVal != 0) {
+        displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+        return;
+    }
 
-    if (substr_count($command_output, '▹') > 0) {
-        $results = explode('▹', $command_output);
-
+    if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
+        $results = explode('▹', $retArr[0]);
         exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Lyrics▹" . $results[4] . "∙" . escapeQuery($results[1]) . "∙" . escapeQuery($results[0]) . "\"'");
     } else {
         displayNotificationWithArtwork("Cannot get current track", './images/warning.png', 'Error!');

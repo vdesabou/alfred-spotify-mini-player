@@ -2560,16 +2560,36 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
     $is_public_playlists        = $settings->is_public_playlists;
 
     // get info on current song
-    $command_output = exec("./src/track_info.ksh 2>&1");
+    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+    if($retVal != 0) {
+        $w->result(null, 'help', "AppleScript execution failed!", "Message: " . htmlspecialchars($retArr[0]), './images/warning.png', 'no', null, '');
+        $w->result(null, serialize(array(
+            '' /*track_uri*/ ,
+            '' /* album_uri */ ,
+            '' /* artist_uri */ ,
+            '' /* playlist_uri */ ,
+            '' /* spotify_command */ ,
+            '' /* query */ ,
+            'Open▹' . 'http://alfred-spotify-mini-player.com/blog/issue-with-latest-spotify-update/' /* other_settings*/ ,
+            '' /* other_action */ ,
+            '' /* artist_name */ ,
+            '' /* track_name */ ,
+            '' /* album_name */ ,
+            '' /* track_artwork_path */ ,
+            '' /* artist_artwork_path */ ,
+            '' /* album_artwork_path */ ,
+            '' /* playlist_name */ ,
+            '' /* playlist_artwork_path */
+        )), 'Maybe you have an issue with a Broken Spotify version?', "Go to the article to get more information", './images/website.png', 'yes', null, '');
+        return;
+    }
 
-    if (substr_count($command_output, '▹') > 0) {
-        $results = explode('▹', $command_output);
-
+    if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
+        $results = explode('▹', $retArr[0]);
         if ($results[1] == '' || $results[2] == '') {
             $w->result(null, 'help', "Current track is not valid: Artist or Album name is missing", "Fill missing information in Spotify and retry again", './images/warning.png', 'no', null, '');
             echo $w->toxml();
             return;
-
         }
 
         $currentArtistArtwork = getArtistArtwork($w, $results[1], false);
