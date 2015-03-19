@@ -4,6 +4,7 @@
 # Download
 
 Find all information and download the workflow [on the web site](http://alfred-spotify-mini-player.com)
+
 Follow [@TheMiniPlayer](https://twitter.com/TheMiniPlayer) to get all the news.
 
 # Setup
