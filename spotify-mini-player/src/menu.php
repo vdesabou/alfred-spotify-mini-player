@@ -4004,8 +4004,7 @@ function secondDelimiterAlbums($w, $query, $settings, $db, $update_in_progress)
     $track      = $words[2];
 
     $href = explode(':', $album_uri);
-    if ($href[1] == 'track') {
-
+    if ($href[1] == 'track' || $href[1] == 'local') {
         $track_uri = $album_uri;
         $album_uri = getAlbumUriFromTrack($w, $track_uri);
         if ($album_uri == false) {
@@ -4014,6 +4013,7 @@ function secondDelimiterAlbums($w, $query, $settings, $db, $update_in_progress)
             return;
         }
     }
+
 
     try {
         if (mb_strlen($track) < 3) {
@@ -4504,7 +4504,7 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
         $album_name  = $words[3];
 
         $href = explode(':', $album_uri);
-        if ($href[1] == 'track') {
+        if ($href[1] == 'track' || $href[1] == 'local') {
             $track_uri = $album_uri;
             $album_uri = getAlbumUriFromTrack($w, $track_uri);
             if ($album_uri == false) {
