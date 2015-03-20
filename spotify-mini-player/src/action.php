@@ -4,6 +4,9 @@ require './src/functions.php';
 require_once './src/workflows.php';
 $w = new Workflows('com.vdesabou.spotify.mini.player');
 
+// Report all PHP errors
+error_reporting(E_ALL);
+
 $query         = $argv[1];
 $type          = $argv[2];
 $add_to_option = $argv[3];
@@ -149,7 +152,17 @@ if ($type == "TRACK" && $other_settings == "" &&
 		        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
 	            }
                 if($other_action == "") {
-                    addTrackToPlayQueue($w, $track_uri, $track_name, $country_code);
+                    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+                    if($retVal != 0) {
+                        displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+                        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+                        return;
+                    }
+
+                    if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
+                        $results = explode('▹', $retArr[0]);
+                        addTrackToPlayQueue($w, $track_uri, escapeQuery($results[0]), escapeQuery($results[1]), escapeQuery($results[2]), $results[5], $country_code);
+                    }
                 }
                 return;
             }
@@ -419,6 +432,10 @@ if ($type == "TRACK" && $other_settings == "" &&
         if ($track_uri != '') {
             $track_artwork_path = getTrackOrAlbumArtwork($w, $track_uri, true);
             $tmp                = explode(':', $track_uri);
+            if ($tmp[1] == 'local') {
+                displayNotificationWithArtwork('Cannot remove local track ' . $track_name, './images/warning.png', 'Error!');
+                return;
+            }
             $ret                = removeTrackFromPlaylist($w, $tmp[2], $setting[1], $setting[2]);
             if($userid != 'vdesabou') {
 	        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);
@@ -597,22 +614,6 @@ if ($type == "TRACK" && $other_settings == "" &&
             displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
         }
         return;
-    } else if ($other_action == "enable_lookup_local_tracks_online") {
-        $ret = updateSetting($w, 'lookup_local_tracks_online', 1);
-        if ($ret == true) {
-            displayNotificationWithArtwork("Lookup for local tracks online is enabled", './images/enable_lookup_local_tracks_online.png', 'Settings');
-        } else {
-            displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
-        }
-        return;
-    } else if ($other_action == "disable_lookup_local_tracks_online") {
-        $ret = updateSetting($w, 'lookup_local_tracks_online', 0);
-        if ($ret == true) {
-            displayNotificationWithArtwork("Lookup for local tracks online is disabled", './images/disable_lookup_local_tracks_online.png', 'Settings');
-        } else {
-            displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
-        }
-        return;
     } else if ($other_action == "enable_public_playlists") {
         $ret = updateSetting($w, 'is_public_playlists', 1);
         if ($ret == true) {
@@ -776,7 +777,7 @@ if ($type == "TRACK" && $other_settings == "" &&
         }
         return;
     } else if ($other_action == "random") {
-        list($track_uri, $track_name) = getRandomTrack($w);
+        list($track_uri, $track_name, $artist_name, $album_name, $duration) = getRandomTrack($w);
         // start now playing if needed
         if ($now_playing_notifications == "") {
             //
@@ -799,7 +800,7 @@ if ($type == "TRACK" && $other_settings == "" &&
         if($userid != 'vdesabou') {
             stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
         }
-        addTrackToPlayQueue($w, $track_uri, $track_name, $country_code);
+        addTrackToPlayQueue($w, $track_uri, $track_name, $artist_name, $album_name, $duration, $country_code);
         return;
     } else if ($other_action == "random_album") {
         list($album_uri, $album_name, $theartistname) = getRandomAlbum($w);

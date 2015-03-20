@@ -255,18 +255,36 @@ function addArtistToPlayQueue($w, $artist_uri, $artist_name, $country_code) {
  * @param mixed $w
  * @param mixed $track_uri
  * @param mixed $track_name
+ * @param mixed $artist_name
+ * @param mixed $album_name
+ * @param mixed $duration
  * @param mixed $country_code
  * @return void
  */
-function addTrackToPlayQueue($w, $track_uri, $track_name, $country_code) {
+function addTrackToPlayQueue($w, $track_uri, $track_name, $artist_name, $album_name, $duration, $country_code) {
     if (!$w->internet()) {
         return false;
     }
 	$tracks = array();
 	$track = getTheFullTrack($w, $track_uri, $country_code);
+
 	if($track == false) {
-		displayNotificationWithArtwork("Cannot get track " . $track_name, './images/warning.png', 'Error!');
-		return false;
+        $track = new stdClass();
+        $track->uri = $track_uri;
+        $track->name = $track_name;
+        $artists = array();
+        $artist = new stdClass();
+        $artist->name = $artist_name;
+        $artists[0] = $artist;
+        $track->artists = $artists;
+        $album = new stdClass();
+        $album->name = $album_name;
+        $track->album = $album;
+        if(is_numeric($duration)) {
+            $track->duration_ms = $duration*1000;
+        } else {
+            $track->duration = $duration;
+        }
 	}
     $playqueue = $w->read('playqueue.json');
     if ($playqueue == false) {
@@ -1152,18 +1170,21 @@ function getRandomTrack($w)
             PDO::ATTR_PERSISTENT => true
         ));
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $getTracks = "select uri,track_name from tracks order by random() limit 1";
+        $getTracks = "select uri,track_name,artist_name,album_name,duration from tracks order by random() limit 1";
         $stmt      = $db->prepare($getTracks);
         $stmt->execute();
         $track       = $stmt->fetch();
         $thetrackuri = $track[0];
         $thetrackname = $track[1];
+        $theartistname = $track[2];
+        $thealbumname = $track[3];
+        $theduration = $track[4];
     }
     catch (PDOException $e) {
         handleDbIssuePdoEcho($db, $w);
     }
 
-    return array($thetrackuri,$thetrackname);
+    return array($thetrackuri,$thetrackname,$theartistname,$thealbumname,$theduration);
 }
 
 /**
@@ -1658,7 +1679,8 @@ function getThePlaylistTracks($w, $playlist_uri)
             $userPlaylistTracks = $api->getUserPlaylistTracks(urlencode($tmp[2]), $tmp[4], array(
                 'fields' => array(
                     'total',
-                    'items.track(id,is_playable)'
+                    'items.track(id,is_playable)',
+                    'items(is_local)'
                 ),
                 'limit' => $limitGetUserPlaylistTracks,
                 'offset' => $offsetGetUserPlaylistTracks,
@@ -1667,7 +1689,10 @@ function getThePlaylistTracks($w, $playlist_uri)
 
             foreach ($userPlaylistTracks->items as $item) {
                 $track    = $item->track;
-                if($track->is_playable) {
+                if(isset($track->is_playable) && $track->is_playable) {
+                    $tracks[] = $track->id;
+                }
+                if(isset($item->is_local) && $item->is_local) {
                     $tracks[] = $track->id;
                 }
             }
@@ -1817,7 +1842,6 @@ function getTheAlbumFullTracks($w, $album_uri, $actionMode = false)
     //
 
     $settings = getSettings($w);
-
     $country_code = $settings->country_code;
 
     try {
@@ -1880,6 +1904,7 @@ function getThePlaylistFullTracks($w, $playlist_uri)
                         'fields' => array(
                             'total',
                             'items(added_at)',
+                            'items(is_local)',
                             'items.track(is_playable,duration_ms,uri,popularity,name)',
                             'items.track.album(album_type,images,uri,name)',
                             'items.track.artists(name,uri)'
@@ -2546,7 +2571,6 @@ function downloadArtworks($w)
 function getTrackOrAlbumArtwork($w, $spotifyURL, $fetchIfNotPresent, $fetchLater = false, $isLaterFetch = false)
 {
     $hrefs = explode(':', $spotifyURL);
-
     $isAlbum = false;
     if ($hrefs[1] == "album") {
         $isAlbum = true;
@@ -2979,7 +3003,7 @@ function getArtistArtworkURL($w, $artist)
         return '';
     }
 
-    return $json[artist][image][1]['#text'];
+    return $json['artist']['image'][1]['#text'];
 }
 
 /**
@@ -3001,7 +3025,6 @@ function updateLibrary($w)
     $settings                   = getSettings($w);
     $country_code               = $settings->country_code;
     $userid                     = $settings->userid;
-    $lookup_local_tracks_online = $settings->lookup_local_tracks_online;
 
     $words = explode('▹', $in_progress_data);
 
@@ -3017,15 +3040,12 @@ function updateLibrary($w)
                     rename($folder . '/' . $file, $folder . '/' . hash('md5', $file) . '/' . $file);
                 }
             }
-
             closedir($handle);
         }
     }
 
     putenv('LANG=fr_FR.UTF-8');
-
     ini_set('memory_limit', '512M');
-
     if (file_exists($w->data() . '/library.db')) {
         rename($w->data() . '/library.db', $w->data() . '/library_old.db');
     }
@@ -3212,7 +3232,7 @@ function updateLibrary($w)
     $nb_track = 0;
 
     try {
-        $db->exec("create table tracks (yourmusic boolean, popularity int, uri text, album_uri text, artist_uri text, track_name text, album_name text, artist_name text, album_type text, track_artwork_path text, artist_artwork_path text, album_artwork_path text, playlist_name text, playlist_uri text, playable boolean, added_at text, duration text, nb_times_played int)");
+        $db->exec("create table tracks (yourmusic boolean, popularity int, uri text, album_uri text, artist_uri text, track_name text, album_name text, artist_name text, album_type text, track_artwork_path text, artist_artwork_path text, album_artwork_path text, playlist_name text, playlist_uri text, playable boolean, added_at text, duration text, nb_times_played int, local_track boolean)");
         $db->exec("CREATE INDEX IndexPlaylistUri ON tracks (playlist_uri)");
         $db->exec("CREATE INDEX IndexArtistName ON tracks (artist_name)");
         $db->exec("CREATE INDEX IndexAlbumName ON tracks (album_name)");
@@ -3222,7 +3242,7 @@ function updateLibrary($w)
         $insertPlaylist = "insert into playlists values (:uri,:name,:nb_tracks,:owner,:username,:playlist_artwork_path,:ownedbyuser,:nb_playable_tracks,:duration_playlist,:nb_times_played,:collaborative,:public)";
         $stmtPlaylist   = $db->prepare($insertPlaylist);
 
-        $insertTrack = "insert into tracks values (:yourmusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_type,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:added_at,:duration,:nb_times_played)";
+        $insertTrack = "insert into tracks values (:yourmusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_type,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:added_at,:duration,:nb_times_played,:local_track)";
         $stmtTrack   = $db->prepare($insertTrack);
     }
     catch (PDOException $e) {
@@ -3290,6 +3310,7 @@ function updateLibrary($w)
                         'fields' => array(
                             'total',
                             'items(added_at)',
+                            'items(is_local)',
                             'items.track(is_playable,duration_ms,uri,popularity,name)',
                             'items.track.album(album_type,images,uri,name)',
                             'items.track.artists(name,uri)'
@@ -3327,66 +3348,46 @@ function updateLibrary($w)
                 $artist  = $artists[0];
                 $album   = $track->album;
 
-                // This is a known issue
-                // http://stackoverflow.com/questions/27533743/local-tracks-returned-as-null-by-spotify-web-api?noredirect=1#comment43496449_27533743
-                if ($track->uri == 'spotify:track:null') {
-                    if ($lookup_local_tracks_online == false) {
-                        logMsg("WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri");
-                        $nb_track++;
-                        $nb_skipped++;
-                        continue;
-                    } else {
-                        // unknown track, look it up online
-                        $query   = 'track:' . strtolower($track->name) . ' artist:' . strtolower($artist->name);
-                        $results = searchWebApi($w, $country_code, $query, 'track', 1);
-
-                        if (count($results) > 0) {
-                            // only one track returned
-                            $track   = $results[0];
-                            $artists = $track->artists;
-                            $artist  = $artists[0];
-                            logMsg("INFO: Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name");
-
-                        } else {
-                            // skip
-                            logMsg("WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri ");
-                            $nb_track++;
-                            $nb_skipped++;
-                            continue;
-                        }
-                    }
-                }
-
-                if($track->is_playable) {
+                $playable = 0;
+                $local_track = 0;
+                if(isset($track->is_playable) && $track->is_playable) {
                     $playable = 1;
-                } else {
-                    $playable = 0;
+                }
+                if(isset($item->is_local) && $item->is_local) {
+                    $playable = 1;
+                    $local_track = 1;
                 }
                 try {
                     //
                     // Download artworks in Fetch later mode
-                    list($already_present, $track_artwork_path) = getTrackOrAlbumArtwork($w, $track->uri, true, true);
-                    if ($already_present == false) {
-                        $artworksToDownload = true;
-                        $stmtTrackArtwork->bindValue(':track_uri', $track->uri);
-                        $stmtTrackArtwork->bindValue(':already_fetched', 0);
-                        $stmtTrackArtwork->execute();
+                    if(isset($track->uri)) {
+                        list($already_present, $track_artwork_path) = getTrackOrAlbumArtwork($w, $track->uri, true, true);
+                        if ($already_present == false) {
+                            $artworksToDownload = true;
+                            $stmtTrackArtwork->bindValue(':track_uri', $track->uri);
+                            $stmtTrackArtwork->bindValue(':already_fetched', 0);
+                            $stmtTrackArtwork->execute();
+                        }
                     }
 
-                    list($already_present, $artist_artwork_path) = getArtistArtwork($w, $artist->name, true, true);
-                    if ($already_present == false) {
-                        $artworksToDownload = true;
-                        $stmtArtistArtwork->bindValue(':artist_name', $artist->name);
-                        $stmtArtistArtwork->bindValue(':already_fetched', 0);
-                        $stmtArtistArtwork->execute();
+                    if(isset($artist->name)) {
+                        list($already_present, $artist_artwork_path) = getArtistArtwork($w, $artist->name, true, true);
+                        if ($already_present == false) {
+                            $artworksToDownload = true;
+                            $stmtArtistArtwork->bindValue(':artist_name', $artist->name);
+                            $stmtArtistArtwork->bindValue(':already_fetched', 0);
+                            $stmtArtistArtwork->execute();
+                        }
                     }
 
-                    list($already_present, $album_artwork_path) = getTrackOrAlbumArtwork($w, $album->uri, true, true);
-                    if ($already_present == false) {
-                        $artworksToDownload = true;
-                        $stmtAlbumArtwork->bindValue(':album_uri', $album->uri);
-                        $stmtAlbumArtwork->bindValue(':already_fetched', 0);
-                        $stmtAlbumArtwork->execute();
+                    if(isset($album->uri)) {
+                        list($already_present, $album_artwork_path) = getTrackOrAlbumArtwork($w, $album->uri, true, true);
+                        if ($already_present == false) {
+                            $artworksToDownload = true;
+                            $stmtAlbumArtwork->bindValue(':album_uri', $album->uri);
+                            $stmtAlbumArtwork->bindValue(':already_fetched', 0);
+                            $stmtAlbumArtwork->execute();
+                        }
                     }
                 }
                 catch (PDOException $e) {
@@ -3419,6 +3420,7 @@ function updateLibrary($w)
                     $stmtTrack->bindValue(':added_at', $item->added_at);
                     $stmtTrack->bindValue(':duration', beautifyTime($track->duration_ms / 1000));
                     $stmtTrack->bindValue(':nb_times_played', 0);
+                    $stmtTrack->bindValue(':local_track', $local_track);
                     $stmtTrack->execute();
                 }
                 catch (PDOException $e) {
@@ -3470,67 +3472,46 @@ function updateLibrary($w)
         $artist  = $artists[0];
         $album   = $track->album;
 
-        // This is a known issue
-        // http://stackoverflow.com/questions/27533743/local-tracks-returned-as-null-by-spotify-web-api?noredirect=1#comment43496449_27533743
-        if ($track->uri == 'spotify:track:null') {
-            if ($lookup_local_tracks_online == false) {
-                logMsg("WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri");
-                $nb_track++;
-                $nb_skipped++;
-                continue;
-            } else {
-                // unknown track, look it up online
-                $query   = 'track:' . strtolower($track->name) . ' artist:' . strtolower($artist->name);
-                $results = searchWebApi($w, $country_code, $query, 'track', 1);
-
-                if (count($results) > 0) {
-                    // only one track returned
-                    $track   = $results[0];
-                    $artists = $track->artists;
-                    $artist  = $artists[0];
-                    logMsg("INFO: Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name");
-
-                } else {
-                    // skip
-                    logMsg("WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri ");
-                    $nb_track++;
-                    $nb_skipped++;
-                    continue;
-                }
-            }
-        }
-
-        if($track->is_playable) {
+        $playable = 0;
+        $local_track = 0;
+        if(isset($track->is_playable) && $track->is_playable) {
             $playable = 1;
-        } else {
-            $playable = 0;
         }
-
+        if(isset($item->is_local) && $item->is_local) {
+            $playable = 1;
+            $local_track = 1;
+        }
         try {
             //
             // Download artworks in Fetch later mode
-            list($already_present, $track_artwork_path) = getTrackOrAlbumArtwork($w, $track->uri, true, true);
-            if ($already_present == false) {
-                $artworksToDownload = true;
-                $stmtTrackArtwork->bindValue(':track_uri', $track->uri);
-                $stmtTrackArtwork->bindValue(':already_fetched', 0);
-                $stmtTrackArtwork->execute();
+            if(isset($track->uri)) {
+                list($already_present, $track_artwork_path) = getTrackOrAlbumArtwork($w, $track->uri, true, true);
+                if ($already_present == false) {
+                    $artworksToDownload = true;
+                    $stmtTrackArtwork->bindValue(':track_uri', $track->uri);
+                    $stmtTrackArtwork->bindValue(':already_fetched', 0);
+                    $stmtTrackArtwork->execute();
+                }
             }
 
-            list($already_present, $artist_artwork_path) = getArtistArtwork($w, $artist->name, true, true);
-            if ($already_present == false) {
-                $artworksToDownload = true;
-                $stmtArtistArtwork->bindValue(':artist_name', $artist->name);
-                $stmtArtistArtwork->bindValue(':already_fetched', 0);
-                $stmtArtistArtwork->execute();
+            if(isset($artist->name)) {
+                list($already_present, $artist_artwork_path) = getArtistArtwork($w, $artist->name, true, true);
+                if ($already_present == false) {
+                    $artworksToDownload = true;
+                    $stmtArtistArtwork->bindValue(':artist_name', $artist->name);
+                    $stmtArtistArtwork->bindValue(':already_fetched', 0);
+                    $stmtArtistArtwork->execute();
+                }
             }
 
-            list($already_present, $album_artwork_path) = getTrackOrAlbumArtwork($w, $album->uri, true, true);
-            if ($already_present == false) {
-                $artworksToDownload = true;
-                $stmtAlbumArtwork->bindValue(':album_uri', $album->uri);
-                $stmtAlbumArtwork->bindValue(':already_fetched', 0);
-                $stmtAlbumArtwork->execute();
+            if(isset($album->uri)) {
+                list($already_present, $album_artwork_path) = getTrackOrAlbumArtwork($w, $album->uri, true, true);
+                if ($already_present == false) {
+                    $artworksToDownload = true;
+                    $stmtAlbumArtwork->bindValue(':album_uri', $album->uri);
+                    $stmtAlbumArtwork->bindValue(':already_fetched', 0);
+                    $stmtAlbumArtwork->execute();
+                }
             }
         }
         catch (PDOException $e) {
@@ -3561,6 +3542,7 @@ function updateLibrary($w)
             $stmtTrack->bindValue(':added_at', $item->added_at);
             $stmtTrack->bindValue(':duration', beautifyTime($track->duration_ms / 1000));
             $stmtTrack->bindValue(':nb_times_played', 0);
+            $stmtTrack->bindValue(':local_track', $local_track);
             $stmtTrack->execute();
         }
         catch (PDOException $e) {
@@ -3691,7 +3673,6 @@ function refreshLibrary($w)
 
     $country_code               = $settings->country_code;
     $userid                     = $settings->userid;
-    $lookup_local_tracks_online = $settings->lookup_local_tracks_online;
 
     $words = explode('▹', $in_progress_data);
 
@@ -3793,7 +3774,7 @@ function refreshLibrary($w)
         $insertPlaylist = "insert into playlists values (:uri,:name,:nb_tracks,:owner,:username,:playlist_artwork_path,:ownedbyuser,:nb_playable_tracks,:duration_playlist,:nb_times_played,:collaborative,:public)";
         $stmtPlaylist   = $db->prepare($insertPlaylist);
 
-        $insertTrack = "insert into tracks values (:yourmusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_type,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:added_at,:duration,:nb_times_played)";
+        $insertTrack = "insert into tracks values (:yourmusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_type,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:added_at,:duration,:nb_times_played,:local_track)";
         $stmtTrack   = $db->prepare($insertTrack);
 
         $deleteFromTracks     = "delete from tracks where playlist_uri=:playlist_uri";
@@ -3819,6 +3800,7 @@ function refreshLibrary($w)
     do {
         $retry = true;
         $nb_retry = 0;
+        $api           = getSpotifyWebAPI($w);
         while($retry) {
             try {
                 // refresh api
@@ -3854,7 +3836,6 @@ function refreshLibrary($w)
         foreach ($userPlaylists->items as $playlist) {
             if($playlist->name != "") {
                 $savedListPlaylist[] = $playlist;
-                $nb_tracktotal += $tracks->total;
             }
         }
         $offsetGetUserPlaylists += $limitGetUserPlaylists;
@@ -3916,6 +3897,7 @@ function refreshLibrary($w)
                             'fields' => array(
                                 'total',
                                 'items(added_at)',
+                                'items(is_local)',
                                 'items.track(is_playable,duration_ms,uri,popularity,name)',
                                 'items.track.album(album_type,images,uri,name)',
                                 'items.track.artists(name,uri)'
@@ -3953,63 +3935,46 @@ function refreshLibrary($w)
                     $artist  = $artists[0];
                     $album   = $track->album;
 
-                    // This is a known issue
-                    // http://stackoverflow.com/questions/27533743/local-tracks-returned-as-null-by-spotify-web-api?noredirect=1#comment43496449_27533743
-                    if ($track->uri == 'spotify:track:null') {
-
-                        if ($lookup_local_tracks_online == false) {
-                            logMsg("WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri");
-                            continue;
-                        } else {
-                            // unknown track, look it up online
-                            $query   = 'track:' . strtolower($track->name) . ' artist:' . strtolower($artist->name);
-                            $results = searchWebApi($w, $country_code, $query, 'track', 1);
-
-                            if (count($results) > 0) {
-                                // only one track returned
-                                $track   = $results[0];
-                                $artists = $track->artists;
-                                $artist  = $artists[0];
-                                logMsg("INFO: Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name");
-
-                            } else {
-                                // skip
-                                logMsg("WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri ");
-                                continue;
-                            }
-                        }
-                    }
-                    if($track->is_playable) {
+                    $playable = 0;
+                    $local_track = 0;
+                    if(isset($track->is_playable) && $track->is_playable) {
                         $playable = 1;
-                    } else {
-                        $playable = 0;
                     }
-
+                    if(isset($item->is_local) && $item->is_local) {
+                        $playable = 1;
+                        $local_track = 1;
+                    }
                     try {
                         //
                         // Download artworks in Fetch later mode
-                        list($already_present, $track_artwork_path) = getTrackOrAlbumArtwork($w, $track->uri, true, true);
-                        if ($already_present == false) {
-                            $artworksToDownload = true;
-                            $stmtTrackArtwork->bindValue(':track_uri', $track->uri);
-                            $stmtTrackArtwork->bindValue(':already_fetched', 0);
-                            $stmtTrackArtwork->execute();
+                        if(isset($track->uri)) {
+                            list($already_present, $track_artwork_path) = getTrackOrAlbumArtwork($w, $track->uri, true, true);
+                            if ($already_present == false) {
+                                $artworksToDownload = true;
+                                $stmtTrackArtwork->bindValue(':track_uri', $track->uri);
+                                $stmtTrackArtwork->bindValue(':already_fetched', 0);
+                                $stmtTrackArtwork->execute();
+                            }
                         }
 
-                        list($already_present, $artist_artwork_path) = getArtistArtwork($w, $artist->name, true, true);
-                        if ($already_present == false) {
-                            $artworksToDownload = true;
-                            $stmtArtistArtwork->bindValue(':artist_name', $artist->name);
-                            $stmtArtistArtwork->bindValue(':already_fetched', 0);
-                            $stmtArtistArtwork->execute();
+                        if(isset($artist->name)) {
+                            list($already_present, $artist_artwork_path) = getArtistArtwork($w, $artist->name, true, true);
+                            if ($already_present == false) {
+                                $artworksToDownload = true;
+                                $stmtArtistArtwork->bindValue(':artist_name', $artist->name);
+                                $stmtArtistArtwork->bindValue(':already_fetched', 0);
+                                $stmtArtistArtwork->execute();
+                            }
                         }
 
-                        list($already_present, $album_artwork_path) = getTrackOrAlbumArtwork($w, $album->uri, true, true);
-                        if ($already_present == false) {
-                            $artworksToDownload = true;
-                            $stmtAlbumArtwork->bindValue(':album_uri', $album->uri);
-                            $stmtAlbumArtwork->bindValue(':already_fetched', 0);
-                            $stmtAlbumArtwork->execute();
+                        if(isset($album->uri)) {
+                            list($already_present, $album_artwork_path) = getTrackOrAlbumArtwork($w, $album->uri, true, true);
+                            if ($already_present == false) {
+                                $artworksToDownload = true;
+                                $stmtAlbumArtwork->bindValue(':album_uri', $album->uri);
+                                $stmtAlbumArtwork->bindValue(':already_fetched', 0);
+                                $stmtAlbumArtwork->execute();
+                            }
                         }
                     }
                     catch (PDOException $e) {
@@ -4042,6 +4007,7 @@ function refreshLibrary($w)
                         $stmtTrack->bindValue(':added_at', $item->added_at);
                         $stmtTrack->bindValue(':duration', beautifyTime($track->duration_ms / 1000));
                         $stmtTrack->bindValue(':nb_times_played', 0);
+                        $stmtTrack->bindValue(':local_track', $local_track);
                         $stmtTrack->execute();
                     }
                     catch (PDOException $e) {
@@ -4130,6 +4096,7 @@ function refreshLibrary($w)
                                 'fields' => array(
                                     'total',
                                     'items(added_at)',
+                                    'items(is_local)',
                                     'items.track(is_playable,duration_ms,uri,popularity,name)',
                                     'items.track.album(album_type,images,uri,name)',
                                     'items.track.artists(name,uri)'
@@ -4166,66 +4133,48 @@ function refreshLibrary($w)
                         $artists = $track->artists;
                         $artist  = $artists[0];
                         $album   = $track->album;
-                        // This is a known issue
-                        // http://stackoverflow.com/questions/27533743/local-tracks-returned-as-null-by-spotify-web-api?noredirect=1#comment43496449_27533743
-                        if ($track->uri == 'spotify:track:null') {
 
-                            if ($lookup_local_tracks_online == false) {
-                                logMsg("WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri");
-                                $nb_track++;
-                                continue;
-                            } else {
-                                // unknown track, look it up online
-                                $query   = 'track:' . strtolower($track->name) . ' artist:' . strtolower($artist->name);
-                                $results = searchWebApi($w, $country_code, $query, 'track', 1);
-
-                                if (count($results) > 0) {
-                                    // only one track returned
-                                    $track   = $results[0];
-                                    $artists = $track->artists;
-                                    $artist  = $artists[0];
-                                    logMsg("INFO: Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name");
-
-                                } else {
-                                    // skip
-                                    logMsg("WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri ");
-                                    $nb_track++;
-                                    continue;
-                                }
-                            }
-                        }
-
-                        if($track->is_playable) {
+                        $playable = 0;
+                        $local_track = 0;
+                        if(isset($track->is_playable) && $track->is_playable) {
                             $playable = 1;
-                        } else {
-                            $playable = 0;
+                        }
+                        if(isset($item->is_local) && $item->is_local) {
+                            $playable = 1;
+                            $local_track = 1;
                         }
 
                         try {
                             //
                             // Download artworks in Fetch later mode
-                            list($already_present, $track_artwork_path) = getTrackOrAlbumArtwork($w, $track->uri, true, true);
-                            if ($already_present == false) {
-                                $artworksToDownload = true;
-                                $stmtTrackArtwork->bindValue(':track_uri', $track->uri);
-                                $stmtTrackArtwork->bindValue(':already_fetched', 0);
-                                $stmtTrackArtwork->execute();
+                            if(isset($track->uri)) {
+                                list($already_present, $track_artwork_path) = getTrackOrAlbumArtwork($w, $track->uri, true, true);
+                                if ($already_present == false) {
+                                    $artworksToDownload = true;
+                                    $stmtTrackArtwork->bindValue(':track_uri', $track->uri);
+                                    $stmtTrackArtwork->bindValue(':already_fetched', 0);
+                                    $stmtTrackArtwork->execute();
+                                }
                             }
 
-                            list($already_present, $artist_artwork_path) = getArtistArtwork($w, $artist->name, true, true);
-                            if ($already_present == false) {
-                                $artworksToDownload = true;
-                                $stmtArtistArtwork->bindValue(':artist_name', $artist->name);
-                                $stmtArtistArtwork->bindValue(':already_fetched', 0);
-                                $stmtArtistArtwork->execute();
+                            if(isset($artist->name)) {
+                                list($already_present, $artist_artwork_path) = getArtistArtwork($w, $artist->name, true, true);
+                                if ($already_present == false) {
+                                    $artworksToDownload = true;
+                                    $stmtArtistArtwork->bindValue(':artist_name', $artist->name);
+                                    $stmtArtistArtwork->bindValue(':already_fetched', 0);
+                                    $stmtArtistArtwork->execute();
+                                }
                             }
 
-                            list($already_present, $album_artwork_path) = getTrackOrAlbumArtwork($w, $album->uri, true, true);
-                            if ($already_present == false) {
-                                $artworksToDownload = true;
-                                $stmtAlbumArtwork->bindValue(':album_uri', $album->uri);
-                                $stmtAlbumArtwork->bindValue(':already_fetched', 0);
-                                $stmtAlbumArtwork->execute();
+                            if(isset($album->uri)) {
+                                list($already_present, $album_artwork_path) = getTrackOrAlbumArtwork($w, $album->uri, true, true);
+                                if ($already_present == false) {
+                                    $artworksToDownload = true;
+                                    $stmtAlbumArtwork->bindValue(':album_uri', $album->uri);
+                                    $stmtAlbumArtwork->bindValue(':already_fetched', 0);
+                                    $stmtAlbumArtwork->execute();
+                                }
                             }
                         }
                         catch (PDOException $e) {
@@ -4233,12 +4182,10 @@ function refreshLibrary($w)
                             handleDbIssuePdoEcho($dbartworks, $w);
                             $dbartworks = null;
                             $db         = null;
-
                             return false;
                         }
 
                         $duration_playlist += $track->duration_ms;
-
                         try {
                             $stmtTrack->bindValue(':yourmusic', 0);
                             $stmtTrack->bindValue(':popularity', $track->popularity);
@@ -4258,6 +4205,7 @@ function refreshLibrary($w)
                             $stmtTrack->bindValue(':added_at', $item->added_at);
                             $stmtTrack->bindValue(':duration', beautifyTime($track->duration_ms / 1000));
                             $stmtTrack->bindValue(':nb_times_played', 0);
+                            $stmtTrack->bindValue(':local_track', $local_track);
                             $stmtTrack->execute();
                         }
                         catch (PDOException $e) {
@@ -4265,7 +4213,6 @@ function refreshLibrary($w)
                             handleDbIssuePdoEcho($db, $w);
                             $dbartworks = null;
                             $db         = null;
-
                             return;
                         }
                         $nb_track_playlist++;
@@ -4287,10 +4234,8 @@ function refreshLibrary($w)
                     handleDbIssuePdoEcho($db, $w);
                     $dbartworks = null;
                     $db         = null;
-
                     return;
                 }
-
                 displayNotificationWithArtwork('Updated playlist ' . escapeQuery($playlist->name), getPlaylistArtwork($w, $playlist->uri, true), 'Refresh Library');
             } else {
                 continue;
@@ -4451,66 +4396,47 @@ function refreshLibrary($w)
                 $artist  = $artists[0];
                 $album   = $track->album;
 
-                // This is a known issue
-                // http://stackoverflow.com/questions/27533743/local-tracks-returned-as-null-by-spotify-web-api?noredirect=1#comment43496449_27533743
-                if ($track->uri == 'spotify:track:null') {
-
-                    if ($lookup_local_tracks_online == false) {
-                        logMsg("WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri");
-                        $nb_track++;
-                        continue;
-                    } else {
-                        // unknown track, look it up online
-                        $query   = 'track:' . strtolower($track->name) . ' artist:' . strtolower($artist->name);
-                        $results = searchWebApi($w, $country_code, $query, 'track', 1);
-
-                        if (count($results) > 0) {
-                            // only one track returned
-                            $track   = $results[0];
-                            $artists = $track->artists;
-                            $artist  = $artists[0];
-                            logMsg("INFO: Unknown track $track->uri / $track->name / $artist->name replaced by track: $track->uri / $track->name / $artist->name");
-
-                        } else {
-                            // skip
-                            logMsg("WARN: Skip Unknown track: $track->uri / $track->name / $artist->name / $album->name / $playlist->name / $playlist->uri ");
-                            $nb_track++;
-                            continue;
-                        }
-                    }
-                }
-
-                if($track->is_playable) {
+                $playable = 0;
+                $local_track = 0;
+                if(isset($track->is_playable) && $track->is_playable) {
                     $playable = 1;
-                } else {
-                    $playable = 0;
+                }
+                if(isset($item->is_local) && $item->is_local) {
+                    $playable = 1;
+                    $local_track = 1;
                 }
 
                 try {
                     //
                     // Download artworks in Fetch later mode
-                    list($already_present, $track_artwork_path) = getTrackOrAlbumArtwork($w, $track->uri, true, true);
-                    if ($already_present == false) {
-                        $artworksToDownload = true;
-                        $stmtTrackArtwork->bindValue(':track_uri', $track->uri);
-                        $stmtTrackArtwork->bindValue(':already_fetched', 0);
-                        $stmtTrackArtwork->execute();
+                    if(isset($track->uri)) {
+                        list($already_present, $track_artwork_path) = getTrackOrAlbumArtwork($w, $track->uri, true, true);
+                        if ($already_present == false) {
+                            $artworksToDownload = true;
+                            $stmtTrackArtwork->bindValue(':track_uri', $track->uri);
+                            $stmtTrackArtwork->bindValue(':already_fetched', 0);
+                            $stmtTrackArtwork->execute();
+                        }
                     }
 
-                    list($already_present, $artist_artwork_path) = getArtistArtwork($w, $artist->name, true, true);
-                    if ($already_present == false) {
-                        $artworksToDownload = true;
-                        $stmtArtistArtwork->bindValue(':artist_name', $artist->name);
-                        $stmtArtistArtwork->bindValue(':already_fetched', 0);
-                        $stmtArtistArtwork->execute();
+                    if(isset($artist->name)) {
+                        list($already_present, $artist_artwork_path) = getArtistArtwork($w, $artist->name, true, true);
+                        if ($already_present == false) {
+                            $artworksToDownload = true;
+                            $stmtArtistArtwork->bindValue(':artist_name', $artist->name);
+                            $stmtArtistArtwork->bindValue(':already_fetched', 0);
+                            $stmtArtistArtwork->execute();
+                        }
                     }
 
-                    list($already_present, $album_artwork_path) = getTrackOrAlbumArtwork($w, $album->uri, true, true);
-                    if ($already_present == false) {
-                        $artworksToDownload = true;
-                        $stmtAlbumArtwork->bindValue(':album_uri', $album->uri);
-                        $stmtAlbumArtwork->bindValue(':already_fetched', 0);
-                        $stmtAlbumArtwork->execute();
+                    if(isset($album->uri)) {
+                        list($already_present, $album_artwork_path) = getTrackOrAlbumArtwork($w, $album->uri, true, true);
+                        if ($already_present == false) {
+                            $artworksToDownload = true;
+                            $stmtAlbumArtwork->bindValue(':album_uri', $album->uri);
+                            $stmtAlbumArtwork->bindValue(':already_fetched', 0);
+                            $stmtAlbumArtwork->execute();
+                        }
                     }
                 }
                 catch (PDOException $e) {
@@ -4541,6 +4467,7 @@ function refreshLibrary($w)
                     $stmtTrack->bindValue(':added_at', $item->added_at);
                     $stmtTrack->bindValue(':duration', beautifyTime($track->duration_ms / 1000));
                     $stmtTrack->bindValue(':nb_times_played', 0);
+                    $stmtTrack->bindValue(':local_track', $local_track);
                     $stmtTrack->execute();
                 }
                 catch (PDOException $e) {
@@ -4616,6 +4543,10 @@ function refreshLibrary($w)
     $elapsed_time     = time() - $words[3];
     $changedPlaylists = false;
     $changedYourMusic = false;
+    $addedMsg = '';
+    $removedMsg = '';
+    $updatedMsg = '';
+    $yourMusicMsg = '';
     if ($nb_added_playlists > 0) {
         $addedMsg         = $nb_added_playlists . ' added';
         $changedPlaylists = true;
@@ -4799,13 +4730,18 @@ function floatToStars($decimal)
  * @return string
  */
 // thanks to http://stackoverflow.com/questions/2853454/php-unserialize-fails-with-non-encoded-characters
-function mb_unserialize($string)
-{
-    $string = preg_replace('!s:(\d+):"(.*?)";!se', "'s:'.strlen('$2').':\"$2\";'", $string);
+function mb_unserialize($string) {
+    $string2 = preg_replace_callback(
+        '!s:(\d+):"(.*?)";!s',
+        function($m){
+            $len = strlen($m[2]);
+            $result = "s:$len:\"{$m[2]}\";";
+            return $result;
 
-    return unserialize($string);
+        },
+        $string);
+    return unserialize($string2);
 }
-
 
 /**
  *
@@ -5282,7 +5218,6 @@ function getSettings($w)
                 'display_name' => $setting[17],
                 'userid' => $setting[18],
                 'echonest_api_key' => '5EG94BIZEGFEY9AL9',
-                'lookup_local_tracks_online' => 0,
                 'is_public_playlists' => 0
             );
 
@@ -5316,7 +5251,6 @@ function getSettings($w)
             'display_name' => '',
             'userid' => '',
             'echonest_api_key' => '5EG94BIZEGFEY9AL9',
-            'lookup_local_tracks_online' => 0,
             'is_public_playlists' => 0,
             'quick_mode' => 0
         );
