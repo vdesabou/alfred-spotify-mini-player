@@ -2671,8 +2671,10 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
         // check if artist is in library
         $noresult = true;
         while ($track = $stmt->fetch()) {
-            $artist_uri = $track[1];
-            $noresult   = false;
+            if($track[1] != '') {
+                $artist_uri = $track[1];
+                $noresult   = false;
+            }
         }
 
         if ($noresult == false) {
@@ -3757,7 +3759,7 @@ function secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
     $display_name              = $settings->display_name;
     $userid                    = $settings->userid;
     $echonest_api_key          = $settings->echonest_api_key;
-    $is_public_playlists        = $settings->is_public_playlists;
+    $is_public_playlists       = $settings->is_public_playlists;
 
     //
     // display tracks for selected artists
@@ -3769,11 +3771,18 @@ function secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
 
     $href = explode(':', $artist_uri);
     if ($href[1] == 'track') {
-
         $track_uri  = $artist_uri;
         $artist_uri = getArtistUriFromTrack($w, $track_uri);
         if ($artist_uri == false) {
-            $w->result(null, 'help', "The artist cannot be retrieved", "", './images/warning.png', 'no', null, '');
+            $w->result(null, 'help', "The artist cannot be retrieved from track uri", 'URI was ' . $artist_uri, './images/warning.png', 'no', null, '');
+            echo $w->toxml();
+            return;
+        }
+    }
+    if ($href[1] == 'local') {
+        $artist_uri = getArtistUriFromSearch($w, $href[2], $country_code);
+        if ($artist_uri == false) {
+            $w->result(null, 'help', "The artist cannot be retrieved from local track uri", 'URI was ' . $artist_uri, './images/warning.png', 'no', null, '');
             echo $w->toxml();
             return;
         }
