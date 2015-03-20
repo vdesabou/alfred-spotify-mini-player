@@ -97,7 +97,7 @@ then
 	if [ "$(ps -p `cat "${DATADIR}/spotify_mini_player_notifications.lock"` | wc -l)" -gt 1 ]
 	then
 		# process is still running
-		traceit "INFO: Already running: process `cat "${DATADIR}/spotify_mini_player_notifications.lock"`, `date`"
+		# traceit "INFO: Already running: process `cat "${DATADIR}/spotify_mini_player_notifications.lock"`, `date`"
 		return 0
 	else
 		# process not running, but lock file not deleted?
