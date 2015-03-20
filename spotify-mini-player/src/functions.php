@@ -344,15 +344,17 @@ function updateCurrentTrackIndexFromPlayQueue($w) {
 	    $found = false;
         $i = 0;
         $current_track_name = cleanupTrackName($results[0]);
-        if(count($playqueue->tracks) > 0) {
-            foreach ($playqueue->tracks as $track) {
-                $track_name = cleanupTrackName($track->name);
-                if(escapeQuery($track_name) == escapeQuery($current_track_name) &&
-                   escapeQuery($track->artists[0]->name) == escapeQuery($results[1])) {
-                    $found = true;
-                    break;
+        if(isset($playqueue->tracks)) {
+            if(count($playqueue->tracks) > 0) {
+                foreach ($playqueue->tracks as $track) {
+                    $track_name = cleanupTrackName($track->name);
+                    if(escapeQuery($track_name) == escapeQuery($current_track_name) &&
+                       escapeQuery($track->artists[0]->name) == escapeQuery($results[1])) {
+                        $found = true;
+                        break;
+                    }
+                    $i++;
                 }
-                $i++;
             }
         }
 
