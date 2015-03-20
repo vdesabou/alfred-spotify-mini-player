@@ -571,7 +571,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress)
         $subtitle = $track[6];
         $added = '';
         if($track[18] == true) {
-            $added = '🎶 ';
+            $added = '📌 ';
         }
         if (checkIfResultAlreadyThere($w->results(), $added . ucfirst($track[7]) . " ● " . $track[5]) == false) {
             if($track[14] == true) {
@@ -3888,7 +3888,7 @@ function secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
 
         $added = '';
         if($track[18] == true) {
-            $added = '🎶 ';
+            $added = '📌 ';
         }
         if (checkIfResultAlreadyThere($w->results(), $added . ucfirst($track[7]) . " ● " . $track[5]) == false) {
             if($track[14] == true) {
@@ -4093,7 +4093,7 @@ function secondDelimiterAlbums($w, $query, $settings, $db, $update_in_progress)
 
         $added = '';
         if($track[18] == true) {
-            $added = '🎶 ';
+            $added = '📌 ';
         }
         if (checkIfResultAlreadyThere($w->results(), $added . ucfirst($track[7]) . " ● " . $track[5]) == false) {
             if($track[14] == true) {
@@ -4326,7 +4326,7 @@ function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progres
                 $subtitle = $track[6];
                 $added = '';
                 if($track[18] == true) {
-                    $added = '🎶 ';
+                    $added = '📌 ';
                 }
                 if (checkIfResultAlreadyThere($w->results(), $added . ucfirst($track[7]) . " ● " . $track[5]) == false) {
                     if($track[14] == true) {
@@ -4853,7 +4853,7 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
         } else {
             $added = '';
             if(isset($item->is_local) && $item->is_local) {
-                $added = '🎶 ';
+                $added = '📌 ';
             } else {
                 $added = '🚫 ';
             }
@@ -4926,7 +4926,7 @@ function secondDelimiterYourMusicTracks($w, $query, $settings, $db, $update_in_p
 
         $added = '';
         if($track[18] == true) {
-            $added = '🎶 ';
+            $added = '📌 ';
         }
         if (checkIfResultAlreadyThere($w->results(), $added . ucfirst($track[7]) . " ● " . $track[5]) == false) {
             if($track[14] == true) {
