@@ -4,6 +4,8 @@ require './src/functions.php';
 require './src/menu.php';
 require_once './src/workflows.php';
 // $begin_time = computeTime();
+// Report all PHP errors
+//error_reporting(E_ALL);
 error_reporting(0);
 $w = new Workflows('com.vdesabou.spotify.mini.player');
 
