@@ -5783,7 +5783,7 @@ function secondDelimiterAdd($w, $query, $settings, $db, $update_in_progress)
         $playlist_uri  = $uri;
         $message       = "playlist " . $playlist_name;
     } elseif ($href[1] == 'local') {
-        $w->result(null, '', 'Cannot add local files to playlists using the Web API', 'This is a limitation of Spotify Web API', './images/warning.png', 'no', null, '');
+        $w->result(null, '', 'Cannot add local track to playlist using the Web API', 'This is a limitation of Spotify Web API', './images/warning.png', 'no', null, '');
         echo $w->toxml();
         return;
     }
@@ -5931,12 +5931,19 @@ function secondDelimiterRemove($w, $query, $settings, $db, $update_in_progress)
 
     $tmp         = explode('∙', $words[1]);
     $uri         = $tmp[0];
+    $href = explode(':', $uri);
     // it is necessarly a track:
     $type        = 'track';
     $track_name  = $tmp[1];
     $track_uri   = $uri;
     $message     = "track " . $track_name;
     $theplaylist = $words[2];
+
+    if ($href[1] == 'local') {
+        $w->result(null, '', 'Cannot remove local tracks from playlists using the Web API', 'This is a limitation of Spotify Web API', './images/warning.png', 'no', null, '');
+        echo $w->toxml();
+        return;
+    }
 
     $noresult             = true;
     $getPlaylistsForTrack = "select distinct playlist_uri from tracks where uri=:uri";
