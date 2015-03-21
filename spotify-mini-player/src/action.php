@@ -76,7 +76,8 @@ if ($spotify_command != "" && $type == "TRACK" && $add_to_option == "") {
 }
 
 if ($type == "TRACK" && $other_settings == "" &&
-    (startsWith($other_action, 'set_playlist_privacy_to_') || $other_action == "play_track_from_play_queue" || $other_action == "")) {
+    (startsWith($other_action, 'set_playlist_privacy_to_') || $other_action == "play_track_from_play_queue" || $other_action == ""
+        ||  ($other_action == "play_track_in_album_context" && $add_to_option != "")  )) {
     if ($track_uri != "") {
         if ($add_to_option != "") {
             $tmp = explode(':', $track_uri);
