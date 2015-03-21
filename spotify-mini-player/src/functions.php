@@ -2616,9 +2616,10 @@ function getTrackOrAlbumArtwork($w, $spotifyURL, $fetchIfNotPresent, $fetchLater
         return $currentArtwork;
     }
 
-    if (!is_file($currentArtwork) || (is_file($currentArtwork) && filesize($currentArtwork) == 0)) {
+    if (!is_file($currentArtwork) || (is_file($currentArtwork) && filesize($currentArtwork) == 0) || $hrefs[2] == "fakeuri") {
         if ($fetchIfNotPresent == true || (is_file($currentArtwork) && filesize($currentArtwork) == 0)) {
             $artwork = getArtworkURL($w, $hrefs[1], $hrefs[2]);
+
             // if return 0, it is a 404 error, no need to fetch
             if (!empty($artwork) || (is_numeric($artwork) && $artwork != 0)) {
                 if (!file_exists($w->data() . "/artwork/" . hash('md5', $hrefs[2] . ".png"))):
@@ -3377,34 +3378,39 @@ function updateLibrary($w)
                 try {
                     //
                     // Download artworks in Fetch later mode
-                    if(isset($track->uri)) {
-                        list($already_present, $track_artwork_path) = getTrackOrAlbumArtwork($w, $track->uri, true, true);
-                        if ($already_present == false) {
-                            $artworksToDownload = true;
-                            $stmtTrackArtwork->bindValue(':track_uri', $track->uri);
-                            $stmtTrackArtwork->bindValue(':already_fetched', 0);
-                            $stmtTrackArtwork->execute();
-                        }
+                    $thetrackuri = 'spotify:track:faketrackuri';
+                    if($local_track == 0 && isset($track->uri)) {
+                        $thetrackuri = $track->uri;
                     }
-
+                    list($already_present, $track_artwork_path) = getTrackOrAlbumArtwork($w, $thetrackuri, true, true);
+                    if ($already_present == false) {
+                        $artworksToDownload = true;
+                        $stmtTrackArtwork->bindValue(':track_uri', $thetrackuri);
+                        $stmtTrackArtwork->bindValue(':already_fetched', 0);
+                        $stmtTrackArtwork->execute();
+                    }
+                    $theartistname = 'fakeartist';
                     if(isset($artist->name)) {
-                        list($already_present, $artist_artwork_path) = getArtistArtwork($w, $artist->name, true, true);
-                        if ($already_present == false) {
-                            $artworksToDownload = true;
-                            $stmtArtistArtwork->bindValue(':artist_name', $artist->name);
-                            $stmtArtistArtwork->bindValue(':already_fetched', 0);
-                            $stmtArtistArtwork->execute();
-                        }
+                        $theartistname = $artist->name;
+                    }
+                    list($already_present, $artist_artwork_path) = getArtistArtwork($w, $theartistname, true, true);
+                    if ($already_present == false) {
+                        $artworksToDownload = true;
+                        $stmtArtistArtwork->bindValue(':artist_name', $theartistname);
+                        $stmtArtistArtwork->bindValue(':already_fetched', 0);
+                        $stmtArtistArtwork->execute();
                     }
 
+                    $thealbumuri = 'spotify:album:fakealbumuri';
                     if(isset($album->uri)) {
-                        list($already_present, $album_artwork_path) = getTrackOrAlbumArtwork($w, $album->uri, true, true);
-                        if ($already_present == false) {
-                            $artworksToDownload = true;
-                            $stmtAlbumArtwork->bindValue(':album_uri', $album->uri);
-                            $stmtAlbumArtwork->bindValue(':already_fetched', 0);
-                            $stmtAlbumArtwork->execute();
-                        }
+                        $thealbumuri = $album->uri;
+                    }
+                    list($already_present, $album_artwork_path) = getTrackOrAlbumArtwork($w, $thealbumuri, true, true);
+                    if ($already_present == false) {
+                        $artworksToDownload = true;
+                        $stmtAlbumArtwork->bindValue(':album_uri', $thealbumuri);
+                        $stmtAlbumArtwork->bindValue(':already_fetched', 0);
+                        $stmtAlbumArtwork->execute();
                     }
                 }
                 catch (PDOException $e) {
@@ -3501,34 +3507,39 @@ function updateLibrary($w)
         try {
             //
             // Download artworks in Fetch later mode
-            if(isset($track->uri)) {
-                list($already_present, $track_artwork_path) = getTrackOrAlbumArtwork($w, $track->uri, true, true);
-                if ($already_present == false) {
-                    $artworksToDownload = true;
-                    $stmtTrackArtwork->bindValue(':track_uri', $track->uri);
-                    $stmtTrackArtwork->bindValue(':already_fetched', 0);
-                    $stmtTrackArtwork->execute();
-                }
+            $thetrackuri = 'spotify:track:faketrackuri';
+            if($local_track == 0 && isset($track->uri)) {
+                $thetrackuri = $track->uri;
             }
-
+            list($already_present, $track_artwork_path) = getTrackOrAlbumArtwork($w, $thetrackuri, true, true);
+            if ($already_present == false) {
+                $artworksToDownload = true;
+                $stmtTrackArtwork->bindValue(':track_uri', $thetrackuri);
+                $stmtTrackArtwork->bindValue(':already_fetched', 0);
+                $stmtTrackArtwork->execute();
+            }
+            $theartistname = 'fakeartist';
             if(isset($artist->name)) {
-                list($already_present, $artist_artwork_path) = getArtistArtwork($w, $artist->name, true, true);
-                if ($already_present == false) {
-                    $artworksToDownload = true;
-                    $stmtArtistArtwork->bindValue(':artist_name', $artist->name);
-                    $stmtArtistArtwork->bindValue(':already_fetched', 0);
-                    $stmtArtistArtwork->execute();
-                }
+                $theartistname = $artist->name;
+            }
+            list($already_present, $artist_artwork_path) = getArtistArtwork($w, $theartistname, true, true);
+            if ($already_present == false) {
+                $artworksToDownload = true;
+                $stmtArtistArtwork->bindValue(':artist_name', $theartistname);
+                $stmtArtistArtwork->bindValue(':already_fetched', 0);
+                $stmtArtistArtwork->execute();
             }
 
+            $thealbumuri = 'spotify:album:fakealbumuri';
             if(isset($album->uri)) {
-                list($already_present, $album_artwork_path) = getTrackOrAlbumArtwork($w, $album->uri, true, true);
-                if ($already_present == false) {
-                    $artworksToDownload = true;
-                    $stmtAlbumArtwork->bindValue(':album_uri', $album->uri);
-                    $stmtAlbumArtwork->bindValue(':already_fetched', 0);
-                    $stmtAlbumArtwork->execute();
-                }
+                $thealbumuri = $album->uri;
+            }
+            list($already_present, $album_artwork_path) = getTrackOrAlbumArtwork($w, $thealbumuri, true, true);
+            if ($already_present == false) {
+                $artworksToDownload = true;
+                $stmtAlbumArtwork->bindValue(':album_uri', $thealbumuri);
+                $stmtAlbumArtwork->bindValue(':already_fetched', 0);
+                $stmtAlbumArtwork->execute();
             }
         }
         catch (PDOException $e) {
@@ -3964,34 +3975,39 @@ function refreshLibrary($w)
                     try {
                         //
                         // Download artworks in Fetch later mode
-                        if(isset($track->uri)) {
-                            list($already_present, $track_artwork_path) = getTrackOrAlbumArtwork($w, $track->uri, true, true);
-                            if ($already_present == false) {
-                                $artworksToDownload = true;
-                                $stmtTrackArtwork->bindValue(':track_uri', $track->uri);
-                                $stmtTrackArtwork->bindValue(':already_fetched', 0);
-                                $stmtTrackArtwork->execute();
-                            }
+                        $thetrackuri = 'spotify:track:faketrackuri';
+                        if($local_track == 0 && isset($track->uri)) {
+                            $thetrackuri = $track->uri;
                         }
-
+                        list($already_present, $track_artwork_path) = getTrackOrAlbumArtwork($w, $thetrackuri, true, true);
+                        if ($already_present == false) {
+                            $artworksToDownload = true;
+                            $stmtTrackArtwork->bindValue(':track_uri', $thetrackuri);
+                            $stmtTrackArtwork->bindValue(':already_fetched', 0);
+                            $stmtTrackArtwork->execute();
+                        }
+                        $theartistname = 'fakeartist';
                         if(isset($artist->name)) {
-                            list($already_present, $artist_artwork_path) = getArtistArtwork($w, $artist->name, true, true);
-                            if ($already_present == false) {
-                                $artworksToDownload = true;
-                                $stmtArtistArtwork->bindValue(':artist_name', $artist->name);
-                                $stmtArtistArtwork->bindValue(':already_fetched', 0);
-                                $stmtArtistArtwork->execute();
-                            }
+                            $theartistname = $artist->name;
+                        }
+                        list($already_present, $artist_artwork_path) = getArtistArtwork($w, $theartistname, true, true);
+                        if ($already_present == false) {
+                            $artworksToDownload = true;
+                            $stmtArtistArtwork->bindValue(':artist_name', $theartistname);
+                            $stmtArtistArtwork->bindValue(':already_fetched', 0);
+                            $stmtArtistArtwork->execute();
                         }
 
+                        $thealbumuri = 'spotify:album:fakealbumuri';
                         if(isset($album->uri)) {
-                            list($already_present, $album_artwork_path) = getTrackOrAlbumArtwork($w, $album->uri, true, true);
-                            if ($already_present == false) {
-                                $artworksToDownload = true;
-                                $stmtAlbumArtwork->bindValue(':album_uri', $album->uri);
-                                $stmtAlbumArtwork->bindValue(':already_fetched', 0);
-                                $stmtAlbumArtwork->execute();
-                            }
+                            $thealbumuri = $album->uri;
+                        }
+                        list($already_present, $album_artwork_path) = getTrackOrAlbumArtwork($w, $thealbumuri, true, true);
+                        if ($already_present == false) {
+                            $artworksToDownload = true;
+                            $stmtAlbumArtwork->bindValue(':album_uri', $thealbumuri);
+                            $stmtAlbumArtwork->bindValue(':already_fetched', 0);
+                            $stmtAlbumArtwork->execute();
                         }
                     }
                     catch (PDOException $e) {
@@ -4164,34 +4180,39 @@ function refreshLibrary($w)
                         try {
                             //
                             // Download artworks in Fetch later mode
-                            if(isset($track->uri)) {
-                                list($already_present, $track_artwork_path) = getTrackOrAlbumArtwork($w, $track->uri, true, true);
-                                if ($already_present == false) {
-                                    $artworksToDownload = true;
-                                    $stmtTrackArtwork->bindValue(':track_uri', $track->uri);
-                                    $stmtTrackArtwork->bindValue(':already_fetched', 0);
-                                    $stmtTrackArtwork->execute();
-                                }
+                            $thetrackuri = 'spotify:track:faketrackuri';
+                            if($local_track == 0 && isset($track->uri)) {
+                                $thetrackuri = $track->uri;
                             }
-
+                            list($already_present, $track_artwork_path) = getTrackOrAlbumArtwork($w, $thetrackuri, true, true);
+                            if ($already_present == false) {
+                                $artworksToDownload = true;
+                                $stmtTrackArtwork->bindValue(':track_uri', $thetrackuri);
+                                $stmtTrackArtwork->bindValue(':already_fetched', 0);
+                                $stmtTrackArtwork->execute();
+                            }
+                            $theartistname = 'fakeartist';
                             if(isset($artist->name)) {
-                                list($already_present, $artist_artwork_path) = getArtistArtwork($w, $artist->name, true, true);
-                                if ($already_present == false) {
-                                    $artworksToDownload = true;
-                                    $stmtArtistArtwork->bindValue(':artist_name', $artist->name);
-                                    $stmtArtistArtwork->bindValue(':already_fetched', 0);
-                                    $stmtArtistArtwork->execute();
-                                }
+                                $theartistname = $artist->name;
+                            }
+                            list($already_present, $artist_artwork_path) = getArtistArtwork($w, $theartistname, true, true);
+                            if ($already_present == false) {
+                                $artworksToDownload = true;
+                                $stmtArtistArtwork->bindValue(':artist_name', $theartistname);
+                                $stmtArtistArtwork->bindValue(':already_fetched', 0);
+                                $stmtArtistArtwork->execute();
                             }
 
+                            $thealbumuri = 'spotify:album:fakealbumuri';
                             if(isset($album->uri)) {
-                                list($already_present, $album_artwork_path) = getTrackOrAlbumArtwork($w, $album->uri, true, true);
-                                if ($already_present == false) {
-                                    $artworksToDownload = true;
-                                    $stmtAlbumArtwork->bindValue(':album_uri', $album->uri);
-                                    $stmtAlbumArtwork->bindValue(':already_fetched', 0);
-                                    $stmtAlbumArtwork->execute();
-                                }
+                                $thealbumuri = $album->uri;
+                            }
+                            list($already_present, $album_artwork_path) = getTrackOrAlbumArtwork($w, $thealbumuri, true, true);
+                            if ($already_present == false) {
+                                $artworksToDownload = true;
+                                $stmtAlbumArtwork->bindValue(':album_uri', $thealbumuri);
+                                $stmtAlbumArtwork->bindValue(':already_fetched', 0);
+                                $stmtAlbumArtwork->execute();
                             }
                         }
                         catch (PDOException $e) {
@@ -4426,34 +4447,39 @@ function refreshLibrary($w)
                 try {
                     //
                     // Download artworks in Fetch later mode
-                    if(isset($track->uri)) {
-                        list($already_present, $track_artwork_path) = getTrackOrAlbumArtwork($w, $track->uri, true, true);
-                        if ($already_present == false) {
-                            $artworksToDownload = true;
-                            $stmtTrackArtwork->bindValue(':track_uri', $track->uri);
-                            $stmtTrackArtwork->bindValue(':already_fetched', 0);
-                            $stmtTrackArtwork->execute();
-                        }
+                    $thetrackuri = 'spotify:track:faketrackuri';
+                    if($local_track == 0 && isset($track->uri)) {
+                        $thetrackuri = $track->uri;
                     }
-
+                    list($already_present, $track_artwork_path) = getTrackOrAlbumArtwork($w, $thetrackuri, true, true);
+                    if ($already_present == false) {
+                        $artworksToDownload = true;
+                        $stmtTrackArtwork->bindValue(':track_uri', $thetrackuri);
+                        $stmtTrackArtwork->bindValue(':already_fetched', 0);
+                        $stmtTrackArtwork->execute();
+                    }
+                    $theartistname = 'fakeartist';
                     if(isset($artist->name)) {
-                        list($already_present, $artist_artwork_path) = getArtistArtwork($w, $artist->name, true, true);
-                        if ($already_present == false) {
-                            $artworksToDownload = true;
-                            $stmtArtistArtwork->bindValue(':artist_name', $artist->name);
-                            $stmtArtistArtwork->bindValue(':already_fetched', 0);
-                            $stmtArtistArtwork->execute();
-                        }
+                        $theartistname = $artist->name;
+                    }
+                    list($already_present, $artist_artwork_path) = getArtistArtwork($w, $theartistname, true, true);
+                    if ($already_present == false) {
+                        $artworksToDownload = true;
+                        $stmtArtistArtwork->bindValue(':artist_name', $theartistname);
+                        $stmtArtistArtwork->bindValue(':already_fetched', 0);
+                        $stmtArtistArtwork->execute();
                     }
 
+                    $thealbumuri = 'spotify:album:fakealbumuri';
                     if(isset($album->uri)) {
-                        list($already_present, $album_artwork_path) = getTrackOrAlbumArtwork($w, $album->uri, true, true);
-                        if ($already_present == false) {
-                            $artworksToDownload = true;
-                            $stmtAlbumArtwork->bindValue(':album_uri', $album->uri);
-                            $stmtAlbumArtwork->bindValue(':already_fetched', 0);
-                            $stmtAlbumArtwork->execute();
-                        }
+                        $thealbumuri = $album->uri;
+                    }
+                    list($already_present, $album_artwork_path) = getTrackOrAlbumArtwork($w, $thealbumuri, true, true);
+                    if ($already_present == false) {
+                        $artworksToDownload = true;
+                        $stmtAlbumArtwork->bindValue(':album_uri', $thealbumuri);
+                        $stmtAlbumArtwork->bindValue(':already_fetched', 0);
+                        $stmtAlbumArtwork->execute();
                     }
                 }
                 catch (PDOException $e) {

@@ -495,9 +495,9 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress)
     // Search artists
     //
     if ($all_playlists == false) {
-        $getTracks = "select artist_name,artist_uri,artist_artwork_path from tracks where yourmusic=1 and artist_name like :artist_name limit " . $max_results;
+        $getTracks = "select artist_name,artist_uri,artist_artwork_path from tracks where yourmusic=1 and artist_uri!='' and artist_name like :artist_name limit " . $max_results;
     } else {
-        $getTracks = "select artist_name,artist_uri,artist_artwork_path from tracks where artist_name like :artist_name limit " . $max_results;
+        $getTracks = "select artist_name,artist_uri,artist_artwork_path from tracks where artist_uri!='' and artist_name like :artist_name limit " . $max_results;
     }
 
     try {
