@@ -2600,6 +2600,11 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
             return;
         }
 
+        $href = explode(':', $results[4] );
+        $added = '';
+        if ($href[1] == 'local') {
+            $added = '📌 ';
+        }
         $currentArtistArtwork = getArtistArtwork($w, $results[1], false);
         $subtitle             = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
         $subtitle             = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
@@ -2621,7 +2626,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                 '' /* album_artwork_path */ ,
                 '' /* playlist_name */ ,
                 '' /* playlist_artwork_path */
-            )), " " . escapeQuery($results[0]) . " ● " . escapeQuery($results[1]) . " ● " . escapeQuery($results[2]) . " ● " . floatToStars($results[6] / 100) . ' (' . beautifyTime($results[5]) . ')', array(
+            )), $added . escapeQuery($results[0]) . " ● " . escapeQuery($results[1]) . " ● " . escapeQuery($results[2]) . " ● " . floatToStars($results[6] / 100) . ' (' . beautifyTime($results[5]) . ')', array(
                 $subtitle,
                 'alt' => 'Play album ' . escapeQuery($results[2]) . ' in Spotify',
                 'cmd' => 'Play artist ' . escapeQuery($results[1]) . ' in Spotify',
@@ -2648,7 +2653,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                 '' /* album_artwork_path */ ,
                 '' /* playlist_name */ ,
                 '' /* playlist_artwork_path */
-            )), " " . escapeQuery($results[0]) . " ● " . escapeQuery($results[1]) . " ● " . escapeQuery($results[2]) . " ● " . floatToStars($results[6] / 100) . ' (' . beautifyTime($results[5]) . ')', array(
+            )), $added . escapeQuery($results[0]) . " ● " . escapeQuery($results[1]) . " ● " . escapeQuery($results[2]) . " ● " . floatToStars($results[6] / 100) . ' (' . beautifyTime($results[5]) . ')', array(
                 $subtitle,
                 'alt' => 'Play album ' . escapeQuery($results[2]) . ' in Spotify',
                 'cmd' => 'Play artist ' . escapeQuery($results[1]) . ' in Spotify',
