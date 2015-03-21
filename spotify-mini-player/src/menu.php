@@ -2443,7 +2443,6 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
                     '' /* query */ ,
                     '' /* other_settings*/ ,
                     'play_track_in_album_context' /* other_action */ ,
-
                     escapeQuery($artist->name) /* artist_name */ ,
                     escapeQuery($track->name) /* track_name */ ,
                     escapeQuery($album->name) /* album_name */ ,
@@ -5707,7 +5706,6 @@ function secondDelimiterNewReleases($w, $query, $settings, $db, $update_in_progr
                     '' /* query */ ,
                     '' /* other_settings*/ ,
                     'play_track_in_album_context' /* other_action */ ,
-
                     $track->artists[0]->name /* artist_name */ ,
                     $track->name /* track_name */ ,
                     $album_name /* album_name */ ,
