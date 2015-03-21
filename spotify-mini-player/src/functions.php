@@ -1331,6 +1331,11 @@ function getAlbumUriFromTrack($w, $track_uri)
         $tmp = explode(':', $track_uri);
 
         if ($tmp[1] == 'local') {
+            //
+            // Read settings from JSON
+            //
+            $settings            = getSettings($w);
+            $country_code        = $settings->country_code;
             // local track, look it up online
             // spotify:local:The+D%c3%b8:On+My+Shoulders+-+Single:On+My+Shoulders:318
             // spotify:local:Damien+Rice:B-Sides:Woman+Like+a+Man+%28Live%2c+Unplugged%29:284
@@ -1568,6 +1573,15 @@ function createRadioSongPlaylistForCurrentTrack($w)
 function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name)
 {
     //
+    // Read settings from JSON
+    //
+
+    $settings            = getSettings($w);
+    $radio_number_tracks = $settings->radio_number_tracks;
+    $userid              = $settings->userid;
+    $echonest_api_key    = $settings->echonest_api_key;
+    $country_code        = $settings->country_code;
+    $is_public_playlists = $settings->is_public_playlists;    //
     // Read settings from JSON
     //
 
@@ -2605,7 +2619,6 @@ function getTrackOrAlbumArtwork($w, $spotifyURL, $fetchIfNotPresent, $fetchLater
     if (!is_file($currentArtwork) || (is_file($currentArtwork) && filesize($currentArtwork) == 0)) {
         if ($fetchIfNotPresent == true || (is_file($currentArtwork) && filesize($currentArtwork) == 0)) {
             $artwork = getArtworkURL($w, $hrefs[1], $hrefs[2]);
-
             // if return 0, it is a 404 error, no need to fetch
             if (!empty($artwork) || (is_numeric($artwork) && $artwork != 0)) {
                 if (!file_exists($w->data() . "/artwork/" . hash('md5', $hrefs[2] . ".png"))):
@@ -2759,6 +2772,7 @@ function getPlaylistArtwork($w, $playlistURI, $fetchIfNotPresent, $forceFetch = 
                 );
 
                 $w->request("$artwork", $options);
+                stathat_ez_count('AlfredSpotifyMiniPlayer', 'artworks', 1);
             } else {
                 return "./images/playlists.png";
             }
@@ -2809,6 +2823,7 @@ function getCategoryArtwork($w, $categoryId, $categoryURI, $fetchIfNotPresent, $
                     CURLOPT_TIMEOUT => 5
                 );
                 $w->request("$categoryURI", $options);
+                stathat_ez_count('AlfredSpotifyMiniPlayer', 'artworks', 1);
         } else {
             return "./images/browse.png";
         }
@@ -2872,7 +2887,7 @@ function getArtistArtwork($w, $artist, $fetchIfNotPresent = false, $fetchLater =
                     CURLOPT_FILE => $fp
                 );
                 $w->request("$artwork", $options);
-
+                stathat_ez_count('AlfredSpotifyMiniPlayer', 'artworks', 1);
                 if ($isLaterFetch == true) {
                     return true;
                 }
