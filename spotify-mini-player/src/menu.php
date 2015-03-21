@@ -617,9 +617,9 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress)
     // Search albums
     //
     if ($all_playlists == false) {
-        $getTracks = "select album_name,album_uri,album_artwork_path from tracks where yourmusic=1 and :album_name like :artist_name limit " . $max_results;
+        $getTracks = "select album_name,album_uri,album_artwork_path,uri from tracks where yourmusic=1 and :album_name like :artist_name limit " . $max_results;
     } else {
-        $getTracks = "select album_name,album_uri,album_artwork_path from tracks where album_name like :album_name limit " . $max_results;
+        $getTracks = "select album_name,album_uri,album_artwork_path,uri from tracks where album_name like :album_name limit " . $max_results;
     }
 
     try {
@@ -634,6 +634,10 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress)
 
     while ($track = $stmt->fetch()) {
         if (checkIfResultAlreadyThere($w->results(), "💿 " . ucfirst($track[0])) == false) {
+            if($track[1] == '') {
+                // can happen for local tracks
+                $track[1] = $track[3];
+            }
             if($quick_mode) {
                 $w->result(null, serialize(array(
                     '' /*track_uri*/ ,
@@ -4008,7 +4012,7 @@ function secondDelimiterAlbums($w, $query, $settings, $db, $update_in_progress)
         $track_uri = $album_uri;
         $album_uri = getAlbumUriFromTrack($w, $track_uri);
         if ($album_uri == false) {
-            $w->result(null, 'help', "The album cannot be retrieved", "", './images/warning.png', 'no', null, '');
+            $w->result(null, 'help', "The album cannot be retrieved from track uri", 'URI was ' . $tmp[0], './images/warning.png', 'no', null, '');
             echo $w->toxml();
             return;
         }
