@@ -159,7 +159,7 @@ class Request
         return array(
             'body' => $body,
             'headers' => $headers,
-            'status' => $status
+            'status' => $status,
         );
     }
 

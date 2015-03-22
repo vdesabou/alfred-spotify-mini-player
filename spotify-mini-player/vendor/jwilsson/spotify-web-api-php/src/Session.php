@@ -51,7 +51,7 @@ class Session
         $defaults = array(
             'scope' => array(),
             'show_dialog' => false,
-            'state' => ''
+            'state' => '',
         );
 
         $options = array_merge($defaults, (array) $options);
@@ -61,7 +61,7 @@ class Session
             'response_type' => 'code',
             'scope' => implode(' ', $options['scope']),
             'show_dialog' => $options['show_dialog'] ? 'true' : 'false',
-            'state' => $options['state']
+            'state' => $options['state'],
         );
 
         return Request::ACCOUNT_URL . '/authorize/?' . http_build_query($parameters);
@@ -98,9 +98,9 @@ class Session
     }
 
     /**
-     * Get the number of seconds before the access token expires.
+     * Get the number of seconds for which the access token is valid.
      *
-     * @return int The expires time.
+     * @return int The time period (in seconds) for which the access token is valid.
      */
     public function getExpires()
     {
@@ -128,21 +128,30 @@ class Session
     }
 
     /**
-     * Refresh a access token.
+     * @deprecated Use Session::refreshAccessToken instead. This dummy function will be removed in 1.0.0.
+     */
+    public function refreshToken()
+    {
+        trigger_error('Use Session::refreshAccessToken instead', E_USER_DEPRECATED);
+        return $this->refreshAccessToken();
+    }
+
+    /**
+     * Refresh an access token.
      *
      * @return bool Whether the access token was successfully refreshed.
      */
-    public function refreshToken()
+    public function refreshAccessToken()
     {
         $payload = base64_encode($this->getClientId() . ':' . $this->getClientSecret());
 
         $parameters = array(
             'grant_type' => 'refresh_token',
-            'refresh_token' => $this->refreshToken
+            'refresh_token' => $this->refreshToken,
         );
 
         $headers = array(
-            'Authorization' => 'Basic ' . $payload
+            'Authorization' => 'Basic ' . $payload,
         );
 
         $response = $this->request->account('POST', '/api/token', $parameters, $headers);
@@ -159,11 +168,11 @@ class Session
     }
 
     /**
-     * Request a access token using the Client Credentials Flow.
+     * Request an access token using the Client Credentials Flow.
      *
      * @param array $scope Optional. Scope(s) to request from the user.
      *
-     * @return bool Whether a access token was successfully granted.
+     * @return bool True when an access token was successfully granted, false otherwise.
      */
     public function requestCredentialsToken($scope = array())
     {
@@ -171,11 +180,11 @@ class Session
 
         $parameters = array(
             'grant_type' => 'client_credentials',
-            'scope' => implode(' ', $scope)
+            'scope' => implode(' ', $scope),
         );
 
         $headers = array(
-            'Authorization' => 'Basic ' . $payload
+            'Authorization' => 'Basic ' . $payload,
         );
 
         $response = $this->request->account('POST', '/api/token', $parameters, $headers);
@@ -192,29 +201,39 @@ class Session
     }
 
     /**
-     * Request a access token.
-     *
-     * @param string $code The authorization code from Spotify.
-     *
-     * @return bool Whether a access token was successfully granted.
+     * @deprecated Use Session::requestAccessToken instead. This dummy function will be removed in 1.0.0.
      */
     public function requestToken($code)
+    {
+        trigger_error('Use Session::requestAccessToken instead', E_USER_DEPRECATED);
+        return $this->requestAccessToken($code);
+    }
+
+    /**
+     * Request an access token given an authorization code.
+     *
+     * @param string $authorizationCode The authorization code from Spotify.
+     *
+     * @return bool True when the access token was successfully granted, false otherwise.
+     */
+    public function requestAccessToken($authorizationCode)
     {
         $parameters = array(
             'client_id' => $this->getClientId(),
             'client_secret' => $this->getClientSecret(),
-            'code' => $code,
+            'code' => $authorizationCode,
             'grant_type' => 'authorization_code',
-            'redirect_uri' => $this->getRedirectUri()
+            'redirect_uri' => $this->getRedirectUri(),
         );
 
         $response = $this->request->account('POST', '/api/token', $parameters);
         $response = $response['body'];
 
-        if (isset($response->access_token)) {
+        if (isset($response->refresh_token)
+                && isset($response->access_token)) {
+            $this->refreshToken = $response->refresh_token;
             $this->accessToken = $response->access_token;
             $this->expires = $response->expires_in;
-            $this->refreshToken = $response->refresh_token;
 
             return true;
         }

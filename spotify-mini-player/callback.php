@@ -21,7 +21,7 @@ try {
 	if (!empty($_GET['code'])) {
 
 		// Request a access token using the code from Spotify
-		$ret = $session->requestToken($_GET['code']);
+		$ret = $session->refreshAccessToken($_GET['code']);
 
 		if ($ret == true) {
 			$api = new SpotifyWebAPI\SpotifyWebAPI();

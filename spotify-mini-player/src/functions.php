@@ -44,7 +44,7 @@ function getSpotifyWebAPI($w, $old_api = null)
             $session->setRefreshToken($oauth_refresh_token);
             $api = new SpotifyWebAPI\SpotifyWebAPI();
         }
-        if ($session->refreshToken() == true) {
+        if ($session->refreshAccessToken() == true) {
             $oauth_access_token = $session->getAccessToken();
             // Set new token to settings
             $ret                = updateSetting($w, 'oauth_access_token', $oauth_access_token);
