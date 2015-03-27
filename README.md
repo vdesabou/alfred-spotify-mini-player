@@ -1,15 +1,8 @@
+# alfred-spotify-mini-player.com
 
-# alfred-spotify-mini-player
+Find all information and download the workflow [on the web site](http://alfred-spotify-mini-player.com)
 
-# Download
-
-Find all information and download the workflow [![on the web site](https://infinit.io/link/vdesabou/3fQDsyu.png)](http://alfred-spotify-mini-player.com)
-
-Follow [@TheMiniPlayer](https://twitter.com/TheMiniPlayer) to get all the news.
-
-# Setup
-
-Follow steps [here](http://alfred-spotify-mini-player.com/setup)
+[![Screenshot](https://infinit.io/link/vdesabou/3fQDsyu.png)](http://alfred-spotify-mini-player.com)
 
 # Features
 
@@ -19,6 +12,8 @@ Follow steps [here](http://alfred-spotify-mini-player.com/setup)
 
 ![Screenshot](http://alfred-spotify-mini-player.com/images/index1.gif)
 
+# Twitter
 
+Follow [@TheMiniPlayer](https://twitter.com/TheMiniPlayer) to get all the news.
 
 
