@@ -3,7 +3,7 @@
 
 # Download
 
-Find all information and download the workflow [on the web site](http://alfred-spotify-mini-player.com)
+Find all information and download the workflow [![on the web site](https://infinit.io/link/vdesabou/3fQDsyu.png)](http://alfred-spotify-mini-player.com)
 
 Follow [@TheMiniPlayer](https://twitter.com/TheMiniPlayer) to get all the news.
 
