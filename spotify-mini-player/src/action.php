@@ -108,13 +108,6 @@ if ($type == "TRACK" && $other_settings == "" &&
             return;
         } else if ($playlist_uri != "") {
             // start now playing if needed
-            if ($now_playing_notifications == "") {
-                //
-                // Read settings from JSON
-                //
-                $settings                  = getSettings($w);
-                $now_playing_notifications = $settings->now_playing_notifications;
-            }
             exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
             if(! $use_mopidy) {
 	            exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
@@ -141,13 +134,6 @@ if ($type == "TRACK" && $other_settings == "" &&
         } else {
             if ($other_action == "" || $other_action == "play_track_from_play_queue") {
                 // start now playing if needed
-                if ($now_playing_notifications == "") {
-                    //
-                    // Read settings from JSON
-                    //
-                    $settings                  = getSettings($w);
-                    $now_playing_notifications = $settings->now_playing_notifications;
-                }
                 exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
 	            if(! $use_mopidy) {
 		            exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
@@ -670,13 +656,6 @@ if ($type == "TRACK" && $other_settings == "" &&
         return;
     } else if ($other_action == "play_track_in_album_context") {
         // start now playing if needed
-        if ($now_playing_notifications == "") {
-            //
-            // Read settings from JSON
-            //
-            $settings                  = getSettings($w);
-            $now_playing_notifications = $settings->now_playing_notifications;
-        }
         exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
         if(! $use_mopidy) {
             exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
@@ -795,8 +774,10 @@ if ($type == "TRACK" && $other_settings == "" &&
             ($now_playing_notifications == false && $type == "")) {
             displayNotificationForCurrentTrack($w);
         }
-        if($type != "playing") {
-	       	updateCurrentTrackIndexFromPlayQueue($w);
+        if(! $use_mopidy) {
+	        if($type != "playing") {
+		       	updateCurrentTrackIndexFromPlayQueue($w);
+	        }
         }
         return;
     } else if ($other_action == "add_current_track_to") {
@@ -846,13 +827,6 @@ if ($type == "TRACK" && $other_settings == "" &&
     } else if ($other_action == "random") {
         list($track_uri, $track_name, $artist_name, $album_name, $duration) = getRandomTrack($w);
         // start now playing if needed
-        if ($now_playing_notifications == "") {
-            //
-            // Read settings from JSON
-            //
-            $settings                  = getSettings($w);
-            $now_playing_notifications = $settings->now_playing_notifications;
-        }
         exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
         if(! $use_mopidy) {
             exec("./src/track_info.ksh 2>&1", $retArr, $retVal);

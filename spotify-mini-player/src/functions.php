@@ -74,10 +74,12 @@ function getSpotifyWebAPI($w, $old_api = null)
 }
 
 /**
- * lookupCurrentArtist function.
+ * invokeModipyMethod function.
  *
  * @access public
  * @param mixed $w
+ * @param mixed $method
+ * @param mixed $params
  * @return void
  */
 function invokeModipyMethod($w, $method, $params)
@@ -113,18 +115,41 @@ function invokeModipyMethod($w, $method, $params)
     }
 }
 
+/**
+ * getCurrentTrackInfoWithModipy function.
+ *
+ * @access public
+ * @param mixed $w
+ * @return void
+ */
 function getCurrentTrackInfoWithModipy($w) {
     $tl_track = invokeModipyMethod($w, "core.playback.get_current_track", array());
     $state = invokeModipyMethod($w, "core.playback.get_state", array());
     return "" . $tl_track->name . "▹" . $tl_track->artists[0]->name . "▹" . $tl_track->album->name . "▹" . $state . "▹" . $tl_track->uri . "▹" . $tl_track->length/1000 . "▹" . "0";
 }
 
+/**
+ * playTrackWithModipy function.
+ *
+ * @access public
+ * @param mixed $w
+ * @param mixed $track_uri
+ * @return void
+ */
 function playTrackWithModipy($w, $track_uri) {
     invokeModipyMethod($w, "core.tracklist.add", array('uri' => $track_uri, 'at_position' => 0));
     $tl_tracks = invokeModipyMethod($w, "core.tracklist.get_tl_tracks", array());
     invokeModipyMethod($w, "core.playback.play", array('tl_track' => $tl_tracks[0]));
 }
 
+/**
+ * playAlbumOrPlaylistWithModipy function.
+ *
+ * @access public
+ * @param mixed $w
+ * @param mixed $uri
+ * @return void
+ */
 function playAlbumOrPlaylistWithModipy($w, $uri) {
     invokeModipyMethod($w, "core.tracklist.clear", array());
     invokeModipyMethod($w, "core.tracklist.add", array('uri' => $uri, 'at_position' => 0));
@@ -132,6 +157,15 @@ function playAlbumOrPlaylistWithModipy($w, $uri) {
     invokeModipyMethod($w, "core.playback.play", array('tl_track' => $tl_tracks[0]));
 }
 
+/**
+ * playTrackInContextWithModipy function.
+ *
+ * @access public
+ * @param mixed $w
+ * @param mixed $track_uri
+ * @param mixed $context_uri
+ * @return void
+ */
 function playTrackInContextWithModipy($w, $track_uri, $context_uri) {
     invokeModipyMethod($w, "core.tracklist.clear", array());
     invokeModipyMethod($w, "core.tracklist.add", array('uri' => $context_uri, 'at_position' => 0));
@@ -4996,6 +5030,9 @@ function floatToSquares($decimal)
  */
 function floatToStars($decimal)
 {
+	if($decimal == 0) {
+		return '';
+	}
     $squares = ($decimal < 1) ? floor($decimal * 5) : 5;
 
     return str_repeat("★", $squares) . str_repeat("☆", 5 - $squares);
@@ -5005,12 +5042,13 @@ function floatToStars($decimal)
  * Mulit-byte Unserialize
  *
  * UTF-8 will screw up a serialized string
+ * Thanks to http://stackoverflow.com/questions/2853454/php-unserialize-fails-with-non-encoded-characters
  *
  * @access private
  * @param string
  * @return string
  */
-// thanks to http://stackoverflow.com/questions/2853454/php-unserialize-fails-with-non-encoded-characters
+
 function mb_unserialize($string) {
     $string2 = preg_replace_callback(
         '!s:(\d+):"(.*?)";!s',
