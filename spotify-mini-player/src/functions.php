@@ -94,7 +94,7 @@ function invokeMopidyMethod($w, $method, $params)
     exec("curl -s -X POST -H Content-Type:application/json -d '{
   \"method\": \"" . $method . "\",
   \"jsonrpc\": \"2.0\",
-  \"params\": " . json_encode($params) . ",
+  \"params\": " . json_encode($params, JSON_HEX_APOS) . ",
   \"id\": 1
 }' http://" . $mopidy_server . ":" . $mopidy_port . "/mopidy/rpc", $retArr, $retVal);
 
@@ -110,7 +110,7 @@ function invokeMopidyMethod($w, $method, $params)
             return $result->result;
         }
         if(isset($result->error)) {
-            logMsg("ERROR: invokeMopidyMethod() method: " . $method . ' params: ' . json_encode($params) . ' exception:'. print_r($result));
+            logMsg("ERROR: invokeMopidyMethod() method: " . $method . ' params: ' . json_encode($params, JSON_HEX_APOS) . ' exception:'. print_r($result));
 
             displayNotificationWithArtwork('Mopidy Exception: ' . htmlspecialchars($result->error->message), './images/warning.png', 'Error!');
             exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug Mopidy Exception: " . htmlspecialchars($result->error->message) . "\"'");
@@ -144,7 +144,6 @@ function getCurrentTrackInfoWithMopidy($w) {
  */
 function playUriWithMopidyWithoutClearing($w, $uri) {
     invokeMopidyMethod($w, "core.tracklist.add", array('uri' => $uri, 'at_position' => 0));
-    $tl_tracks = array();
     $tl_tracks = invokeMopidyMethod($w, "core.tracklist.get_tl_tracks", array());
     invokeMopidyMethod($w, "core.playback.play", array('tl_track' => $tl_tracks[0]));
 }
