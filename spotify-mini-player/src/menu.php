@@ -3452,7 +3452,7 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
             'fn' => 'Not Available',
             'ctrl' => 'Not Available'
         ), './images/disable_mopidy.png', 'yes', null, '');
-        $w->result(null, '', "Configure Mopidy server (currently " . $mopidy_server . ")", "Server name/IP where Mopidy is running", './images/mopidy_server.png', 'no', null, 'Settings▹MopidyServer▹');
+        $w->result(null, '', "Configure Mopidy server (currently " . $mopidy_server . ")", "Server name/ip where Mopidy server is running", './images/mopidy_server.png', 'no', null, 'Settings▹MopidyServer▹');
         $w->result(null, '', "Configure Mopidy port (currently " . $mopidy_port . ")", "TCP port where Mopidy server is running", './images/mopidy_port.png', 'no', null, 'Settings▹MopidyPort▹');
     } else {
         $w->result(null, serialize(array(

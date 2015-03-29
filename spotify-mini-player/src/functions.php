@@ -295,10 +295,21 @@ function addPlaylistToPlayQueue($w, $playlist_uri, $playlist_name) {
     if (!$w->internet()) {
         return false;
     }
-	$tracks = getThePlaylistFullTracks($w, $playlist_uri);
-	if($tracks == false) {
-		displayNotificationWithArtwork("Cannot get tracks for playlist " . $playlist_name, './images/warning.png', 'Error!');
-		return false;
+
+	//
+	// Read settings from JSON
+	//
+	$settings                  = getSettings($w);
+	$use_mopidy                = $settings->use_mopidy;
+
+	if(! $use_mopidy) {
+		$tracks = getThePlaylistFullTracks($w, $playlist_uri);
+		if($tracks == false) {
+			displayNotificationWithArtwork("Cannot get tracks for playlist " . $playlist_name, './images/warning.png', 'Error!');
+			return false;
+		}
+	} else {
+		$tracks = array();
 	}
 	$playqueue = array(
 	    "type" => "playlist",
@@ -323,11 +334,23 @@ function addAlbumToPlayQueue($w, $album_uri, $album_name) {
     if (!$w->internet()) {
         return false;
     }
-	$tracks = getTheAlbumFullTracks($w, $album_uri);
-	if($tracks == false) {
-		displayNotificationWithArtwork("Cannot get tracks for album " . $album_name, './images/warning.png', 'Error!');
-		return false;
+
+	//
+	// Read settings from JSON
+	//
+	$settings                  = getSettings($w);
+	$use_mopidy                = $settings->use_mopidy;
+
+	if(! $use_mopidy) {
+		$tracks = getTheAlbumFullTracks($w, $album_uri);
+		if($tracks == false) {
+			displayNotificationWithArtwork("Cannot get tracks for album " . $album_name, './images/warning.png', 'Error!');
+			return false;
+		}
+	} else {
+		$tracks = array();
 	}
+
 	$playqueue = array(
 	    "type" => "album",
 	    "uri" => $album_uri,
@@ -352,11 +375,22 @@ function addArtistToPlayQueue($w, $artist_uri, $artist_name, $country_code) {
     if (!$w->internet()) {
         return false;
     }
-	$tracks = getTheArtistFullTracks($w, $artist_uri, $country_code);
-	if($tracks == false) {
-		displayNotificationWithArtwork("Cannot get tracks for artist " . $artist_name, './images/warning.png', 'Error!');
-		return false;
+	//
+	// Read settings from JSON
+	//
+	$settings                  = getSettings($w);
+	$use_mopidy                = $settings->use_mopidy;
+
+	if(! $use_mopidy) {
+		$tracks = getTheArtistFullTracks($w, $artist_uri, $country_code);
+		if($tracks == false) {
+			displayNotificationWithArtwork("Cannot get tracks for artist " . $artist_name, './images/warning.png', 'Error!');
+			return false;
+		}
+	} else {
+		$tracks = array();
 	}
+
 	$playqueue = array(
 	    "type" => "artist",
 	    "uri" => $artist_uri,
@@ -384,8 +418,22 @@ function addTrackToPlayQueue($w, $track_uri, $track_name, $artist_name, $album_n
     if (!$w->internet()) {
         return false;
     }
-	$tracks = array();
-	$track = getTheFullTrack($w, $track_uri, $country_code);
+	//
+	// Read settings from JSON
+	//
+	$settings                  = getSettings($w);
+	$use_mopidy                = $settings->use_mopidy;
+
+	if(! $use_mopidy) {
+		$tracks = array();
+		$track = getTheFullTrack($w, $track_uri, $country_code);
+		if($track == false) {
+			displayNotificationWithArtwork("Cannot get track for artist " . $artist_name, './images/warning.png', 'Error!');
+			return false;
+		}
+	} else {
+		$tracks = array();
+	}
 
 	if($track == false) {
         $track = new stdClass();
