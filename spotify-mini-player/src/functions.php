@@ -149,14 +149,14 @@ function playTrackWithMopidy($w, $track_uri) {
 }
 
 /**
- * playAlbumOrPlaylistWithMopidy function.
+ * playUriWithMopidy function.
  *
  * @access public
  * @param mixed $w
  * @param mixed $uri
  * @return void
  */
-function playAlbumOrPlaylistWithMopidy($w, $uri) {
+function playUriWithMopidy($w, $uri) {
     invokeMopidyMethod($w, "core.tracklist.clear", array());
     invokeMopidyMethod($w, "core.tracklist.add", array('uri' => $uri, 'at_position' => 0));
     $tl_tracks = invokeMopidyMethod($w, "core.tracklist.get_tl_tracks", array());
@@ -704,7 +704,7 @@ function playAlfredPlaylist($w)
         return;
     }
     if($use_mopidy) {
-        playAlbumOrPlaylistWithMopidy($w, $alfred_playlist_uri);
+        playUriWithMopidy($w, $alfred_playlist_uri);
     } else {
         exec("osascript -e 'tell application \"Spotify\" to play track \"$alfred_playlist_uri\"'");
         addPlaylistToPlayQueue($w, $alfred_playlist_uri, $alfred_playlist_name);
@@ -859,7 +859,7 @@ function playCurrentArtist($w)
             return;
         }
         if($use_mopidy) {
-            playAlbumOrPlaylistWithMopidy($w, $artist_uri);
+            playUriWithMopidy($w, $artist_uri);
         } else {
             // FIX THIS add play queue
             exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");

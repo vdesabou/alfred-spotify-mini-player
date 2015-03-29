@@ -185,7 +185,7 @@ if ($type == "TRACK" && $other_settings == "" &&
             }
         }
         if($use_mopidy) {
-            playAlbumOrPlaylistWithMopidy($w, $playlist_uri);
+            playUriWithMopidy($w, $playlist_uri);
         } else {
             exec("osascript -e 'tell application \"Spotify\" to play track \"$playlist_uri\"'");
         }
@@ -220,7 +220,7 @@ if ($type == "TRACK" && $other_settings == "" &&
         }
     }
     if($use_mopidy) {
-        playAlbumOrPlaylistWithMopidy($w, $album_uri);
+        playUriWithMopidy($w, $album_uri);
     } else {
         exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
     }
@@ -290,7 +290,7 @@ if ($type == "TRACK" && $other_settings == "" &&
             }
         }
         if($use_mopidy) {
-            playAlbumOrPlaylistWithMopidy($w, $artist_uri);
+            playUriWithMopidy($w, $artist_uri);
         } else {
             exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
         }
@@ -898,7 +898,7 @@ if ($type == "TRACK" && $other_settings == "" &&
             }
         }
         if($use_mopidy) {
-            playAlbumOrPlaylistWithMopidy($w, $album_uri);
+            playUriWithMopidy($w, $album_uri);
         } else {
             exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
         }
@@ -954,7 +954,7 @@ if ($type == "TRACK" && $other_settings == "" &&
             }
         }
         if($use_mopidy) {
-            playAlbumOrPlaylistWithMopidy($w, $artist_uri);
+            playUriWithMopidy($w, $artist_uri);
         } else {
             exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
         }
@@ -982,7 +982,7 @@ if ($type == "TRACK" && $other_settings == "" &&
             }
         }
         if($use_mopidy) {
-            playAlbumOrPlaylistWithMopidy($w, $album_uri);
+            playUriWithMopidy($w, $album_uri);
         } else {
             exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
         }
