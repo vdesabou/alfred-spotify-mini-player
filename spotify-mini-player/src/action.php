@@ -155,18 +155,21 @@ if ($type == "TRACK" && $other_settings == "" &&
 		        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
 	            }
                 if($other_action == "") {
-		            if(! $use_mopidy) {
-			            exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
-			            if($retVal != 0) {
-			                displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-			                exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
-			                return;
-			            }
-	                    if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
-	                        $results = explode('▹', $retArr[0]);
-	                        addTrackToPlayQueue($w, $track_uri, escapeQuery($results[0]), escapeQuery($results[1]), escapeQuery($results[2]), $results[5], $country_code);
-	                    }
-			        }
+				    if($use_mopidy) {
+				        $retArr = array(getCurrentTrackInfoWithModipy($w));
+				    } else {
+					    // get info on current song
+					    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+					    if($retVal != 0) {
+					        displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+					        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+					        return;
+					    }
+					}
+                    if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
+                        $results = explode('▹', $retArr[0]);
+                        addTrackToPlayQueue($w, $track_uri, escapeQuery($results[0]), escapeQuery($results[1]), escapeQuery($results[2]), $results[5], $country_code);
+                    }
                 }
                 return;
             }
@@ -848,9 +851,7 @@ if ($type == "TRACK" && $other_settings == "" &&
         if($userid != 'vdesabou') {
             stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
         }
-        if(! $use_mopidy) {
-	     	addTrackToPlayQueue($w, $track_uri, $track_name, $artist_name, $album_name, $duration, $country_code);
-        }
+	    addTrackToPlayQueue($w, $track_uri, $track_name, $artist_name, $album_name, $duration, $country_code);
         return;
     } else if ($other_action == "random_album") {
         list($album_uri, $album_name, $theartistname) = getRandomAlbum($w);

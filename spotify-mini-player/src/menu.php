@@ -3571,29 +3571,70 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
     $use_mopidy                = $settings->use_mopidy;
 
     if($use_mopidy) {
+        $playqueue = $w->read('playqueue.json');
+        if ($playqueue == false) {
+            $w->result(null, 'help', "There is no track in the play queue", "Make sure to always use the workflow to launch tracks, playlists, etc..Internet connectivity is also required", './images/warning.png', 'no', null, '');
+            $w->result(null, serialize(array(
+                '' /*track_uri*/ ,
+                '' /* album_uri */ ,
+                '' /* artist_uri */ ,
+                '' /* playlist_uri */ ,
+                '' /* spotify_command */ ,
+                '' /* query */ ,
+                'Open▹' . 'http://alfred-spotify-mini-player.com/articles/play-queue/' /* other_settings*/ ,
+                '' /* other_action */ ,
+                '' /* artist_name */ ,
+                '' /* track_name */ ,
+                '' /* album_name */ ,
+                '' /* track_artwork_path */ ,
+                '' /* artist_artwork_path */ ,
+                '' /* album_artwork_path */ ,
+                '' /* playlist_name */ ,
+                '' /* playlist_artwork_path */
+            )), 'Learn more about Play Queue', "Find out all information about Play Queue on alfred-spotify-mini-player.com", './images/website.png', 'yes', null, '');
+            echo $w->toxml();
+            return;
+        }
         $tl_tracks = invokeModipyMethod($w, "core.tracklist.get_tl_tracks", array());
+		$current_tl_track = invokeModipyMethod($w, "core.playback.get_current_tl_track", array());
 
+		$isShuffleEnabled = invokeModipyMethod($w, "core.tracklist.get_random", array());
+        if ($isShuffleEnabled) {
+            $w->result(null, 'help', "Shuffle is enabled", "The order of tracks presented below is not relevant", './images/warning.png', 'no', null, '');
+        }
         $noresult = true;
+        $firstTime = true;
         $nb_tracks           = 0;
         $track_name = '';
         $album_name = '';
         $playlist_name = '';
+        $current_track_found = false;
+        $current_track_index = 0;
         foreach ($tl_tracks as $tl_track) {
-            // $track = $playqueue->tracks[$i];
-            // if ($noresult == true) {
-            //     $added = '🔈 ';
-            //     if($playqueue->type == 'playlist') {
-            //         $playlist_name = $playqueue->name;
-            //     } elseif ($playqueue->type == 'album') {
-            //         $album_name = $playqueue->name;
-            //     } elseif ($playqueue->type == 'track') {
-            //         $track_name = $playqueue->name;
-            //     }
-            //     $w->result(null, 'help', "Playing from: " . ucfirst($playqueue->type) . ' ' . $playqueue->name, 'Track ' . ($playqueue->current_track_index + 1) . ' on '. count($playqueue->tracks) . ' tracks queued', './images/play_queue.png', 'no', null, '');
-            //     // $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-            //     // $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
-            //     // $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
-            // }
+	        $current_track_index++;
+            if($current_track_found == false &&
+            	$tl_track->tlid == $current_tl_track->tlid) {
+	            $current_track_found = true;
+            }
+            if($current_track_found == false &&
+            	$tl_track->tlid != $current_tl_track->tlid) {
+	            continue;
+            }
+            if ($firstTime == true) {
+                $added = '🔈 ';
+                if($playqueue->type == 'playlist') {
+                    $playlist_name = $playqueue->name;
+                } elseif ($playqueue->type == 'album') {
+                    $album_name = $playqueue->name;
+                } elseif ($playqueue->type == 'track') {
+                    $track_name = $playqueue->name;
+                }
+                $w->result(null, 'help', "Playing from: " . ucfirst($playqueue->type) . ' ' . $playqueue->name, 'Track ' . $current_track_index . ' on '. count($tl_tracks) . ' tracks queued', './images/play_queue.png', 'no', null, '');
+                // $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
+                // $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
+                // $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
+            }
+            $firstTime = false;
             $max_tracks_displayed = 150;
             if($nb_tracks >= $max_tracks_displayed) {
                 $w->result(null, 'help', "[...] " . (count($tl_tracks) - $max_tracks_displayed) . " additional tracks are in the queue", "A maximum of " . $max_tracks_displayed . " tracks is displayed." , './images/info.png', 'no', null, '');
