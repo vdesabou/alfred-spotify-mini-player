@@ -144,6 +144,7 @@ function getCurrentTrackInfoWithMopidy($w) {
  */
 function playUriWithMopidyWithoutClearing($w, $uri) {
     invokeMopidyMethod($w, "core.tracklist.add", array('uri' => $uri, 'at_position' => 0));
+    $tl_tracks = array();
     $tl_tracks = invokeMopidyMethod($w, "core.tracklist.get_tl_tracks", array());
     invokeMopidyMethod($w, "core.playback.play", array('tl_track' => $tl_tracks[0]));
 }
@@ -422,35 +423,31 @@ function addTrackToPlayQueue($w, $track_uri, $track_name, $artist_name, $album_n
 	$settings                  = getSettings($w);
 	$use_mopidy                = $settings->use_mopidy;
 
+	$track = new stdClass();
 	if(! $use_mopidy) {
 		$tracks = array();
 		$track = getTheFullTrack($w, $track_uri, $country_code);
 		if($track == false) {
-			displayNotificationWithArtwork("Cannot get track for artist " . $artist_name, './images/warning.png', 'Error!');
-			return false;
+	        $track->uri = $track_uri;
+	        $track->name = $track_name;
+	        $artists = array();
+	        $artist = new stdClass();
+	        $artist->name = $artist_name;
+	        $artists[0] = $artist;
+	        $track->artists = $artists;
+	        $album = new stdClass();
+	        $album->name = $album_name;
+	        $track->album = $album;
+	        if(is_numeric($duration)) {
+	            $track->duration_ms = $duration*1000;
+	        } else {
+	            $track->duration = $duration;
+	        }
 		}
 	} else {
 		$tracks = array();
 	}
 
-	if($track == false) {
-        $track = new stdClass();
-        $track->uri = $track_uri;
-        $track->name = $track_name;
-        $artists = array();
-        $artist = new stdClass();
-        $artist->name = $artist_name;
-        $artists[0] = $artist;
-        $track->artists = $artists;
-        $album = new stdClass();
-        $album->name = $album_name;
-        $track->album = $album;
-        if(is_numeric($duration)) {
-            $track->duration_ms = $duration*1000;
-        } else {
-            $track->duration = $duration;
-        }
-	}
     $playqueue = $w->read('playqueue.json');
     if ($playqueue == false) {
         $tracks[] = $track;
@@ -464,13 +461,16 @@ function addTrackToPlayQueue($w, $track_uri, $track_name, $artist_name, $album_n
     } else {
         // replace current track by new track
         $playqueue->tracks[$playqueue->current_track_index] = $track;
+        if(! $use_mopidy) {
+		    $tracks = $playqueue->tracks;
+	    }
 	    if($playqueue->type != '') {
 			$newplayqueue = array(
 			    "type" => $playqueue->type,
 			    "uri" => $playqueue->uri,
 			    "name" => $playqueue->name,
                 "current_track_index" => $playqueue->current_track_index,
-			    "tracks" => $playqueue->tracks,
+			    "tracks" => $tracks,
 			);
 	    } else {
 			$newplayqueue = array(
@@ -478,7 +478,7 @@ function addTrackToPlayQueue($w, $track_uri, $track_name, $artist_name, $album_n
 			    "uri" => $track_uri,
 			    "name" => escapeQuery($track_name),
                 "current_track_index" => $playqueue->current_track_index,
-			    "tracks" => $playqueue->tracks,
+			    "tracks" => $tracks,
 			);
 	    }
     }
