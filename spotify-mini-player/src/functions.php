@@ -652,8 +652,8 @@ function playAlfredPlaylist($w)
     if($use_mopidy) {
         playAlbumOrPlaylistWithModipy($w, $alfred_playlist_uri);
     } else {
-        // FIX THIS add play queue
         exec("osascript -e 'tell application \"Spotify\" to play track \"$alfred_playlist_uri\"'");
+        addPlaylistToPlayQueue($w, $alfred_playlist_uri, $alfred_playlist_name);
     }
 
     $playlist_artwork_path = getPlaylistArtwork($w, $alfred_playlist_uri, true, true);
