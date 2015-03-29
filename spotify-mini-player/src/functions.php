@@ -135,15 +135,15 @@ function getCurrentTrackInfoWithMopidy($w) {
 }
 
 /**
- * playTrackWithMopidy function.
+ * playUriWithMopidyWithoutClearing function.
  *
  * @access public
  * @param mixed $w
- * @param mixed $track_uri
+ * @param mixed $uri
  * @return void
  */
-function playTrackWithMopidy($w, $track_uri) {
-    invokeMopidyMethod($w, "core.tracklist.add", array('uri' => $track_uri, 'at_position' => 0));
+function playUriWithMopidyWithoutClearing($w, $uri) {
+    invokeMopidyMethod($w, "core.tracklist.add", array('uri' => $uri, 'at_position' => 0));
     $tl_tracks = invokeMopidyMethod($w, "core.tracklist.get_tl_tracks", array());
     invokeMopidyMethod($w, "core.playback.play", array('tl_track' => $tl_tracks[0]));
 }
@@ -158,9 +158,7 @@ function playTrackWithMopidy($w, $track_uri) {
  */
 function playUriWithMopidy($w, $uri) {
     invokeMopidyMethod($w, "core.tracklist.clear", array());
-    invokeMopidyMethod($w, "core.tracklist.add", array('uri' => $uri, 'at_position' => 0));
-    $tl_tracks = invokeMopidyMethod($w, "core.tracklist.get_tl_tracks", array());
-    invokeMopidyMethod($w, "core.playback.play", array('tl_track' => $tl_tracks[0]));
+    playUriWithMopidyWithoutClearing($w, $uri);
 }
 
 /**

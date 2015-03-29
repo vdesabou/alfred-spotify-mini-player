@@ -144,7 +144,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 		            }
 		        }
                 if($use_mopidy) {
-                    playTrackWithMopidy($w, $track_uri);
+                    playUriWithMopidyWithoutClearing($w, $track_uri);
                 } else {
                     exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
                 }
@@ -872,7 +872,7 @@ if ($type == "TRACK" && $other_settings == "" &&
             }
         }
         if($use_mopidy) {
-            playTrackWithMopidy($w, $track_uri);
+            playUriWithMopidyWithoutClearing($w, $track_uri);
         } else {
             exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
         }
