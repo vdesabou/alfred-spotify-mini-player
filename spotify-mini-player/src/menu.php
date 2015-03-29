@@ -2570,7 +2570,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
     $use_mopidy                = $settings->use_mopidy;
 
     if($use_mopidy) {
-        $retArr = array(getCurrentTrackInfoWithModipy($w));
+        $retArr = array(getCurrentTrackInfoWithMopidy($w));
     } else {
         // get info on current song
         exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
@@ -3091,7 +3091,10 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
     $userid                     = $settings->userid;
     $echonest_api_key           = $settings->echonest_api_key;
     $is_public_playlists        = $settings->is_public_playlists;
-    $quick_mode                = $settings->quick_mode;
+    $quick_mode                 = $settings->quick_mode;
+    $use_mopidy                 = $settings->use_mopidy;
+	$mopidy_server              = $settings->mopidy_server;
+	$mopidy_port                = $settings->mopidy_port;
 
     if ($update_in_progress == false) {
         $w->result(null, serialize(array(
@@ -3423,6 +3426,62 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
         ), './images/enable_public_playlists.png', 'yes', null, '');
     }
 
+    if ($use_mopidy == true) {
+        $w->result(null, serialize(array(
+            '' /*track_uri*/ ,
+            '' /* album_uri */ ,
+            '' /* artist_uri */ ,
+            '' /* playlist_uri */ ,
+            '' /* spotify_command */ ,
+            '' /* query */ ,
+            '' /* other_settings*/ ,
+            'disable_mopidy' /* other_action */ ,
+            '' /* artist_name */ ,
+            '' /* track_name */ ,
+            '' /* album_name */ ,
+            '' /* track_artwork_path */ ,
+            '' /* artist_artwork_path */ ,
+            '' /* album_artwork_path */ ,
+            '' /* playlist_name */ ,
+            '' /* playlist_artwork_path */
+        )), "Disable Mopidy", array(
+            "You will use Spotify Desktop app with AppleScript instead",
+            'alt' => 'Not Available',
+            'cmd' => 'Not Available',
+            'shift' => 'Not Available',
+            'fn' => 'Not Available',
+            'ctrl' => 'Not Available'
+        ), './images/disable_mopidy.png', 'yes', null, '');
+        $w->result(null, '', "Configure Mopidy server (currently " . $mopidy_server . ")", "Server name/IP where Mopidy is running", './images/mopidy_server.png', 'no', null, 'Settings▹MopidyServer▹');
+        $w->result(null, '', "Configure Mopidy port (currently " . $mopidy_port . ")", "TCP port where Mopidy server is running", './images/mopidy_port.png', 'no', null, 'Settings▹MopidyPort▹');
+    } else {
+        $w->result(null, serialize(array(
+            '' /*track_uri*/ ,
+            '' /* album_uri */ ,
+            '' /* artist_uri */ ,
+            '' /* playlist_uri */ ,
+            '' /* spotify_command */ ,
+            '' /* query */ ,
+            '' /* other_settings*/ ,
+            'enable_mopidy' /* other_action */ ,
+            '' /* artist_name */ ,
+            '' /* track_name */ ,
+            '' /* album_name */ ,
+            '' /* track_artwork_path */ ,
+            '' /* artist_artwork_path */ ,
+            '' /* album_artwork_path */ ,
+            '' /* playlist_name */ ,
+            '' /* playlist_artwork_path */
+        )), "Enable Mopidy", array(
+            "You will use Mopidy",
+            'alt' => 'Not Available',
+            'cmd' => 'Not Available',
+            'shift' => 'Not Available',
+            'fn' => 'Not Available',
+            'ctrl' => 'Not Available'
+        ), './images/enable_mopidy.png', 'yes', null, '');
+    }
+
     $w->result(null, '', 'Check for workflow update', 'Last checked: ' . beautifyTime(time() - $last_check_update_time, true) . ' ago (note this is automatically done otherwise once per day)', './images/check_update.png', 'no', null, 'Check for update...' . '▹');
 
     $w->result(null, serialize(array(
@@ -3595,10 +3654,10 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
             echo $w->toxml();
             return;
         }
-        $tl_tracks = invokeModipyMethod($w, "core.tracklist.get_tl_tracks", array());
-		$current_tl_track = invokeModipyMethod($w, "core.playback.get_current_tl_track", array());
+        $tl_tracks = invokeMopidyMethod($w, "core.tracklist.get_tl_tracks", array());
+		$current_tl_track = invokeMopidyMethod($w, "core.playback.get_current_tl_track", array());
 
-		$isShuffleEnabled = invokeModipyMethod($w, "core.tracklist.get_random", array());
+		$isShuffleEnabled = invokeMopidyMethod($w, "core.tracklist.get_random", array());
         if ($isShuffleEnabled) {
             $w->result(null, 'help', "Shuffle is enabled", "The order of tracks presented below is not relevant", './images/warning.png', 'no', null, '');
         }
@@ -3688,7 +3747,7 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
         }
 
         if ($noresult) {
-            $w->result(null, 'help', "There is no track in the play queue from Modipy", "Make sure to always use the workflow to launch tracks, playlists, etc..Internet connectivity is also required", './images/warning.png', 'no', null, '');
+            $w->result(null, 'help', "There is no track in the play queue from Mopidy", "Make sure to always use the workflow to launch tracks, playlists, etc..Internet connectivity is also required", './images/warning.png', 'no', null, '');
             $w->result(null, serialize(array(
                 '' /*track_uri*/ ,
                 '' /* album_uri */ ,
@@ -5379,7 +5438,6 @@ function secondDelimiterSettings($w, $query, $settings, $db, $update_in_progress
                     '' /* query */ ,
                     'MAX_RESULTS▹' . $the_query /* other_settings*/ ,
                     '' /* other_action */ ,
-
                     '' /* artist_name */ ,
                     '' /* track_name */ ,
                     '' /* album_name */ ,
@@ -5409,7 +5467,6 @@ function secondDelimiterSettings($w, $query, $settings, $db, $update_in_progress
                     '' /* query */ ,
                     'RADIO_TRACKS▹' . $the_query /* other_settings*/ ,
                     '' /* other_action */ ,
-
                     '' /* artist_name */ ,
                     '' /* track_name */ ,
                     '' /* album_name */ ,
@@ -5418,10 +5475,64 @@ function secondDelimiterSettings($w, $query, $settings, $db, $update_in_progress
                     '' /* album_artwork_path */ ,
                     '' /* playlist_name */ ,
                     '' /* playlist_artwork_path */ ,
-                    $alfred_playlist_name /* $alfred_playlist_name */
+                    '' /* $alfred_playlist_name */
                 )), "Number of Radio Tracks will be set to <" . $the_query . ">", "Type enter to validate the Radio Tracks number", './images/settings.png', 'yes', null, '');
             } else {
                 $w->result(null, '', "The number of tracks value entered is not valid", "Please fix it, it must be a number between 1 and 100", './images/warning.png', 'no', null, '');
+
+            }
+        }
+    } elseif ($setting_kind == "MopidyServer") {
+        if (mb_strlen($the_query) == 0) {
+            $w->result(null, '', "Enter the server name or IP where Mopidy server is running:", "Example: 192.168.0.5 or myserver.mydomain.mydomainextension", './images/settings.png', 'no', null, '');
+        } else {
+            $w->result(null, serialize(array(
+                '' /*track_uri*/ ,
+                '' /* album_uri */ ,
+                '' /* artist_uri */ ,
+                '' /* playlist_uri */ ,
+                '' /* spotify_command */ ,
+                '' /* query */ ,
+                'MOPIDY_SERVER▹' . $the_query /* other_settings*/ ,
+                '' /* other_action */ ,
+                '' /* artist_name */ ,
+                '' /* track_name */ ,
+                '' /* album_name */ ,
+                '' /* track_artwork_path */ ,
+                '' /* artist_artwork_path */ ,
+                '' /* album_artwork_path */ ,
+                '' /* playlist_name */ ,
+                '' /* playlist_artwork_path */ ,
+                '' /* $alfred_playlist_name */
+            )), "Mopidy server will be set to <" . $the_query . ">", "Type enter to validate the Mopidy server name or IP", './images/settings.png', 'yes', null, '');
+        }
+    } elseif ($setting_kind == "MopidyPort") {
+        if (mb_strlen($the_query) == 0) {
+            $w->result(null, '', "Enter the TCP port number where Mopidy server is running:", "Must be a numeric value", './images/settings.png', 'no', null, '');
+        } else {
+            // tcp port has been set
+            if (is_numeric($the_query) == true) {
+                $w->result(null, serialize(array(
+                    '' /*track_uri*/ ,
+                    '' /* album_uri */ ,
+                    '' /* artist_uri */ ,
+                    '' /* playlist_uri */ ,
+                    '' /* spotify_command */ ,
+                    '' /* query */ ,
+                    'MOPIDY_PORT▹' . $the_query /* other_settings*/ ,
+                    '' /* other_action */ ,
+                    '' /* artist_name */ ,
+                    '' /* track_name */ ,
+                    '' /* album_name */ ,
+                    '' /* track_artwork_path */ ,
+                    '' /* artist_artwork_path */ ,
+                    '' /* album_artwork_path */ ,
+                    '' /* playlist_name */ ,
+                    '' /* playlist_artwork_path */ ,
+                    '' /* $alfred_playlist_name */
+                )), "Mopidy TCP port will be set to <" . $the_query . ">", "Type enter to validate the Mopidy TCP port number", './images/settings.png', 'yes', null, '');
+            } else {
+                $w->result(null, '', "The TCP port value entered is not valid", "Please fix it, it must be a numeric value", './images/warning.png', 'no', null, '');
 
             }
         }

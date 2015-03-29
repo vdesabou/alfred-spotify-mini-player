@@ -74,7 +74,7 @@ function getSpotifyWebAPI($w, $old_api = null)
 }
 
 /**
- * invokeModipyMethod function.
+ * invokeMopidyMethod function.
  *
  * @access public
  * @param mixed $w
@@ -82,83 +82,89 @@ function getSpotifyWebAPI($w, $old_api = null)
  * @param mixed $params
  * @return void
  */
-function invokeModipyMethod($w, $method, $params)
+function invokeMopidyMethod($w, $method, $params)
 {
+	//
+	// Read settings from JSON
+	//
+	$settings                  = getSettings($w);
+	$mopidy_server             = $settings->mopidy_server;
+	$mopidy_port               = $settings->mopidy_port;
+
     exec("curl -s -X POST -H Content-Type:application/json -d '{
   \"method\": \"" . $method . "\",
   \"jsonrpc\": \"2.0\",
   \"params\": " . json_encode($params) . ",
   \"id\": 1
-}' http://127.0.0.1:6680/mopidy/rpc", $retArr, $retVal);
+}' http://" . $mopidy_server . ":" . $mopidy_port . "/mopidy/rpc", $retArr, $retVal);
 
     if($retVal != 0) {
-        displayNotificationWithArtwork('Modipy Exception: returned ' . $retVal . ' ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug Modipy Exception: returned" . $retVal . ' ' . htmlspecialchars($retArr[0]) . "\"'");
+        displayNotificationWithArtwork('Mopidy Exception: returned error ' . $retVal, './images/warning.png', 'Error!');
+        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug Mopidy Exception: returned error " . $retVal . "\"'");
         return;
     }
 
     if (isset($retArr[0])) {
         $result = json_decode($retArr[0]);
-        //print_r($result);
         if(isset($result->result)) {
             return $result->result;
         }
         if(isset($result->error)) {
-            logMsg("ERROR: invokeModipyMethod() method: " . $method . ' params: ' . json_encode($params) . ' exception:'. print_r($result));
+            logMsg("ERROR: invokeMopidyMethod() method: " . $method . ' params: ' . json_encode($params) . ' exception:'. print_r($result));
 
-            displayNotificationWithArtwork('Modipy Exception: ' . htmlspecialchars($result->error->message) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-            exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug Modipy Exception: " . htmlspecialchars($result->error->message) . "\"'");
+            displayNotificationWithArtwork('Mopidy Exception: ' . htmlspecialchars($result->error->message), './images/warning.png', 'Error!');
+            exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug Mopidy Exception: " . htmlspecialchars($result->error->message) . "\"'");
             return;
         }
     } else {
-        displayNotificationWithArtwork("Nothing returned by Modipy", './images/warning.png');
+        displayNotificationWithArtwork("Nothing returned by Mopidy", './images/warning.png');
     }
 }
 
 /**
- * getCurrentTrackInfoWithModipy function.
+ * getCurrentTrackInfoWithMopidy function.
  *
  * @access public
  * @param mixed $w
  * @return void
  */
-function getCurrentTrackInfoWithModipy($w) {
-    $tl_track = invokeModipyMethod($w, "core.playback.get_current_track", array());
-    $state = invokeModipyMethod($w, "core.playback.get_state", array());
+function getCurrentTrackInfoWithMopidy($w) {
+    $tl_track = invokeMopidyMethod($w, "core.playback.get_current_track", array());
+    $state = invokeMopidyMethod($w, "core.playback.get_state", array());
     return "" . $tl_track->name . "▹" . $tl_track->artists[0]->name . "▹" . $tl_track->album->name . "▹" . $state . "▹" . $tl_track->uri . "▹" . $tl_track->length/1000 . "▹" . "0";
 }
 
 /**
- * playTrackWithModipy function.
+ * playTrackWithMopidy function.
  *
  * @access public
  * @param mixed $w
  * @param mixed $track_uri
  * @return void
  */
-function playTrackWithModipy($w, $track_uri) {
-    invokeModipyMethod($w, "core.tracklist.add", array('uri' => $track_uri, 'at_position' => 0));
-    $tl_tracks = invokeModipyMethod($w, "core.tracklist.get_tl_tracks", array());
-    invokeModipyMethod($w, "core.playback.play", array('tl_track' => $tl_tracks[0]));
+function playTrackWithMopidy($w, $track_uri) {
+    invokeMopidyMethod($w, "core.tracklist.add", array('uri' => $track_uri, 'at_position' => 0));
+    $tl_tracks = invokeMopidyMethod($w, "core.tracklist.get_tl_tracks", array());
+    invokeMopidyMethod($w, "core.playback.play", array('tl_track' => $tl_tracks[0]));
 }
 
 /**
- * playAlbumOrPlaylistWithModipy function.
+ * playAlbumOrPlaylistWithMopidy function.
  *
  * @access public
  * @param mixed $w
  * @param mixed $uri
  * @return void
  */
-function playAlbumOrPlaylistWithModipy($w, $uri) {
-    invokeModipyMethod($w, "core.tracklist.clear", array());
-    invokeModipyMethod($w, "core.tracklist.add", array('uri' => $uri, 'at_position' => 0));
-    $tl_tracks = invokeModipyMethod($w, "core.tracklist.get_tl_tracks", array());
-    invokeModipyMethod($w, "core.playback.play", array('tl_track' => $tl_tracks[0]));
+function playAlbumOrPlaylistWithMopidy($w, $uri) {
+    invokeMopidyMethod($w, "core.tracklist.clear", array());
+    invokeMopidyMethod($w, "core.tracklist.add", array('uri' => $uri, 'at_position' => 0));
+    $tl_tracks = invokeMopidyMethod($w, "core.tracklist.get_tl_tracks", array());
+    invokeMopidyMethod($w, "core.playback.play", array('tl_track' => $tl_tracks[0]));
 }
 
 /**
- * playTrackInContextWithModipy function.
+ * playTrackInContextWithMopidy function.
  *
  * @access public
  * @param mixed $w
@@ -166,24 +172,24 @@ function playAlbumOrPlaylistWithModipy($w, $uri) {
  * @param mixed $context_uri
  * @return void
  */
-function playTrackInContextWithModipy($w, $track_uri, $context_uri) {
-    invokeModipyMethod($w, "core.tracklist.clear", array());
-    invokeModipyMethod($w, "core.tracklist.add", array('uri' => $context_uri, 'at_position' => 0));
-    $tl_tracks = invokeModipyMethod($w, "core.tracklist.get_tl_tracks", array());
+function playTrackInContextWithMopidy($w, $track_uri, $context_uri) {
+    invokeMopidyMethod($w, "core.tracklist.clear", array());
+    invokeMopidyMethod($w, "core.tracklist.add", array('uri' => $context_uri, 'at_position' => 0));
+    $tl_tracks = invokeMopidyMethod($w, "core.tracklist.get_tl_tracks", array());
 
     // loop to find track_uri
     $i=0;
     foreach ($tl_tracks as $tl_track) {
         if($tl_track->track->uri == $track_uri) {
             // found the track move it to position 0
-            invokeModipyMethod($w, "core.tracklist.move", array('start' => $i, 'end' => $i, 'to_position' => 0));
+            invokeMopidyMethod($w, "core.tracklist.move", array('start' => $i, 'end' => $i, 'to_position' => 0));
             logMsg(" found the track " . $tl_track->track->uri . " at position " . $i);
         }
         $i++;
     }
 
-    $tl_tracks = invokeModipyMethod($w, "core.tracklist.get_tl_tracks", array());
-    invokeModipyMethod($w, "core.playback.play", array('tl_track' => $tl_tracks[0]));
+    $tl_tracks = invokeMopidyMethod($w, "core.tracklist.get_tl_tracks", array());
+    invokeMopidyMethod($w, "core.playback.play", array('tl_track' => $tl_tracks[0]));
 }
 
 /**
@@ -650,7 +656,7 @@ function playAlfredPlaylist($w)
         return;
     }
     if($use_mopidy) {
-        playAlbumOrPlaylistWithModipy($w, $alfred_playlist_uri);
+        playAlbumOrPlaylistWithMopidy($w, $alfred_playlist_uri);
     } else {
         exec("osascript -e 'tell application \"Spotify\" to play track \"$alfred_playlist_uri\"'");
         addPlaylistToPlayQueue($w, $alfred_playlist_uri, $alfred_playlist_name);
@@ -678,7 +684,7 @@ function lookupCurrentArtist($w)
     $use_mopidy                = $settings->use_mopidy;
 
     if($use_mopidy) {
-        $retArr = array(getCurrentTrackInfoWithModipy($w));
+        $retArr = array(getCurrentTrackInfoWithMopidy($w));
     } else {
 	    // get info on current song
 	    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
@@ -732,7 +738,7 @@ function displayCurrentArtistBiography($w)
     $use_mopidy                = $settings->use_mopidy;
 
     if($use_mopidy) {
-        $retArr = array(getCurrentTrackInfoWithModipy($w));
+        $retArr = array(getCurrentTrackInfoWithMopidy($w));
     } else {
 	    // get info on current song
 	    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
@@ -780,7 +786,7 @@ function playCurrentArtist($w)
     $use_mopidy                = $settings->use_mopidy;
 
     if($use_mopidy) {
-        $retArr = array(getCurrentTrackInfoWithModipy($w));
+        $retArr = array(getCurrentTrackInfoWithMopidy($w));
     } else {
 	    // get info on current song
 	    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
@@ -805,7 +811,7 @@ function playCurrentArtist($w)
             return;
         }
         if($use_mopidy) {
-            playAlbumOrPlaylistWithModipy($w, $artist_uri);
+            playAlbumOrPlaylistWithMopidy($w, $artist_uri);
         } else {
             // FIX THIS add play queue
             exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
@@ -834,7 +840,7 @@ function playCurrentAlbum($w)
     $use_mopidy                = $settings->use_mopidy;
 
     if($use_mopidy) {
-        $retArr = array(getCurrentTrackInfoWithModipy($w));
+        $retArr = array(getCurrentTrackInfoWithMopidy($w));
     } else {
 	    // get info on current song
 	    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
@@ -879,7 +885,7 @@ function addCurrentTrackTo($w)
     $use_mopidy                = $settings->use_mopidy;
 
     if($use_mopidy) {
-        $retArr = array(getCurrentTrackInfoWithModipy($w));
+        $retArr = array(getCurrentTrackInfoWithMopidy($w));
     } else {
 	    // get info on current song
 	    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
@@ -943,7 +949,7 @@ function removeCurrentTrackFrom($w)
     $use_mopidy                = $settings->use_mopidy;
 
     if($use_mopidy) {
-        $retArr = array(getCurrentTrackInfoWithModipy($w));
+        $retArr = array(getCurrentTrackInfoWithMopidy($w));
     } else {
 	    // get info on current song
 	    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
@@ -1005,7 +1011,7 @@ function addCurrentTrackToAlfredPlaylist($w)
     $use_mopidy                = $settings->use_mopidy;
 
     if($use_mopidy) {
-        $retArr = array(getCurrentTrackInfoWithModipy($w));
+        $retArr = array(getCurrentTrackInfoWithMopidy($w));
     } else {
 	    // get info on current song
 	    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
@@ -1088,7 +1094,7 @@ function addCurrentTrackToYourMusic($w)
     $use_mopidy                = $settings->use_mopidy;
 
     if($use_mopidy) {
-        $retArr = array(getCurrentTrackInfoWithModipy($w));
+        $retArr = array(getCurrentTrackInfoWithMopidy($w));
     } else {
 	    // get info on current song
 	    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
@@ -1676,7 +1682,7 @@ function createRadioArtistPlaylistForCurrentArtist($w)
     $use_mopidy                = $settings->use_mopidy;
 
     if($use_mopidy) {
-        $retArr = array(getCurrentTrackInfoWithModipy($w));
+        $retArr = array(getCurrentTrackInfoWithMopidy($w));
     } else {
 	    // get info on current song
 	    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
@@ -1787,7 +1793,7 @@ function createRadioSongPlaylistForCurrentTrack($w)
     $use_mopidy                = $settings->use_mopidy;
 
     if($use_mopidy) {
-        $retArr = array(getCurrentTrackInfoWithModipy($w));
+        $retArr = array(getCurrentTrackInfoWithMopidy($w));
     } else {
 	    // get info on current song
 	    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
@@ -2604,7 +2610,7 @@ function displayNotificationForCurrentTrack($w)
     $use_mopidy                = $settings->use_mopidy;
 
     if($use_mopidy) {
-        $retArr = array(getCurrentTrackInfoWithModipy($w));
+        $retArr = array(getCurrentTrackInfoWithMopidy($w));
     } else {
 	    // get info on current song
 	    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
@@ -2647,7 +2653,7 @@ function displayLyricsForCurrentTrack($w)
     $use_mopidy                = $settings->use_mopidy;
 
     if($use_mopidy) {
-        $retArr = array(getCurrentTrackInfoWithModipy($w));
+        $retArr = array(getCurrentTrackInfoWithMopidy($w));
     } else {
 	    // get info on current song
 	    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
@@ -5538,7 +5544,9 @@ function getSettings($w)
                 'userid' => $setting[18],
                 'echonest_api_key' => '5EG94BIZEGFEY9AL9',
                 'is_public_playlists' => 0,
-                'use_mopidy' => 0
+                'use_mopidy' => 0,
+                'mopidy_server' => '127.0.0.1',
+                'mopidy_port' => '6680'
             );
 
             $ret = $w->write($migrated, 'settings.json');
@@ -5573,7 +5581,9 @@ function getSettings($w)
             'echonest_api_key' => '5EG94BIZEGFEY9AL9',
             'is_public_playlists' => 0,
             'quick_mode' => 0,
-            'use_mopidy' => 0
+            'use_mopidy' => 0,
+            'mopidy_server' => '127.0.0.1',
+            'mopidy_port' => '6680'
         );
 
         $ret = $w->write($default, 'settings.json');
@@ -5591,6 +5601,18 @@ function getSettings($w)
     // add usemopidy if needed
     if(!isset($settings->use_mopidy)) {
         updateSetting($w, 'use_mopidy', 0);
+        $settings = $w->read('settings.json');
+    }
+
+    // add mopidy_server if needed
+    if(!isset($settings->mopidy_server)) {
+        updateSetting($w, 'mopidy_server', '127.0.0.1');
+        $settings = $w->read('settings.json');
+    }
+
+    // add mopidy_port if needed
+    if(!isset($settings->mopidy_port)) {
+        updateSetting($w, 'mopidy_port', '6680');
         $settings = $w->read('settings.json');
     }
 

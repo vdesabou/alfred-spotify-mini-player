@@ -118,7 +118,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 	            }
 	        }
             if($use_mopidy) {
-                playTrackInContextWithModipy($w, $track_uri, $playlist_uri);
+                playTrackInContextWithMopidy($w, $track_uri, $playlist_uri);
             } else {
                 exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\" in context \"$playlist_uri\"'");
             }
@@ -144,7 +144,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 		            }
 		        }
                 if($use_mopidy) {
-                    playTrackWithModipy($w, $track_uri);
+                    playTrackWithMopidy($w, $track_uri);
                 } else {
                     exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
                 }
@@ -156,7 +156,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 	            }
                 if($other_action == "") {
 				    if($use_mopidy) {
-				        $retArr = array(getCurrentTrackInfoWithModipy($w));
+				        $retArr = array(getCurrentTrackInfoWithMopidy($w));
 				    } else {
 					    // get info on current song
 					    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
@@ -185,7 +185,7 @@ if ($type == "TRACK" && $other_settings == "" &&
             }
         }
         if($use_mopidy) {
-            playAlbumOrPlaylistWithModipy($w, $playlist_uri);
+            playAlbumOrPlaylistWithMopidy($w, $playlist_uri);
         } else {
             exec("osascript -e 'tell application \"Spotify\" to play track \"$playlist_uri\"'");
         }
@@ -220,7 +220,7 @@ if ($type == "TRACK" && $other_settings == "" &&
         }
     }
     if($use_mopidy) {
-        playAlbumOrPlaylistWithModipy($w, $album_uri);
+        playAlbumOrPlaylistWithMopidy($w, $album_uri);
     } else {
         exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
     }
@@ -290,7 +290,7 @@ if ($type == "TRACK" && $other_settings == "" &&
             }
         }
         if($use_mopidy) {
-            playAlbumOrPlaylistWithModipy($w, $artist_uri);
+            playAlbumOrPlaylistWithMopidy($w, $artist_uri);
         } else {
             exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
         }
@@ -337,6 +337,22 @@ if ($type == "TRACK" && $other_settings == "" &&
         $ret = updateSetting($w, 'radio_number_tracks', $setting[1]);
         if ($ret == true) {
             displayNotificationWithArtwork('Radio track number set to ' . $setting[1], './images/settings.png', 'Settings');
+        } else {
+            displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
+        }
+        return;
+    } else if ($setting[0] == "MOPIDY_SERVER") {
+        $ret = updateSetting($w, 'mopidy_server', $setting[1]);
+        if ($ret == true) {
+            displayNotificationWithArtwork('Mopidy server set to ' . $setting[1], './images/settings.png', 'Settings');
+        } else {
+            displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
+        }
+        return;
+    } else if ($setting[0] == "MOPIDY_PORT") {
+        $ret = updateSetting($w, 'mopidy_port', $setting[1]);
+        if ($ret == true) {
+            displayNotificationWithArtwork('Mopidy TCP port set to ' . $setting[1], './images/settings.png', 'Settings');
         } else {
             displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
         }
@@ -609,7 +625,7 @@ if ($type == "TRACK" && $other_settings == "" &&
             displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
         }
         return;
-    }  else if ($other_action == "enable_quick_mode") {
+    } else if ($other_action == "enable_quick_mode") {
         $ret = updateSetting($w, 'quick_mode', 1);
         if ($ret == true) {
             displayNotificationWithArtwork("Quick Mode is now enabled", './images/enable_quick_mode.png', 'Settings');
@@ -621,6 +637,22 @@ if ($type == "TRACK" && $other_settings == "" &&
         $ret = updateSetting($w, 'quick_mode', 0);
         if ($ret == true) {
             displayNotificationWithArtwork("Quick Mode is now disabled", './images/disable_quick_mode.png', 'Settings');
+        } else {
+            displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
+        }
+        return;
+    } else if ($other_action == "enable_mopidy") {
+        $ret = updateSetting($w, 'use_mopidy', 1);
+        if ($ret == true) {
+            displayNotificationWithArtwork("Mopidy is now enabled", './images/enable_mopidy.png', 'Settings');
+        } else {
+            displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
+        }
+        return;
+    } else if ($other_action == "disable_mopidy") {
+        $ret = updateSetting($w, 'use_mopidy', 0);
+        if ($ret == true) {
+            displayNotificationWithArtwork("Mopidy is now disabled", './images/disable_mopidy.png', 'Settings');
         } else {
             displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
         }
@@ -669,7 +701,7 @@ if ($type == "TRACK" && $other_settings == "" &&
             }
         }
         if($use_mopidy) {
-            playTrackInContextWithModipy($w, $track_uri, $album_uri);
+            playTrackInContextWithMopidy($w, $track_uri, $album_uri);
         } else {
             exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\" in context \"$album_uri\"'");
         }
@@ -692,7 +724,7 @@ if ($type == "TRACK" && $other_settings == "" &&
             }
         }
         if($use_mopidy) {
-            invokeModipyMethod($w, "core.playback.resume", array());
+            invokeMopidyMethod($w, "core.playback.resume", array());
         } else {
 	        exec("osascript -e 'tell application \"Spotify\" to play'");
         }
@@ -702,7 +734,7 @@ if ($type == "TRACK" && $other_settings == "" &&
         return;
     } else if ($other_action == "pause") {
         if($use_mopidy) {
-            invokeModipyMethod($w, "core.playback.pause", array());
+            invokeMopidyMethod($w, "core.playback.pause", array());
         } else {
 	        exec("osascript -e 'tell application \"Spotify\" to pause'");
         }
@@ -799,7 +831,7 @@ if ($type == "TRACK" && $other_settings == "" &&
         return;
     } else if ($other_action == "previous") {
         if($use_mopidy) {
-            invokeModipyMethod($w, "core.playback.previous", array());
+            invokeMopidyMethod($w, "core.playback.previous", array());
         } else {
             exec("osascript -e 'tell application \"Spotify\" to previous track'");
         }
@@ -809,7 +841,7 @@ if ($type == "TRACK" && $other_settings == "" &&
         return;
     } else if ($other_action == "next") {
         if($use_mopidy) {
-            invokeModipyMethod($w, "core.playback.next", array());
+            invokeMopidyMethod($w, "core.playback.next", array());
         } else {
             exec("osascript -e 'tell application \"Spotify\" to next track'");
         }
@@ -840,7 +872,7 @@ if ($type == "TRACK" && $other_settings == "" &&
             }
         }
         if($use_mopidy) {
-            playTrackWithModipy($w, $track_uri);
+            playTrackWithMopidy($w, $track_uri);
         } else {
             exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
         }
@@ -866,7 +898,7 @@ if ($type == "TRACK" && $other_settings == "" &&
             }
         }
         if($use_mopidy) {
-            playAlbumOrPlaylistWithModipy($w, $album_uri);
+            playAlbumOrPlaylistWithMopidy($w, $album_uri);
         } else {
             exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
         }
@@ -922,7 +954,7 @@ if ($type == "TRACK" && $other_settings == "" &&
             }
         }
         if($use_mopidy) {
-            playAlbumOrPlaylistWithModipy($w, $artist_uri);
+            playAlbumOrPlaylistWithMopidy($w, $artist_uri);
         } else {
             exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
         }
@@ -950,7 +982,7 @@ if ($type == "TRACK" && $other_settings == "" &&
             }
         }
         if($use_mopidy) {
-            playAlbumOrPlaylistWithModipy($w, $album_uri);
+            playAlbumOrPlaylistWithMopidy($w, $album_uri);
         } else {
             exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
         }
@@ -962,7 +994,7 @@ if ($type == "TRACK" && $other_settings == "" &&
         return;
     } else if ($other_action == "volume_up") {
         if($use_mopidy) {
-            invokeModipyMethod($w, "core.playback.set_volume", array('volume' => invokeModipyMethod($w, "core.playback.get_volume", array()) * 1.1 ));
+            invokeMopidyMethod($w, "core.playback.set_volume", array('volume' => invokeMopidyMethod($w, "core.playback.get_volume", array()) * 1.1 ));
         } else {
 	        exec("osascript -e 'tell application \"Spotify\"
 	                if it is running then
@@ -974,7 +1006,7 @@ if ($type == "TRACK" && $other_settings == "" &&
         return;
     } else if ($other_action == "volume_down") {
         if($use_mopidy) {
-            invokeModipyMethod($w, "core.playback.set_volume", array('volume' => invokeModipyMethod($w, "core.playback.get_volume", array()) * 0.9 ));
+            invokeMopidyMethod($w, "core.playback.set_volume", array('volume' => invokeMopidyMethod($w, "core.playback.get_volume", array()) * 0.9 ));
         } else {
 	        exec("osascript -e 'tell application \"Spotify\"
 	                if it is running then
@@ -986,12 +1018,12 @@ if ($type == "TRACK" && $other_settings == "" &&
         return;
     } else if ($other_action == "mute") {
         if($use_mopidy) {
-            $volume = invokeModipyMethod($w, "core.playback.get_volume", array());
+            $volume = invokeMopidyMethod($w, "core.playback.get_volume", array());
             if($volume <= 0) {
-	            invokeModipyMethod($w, "core.playback.set_volume", array('volume' => 100));
+	            invokeMopidyMethod($w, "core.playback.set_volume", array('volume' => 100));
 	            $command_output = "Spotify volume is unmuted.";
             } else {
-	           	invokeModipyMethod($w, "core.playback.set_volume", array('volume' => 0));
+	           	invokeMopidyMethod($w, "core.playback.set_volume", array('volume' => 0));
 	            $command_output = "Spotify volume is muted.";
             }
         } else {
@@ -1009,12 +1041,12 @@ if ($type == "TRACK" && $other_settings == "" &&
         return;
     } else if ($other_action == "shuffle") {
         if($use_mopidy) {
-            $isShuffleEnabled = invokeModipyMethod($w, "core.tracklist.get_random", array());
+            $isShuffleEnabled = invokeMopidyMethod($w, "core.tracklist.get_random", array());
             if($isShuffleEnabled) {
-	            invokeModipyMethod($w, "core.tracklist.set_random", array('value' => false));
+	            invokeMopidyMethod($w, "core.tracklist.set_random", array('value' => false));
 	            $command_output = "Shuffle is now disabled.";
             } else {
-	           	invokeModipyMethod($w, "core.tracklist.set_random", array('value' => true));
+	           	invokeMopidyMethod($w, "core.tracklist.set_random", array('value' => true));
 	            $command_output = "Shuffle is now enabled.";
             }
         } else {
