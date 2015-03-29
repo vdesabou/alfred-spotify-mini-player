@@ -74,6 +74,85 @@ function getSpotifyWebAPI($w, $old_api = null)
 }
 
 /**
+ * lookupCurrentArtist function.
+ *
+ * @access public
+ * @param mixed $w
+ * @return void
+ */
+function invokeModipyMethod($w, $method, $params)
+{
+    exec("curl -s -X POST -H Content-Type:application/json -d '{
+  \"method\": \"" . $method . "\",
+  \"jsonrpc\": \"2.0\",
+  \"params\": " . json_encode($params) . ",
+  \"id\": 1
+}' http://127.0.0.1:6680/mopidy/rpc", $retArr, $retVal);
+
+    if($retVal != 0) {
+        displayNotificationWithArtwork('Modipy Exception: returned ' . $retVal . ' ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug Modipy Exception: returned" . $retVal . ' ' . htmlspecialchars($retArr[0]) . "\"'");
+        return;
+    }
+
+    if (isset($retArr[0])) {
+        $result = json_decode($retArr[0]);
+        //print_r($result);
+        if(isset($result->result)) {
+            return $result->result;
+        }
+        if(isset($result->error)) {
+            logMsg("ERROR: invokeModipyMethod() method: " . $method . ' params: ' . json_encode($params) . ' exception:'. print_r($result));
+
+            displayNotificationWithArtwork('Modipy Exception: ' . htmlspecialchars($result->error->message) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+            exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug Modipy Exception: " . htmlspecialchars($result->error->message) . "\"'");
+            return;
+        }
+    } else {
+        displayNotificationWithArtwork("Nothing returned by Modipy", './images/warning.png');
+    }
+}
+
+function getCurrentTrackInfoWithModipy($w) {
+    $tl_track = invokeModipyMethod($w, "core.playback.get_current_track", array());
+    $state = invokeModipyMethod($w, "core.playback.get_state", array());
+    return "" . $tl_track->name . "▹" . $tl_track->artists[0]->name . "▹" . $tl_track->album->name . "▹" . $state . "▹" . $tl_track->uri . "▹" . $tl_track->length/1000 . "▹" . "0";
+}
+
+function playTrackWithModipy($w, $track_uri) {
+    invokeModipyMethod($w, "core.tracklist.add", array('uri' => $track_uri, 'at_position' => 0));
+    $tl_tracks = invokeModipyMethod($w, "core.tracklist.get_tl_tracks", array());
+    invokeModipyMethod($w, "core.playback.play", array('tl_track' => $tl_tracks[0]));
+}
+
+function playAlbumOrPlaylistWithModipy($w, $uri) {
+    invokeModipyMethod($w, "core.tracklist.clear", array());
+    invokeModipyMethod($w, "core.tracklist.add", array('uri' => $uri, 'at_position' => 0));
+    $tl_tracks = invokeModipyMethod($w, "core.tracklist.get_tl_tracks", array());
+    invokeModipyMethod($w, "core.playback.play", array('tl_track' => $tl_tracks[0]));
+}
+
+function playTrackInContextWithModipy($w, $track_uri, $context_uri) {
+    invokeModipyMethod($w, "core.tracklist.clear", array());
+    invokeModipyMethod($w, "core.tracklist.add", array('uri' => $context_uri, 'at_position' => 0));
+    $tl_tracks = invokeModipyMethod($w, "core.tracklist.get_tl_tracks", array());
+
+    // loop to find track_uri
+    $i=0;
+    foreach ($tl_tracks as $tl_track) {
+        if($tl_track->track->uri == $track_uri) {
+            // found the track move it to position 0
+            invokeModipyMethod($w, "core.tracklist.move", array('start' => $i, 'end' => $i, 'to_position' => 0));
+            logMsg(" found the track " . $tl_track->track->uri . " at position " . $i);
+        }
+        $i++;
+    }
+
+    $tl_tracks = invokeModipyMethod($w, "core.tracklist.get_tl_tracks", array());
+    invokeModipyMethod($w, "core.playback.play", array('tl_track' => $tl_tracks[0]));
+}
+
+/**
  * setThePlaylistPrivacy function.
  *
  * @access public
@@ -529,13 +608,19 @@ function playAlfredPlaylist($w)
     $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
     $alfred_playlist_uri       = $settings->alfred_playlist_uri;
     $alfred_playlist_name      = $settings->alfred_playlist_name;
+    $use_mopidy                = $settings->use_mopidy;
 
     if ($alfred_playlist_uri == "" || $alfred_playlist_name == "") {
         displayNotificationWithArtwork("Alfred Playlist is not set", './images/warning.png');
 
         return;
     }
-    exec("osascript -e 'tell application \"Spotify\" to play track \"$alfred_playlist_uri\"'");
+    if($use_mopidy) {
+        playAlbumOrPlaylistWithModipy($w, $alfred_playlist_uri);
+    } else {
+        // FIX THIS add play queue
+        exec("osascript -e 'tell application \"Spotify\" to play track \"$alfred_playlist_uri\"'");
+    }
 
     $playlist_artwork_path = getPlaylistArtwork($w, $alfred_playlist_uri, true, true);
     displayNotificationWithArtwork('🔈 Alfred Playlist ' . $alfred_playlist_name, $playlist_artwork_path, 'Play Alfred Playlist');
@@ -550,13 +635,25 @@ function playAlfredPlaylist($w)
  */
 function lookupCurrentArtist($w)
 {
-    // get info on current song
-    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
-    if($retVal != 0) {
-        displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
-        return;
-    }
+    //
+    // Read settings from JSON
+    //
+
+    $settings = getSettings($w);
+
+    $use_mopidy                = $settings->use_mopidy;
+
+    if($use_mopidy) {
+        $retArr = array(getCurrentTrackInfoWithModipy($w));
+    } else {
+	    // get info on current song
+	    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+	    if($retVal != 0) {
+	        displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+	        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+	        return;
+	    }
+	}
 
     if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
         $results = explode('▹', $retArr[0]);
@@ -592,13 +689,25 @@ function displayCurrentArtistBiography($w)
         return;
     }
 
-    // get info on current song
-    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
-    if($retVal != 0) {
-        displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
-        return;
-    }
+    //
+    // Read settings from JSON
+    //
+
+    $settings = getSettings($w);
+
+    $use_mopidy                = $settings->use_mopidy;
+
+    if($use_mopidy) {
+        $retArr = array(getCurrentTrackInfoWithModipy($w));
+    } else {
+	    // get info on current song
+	    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+	    if($retVal != 0) {
+	        displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+	        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+	        return;
+	    }
+	}
 
     if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
         $results = explode('▹', $retArr[0]);
@@ -628,13 +737,25 @@ function displayCurrentArtistBiography($w)
  */
 function playCurrentArtist($w)
 {
-    // get info on current song
-    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
-    if($retVal != 0) {
-        displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
-        return;
-    }
+    //
+    // Read settings from JSON
+    //
+
+    $settings = getSettings($w);
+
+    $use_mopidy                = $settings->use_mopidy;
+
+    if($use_mopidy) {
+        $retArr = array(getCurrentTrackInfoWithModipy($w));
+    } else {
+	    // get info on current song
+	    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+	    if($retVal != 0) {
+	        displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+	        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+	        return;
+	    }
+	}
 
     if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
         $results = explode('▹', $retArr[0]);
@@ -649,7 +770,12 @@ function playCurrentArtist($w)
 
             return;
         }
-        exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
+        if($use_mopidy) {
+            playAlbumOrPlaylistWithModipy($w, $artist_uri);
+        } else {
+            // FIX THIS add play queue
+            exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
+        }
         displayNotificationWithArtwork('🔈 Artist ' . escapeQuery($results[1]), getArtistArtwork($w, $results[1], true), 'Play Current Artist');
     } else {
         displayNotificationWithArtwork("No artist is playing", './images/warning.png');
@@ -665,13 +791,25 @@ function playCurrentArtist($w)
  */
 function playCurrentAlbum($w)
 {
-    // get info on current song
-    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
-    if($retVal != 0) {
-        displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
-        return;
-    }
+    //
+    // Read settings from JSON
+    //
+
+    $settings = getSettings($w);
+
+    $use_mopidy                = $settings->use_mopidy;
+
+    if($use_mopidy) {
+        $retArr = array(getCurrentTrackInfoWithModipy($w));
+    } else {
+	    // get info on current song
+	    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+	    if($retVal != 0) {
+	        displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+	        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+	        return;
+	    }
+	}
 
     if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
         $results = explode('▹', $retArr[0]);
@@ -698,13 +836,25 @@ function playCurrentAlbum($w)
  */
 function addCurrentTrackTo($w)
 {
-    // get info on current song
-    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
-    if($retVal != 0) {
-        displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
-        return;
-    }
+    //
+    // Read settings from JSON
+    //
+
+    $settings = getSettings($w);
+
+    $use_mopidy                = $settings->use_mopidy;
+
+    if($use_mopidy) {
+        $retArr = array(getCurrentTrackInfoWithModipy($w));
+    } else {
+	    // get info on current song
+	    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+	    if($retVal != 0) {
+	        displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+	        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+	        return;
+	    }
+	}
 
     if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
         $results = explode('▹', $retArr[0]);
@@ -750,13 +900,25 @@ function addCurrentTrackTo($w)
  */
 function removeCurrentTrackFrom($w)
 {
-    // get info on current song
-    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
-    if($retVal != 0) {
-        displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
-        return;
-    }
+    //
+    // Read settings from JSON
+    //
+
+    $settings = getSettings($w);
+
+    $use_mopidy                = $settings->use_mopidy;
+
+    if($use_mopidy) {
+        $retArr = array(getCurrentTrackInfoWithModipy($w));
+    } else {
+	    // get info on current song
+	    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+	    if($retVal != 0) {
+	        displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+	        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+	        return;
+	    }
+	}
 
     if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
         $results = explode('▹', $retArr[0]);
@@ -800,13 +962,25 @@ function addCurrentTrackToAlfredPlaylistOrYourMusic($w)
  */
 function addCurrentTrackToAlfredPlaylist($w)
 {
-    // get info on current song
-    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
-    if($retVal != 0) {
-        displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
-        return;
-    }
+    //
+    // Read settings from JSON
+    //
+
+    $settings = getSettings($w);
+
+    $use_mopidy                = $settings->use_mopidy;
+
+    if($use_mopidy) {
+        $retArr = array(getCurrentTrackInfoWithModipy($w));
+    } else {
+	    // get info on current song
+	    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+	    if($retVal != 0) {
+	        displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+	        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+	        return;
+	    }
+	}
 
     if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
         $results = explode('▹', $retArr[0]);
@@ -871,13 +1045,25 @@ function addCurrentTrackToAlfredPlaylist($w)
  */
 function addCurrentTrackToYourMusic($w)
 {
-    // get info on current song
-    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
-    if($retVal != 0) {
-        displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
-        return;
-    }
+    //
+    // Read settings from JSON
+    //
+
+    $settings = getSettings($w);
+
+    $use_mopidy                = $settings->use_mopidy;
+
+    if($use_mopidy) {
+        $retArr = array(getCurrentTrackInfoWithModipy($w));
+    } else {
+	    // get info on current song
+	    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+	    if($retVal != 0) {
+	        displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+	        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+	        return;
+	    }
+	}
 
     if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
         $results = explode('▹', $retArr[0]);
@@ -1447,12 +1633,25 @@ function createTheUserPlaylist($w, $playlist_name)
  */
 function createRadioArtistPlaylistForCurrentArtist($w)
 {
-    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
-    if($retVal != 0) {
-        displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
-        return;
-    }
+    //
+    // Read settings from JSON
+    //
+
+    $settings = getSettings($w);
+
+    $use_mopidy                = $settings->use_mopidy;
+
+    if($use_mopidy) {
+        $retArr = array(getCurrentTrackInfoWithModipy($w));
+    } else {
+	    // get info on current song
+	    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+	    if($retVal != 0) {
+	        displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+	        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+	        return;
+	    }
+	}
 
     if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
         $results = explode('▹', $retArr[0]);
@@ -1545,12 +1744,25 @@ function createRadioArtistPlaylist($w, $artist_name)
  */
 function createRadioSongPlaylistForCurrentTrack($w)
 {
-    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
-    if($retVal != 0) {
-        displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
-        return;
-    }
+    //
+    // Read settings from JSON
+    //
+
+    $settings = getSettings($w);
+
+    $use_mopidy                = $settings->use_mopidy;
+
+    if($use_mopidy) {
+        $retArr = array(getCurrentTrackInfoWithModipy($w));
+    } else {
+	    // get info on current song
+	    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+	    if($retVal != 0) {
+	        displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+	        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+	        return;
+	    }
+	}
 
     if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
         $results = explode('▹', $retArr[0]);
@@ -2349,12 +2561,25 @@ function displayNotificationWithArtwork($subtitle, $artwork, $title = 'Spotify M
  */
 function displayNotificationForCurrentTrack($w)
 {
-    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
-    if($retVal != 0) {
-        displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
-        return;
-    }
+    //
+    // Read settings from JSON
+    //
+
+    $settings = getSettings($w);
+
+    $use_mopidy                = $settings->use_mopidy;
+
+    if($use_mopidy) {
+        $retArr = array(getCurrentTrackInfoWithModipy($w));
+    } else {
+	    // get info on current song
+	    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+	    if($retVal != 0) {
+	        displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+	        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+	        return;
+	    }
+	}
 
     if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
         $results = explode('▹', $retArr[0]);
@@ -2379,12 +2604,25 @@ function displayLyricsForCurrentTrack($w)
         return;
     }
 
-    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
-    if($retVal != 0) {
-        displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
-        return;
-    }
+    //
+    // Read settings from JSON
+    //
+
+    $settings = getSettings($w);
+
+    $use_mopidy                = $settings->use_mopidy;
+
+    if($use_mopidy) {
+        $retArr = array(getCurrentTrackInfoWithModipy($w));
+    } else {
+	    // get info on current song
+	    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+	    if($retVal != 0) {
+	        displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+	        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+	        return;
+	    }
+	}
 
     if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
         $results = explode('▹', $retArr[0]);
@@ -5261,7 +5499,8 @@ function getSettings($w)
                 'display_name' => $setting[17],
                 'userid' => $setting[18],
                 'echonest_api_key' => '5EG94BIZEGFEY9AL9',
-                'is_public_playlists' => 0
+                'is_public_playlists' => 0,
+                'use_mopidy' => 0
             );
 
             $ret = $w->write($migrated, 'settings.json');
@@ -5295,7 +5534,8 @@ function getSettings($w)
             'userid' => '',
             'echonest_api_key' => '5EG94BIZEGFEY9AL9',
             'is_public_playlists' => 0,
-            'quick_mode' => 0
+            'quick_mode' => 0,
+            'use_mopidy' => 0
         );
 
         $ret = $w->write($default, 'settings.json');
@@ -5307,6 +5547,12 @@ function getSettings($w)
     // add quick_mode if needed
     if(!isset($settings->quick_mode)) {
         updateSetting($w, 'quick_mode', 0);
+        $settings = $w->read('settings.json');
+    }
+
+    // add usemopidy if needed
+    if(!isset($settings->use_mopidy)) {
+        updateSetting($w, 'use_mopidy', 0);
         $settings = $w->read('settings.json');
     }
 

@@ -2564,31 +2564,36 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
     $display_name              = $settings->display_name;
     $userid                    = $settings->userid;
     $echonest_api_key          = $settings->echonest_api_key;
-    $is_public_playlists        = $settings->is_public_playlists;
+    $is_public_playlists       = $settings->is_public_playlists;
+    $use_mopidy                = $settings->use_mopidy;
 
-    // get info on current song
-    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
-    if($retVal != 0) {
-        $w->result(null, 'help', "AppleScript execution failed!", "Message: " . htmlspecialchars($retArr[0]), './images/warning.png', 'no', null, '');
-        $w->result(null, serialize(array(
-            '' /*track_uri*/ ,
-            '' /* album_uri */ ,
-            '' /* artist_uri */ ,
-            '' /* playlist_uri */ ,
-            '' /* spotify_command */ ,
-            '' /* query */ ,
-            'Open▹' . 'http://alfred-spotify-mini-player.com/blog/issue-with-latest-spotify-update/' /* other_settings*/ ,
-            '' /* other_action */ ,
-            '' /* artist_name */ ,
-            '' /* track_name */ ,
-            '' /* album_name */ ,
-            '' /* track_artwork_path */ ,
-            '' /* artist_artwork_path */ ,
-            '' /* album_artwork_path */ ,
-            '' /* playlist_name */ ,
-            '' /* playlist_artwork_path */
-        )), 'Maybe you have an issue with a Broken Spotify version?', "Go to the article to get more information", './images/website.png', 'yes', null, '');
-        return;
+    if($use_mopidy) {
+        $retArr = array(getCurrentTrackInfoWithModipy($w));
+    } else {
+        // get info on current song
+        exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+        if($retVal != 0) {
+            $w->result(null, 'help', "AppleScript execution failed!", "Message: " . htmlspecialchars($retArr[0]), './images/warning.png', 'no', null, '');
+            $w->result(null, serialize(array(
+                '' /*track_uri*/ ,
+                '' /* album_uri */ ,
+                '' /* artist_uri */ ,
+                '' /* playlist_uri */ ,
+                '' /* spotify_command */ ,
+                '' /* query */ ,
+                'Open▹' . 'http://alfred-spotify-mini-player.com/blog/issue-with-latest-spotify-update/' /* other_settings*/ ,
+                '' /* other_action */ ,
+                '' /* artist_name */ ,
+                '' /* track_name */ ,
+                '' /* album_name */ ,
+                '' /* track_artwork_path */ ,
+                '' /* artist_artwork_path */ ,
+                '' /* album_artwork_path */ ,
+                '' /* playlist_name */ ,
+                '' /* playlist_artwork_path */
+            )), 'Maybe you have an issue with a Broken Spotify version?', "Go to the article to get more information", './images/website.png', 'yes', null, '');
+            return;
+        }
     }
 
     if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
@@ -3561,143 +3566,244 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
     $display_name              = $settings->display_name;
     $userid                    = $settings->userid;
     $echonest_api_key          = $settings->echonest_api_key;
+    $use_mopidy                = $settings->use_mopidy;
 
-    $playqueue = $w->read('playqueue.json');
-    if ($playqueue == false) {
-        $w->result(null, 'help', "There is no track in the play queue", "Make sure to always use the workflow to launch tracks, playlists, etc..Internet connectivity is also required", './images/warning.png', 'no', null, '');
-        $w->result(null, serialize(array(
-            '' /*track_uri*/ ,
-            '' /* album_uri */ ,
-            '' /* artist_uri */ ,
-            '' /* playlist_uri */ ,
-            '' /* spotify_command */ ,
-            '' /* query */ ,
-            'Open▹' . 'http://alfred-spotify-mini-player.com/articles/play-queue/' /* other_settings*/ ,
-            '' /* other_action */ ,
-            '' /* artist_name */ ,
-            '' /* track_name */ ,
-            '' /* album_name */ ,
-            '' /* track_artwork_path */ ,
-            '' /* artist_artwork_path */ ,
-            '' /* album_artwork_path */ ,
-            '' /* playlist_name */ ,
-            '' /* playlist_artwork_path */
-        )), 'Learn more about Play Queue', "Find out all information about Play Queue on alfred-spotify-mini-player.com", './images/website.png', 'yes', null, '');
-        echo $w->toxml();
-        return;
-    }
-    $command_output = exec("osascript -e '
-    tell application \"Spotify\"
-    if shuffling enabled is true then
-        if shuffling is true then
-            return \"enabled\"
+    if($use_mopidy) {
+        $tl_tracks = invokeModipyMethod($w, "core.tracklist.get_tl_tracks", array());
+
+        $noresult = true;
+        $nb_tracks           = 0;
+        $track_name = '';
+        $album_name = '';
+        $playlist_name = '';
+        foreach ($tl_tracks as $tl_track) {
+            // $track = $playqueue->tracks[$i];
+            // if ($noresult == true) {
+            //     $added = '🔈 ';
+            //     if($playqueue->type == 'playlist') {
+            //         $playlist_name = $playqueue->name;
+            //     } elseif ($playqueue->type == 'album') {
+            //         $album_name = $playqueue->name;
+            //     } elseif ($playqueue->type == 'track') {
+            //         $track_name = $playqueue->name;
+            //     }
+            //     $w->result(null, 'help', "Playing from: " . ucfirst($playqueue->type) . ' ' . $playqueue->name, 'Track ' . ($playqueue->current_track_index + 1) . ' on '. count($playqueue->tracks) . ' tracks queued', './images/play_queue.png', 'no', null, '');
+            //     // $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
+            //     // $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
+            //     // $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
+            // }
+            $max_tracks_displayed = 150;
+            if($nb_tracks >= $max_tracks_displayed) {
+                $w->result(null, 'help', "[...] " . (count($tl_tracks) - $max_tracks_displayed) . " additional tracks are in the queue", "A maximum of " . $max_tracks_displayed . " tracks is displayed." , './images/info.png', 'no', null, '');
+                break;
+            }
+            $track_name = '';
+            if(isset($tl_track->track->name)) {
+                $track_name = $tl_track->track->name;
+            }
+            $artist_name = '';
+            if(isset($tl_track->track->artists[0]->name)) {
+                $artist_name = $tl_track->track->artists[0]->name;
+            }
+            $album_name = '';
+            if(isset($tl_track->track->album->name)) {
+                $album_name = $tl_track->track->album->name;
+            }
+            $duration = 'na';
+            if(isset($tl_track->track->length)) {
+                $duration = beautifyTime($tl_track->track->length / 1000);
+            }
+            $track_artwork = getTrackOrAlbumArtwork($w, $tl_track->track->uri, false);
+            $w->result(null, serialize(array(
+                $tl_track->track->uri /*track_uri*/ ,
+                '' /* album_uri */ ,
+                '' /* artist_uri */ ,
+                '' /* playlist_uri */ ,
+                '' /* spotify_command */ ,
+                '' /* query */ ,
+                '' /* other_settings*/ ,
+                'play_track_from_play_queue' /* other_action */ ,
+                escapeQuery($artist_name) /* artist_name */ ,
+                escapeQuery($track_name) /* track_name */ ,
+                escapeQuery($album_name) /* album_name */ ,
+                $track_artwork /* track_artwork_path */ ,
+                '' /* artist_artwork_path */ ,
+                '' /* album_artwork_path */ ,
+                $playlist_name /* playlist_name */ ,
+                '' /* playlist_artwork_path */
+            )), $added . escapeQuery($artist_name) . " ● " . escapeQuery($track_name), array(
+                $duration . " ● " . escapeQuery($album_name),
+                'alt' => 'Play album ' . escapeQuery($album_name) . ' in Spotify',
+                'cmd' => 'Play artist ' . escapeQuery($artist_name) . ' in Spotify',
+                'fn' => 'Add track ' . escapeQuery($track->name) . ' to ...',
+                'shift' => 'Add album ' . escapeQuery($album_name) . ' to ...',
+                'ctrl' => 'Search artist ' . escapeQuery($artist_name) . ' online'
+            ), $track_artwork, 'yes', null, '');
+            $noresult      = false;
+            $added = '';
+            $nb_tracks += 1;
+        }
+
+        if ($noresult) {
+            $w->result(null, 'help', "There is no track in the play queue from Modipy", "Make sure to always use the workflow to launch tracks, playlists, etc..Internet connectivity is also required", './images/warning.png', 'no', null, '');
+            $w->result(null, serialize(array(
+                '' /*track_uri*/ ,
+                '' /* album_uri */ ,
+                '' /* artist_uri */ ,
+                '' /* playlist_uri */ ,
+                '' /* spotify_command */ ,
+                '' /* query */ ,
+                'Open▹' . 'http://alfred-spotify-mini-player.com/articles/play-queue/' /* other_settings*/ ,
+                '' /* other_action */ ,
+                '' /* artist_name */ ,
+                '' /* track_name */ ,
+                '' /* album_name */ ,
+                '' /* track_artwork_path */ ,
+                '' /* artist_artwork_path */ ,
+                '' /* album_artwork_path */ ,
+                '' /* playlist_name */ ,
+                '' /* playlist_artwork_path */
+            )), 'Learn more about Play Queue', "Find out all information about Play Queue on alfred-spotify-mini-player.com", './images/website.png', 'yes', null, '');
+            echo $w->toxml();
+        }
+    } else {
+        $playqueue = $w->read('playqueue.json');
+        if ($playqueue == false) {
+            $w->result(null, 'help', "There is no track in the play queue", "Make sure to always use the workflow to launch tracks, playlists, etc..Internet connectivity is also required", './images/warning.png', 'no', null, '');
+            $w->result(null, serialize(array(
+                '' /*track_uri*/ ,
+                '' /* album_uri */ ,
+                '' /* artist_uri */ ,
+                '' /* playlist_uri */ ,
+                '' /* spotify_command */ ,
+                '' /* query */ ,
+                'Open▹' . 'http://alfred-spotify-mini-player.com/articles/play-queue/' /* other_settings*/ ,
+                '' /* other_action */ ,
+                '' /* artist_name */ ,
+                '' /* track_name */ ,
+                '' /* album_name */ ,
+                '' /* track_artwork_path */ ,
+                '' /* artist_artwork_path */ ,
+                '' /* album_artwork_path */ ,
+                '' /* playlist_name */ ,
+                '' /* playlist_artwork_path */
+            )), 'Learn more about Play Queue', "Find out all information about Play Queue on alfred-spotify-mini-player.com", './images/website.png', 'yes', null, '');
+            echo $w->toxml();
+            return;
+        }
+        $command_output = exec("osascript -e '
+        tell application \"Spotify\"
+        if shuffling enabled is true then
+            if shuffling is true then
+                return \"enabled\"
+            else
+                return \"disabled\"
+            end if
         else
             return \"disabled\"
         end if
-    else
-        return \"disabled\"
-    end if
-    end tell'");
-    if ($command_output == "enabled") {
-        $w->result(null, 'help', "Shuffle is enabled", "The order of tracks presented below is not relevant", './images/warning.png', 'no', null, '');
-    }
-    $noresult = true;
-    $nb_tracks           = 0;
-    $track_name = '';
-    $album_name = '';
-    $playlist_name = '';
-    for($i = $playqueue->current_track_index; $i < count($playqueue->tracks);$i++){
-        $track = $playqueue->tracks[$i];
-        if ($noresult == true) {
-            $added = '🔈 ';
-            if($playqueue->type == 'playlist') {
-	            $playlist_name = $playqueue->name;
-            } elseif ($playqueue->type == 'album') {
-	            $album_name = $playqueue->name;
-            } elseif ($playqueue->type == 'track') {
-	            $track_name = $playqueue->name;
-            }
-            $w->result(null, 'help', "Playing from: " . ucfirst($playqueue->type) . ' ' . $playqueue->name, 'Track ' . ($playqueue->current_track_index + 1) . ' on '. count($playqueue->tracks) . ' tracks queued', './images/play_queue.png', 'no', null, '');
-            // $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-            // $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
-            // $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
+        end tell'");
+        if ($command_output == "enabled") {
+            $w->result(null, 'help', "Shuffle is enabled", "The order of tracks presented below is not relevant", './images/warning.png', 'no', null, '');
         }
-        $max_tracks_displayed = 150;
-        if($nb_tracks >= $max_tracks_displayed) {
-	    	$w->result(null, 'help', "[...] " . (count($playqueue->tracks) - $max_tracks_displayed) . " additional tracks are in the queue", "A maximum of " . $max_tracks_displayed . " tracks is displayed." , './images/info.png', 'no', null, '');
-	    	break;
-        }
+        $noresult = true;
+        $nb_tracks           = 0;
         $track_name = '';
-        if(isset($track->name)) {
-            $track_name = $track->name;
-        }
-        $artist_name = '';
-        if(isset($track->artists[0]->name)) {
-            $artist_name = $track->artists[0]->name;
-        }
         $album_name = '';
-        if(isset($track->album->name)) {
-	        $album_name = $track->album->name;
-	    }
-        $duration = 'na';
-        if(isset($track->duration_ms)) {
-            $duration = beautifyTime($track->duration_ms / 1000);
+        $playlist_name = '';
+        for($i = $playqueue->current_track_index; $i < count($playqueue->tracks);$i++){
+            $track = $playqueue->tracks[$i];
+            if ($noresult == true) {
+                $added = '🔈 ';
+                if($playqueue->type == 'playlist') {
+                    $playlist_name = $playqueue->name;
+                } elseif ($playqueue->type == 'album') {
+                    $album_name = $playqueue->name;
+                } elseif ($playqueue->type == 'track') {
+                    $track_name = $playqueue->name;
+                }
+                $w->result(null, 'help', "Playing from: " . ucfirst($playqueue->type) . ' ' . $playqueue->name, 'Track ' . ($playqueue->current_track_index + 1) . ' on '. count($playqueue->tracks) . ' tracks queued', './images/play_queue.png', 'no', null, '');
+                // $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
+                // $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
+                // $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
+            }
+            $max_tracks_displayed = 150;
+            if($nb_tracks >= $max_tracks_displayed) {
+                $w->result(null, 'help', "[...] " . (count($playqueue->tracks) - $max_tracks_displayed) . " additional tracks are in the queue", "A maximum of " . $max_tracks_displayed . " tracks is displayed." , './images/info.png', 'no', null, '');
+                break;
+            }
+            $track_name = '';
+            if(isset($track->name)) {
+                $track_name = $track->name;
+            }
+            $artist_name = '';
+            if(isset($track->artists[0]->name)) {
+                $artist_name = $track->artists[0]->name;
+            }
+            $album_name = '';
+            if(isset($track->album->name)) {
+                $album_name = $track->album->name;
+            }
+            $duration = 'na';
+            if(isset($track->duration_ms)) {
+                $duration = beautifyTime($track->duration_ms / 1000);
+            }
+            if(isset($track->duration)) {
+                $duration = $track->duration;
+            }
+            $track_artwork = getTrackOrAlbumArtwork($w, $track->uri, false);
+            $w->result(null, serialize(array(
+                $track->uri /*track_uri*/ ,
+                '' /* album_uri */ ,
+                '' /* artist_uri */ ,
+                '' /* playlist_uri */ ,
+                '' /* spotify_command */ ,
+                '' /* query */ ,
+                '' /* other_settings*/ ,
+                'play_track_from_play_queue' /* other_action */ ,
+                escapeQuery($artist_name) /* artist_name */ ,
+                escapeQuery($track_name) /* track_name */ ,
+                escapeQuery($album_name) /* album_name */ ,
+                $track_artwork /* track_artwork_path */ ,
+                '' /* artist_artwork_path */ ,
+                '' /* album_artwork_path */ ,
+                $playlist_name /* playlist_name */ ,
+                '' /* playlist_artwork_path */
+            )), $added . escapeQuery($artist_name) . " ● " . escapeQuery($track_name), array(
+                $duration . " ● " . escapeQuery($album_name),
+                'alt' => 'Play album ' . escapeQuery($album_name) . ' in Spotify',
+                'cmd' => 'Play artist ' . escapeQuery($artist_name) . ' in Spotify',
+                'fn' => 'Add track ' . escapeQuery($track->name) . ' to ...',
+                'shift' => 'Add album ' . escapeQuery($album_name) . ' to ...',
+                'ctrl' => 'Search artist ' . escapeQuery($artist_name) . ' online'
+            ), $track_artwork, 'yes', null, '');
+            $noresult      = false;
+            $added = '';
+            $nb_tracks += 1;
         }
-        if(isset($track->duration)) {
-            $duration = $track->duration;
-        }
-        $track_artwork = getTrackOrAlbumArtwork($w, $track->uri, false);
-        $w->result(null, serialize(array(
-            $track->uri /*track_uri*/ ,
-            '' /* album_uri */ ,
-            '' /* artist_uri */ ,
-            '' /* playlist_uri */ ,
-            '' /* spotify_command */ ,
-            '' /* query */ ,
-            '' /* other_settings*/ ,
-            'play_track_from_play_queue' /* other_action */ ,
-            escapeQuery($artist_name) /* artist_name */ ,
-            escapeQuery($track->name) /* track_name */ ,
-            escapeQuery($album_name) /* album_name */ ,
-            $track_artwork /* track_artwork_path */ ,
-            '' /* artist_artwork_path */ ,
-            '' /* album_artwork_path */ ,
-            $playlist_name /* playlist_name */ ,
-            '' /* playlist_artwork_path */
-        )), $added . escapeQuery($artist_name) . " ● " . escapeQuery($track_name), array(
-            $duration . " ● " . escapeQuery($album_name),
-            'alt' => 'Play album ' . escapeQuery($album_name) . ' in Spotify',
-            'cmd' => 'Play artist ' . escapeQuery($artist_name) . ' in Spotify',
-            'fn' => 'Add track ' . escapeQuery($track->name) . ' to ...',
-            'shift' => 'Add album ' . escapeQuery($album_name) . ' to ...',
-            'ctrl' => 'Search artist ' . escapeQuery($artist_name) . ' online'
-        ), $track_artwork, 'yes', null, '');
-        $noresult      = false;
-        $added = '';
-        $nb_tracks += 1;
-    }
 
-    if ($noresult) {
-        $w->result(null, 'help', "There is no track in the play queue", "Make sure to always use the workflow to launch tracks, playlists, etc..Internet connectivity is also required", './images/warning.png', 'no', null, '');
-        $w->result(null, serialize(array(
-            '' /*track_uri*/ ,
-            '' /* album_uri */ ,
-            '' /* artist_uri */ ,
-            '' /* playlist_uri */ ,
-            '' /* spotify_command */ ,
-            '' /* query */ ,
-            'Open▹' . 'http://alfred-spotify-mini-player.com/articles/play-queue/' /* other_settings*/ ,
-            '' /* other_action */ ,
-            '' /* artist_name */ ,
-            '' /* track_name */ ,
-            '' /* album_name */ ,
-            '' /* track_artwork_path */ ,
-            '' /* artist_artwork_path */ ,
-            '' /* album_artwork_path */ ,
-            '' /* playlist_name */ ,
-            '' /* playlist_artwork_path */
-        )), 'Learn more about Play Queue', "Find out all information about Play Queue on alfred-spotify-mini-player.com", './images/website.png', 'yes', null, '');
-        echo $w->toxml();
+        if ($noresult) {
+            $w->result(null, 'help', "There is no track in the play queue", "Make sure to always use the workflow to launch tracks, playlists, etc..Internet connectivity is also required", './images/warning.png', 'no', null, '');
+            $w->result(null, serialize(array(
+                '' /*track_uri*/ ,
+                '' /* album_uri */ ,
+                '' /* artist_uri */ ,
+                '' /* playlist_uri */ ,
+                '' /* spotify_command */ ,
+                '' /* query */ ,
+                'Open▹' . 'http://alfred-spotify-mini-player.com/articles/play-queue/' /* other_settings*/ ,
+                '' /* other_action */ ,
+                '' /* artist_name */ ,
+                '' /* track_name */ ,
+                '' /* album_name */ ,
+                '' /* track_artwork_path */ ,
+                '' /* artist_artwork_path */ ,
+                '' /* album_artwork_path */ ,
+                '' /* playlist_name */ ,
+                '' /* playlist_artwork_path */
+            )), 'Learn more about Play Queue', "Find out all information about Play Queue on alfred-spotify-mini-player.com", './images/website.png', 'yes', null, '');
+            echo $w->toxml();
+        }
     }
 }
 

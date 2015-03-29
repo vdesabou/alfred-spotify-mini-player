@@ -44,6 +44,7 @@ $oauth_client_id           = $settings->oauth_client_id;
 $oauth_client_secret       = $settings->oauth_client_secret;
 $oauth_redirect_uri        = $settings->oauth_redirect_uri;
 $oauth_access_token        = $settings->oauth_access_token;
+$use_mopidy                = $settings->use_mopidy;
 
 if($oauth_client_id == '' || $oauth_client_secret == '' || $oauth_access_token == '') {
     if ($other_settings != '' && (startsWith($other_settings, 'Oauth_Client') === false && startsWith($other_settings, 'Open') === false)) {
@@ -115,13 +116,20 @@ if ($type == "TRACK" && $other_settings == "" &&
                 $now_playing_notifications = $settings->now_playing_notifications;
             }
             exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
-            exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
-            if($retVal != 0) {
-                displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-                exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
-                return;
+            if(! $use_mopidy) {
+	            exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+	            if($retVal != 0) {
+	                displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+	                exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+	                return;
+	            }
+	        }
+            if($use_mopidy) {
+                playTrackInContextWithModipy($w, $track_uri, $playlist_uri);
+            } else {
+                exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\" in context \"$playlist_uri\"'");
             }
-            exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\" in context \"$playlist_uri\"'");
+
             if ($now_playing_notifications == false) {
                 displayNotificationWithArtwork('🔈 ' . $track_name . ' by ' . ucfirst($artist_name), $track_artwork_path);
             }
@@ -141,13 +149,19 @@ if ($type == "TRACK" && $other_settings == "" &&
                     $now_playing_notifications = $settings->now_playing_notifications;
                 }
                 exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
-                exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
-                if($retVal != 0) {
-                    displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-                    exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
-                    return;
+	            if(! $use_mopidy) {
+		            exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+		            if($retVal != 0) {
+		                displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+		                exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+		                return;
+		            }
+		        }
+                if($use_mopidy) {
+                    playTrackWithModipy($w, $track_uri);
+                } else {
+                    exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
                 }
-                exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
                 if ($now_playing_notifications == false) {
                     displayNotificationWithArtwork('🔈 ' . $track_name . ' by ' . ucfirst($artist_name), $track_artwork_path);
                 }
@@ -155,30 +169,38 @@ if ($type == "TRACK" && $other_settings == "" &&
 		        	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
 	            }
                 if($other_action == "") {
-                    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
-                    if($retVal != 0) {
-                        displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-                        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
-                        return;
-                    }
-
-                    if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
-                        $results = explode('▹', $retArr[0]);
-                        addTrackToPlayQueue($w, $track_uri, escapeQuery($results[0]), escapeQuery($results[1]), escapeQuery($results[2]), $results[5], $country_code);
-                    }
+		            if(! $use_mopidy) {
+			            exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+			            if($retVal != 0) {
+			                displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+			                exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+			                return;
+			            }
+	                    if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
+	                        $results = explode('▹', $retArr[0]);
+	                        addTrackToPlayQueue($w, $track_uri, escapeQuery($results[0]), escapeQuery($results[1]), escapeQuery($results[2]), $results[5], $country_code);
+	                    }
+			        }
                 }
                 return;
             }
         }
     } elseif ($playlist_uri != "") {
         exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
-        exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
-        if($retVal != 0) {
-            displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-            exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
-            return;
+        if(! $use_mopidy) {
+            exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+            if($retVal != 0) {
+                displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+                exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+                return;
+            }
         }
-        exec("osascript -e 'tell application \"Spotify\" to play track \"$playlist_uri\"'");
+        if($use_mopidy) {
+            playAlbumOrPlaylistWithModipy($w, $playlist_uri);
+        } else {
+            exec("osascript -e 'tell application \"Spotify\" to play track \"$playlist_uri\"'");
+        }
+
         if ($playlist_artwork_path == '') {
             $playlist_artwork_path = getPlaylistArtwork($w, $playlist_uri, true, false);
         }
@@ -200,13 +222,19 @@ if ($type == "TRACK" && $other_settings == "" &&
         $album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, true);
     }
     exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
-    exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
-    if($retVal != 0) {
-        displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
-        return;
+    if(! $use_mopidy) {
+        exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+        if($retVal != 0) {
+            displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+            exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+            return;
+        }
     }
-    exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
+    if($use_mopidy) {
+        playAlbumOrPlaylistWithModipy($w, $album_uri);
+    } else {
+        exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
+    }
     displayNotificationWithArtwork('🔈 Album ' . $album_name . ' by ' . ucfirst($artist_name), $album_artwork_path, 'Play Album');
     if($userid != 'vdesabou') {
     	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
@@ -264,13 +292,20 @@ if ($type == "TRACK" && $other_settings == "" &&
             $artist_artwork_path = getArtistArtwork($w, $artist_name, true);
         }
         exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
-        exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
-        if($retVal != 0) {
-            displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-            exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
-            return;
+        if(! $use_mopidy) {
+            exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+            if($retVal != 0) {
+                displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+                exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+                return;
+            }
         }
-        exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
+        if($use_mopidy) {
+            playAlbumOrPlaylistWithModipy($w, $artist_uri);
+        } else {
+            exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
+        }
+
         displayNotificationWithArtwork('🔈 Artist ' . $artist_name, $artist_artwork_path, 'Play Artist');
         if($userid != 'vdesabou') {
             stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
@@ -643,13 +678,19 @@ if ($type == "TRACK" && $other_settings == "" &&
             $now_playing_notifications = $settings->now_playing_notifications;
         }
         exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
-        exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
-        if($retVal != 0) {
-            displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-            exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
-            return;
+        if(! $use_mopidy) {
+            exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+            if($retVal != 0) {
+                displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+                exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+                return;
+            }
         }
-        exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\" in context \"$album_uri\"'");
+        if($use_mopidy) {
+            playTrackInContextWithModipy($w, $track_uri, $album_uri);
+        } else {
+            exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\" in context \"$album_uri\"'");
+        }
         $album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, true);
         if ($now_playing_notifications == false) {
             displayNotificationWithArtwork('🔈 ' . $track_name . ' in album ' . $album_name . ' by ' . ucfirst($artist_name), $album_artwork_path, 'Play Track from Album');
@@ -660,14 +701,29 @@ if ($type == "TRACK" && $other_settings == "" &&
         addAlbumToPlayQueue($w, $album_uri, $album_name);
         return;
     } else if ($other_action == "play") {
-	    exec("./src/track_info.ksh 2>&1");
-        exec("osascript -e 'tell application \"Spotify\" to play'");
+        if(! $use_mopidy) {
+            exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+            if($retVal != 0) {
+                displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+                exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+                return;
+            }
+        }
+        if($use_mopidy) {
+            invokeModipyMethod($w, "core.playback.resume", array());
+        } else {
+	        exec("osascript -e 'tell application \"Spotify\" to play'");
+        }
         if ($now_playing_notifications == false) {
             displayNotificationForCurrentTrack($w);
         }
         return;
     } else if ($other_action == "pause") {
-        exec("osascript -e 'tell application \"Spotify\" to pause'");
+        if($use_mopidy) {
+            invokeModipyMethod($w, "core.playback.pause", array());
+        } else {
+	        exec("osascript -e 'tell application \"Spotify\" to pause'");
+        }
         return;
     } else if ($other_action == "kill_update") {
         killUpdate($w);
@@ -758,13 +814,21 @@ if ($type == "TRACK" && $other_settings == "" &&
         removeCurrentTrackFrom($w);
         return;
     } else if ($other_action == "previous") {
-        exec("osascript -e 'tell application \"Spotify\" to previous track'");
+        if($use_mopidy) {
+            invokeModipyMethod($w, "core.playback.previous", array());
+        } else {
+            exec("osascript -e 'tell application \"Spotify\" to previous track'");
+        }
         if ($now_playing_notifications == true) {
             displayNotificationForCurrentTrack($w);
         }
         return;
     } else if ($other_action == "next") {
-        exec("osascript -e 'tell application \"Spotify\" to next track'");
+        if($use_mopidy) {
+            invokeModipyMethod($w, "core.playback.next", array());
+        } else {
+            exec("osascript -e 'tell application \"Spotify\" to next track'");
+        }
         if ($now_playing_notifications == false) {
             displayNotificationForCurrentTrack($w);
         }
@@ -790,32 +854,47 @@ if ($type == "TRACK" && $other_settings == "" &&
             $now_playing_notifications = $settings->now_playing_notifications;
         }
         exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
-        exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
-        if($retVal != 0) {
-            displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-            exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
-            return;
+        if(! $use_mopidy) {
+            exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+            if($retVal != 0) {
+                displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+                exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+                return;
+            }
         }
-        exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
+        if($use_mopidy) {
+            playTrackWithModipy($w, $track_uri);
+        } else {
+            exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
+        }
+
         if ($now_playing_notifications == false) {
             displayNotificationForCurrentTrack($w);
         }
         if($userid != 'vdesabou') {
             stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
         }
-        addTrackToPlayQueue($w, $track_uri, $track_name, $artist_name, $album_name, $duration, $country_code);
+        if(! $use_mopidy) {
+	     	addTrackToPlayQueue($w, $track_uri, $track_name, $artist_name, $album_name, $duration, $country_code);
+        }
         return;
     } else if ($other_action == "random_album") {
         list($album_uri, $album_name, $theartistname) = getRandomAlbum($w);
         // start now playing if needed
         exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
-        exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
-        if($retVal != 0) {
-            displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-            exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
-            return;
+        if(! $use_mopidy) {
+            exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+            if($retVal != 0) {
+                displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+                exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+                return;
+            }
         }
-        exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
+        if($use_mopidy) {
+            playAlbumOrPlaylistWithModipy($w, $album_uri);
+        } else {
+            exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
+        }
         displayNotificationWithArtwork('🔈 Album ' . $album_name . ' by ' . $theartistname, getTrackOrAlbumArtwork($w, $album_uri, true), 'Play Random Album');
         if($userid != 'vdesabou') {
             stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
@@ -859,8 +938,19 @@ if ($type == "TRACK" && $other_settings == "" &&
         return;
     } else if ($other_action == "playartist") {
         exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
-        exec("./src/track_info.ksh 2>&1");
-        exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
+        if(! $use_mopidy) {
+            exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+            if($retVal != 0) {
+                displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+                exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+                return;
+            }
+        }
+        if($use_mopidy) {
+            playAlbumOrPlaylistWithModipy($w, $artist_uri);
+        } else {
+            exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
+        }
         displayNotificationWithArtwork('🔈 Artist ' . $artist_name, $artist_artwork_path, 'Play Artist');
         if($userid != 'vdesabou') {
         	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
@@ -876,13 +966,19 @@ if ($type == "TRACK" && $other_settings == "" &&
             }
         }
         exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
-        exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
-        if($retVal != 0) {
-            displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-            exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
-            return;
+        if(! $use_mopidy) {
+            exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+            if($retVal != 0) {
+                displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+                exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+                return;
+            }
         }
-        exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
+        if($use_mopidy) {
+            playAlbumOrPlaylistWithModipy($w, $album_uri);
+        } else {
+            exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
+        }
         displayNotificationWithArtwork('🔈 Album ' . $album_name, $album_artwork_path, 'Play Album');
         if($userid != 'vdesabou') {
         	stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
@@ -890,49 +986,78 @@ if ($type == "TRACK" && $other_settings == "" &&
         addAlbumToPlayQueue($w, $album_uri, $album_name);
         return;
     } else if ($other_action == "volume_up") {
-        exec("osascript -e 'tell application \"Spotify\"
-                if it is running then
-                    set sound volume to (sound volume * 1.1)
-                end if
-            end tell'");
+        if($use_mopidy) {
+            invokeModipyMethod($w, "core.playback.set_volume", array('volume' => invokeModipyMethod($w, "core.playback.get_volume", array()) * 1.1 ));
+        } else {
+	        exec("osascript -e 'tell application \"Spotify\"
+	                if it is running then
+	                    set sound volume to (sound volume * 1.1)
+	                end if
+	            end tell'");
+        }
         displayNotificationWithArtwork("Spotify volume has been increased", './images/volume_up.png', 'Volume Up');
         return;
     } else if ($other_action == "volume_down") {
-        exec("osascript -e 'tell application \"Spotify\"
-                if it is running then
-                    set sound volume to (sound volume * 0.9)
-                end if
-            end tell'");
+        if($use_mopidy) {
+            invokeModipyMethod($w, "core.playback.set_volume", array('volume' => invokeModipyMethod($w, "core.playback.get_volume", array()) * 0.9 ));
+        } else {
+	        exec("osascript -e 'tell application \"Spotify\"
+	                if it is running then
+	                    set sound volume to (sound volume * 0.9)
+	                end if
+	            end tell'");
+        }
         displayNotificationWithArtwork("Spotify volume has been decreased", './images/volume_down.png', 'Volume Down');
         return;
     } else if ($other_action == "mute") {
-        $command_output = exec("osascript -e 'tell application \"Spotify\"
-                if sound volume is less than or equal to 0 then
-                    set sound volume to 100
-                    return \"Spotify volume is unmuted.\"
-                else
-                    set sound volume to 0
-                    return \"Spotify volume is muted.\"
-                end if
-            end tell'");
+        if($use_mopidy) {
+            $volume = invokeModipyMethod($w, "core.playback.get_volume", array());
+            if($volume <= 0) {
+	            invokeModipyMethod($w, "core.playback.set_volume", array('volume' => 100));
+	            $command_output = "Spotify volume is unmuted.";
+            } else {
+	           	invokeModipyMethod($w, "core.playback.set_volume", array('volume' => 0));
+	            $command_output = "Spotify volume is muted.";
+            }
+        } else {
+	        $command_output = exec("osascript -e 'tell application \"Spotify\"
+	                if sound volume is less than or equal to 0 then
+	                    set sound volume to 100
+	                    return \"Spotify volume is unmuted.\"
+	                else
+	                    set sound volume to 0
+	                    return \"Spotify volume is muted.\"
+	                end if
+	            end tell'");
+        }
         displayNotificationWithArtwork($command_output, './images/mute.png', 'Mute');
         return;
     } else if ($other_action == "shuffle") {
-        $command_output = exec("osascript -e '
-    	tell application \"Spotify\"
-    	if shuffling enabled is true then
-    		if shuffling is true then
-				set shuffling to false
-				return \"Shuffle is now disabled.\"
+        if($use_mopidy) {
+            $isShuffleEnabled = invokeModipyMethod($w, "core.tracklist.get_random", array());
+            if($isShuffleEnabled) {
+	            invokeModipyMethod($w, "core.tracklist.set_random", array('value' => false));
+	            $command_output = "Shuffle is now disabled.";
+            } else {
+	           	invokeModipyMethod($w, "core.tracklist.set_random", array('value' => true));
+	            $command_output = "Shuffle is now enabled.";
+            }
+        } else {
+	        $command_output = exec("osascript -e '
+	    	tell application \"Spotify\"
+	    	if shuffling enabled is true then
+	    		if shuffling is true then
+					set shuffling to false
+					return \"Shuffle is now disabled.\"
+				else
+					set shuffling to true
+					return \"Shuffle is now enabled.\"
+				end if
 			else
-				set shuffling to true
-				return \"Shuffle is now enabled.\"
+				return \"Shuffle is not currently enabled.\"
 			end if
-		else
-			return \"Shuffle is not currently enabled.\"
-		end if
-		end tell'");
-
+			end tell'");
+        }
         displayNotificationWithArtwork($command_output, './images/shuffle.png', 'Shuffle');
         return;
     } else if ($other_action == "radio_artist") {
