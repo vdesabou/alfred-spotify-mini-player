@@ -131,7 +131,36 @@ function invokeMopidyMethod($w, $method, $params)
 function getCurrentTrackInfoWithMopidy($w) {
     $tl_track = invokeMopidyMethod($w, "core.playback.get_current_track", array());
     $state = invokeMopidyMethod($w, "core.playback.get_state", array());
-    return "" . $tl_track->name . "▹" . $tl_track->artists[0]->name . "▹" . $tl_track->album->name . "▹" . $state . "▹" . $tl_track->uri . "▹" . $tl_track->length/1000 . "▹" . "0";
+
+    $track_name = '';
+    $artist_name = '';
+    $album_name = '';
+    $track_uri = '';
+    $length = 0;
+
+    if(isset($tl_track->name)) {
+	    $track_name = $tl_track->name;
+    }
+
+    if( isset($tl_track->artists) &&
+    	isset($tl_track->artists[0]) &&
+    	isset($tl_track->artists[0])) {
+	    $artist_name = $tl_track->artists[0]->name;
+    }
+
+    if(isset($tl_track->album) && isset($tl_track->album->name)) {
+	    $album_name = $tl_track->album->name;
+    }
+
+    if(isset($tl_track->uri)) {
+	    $track_uri = $tl_track->uri;
+    }
+
+    if(isset($tl_track->length)) {
+	    $length = $tl_track->length;
+    }
+
+    return "" . $track_name. "▹" . $artist_name . "▹" . $album_name . "▹" . $state . "▹" . $track_uri . "▹" . $length/1000 . "▹" . "0";
 }
 
 /**
@@ -143,9 +172,12 @@ function getCurrentTrackInfoWithMopidy($w) {
  * @return void
  */
 function playUriWithMopidyWithoutClearing($w, $uri) {
-    invokeMopidyMethod($w, "core.tracklist.add", array('uri' => $uri, 'at_position' => 0));
-    $tl_tracks = invokeMopidyMethod($w, "core.tracklist.get_tl_tracks", array());
-    invokeMopidyMethod($w, "core.playback.play", array('tl_track' => $tl_tracks[0]));
+    $tl_tracks = invokeMopidyMethod($w, "core.tracklist.add", array('uris' => array($uri), 'at_position' => 0));
+    if(isset($tl_tracks[0])) {
+	 	invokeMopidyMethod($w, "core.playback.play", array('tl_track' => $tl_tracks[0]));
+    } else {
+	    displayNotificationWithArtwork("Cannot play track with uri " . $uri, './images/warning.png', 'Error!');
+    }
 }
 
 /**
