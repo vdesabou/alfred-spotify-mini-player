@@ -80,9 +80,10 @@ function getSpotifyWebAPI($w, $old_api = null)
  * @param mixed $w
  * @param mixed $method
  * @param mixed $params
+ * @param bool $displayError (default: true)
  * @return void
  */
-function invokeMopidyMethod($w, $method, $params)
+function invokeMopidyMethod($w, $method, $params, $displayError = true)
 {
 	//
 	// Read settings from JSON
@@ -99,9 +100,12 @@ function invokeMopidyMethod($w, $method, $params)
 }' http://" . $mopidy_server . ":" . $mopidy_port . "/mopidy/rpc", $retArr, $retVal);
 
     if($retVal != 0) {
-        displayNotificationWithArtwork('Mopidy Exception: returned error ' . $retVal, './images/warning.png', 'Error!');
-        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug Mopidy Exception: returned error " . $retVal . "\"'");
-        return;
+	    if($displayError) {
+	        displayNotificationWithArtwork('Mopidy Exception: returned error ' . $retVal, './images/warning.png', 'Error!');
+	        exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug Mopidy Exception: returned error " . $retVal . "\"'");
+
+	    }
+	    return false;
     }
 
     if (isset($retArr[0])) {
@@ -112,12 +116,15 @@ function invokeMopidyMethod($w, $method, $params)
         if(isset($result->error)) {
             logMsg("ERROR: invokeMopidyMethod() method: " . $method . ' params: ' . json_encode($params, JSON_HEX_APOS) . ' exception:'. print_r($result));
 
-            displayNotificationWithArtwork('Mopidy Exception: ' . htmlspecialchars($result->error->message), './images/warning.png', 'Error!');
-            exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug Mopidy Exception: " . htmlspecialchars($result->error->message) . "\"'");
-            return;
+			if($displayError) {
+	            displayNotificationWithArtwork('Mopidy Exception: ' . htmlspecialchars($result->error->message), './images/warning.png', 'Error!');
+	            exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug Mopidy Exception: " . htmlspecialchars($result->error->message) . "\"'");
+	        }
+	        return false;
         }
     } else {
-        displayNotificationWithArtwork("Nothing returned by Mopidy", './images/warning.png');
+	    logMsg("ERROR: empty response from Mopidy method: " . $method . ' params: ' . json_encode($params, JSON_HEX_APOS));
+        displayNotificationWithArtwork("ERROR: empty response from Mopidy method: " . $method . ' params: ' . json_encode($params, JSON_HEX_APOS), './images/warning.png');
     }
 }
 
@@ -126,11 +133,15 @@ function invokeMopidyMethod($w, $method, $params)
  *
  * @access public
  * @param mixed $w
+ * @param bool $displayError (default: true)
  * @return void
  */
-function getCurrentTrackInfoWithMopidy($w) {
-    $tl_track = invokeMopidyMethod($w, "core.playback.get_current_track", array());
-    $state = invokeMopidyMethod($w, "core.playback.get_state", array());
+function getCurrentTrackInfoWithMopidy($w, $displayError = true) {
+    $tl_track = invokeMopidyMethod($w, "core.playback.get_current_track", array(), $displayError);
+    if($tl_track == false) {
+	    return "mopidy_stopped";
+    }
+    $state = invokeMopidyMethod($w, "core.playback.get_state", array(), $displayError);
 
     $track_name = '';
     $artist_name = '';
