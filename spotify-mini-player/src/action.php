@@ -994,7 +994,7 @@ if ($type == "TRACK" && $other_settings == "" &&
         return;
     } else if ($other_action == "volume_up") {
         if($use_mopidy) {
-            invokeMopidyMethod($w, "core.playback.set_volume", array('volume' => invokeMopidyMethod($w, "core.playback.get_volume", array()) * 1.1 ));
+            invokeMopidyMethod($w, "core.mixer.set_volume", array('volume' => invokeMopidyMethod($w, "core.mixer.get_volume", array()) * 1.1 ));
         } else {
 	        exec("osascript -e 'tell application \"Spotify\"
 	                if it is running then
@@ -1006,7 +1006,7 @@ if ($type == "TRACK" && $other_settings == "" &&
         return;
     } else if ($other_action == "volume_down") {
         if($use_mopidy) {
-            invokeMopidyMethod($w, "core.playback.set_volume", array('volume' => invokeMopidyMethod($w, "core.playback.get_volume", array()) * 0.9 ));
+            invokeMopidyMethod($w, "core.mixer.set_volume", array('volume' => invokeMopidyMethod($w, "core.mixer.get_volume", array()) * 0.9 ));
         } else {
 	        exec("osascript -e 'tell application \"Spotify\"
 	                if it is running then
@@ -1018,12 +1018,12 @@ if ($type == "TRACK" && $other_settings == "" &&
         return;
     } else if ($other_action == "mute") {
         if($use_mopidy) {
-            $volume = invokeMopidyMethod($w, "core.playback.get_volume", array());
+            $volume = invokeMopidyMethod($w, "core.mixer.get_volume", array());
             if($volume <= 0) {
-	            invokeMopidyMethod($w, "core.playback.set_volume", array('volume' => 100));
+	            invokeMopidyMethod($w, "core.mixer.set_volume", array('volume' => 100));
 	            $command_output = "Spotify volume is unmuted.";
             } else {
-	           	invokeMopidyMethod($w, "core.playback.set_volume", array('volume' => 0));
+	           	invokeMopidyMethod($w, "core.mixer.set_volume", array('volume' => 0));
 	            $command_output = "Spotify volume is muted.";
             }
         } else {
