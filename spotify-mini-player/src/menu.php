@@ -3724,31 +3724,37 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
 				$duration = beautifyTime($tl_track->track->length / 1000);
 			}
 			$track_artwork = getTrackOrAlbumArtwork($w, $tl_track->track->uri, false);
-			$w->result(null, serialize(array(
-						$tl_track->track->uri /*track_uri*/ ,
-						'' /* album_uri */ ,
-						'' /* artist_uri */ ,
-						'' /* playlist_uri */ ,
-						'' /* spotify_command */ ,
-						'' /* query */ ,
-						'' /* other_settings*/ ,
-						'play_track_from_play_queue' /* other_action */ ,
-						escapeQuery($artist_name) /* artist_name */ ,
-						escapeQuery($track_name) /* track_name */ ,
-						escapeQuery($album_name) /* album_name */ ,
-						$track_artwork /* track_artwork_path */ ,
-						'' /* artist_artwork_path */ ,
-						'' /* album_artwork_path */ ,
-						$playlist_name /* playlist_name */ ,
-						'' /* playlist_artwork_path */
-					)), $added . escapeQuery($artist_name) . " ● " . escapeQuery($track_name), array(
-					$duration . " ● " . escapeQuery($album_name),
-					'alt' => 'Play album ' . escapeQuery($album_name) . ' in Spotify',
-					'cmd' => 'Play artist ' . escapeQuery($artist_name) . ' in Spotify',
-					'fn' => 'Add track ' . escapeQuery($track->name) . ' to ...',
-					'shift' => 'Add album ' . escapeQuery($album_name) . ' to ...',
-					'ctrl' => 'Search artist ' . escapeQuery($artist_name) . ' online'
-				), $track_artwork, 'yes', null, '');
+
+			if (strpos($track_name,'[unplayable]') !== false) {
+			    $track_name = str_replace('[unplayable]', '', $track_name);
+			    $w->result(null, '', '🚫 ' . escapeQuery(ucfirst($artist_name)) . " ● " . escapeQuery($track_name), $duration . " ● " . $album_name, $track_artwork, 'no', null, '');
+			} else {
+				$w->result(null, serialize(array(
+							$tl_track->track->uri /*track_uri*/ ,
+							'' /* album_uri */ ,
+							'' /* artist_uri */ ,
+							'' /* playlist_uri */ ,
+							'' /* spotify_command */ ,
+							'' /* query */ ,
+							'' /* other_settings*/ ,
+							'play_track_from_play_queue' /* other_action */ ,
+							escapeQuery($artist_name) /* artist_name */ ,
+							escapeQuery($track_name) /* track_name */ ,
+							escapeQuery($album_name) /* album_name */ ,
+							$track_artwork /* track_artwork_path */ ,
+							'' /* artist_artwork_path */ ,
+							'' /* album_artwork_path */ ,
+							$playlist_name /* playlist_name */ ,
+							'' /* playlist_artwork_path */
+						)), $added . escapeQuery($artist_name) . " ● " . escapeQuery($track_name), array(
+						$duration . " ● " . escapeQuery($album_name),
+						'alt' => 'Play album ' . escapeQuery($album_name) . ' in Spotify',
+						'cmd' => 'Play artist ' . escapeQuery($artist_name) . ' in Spotify',
+						'fn' => 'Add track ' . escapeQuery($track->name) . ' to ...',
+						'shift' => 'Add album ' . escapeQuery($album_name) . ' to ...',
+						'ctrl' => 'Search artist ' . escapeQuery($artist_name) . ' online'
+					), $track_artwork, 'yes', null, '');
+			}
 			$noresult      = false;
 			$added = '';
 			$nb_tracks += 1;
