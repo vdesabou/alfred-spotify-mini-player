@@ -124,7 +124,7 @@ then
 			fi
 		fi
 	done
-	return 0
+	exit 0
 fi
 
 if [ -f "${DATADIR}/spotify_mini_player_notifications.lock" ]
