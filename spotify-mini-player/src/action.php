@@ -639,6 +639,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 				}
 				return;
 			} else if ($other_action == "disable_now_playing_notifications") {
+				exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a stop -m \"" . $mopidy_arg . "\"  >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
 				$ret = updateSetting($w, 'now_playing_notifications', 0);
 				if ($ret == true) {
 					displayNotificationWithArtwork("Now Playing notifications are now disabled", './images/disable_now_playing.png', 'Settings');
@@ -663,6 +664,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 				}
 				return;
 			} else if ($other_action == "enable_mopidy") {
+				exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a stop -m \"" . $mopidy_arg . "\"  >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
 				$ret = updateSetting($w, 'use_mopidy', 1);
 				if ($ret == true) {
 					displayNotificationWithArtwork("Mopidy is now enabled", './images/enable_mopidy.png', 'Settings');
@@ -671,6 +673,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 				}
 				return;
 			} else if ($other_action == "disable_mopidy") {
+				exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a stop -m \"" . $mopidy_arg . "\"  >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
 				$ret = updateSetting($w, 'use_mopidy', 0);
 				if ($ret == true) {
 					displayNotificationWithArtwork("Mopidy is now disabled", './images/disable_mopidy.png', 'Settings');
