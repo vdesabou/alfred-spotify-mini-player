@@ -227,7 +227,6 @@ function playTrackInContextWithMopidy($w, $track_uri, $context_uri) {
 		if ($tl_track->track->uri == $track_uri) {
 			// found the track move it to position 0
 			invokeMopidyMethod($w, "core.tracklist.move", array('start' => $i, 'end' => $i, 'to_position' => 0));
-			logMsg(" found the track " . $tl_track->track->uri . " at position " . $i);
 		}
 		$i++;
 	}
