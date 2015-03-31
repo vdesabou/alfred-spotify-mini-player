@@ -60,7 +60,7 @@ if (mb_strlen($query) > 1) {
             '' /* playlist_uri */ ,
             '' /* spotify_command */ ,
             '' /* query */ ,
-            'Open▹' . 'http://alfred-spotify-mini-player.com/blog/FIXTHIS/' /* other_settings*/ ,
+            'Open▹' . 'http://alfred-spotify-mini-player.com/articles/mopidy/' /* other_settings*/ ,
             '' /* other_action */ ,
             '' /* artist_name */ ,
             '' /* track_name */ ,
