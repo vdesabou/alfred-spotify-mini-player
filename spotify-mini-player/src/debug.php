@@ -149,9 +149,11 @@ $output = $output . "\n";
 $output = $output . exec("sw_vers -productVersion");
 $output = $output . "\n";
 $output = $output . exec("sysctl hw.memsize");
+$output = $output . "\n";
 if(! $use_mopidy) {
-	$output = $output . "\n";
 	$output = $output . exec("osascript -e 'tell application \"Spotify\" to version'");
+} else {
+	$output = $output . "Mopidy version is " . invokeMopidyMethod($w, "core.get_version", array(), false);
 }
 $output = $output . "\n";
 
