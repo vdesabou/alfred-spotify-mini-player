@@ -887,6 +887,7 @@ function playCurrentArtist($w) {
 	$settings = getSettings($w);
 
 	$use_mopidy                = $settings->use_mopidy;
+	$country_code 			   = $settings->country_code;
 
 	if ($use_mopidy) {
 		$retArr = array(getCurrentTrackInfoWithMopidy($w));
@@ -916,8 +917,8 @@ function playCurrentArtist($w) {
 		if ($use_mopidy) {
 			playUriWithMopidy($w, $artist_uri);
 		} else {
-			// FIX THIS add play queue
 			exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
+			addArtistToPlayQueue($w, $artist_uri, escapeQuery($results[1]), $country_code);
 		}
 		displayNotificationWithArtwork('🔈 Artist ' . escapeQuery($results[1]), getArtistArtwork($w, $results[1], true), 'Play Current Artist');
 	} else {
