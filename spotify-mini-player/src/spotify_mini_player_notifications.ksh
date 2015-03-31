@@ -2,8 +2,9 @@
 
 DATADIR=""
 ACTION=""
+USE_MOPIDY=""
 
-while getopts ':d:a:' arguments
+while getopts ':d:a:m:' arguments
 	do
 	  case ${arguments} in
 		d)
@@ -12,9 +13,12 @@ while getopts ':d:a:' arguments
 		a)
 			ACTION="${OPTARG}"
 			;;
+		m)
+			USE_MOPIDY="${OPTARG}"
+			;;
 	   \?)
 			print "ERROR: ${OPTARG} is not a valid option"
-			print "Usage: $0 -d <data dir> -a <action>"
+			print "Usage: $0 -d <data dir> -a <action> -m <mopidy server:port>"
 			exit 1;;
 	  esac
 	done
@@ -26,7 +30,7 @@ function traceit
 	print "${datestr} : ${1}";
 }
 
-function Start
+function StartAppleScript
 {
 osascript <<EOT
 try
@@ -73,6 +77,38 @@ end try
 EOT
 }
 
+function StartMopidy
+{
+	result=""
+	query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "current_mopidy" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
+	current_track_url=""
+	old_player_state=""
+	player_state=""
+	track_url=""
+
+	until [ "${result}" == "mopidy_stopped" ]
+	do
+		result=$(php -f ./src/action.php -- "$query" "TRACK" "")
+
+		track_url=$(echo "${result}" | awk -F '▹' '{print $5}')
+		player_state=$(echo "${result}" | awk -F '▹' '{print $4}')
+
+		if [ "${track_url}" != "${current_track_url}" ]
+		then
+			current_track_url=$(echo "${result}" | awk -F '▹' '{print $5}')
+			osascript -e 'tell application "Alfred 2" to run trigger "display_current_track_notification" in workflow "com.vdesabou.spotify.mini.player" with argument "${track_url}"'
+		fi
+
+		if [ "${player_state}" != "${old_player_state}" ] && [ "${player_state}" == "playing" ]
+		then
+			osascript -e 'tell application "Alfred 2" to run trigger "display_current_track_notification" in workflow "com.vdesabou.spotify.mini.player" with argument "${player_state}"'
+		fi
+
+		old_player_state=${player_state}
+
+		sleep 3
+	done
+}
 
 if [ "${ACTION}" = "stop" ]
 then
@@ -88,7 +124,7 @@ then
 			fi
 		fi
 	done
-	return 0
+	exit 0
 fi
 
 if [ -f "${DATADIR}/spotify_mini_player_notifications.lock" ]
@@ -101,7 +137,6 @@ then
 		return 0
 	else
 		# process not running, but lock file not deleted?
-
 		traceit "INFO: orphan lock file warning, process spotify_mini_player_notifications not running."
 		rm "${DATADIR}/spotify_mini_player_notifications.lock"
 		traceit "INFO: Lock file deleted. `date`"
@@ -114,7 +149,13 @@ traceit "INFO: creating lock file . `date`"
 echo $$ > "${DATADIR}/spotify_mini_player_notifications.lock"
 
 # call to main function
-Start
+if [ "${USE_MOPIDY}" = "" ]
+then
+	StartAppleScript
+else
+	StartMopidy
+fi
+
 
 if [ -f "${DATADIR}/spotify_mini_player_notifications.lock" ]
 then

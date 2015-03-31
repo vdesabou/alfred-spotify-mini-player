@@ -51,6 +51,26 @@ if (mb_strlen($query) > 1) {
             '' /* playlist_name */ ,
             '' /* playlist_artwork_path */
         )), 'Maybe you have an issue with a Broken Spotify version?', "Go to the article to get more information", './images/website.png', 'yes', null, '');
+    } elseif (startsWith($query, 'Mopidy Exception')) {
+        $w->result(null, 'help', "Mopidy execution failed!", "Message: " . $query, './images/warning.png', 'no', null, '');
+        $w->result(null, serialize(array(
+            '' /*track_uri*/ ,
+            '' /* album_uri */ ,
+            '' /* artist_uri */ ,
+            '' /* playlist_uri */ ,
+            '' /* spotify_command */ ,
+            '' /* query */ ,
+            'Open▹' . 'http://alfred-spotify-mini-player.com/articles/mopidy/' /* other_settings*/ ,
+            '' /* other_action */ ,
+            '' /* artist_name */ ,
+            '' /* track_name */ ,
+            '' /* album_name */ ,
+            '' /* track_artwork_path */ ,
+            '' /* artist_artwork_path */ ,
+            '' /* album_artwork_path */ ,
+            '' /* playlist_name */ ,
+            '' /* playlist_artwork_path */
+        )), 'Is Mopidy correctly installed and running?', "Go to the article to get more information", './images/website.png', 'yes', null, '');
     } else {
         $w->result(null, '', 'Exception occurred: ' . $query, 'Use the Send an email to the author option below to send generated spot_mini_debug.tgz', './images/warning.png', 'no', null, '');
     }
@@ -118,13 +138,23 @@ if (!file_exists(exec('pwd') . "/packal/package.xml")) {
     copy(exec('pwd') . "/packal/package.xml", $w->home() . "/Downloads/spot_mini_debug/package.xml");
 }
 
+//
+// Read settings from JSON
+//
+$settings                  = getSettings($w);
+$use_mopidy                = $settings->use_mopidy;
+
 $output = $output . exec("uname -a");
 $output = $output . "\n";
 $output = $output . exec("sw_vers -productVersion");
 $output = $output . "\n";
 $output = $output . exec("sysctl hw.memsize");
 $output = $output . "\n";
-$output = $output . exec("osascript -e 'tell application \"Spotify\" to version'");
+if(! $use_mopidy) {
+	$output = $output . exec("osascript -e 'tell application \"Spotify\" to version'");
+} else {
+	$output = $output . "Mopidy version is " . invokeMopidyMethod($w, "core.get_version", array(), false);
+}
 $output = $output . "\n";
 
 file_put_contents($w->home() . "/Downloads/spot_mini_debug/debug.log", $output);
