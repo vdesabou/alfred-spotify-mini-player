@@ -134,7 +134,23 @@
 			<string>FE5DC9FF-211E-4EE9-9881-52A92FFF8055</string>
 		</dict>
 		<dict/>
-		<dict/>
+		<dict>
+			<key>actionconfig</key>
+			<dict>
+				<key>autoworkflowuid</key>
+				<true/>
+				<key>triggerid</key>
+				<string>com.vdesabou.miniplayer.playpause</string>
+			</dict>
+			<key>actionuid</key>
+			<string>remote.alfred.runworkflow</string>
+			<key>buttoniconid</key>
+			<string>E7ECAC10-DDC2-4860-A342-A876756D8812</string>
+			<key>buttonlabel</key>
+			<string>Play/Pause</string>
+			<key>itemuid</key>
+			<string>37F02763-E4E9-41B2-A984-1FC85272D748</string>
+		</dict>
 		<dict/>
 		<dict>
 			<key>actionconfig</key>

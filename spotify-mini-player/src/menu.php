@@ -1025,6 +1025,25 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
 					'' /* playlist_artwork_path */
 				)), 'Pause', 'Pause the current Spotify track', './images/pause.png', 'yes', '');
 
+		$w->result('SpotifyMiniPlayer_' . 'playpause', serialize(array(
+					'' /*track_uri*/ ,
+					'' /* album_uri */ ,
+					'' /* artist_uri */ ,
+					'' /* playlist_uri */ ,
+					'' /* spotify_command */ ,
+					'' /* query */ ,
+					'' /* other_settings*/ ,
+					'playpause' /* other_action */ ,
+					'' /* artist_name */ ,
+					'' /* track_name */ ,
+					'' /* album_name */ ,
+					'' /* track_artwork_path */ ,
+					'' /* artist_artwork_path */ ,
+					'' /* album_artwork_path */ ,
+					'' /* playlist_name */ ,
+					'' /* playlist_artwork_path */
+				)), 'Play / Pause', 'Play or Pause the current Spotify track', './images/playpause.png', 'yes', '');
+
 		$w->result('SpotifyMiniPlayer_' . 'current', serialize(array(
 					'' /*track_uri*/ ,
 					'' /* album_uri */ ,
@@ -1480,6 +1499,25 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
 						'' /* spotify_command */ ,
 						'' /* query */ ,
 						'' /* other_settings*/ ,
+						'playpause' /* other_action */ ,
+						'' /* artist_name */ ,
+						'' /* track_name */ ,
+						'' /* album_name */ ,
+						'' /* track_artwork_path */ ,
+						'' /* artist_artwork_path */ ,
+						'' /* album_artwork_path */ ,
+						'' /* playlist_name */ ,
+						'' /* playlist_artwork_path */
+					)), 'Play / Pause', 'Play or Pause the current Spotify track', './images/playpause.png', 'yes', '');
+
+			$w->result(null, serialize(array(
+						'' /*track_uri*/ ,
+						'' /* album_uri */ ,
+						'' /* artist_uri */ ,
+						'' /* playlist_uri */ ,
+						'' /* spotify_command */ ,
+						'' /* query */ ,
+						'' /* other_settings*/ ,
 						'play_current_artist' /* other_action */ ,
 						'' /* artist_name */ ,
 						'' /* track_name */ ,
@@ -1528,7 +1566,28 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
 						'' /* playlist_name */ ,
 						'' /* playlist_artwork_path */
 					)), 'Pause', 'Pause the current Spotify track', './images/pause.png', 'yes', '');
+
+			$w->result(null, serialize(array(
+						'' /*track_uri*/ ,
+						'' /* album_uri */ ,
+						'' /* artist_uri */ ,
+						'' /* playlist_uri */ ,
+						'' /* spotify_command */ ,
+						'' /* query */ ,
+						'' /* other_settings*/ ,
+						'playpause' /* other_action */ ,
+						'' /* artist_name */ ,
+						'' /* track_name */ ,
+						'' /* album_name */ ,
+						'' /* track_artwork_path */ ,
+						'' /* artist_artwork_path */ ,
+						'' /* album_artwork_path */ ,
+						'' /* playlist_name */ ,
+						'' /* playlist_artwork_path */
+					)), 'Play / Pause', 'Play or Pause the current Spotify track', './images/playpause.png', 'yes', '');
 		}
+
+
 		if (strpos(strtolower('current'), strtolower($query)) !== false) {
 			$w->result(null, serialize(array(
 						'' /*track_uri*/ ,

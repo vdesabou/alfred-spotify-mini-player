@@ -81,6 +81,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 	(startsWith($other_action, 'set_playlist_privacy_to_') || $other_action == "play_track_from_play_queue" || $other_action == ""
 		||  ($other_action == "play_track_in_album_context" && $add_to_option != "")
 		||  ($other_action == "play" && $add_to_option != "")
+		||  ($other_action == "playpause" && $add_to_option != "")
 		||  ($other_action == "pause" && $add_to_option != "")  )) {
 	if ($track_uri != "") {
 		if ($add_to_option != "") {
@@ -765,6 +766,18 @@ if ($type == "TRACK" && $other_settings == "" &&
 					invokeMopidyMethod($w, "core.playback.pause", array());
 				} else {
 					exec("osascript -e 'tell application \"Spotify\" to pause'");
+				}
+				return;
+			} else if ($other_action == "playpause") {
+				if ($use_mopidy) {
+					$state = invokeMopidyMethod($w, "core.playback.get_state", array());
+					if($state == 'playing') {
+						invokeMopidyMethod($w, "core.playback.pause", array());
+					} else {
+						invokeMopidyMethod($w, "core.playback.resume", array());
+					}
+				} else {
+					exec("osascript -e 'tell application \"Spotify\" to playpause'");
 				}
 				return;
 			} else if ($other_action == "kill_update") {
