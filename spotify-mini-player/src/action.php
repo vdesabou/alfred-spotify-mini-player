@@ -997,6 +997,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 				}
 				return;
 			} else if ($other_action == "playartist") {
+				$artist_artwork_path = getArtistArtwork($w, $artist_name, true);
 				$mopidy_arg = "";
 				if ($use_mopidy) {
 					$mopidy_arg = "MOPIDY";
@@ -1029,6 +1030,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 						return;
 					}
 				}
+				$album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, true);
 				$mopidy_arg = "";
 				if ($use_mopidy) {
 					$mopidy_arg = "MOPIDY";
