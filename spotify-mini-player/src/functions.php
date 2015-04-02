@@ -2064,7 +2064,7 @@ function getThePlaylistTracks($w, $playlist_uri) {
 			$userPlaylistTracks = $api->getUserPlaylistTracks(urlencode($tmp[2]), $tmp[4], array(
 					'fields' => array(
 						'total',
-						'items.track(id,is_playable)',
+						'items.track(id,is_playable,linked_from)',
 						'items(is_local)'
 					),
 					'limit' => $limitGetUserPlaylistTracks,
@@ -2075,6 +2075,9 @@ function getThePlaylistTracks($w, $playlist_uri) {
 			foreach ($userPlaylistTracks->items as $item) {
 				$track    = $item->track;
 				if (isset($track->is_playable) && $track->is_playable) {
+					if(isset($track->linked_from) && isset($track->linked_from->id)) {
+						$track->id = $track->linked_from->id;
+					}
 					$tracks[] = $track->id;
 				}
 				if (isset($item->is_local) && $item->is_local) {
@@ -2297,7 +2300,7 @@ function getThePlaylistFullTracks($w, $playlist_uri) {
 						'total',
 						'items(added_at)',
 						'items(is_local)',
-						'items.track(is_playable,duration_ms,uri,popularity,name)',
+						'items.track(is_playable,duration_ms,uri,popularity,name,linked_from)',
 						'items.track.album(album_type,images,uri,name)',
 						'items.track.artists(name,uri)'
 					),
@@ -3739,7 +3742,7 @@ function updateLibrary($w) {
 								'total',
 								'items(added_at)',
 								'items(is_local)',
-								'items.track(is_playable,duration_ms,uri,popularity,name)',
+								'items.track(is_playable,duration_ms,uri,popularity,name,linked_from)',
 								'items.track.album(album_type,images,uri,name)',
 								'items.track.artists(name,uri)'
 							),
@@ -3780,6 +3783,9 @@ function updateLibrary($w) {
 				$local_track = 0;
 				if (isset($track->is_playable) && $track->is_playable) {
 					$playable = 1;
+					if(isset($track->linked_from) && isset($track->linked_from->uri)) {
+						$track->uri = $track->linked_from->uri;
+					}
 				}
 				if (isset($item->is_local) && $item->is_local) {
 					$playable = 1;
@@ -3909,6 +3915,9 @@ function updateLibrary($w) {
 		$local_track = 0;
 		if (isset($track->is_playable) && $track->is_playable) {
 			$playable = 1;
+			if(isset($track->linked_from) && isset($track->linked_from->uri)) {
+				$track->uri = $track->linked_from->uri;
+			}
 		}
 		if (isset($item->is_local) && $item->is_local) {
 			$playable = 1;
@@ -4336,7 +4345,7 @@ function refreshLibrary($w) {
 									'total',
 									'items(added_at)',
 									'items(is_local)',
-									'items.track(is_playable,duration_ms,uri,popularity,name)',
+									'items.track(is_playable,duration_ms,uri,popularity,name,linked_from)',
 									'items.track.album(album_type,images,uri,name)',
 									'items.track.artists(name,uri)'
 								),
@@ -4377,6 +4386,9 @@ function refreshLibrary($w) {
 					$local_track = 0;
 					if (isset($track->is_playable) && $track->is_playable) {
 						$playable = 1;
+						if(isset($track->linked_from) && isset($track->linked_from->uri)) {
+							$track->uri = $track->linked_from->uri;
+						}
 					}
 					if (isset($item->is_local) && $item->is_local) {
 						$playable = 1;
@@ -4540,7 +4552,7 @@ function refreshLibrary($w) {
 										'total',
 										'items(added_at)',
 										'items(is_local)',
-										'items.track(is_playable,duration_ms,uri,popularity,name)',
+										'items.track(is_playable,duration_ms,uri,popularity,name,linked_from)',
 										'items.track.album(album_type,images,uri,name)',
 										'items.track.artists(name,uri)'
 									),
@@ -4581,6 +4593,9 @@ function refreshLibrary($w) {
 						$local_track = 0;
 						if (isset($track->is_playable) && $track->is_playable) {
 							$playable = 1;
+							if(isset($track->linked_from) && isset($track->linked_from->uri)) {
+								$track->uri = $track->linked_from->uri;
+							}
 						}
 						if (isset($item->is_local) && $item->is_local) {
 							$playable = 1;
@@ -4848,6 +4863,9 @@ function refreshLibrary($w) {
 				$local_track = 0;
 				if (isset($track->is_playable) && $track->is_playable) {
 					$playable = 1;
+					if(isset($track->linked_from) && isset($track->linked_from->uri)) {
+						$track->uri = $track->linked_from->uri;
+					}
 				}
 				if (isset($item->is_local) && $item->is_local) {
 					$playable = 1;
