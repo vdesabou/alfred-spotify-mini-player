@@ -2660,7 +2660,7 @@ function getNumberOfTracksForArtist($db, $artist_uri, $yourmusiconly = false) {
  */
 function escapeQuery($text) {
 	$text = str_replace("'", "’", $text);
-	$text = str_replace('"', "’", $text);
+	$text = str_replace('"', "", $text);
 	$text = str_replace("&apos;", "’", $text);
 	$text = str_replace("`", "’", $text);
 	$text = str_replace("&amp;", "and", $text);
