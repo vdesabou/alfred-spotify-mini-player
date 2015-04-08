@@ -4534,12 +4534,11 @@ function refreshLibrary($w) {
 					return;
 				}
 
-				$tmp = explode(':', $playlist->uri);
-
 				$duration_playlist           = 0;
 				$nb_track_playlist           = 0;
 				$offsetGetUserPlaylistTracks = 0;
 				$limitGetUserPlaylistTracks  = 100;
+				$owner  					 = $playlist->owner;
 				do {
 					$retry = true;
 					$nb_retry = 0;
@@ -4547,7 +4546,7 @@ function refreshLibrary($w) {
 						try {
 							// refresh api
 							$api                = getSpotifyWebAPI($w, $api);
-							$userPlaylistTracks = $api->getUserPlaylistTracks(urlencode($tmp[2]), $tmp[4], array(
+							$userPlaylistTracks = $api->getUserPlaylistTracks(urlencode($owner->id), $playlist->id, array(
 									'fields' => array(
 										'total',
 										'items(added_at)',
