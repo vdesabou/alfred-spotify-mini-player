@@ -2061,7 +2061,7 @@ function getThePlaylistTracks($w, $playlist_uri) {
 		do {
 			// refresh api
 			$api                = getSpotifyWebAPI($w, $api);
-			$userPlaylistTracks = $api->getUserPlaylistTracks(urlencode($tmp[2]), $tmp[4], array(
+			$userPlaylistTracks = $api->getUserPlaylistTracks($tmp[2], $tmp[4], array(
 					'fields' => array(
 						'total',
 						'items.track(id,is_playable,linked_from)',
@@ -2295,7 +2295,7 @@ function getThePlaylistFullTracks($w, $playlist_uri) {
 		do {
 			// refresh api
 			$api                = getSpotifyWebAPI($w, $api);
-			$userPlaylistTracks = $api->getUserPlaylistTracks(urlencode($tmp[2]), $tmp[4], array(
+			$userPlaylistTracks = $api->getUserPlaylistTracks($tmp[2], $tmp[4], array(
 					'fields' => array(
 						'total',
 						'items(added_at)',
