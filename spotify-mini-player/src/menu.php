@@ -5130,7 +5130,7 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
 		do {
 			// refresh api
 			$api                = getSpotifyWebAPI($w, false, $api);
-			$userPlaylistTracks = $api->getUserPlaylistTracks(urlencode($owner_id), $playlist_id, array(
+			$userPlaylistTracks = $api->getUserPlaylistTracks($owner_id, $playlist_id, array(
 					'fields' => array(
 						'total',
 						'items(added_at)',
