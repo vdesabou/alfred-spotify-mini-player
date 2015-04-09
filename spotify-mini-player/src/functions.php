@@ -3262,6 +3262,7 @@ function getCategoryArtwork($w, $categoryId, $categoryURI, $fetchIfNotPresent, $
  * @return void
  */
 function getArtistArtwork($w, $artist, $fetchIfNotPresent = false, $fetchLater = false, $isLaterFetch = false) {
+	$artist = cleanupArtistName($artist);
 	$parsedArtist = urlencode(escapeQuery($artist));
 
 	if (!file_exists($w->data() . "/artwork")):
@@ -5220,9 +5221,14 @@ function mb_unserialize($string) {
 }
 
 
+
 /**
+ * cleanupTrackName function.
  *
- * */
+ * @access public
+ * @param mixed $track_name
+ * @return void
+ */
 function cleanupTrackName($track_name) {
 	return str_ireplace(array(
 			'acoustic version',
@@ -5268,6 +5274,33 @@ function cleanupTrackName($track_name) {
 }
 
 
+/**
+ * cleanupArtistName function.
+ *
+ * @access public
+ * @param mixed $artist_name
+ * @return void
+ */
+function cleanupArtistName($artist_name) {
+	$query_artist = $artist_name;
+	if (stristr($query_artist, 'feat.')) {
+		$query_artist = stristr($query_artist, 'feat.', true);
+	} elseif (stristr($query_artist, 'featuring')) {
+		$query_artist = stristr($query_artist, 'featuring', true);
+	} elseif (stristr($query_artist, ' & ')) {
+		$query_artist = stristr($query_artist, ' & ', true);
+	}
+
+	$query_artist = str_replace('&', 'and', $query_artist);
+	$query_artist = str_replace('$', 's', $query_artist);
+	$query_artist = strip_string(trim($query_artist));
+	$query_artist = str_replace(' - ', '-', $query_artist);
+	//$query_artist = str_replace(' ', '-', $query_artist);
+
+	return $query_artist;
+}
+
+
 /*
 
 This function was mostly taken from SpotCommander.
@@ -5298,23 +5331,9 @@ Copyright 2013 Ole Jon Bjørkum
 function getLyrics($w, $artist, $title) {
 	$query_artist = $artist;
 	$query_title  = $title;
-	if (stristr($query_artist, 'feat.')) {
-		$query_artist = stristr($query_artist, 'feat.', true);
-	} elseif (stristr($query_artist, 'featuring')) {
-		$query_artist = stristr($query_artist, 'featuring', true);
-	} elseif (stristr($query_title, ' con ')) {
-		$query_title = stristr($query_title, ' con ', true);
-	} elseif (stristr($query_artist, ' & ')) {
-		$query_artist = stristr($query_artist, ' & ', true);
-	}
 
-	$query_artist = str_replace('&', 'and', $query_artist);
-	$query_artist = str_replace('$', 's', $query_artist);
-	$query_artist = strip_string(trim($query_artist));
-	$query_artist = str_replace(' - ', '-', $query_artist);
-	$query_artist = str_replace(' ', '-', $query_artist);
-
-	$query_title = cleanupTrackName($query_title);
+	$query_artist = cleanupArtistName($query_artist);
+	$query_title  = cleanupTrackName($query_title);
 
 	if (stristr($query_title, 'feat.')) {
 		$query_title = stristr($query_title, 'feat.', true);
