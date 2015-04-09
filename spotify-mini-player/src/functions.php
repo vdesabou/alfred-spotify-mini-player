@@ -2668,6 +2668,9 @@ function escapeQuery($text) {
 	$text = str_replace("\\", " ", $text);
 	$text = str_replace("$", "\\$", $text);
 
+	if(startswith($text, "’")) {
+		$text = ltrim ($text, "’");
+	}
 	return $text;
 }
 
