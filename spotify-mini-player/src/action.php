@@ -296,7 +296,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 					displayNotificationWithArtwork("Cannot get current artist", './images/warning.png', 'Error!');
 					return;
 				}
-				$artist_artwork_path = getArtistArtwork($w, $artist_name, true);
+				$artist_artwork_path = getArtistArtwork($w, $artist_uri, $artist_name, true);
 			}
 			$mopidy_arg = "";
 			if ($use_mopidy) {
@@ -997,7 +997,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 				}
 				return;
 			} else if ($other_action == "playartist") {
-				$artist_artwork_path = getArtistArtwork($w, $artist_name, true);
+				$artist_artwork_path = getArtistArtwork($w, $artist_uri, $artist_name, true);
 				$mopidy_arg = "";
 				if ($use_mopidy) {
 					$mopidy_arg = "MOPIDY";

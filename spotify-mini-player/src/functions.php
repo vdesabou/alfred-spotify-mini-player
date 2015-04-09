@@ -920,7 +920,7 @@ function playCurrentArtist($w) {
 			exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
 			addArtistToPlayQueue($w, $artist_uri, escapeQuery($results[1]), $country_code);
 		}
-		displayNotificationWithArtwork('🔈 Artist ' . escapeQuery($results[1]), getArtistArtwork($w, $results[1], true), 'Play Current Artist');
+		displayNotificationWithArtwork('🔈 Artist ' . escapeQuery($results[1]), getArtistArtwork($w, $artist_uri, $results[1], true), 'Play Current Artist');
 	} else {
 		displayNotificationWithArtwork("No artist is playing", './images/warning.png');
 	}
@@ -2876,10 +2876,10 @@ function downloadArtworks($w) {
 				displayNotificationWithArtwork("Start downloading " . $nb_artworks_total . " artworks", './images/artworks.png', 'Artworks');
 
 				// artists
-				$getArtists     = "select artist_name from artists where already_fetched=0";
+				$getArtists     = "select artist_uri,artist_name from artists where already_fetched=0";
 				$stmtGetArtists = $dbartworks->prepare($getArtists);
 
-				$updateArtist     = "update artists set already_fetched=1 where artist_name=:artist_name";
+				$updateArtist     = "update artists set already_fetched=1 where artist_uri=:artist_uri";
 				$stmtUpdateArtist = $dbartworks->prepare($updateArtist);
 
 				// tracks
@@ -2902,16 +2902,16 @@ function downloadArtworks($w) {
 				$artists = $stmtGetArtists->execute();
 
 				while ($artist = $stmtGetArtists->fetch()) {
-					$ret = getArtistArtwork($w, $artist[0], true, false, true);
+					$ret = getArtistArtwork($w, $artist[0], $artist[1], true, false, true);
 					if ($ret == false) {
-						logMsg("WARN: $artist[0] artwork not found, using default");
+						logMsg("WARN: $artist[0] $artist[1] artwork not found, using default");
 					} elseif (!is_string($ret)) {
-						//logMsg("INFO: $artist[0] artwork was fetched ");
+						//logMsg("INFO: $artist[0] $artist[1] artwork was fetched ");
 					} elseif (is_string($ret)) {
-						//logMsg("INFO: $artist[0] artwork was already there $ret ");
+						//logMsg("INFO: $artist[0] $artist[1] artwork was already there $ret ");
 					}
 
-					$stmtUpdateArtist->bindValue(':artist_name', $artist[0]);
+					$stmtUpdateArtist->bindValue(':artist_uri', $artist[0]);
 					$stmtUpdateArtist->execute();
 
 					$nb_artworks++;
@@ -3252,24 +3252,37 @@ function getCategoryArtwork($w, $categoryId, $categoryURI, $fetchIfNotPresent, $
 }
 
 
+
 /**
  * getArtistArtwork function.
  *
  * @access public
  * @param mixed $w
- * @param mixed $artist
- * @param mixed $fetchIfNotPresent
+ * @param mixed $artist_uri
+ * @param mixed $artist_name
+ * @param bool $fetchIfNotPresent (default: false)
+ * @param bool $fetchLater (default: false)
+ * @param bool $isLaterFetch (default: false)
  * @return void
  */
-function getArtistArtwork($w, $artist, $fetchIfNotPresent = false, $fetchLater = false, $isLaterFetch = false) {
-	$artist = cleanupArtistName($artist);
-	$parsedArtist = urlencode(escapeQuery($artist));
+function getArtistArtwork($w, $artist_uri, $artist_name, $fetchIfNotPresent = false, $fetchLater = false, $isLaterFetch = false) {
+	$parsedArtist = urlencode(escapeQuery($artist_name));
 
 	if (!file_exists($w->data() . "/artwork")):
 		exec("mkdir '" . $w->data() . "/artwork'");
 	endif;
 
+	// remove legacy png files
 	$currentArtwork = $w->data() . "/artwork/" . hash('md5', $parsedArtist . ".png") . "/" . "$parsedArtist.png";
+	if (file_exists($currentArtwork)) {
+		logMsg("DEBUG: removing " . $artist_name . " path: " . $w->data() . "/artwork/" . hash('md5', $parsedArtist . ".png"));
+		removeDirectory($w->data() . "/artwork/" . hash('md5', $parsedArtist . ".png"));
+	}
+
+	$tmp  = explode(':', $artist_uri);
+	$artist_uri = $tmp[2];
+	$currentArtwork = $w->data() . "/artwork/" . hash('md5', $artist_uri) . "/" . "$artist_uri.jpg";
+
 	$artwork        = "";
 
 	//
@@ -3291,12 +3304,12 @@ function getArtistArtwork($w, $artist, $fetchIfNotPresent = false, $fetchLater =
 
 	if (!is_file($currentArtwork) || (is_file($currentArtwork) && filesize($currentArtwork) == 0)) {
 		if ($fetchIfNotPresent == true || (is_file($currentArtwork) && filesize($currentArtwork) == 0)) {
-			$artwork = getArtistArtworkURL($w, $artist);
+			$artwork = getArtistArtworkURL($w, $artist_uri);
 
 			// if return 0, it is a 404 error, no need to fetch
 			if (!empty($artwork) || (is_numeric($artwork) && $artwork != 0)) {
-				if (!file_exists($w->data() . "/artwork/" . hash('md5', $parsedArtist . ".png"))):
-					exec("mkdir '" . $w->data() . "/artwork/" . hash('md5', $parsedArtist . ".png") . "'");
+				if (!file_exists($w->data() . "/artwork/" . hash('md5', $artist_uri))):
+					exec("mkdir '" . $w->data() . "/artwork/" . hash('md5', $artist_uri) . "'");
 				endif;
 				$fp      = fopen($currentArtwork, 'w+');
 				$options = array(
@@ -3309,8 +3322,8 @@ function getArtistArtwork($w, $artist, $fetchIfNotPresent = false, $fetchLater =
 				}
 			} else {
 				if ($isLaterFetch == true) {
-					if (!file_exists($w->data() . "/artwork/" . hash('md5', $parsedArtist . ".png"))):
-						exec("mkdir '" . $w->data() . "/artwork/" . hash('md5', $parsedArtist . ".png") . "'");
+					if (!file_exists($w->data() . "/artwork/" . hash('md5', $artist_uri))):
+						exec("mkdir '" . $w->data() . "/artwork/" . hash('md5', $artist_uri) . "'");
 					endif;
 					copy('./images/artists.png', $currentArtwork);
 
@@ -3321,8 +3334,8 @@ function getArtistArtwork($w, $artist, $fetchIfNotPresent = false, $fetchLater =
 			}
 		} else {
 			if ($isLaterFetch == true) {
-				if (!file_exists($w->data() . "/artwork/" . hash('md5', $parsedArtist . ".png"))):
-					exec("mkdir '" . $w->data() . "/artwork/" . hash('md5', $parsedArtist . ".png") . "'");
+				if (!file_exists($w->data() . "/artwork/" . hash('md5', $artist_uri))):
+					exec("mkdir '" . $w->data() . "/artwork/" . hash('md5', $artist_uri) . "'");
 				endif;
 				copy('./images/artists.png', $currentArtwork);
 
@@ -3334,8 +3347,8 @@ function getArtistArtwork($w, $artist, $fetchIfNotPresent = false, $fetchLater =
 	} else {
 		if (filesize($currentArtwork) == 0) {
 			if ($isLaterFetch == true) {
-				if (!file_exists($w->data() . "/artwork/" . hash('md5', $parsedArtist . ".png"))):
-					exec("mkdir '" . $w->data() . "/artwork/" . hash('md5', $parsedArtist . ".png") . "'");
+				if (!file_exists($w->data() . "/artwork/" . hash('md5', $artist_uri))):
+					exec("mkdir '" . $w->data() . "/artwork/" . hash('md5', $artist_uri) . "'");
 				endif;
 				copy('./images/artists.png', $currentArtwork);
 
@@ -3348,8 +3361,8 @@ function getArtistArtwork($w, $artist, $fetchIfNotPresent = false, $fetchLater =
 
 	if (is_numeric($artwork) && $artwork == 0) {
 		if ($isLaterFetch == true) {
-			if (!file_exists($w->data() . "/artwork/" . hash('md5', $parsedArtist . ".png"))):
-				exec("mkdir '" . $w->data() . "/artwork/" . hash('md5', $parsedArtist . ".png") . "'");
+			if (!file_exists($w->data() . "/artwork/" . hash('md5', $artist_uri))):
+				exec("mkdir '" . $w->data() . "/artwork/" . hash('md5', $artist_uri) . "'");
 			endif;
 			copy('./images/artists.png', $currentArtwork);
 
@@ -3420,23 +3433,23 @@ function getPlaylistArtworkURL($w, $url) {
  *
  * @access public
  * @param mixed $w
- * @param mixed $artist
+ * @param mixed $artist_id
  * @return void
  */
-function getArtistArtworkURL($w, $artist) {
-	$options = array(
-		CURLOPT_TIMEOUT => 5
-	);
-
-	$parsedArtist = urlencode($artist);
-	$html         = $w->request("http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&api_key=49d58890a60114e8fdfc63cbcf75d6c5&artist=$parsedArtist&format=json", $options);
-	$json         = json_decode($html, true);
-	// make more resilient to empty json responses
-	if (!is_array($json) || empty($json['artist']['image'][1]['#text'])) {
-		return '';
+function getArtistArtworkURL($w, $artist_id) {
+	$url = "";
+	try {
+		$api     = getSpotifyWebAPI($w);
+		$artist  = $api->getArtist($artist_id);
 	}
-
-	return $json['artist']['image'][1]['#text'];
+	catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+		echo "Error(getArtistArtworkURL): (exception " . print_r($e) . ")";
+		return $url;
+	}
+	if(isset($artist->images) && isset($artist->images[0]) && isset($artist->images[0]->url)) {
+		$url = $artist->images[0]->url;
+	}
+	return $url;
 }
 
 
@@ -3540,7 +3553,7 @@ function updateLibrary($w) {
 
 	// DB artowrks
 	try {
-		$dbartworks->exec("create table artists (artist_name text PRIMARY KEY NOT NULL, already_fetched boolean)");
+		$dbartworks->exec("create table artists (artist_uri text PRIMARY KEY NOT NULL, artist_name text, already_fetched boolean)");
 		$dbartworks->exec("create table tracks (track_uri text PRIMARY KEY NOT NULL, already_fetched boolean)");
 		$dbartworks->exec("create table albums (album_uri text PRIMARY KEY NOT NULL, already_fetched boolean)");
 	}
@@ -3689,7 +3702,7 @@ function updateLibrary($w) {
 
 	try {
 		// artworks
-		$insertArtistArtwork = "insert or ignore into artists values (:artist_name,:already_fetched)";
+		$insertArtistArtwork = "insert or ignore into artists values (:artist_uri, :artist_name,:already_fetched)";
 		$stmtArtistArtwork   = $dbartworks->prepare($insertArtistArtwork);
 
 		$insertTrackArtwork = "insert or ignore into tracks values (:track_uri,:already_fetched)";
@@ -3811,9 +3824,10 @@ function updateLibrary($w) {
 					if (isset($artist->name)) {
 						$theartistname = $artist->name;
 					}
-					list($already_present, $artist_artwork_path) = getArtistArtwork($w, $theartistname, true, true);
+					list($already_present, $artist_artwork_path) = getArtistArtwork($w, $artist->uri , $theartistname, true, true);
 					if ($already_present == false) {
 						$artworksToDownload = true;
+						$stmtArtistArtwork->bindValue(':artist_uri', $artist->uri);
 						$stmtArtistArtwork->bindValue(':artist_name', $theartistname);
 						$stmtArtistArtwork->bindValue(':already_fetched', 0);
 						$stmtArtistArtwork->execute();
@@ -3943,9 +3957,10 @@ function updateLibrary($w) {
 			if (isset($artist->name)) {
 				$theartistname = $artist->name;
 			}
-			list($already_present, $artist_artwork_path) = getArtistArtwork($w, $theartistname, true, true);
+			list($already_present, $artist_artwork_path) = getArtistArtwork($w, $artist->uri, $theartistname, true, true);
 			if ($already_present == false) {
 				$artworksToDownload = true;
+				$stmtArtistArtwork->bindValue(':artist_uri', $artist->uri);
 				$stmtArtistArtwork->bindValue(':artist_name', $theartistname);
 				$stmtArtistArtwork->bindValue(':already_fetched', 0);
 				$stmtArtistArtwork->execute();
@@ -4166,7 +4181,7 @@ function refreshLibrary($w) {
 	// DB artowrks
 	if ($fetch_artworks_existed == false) {
 		try {
-			$dbartworks->exec("create table artists (artist_name text PRIMARY KEY NOT NULL, already_fetched boolean)");
+			$dbartworks->exec("create table artists (artist_uri text PRIMARY KEY NOT NULL, artist_name text, already_fetched boolean)");
 			$dbartworks->exec("create table tracks (track_uri text PRIMARY KEY NOT NULL, already_fetched boolean)");
 			$dbartworks->exec("create table albums (album_uri text PRIMARY KEY NOT NULL, already_fetched boolean)");
 		}
@@ -4182,7 +4197,7 @@ function refreshLibrary($w) {
 
 	try {
 		// artworks
-		$insertArtistArtwork = "insert or ignore into artists values (:artist_name,:already_fetched)";
+		$insertArtistArtwork = "insert or ignore into artists values (:artist_uri,:artist_name,:already_fetched)";
 		$stmtArtistArtwork   = $dbartworks->prepare($insertArtistArtwork);
 
 		$insertTrackArtwork = "insert or ignore into tracks values (:track_uri,:already_fetched)";
@@ -4414,9 +4429,10 @@ function refreshLibrary($w) {
 						if (isset($artist->name)) {
 							$theartistname = $artist->name;
 						}
-						list($already_present, $artist_artwork_path) = getArtistArtwork($w, $theartistname, true, true);
+						list($already_present, $artist_artwork_path) = getArtistArtwork($w, $artist->uri, $theartistname, true, true);
 						if ($already_present == false) {
 							$artworksToDownload = true;
+							$stmtArtistArtwork->bindValue(':artist_uri', $artist->uri);
 							$stmtArtistArtwork->bindValue(':artist_name', $theartistname);
 							$stmtArtistArtwork->bindValue(':already_fetched', 0);
 							$stmtArtistArtwork->execute();
@@ -4621,9 +4637,10 @@ function refreshLibrary($w) {
 							if (isset($artist->name)) {
 								$theartistname = $artist->name;
 							}
-							list($already_present, $artist_artwork_path) = getArtistArtwork($w, $theartistname, true, true);
+							list($already_present, $artist_artwork_path) = getArtistArtwork($w, $artist->uri, $theartistname, true, true);
 							if ($already_present == false) {
 								$artworksToDownload = true;
+								$stmtArtistArtwork->bindValue(':artist_uri', $artist->uri);
 								$stmtArtistArtwork->bindValue(':artist_name', $theartistname);
 								$stmtArtistArtwork->bindValue(':already_fetched', 0);
 								$stmtArtistArtwork->execute();
@@ -4891,9 +4908,10 @@ function refreshLibrary($w) {
 					if (isset($artist->name)) {
 						$theartistname = $artist->name;
 					}
-					list($already_present, $artist_artwork_path) = getArtistArtwork($w, $theartistname, true, true);
+					list($already_present, $artist_artwork_path) = getArtistArtwork($w, $artist->uri, $theartistname, true, true);
 					if ($already_present == false) {
 						$artworksToDownload = true;
+						$stmtArtistArtwork->bindValue(':artist_uri', $artist->uri);
 						$stmtArtistArtwork->bindValue(':artist_name', $theartistname);
 						$stmtArtistArtwork->bindValue(':already_fetched', 0);
 						$stmtArtistArtwork->execute();
@@ -5839,14 +5857,14 @@ function logMsg($msg) {
 
 
 /**
- * copy_directory function.
+ * copyDirectory function.
  *
  * @access public
  * @param mixed $source
  * @param mixed $destination
  * @return void
  */
-function copy_directory($source, $destination) {
+function copyDirectory($source, $destination) {
 	if (is_dir($source)) {
 		@mkdir($destination);
 		$directory = dir($source);
@@ -5856,7 +5874,7 @@ function copy_directory($source, $destination) {
 			}
 			$PathDir = $source . '/' . $readdirectory;
 			if (is_dir($PathDir)) {
-				copy_directory($PathDir, $destination . '/' . $readdirectory);
+				copyDirectory($PathDir, $destination . '/' . $readdirectory);
 				continue;
 			}
 			copy($PathDir, $destination . '/' . $readdirectory);
@@ -5866,6 +5884,35 @@ function copy_directory($source, $destination) {
 	} else {
 		copy($source, $destination);
 	}
+}
+
+/**
+ * removeDirectory function.
+ *
+ * @access public
+ * @param mixed $path
+ * @return void
+ */
+function removeDirectory($path)
+{
+    if (is_dir($path) === true)
+    {
+        $files = array_diff(scandir($path), array('.', '..'));
+
+        foreach ($files as $file)
+        {
+            removeDirectory(realpath($path) . '/' . $file);
+        }
+
+        return rmdir($path);
+    }
+
+    else if (is_file($path) === true)
+    {
+        return unlink($path);
+    }
+
+    return false;
 }
 
 
