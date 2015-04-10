@@ -3275,12 +3275,14 @@ function getArtistArtwork($w, $artist_uri, $artist_name, $fetchIfNotPresent = fa
 	// remove legacy png files
 	$currentArtwork = $w->data() . "/artwork/" . hash('md5', $parsedArtist . ".png") . "/" . "$parsedArtist.png";
 	if (file_exists($currentArtwork)) {
-		logMsg("DEBUG: removing " . $artist_name . " path: " . $w->data() . "/artwork/" . hash('md5', $parsedArtist . ".png"));
+		//logMsg("DEBUG: removing " . $artist_name . " path: " . $w->data() . "/artwork/" . hash('md5', $parsedArtist . ".png"));
 		removeDirectory($w->data() . "/artwork/" . hash('md5', $parsedArtist . ".png"));
 	}
 
 	$tmp  = explode(':', $artist_uri);
-	$artist_uri = $tmp[2];
+	if(isset($tmp[2])) {
+		$artist_uri = $tmp[2];
+	}
 	$currentArtwork = $w->data() . "/artwork/" . hash('md5', $artist_uri) . "/" . "$artist_uri.jpg";
 
 	$artwork        = "";
