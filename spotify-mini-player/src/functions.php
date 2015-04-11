@@ -3373,6 +3373,9 @@ function getArtistArtwork($w, $artist_uri, $artist_name, $fetchIfNotPresent = fa
 function getArtworkURL($w, $type, $id) {
 	$url = "";
 
+	if(startswith($id, 'fake')) {
+		return $url;
+	}
 	if($type == 'track') {
 		try {
 			$api     = getSpotifyWebAPI($w);
@@ -3485,6 +3488,9 @@ function getPlaylistArtworkURL($w, $playlist_uri) {
  */
 function getArtistArtworkURL($w, $artist_id) {
 	$url = "";
+	if(startswith($artist_id, 'fake')) {
+		return $url;
+	}
 	try {
 		$api     = getSpotifyWebAPI($w);
 		$artist  = $api->getArtist($artist_id);
@@ -3886,7 +3892,11 @@ function updateLibrary($w) {
 					if (isset($artist->name)) {
 						$theartistname = $artist->name;
 					}
-					list($already_present, $artist_artwork_path) = getArtistArtwork($w, $artist->uri , $theartistname, true, true);
+					$theartisturi = 'spotify:artist:fakeartisturi';
+					if (isset($artist->uri)) {
+						$theartisturi = $artist->uri;
+					}
+					list($already_present, $artist_artwork_path) = getArtistArtwork($w, $theartisturi , $theartistname, true, true);
 					if ($already_present == false) {
 						$artworksToDownload = true;
 						$stmtArtistArtwork->bindValue(':artist_uri', $artist->uri);
@@ -4019,7 +4029,11 @@ function updateLibrary($w) {
 			if (isset($artist->name)) {
 				$theartistname = $artist->name;
 			}
-			list($already_present, $artist_artwork_path) = getArtistArtwork($w, $artist->uri, $theartistname, true, true);
+			$theartisturi = 'spotify:artist:fakeartisturi';
+			if (isset($artist->uri)) {
+				$theartisturi = $artist->uri;
+			}
+			list($already_present, $artist_artwork_path) = getArtistArtwork($w, $theartisturi , $theartistname, true, true);
 			if ($already_present == false) {
 				$artworksToDownload = true;
 				$stmtArtistArtwork->bindValue(':artist_uri', $artist->uri);
@@ -4491,7 +4505,11 @@ function refreshLibrary($w) {
 						if (isset($artist->name)) {
 							$theartistname = $artist->name;
 						}
-						list($already_present, $artist_artwork_path) = getArtistArtwork($w, $artist->uri, $theartistname, true, true);
+						$theartisturi = 'spotify:artist:fakeartisturi';
+						if (isset($artist->uri)) {
+							$theartisturi = $artist->uri;
+						}
+						list($already_present, $artist_artwork_path) = getArtistArtwork($w, $theartisturi , $theartistname, true, true);
 						if ($already_present == false) {
 							$artworksToDownload = true;
 							$stmtArtistArtwork->bindValue(':artist_uri', $artist->uri);
@@ -4699,7 +4717,11 @@ function refreshLibrary($w) {
 							if (isset($artist->name)) {
 								$theartistname = $artist->name;
 							}
-							list($already_present, $artist_artwork_path) = getArtistArtwork($w, $artist->uri, $theartistname, true, true);
+							$theartisturi = 'spotify:artist:fakeartisturi';
+							if (isset($artist->uri)) {
+								$theartisturi = $artist->uri;
+							}
+							list($already_present, $artist_artwork_path) = getArtistArtwork($w, $theartisturi , $theartistname, true, true);
 							if ($already_present == false) {
 								$artworksToDownload = true;
 								$stmtArtistArtwork->bindValue(':artist_uri', $artist->uri);
@@ -4970,7 +4992,11 @@ function refreshLibrary($w) {
 					if (isset($artist->name)) {
 						$theartistname = $artist->name;
 					}
-					list($already_present, $artist_artwork_path) = getArtistArtwork($w, $artist->uri, $theartistname, true, true);
+					$theartisturi = 'spotify:artist:fakeartisturi';
+					if (isset($artist->uri)) {
+						$theartisturi = $artist->uri;
+					}
+					list($already_present, $artist_artwork_path) = getArtistArtwork($w, $theartisturi , $theartistname, true, true);
 					if ($already_present == false) {
 						$artworksToDownload = true;
 						$stmtArtistArtwork->bindValue(':artist_uri', $artist->uri);
