@@ -316,13 +316,12 @@ function unfollowThePlaylist($w, $playlist_uri) {
 	try {
 		$tmp                         = explode(':', $playlist_uri);
 		$api    = getSpotifyWebAPI($w);
-		$ret = $api->unfollowPlaylist(urlencode($tmp[2]), $tmp[4]);
+		$ret = $api->unfollowPlaylist($tmp[2], $tmp[4]);
 		if ($ret == true) {
 			// refresh library
 			refreshLibrary($w);
 		}
 	}
-
 
 	catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 		logMsg("Error(unfollowPlaylist): (exception " . print_r($e) . ")");
@@ -3148,33 +3147,25 @@ function getTrackOrAlbumArtwork($w, $spotifyURL, $fetchIfNotPresent, $fetchLater
  *
  * @access public
  * @param mixed $w
- * @param mixed $playlistURI
+ * @param mixed $playlist_uri
  * @param mixed $fetchIfNotPresent
  * @param bool $forceFetch (default: false)
  * @return void
  */
-function getPlaylistArtwork($w, $playlistURI, $fetchIfNotPresent, $forceFetch = false) {
-	$hrefs = explode(':', $playlistURI);
+function getPlaylistArtwork($w, $playlist_uri, $fetchIfNotPresent, $forceFetch = false) {
+	$tmp                         = explode(':', $playlist_uri);
+	$filename = "" . $tmp[2] . "_" . $tmp[4];
 	$artwork = '';
 
 	if (!file_exists($w->data() . "/artwork")):
 		exec("mkdir '" . $w->data() . "/artwork'");
 	endif;
 
-	if (count($hrefs) == 5) {
-		$filename = "" . $hrefs[2] . "_" . $hrefs[4];
-		$url      = "http://open.spotify.com/user/" . $hrefs[2] . "/playlist/" . $hrefs[4];
-	} else {
-		//starred playlist
-		$filename = "" . $hrefs[2] . "_" . $hrefs[3];
-		$url      = "http://open.spotify.com/user/" . $hrefs[2] . "/" . $hrefs[3];
-	}
-
 	$currentArtwork = $w->data() . "/artwork/" . hash('md5', $filename . ".png") . "/" . "$filename.png";
 
 	if (!is_file($currentArtwork) || (is_file($currentArtwork) && filesize($currentArtwork) == 0) || $forceFetch) {
 		if ($fetchIfNotPresent == true || (is_file($currentArtwork) && filesize($currentArtwork) == 0) || $forceFetch) {
-			$artwork = getPlaylistArtworkURL($w, $url);
+			$artwork = getPlaylistArtworkURL($w, $playlist_uri);
 
 			// if return 0, it is a 404 error, no need to fetch
 			if (!empty($artwork) || (is_numeric($artwork) && $artwork != 0)) {
@@ -3380,20 +3371,63 @@ function getArtistArtwork($w, $artist_uri, $artist_name, $fetchIfNotPresent = fa
  * @return void
  */
 function getArtworkURL($w, $type, $id) {
-	$options = array(
-		CURLOPT_FOLLOWLOCATION => 1,
-		CURLOPT_TIMEOUT => 5
-	);
+	$url = "";
 
-	$html = $w->request("http://open.spotify.com/$type/$id", $options);
+	if($type == 'track') {
+		try {
+			$api     = getSpotifyWebAPI($w);
+			$track  = $api->getTrack($id);
+		}
+		catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+			echo "Error(getArtworkURL): (exception " . print_r($e) . ")";
+			return $url;
+		}
+		if(isset($track->album) && isset($track->album->images)) {
 
-	if (!empty($html)) {
-		preg_match_all('/.*?og:image.*?content="(.*?)">.*?/is', $html, $m);
+			// 60 px
+			if(isset($track->album->images[2]) && isset($track->album->images[2]->url)) {
+				return $track->album->images[2]->url;
+			}
 
-		return (isset($m[1][0])) ? $m[1][0] : 0;
+			// 300 px
+			if(isset($track->album->images[1]) && isset($track->album->images[1]->url)) {
+				return $track->album->images[1]->url;
+			}
+
+			// 600 px
+			if(isset($track->album->images[0]) && isset($track->album->images[0]->url)) {
+				return $track->album->images[0]->url;
+			}
+		}
+	} else {
+		try {
+			$api     = getSpotifyWebAPI($w);
+			$album  = $api->getAlbum($id);
+		}
+		catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+			echo "Error(getArtworkURL): (exception " . print_r($e) . ")";
+			return $url;
+		}
+		if(isset($album->images)) {
+
+			// 60 px
+			if(isset($album->images[2]) && isset($album->images[2]->url)) {
+				return $album->images[2]->url;
+			}
+
+			// 300 px
+			if(isset($album->images[1]) && isset($album->images[1]->url)) {
+				return $album->images[1]->url;
+			}
+
+			// 600 px
+			if(isset($album->images[0]) && isset($album->images[0]->url)) {
+				return $album->images[0]->url;
+			}
+		}
 	}
 
-	return 0;
+	return $url;
 }
 
 
@@ -3402,23 +3436,42 @@ function getArtworkURL($w, $type, $id) {
  *
  * @access public
  * @param mixed $w
- * @param mixed $url
+ * @param mixed $playlist_uri
  * @return void
  */
-function getPlaylistArtworkURL($w, $url) {
-	$options = array(
-		CURLOPT_FOLLOWLOCATION => 1,
-		CURLOPT_TIMEOUT => 5
-	);
-	$html    = $w->request($url, $options);
-
-	if (!empty($html)) {
-		preg_match_all('/.*?twitter:image.*?content="(.*?)">.*?/is', $html, $m);
-
-		return (isset($m[1][0])) ? $m[1][0] : 0;
+function getPlaylistArtworkURL($w, $playlist_uri) {
+	$url = "";
+	$tmp = explode(':', $playlist_uri);
+	try {
+		$api     = getSpotifyWebAPI($w);
+		$playlist = $api->getUserPlaylist(urlencode($tmp[2]), $tmp[4], array(
+				'fields' => array(
+					'images'
+				)
+			));
 	}
+	catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+		echo "Error(getPlaylistArtworkURL): (exception " . print_r($e) . ")";
+		return $url;
+	}
+	if(isset($playlist->images)) {
 
-	return 0;
+		// 60 px
+		if(isset($playlist->images[2]) && isset($playlist->images[2]->url)) {
+			return $playlist->images[2]->url;
+		}
+
+		// 300 px
+		if(isset($playlist->images[1]) && isset($playlist->images[1]->url)) {
+			return $playlist->images[1]->url;
+		}
+
+		// 600 px
+		if(isset($playlist->images[0]) && isset($playlist->images[0]->url)) {
+			return $playlist->images[0]->url;
+		}
+	}
+	return $url;
 }
 
 
@@ -3440,8 +3493,23 @@ function getArtistArtworkURL($w, $artist_id) {
 		echo "Error(getArtistArtworkURL): (exception " . print_r($e) . ")";
 		return $url;
 	}
-	if(isset($artist->images) && isset($artist->images[0]) && isset($artist->images[0]->url)) {
-		$url = $artist->images[0]->url;
+
+	if(isset($artist->images)) {
+
+		// 60 px
+		if(isset($artist->images[2]) && isset($artist->images[2]->url)) {
+			return $artist->images[2]->url;
+		}
+
+		// 300 px
+		if(isset($artist->images[1]) && isset($artist->images[1]->url)) {
+			return $artist->images[1]->url;
+		}
+
+		// 600 px
+		if(isset($artist->images[0]) && isset($artist->images[0]->url)) {
+			return $artist->images[0]->url;
+		}
 	}
 	return $url;
 }
