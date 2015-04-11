@@ -3272,21 +3272,13 @@ function getArtistArtwork($w, $artist_uri, $artist_name, $fetchIfNotPresent = fa
 		exec("mkdir '" . $w->data() . "/artwork'");
 	endif;
 
-	// remove legacy png files
 	$currentArtwork = $w->data() . "/artwork/" . hash('md5', $parsedArtist . ".png") . "/" . "$parsedArtist.png";
-	if (file_exists($currentArtwork)) {
-		//logMsg("DEBUG: removing " . $artist_name . " path: " . $w->data() . "/artwork/" . hash('md5', $parsedArtist . ".png"));
-		removeDirectory($w->data() . "/artwork/" . hash('md5', $parsedArtist . ".png"));
-	}
 
 	$tmp  = explode(':', $artist_uri);
 	if(isset($tmp[2])) {
 		$artist_uri = $tmp[2];
 	}
-	$currentArtwork = $w->data() . "/artwork/" . hash('md5', $artist_uri) . "/" . "$artist_uri.jpg";
-
 	$artwork        = "";
-
 	//
 	if ($fetchLater == true) {
 		if (!is_file($currentArtwork)) {
@@ -3310,8 +3302,8 @@ function getArtistArtwork($w, $artist_uri, $artist_name, $fetchIfNotPresent = fa
 
 			// if return 0, it is a 404 error, no need to fetch
 			if (!empty($artwork) || (is_numeric($artwork) && $artwork != 0)) {
-				if (!file_exists($w->data() . "/artwork/" . hash('md5', $artist_uri))):
-					exec("mkdir '" . $w->data() . "/artwork/" . hash('md5', $artist_uri) . "'");
+				if (!file_exists($w->data() . "/artwork/" . hash('md5', $parsedArtist . ".png"))):
+					exec("mkdir '" . $w->data() . "/artwork/" . hash('md5', $parsedArtist . ".png") . "'");
 				endif;
 				$fp      = fopen($currentArtwork, 'w+');
 				$options = array(
@@ -3324,8 +3316,8 @@ function getArtistArtwork($w, $artist_uri, $artist_name, $fetchIfNotPresent = fa
 				}
 			} else {
 				if ($isLaterFetch == true) {
-					if (!file_exists($w->data() . "/artwork/" . hash('md5', $artist_uri))):
-						exec("mkdir '" . $w->data() . "/artwork/" . hash('md5', $artist_uri) . "'");
+					if (!file_exists($w->data() . "/artwork/" . hash('md5', $parsedArtist . ".png"))):
+						exec("mkdir '" . $w->data() . "/artwork/" . hash('md5', $parsedArtist . ".png") . "'");
 					endif;
 					copy('./images/artists.png', $currentArtwork);
 
@@ -3336,8 +3328,8 @@ function getArtistArtwork($w, $artist_uri, $artist_name, $fetchIfNotPresent = fa
 			}
 		} else {
 			if ($isLaterFetch == true) {
-				if (!file_exists($w->data() . "/artwork/" . hash('md5', $artist_uri))):
-					exec("mkdir '" . $w->data() . "/artwork/" . hash('md5', $artist_uri) . "'");
+				if (!file_exists($w->data() . "/artwork/" . hash('md5', $parsedArtist . ".png"))):
+					exec("mkdir '" . $w->data() . "/artwork/" . hash('md5', $parsedArtist . ".png") . "'");
 				endif;
 				copy('./images/artists.png', $currentArtwork);
 
@@ -3349,8 +3341,8 @@ function getArtistArtwork($w, $artist_uri, $artist_name, $fetchIfNotPresent = fa
 	} else {
 		if (filesize($currentArtwork) == 0) {
 			if ($isLaterFetch == true) {
-				if (!file_exists($w->data() . "/artwork/" . hash('md5', $artist_uri))):
-					exec("mkdir '" . $w->data() . "/artwork/" . hash('md5', $artist_uri) . "'");
+				if (!file_exists($w->data() . "/artwork/" . hash('md5', $parsedArtist . ".png"))):
+					exec("mkdir '" . $w->data() . "/artwork/" . hash('md5', $parsedArtist . ".png") . "'");
 				endif;
 				copy('./images/artists.png', $currentArtwork);
 
@@ -3363,8 +3355,8 @@ function getArtistArtwork($w, $artist_uri, $artist_name, $fetchIfNotPresent = fa
 
 	if (is_numeric($artwork) && $artwork == 0) {
 		if ($isLaterFetch == true) {
-			if (!file_exists($w->data() . "/artwork/" . hash('md5', $artist_uri))):
-				exec("mkdir '" . $w->data() . "/artwork/" . hash('md5', $artist_uri) . "'");
+			if (!file_exists($w->data() . "/artwork/" . hash('md5', $parsedArtist . ".png"))):
+				exec("mkdir '" . $w->data() . "/artwork/" . hash('md5', $parsedArtist . ".png") . "'");
 			endif;
 			copy('./images/artists.png', $currentArtwork);
 
