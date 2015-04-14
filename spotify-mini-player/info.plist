@@ -1250,11 +1250,11 @@
 			<key>config</key>
 			<dict>
 				<key>concurrently</key>
-				<false/>
+				<true/>
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f ./src/action.php -- "{query}" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+				<string>php -f ./src/action.php -- "{query}" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -1290,11 +1290,11 @@
 			<key>config</key>
 			<dict>
 				<key>concurrently</key>
-				<false/>
+				<true/>
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f ./src/action.php -- "{query}" "ALBUM" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+				<string>php -f ./src/action.php -- "{query}" "ALBUM" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -1309,11 +1309,11 @@
 			<key>config</key>
 			<dict>
 				<key>concurrently</key>
-				<false/>
+				<true/>
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f ./src/action.php -- "{query}" "ARTIST_OR_PLAYLIST_PRIVACY" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+				<string>php -f ./src/action.php -- "{query}" "ARTIST_OR_PLAYLIST_PRIVACY" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -1398,11 +1398,11 @@
 			<key>config</key>
 			<dict>
 				<key>concurrently</key>
-				<false/>
+				<true/>
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f ./src/action.php -- "{query}" "ALBUM_OR_PLAYLIST" "ADDTOPLAYLIST" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+				<string>php -f ./src/action.php -- "{query}" "ALBUM_OR_PLAYLIST" "ADDTOPLAYLIST" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -1438,11 +1438,11 @@
 			<key>config</key>
 			<dict>
 				<key>concurrently</key>
-				<false/>
+				<true/>
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f ./src/action.php -- "{query}" "TRACK" "ADDTOPLAYLIST" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+				<string>php -f ./src/action.php -- "{query}" "TRACK" "ADDTOPLAYLIST" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1</string>
 				<key>type</key>
 				<integer>0</integer>
 			</dict>
@@ -1490,11 +1490,11 @@
 			<key>config</key>
 			<dict>
 				<key>concurrently</key>
-				<false/>
+				<true/>
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f ./src/action.php -- "{query}" "ONLINE" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;
+				<string>php -f ./src/action.php -- "{query}" "ONLINE" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1
 </string>
 				<key>type</key>
 				<integer>0</integer>
