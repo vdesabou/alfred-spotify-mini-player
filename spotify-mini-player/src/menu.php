@@ -544,9 +544,9 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
 	// Search everything
 	//
 	if ($all_playlists == false) {
-		$getTracks = "select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where yourmusic=1 and (artist_name like :query or album_name like :query or track_name like :query)" . " limit " . $max_results;
+		$getTracks = "select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where yourmusic=1 and (artist_name like :query or album_name like :query or track_name like :query)" . "  order by added_at desc limit " . $max_results;
 	} else {
-		$getTracks = "select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where (artist_name like :query or album_name like :query or track_name like :query)" . " limit " . $max_results;
+		$getTracks = "select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where (artist_name like :query or album_name like :query or track_name like :query)" . "  order by added_at desc limit " . $max_results;
 	}
 
 	try {
@@ -624,9 +624,9 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
 	// Search albums
 	//
 	if ($all_playlists == false) {
-		$getTracks = "select album_name,album_uri,album_artwork_path,uri from tracks where yourmusic=1 and :album_name like :artist_name limit " . $max_results;
+		$getTracks = "select album_name,album_uri,album_artwork_path,uri from tracks where yourmusic=1 and album_name like :album_name order by added_at desc limit " . $max_results;
 	} else {
-		$getTracks = "select album_name,album_uri,album_artwork_path,uri from tracks where album_name like :album_name limit " . $max_results;
+		$getTracks = "select album_name,album_uri,album_artwork_path,uri from tracks where album_name like :album_name order by added_at desc limit " . $max_results;
 	}
 
 	try {
@@ -2337,26 +2337,23 @@ function firstDelimiterAlbums($w, $query, $settings, $db, $update_in_progress) {
 	try {
 		if (mb_strlen($album) < 3) {
 			if ($all_playlists == false) {
-				$getTracks = "select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where yourmusic=1 group by album_name" . " limit " . $max_results;
+				$getTracks = "select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where yourmusic=1" . "  order by added_at desc limit " . $max_results;
 			} else {
-				$getTracks = "select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks  group by album_name" . " limit " . $max_results;
+				$getTracks = "select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks order by added_at desc limit " . $max_results;
 			}
 			$stmt = $db->prepare($getTracks);
 		} else {
 			if ($all_playlists == false) {
-				$getTracks = "select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where yourmusic=1 and album_name like :query limit " . $max_results;
+				$getTracks = "select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where yourmusic=1 and album_name like :query  order by added_at desc limit " . $max_results;
 			} else {
-				$getTracks = "select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where album_name like :query limit " . $max_results;
+				$getTracks = "select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where album_name like :query  order by added_at desc limit " . $max_results;
 			}
 			$stmt = $db->prepare($getTracks);
 			$stmt->bindValue(':query', '%' . $album . '%');
 		}
 
 		$tracks = $stmt->execute();
-
 	}
-
-
 	catch (PDOException $e) {
 		handleDbIssuePdoXml($db);
 		return;
@@ -5343,10 +5340,10 @@ function secondDelimiterYourMusicTracks($w, $query, $settings, $db, $update_in_p
 	$thetrack = $words[2];
 
 	if (mb_strlen($thetrack) < 3) {
-		$getTracks = "select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where yourmusic=1 limit " . $max_results;
+		$getTracks = "select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where yourmusic=1 order by added_at desc limit " . $max_results;
 		$stmt      = $db->prepare($getTracks);
 	} else {
-		$getTracks = "select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where yourmusic=1 and (artist_name like :track or album_name like :track or track_name like :track)" . " limit " . $max_results;
+		$getTracks = "select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where yourmusic=1 and (artist_name like :track or album_name like :track or track_name like :track)" . " order by added_at desc limit " . $max_results;
 		$stmt      = $db->prepare($getTracks);
 		$stmt->bindValue(':track', '%' . $thetrack . '%');
 	}
@@ -5490,10 +5487,10 @@ function secondDelimiterYourMusicAlbums($w, $query, $settings, $db, $update_in_p
 	$album = $words[2];
 	try {
 		if (mb_strlen($album) < 3) {
-			$getTracks = "select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where yourmusic=1 group by album_name" . " limit " . $max_results;
+			$getTracks = "select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where yourmusic=1" . " order by added_at desc limit " . $max_results;
 			$stmt      = $db->prepare($getTracks);
 		} else {
-			$getTracks = "select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where yourmusic=1 and album_name like :query limit " . $max_results;
+			$getTracks = "select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where yourmusic=1 and album_name like :query order by added_at desc limit " . $max_results;
 			$stmt      = $db->prepare($getTracks);
 			$stmt->bindValue(':query', '%' . $album . '%');
 		}
@@ -5501,8 +5498,6 @@ function secondDelimiterYourMusicAlbums($w, $query, $settings, $db, $update_in_p
 		$tracks = $stmt->execute();
 
 	}
-
-
 	catch (PDOException $e) {
 		handleDbIssuePdoXml($db);
 		return;
