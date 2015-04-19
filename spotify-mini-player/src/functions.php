@@ -5548,19 +5548,18 @@ function strip_string($string) {
 	return preg_replace('/[^a-zA-Z0-9-\s]/', '', $string);
 }
 
-
 /**
  * checkForUpdate function.
  *
  * @access public
  * @param mixed $w
  * @param mixed $last_check_update_time
+ * @param bool $download (default: true)
  * @return void
  */
-function checkForUpdate($w, $last_check_update_time) {
-	if (time() - $last_check_update_time > 86400) {
+function checkForUpdate($w, $last_check_update_time, $download = false) {
+	if (time() - $last_check_update_time > 86400 || $download == true) {
 		// update last_check_update_time
-
 		$ret = updateSetting($w, 'last_check_update_time', time());
 		if ($ret == false) {
 			return "Error while updating settings";
@@ -5593,18 +5592,39 @@ function checkForUpdate($w, $last_check_update_time) {
 			$description    = $json['description'];
 
 			if ($local_version < $remote_version) {
-				$workflow_file_name = exec('printf $HOME') . '/Downloads/spotify-mini-player-' . $remote_version . '.alfredworkflow';
-				$fp                 = fopen($workflow_file_name, 'w+');
-				$options            = array(
-					CURLOPT_FILE => $fp
-				);
-				$w->request("$download_url", $options);
+				if($download == true) {
+					$workflow_file_name = exec('printf $HOME') . '/Downloads/spotify-mini-player-' . $remote_version . '.alfredworkflow';
+					$fp                 = fopen($workflow_file_name, 'w+');
+					$options            = array(
+						CURLOPT_FILE => $fp
+					);
+					$w->request("$download_url", $options);
 
-				return array(
-					$remote_version,
-					$workflow_file_name,
-					$description
-				);
+					return array(
+						$remote_version,
+						$workflow_file_name,
+						$description
+					);
+				} else {
+					$w->result(null, serialize(array(
+								'' /*track_uri*/ ,
+								'' /* album_uri */ ,
+								'' /* artist_uri */ ,
+								'' /* playlist_uri */ ,
+								'' /* spotify_command */ ,
+								'' /* query */ ,
+								'' /* other_settings*/ ,
+								'download_update' /* other_action */ ,
+								'' /* artist_name */ ,
+								'' /* track_name */ ,
+								'' /* album_name */ ,
+								'' /* track_artwork_path */ ,
+								'' /* artist_artwork_path */ ,
+								'' /* album_artwork_path */ ,
+								'' /* playlist_name */ ,
+								'' /* playlist_artwork_path */
+							)), 'An update is available, version ' . $remote_version . '. Click to download', '' . $description, './images/check_update.png', 'yes', '');
+				}
 			}
 		} else {
 			return "Cannot read remote.json";

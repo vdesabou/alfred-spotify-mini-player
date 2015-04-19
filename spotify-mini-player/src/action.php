@@ -874,7 +874,15 @@ if ($type == "TRACK" && $other_settings == "" &&
 				}
 				removeCurrentTrackFrom($w);
 				return;
-			} else if ($other_action == "previous") {
+			} else if ($other_action == "download_update") {
+				$check_results = checkForUpdate($w, 0, true);
+				if ($check_results != null && is_array($check_results)) {
+					exec("open \"$check_results[1]\"");
+				    displayNotificationWithArtwork("Please install the new version with Alfred", './images/check_update.png', 'Update available');
+				    return;
+				}
+				return;
+			}  else if ($other_action == "previous") {
 				if ($use_mopidy) {
 					invokeMopidyMethod($w, "core.playback.previous", array());
 				} else {

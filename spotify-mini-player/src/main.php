@@ -178,15 +178,7 @@ catch (PDOException $e) {
 
 //
 // Check for workflow update
-$check_results = checkForUpdate($w, $last_check_update_time);
-if ($check_results != null && is_array($check_results)) {
-    $w->result(null, '', 'New version ' . $check_results[0] . ' is available', $check_results[2], './images/info.png', 'no', null, '');
-    $w->result(null, $check_results[1], 'Please install the new version in Downloads directory', $check_results[1], 'fileicon:' . $check_results[1], 'no', '', '', 'file');
-
-    echo $w->toxml();
-    return;
-}
-
+checkForUpdate($w, $last_check_update_time, false);
 
 // thanks to http://www.alfredforum.com/topic/1788-prevent-flash-of-no-result
 mb_internal_encoding('UTF-8');
