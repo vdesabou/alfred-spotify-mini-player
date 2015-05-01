@@ -63,6 +63,17 @@
 				<string></string>
 			</dict>
 		</array>
+		<key>15B503BB-DA3F-4B7B-8E4C-94E968ECDCF2</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>383F2E0F-8A62-41E5-8575-415A9225572E</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 		<key>16F5C3BF-01EE-493C-9E7B-CC54D482B7A6</key>
 		<array>
 			<dict>
@@ -564,6 +575,17 @@
 				<string></string>
 			</dict>
 		</array>
+		<key>817080F0-4CE8-4336-A972-550D43D063B1</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>383F2E0F-8A62-41E5-8575-415A9225572E</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 		<key>81BA0BC2-F1CB-46DC-A715-C38A1A0E055E</key>
 		<array>
 			<dict>
@@ -733,6 +755,17 @@
 				<string></string>
 			</dict>
 		</array>
+		<key>9E3FE06C-F5F8-41F3-A70F-B92E187EED75</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>6E7D21ED-AC05-4EC3-974C-ECB80BB744CA</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 		<key>A0EAB8B1-F034-490F-9534-44ADF572AF4E</key>
 		<array>
 			<dict>
@@ -815,6 +848,17 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>24B8C827-75F2-4421-A412-D48782DA1DB8</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>A8BE6109-BCC0-4A41-9375-C1D2E3A755BD</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>383F2E0F-8A62-41E5-8575-415A9225572E</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -1041,6 +1085,17 @@
 				<string></string>
 			</dict>
 		</array>
+		<key>D9BCA226-6F66-4A41-A8BE-19E9D6343941</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>6E7D21ED-AC05-4EC3-974C-ECB80BB744CA</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
 		<key>DAE270E5-CA94-4F36-99FE-D8EC996608C0</key>
 		<array>
 			<dict>
@@ -1123,6 +1178,17 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>64953E09-D9D0-485B-B92B-79E7FEC15927</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+			</dict>
+		</array>
+		<key>EA03C1F5-912A-4422-B766-2BBC94DC0344</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>6E7D21ED-AC05-4EC3-974C-ECB80BB744CA</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -4381,6 +4447,180 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>volmax</string>
+				<key>subtext</key>
+				<string>Set the Spotify volume to maximum</string>
+				<key>text</key>
+				<string>Set Spotify Volume to Maximum</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>15B503BB-DA3F-4B7B-8E4C-94E968ECDCF2</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "volmax" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
+php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>383F2E0F-8A62-41E5-8575-415A9225572E</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string></string>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>triggerid</key>
+				<string>com.vdesabou.miniplayer.volmax</string>
+				<key>triggername</key>
+				<string>Volume Max</string>
+				<key>workflowonly</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.remote</string>
+			<key>uid</key>
+			<string>A8BE6109-BCC0-4A41-9375-C1D2E3A755BD</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>0</integer>
+				<key>hotkey</key>
+				<integer>0</integer>
+				<key>hotmod</key>
+				<integer>0</integer>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>0</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>817080F0-4CE8-4336-A972-550D43D063B1</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>volmid</string>
+				<key>subtext</key>
+				<string>Set the Spotify volume to 50%</string>
+				<key>text</key>
+				<string>Set Spotify Volume to 50%</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>EA03C1F5-912A-4422-B766-2BBC94DC0344</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string></string>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>triggerid</key>
+				<string>com.vdesabou.miniplayer.volmid</string>
+				<key>triggername</key>
+				<string>Volume 50%</string>
+				<key>workflowonly</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.remote</string>
+			<key>uid</key>
+			<string>9E3FE06C-F5F8-41F3-A70F-B92E187EED75</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "volmid" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
+php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>6E7D21ED-AC05-4EC3-974C-ECB80BB744CA</string>
+			<key>version</key>
+			<integer>0</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>0</integer>
+				<key>hotkey</key>
+				<integer>0</integer>
+				<key>hotmod</key>
+				<integer>0</integer>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>0</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>D9BCA226-6F66-4A41-A8BE-19E9D6343941</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string>Web Site:
@@ -4449,6 +4689,11 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 		<dict>
 			<key>ypos</key>
 			<real>1200</real>
+		</dict>
+		<key>15B503BB-DA3F-4B7B-8E4C-94E968ECDCF2</key>
+		<dict>
+			<key>ypos</key>
+			<real>10380</real>
 		</dict>
 		<key>16F5C3BF-01EE-493C-9E7B-CC54D482B7A6</key>
 		<dict>
@@ -4560,6 +4805,11 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<key>ypos</key>
 			<real>2990</real>
 		</dict>
+		<key>383F2E0F-8A62-41E5-8575-415A9225572E</key>
+		<dict>
+			<key>ypos</key>
+			<real>10380</real>
+		</dict>
 		<key>39A1935A-37F5-49FA-A860-BCF7765A8C65</key>
 		<dict>
 			<key>ypos</key>
@@ -4665,6 +4915,11 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<key>ypos</key>
 			<real>2040</real>
 		</dict>
+		<key>6E7D21ED-AC05-4EC3-974C-ECB80BB744CA</key>
+		<dict>
+			<key>ypos</key>
+			<real>10690</real>
+		</dict>
 		<key>6E9B4F21-F907-4A22-8689-9A146F909454</key>
 		<dict>
 			<key>ypos</key>
@@ -4734,6 +4989,11 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 		<dict>
 			<key>ypos</key>
 			<real>2750</real>
+		</dict>
+		<key>817080F0-4CE8-4336-A972-550D43D063B1</key>
+		<dict>
+			<key>ypos</key>
+			<real>10560</real>
 		</dict>
 		<key>81BA0BC2-F1CB-46DC-A715-C38A1A0E055E</key>
 		<dict>
@@ -4840,6 +5100,11 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<key>ypos</key>
 			<real>9670</real>
 		</dict>
+		<key>9E3FE06C-F5F8-41F3-A70F-B92E187EED75</key>
+		<dict>
+			<key>ypos</key>
+			<real>10680</real>
+		</dict>
 		<key>A0EAB8B1-F034-490F-9534-44ADF572AF4E</key>
 		<dict>
 			<key>ypos</key>
@@ -4884,6 +5149,11 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 		<dict>
 			<key>ypos</key>
 			<real>3250</real>
+		</dict>
+		<key>A8BE6109-BCC0-4A41-9375-C1D2E3A755BD</key>
+		<dict>
+			<key>ypos</key>
+			<real>10440</real>
 		</dict>
 		<key>AC236315-8CDE-41E3-A9BA-BB59D292FE14</key>
 		<dict>
@@ -5000,6 +5270,11 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<key>ypos</key>
 			<real>8020</real>
 		</dict>
+		<key>D9BCA226-6F66-4A41-A8BE-19E9D6343941</key>
+		<dict>
+			<key>ypos</key>
+			<real>10800</real>
+		</dict>
 		<key>DAE270E5-CA94-4F36-99FE-D8EC996608C0</key>
 		<dict>
 			<key>ypos</key>
@@ -5054,6 +5329,11 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 		<dict>
 			<key>ypos</key>
 			<real>4200</real>
+		</dict>
+		<key>EA03C1F5-912A-4422-B766-2BBC94DC0344</key>
+		<dict>
+			<key>ypos</key>
+			<real>10620</real>
 		</dict>
 		<key>EB1ED46F-71D7-49D1-B7BB-DA1ECF2F665F</key>
 		<dict>

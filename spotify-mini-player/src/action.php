@@ -1087,6 +1087,30 @@ if ($type == "TRACK" && $other_settings == "" &&
 				}
 				displayNotificationWithArtwork("Spotify volume has been decreased", './images/volume_down.png', 'Volume Down');
 				return;
+			} else if ($other_action == "volmax") {
+				if ($use_mopidy) {
+					invokeMopidyMethod($w, "core.mixer.set_volume", array('volume' => 100));
+				} else {
+					exec("osascript -e 'tell application \"Spotify\"
+	                if it is running then
+	                    set sound volume to 100
+	                end if
+	            end tell'");
+				}
+				displayNotificationWithArtwork("Spotify volume has been set to maximum", './images/volmax.png', 'Volume Max');
+				return;
+			} else if ($other_action == "volmid") {
+				if ($use_mopidy) {
+					invokeMopidyMethod($w, "core.mixer.set_volume", array('volume' => 50));
+				} else {
+					exec("osascript -e 'tell application \"Spotify\"
+	                if it is running then
+	                    set sound volume to 50
+	                end if
+	            end tell'");
+				}
+				displayNotificationWithArtwork("Spotify volume has been set to 50%", './images/volmid.png', 'Volume 50%');
+				return;
 			} else if ($other_action == "mute") {
 				if ($use_mopidy) {
 					$volume = invokeMopidyMethod($w, "core.mixer.get_volume", array());

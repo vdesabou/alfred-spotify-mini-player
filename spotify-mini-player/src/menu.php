@@ -1327,6 +1327,44 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
 					'' /* playlist_artwork_path */
 				)), 'Volume Up', 'Increase Spotify Volume', './images/volume_up.png', 'yes', '');
 
+		$w->result('SpotifyMiniPlayer_' . 'volmax', serialize(array(
+					'' /*track_uri*/ ,
+					'' /* album_uri */ ,
+					'' /* artist_uri */ ,
+					'' /* playlist_uri */ ,
+					'' /* spotify_command */ ,
+					'' /* query */ ,
+					'' /* other_settings*/ ,
+					'volmax' /* other_action */ ,
+					'' /* artist_name */ ,
+					'' /* track_name */ ,
+					'' /* album_name */ ,
+					'' /* track_artwork_path */ ,
+					'' /* artist_artwork_path */ ,
+					'' /* album_artwork_path */ ,
+					'' /* playlist_name */ ,
+					'' /* playlist_artwork_path */
+				)), 'Set Spotify Volume to Maximum', 'Set the Spotify volume to maximum', './images/volmax.png', 'yes', '');
+
+		$w->result('SpotifyMiniPlayer_' . 'volmid', serialize(array(
+					'' /*track_uri*/ ,
+					'' /* album_uri */ ,
+					'' /* artist_uri */ ,
+					'' /* playlist_uri */ ,
+					'' /* spotify_command */ ,
+					'' /* query */ ,
+					'' /* other_settings*/ ,
+					'volmid' /* other_action */ ,
+					'' /* artist_name */ ,
+					'' /* track_name */ ,
+					'' /* album_name */ ,
+					'' /* track_artwork_path */ ,
+					'' /* artist_artwork_path */ ,
+					'' /* album_artwork_path */ ,
+					'' /* playlist_name */ ,
+					'' /* playlist_artwork_path */
+				)), 'Set Spotify Volume to 50%', 'Set the Spotify volume to 50%', './images/volmid.png', 'yes', '');
+
 		if ($use_mopidy == true) {
 			$w->result('SpotifyMiniPlayer_' . 'disable_mopidy', serialize(array(
 						'' /*track_uri*/ ,
@@ -1967,6 +2005,48 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
 						'' /* playlist_name */ ,
 						'' /* playlist_artwork_path */
 					)), 'Volume Up', 'Increase Spotify Volume', './images/volume_up.png', 'yes', '');
+		}
+
+		if (strpos(strtolower('volmax'), strtolower($query)) !== false) {
+			$w->result('SpotifyMiniPlayer_' . 'volmax', serialize(array(
+						'' /*track_uri*/ ,
+						'' /* album_uri */ ,
+						'' /* artist_uri */ ,
+						'' /* playlist_uri */ ,
+						'' /* spotify_command */ ,
+						'' /* query */ ,
+						'' /* other_settings*/ ,
+						'volmax' /* other_action */ ,
+						'' /* artist_name */ ,
+						'' /* track_name */ ,
+						'' /* album_name */ ,
+						'' /* track_artwork_path */ ,
+						'' /* artist_artwork_path */ ,
+						'' /* album_artwork_path */ ,
+						'' /* playlist_name */ ,
+						'' /* playlist_artwork_path */
+					)), 'Set Spotify Volume to Maximum', 'Set the Spotify volume to maximum', './images/volmax.png', 'yes', '');
+		}
+
+		if (strpos(strtolower('volmid'), strtolower($query)) !== false) {
+			$w->result('SpotifyMiniPlayer_' . 'volmid', serialize(array(
+						'' /*track_uri*/ ,
+						'' /* album_uri */ ,
+						'' /* artist_uri */ ,
+						'' /* playlist_uri */ ,
+						'' /* spotify_command */ ,
+						'' /* query */ ,
+						'' /* other_settings*/ ,
+						'volmid' /* other_action */ ,
+						'' /* artist_name */ ,
+						'' /* track_name */ ,
+						'' /* album_name */ ,
+						'' /* track_artwork_path */ ,
+						'' /* artist_artwork_path */ ,
+						'' /* album_artwork_path */ ,
+						'' /* playlist_name */ ,
+						'' /* playlist_artwork_path */
+					)), 'Set Spotify Volume to 50%', 'Set the Spotify volume to 50%', './images/volmid.png', 'yes', '');
 		}
 
 		if (strpos(strtolower('mopidy'), strtolower($query)) !== false) {
