@@ -133,7 +133,23 @@
 			<key>itemuid</key>
 			<string>FE5DC9FF-211E-4EE9-9881-52A92FFF8055</string>
 		</dict>
-		<dict/>
+		<dict>
+			<key>actionconfig</key>
+			<dict>
+				<key>autoworkflowuid</key>
+				<true/>
+				<key>triggerid</key>
+				<string>com.vdesabou.miniplayer.volmax</string>
+			</dict>
+			<key>actionuid</key>
+			<string>remote.alfred.runworkflow</string>
+			<key>buttoniconid</key>
+			<string>EE84BB33-1412-4F21-8B4D-D09362ECFE7A</string>
+			<key>buttonlabel</key>
+			<string>Volume Max</string>
+			<key>itemuid</key>
+			<string>489EE95B-58D0-4FCC-B76C-F8FFF476941A</string>
+		</dict>
 		<dict>
 			<key>actionconfig</key>
 			<dict>
@@ -151,7 +167,6 @@
 			<key>itemuid</key>
 			<string>37F02763-E4E9-41B2-A984-1FC85272D748</string>
 		</dict>
-		<dict/>
 		<dict>
 			<key>actionconfig</key>
 			<dict>
@@ -185,6 +200,23 @@
 			<string>Volume Up</string>
 			<key>itemuid</key>
 			<string>F3931E5D-9D07-410F-BF96-7B7501DEE354</string>
+		</dict>
+		<dict>
+			<key>actionconfig</key>
+			<dict>
+				<key>autoworkflowuid</key>
+				<true/>
+				<key>triggerid</key>
+				<string>com.vdesabou.miniplayer.volmid</string>
+			</dict>
+			<key>actionuid</key>
+			<string>remote.alfred.runworkflow</string>
+			<key>buttoniconid</key>
+			<string>41AECA11-8410-4CFF-8BAB-51FE6DE283F4</string>
+			<key>buttonlabel</key>
+			<string>Volume 50%</string>
+			<key>itemuid</key>
+			<string>87F8CB97-6174-4517-B52A-3481C03EDEAC</string>
 		</dict>
 		<dict>
 			<key>actionconfig</key>
