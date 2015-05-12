@@ -8,7 +8,6 @@ $w = new Workflows('com.vdesabou.spotify.mini.player');
 //
 // Read settings from JSON
 //
-
 $settings = getSettings($w);
 
 $oauth_client_id = $settings->oauth_client_id;
@@ -29,7 +28,8 @@ try {
 					'user-follow-read',
 					'playlist-read-private',
 					'playlist-modify-public',
-					'playlist-modify-private'),
+					'playlist-modify-private',
+					'playlist-read-collaborative'),
 				'show_dialog' => true)));
 }
 catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
