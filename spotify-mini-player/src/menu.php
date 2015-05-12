@@ -438,13 +438,18 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
 
 	while ($playlist = $stmt->fetch()) {
 		$added = ' ';
+		$public_status = '';
 		if (startswith($playlist[1], 'Artist radio for')) {
 			$added = '📻 ';
 		}
-		if ($playlist[10]) {
-			$public_status = 'public';
+		if ($playlist[9]) {
+			$public_status = 'collaborative';
 		} else {
-			$public_status = 'private';
+			if ($playlist[10]) {
+				$public_status = 'public';
+			} else {
+				$public_status = 'private';
+			}
 		}
 
 		if ($quick_mode) {
@@ -456,7 +461,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
 			$subtitle = "⚡️Launch Playlist";
 			$subtitle = $subtitle . " ,⇧ ▹ add playlist to ...,  ⌥ ▹ change playlist privacy to " . $public_status_contrary;
 			$added = ' ';
-			if ($userid == $playlist[4]) {
+			if ($userid == $playlist[4] && $public_status != 'collaborative') {
 				$cmdMsg = 'Change playlist privacy to ' . $public_status_contrary;
 			} else {
 				$cmdMsg = 'Not Available';
@@ -2169,10 +2174,14 @@ function firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress
 	if ($query == "Playlist▹Artist radio") {
 		while ($playlist = $stmt->fetch()) {
 			$noresult = false;
-			if ($playlist[10]) {
-				$public_status = 'public';
+			if ($playlist[9]) {
+				$public_status = 'collaborative';
 			} else {
-				$public_status = 'private';
+				if ($playlist[10]) {
+					$public_status = 'public';
+				} else {
+					$public_status = 'private';
+				}
 			}
 			if (startswith($playlist[1], 'Artist radio for')) {
 				$w->result(null, '', "🎵 " . ucfirst($playlist[1]), $public_status . " playlist by " . $playlist[3] . " ● " . $playlist[7] . " tracks ● " . $playlist[8], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
@@ -2181,10 +2190,14 @@ function firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress
 	} elseif ($query == "Playlist▹Song radio") {
 		while ($playlist = $stmt->fetch()) {
 			$noresult = false;
-			if ($playlist[10]) {
-				$public_status = 'public';
+			if ($playlist[9]) {
+				$public_status = 'collaborative';
 			} else {
-				$public_status = 'private';
+				if ($playlist[10]) {
+					$public_status = 'public';
+				} else {
+					$public_status = 'private';
+				}
 			}
 			if (startswith($playlist[1], 'Song radio for')) {
 				$w->result(null, '', "🎵 " . ucfirst($playlist[1]), $public_status . " playlist by " . $playlist[3] . " ● " . $playlist[7] . " tracks ● " . $playlist[8], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
@@ -2222,10 +2235,14 @@ function firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress
 		foreach ($savedPlaylists as $playlist) {
 			$noresult = false;
 			$added    = ' ';
-			if ($playlist[10]) {
-				$public_status = 'public';
+			if ($playlist[9]) {
+				$public_status = 'collaborative';
 			} else {
-				$public_status = 'private';
+				if ($playlist[10]) {
+					$public_status = 'public';
+				} else {
+					$public_status = 'private';
+				}
 			}
 			$w->result(null, '', "🎵" . $added . ucfirst($playlist[1]), $public_status . " playlist by " . $playlist[3] . " ● " . $playlist[7] . " tracks ● " . $playlist[8], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
 		}
@@ -3058,10 +3075,14 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
 							$added = '📻 ';
 						}
 						if (checkIfResultAlreadyThere($w->results(), "🎵" . $added . "In playlist " . ucfirst($playlist[1])) == false) {
-							if ($playlist[10]) {
-								$public_status = 'public';
+							if ($playlist[9]) {
+								$public_status = 'collaborative';
 							} else {
-								$public_status = 'private';
+								if ($playlist[10]) {
+									$public_status = 'public';
+								} else {
+									$public_status = 'private';
+								}
 							}
 							$w->result(null, '', "🎵" . $added . "In playlist " . ucfirst($playlist[1]), $public_status . " playlist by " . $playlist[3] . " ● " . $playlist[7] . " tracks ● " . $playlist[8], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
 						}
@@ -4731,6 +4752,15 @@ function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progres
 		while ($playlist = $stmt->fetch()) {
 			$noresultplaylist = false;
 			if (mb_strlen($thetrack) < 3) {
+				if ($playlist[9]) {
+					$public_status = 'collaborative';
+				} else {
+					if ($playlist[10]) {
+						$public_status = 'public';
+					} else {
+						$public_status = 'private';
+					}
+				}
 				if ($playlist[10]) {
 					$public_status_contrary = 'private';
 				} else {
@@ -4739,7 +4769,7 @@ function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progres
 				$subtitle = "Launch Playlist";
 				$subtitle = $subtitle . " ,⇧ ▹ add playlist to ...,  ⌥ ▹ change playlist privacy to " . $public_status_contrary;
 				$added = ' ';
-				if ($userid == $playlist[4]) {
+				if ($userid == $playlist[4] && $public_status != 'collaborative') {
 					$cmdMsg = 'Change playlist privacy to ' . $public_status_contrary;
 				} else {
 					$cmdMsg = 'Not Available';
