@@ -45,6 +45,7 @@ $oauth_client_secret       = $settings->oauth_client_secret;
 $oauth_redirect_uri        = $settings->oauth_redirect_uri;
 $oauth_access_token        = $settings->oauth_access_token;
 $use_mopidy                = $settings->use_mopidy;
+$volume_percent            = $settings->volume_percent;
 
 if ($oauth_client_id == '' || $oauth_client_secret == '' || $oauth_access_token == '') {
 	if ($other_settings != '' && (startsWith($other_settings, 'Oauth_Client') === false && startsWith($other_settings, 'Open') === false)) {
@@ -1065,27 +1066,27 @@ if ($type == "TRACK" && $other_settings == "" &&
 				return;
 			} else if ($other_action == "volume_up") {
 				if ($use_mopidy) {
-					invokeMopidyMethod($w, "core.mixer.set_volume", array('volume' => invokeMopidyMethod($w, "core.mixer.get_volume", array()) * 1.1 ));
+					invokeMopidyMethod($w, "core.mixer.set_volume", array('volume' => invokeMopidyMethod($w, "core.mixer.get_volume", array()) + $volume_percent));
 				} else {
 					exec("osascript -e 'tell application \"Spotify\"
 	                if it is running then
-	                    set sound volume to (sound volume * 1.1)
+	                    set sound volume to (sound volume + " . $volume_percent . ")
 	                end if
 	            end tell'");
 				}
-				displayNotificationWithArtwork("Spotify volume has been increased", './images/volume_up.png', 'Volume Up');
+				displayNotificationWithArtwork("Spotify volume has been increased by " . $volume_percent . "%" , './images/volume_up.png', 'Volume Up');
 				return;
 			} else if ($other_action == "volume_down") {
 				if ($use_mopidy) {
-					invokeMopidyMethod($w, "core.mixer.set_volume", array('volume' => invokeMopidyMethod($w, "core.mixer.get_volume", array()) * 0.9 ));
+					invokeMopidyMethod($w, "core.mixer.set_volume", array('volume' => invokeMopidyMethod($w, "core.mixer.get_volume", array()) - $volume_percent ));
 				} else {
 					exec("osascript -e 'tell application \"Spotify\"
 	                if it is running then
-	                    set sound volume to (sound volume * 0.9)
+	                    set sound volume to (sound volume - " . $volume_percent . ")
 	                end if
 	            end tell'");
 				}
-				displayNotificationWithArtwork("Spotify volume has been decreased", './images/volume_down.png', 'Volume Down');
+				displayNotificationWithArtwork("Spotify volume has been decreased by " . $volume_percent . "%", './images/volume_down.png', 'Volume Down');
 				return;
 			} else if ($other_action == "volmax") {
 				if ($use_mopidy) {

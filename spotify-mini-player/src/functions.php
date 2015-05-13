@@ -5845,7 +5845,8 @@ function getSettings($w) {
 				'is_public_playlists' => 0,
 				'use_mopidy' => 0,
 				'mopidy_server' => '127.0.0.1',
-				'mopidy_port' => '6680'
+				'mopidy_port' => '6680',
+				'volume_percent' => 20
 			);
 
 			$ret = $w->write($migrated, 'settings.json');
@@ -5882,7 +5883,8 @@ function getSettings($w) {
 			'quick_mode' => 0,
 			'use_mopidy' => 0,
 			'mopidy_server' => '127.0.0.1',
-			'mopidy_port' => '6680'
+			'mopidy_port' => '6680',
+			'volume_percent' => 20
 		);
 
 		$ret = $w->write($default, 'settings.json');
@@ -5912,6 +5914,12 @@ function getSettings($w) {
 	// add mopidy_port if needed
 	if (!isset($settings->mopidy_port)) {
 		updateSetting($w, 'mopidy_port', '6680');
+		$settings = $w->read('settings.json');
+	}
+
+	// add volume_percent if needed
+	if (!isset($settings->volume_percent)) {
+		updateSetting($w, 'volume_percent', 20);
 		$settings = $w->read('settings.json');
 	}
 
