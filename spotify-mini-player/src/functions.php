@@ -800,7 +800,7 @@ function lookupCurrentArtist($w) {
 	if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
 		$results = explode('▹', $retArr[0]);
 		$tmp     = explode(':', $results[4]);
-		if ($tmp[1] == 'local') {
+		if (isset($tmp[1]) && $tmp[1] == 'local') {
 			$artist_uri = getArtistUriFromSearch($w, $results[1]);
 		} else {
 			$artist_uri = getArtistUriFromTrack($w, $results[4]);
@@ -854,7 +854,7 @@ function displayCurrentArtistBiography($w) {
 	if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
 		$results = explode('▹', $retArr[0]);
 		$tmp     = explode(':', $results[4]);
-		if ($tmp[1] == 'local') {
+		if (isset($tmp[1]) && $tmp[1] == 'local') {
 			$artist_uri = getArtistUriFromSearch($w, $results[1]);
 		} else {
 			$artist_uri = getArtistUriFromTrack($w, $results[4]);
@@ -903,7 +903,7 @@ function playCurrentArtist($w) {
 	if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
 		$results = explode('▹', $retArr[0]);
 		$tmp     = explode(':', $results[4]);
-		if ($tmp[1] == 'local') {
+		if (isset($tmp[1]) && $tmp[1] == 'local') {
 			$artist_uri = getArtistUriFromSearch($w, $results[1]);
 		} else {
 			$artist_uri = getArtistUriFromTrack($w, $results[4]);
@@ -1002,7 +1002,7 @@ function addCurrentTrackTo($w) {
 	if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
 		$results = explode('▹', $retArr[0]);
 		$tmp     = explode(':', $results[4]);
-		if ($tmp[1] == 'local') {
+		if (isset($tmp[1]) && $tmp[1] == 'local') {
 			//
 			// Read settings from JSON
 			//
@@ -1144,7 +1144,7 @@ function addCurrentTrackToAlfredPlaylist($w) {
 		}
 
 		$tmp = explode(':', $results[4]);
-		if ($tmp[1] == 'local') {
+		if (isset($tmp[1]) && $tmp[1] == 'local') {
 			// local track, look it up online
 
 			$query         = 'track:' . strtolower(escapeQuery($results[0])) . ' artist:' . strtolower(escapeQuery($results[1]));
@@ -1210,7 +1210,7 @@ function addCurrentTrackToYourMusic($w) {
 	if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
 		$results = explode('▹', $retArr[0]);
 		$tmp     = explode(':', $results[4]);
-		if ($tmp[1] == 'local') {
+		if (isset($tmp[1]) && $tmp[1] == 'local') {
 			//
 			// Read settings from JSON
 			//
@@ -1581,7 +1581,7 @@ function getArtistUriFromTrack($w, $track_uri) {
 	try {
 		$tmp = explode(':', $track_uri);
 
-		if ($tmp[1] == 'local') {
+		if (isset($tmp[1]) && $tmp[1] == 'local') {
 			// local track, look it up online
 			// spotify:local:The+D%c3%b8:On+My+Shoulders+-+Single:On+My+Shoulders:318
 			// spotify:local:Damien+Rice:B-Sides:Woman+Like+a+Man+%28Live%2c+Unplugged%29:284
@@ -1667,7 +1667,7 @@ function getAlbumUriFromTrack($w, $track_uri) {
 	try {
 		$tmp = explode(':', $track_uri);
 
-		if ($tmp[1] == 'local') {
+		if (isset($tmp[1]) && $tmp[1] == 'local') {
 			//
 			// Read settings from JSON
 			//
@@ -1966,7 +1966,7 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name) {
 	}
 
 	$tmp = explode(':', $track_uri);
-	if ($tmp[1] == 'local') {
+	if (isset($tmp[1]) && $tmp[1] == 'local') {
 		// local track, look it up online
 		// spotify:local:The+D%c3%b8:On+My+Shoulders+-+Single:On+My+Shoulders:318
 		// spotify:local:Damien+Rice:B-Sides:Woman+Like+a+Man+%28Live%2c+Unplugged%29:284
@@ -2373,7 +2373,7 @@ function getTheFullTrack($w, $track_uri, $country_code) {
 	try {
 		$tmp = explode(':', $track_uri);
 
-		if ($tmp[1] == 'local') {
+		if (isset($tmp[1]) && $tmp[1] == 'local') {
 			// local track, look it up online
 			// spotify:local:The+D%c3%b8:On+My+Shoulders+-+Single:On+My+Shoulders:318
 			// spotify:local:Damien+Rice:B-Sides:Woman+Like+a+Man+%28Live%2c+Unplugged%29:284

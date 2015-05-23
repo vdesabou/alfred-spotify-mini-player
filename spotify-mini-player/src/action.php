@@ -217,6 +217,10 @@ if ($type == "TRACK" && $other_settings == "" &&
 	}
 } else if ($type == "ALBUM") {
 		if ($album_uri == "") {
+			if($track_uri == "") {
+				displayNotificationWithArtwork("Cannot get current album", './images/warning.png', 'Error!');
+				return;
+			}
 			// case of current song with alt
 			$album_uri = getAlbumUriFromTrack($w, $track_uri);
 			if ($album_uri == false) {
@@ -267,6 +271,10 @@ if ($type == "TRACK" && $other_settings == "" &&
 		if ($add_to_option != "") {
 			if ($album_name != "") {
 				if ($album_uri == "") {
+					if($track_uri == "") {
+						displayNotificationWithArtwork("Cannot get current album", './images/warning.png', 'Error!');
+						return;
+					}
 					// case of current song with shift
 					$album_uri = getAlbumUriFromTrack($w, $track_uri);
 					if ($album_uri == false) {
@@ -1033,6 +1041,10 @@ if ($type == "TRACK" && $other_settings == "" &&
 				return;
 			} else if ($other_action == "playalbum") {
 				if ($album_uri == "") {
+					if($track_uri == "") {
+						displayNotificationWithArtwork("Cannot get current album", './images/warning.png', 'Error!');
+						return;
+					}
 					$album_uri = getAlbumUriFromTrack($w, $track_uri);
 					if ($album_uri == false) {
 						displayNotificationWithArtwork("Cannot get album", './images/warning.png', 'Error!');
