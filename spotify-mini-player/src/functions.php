@@ -481,6 +481,7 @@ function addTrackToPlayQueue($w, $track_uri, $track_name, $artist_name, $album_n
 		$tracks = array();
 		$track = getTheFullTrack($w, $track_uri, $country_code);
 		if ($track == false) {
+			$track = new stdClass();
 			$track->uri = $track_uri;
 			$track->name = $track_name;
 			$artists = array();
