@@ -4359,6 +4359,31 @@ function secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
 					)), 'Create a Radio Playlist for ' . $artist_name, 'This will create a ' . $privacy_status . ' radio playlist with ' . $radio_number_tracks . ' tracks for the artist', './images/radio_artist.png', 'yes', null, '');
 		}
 
+		if ($update_in_progress == false) {
+			$privacy_status = 'private';
+			if ($is_public_playlists) {
+				$privacy_status = 'public';
+			}
+			$w->result(null, serialize(array(
+						'' /*track_uri*/ ,
+						'' /* album_uri */ ,
+						$artist_uri /* artist_uri */ ,
+						'' /* playlist_uri */ ,
+						'' /* spotify_command */ ,
+						'' /* query */ ,
+						'' /* other_settings*/ ,
+						'complete_collection_artist' /* other_action */ ,
+						$artist_name /* artist_name */ ,
+						'' /* track_name */ ,
+						'' /* album_name */ ,
+						'' /* track_artwork_path */ ,
+						'' /* artist_artwork_path */ ,
+						'' /* album_artwork_path */ ,
+						'' /* playlist_name */ ,
+						'' /* playlist_artwork_path */
+					)), 'Create a Complete Collection Playlist for ' . $artist_name, 'This will create a ' . $privacy_status . ' playlist for the artist with all the albums', './images/complete_collection.png', 'yes', null, '');
+		}
+
 		if ($all_playlists == false || count($tmp) == 3) {
 			$getTracks = "select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where yourmusic=1 and artist_uri=:artist_uri limit " . $max_results;
 		} else {

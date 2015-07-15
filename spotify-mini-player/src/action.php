@@ -1185,6 +1185,13 @@ if ($type == "TRACK" && $other_settings == "" &&
 					stathat_ez_count('AlfredSpotifyMiniPlayer', 'radio', 1);
 				}
 				return;
+			}  else if ($other_action == "complete_collection_artist") {
+				if (file_exists($w->data() . '/update_library_in_progress')) {
+					displayNotificationWithArtwork("Cannot modify library while update is in progress", './images/warning.png', 'Error!');
+					return;
+				}
+				createCompleteCollectionArtistPlaylist($w, $artist_name, $artist_uri);
+				return;
 			} else if ($other_action == "play_alfred_playlist") {
 				playAlfredPlaylist($w);
 				if ($userid != 'vdesabou') {

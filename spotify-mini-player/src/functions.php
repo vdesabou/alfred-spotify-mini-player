@@ -1892,6 +1892,77 @@ function createRadioArtistPlaylist($w, $artist_name) {
 	return true;
 }
 
+/**
+ * createCompleteCollectionArtistPlaylist function.
+ *
+ * @access public
+ * @param mixed $w
+ * @param mixed $artist_name
+ * @return void
+ */
+function createCompleteCollectionArtistPlaylist($w, $artist_name, $artist_uri) {
+	//
+	// Read settings from JSON
+	//
+	$settings            = getSettings($w);
+	$radio_number_tracks = $settings->radio_number_tracks;
+	$userid              = $settings->userid;
+	$country_code        = $settings->country_code;
+	$is_public_playlists = $settings->is_public_playlists;
+
+	$public = false;
+	if ($is_public_playlists) {
+		$public = true;
+	}
+
+	$newplaylisttracks = array();
+	// call to web api, if it fails,
+	// it displays an error in main window
+	$albums = getTheArtistAlbums($w, $artist_uri, $country_code, true, false);
+
+	foreach ($albums as $album) {
+		// call to web api, if it fails,
+		// it displays an error in main window
+		$tracks = getTheAlbumFullTracks($w, $album->uri, true);
+		foreach ($tracks as $track) {
+			$tmp                 = explode(':', $track->uri);
+			$newplaylisttracks[] = $tmp[2];
+		}
+	}
+
+	if (count($newplaylisttracks) > 0) {
+		try {
+			$api  = getSpotifyWebAPI($w);
+			$json = $api->createUserPlaylist($userid, array(
+					'name' => 'Complete Collection for ' . escapeQuery($artist_name),
+					'public' => $public
+				));
+		}
+		catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+			logMsg("Error(createCompleteCollectionArtistPlaylist): Complete Collection " . $artist_name . " (exception " . print_r($e) . ")");
+			handleSpotifyWebAPIException($w, $e);
+
+			return false;
+		}
+
+		$ret = addTracksToPlaylist($w, $newplaylisttracks, $json->uri, $json->name, false, false);
+		if (is_numeric($ret) && $ret > 0) {
+			refreshLibrary($w);
+
+			return;
+		} elseif (is_numeric($ret) && $ret == 0) {
+			displayNotificationWithArtwork('Playlist ' . $json->name . ' cannot be added', './images/warning.png', 'Error!');
+
+			return;
+		}
+	} else {
+		displayNotificationWithArtwork('Artist was not found', './images/warning.png', 'Error!');
+
+		return false;
+	}
+
+	return true;
+}
 
 /**
  * createRadioSongPlaylistForCurrentTrack function.
@@ -2149,9 +2220,11 @@ function getTheAlbumTracks($w, $album_uri) {
  * @param mixed $w
  * @param mixed $artist_uri
  * @param mixed $country_code
+ * @param bool $actionMode (default: false)
+ * @param bool $all_type (default: true)
  * @return void
  */
-function getTheArtistAlbums($w, $artist_uri, $country_code) {
+function getTheArtistAlbums($w, $artist_uri, $country_code, $actionMode = false, $all_type = true ) {
 	$album_ids = array();
 
 	try {
@@ -2159,15 +2232,23 @@ function getTheArtistAlbums($w, $artist_uri, $country_code) {
 		$tmp                   = explode(':', $artist_uri);
 		$offsetGetArtistAlbums = 0;
 		$limitGetArtistAlbums  = 50;
+
+		if($all_type) {
+			$album_type = array(
+						'album',
+						'single',
+						'compilation'
+					);
+		} else {
+			$album_type = array(
+						'album',
+					);
+		}
 		do {
 			// refresh api
 			$api              = getSpotifyWebAPI($w, $api);
 			$userArtistAlbums = $api->getArtistAlbums($tmp[2], array(
-					'album_type' => array(
-						'album',
-						'single',
-						'compilation'
-					),
+					'album_type' => $album_type,
 					'market' => $country_code,
 					'limit' => $limitGetArtistAlbums,
 					'offset' => $offsetGetArtistAlbums
@@ -2183,10 +2264,20 @@ function getTheArtistAlbums($w, $artist_uri, $country_code) {
 
 
 	catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-		$w2 = new Workflows('com.vdesabou.spotify.mini.player');
-		$w2->result(null, '', "Error: Spotify WEB API getArtistAlbums returned error " . $e->getMessage(), "Try again or report to author", './images/warning.png', 'no', null, '');
-		echo $w2->toxml();
-		exit;
+		if ($actionMode == false) {
+			$w2 = new Workflows('com.vdesabou.spotify.mini.player');
+			$w2->result(null, '', "Error: Spotify WEB API getArtistAlbums returned error " . $e->getMessage(), "Try again or report to author", './images/warning.png', 'no', null, '');
+			echo $w2->toxml();
+			exit;
+
+		} else {
+			echo "Error(getTheArtistAlbums): (exception " . print_r($e) . ")";
+			handleSpotifyWebAPIException($w, $e);
+			return false;
+		}
+
+
+
 	}
 
 	$albums = array();
