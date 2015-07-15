@@ -5402,7 +5402,7 @@ function cleanupArtistName($artist_name) {
 	$query_artist = str_replace('$', 's', $query_artist);
 	$query_artist = strip_string(trim($query_artist));
 	$query_artist = str_replace(' - ', '-', $query_artist);
-	//$query_artist = str_replace(' ', '-', $query_artist);
+	$query_artist = str_replace(' ', '-', $query_artist);
 
 	return $query_artist;
 }
@@ -5471,7 +5471,7 @@ function getLyrics($w, $artist, $title) {
 	$query_title = str_replace(' ', '-', $query_title);
 	$query_title = rtrim($query_title, '-');
 
-	$uri = strtolower('https://www.musixmatch.com/fr/paroles/' . $query_artist . '/' . $query_title);
+	$uri = strtolower('https://www.musixmatch.com/lyrics/' . $query_artist . '/' . $query_title);
 	$error    = false;
 	$no_match = false;
 
@@ -5481,6 +5481,7 @@ function getLyrics($w, $artist, $title) {
 		CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13'
 	);
 	$file = $w->request($uri, $options);
+
 	preg_match('/<script>var __mxmProps = (.*?)<\/script>/s', $file, $lyrics);
 	$lyrics = (empty($lyrics[1])) ? '' : $lyrics[1];
 	if (empty($file)) {
