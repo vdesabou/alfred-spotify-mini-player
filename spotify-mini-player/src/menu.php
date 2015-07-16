@@ -4792,7 +4792,7 @@ function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progres
 					$public_status_contrary = 'public';
 				}
 				$subtitle = "Launch Playlist";
-				$subtitle = $subtitle . " ,⇧ ▹ add playlist to ...,  ⌥ ▹ change playlist privacy to " . $public_status_contrary;
+				$subtitle = $subtitle . " ,⇧ ▹ add playlist to ..., ⌘ ▹ change playlist privacy to " . $public_status_contrary;
 				$added = ' ';
 				if ($userid == $playlist[4] && $public_status != 'collaborative') {
 					$cmdMsg = 'Change playlist privacy to ' . $public_status_contrary;
