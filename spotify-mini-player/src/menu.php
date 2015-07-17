@@ -4381,7 +4381,7 @@ function secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
 						'' /* album_artwork_path */ ,
 						'' /* playlist_name */ ,
 						'' /* playlist_artwork_path */
-					)), 'Create a Complete Collection Playlist for ' . $artist_name, 'This will create a ' . $privacy_status . ' playlist for the artist with all the albums', './images/complete_collection.png', 'yes', null, '');
+					)), 'Create a Complete Collection Playlist for ' . $artist_name, 'This will create a ' . $privacy_status . ' playlist for the artist with all the albums and singles', './images/complete_collection.png', 'yes', null, '');
 		}
 
 		if ($all_playlists == false || count($tmp) == 3) {

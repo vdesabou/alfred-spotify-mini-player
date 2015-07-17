@@ -1905,7 +1905,6 @@ function createCompleteCollectionArtistPlaylist($w, $artist_name, $artist_uri) {
 	// Read settings from JSON
 	//
 	$settings            = getSettings($w);
-	$radio_number_tracks = $settings->radio_number_tracks;
 	$userid              = $settings->userid;
 	$country_code        = $settings->country_code;
 	$is_public_playlists = $settings->is_public_playlists;
@@ -1956,7 +1955,7 @@ function createCompleteCollectionArtistPlaylist($w, $artist_name, $artist_uri) {
 			return;
 		}
 	} else {
-		displayNotificationWithArtwork('Artist was not found', './images/warning.png', 'Error!');
+		displayNotificationWithArtwork('No track was found for artist ' . $artist_name, './images/warning.png', 'Error!');
 
 		return false;
 	}
@@ -2242,6 +2241,7 @@ function getTheArtistAlbums($w, $artist_uri, $country_code, $actionMode = false,
 		} else {
 			$album_type = array(
 						'album',
+						'single'
 					);
 		}
 		do {
