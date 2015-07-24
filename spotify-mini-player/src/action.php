@@ -684,6 +684,9 @@ if ($type == "TRACK" && $other_settings == "" &&
 				return;
 			} else if ($other_action == "disable_mopidy") {
 				exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a stop >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
+				if ($use_mopidy) {
+					invokeMopidyMethod($w, "core.playback.pause", array());
+				}
 				$ret = updateSetting($w, 'use_mopidy', 0);
 				if ($ret == true) {
 					displayNotificationWithArtwork("Mopidy is now disabled", './images/disable_mopidy.png', 'Settings');
