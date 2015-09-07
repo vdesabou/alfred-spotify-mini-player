@@ -7387,7 +7387,7 @@ function thirdDelimiterAdd($w, $query, $settings, $db, $update_in_progress) {
 						'' /* album_artwork_path */ ,
 						$playlist_name /* playlist_name */ ,
 						'' /* playlist_artwork_path */
-					)), "Create a copy of playlist named '" . $playlist_name . "'", 'This will copy the existing playlist ' . $playlist_name . ' to a new one (this is useful until Spotify WEB API allows to subscribe to playlist', './images/add.png', 'yes', null, '');
+					)), "Create a copy of playlist named '" . $playlist_name . "'", 'This will copy the existing playlist ' . $playlist_name . ' to a new one', './images/add.png', 'yes', null, '');
 		}
 	} else {
 		// playlist name has been set
