@@ -2853,7 +2853,7 @@ function displayNotificationForCurrentTrack($w) {
 
 	if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
 		$results = explode('▹', $retArr[0]);
-		displayNotificationWithArtwork('🔈 ' . escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]) . ' in album ' . escapeQuery($results[2]), getTrackOrAlbumArtwork($w, $results[4], true), 'Now Playing ' . floatToStars($results[6] / 100) . ' (' . beautifyTime($results[5]) . ')');
+		displayNotificationWithArtwork('🔈 ' . escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]) . ' in album ' . escapeQuery($results[2]), getTrackOrAlbumArtwork($w, $results[4], true), 'Now Playing ' . floatToStars($results[6] / 100) . ' (' . beautifyTime($results[5] / 1000) . ')');
 	}
 }
 
