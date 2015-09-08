@@ -1083,6 +1083,11 @@ if ($type == "TRACK" && $other_settings == "" &&
 				if ($use_mopidy) {
 					invokeMopidyMethod($w, "core.mixer.set_volume", array('volume' => invokeMopidyMethod($w, "core.mixer.get_volume", array()) + $volume_percent));
 				} else {
+					# FIX THIS: Workaround for #92
+					# https://github.com/vdesabou/alfred-spotify-mini-player/issues/92
+					# To remove once Spotify fixes the issue.
+					exec("osascript -e 'tell application \"Spotify\" to playpause'");
+					exec("osascript -e 'tell application \"Spotify\" to playpause'");
 					exec("osascript -e 'tell application \"Spotify\"
 	                if it is running then
 	                    set sound volume to (sound volume + " . $volume_percent . ")
@@ -1095,6 +1100,11 @@ if ($type == "TRACK" && $other_settings == "" &&
 				if ($use_mopidy) {
 					invokeMopidyMethod($w, "core.mixer.set_volume", array('volume' => invokeMopidyMethod($w, "core.mixer.get_volume", array()) - $volume_percent ));
 				} else {
+					# FIX THIS: Workaround for #92
+					# https://github.com/vdesabou/alfred-spotify-mini-player/issues/92
+					# To remove once Spotify fixes the issue.
+					exec("osascript -e 'tell application \"Spotify\" to playpause'");
+					exec("osascript -e 'tell application \"Spotify\" to playpause'");
 					exec("osascript -e 'tell application \"Spotify\"
 	                if it is running then
 	                    set sound volume to (sound volume - " . $volume_percent . ")
@@ -1138,6 +1148,11 @@ if ($type == "TRACK" && $other_settings == "" &&
 						$command_output = "Spotify volume is muted.";
 					}
 				} else {
+					# FIX THIS: Workaround for #92
+					# https://github.com/vdesabou/alfred-spotify-mini-player/issues/92
+					# To remove once Spotify fixes the issue.
+					exec("osascript -e 'tell application \"Spotify\" to playpause'");
+					exec("osascript -e 'tell application \"Spotify\" to playpause'");
 					$command_output = exec("osascript -e 'tell application \"Spotify\"
 	                if sound volume is less than or equal to 0 then
 	                    set sound volume to 100
