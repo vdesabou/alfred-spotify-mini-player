@@ -171,7 +171,7 @@ function getCurrentTrackInfoWithMopidy($w, $displayError = true) {
 		$length = $tl_track->length;
 	}
 
-	return "" . $track_name. "▹" . $artist_name . "▹" . $album_name . "▹" . $state . "▹" . $track_uri . "▹" . $length/1000 . "▹" . "0";
+	return "" . $track_name. "▹" . $artist_name . "▹" . $album_name . "▹" . $state . "▹" . $track_uri . "▹" . $length . "▹" . "0";
 }
 
 
