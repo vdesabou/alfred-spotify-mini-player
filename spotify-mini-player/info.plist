@@ -4430,9 +4430,11 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argument</key>
 				<integer>0</integer>
 				<key>hotkey</key>
-				<integer>0</integer>
+				<integer>-1</integer>
 				<key>hotmod</key>
-				<integer>0</integer>
+				<integer>131072</integer>
+				<key>hotstring</key>
+				<string>double tap</string>
 				<key>leftcursor</key>
 				<false/>
 				<key>modsmode</key>
