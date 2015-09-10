@@ -2708,11 +2708,11 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argument</key>
 				<integer>0</integer>
 				<key>hotkey</key>
-				<integer>0</integer>
+				<integer>45</integer>
 				<key>hotmod</key>
-				<integer>0</integer>
+				<integer>1310720</integer>
 				<key>hotstring</key>
-				<string></string>
+				<string>N</string>
 				<key>leftcursor</key>
 				<false/>
 				<key>modsmode</key>
