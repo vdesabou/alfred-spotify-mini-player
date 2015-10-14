@@ -74,7 +74,12 @@ if ($add_to_option != "") {
 
 if ($spotify_command != "" && $type == "TRACK" && $add_to_option == "") {
 	$spotify_command = str_replace("\\", "", $spotify_command);
-	exec("osascript -e 'tell application \"Spotify\" to $spotify_command'");
+	if(!startsWith($spotify_command,'activate')) {
+		exec("osascript -e 'tell application \"Spotify\" to activate'");
+		exec("osascript -e 'set uri to \"spotify:search:\" & \"$spotify_command\"' -e 'tell application \"Finder\" to open location uri'");
+	} else {
+		exec("osascript -e 'tell application \"Spotify\" to $spotify_command'");
+	}
 	return;
 }
 

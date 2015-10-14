@@ -680,7 +680,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
 					'' /* album_uri */ ,
 					'' /* artist_uri */ ,
 					'' /* playlist_uri */ ,
-					'activate (open location "spotify:search:' . $query . '")' /* spotify_command */ ,
+					$query /* spotify_command */ ,
 					'' /* query */ ,
 					'' /* other_settings*/ ,
 					'' /* other_action */ ,
@@ -2386,6 +2386,34 @@ function firstDelimiterArtists($w, $query, $settings, $db, $update_in_progress) 
 
 	if ($noresult) {
 		$w->result(null, 'help', "There is no result for your search", "", './images/warning.png', 'no', null, '');
+		if (! $use_mopidy) {
+			$w->result(null, serialize(array(
+						'' /*track_uri*/ ,
+						'' /* album_uri */ ,
+						'' /* artist_uri */ ,
+						'' /* playlist_uri */ ,
+						'artist:' . $artist /* spotify_command */ ,
+						'' /* query */ ,
+						'' /* other_settings*/ ,
+						'' /* other_action */ ,
+
+						'' /* artist_name */ ,
+						'' /* track_name */ ,
+						'' /* album_name */ ,
+						'' /* track_artwork_path */ ,
+						'' /* artist_artwork_path */ ,
+						'' /* album_artwork_path */ ,
+						'' /* playlist_name */ ,
+						'' /* playlist_artwork_path */
+					)), "Search for artist " . $artist . " in Spotify", array(
+					'This will start a new search in Spotify',
+					'alt' => 'Not Available',
+					'cmd' => 'Not Available',
+					'shift' => 'Not Available',
+					'fn' => 'Not Available',
+					'ctrl' => 'Not Available'
+				), './images/spotify.png', 'yes', null, '');
+		}
 	}
 }
 
@@ -2468,6 +2496,33 @@ function firstDelimiterAlbums($w, $query, $settings, $db, $update_in_progress) {
 
 	if ($noresult) {
 		$w->result(null, 'help', "There is no result for your search", "", './images/warning.png', 'no', null, '');
+		if (! $use_mopidy) {
+			$w->result(null, serialize(array(
+						'' /*track_uri*/ ,
+						'' /* album_uri */ ,
+						'' /* artist_uri */ ,
+						'' /* playlist_uri */ ,
+						'album:' . $album /* spotify_command */ ,
+						'' /* query */ ,
+						'' /* other_settings*/ ,
+						'' /* other_action */ ,
+						'' /* artist_name */ ,
+						'' /* track_name */ ,
+						'' /* album_name */ ,
+						'' /* track_artwork_path */ ,
+						'' /* artist_artwork_path */ ,
+						'' /* album_artwork_path */ ,
+						'' /* playlist_name */ ,
+						'' /* playlist_artwork_path */
+					)), "Search for album " . $album . " in Spotify", array(
+					'This will start a new search in Spotify',
+					'alt' => 'Not Available',
+					'cmd' => 'Not Available',
+					'shift' => 'Not Available',
+					'fn' => 'Not Available',
+					'ctrl' => 'Not Available'
+				), './images/spotify.png', 'yes', null, '');
+		}
 	}
 }
 
@@ -4459,7 +4514,6 @@ function secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
 		} else {
 			$w->result(null, 'help', "There is no result for your search", "", './images/warning.png', 'no', null, '');
 		}
-
 	}
 
 	if (! $use_mopidy) {
@@ -4468,7 +4522,7 @@ function secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
 					'' /* album_uri */ ,
 					'' /* artist_uri */ ,
 					'' /* playlist_uri */ ,
-					'activate (open location "spotify:search:' . $artist_name . '")' /* spotify_command */ ,
+					'artist:' . $artist_name /* spotify_command */ ,
 					'' /* query */ ,
 					'' /* other_settings*/ ,
 					'' /* other_action */ ,
@@ -4481,7 +4535,7 @@ function secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
 					'' /* album_artwork_path */ ,
 					'' /* playlist_name */ ,
 					'' /* playlist_artwork_path */
-				)), "Search for " . $artist_name . " in Spotify", array(
+				)), "Search for artist" . $artist_name . " in Spotify", array(
 				'This will start a new search in Spotify',
 				'alt' => 'Not Available',
 				'cmd' => 'Not Available',
@@ -4667,61 +4721,34 @@ function secondDelimiterAlbums($w, $query, $settings, $db, $update_in_progress) 
 
 	if ($noresult) {
 		$w->result(null, 'help', "There is no result for your search", "", './images/warning.png', 'no', null, '');
-		if (! $use_mopidy) {
-			$w->result(null, serialize(array(
-						'' /*track_uri*/ ,
-						'' /* album_uri */ ,
-						'' /* artist_uri */ ,
-						'' /* playlist_uri */ ,
-						'activate (open location "spotify:search:' . $album_name . '")' /* spotify_command */ ,
-						'' /* query */ ,
-						'' /* other_settings*/ ,
-						'' /* other_action */ ,
-						'' /* artist_name */ ,
-						'' /* track_name */ ,
-						'' /* album_name */ ,
-						'' /* track_artwork_path */ ,
-						'' /* artist_artwork_path */ ,
-						'' /* album_artwork_path */ ,
-						'' /* playlist_name */ ,
-						'' /* playlist_artwork_path */
-					)), "Search for " . $album_name . " in Spotify", array(
-					'This will start a new search in Spotify',
-					'alt' => 'Not Available',
-					'cmd' => 'Not Available',
-					'shift' => 'Not Available',
-					'fn' => 'Not Available',
-					'ctrl' => 'Not Available'
-				), './images/spotify.png', 'yes', null, '');
-		}
-	} else {
-		if (! $use_mopidy) {
-			$w->result(null, serialize(array(
-						'' /*track_uri*/ ,
-						'' /* album_uri */ ,
-						'' /* artist_uri */ ,
-						'' /* playlist_uri */ ,
-						'activate (open location "spotify:search:' . $album_name . '")' /* spotify_command */ ,
-						'' /* query */ ,
-						'' /* other_settings*/ ,
-						'' /* other_action */ ,
-						'' /* artist_name */ ,
-						'' /* track_name */ ,
-						'' /* album_name */ ,
-						'' /* track_artwork_path */ ,
-						'' /* artist_artwork_path */ ,
-						'' /* album_artwork_path */ ,
-						'' /* playlist_name */ ,
-						'' /* playlist_artwork_path */
-					)), "Search for " . $album_name . " in Spotify", array(
-					'This will start a new search in Spotify',
-					'alt' => 'Not Available',
-					'cmd' => 'Not Available',
-					'shift' => 'Not Available',
-					'fn' => 'Not Available',
-					'ctrl' => 'Not Available'
-				), './images/spotify.png', 'yes', null, '');
-		}
+	}
+
+	if (! $use_mopidy) {
+		$w->result(null, serialize(array(
+					'' /*track_uri*/ ,
+					'' /* album_uri */ ,
+					'' /* artist_uri */ ,
+					'' /* playlist_uri */ ,
+					'album:' . $album_name /* spotify_command */ ,
+					'' /* query */ ,
+					'' /* other_settings*/ ,
+					'' /* other_action */ ,
+					'' /* artist_name */ ,
+					'' /* track_name */ ,
+					'' /* album_name */ ,
+					'' /* track_artwork_path */ ,
+					'' /* artist_artwork_path */ ,
+					'' /* album_artwork_path */ ,
+					'' /* playlist_name */ ,
+					'' /* playlist_artwork_path */
+				)), "Search for album " . $album_name . " in Spotify", array(
+				'This will start a new search in Spotify',
+				'alt' => 'Not Available',
+				'cmd' => 'Not Available',
+				'shift' => 'Not Available',
+				'fn' => 'Not Available',
+				'ctrl' => 'Not Available'
+			), './images/spotify.png', 'yes', null, '');
 	}
 }
 
@@ -5548,7 +5575,7 @@ function secondDelimiterYourMusicTracks($w, $query, $settings, $db, $update_in_p
 						'' /* album_uri */ ,
 						'' /* artist_uri */ ,
 						'' /* playlist_uri */ ,
-						'activate (open location "spotify:search:' . $thetrack . '")' /* spotify_command */ ,
+						$thetrack  /* spotify_command */ ,
 						'' /* query */ ,
 						'' /* other_settings*/ ,
 						'' /* other_action */ ,
