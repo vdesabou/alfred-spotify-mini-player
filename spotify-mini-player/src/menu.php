@@ -2900,6 +2900,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
 	$echonest_api_key          = $settings->echonest_api_key;
 	$is_public_playlists       = $settings->is_public_playlists;
 	$use_mopidy                = $settings->use_mopidy;
+	$is_display_rating         = $settings->is_display_rating;
 
 	if ($use_mopidy) {
 		$retArr = array(getCurrentTrackInfoWithMopidy($w));
@@ -2964,7 +2965,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
 						'' /* album_artwork_path */ ,
 						'' /* playlist_name */ ,
 						'' /* playlist_artwork_path */
-					)), $added . escapeQuery($results[0]) . " ● " . escapeQuery($results[1]) . " ● " . escapeQuery($results[2]) . " ● " . floatToStars($results[6] / 100) . ' (' . beautifyTime($results[5]) . ')', array(
+					)), $added . escapeQuery($results[0]) . " ● " . escapeQuery($results[1]) . " ● " . escapeQuery($results[2]) . " ● " . floatToStars(($results[6] / 100) ? $is_display_rating : 0) . ' ' . beautifyTime($results[5]), array(
 					$subtitle,
 					'alt' => 'Play album ' . escapeQuery($results[2]) . ' in Spotify',
 					'cmd' => 'Play artist ' . escapeQuery($results[1]) . ' in Spotify',
@@ -3430,6 +3431,7 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
 	$use_mopidy                 = $settings->use_mopidy;
 	$mopidy_server              = $settings->mopidy_server;
 	$mopidy_port                = $settings->mopidy_port;
+	$is_display_rating          = $settings->is_display_rating;
 
 	if ($update_in_progress == false) {
 		$w->result(null, serialize(array(
@@ -3677,6 +3679,60 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
 				'fn' => 'Not Available',
 				'ctrl' => 'Not Available'
 			), './images/enable_quick_mode.png', 'yes', null, '');
+	}
+
+	if ($is_display_rating == true) {
+		$w->result(null, serialize(array(
+					'' /*track_uri*/ ,
+					'' /* album_uri */ ,
+					'' /* artist_uri */ ,
+					'' /* playlist_uri */ ,
+					'' /* spotify_command */ ,
+					'' /* query */ ,
+					'' /* other_settings*/ ,
+					'disable_display_rating' /* other_action */ ,
+					'' /* artist_name */ ,
+					'' /* track_name */ ,
+					'' /* album_name */ ,
+					'' /* track_artwork_path */ ,
+					'' /* artist_artwork_path */ ,
+					'' /* album_artwork_path */ ,
+					'' /* playlist_name */ ,
+					'' /* playlist_artwork_path */
+				)), "Disable Track Rating", array(
+				"Do not display track rating with stars in Current Track menu and notifications",
+				'alt' => 'Not Available',
+				'cmd' => 'Not Available',
+				'shift' => 'Not Available',
+				'fn' => 'Not Available',
+				'ctrl' => 'Not Available'
+			), './images/disable_display_rating.png', 'yes', null, '');
+	} else {
+		$w->result(null, serialize(array(
+					'' /*track_uri*/ ,
+					'' /* album_uri */ ,
+					'' /* artist_uri */ ,
+					'' /* playlist_uri */ ,
+					'' /* spotify_command */ ,
+					'' /* query */ ,
+					'' /* other_settings*/ ,
+					'enable_display_rating' /* other_action */ ,
+					'' /* artist_name */ ,
+					'' /* track_name */ ,
+					'' /* album_name */ ,
+					'' /* track_artwork_path */ ,
+					'' /* artist_artwork_path */ ,
+					'' /* album_artwork_path */ ,
+					'' /* playlist_name */ ,
+					'' /* playlist_artwork_path */
+				)), "Enable Track Rating", array(
+				"Display track rating with stars in Current Track menu and notifications",
+				'alt' => 'Not Available',
+				'cmd' => 'Not Available',
+				'shift' => 'Not Available',
+				'fn' => 'Not Available',
+				'ctrl' => 'Not Available'
+			), './images/enable_display_rating.png', 'yes', null, '');
 	}
 
 	if ($update_in_progress == false) {

@@ -2838,6 +2838,7 @@ function displayNotificationForCurrentTrack($w) {
 	$settings = getSettings($w);
 
 	$use_mopidy                = $settings->use_mopidy;
+	$is_display_rating         = $settings->is_display_rating;
 
 	if ($use_mopidy) {
 		$retArr = array(getCurrentTrackInfoWithMopidy($w));
@@ -2853,7 +2854,7 @@ function displayNotificationForCurrentTrack($w) {
 
 	if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
 		$results = explode('▹', $retArr[0]);
-		displayNotificationWithArtwork('🔈 ' . escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]) . ' in album ' . escapeQuery($results[2]), getTrackOrAlbumArtwork($w, $results[4], true), 'Now Playing ' . floatToStars($results[6] / 100) . ' (' . beautifyTime($results[5] / 1000) . ')');
+		displayNotificationWithArtwork('🔈 ' . escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]) . ' in album ' . escapeQuery($results[2]), getTrackOrAlbumArtwork($w, $results[4], true), 'Now Playing ' . floatToStars(($results[6] / 100) ? $is_display_rating : 0) . ' (' . beautifyTime($results[5] / 1000) . ')');
 	}
 }
 
@@ -5939,7 +5940,8 @@ function getSettings($w) {
 				'use_mopidy' => 0,
 				'mopidy_server' => '127.0.0.1',
 				'mopidy_port' => '6680',
-				'volume_percent' => 20
+				'volume_percent' => 20,
+				'is_display_rating' => 1
 			);
 
 			$ret = $w->write($migrated, 'settings.json');
@@ -5977,7 +5979,8 @@ function getSettings($w) {
 			'use_mopidy' => 0,
 			'mopidy_server' => '127.0.0.1',
 			'mopidy_port' => '6680',
-			'volume_percent' => 20
+			'volume_percent' => 20,
+			'is_display_rating' => 1
 		);
 
 		$ret = $w->write($default, 'settings.json');
@@ -6013,6 +6016,12 @@ function getSettings($w) {
 	// add volume_percent if needed
 	if (!isset($settings->volume_percent)) {
 		updateSetting($w, 'volume_percent', 20);
+		$settings = $w->read('settings.json');
+	}
+
+	// add is_display_rating if needed
+	if (!isset($settings->is_display_rating)) {
+		updateSetting($w, 'is_display_rating', 1);
 		$settings = $w->read('settings.json');
 	}
 

@@ -678,6 +678,22 @@ if ($type == "TRACK" && $other_settings == "" &&
 					displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
 				}
 				return;
+			} else if ($other_action == "enable_display_rating") {
+				$ret = updateSetting($w, 'is_display_rating', 1);
+				if ($ret == true) {
+					displayNotificationWithArtwork("Track Rating is now enabled", './images/enable_display_rating.png', 'Settings');
+				} else {
+					displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
+				}
+				return;
+			} else if ($other_action == "disable_display_rating") {
+				$ret = updateSetting($w, 'is_display_rating', 0);
+				if ($ret == true) {
+					displayNotificationWithArtwork("Track Rating is now disabled", './images/disable_display_rating.png', 'Settings');
+				} else {
+					displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
+				}
+				return;
 			} else if ($other_action == "enable_mopidy") {
 				exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a stop >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
 				$ret = updateSetting($w, 'use_mopidy', 1);
