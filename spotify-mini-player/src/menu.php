@@ -3432,6 +3432,7 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
 	$mopidy_server              = $settings->mopidy_server;
 	$mopidy_port                = $settings->mopidy_port;
 	$is_display_rating          = $settings->is_display_rating;
+	$volume_percent             = $settings->volume_percent;
 
 	if ($update_in_progress == false) {
 		$w->result(null, serialize(array(
@@ -3571,6 +3572,7 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
 	}
 	$w->result(null, '', "Configure Max Number of Results (currently " . $max_results . ")", "Number of results displayed (it does not apply to the list of your playlists)", './images/results_numbers.png', 'no', null, 'Settings▹MaxResults▹');
 	$w->result(null, '', "Configure Number of Radio tracks (currently " . $radio_number_tracks . ")", "Number of tracks when creating a Radio Playlist.", './images/radio_numbers.png', 'no', null, 'Settings▹RadioTracks▹');
+	$w->result(null, '', "Configure Volume Percent (currently " . $volume_percent . "%)", "The percentage of volume which is increased or decreased.", './images/volume_up.png', 'no', null, 'Settings▹VolumePercentage▹');
 
 
 	if ($now_playing_notifications == true) {
@@ -5905,6 +5907,36 @@ function secondDelimiterSettings($w, $query, $settings, $db, $update_in_progress
 						)), "Number of Radio Tracks will be set to <" . $the_query . ">", "Type enter to validate the Radio Tracks number", './images/settings.png', 'yes', null, '');
 			} else {
 				$w->result(null, '', "The number of tracks value entered is not valid", "Please fix it, it must be a number between 1 and 100", './images/warning.png', 'no', null, '');
+
+			}
+		}
+	}  elseif ($setting_kind == "VolumePercentage") {
+		if (mb_strlen($the_query) == 0) {
+			$w->result(null, '', "Enter the percentage of volume:", "Must be between 1 and 50", './images/settings.png', 'no', null, '');
+		} else {
+			// volume percent
+			if (is_numeric($the_query) == true && $the_query > 0 && $the_query <= 50) {
+				$w->result(null, serialize(array(
+							'' /*track_uri*/ ,
+							'' /* album_uri */ ,
+							'' /* artist_uri */ ,
+							'' /* playlist_uri */ ,
+							'' /* spotify_command */ ,
+							'' /* query */ ,
+							'VOLUME_PERCENT▹' . $the_query /* other_settings*/ ,
+							'' /* other_action */ ,
+							'' /* artist_name */ ,
+							'' /* track_name */ ,
+							'' /* album_name */ ,
+							'' /* track_artwork_path */ ,
+							'' /* artist_artwork_path */ ,
+							'' /* album_artwork_path */ ,
+							'' /* playlist_name */ ,
+							'' /* playlist_artwork_path */ ,
+							'' /* $alfred_playlist_name */
+						)), "Volume Percentage will be set to <" . $the_query . ">", "Type enter to validate the Volume Percentage number", './images/settings.png', 'yes', null, '');
+			} else {
+				$w->result(null, '', "The number of volume percentage entered is not valid", "Please fix it, it must be a number between 1 and 50", './images/warning.png', 'no', null, '');
 
 			}
 		}
