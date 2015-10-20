@@ -646,629 +646,645 @@ if ($type == "TRACK" && $other_settings == "" &&
 			}
 			return;
 		} else if ($other_action == "enable_all_playlist") {
-				$ret = updateSetting($w, 'all_playlists', 1);
-				if ($ret == true) {
-					displayNotificationWithArtwork("Search scope set to your complete library", './images/search.png', 'Settings');
-				} else {
-					displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
+			$ret = updateSetting($w, 'all_playlists', 1);
+			if ($ret == true) {
+				displayNotificationWithArtwork("Search scope set to your complete library", './images/search.png', 'Settings');
+			} else {
+				displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
+			}
+			return;
+		} else if ($other_action == "enable_now_playing_notifications") {
+			$ret = updateSetting($w, 'now_playing_notifications', 1);
+			if ($ret == true) {
+				displayNotificationWithArtwork("Now Playing notifications are now enabled", './images/enable_now_playing.png', 'Settings');
+			} else {
+				displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
+			}
+			return;
+		} else if ($other_action == "disable_now_playing_notifications") {
+			exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a stop >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
+			$ret = updateSetting($w, 'now_playing_notifications', 0);
+			if ($ret == true) {
+				displayNotificationWithArtwork("Now Playing notifications are now disabled", './images/disable_now_playing.png', 'Settings');
+			} else {
+				displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
+			}
+			return;
+		} else if ($other_action == "enable_quick_mode") {
+			$ret = updateSetting($w, 'quick_mode', 1);
+			if ($ret == true) {
+				displayNotificationWithArtwork("Quick Mode is now enabled", './images/enable_quick_mode.png', 'Settings');
+			} else {
+				displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
+			}
+			return;
+		} else if ($other_action == "disable_quick_mode") {
+			$ret = updateSetting($w, 'quick_mode', 0);
+			if ($ret == true) {
+				displayNotificationWithArtwork("Quick Mode is now disabled", './images/disable_quick_mode.png', 'Settings');
+			} else {
+				displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
+			}
+			return;
+		} else if ($other_action == "enable_display_rating") {
+			$ret = updateSetting($w, 'is_display_rating', 1);
+			if ($ret == true) {
+				displayNotificationWithArtwork("Track Rating is now enabled", './images/enable_display_rating.png', 'Settings');
+			} else {
+				displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
+			}
+			return;
+		} else if ($other_action == "disable_display_rating") {
+			$ret = updateSetting($w, 'is_display_rating', 0);
+			if ($ret == true) {
+				displayNotificationWithArtwork("Track Rating is now disabled", './images/disable_display_rating.png', 'Settings');
+			} else {
+				displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
+			}
+			return;
+		} else if ($other_action == "enable_autoplay") {
+			$ret = updateSetting($w, 'is_autoplay_playlist', 1);
+			if ($ret == true) {
+				displayNotificationWithArtwork("Playlist Autoplay is now enabled", './images/enable_autoplay.png', 'Settings');
+			} else {
+				displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
+			}
+			return;
+		} else if ($other_action == "disable_autoplay") {
+			$ret = updateSetting($w, 'is_autoplay_playlist', 0);
+			if ($ret == true) {
+				displayNotificationWithArtwork("Playlist Autoplay is now disabled", './images/disable_autoplay.png', 'Settings');
+			} else {
+				displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
+			}
+			return;
+		} else if ($other_action == "enable_mopidy") {
+			exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a stop >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
+			$ret = updateSetting($w, 'use_mopidy', 1);
+			if ($ret == true) {
+				displayNotificationWithArtwork("Mopidy is now enabled", './images/enable_mopidy.png', 'Settings');
+			} else {
+				displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
+			}
+			return;
+		} else if ($other_action == "disable_mopidy") {
+			exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a stop >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
+			if ($use_mopidy) {
+				invokeMopidyMethod($w, "core.playback.pause", array());
+			}
+			$ret = updateSetting($w, 'use_mopidy', 0);
+			if ($ret == true) {
+				displayNotificationWithArtwork("Mopidy is now disabled", './images/disable_mopidy.png', 'Settings');
+			} else {
+				displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
+			}
+			return;
+		} else if ($other_action == "enable_alfred_playlist") {
+			$ret = updateSetting($w, 'is_alfred_playlist_active', 1);
+			if ($ret == true) {
+				displayNotificationWithArtwork("Controlling Alfred Playlist", './images/alfred_playlist.png', 'Settings');
+			} else {
+				displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
+			}
+			return;
+		} else if ($other_action == "disable_alfred_playlist") {
+			$ret = updateSetting($w, 'is_alfred_playlist_active', 0);
+			if ($ret == true) {
+				displayNotificationWithArtwork("Controlling Your Music", './images/yourmusic.png', 'Settings');
+			} else {
+				displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
+			}
+			return;
+		} else if ($other_action == "enable_public_playlists") {
+			$ret = updateSetting($w, 'is_public_playlists', 1);
+			if ($ret == true) {
+				displayNotificationWithArtwork("New playlists will be now public", './images/enable_public_playlists.png', 'Settings');
+			} else {
+				displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
+			}
+			return;
+		} else if ($other_action == "disable_public_playlists") {
+			$ret = updateSetting($w, 'is_public_playlists', 0);
+			if ($ret == true) {
+				displayNotificationWithArtwork("New playlists will be now private", './images/disable_public_playlists.png', 'Settings');
+			} else {
+				displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
+			}
+			return;
+		} else if ($other_action == "play_track_in_album_context") {
+			// start now playing if needed
+			$mopidy_arg = "";
+			if ($use_mopidy) {
+				$mopidy_arg = "MOPIDY";
+			}
+			exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start -m \"" . $mopidy_arg . "\"  >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
+			if (! $use_mopidy) {
+				exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+				if ($retVal != 0) {
+					displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+					exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+					return;
 				}
-				return;
-			} else if ($other_action == "enable_now_playing_notifications") {
-				$ret = updateSetting($w, 'now_playing_notifications', 1);
-				if ($ret == true) {
-					displayNotificationWithArtwork("Now Playing notifications are now enabled", './images/enable_now_playing.png', 'Settings');
-				} else {
-					displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
+			}
+			if ($use_mopidy) {
+				playTrackInContextWithMopidy($w, $track_uri, $album_uri);
+			} else {
+				exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\" in context \"$album_uri\"'");
+			}
+			$album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, true);
+			if ($now_playing_notifications == false) {
+				displayNotificationWithArtwork('🔈 ' . $track_name . ' in album ' . $album_name . ' by ' . ucfirst($artist_name), $album_artwork_path, 'Play Track from Album');
+			}
+			if ($userid != 'vdesabou') {
+				stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
+			}
+			addAlbumToPlayQueue($w, $album_uri, $album_name);
+			return;
+		} else if ($other_action == "play") {
+			if (! $use_mopidy) {
+				exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+				if ($retVal != 0) {
+					displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+					exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+					return;
 				}
-				return;
-			} else if ($other_action == "disable_now_playing_notifications") {
-				exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a stop >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
-				$ret = updateSetting($w, 'now_playing_notifications', 0);
-				if ($ret == true) {
-					displayNotificationWithArtwork("Now Playing notifications are now disabled", './images/disable_now_playing.png', 'Settings');
-				} else {
-					displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
-				}
-				return;
-			} else if ($other_action == "enable_quick_mode") {
-				$ret = updateSetting($w, 'quick_mode', 1);
-				if ($ret == true) {
-					displayNotificationWithArtwork("Quick Mode is now enabled", './images/enable_quick_mode.png', 'Settings');
-				} else {
-					displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
-				}
-				return;
-			} else if ($other_action == "disable_quick_mode") {
-				$ret = updateSetting($w, 'quick_mode', 0);
-				if ($ret == true) {
-					displayNotificationWithArtwork("Quick Mode is now disabled", './images/disable_quick_mode.png', 'Settings');
-				} else {
-					displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
-				}
-				return;
-			} else if ($other_action == "enable_display_rating") {
-				$ret = updateSetting($w, 'is_display_rating', 1);
-				if ($ret == true) {
-					displayNotificationWithArtwork("Track Rating is now enabled", './images/enable_display_rating.png', 'Settings');
-				} else {
-					displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
-				}
-				return;
-			} else if ($other_action == "disable_display_rating") {
-				$ret = updateSetting($w, 'is_display_rating', 0);
-				if ($ret == true) {
-					displayNotificationWithArtwork("Track Rating is now disabled", './images/disable_display_rating.png', 'Settings');
-				} else {
-					displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
-				}
-				return;
-			} else if ($other_action == "enable_mopidy") {
-				exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a stop >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
-				$ret = updateSetting($w, 'use_mopidy', 1);
-				if ($ret == true) {
-					displayNotificationWithArtwork("Mopidy is now enabled", './images/enable_mopidy.png', 'Settings');
-				} else {
-					displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
-				}
-				return;
-			} else if ($other_action == "disable_mopidy") {
-				exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a stop >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
-				if ($use_mopidy) {
+			}
+			if ($use_mopidy) {
+				invokeMopidyMethod($w, "core.playback.resume", array());
+			} else {
+				exec("osascript -e 'tell application \"Spotify\" to play'");
+			}
+			if ($now_playing_notifications == false) {
+				displayNotificationForCurrentTrack($w);
+			}
+			return;
+		} else if ($other_action == "pause") {
+			if ($use_mopidy) {
+				invokeMopidyMethod($w, "core.playback.pause", array());
+			} else {
+				exec("osascript -e 'tell application \"Spotify\" to pause'");
+			}
+			return;
+		} else if ($other_action == "playpause") {
+			if ($use_mopidy) {
+				$state = invokeMopidyMethod($w, "core.playback.get_state", array());
+				if($state == 'playing') {
 					invokeMopidyMethod($w, "core.playback.pause", array());
-				}
-				$ret = updateSetting($w, 'use_mopidy', 0);
-				if ($ret == true) {
-					displayNotificationWithArtwork("Mopidy is now disabled", './images/disable_mopidy.png', 'Settings');
 				} else {
-					displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
-				}
-				return;
-			} else if ($other_action == "enable_alfred_playlist") {
-				$ret = updateSetting($w, 'is_alfred_playlist_active', 1);
-				if ($ret == true) {
-					displayNotificationWithArtwork("Controlling Alfred Playlist", './images/alfred_playlist.png', 'Settings');
-				} else {
-					displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
-				}
-				return;
-			} else if ($other_action == "disable_alfred_playlist") {
-				$ret = updateSetting($w, 'is_alfred_playlist_active', 0);
-				if ($ret == true) {
-					displayNotificationWithArtwork("Controlling Your Music", './images/yourmusic.png', 'Settings');
-				} else {
-					displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
-				}
-				return;
-			} else if ($other_action == "enable_public_playlists") {
-				$ret = updateSetting($w, 'is_public_playlists', 1);
-				if ($ret == true) {
-					displayNotificationWithArtwork("New playlists will be now public", './images/enable_public_playlists.png', 'Settings');
-				} else {
-					displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
-				}
-				return;
-			} else if ($other_action == "disable_public_playlists") {
-				$ret = updateSetting($w, 'is_public_playlists', 0);
-				if ($ret == true) {
-					displayNotificationWithArtwork("New playlists will be now private", './images/disable_public_playlists.png', 'Settings');
-				} else {
-					displayNotificationWithArtwork("Error while updating settings", './images/settings.png', 'Error!');
-				}
-				return;
-			} else if ($other_action == "play_track_in_album_context") {
-				// start now playing if needed
-				$mopidy_arg = "";
-				if ($use_mopidy) {
-					$mopidy_arg = "MOPIDY";
-				}
-				exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start -m \"" . $mopidy_arg . "\"  >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
-				if (! $use_mopidy) {
-					exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
-					if ($retVal != 0) {
-						displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-						exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
-						return;
-					}
-				}
-				if ($use_mopidy) {
-					playTrackInContextWithMopidy($w, $track_uri, $album_uri);
-				} else {
-					exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\" in context \"$album_uri\"'");
-				}
-				$album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, true);
-				if ($now_playing_notifications == false) {
-					displayNotificationWithArtwork('🔈 ' . $track_name . ' in album ' . $album_name . ' by ' . ucfirst($artist_name), $album_artwork_path, 'Play Track from Album');
-				}
-				if ($userid != 'vdesabou') {
-					stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
-				}
-				addAlbumToPlayQueue($w, $album_uri, $album_name);
-				return;
-			} else if ($other_action == "play") {
-				if (! $use_mopidy) {
-					exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
-					if ($retVal != 0) {
-						displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-						exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
-						return;
-					}
-				}
-				if ($use_mopidy) {
 					invokeMopidyMethod($w, "core.playback.resume", array());
-				} else {
-					exec("osascript -e 'tell application \"Spotify\" to play'");
 				}
-				if ($now_playing_notifications == false) {
-					displayNotificationForCurrentTrack($w);
-				}
-				return;
-			} else if ($other_action == "pause") {
-				if ($use_mopidy) {
-					invokeMopidyMethod($w, "core.playback.pause", array());
-				} else {
-					exec("osascript -e 'tell application \"Spotify\" to pause'");
-				}
-				return;
-			} else if ($other_action == "playpause") {
-				if ($use_mopidy) {
-					$state = invokeMopidyMethod($w, "core.playback.get_state", array());
-					if($state == 'playing') {
-						invokeMopidyMethod($w, "core.playback.pause", array());
-					} else {
-						invokeMopidyMethod($w, "core.playback.resume", array());
-					}
-				} else {
-					exec("osascript -e 'tell application \"Spotify\" to playpause'");
-				}
-				return;
-			} else if ($other_action == "kill_update") {
-				killUpdate($w);
-				if ($userid != 'vdesabou') {
-					stathat_ez_count('AlfredSpotifyMiniPlayer', 'kill update', 1);
-				}
-				return;
-			} else if ($other_action == "lookup_current_artist") {
-				lookupCurrentArtist($w);
-				return;
-			} else if ($other_action == "unfollow_playlist") {
-				unfollowThePlaylist($w, $playlist_uri);
-				return;
-			} else if ($other_action == "follow_playlist") {
-				followThePlaylist($w, $playlist_uri);
-				return;
-			} else if ($other_action == "lyrics") {
-				displayLyricsForCurrentTrack($w);
-				return;
-			} else if ($other_action == "current_track_radio") {
-				if (file_exists($w->data() . '/update_library_in_progress')) {
-					displayNotificationWithArtwork("Cannot modify library while update is in progress", './images/warning.png', 'Error!');
-					return;
-				}
-				createRadioSongPlaylistForCurrentTrack($w);
-				if ($userid != 'vdesabou') {
-					stathat_ez_count('AlfredSpotifyMiniPlayer', 'radio', 1);
-				}
-				return;
-			} else if ($other_action == "current_artist_radio") {
-				if (file_exists($w->data() . '/update_library_in_progress')) {
-					displayNotificationWithArtwork("Cannot modify library while update is in progress", './images/warning.png', 'Error!');
-					return;
-				}
-				createRadioArtistPlaylistForCurrentArtist($w);
-				if ($userid != 'vdesabou') {
-					stathat_ez_count('AlfredSpotifyMiniPlayer', 'radio', 1);
-				}
-				return;
-			} else if ($other_action == "play_current_artist") {
-				playCurrentArtist($w);
-				if ($userid != 'vdesabou') {
-					stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
-				}
-				return;
-			} else if ($other_action == "play_current_album") {
-				playCurrentAlbum($w);
-				if ($userid != 'vdesabou') {
-					stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
-				}
-				return;
-			} else if ($other_action == "Oauth_Login") {
-				// check PHP version
-				$version = explode('.', phpversion());
-				if ($version[1] < 4) {
-					displayNotificationWithArtwork("PHP 5.4.0 or later is required for authentication", './images/warning.png', 'Error!');
-					exec("open http://alfred-spotify-mini-player.com/known-issues/#php_requirement");
-					return;
-				}
-				exec("kill -9 $(ps -efx | grep \"php\" | egrep \"php -S localhost:15298\" | grep -v grep | awk '{print $2}')");
-				sleep(1);
-				$cache_log = $w->cache() . '/spotify_mini_player_web_server.log';
-				exec("php -S localhost:15298 > \"$cache_log\" 2>&1 &");
-				sleep(2);
-				exec("open http://localhost:15298");
-				return;
-			} else if ($other_action == "current") {
-				if ($now_playing_notifications == true ||
-					($now_playing_notifications == false && $type == "")) {
-					displayNotificationForCurrentTrack($w);
-				}
-				if (! $use_mopidy) {
-					if ($type != "playing") {
-						updateCurrentTrackIndexFromPlayQueue($w);
-					}
-				}
-				return;
-			} else if ($other_action == "current_mopidy") {
-				$ret = getCurrentTrackInfoWithMopidy($w, false);
-				echo "$ret";
-				return;
-			} else if ($other_action == "add_current_track_to") {
-				if (file_exists($w->data() . '/update_library_in_progress')) {
-					displayNotificationWithArtwork("Cannot modify library while update is in progress", './images/warning.png', 'Error!');
-					return;
-				}
-				addCurrentTrackTo($w);
-				return;
-			} else if ($other_action == "remove_current_track_from") {
-				if (file_exists($w->data() . '/update_library_in_progress')) {
-					displayNotificationWithArtwork("Cannot modify library while update is in progress", './images/warning.png', 'Error!');
-					return;
-				}
-				removeCurrentTrackFrom($w);
-				return;
-			} else if ($other_action == "download_update") {
-				$check_results = checkForUpdate($w, 0, true);
-				if ($check_results != null && is_array($check_results)) {
-					exec("open \"$check_results[1]\"");
-				    displayNotificationWithArtwork("Please install the new version with Alfred", './images/check_update.png', 'Update available');
-				    return;
-				}
-				return;
-			}  else if ($other_action == "previous") {
-				if ($use_mopidy) {
-					invokeMopidyMethod($w, "core.playback.previous", array());
-				} else {
-					exec("osascript -e 'tell application \"Spotify\" to previous track'");
-				}
-				if ($now_playing_notifications == true) {
-					displayNotificationForCurrentTrack($w);
-				}
-				return;
-			} else if ($other_action == "next") {
-				if ($use_mopidy) {
-					invokeMopidyMethod($w, "core.playback.next", array());
-				} else {
-					exec("osascript -e 'tell application \"Spotify\" to next track'");
-				}
-				if ($now_playing_notifications == false) {
-					displayNotificationForCurrentTrack($w);
-				}
-				return;
-			} else if ($other_action == "add_current_track") {
-				if (file_exists($w->data() . '/update_library_in_progress')) {
-					displayNotificationWithArtwork("Cannot modify library while update is in progress", './images/warning.png', 'Error!');
-					return;
-				}
-				addCurrentTrackToAlfredPlaylistOrYourMusic($w);
-				if ($userid != 'vdesabou') {
-					stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);
-				}
-				return;
-			} else if ($other_action == "random") {
-				list($track_uri, $track_name, $artist_name, $album_name, $duration) = getRandomTrack($w);
-				// start now playing if needed
-				$mopidy_arg = "";
-				if ($use_mopidy) {
-					$mopidy_arg = "MOPIDY";
-				}
-				exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start -m \"" . $mopidy_arg . "\"  >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
-				if (! $use_mopidy) {
-					exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
-					if ($retVal != 0) {
-						displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-						exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
-						return;
-					}
-				}
-				if ($use_mopidy) {
-					playUriWithMopidyWithoutClearing($w, $track_uri);
-				} else {
-					exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
-				}
-
-				if ($now_playing_notifications == false) {
-					displayNotificationForCurrentTrack($w);
-				}
-				if ($userid != 'vdesabou') {
-					stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
-				}
-				addTrackToPlayQueue($w, $track_uri, $track_name, $artist_name, $album_name, $duration, $country_code);
-				return;
-			} else if ($other_action == "random_album") {
-				list($album_uri, $album_name, $theartistname) = getRandomAlbum($w);
-				// start now playing if needed
-				$mopidy_arg = "";
-				if ($use_mopidy) {
-					$mopidy_arg = "MOPIDY";
-				}
-				exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start -m \"" . $mopidy_arg . "\"  >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
-				if (! $use_mopidy) {
-					exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
-					if ($retVal != 0) {
-						displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-						exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
-						return;
-					}
-				}
-				if ($use_mopidy) {
-					playUriWithMopidy($w, $album_uri);
-				} else {
-					exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
-				}
-				displayNotificationWithArtwork('🔈 Album ' . $album_name . ' by ' . $theartistname, getTrackOrAlbumArtwork($w, $album_uri, true), 'Play Random Album');
-				if ($userid != 'vdesabou') {
-					stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
-				}
-				addAlbumToPlayQueue($w, $album_uri, $album_name);
-				return;
-			} else if ($other_action == "reset_settings") {
-				deleteTheFile($w->data() . '/settings.json');
-				return;
-			} else if ($other_action == "biography") {
-				displayCurrentArtistBiography($w);
-				if ($userid != 'vdesabou') {
-					stathat_ez_count('AlfredSpotifyMiniPlayer', 'display biography', 1);
-				}
-				return;
-			} else if ($other_action == "go_back") {
-				$history = $w->read('history.json');
-
-				if ($history == false) {
-					displayNotificationWithArtwork("No history yet", './images/warning.png', 'Error!');
-				}
-				$query = array_pop($history);
-				// pop twice
-				$query = array_pop($history);
-				$w->write($history, 'history.json');
-				exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini $query\"'");
-				return;
-			} else if ($other_action == "lookup_artist") {
-
-				if (!$w->internet()) {
-					displayNotificationWithArtwork("No internet connection", './images/warning.png', 'Error!');
-					return;
-				}
-				if ($artist_uri == "") {
-					$artist_uri = getArtistUriFromTrack($w, $track_uri);
-				}
-				exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online▹" . $artist_uri . "@" . escapeQuery($artist_name) . '▹' . "\"'");
-				if ($userid != 'vdesabou') {
-					stathat_ez_count('AlfredSpotifyMiniPlayer', 'lookup online', 1);
-				}
-				return;
-			} else if ($other_action == "playartist") {
-				$artist_artwork_path = getArtistArtwork($w, $artist_uri, $artist_name, true);
-				$mopidy_arg = "";
-				if ($use_mopidy) {
-					$mopidy_arg = "MOPIDY";
-				}
-				exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start -m \"" . $mopidy_arg . "\"  >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
-				if (! $use_mopidy) {
-					exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
-					if ($retVal != 0) {
-						displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-						exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
-						return;
-					}
-				}
-				if ($use_mopidy) {
-					playUriWithMopidy($w, $artist_uri);
-				} else {
-					exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
-				}
-				displayNotificationWithArtwork('🔈 Artist ' . $artist_name, $artist_artwork_path, 'Play Artist');
-				if ($userid != 'vdesabou') {
-					stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
-				}
-				addArtistToPlayQueue($w, $artist_uri, $artist_name, $country_code);
-				return;
-			} else if ($other_action == "playalbum") {
-				if ($album_uri == "") {
-					if($track_uri == "") {
-						displayNotificationWithArtwork("Cannot get current album", './images/warning.png', 'Error!');
-						return;
-					}
-					$album_uri = getAlbumUriFromTrack($w, $track_uri);
-					if ($album_uri == false) {
-						displayNotificationWithArtwork("Cannot get album", './images/warning.png', 'Error!');
-						return;
-					}
-				}
-				$album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, true);
-				$mopidy_arg = "";
-				if ($use_mopidy) {
-					$mopidy_arg = "MOPIDY";
-				}
-				exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start -m \"" . $mopidy_arg . "\"  >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
-				if (! $use_mopidy) {
-					exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
-					if ($retVal != 0) {
-						displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-						exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
-						return;
-					}
-				}
-				if ($use_mopidy) {
-					playUriWithMopidy($w, $album_uri);
-				} else {
-					exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
-				}
-				displayNotificationWithArtwork('🔈 Album ' . $album_name, $album_artwork_path, 'Play Album');
-				if ($userid != 'vdesabou') {
-					stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
-				}
-				addAlbumToPlayQueue($w, $album_uri, $album_name);
-				return;
-			} else if ($other_action == "volume_up") {
-				if ($use_mopidy) {
-					invokeMopidyMethod($w, "core.mixer.set_volume", array('volume' => invokeMopidyMethod($w, "core.mixer.get_volume", array()) + $volume_percent));
-				} else {
-					$command_output = exec("osascript -e 'tell application \"Spotify\"
-	                if it is running then
-						if (sound volume + $volume_percent) > 100 then
-							set theVolume to 100
-							set sound volume to theVolume
-							return \"Spotify volume is at maximum level.\"
-						else
-							set theVolume to (sound volume + $volume_percent)
-							set sound volume to theVolume
-							return \"Spotify volume has been increased to \" & theVolume & \"%.\"
-						end if
-	                end if
-	            end tell'");
-	            	displayNotificationWithArtwork($command_output, './images/volume_up.png', 'Volume Up');
-				}
-
-				return;
-			} else if ($other_action == "volume_down") {
-				if ($use_mopidy) {
-					invokeMopidyMethod($w, "core.mixer.set_volume", array('volume' => invokeMopidyMethod($w, "core.mixer.get_volume", array()) - $volume_percent ));
-				} else {
-					$command_output = exec("osascript -e 'tell application \"Spotify\"
-	                if it is running then
-						if (sound volume - $volume_percent) < 0 then
-							set theVolume to 0
-							set sound volume to theVolume
-							return \"Spotify volume is at minimum level.\"
-						else
-							set theVolume to (sound volume - $volume_percent)
-							set sound volume to theVolume
-							return \"Spotify volume has been decreased to \" & theVolume & \"%.\"
-						end if
-	                    set sound volume to theVolume
-	                end if
-	            end tell'");
-	            	displayNotificationWithArtwork($command_output, './images/volume_down.png', 'Volume Down');
-				}
-
-				return;
-			} else if ($other_action == "volmax") {
-				if ($use_mopidy) {
-					invokeMopidyMethod($w, "core.mixer.set_volume", array('volume' => 100));
-				} else {
-					exec("osascript -e 'tell application \"Spotify\"
-	                if it is running then
-	                    set sound volume to 100
-	                end if
-	            end tell'");
-				}
-				displayNotificationWithArtwork("Spotify volume has been set to maximum", './images/volmax.png', 'Volume Max');
-				return;
-			} else if ($other_action == "volmid") {
-				if ($use_mopidy) {
-					invokeMopidyMethod($w, "core.mixer.set_volume", array('volume' => 50));
-				} else {
-					exec("osascript -e 'tell application \"Spotify\"
-	                if it is running then
-	                    set sound volume to 50
-	                end if
-	            end tell'");
-				}
-				displayNotificationWithArtwork("Spotify volume has been set to 50%", './images/volmid.png', 'Volume 50%');
-				return;
-			} else if ($other_action == "mute") {
-				if ($use_mopidy) {
-					$volume = invokeMopidyMethod($w, "core.mixer.get_volume", array());
-					if ($volume <= 0) {
-						invokeMopidyMethod($w, "core.mixer.set_volume", array('volume' => 100));
-						$command_output = "Spotify volume is unmuted.";
-					} else {
-						invokeMopidyMethod($w, "core.mixer.set_volume", array('volume' => 0));
-						$command_output = "Spotify volume is muted.";
-					}
-				} else {
-					$command_output = exec("osascript -e 'tell application \"Spotify\"
-	                if sound volume is less than or equal to 0 then
-	                    set sound volume to 100
-	                    return \"Spotify volume is unmuted.\"
-	                else
-	                    set sound volume to 0
-	                    return \"Spotify volume is muted.\"
-	                end if
-	            end tell'");
-				}
-				displayNotificationWithArtwork($command_output, './images/mute.png', 'Mute');
-				return;
-			} else if ($other_action == "shuffle") {
-				if ($use_mopidy) {
-					$isShuffleEnabled = invokeMopidyMethod($w, "core.tracklist.get_random", array());
-					if ($isShuffleEnabled) {
-						invokeMopidyMethod($w, "core.tracklist.set_random", array('value' => false));
-						$command_output = "Shuffle is now disabled.";
-					} else {
-						invokeMopidyMethod($w, "core.tracklist.set_random", array('value' => true));
-						$command_output = "Shuffle is now enabled.";
-					}
-				} else {
-					$command_output = exec("osascript -e '
-	    	tell application \"Spotify\"
-	    	if shuffling enabled is true then
-	    		if shuffling is true then
-					set shuffling to false
-					return \"Shuffle is now disabled.\"
-				else
-					set shuffling to true
-					return \"Shuffle is now enabled.\"
-				end if
-			else
-				return \"Shuffle is not currently enabled.\"
-			end if
-			end tell'");
-				}
-				displayNotificationWithArtwork($command_output, './images/shuffle.png', 'Shuffle');
-				return;
-			} else if ($other_action == "radio_artist") {
-				if (file_exists($w->data() . '/update_library_in_progress')) {
-					displayNotificationWithArtwork("Cannot modify library while update is in progress", './images/warning.png', 'Error!');
-					return;
-				}
-				createRadioArtistPlaylist($w, $artist_name);
-				if ($userid != 'vdesabou') {
-					stathat_ez_count('AlfredSpotifyMiniPlayer', 'radio', 1);
-				}
-				return;
-			}  else if ($other_action == "complete_collection_artist") {
-				if (file_exists($w->data() . '/update_library_in_progress')) {
-					displayNotificationWithArtwork("Cannot modify library while update is in progress", './images/warning.png', 'Error!');
-					return;
-				}
-				createCompleteCollectionArtistPlaylist($w, $artist_name, $artist_uri);
-				return;
-			} else if ($other_action == "play_alfred_playlist") {
-				playAlfredPlaylist($w);
-				if ($userid != 'vdesabou') {
-					stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
-				}
-				return;
-			} else if ($other_action == "update_library") {
-				if (file_exists($w->data() . '/update_library_in_progress')) {
-					displayNotificationWithArtwork("Cannot modify library while update is in progress", './images/warning.png', 'Error!');
-					return;
-				}
-				updateLibrary($w);
-				if ($userid != 'vdesabou') {
-					stathat_ez_count('AlfredSpotifyMiniPlayer', 'update library', 1);
-				}
-				return;
-			} else if ($other_action == "refresh_library") {
-				if (file_exists($w->data() . '/update_library_in_progress')) {
-					displayNotificationWithArtwork("Cannot modify library while update is in progress", './images/warning.png', 'Error!');
-					return;
-				}
-				refreshLibrary($w);
-				if ($userid != 'vdesabou') {
-					stathat_ez_count('AlfredSpotifyMiniPlayer', 'update library', 1);
-				}
+			} else {
+				exec("osascript -e 'tell application \"Spotify\" to playpause'");
+			}
+			return;
+		} else if ($other_action == "kill_update") {
+			killUpdate($w);
+			if ($userid != 'vdesabou') {
+				stathat_ez_count('AlfredSpotifyMiniPlayer', 'kill update', 1);
+			}
+			return;
+		} else if ($other_action == "lookup_current_artist") {
+			lookupCurrentArtist($w);
+			return;
+		} else if ($other_action == "unfollow_playlist") {
+			unfollowThePlaylist($w, $playlist_uri);
+			return;
+		} else if ($other_action == "follow_playlist") {
+			followThePlaylist($w, $playlist_uri);
+			return;
+		} else if ($other_action == "lyrics") {
+			displayLyricsForCurrentTrack($w);
+			return;
+		} else if ($other_action == "current_track_radio") {
+			if (file_exists($w->data() . '/update_library_in_progress')) {
+				displayNotificationWithArtwork("Cannot modify library while update is in progress", './images/warning.png', 'Error!');
 				return;
 			}
+			createRadioSongPlaylistForCurrentTrack($w);
+			if ($userid != 'vdesabou') {
+				stathat_ez_count('AlfredSpotifyMiniPlayer', 'radio', 1);
+			}
+			return;
+		} else if ($other_action == "current_artist_radio") {
+			if (file_exists($w->data() . '/update_library_in_progress')) {
+				displayNotificationWithArtwork("Cannot modify library while update is in progress", './images/warning.png', 'Error!');
+				return;
+			}
+			createRadioArtistPlaylistForCurrentArtist($w);
+			if ($userid != 'vdesabou') {
+				stathat_ez_count('AlfredSpotifyMiniPlayer', 'radio', 1);
+			}
+			return;
+		} else if ($other_action == "play_current_artist") {
+			playCurrentArtist($w);
+			if ($userid != 'vdesabou') {
+				stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
+			}
+			return;
+		} else if ($other_action == "play_current_album") {
+			playCurrentAlbum($w);
+			if ($userid != 'vdesabou') {
+				stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
+			}
+			return;
+		} else if ($other_action == "Oauth_Login") {
+			// check PHP version
+			$version = explode('.', phpversion());
+			if ($version[1] < 4) {
+				displayNotificationWithArtwork("PHP 5.4.0 or later is required for authentication", './images/warning.png', 'Error!');
+				exec("open http://alfred-spotify-mini-player.com/known-issues/#php_requirement");
+				return;
+			}
+			exec("kill -9 $(ps -efx | grep \"php\" | egrep \"php -S localhost:15298\" | grep -v grep | awk '{print $2}')");
+			sleep(1);
+			$cache_log = $w->cache() . '/spotify_mini_player_web_server.log';
+			exec("php -S localhost:15298 > \"$cache_log\" 2>&1 &");
+			sleep(2);
+			exec("open http://localhost:15298");
+			return;
+		} else if ($other_action == "current") {
+			if ($now_playing_notifications == true ||
+				($now_playing_notifications == false && $type == "")) {
+				displayNotificationForCurrentTrack($w);
+			}
+			if (! $use_mopidy) {
+				if ($type != "playing") {
+					updateCurrentTrackIndexFromPlayQueue($w);
+				}
+			}
+			return;
+		} else if ($other_action == "current_mopidy") {
+			$ret = getCurrentTrackInfoWithMopidy($w, false);
+			echo "$ret";
+			return;
+		} else if ($other_action == "add_current_track_to") {
+			if (file_exists($w->data() . '/update_library_in_progress')) {
+				displayNotificationWithArtwork("Cannot modify library while update is in progress", './images/warning.png', 'Error!');
+				return;
+			}
+			addCurrentTrackTo($w);
+			return;
+		} else if ($other_action == "remove_current_track_from") {
+			if (file_exists($w->data() . '/update_library_in_progress')) {
+				displayNotificationWithArtwork("Cannot modify library while update is in progress", './images/warning.png', 'Error!');
+				return;
+			}
+			removeCurrentTrackFrom($w);
+			return;
+		} else if ($other_action == "download_update") {
+			$check_results = checkForUpdate($w, 0, true);
+			if ($check_results != null && is_array($check_results)) {
+				exec("open \"$check_results[1]\"");
+			    displayNotificationWithArtwork("Please install the new version with Alfred", './images/check_update.png', 'Update available');
+			    return;
+			}
+			return;
+		}  else if ($other_action == "previous") {
+			if ($use_mopidy) {
+				invokeMopidyMethod($w, "core.playback.previous", array());
+			} else {
+				exec("osascript -e 'tell application \"Spotify\" to previous track'");
+			}
+			if ($now_playing_notifications == true) {
+				displayNotificationForCurrentTrack($w);
+			}
+			return;
+		} else if ($other_action == "next") {
+			if ($use_mopidy) {
+				invokeMopidyMethod($w, "core.playback.next", array());
+			} else {
+				exec("osascript -e 'tell application \"Spotify\" to next track'");
+			}
+			if ($now_playing_notifications == false) {
+				displayNotificationForCurrentTrack($w);
+			}
+			return;
+		} else if ($other_action == "add_current_track") {
+			if (file_exists($w->data() . '/update_library_in_progress')) {
+				displayNotificationWithArtwork("Cannot modify library while update is in progress", './images/warning.png', 'Error!');
+				return;
+			}
+			addCurrentTrackToAlfredPlaylistOrYourMusic($w);
+			if ($userid != 'vdesabou') {
+				stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);
+			}
+			return;
+		} else if ($other_action == "random") {
+			list($track_uri, $track_name, $artist_name, $album_name, $duration) = getRandomTrack($w);
+			// start now playing if needed
+			$mopidy_arg = "";
+			if ($use_mopidy) {
+				$mopidy_arg = "MOPIDY";
+			}
+			exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start -m \"" . $mopidy_arg . "\"  >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
+			if (! $use_mopidy) {
+				exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+				if ($retVal != 0) {
+					displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+					exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+					return;
+				}
+			}
+			if ($use_mopidy) {
+				playUriWithMopidyWithoutClearing($w, $track_uri);
+			} else {
+				exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
+			}
+
+			if ($now_playing_notifications == false) {
+				displayNotificationForCurrentTrack($w);
+			}
+			if ($userid != 'vdesabou') {
+				stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
+			}
+			addTrackToPlayQueue($w, $track_uri, $track_name, $artist_name, $album_name, $duration, $country_code);
+			return;
+		} else if ($other_action == "random_album") {
+			list($album_uri, $album_name, $theartistname) = getRandomAlbum($w);
+			// start now playing if needed
+			$mopidy_arg = "";
+			if ($use_mopidy) {
+				$mopidy_arg = "MOPIDY";
+			}
+			exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start -m \"" . $mopidy_arg . "\"  >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
+			if (! $use_mopidy) {
+				exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+				if ($retVal != 0) {
+					displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+					exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+					return;
+				}
+			}
+			if ($use_mopidy) {
+				playUriWithMopidy($w, $album_uri);
+			} else {
+				exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
+			}
+			displayNotificationWithArtwork('🔈 Album ' . $album_name . ' by ' . $theartistname, getTrackOrAlbumArtwork($w, $album_uri, true), 'Play Random Album');
+			if ($userid != 'vdesabou') {
+				stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
+			}
+			addAlbumToPlayQueue($w, $album_uri, $album_name);
+			return;
+		} else if ($other_action == "reset_settings") {
+			deleteTheFile($w->data() . '/settings.json');
+			return;
+		} else if ($other_action == "biography") {
+			displayCurrentArtistBiography($w);
+			if ($userid != 'vdesabou') {
+				stathat_ez_count('AlfredSpotifyMiniPlayer', 'display biography', 1);
+			}
+			return;
+		} else if ($other_action == "go_back") {
+			$history = $w->read('history.json');
+
+			if ($history == false) {
+				displayNotificationWithArtwork("No history yet", './images/warning.png', 'Error!');
+			}
+			$query = array_pop($history);
+			// pop twice
+			$query = array_pop($history);
+			$w->write($history, 'history.json');
+			exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini $query\"'");
+			return;
+		} else if ($other_action == "lookup_artist") {
+
+			if (!$w->internet()) {
+				displayNotificationWithArtwork("No internet connection", './images/warning.png', 'Error!');
+				return;
+			}
+			if ($artist_uri == "") {
+				$artist_uri = getArtistUriFromTrack($w, $track_uri);
+			}
+			exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online▹" . $artist_uri . "@" . escapeQuery($artist_name) . '▹' . "\"'");
+			if ($userid != 'vdesabou') {
+				stathat_ez_count('AlfredSpotifyMiniPlayer', 'lookup online', 1);
+			}
+			return;
+		} else if ($other_action == "playartist") {
+			$artist_artwork_path = getArtistArtwork($w, $artist_uri, $artist_name, true);
+			$mopidy_arg = "";
+			if ($use_mopidy) {
+				$mopidy_arg = "MOPIDY";
+			}
+			exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start -m \"" . $mopidy_arg . "\"  >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
+			if (! $use_mopidy) {
+				exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+				if ($retVal != 0) {
+					displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+					exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+					return;
+				}
+			}
+			if ($use_mopidy) {
+				playUriWithMopidy($w, $artist_uri);
+			} else {
+				exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
+			}
+			displayNotificationWithArtwork('🔈 Artist ' . $artist_name, $artist_artwork_path, 'Play Artist');
+			if ($userid != 'vdesabou') {
+				stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
+			}
+			addArtistToPlayQueue($w, $artist_uri, $artist_name, $country_code);
+			return;
+		} else if ($other_action == "playalbum") {
+			if ($album_uri == "") {
+				if($track_uri == "") {
+					displayNotificationWithArtwork("Cannot get current album", './images/warning.png', 'Error!');
+					return;
+				}
+				$album_uri = getAlbumUriFromTrack($w, $track_uri);
+				if ($album_uri == false) {
+					displayNotificationWithArtwork("Cannot get album", './images/warning.png', 'Error!');
+					return;
+				}
+			}
+			$album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, true);
+			$mopidy_arg = "";
+			if ($use_mopidy) {
+				$mopidy_arg = "MOPIDY";
+			}
+			exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start -m \"" . $mopidy_arg . "\"  >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
+			if (! $use_mopidy) {
+				exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
+				if ($retVal != 0) {
+					displayNotificationWithArtwork('AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
+					exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+					return;
+				}
+			}
+			if ($use_mopidy) {
+				playUriWithMopidy($w, $album_uri);
+			} else {
+				exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
+			}
+			displayNotificationWithArtwork('🔈 Album ' . $album_name, $album_artwork_path, 'Play Album');
+			if ($userid != 'vdesabou') {
+				stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
+			}
+			addAlbumToPlayQueue($w, $album_uri, $album_name);
+			return;
+		} else if ($other_action == "volume_up") {
+			if ($use_mopidy) {
+				invokeMopidyMethod($w, "core.mixer.set_volume", array('volume' => invokeMopidyMethod($w, "core.mixer.get_volume", array()) + $volume_percent));
+			} else {
+				$command_output = exec("osascript -e 'tell application \"Spotify\"
+                if it is running then
+					if (sound volume + $volume_percent) > 100 then
+						set theVolume to 100
+						set sound volume to theVolume
+						return \"Spotify volume is at maximum level.\"
+					else
+						set theVolume to (sound volume + $volume_percent)
+						set sound volume to theVolume
+						return \"Spotify volume has been increased to \" & theVolume & \"%.\"
+					end if
+                end if
+            end tell'");
+            	displayNotificationWithArtwork($command_output, './images/volume_up.png', 'Volume Up');
+			}
+
+			return;
+		} else if ($other_action == "volume_down") {
+			if ($use_mopidy) {
+				invokeMopidyMethod($w, "core.mixer.set_volume", array('volume' => invokeMopidyMethod($w, "core.mixer.get_volume", array()) - $volume_percent ));
+			} else {
+				$command_output = exec("osascript -e 'tell application \"Spotify\"
+                if it is running then
+					if (sound volume - $volume_percent) < 0 then
+						set theVolume to 0
+						set sound volume to theVolume
+						return \"Spotify volume is at minimum level.\"
+					else
+						set theVolume to (sound volume - $volume_percent)
+						set sound volume to theVolume
+						return \"Spotify volume has been decreased to \" & theVolume & \"%.\"
+					end if
+                    set sound volume to theVolume
+                end if
+            end tell'");
+            	displayNotificationWithArtwork($command_output, './images/volume_down.png', 'Volume Down');
+			}
+
+			return;
+		} else if ($other_action == "volmax") {
+			if ($use_mopidy) {
+				invokeMopidyMethod($w, "core.mixer.set_volume", array('volume' => 100));
+			} else {
+				exec("osascript -e 'tell application \"Spotify\"
+                if it is running then
+                    set sound volume to 100
+                end if
+            end tell'");
+			}
+			displayNotificationWithArtwork("Spotify volume has been set to maximum", './images/volmax.png', 'Volume Max');
+			return;
+		} else if ($other_action == "volmid") {
+			if ($use_mopidy) {
+				invokeMopidyMethod($w, "core.mixer.set_volume", array('volume' => 50));
+			} else {
+				exec("osascript -e 'tell application \"Spotify\"
+                if it is running then
+                    set sound volume to 50
+                end if
+            end tell'");
+			}
+			displayNotificationWithArtwork("Spotify volume has been set to 50%", './images/volmid.png', 'Volume 50%');
+			return;
+		} else if ($other_action == "mute") {
+			if ($use_mopidy) {
+				$volume = invokeMopidyMethod($w, "core.mixer.get_volume", array());
+				if ($volume <= 0) {
+					invokeMopidyMethod($w, "core.mixer.set_volume", array('volume' => 100));
+					$command_output = "Spotify volume is unmuted.";
+				} else {
+					invokeMopidyMethod($w, "core.mixer.set_volume", array('volume' => 0));
+					$command_output = "Spotify volume is muted.";
+				}
+			} else {
+				$command_output = exec("osascript -e 'tell application \"Spotify\"
+                if sound volume is less than or equal to 0 then
+                    set sound volume to 100
+                    return \"Spotify volume is unmuted.\"
+                else
+                    set sound volume to 0
+                    return \"Spotify volume is muted.\"
+                end if
+            end tell'");
+			}
+			displayNotificationWithArtwork($command_output, './images/mute.png', 'Mute');
+			return;
+		} else if ($other_action == "shuffle") {
+			if ($use_mopidy) {
+				$isShuffleEnabled = invokeMopidyMethod($w, "core.tracklist.get_random", array());
+				if ($isShuffleEnabled) {
+					invokeMopidyMethod($w, "core.tracklist.set_random", array('value' => false));
+					$command_output = "Shuffle is now disabled.";
+				} else {
+					invokeMopidyMethod($w, "core.tracklist.set_random", array('value' => true));
+					$command_output = "Shuffle is now enabled.";
+				}
+			} else {
+				$command_output = exec("osascript -e '
+    	tell application \"Spotify\"
+    	if shuffling enabled is true then
+    		if shuffling is true then
+				set shuffling to false
+				return \"Shuffle is now disabled.\"
+			else
+				set shuffling to true
+				return \"Shuffle is now enabled.\"
+			end if
+		else
+			return \"Shuffle is not currently enabled.\"
+		end if
+		end tell'");
+			}
+			displayNotificationWithArtwork($command_output, './images/shuffle.png', 'Shuffle');
+			return;
+		} else if ($other_action == "radio_artist") {
+			if (file_exists($w->data() . '/update_library_in_progress')) {
+				displayNotificationWithArtwork("Cannot modify library while update is in progress", './images/warning.png', 'Error!');
+				return;
+			}
+			createRadioArtistPlaylist($w, $artist_name);
+			if ($userid != 'vdesabou') {
+				stathat_ez_count('AlfredSpotifyMiniPlayer', 'radio', 1);
+			}
+			return;
+		}  else if ($other_action == "complete_collection_artist") {
+			if (file_exists($w->data() . '/update_library_in_progress')) {
+				displayNotificationWithArtwork("Cannot modify library while update is in progress", './images/warning.png', 'Error!');
+				return;
+			}
+			createCompleteCollectionArtistPlaylist($w, $artist_name, $artist_uri);
+			return;
+		} else if ($other_action == "play_alfred_playlist") {
+			playAlfredPlaylist($w);
+			if ($userid != 'vdesabou') {
+				stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
+			}
+			return;
+		} else if ($other_action == "update_library") {
+			if (file_exists($w->data() . '/update_library_in_progress')) {
+				displayNotificationWithArtwork("Cannot modify library while update is in progress", './images/warning.png', 'Error!');
+				return;
+			}
+			updateLibrary($w);
+			if ($userid != 'vdesabou') {
+				stathat_ez_count('AlfredSpotifyMiniPlayer', 'update library', 1);
+			}
+			return;
+		} else if ($other_action == "refresh_library") {
+			if (file_exists($w->data() . '/update_library_in_progress')) {
+				displayNotificationWithArtwork("Cannot modify library while update is in progress", './images/warning.png', 'Error!');
+				return;
+			}
+			refreshLibrary($w);
+			if ($userid != 'vdesabou') {
+				stathat_ez_count('AlfredSpotifyMiniPlayer', 'update library', 1);
+			}
+			return;
+		}
 	}
 ?>

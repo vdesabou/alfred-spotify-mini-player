@@ -1832,11 +1832,12 @@ function createRadioArtistPlaylist($w, $artist_name) {
 	// Read settings from JSON
 	//
 
-	$settings            = getSettings($w);
-	$radio_number_tracks = $settings->radio_number_tracks;
-	$userid              = $settings->userid;
-	$echonest_api_key    = $settings->echonest_api_key;
-	$is_public_playlists = $settings->is_public_playlists;
+	$settings             = getSettings($w);
+	$radio_number_tracks  = $settings->radio_number_tracks;
+	$userid               = $settings->userid;
+	$echonest_api_key     = $settings->echonest_api_key;
+	$is_public_playlists  = $settings->is_public_playlists;
+	$is_autoplay_playlist = $settings->is_autoplay_playlist;
 
 	$public = false;
 	if ($is_public_playlists) {
@@ -1875,6 +1876,12 @@ function createRadioArtistPlaylist($w, $artist_name) {
 
 		$ret = addTracksToPlaylist($w, $newplaylisttracks, $json->uri, $json->name, false, false);
 		if (is_numeric($ret) && $ret > 0) {
+			if($is_autoplay_playlist) {
+				sleep(2);
+				exec("osascript -e 'tell application \"Spotify\" to play track \"$json->uri\"'");
+				$playlist_artwork_path = getPlaylistArtwork($w, $json->uri, true, false);
+				displayNotificationWithArtwork('🔈 Playlist ' . $json->name, $playlist_artwork_path, 'Launch Artist Radio Playlist');
+			}
 			refreshLibrary($w);
 
 			return;
@@ -1904,10 +1911,11 @@ function createCompleteCollectionArtistPlaylist($w, $artist_name, $artist_uri) {
 	//
 	// Read settings from JSON
 	//
-	$settings            = getSettings($w);
-	$userid              = $settings->userid;
-	$country_code        = $settings->country_code;
-	$is_public_playlists = $settings->is_public_playlists;
+	$settings             = getSettings($w);
+	$userid               = $settings->userid;
+	$country_code         = $settings->country_code;
+	$is_public_playlists  = $settings->is_public_playlists;
+	$is_autoplay_playlist = $settings->is_autoplay_playlist;
 
 	$public = false;
 	if ($is_public_playlists) {
@@ -1946,6 +1954,12 @@ function createCompleteCollectionArtistPlaylist($w, $artist_name, $artist_uri) {
 
 		$ret = addTracksToPlaylist($w, $newplaylisttracks, $json->uri, $json->name, false, false);
 		if (is_numeric($ret) && $ret > 0) {
+			if($is_autoplay_playlist) {
+				sleep(2);
+				exec("osascript -e 'tell application \"Spotify\" to play track \"$json->uri\"'");
+				$playlist_artwork_path = getPlaylistArtwork($w, $json->uri, true, false);
+				displayNotificationWithArtwork('🔈 Playlist ' . $json->name, $playlist_artwork_path, 'Launch Complete Collection Playlist');
+			}
 			refreshLibrary($w);
 
 			return;
@@ -2015,21 +2029,13 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name) {
 	// Read settings from JSON
 	//
 
-	$settings            = getSettings($w);
-	$radio_number_tracks = $settings->radio_number_tracks;
-	$userid              = $settings->userid;
-	$echonest_api_key    = $settings->echonest_api_key;
-	$country_code        = $settings->country_code;
-	$is_public_playlists = $settings->is_public_playlists;    //
-	// Read settings from JSON
-	//
-
-	$settings            = getSettings($w);
-	$radio_number_tracks = $settings->radio_number_tracks;
-	$userid              = $settings->userid;
-	$echonest_api_key    = $settings->echonest_api_key;
-	$country_code        = $settings->country_code;
-	$is_public_playlists = $settings->is_public_playlists;
+	$settings             = getSettings($w);
+	$radio_number_tracks  = $settings->radio_number_tracks;
+	$userid               = $settings->userid;
+	$echonest_api_key     = $settings->echonest_api_key;
+	$country_code         = $settings->country_code;
+	$is_public_playlists  = $settings->is_public_playlists;
+	$is_autoplay_playlist = $settings->is_autoplay_playlist;
 
 	$public = false;
 	if ($is_public_playlists) {
@@ -2088,6 +2094,12 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name) {
 
 		$ret = addTracksToPlaylist($w, $newplaylisttracks, $json->uri, $json->name, false, false);
 		if (is_numeric($ret) && $ret > 0) {
+			if($is_autoplay_playlist) {
+				sleep(2);
+				exec("osascript -e 'tell application \"Spotify\" to play track \"$json->uri\"'");
+				$playlist_artwork_path = getPlaylistArtwork($w, $json->uri, true, false);
+				displayNotificationWithArtwork('🔈 Playlist ' . $json->name, $playlist_artwork_path, 'Launch Radio Playlist');
+			}
 			refreshLibrary($w);
 
 			return;
@@ -5941,7 +5953,8 @@ function getSettings($w) {
 				'mopidy_server' => '127.0.0.1',
 				'mopidy_port' => '6680',
 				'volume_percent' => 20,
-				'is_display_rating' => 1
+				'is_display_rating' => 1,
+				'is_autoplay_playlist' => 1
 			);
 
 			$ret = $w->write($migrated, 'settings.json');
@@ -5980,7 +5993,8 @@ function getSettings($w) {
 			'mopidy_server' => '127.0.0.1',
 			'mopidy_port' => '6680',
 			'volume_percent' => 20,
-			'is_display_rating' => 1
+			'is_display_rating' => 1,
+			'is_autoplay_playlist' => 1
 		);
 
 		$ret = $w->write($default, 'settings.json');
@@ -6022,6 +6036,12 @@ function getSettings($w) {
 	// add is_display_rating if needed
 	if (!isset($settings->is_display_rating)) {
 		updateSetting($w, 'is_display_rating', 1);
+		$settings = $w->read('settings.json');
+	}
+
+	// add is_autoplay_playlist if needed
+	if (!isset($settings->is_autoplay_playlist)) {
+		updateSetting($w, 'is_autoplay_playlist', 1);
 		$settings = $w->read('settings.json');
 	}
 

@@ -3433,6 +3433,7 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
 	$mopidy_port                = $settings->mopidy_port;
 	$is_display_rating          = $settings->is_display_rating;
 	$volume_percent             = $settings->volume_percent;
+	$is_autoplay_playlist       = $settings->is_autoplay_playlist;
 
 	if ($update_in_progress == false) {
 		$w->result(null, serialize(array(
@@ -3735,6 +3736,60 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
 				'fn' => 'Not Available',
 				'ctrl' => 'Not Available'
 			), './images/enable_display_rating.png', 'yes', null, '');
+	}
+
+	if ($is_autoplay_playlist == true) {
+		$w->result(null, serialize(array(
+					'' /*track_uri*/ ,
+					'' /* album_uri */ ,
+					'' /* artist_uri */ ,
+					'' /* playlist_uri */ ,
+					'' /* spotify_command */ ,
+					'' /* query */ ,
+					'' /* other_settings*/ ,
+					'disable_autoplay' /* other_action */ ,
+					'' /* artist_name */ ,
+					'' /* track_name */ ,
+					'' /* album_name */ ,
+					'' /* track_artwork_path */ ,
+					'' /* artist_artwork_path */ ,
+					'' /* album_artwork_path */ ,
+					'' /* playlist_name */ ,
+					'' /* playlist_artwork_path */
+				)), "Disable Playlist Autoplay", array(
+				"Do not autoplay playlists (radios and complete collection) when they are created",
+				'alt' => 'Not Available',
+				'cmd' => 'Not Available',
+				'shift' => 'Not Available',
+				'fn' => 'Not Available',
+				'ctrl' => 'Not Available'
+			), './images/disable_autoplay.png', 'yes', null, '');
+	} else {
+		$w->result(null, serialize(array(
+					'' /*track_uri*/ ,
+					'' /* album_uri */ ,
+					'' /* artist_uri */ ,
+					'' /* playlist_uri */ ,
+					'' /* spotify_command */ ,
+					'' /* query */ ,
+					'' /* other_settings*/ ,
+					'enable_autoplay' /* other_action */ ,
+					'' /* artist_name */ ,
+					'' /* track_name */ ,
+					'' /* album_name */ ,
+					'' /* track_artwork_path */ ,
+					'' /* artist_artwork_path */ ,
+					'' /* album_artwork_path */ ,
+					'' /* playlist_name */ ,
+					'' /* playlist_artwork_path */
+				)), "Enable Playlist Autoplay", array(
+				"Autoplay playlists (radios and complete collection) when they are created",
+				'alt' => 'Not Available',
+				'cmd' => 'Not Available',
+				'shift' => 'Not Available',
+				'fn' => 'Not Available',
+				'ctrl' => 'Not Available'
+			), './images/enable_autoplay.png', 'yes', null, '');
 	}
 
 	if ($update_in_progress == false) {
