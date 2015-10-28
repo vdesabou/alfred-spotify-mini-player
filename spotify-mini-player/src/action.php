@@ -47,19 +47,20 @@ $oauth_access_token        = $settings->oauth_access_token;
 $use_mopidy                = $settings->use_mopidy;
 $volume_percent            = $settings->volume_percent;
 
-if ($oauth_client_id == '' || $oauth_client_secret == '' || $oauth_access_token == '') {
-	if ($other_settings != '' && (startsWith($other_settings, 'Oauth_Client') === false && startsWith($other_settings, 'Open') === false)) {
-		exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini \"'");
-		return;
-	}
+if($other_action != "reset_settings") {
+	if ($oauth_client_id == '' || $oauth_client_secret == '' || $oauth_access_token == '') {
+		if ($other_settings != '' && (startsWith($other_settings, 'Oauth_Client') === false && startsWith($other_settings, 'Open') === false)) {
+			exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini \"'");
+			return;
+		}
 
-	if ($other_action != '' && $other_action != 'Oauth_Login' &&
-		! startsWith($other_action, 'current')) {
-		exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini \"'");
-		return;
+		if ($other_action != '' && $other_action != 'Oauth_Login' &&
+			! startsWith($other_action, 'current')) {
+			exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini \"'");
+			return;
+		}
 	}
 }
-
 
 if ($userid != 'vdesabou' && ! startsWith($other_action, 'current')) {
 	stathat_ez_count('AlfredSpotifyMiniPlayer', 'workflow used', 1);
