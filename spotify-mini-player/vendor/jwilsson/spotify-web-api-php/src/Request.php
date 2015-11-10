@@ -9,6 +9,30 @@ class Request
     const API_URL = 'https://api.spotify.com';
 
     /**
+     * Parse HTTP response headers.
+     *
+     * @param string $headers Raw string of HTTP headers.
+     *
+     * @return array Headers as key–value pairs.
+     */
+    protected function parseHeaders($headers)
+    {
+        $headers = str_replace("\r\n", "\n", $headers);
+        $headers = explode("\n", $headers);
+
+        array_shift($headers);
+
+        $parsedHeaders = array();
+        foreach ($headers as $header) {
+            list($key, $value) = explode(':', $header, 2);
+
+            $parsedHeaders[$key] = trim($value);
+        }
+
+        return $parsedHeaders;
+    }
+
+    /**
      * Make a request to the "account" endpoint.
      *
      * @param string $method The HTTP method to use.
@@ -65,8 +89,9 @@ class Request
      *
      * @return array Response data.
      * - array|object body The response body. Type is controlled by Request::setReturnAssoc().
-     * - string headers Response headers.
+     * - array headers Response headers.
      * - int status HTTP status code.
+     * - string url The requested URL.
      */
     public function send($method, $url, $parameters = array(), $headers = array())
     {
@@ -81,9 +106,10 @@ class Request
         }
 
         $options = array(
+            CURLOPT_CAINFO => __DIR__ . '/cacert.pem',
             CURLOPT_HEADER => true,
             CURLOPT_HTTPHEADER => $mergedHeaders,
-            CURLOPT_RETURNTRANSFER => true
+            CURLOPT_RETURNTRANSFER => true,
         );
 
         $url = rtrim($url, '/');
@@ -121,12 +147,18 @@ class Request
         curl_setopt_array($ch, $options);
 
         $response = curl_exec($ch);
-        $status = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
+
+        if (curl_error($ch)) {
+            throw new SpotifyWebAPIException('cURL transport error: ' . curl_errno($ch) . ' ' .  curl_error($ch));
+        }
 
         list($headers, $body) = explode("\r\n\r\n", $response, 2);
 
+        $headers = $this->parseHeaders($headers);
+        $status = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $body = json_decode($body, $this->returnAssoc);
+
+        curl_close($ch);
 
         if ($status < 200 || $status > 299) {
             if (!$this->returnAssoc && isset($body->error)) {
@@ -160,6 +192,7 @@ class Request
             'body' => $body,
             'headers' => $headers,
             'status' => $status,
+            'url' => $url,
         );
     }
 

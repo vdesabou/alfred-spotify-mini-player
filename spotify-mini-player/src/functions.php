@@ -29,7 +29,6 @@ function getSpotifyWebAPI($w, $old_api = null) {
 	if ($old_api == null) {
 		// create a new api object
 		$session = new SpotifyWebAPI\Session($oauth_client_id, $oauth_client_secret, $oauth_redirect_uri);
-		$session->setRefreshToken($oauth_refresh_token);
 		$api = new SpotifyWebAPI\SpotifyWebAPI();
 	}
 
@@ -40,10 +39,9 @@ function getSpotifyWebAPI($w, $old_api = null) {
 			// when refresh needed:
 			// create a new api object (even if api not null)
 			$session = new SpotifyWebAPI\Session($oauth_client_id, $oauth_client_secret, $oauth_redirect_uri);
-			$session->setRefreshToken($oauth_refresh_token);
 			$api = new SpotifyWebAPI\SpotifyWebAPI();
 		}
-		if ($session->refreshAccessToken() == true) {
+		if ($session->refreshAccessToken($oauth_refresh_token) == true) {
 			$oauth_access_token = $session->getAccessToken();
 			// Set new token to settings
 			$ret                = updateSetting($w, 'oauth_access_token', $oauth_access_token);

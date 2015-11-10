@@ -6,7 +6,7 @@ class Session
     private $accessToken = '';
     private $clientId = '';
     private $clientSecret = '';
-    private $expires = 0;
+    private $expirationTime = 0;
     private $redirectUri = '';
     private $refreshToken = '';
 
@@ -48,20 +48,15 @@ class Session
      */
     public function getAuthorizeUrl($options = array())
     {
-        $defaults = array(
-            'scope' => array(),
-            'show_dialog' => false,
-            'state' => '',
-        );
+        $options = (array) $options;
 
-        $options = array_merge($defaults, (array) $options);
         $parameters = array(
             'client_id' => $this->getClientId(),
             'redirect_uri' => $this->getRedirectUri(),
             'response_type' => 'code',
-            'scope' => implode(' ', $options['scope']),
-            'show_dialog' => $options['show_dialog'] ? 'true' : 'false',
-            'state' => $options['state'],
+            'scope' => isset($options['scope']) ? implode(' ', $options['scope']) : null,
+            'show_dialog' => !empty($options['show_dialog']) ? 'true' : null,
+            'state' => isset($options['state']) ? $options['state'] : null,
         );
 
         return Request::ACCOUNT_URL . '/authorize/?' . http_build_query($parameters);
@@ -98,13 +93,13 @@ class Session
     }
 
     /**
-     * Get the number of seconds for which the access token is valid.
+     * Get the access token expiration time.
      *
-     * @return int The time period (in seconds) for which the access token is valid.
+     * @return int A Unix timestamp indicating the token expiration time.
      */
-    public function getExpires()
+    public function getTokenExpiration()
     {
-        return $this->expires;
+        return $this->expirationTime;
     }
 
     /**
@@ -128,26 +123,19 @@ class Session
     }
 
     /**
-     * @deprecated Use Session::refreshAccessToken instead. This dummy function will be removed in 1.0.0.
-     */
-    public function refreshToken()
-    {
-        trigger_error('Use Session::refreshAccessToken instead', E_USER_DEPRECATED);
-        return $this->refreshAccessToken();
-    }
-
-    /**
      * Refresh an access token.
+     *
+     * @param string $refreshToken The refresh token to use.
      *
      * @return bool Whether the access token was successfully refreshed.
      */
-    public function refreshAccessToken()
+    public function refreshAccessToken($refreshToken)
     {
         $payload = base64_encode($this->getClientId() . ':' . $this->getClientSecret());
 
         $parameters = array(
             'grant_type' => 'refresh_token',
-            'refresh_token' => $this->refreshToken,
+            'refresh_token' => $refreshToken,
         );
 
         $headers = array(
@@ -159,7 +147,7 @@ class Session
 
         if (isset($response->access_token)) {
             $this->accessToken = $response->access_token;
-            $this->expires = $response->expires_in;
+            $this->expirationTime = time() + $response->expires_in;
 
             return true;
         }
@@ -192,21 +180,12 @@ class Session
 
         if (isset($response->access_token)) {
             $this->accessToken = $response->access_token;
-            $this->expires = $response->expires_in;
+            $this->expirationTime = time() + $response->expires_in;
 
             return true;
         }
 
         return false;
-    }
-
-    /**
-     * @deprecated Use Session::requestAccessToken instead. This dummy function will be removed in 1.0.0.
-     */
-    public function requestToken($code)
-    {
-        trigger_error('Use Session::requestAccessToken instead', E_USER_DEPRECATED);
-        return $this->requestAccessToken($code);
     }
 
     /**
@@ -226,14 +205,13 @@ class Session
             'redirect_uri' => $this->getRedirectUri(),
         );
 
-        $response = $this->request->account('POST', '/api/token', $parameters);
+        $response = $this->request->account('POST', '/api/token', $parameters, array());
         $response = $response['body'];
 
-        if (isset($response->refresh_token)
-                && isset($response->access_token)) {
+        if (isset($response->refresh_token) && isset($response->access_token)) {
             $this->refreshToken = $response->refresh_token;
             $this->accessToken = $response->access_token;
-            $this->expires = $response->expires_in;
+            $this->expirationTime = time() + $response->expires_in;
 
             return true;
         }
@@ -275,17 +253,5 @@ class Session
     public function setRedirectUri($redirectUri)
     {
         $this->redirectUri = $redirectUri;
-    }
-
-    /**
-     * Set the refresh token.
-     *
-     * @param string $refreshToken The refresh token.
-     *
-     * @return void
-     */
-    public function setRefreshToken($refreshToken)
-    {
-        $this->refreshToken = $refreshToken;
     }
 }
