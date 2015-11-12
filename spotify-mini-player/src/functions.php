@@ -429,6 +429,7 @@ function addArtistToPlayQueue($w, $artist_uri, $artist_name, $country_code) {
 	//
 	$settings                  = getSettings($w);
 	$use_mopidy                = $settings->use_mopidy;
+	$country_code 			   = $settings->country_code;
 
 	if (! $use_mopidy) {
 		$tracks = getTheArtistFullTracks($w, $artist_uri, $country_code);
@@ -2443,7 +2444,9 @@ function getTheArtistFullTracks($w, $artist_uri, $country_code) {
 	try {
 		$api                         = getSpotifyWebAPI($w);
 		$tmp                         = explode(':', $artist_uri);
-		$artistTopTracks = $api->getArtistTopTracks($tmp[2], $country_code);
+		$artistTopTracks = $api->getArtistTopTracks($tmp[2], array(
+					'country' => $country_code
+				));
 
 		foreach ($artistTopTracks->tracks as $track) {
 			$tracks[] = $track;
