@@ -126,6 +126,127 @@ function invokeMopidyMethod($w, $method, $params, $displayError = true) {
 }
 
 
+
+
+/**
+ * createDebugFile function.
+ *
+ * @access public
+ * @param mixed $w
+ * @return void
+ */
+function createDebugFile($w) {
+
+	//
+	// Read settings from JSON
+	//
+	$settings                  = getSettings($w);
+	$use_mopidy                = $settings->use_mopidy;
+	$oauth_client_secret       = $settings->oauth_client_secret;
+	$oauth_access_token        = $settings->oauth_access_token;
+	$oauth_refresh_token       = $settings->oauth_refresh_token;
+	$display_name              = $settings->display_name;
+	$userid                    = $settings->userid;
+
+	exec("mkdir -p /tmp/spot_mini_debug");
+	date_default_timezone_set('UTC');
+	$date = date('Y-m-d H:i:s', time());
+
+	$output = "Generated: " . $date . "\n";
+	$output = $output . "----------------------------------------------\n";
+
+	//
+	// check for library update in progress
+	if (file_exists($w->data() . "/update_library_in_progress")) {
+	    $output = $output . "Library update in progress: " . "the file" . $w->data() . "/update_library_in_progress is present\n";
+	}
+
+
+	// settings.json
+	//
+    copy($w->data() . "/settings.json", "/tmp/spot_mini_debug/settings.json");
+    // Remove oAuth values from file that will be uploaded
+	updateSetting($w, 'oauth_client_secret', 'xxx', "/tmp/spot_mini_debug/settings.json");
+	updateSetting($w, 'oauth_access_token', 'xxx', "/tmp/spot_mini_debug/settings.json");
+	updateSetting($w, 'display_name', 'xxx', "/tmp/spot_mini_debug/settings.json");
+	$output = $output . "* display_name: " . $display_name . "\n\n";
+	$output = $output . "* oauth_client_secret: " . $oauth_client_secret . "\n\n";
+	$output = $output . "* oauth_access_token: " . $oauth_access_token . "\n\n";
+	$output = $output . "* oauth_refresh_token: " . $oauth_refresh_token . "\n\n";
+
+
+	$output = $output . "****\n";
+
+	copyDirectory($w->cache(), "/tmp/spot_mini_debug/cache");
+
+	if (!file_exists($w->data() . "/fetch_artworks.db")) {
+	    $output = $output . "The file " . $w->data() . "/fetch_artworks.db is not present\n";
+	} else {
+	    copy($w->data() . "/fetch_artworks.db", "/tmp/spot_mini_debug/fetch_artworks.db");
+	}
+
+	if (!file_exists($w->data() . "/library.db")) {
+	    $output = $output . "The file " . $w->data() . "/library.db is not present\n";
+	} else {
+	    copy($w->data() . "/library.db", "/tmp/spot_mini_debug/library.db");
+	}
+
+	if (!file_exists($w->data() . "/library_new.db")) {
+	    $output = $output . "The file " . $w->data() . "/library_new.db is not present\n";
+	} else {
+	    copy($w->data() . "/library_new.db", "/tmp/spot_mini_debug/library_new.db");
+	}
+
+	if (!file_exists($w->data() . "/library_old.db")) {
+	    $output = $output . "The file " . $w->data() . "/library_old.db is not present\n";
+	} else {
+	    copy($w->data() . "/library_old.db", "/tmp/spot_mini_debug/library_old.db");
+	}
+
+
+	if (!file_exists($w->data() . "/history.json")) {
+	    $output = $output . "The file " . $w->data() . "/history.json is not present\n";
+	} else {
+	    copy($w->data() . "/history.json", "/tmp/spot_mini_debug/history.json");
+	}
+
+	if (!file_exists($w->data() . "/playqueue.json")) {
+	    $output = $output . "The file " . $w->data() . "/playqueue.json is not present\n";
+	} else {
+	    copy($w->data() . "/playqueue.json", "/tmp/spot_mini_debug/playqueue.json");
+	}
+
+	if (!file_exists(exec('pwd') . "/packal/package.xml")) {
+	    $output = $output . "The file " . exec('pwd') . "/packal/package.xml is not present\n";
+	} else {
+	    copy(exec('pwd') . "/packal/package.xml", "/tmp/spot_mini_debug/package.xml");
+	}
+
+	$output = $output . exec("uname -a");
+	$output = $output . "\n";
+	$output = $output . exec("sw_vers -productVersion");
+	$output = $output . "\n";
+	$output = $output . exec("sysctl hw.memsize");
+	$output = $output . "\n";
+	if(! $use_mopidy) {
+		$output = $output . exec("osascript -e 'tell application \"Spotify\" to version'");
+	} else {
+		$output = $output . "Mopidy version is " . invokeMopidyMethod($w, "core.get_version", array(), false);
+	}
+	$output = $output . "\n";
+
+	exec("cd /tmp;tar cfz spot_mini_debug.tgz spot_mini_debug");
+
+	$output = $output . "****\n";
+
+	$output = $output . exec("curl --upload-file /tmp/spot_mini_debug.tgz https://transfer.sh/spot_mini_debug_$userid.tgz");
+
+	exec("cd /tmp;rm -rf spot_mini_debug.tgz spot_mini_debug");
+
+	$output = $output . "\n----------------------------------------------\nCan you describe the problem in a few lines:\n";
+
+	exec("open \"mailto:alfred.spotify.mini.player@gmail.com?subject=Alfred Spotify Mini Player debug file&body=$output\"");
+}
 /**
  * getCurrentTrackInfoWithMopidy function.
  *
@@ -6056,10 +6177,12 @@ function getSettings($w) {
  * @access public
  * @param mixed $w
  * @param mixed $setting_name
+ * @param mixed $setting_new_value
+ * @param string $settings_file (default: 'settings.json')
  * @return void
  */
-function updateSetting($w, $setting_name, $setting_new_value) {
-	$settings     = $w->read('settings.json');
+function updateSetting($w, $setting_name, $setting_new_value, $settings_file = 'settings.json') {
+	$settings     = $w->read($settings_file);
 	$new_settings = array();
 	$found = false;
 
@@ -6074,7 +6197,7 @@ function updateSetting($w, $setting_name, $setting_new_value) {
 	if ($found == false) {
 		$new_settings[$setting_name] = $setting_new_value;
 	}
-	$ret = $w->write($new_settings, 'settings.json');
+	$ret = $w->write($new_settings, $settings_file);
 
 	return $ret;
 }

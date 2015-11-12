@@ -1243,6 +1243,9 @@ if ($type == "TRACK" && $other_settings == "" &&
 			}
 			displayNotificationWithArtwork($command_output, './images/shuffle.png', 'Shuffle');
 			return;
+		} else if ($other_action == "spot_mini_debug") {
+			createDebugFile($w);
+			return;
 		} else if ($other_action == "radio_artist") {
 			if (file_exists($w->data() . '/update_library_in_progress')) {
 				displayNotificationWithArtwork("Cannot modify library while update is in progress", './images/warning.png', 'Error!');
