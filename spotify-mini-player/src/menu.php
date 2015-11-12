@@ -6148,10 +6148,8 @@ function secondDelimiterFeaturedPlaylist($w, $query, $settings, $db, $update_in_
 			$api               = getSpotifyWebAPI($w);
 			$featuredPlaylists = $api->getFeaturedPlaylists(array(
 					'country' => $country,
-					'limit' => 0,
-					'locale' => '',
+					'limit' => ($max_results <= 50) ? $max_results : 50,
 					'offset' => 0,
-					'timestamp' => ''
 				));
 
 			$subtitle  = "Launch Playlist";
