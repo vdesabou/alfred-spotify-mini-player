@@ -116,18 +116,14 @@ class Request
         $method = strtoupper($method);
 
         switch ($method) {
-            case 'DELETE':
+            case 'DELETE': // No break
+            case 'PUT':
                 $options[CURLOPT_CUSTOMREQUEST] = $method;
                 $options[CURLOPT_POSTFIELDS] = $parameters;
 
                 break;
             case 'POST':
                 $options[CURLOPT_POST] = true;
-                $options[CURLOPT_POSTFIELDS] = $parameters;
-
-                break;
-            case 'PUT':
-                $options[CURLOPT_CUSTOMREQUEST] = 'PUT';
                 $options[CURLOPT_POSTFIELDS] = $parameters;
 
                 break;
@@ -152,39 +148,27 @@ class Request
             throw new SpotifyWebAPIException('cURL transport error: ' . curl_errno($ch) . ' ' .  curl_error($ch));
         }
 
-        list($headers, $body) = explode("\r\n\r\n", $response, 2);
+        list($headers, $rawBody) = explode("\r\n\r\n", $response, 2);
 
         $headers = $this->parseHeaders($headers);
         $status = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $body = json_decode($body, $this->returnAssoc);
+        $body = json_decode($rawBody, $this->returnAssoc);
 
         curl_close($ch);
 
         if ($status < 200 || $status > 299) {
-            if (!$this->returnAssoc && isset($body->error)) {
-                $error = $body->error;
+            $errorBody = json_decode($rawBody);
+            $error = $errorBody->error;
 
-                // These properties only exist on API calls, not auth calls
                 if (isset($error->message) && isset($error->status)) {
+                // API call error
                     throw new SpotifyWebAPIException($error->message, $error->status);
-                } elseif (isset($body->error_description)) {
+            } elseif (isset($errorBody->error_description)) {
+                // Auth call error
                     throw new SpotifyWebAPIException($body->error_description, $status);
                 } else {
-                    throw new SpotifyWebAPIException($error, $status);
-                }
-            } elseif ($this->returnAssoc && isset($body['error'])) {
-                $error = $body['error'];
-
-                // These properties only exist on API calls, not auth calls
-                if (isset($error['message']) && isset($error['status'])) {
-                    throw new SpotifyWebAPIException($error['message'], $error['status']);
-                } elseif (isset($body['error_description'])) {
-                    throw new SpotifyWebAPIException($body['error_description'], $status);
-                } else {
-                    throw new SpotifyWebAPIException($error, $status);
-                }
-            } else {
-                throw new SpotifyWebAPIException('No \'error\' provided in response body', $status);
+                // Something went really wrong
+                throw new SpotifyWebAPIException('An unknown error occurred.', $status);
             }
         }
 

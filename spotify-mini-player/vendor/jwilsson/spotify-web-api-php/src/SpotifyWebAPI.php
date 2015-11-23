@@ -147,8 +147,8 @@ class SpotifyWebAPI
      * Requires a valid access token.
      * https://developer.spotify.com/web-api/check-current-user-follows/
      *
-     * @param string The type to check: either 'artist' or 'user'.
-     * @param string|array ID(s) of the user(s) or artist(s) to check for.
+     * @param string $type The type to check: either 'artist' or 'user'.
+     * @param string|array $ids ID(s) of the user(s) or artist(s) to check for.
      *
      * @return array Whether each user or artist is followed.
      */
@@ -180,14 +180,16 @@ class SpotifyWebAPI
      */
     public function deleteMyTracks($tracks)
     {
-        $tracks = implode(',', (array) $tracks);
-        $tracks = urlencode($tracks);
+        $tracks = json_encode(
+            (array) $tracks
+        );
 
         $headers = $this->authHeaders();
+        $headers['Content-Type'] = 'application/json';
 
-        $uri = '/v1/me/tracks?ids=' . $tracks;
+        $uri = '/v1/me/tracks';
 
-        $this->lastResponse = $this->request->api('DELETE', $uri, array(), $headers);
+        $this->lastResponse = $this->request->api('DELETE', $uri, $tracks, $headers);
 
         return $this->lastResponse['status'] == 200;
     }
@@ -248,8 +250,8 @@ class SpotifyWebAPI
      * Requires a valid access token.
      * https://developer.spotify.com/web-api/follow-artists-users/
      *
-     * @param string The type to check: either 'artist' or 'user'.
-     * @param string|array ID(s) of the user(s) or artist(s) to follow.
+     * @param string $type The type to check: either 'artist' or 'user'.
+     * @param string|array $ids ID(s) of the user(s) or artist(s) to follow.
      *
      * @return bool Whether the artist or user was successfully followed.
      */
@@ -982,8 +984,8 @@ class SpotifyWebAPI
      * Requires a valid access token.
      * https://developer.spotify.com/web-api/unfollow-artists-users/
      *
-     * @param string The type to check: either 'artist' or 'user'.
-     * @param string|array ID(s) of the user(s) or artist(s) to unfollow.
+     * @param string $type The type to check: either 'artist' or 'user'.
+     * @param string|array $ids ID(s) of the user(s) or artist(s) to unfollow.
      *
      * @return bool Whether the artist(s) or user(s) were successfully unfollowed.
      */
@@ -1031,6 +1033,8 @@ class SpotifyWebAPI
      * Requires a valid access token.
      * https://developer.spotify.com/web-api/change-playlist-details/
      *
+     * @param string $userId ID of the user who owns the playlist.
+     * @param string $playlistId ID of the playlist to update.
      * @param array|object $options Options for the playlist.
      * - name string Optional. Name of the playlist.
      * - public bool Optional. Whether the playlist should be public or not.
@@ -1058,7 +1062,7 @@ class SpotifyWebAPI
      *
      * @param string $ownerId User ID of the playlist owner.
      * @param string $playlistId ID of the playlist.
-     * @param $options array|object Options for the check.
+     * @param array|object $options Options for the check.
      * - ids string|array Required. ID(s) of the user(s) to check for.
      *
      * @return array Whether each user is following the playlist.
