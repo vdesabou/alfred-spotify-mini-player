@@ -34,7 +34,7 @@ try {
 }
 catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 	echo "There was an error during the authentication flow (exception " . $e . ")";
-	displayNotificationWithArtwork("Web server killed",'./images/warning.png', 'Error!');
+	displayNotificationWithArtwork($w,"Web server killed",'./images/warning.png', 'Error!');
 	exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk '{print $2}')");
 	return;
 }

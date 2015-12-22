@@ -3434,6 +3434,7 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
 	$is_display_rating          = $settings->is_display_rating;
 	$volume_percent             = $settings->volume_percent;
 	$is_autoplay_playlist       = $settings->is_autoplay_playlist;
+	$use_growl                  = $settings->use_growl;
 
 	if ($update_in_progress == false) {
 		$w->result(null, serialize(array(
@@ -3790,6 +3791,60 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
 				'fn' => 'Not Available',
 				'ctrl' => 'Not Available'
 			), './images/enable_autoplay.png', 'yes', null, '');
+	}
+
+	if ($use_growl == true) {
+		$w->result(null, serialize(array(
+					'' /*track_uri*/ ,
+					'' /* album_uri */ ,
+					'' /* artist_uri */ ,
+					'' /* playlist_uri */ ,
+					'' /* spotify_command */ ,
+					'' /* query */ ,
+					'' /* other_settings*/ ,
+					'disable_use_growl' /* other_action */ ,
+					'' /* artist_name */ ,
+					'' /* track_name */ ,
+					'' /* album_name */ ,
+					'' /* track_artwork_path */ ,
+					'' /* artist_artwork_path */ ,
+					'' /* album_artwork_path */ ,
+					'' /* playlist_name */ ,
+					'' /* playlist_artwork_path */
+				)), "Disable Growl", array(
+				"Use Notification Center instead of Growl",
+				'alt' => 'Not Available',
+				'cmd' => 'Not Available',
+				'shift' => 'Not Available',
+				'fn' => 'Not Available',
+				'ctrl' => 'Not Available'
+			), './images/disable_use_growl.png', 'yes', null, '');
+	} else {
+		$w->result(null, serialize(array(
+					'' /*track_uri*/ ,
+					'' /* album_uri */ ,
+					'' /* artist_uri */ ,
+					'' /* playlist_uri */ ,
+					'' /* spotify_command */ ,
+					'' /* query */ ,
+					'' /* other_settings*/ ,
+					'enable_use_growl' /* other_action */ ,
+					'' /* artist_name */ ,
+					'' /* track_name */ ,
+					'' /* album_name */ ,
+					'' /* track_artwork_path */ ,
+					'' /* artist_artwork_path */ ,
+					'' /* album_artwork_path */ ,
+					'' /* playlist_name */ ,
+					'' /* playlist_artwork_path */
+				)), "Enable Growl", array(
+				"Use Growl instead of Notification Center",
+				'alt' => 'Not Available',
+				'cmd' => 'Not Available',
+				'shift' => 'Not Available',
+				'fn' => 'Not Available',
+				'ctrl' => 'Not Available'
+			), './images/enable_use_growl.png', 'yes', null, '');
 	}
 
 	if ($update_in_progress == false) {
@@ -7071,10 +7126,10 @@ function secondDelimiterFollowOrUnfollow($w, $query, $settings, $db, $update_in_
 
 			if ($ret) {
 				if ($follow) {
-					displayNotificationWithArtwork('You are now following the artist ' . $artist_name, './images/follow.png', 'Follow');
+					displayNotificationWithArtwork($w,'You are now following the artist ' . $artist_name, './images/follow.png', 'Follow');
 					exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Artist▹" . $artist_uri . "∙" . escapeQuery($artist_name) . '▹' . "\"'");
 				} else {
-					displayNotificationWithArtwork('You are no more following the artist ' . $artist_name, './images/follow.png', 'Unfollow');
+					displayNotificationWithArtwork($w,'You are no more following the artist ' . $artist_name, './images/follow.png', 'Unfollow');
 					exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Artist▹" . $artist_uri . "∙" . escapeQuery($artist_name) . '▹' . "\"'");
 				}
 			} else {
