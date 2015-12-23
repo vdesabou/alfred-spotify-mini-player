@@ -1143,7 +1143,15 @@ if ($type == "TRACK" && $other_settings == "" &&
 			return;
 		} else if ($other_action == "volume_up") {
 			if ($use_mopidy) {
-				invokeMopidyMethod($w, "core.mixer.set_volume", array('volume' => invokeMopidyMethod($w, "core.mixer.get_volume", array()) + $volume_percent));
+				$theVolume = invokeMopidyMethod($w, "core.mixer.get_volume", array());
+				if(($theVolume+$volume_percent) > 100) {
+					$theVolume = 100;
+					displayNotificationWithArtwork($w,'Spotify volume is at maximum level.', './images/volume_up.png', 'Volume Up');
+				} else {
+					$theVolume = $theVolume+$volume_percent;
+					displayNotificationWithArtwork($w,'Spotify volume has been increased to ' . $theVolume . '%', './images/volume_up.png', 'Volume Up');
+				}
+				invokeMopidyMethod($w, "core.mixer.set_volume", array('volume' => $theVolume));
 			} else {
 				$command_output = exec("osascript -e 'tell application \"Spotify\"
                 if it is running then
@@ -1164,7 +1172,15 @@ if ($type == "TRACK" && $other_settings == "" &&
 			return;
 		} else if ($other_action == "volume_down") {
 			if ($use_mopidy) {
-				invokeMopidyMethod($w, "core.mixer.set_volume", array('volume' => invokeMopidyMethod($w, "core.mixer.get_volume", array()) - $volume_percent ));
+				$theVolume = invokeMopidyMethod($w, "core.mixer.get_volume", array());
+				if(($theVolume-$volume_percent) < 0) {
+					$theVolume = 0;
+					displayNotificationWithArtwork($w,'Spotify volume is at minimum level.', './images/volume_down.png', 'Volume Down');
+				} else {
+					$theVolume = $theVolume-$volume_percent;
+					displayNotificationWithArtwork($w,'Spotify volume has been decreased to ' . $theVolume . '%', './images/volume_down.png', 'Volume Down');
+				}
+				invokeMopidyMethod($w, "core.mixer.set_volume", array('volume' => $theVolume));
 			} else {
 				$command_output = exec("osascript -e 'tell application \"Spotify\"
                 if it is running then
