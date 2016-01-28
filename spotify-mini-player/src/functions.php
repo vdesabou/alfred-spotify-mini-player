@@ -2852,19 +2852,19 @@ function getNumberOfTracksForAlbum($db, $album_uri, $yourmusiconly = false) {
  *
  * @access public
  * @param mixed $db
- * @param mixed $artist_uri
+ * @param mixed $artist_name
  * @return void
  */
-function getNumberOfTracksForArtist($db, $artist_uri, $yourmusiconly = false) {
+function getNumberOfTracksForArtist($db, $artist_name, $yourmusiconly = false) {
 	if ($yourmusiconly == false) {
-		$getNumberOfTracksForArtist = "select count(distinct track_name) from tracks where artist_uri=:artist_uri";
+		$getNumberOfTracksForArtist = "select count(distinct track_name) from tracks where artist_name=:artist_name";
 	} else {
-		$getNumberOfTracksForArtist = "select count(distinct track_name) from tracks where yourmusic=1 and artist_uri=:artist_uri";
+		$getNumberOfTracksForArtist = "select count(distinct track_name) from tracks where yourmusic=1 and artist_name=:artist_name";
 	}
 
 	try {
 		$stmt = $db->prepare($getNumberOfTracksForArtist);
-		$stmt->bindValue(':artist_uri', '' . $artist_uri . '');
+		$stmt->bindValue(':artist_name', '' . $artist_name . '');
 		$stmt->execute();
 		$nb = $stmt->fetch();
 	}

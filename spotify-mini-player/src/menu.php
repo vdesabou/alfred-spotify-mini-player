@@ -2349,16 +2349,16 @@ function firstDelimiterArtists($w, $query, $settings, $db, $update_in_progress) 
 	try {
 		if (mb_strlen($artist) < 3) {
 			if ($all_playlists == false) {
-				$getTracks = "select artist_name,artist_artwork_path,artist_uri from tracks where yourmusic=1 group by artist_name" . " limit " . $max_results;
+				$getTracks = "select artist_name,artist_artwork_path,artist_uri,uri from tracks where yourmusic=1 group by artist_name" . " limit " . $max_results;
 			} else {
-				$getTracks = "select artist_name,artist_artwork_path,artist_uri from tracks  group by artist_name" . " limit " . $max_results;
+				$getTracks = "select artist_name,artist_artwork_path,artist_uri,uri from tracks  group by artist_name" . " limit " . $max_results;
 			}
 			$stmt = $db->prepare($getTracks);
 		} else {
 			if ($all_playlists == false) {
-				$getTracks = "select artist_name,artist_artwork_path,artist_uri from tracks where yourmusic=1 and artist_name like :query limit " . $max_results;
+				$getTracks = "select artist_name,artist_artwork_path,artist_uri,uri from tracks where yourmusic=1 and artist_name like :query limit " . $max_results;
 			} else {
-				$getTracks = "select artist_name,artist_artwork_path,artist_uri from tracks where artist_name like :query limit " . $max_results;
+				$getTracks = "select artist_name,artist_artwork_path,artist_uri,uri from tracks where artist_name like :query limit " . $max_results;
 			}
 			$stmt = $db->prepare($getTracks);
 			$stmt->bindValue(':query', '%' . $artist . '%');
@@ -2378,9 +2378,15 @@ function firstDelimiterArtists($w, $query, $settings, $db, $update_in_progress) 
 	$noresult = true;
 	while ($track = $stmt->fetch()) {
 		$noresult         = false;
-		$nb_artist_tracks = getNumberOfTracksForArtist($db, $track[2]);
+		$nb_artist_tracks = getNumberOfTracksForArtist($db, $track[0]);
 		if (checkIfResultAlreadyThere($w->results(), "👤 " . ucfirst($track[0]) . ' (' . $nb_artist_tracks . ' tracks)') == false) {
-			$w->result(null, '', "👤 " . ucfirst($track[0]) . ' (' . $nb_artist_tracks . ' tracks)', "Browse this artist", $track[1], 'no', null, "Artist▹" . $track[2] . '∙' . $track[0] . "▹");
+			$uri = $track[2];
+			// in case of local track, pass track uri instead
+			if($uri == '') {
+				$uri = $track[3];
+			}
+
+			$w->result(null, '', "👤 " . ucfirst($track[0]) . ' (' . $nb_artist_tracks . ' tracks)', "Browse this artist", $track[1], 'no', null, "Artist▹" . $uri . '∙' . $track[0] . "▹");
 		}
 	}
 
@@ -5912,9 +5918,15 @@ function secondDelimiterYourMusicArtists($w, $query, $settings, $db, $update_in_
 	$noresult = true;
 	while ($track = $stmt->fetch()) {
 		$noresult         = false;
-		$nb_artist_tracks = getNumberOfTracksForArtist($db, $track[2], true);
+		$nb_artist_tracks = getNumberOfTracksForArtist($db, $track[0], true);
 		if (checkIfResultAlreadyThere($w->results(), "👤 " . ucfirst($track[0]) . ' (' . $nb_artist_tracks . ' tracks)') == false) {
-			$w->result(null, '', "👤 " . ucfirst($track[0]) . ' (' . $nb_artist_tracks . ' tracks)', "Browse this artist", $track[1], 'no', null, "Artist▹" . $track[2] . '∙' . $track[0] . '∙' . ' ★ ' . "▹");
+			$uri = $track[2];
+			// in case of local track, pass track uri instead
+			if($uri == '') {
+				$uri = $track[3];
+			}
+
+			$w->result(null, '', "👤 " . ucfirst($track[0]) . ' (' . $nb_artist_tracks . ' tracks)', "Browse this artist", $track[1], 'no', null, "Artist▹" . $uri . '∙' . $track[0] . '∙' . ' ★ ' . "▹");
 		}
 	}
 
