@@ -4709,7 +4709,7 @@ function secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
 					'' /* album_artwork_path */ ,
 					'' /* playlist_name */ ,
 					'' /* playlist_artwork_path */
-				)), "Search for artist" . $artist_name . " in Spotify", array(
+				)), "Search for artist " . $artist_name . " in Spotify", array(
 				'This will start a new search in Spotify',
 				'alt' => 'Not Available',
 				'cmd' => 'Not Available',
