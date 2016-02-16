@@ -1538,7 +1538,7 @@ function removeTrackFromPlaylist($w, $track_uri, $playlist_uri, $playlist_name, 
 	try {
 		$api = getSpotifyWebAPI($w);
 		$tmp = explode(':', $playlist_uri);
-		$api->deletePlaylistTracks(urlencode($userid), $tmp[4], array(
+		$api->deleteUserPlaylistTracks(urlencode($userid), $tmp[4], array(
 				array(
 					'id' => $track_uri
 				)
