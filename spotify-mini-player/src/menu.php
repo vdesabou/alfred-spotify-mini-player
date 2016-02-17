@@ -2601,7 +2601,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
 	//
 	// Search online
 	//
-	$the_query = $words[1];
+	$the_query = $words[1] . "*";
 
 	if (mb_strlen($the_query) < 3) {
 
