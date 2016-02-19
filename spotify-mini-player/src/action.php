@@ -73,6 +73,13 @@ if ($add_to_option != "") {
 	}
 }
 
+// start now playing if needed
+$mopidy_arg = "";
+if ($use_mopidy) {
+	$mopidy_arg = "MOPIDY";
+}
+exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start -m \"" . $mopidy_arg . "\"  >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
+
 if ($spotify_command != "" && $type == "TRACK" && $add_to_option == "") {
 	$spotify_command = str_replace("\\", "", $spotify_command);
 	if(!startsWith($spotify_command,'activate')) {
@@ -116,12 +123,6 @@ if ($type == "TRACK" && $other_settings == "" &&
 			exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Add▹" . $track_uri . "∙" . escapeQuery($track_name) . '▹' . "\"'");
 			return;
 		} else if ($playlist_uri != "") {
-				// start now playing if needed
-				$mopidy_arg = "";
-				if ($use_mopidy) {
-					$mopidy_arg = "MOPIDY";
-				}
-				exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start -m \"" . $mopidy_arg . "\"  >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
 				if (! $use_mopidy) {
 					exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
 					if ($retVal != 0) {
@@ -146,12 +147,6 @@ if ($type == "TRACK" && $other_settings == "" &&
 				return;
 			} else {
 			if ($other_action == "" || $other_action == "play_track_from_play_queue") {
-				// start now playing if needed
-				$mopidy_arg = "";
-				if ($use_mopidy) {
-					$mopidy_arg = "MOPIDY";
-				}
-				exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start -m \"" . $mopidy_arg . "\"  >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
 				if (! $use_mopidy) {
 					exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
 					if ($retVal != 0) {
@@ -192,11 +187,6 @@ if ($type == "TRACK" && $other_settings == "" &&
 			}
 		}
 	} elseif ($playlist_uri != "") {
-		$mopidy_arg = "";
-		if ($use_mopidy) {
-			$mopidy_arg = "MOPIDY";
-		}
-		exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start -m \"" . $mopidy_arg . "\"  >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
 		if (! $use_mopidy) {
 			exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
 			if ($retVal != 0) {
@@ -235,11 +225,6 @@ if ($type == "TRACK" && $other_settings == "" &&
 			}
 			$album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, true);
 		}
-		$mopidy_arg = "";
-		if ($use_mopidy) {
-			$mopidy_arg = "MOPIDY";
-		}
-		exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start -m \"" . $mopidy_arg . "\"  >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
 		if (! $use_mopidy) {
 			exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
 			if ($retVal != 0) {
@@ -313,11 +298,6 @@ if ($type == "TRACK" && $other_settings == "" &&
 				}
 				$artist_artwork_path = getArtistArtwork($w, $artist_uri, $artist_name, true);
 			}
-			$mopidy_arg = "";
-			if ($use_mopidy) {
-				$mopidy_arg = "MOPIDY";
-			}
-			exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start -m \"" . $mopidy_arg . "\"  >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
 			if (! $use_mopidy) {
 				exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
 				if ($retVal != 0) {
@@ -657,7 +637,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 		} else if ($other_action == "enable_now_playing_notifications") {
 			$ret = updateSetting($w, 'now_playing_notifications', 1);
 			if ($ret == true) {
-				displayNotificationWithArtwork($w,"Now Playing notifications are now enabled", './images/enable_now_playing.png', 'Settings');
+				displayNotificationWithArtwork($w,"Now Playing notifications are g enabled", './images/enable_now_playing.png', 'Settings');
 			} else {
 				displayNotificationWithArtwork($w,"Error while updating settings", './images/settings.png', 'Error!');
 			}
@@ -789,12 +769,6 @@ if ($type == "TRACK" && $other_settings == "" &&
 			}
 			return;
 		} else if ($other_action == "play_track_in_album_context") {
-			// start now playing if needed
-			$mopidy_arg = "";
-			if ($use_mopidy) {
-				$mopidy_arg = "MOPIDY";
-			}
-			exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start -m \"" . $mopidy_arg . "\"  >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
 			if (! $use_mopidy) {
 				exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
 				if ($retVal != 0) {
@@ -988,12 +962,6 @@ if ($type == "TRACK" && $other_settings == "" &&
 			return;
 		} else if ($other_action == "random") {
 			list($track_uri, $track_name, $artist_name, $album_name, $duration) = getRandomTrack($w);
-			// start now playing if needed
-			$mopidy_arg = "";
-			if ($use_mopidy) {
-				$mopidy_arg = "MOPIDY";
-			}
-			exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start -m \"" . $mopidy_arg . "\"  >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
 			if (! $use_mopidy) {
 				exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
 				if ($retVal != 0) {
@@ -1018,12 +986,6 @@ if ($type == "TRACK" && $other_settings == "" &&
 			return;
 		} else if ($other_action == "random_album") {
 			list($album_uri, $album_name, $theartistname) = getRandomAlbum($w);
-			// start now playing if needed
-			$mopidy_arg = "";
-			if ($use_mopidy) {
-				$mopidy_arg = "MOPIDY";
-			}
-			exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start -m \"" . $mopidy_arg . "\"  >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
 			if (! $use_mopidy) {
 				exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
 				if ($retVal != 0) {
@@ -1080,11 +1042,6 @@ if ($type == "TRACK" && $other_settings == "" &&
 			return;
 		} else if ($other_action == "playartist") {
 			$artist_artwork_path = getArtistArtwork($w, $artist_uri, $artist_name, true);
-			$mopidy_arg = "";
-			if ($use_mopidy) {
-				$mopidy_arg = "MOPIDY";
-			}
-			exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start -m \"" . $mopidy_arg . "\"  >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
 			if (! $use_mopidy) {
 				exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
 				if ($retVal != 0) {
@@ -1117,11 +1074,6 @@ if ($type == "TRACK" && $other_settings == "" &&
 				}
 			}
 			$album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, true);
-			$mopidy_arg = "";
-			if ($use_mopidy) {
-				$mopidy_arg = "MOPIDY";
-			}
-			exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start -m \"" . $mopidy_arg . "\"  >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
 			if (! $use_mopidy) {
 				exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
 				if ($retVal != 0) {
