@@ -20,8 +20,6 @@ class Session
      * @param string $clientSecret The client secret.
      * @param string $redirectUri Optional. The redirect URI.
      * @param Request $request Optional. The Request object to use.
-     *
-     * @return void
      */
     public function __construct($clientId, $clientSecret, $redirectUri = '', $request = null)
     {

@@ -12,8 +12,6 @@ class SpotifyWebAPI
      * Set up Request object.
      *
      * @param Request $request Optional. The Request object to use.
-     *
-     * @return void
      */
     public function __construct($request = null)
     {
@@ -60,6 +58,29 @@ class SpotifyWebAPI
         }
 
         return (count($ids) == 1) ? $ids[0] : $ids;
+    }
+
+    /**
+     * Add albums to the current user's Spotify library.
+     * Requires a valid access token.
+     * https://developer.spotify.com/web-api/save-albums-user/
+     *
+     * @param string|array $albums ID(s) of the album(s) to add.
+     *
+     * @return bool Whether the albums was successfully added.
+     */
+    public function addMyAlbums($albums)
+    {
+        $albums = json_encode((array) $albums);
+
+        $headers = $this->authHeaders();
+        $headers['Content-Type'] = 'application/json';
+
+        $uri = '/v1/me/albums';
+
+        $this->lastResponse = $this->request->api('PUT', $uri, $albums, $headers);
+
+        return $this->lastResponse['status'] == 200;
     }
 
     /**
@@ -167,6 +188,31 @@ class SpotifyWebAPI
         $this->lastResponse = $this->request->api('GET', $uri, $options, $headers);
 
         return $this->lastResponse['body'];
+    }
+
+    /**
+     * Delete albums from current user's Spotify library.
+     * Requires a valid access token.
+     * https://developer.spotify.com/web-api/remove-albums-user/
+     *
+     * @param string|array $albums ID(s) of the album(s) to delete.
+     *
+     * @return bool Whether the albums was successfully deleted.
+     */
+    public function deleteMyAlbums($albums)
+    {
+        $albums = json_encode(
+            (array) $albums
+        );
+
+        $headers = $this->authHeaders();
+        $headers['Content-Type'] = 'application/json';
+
+        $uri = '/v1/me/albums';
+
+        $this->lastResponse = $this->request->api('DELETE', $uri, $albums, $headers);
+
+        return $this->lastResponse['status'] == 200;
     }
 
     /**
@@ -611,6 +657,51 @@ class SpotifyWebAPI
     }
 
     /**
+     * Get the current user’s playlists.
+     * Requires a valid access token.
+     * https://developer.spotify.com/web-api/get-a-list-of-current-users-playlists/
+     *
+     * @param array|object $options Optional. Options for the playlists.
+     * - int limit Optional. Limit the number of playlists.
+     * - int offset Optional. Number of playlists to skip.
+     *
+     * @return array|object The user's playlists. Type is controlled by SpotifyWebAPI::setReturnAssoc().
+     */
+    public function getMyPlaylists($options = array())
+    {
+        $headers = $this->authHeaders();
+
+        $uri = '/v1/me/playlists';
+
+        $this->lastResponse = $this->request->api('GET', $uri, $options, $headers);
+
+        return $this->lastResponse['body'];
+    }
+
+    /**
+     * Get the current user’s saved albums.
+     * Requires a valid access token.
+     * https://developer.spotify.com/web-api/get-users-saved-albums/
+     *
+     * @param array|object $options Optional. Options for the albums.
+     * - int limit Optional. Limit the number of albums.
+     * - int offset Optional. Number of albums to skip.
+     * - string market Optional. An ISO 3166-1 alpha-2 country code, provide this if you wish to apply Track Relinking.
+     *
+     * @return array|object The user's saved albums. Type is controlled by SpotifyWebAPI::setReturnAssoc().
+     */
+    public function getMySavedAlbums($options = array())
+    {
+        $headers = $this->authHeaders();
+
+        $uri = '/v1/me/albums';
+
+        $this->lastResponse = $this->request->api('GET', $uri, $options, $headers);
+
+        return $this->lastResponse['body'];
+    }
+
+    /**
      * Get the current user’s saved tracks.
      * Requires a valid access token.
      * https://developer.spotify.com/web-api/get-users-saved-tracks/
@@ -838,7 +929,32 @@ class SpotifyWebAPI
     }
 
     /**
-     * Check if tracks is saved in the current user's Spotify library.
+     * Check if albums are saved in the current user's Spotify library.
+     * Requires a valid access token.
+     * https://developer.spotify.com/web-api/check-users-saved-albums/
+     *
+     * @param string|array $albums ID(s) of the album(s) to check for.
+     *
+     * @return array Whether each album is saved.
+     */
+    public function myAlbumsContains($albums)
+    {
+        $albums = implode(',', (array) $albums);
+        $options = array(
+            'ids' => $albums,
+        );
+
+        $headers = $this->authHeaders();
+
+        $uri = '/v1/me/albums/contains';
+
+        $this->lastResponse = $this->request->api('GET', $uri, $options, $headers);
+
+        return $this->lastResponse['body'];
+    }
+
+    /**
+     * Check if tracks are saved in the current user's Spotify library.
      * Requires a valid access token.
      * https://developer.spotify.com/web-api/check-users-saved-tracks/
      *

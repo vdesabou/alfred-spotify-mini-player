@@ -1,8 +1,5 @@
 .DS_Store
-.env
-/vendor
+build
 composer.lock
-Gemfile
-Gemfile.lock
 phpunit.xml
-Thumbs.db
+vendor

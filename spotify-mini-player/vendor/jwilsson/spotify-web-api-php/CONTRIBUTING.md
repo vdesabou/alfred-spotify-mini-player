@@ -12,6 +12,29 @@ Please submit all your bug reports, feature requests and pull requests here but 
     * The steps to reproduce the problem.
     * Possible solutions or other relevant information/suggestions.
 
+## New features
+If you have an idea for a new feature, please file an issue first to see if it fits the scope of this project. That way no one's time needs to be wasted.
+
 ## Coding Guidelines
-We follow the coding standards outlined in [PSR-1](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md) and [PSR-2](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md). Please follow these guidelines when commiting new code.
-Fixes for existing code which doesn't follow these standards are highly appreciated!
+We follow the coding standards outlined in [PSR-1](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-1-basic-coding-standard.md) and [PSR-2](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md). Please follow these guidelines when committing new code.
+
+In addition to the PSR guidelines we try to adhere to the following points:
+* We order all methods by visibility and then alphabetically, `private`/`protected` methods first and then `public`. For example:
+
+```
+protected function b() {}
+
+public function a() {}
+```
+
+instead of
+
+```
+public function a() {}
+
+protected function b() {}
+```
+
+* We strive to keep the inline documentation language consistent, take a look at existing docs for examples.
+
+Before committing any code, be sure to run `composer test` to ensure that the code style is consistent and all the tests pass.

@@ -4,7 +4,7 @@
     "type": "library",
     "license": "MIT",
     "keywords": ["spotify"],
-    "homepage": "https://github.com/jwilsson/spotify-web-api-php",
+    "homepage": "http://jwilsson.github.io/spotify-web-api-php/",
     "authors": [
         {
             "name": "Jonathan Wilsson",
@@ -12,16 +12,20 @@
         }
     ],
     "require": {
-        "php": ">=5.3.3"
+        "php": ">=5.5",
+        "ext-curl": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "4.*",
         "satooshi/php-coveralls": "dev-master",
-        "vlucas/phpdotenv": "1.*"
+        "squizlabs/php_codesniffer": "2.*"
     },
     "autoload": {
         "psr-4": {
             "SpotifyWebAPI\\": "src/"
         }
+    },
+    "scripts": {
+        "test": "phpcs src -v --standard=PSR2 && phpunit"
     }
 }
