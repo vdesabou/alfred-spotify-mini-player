@@ -2061,7 +2061,7 @@ function createCompleteCollectionArtistPlaylist($w, $artist_name, $artist_uri) {
 		try {
 			$api  = getSpotifyWebAPI($w);
 			$json = $api->createUserPlaylist($userid, array(
-					'name' => 'Complete Collection for ' . escapeQuery($artist_name),
+					'name' => 'CC for ' . escapeQuery($artist_name),
 					'public' => $public
 				));
 		}

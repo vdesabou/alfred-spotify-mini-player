@@ -837,7 +837,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
 	$mopidy_server             = $settings->mopidy_server;
 	$mopidy_port               = $settings->mopidy_port;
 
-	if (mb_strlen($query) < 3) {
+	if (mb_strlen($query) < 2) {
 		////////
 		//
 		// Fast Access to commands
@@ -2152,7 +2152,7 @@ function firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress
 	//
 	$theplaylist = $words[1];
 	try {
-		if (mb_strlen($theplaylist) < 3) {
+		if (mb_strlen($theplaylist) < 2) {
 			$getPlaylists = "select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist,collaborative,public from playlists";
 			$stmt         = $db->prepare($getPlaylists);
 		} else {
@@ -2222,7 +2222,7 @@ function firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress
 			$savedPlaylists[] = $playlist;
 		}
 
-		if (mb_strlen($theplaylist) < 3) {
+		if (mb_strlen($theplaylist) < 2) {
 			if ($nb_artist_radio_playlist > 0) {
 				$w->result(null, '', "Browse your artist radio playlists (" . $nb_artist_radio_playlist . " playlists)", "Display all your artist radio playlists", './images/radio_artist.png', 'no', null, "Playlist▹Artist radio");
 			}
@@ -2347,7 +2347,7 @@ function firstDelimiterArtists($w, $query, $settings, $db, $update_in_progress) 
 	$artist = $words[1];
 
 	try {
-		if (mb_strlen($artist) < 3) {
+		if (mb_strlen($artist) < 2) {
 			if ($all_playlists == false) {
 				$getTracks = "select artist_name,artist_artwork_path,artist_uri,uri from tracks where yourmusic=1 group by artist_name" . " limit " . $max_results;
 			} else {
@@ -2466,7 +2466,7 @@ function firstDelimiterAlbums($w, $query, $settings, $db, $update_in_progress) {
 	//
 	$album = $words[1];
 	try {
-		if (mb_strlen($album) < 3) {
+		if (mb_strlen($album) < 2) {
 			if ($all_playlists == false) {
 				$getTracks = "select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where yourmusic=1" . "  group by album_name order by max(added_at) desc limit " . $max_results;
 			} else {
@@ -2603,7 +2603,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
 	//
 	$the_query = $words[1] . "*";
 
-	if (mb_strlen($the_query) < 3) {
+	if (mb_strlen($the_query) < 2) {
 
 		if ($kind == "Search Online") {
 
@@ -3195,7 +3195,7 @@ function firstDelimiterYourMusic($w, $query, $settings, $db, $update_in_progress
 
 	$thequery = $words[1];
 
-	if (mb_strlen($thequery) < 3) {
+	if (mb_strlen($thequery) < 2) {
 		$getCounters = 'select * from counters';
 		try {
 			$stmt = $db->prepare($getCounters);
@@ -4517,7 +4517,7 @@ function secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
 			return;
 		}
 	}
-	if (mb_strlen($track) < 3) {
+	if (mb_strlen($track) < 2) {
 		$artist_artwork_path = getArtistArtwork($w, $artist_name, false);
 		$w->result(null, serialize(array(
 					'' /*track_uri*/ ,
@@ -4683,7 +4683,7 @@ function secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
 	}
 
 	if ($noresult) {
-		if (mb_strlen($track) < 3) {
+		if (mb_strlen($track) < 2) {
 			$w->result(null, 'help', "There is no track in your library for the artist " . escapeQuery($artist_name), "Choose one of the options above", './images/info.png', 'no', null, '');
 		} else {
 			$w->result(null, 'help', "There is no result for your search", "", './images/warning.png', 'no', null, '');
@@ -4777,7 +4777,7 @@ function secondDelimiterAlbums($w, $query, $settings, $db, $update_in_progress) 
 
 
 	try {
-		if (mb_strlen($track) < 3) {
+		if (mb_strlen($track) < 2) {
 			if ($all_playlists == false || count($tmp) == 3) {
 				$getTracks = "select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where yourmusic=1 and album_uri=:album_uri limit " . $max_results;
 			} else {
@@ -4977,7 +4977,7 @@ function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progres
 		$noresultplaylist = true;
 		while ($playlist = $stmt->fetch()) {
 			$noresultplaylist = false;
-			if (mb_strlen($thetrack) < 3) {
+			if (mb_strlen($thetrack) < 2) {
 				if ($playlist[9]) {
 					$public_status = 'collaborative';
 				} else {
@@ -5675,7 +5675,7 @@ function secondDelimiterYourMusicTracks($w, $query, $settings, $db, $update_in_p
 	//
 	$thetrack = $words[2];
 
-	if (mb_strlen($thetrack) < 3) {
+	if (mb_strlen($thetrack) < 2) {
 		$getTracks = "select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where yourmusic=1 order by added_at desc limit " . $max_results;
 		$stmt      = $db->prepare($getTracks);
 	} else {
@@ -5822,7 +5822,7 @@ function secondDelimiterYourMusicAlbums($w, $query, $settings, $db, $update_in_p
 	//
 	$album = $words[2];
 	try {
-		if (mb_strlen($album) < 3) {
+		if (mb_strlen($album) < 2) {
 			$getTracks = "select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where yourmusic=1" . " group by album_name order by max(added_at) desc limit " . $max_results;
 			$stmt      = $db->prepare($getTracks);
 		} else {
@@ -5895,7 +5895,7 @@ function secondDelimiterYourMusicArtists($w, $query, $settings, $db, $update_in_
 	$artist = $words[2];
 
 	try {
-		if (mb_strlen($artist) < 3) {
+		if (mb_strlen($artist) < 2) {
 			$getTracks = "select artist_name,artist_artwork_path,artist_uri from tracks where yourmusic=1 group by artist_name" . " limit " . $max_results;
 			$stmt      = $db->prepare($getTracks);
 		} else {
@@ -6655,7 +6655,7 @@ function secondDelimiterAdd($w, $query, $settings, $db, $update_in_progress) {
 	$theplaylist = $words[2];
 
 	try {
-		if (mb_strlen($theplaylist) < 3) {
+		if (mb_strlen($theplaylist) < 2) {
 			$getPlaylists = "select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist from playlists where ownedbyuser=1";
 			$stmt         = $db->prepare($getPlaylists);
 
@@ -6725,7 +6725,7 @@ function secondDelimiterAdd($w, $query, $settings, $db, $update_in_progress) {
 	}
 
 	while ($playlist = $stmt->fetch()) {
-		if (($playlist[0] != $alfred_playlist_uri && (mb_strlen($theplaylist) < 3)) || (mb_strlen($theplaylist) >= 3)) {
+		if (($playlist[0] != $alfred_playlist_uri && (mb_strlen($theplaylist) < 2)) || (mb_strlen($theplaylist) >= 3)) {
 			$added = ' ';
 			if (startswith($playlist[1], 'Artist radio for')) {
 				$added = '📻 ';
@@ -6843,7 +6843,7 @@ function secondDelimiterRemove($w, $query, $settings, $db, $update_in_progress) 
 						)), "Your Music", "Select to remove the " . $message . " from Your Music", './images/yourmusic.png', 'yes', null, '');
 				$noresult = false;
 			} else {
-				if (mb_strlen($theplaylist) < 3) {
+				if (mb_strlen($theplaylist) < 2) {
 					$getPlaylists     = "select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist from playlists where ownedbyuser=1 and uri=:playlist_uri";
 					$stmtGetPlaylists = $db->prepare($getPlaylists);
 					$stmtGetPlaylists->bindValue(':playlist_uri', $playlistsForTrack[0]);
@@ -6940,7 +6940,7 @@ function secondDelimiterAlfredPlaylist($w, $query, $settings, $db, $update_in_pr
 		$w->result(null, '', "Set your Alfred playlist", "Select one of your playlists below as your Alfred playlist", './images/settings.png', 'no', null, '');
 
 		try {
-			if (mb_strlen($theplaylist) < 3) {
+			if (mb_strlen($theplaylist) < 2) {
 				$getPlaylists = "select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist from playlists where ownedbyuser=1";
 				$stmt         = $db->prepare($getPlaylists);
 			} else {

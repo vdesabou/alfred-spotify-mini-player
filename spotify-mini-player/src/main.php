@@ -199,7 +199,7 @@ if (substr_count($query, '✧') == 1) {
     $query = ltrim($query, '✧');
 }
 
-if (mb_strlen($query) < 3) {
+if (mb_strlen($query) < 2) {
     // empty history
     $w->write(array(), 'history.json');
 
