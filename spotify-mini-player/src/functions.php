@@ -3280,7 +3280,9 @@ function getTrackOrAlbumArtwork($w, $spotifyURL, $fetchIfNotPresent, $fetchLater
 				endif;
 				$fp      = fopen($currentArtwork, 'w+');
 				$options = array(
-					CURLOPT_FILE => $fp
+					CURLOPT_FILE => $fp,
+					CURLOPT_FOLLOWLOCATION => 1,
+					CURLOPT_TIMEOUT => 5
 				);
 
 				$w->request("$artwork", $options);
@@ -3406,7 +3408,6 @@ function getPlaylistArtwork($w, $playlist_uri, $fetchIfNotPresent, $forceFetch =
 	if (!is_file($currentArtwork) || (is_file($currentArtwork) && filesize($currentArtwork) == 0) || $forceFetch) {
 		if ($fetchIfNotPresent == true || (is_file($currentArtwork) && filesize($currentArtwork) == 0) || $forceFetch) {
 			$artwork = getPlaylistArtworkURL($w, $playlist_uri);
-
 			// if return 0, it is a 404 error, no need to fetch
 			if (!empty($artwork) || (is_numeric($artwork) && $artwork != 0)) {
 				if (!file_exists($w->data() . "/artwork/" . hash('md5', $filename . ".png"))):
@@ -3414,7 +3415,9 @@ function getPlaylistArtwork($w, $playlist_uri, $fetchIfNotPresent, $forceFetch =
 				endif;
 				$fp      = fopen($currentArtwork, 'w+');
 				$options = array(
-					CURLOPT_FILE => $fp
+					CURLOPT_FILE => $fp,
+					CURLOPT_FOLLOWLOCATION => 1,
+					CURLOPT_TIMEOUT => 5
 				);
 
 				$w->request("$artwork", $options);
@@ -3538,7 +3541,9 @@ function getArtistArtwork($w, $artist_uri, $artist_name, $fetchIfNotPresent = fa
 				endif;
 				$fp      = fopen($currentArtwork, 'w+');
 				$options = array(
-					CURLOPT_FILE => $fp
+					CURLOPT_FILE => $fp,
+					CURLOPT_FOLLOWLOCATION => 1,
+					CURLOPT_TIMEOUT => 5
 				);
 				$w->request("$artwork", $options);
 				stathat_ez_count('AlfredSpotifyMiniPlayer', 'artworks', 1);
