@@ -6188,7 +6188,7 @@ function getSettings($w) {
 	}
 
 	// add use_growl if needed
-	if (!isset($settings->is_autoplay_playlist)) {
+	if (!isset($settings->use_growl)) {
 		updateSetting($w, 'use_growl', 0);
 		$settings = $w->read('settings.json');
 	}
