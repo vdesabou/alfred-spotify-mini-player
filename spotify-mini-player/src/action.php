@@ -805,9 +805,6 @@ if ($type == "TRACK" && $other_settings == "" &&
 			} else {
 				exec("osascript -e 'tell application \"Spotify\" to play'");
 			}
-			if ($now_playing_notifications == false) {
-				displayNotificationForCurrentTrack($w);
-			}
 			return;
 		} else if ($other_action == "pause") {
 			if ($use_mopidy) {
@@ -936,18 +933,12 @@ if ($type == "TRACK" && $other_settings == "" &&
 			} else {
 				exec("osascript -e 'tell application \"Spotify\" to previous track'");
 			}
-			if ($now_playing_notifications == true) {
-				displayNotificationForCurrentTrack($w);
-			}
 			return;
 		} else if ($other_action == "next") {
 			if ($use_mopidy) {
 				invokeMopidyMethod($w, "core.playback.next", array());
 			} else {
 				exec("osascript -e 'tell application \"Spotify\" to next track'");
-			}
-			if ($now_playing_notifications == false) {
-				displayNotificationForCurrentTrack($w);
 			}
 			return;
 		} else if ($other_action == "add_current_track") {
@@ -976,9 +967,6 @@ if ($type == "TRACK" && $other_settings == "" &&
 				exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
 			}
 
-			if ($now_playing_notifications == false) {
-				displayNotificationForCurrentTrack($w);
-			}
 			if ($userid != 'vdesabou') {
 				stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
 			}
