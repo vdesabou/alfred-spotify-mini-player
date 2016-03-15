@@ -245,6 +245,8 @@ function createDebugFile($w) {
 
 	$output = $output . "\n----------------------------------------------\nCan you describe the problem in a few lines:\n";
 
+    exec("echo \"" . $output . "\" | pbcopy");
+
 	exec("open \"mailto:alfred.spotify.mini.player@gmail.com?subject=Alfred Spotify Mini Player debug file&body=$output\"");
 }
 /**
