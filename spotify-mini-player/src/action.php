@@ -47,7 +47,7 @@ $oauth_access_token        = $settings->oauth_access_token;
 $use_mopidy                = $settings->use_mopidy;
 $volume_percent            = $settings->volume_percent;
 
-if($other_action != "reset_settings") {
+if($other_action != "reset_settings" && $other_action != "spot_mini_debug") {
 	if ($oauth_client_id == '' || $oauth_client_secret == '' || $oauth_access_token == '') {
 		if ($other_settings != '' && (startsWith($other_settings, 'Oauth_Client') === false && startsWith($other_settings, 'Open') === false)) {
 			exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini \"'");
