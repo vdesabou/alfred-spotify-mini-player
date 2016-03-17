@@ -883,12 +883,12 @@ if ($type == "TRACK" && $other_settings == "" &&
 				exec("open http://alfred-spotify-mini-player.com/known-issues/#php_requirement");
 				return;
 			}
-			exec("kill -9 $(ps -efx | grep \"php\" | egrep \"php -S localhost:15298\" | grep -v grep | awk '{print $2}')");
+			exec("kill -9 $(ps -efx | grep \"php\" | egrep \"php -S 127.0.0.1:15298\" | grep -v grep | awk '{print $2}')");
 			sleep(1);
 			$cache_log = $w->cache() . '/spotify_mini_player_web_server.log';
-			exec("php -S localhost:15298 > \"$cache_log\" 2>&1 &");
+			exec("php -S 127.0.0.1:15298 > \"$cache_log\" 2>&1 &");
 			sleep(2);
-			exec("open http://localhost:15298");
+			exec("open http://127.0.0.1:15298");
 			return;
 		} else if ($other_action == "current") {
 			if ($now_playing_notifications == true ||
