@@ -160,7 +160,7 @@ class Request
 
         if ($status < 200 || $status > 299) {
             $errorBody = json_decode($rawBody);
-            $error = $errorBody->error;
+            $error = (isset($errorBody->error)) ? $errorBody->error : null;
 
                 if (isset($error->message) && isset($error->status)) {
                 // API call error
