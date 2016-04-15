@@ -296,6 +296,8 @@ if (mb_strlen($query) < 2) {
                 firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress);
             } elseif ($kind == "Browse") {
                 firstDelimiterBrowse($w, $query, $settings, $db, $update_in_progress);
+            } elseif ($kind == "Your Tops") {
+                firstDelimiterYourTops($w, $query, $settings, $db, $update_in_progress);
             }
         }
         ////////////
@@ -349,6 +351,10 @@ if (mb_strlen($query) < 2) {
                 secondDelimiterDisplayConfirmRemovePlaylist($w, $query, $settings, $db, $update_in_progress);
             } elseif ($kind == "Browse") {
                 secondDelimiterBrowse($w, $query, $settings, $db, $update_in_progress);
+            } elseif ($kind == "Your Tops" && $words[1] == "Artists") {
+                secondDelimiterYourTopArtists($w, $query, $settings, $db, $update_in_progress);
+            } elseif ($kind == "Your Tops" && $words[1] == "Tracks") {
+                secondDelimiterYourTopTracks($w, $query, $settings, $db, $update_in_progress);
             }
         }
         ///////////

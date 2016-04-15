@@ -29,7 +29,8 @@ try {
 					'playlist-read-private',
 					'playlist-modify-public',
 					'playlist-modify-private',
-					'playlist-read-collaborative'),
+					'playlist-read-collaborative',
+					'user-top-read'),
 				'show_dialog' => true)));
 }
 catch (SpotifyWebAPI\SpotifyWebAPIException $e) {

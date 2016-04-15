@@ -3510,6 +3510,10 @@ function getArtistArtwork($w, $artist_uri, $artist_name, $fetchIfNotPresent = fa
 
 	$currentArtwork = $w->data() . "/artwork/" . hash('md5', $parsedArtist . ".png") . "/" . "$parsedArtist.png";
 
+    if($artist_uri == '') {
+        return "./images/artists.png";
+    }
+
 	$tmp  = explode(':', $artist_uri);
 	if(isset($tmp[2])) {
 		$artist_uri = $tmp[2];
