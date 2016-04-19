@@ -2954,7 +2954,6 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
 		if ($href[1] == 'local') {
 			$added = '📌 ';
 		}
-		$currentArtistArtwork = getArtistArtwork($w, '' /* empty artist_uri */, $results[1], false);
 		$subtitle             = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
 		$subtitle             = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
 		if ($results[3] == "playing") {
@@ -3034,12 +3033,11 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
 				$noresult   = false;
 			}
 		}
-
 		if ($noresult == false) {
-			$w->result(null, '', "👤 " . ucfirst(escapeQuery($results[1])), "Browse this artist", $currentArtistArtwork, 'no', null, "Artist▹" . $artist_uri . '∙' . escapeQuery($results[1]) . "▹");
+			$w->result(null, '', "👤 " . ucfirst(escapeQuery($results[1])), "Browse this artist", getArtistArtwork($w, $artist_uri, $results[1], false), 'no', null, "Artist▹" . $artist_uri . '∙' . escapeQuery($results[1]) . "▹");
 		} else {
 			// artist is not in library
-			$w->result(null, '', "👤 " . ucfirst(escapeQuery($results[1])), "Browse this artist", $currentArtistArtwork, 'no', null, "Artist▹" . $results[4] . '∙' . escapeQuery($results[1]) . "▹");
+			$w->result(null, '', "👤 " . ucfirst(escapeQuery($results[1])), "Browse this artist", getArtistArtwork($w, '' /* empty artist_uri */, $results[1], false), 'no', null, "Artist▹" . $results[4] . '∙' . escapeQuery($results[1]) . "▹");
 		}
 
 		// use track uri here
