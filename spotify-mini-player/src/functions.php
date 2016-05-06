@@ -5732,7 +5732,7 @@ function getLyrics($w, $artist, $title) {
 	);
 	$file = $w->request($uri, $options);
 
-	preg_match('/<script>var __mxmProps = (.*?)<\/script>/s', $file, $lyrics);
+	preg_match('/<script>.*var __mxmState = (.*?);<\/script>/s', $file, $lyrics);
 	$lyrics = (empty($lyrics[1])) ? '' : $lyrics[1];
 	if (empty($file)) {
 		return array(
@@ -5764,10 +5764,11 @@ function getLyrics($w, $artist, $title) {
 				''
 			);
 		case JSON_ERROR_NONE:
-			if (isset($json->lyrics) &&
-				isset($json->lyrics->attributes) &&
-				isset($json->lyrics->attributes->lyrics_body)) {
-				if ($json->lyrics->attributes->lyrics_body == '') {
+
+			if (isset($json->page) &&
+				isset($json->page->lyrics) &&
+				isset($json->page->lyrics->lyrics)) {
+				if ($json->page->lyrics->lyrics->body == '') {
 					return array(
 						false,
 						''
@@ -5775,7 +5776,7 @@ function getLyrics($w, $artist, $title) {
 				} else {
 					return array(
 						$uri,
-						$json->lyrics->attributes->lyrics_body
+						$json->page->lyrics->lyrics->body
 					);
 				}
 			} else {
