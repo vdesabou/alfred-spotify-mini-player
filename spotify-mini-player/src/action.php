@@ -50,13 +50,13 @@ $volume_percent            = $settings->volume_percent;
 if($other_action != "reset_settings" && $other_action != "spot_mini_debug") {
 	if ($oauth_client_id == '' || $oauth_client_secret == '' || $oauth_access_token == '') {
 		if ($other_settings != '' && (startsWith($other_settings, 'Oauth_Client') === false && startsWith($other_settings, 'Open') === false)) {
-			exec("osascript -e 'tell application \"Alfred 3\" to search \"spot_mini \"'");
+			exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini \"'");
 			return;
 		}
 
 		if ($other_action != '' && $other_action != 'Oauth_Login' &&
 			! startsWith($other_action, 'current')) {
-			exec("osascript -e 'tell application \"Alfred 3\" to search \"spot_mini \"'");
+			exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini \"'");
 			return;
 		}
 	}
@@ -120,14 +120,14 @@ if ($type == "TRACK" && $other_settings == "" &&
 					return;
 				}
 			}
-			exec("osascript -e 'tell application \"Alfred 3\" to search \"spot_mini Add▹" . $track_uri . "∙" . escapeQuery($track_name) . '▹' . "\"'");
+			exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Add▹" . $track_uri . "∙" . escapeQuery($track_name) . '▹' . "\"'");
 			return;
 		} else if ($playlist_uri != "") {
 				if (! $use_mopidy) {
 					exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
 					if ($retVal != 0) {
 						displayNotificationWithArtwork($w,'AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-						exec("osascript -e 'tell application \"Alfred 3\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+						exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
 						return;
 					}
 				}
@@ -151,7 +151,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 					exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
 					if ($retVal != 0) {
 						displayNotificationWithArtwork($w,'AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-						exec("osascript -e 'tell application \"Alfred 3\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+						exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
 						return;
 					}
 				}
@@ -174,7 +174,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 						exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
 						if ($retVal != 0) {
 							displayNotificationWithArtwork($w,'AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-							exec("osascript -e 'tell application \"Alfred 3\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+							exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
 							return;
 						}
 					}
@@ -191,7 +191,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 			exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
 			if ($retVal != 0) {
 				displayNotificationWithArtwork($w,'AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-				exec("osascript -e 'tell application \"Alfred 3\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+				exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
 				return;
 			}
 		}
@@ -229,7 +229,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 			exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
 			if ($retVal != 0) {
 				displayNotificationWithArtwork($w,'AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-				exec("osascript -e 'tell application \"Alfred 3\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+				exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
 				return;
 			}
 		}
@@ -253,7 +253,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 				return;
 			}
 		}
-		exec("osascript -e 'tell application \"Alfred 3\" to search \"spot_mini Online▹" . $artist_uri . "@" . escapeQuery($artist_name) . '▹' . "\"'");
+		exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online▹" . $artist_uri . "@" . escapeQuery($artist_name) . '▹' . "\"'");
 		if ($userid != 'vdesabou') {
 			stathat_ez_count('AlfredSpotifyMiniPlayer', 'lookup online', 1);
 		}
@@ -274,10 +274,10 @@ if ($type == "TRACK" && $other_settings == "" &&
 					}
 					$album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, true);
 				}
-				exec("osascript -e 'tell application \"Alfred 3\" to search \"spot_mini Add▹" . $album_uri . "∙" . escapeQuery($album_name) . '▹' . "\"'");
+				exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Add▹" . $album_uri . "∙" . escapeQuery($album_name) . '▹' . "\"'");
 				return;
 			} else if ($playlist_uri != "") {
-					exec("osascript -e 'tell application \"Alfred 3\" to search \"spot_mini Add▹" . $playlist_uri . "∙" . escapeQuery($playlist_name) . '▹' . "\"'");
+					exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Add▹" . $playlist_uri . "∙" . escapeQuery($playlist_name) . '▹' . "\"'");
 					return;
 				}
 		}
@@ -302,7 +302,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 				exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
 				if ($retVal != 0) {
 					displayNotificationWithArtwork($w,'AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-					exec("osascript -e 'tell application \"Alfred 3\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+					exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
 					return;
 				}
 			}
@@ -773,7 +773,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 				exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
 				if ($retVal != 0) {
 					displayNotificationWithArtwork($w,'AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-					exec("osascript -e 'tell application \"Alfred 3\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+					exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
 					return;
 				}
 			}
@@ -796,7 +796,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 				exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
 				if ($retVal != 0) {
 					displayNotificationWithArtwork($w,'AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-					exec("osascript -e 'tell application \"Alfred 3\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+					exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
 					return;
 				}
 			}
@@ -957,7 +957,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 				exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
 				if ($retVal != 0) {
 					displayNotificationWithArtwork($w,'AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-					exec("osascript -e 'tell application \"Alfred 3\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+					exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
 					return;
 				}
 			}
@@ -978,7 +978,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 				exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
 				if ($retVal != 0) {
 					displayNotificationWithArtwork($w,'AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-					exec("osascript -e 'tell application \"Alfred 3\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+					exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
 					return;
 				}
 			}
@@ -1012,7 +1012,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 			// pop twice
 			$query = array_pop($history);
 			$w->write($history, 'history.json');
-			exec("osascript -e 'tell application \"Alfred 3\" to search \"spot_mini $query\"'");
+			exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini $query\"'");
 			return;
 		} else if ($other_action == "lookup_artist") {
 
@@ -1023,7 +1023,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 			if ($artist_uri == "") {
 				$artist_uri = getArtistUriFromTrack($w, $track_uri);
 			}
-			exec("osascript -e 'tell application \"Alfred 3\" to search \"spot_mini Online▹" . $artist_uri . "@" . escapeQuery($artist_name) . '▹' . "\"'");
+			exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Online▹" . $artist_uri . "@" . escapeQuery($artist_name) . '▹' . "\"'");
 			if ($userid != 'vdesabou') {
 				stathat_ez_count('AlfredSpotifyMiniPlayer', 'lookup online', 1);
 			}
@@ -1034,7 +1034,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 				exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
 				if ($retVal != 0) {
 					displayNotificationWithArtwork($w,'AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-					exec("osascript -e 'tell application \"Alfred 3\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+					exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
 					return;
 				}
 			}
@@ -1066,7 +1066,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 				exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
 				if ($retVal != 0) {
 					displayNotificationWithArtwork($w,'AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-					exec("osascript -e 'tell application \"Alfred 3\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+					exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
 					return;
 				}
 			}

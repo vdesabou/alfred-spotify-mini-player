@@ -7342,10 +7342,10 @@ function secondDelimiterFollowOrUnfollow($w, $query, $settings, $db, $update_in_
 			if ($ret) {
 				if ($follow) {
 					displayNotificationWithArtwork($w,'You are now following the artist ' . $artist_name, './images/follow.png', 'Follow');
-					exec("osascript -e 'tell application \"Alfred 3\" to search \"spot_mini Artist▹" . $artist_uri . "∙" . escapeQuery($artist_name) . '▹' . "\"'");
+					exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Artist▹" . $artist_uri . "∙" . escapeQuery($artist_name) . '▹' . "\"'");
 				} else {
 					displayNotificationWithArtwork($w,'You are no more following the artist ' . $artist_name, './images/follow.png', 'Unfollow');
-					exec("osascript -e 'tell application \"Alfred 3\" to search \"spot_mini Artist▹" . $artist_uri . "∙" . escapeQuery($artist_name) . '▹' . "\"'");
+					exec("osascript -e 'tell application \"Alfred 2\" to search \"spot_mini Artist▹" . $artist_uri . "∙" . escapeQuery($artist_name) . '▹' . "\"'");
 				}
 			} else {
 				$w->result(null, '', 'Error!', 'An error happened, try again or report to the author', './images/warning.png', 'no', null, '');
