@@ -4591,7 +4591,15 @@ function refreshLibrary($w) {
 	do {
 		$retry = true;
 		$nb_retry = 0;
+		try {
 		$api           = getSpotifyWebAPI($w);
+		}
+		catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+			logMsg("Error(refreshLibrary): (exception " . print_r($e) . ")");
+			handleSpotifyWebAPIException($w, $e);
+			return false;
+		}
+
 		while ($retry) {
 			try {
 				// refresh api
@@ -5949,8 +5957,15 @@ function doJsonRequest($w, $url, $actionMode = true) {
 function killUpdate($w) {
 	deleteTheFile($w->data() . '/update_library_in_progress');
 	deleteTheFile($w->data() . '/download_artworks_in_progress');
+
+
+	if (file_exists($w->data() . '/library_old.db')) {
+	    rename($w->data() . '/library_old.db', $w->data() . '/library.db');
+    }
+
+	if (file_exists($w->data() . '/library_new.db')) {
 	deleteTheFile($w->data() . '/library_new.db');
-	deleteTheFile($w->data() . '/library_old.db');
+	}
 
 	exec("kill -9 $(ps -efx | grep \"php\" | egrep \"update_|php -S localhost:15298|ADDTOPLAYLIST|UPDATE_|DOWNLOAD_ARTWORKS\" | grep -v grep | awk '{print $2}')");
 

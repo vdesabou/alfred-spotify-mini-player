@@ -514,7 +514,7 @@ class Workflows
 
     public function internet()
     {
-        $internet = @fsockopen("www.google.com", 80);
+        $internet = @fsockopen("api.spotify.com", 80);
         if ($internet):
             fclose($internet);
             return true;
