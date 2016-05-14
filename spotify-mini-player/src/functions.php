@@ -4591,7 +4591,15 @@ function refreshLibrary($w) {
 	do {
 		$retry = true;
 		$nb_retry = 0;
-		$api           = getSpotifyWebAPI($w);
+		try {
+    		$api           = getSpotifyWebAPI($w);
+		}
+		catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+			logMsg("Error(refreshLibrary): (exception " . print_r($e) . ")");
+			handleSpotifyWebAPIException($w, $e);
+			return false;
+		}
+
 		while ($retry) {
 			try {
 				// refresh api
