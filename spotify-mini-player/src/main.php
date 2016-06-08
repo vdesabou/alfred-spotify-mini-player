@@ -2,7 +2,11 @@
 
 require './src/functions.php';
 require './src/menu.php';
+require './src/firstDelimiter.php';
+require './src/secondDelimiter.php';
+require './src/thirdDelimiter.php';
 require_once './src/workflows.php';
+
 // $begin_time = computeTime();
 // Report all PHP errors
 //error_reporting(E_ALL);
