@@ -4,6 +4,18 @@ require_once './src/workflows.php';
 require './vendor/autoload.php';
 
 /**
+ * remove_emoji function.
+ * thanks to http://stackoverflow.com/questions/12807176/php-writing-a-simple-removeemoji-function
+
+ * @access public
+ * @param mixed $text
+ * @return void
+ */
+function remove_emoji($text){
+  return preg_replace('/([0-9#][\x{20E3}])|[\x{00ae}\x{00a9}\x{203C}\x{2047}\x{2048}\x{2049}\x{3030}\x{303D}\x{2139}\x{2122}\x{3297}\x{3299}][\x{FE00}-\x{FEFF}]?|[\x{2190}-\x{21FF}][\x{FE00}-\x{FEFF}]?|[\x{2300}-\x{23FF}][\x{FE00}-\x{FEFF}]?|[\x{2460}-\x{24FF}][\x{FE00}-\x{FEFF}]?|[\x{25A0}-\x{25FF}][\x{FE00}-\x{FEFF}]?|[\x{2600}-\x{27BF}][\x{FE00}-\x{FEFF}]?|[\x{2900}-\x{297F}][\x{FE00}-\x{FEFF}]?|[\x{2B00}-\x{2BF0}][\x{FE00}-\x{FEFF}]?|[\x{1F000}-\x{1F6FF}][\x{FE00}-\x{FEFF}]?/u', '', $text);
+}
+
+/**
  * getSpotifyWebAPI function.
  *
  * @access public
@@ -3938,7 +3950,7 @@ function updateLibrary($w) {
 		foreach ($userPlaylists->items as $playlist) {
 			$tracks = $playlist->tracks;
 			$nb_tracktotal += $tracks->total;
-			if ($playlist->name != "") {
+			if (remove_emoji($playlist->name) != "") {
 				$savedListPlaylist[] = $playlist;
 			}
 		}
@@ -4192,7 +4204,7 @@ function updateLibrary($w) {
 					$stmtTrack->bindValue(':track_artwork_path', $track_artwork_path);
 					$stmtTrack->bindValue(':artist_artwork_path', $artist_artwork_path);
 					$stmtTrack->bindValue(':album_artwork_path', $album_artwork_path);
-					$stmtTrack->bindValue(':playlist_name', escapeQuery($playlist->name));
+					$stmtTrack->bindValue(':playlist_name', escapeQuery(remove_emoji($playlist->name)));
 					$stmtTrack->bindValue(':playlist_uri', $playlist->uri);
 					$stmtTrack->bindValue(':playable', $playable);
 					$stmtTrack->bindValue(':added_at', $item->added_at);
@@ -4212,7 +4224,7 @@ function updateLibrary($w) {
 				$nb_track++;
 				$nb_track_playlist++;
 				if ($nb_track % 10 === 0) {
-					$w->write('Create Library▹' . $nb_track . '▹' . $nb_tracktotal . '▹' . $words[3] . '▹' . escapeQuery($playlist->name), 'update_library_in_progress');
+					$w->write('Create Library▹' . $nb_track . '▹' . $nb_tracktotal . '▹' . $words[3] . '▹' . escapeQuery(remove_emoji($playlist->name)), 'update_library_in_progress');
 				}
 			}
 
@@ -4221,7 +4233,7 @@ function updateLibrary($w) {
 
 		try {
 			$stmtPlaylist->bindValue(':uri', $playlist->uri);
-			$stmtPlaylist->bindValue(':name', escapeQuery($playlist->name));
+			$stmtPlaylist->bindValue(':name', escapeQuery(remove_emoji($playlist->name)));
 			$stmtPlaylist->bindValue(':nb_tracks', $playlist->tracks->total);
 			$stmtPlaylist->bindValue(':owner', $owner->id);
 			$stmtPlaylist->bindValue(':username', $owner->id);
@@ -4633,7 +4645,7 @@ function refreshLibrary($w) {
 		$nb_playlist_total = $userPlaylists->total;
 
 		foreach ($userPlaylists->items as $playlist) {
-			if ($playlist->name != "") {
+			if (remove_emoji($playlist->name) != "") {
 				$savedListPlaylist[] = $playlist;
 			}
 		}
@@ -4648,7 +4660,7 @@ function refreshLibrary($w) {
 		$owner  = $playlist->owner;
 
 		$nb_playlist++;
-		$w->write('Refresh Library▹' . $nb_playlist . '▹' . $nb_playlist_total . '▹' . $words[3] . '▹' . escapeQuery($playlist->name), 'update_library_in_progress');
+		$w->write('Refresh Library▹' . $nb_playlist . '▹' . $nb_playlist_total . '▹' . $words[3] . '▹' . escapeQuery(remove_emoji($playlist->name)), 'update_library_in_progress');
 
 		try {
 			// Loop on existing playlists in library
@@ -4813,7 +4825,7 @@ function refreshLibrary($w) {
 						$stmtTrack->bindValue(':track_artwork_path', $track_artwork_path);
 						$stmtTrack->bindValue(':artist_artwork_path', $artist_artwork_path);
 						$stmtTrack->bindValue(':album_artwork_path', $album_artwork_path);
-						$stmtTrack->bindValue(':playlist_name', escapeQuery($playlist->name));
+						$stmtTrack->bindValue(':playlist_name', escapeQuery(remove_emoji($playlist->name)));
 						$stmtTrack->bindValue(':playlist_uri', $playlist->uri);
 						$stmtTrack->bindValue(':playable', $playable);
 						$stmtTrack->bindValue(':added_at', $item->added_at);
@@ -4838,7 +4850,7 @@ function refreshLibrary($w) {
 
 			try {
 				$stmtPlaylist->bindValue(':uri', $playlist->uri);
-				$stmtPlaylist->bindValue(':name', escapeQuery($playlist->name));
+				$stmtPlaylist->bindValue(':name', escapeQuery(remove_emoji($playlist->name)));
 				$stmtPlaylist->bindValue(':nb_tracks', $tracks->total);
 				$stmtPlaylist->bindValue(':owner', $owner->id);
 				$stmtPlaylist->bindValue(':username', $owner->id);
@@ -4859,11 +4871,11 @@ function refreshLibrary($w) {
 				return;
 			}
 
-			displayNotificationWithArtwork($w,'Added playlist ' . escapeQuery($playlist->name), $playlist_artwork_path, 'Refresh Library');
+			displayNotificationWithArtwork($w,'Added playlist ' . escapeQuery(remove_emoji($playlist->name)), $playlist_artwork_path, 'Refresh Library');
 		} else {
 			// number of tracks has changed or playlist name has changed or the privacy has changed
 			// update the playlist
-			if ($playlists[2] != $tracks->total || $playlists[1] != escapeQuery($playlist->name) ||
+			if ($playlists[2] != $tracks->total || $playlists[1] != escapeQuery(remove_emoji($playlist->name)) ||
 				(($playlists[11] == '' && $playlist->public == true) || ($playlists[11] == true && $playlist->public == ''))) {
 				$nb_updated_playlists++;
 
@@ -4871,11 +4883,11 @@ function refreshLibrary($w) {
 				getPlaylistArtwork($w, $playlist->uri, true, true);
 
 				try {
-					if ($playlists[1] != escapeQuery($playlist->name)) {
+					if ($playlists[1] != escapeQuery(remove_emoji($playlist->name))) {
 						$updatePlaylistsName     = "update playlists set name=:name where uri=:uri";
 						$stmtUpdatePlaylistsName = $db->prepare($updatePlaylistsName);
 
-						$stmtUpdatePlaylistsName->bindValue(':name', escapeQuery($playlist->name));
+						$stmtUpdatePlaylistsName->bindValue(':name', escapeQuery(remove_emoji($playlist->name)));
 						$stmtUpdatePlaylistsName->bindValue(':uri', $playlist->uri);
 						$stmtUpdatePlaylistsName->execute();
 					}
@@ -5023,7 +5035,7 @@ function refreshLibrary($w) {
 							$stmtTrack->bindValue(':track_artwork_path', $track_artwork_path);
 							$stmtTrack->bindValue(':artist_artwork_path', $artist_artwork_path);
 							$stmtTrack->bindValue(':album_artwork_path', $album_artwork_path);
-							$stmtTrack->bindValue(':playlist_name', escapeQuery($playlist->name));
+							$stmtTrack->bindValue(':playlist_name', escapeQuery(remove_emoji($playlist->name)));
 							$stmtTrack->bindValue(':playlist_uri', $playlist->uri);
 							$stmtTrack->bindValue(':playable', $playable);
 							$stmtTrack->bindValue(':added_at', $item->added_at);
@@ -5060,7 +5072,7 @@ function refreshLibrary($w) {
 					$db         = null;
 					return;
 				}
-				displayNotificationWithArtwork($w,'Updated playlist ' . escapeQuery($playlist->name), getPlaylistArtwork($w, $playlist->uri, true), 'Refresh Library');
+				displayNotificationWithArtwork($w,'Updated playlist ' . escapeQuery(remove_emoji($playlist->name)), getPlaylistArtwork($w, $playlist->uri, true), 'Refresh Library');
 			} else {
 				continue;
 			}
