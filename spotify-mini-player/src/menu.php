@@ -367,8 +367,6 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress) {
 		$w->result(null, '', 'Albums in "Your Music"', 'Browse by album' . ' (' . $yourmusic_albums . ' albums)', './images/albums.png', 'no', null, 'Album▹');
 	}
 
-	//$w->result(null, '', 'Charts', 'Browse charts', './images/numbers.png', 'no', null, 'Charts▹');
-
 	$w->result(null, '', 'Browse', 'Browse Spotify by categories, as in the Spotify player’s “Browse” tab', './images/browse.png', 'no', null, 'Browse▹');
     $w->result(null, '', 'Your Tops', 'Browse your top artists and top tracks', './images/star.png', 'no', null, 'Your Tops▹');
 
@@ -738,9 +736,6 @@ function searchCategoriesFastAccess($w, $query, $settings, $db, $update_in_progr
 	}
 	if (strpos(strtolower('albums'), strtolower($query)) !== false) {
 		$w->result(null, '', 'Albums', 'Browse by album', './images/albums.png', 'no', null, 'Album▹');
-	}
-	if (strpos(strtolower('charts'), strtolower($query)) !== false) {
-		$w->result(null, '', 'Charts', 'Browse charts', './images/numbers.png', 'no', null, 'Charts▹');
 	}
 	if (strpos(strtolower('browse'), strtolower($query)) !== false) {
 		$w->result(null, '', 'Browse', 'Browse Spotify by categories, as in the Spotify player’s “Browse” tab', './images/browse.png', 'no', null, 'Browse▹');

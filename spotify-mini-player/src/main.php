@@ -282,8 +282,6 @@ if (mb_strlen($query) < 2) {
                 firstDelimiterFeaturedPlaylist($w, $query, $settings, $db, $update_in_progress);
             } elseif (startswith($kind, "Search")) {
                 firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progress);
-            } elseif ($kind == "Charts") {
-                firstDelimiterCharts($w, $query, $settings, $db, $update_in_progress);
             } elseif ($kind == "New Releases") {
                 firstDelimiterNewReleases($w, $query, $settings, $db, $update_in_progress);
             } elseif ($kind == "Current Track") {
@@ -335,8 +333,6 @@ if (mb_strlen($query) < 2) {
                 secondDelimiterSettings($w, $query, $settings, $db, $update_in_progress);
             } elseif ($kind == "Featured Playlist") {
                 secondDelimiterFeaturedPlaylist($w, $query, $settings, $db, $update_in_progress);
-            } elseif ($kind == "Charts") {
-                secondDelimiterCharts($w, $query, $settings, $db, $update_in_progress);
             } elseif ($kind == "New Releases") {
                 secondDelimiterNewReleases($w, $query, $settings, $db, $update_in_progress);
             } elseif ($kind == "Add") {

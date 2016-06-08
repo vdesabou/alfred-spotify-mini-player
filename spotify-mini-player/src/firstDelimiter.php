@@ -697,37 +697,6 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
 
 
 /**
- * firstDelimiterCharts function.
- *
- * @access public
- * @param mixed $w
- * @param mixed $query
- * @param mixed $settings
- * @param mixed $db
- * @param mixed $update_in_progress
- * @return void
- */
-function firstDelimiterCharts($w, $query, $settings, $db, $update_in_progress) {
-	$words = explode('▹', $query);
-	$kind  = $words[0];
-
-	$country_code = $settings->country_code;
-
-	$w->result(null, '', getCountryName($country_code), 'Browse the current charts in ' . getCountryName($country_code), './images/numbers.png', 'no', null, 'Charts▹' . $country_code . '▹');
-
-	if ($country_code != 'US') {
-		$w->result(null, '', getCountryName('US'), 'Browse the current charts in ' . getCountryName('US'), './images/numbers.png', 'no', null, 'Charts▹US▹');
-	}
-
-	if ($country_code != 'GB') {
-		$w->result(null, '', getCountryName('GB'), 'Browse the current charts in ' . getCountryName('GB'), './images/numbers.png', 'no', null, 'Charts▹GB▹');
-	}
-
-	$w->result(null, '', 'Choose Another country', 'Browse the current charts in another country of your choice', './images/numbers.png', 'no', null, 'Charts▹Choose a Country▹');
-}
-
-
-/**
  * firstDelimiterNewReleases function.
  *
  * @access public
