@@ -218,6 +218,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>2F1F6369-46C0-483B-816F-3796168AE060</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>0749257A-D830-483B-9EF5-580E33C10BB8</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>2FC567E2-E6C5-4A91-B42E-1996532B78C9</key>
 		<array>
 			<dict>
@@ -249,6 +262,19 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>18496AC4-EA42-444C-A906-642E38259C96</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>3435F565-E791-4FE9-A7B9-85B4A2EA353C</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>0749257A-D830-483B-9EF5-580E33C10BB8</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -922,6 +948,19 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>BC672665-5E43-4892-B8D3-BFCBA48E34C4</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>A41190FA-4B23-4908-A4B7-16A14F338C11</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>0749257A-D830-483B-9EF5-580E33C10BB8</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -4939,6 +4978,97 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 			<key>version</key>
 			<integer>2</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string></string>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>triggerid</key>
+				<string>com.vdesabou.miniplayer.repeating</string>
+				<key>triggername</key>
+				<string>Activate Repeating</string>
+				<key>workflowonly</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.remote</string>
+			<key>uid</key>
+			<string>A41190FA-4B23-4908-A4B7-16A14F338C11</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "repeating" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
+php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>0749257A-D830-483B-9EF5-580E33C10BB8</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>repeating</string>
+				<key>subtext</key>
+				<string>Activate/Deactivate repeating in Spotify</string>
+				<key>text</key>
+				<string>Repeating</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>2F1F6369-46C0-483B-816F-3796168AE060</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>0</integer>
+				<key>hotkey</key>
+				<integer>0</integer>
+				<key>hotmod</key>
+				<integer>0</integer>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>0</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>3435F565-E791-4FE9-A7B9-85B4A2EA353C</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string>Web Site:
@@ -4978,6 +5108,13 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<integer>300</integer>
 			<key>ypos</key>
 			<real>6010</real>
+		</dict>
+		<key>0749257A-D830-483B-9EF5-580E33C10BB8</key>
+		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
+			<key>ypos</key>
+			<integer>11040</integer>
 		</dict>
 		<key>0A7E4CC3-BA4A-4DD4-AB4B-E2E8F9DBBE8C</key>
 		<dict>
@@ -5149,6 +5286,13 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<key>ypos</key>
 			<real>8990</real>
 		</dict>
+		<key>2F1F6369-46C0-483B-816F-3796168AE060</key>
+		<dict>
+			<key>xpos</key>
+			<integer>300</integer>
+			<key>ypos</key>
+			<integer>11040</integer>
+		</dict>
 		<key>2FC567E2-E6C5-4A91-B42E-1996532B78C9</key>
 		<dict>
 			<key>xpos</key>
@@ -5169,6 +5313,13 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<integer>130</integer>
 			<key>ypos</key>
 			<integer>990</integer>
+		</dict>
+		<key>3435F565-E791-4FE9-A7B9-85B4A2EA353C</key>
+		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
+			<key>ypos</key>
+			<integer>11100</integer>
 		</dict>
 		<key>3617F927-558D-4F30-B8D1-B7789F863AB0</key>
 		<dict>
@@ -5631,6 +5782,13 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<integer>300</integer>
 			<key>ypos</key>
 			<real>4610</real>
+		</dict>
+		<key>A41190FA-4B23-4908-A4B7-16A14F338C11</key>
+		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
+			<key>ypos</key>
+			<integer>10940</integer>
 		</dict>
 		<key>A4437594-2A54-42A1-836E-129E46F5DB47</key>
 		<dict>

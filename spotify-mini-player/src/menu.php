@@ -1127,6 +1127,25 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
 					'' /* playlist_artwork_path */
 				)), 'Shuffle', 'Activate/Deactivate shuffling in Spotify', './images/shuffle.png', 'yes', '');
 
+		$w->result('SpotifyMiniPlayer_' . 'repeating', serialize(array(
+					'' /*track_uri*/ ,
+					'' /* album_uri */ ,
+					'' /* artist_uri */ ,
+					'' /* playlist_uri */ ,
+					'' /* spotify_command */ ,
+					'' /* query */ ,
+					'' /* other_settings*/ ,
+					'repeating' /* other_action */ ,
+					'' /* artist_name */ ,
+					'' /* track_name */ ,
+					'' /* album_name */ ,
+					'' /* track_artwork_path */ ,
+					'' /* artist_artwork_path */ ,
+					'' /* album_artwork_path */ ,
+					'' /* playlist_name */ ,
+					'' /* playlist_artwork_path */
+				)), 'Repeating', 'Activate/Deactivate repeating in Spotify', './images/repeating.png', 'yes', '');
+
 		if ($update_in_progress == false) {
 			$w->result('SpotifyMiniPlayer_' . 'refresh_library', serialize(array(
 						'' /*track_uri*/ ,
@@ -1765,6 +1784,26 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
 						'' /* playlist_name */ ,
 						'' /* playlist_artwork_path */
 					)), 'Shuffle', 'Activate/Deactivate shuffling in Spotify', './images/shuffle.png', 'yes', '');
+		}
+		if (strpos(strtolower('repeating'), strtolower($query)) !== false) {
+			$w->result(null, serialize(array(
+						'' /*track_uri*/ ,
+						'' /* album_uri */ ,
+						'' /* artist_uri */ ,
+						'' /* playlist_uri */ ,
+						'' /* spotify_command */ ,
+						'' /* query */ ,
+						'' /* other_settings*/ ,
+						'repeating' /* other_action */ ,
+						'' /* artist_name */ ,
+						'' /* track_name */ ,
+						'' /* album_name */ ,
+						'' /* track_artwork_path */ ,
+						'' /* artist_artwork_path */ ,
+						'' /* album_artwork_path */ ,
+						'' /* playlist_name */ ,
+						'' /* playlist_artwork_path */
+					)), 'Repeating', 'Activate/Deactivate repeating in Spotify', './images/repeating.png', 'yes', '');
 		}
 		if (strpos(strtolower('refresh'), strtolower($query)) !== false) {
 			if ($update_in_progress == false) {

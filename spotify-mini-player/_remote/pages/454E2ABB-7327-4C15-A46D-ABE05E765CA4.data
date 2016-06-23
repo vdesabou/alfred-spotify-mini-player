@@ -54,16 +54,16 @@
 				<key>autoworkflowuid</key>
 				<true/>
 				<key>triggerid</key>
-				<string>com.vdesabou.miniplayer.playalfredplaylist</string>
+				<string>com.vdesabou.miniplayer.repeating</string>
 			</dict>
 			<key>actionuid</key>
 			<string>remote.alfred.runworkflow</string>
 			<key>buttoniconid</key>
-			<string>48A69ED5-BBD6-46BE-911E-343562F6F343</string>
+			<string>9B2EBB97-E54C-420E-BB2E-20AC87764C68</string>
 			<key>buttonlabel</key>
-			<string>Play Alfred Playlist</string>
+			<string>Activate Repeating</string>
 			<key>itemuid</key>
-			<string>DADB809A-18EA-4BA9-9FE0-1227A0D2D2B7</string>
+			<string>3AB82BD4-8431-450E-BFEF-F445506BA22C</string>
 		</dict>
 		<dict>
 			<key>actionconfig</key>

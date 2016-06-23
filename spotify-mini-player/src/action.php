@@ -1215,6 +1215,34 @@ if ($type == "TRACK" && $other_settings == "" &&
 			}
 			displayNotificationWithArtwork($w,$command_output, './images/shuffle.png', 'Shuffle');
 			return;
+		} else if ($other_action == "repeating") {
+			if ($use_mopidy) {
+				$isRepeatingEnabled = invokeMopidyMethod($w, "core.tracklist.get_repeat", array());
+				if ($isRepeatingEnabled) {
+					invokeMopidyMethod($w, "core.tracklist.set_repeat", array('value' => false));
+					$command_output = "Repeating is now disabled.";
+				} else {
+					invokeMopidyMethod($w, "core.tracklist.set_repeat", array('value' => true));
+					$command_output = "Repeating is now enabled.";
+				}
+			} else {
+				$command_output = exec("osascript -e '
+    	tell application \"Spotify\"
+    	if repeating enabled is true then
+    		if repeating is true then
+				set repeating to false
+				return \"Repeating is now disabled.\"
+			else
+				set repeating to true
+				return \"Repeating is now enabled.\"
+			end if
+		else
+			return \"Repeating is not currently enabled.\"
+		end if
+		end tell'");
+			}
+			displayNotificationWithArtwork($w,$command_output, './images/repeating.png', 'Repeating');
+			return;
 		} else if ($other_action == "spot_mini_debug") {
 			createDebugFile($w);
 			return;
