@@ -50,7 +50,7 @@ function secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
 		$artist_uri = getArtistUriFromTrack($w, $track_uri);
 		if ($artist_uri == false) {
 			$w->result(null, 'help', "The artist cannot be retrieved from track uri", 'URI was ' . $tmp[0], './images/warning.png', 'no', null, '');
-			echo $w->toxml();
+			echo $w->tojson();
 			return;
 		}
 	}
@@ -58,7 +58,7 @@ function secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
 		$artist_uri = getArtistUriFromSearch($w, $href[2], $country_code);
 		if ($artist_uri == false) {
 			$w->result(null, 'help', "The artist cannot be retrieved from local track uri", 'URI was ' . $tmp[0], './images/warning.png', 'no', null, '');
-			echo $w->toxml();
+			echo $w->tojson();
 			return;
 		}
 	}
@@ -315,7 +315,7 @@ function secondDelimiterAlbums($w, $query, $settings, $db, $update_in_progress) 
 		$album_uri = getAlbumUriFromTrack($w, $track_uri);
 		if ($album_uri == false) {
 			$w->result(null, 'help', "The album cannot be retrieved from track uri", 'URI was ' . $tmp[0], './images/warning.png', 'no', null, '');
-			echo $w->toxml();
+			echo $w->tojson();
 			return;
 		}
 	}
@@ -813,7 +813,7 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress) 
 			$album_uri = getAlbumUriFromTrack($w, $track_uri);
 			if ($album_uri == false) {
 				$w->result(null, 'help', "The album cannot be retrieved from track uri", 'URI was ' . $track_uri, './images/warning.png', 'no', null, '');
-				echo $w->toxml();
+				echo $w->tojson();
 				return;
 			}
 		}
@@ -823,7 +823,7 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress) 
 			$artist_uri = getArtistUriFromTrack($w, $track_uri);
 			if ($artist_uri == false) {
 				$w->result(null, 'help', "The artist cannot be retrieved from track uri", 'URI was ' . $track_uri, './images/warning.png', 'no', null, '');
-				echo $w->toxml();
+				echo $w->tojson();
 				return;
 			}
 		}
@@ -1035,7 +1035,7 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
 
 	catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 		$w->result(null, 'help', "Exception occurred", "" . $e->getMessage(), './images/warning.png', 'no', null, '');
-		echo $w->toxml();
+		echo $w->tojson();
 		return;
 	}
 
@@ -1458,7 +1458,7 @@ function secondDelimiterYourTopArtists($w, $query, $settings, $db, $update_in_pr
 	}
 	catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 		$w->result(null, 'help', "Exception occurred", "" . $e->getMessage(), './images/warning.png', 'no', null, '');
-		echo $w->toxml();
+		echo $w->tojson();
 		return;
 	}
 
@@ -1568,7 +1568,7 @@ function secondDelimiterYourTopTracks($w, $query, $settings, $db, $update_in_pro
 	}
 	catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 		$w->result(null, 'help', "Exception occurred", "" . $e->getMessage(), './images/warning.png', 'no', null, '');
-		echo $w->toxml();
+		echo $w->tojson();
 		return;
 	}
 
@@ -1949,7 +1949,7 @@ function secondDelimiterFeaturedPlaylist($w, $query, $settings, $db, $update_in_
 		}
 		catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 			$w->result(null, 'help', "Exception occurred", "" . $e->getMessage(), './images/warning.png', 'no', null, '');
-			echo $w->toxml();
+			echo $w->tojson();
 			return;
 		}
 	}
@@ -2187,7 +2187,7 @@ function secondDelimiterAdd($w, $query, $settings, $db, $update_in_progress) {
 	if ($update_in_progress == true) {
 		$w->result(null, '', 'Cannot add tracks/albums/playlists while update is in progress', 'Please retry when update is finished', './images/warning.png', 'no', null, '');
 
-		echo $w->toxml();
+		echo $w->tojson();
 		return;
 	}
 
@@ -2221,7 +2221,7 @@ function secondDelimiterAdd($w, $query, $settings, $db, $update_in_progress) {
 		$message       = "playlist " . $playlist_name;
 	} elseif ($href[1] == 'local') {
 		$w->result(null, '', 'Cannot add local track to playlist using the Web API', 'This is a limitation of Spotify Web API', './images/warning.png', 'no', null, '');
-		echo $w->toxml();
+		echo $w->tojson();
 		return;
 	}
 	$theplaylist = $words[2];
@@ -2362,7 +2362,7 @@ function secondDelimiterRemove($w, $query, $settings, $db, $update_in_progress) 
 	if ($update_in_progress == true) {
 		$w->result(null, '', 'Cannot remove tracks while update is in progress', 'Please retry when update is finished', './images/warning.png', 'no', null, '');
 
-		echo $w->toxml();
+		echo $w->tojson();
 		return;
 	}
 
@@ -2378,7 +2378,7 @@ function secondDelimiterRemove($w, $query, $settings, $db, $update_in_progress) 
 
 	if ($href[1] == 'local') {
 		$w->result(null, '', 'Cannot remove local tracks from playlists using the Web API', 'This is a limitation of Spotify Web API', './images/warning.png', 'no', null, '');
-		echo $w->toxml();
+		echo $w->tojson();
 		return;
 	}
 
@@ -2643,7 +2643,7 @@ function secondDelimiterFollowUnfollow($w, $query, $settings, $db, $update_in_pr
 		}
 		catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 			$w->result(null, 'help', "Exception occurred", "" . $e->getMessage(), './images/warning.png', 'no', null, '');
-			echo $w->toxml();
+			echo $w->tojson();
 			return;
 		}
 	}
@@ -2722,7 +2722,7 @@ function secondDelimiterFollowOrUnfollow($w, $query, $settings, $db, $update_in_
 		}
 		catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 			$w->result(null, 'help', "Exception occurred", "" . $e->getMessage(), './images/warning.png', 'no', null, '');
-			echo $w->toxml();
+			echo $w->tojson();
 			return;
 		}
 	}
@@ -2857,7 +2857,7 @@ function secondDelimiterDisplayBiography($w, $query, $settings, $db, $update_in_
 			}
 		} else {
 			$w->result(null, 'help', "No biography found!", "", './images/warning.png', 'no', null, '');
-			echo $w->toxml();
+			echo $w->tojson();
 			return;
 		}
 	}
@@ -3062,7 +3062,7 @@ function secondDelimiterBrowse($w, $query, $settings, $db, $update_in_progress) 
 		}
 		catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 			$w->result(null, 'help', "Exception occurred", "" . $e->getMessage(), './images/warning.png', 'no', null, '');
-			echo $w->toxml();
+			echo $w->tojson();
 			return;
 		}
 	}

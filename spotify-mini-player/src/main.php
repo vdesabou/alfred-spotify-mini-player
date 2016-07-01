@@ -73,7 +73,7 @@ if (file_exists($w->data() . '/update_library_in_progress')) {
                 $w->result(null, $w->data() . '/update_library_in_progress', $update_library_in_progress_words[0] . ' in progress since ' . beautifyTime($elapsed_time, true) . ' : ' . floatToSquares(0), 'No ' . $type . ' processed so far', './images/update_in_progress.png', 'no', null, '');
             }
         }
-        echo $w->toxml();
+        echo $w->tojson();
         return;
     }
 }
@@ -158,7 +158,7 @@ if ($dbfile == "") {
         $userid
         /* userid*/
     )), 'Create library', "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', null, '');
-    echo $w->toxml();
+    echo $w->tojson();
     return;
 }
 try {
@@ -192,7 +192,7 @@ mb_internal_encoding('UTF-8');
 //
 if (startsWith($query, ' ')) {
     searchCommandsFastAccess($w, ltrim($query), $settings, $db, $update_in_progress);
-    echo $w->toxml();
+    echo $w->tojson();
     return;
 }
 
@@ -379,4 +379,4 @@ $end_time = computeTime();
 $total_temp = ($end_time-$begin_time);
 $w->result(null, 'debug', "Processed in " . $total_temp*1000 . ' ms', '', './images/info.png', 'no', null, '');
 */
-echo $w->toxml();
+echo $w->tojson();

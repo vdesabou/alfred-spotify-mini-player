@@ -71,7 +71,7 @@ function thirdDelimiterAdd($w, $query, $settings, $db, $update_in_progress) {
 	if ($update_in_progress == true) {
 		$w->result(null, '', 'Cannot add tracks/albums/playlists while update is in progress', 'Please retry when update is finished', './images/warning.png', 'no', null, '');
 
-		echo $w->toxml();
+		echo $w->tojson();
 		return;
 	}
 
@@ -215,7 +215,7 @@ function thirdDelimiterBrowse($w, $query, $settings, $db, $update_in_progress) {
 
 	catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 		$w->result(null, 'help', "Exception occurred", "" . $e->getMessage(), './images/warning.png', 'no', null, '');
-		echo $w->toxml();
+		echo $w->tojson();
 		return;
 	}
 }

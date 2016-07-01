@@ -174,6 +174,6 @@ $w->result(null, serialize(array(
 )), 'Browse to Alfred workflow folder', "This will open the folder in Finder", 'fileicon:' . exec('pwd'), 'yes', null, '');
 
 
-echo $w->toxml();
+echo $w->tojson();
 
 ?>

@@ -159,6 +159,174 @@ class Workflows
         return $this->results;
     }
 
+    public function tojson($a = null)
+    {
+
+        if (is_null($a) && !empty($this->results)):
+            $a = $this->results;
+        elseif (is_null($a) && empty($this->results)):
+            return false;
+        endif;
+
+        $items = array();
+
+
+
+
+#cat << EOB
+#{"items": [
+#
+#	{
+#		"uid": "desktop",
+#		"type": "file",
+#		"title": "Desktop",
+#		"subtitle": "~/Desktop",
+#		"arg": "~/Desktop",
+#		"autocomplete": "Desktop",
+#		"icon": {
+#			"type": "fileicon",
+#			"path": "~/Desktop"
+#		}
+#	},
+#
+#	{
+#		"valid": false,
+#		"uid": "flickr",
+#		"title": "Flickr",
+#		"icon": {
+#			"path": "flickr.png"
+#		}
+#	},
+#
+#	{
+#		"uid": "image",
+#		"type": "file",
+#		"title": "My holiday photo",
+#		"subtitle": "~/Pictures/My holiday photo.jpg",
+#		"autocomplete": "My holiday photo",
+#		"icon": {
+#			"type": "filetype",
+#			"path": "public.jpeg"
+#		}
+#	},
+#
+#	{
+#		"valid": false,
+#		"uid": "alfredapp",
+#		"title": "Alfred Website",
+#		"subtitle": "https://www.alfredapp.com/",
+#		"arg": "alfredapp.com",
+#		"autocomplete": "Alfred Website",
+#		"quicklookurl": "https://www.alfredapp.com/",
+#		"mods": {
+#			"alt": {
+#				"valid": true,
+#				"arg": "alfredapp.com/powerpack",
+#				"subtitle": "https://www.alfredapp.com/powerpack/"
+#			},
+#			"cmd": {
+#				"valid": true,
+#				"arg": "alfredapp.com/powerpack/buy/",
+#				"subtitle": "https://www.alfredapp.com/powerpack/buy/"
+#			},
+#		},
+#		"text": {
+#			"copy": "https://www.alfredapp.com/ (text here to copy)",
+#			"largetype": "https://www.alfredapp.com/ (text here for large type)"
+#		}
+#	}
+#
+#]}
+#EOB
+
+
+        foreach ($a as $b):
+            $c = new StdClass;                              // Loop through each object in the array
+            $c_keys = array_keys($b);                        // Grab all the keys for that item
+            foreach ($c_keys as $key):                        // For each of those keys
+                if ($key == 'uid'):
+                    if ($b[$key] === null || $b[$key] === ''):
+                        continue;
+                    else:
+                        $c->uid=$b[$key];
+                    endif;
+                elseif ($key == 'arg'):
+                    $c->arg = $b[$key];
+                elseif ($key == 'type'):
+                    $c->type = $b[$key];
+                elseif ($key == 'quicklookurl'):
+                    $c->quicklookurl = $b[$key];
+                elseif ($key == 'valid'):
+                    if ($b[$key] == 'yes' || $b[$key] == 'no'):
+                       $c->valid = $b[$key];
+                    endif;
+                elseif ($key == 'autocomplete'):
+                    if ($b[$key] === null || $b[$key] === ''):
+                        continue;
+                    else:
+                        $c->autocomplete = $b[$key];
+                   endif;
+                elseif ($key == 'icon'):
+                    $icon = new StdClass;
+                    if (substr($b[$key], 0, 9) == 'fileicon:'):
+                        $val = substr($b[$key], 9);
+                        $icon->path=$val;
+                        $icon->type='fileicon';
+                    elseif (substr($b[$key], 0, 9) == 'filetype:'):
+                        $val = substr($b[$key], 9);
+                        $icon->path=$val;
+                        $icon->type='filetype';
+                    else:
+                        $icon->path=$b[$key];
+                    endif;
+                    $c->icon=$icon;
+                elseif ($key == 'subtitle'):
+                    if (gettype($b[$key]) == 'array'):
+                        $mods = new StdClass;
+                        $subtitle_types = array('shift', 'fn', 'ctrl', 'alt', 'cmd');
+                        $subtitles = $b[$key];
+                        $subtitle_keys = array_keys($subtitles);
+
+                        $c->subtitle = $subtitles[0];
+                        foreach ($subtitle_keys as $subtitle_key):
+
+                            if (in_array($subtitle_key, $subtitle_types, true)):
+                                $m = new StdClass;
+                                $m->valid = 'true';
+                                $m->arg = $c->arg;
+                                $m->subtitle = $subtitles[$subtitle_key];
+                                $mods->$subtitle_key = $m;
+                            endif;
+                        endforeach;
+                        $c->mods=$mods;
+                    else:
+                        $c->$key = $b[$key];
+                    endif;
+                elseif ($key == 'text' && gettype($b[$key]) == 'array'):
+                    $text = new StdClass;
+                    $text_types = array('copy', 'largetype');
+                    $texts = $b[$key];
+                    $text_keys = array_keys($texts);
+
+                    foreach ($text_keys as $text_key):
+                        if (in_array($text_key, $text_types)):
+                            $text->$text_key=$texts[$text_key];
+                        endif;
+                    endforeach;
+                    $c->text=$text;
+                else:
+                    $c->$key = $b[$key];
+                endif;
+            endforeach;
+            array_push($items, $c);
+        endforeach;
+
+        $results = new StdClass;
+        $results->items = $items;
+        return json_encode($results);
+
+    }
+
     /**
      * Description:
      * Convert an associative array into XML format
@@ -489,7 +657,7 @@ class Workflows
      * @param $auto - the autocomplete value for the result item
      * @return array - array item to be passed back to Alfred
      */
-    public function result($uid, $arg, $title, $sub, $icon, $valid = 'yes', $text = null, $auto = null, $type = null)
+    public function result($uid, $arg, $title, $sub, $icon, $valid = 'yes', $text = null, $auto = null, $type = null, $quicklookurl = null)
     {
         $temp = array(
             'uid' => $uid,
@@ -500,11 +668,16 @@ class Workflows
             'valid' => $valid,
             'text' => $text,
             'autocomplete' => $auto,
-            'type' => $type
+            'type' => $type,
+            'quicklookurl' => $quicklookurl
         );
 
         if (is_null($type)):
             unset($temp['type']);
+        endif;
+
+        if (is_null($quicklookurl)):
+            unset($temp['quicklookurl']);
         endif;
 
         array_push($this->results, $temp);

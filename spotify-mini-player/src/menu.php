@@ -98,7 +98,7 @@ function oAuthChecks($w, $query, $settings, $update_in_progress) {
 						'' /* playlist_artwork_path */
 					)), "Application Client ID will be set to <" . rtrim(ltrim($query)) . ">", "Type enter to validate the Application Client ID", './images/settings.png', 'yes', null, '');
 		}
-		echo $w->toxml();
+		echo $w->tojson();
 		exit;
 	}
 
@@ -165,7 +165,7 @@ function oAuthChecks($w, $query, $settings, $update_in_progress) {
 						'' /* playlist_artwork_path */
 					)), "Application Client Secret will be set to <" . rtrim(ltrim($query)) . ">", "Type enter to validate the Application Client Secret", './images/settings.png', 'yes', null, '');
 		}
-		echo $w->toxml();
+		echo $w->tojson();
 		exit;
 	}
 
@@ -213,7 +213,7 @@ function oAuthChecks($w, $query, $settings, $update_in_progress) {
 					'' /* playlist_name */ ,
 					'' /* playlist_artwork_path */
 				)), 'Go to the website alfred-spotify-mini-player.com to see setup tutorial', "This will open the Application page with your default browser", './images/website.png', 'yes', null, '');
-		echo $w->toxml();
+		echo $w->tojson();
 		exit;
 	}
 }

@@ -5462,7 +5462,7 @@ function handleDbIssuePdoXml($dbhandle) {
 				''
 				/* $alfred_playlist_name */
 			)), "Re-Create Library", "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', null, '');
-	echo $w->toxml();
+	echo $w->tojson();
 }
 
 
@@ -5911,7 +5911,7 @@ function doJsonRequest($w, $url, $actionMode = true) {
 			exit;
 		} else {
 			$w->result(null, '', "Error: No internet connection", $url, './images/warning.png', 'no', null, '');
-			echo $w->toxml();
+			echo $w->tojson();
 			exit;
 		}
 	}
@@ -5924,7 +5924,7 @@ function doJsonRequest($w, $url, $actionMode = true) {
 			exit;
 		} else {
 			$w->result(null, '', "Error: JSON request returned empty result", $url, './images/warning.png', 'no', null, '');
-			echo $w->toxml();
+			echo $w->tojson();
 			exit;
 		}
 	}
@@ -5940,7 +5940,7 @@ function doJsonRequest($w, $url, $actionMode = true) {
 			exit;
 		} else {
 			$w->result(null, '', "Error: JSON request returned error " . json_last_error() . ' (' . json_last_error_msg() . ')', "Try again or report to author", './images/warning.png', 'no', null, '');
-			echo $w->toxml();
+			echo $w->tojson();
 			exit;
 		}
 	}
