@@ -485,16 +485,16 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
 						'' /* album_artwork_path */ ,
 						$playlist[1] /* playlist_name */ ,
 						$playlist[5] /* playlist_artwork_path */
-					)), "🎵" . $added . ucfirst($playlist[1]) . " by " . $playlist[3] . " ● " . $playlist[7] . " tracks ● " . $playlist[8], array(
+					)), "🎵" . $added . $playlist[1] . " by " . $playlist[3] . " ● " . $playlist[7] . " tracks ● " . $playlist[8], array(
 					$subtitle,
 					'alt' => 'Not Available',
 					'cmd' => $cmdMsg,
-					'shift' => 'Add playlist ' . ucfirst($playlist[1]) . ' to ...',
+					'shift' => 'Add playlist ' . $playlist[1] . ' to ...',
 					'fn' => 'Not Available',
 					'ctrl' => 'Not Available'
 				), $playlist[5], 'yes', null, '');
 		} else {
-			$w->result(null, '', "🎵" . $added . ucfirst($playlist[1]), 'Browse ' . $public_status . " playlist by " . $playlist[3] . " ● " . $playlist[7] . " tracks ● " . $playlist[8], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
+			$w->result(null, '', "🎵" . $added . $playlist[1], 'Browse ' . $public_status . " playlist by " . $playlist[3] . " ● " . $playlist[7] . " tracks ● " . $playlist[8], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
 		}
 	}
 
@@ -731,19 +731,19 @@ function searchCategoriesFastAccess($w, $query, $settings, $db, $update_in_progr
 	//
 	// Search categories for fast access
 	//
-	if (strpos(strtolower(getenv('playlists')), strtolower($query)) !== false) {
+	if (strpos(strtolower('playlists'), strtolower($query)) !== false) {
 		$w->result(null, '', 'Playlists', 'Browse by playlist', './images/playlists.png', 'no', null, 'Playlist▹');
 	}
-	if (strpos(strtolower(getenv('albums')), strtolower($query)) !== false) {
+	if (strpos(strtolower('albums'), strtolower($query)) !== false) {
 		$w->result(null, '', 'Albums', 'Browse by album', './images/albums.png', 'no', null, 'Album▹');
 	}
-	if (strpos(strtolower(getenv('browse')), strtolower($query)) !== false) {
+	if (strpos(strtolower('browse'), strtolower($query)) !== false) {
 		$w->result(null, '', 'Browse', 'Browse Spotify by categories, as in the Spotify player’s “Browse” tab', './images/browse.png', 'no', null, 'Browse▹');
 	}
-	if (strpos(strtolower(getenv('your top')), strtolower($query)) !== false) {
+	if (strpos(strtolower('your top'), strtolower($query)) !== false) {
 		$w->result(null, '', 'Your Tops', 'Browse your top artists and top tracks', './images/star.png', 'no', null, 'Your Tops▹');
 	}
-	if (strpos(strtolower(getenv('lookup current artist online')), strtolower($query)) !== false) {
+	if (strpos(strtolower('lookup current artist online'), strtolower($query)) !== false) {
 		$w->result(null, serialize(array(
 					'' /*track_uri*/ ,
 					'' /* album_uri */ ,
@@ -770,33 +770,33 @@ function searchCategoriesFastAccess($w, $query, $settings, $db, $update_in_progr
 				'ctrl' => 'Not Available'
 			), './images/online_artist.png', 'yes', '');
 	}
-	if (strpos(strtolower(getenv('search online')), strtolower($query)) !== false) {
+	if (strpos(strtolower('search online'), strtolower($query)) !== false) {
 		$w->result(null, '', 'Search online', '☁︎ You can search tracks, artists, albums and playlists online, i.e not in your library', './images/online.png', 'no', null, 'Search Online▹');
 	}
-	if (strpos(strtolower(getenv('new releases')), strtolower($query)) !== false) {
+	if (strpos(strtolower('new releases'), strtolower($query)) !== false) {
 		$w->result(null, '', 'New Releases', 'Browse new album releases', './images/new_releases.png', 'no', null, 'New Releases▹');
 	}
-	if (strpos(strtolower(getenv('artists')), strtolower($query)) !== false) {
+	if (strpos(strtolower('artists'), strtolower($query)) !== false) {
 		$w->result(null, '', 'Artists', 'Browse by artist', './images/artists.png', 'no', null, 'Artist▹');
 	}
-	if (strpos(strtolower(getenv('play queue')), strtolower($query)) !== false) {
+	if (strpos(strtolower('play queue'), strtolower($query)) !== false) {
 		if ($now_playing_notifications == true) {
 			$w->result(null, '', 'Play Queue', 'Get the current play queue. Always use the workflow to launch tracks, otherwise play queue will be empty', './images/play_queue.png', 'no', null, 'Play Queue▹');
 		}
 	}
-	if (strpos(strtolower(getenv('alfred')), strtolower($query)) !== false) {
+	if (strpos(strtolower('alfred'), strtolower($query)) !== false) {
 		$w->result(null, '', 'Alfred Playlist (currently set to <' . $alfred_playlist_name . '>)', 'Choose one of your playlists and add tracks, album, playlist to it directly from the workflow', './images/alfred_playlist.png', 'no', null, 'Alfred Playlist▹');
 	}
-	if (strpos(strtolower(getenv('settings')), strtolower($query)) !== false) {
+	if (strpos(strtolower('settings'), strtolower($query)) !== false) {
 		$w->result(null, '', 'Settings', 'Go to settings', './images/settings.png', 'no', null, 'Settings▹');
 	}
-	if (strpos(strtolower(getenv('featured playlist')), strtolower($query)) !== false) {
+	if (strpos(strtolower('featured playlist'), strtolower($query)) !== false) {
 		$w->result(null, '', 'Featured Playlist', 'Browse the current featured playlists', './images/star.png', 'no', null, 'Featured Playlist▹');
 	}
-	if (strpos(strtolower(getenv('your music')), strtolower($query)) !== false) {
+	if (strpos(strtolower('your music'), strtolower($query)) !== false) {
 		$w->result(null, '', 'Your Music', 'Browse Your Music', './images/tracks.png', 'no', null, 'Your Music▹');
 	}
-	if (strpos(strtolower(getenv('current track')), strtolower($query)) !== false) {
+	if (strpos(strtolower('current track'), strtolower($query)) !== false) {
 		$w->result(null, '', 'Current Track', 'Display current track information and browse various options', './images/tracks.png', 'no', null, 'Current Track▹');
 	}
 }
@@ -1445,7 +1445,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
 		//
 		// Search commands for fast access
 		//
-		if (strpos(strtolower(getenv('next')), strtolower($query)) !== false) {
+		if (strpos(strtolower('next'), strtolower($query)) !== false) {
 			$w->result(null, serialize(array(
 						'' /*track_uri*/ ,
 						'' /* album_uri */ ,
@@ -1465,7 +1465,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
 						'' /* playlist_artwork_path */
 					)), 'Next Track', 'Play the next track in Spotify', './images/next.png', 'yes', '');
 		}
-		if (strpos(strtolower(getenv('previous')), strtolower($query)) !== false) {
+		if (strpos(strtolower('previous'), strtolower($query)) !== false) {
 			$w->result(null, serialize(array(
 						'' /*track_uri*/ ,
 						'' /* album_uri */ ,
@@ -1485,7 +1485,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
 						'' /* playlist_artwork_path */
 					)), 'Previous Track', 'Play the previous track in Spotify', './images/previous.png', 'yes', '');
 		}
-		if (strpos(strtolower(getenv('previous')), strtolower($query)) !== false) {
+		if (strpos(strtolower('previous'), strtolower($query)) !== false) {
 			$w->result(null, serialize(array(
 						'' /*track_uri*/ ,
 						'' /* album_uri */ ,
@@ -1505,7 +1505,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
 						'' /* playlist_artwork_path */
 					)), 'Previous Track', 'Play the previous track in Spotify', './images/previous.png', 'yes', '');
 		}
-		if (strpos(strtolower(getenv('lyrics')), strtolower($query)) !== false) {
+		if (strpos(strtolower('lyrics'), strtolower($query)) !== false) {
 			$w->result(null, serialize(array(
 						'' /*track_uri*/ ,
 						'' /* album_uri */ ,
@@ -1533,7 +1533,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
 				), './images/lyrics.png', 'yes', '');
 		}
 
-		if (strpos(strtolower(getenv('biography')), strtolower($query)) !== false) {
+		if (strpos(strtolower('biography'), strtolower($query)) !== false) {
 			$w->result('SpotifyMiniPlayer_' . 'biography', serialize(array(
 						'' /*track_uri*/ ,
 						'' /* album_uri */ ,
@@ -1562,7 +1562,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
 				), './images/biography.png', 'yes', '');
 		}
 
-		if (strpos(strtolower(getenv('query')), strtolower($query)) !== false) {
+		if (strpos(strtolower('query'), strtolower($query)) !== false) {
 			$w->result(null, serialize(array(
 						'' /*track_uri*/ ,
 						'' /* album_uri */ ,
@@ -1589,7 +1589,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
 					'ctrl' => 'Not Available'
 				), './images/online_artist.png', 'yes', '');
 		}
-		if (strpos(strtolower(getenv('play')), strtolower($query)) !== false) {
+		if (strpos(strtolower('play'), strtolower($query)) !== false) {
 			$w->result(null, serialize(array(
 						'' /*track_uri*/ ,
 						'' /* album_uri */ ,
@@ -1665,7 +1665,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
 						'' /* playlist_artwork_path */
 					)), 'Play current album', 'Play the current album', './images/albums.png', 'yes', null, '');
 		}
-		if (strpos(strtolower(getenv('pause')), strtolower($query)) !== false) {
+		if (strpos(strtolower('pause'), strtolower($query)) !== false) {
 			$w->result(null, serialize(array(
 						'' /*track_uri*/ ,
 						'' /* album_uri */ ,
@@ -1706,7 +1706,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
 		}
 
 
-		if (strpos(strtolower(getenv('current')), strtolower($query)) !== false) {
+		if (strpos(strtolower('current'), strtolower($query)) !== false) {
 			$w->result(null, serialize(array(
 						'' /*track_uri*/ ,
 						'' /* album_uri */ ,
@@ -1726,7 +1726,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
 						'' /* playlist_artwork_path */
 					)), 'Get Current Track info', 'Get current track information', './images/info.png', 'yes', '');
 		}
-		if (strpos(strtolower(getenv('random')), strtolower($query)) !== false) {
+		if (strpos(strtolower('random'), strtolower($query)) !== false) {
 			$w->result(null, serialize(array(
 						'' /*track_uri*/ ,
 						'' /* album_uri */ ,
@@ -1765,7 +1765,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
 						'' /* playlist_artwork_path */
 					)), 'Random Album', 'Play random album', './images/random_album.png', 'yes', '');
 		}
-		if (strpos(strtolower(getenv('shuffle')), strtolower($query)) !== false) {
+		if (strpos(strtolower('shuffle'), strtolower($query)) !== false) {
 			$w->result(null, serialize(array(
 						'' /*track_uri*/ ,
 						'' /* album_uri */ ,
@@ -1785,7 +1785,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
 						'' /* playlist_artwork_path */
 					)), 'Shuffle', 'Activate/Deactivate shuffling in Spotify', './images/shuffle.png', 'yes', '');
 		}
-		if (strpos(strtolower(getenv('repeating')), strtolower($query)) !== false) {
+		if (strpos(strtolower('repeating'), strtolower($query)) !== false) {
 			$w->result(null, serialize(array(
 						'' /*track_uri*/ ,
 						'' /* album_uri */ ,
@@ -1805,7 +1805,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
 						'' /* playlist_artwork_path */
 					)), 'Repeating', 'Activate/Deactivate repeating in Spotify', './images/repeating.png', 'yes', '');
 		}
-		if (strpos(strtolower(getenv('refresh')), strtolower($query)) !== false) {
+		if (strpos(strtolower('refresh'), strtolower($query)) !== false) {
 			if ($update_in_progress == false) {
 				$w->result(null, serialize(array(
 							'' /*track_uri*/ ,
@@ -1928,7 +1928,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
 							'' /* playlist_artwork_path */
 						)), 'Add current track to...', 'Current track will be added to Your Music or a playlist of your choice', './images/add_to.png', 'yes', '');
 			}
-			if (strpos(strtolower(getenv('remove_current_track_from')), strtolower($query)) !== false) {
+			if (strpos(strtolower('remove'), strtolower($query)) !== false) {
 				$w->result('SpotifyMiniPlayer_' . 'remove_current_track_from', serialize(array(
 							'' /*track_uri*/ ,
 							'' /* album_uri */ ,
@@ -1989,7 +1989,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
 						)), 'Create song radio playlist for current track', 'Create song radio playlist', './images/radio_song.png', 'yes', '');
 			}
 		}
-		if (strpos(strtolower(getenv('mute')), strtolower($query)) !== false) {
+		if (strpos(strtolower('mute'), strtolower($query)) !== false) {
 			$w->result(null, serialize(array(
 						'' /*track_uri*/ ,
 						'' /* album_uri */ ,
@@ -2009,7 +2009,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
 						'' /* playlist_artwork_path */
 					)), 'Mute/Unmute Spotify Volume', 'Mute/Unmute Volume', './images/mute.png', 'yes', '');
 		}
-		if (strpos(strtolower(getenv('volume_down')), strtolower($query)) !== false) {
+		if (strpos(strtolower('volume_down'), strtolower($query)) !== false) {
 			$w->result(null, serialize(array(
 						'' /*track_uri*/ ,
 						'' /* album_uri */ ,
@@ -2029,7 +2029,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
 						'' /* playlist_artwork_path */
 					)), 'Volume Down', 'Decrease Spotify Volume', './images/volume_down.png', 'yes', '');
 		}
-		if (strpos(strtolower(getenv('volume_up')), strtolower($query)) !== false) {
+		if (strpos(strtolower('volume_up'), strtolower($query)) !== false) {
 			$w->result(null, serialize(array(
 						'' /*track_uri*/ ,
 						'' /* album_uri */ ,
@@ -2050,7 +2050,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
 					)), 'Volume Up', 'Increase Spotify Volume', './images/volume_up.png', 'yes', '');
 		}
 
-		if (strpos(strtolower(getenv('volmax')), strtolower($query)) !== false) {
+		if (strpos(strtolower('volmax'), strtolower($query)) !== false) {
 			$w->result('SpotifyMiniPlayer_' . 'volmax', serialize(array(
 						'' /*track_uri*/ ,
 						'' /* album_uri */ ,
@@ -2071,7 +2071,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
 					)), 'Set Spotify Volume to Maximum', 'Set the Spotify volume to maximum', './images/volmax.png', 'yes', '');
 		}
 
-		if (strpos(strtolower(getenv('volmid')), strtolower($query)) !== false) {
+		if (strpos(strtolower('volmid'), strtolower($query)) !== false) {
 			$w->result('SpotifyMiniPlayer_' . 'volmid', serialize(array(
 						'' /*track_uri*/ ,
 						'' /* album_uri */ ,
