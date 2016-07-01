@@ -634,7 +634,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
 
 			foreach ($results as $playlist) {
 				$noresult = false;
-				$w->result(null, '', "🎵" . escapeQuery(remove_emoji($playlist->name)), "by " . $playlist->owner->id . " ● " . $playlist->tracks->total . " tracks", getPlaylistArtwork($w, $playlist->uri, false), 'no', null, "Online Playlist▹" . $playlist->uri . '∙' . escapeQuery(remove_emoji($playlist->name)) . '▹');
+				$w->result(null, '', "🎵" . escapeQuery($playlist->name), "by " . $playlist->owner->id . " ● " . $playlist->tracks->total . " tracks", getPlaylistArtwork($w, $playlist->uri, false), 'no', null, "Online Playlist▹" . $playlist->uri . '∙' . escapeQuery($playlist->name) . '▹');
 
 			}
 		}

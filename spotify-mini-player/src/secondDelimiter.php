@@ -1060,11 +1060,11 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
 				'' /* track_artwork_path */ ,
 				'' /* artist_artwork_path */ ,
 				'' /* album_artwork_path */ ,
-				remove_emoji($theplaylistname) /* playlist_name */ ,
+				$theplaylistname /* playlist_name */ ,
 				$playlist_artwork_path /* playlist_artwork_path */ ,
 				$alfred_playlist_name
 				/* alfred_playlist_name */
-			)), "🎵" . ucfirst(remove_emoji($theplaylistname)) . " by " . $owner_id . " ● " . $nb_tracks . " tracks ● " . beautifyTime($duration_playlist / 1000, true), array(
+			)), "🎵" . ucfirst($theplaylistname) . " by " . $owner_id . " ● " . $nb_tracks . " tracks ● " . beautifyTime($duration_playlist / 1000, true), array(
 			$subtitle,
 			'alt' => 'Not Available',
 			'cmd' => 'Not Available',
@@ -1092,7 +1092,7 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
 					'' /* album_artwork_path */ ,
 					'' /* playlist_name */ ,
 					'' /* playlist_artwork_path */
-				)), "Open playlist " . remove_emoji($theplaylistname) . " in Spotify", "This will open the playlist in Spotify", './images/spotify.png', 'yes', null, '');
+				)), "Open playlist " . $theplaylistname . " in Spotify", "This will open the playlist in Spotify", './images/spotify.png', 'yes', null, '');
 	}
 	if ($update_in_progress == false) {
 		$added = 'privately';
@@ -1118,7 +1118,7 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
 					'' /* album_artwork_path */ ,
 					$theplaylistname /* playlist_name */ ,
 					'' /* playlist_artwork_path */
-				)), 'Follow ' . $added . ' playlist ' . remove_emoji($theplaylistname) , "This will add the playlist (marked as " . $privacy_status . ") to your library", './images/follow.png', 'yes', null, '');
+				)), 'Follow ' . $added . ' playlist ' . $theplaylistname , "This will add the playlist (marked as " . $privacy_status . ") to your library", './images/follow.png', 'yes', null, '');
 	}
 
 	$noresult   = true;
