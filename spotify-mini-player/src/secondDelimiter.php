@@ -565,11 +565,11 @@ function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progres
 							'' /* album_artwork_path */ ,
 							$playlist[1] /* playlist_name */ ,
 							$playlist[5] /* playlist_artwork_path */
-						)), "🎵" . $added . ucfirst($playlist[1]) . " by " . $playlist[3] . " ● " . $playlist[7] . " tracks ● " . $playlist[8], array(
+						)), "🎵" . $added . $playlist[1] . " by " . $playlist[3] . " ● " . $playlist[7] . " tracks ● " . $playlist[8], array(
 						$subtitle,
 						'alt' => 'Not Available',
 						'cmd' => $cmdMsg,
-						'shift' => 'Add playlist ' . ucfirst($playlist[1]) . ' to ...',
+						'shift' => 'Add playlist ' . $playlist[1] . ' to ...',
 						'fn' => 'Not Available',
 						'ctrl' => 'Not Available'
 					), $playlist[5], 'yes', null, '');
@@ -1064,11 +1064,11 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
 				$playlist_artwork_path /* playlist_artwork_path */ ,
 				$alfred_playlist_name
 				/* alfred_playlist_name */
-			)), "🎵" . ucfirst($theplaylistname) . " by " . $owner_id . " ● " . $nb_tracks . " tracks ● " . beautifyTime($duration_playlist / 1000, true), array(
+			)), "🎵" . $theplaylistname . " by " . $owner_id . " ● " . $nb_tracks . " tracks ● " . beautifyTime($duration_playlist / 1000, true), array(
 			$subtitle,
 			'alt' => 'Not Available',
 			'cmd' => 'Not Available',
-			'shift' => 'Add playlist ' . ucfirst($theplaylistname) . ' to your Alfred Playlist',
+			'shift' => 'Add playlist ' . $theplaylistname . ' to your Alfred Playlist',
 			'fn' => 'Not Available',
 			'ctrl' => 'Not Available'
 		), $playlist_artwork_path, 'yes', null, '');
@@ -2260,7 +2260,7 @@ function secondDelimiterAdd($w, $query, $settings, $db, $update_in_progress) {
 								'' /* album_artwork_path */ ,
 								$playlist_name /* playlist_name */ ,
 								'' /* playlist_artwork_path */
-							)), "🎵 Alfred Playlist " . " ● " . ucfirst($alfred_playlist_name), "Select the playlist to add the " . $message, './images/alfred_playlist.png', 'yes', null, '');
+							)), "🎵 Alfred Playlist " . " ● " . $alfred_playlist_name, "Select the playlist to add the " . $message, './images/alfred_playlist.png', 'yes', null, '');
 
 				}
 			}
@@ -2319,7 +2319,7 @@ function secondDelimiterAdd($w, $query, $settings, $db, $update_in_progress) {
 						'' /* album_artwork_path */ ,
 						$playlist_name /* playlist_name */ ,
 						'' /* playlist_artwork_path */
-					)), "🎵" . $added . ucfirst($playlist[1]), $playlist[7] . " tracks ● " . $playlist[8] . " ● Select the playlist to add the " . $message, $playlist[5], 'yes', null, '');
+					)), "🎵" . $added . $playlist[1], $playlist[7] . " tracks ● " . $playlist[8] . " ● Select the playlist to add the " . $message, $playlist[5], 'yes', null, '');
 		}
 	}
 }
@@ -2453,7 +2453,7 @@ function secondDelimiterRemove($w, $query, $settings, $db, $update_in_progress) 
 								'' /* album_artwork_path */ ,
 								'' /* playlist_name */ ,
 								'' /* playlist_artwork_path */
-							)), "🎵" . $added . ucfirst($playlist[1]), $playlist[7] . " tracks ● " . $playlist[8] . " ● Select the playlist to remove the " . $message, $playlist[5], 'yes', null, '');
+							)), "🎵" . $added . $playlist[1], $playlist[7] . " tracks ● " . $playlist[8] . " ● Select the playlist to remove the " . $message, $playlist[5], 'yes', null, '');
 					$noresult = false;
 				}
 
@@ -2552,7 +2552,7 @@ function secondDelimiterAlfredPlaylist($w, $query, $settings, $db, $update_in_pr
 						'' /* album_artwork_path */ ,
 						'' /* playlist_name */ ,
 						'' /* playlist_artwork_path */
-					)), "🎵" . $added . ucfirst($playlist[1]), $playlist[7] . " tracks ● " . $playlist[8] . " ● Select the playlist to set it as your Alfred Playlist", $playlist[5], 'yes', null, '');
+					)), "🎵" . $added . $playlist[1], $playlist[7] . " tracks ● " . $playlist[8] . " ● Select the playlist to set it as your Alfred Playlist", $playlist[5], 'yes', null, '');
 
 		}
 	} elseif ($setting_kind == "Confirm Clear Alfred Playlist") {

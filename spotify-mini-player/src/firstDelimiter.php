@@ -71,7 +71,7 @@ function firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress
 				}
 			}
 			if (startswith($playlist[1], 'Artist radio for')) {
-				$w->result(null, '', "🎵 " . ucfirst($playlist[1]), $public_status . " playlist by " . $playlist[3] . " ● " . $playlist[7] . " tracks ● " . $playlist[8], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
+				$w->result(null, '', "🎵 " . $playlist[1], $public_status . " playlist by " . $playlist[3] . " ● " . $playlist[7] . " tracks ● " . $playlist[8], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
 			}
 		}
 	} elseif ($query == "Playlist▹Song radio") {
@@ -87,7 +87,7 @@ function firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress
 				}
 			}
 			if (startswith($playlist[1], 'Song radio for')) {
-				$w->result(null, '', "🎵 " . ucfirst($playlist[1]), $public_status . " playlist by " . $playlist[3] . " ● " . $playlist[7] . " tracks ● " . $playlist[8], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
+				$w->result(null, '', "🎵 " . $playlist[1], $public_status . " playlist by " . $playlist[3] . " ● " . $playlist[7] . " tracks ● " . $playlist[8], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
 			}
 		}
 	} else {
@@ -131,7 +131,7 @@ function firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress
 					$public_status = 'private';
 				}
 			}
-			$w->result(null, '', "🎵" . $added . ucfirst($playlist[1]), $public_status . " playlist by " . $playlist[3] . " ● " . $playlist[7] . " tracks ● " . $playlist[8], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
+			$w->result(null, '', "🎵" . $added . $playlist[1], $public_status . " playlist by " . $playlist[3] . " ● " . $playlist[7] . " tracks ● " . $playlist[8], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
 		}
 	}
 
@@ -990,7 +990,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
 						if (startswith($playlist[1], 'Artist radio for')) {
 							$added = '📻 ';
 						}
-						if (checkIfResultAlreadyThere($w->results(), "🎵" . $added . "In playlist " . ucfirst($playlist[1])) == false) {
+						if (checkIfResultAlreadyThere($w->results(), "🎵" . $added . "In playlist " . $playlist[1]) == false) {
 							if ($playlist[9]) {
 								$public_status = 'collaborative';
 							} else {
@@ -1000,7 +1000,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
 									$public_status = 'private';
 								}
 							}
-							$w->result(null, '', "🎵" . $added . "In playlist " . ucfirst($playlist[1]), $public_status . " playlist by " . $playlist[3] . " ● " . $playlist[7] . " tracks ● " . $playlist[8], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
+							$w->result(null, '', "🎵" . $added . "In playlist " . $playlist[1], $public_status . " playlist by " . $playlist[3] . " ● " . $playlist[7] . " tracks ● " . $playlist[8], $playlist[5], 'no', null, "Playlist▹" . $playlist[0] . "▹");
 						}
 					}
 				}
