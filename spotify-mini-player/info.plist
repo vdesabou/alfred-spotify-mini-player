@@ -1099,6 +1099,8 @@
 				<false/>
 			</dict>
 		</array>
+		<key>B3898D11-D401-41BC-B831-E83A35F982D3</key>
+		<array/>
 		<key>B77F5F98-C065-49A4-BBB1-68ADADDD8E7D</key>
 		<array>
 			<dict>
@@ -1286,6 +1288,19 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>24B8C827-75F2-4421-A412-D48782DA1DB8</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>D781BC43-654A-4261-A7E4-648287517182</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>B3898D11-D401-41BC-B831-E83A35F982D3</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -5069,6 +5084,42 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 			<key>version</key>
 			<integer>2</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>70</integer>
+				<key>script</key>
+				<string>osascript -e 'tell application "Alfred 3" to search "'"$spot_mini $1"'"'</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>B3898D11-D401-41BC-B831-E83A35F982D3</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>text</key>
+				<string>Search Spotify Mini Player for '{query}'</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.fallback</string>
+			<key>uid</key>
+			<string>D781BC43-654A-4261-A7E4-648287517182</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string>Web Site:
@@ -5860,6 +5911,13 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<key>ypos</key>
 			<real>5830</real>
 		</dict>
+		<key>B3898D11-D401-41BC-B831-E83A35F982D3</key>
+		<dict>
+			<key>xpos</key>
+			<integer>450</integer>
+			<key>ypos</key>
+			<integer>11240</integer>
+		</dict>
 		<key>B77F5F98-C065-49A4-BBB1-68ADADDD8E7D</key>
 		<dict>
 			<key>xpos</key>
@@ -5985,6 +6043,13 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<integer>100</integer>
 			<key>ypos</key>
 			<real>3120</real>
+		</dict>
+		<key>D781BC43-654A-4261-A7E4-648287517182</key>
+		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
+			<key>ypos</key>
+			<integer>11240</integer>
 		</dict>
 		<key>D8C53798-B7E2-4A51-AC12-37FEBDB624E0</key>
 		<dict>
