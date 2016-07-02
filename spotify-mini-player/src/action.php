@@ -127,7 +127,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 					exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
 					if ($retVal != 0) {
 						displayNotificationWithArtwork($w,'AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-						exec("osascript -e 'tell application \"Alfred 3\" to search \"" .  getenv("spot_mini") . "_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+						exec("osascript -e 'tell application \"Alfred 3\" to search \"" .  getenv("spot_mini_debug") . " AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
 						return;
 					}
 				}
@@ -151,7 +151,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 					exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
 					if ($retVal != 0) {
 						displayNotificationWithArtwork($w,'AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-						exec("osascript -e 'tell application \"Alfred 3\" to search \"" .  getenv("spot_mini") . "_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+						exec("osascript -e 'tell application \"Alfred 3\" to search \"" .  getenv("spot_mini_debug") . " AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
 						return;
 					}
 				}
@@ -174,7 +174,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 						exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
 						if ($retVal != 0) {
 							displayNotificationWithArtwork($w,'AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-							exec("osascript -e 'tell application \"Alfred 3\" to search \"" .  getenv("spot_mini") . "_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+							exec("osascript -e 'tell application \"Alfred 3\" to search \"" .  getenv("spot_mini_debug") . " AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
 							return;
 						}
 					}
@@ -191,7 +191,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 			exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
 			if ($retVal != 0) {
 				displayNotificationWithArtwork($w,'AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-				exec("osascript -e 'tell application \"Alfred 3\" to search \"" .  getenv("spot_mini") . "_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+				exec("osascript -e 'tell application \"Alfred 3\" to search \"" .  getenv("spot_mini_debug") . " AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
 				return;
 			}
 		}
@@ -229,7 +229,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 			exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
 			if ($retVal != 0) {
 				displayNotificationWithArtwork($w,'AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-				exec("osascript -e 'tell application \"Alfred 3\" to search \"" .  getenv("spot_mini") . "_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+				exec("osascript -e 'tell application \"Alfred 3\" to search \"" .  getenv("spot_mini_debug") . " AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
 				return;
 			}
 		}
@@ -302,7 +302,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 				exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
 				if ($retVal != 0) {
 					displayNotificationWithArtwork($w,'AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-					exec("osascript -e 'tell application \"Alfred 3\" to search \"" .  getenv("spot_mini") . "_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+					exec("osascript -e 'tell application \"Alfred 3\" to search \"" .  getenv("spot_mini_debug") . " AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
 					return;
 				}
 			}
@@ -773,7 +773,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 				exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
 				if ($retVal != 0) {
 					displayNotificationWithArtwork($w,'AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-					exec("osascript -e 'tell application \"Alfred 3\" to search \"" .  getenv("spot_mini") . "_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+					exec("osascript -e 'tell application \"Alfred 3\" to search \"" .  getenv("spot_mini_debug") . " AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
 					return;
 				}
 			}
@@ -796,7 +796,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 				exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
 				if ($retVal != 0) {
 					displayNotificationWithArtwork($w,'AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-					exec("osascript -e 'tell application \"Alfred 3\" to search \"" .  getenv("spot_mini") . "_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+					exec("osascript -e 'tell application \"Alfred 3\" to search \"" .  getenv("spot_mini_debug") . " AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
 					return;
 				}
 			}
@@ -957,7 +957,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 				exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
 				if ($retVal != 0) {
 					displayNotificationWithArtwork($w,'AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-					exec("osascript -e 'tell application \"Alfred 3\" to search \"" .  getenv("spot_mini") . "_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+					exec("osascript -e 'tell application \"Alfred 3\" to search \"" .  getenv("spot_mini_debug") . " AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
 					return;
 				}
 			}
@@ -978,7 +978,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 				exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
 				if ($retVal != 0) {
 					displayNotificationWithArtwork($w,'AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-					exec("osascript -e 'tell application \"Alfred 3\" to search \"" .  getenv("spot_mini") . "_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+					exec("osascript -e 'tell application \"Alfred 3\" to search \"" .  getenv("spot_mini_debug") . " AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
 					return;
 				}
 			}
@@ -1034,7 +1034,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 				exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
 				if ($retVal != 0) {
 					displayNotificationWithArtwork($w,'AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-					exec("osascript -e 'tell application \"Alfred 3\" to search \"" .  getenv("spot_mini") . "_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+					exec("osascript -e 'tell application \"Alfred 3\" to search \"" .  getenv("spot_mini_debug") . " AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
 					return;
 				}
 			}
@@ -1066,7 +1066,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 				exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
 				if ($retVal != 0) {
 					displayNotificationWithArtwork($w,'AppleScript Exception: ' . htmlspecialchars($retArr[0]) . ' use spot_mini_debug command', './images/warning.png', 'Error!');
-					exec("osascript -e 'tell application \"Alfred 3\" to search \"" .  getenv("spot_mini") . "_debug AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
+					exec("osascript -e 'tell application \"Alfred 3\" to search \"" .  getenv("spot_mini_debug") . " AppleScript Exception: " . htmlspecialchars($retArr[0]) . "\"'");
 					return;
 				}
 			}
