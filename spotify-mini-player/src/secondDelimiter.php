@@ -2858,7 +2858,7 @@ function secondDelimiterDisplayBiography($w, $query, $settings, $db, $update_in_
 		} else {
 			$w->result(null, 'help', "No biography found!", "", './images/warning.png', 'no', null, '');
 			echo $w->tojson();
-			return;
+			exit;
 		}
 	}
 }

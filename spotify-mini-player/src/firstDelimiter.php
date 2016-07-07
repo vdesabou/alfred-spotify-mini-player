@@ -603,7 +603,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
 			catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 				$w->result(null, 'help', "Exception occurred", "" . $e->getMessage(), './images/warning.png', 'no', null, '');
 				echo $w->tojson();
-				return;
+				exit;
 			}
 
 			foreach ($results as $album) {
@@ -616,7 +616,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
 					catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 						$w->result(null, 'help', "Exception occurred", "" . $e->getMessage(), './images/warning.png', 'no', null, '');
 						echo $w->tojson();
-						return;
+						exit;
 					}
 					$w->result(null, '', escapeQuery(ucfirst($album->name)) . ' (' . $full_album->tracks->total . ' tracks)', $album->album_type . ' by ' . escapeQuery($full_album->artists[0]->name), getTrackOrAlbumArtwork($w, $album->uri, false), 'no', null, 'Online▹' . $full_album->artists[0]->uri . '@' . escapeQuery($full_album->artists[0]->name) . '@' . $album->uri . '@' . escapeQuery($album->name) . '▹');
 				}
@@ -798,7 +798,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
 		if ($results[1] == '' || $results[2] == '') {
 			$w->result(null, 'help', "Current track is not valid: Artist or Album name is missing", "Fill missing information in Spotify and retry again", './images/warning.png', 'no', null, '');
 			echo $w->tojson();
-			return;
+			exit;
 		}
 
 		$href = explode(':', $results[4] );
@@ -1247,7 +1247,7 @@ function firstDelimiterLyrics($w, $query, $settings, $db, $update_in_progress) {
 		} else {
 			$w->result(null, 'help', "No lyrics found!", "", './images/warning.png', 'no', null, '');
 			echo $w->tojson();
-			return;
+			exit;
 		}
 	}
 }
@@ -2014,7 +2014,7 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
 						'' /* playlist_artwork_path */
 					)), 'Learn more about Play Queue', "Find out all information about Play Queue on alfred-spotify-mini-player.com", './images/website.png', 'yes', null, '');
 			echo $w->tojson();
-			return;
+			exit;
 		}
 		$tl_tracks = invokeMopidyMethod($w, "core.tracklist.get_tl_tracks", array());
 		$current_tl_track = invokeMopidyMethod($w, "core.playback.get_current_tl_track", array());
@@ -2135,6 +2135,7 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
 						'' /* playlist_artwork_path */
 					)), 'Learn more about Play Queue', "Find out all information about Play Queue on alfred-spotify-mini-player.com", './images/website.png', 'yes', null, '');
 			echo $w->tojson();
+			exit;
 		}
 	} else {
 		$playqueue = $w->read('playqueue.json');
@@ -2159,7 +2160,7 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
 						'' /* playlist_artwork_path */
 					)), 'Learn more about Play Queue', "Find out all information about Play Queue on alfred-spotify-mini-player.com", './images/website.png', 'yes', null, '');
 			echo $w->tojson();
-			return;
+			exit;
 		}
 		$command_output = exec("osascript -e '
         tell application \"Spotify\"
@@ -2273,6 +2274,7 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
 						'' /* playlist_artwork_path */
 					)), 'Learn more about Play Queue', "Find out all information about Play Queue on alfred-spotify-mini-player.com", './images/website.png', 'yes', null, '');
 			echo $w->tojson();
+			exit;
 		}
 	}
 }
