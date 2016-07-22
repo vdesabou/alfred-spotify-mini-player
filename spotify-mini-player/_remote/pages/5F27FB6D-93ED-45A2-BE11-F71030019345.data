@@ -65,23 +65,7 @@
 			<key>itemuid</key>
 			<string>AA7FA832-013B-46FB-AD02-CDE9BBE67F3D</string>
 		</dict>
-		<dict>
-			<key>actionconfig</key>
-			<dict>
-				<key>autoworkflowuid</key>
-				<true/>
-				<key>triggerid</key>
-				<string>com.vdesabou.miniplayer.displaycurrentartistbiography</string>
-			</dict>
-			<key>actionuid</key>
-			<string>remote.alfred.runworkflow</string>
-			<key>buttoniconid</key>
-			<string>D834784F-B286-4D4C-9C0E-9CDB58670AAC</string>
-			<key>buttonlabel</key>
-			<string>Display Artist Biography</string>
-			<key>itemuid</key>
-			<string>48E02B71-0F33-4EC8-9B3C-31BA06B69EB2</string>
-		</dict>
+		<dict/>
 		<dict>
 			<key>actionconfig</key>
 			<dict>
