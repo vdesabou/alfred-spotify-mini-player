@@ -32,7 +32,7 @@ function secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
-	
+
 	$is_public_playlists       = $settings->is_public_playlists;
 	$use_mopidy                = $settings->use_mopidy;
 
@@ -102,7 +102,7 @@ function secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
 				)), "👤 " . $artist_name, '☁︎ Query all albums/tracks from this artist online..', './images/online_artist.png', 'yes', null, '');
 
 
-		$w->result(null, '', "Display biography", "This will display the artist biography, twitter and official website", './images/biography.png', 'no', null, "Biography▹" . $artist_uri . '∙' . escapeQuery($artist_name) . '▹');
+		//$w->result(null, '', "Display biography", "This will display the artist biography, twitter and official website", './images/biography.png', 'no', null, "Biography▹" . $artist_uri . '∙' . escapeQuery($artist_name) . '▹');
 
 		$w->result(null, '', 'Follow/Unfollow Artist', 'Display options to follow/unfollow the artist', './images/follow.png', 'no', null, "Follow/Unfollow▹" . $artist_uri . "@" . $artist_name . '▹');
 
@@ -298,7 +298,7 @@ function secondDelimiterAlbums($w, $query, $settings, $db, $update_in_progress) 
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
-	
+
 	$use_mopidy                = $settings->use_mopidy;
 
 	//
@@ -504,7 +504,7 @@ function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progres
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
-	
+
 	$use_mopidy                = $settings->use_mopidy;
 
 	//
@@ -716,7 +716,7 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress) 
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
-	
+
 
 	if (substr_count($query, '@') == 1) {
 		//
@@ -749,7 +749,7 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress) 
 					'' /* playlist_artwork_path */
 				)), "👤 " . escapeQuery($artist_name), 'Play artist', $artist_artwork_path, 'yes', null, '');
 
-		$w->result(null, '', "Display biography", "This will display the artist biography, twitter and official website", './images/biography.png', 'no', null, "Biography▹" . $artist_uri . '∙' . escapeQuery($artist_name) . '▹');
+		//$w->result(null, '', "Display biography", "This will display the artist biography, twitter and official website", './images/biography.png', 'no', null, "Biography▹" . $artist_uri . '∙' . escapeQuery($artist_name) . '▹');
 
 		$w->result(null, '', 'Follow/Unfollow Artist', 'Display options to follow/unfollow the artist', './images/follow.png', 'no', null, "Follow/Unfollow▹" . $artist_uri . "@" . $artist_name . '▹');
 
@@ -929,7 +929,7 @@ function secondDelimiterOnlineRelated($w, $query, $settings, $db, $update_in_pro
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
-	
+
 
 	if (substr_count($query, '@') == 1) {
 		//
@@ -983,7 +983,7 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
-	
+
 	$is_public_playlists       = $settings->is_public_playlists;
 	$use_mopidy                = $settings->use_mopidy;
 
@@ -1212,7 +1212,7 @@ function secondDelimiterYourMusicTracks($w, $query, $settings, $db, $update_in_p
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
-	
+
 	$use_mopidy                = $settings->use_mopidy;
 
 	//
@@ -1360,7 +1360,7 @@ function secondDelimiterYourMusicAlbums($w, $query, $settings, $db, $update_in_p
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
-	
+
 
 	//
 	// Search albums
@@ -1432,7 +1432,7 @@ function secondDelimiterYourTopArtists($w, $query, $settings, $db, $update_in_pr
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
-	
+
 
 
 	try {
@@ -1497,7 +1497,7 @@ function secondDelimiterYourTopTracks($w, $query, $settings, $db, $update_in_pro
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
-	
+
 
 
 	try {
@@ -1606,7 +1606,7 @@ function secondDelimiterYourMusicArtists($w, $query, $settings, $db, $update_in_
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
-	
+
 
 	//
 	// Search artists
@@ -1687,7 +1687,7 @@ function secondDelimiterSettings($w, $query, $settings, $db, $update_in_progress
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
-	
+
 
 	$setting_kind = $words[1];
 	$the_query    = $words[2];
@@ -1871,7 +1871,7 @@ function secondDelimiterFeaturedPlaylist($w, $query, $settings, $db, $update_in_
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
-	
+
 
 	$country = $words[1];
 
@@ -1987,7 +1987,7 @@ function secondDelimiterNewReleases($w, $query, $settings, $db, $update_in_progr
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
-	
+
 
 	$country = $words[1];
 
@@ -2181,7 +2181,7 @@ function secondDelimiterAdd($w, $query, $settings, $db, $update_in_progress) {
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
-	
+
 	$is_public_playlists        = $settings->is_public_playlists;
 
 	if ($update_in_progress == true) {
@@ -2357,7 +2357,7 @@ function secondDelimiterRemove($w, $query, $settings, $db, $update_in_progress) 
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
-	
+
 
 	if ($update_in_progress == true) {
 		$w->result(null, '', 'Cannot remove tracks while update is in progress', 'Please retry when update is finished', './images/warning.png', 'no', null, '');
@@ -2503,7 +2503,7 @@ function secondDelimiterAlfredPlaylist($w, $query, $settings, $db, $update_in_pr
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
-	
+
 
 	$setting_kind = $words[1];
 	$theplaylist  = $words[2];
@@ -2616,7 +2616,7 @@ function secondDelimiterFollowUnfollow($w, $query, $settings, $db, $update_in_pr
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
-	
+
 
 	if (substr_count($query, '@') == 1) {
 		//
@@ -2682,7 +2682,7 @@ function secondDelimiterFollowOrUnfollow($w, $query, $settings, $db, $update_in_
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
-	
+
 
 	if (substr_count($query, '@') == 1) {
 		//
@@ -2761,7 +2761,7 @@ function secondDelimiterDisplayBiography($w, $query, $settings, $db, $update_in_
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
-	
+
 
 	if (substr_count($query, '∙') == 1) {
 		//
@@ -2896,7 +2896,7 @@ function secondDelimiterDisplayConfirmRemovePlaylist($w, $query, $settings, $db,
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
-	
+
 
 	if (substr_count($query, '∙') == 1) {
 		$tmp         = $words[1];
@@ -2980,7 +2980,7 @@ function secondDelimiterBrowse($w, $query, $settings, $db, $update_in_progress) 
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
-	
+
 
 	$country = $words[1];
 

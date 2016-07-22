@@ -31,7 +31,7 @@ function oAuthChecks($w, $query, $settings, $update_in_progress) {
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
-	
+
 
 	////
 	// OAUTH checks
@@ -251,7 +251,7 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress) {
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
-	
+
 	$quick_mode                = $settings->quick_mode;
 
 	////////
@@ -415,7 +415,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
-	
+
 	$quick_mode                = $settings->quick_mode;
 	$use_mopidy                = $settings->use_mopidy;
 
@@ -831,7 +831,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
-	
+
 	$use_mopidy                = $settings->use_mopidy;
 	$mopidy_server             = $settings->mopidy_server;
 	$mopidy_port               = $settings->mopidy_port;
@@ -931,31 +931,31 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
 				'ctrl' => 'Not Available'
 			), './images/lyrics.png', 'yes', '');
 
-		$w->result('SpotifyMiniPlayer_' . 'biography', serialize(array(
-					'' /*track_uri*/ ,
-					'' /* album_uri */ ,
-					'' /* artist_uri */ ,
-					'' /* playlist_uri */ ,
-					'' /* spotify_command */ ,
-					'' /* query */ ,
-					'' /* other_settings*/ ,
-					'biography' /* other_action */ ,
-					'' /* artist_name */ ,
-					'' /* track_name */ ,
-					'' /* album_name */ ,
-					'' /* track_artwork_path */ ,
-					'' /* artist_artwork_path */ ,
-					'' /* album_artwork_path */ ,
-					'' /* playlist_name */ ,
-					'' /* playlist_artwork_path */
-				)), 'Display biography', array(
-				"This will display the artist biography, twitter and official website",
-				'alt' => 'Not Available',
-				'cmd' => 'Not Available',
-				'shift' => 'Not Available',
-				'fn' => 'Not Available',
-				'ctrl' => 'Not Available'
-			), './images/biography.png', 'yes', '');
+//		$w->result('SpotifyMiniPlayer_' . 'biography', serialize(array(
+//					'' /*track_uri*/ ,
+//					'' /* album_uri */ ,
+//					'' /* artist_uri */ ,
+//					'' /* playlist_uri */ ,
+//					'' /* spotify_command */ ,
+//					'' /* query */ ,
+//					'' /* other_settings*/ ,
+//					'biography' /* other_action */ ,
+//					'' /* artist_name */ ,
+//					'' /* track_name */ ,
+//					'' /* album_name */ ,
+//					'' /* track_artwork_path */ ,
+//					'' /* artist_artwork_path */ ,
+//					'' /* album_artwork_path */ ,
+//					'' /* playlist_name */ ,
+//					'' /* playlist_artwork_path */
+//				)), 'Display biography', array(
+//				"This will display the artist biography, twitter and official website",
+//				'alt' => 'Not Available',
+//				'cmd' => 'Not Available',
+//				'shift' => 'Not Available',
+//				'fn' => 'Not Available',
+//				'ctrl' => 'Not Available'
+//			), './images/biography.png', 'yes', '');
 
 		$w->result('SpotifyMiniPlayer_' . 'play', serialize(array(
 					'' /*track_uri*/ ,
@@ -1533,34 +1533,34 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
 				), './images/lyrics.png', 'yes', '');
 		}
 
-		if (strpos(strtolower('biography'), strtolower($query)) !== false) {
-			$w->result('SpotifyMiniPlayer_' . 'biography', serialize(array(
-						'' /*track_uri*/ ,
-						'' /* album_uri */ ,
-						'' /* artist_uri */ ,
-						'' /* playlist_uri */ ,
-						'' /* spotify_command */ ,
-						'' /* query */ ,
-						'' /* other_settings*/ ,
-						'biography' /* other_action */ ,
-
-						'' /* artist_name */ ,
-						'' /* track_name */ ,
-						'' /* album_name */ ,
-						'' /* track_artwork_path */ ,
-						'' /* artist_artwork_path */ ,
-						'' /* album_artwork_path */ ,
-						'' /* playlist_name */ ,
-						'' /* playlist_artwork_path */
-					)), 'Display biography', array(
-					"This will display the artist biography, twitter and official website",
-					'alt' => 'Not Available',
-					'cmd' => 'Not Available',
-					'shift' => 'Not Available',
-					'fn' => 'Not Available',
-					'ctrl' => 'Not Available'
-				), './images/biography.png', 'yes', '');
-		}
+//		if (strpos(strtolower('biography'), strtolower($query)) !== false) {
+//			$w->result('SpotifyMiniPlayer_' . 'biography', serialize(array(
+//						'' /*track_uri*/ ,
+//						'' /* album_uri */ ,
+//						'' /* artist_uri */ ,
+//						'' /* playlist_uri */ ,
+//						'' /* spotify_command */ ,
+//						'' /* query */ ,
+//						'' /* other_settings*/ ,
+//						'biography' /* other_action */ ,
+//
+//						'' /* artist_name */ ,
+//						'' /* track_name */ ,
+//						'' /* album_name */ ,
+//						'' /* track_artwork_path */ ,
+//						'' /* artist_artwork_path */ ,
+//						'' /* album_artwork_path */ ,
+//						'' /* playlist_name */ ,
+//						'' /* playlist_artwork_path */
+//					)), 'Display biography', array(
+//					"This will display the artist biography, twitter and official website",
+//					'alt' => 'Not Available',
+//					'cmd' => 'Not Available',
+//					'shift' => 'Not Available',
+//					'fn' => 'Not Available',
+//					'ctrl' => 'Not Available'
+//				), './images/biography.png', 'yes', '');
+//		}
 
 		if (strpos(strtolower('query'), strtolower($query)) !== false) {
 			$w->result(null, serialize(array(
