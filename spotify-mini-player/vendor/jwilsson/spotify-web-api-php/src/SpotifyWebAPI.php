@@ -814,7 +814,7 @@ class SpotifyWebAPI
         $options = (array) $options;
 
         array_walk($options, function (&$value, $key) {
-            if (strpos($key, 'seed_') !== false) {
+            if (substr($key, 0, 5) == 'seed_') {
                 $value = implode(',', $value);
             }
         });
