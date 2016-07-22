@@ -31,7 +31,7 @@ function oAuthChecks($w, $query, $settings, $update_in_progress) {
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
-	$echonest_api_key          = $settings->echonest_api_key;
+	
 
 	////
 	// OAUTH checks
@@ -251,7 +251,7 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress) {
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
-	$echonest_api_key          = $settings->echonest_api_key;
+	
 	$quick_mode                = $settings->quick_mode;
 
 	////////
@@ -415,7 +415,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
-	$echonest_api_key          = $settings->echonest_api_key;
+	
 	$quick_mode                = $settings->quick_mode;
 	$use_mopidy                = $settings->use_mopidy;
 
@@ -831,7 +831,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
-	$echonest_api_key          = $settings->echonest_api_key;
+	
 	$use_mopidy                = $settings->use_mopidy;
 	$mopidy_server             = $settings->mopidy_server;
 	$mopidy_port               = $settings->mopidy_port;

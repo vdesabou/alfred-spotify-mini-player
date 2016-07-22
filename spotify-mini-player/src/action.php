@@ -1251,7 +1251,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 				displayNotificationWithArtwork($w,"Cannot modify library while update is in progress", './images/warning.png', 'Error!');
 				return;
 			}
-			createRadioArtistPlaylist($w, $artist_name);
+			createRadioArtistPlaylist($w, $artist_name, $artist_uri);
 			if ($userid != 'vdesabou') {
 				stathat_ez_count('AlfredSpotifyMiniPlayer', 'radio', 1);
 			}

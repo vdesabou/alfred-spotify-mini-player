@@ -742,8 +742,12 @@ function getBiography($w, $artist_uri, $artist_name) {
 	$settings         = getSettings($w);
 	$echonest_api_key = $settings->echonest_api_key;
 
+    // THIS IS BROKEN, see http://developer.echonest.com
+    // SPOTIFY WEB API DOES NO SUPPORT IT YET https://github.com/spotify/web-api/issues/207
+
 	$json     = doJsonRequest($w, 'http://developer.echonest.com/api/v4/artist/biographies?api_key=' . $echonest_api_key . '&id=' . $artist_uri);
 	$response = $json->response;
+
 	foreach ($response->biographies as $biography) {
 		if ($biography->site == "wikipedia") {
 			$wikipedia = $biography->text;
@@ -1934,7 +1938,19 @@ function createRadioArtistPlaylistForCurrentArtist($w) {
 
 	if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
 		$results = explode('▹', $retArr[0]);
-		createRadioArtistPlaylist($w, $results[1]);
+		$tmp     = explode(':', $results[4]);
+		if (isset($tmp[1]) && $tmp[1] == 'local') {
+			$artist_uri = getArtistUriFromSearch($w, $results[1]);
+		} else {
+			$artist_uri = getArtistUriFromTrack($w, $results[4]);
+		}
+
+		if ($artist_uri == false) {
+			displayNotificationWithArtwork($w,"Cannot get current artist", './images/warning.png', 'Error!');
+
+			return;
+		}
+		createRadioArtistPlaylist($w, $results[1], $artist_uri);
 	} else {
 		displayNotificationWithArtwork($w,"Cannot get current artist", './images/warning.png', 'Error!');
 	}
@@ -1946,10 +1962,11 @@ function createRadioArtistPlaylistForCurrentArtist($w) {
  *
  * @access public
  * @param mixed $w
- * @param mixed $artist_name
+  * @param mixed $artist_name
+ * @param mixed $artist_uri
  * @return void
  */
-function createRadioArtistPlaylist($w, $artist_name) {
+function createRadioArtistPlaylist($w, $artist_name, $artist_uri) {
 	//
 	// Read settings from JSON
 	//
@@ -1957,28 +1974,33 @@ function createRadioArtistPlaylist($w, $artist_name) {
 	$settings             = getSettings($w);
 	$radio_number_tracks  = $settings->radio_number_tracks;
 	$userid               = $settings->userid;
-	$echonest_api_key     = $settings->echonest_api_key;
 	$is_public_playlists  = $settings->is_public_playlists;
 	$is_autoplay_playlist = $settings->is_autoplay_playlist;
+	$country_code         = $settings->country_code;
 
 	$public = false;
 	if ($is_public_playlists) {
 		$public = true;
 	}
 
-	$json = doJsonRequest($w, 'http://developer.echonest.com/api/v4/playlist/static?api_key=' . $echonest_api_key . '&artist=' . urlencode($artist_name) . '&format=json&results=' . $radio_number_tracks . '&distribution=focused&type=artist-radio&bucket=id:spotify&bucket=tracks');
-
-	$response = $json->response;
+	try {
+		$api     = getSpotifyWebAPI($w);
+		$tmp = explode(':', $artist_uri);
+        $recommendations = $api->getRecommendations(array(
+            'seed_artists' => array($tmp[2]),
+            'market' => $country_code,
+            'limit' => $radio_number_tracks,
+        ));
+	}
+	catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+		echo "Error(createRadioArtistPlaylist): (exception " . print_r($e) . ")";
+		handleSpotifyWebAPIException($w, $e);
+        exit;
+	}
 
 	$newplaylisttracks = array();
-	foreach ($response->songs as $song) {
-		foreach ($song->tracks as $track) {
-			$foreign_id          = $track->foreign_id;
-			$tmp                 = explode(':', $foreign_id);
-			$newplaylisttracks[] = $tmp[2];
-			// only take one
-			break;
-		}
+	foreach ($recommendations->tracks as $track) {
+		$newplaylisttracks[] = $track->id;
 	}
 
 	if (count($newplaylisttracks) > 0) {
@@ -2154,7 +2176,6 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name) {
 	$settings             = getSettings($w);
 	$radio_number_tracks  = $settings->radio_number_tracks;
 	$userid               = $settings->userid;
-	$echonest_api_key     = $settings->echonest_api_key;
 	$country_code         = $settings->country_code;
 	$is_public_playlists  = $settings->is_public_playlists;
 	$is_autoplay_playlist = $settings->is_autoplay_playlist;
@@ -2184,19 +2205,24 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name) {
 		}
 	}
 
-	$json = doJsonRequest($w, 'http://developer.echonest.com/api/v4/playlist/static?api_key=' . $echonest_api_key . '&song_id=' . $track_uri . '&format=json&results=' . $radio_number_tracks . '&distribution=focused&type=song-radio&bucket=id:spotify&bucket=tracks');
-
-	$response = $json->response;
+    $tmp = explode(':', $track_uri);
+	try {
+		$api     = getSpotifyWebAPI($w);
+        $recommendations = $api->getRecommendations(array(
+            'seed_tracks' => array($tmp[2]),
+            'market' => $country_code,
+            'limit' => $radio_number_tracks,
+        ));
+	}
+	catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+		echo "Error(createRadioSongPlaylist): (exception " . print_r($e) . ")";
+		handleSpotifyWebAPIException($w, $e);
+        exit;
+	}
 
 	$newplaylisttracks = array();
-	foreach ($response->songs as $song) {
-		foreach ($song->tracks as $track) {
-			$foreign_id          = $track->foreign_id;
-			$tmp                 = explode(':', $foreign_id);
-			$newplaylisttracks[] = $tmp[2];
-			// only take one
-			break;
-		}
+	foreach ($recommendations->tracks as $track) {
+		$newplaylisttracks[] = $track->id;
 	}
 
 	if (count($newplaylisttracks) > 0) {
@@ -6070,7 +6096,7 @@ function getSettings($w) {
 		//
 		// Read settings from DB
 		//
-		$getSettings    = 'select all_playlists,is_spotifious_active,is_alfred_playlist_active,radio_number_tracks,is_lyrics_active,max_results, alfred_playlist_uri,alfred_playlist_name,country_code,theme,last_check_update_time,oauth_client_id,oauth_client_secret,oauth_redirect_uri,oauth_access_token,oauth_expires,oauth_refresh_token,display_name,userid,echonest_api_key from settings';
+		$getSettings    = 'select all_playlists,is_spotifious_active,is_alfred_playlist_active,radio_number_tracks,is_lyrics_active,max_results, alfred_playlist_uri,alfred_playlist_name,country_code,theme,last_check_update_time,oauth_client_id,oauth_client_secret,oauth_redirect_uri,oauth_access_token,oauth_expires,oauth_refresh_token,display_name,userid from settings';
 		$dbsettingsfile = $w->data() . '/settings.db';
 
 		try {
@@ -6109,7 +6135,6 @@ function getSettings($w) {
 				'oauth_refresh_token' => $setting[16],
 				'display_name' => $setting[17],
 				'userid' => $setting[18],
-				'echonest_api_key' => '5EG94BIZEGFEY9AL9',
 				'is_public_playlists' => 0,
 				'use_mopidy' => 0,
 				'mopidy_server' => '127.0.0.1',
@@ -6149,7 +6174,6 @@ function getSettings($w) {
 			'oauth_refresh_token' => '',
 			'display_name' => '',
 			'userid' => '',
-			'echonest_api_key' => '5EG94BIZEGFEY9AL9',
 			'is_public_playlists' => 0,
 			'quick_mode' => 0,
 			'use_mopidy' => 0,

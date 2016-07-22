@@ -32,7 +32,7 @@ function firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
-	$echonest_api_key          = $settings->echonest_api_key;
+
 
 	//
 	// Search playlists
@@ -173,7 +173,7 @@ function firstDelimiterAlfredPlaylist($w, $query, $settings, $db, $update_in_pro
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
-	$echonest_api_key          = $settings->echonest_api_key;
+
 
 	//
 	// Alfred Playlist
@@ -226,7 +226,7 @@ function firstDelimiterArtists($w, $query, $settings, $db, $update_in_progress) 
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
-	$echonest_api_key          = $settings->echonest_api_key;
+
 
 	//
 	// Search artists
@@ -343,7 +343,7 @@ function firstDelimiterAlbums($w, $query, $settings, $db, $update_in_progress) {
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
-	$echonest_api_key          = $settings->echonest_api_key;
+
 
 	// New Releases menu
 	$w->result(null, '', 'New Releases', 'Browse new album releases', './images/new_releases.png', 'no', null, 'New Releases▹');
@@ -483,7 +483,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
-	$echonest_api_key          = $settings->echonest_api_key;
+
 
 	//
 	// Search online
@@ -759,7 +759,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
-	$echonest_api_key          = $settings->echonest_api_key;
+
 	$is_public_playlists       = $settings->is_public_playlists;
 	$use_mopidy                = $settings->use_mopidy;
 	$is_display_rating         = $settings->is_display_rating;
@@ -1045,7 +1045,7 @@ function firstDelimiterYourMusic($w, $query, $settings, $db, $update_in_progress
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
-	$echonest_api_key          = $settings->echonest_api_key;
+
 
 	$thequery = $words[1];
 
@@ -1200,7 +1200,7 @@ function firstDelimiterLyrics($w, $query, $settings, $db, $update_in_progress) {
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
-	$echonest_api_key          = $settings->echonest_api_key;
+
 
 	if (substr_count($query, '∙') == 2) {
 		//
@@ -1285,7 +1285,6 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
 	$oauth_refresh_token        = $settings->oauth_refresh_token;
 	$display_name               = $settings->display_name;
 	$userid                     = $settings->userid;
-	$echonest_api_key           = $settings->echonest_api_key;
 	$is_public_playlists        = $settings->is_public_playlists;
 	$quick_mode                 = $settings->quick_mode;
 	$use_mopidy                 = $settings->use_mopidy;
@@ -1900,7 +1899,7 @@ function firstDelimiterCheckForUpdate($w, $query, $settings, $db, $update_in_pro
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
-	$echonest_api_key          = $settings->echonest_api_key;
+
 
 	$check_results = checkForUpdate($w, 0);
 	if ($check_results != null && is_array($check_results)) {
@@ -1988,7 +1987,7 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
-	$echonest_api_key          = $settings->echonest_api_key;
+
 	$use_mopidy                = $settings->use_mopidy;
 
 	if ($use_mopidy) {
