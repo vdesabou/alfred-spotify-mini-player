@@ -1446,7 +1446,7 @@ function secondDelimiterYourTopArtists($w, $query, $settings, $db, $update_in_pr
 		$noresult = true;
 		foreach ($items as $artist) {
             $noresult         = false;
-            $w->result(null, '', "👤 " . ucfirst($artist->name), "Browse this artist", getArtistArtwork($w, $artist->uri, $artist->name, false), 'no', null, "Artist▹" . $artist->uri . '∙' . $artist->name . '∙' . "▹");
+            $w->result(null, '', "👤 " . ucfirst($artist->name), "Browse this artist", getArtistArtwork($w, $artist->uri, $artist->name, false), 'no', null, "Artist▹" . $artist->uri . '∙' . $artist->name . "▹");
 
 
 		}
