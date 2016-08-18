@@ -174,7 +174,6 @@ function createDebugFile($w) {
 	$output = $output . "* oauth_access_token: " . $oauth_access_token . "\n\n";
 	$output = $output . "* oauth_refresh_token: " . $oauth_refresh_token . "\n\n";
 
-
 	$output = $output . "****\n";
 
 	copyDirectory($w->cache(), "/tmp/spot_mini_debug/cache");
@@ -203,7 +202,6 @@ function createDebugFile($w) {
 	    copy($w->data() . "/library_old.db", "/tmp/spot_mini_debug/library_old.db");
 	}
 
-
 	if (!file_exists($w->data() . "/history.json")) {
 	    $output = $output . "The file " . $w->data() . "/history.json is not present\n";
 	} else {
@@ -228,10 +226,18 @@ function createDebugFile($w) {
 	$output = $output . "\n";
 	$output = $output . exec("sysctl hw.memsize");
 	$output = $output . "\n";
+	$output = $output . 'alfred_version:' . getenv("alfred_version");
+	$output = $output . "\n";
+	$output = $output . 'alfred_version_build:' . getenv("alfred_version_build");
+	$output = $output . "\n";
+	$output = $output . 'alfred_workflow_version:' . getenv("alfred_workflow_version");
+	$output = $output . "\n";
+	$output = $output . 'alfred_debug:' . getenv("alfred_debug");
+	$output = $output . "\n";
 	if(! $use_mopidy) {
-		$output = $output . exec("osascript -e 'tell application \"Spotify\" to version'");
+		$output = $output . 'Spotify desktop version:' . exec("osascript -e 'tell application \"Spotify\" to version'");
 	} else {
-		$output = $output . "Mopidy version is " . invokeMopidyMethod($w, "core.get_version", array(), false);
+		$output = $output . "Mopidy version:" . invokeMopidyMethod($w, "core.get_version", array(), false);
 	}
 	$output = $output . "\n";
 
