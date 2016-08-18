@@ -875,6 +875,14 @@ if ($type == "TRACK" && $other_settings == "" &&
 				stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
 			}
 			return;
+		} else if ($other_action == "delete_artwork_folder") {
+            if (file_exists($w->data() . "/artwork")):
+                exec("rm -rf '" . $w->data() . "/artwork'");
+                displayNotificationWithArtwork($w,"All artworks have been erased", './images/warning.png', 'Warning!');
+                updateLibrary($w);
+            endif;
+
+			return;
 		} else if ($other_action == "Oauth_Login") {
 			// check PHP version
 			$version = explode('.', phpversion());

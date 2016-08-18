@@ -173,6 +173,55 @@ $w->result(null, serialize(array(
     ''/* userid*/
 )), 'Browse to Alfred workflow folder', "This will open the folder in Finder", 'fileicon:' . exec('pwd'), 'yes', null, '');
 
+$w->result(null, serialize(array(
+    '' /*track_uri*/ ,
+    '' /* album_uri */ ,
+    '' /* artist_uri */ ,
+    '' /* playlist_uri */ ,
+    '' /* spotify_command */ ,
+    '' /* query */ ,
+    'Open▹' . $w->cache() . '/action.log'/* other_settings*/ ,
+    '' /* other_action */ ,
+    '' /* alfred_playlist_uri */ ,
+    '' /* artist_name */ ,
+    '' /* track_name */ ,
+    '' /* album_name */ ,
+    '' /* track_artwork_path */ ,
+    '' /* artist_artwork_path */ ,
+    '' /* album_artwork_path */ ,
+    '' /* playlist_name */ ,
+    '' /* playlist_artwork_path */ ,
+    '' /* $alfred_playlist_name */ ,
+    '' /* now_playing_notifications */ ,
+    '' /* is_alfred_playlist_active */ ,
+    '' /* country_code*/ ,
+    ''/* userid*/
+)), 'Open log file', "This will open the log file", 'fileicon:' . $w->cache() . '/action.log', 'yes', null, '');
+
+$w->result(null, serialize(array(
+    '' /*track_uri*/ ,
+    '' /* album_uri */ ,
+    '' /* artist_uri */ ,
+    '' /* playlist_uri */ ,
+    '' /* spotify_command */ ,
+    '' /* query */ ,
+    '' /* other_settings*/ ,
+    'delete_artwork_folder' /* other_action */ ,
+    '' /* alfred_playlist_uri */ ,
+    '' /* artist_name */ ,
+    '' /* track_name */ ,
+    '' /* album_name */ ,
+    '' /* track_artwork_path */ ,
+    '' /* artist_artwork_path */ ,
+    '' /* album_artwork_path */ ,
+    '' /* playlist_name */ ,
+    '' /* playlist_artwork_path */ ,
+    '' /* $alfred_playlist_name */ ,
+    '' /* now_playing_notifications */ ,
+    '' /* is_alfred_playlist_active */ ,
+    '' /* country_code*/ ,
+    ''/* userid*/
+)), 'Delete artwork folder', "This will erase all existing artworks and re-download them", './images/warning.png', 'yes', null, '');
 
 echo $w->tojson();
 
