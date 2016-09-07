@@ -1036,7 +1036,7 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
 	catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 		$w->result(null, 'help', "Exception occurred", "" . $e->getMessage(), './images/warning.png', 'no', null, '');
 		echo $w->tojson();
-		return;
+		exit;
 	}
 
 	$subtitle = "Launch Playlist";
@@ -1459,7 +1459,7 @@ function secondDelimiterYourTopArtists($w, $query, $settings, $db, $update_in_pr
 	catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 		$w->result(null, 'help', "Exception occurred", "" . $e->getMessage(), './images/warning.png', 'no', null, '');
 		echo $w->tojson();
-		return;
+		exit;
 	}
 
 }
@@ -1569,7 +1569,7 @@ function secondDelimiterYourTopTracks($w, $query, $settings, $db, $update_in_pro
 	catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 		$w->result(null, 'help', "Exception occurred", "" . $e->getMessage(), './images/warning.png', 'no', null, '');
 		echo $w->tojson();
-		return;
+		exit;
 	}
 
 }
@@ -1950,7 +1950,7 @@ function secondDelimiterFeaturedPlaylist($w, $query, $settings, $db, $update_in_
 		catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 			$w->result(null, 'help', "Exception occurred", "" . $e->getMessage(), './images/warning.png', 'no', null, '');
 			echo $w->tojson();
-			return;
+			exit;
 		}
 	}
 }
@@ -2644,7 +2644,7 @@ function secondDelimiterFollowUnfollow($w, $query, $settings, $db, $update_in_pr
 		catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 			$w->result(null, 'help', "Exception occurred", "" . $e->getMessage(), './images/warning.png', 'no', null, '');
 			echo $w->tojson();
-			return;
+			exit;
 		}
 	}
 }
@@ -2723,7 +2723,7 @@ function secondDelimiterFollowOrUnfollow($w, $query, $settings, $db, $update_in_
 		catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 			$w->result(null, 'help', "Exception occurred", "" . $e->getMessage(), './images/warning.png', 'no', null, '');
 			echo $w->tojson();
-			return;
+			exit;
 		}
 	}
 }

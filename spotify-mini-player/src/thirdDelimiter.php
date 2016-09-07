@@ -32,7 +32,7 @@ function thirdDelimiterAdd($w, $query, $settings, $db, $update_in_progress) {
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
-	
+
 	$is_public_playlists        = $settings->is_public_playlists;
 
 	$tmp = explode('∙', $words[1]);
@@ -183,7 +183,7 @@ function thirdDelimiterBrowse($w, $query, $settings, $db, $update_in_progress) {
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
-	
+
 
 	$country = $words[1];
 	$category = $words[2];
@@ -216,6 +216,6 @@ function thirdDelimiterBrowse($w, $query, $settings, $db, $update_in_progress) {
 	catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
 		$w->result(null, 'help', "Exception occurred", "" . $e->getMessage(), './images/warning.png', 'no', null, '');
 		echo $w->tojson();
-		return;
+		exit;
 	}
 }
