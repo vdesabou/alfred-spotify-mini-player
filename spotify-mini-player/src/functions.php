@@ -6097,68 +6097,6 @@ function startswith($haystack, $needle) {
  * @return void
  */
 function getSettings($w) {
-	if (file_exists($w->data() . '/settings.db') && !file_exists($w->data() . '/settings.json')) {
-		// migrate settings.db to settings.json
-		//
-		// Read settings from DB
-		//
-		$getSettings    = 'select all_playlists,is_spotifious_active,is_alfred_playlist_active,radio_number_tracks,is_lyrics_active,max_results, alfred_playlist_uri,alfred_playlist_name,country_code,theme,last_check_update_time,oauth_client_id,oauth_client_secret,oauth_redirect_uri,oauth_access_token,oauth_expires,oauth_refresh_token,display_name,userid from settings';
-		$dbsettingsfile = $w->data() . '/settings.db';
-
-		try {
-			$dbsettings = new PDO("sqlite:$dbsettingsfile", "", "", array(
-					PDO::ATTR_PERSISTENT => true
-				));
-			$dbsettings->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-			$dbsettings->query("PRAGMA synchronous = OFF");
-			$dbsettings->query("PRAGMA journal_mode = OFF");
-			$dbsettings->query("PRAGMA temp_store = MEMORY");
-			$dbsettings->query("PRAGMA count_changes = OFF");
-			$dbsettings->query("PRAGMA PAGE_SIZE = 4096");
-			$dbsettings->query("PRAGMA default_cache_size=700000");
-			$dbsettings->query("PRAGMA cache_size=700000");
-			$dbsettings->query("PRAGMA compile_options");
-
-			$stmt     = $dbsettings->prepare($getSettings);
-			$settings = $stmt->execute();
-			$setting  = $stmt->fetch();
-
-			$migrated = array(
-				'all_playlists' => $setting[0],
-				'is_alfred_playlist_active' => $setting[2],
-				'radio_number_tracks' => $setting[3],
-				'now_playing_notifications' => 1,
-				'max_results' => $setting[5],
-				'alfred_playlist_uri' => $setting[6],
-				'alfred_playlist_name' => $setting[7],
-				'country_code' => $setting[8],
-				'last_check_update_time' => $setting[10],
-				'oauth_client_id' => $setting[11],
-				'oauth_client_secret' => $setting[12],
-				'oauth_redirect_uri' => 'http://localhost:15298/callback.php',
-				'oauth_access_token' => $setting[14],
-				'oauth_expires' => $setting[15],
-				'oauth_refresh_token' => $setting[16],
-				'display_name' => $setting[17],
-				'userid' => $setting[18],
-				'is_public_playlists' => 0,
-				'use_mopidy' => 0,
-				'mopidy_server' => '127.0.0.1',
-				'mopidy_port' => '6680',
-				'volume_percent' => 20,
-				'is_display_rating' => 1,
-				'is_autoplay_playlist' => 1,
-				'use_growl' => 0,
-			);
-
-			$ret = $w->write($migrated, 'settings.json');
-		}
-		catch (PDOException $e) {
-			logMsg("Error(getSettings): (exception " . print_r($e) . ")");
-		}
-		deleteTheFile($w->data() . '/settings.db');
-	}
-
 	$settings = $w->read('settings.json');
 
 	if ($settings == false) {
