@@ -1491,6 +1491,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>EC1183BF-4D79-4AA1-9B58-E69CBC467069</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>24B8C827-75F2-4421-A412-D48782DA1DB8</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>ECC53637-75AD-4FD2-9605-8E038D04C4BF</key>
 		<array/>
 		<key>EF574432-0896-4A92-9944-7DA5DD7295DA</key>
@@ -2617,6 +2630,19 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 			<string>3837382F-63B4-4B0D-A880-A1CF7079D584</string>
 			<key>version</key>
 			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>triggerid</key>
+				<string>pause</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.external</string>
+			<key>uid</key>
+			<string>EC1183BF-4D79-4AA1-9B58-E69CBC467069</string>
+			<key>version</key>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -6202,6 +6228,13 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<integer>100</integer>
 			<key>ypos</key>
 			<real>4770</real>
+		</dict>
+		<key>EC1183BF-4D79-4AA1-9B58-E69CBC467069</key>
+		<dict>
+			<key>xpos</key>
+			<integer>350</integer>
+			<key>ypos</key>
+			<integer>3100</integer>
 		</dict>
 		<key>ECC53637-75AD-4FD2-9605-8E038D04C4BF</key>
 		<dict>
