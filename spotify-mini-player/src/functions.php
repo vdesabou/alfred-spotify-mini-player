@@ -5851,7 +5851,7 @@ function strip_string($string) {
  * @return void
  */
 function checkForUpdate($w, $last_check_update_time, $download = false) {
-	if (time() - $last_check_update_time > 86400 || $download == true) {
+	if (time() - $last_check_update_time > 604800 || $download == true) {
 		// update last_check_update_time
 		$ret = updateSetting($w, 'last_check_update_time', time());
 		if ($ret == false) {
