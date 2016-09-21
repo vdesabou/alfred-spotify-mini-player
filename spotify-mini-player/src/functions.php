@@ -687,8 +687,8 @@ function updateCurrentTrackIndexFromPlayQueue($w) {
 		return;
 	}
 
-	if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
-		$results = explode('▹', $retArr[0]);
+	if (substr_count($retArr[count($retArr)-1], '▹') > 0) {
+		$results = explode('▹', $retArr[count($retArr)-1]);
 		$found = false;
 		$i = 0;
 		$current_track_name = cleanupTrackName($results[0]);
@@ -930,8 +930,8 @@ function lookupCurrentArtist($w) {
 		}
 	}
 
-	if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
-		$results = explode('▹', $retArr[0]);
+	if (substr_count($retArr[count($retArr)-1], '▹') > 0) {
+		$results = explode('▹', $retArr[count($retArr)-1]);
 		$tmp     = explode(':', $results[4]);
 		if (isset($tmp[1]) && $tmp[1] == 'local') {
 			$artist_uri = getArtistUriFromSearch($w, $results[1]);
@@ -984,8 +984,8 @@ function displayCurrentArtistBiography($w) {
 		}
 	}
 
-	if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
-		$results = explode('▹', $retArr[0]);
+	if (substr_count($retArr[count($retArr)-1], '▹') > 0) {
+		$results = explode('▹', $retArr[count($retArr)-1]);
 		$tmp     = explode(':', $results[4]);
 		if (isset($tmp[1]) && $tmp[1] == 'local') {
 			$artist_uri = getArtistUriFromSearch($w, $results[1]);
@@ -1033,8 +1033,8 @@ function playCurrentArtist($w) {
 		}
 	}
 
-	if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
-		$results = explode('▹', $retArr[0]);
+	if (substr_count($retArr[count($retArr)-1], '▹') > 0) {
+		$results = explode('▹', $retArr[count($retArr)-1]);
 		$tmp     = explode(':', $results[4]);
 		if (isset($tmp[1]) && $tmp[1] == 'local') {
 			$artist_uri = getArtistUriFromSearch($w, $results[1]);
@@ -1087,8 +1087,8 @@ function playCurrentAlbum($w) {
 		}
 	}
 
-	if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
-		$results = explode('▹', $retArr[0]);
+	if (substr_count($retArr[count($retArr)-1], '▹') > 0) {
+		$results = explode('▹', $retArr[count($retArr)-1]);
 		$tmp       = explode(':', $results[4]);
 		$album_uri = getAlbumUriFromTrack($w, $results[4]);
 		if ($album_uri == false) {
@@ -1132,8 +1132,8 @@ function addCurrentTrackTo($w) {
 		}
 	}
 
-	if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
-		$results = explode('▹', $retArr[0]);
+	if (substr_count($retArr[count($retArr)-1], '▹') > 0) {
+		$results = explode('▹', $retArr[count($retArr)-1]);
 		$tmp     = explode(':', $results[4]);
 		if (isset($tmp[1]) && $tmp[1] == 'local') {
 			//
@@ -1196,8 +1196,8 @@ function removeCurrentTrackFrom($w) {
 		}
 	}
 
-	if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
-		$results = explode('▹', $retArr[0]);
+	if (substr_count($retArr[count($retArr)-1], '▹') > 0) {
+		$results = explode('▹', $retArr[count($retArr)-1]);
 		exec("osascript -e 'tell application \"Alfred 3\" to search \"" .  getenv("spot_mini") . " Remove▹" . $results[4] . "∙" . escapeQuery($results[0]) . '▹' . "\"'");
 	} else {
 		displayNotificationWithArtwork($w,"No track is playing", './images/warning.png');
@@ -1257,8 +1257,8 @@ function addCurrentTrackToAlfredPlaylist($w) {
 		}
 	}
 
-	if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
-		$results = explode('▹', $retArr[0]);
+	if (substr_count($retArr[count($retArr)-1], '▹') > 0) {
+		$results = explode('▹', $retArr[count($retArr)-1]);
 		//
 		// Read settings from JSON
 		//
@@ -1340,8 +1340,8 @@ function addCurrentTrackToYourMusic($w) {
 		}
 	}
 
-	if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
-		$results = explode('▹', $retArr[0]);
+	if (substr_count($retArr[count($retArr)-1], '▹') > 0) {
+		$results = explode('▹', $retArr[count($retArr)-1]);
 		$tmp     = explode(':', $results[4]);
 		if (isset($tmp[1]) && $tmp[1] == 'local') {
 			//
@@ -1942,8 +1942,8 @@ function createRadioArtistPlaylistForCurrentArtist($w) {
 		}
 	}
 
-	if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
-		$results = explode('▹', $retArr[0]);
+	if (substr_count($retArr[count($retArr)-1], '▹') > 0) {
+		$results = explode('▹', $retArr[count($retArr)-1]);
 		$tmp     = explode(':', $results[4]);
 		if (isset($tmp[1]) && $tmp[1] == 'local') {
 			$artist_uri = getArtistUriFromSearch($w, $results[1]);
@@ -2155,8 +2155,8 @@ function createRadioSongPlaylistForCurrentTrack($w) {
 		}
 	}
 
-	if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
-		$results = explode('▹', $retArr[0]);
+	if (substr_count($retArr[count($retArr)-1], '▹') > 0) {
+		$results = explode('▹', $retArr[count($retArr)-1]);
 		createRadioSongPlaylist($w, $results[0], $results[4], $results[1]);
 	} else {
 		displayNotificationWithArtwork($w,"There is not track currently playing", './images/warning.png', 'Error!');
@@ -3033,8 +3033,8 @@ function displayNotificationForCurrentTrack($w) {
 		}
 	}
 
-	if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
-		$results = explode('▹', $retArr[0]);
+	if (substr_count($retArr[count($retArr)-1], '▹') > 0) {
+		$results = explode('▹', $retArr[count($retArr)-1]);
 		displayNotificationWithArtwork($w,'🔈 ' . escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]) . ' in album ' . escapeQuery($results[2]), getTrackOrAlbumArtwork($w, $results[4], true), 'Now Playing ' . floatToStars(($results[6] / 100) ? $is_display_rating : 0) . ' (' . beautifyTime($results[5] / 1000) . ')');
 	}
 }
@@ -3074,8 +3074,8 @@ function displayLyricsForCurrentTrack($w) {
 		}
 	}
 
-	if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
-		$results = explode('▹', $retArr[0]);
+	if (substr_count($retArr[count($retArr)-1], '▹') > 0) {
+		$results = explode('▹', $retArr[count($retArr)-1]);
 		exec("osascript -e 'tell application \"Alfred 3\" to search \"" .  getenv("spot_mini") . " Lyrics▹" . $results[4] . "∙" . escapeQuery($results[1]) . "∙" . escapeQuery($results[0]) . "\"'");
 	} else {
 		displayNotificationWithArtwork($w,"There is not track currently playing", './images/warning.png', 'Error!');

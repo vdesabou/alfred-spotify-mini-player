@@ -178,8 +178,8 @@ if ($type == "TRACK" && $other_settings == "" &&
 							return;
 						}
 					}
-					if (isset($retArr[0]) && substr_count($retArr[0], '▹') > 0) {
-						$results = explode('▹', $retArr[0]);
+					if (substr_count($retArr[count($retArr)-1], '▹') > 0) {
+						$results = explode('▹', $retArr[count($retArr)-1]);
 						addTrackToPlayQueue($w, $track_uri, escapeQuery($results[0]), escapeQuery($results[1]), escapeQuery($results[2]), $results[5], $country_code);
 					}
 				}
