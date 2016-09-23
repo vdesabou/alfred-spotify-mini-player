@@ -27,11 +27,7 @@ class Session
         $this->setClientSecret($clientSecret);
         $this->setRedirectUri($redirectUri);
 
-        if (is_null($request)) {
-            $request = new Request();
-        }
-
-        $this->request = $request;
+        $this->request = $request ?: new Request();
     }
 
     /**
@@ -44,18 +40,18 @@ class Session
      *
      * @return string The authorization URL.
      */
-    public function getAuthorizeUrl($options = array())
+    public function getAuthorizeUrl($options = [])
     {
         $options = (array) $options;
 
-        $parameters = array(
+        $parameters = [
             'client_id' => $this->getClientId(),
             'redirect_uri' => $this->getRedirectUri(),
             'response_type' => 'code',
             'scope' => isset($options['scope']) ? implode(' ', $options['scope']) : null,
             'show_dialog' => !empty($options['show_dialog']) ? 'true' : null,
             'state' => isset($options['state']) ? $options['state'] : null,
-        );
+        ];
 
         return Request::ACCOUNT_URL . '/authorize/?' . http_build_query($parameters);
     }
@@ -131,14 +127,14 @@ class Session
     {
         $payload = base64_encode($this->getClientId() . ':' . $this->getClientSecret());
 
-        $parameters = array(
+        $parameters = [
             'grant_type' => 'refresh_token',
             'refresh_token' => $refreshToken,
-        );
+        ];
 
-        $headers = array(
+        $headers = [
             'Authorization' => 'Basic ' . $payload,
-        );
+        ];
 
         $response = $this->request->account('POST', '/api/token', $parameters, $headers);
         $response = $response['body'];
@@ -160,18 +156,18 @@ class Session
      *
      * @return bool True when an access token was successfully granted, false otherwise.
      */
-    public function requestCredentialsToken($scope = array())
+    public function requestCredentialsToken($scope = [])
     {
         $payload = base64_encode($this->getClientId() . ':' . $this->getClientSecret());
 
-        $parameters = array(
+        $parameters = [
             'grant_type' => 'client_credentials',
             'scope' => implode(' ', $scope),
-        );
+        ];
 
-        $headers = array(
+        $headers = [
             'Authorization' => 'Basic ' . $payload,
-        );
+        ];
 
         $response = $this->request->account('POST', '/api/token', $parameters, $headers);
         $response = $response['body'];
@@ -195,15 +191,15 @@ class Session
      */
     public function requestAccessToken($authorizationCode)
     {
-        $parameters = array(
+        $parameters = [
             'client_id' => $this->getClientId(),
             'client_secret' => $this->getClientSecret(),
             'code' => $authorizationCode,
             'grant_type' => 'authorization_code',
             'redirect_uri' => $this->getRedirectUri(),
-        );
+        ];
 
-        $response = $this->request->account('POST', '/api/token', $parameters, array());
+        $response = $this->request->account('POST', '/api/token', $parameters, []);
         $response = $response['body'];
 
         if (isset($response->refresh_token) && isset($response->access_token)) {
