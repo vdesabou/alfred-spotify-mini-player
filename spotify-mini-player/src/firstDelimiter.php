@@ -1844,7 +1844,7 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
 			), './images/enable_mopidy.png', 'yes', null, '');
 	}
 
-	$w->result(null, '', 'Check for workflow update', 'Last checked: ' . beautifyTime(time() - $last_check_update_time, true) . ' ago (note this is automatically done otherwise once per day)', './images/check_update.png', 'no', null, 'Check for update...' . '▹');
+	$w->result(null, '', 'Check for workflow update', 'Last checked: ' . beautifyTime(time() - $last_check_update_time, true) . ' ago (note this is automatically done otherwise once per week)', './images/check_update.png', 'no', null, 'Check for update...' . '▹');
 
 	$w->result(null, serialize(array(
 				'' /*track_uri*/ ,
