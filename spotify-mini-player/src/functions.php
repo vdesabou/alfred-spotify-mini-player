@@ -152,14 +152,14 @@ function switchToGreenIcons($w) {
 
         $green_icon_url = 'https://github.com/vdesabou/alfred-spotify-mini-player/raw/master/resources/images_green/' . $img;
 
-		//$fp      = fopen('./images/' . $img, 'w+');
+		$fp      = fopen('./images/' . $img, 'w+');
 		$options = array(
 			CURLOPT_FILE => $fp,
 			CURLOPT_FOLLOWLOCATION => 1,
 			CURLOPT_TIMEOUT => 5
 		);
 
-		//$w->request("$green_icon_url", $options);
+		$w->request("$green_icon_url", $options);
     }
 
     // check icons from images directory
