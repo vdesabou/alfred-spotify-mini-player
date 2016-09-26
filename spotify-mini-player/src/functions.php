@@ -184,17 +184,17 @@ function switchToGreenIcons($w) {
             '15B503BB-DA3F-4B7B-8E4C-94E968ECDCF2' => 'volmax',
             '16F5C3BF-01EE-493C-9E7B-CC54D482B7A6' => 'playlists',
             '1BA522F3-B2D0-4F36-B86C-738FB3AC55DD' => 'volume_up',
-            '1F30DEA9-0A81-4E00-9CF0-E7D086C6B5B0' => 'up',
+            '1F30DEA9-0A81-4E00-9CF0-E7D086C6B5B0' => 'keyup',
             '2B0C6211-1DD0-4CE6-8082-37957F15CC1D' => 'mute',
             '2B0C8466-4AED-4272-9C10-50F3BCE88043' => 'update',
             '2F1F6369-46C0-483B-816F-3796168AE060' => 'repeating',
             '2FC567E2-E6C5-4A91-B42E-1996532B78C9' => 'albums',
-            '303A65BF-8E81-48E8-AA28-E1CA408FDD53' => 'down',
+            '303A65BF-8E81-48E8-AA28-E1CA408FDD53' => 'keydown',
             '3040749D-6B5C-4CCD-AF95-AEC0F83B48D9' => 'current_track',
             '3617F927-558D-4F30-B8D1-B7789F863AB0' => 'play_queue',
             '39A1935A-37F5-49FA-A860-BCF7765A8C65' => 'icon',
             '3F85747B-FC44-4B07-AA6E-3645F0CC0DF7' => 'add_to_ap_yourmusic',
-            '450AEF8B-BDAA-409C-A0D4-68769545FBCF' => 'escape',
+            '450AEF8B-BDAA-409C-A0D4-68769545FBCF' => 'keyescape',
             '455BDE70-BCF4-447F-ABFF-C25D8E5B08B6' => 'radio_song',
             '4BE9FB30-9B4F-4E44-861D-D178507A7568' => 'remove_from',
             '4EB5FB5E-6472-4757-A479-B206B6080036' => 'next',
@@ -205,7 +205,7 @@ function switchToGreenIcons($w) {
             '62AA861E-C910-4354-84C9-58A5660365D8' => 'remove_from',
             '66F8A022-163E-42CB-A9E9-B32E8158ACA7' => 'previous',
             '6E9B4F21-F907-4A22-8689-9A146F909454' => 'playpause',
-            '78DAB9D1-72A3-4B44-AB3B-D1C71F13DF7A' => 'enter',
+            '78DAB9D1-72A3-4B44-AB3B-D1C71F13DF7A' => 'keyenter',
             '794A76A7-BB98-4A83-92BE-386A56875120' => 'issue',
             '79F70A28-E2D9-4705-81A9-86F3EA8EB47F' => 'alfred_playlist',
             '7FE5D993-C14D-4B94-9479-B361680F1C40' => 'add_to',
@@ -228,7 +228,7 @@ function switchToGreenIcons($w) {
             'A41190FA-4B23-4908-A4B7-16A14F338C11' => 'repeating',
             'A76C26BD-BA48-4797-839B-BE439FF40846' => 'pause',
             'A8BE6109-BCC0-4A41-9375-C1D2E3A755BD' => 'volmax',
-            'AC236315-8CDE-41E3-A9BA-BB59D292FE14' => 'playlists',
+            'AC236315-8CDE-41E3-A9BA-BB59D292FE14' => 'lyrics',
             'B23712E3-4564-4668-BD6D-4D535839CC8C' => 'uncheck',
             'B77F5F98-C065-49A4-BBB1-68ADADDD8E7D' => 'albums',
             'BA289B3E-779E-482F-AFEA-8E1395513365' => 'browse',
@@ -275,7 +275,106 @@ function switchToGreenIcons($w) {
 
         if (!is_file('./' . $key . '.png') || (is_file('./' . $key . '.png') && filesize('./' . $key . '.png') == 0)) {
             $hasError = true;
-            logMsg("Error(switchToGreenIcons): (failed to load UUID " . $keya. ")");
+            logMsg("Error(switchToGreenIcons): (failed to load UUID " . $key. ")");
+        }
+    }
+
+
+    // replace UUID items images for remote
+    $uuid_imgs = array (
+            'FDAEECD4-DE40-443C-89F9-B46D5592D8C4' => 'issue',
+            'F14D664A-48D5-4232-A6CD-772F3361630B' => 'new_releases',
+            'EE84BB33-1412-4F21-8B4D-D09362ECFE7A' => 'volmax',
+            'EA114C5E-A6A7-479E-BDB8-17E9C3163B53' => 'current_track',
+            'E8BE74B6-2928-4513-A0BC-B88EBF839ABD' => 'mute',
+            'E7ECAC10-DDC2-4860-A342-A876756D8812' => 'playpause',
+            'DF3FC215-4E94-472D-91B2-9D94A3B8632F' => 'keyenter',
+            'D427D63A-3C3A-420D-87D5-46185FE361E3' => 'online_artist',
+            'D191C6F2-CF3A-4F3A-AEDB-9D8B03EA7EC9' => 'albums',
+            'D51D9C70-68AF-4D63-ABD0-09906D9B1EC9' => 'playlists',
+            'CED135C7-B958-4C68-8C47-956FBAA9086A' => 'remove_from',
+            'CC39269A-4977-48A1-8427-F9CFC2AE8EED' => 'play',
+            'AF86DFA1-E6C7-4C2B-BD00-66614B6CFE81' => 'update',
+            'AEC59638-4779-4470-9A6A-E32992498ED2' => 'pause',
+            'AE944AAF-0B18-436F-AB21-1B22AA446063' => 'browse',
+            'A6374417-A3FC-4360-9913-504F7A21F4F1' => 'radio_artist',
+            '3690378D-02F4-4BF9-BC91-975F3739542B' => 'random',
+            '2737969D-A8B4-4550-8568-3C926D36DD81' => 'add_to_ap_yourmusic',
+            '2375184C-CC97-4763-A846-D2FAB1259FD1' => 'random_album',
+            '707403B7-FF4A-4995-99F3-AB2B5F39B34F' => 'debug',
+            '163265DD-5CAB-4D11-B984-F86871709AEE' => 'icon',
+            '9045D879-6632-4113-9915-85534EBECBB1' => 'online',
+            '5365AF85-EDB1-4789-9ABD-B272A8C96AA0' => 'volume_down',
+            '4368A343-21A8-44C7-96F9-4870FA1C2EFB' => 'previous',
+            '924A7250-A8D3-4944-BDEF-74B3DD32DC75' => 'volume_up',
+            '749D3ABB-38FB-4EFB-9E3D-881C5AF5CAC9' => 'next',
+            '577A4640-8D94-4813-9223-B355BE7FE1BD' => 'shuffle',
+            '569B0F42-A04A-40B7-9E86-EA1C61EF0AE5' => 'play_queue',
+            '178DD46F-F3E2-4105-B579-2ED25639AF43' => 'alfred_playlist',
+            '89CD46BC-7C18-4D85-A23B-CF5F93273B1A' => 'keyescape',
+            '83F461DC-A47F-4407-92C3-BF269BB49953' => 'uncheck',
+            '83D8A06D-1B1C-4B90-A00A-5B5E575DF7E8' => 'radio_song',
+            '58AF0E83-EC70-42B2-AED5-DB7DF65C043C' => 'info',
+            '41AECA11-8410-4CFF-8BAB-51FE6DE283F4' => 'volmid',
+            '27BDEB50-2E71-474D-B329-30EBFB7BC663' => 'artists',
+            '19E641F3-FE15-4058-9597-255FDDAA4F48' => 'settings',
+            '9B2EBB97-E54C-420E-BB2E-20AC87764C68' => 'repeating',
+            '8B60A0B6-910F-4B63-A0B1-953D9A99990F' => 'lyrics',
+            '6D35BFAD-C96C-4BF8-B76B-5C4BB4313DF9' => 'keydown',
+            '5C18A3F0-C5CC-4B8D-B71E-B00B420CA2DC' => 'keyup',
+            '4FE5620A-FB79-440E-8633-B8148EE1191E' => 'add_to',
+        );
+
+
+    foreach ($uuid_imgs as $key => $value) {
+        $green_icon_url = 'https://github.com/vdesabou/alfred-spotify-mini-player/raw/master/resources/images_green/' . $value . '@3x.png';
+
+		$fp      = fopen('./_remote/images/items/' . $key . '.png', 'w+');
+		$options = array(
+			CURLOPT_FILE => $fp,
+			CURLOPT_FOLLOWLOCATION => 1,
+			CURLOPT_TIMEOUT => 5
+		);
+
+		$w->request("$green_icon_url", $options);
+    }
+
+    // check UUID images
+    foreach ($uuid_imgs as $key => $value) {
+
+        if (!is_file('./_remote/images/items/' . $key . '.png') || (is_file('./_remote/images/items/' . $key . '.png') && filesize('./_remote/images/items/' . $key . '.png') == 0)) {
+            $hasError = true;
+            logMsg("Error(switchToGreenIcons): (failed to load UUID items remote " . $key . ")");
+        }
+    }
+
+    // replace UUID pages images for remote
+    $uuid_imgs = array (
+            '8F6D8768-149A-492E-B88F-DECA4DB283B5' => 'keyenter',
+            '31BE3663-05A1-4380-9955-ECBD4E1AD618' => 'next',
+            '657FE771-8978-4E40-9AA9-201603AC8B5F' => 'update',
+        );
+
+
+    foreach ($uuid_imgs as $key => $value) {
+        $green_icon_url = 'https://github.com/vdesabou/alfred-spotify-mini-player/raw/master/resources/images_green/' . $value . '@3x.png';
+
+		$fp      = fopen('./_remote/images/pages/' . $key . '.png', 'w+');
+		$options = array(
+			CURLOPT_FILE => $fp,
+			CURLOPT_FOLLOWLOCATION => 1,
+			CURLOPT_TIMEOUT => 5
+		);
+
+		$w->request("$green_icon_url", $options);
+    }
+
+    // check UUID images
+    foreach ($uuid_imgs as $key => $value) {
+
+        if (!is_file('./_remote/images/pages/' . $key . '.png') || (is_file('./_remote/images/pages/' . $key . '.png') && filesize('./_remote/images/pages/' . $key . '.png') == 0)) {
+            $hasError = true;
+            logMsg("Error(switchToGreenIcons): (failed to load UUID pages remote " . $key . ")");
         }
     }
 
