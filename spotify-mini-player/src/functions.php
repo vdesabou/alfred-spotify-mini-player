@@ -145,7 +145,6 @@ function switchToGreenIcons($w) {
     // replace icons from images directory
     foreach ($imgs as $img) {
         if($img == '.' || $img == '..'
-            || $img == 'switch_to_green_icons.png'
             || $img == 'alfred-workflow-icon.png' ) {
             continue;
         }
@@ -166,7 +165,6 @@ function switchToGreenIcons($w) {
     $hasError = false;
     foreach ($imgs as $img) {
         if($img == '.' || $img == '..'
-            || $img == 'switch_to_green_icons.png'
             || $img == 'alfred-workflow-icon.png' ) {
             continue;
         }
