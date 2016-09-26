@@ -724,6 +724,9 @@ if ($type == "TRACK" && $other_settings == "" &&
 				displayNotificationWithArtwork($w,"Error while updating settings", './images/settings.png', 'Error!');
 			}
 			return;
+		} else if ($other_action == "switch_to_green_icons") {
+            switchToGreenIcons($w);
+			return;
 		} else if ($other_action == "disable_mopidy") {
 			exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a stop >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
 			if ($use_mopidy) {

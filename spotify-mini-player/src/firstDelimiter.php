@@ -1844,6 +1844,32 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
 			), './images/enable_mopidy.png', 'yes', null, '');
 	}
 
+	$w->result(null, serialize(array(
+				'' /*track_uri*/ ,
+				'' /* album_uri */ ,
+				'' /* artist_uri */ ,
+				'' /* playlist_uri */ ,
+				'' /* spotify_command */ ,
+				'' /* query */ ,
+				'' /* other_settings*/ ,
+				'switch_to_green_icons' /* other_action */ ,
+				'' /* artist_name */ ,
+				'' /* track_name */ ,
+				'' /* album_name */ ,
+				'' /* track_artwork_path */ ,
+				'' /* artist_artwork_path */ ,
+				'' /* album_artwork_path */ ,
+				'' /* playlist_name */ ,
+				'' /* playlist_artwork_path */
+			)), "Switch to green icons", array(
+			"All existing icons will be replaced by green icons",
+			'alt' => 'Not Available',
+			'cmd' => 'Not Available',
+			'shift' => 'Not Available',
+			'fn' => 'Not Available',
+			'ctrl' => 'Not Available'
+		), './images/switch_to_green_icons.png', 'yes', null, '');
+
 	$w->result(null, '', 'Check for workflow update', 'Last checked: ' . beautifyTime(time() - $last_check_update_time, true) . ' ago (note this is automatically done otherwise once per week)', './images/check_update.png', 'no', null, 'Check for update...' . '▹');
 
 	$w->result(null, serialize(array(

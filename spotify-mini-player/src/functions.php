@@ -125,7 +125,94 @@ function invokeMopidyMethod($w, $method, $params, $displayError = true) {
 	}
 }
 
+/**
+ * switchToGreenIcons function.
+ *
+ * @access public
+ * @param mixed $w
+ * @return void
+ */
+function switchToGreenIcons($w) {
 
+	//
+	// Read settings from JSON
+	//
+	$settings                  = getSettings($w);
+	$use_mopidy                = $settings->use_mopidy;
+
+    $imgs = scandir("./images/");
+
+    // replace icons from images directory
+    foreach ($imgs as $img) {
+        if($img == '.' || $img == '..'
+            || $img == 'switch_to_green_icons.png'
+            || $img == 'alfred-workflow-icon.png' ) {
+            continue;
+        }
+
+        $green_icon_url = 'https://github.com/vdesabou/alfred-spotify-mini-player/raw/master/resources/images_green/' . $img;
+
+		//$fp      = fopen('./images/' . $img, 'w+');
+		$options = array(
+			CURLOPT_FILE => $fp,
+			CURLOPT_FOLLOWLOCATION => 1,
+			CURLOPT_TIMEOUT => 5
+		);
+
+		//$w->request("$green_icon_url", $options);
+    }
+
+    // check icons from images directory
+    $hasError = false;
+    foreach ($imgs as $img) {
+        if($img == '.' || $img == '..'
+            || $img == 'switch_to_green_icons.png'
+            || $img == 'alfred-workflow-icon.png' ) {
+            continue;
+        }
+
+        if (!is_file('./images/' . $img) || (is_file('./images/' . $img) && filesize('./images/' . $img) == 0)) {
+            $hasError = true;
+            logMsg("Error(switchToGreenIcons): (failed to load " . $img. ")");
+        }
+    }
+
+    // replace UUID images
+    $uuid_imgs = array (
+            '0A7E4CC3-BA4A-4DD4-AB4B-E2E8F9DBBE8C' => 'playpause',
+            '0B75CF43-8B04-405F-86C3-2FFC59AC4A70' => 'artists'
+        );
+
+
+    foreach ($uuid_imgs as $key => $value) {
+        $green_icon_url = 'https://github.com/vdesabou/alfred-spotify-mini-player/raw/master/resources/images_green/' . $value . '@3x.png';
+
+		$fp      = fopen('./' . $key . '.png', 'w+');
+		$options = array(
+			CURLOPT_FILE => $fp,
+			CURLOPT_FOLLOWLOCATION => 1,
+			CURLOPT_TIMEOUT => 5
+		);
+
+		$w->request("$green_icon_url", $options);
+    }
+
+    // check UUID images
+    foreach ($uuid_imgs as $key => $value) {
+
+        if (!is_file('./' . $key . '.png') || (is_file('./' . $key . '.png') && filesize('./' . $key . '.png') == 0)) {
+            $hasError = true;
+            logMsg("Error(switchToGreenIcons): (failed to load UUID " . $keya. ")");
+        }
+    }
+
+    if(!$hasError) {
+        displayNotificationWithArtwork($w,"All existing icons have been replaced by green icons", './images/switch_to_green_icons.png', 'Settings');
+    } else {
+        displayNotificationWithArtwork($w,"Some icons have not been replaced", './images/warning.png');
+    }
+
+}
 
 
 /**
