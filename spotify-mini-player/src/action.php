@@ -725,6 +725,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 			}
 			return;
 		} else if ($other_action == "switch_to_green_icons") {
+    		stathat_ez_count('AlfredSpotifyMiniPlayer', 'theme_changed', 1);
             switchToGreenIcons($w);
 			return;
 		} else if ($other_action == "disable_mopidy") {
