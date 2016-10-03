@@ -80,6 +80,16 @@ if ($use_mopidy) {
 }
 exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a start -m \"" . $mopidy_arg . "\"  >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
 
+// make sure spotify is running
+if (! $use_mopidy) {
+	exec("./src/is_spotify_running.ksh 2>&1", $retArr, $retVal);
+	if ($retArr[0] != 0) {
+		exec("open -a \"Spotify\"");
+		// wait for Spotify to start
+		sleep(6);
+	}
+}
+
 if ($spotify_command != "" && $type == "TRACK" && $add_to_option == "") {
 	$spotify_command = str_replace("\\", "", $spotify_command);
 	if(!startsWith($spotify_command,'activate')) {
