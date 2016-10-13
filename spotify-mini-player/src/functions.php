@@ -6458,6 +6458,11 @@ function getSettings($w) {
  */
 function updateSetting($w, $setting_name, $setting_new_value, $settings_file = 'settings.json') {
 	$settings     = $w->read($settings_file);
+
+	if($settings == false) {
+        logMsg("Error: updateSetting failed while reading JSON file");
+	    return false;
+	}
 	$new_settings = array();
 	$found = false;
 
