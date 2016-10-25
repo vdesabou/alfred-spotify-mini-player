@@ -171,6 +171,7 @@ class Request
         }
 
         $options[CURLOPT_URL] = $url;
+        $options[CURLOPT_ENCODING] = "gzip";
 
         $ch = curl_init();
         curl_setopt_array($ch, $options);
