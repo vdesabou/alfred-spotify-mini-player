@@ -46,6 +46,7 @@ $oauth_redirect_uri        = $settings->oauth_redirect_uri;
 $oauth_access_token        = $settings->oauth_access_token;
 $use_mopidy                = $settings->use_mopidy;
 $volume_percent            = $settings->volume_percent;
+$use_artworks              = $settings->use_artworks;
 
 if($other_action != "reset_settings" && $other_action != "spot_mini_debug") {
 	if ($oauth_client_id == '' || $oauth_client_secret == '' || $oauth_access_token == '') {
@@ -212,7 +213,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 		}
 
 		if ($playlist_artwork_path == '') {
-			$playlist_artwork_path = getPlaylistArtwork($w, $playlist_uri, true, false);
+			$playlist_artwork_path = getPlaylistArtwork($w, $playlist_uri, true, false, $use_artworks);
 		}
 		displayNotificationWithArtwork($w,'🔈 Playlist ' . $playlist_name, $playlist_artwork_path, 'Launch Playlist');
 		if ($userid != 'vdesabou') {
@@ -233,7 +234,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 				displayNotificationWithArtwork($w,"Cannot get current album", './images/warning.png', 'Error!');
 				return;
 			}
-			$album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, true);
+			$album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, true, false, false, $use_artworks);
 		}
 		if (! $use_mopidy) {
 			exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
@@ -282,7 +283,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 						displayNotificationWithArtwork($w,"Cannot get current album", './images/warning.png', 'Error!');
 						return;
 					}
-					$album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, true);
+					$album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, true, false, false, $use_artworks);
 				}
 				exec("osascript -e 'tell application \"Alfred 3\" to search \"" .  getenv("spot_mini") . " Add▹" . $album_uri . "∙" . escapeQuery($album_name) . '▹' . "\"'");
 				return;
@@ -292,10 +293,12 @@ if ($type == "TRACK" && $other_settings == "" &&
 				}
 		}
 	} else if ($type == "DOWNLOAD_ARTWORKS") {
-		if (downloadArtworks($w) == false) {
-			displayNotificationWithArtwork($w,"Error when downloading artworks", './images/warning.png', 'Error!');
-			return;
-		}
+        if($use_artworks) {
+    		if (downloadArtworks($w) == false) {
+    			displayNotificationWithArtwork($w,"Error when downloading artworks", './images/warning.png', 'Error!');
+    			return;
+    		}
+        }
 		return;
 	} else if ($type == "ARTIST_OR_PLAYLIST_PRIVACY") {
 		if ($artist_name != "") {
@@ -306,7 +309,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 					displayNotificationWithArtwork($w,"Cannot get current artist", './images/warning.png', 'Error!');
 					return;
 				}
-				$artist_artwork_path = getArtistArtwork($w, $artist_uri, $artist_name, true);
+				$artist_artwork_path = getArtistArtwork($w, $artist_uri, $artist_name, true, false, false, $use_artworks);
 			}
 			if (! $use_mopidy) {
 				exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
@@ -413,7 +416,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 			if ($ret == true) {
 				$ret = updateSetting($w, 'alfred_playlist_name', $setting[2]);
 				if ($ret == true) {
-					displayNotificationWithArtwork($w,'Alfred Playlist set to ' . $setting[2], getPlaylistArtwork($w, $setting[1], true), 'Settings');
+					displayNotificationWithArtwork($w,'Alfred Playlist set to ' . $setting[2], getPlaylistArtwork($w, $setting[1], true, false, $use_artworks), 'Settings');
 				} else {
 					displayNotificationWithArtwork($w,"Error while updating settings", './images/settings.png', 'Error!');
 				}
@@ -438,7 +441,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 			}
 			// add track to playlist
 			if ($track_uri != '') {
-				$track_artwork_path = getTrackOrAlbumArtwork($w, $track_uri, true);
+				$track_artwork_path = getTrackOrAlbumArtwork($w, $track_uri, true, false, false, $use_artworks);
 				$tmp                = explode(':', $track_uri);
 				if ($tmp[1] == 'local') {
 					// local track, look it up online
@@ -473,7 +476,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 					}
 			} // add playlist to playlist
 			elseif ($playlist_uri != '') {
-				$playlist_artwork_path = getPlaylistArtwork($w, $playlist_uri, true, true);
+				$playlist_artwork_path = getPlaylistArtwork($w, $playlist_uri, true, true, $use_artworks);
 				$ret                   = addTracksToPlaylist($w, getThePlaylistTracks($w, $playlist_uri), $setting[1], $setting[2], false);
 				if ($userid != 'vdesabou') {
 					stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);
@@ -487,7 +490,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 					}
 			} // add album to playlist
 			elseif ($album_uri != '') {
-				$album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, true);
+				$album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, true, false, false, $use_artworks);
 				$ret                = addTracksToPlaylist($w, getTheAlbumTracks($w, $album_uri), $setting[1], $setting[2], false);
 				if ($userid != 'vdesabou') {
 					stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);
@@ -508,7 +511,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 			}
 			// remove track from playlist
 			if ($track_uri != '') {
-				$track_artwork_path = getTrackOrAlbumArtwork($w, $track_uri, true);
+				$track_artwork_path = getTrackOrAlbumArtwork($w, $track_uri, true, false, false, $use_artworks);
 				$tmp                = explode(':', $track_uri);
 				if ($tmp[1] == 'local') {
 					displayNotificationWithArtwork($w,'Cannot remove local track ' . $track_name, './images/warning.png', 'Error!');
@@ -530,7 +533,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 			}
 			// add track to your music
 			if ($track_uri != '') {
-				$track_artwork_path = getTrackOrAlbumArtwork($w, $track_uri, true);
+				$track_artwork_path = getTrackOrAlbumArtwork($w, $track_uri, true, false, false, $use_artworks);
 				$tmp                = explode(':', $track_uri);
 				if ($tmp[1] == 'local') {
 					// local track, look it up online
@@ -566,7 +569,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 					}
 			} // add playlist to your music
 			elseif ($playlist_uri != '') {
-				$playlist_artwork_path = getPlaylistArtwork($w, $playlist_uri, true, true);
+				$playlist_artwork_path = getPlaylistArtwork($w, $playlist_uri, true, true, $use_artworks);
 				$ret                   = addTracksToYourMusic($w, getThePlaylistTracks($w, $playlist_uri), false);
 				if ($userid != 'vdesabou') {
 					stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);
@@ -580,7 +583,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 					}
 			} // add album to your music
 			elseif ($album_uri != '') {
-				$album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, true);
+				$album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, true, false, false, $use_artworks);
 				$ret                = addTracksToYourMusic($w, getTheAlbumTracks($w, $album_uri), false);
 				if ($userid != 'vdesabou') {
 					stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);
@@ -600,7 +603,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 			}
 			// remove track from your music
 			if ($track_uri != '') {
-				$track_artwork_path = getTrackOrAlbumArtwork($w, $track_uri, true);
+				$track_artwork_path = getTrackOrAlbumArtwork($w, $track_uri, true, false, false, $use_artworks);
 				$tmp                = explode(':', $track_uri);
 				$ret                = removeTrackFromYourMusic($w, $tmp[2]);
 				if ($userid != 'vdesabou') {
@@ -623,7 +626,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 				return;
 			}
 			if (clearPlaylist($w, $setting[1], $setting[2])) {
-				displayNotificationWithArtwork($w,'Alfred Playlist ' . $setting[2] . ' was cleared', getPlaylistArtwork($w, $setting[1], true), 'Clear Alfred Playlist');
+				displayNotificationWithArtwork($w,'Alfred Playlist ' . $setting[2] . ' was cleared', getPlaylistArtwork($w, $setting[1], true, false, $use_artworks), 'Clear Alfred Playlist');
 			}
 			return;
 		}
@@ -673,6 +676,28 @@ if ($type == "TRACK" && $other_settings == "" &&
 			$ret = updateSetting($w, 'quick_mode', 0);
 			if ($ret == true) {
 				displayNotificationWithArtwork($w,"Quick Mode is now disabled", './images/disable_quick_mode.png', 'Settings');
+			} else {
+				displayNotificationWithArtwork($w,"Error while updating settings", './images/settings.png', 'Error!');
+			}
+			return;
+		} else if ($other_action == "enable_artworks") {
+			$ret = updateSetting($w, 'use_artworks', 1);
+			if ($ret == true) {
+				displayNotificationWithArtwork($w,"Artworks are now enabled, library update is started", './images/enable_artworks.png', 'Settings');
+				updateLibrary($w);
+			} else {
+				displayNotificationWithArtwork($w,"Error while updating settings", './images/settings.png', 'Error!');
+			}
+			return;
+		} else if ($other_action == "disable_artworks") {
+			$ret = updateSetting($w, 'use_artworks', 0);
+			if ($ret == true) {
+                if (file_exists($w->data() . "/artwork")):
+                    exec("rm -rf '" . $w->data() . "/artwork'");
+                    displayNotificationWithArtwork($w,"All artworks have been erased", './images/warning.png', 'Warning!');
+                    updateLibrary($w);
+                endif;
+				displayNotificationWithArtwork($w,"Artworks are now disabled", './images/disable_artworks.png', 'Settings');
 			} else {
 				displayNotificationWithArtwork($w,"Error while updating settings", './images/settings.png', 'Error!');
 			}
@@ -796,7 +821,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 			} else {
 				exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\" in context \"$album_uri\"'");
 			}
-			$album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, true);
+			$album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, true, false, false, $use_artworks);
 			if ($now_playing_notifications == false) {
 				displayNotificationWithArtwork($w,'🔈 ' . $track_name . ' in album ' . $album_name . ' by ' . ucfirst($artist_name), $album_artwork_path, 'Play Track from Album');
 			}
@@ -1009,7 +1034,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 			} else {
 				exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
 			}
-			displayNotificationWithArtwork($w,'🔈 Album ' . $album_name . ' by ' . $theartistname, getTrackOrAlbumArtwork($w, $album_uri, true), 'Play Random Album');
+			displayNotificationWithArtwork($w,'🔈 Album ' . $album_name . ' by ' . $theartistname, getTrackOrAlbumArtwork($w, $album_uri, true, false, false, $use_artworks), 'Play Random Album');
 			if ($userid != 'vdesabou') {
 				stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
 			}
@@ -1051,7 +1076,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 			}
 			return;
 		} else if ($other_action == "playartist") {
-			$artist_artwork_path = getArtistArtwork($w, $artist_uri, $artist_name, true);
+			$artist_artwork_path = getArtistArtwork($w, $artist_uri, $artist_name, true, false, false, $use_artworks);
 			if (! $use_mopidy) {
 				exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
 				if ($retVal != 0) {
@@ -1083,7 +1108,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 					return;
 				}
 			}
-			$album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, true);
+			$album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, true, false, false, $use_artworks);
 			if (! $use_mopidy) {
 				exec("./src/track_info.ksh 2>&1", $retArr, $retVal);
 				if ($retVal != 0) {

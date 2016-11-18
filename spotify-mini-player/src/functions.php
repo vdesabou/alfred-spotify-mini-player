@@ -1143,6 +1143,7 @@ function playAlfredPlaylist($w) {
 	$alfred_playlist_uri       = $settings->alfred_playlist_uri;
 	$alfred_playlist_name      = $settings->alfred_playlist_name;
 	$use_mopidy                = $settings->use_mopidy;
+	$use_artworks              = $settings->use_artworks;
 
 	if ($alfred_playlist_uri == "" || $alfred_playlist_name == "") {
 		displayNotificationWithArtwork($w,"Alfred Playlist is not set", './images/warning.png');
@@ -1156,7 +1157,7 @@ function playAlfredPlaylist($w) {
 		addPlaylistToPlayQueue($w, $alfred_playlist_uri, $alfred_playlist_name);
 	}
 
-	$playlist_artwork_path = getPlaylistArtwork($w, $alfred_playlist_uri, true, true);
+	$playlist_artwork_path = getPlaylistArtwork($w, $alfred_playlist_uri, true, true, $use_artworks);
 	displayNotificationWithArtwork($w,'🔈 Alfred Playlist ' . $alfred_playlist_name, $playlist_artwork_path, 'Play Alfred Playlist');
 }
 
@@ -1311,7 +1312,7 @@ function playCurrentArtist($w) {
 			exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
 			addArtistToPlayQueue($w, $artist_uri, escapeQuery($results[1]), $country_code);
 		}
-		displayNotificationWithArtwork($w,'🔈 Artist ' . escapeQuery($results[1]), getArtistArtwork($w, $artist_uri, $results[1], true), 'Play Current Artist');
+		displayNotificationWithArtwork($w,'🔈 Artist ' . escapeQuery($results[1]), getArtistArtwork($w, $artist_uri, $results[1], true, false, false, $use_artworks), 'Play Current Artist');
 	} else {
 		displayNotificationWithArtwork($w,"No artist is playing", './images/warning.png');
 	}
@@ -1333,6 +1334,7 @@ function playCurrentAlbum($w) {
 	$settings = getSettings($w);
 
 	$use_mopidy                = $settings->use_mopidy;
+	$use_artworks              = $settings->use_artworks;
 
 	if ($use_mopidy) {
 		$retArr = array(getCurrentTrackInfoWithMopidy($w));
@@ -1356,7 +1358,7 @@ function playCurrentAlbum($w) {
 			return;
 		}
 		exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
-		displayNotificationWithArtwork($w,'🔈 Album ' . escapeQuery($results[2]), getTrackOrAlbumArtwork($w, $results[4], true), 'Play Current Album');
+		displayNotificationWithArtwork($w,'🔈 Album ' . escapeQuery($results[2]), getTrackOrAlbumArtwork($w, $results[4], true, false, false, $use_artworks), 'Play Current Album', $use_artworks);
 	} else {
 		displayNotificationWithArtwork($w,"No track is playing", './images/warning.png');
 	}
@@ -1528,6 +1530,7 @@ function addCurrentTrackToAlfredPlaylist($w) {
 		$alfred_playlist_uri       = $settings->alfred_playlist_uri;
 		$alfred_playlist_name      = $settings->alfred_playlist_name;
 		$country_code              = $settings->country_code;
+		$use_artworks              = $settings->use_artworks;
 
 		if ($alfred_playlist_uri == "" || $alfred_playlist_name == "") {
 			displayNotificationWithArtwork($w,"Alfred Playlist is not set", './images/warning.png');
@@ -1561,7 +1564,7 @@ function addCurrentTrackToAlfredPlaylist($w) {
 		$tmp = explode(':', $results[4]);
 		$ret = addTracksToPlaylist($w, $tmp[2], $alfred_playlist_uri, $alfred_playlist_name, false);
 		if (is_numeric($ret) && $ret > 0) {
-			displayNotificationWithArtwork($w,'' . escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]) . ' added to Alfred Playlist ' . $alfred_playlist_name, getTrackOrAlbumArtwork($w, $results[4], true), 'Add Current Track to Alfred Playlist');
+			displayNotificationWithArtwork($w,'' . escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]) . ' added to Alfred Playlist ' . $alfred_playlist_name, getTrackOrAlbumArtwork($w, $results[4], true, false, false, $use_artworks), 'Add Current Track to Alfred Playlist');
 		} elseif (is_numeric($ret) && $ret == 0) {
 			displayNotificationWithArtwork($w,'' . escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]) . ' is already in Alfred Playlist ' . $alfred_playlist_name, './images/warning.png', 'Error!');
 		}
@@ -1586,6 +1589,7 @@ function addCurrentTrackToYourMusic($w) {
 	$settings = getSettings($w);
 
 	$use_mopidy                = $settings->use_mopidy;
+	$use_artworks              = $settings->use_artworks;
 
 	if ($use_mopidy) {
 		$retArr = array(getCurrentTrackInfoWithMopidy($w));
@@ -1632,7 +1636,7 @@ function addCurrentTrackToYourMusic($w) {
 		$tmp = explode(':', $results[4]);
 		$ret = addTracksToYourMusic($w, $tmp[2], false);
 		if (is_numeric($ret) && $ret > 0) {
-			displayNotificationWithArtwork($w,'' . escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]) . ' added to Your Music', getTrackOrAlbumArtwork($w, $results[4], true), 'Add Current Track to Your Music');
+			displayNotificationWithArtwork($w,'' . escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]) . ' added to Your Music', getTrackOrAlbumArtwork($w, $results[4], true, false, false,$use_artworks), 'Add Current Track to Your Music');
 		} elseif (is_numeric($ret) && $ret == 0) {
 			displayNotificationWithArtwork($w,'' . escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]) . ' is already in Your Music', './images/warning.png');
 		}
@@ -2242,6 +2246,7 @@ function createRadioArtistPlaylist($w, $artist_name, $artist_uri) {
 	$is_public_playlists  = $settings->is_public_playlists;
 	$is_autoplay_playlist = $settings->is_autoplay_playlist;
 	$country_code         = $settings->country_code;
+	$use_artworks         = $settings->use_artworks;
 
 	$public = false;
 	if ($is_public_playlists) {
@@ -2288,7 +2293,7 @@ function createRadioArtistPlaylist($w, $artist_name, $artist_uri) {
 			if($is_autoplay_playlist) {
 				sleep(2);
 				exec("osascript -e 'tell application \"Spotify\" to play track \"$json->uri\"'");
-				$playlist_artwork_path = getPlaylistArtwork($w, $json->uri, true, false);
+				$playlist_artwork_path = getPlaylistArtwork($w, $json->uri, true, false, $use_artworks);
 				displayNotificationWithArtwork($w,'🔈 Playlist ' . $json->name, $playlist_artwork_path, 'Launch Artist Radio Playlist');
 			}
 			refreshLibrary($w);
@@ -2325,6 +2330,7 @@ function createCompleteCollectionArtistPlaylist($w, $artist_name, $artist_uri) {
 	$country_code         = $settings->country_code;
 	$is_public_playlists  = $settings->is_public_playlists;
 	$is_autoplay_playlist = $settings->is_autoplay_playlist;
+	$use_artworks         = $settings->use_artworks;
 
 	$public = false;
 	if ($is_public_playlists) {
@@ -2366,7 +2372,7 @@ function createCompleteCollectionArtistPlaylist($w, $artist_name, $artist_uri) {
 			if($is_autoplay_playlist) {
 				sleep(2);
 				exec("osascript -e 'tell application \"Spotify\" to play track \"$json->uri\"'");
-				$playlist_artwork_path = getPlaylistArtwork($w, $json->uri, true, false);
+				$playlist_artwork_path = getPlaylistArtwork($w, $json->uri, true, false, $use_artworks);
 				displayNotificationWithArtwork($w,'🔈 Playlist ' . $json->name, $playlist_artwork_path, 'Launch Complete Collection Playlist');
 			}
 			refreshLibrary($w);
@@ -2444,6 +2450,7 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name) {
 	$country_code         = $settings->country_code;
 	$is_public_playlists  = $settings->is_public_playlists;
 	$is_autoplay_playlist = $settings->is_autoplay_playlist;
+	$use_artworks         = $settings->use_artworks;
 
 	$public = false;
 	if ($is_public_playlists) {
@@ -2510,7 +2517,7 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name) {
 			if($is_autoplay_playlist) {
 				sleep(2);
 				exec("osascript -e 'tell application \"Spotify\" to play track \"$json->uri\"'");
-				$playlist_artwork_path = getPlaylistArtwork($w, $json->uri, true, false);
+				$playlist_artwork_path = getPlaylistArtwork($w, $json->uri, true, false, $use_artworks);
 				displayNotificationWithArtwork($w,'🔈 Playlist ' . $json->name, $playlist_artwork_path, 'Launch Radio Playlist');
 			}
 			refreshLibrary($w);
@@ -3279,6 +3286,7 @@ function displayNotificationForCurrentTrack($w) {
 
 	$use_mopidy                = $settings->use_mopidy;
 	$is_display_rating         = $settings->is_display_rating;
+	$use_artworks              = $settings->use_artworks;
 
 	if ($use_mopidy) {
 		$retArr = array(getCurrentTrackInfoWithMopidy($w));
@@ -3294,7 +3302,7 @@ function displayNotificationForCurrentTrack($w) {
 
 	if (substr_count($retArr[count($retArr)-1], '▹') > 0) {
 		$results = explode('▹', $retArr[count($retArr)-1]);
-		displayNotificationWithArtwork($w,'🔈 ' . escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]) . ' in album ' . escapeQuery($results[2]), getTrackOrAlbumArtwork($w, $results[4], true), 'Now Playing ' . floatToStars(($results[6] / 100) ? $is_display_rating : 0) . ' (' . beautifyTime($results[5] / 1000) . ')');
+		displayNotificationWithArtwork($w,'🔈 ' . escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]) . ' in album ' . escapeQuery($results[2]), getTrackOrAlbumArtwork($w, $results[4], true, false, false, $use_artworks), 'Now Playing ' . floatToStars(($results[6] / 100) ? $is_display_rating : 0) . ' (' . beautifyTime($results[5] / 1000) . ')');
 	}
 }
 
@@ -3350,6 +3358,16 @@ function displayLyricsForCurrentTrack($w) {
  * @return void
  */
 function downloadArtworks($w) {
+	//
+	// Read settings from JSON
+	//
+	$settings            = getSettings($w);
+	$userid              = $settings->userid;
+	$use_artworks        = $settings->use_artworks;
+
+    if(!$use_artworks) {
+        return;
+    }
 	if (!$w->internet()) {
 		displayNotificationWithArtwork($w,"Download Artworks,
 	No internet connection", './images/warning.png');
@@ -3362,11 +3380,7 @@ function downloadArtworks($w) {
 	$in_progress_data = $w->read('download_artworks_in_progress');
 	$words            = explode('▹', $in_progress_data);
 
-	//
-	// Read settings from JSON
-	//
-	$settings            = getSettings($w);
-	$userid              = $settings->userid;
+
 
 	putenv('LANG=fr_FR.UTF-8');
 
@@ -3434,7 +3448,7 @@ function downloadArtworks($w) {
 				$artists = $stmtGetArtists->execute();
 
 				while ($artist = $stmtGetArtists->fetch()) {
-					$ret = getArtistArtwork($w, $artist[0], $artist[1], true, false, true);
+					$ret = getArtistArtwork($w, $artist[0], $artist[1], true, false, true, $useArtworks);
 					if ($ret == false) {
 						logMsg("WARN: $artist[0] $artist[1] artwork not found, using default");
 					} elseif (!is_string($ret)) {
@@ -3458,7 +3472,7 @@ function downloadArtworks($w) {
 				$tracks = $stmtGetTracks->execute();
 
 				while ($track = $stmtGetTracks->fetch()) {
-					$ret = getTrackOrAlbumArtwork($w, $track[0], true, false, true);
+					$ret = getTrackOrAlbumArtwork($w, $track[0], true, false, true, $use_artworks);
 					if ($ret == false) {
 						logMsg("WARN: $track[0] artwork not found, using default");
 					} elseif (!is_string($ret)) {
@@ -3482,7 +3496,7 @@ function downloadArtworks($w) {
 				$albums = $stmtGetAlbums->execute();
 
 				while ($album = $stmtGetAlbums->fetch()) {
-					$ret = getTrackOrAlbumArtwork($w, $album[0], true, false, true);
+					$ret = getTrackOrAlbumArtwork($w, $album[0], true, false, true, $use_artworks);
 					if ($ret == false) {
 						logMsg("WARN: $album[0] artwork not found, using default ");
 					} elseif (!is_string($ret)) {
@@ -3529,14 +3543,23 @@ function downloadArtworks($w) {
  * @param mixed $w
  * @param mixed $spotifyURL
  * @param mixed $fetchIfNotPresent
+ * @param bool $useArtworks (default: true)
  * @return void
  */
-function getTrackOrAlbumArtwork($w, $spotifyURL, $fetchIfNotPresent, $fetchLater = false, $isLaterFetch = false) {
+function getTrackOrAlbumArtwork($w, $spotifyURL, $fetchIfNotPresent, $fetchLater = false, $isLaterFetch = false, $useArtworks = true) {
 	$hrefs = explode(':', $spotifyURL);
 	$isAlbum = false;
 	if ($hrefs[1] == "album") {
 		$isAlbum = true;
 	}
+
+    if(!$useArtworks) {
+		if ($isAlbum) {
+			return "./images/albums.png";
+		} else {
+			return "./images/tracks.png";
+		}
+    }
 
 	if (!file_exists($w->data() . "/artwork")):
 		exec("mkdir '" . $w->data() . "/artwork'");
@@ -3685,9 +3708,14 @@ function getTrackOrAlbumArtwork($w, $spotifyURL, $fetchIfNotPresent, $fetchLater
  * @param mixed $playlist_uri
  * @param mixed $fetchIfNotPresent
  * @param bool $forceFetch (default: false)
+ * @param bool $useArtworks (default: true)
  * @return void
  */
-function getPlaylistArtwork($w, $playlist_uri, $fetchIfNotPresent, $forceFetch = false) {
+function getPlaylistArtwork($w, $playlist_uri, $fetchIfNotPresent, $forceFetch = false, $useArtworks = true) {
+    if(!$useArtworks) {
+        return "./images/playlists.png";
+    }
+
 	$tmp                         = explode(':', $playlist_uri);
 	$filename = "" . $tmp[2] . "_" . $tmp[4];
 	$artwork = '';
@@ -3744,9 +3772,14 @@ function getPlaylistArtwork($w, $playlist_uri, $fetchIfNotPresent, $forceFetch =
  * @param mixed $categoryURI
  * @param mixed $fetchIfNotPresent
  * @param bool $forceFetch (default: false)
+ * @param bool $useArtworks (default: true)
  * @return void
  */
-function getCategoryArtwork($w, $categoryId, $categoryURI, $fetchIfNotPresent, $forceFetch = false) {
+function getCategoryArtwork($w, $categoryId, $categoryURI, $fetchIfNotPresent, $forceFetch = false, $useArtworks = true) {
+    if(!$useArtworks) {
+        return "./images/browse.png";
+    }
+
 	if (!file_exists($w->data() . "/artwork")):
 		exec("mkdir '" . $w->data() . "/artwork'");
 	endif;
@@ -3790,9 +3823,13 @@ function getCategoryArtwork($w, $categoryId, $categoryURI, $fetchIfNotPresent, $
  * @param bool $fetchIfNotPresent (default: false)
  * @param bool $fetchLater (default: false)
  * @param bool $isLaterFetch (default: false)
+ * @param bool $useArtworks (default: true)
  * @return void
  */
-function getArtistArtwork($w, $artist_uri, $artist_name, $fetchIfNotPresent = false, $fetchLater = false, $isLaterFetch = false) {
+function getArtistArtwork($w, $artist_uri, $artist_name, $fetchIfNotPresent = false, $fetchLater = false, $isLaterFetch = false, $useArtworks = true) {
+    if(!$useArtworks) {
+        return "./images/artists.png";
+    }
 	$parsedArtist = urlencode(escapeQuery($artist_name));
 
 	if (!file_exists($w->data() . "/artwork")):
@@ -4081,6 +4118,7 @@ function updateLibrary($w) {
 	$settings                   = getSettings($w);
 	$country_code               = $settings->country_code;
 	$userid                     = $settings->userid;
+	$use_artworks               = $settings->use_artworks;
 
 	$words = explode('▹', $in_progress_data);
 
@@ -4131,50 +4169,53 @@ function updateLibrary($w) {
 		return false;
 	}
 
-	// db for fetch artworks
-	// kill previous process if running
-	$pid = exec("ps -efx | grep \"php\" | egrep \"DOWNLOAD_ARTWORKS\" | grep -v grep | awk '{print $2}'");
-	if ($pid != "") {
-		logMsg("KILL Download daemon <$pid>");
-		$ret = exec("kill -9 \"$pid\"");
-	}
-	$dbfile                 = $w->data() . '/fetch_artworks.db';
-	if (file_exists($dbfile)) {
-		deleteTheFile($dbfile);
-		touch($dbfile);
-	}
-	if (file_exists($w->data() . '/download_artworks_in_progress')) {
-		deleteTheFile($w->data() . '/download_artworks_in_progress');
-	}
-	try {
-		$dbartworks = new PDO("sqlite:$dbfile", "", "", array(
-				PDO::ATTR_PERSISTENT => true
-			));
-		$dbartworks->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	}
-	catch (PDOException $e) {
-		logMsg("Error(updateLibrary): (exception " . print_r($e) . ")");
-		handleDbIssuePdoEcho($dbartworks, $w);
-		$dbartworks = null;
-		$db         = null;
+    if($use_artworks) {
+    	// db for fetch artworks
+    	// kill previous process if running
+    	$pid = exec("ps -efx | grep \"php\" | egrep \"DOWNLOAD_ARTWORKS\" | grep -v grep | awk '{print $2}'");
+    	if ($pid != "") {
+    		logMsg("KILL Download daemon <$pid>");
+    		$ret = exec("kill -9 \"$pid\"");
+    	}
+    	$dbfile                 = $w->data() . '/fetch_artworks.db';
+    	if (file_exists($dbfile)) {
+    		deleteTheFile($dbfile);
+    		touch($dbfile);
+    	}
+    	if (file_exists($w->data() . '/download_artworks_in_progress')) {
+    		deleteTheFile($w->data() . '/download_artworks_in_progress');
+    	}
+    	try {
+    		$dbartworks = new PDO("sqlite:$dbfile", "", "", array(
+    				PDO::ATTR_PERSISTENT => true
+    			));
+    		$dbartworks->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    	}
+    	catch (PDOException $e) {
+    		logMsg("Error(updateLibrary): (exception " . print_r($e) . ")");
+    		handleDbIssuePdoEcho($dbartworks, $w);
+    		$dbartworks = null;
+    		$db         = null;
 
-		return false;
-	}
+    		return false;
+    	}
 
-	// DB artowrks
-	try {
-		$dbartworks->exec("create table artists (artist_uri text PRIMARY KEY NOT NULL, artist_name text, already_fetched boolean)");
-		$dbartworks->exec("create table tracks (track_uri text PRIMARY KEY NOT NULL, already_fetched boolean)");
-		$dbartworks->exec("create table albums (album_uri text PRIMARY KEY NOT NULL, already_fetched boolean)");
-	}
-	catch (PDOException $e) {
-		logMsg("Error(updateLibrary): (exception " . print_r($e) . ")");
-		handleDbIssuePdoEcho($dbartworks, $w);
-		$dbartworks = null;
-		$db         = null;
+    	// DB artowrks
+    	try {
+    		$dbartworks->exec("create table artists (artist_uri text PRIMARY KEY NOT NULL, artist_name text, already_fetched boolean)");
+    		$dbartworks->exec("create table tracks (track_uri text PRIMARY KEY NOT NULL, already_fetched boolean)");
+    		$dbartworks->exec("create table albums (album_uri text PRIMARY KEY NOT NULL, already_fetched boolean)");
+    	}
+    	catch (PDOException $e) {
+    		logMsg("Error(updateLibrary): (exception " . print_r($e) . ")");
+    		handleDbIssuePdoEcho($dbartworks, $w);
+    		$dbartworks = null;
+    		$db         = null;
 
-		return false;
-	}
+    		return false;
+    	}
+    }
+
 
 	// get the total number of tracks
 	$nb_tracktotal     = 0;
@@ -4310,26 +4351,28 @@ function updateLibrary($w) {
 		return false;
 	}
 
-	try {
-		// artworks
-		$insertArtistArtwork = "insert or ignore into artists values (:artist_uri, :artist_name,:already_fetched)";
-		$stmtArtistArtwork   = $dbartworks->prepare($insertArtistArtwork);
+    if($use_artworks) {
+    	try {
+    		// artworks
+    		$insertArtistArtwork = "insert or ignore into artists values (:artist_uri, :artist_name,:already_fetched)";
+    		$stmtArtistArtwork   = $dbartworks->prepare($insertArtistArtwork);
 
-		$insertTrackArtwork = "insert or ignore into tracks values (:track_uri,:already_fetched)";
-		$stmtTrackArtwork   = $dbartworks->prepare($insertTrackArtwork);
+    		$insertTrackArtwork = "insert or ignore into tracks values (:track_uri,:already_fetched)";
+    		$stmtTrackArtwork   = $dbartworks->prepare($insertTrackArtwork);
 
-		$insertAlbumArtwork = "insert or ignore into albums values (:album_uri,:already_fetched)";
-		$stmtAlbumArtwork   = $dbartworks->prepare($insertAlbumArtwork);
-	}
-	catch (PDOException $e) {
-		logMsg("Error(updateLibrary): (exception " . print_r($e) . ")");
-		handleDbIssuePdoEcho($dbartworks, $w);
-		$dbartworks = null;
-		$db         = null;
+    		$insertAlbumArtwork = "insert or ignore into albums values (:album_uri,:already_fetched)";
+    		$stmtAlbumArtwork   = $dbartworks->prepare($insertAlbumArtwork);
+    	}
+    	catch (PDOException $e) {
+    		logMsg("Error(updateLibrary): (exception " . print_r($e) . ")");
+    		handleDbIssuePdoEcho($dbartworks, $w);
+    		$dbartworks = null;
+    		$db         = null;
 
-		return false;
-	}
-	$artworksToDownload = false;
+    		return false;
+    	}
+    	$artworksToDownload = false;
+    }
 
 	foreach ($savedListPlaylist as $playlist) {
 		$duration_playlist = 0;
@@ -4337,7 +4380,7 @@ function updateLibrary($w) {
 		$tracks            = $playlist->tracks;
 		$owner             = $playlist->owner;
 
-		$playlist_artwork_path = getPlaylistArtwork($w, $playlist->uri, true, true);
+		$playlist_artwork_path = getPlaylistArtwork($w, $playlist->uri, true, true, $use_artworks);
 
 		if ("-" . $owner->id . "-" == "-" . $userid . "-") {
 			$ownedbyuser = 1;
@@ -4416,6 +4459,7 @@ function updateLibrary($w) {
 					$playable = 1;
 					$local_track = 1;
 				}
+
 				try {
 					//
 					// Download artworks in Fetch later mode
@@ -4423,13 +4467,18 @@ function updateLibrary($w) {
 					if ($local_track == 0 && isset($track->uri)) {
 						$thetrackuri = $track->uri;
 					}
-					list($already_present, $track_artwork_path) = getTrackOrAlbumArtwork($w, $thetrackuri, true, true);
-					if ($already_present == false) {
-						$artworksToDownload = true;
-						$stmtTrackArtwork->bindValue(':track_uri', $thetrackuri);
-						$stmtTrackArtwork->bindValue(':already_fetched', 0);
-						$stmtTrackArtwork->execute();
+					if($use_artworks) {
+					    list($already_present, $track_artwork_path) = getTrackOrAlbumArtwork($w, $thetrackuri, true, true, false, $use_artworks);
+    					if ($already_present == false) {
+    						$artworksToDownload = true;
+    						$stmtTrackArtwork->bindValue(':track_uri', $thetrackuri);
+    						$stmtTrackArtwork->bindValue(':already_fetched', 0);
+    						$stmtTrackArtwork->execute();
+    					}
+					} else {
+                        $track_artwork_path = getTrackOrAlbumArtwork($w, $thetrackuri, false, false, false, $use_artworks);
 					}
+
 					$theartistname = 'fakeartist';
 					if (isset($artist->name)) {
 						$theartistname = $artist->name;
@@ -4438,26 +4487,36 @@ function updateLibrary($w) {
 					if (isset($artist->uri)) {
 						$theartisturi = $artist->uri;
 					}
-					list($already_present, $artist_artwork_path) = getArtistArtwork($w, $theartisturi , $theartistname, true, true);
-					if ($already_present == false) {
-						$artworksToDownload = true;
-						$stmtArtistArtwork->bindValue(':artist_uri', $artist->uri);
-						$stmtArtistArtwork->bindValue(':artist_name', $theartistname);
-						$stmtArtistArtwork->bindValue(':already_fetched', 0);
-						$stmtArtistArtwork->execute();
+					if($use_artworks) {
+					    list($already_present, $artist_artwork_path) = getArtistArtwork($w, $theartisturi , $theartistname, true, true, false, false, $use_artworks);
+    					if ($already_present == false) {
+    						$artworksToDownload = true;
+    						$stmtArtistArtwork->bindValue(':artist_uri', $artist->uri);
+    						$stmtArtistArtwork->bindValue(':artist_name', $theartistname);
+    						$stmtArtistArtwork->bindValue(':already_fetched', 0);
+    						$stmtArtistArtwork->execute();
+    					}
+					} else {
+                        $artist_artwork_path = getArtistArtwork($w, $theartisturi , $theartistname, false, false, false, false, $use_artworks);
 					}
+
 
 					$thealbumuri = 'spotify:album:fakealbumuri';
 					if (isset($album->uri)) {
 						$thealbumuri = $album->uri;
 					}
-					list($already_present, $album_artwork_path) = getTrackOrAlbumArtwork($w, $thealbumuri, true, true);
-					if ($already_present == false) {
-						$artworksToDownload = true;
-						$stmtAlbumArtwork->bindValue(':album_uri', $thealbumuri);
-						$stmtAlbumArtwork->bindValue(':already_fetched', 0);
-						$stmtAlbumArtwork->execute();
-					}
+					if($use_artworks) {
+					    list($already_present, $album_artwork_path) = getTrackOrAlbumArtwork($w, $thealbumuri, true, true, false, $use_artworks);
+    					if ($already_present == false) {
+    						$artworksToDownload = true;
+    						$stmtAlbumArtwork->bindValue(':album_uri', $thealbumuri);
+    						$stmtAlbumArtwork->bindValue(':already_fetched', 0);
+    						$stmtAlbumArtwork->execute();
+    					}
+				    } else {
+                        $album_artwork_path = getTrackOrAlbumArtwork($w, $thealbumuri, false, false, false, $use_artworks);
+				    }
+
 				}
 				catch (PDOException $e) {
 					logMsg("Error(updateLibrary): (exception " . print_r($e) . ")");
@@ -4467,6 +4526,7 @@ function updateLibrary($w) {
 
 					return false;
 				}
+
 
 				$duration_playlist += $track->duration_ms;
 
@@ -4553,6 +4613,7 @@ function updateLibrary($w) {
 			$playable = 1;
 			$local_track = 1;
 		}
+
 		try {
 			//
 			// Download artworks in Fetch later mode
@@ -4560,13 +4621,18 @@ function updateLibrary($w) {
 			if ($local_track == 0 && isset($track->uri)) {
 				$thetrackuri = $track->uri;
 			}
-			list($already_present, $track_artwork_path) = getTrackOrAlbumArtwork($w, $thetrackuri, true, true);
-			if ($already_present == false) {
-				$artworksToDownload = true;
-				$stmtTrackArtwork->bindValue(':track_uri', $thetrackuri);
-				$stmtTrackArtwork->bindValue(':already_fetched', 0);
-				$stmtTrackArtwork->execute();
-			}
+			if($use_artworks) {
+			    list($already_present, $track_artwork_path) = getTrackOrAlbumArtwork($w, $thetrackuri, true, true, false, $use_artworks);
+    			if ($already_present == false) {
+    				$artworksToDownload = true;
+    				$stmtTrackArtwork->bindValue(':track_uri', $thetrackuri);
+    				$stmtTrackArtwork->bindValue(':already_fetched', 0);
+    				$stmtTrackArtwork->execute();
+    			}
+            } else {
+                $track_artwork_path = getTrackOrAlbumArtwork($w, $thetrackuri, false, false, false, $use_artworks);
+            }
+
 			$theartistname = 'fakeartist';
 			if (isset($artist->name)) {
 				$theartistname = $artist->name;
@@ -4575,26 +4641,36 @@ function updateLibrary($w) {
 			if (isset($artist->uri)) {
 				$theartisturi = $artist->uri;
 			}
-			list($already_present, $artist_artwork_path) = getArtistArtwork($w, $theartisturi , $theartistname, true, true);
-			if ($already_present == false) {
-				$artworksToDownload = true;
-				$stmtArtistArtwork->bindValue(':artist_uri', $artist->uri);
-				$stmtArtistArtwork->bindValue(':artist_name', $theartistname);
-				$stmtArtistArtwork->bindValue(':already_fetched', 0);
-				$stmtArtistArtwork->execute();
-			}
+			if($use_artworks) {
+			    list($already_present, $artist_artwork_path) = getArtistArtwork($w, $theartisturi , $theartistname, true, true, false, false, $use_artworks);
+    			if ($already_present == false) {
+    				$artworksToDownload = true;
+    				$stmtArtistArtwork->bindValue(':artist_uri', $artist->uri);
+    				$stmtArtistArtwork->bindValue(':artist_name', $theartistname);
+    				$stmtArtistArtwork->bindValue(':already_fetched', 0);
+    				$stmtArtistArtwork->execute();
+    			}
+			 } else {
+                $artist_artwork_path = getArtistArtwork($w, $theartisturi , $theartistname, false, false, false, false, $use_artworks);
+			 }
+
 
 			$thealbumuri = 'spotify:album:fakealbumuri';
 			if (isset($album->uri)) {
 				$thealbumuri = $album->uri;
 			}
-			list($already_present, $album_artwork_path) = getTrackOrAlbumArtwork($w, $thealbumuri, true, true);
-			if ($already_present == false) {
-				$artworksToDownload = true;
-				$stmtAlbumArtwork->bindValue(':album_uri', $thealbumuri);
-				$stmtAlbumArtwork->bindValue(':already_fetched', 0);
-				$stmtAlbumArtwork->execute();
-			}
+			if($use_artworks) {
+			    list($already_present, $album_artwork_path) = getTrackOrAlbumArtwork($w, $thealbumuri, true, true, false, $use_artworks);
+    			if ($already_present == false) {
+    				$artworksToDownload = true;
+    				$stmtAlbumArtwork->bindValue(':album_uri', $thealbumuri);
+    				$stmtAlbumArtwork->bindValue(':already_fetched', 0);
+    				$stmtAlbumArtwork->execute();
+    			}
+            } else {
+                $album_artwork_path = getTrackOrAlbumArtwork($w, $thealbumuri, false, false, false, $use_artworks);
+            }
+
 		}
 		catch (PDOException $e) {
 			logMsg("Error(updateLibrary): (exception " . print_r($e) . ")");
@@ -4722,8 +4798,10 @@ function updateLibrary($w) {
 	}
 
 	// Download artworks in background
-	if ($artworksToDownload == true) {
-		exec("php -f ./src/action.php -- \"\" \"DOWNLOAD_ARTWORKS\" \"DOWNLOAD_ARTWORKS\" >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
+	if($use_artworks) {
+    	if ($artworksToDownload == true) {
+    		exec("php -f ./src/action.php -- \"\" \"DOWNLOAD_ARTWORKS\" \"DOWNLOAD_ARTWORKS\" >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
+    	}
 	}
 	deleteTheFile($w->data() . '/update_library_in_progress');
 }
@@ -4755,6 +4833,7 @@ function refreshLibrary($w) {
 
 	$country_code               = $settings->country_code;
 	$userid                     = $settings->userid;
+    $use_artworks               = $settings->use_artworks;
 
 	$words = explode('▹', $in_progress_data);
 
@@ -4764,75 +4843,79 @@ function refreshLibrary($w) {
 
 	$nb_playlist = 0;
 
-	// db for fetch artworks
-	$fetch_artworks_existed = true;
-	$dbfile                 = $w->data() . '/fetch_artworks.db';
-	if (!file_exists($dbfile)) {
-		touch($dbfile);
-		$fetch_artworks_existed = false;
-	}
-	// kill previous process if running
-	$pid = exec("ps -efx | grep \"php\" | egrep \"DOWNLOAD_ARTWORKS\" | grep -v grep | awk '{print $2}'");
-	if ($pid != "") {
-		logMsg("KILL Download daemon <$pid>");
-		$ret = exec("kill -9 \"$pid\"");
-	}
-	if (file_exists($w->data() . '/download_artworks_in_progress')) {
-		deleteTheFile($w->data() . '/download_artworks_in_progress');
-	}
+    if($use_artworks) {
+    	// db for fetch artworks
+    	$fetch_artworks_existed = true;
+    	$dbfile                 = $w->data() . '/fetch_artworks.db';
+    	if (!file_exists($dbfile)) {
+    		touch($dbfile);
+    		$fetch_artworks_existed = false;
+    	}
+    	// kill previous process if running
+    	$pid = exec("ps -efx | grep \"php\" | egrep \"DOWNLOAD_ARTWORKS\" | grep -v grep | awk '{print $2}'");
+    	if ($pid != "") {
+    		logMsg("KILL Download daemon <$pid>");
+    		$ret = exec("kill -9 \"$pid\"");
+    	}
+    	if (file_exists($w->data() . '/download_artworks_in_progress')) {
+    		deleteTheFile($w->data() . '/download_artworks_in_progress');
+    	}
 
-	try {
-		$dbartworks = new PDO("sqlite:$dbfile", "", "", array(
-				PDO::ATTR_PERSISTENT => true
-			));
-		$dbartworks->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	}
-	catch (PDOException $e) {
-		logMsg("Error(refreshLibrary): (exception " . print_r($e) . ")");
-		handleDbIssuePdoEcho($dbartworks, $w);
-		$dbartworks = null;
-		$db         = null;
+    	try {
+    		$dbartworks = new PDO("sqlite:$dbfile", "", "", array(
+    				PDO::ATTR_PERSISTENT => true
+    			));
+    		$dbartworks->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    	}
+    	catch (PDOException $e) {
+    		logMsg("Error(refreshLibrary): (exception " . print_r($e) . ")");
+    		handleDbIssuePdoEcho($dbartworks, $w);
+    		$dbartworks = null;
+    		$db         = null;
 
-		return false;
-	}
+    		return false;
+    	}
 
-	// DB artowrks
-	if ($fetch_artworks_existed == false) {
-		try {
-			$dbartworks->exec("create table artists (artist_uri text PRIMARY KEY NOT NULL, artist_name text, already_fetched boolean)");
-			$dbartworks->exec("create table tracks (track_uri text PRIMARY KEY NOT NULL, already_fetched boolean)");
-			$dbartworks->exec("create table albums (album_uri text PRIMARY KEY NOT NULL, already_fetched boolean)");
-		}
-		catch (PDOException $e) {
-			logMsg("Error(updateLibrary): (exception " . print_r($e) . ")");
-			handleDbIssuePdoEcho($dbartworks, $w);
-			$dbartworks = null;
-			$db         = null;
+    	// DB artowrks
+    	if ($fetch_artworks_existed == false) {
+    		try {
+    			$dbartworks->exec("create table artists (artist_uri text PRIMARY KEY NOT NULL, artist_name text, already_fetched boolean)");
+    			$dbartworks->exec("create table tracks (track_uri text PRIMARY KEY NOT NULL, already_fetched boolean)");
+    			$dbartworks->exec("create table albums (album_uri text PRIMARY KEY NOT NULL, already_fetched boolean)");
+    		}
+    		catch (PDOException $e) {
+    			logMsg("Error(updateLibrary): (exception " . print_r($e) . ")");
+    			handleDbIssuePdoEcho($dbartworks, $w);
+    			$dbartworks = null;
+    			$db         = null;
 
-			return false;
-		}
-	}
+    			return false;
+    		}
+    	}
 
-	try {
-		// artworks
-		$insertArtistArtwork = "insert or ignore into artists values (:artist_uri,:artist_name,:already_fetched)";
-		$stmtArtistArtwork   = $dbartworks->prepare($insertArtistArtwork);
+    	try {
+    		// artworks
+    		$insertArtistArtwork = "insert or ignore into artists values (:artist_uri,:artist_name,:already_fetched)";
+    		$stmtArtistArtwork   = $dbartworks->prepare($insertArtistArtwork);
 
-		$insertTrackArtwork = "insert or ignore into tracks values (:track_uri,:already_fetched)";
-		$stmtTrackArtwork   = $dbartworks->prepare($insertTrackArtwork);
+    		$insertTrackArtwork = "insert or ignore into tracks values (:track_uri,:already_fetched)";
+    		$stmtTrackArtwork   = $dbartworks->prepare($insertTrackArtwork);
 
-		$insertAlbumArtwork = "insert or ignore into albums values (:album_uri,:already_fetched)";
-		$stmtAlbumArtwork   = $dbartworks->prepare($insertAlbumArtwork);
-	}
-	catch (PDOException $e) {
-		logMsg("Error(updateLibrary): (exception " . print_r($e) . ")");
-		handleDbIssuePdoEcho($dbartworks, $w);
-		$dbartworks = null;
-		$db         = null;
+    		$insertAlbumArtwork = "insert or ignore into albums values (:album_uri,:already_fetched)";
+    		$stmtAlbumArtwork   = $dbartworks->prepare($insertAlbumArtwork);
+    	}
+    	catch (PDOException $e) {
+    		logMsg("Error(updateLibrary): (exception " . print_r($e) . ")");
+    		handleDbIssuePdoEcho($dbartworks, $w);
+    		$dbartworks = null;
+    		$db         = null;
 
-		return false;
-	}
-	$artworksToDownload = false;
+    		return false;
+    	}
+    	$artworksToDownload = false;
+
+    }
+
 	rename($w->data() . '/library.db', $w->data() . '/library_old.db');
 	copy($w->data() . '/library_old.db', $w->data() . '/library_new.db');
 	$dbfile = $w->data() . '/library_new.db';
@@ -4964,7 +5047,7 @@ function refreshLibrary($w) {
 		// Playlist does not exist, add it
 		if ($noresult == true) {
 			$nb_added_playlists++;
-			$playlist_artwork_path = getPlaylistArtwork($w, $playlist->uri, true, true);
+			$playlist_artwork_path = getPlaylistArtwork($w, $playlist->uri, true, true, $use_artworks);
 
 			if ("-" . $owner->id . "-" == "-" . $userid . "-") {
 				$ownedbyuser = 1;
@@ -5037,6 +5120,7 @@ function refreshLibrary($w) {
 						$playable = 1;
 						$local_track = 1;
 					}
+
 					try {
 						//
 						// Download artworks in Fetch later mode
@@ -5044,13 +5128,17 @@ function refreshLibrary($w) {
 						if ($local_track == 0 && isset($track->uri)) {
 							$thetrackuri = $track->uri;
 						}
-						list($already_present, $track_artwork_path) = getTrackOrAlbumArtwork($w, $thetrackuri, true, true);
-						if ($already_present == false) {
-							$artworksToDownload = true;
-							$stmtTrackArtwork->bindValue(':track_uri', $thetrackuri);
-							$stmtTrackArtwork->bindValue(':already_fetched', 0);
-							$stmtTrackArtwork->execute();
-						}
+						if($use_artworks) {
+						    list($already_present, $track_artwork_path) = getTrackOrAlbumArtwork($w, $thetrackuri, true, true, false, $use_artworks);
+    						if ($already_present == false) {
+    							$artworksToDownload = true;
+    							$stmtTrackArtwork->bindValue(':track_uri', $thetrackuri);
+    							$stmtTrackArtwork->bindValue(':already_fetched', 0);
+    							$stmtTrackArtwork->execute();
+    						}
+                        } else {
+                            $track_artwork_path = getTrackOrAlbumArtwork($w, $thetrackuri, false, false, false, $use_artworks);
+                        }
 						$theartistname = 'fakeartist';
 						if (isset($artist->name)) {
 							$theartistname = $artist->name;
@@ -5059,26 +5147,36 @@ function refreshLibrary($w) {
 						if (isset($artist->uri)) {
 							$theartisturi = $artist->uri;
 						}
-						list($already_present, $artist_artwork_path) = getArtistArtwork($w, $theartisturi , $theartistname, true, true);
-						if ($already_present == false) {
-							$artworksToDownload = true;
-							$stmtArtistArtwork->bindValue(':artist_uri', $artist->uri);
-							$stmtArtistArtwork->bindValue(':artist_name', $theartistname);
-							$stmtArtistArtwork->bindValue(':already_fetched', 0);
-							$stmtArtistArtwork->execute();
-						}
+						if($use_artworks) {
+						    list($already_present, $artist_artwork_path) = getArtistArtwork($w, $theartisturi , $theartistname, true, true, false, false, $use_artworks);
+    						if ($already_present == false) {
+    							$artworksToDownload = true;
+    							$stmtArtistArtwork->bindValue(':artist_uri', $artist->uri);
+    							$stmtArtistArtwork->bindValue(':artist_name', $theartistname);
+    							$stmtArtistArtwork->bindValue(':already_fetched', 0);
+    							$stmtArtistArtwork->execute();
+    						}
+                        } else {
+                            $artist_artwork_path = getArtistArtwork($w, $theartisturi , $theartistname, false, false, false, false, $use_artworks);
+                        }
+
 
 						$thealbumuri = 'spotify:album:fakealbumuri';
 						if (isset($album->uri)) {
 							$thealbumuri = $album->uri;
 						}
-						list($already_present, $album_artwork_path) = getTrackOrAlbumArtwork($w, $thealbumuri, true, true);
-						if ($already_present == false) {
-							$artworksToDownload = true;
-							$stmtAlbumArtwork->bindValue(':album_uri', $thealbumuri);
-							$stmtAlbumArtwork->bindValue(':already_fetched', 0);
-							$stmtAlbumArtwork->execute();
-						}
+						if($use_artworks) {
+						    list($already_present, $album_artwork_path) = getTrackOrAlbumArtwork($w, $thealbumuri, true, true, false, $use_artworks);
+    						if ($already_present == false) {
+    							$artworksToDownload = true;
+    							$stmtAlbumArtwork->bindValue(':album_uri', $thealbumuri);
+    							$stmtAlbumArtwork->bindValue(':already_fetched', 0);
+    							$stmtAlbumArtwork->execute();
+    						}
+				        } else {
+                            $album_artwork_path = getTrackOrAlbumArtwork($w, $thealbumuri, false, false, false, $use_artworks);
+				        }
+
 					}
 					catch (PDOException $e) {
 						logMsg("Error(updateLibrary): (exception " . print_r($e) . ")");
@@ -5088,6 +5186,7 @@ function refreshLibrary($w) {
 
 						return false;
 					}
+
 
 					$duration_playlist += $track->duration_ms;
 
@@ -5159,7 +5258,7 @@ function refreshLibrary($w) {
 				$nb_updated_playlists++;
 
 				// force refresh of playlist artwork
-				getPlaylistArtwork($w, $playlist->uri, true, true);
+				getPlaylistArtwork($w, $playlist->uri, true, true, $use_artworks);
 
 				try {
 					if ($playlists[1] != escapeQuery($playlist->name)) {
@@ -5256,13 +5355,19 @@ function refreshLibrary($w) {
 							if ($local_track == 0 && isset($track->uri)) {
 								$thetrackuri = $track->uri;
 							}
-							list($already_present, $track_artwork_path) = getTrackOrAlbumArtwork($w, $thetrackuri, true, true);
-							if ($already_present == false) {
-								$artworksToDownload = true;
-								$stmtTrackArtwork->bindValue(':track_uri', $thetrackuri);
-								$stmtTrackArtwork->bindValue(':already_fetched', 0);
-								$stmtTrackArtwork->execute();
-							}
+
+        					if($use_artworks) {
+        					    list($already_present, $track_artwork_path) = getTrackOrAlbumArtwork($w, $thetrackuri, true, true, false, $use_artworks);
+    							if ($already_present == false) {
+    								$artworksToDownload = true;
+    								$stmtTrackArtwork->bindValue(':track_uri', $thetrackuri);
+    								$stmtTrackArtwork->bindValue(':already_fetched', 0);
+    								$stmtTrackArtwork->execute();
+    							}
+        					} else {
+                                $track_artwork_path = getTrackOrAlbumArtwork($w, $thetrackuri, false, false, false, $use_artworks);
+        					}
+
 							$theartistname = 'fakeartist';
 							if (isset($artist->name)) {
 								$theartistname = $artist->name;
@@ -5271,26 +5376,35 @@ function refreshLibrary($w) {
 							if (isset($artist->uri)) {
 								$theartisturi = $artist->uri;
 							}
-							list($already_present, $artist_artwork_path) = getArtistArtwork($w, $theartisturi , $theartistname, true, true);
-							if ($already_present == false) {
-								$artworksToDownload = true;
-								$stmtArtistArtwork->bindValue(':artist_uri', $artist->uri);
-								$stmtArtistArtwork->bindValue(':artist_name', $theartistname);
-								$stmtArtistArtwork->bindValue(':already_fetched', 0);
-								$stmtArtistArtwork->execute();
-							}
+        					if($use_artworks) {
+        					    list($already_present, $artist_artwork_path) = getArtistArtwork($w, $theartisturi , $theartistname, true, true, false, false, $use_artworks);
+    							if ($already_present == false) {
+    								$artworksToDownload = true;
+    								$stmtArtistArtwork->bindValue(':artist_uri', $artist->uri);
+    								$stmtArtistArtwork->bindValue(':artist_name', $theartistname);
+    								$stmtArtistArtwork->bindValue(':already_fetched', 0);
+    								$stmtArtistArtwork->execute();
+    							}
+        					} else {
+                                $artist_artwork_path = getArtistArtwork($w, $theartisturi , $theartistname, false, false, false, false, $use_artworks);
+        					}
+
 
 							$thealbumuri = 'spotify:album:fakealbumuri';
 							if (isset($album->uri)) {
 								$thealbumuri = $album->uri;
 							}
-							list($already_present, $album_artwork_path) = getTrackOrAlbumArtwork($w, $thealbumuri, true, true);
-							if ($already_present == false) {
-								$artworksToDownload = true;
-								$stmtAlbumArtwork->bindValue(':album_uri', $thealbumuri);
-								$stmtAlbumArtwork->bindValue(':already_fetched', 0);
-								$stmtAlbumArtwork->execute();
-							}
+        					if($use_artworks) {
+        					    list($already_present, $album_artwork_path) = getTrackOrAlbumArtwork($w, $thealbumuri, true, true, false, $use_artworks);
+    							if ($already_present == false) {
+    								$artworksToDownload = true;
+    								$stmtAlbumArtwork->bindValue(':album_uri', $thealbumuri);
+    								$stmtAlbumArtwork->bindValue(':already_fetched', 0);
+    								$stmtAlbumArtwork->execute();
+    							}
+        				    } else {
+                                $album_artwork_path = getTrackOrAlbumArtwork($w, $thealbumuri, false, false, false, $use_artworks);
+        				    }
 						}
 						catch (PDOException $e) {
 							logMsg("Error(updateLibrary): (exception " . print_r($e) . ")");
@@ -5299,6 +5413,7 @@ function refreshLibrary($w) {
 							$db         = null;
 							return false;
 						}
+
 
 						$duration_playlist += $track->duration_ms;
 						try {
@@ -5351,7 +5466,7 @@ function refreshLibrary($w) {
 					$db         = null;
 					return;
 				}
-				displayNotificationWithArtwork($w,'Updated playlist ' . escapeQuery($playlist->name), getPlaylistArtwork($w, $playlist->uri, true), 'Refresh Library');
+				displayNotificationWithArtwork($w,'Updated playlist ' . escapeQuery($playlist->name), getPlaylistArtwork($w, $playlist->uri, true, false, $use_artworks), 'Refresh Library');
 			} else {
 				continue;
 			}
@@ -5384,7 +5499,7 @@ function refreshLibrary($w) {
 				$stmtDelete       = $db->prepare($deleteFromTracks);
 				$stmtDelete->bindValue(':uri', $playlist_in_db[0]);
 				$stmtDelete->execute();
-				displayNotificationWithArtwork($w,'Removed playlist ' . $playlist_in_db[1], getPlaylistArtwork($w, $playlist_in_db[0], false), 'Refresh Library');
+				displayNotificationWithArtwork($w,'Removed playlist ' . $playlist_in_db[1], getPlaylistArtwork($w, $playlist_in_db[0], false, false, $use_artworks), 'Refresh Library');
 			}
 		}
 	}
@@ -5531,13 +5646,18 @@ function refreshLibrary($w) {
 					if ($local_track == 0 && isset($track->uri)) {
 						$thetrackuri = $track->uri;
 					}
-					list($already_present, $track_artwork_path) = getTrackOrAlbumArtwork($w, $thetrackuri, true, true);
-					if ($already_present == false) {
-						$artworksToDownload = true;
-						$stmtTrackArtwork->bindValue(':track_uri', $thetrackuri);
-						$stmtTrackArtwork->bindValue(':already_fetched', 0);
-						$stmtTrackArtwork->execute();
+					if($use_artworks) {
+					    list($already_present, $track_artwork_path) = getTrackOrAlbumArtwork($w, $thetrackuri, true, true, false, $use_artworks);
+    					if ($already_present == false) {
+    						$artworksToDownload = true;
+    						$stmtTrackArtwork->bindValue(':track_uri', $thetrackuri);
+    						$stmtTrackArtwork->bindValue(':already_fetched', 0);
+    						$stmtTrackArtwork->execute();
+    					}
+					} else {
+                        $track_artwork_path = getTrackOrAlbumArtwork($w, $thetrackuri, false, false, false, $use_artworks);
 					}
+
 					$theartistname = 'fakeartist';
 					if (isset($artist->name)) {
 						$theartistname = $artist->name;
@@ -5546,26 +5666,35 @@ function refreshLibrary($w) {
 					if (isset($artist->uri)) {
 						$theartisturi = $artist->uri;
 					}
-					list($already_present, $artist_artwork_path) = getArtistArtwork($w, $theartisturi , $theartistname, true, true);
-					if ($already_present == false) {
-						$artworksToDownload = true;
-						$stmtArtistArtwork->bindValue(':artist_uri', $artist->uri);
-						$stmtArtistArtwork->bindValue(':artist_name', $theartistname);
-						$stmtArtistArtwork->bindValue(':already_fetched', 0);
-						$stmtArtistArtwork->execute();
+					if($use_artworks) {
+					    list($already_present, $artist_artwork_path) = getArtistArtwork($w, $theartisturi , $theartistname, true, true, false, false, $use_artworks);
+    					if ($already_present == false) {
+    						$artworksToDownload = true;
+    						$stmtArtistArtwork->bindValue(':artist_uri', $artist->uri);
+    						$stmtArtistArtwork->bindValue(':artist_name', $theartistname);
+    						$stmtArtistArtwork->bindValue(':already_fetched', 0);
+    						$stmtArtistArtwork->execute();
+    					}
+					} else {
+                        $artist_artwork_path = getArtistArtwork($w, $theartisturi , $theartistname, false, false, false, false, $use_artworks);
 					}
 
 					$thealbumuri = 'spotify:album:fakealbumuri';
 					if (isset($album->uri)) {
 						$thealbumuri = $album->uri;
 					}
-					list($already_present, $album_artwork_path) = getTrackOrAlbumArtwork($w, $thealbumuri, true, true);
-					if ($already_present == false) {
-						$artworksToDownload = true;
-						$stmtAlbumArtwork->bindValue(':album_uri', $thealbumuri);
-						$stmtAlbumArtwork->bindValue(':already_fetched', 0);
-						$stmtAlbumArtwork->execute();
-					}
+					if($use_artworks) {
+					    list($already_present, $album_artwork_path) = getTrackOrAlbumArtwork($w, $thealbumuri, true, true, false, $use_artworks);
+    					if ($already_present == false) {
+    						$artworksToDownload = true;
+    						$stmtAlbumArtwork->bindValue(':album_uri', $thealbumuri);
+    						$stmtAlbumArtwork->bindValue(':already_fetched', 0);
+    						$stmtAlbumArtwork->execute();
+    					}
+				    } else {
+                        $album_artwork_path = getTrackOrAlbumArtwork($w, $thealbumuri, false, false, false, $use_artworks);
+				    }
+
 				}
 				catch (PDOException $e) {
 					logMsg("Error(updateLibrary): (exception " . print_r($e) . ")");
@@ -5712,9 +5841,11 @@ function refreshLibrary($w) {
 	}
 	rename($w->data() . '/library_new.db', $w->data() . '/library.db');
 
-	// Download artworks in background
-	logMsg("========DOWNLOAD_ARTWORKS DURING REFRESH LIBRARY ========");
-	exec("php -f ./src/action.php -- \"\" \"DOWNLOAD_ARTWORKS\" \"DOWNLOAD_ARTWORKS\" >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
+    if($use_artworks) {
+    	// Download artworks in background
+    	logMsg("========DOWNLOAD_ARTWORKS DURING REFRESH LIBRARY ========");
+    	exec("php -f ./src/action.php -- \"\" \"DOWNLOAD_ARTWORKS\" \"DOWNLOAD_ARTWORKS\" >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
+	}
 
 	deleteTheFile($w->data() . '/update_library_in_progress');
 }
@@ -6439,6 +6570,12 @@ function getSettings($w) {
 	// add use_growl if needed
 	if (!isset($settings->use_growl)) {
 		updateSetting($w, 'use_growl', 0);
+		$settings = $w->read('settings.json');
+	}
+
+	// add use_artworks if needed
+	if (!isset($settings->use_artworks)) {
+		updateSetting($w, 'use_artworks', 1);
 		$settings = $w->read('settings.json');
 	}
 

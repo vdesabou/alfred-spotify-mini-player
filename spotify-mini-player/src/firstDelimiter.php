@@ -173,6 +173,7 @@ function firstDelimiterAlfredPlaylist($w, $query, $settings, $db, $update_in_pro
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
+    $use_artworks              = $settings->use_artworks;
 
 
 	//
@@ -182,7 +183,7 @@ function firstDelimiterAlfredPlaylist($w, $query, $settings, $db, $update_in_pro
 
 	$r = explode(':', $alfred_playlist_uri);
 
-	$w->result(null, '', "Browse your Alfred playlist (" . $alfred_playlist_name . " by " . $r[2] . ")", "You can change the playlist by selecting Change your Alfred playlist below", getPlaylistArtwork($w, $alfred_playlist_uri, false), 'no', null, 'Playlist▹' . $alfred_playlist_uri . '▹');
+	$w->result(null, '', "Browse your Alfred playlist (" . $alfred_playlist_name . " by " . $r[2] . ")", "You can change the playlist by selecting Change your Alfred playlist below", getPlaylistArtwork($w, $alfred_playlist_uri, false, false, $use_artworks), 'no', null, 'Playlist▹' . $alfred_playlist_uri . '▹');
 
 	if ($update_in_progress == false) {
 		$w->result(null, '', "Change your Alfred playlist", "Select one of your playlists below as your Alfred playlist", './images/settings.png', 'no', null, 'Alfred Playlist▹Set Alfred Playlist▹');
@@ -483,6 +484,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
+	$use_artworks              = $settings->use_artworks;
 
 
 	//
@@ -584,7 +586,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
 			foreach ($results as $artist) {
 				if (checkIfResultAlreadyThere($w->results(), "👤 " . escapeQuery(ucfirst($artist->name))) == false) {
 					$noresult = false;
-					$w->result(null, '', "👤 " . escapeQuery(ucfirst($artist->name)), "Browse this artist", getArtistArtwork($w, $artist->uri, $artist->name, false), 'no', null, "Online▹" . $artist->uri . '@' . escapeQuery($artist->name) . '▹');
+					$w->result(null, '', "👤 " . escapeQuery(ucfirst($artist->name)), "Browse this artist", getArtistArtwork($w, $artist->uri, $artist->name, false, false, false, $use_artworks), 'no', null, "Online▹" . $artist->uri . '@' . escapeQuery($artist->name) . '▹');
 				}
 			}
 		}
@@ -618,7 +620,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
 						echo $w->tojson();
 						exit;
 					}
-					$w->result(null, '', escapeQuery(ucfirst($album->name)) . ' (' . $full_album->tracks->total . ' tracks)', $album->album_type . ' by ' . escapeQuery($full_album->artists[0]->name), getTrackOrAlbumArtwork($w, $album->uri, false), 'no', null, 'Online▹' . $full_album->artists[0]->uri . '@' . escapeQuery($full_album->artists[0]->name) . '@' . $album->uri . '@' . escapeQuery($album->name) . '▹');
+					$w->result(null, '', escapeQuery(ucfirst($album->name)) . ' (' . $full_album->tracks->total . ' tracks)', $album->album_type . ' by ' . escapeQuery($full_album->artists[0]->name), getTrackOrAlbumArtwork($w, $album->uri, false, false, false, $use_artworks), 'no', null, 'Online▹' . $full_album->artists[0]->uri . '@' . escapeQuery($full_album->artists[0]->name) . '@' . $album->uri . '@' . escapeQuery($album->name) . '▹');
 				}
 			}
 		}
@@ -634,7 +636,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
 
 			foreach ($results as $playlist) {
 				$noresult = false;
-				$w->result(null, '', "🎵" . escapeQuery($playlist->name), "by " . $playlist->owner->id . " ● " . $playlist->tracks->total . " tracks", getPlaylistArtwork($w, $playlist->uri, false), 'no', null, "Online Playlist▹" . $playlist->uri . '∙' . escapeQuery($playlist->name) . '▹');
+				$w->result(null, '', "🎵" . escapeQuery($playlist->name), "by " . $playlist->owner->id . " ● " . $playlist->tracks->total . " tracks", getPlaylistArtwork($w, $playlist->uri, false, false, $use_artworks), 'no', null, "Online Playlist▹" . $playlist->uri . '∙' . escapeQuery($playlist->name) . '▹');
 
 			}
 		}
@@ -655,7 +657,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
 				// }
 				// $first         = false;
 				$noresult      = false;
-				$track_artwork = getTrackOrAlbumArtwork($w, $track->uri, false);
+				$track_artwork = getTrackOrAlbumArtwork($w, $track->uri, false, false, false, $use_artworks);
 
 				$artists = $track->artists;
 				$artist  = $artists[0];
@@ -759,10 +761,10 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
-
 	$is_public_playlists       = $settings->is_public_playlists;
 	$use_mopidy                = $settings->use_mopidy;
 	$is_display_rating         = $settings->is_display_rating;
+	$use_artworks              = $settings->use_artworks;
 
 	if ($use_mopidy) {
 		$retArr = array(getCurrentTrackInfoWithMopidy($w));
@@ -886,14 +888,14 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
 			}
 		}
 		if ($noresult == false) {
-			$w->result(null, '', "👤 " . ucfirst(escapeQuery($results[1])), "Browse this artist", getArtistArtwork($w, $artist_uri, $results[1], false), 'no', null, "Artist▹" . $artist_uri . '∙' . escapeQuery($results[1]) . "▹");
+			$w->result(null, '', "👤 " . ucfirst(escapeQuery($results[1])), "Browse this artist", getArtistArtwork($w, $artist_uri, $results[1], false, false, false, $use_artworks), 'no', null, "Artist▹" . $artist_uri . '∙' . escapeQuery($results[1]) . "▹");
 		} else {
 			// artist is not in library
-			$w->result(null, '', "👤 " . ucfirst(escapeQuery($results[1])), "Browse this artist", getArtistArtwork($w, '' /* empty artist_uri */, $results[1], false), 'no', null, "Artist▹" . $results[4] . '∙' . escapeQuery($results[1]) . "▹");
+			$w->result(null, '', "👤 " . ucfirst(escapeQuery($results[1])), "Browse this artist", getArtistArtwork($w, '' /* empty artist_uri */, $results[1], false, false, false, $use_artworks), 'no', null, "Artist▹" . $results[4] . '∙' . escapeQuery($results[1]) . "▹");
 		}
 
 		// use track uri here
-		$album_artwork_path = getTrackOrAlbumArtwork($w, $results[4], false);
+		$album_artwork_path = getTrackOrAlbumArtwork($w, $results[4], false, false, false, $use_artworks);
 		$w->result(null, serialize(array(
 					$results[4] /*track_uri*/ ,
 					'' /* album_uri */ ,
@@ -1200,6 +1202,7 @@ function firstDelimiterLyrics($w, $query, $settings, $db, $update_in_progress) {
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
+	$use_artworks              = $settings->use_artworks;
 
 
 	if (substr_count($query, '∙') == 2) {
@@ -1236,7 +1239,7 @@ function firstDelimiterLyrics($w, $query, $settings, $db, $update_in_progress) {
 						'' /* playlist_artwork_path */
 					)), 'See lyrics for ' . $track_name . ' by ' . $artist_name . ' online', "This will open your default browser", './images/lyrics.png', 'yes', null, '');
 
-			$track_artwork = getTrackOrAlbumArtwork($w, $track_uri, false);
+			$track_artwork = getTrackOrAlbumArtwork($w, $track_uri, false, false, false, $use_artworks);
 
 			$wrapped          = wordwrap($lyrics, 70, "\n", false);
 			$lyrics_sentances = explode("\n", $wrapped);
@@ -1294,6 +1297,7 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
 	$volume_percent             = $settings->volume_percent;
 	$is_autoplay_playlist       = $settings->is_autoplay_playlist;
 	$use_growl                  = $settings->use_growl;
+	$use_artworks               = $settings->use_artworks;
 
 	if ($update_in_progress == false) {
 		$w->result(null, serialize(array(
@@ -1542,6 +1546,60 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
 				'fn' => 'Not Available',
 				'ctrl' => 'Not Available'
 			), './images/enable_quick_mode.png', 'yes', null, '');
+	}
+
+	if ($use_artworks == true) {
+		$w->result(null, serialize(array(
+					'' /*track_uri*/ ,
+					'' /* album_uri */ ,
+					'' /* artist_uri */ ,
+					'' /* playlist_uri */ ,
+					'' /* spotify_command */ ,
+					'' /* query */ ,
+					'' /* other_settings*/ ,
+					'disable_artworks' /* other_action */ ,
+					'' /* artist_name */ ,
+					'' /* track_name */ ,
+					'' /* album_name */ ,
+					'' /* track_artwork_path */ ,
+					'' /* artist_artwork_path */ ,
+					'' /* album_artwork_path */ ,
+					'' /* playlist_name */ ,
+					'' /* playlist_artwork_path */
+				)), "Disable Artworks", array(
+				"All existing artworks will be deleted and workflow will only show default artworks (library will be re-created)",
+				'alt' => 'Not Available',
+				'cmd' => 'Not Available',
+				'shift' => 'Not Available',
+				'fn' => 'Not Available',
+				'ctrl' => 'Not Available'
+			), './images/disable_artworks.png', 'yes', null, '');
+	} else {
+		$w->result(null, serialize(array(
+					'' /*track_uri*/ ,
+					'' /* album_uri */ ,
+					'' /* artist_uri */ ,
+					'' /* playlist_uri */ ,
+					'' /* spotify_command */ ,
+					'' /* query */ ,
+					'' /* other_settings*/ ,
+					'enable_artworks' /* other_action */ ,
+					'' /* artist_name */ ,
+					'' /* track_name */ ,
+					'' /* album_name */ ,
+					'' /* track_artwork_path */ ,
+					'' /* artist_artwork_path */ ,
+					'' /* album_artwork_path */ ,
+					'' /* playlist_name */ ,
+					'' /* playlist_artwork_path */
+				)), "Enable Artworks", array(
+				"Use Artworks for playlists, tracks, etc..(library will be re-created)",
+				'alt' => 'Not Available',
+				'cmd' => 'Not Available',
+				'shift' => 'Not Available',
+				'fn' => 'Not Available',
+				'ctrl' => 'Not Available'
+			), './images/enable_artworks.png', 'yes', null, '');
 	}
 
 	if ($is_display_rating == true) {
@@ -2013,8 +2071,8 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
-
 	$use_mopidy                = $settings->use_mopidy;
+	$use_artworks              = $settings->use_artworks;
 
 	if ($use_mopidy) {
 		$playqueue = $w->read('playqueue.json');
@@ -2102,7 +2160,7 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
 			if (isset($tl_track->track->length)) {
 				$duration = beautifyTime($tl_track->track->length / 1000);
 			}
-			$track_artwork = getTrackOrAlbumArtwork($w, $tl_track->track->uri, false);
+			$track_artwork = getTrackOrAlbumArtwork($w, $tl_track->track->uri, false, false, false, $use_artworks);
 
 			if (strpos($track_name,'[unplayable]') !== false) {
 			    $track_name = str_replace('[unplayable]', '', $track_name);
@@ -2247,7 +2305,7 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
 			if (isset($track->duration)) {
 				$duration = $track->duration;
 			}
-			$track_artwork = getTrackOrAlbumArtwork($w, $track->uri, false);
+			$track_artwork = getTrackOrAlbumArtwork($w, $track->uri, false, false, false, $use_artworks);
 			$w->result(null, serialize(array(
 						$track->uri /*track_uri*/ ,
 						'' /* album_uri */ ,

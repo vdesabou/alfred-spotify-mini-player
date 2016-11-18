@@ -183,7 +183,7 @@ function thirdDelimiterBrowse($w, $query, $settings, $db, $update_in_progress) {
 	$oauth_refresh_token       = $settings->oauth_refresh_token;
 	$display_name              = $settings->display_name;
 	$userid                    = $settings->userid;
-
+	$use_artworks              = $settings->use_artworks;
 
 	$country = $words[1];
 	$category = $words[2];
@@ -205,7 +205,7 @@ function thirdDelimiterBrowse($w, $query, $settings, $db, $update_in_progress) {
 			$playlists = $listPlaylists->playlists;
 			$items = $playlists->items;
 			foreach ($items as $playlist) {
-				$w->result(null, '', "🎵" . escapeQuery($playlist->name), "by " . $playlist->owner->id . " ● " . $playlist->tracks->total . " tracks", getPlaylistArtwork($w, $playlist->uri, false), 'no', null, "Online Playlist▹" . $playlist->uri . '∙' . escapeQuery($playlist->name) . "▹");
+				$w->result(null, '', "🎵" . escapeQuery($playlist->name), "by " . $playlist->owner->id . " ● " . $playlist->tracks->total . " tracks", getPlaylistArtwork($w, $playlist->uri, false, false, $use_artworks), 'no', null, "Online Playlist▹" . $playlist->uri . '∙' . escapeQuery($playlist->name) . "▹");
 			}
 
 			$offsetCategoryPlaylists += $limitCategoryPlaylists;
