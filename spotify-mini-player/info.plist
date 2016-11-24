@@ -5090,9 +5090,9 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>keyword</key>
 				<string>{var:volmid}</string>
 				<key>subtext</key>
-				<string>Set the Spotify volume to 50%</string>
+				<string>Set the Spotify volume to Middle</string>
 				<key>text</key>
-				<string>Set Spotify Volume to 50%</string>
+				<string>Set Spotify Volume to Middle</string>
 				<key>withspace</key>
 				<false/>
 			</dict>
@@ -5113,7 +5113,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>triggerid</key>
 				<string>com.vdesabou.miniplayer.volmid</string>
 				<key>triggername</key>
-				<string>Volume 50%</string>
+				<string>Volume Mid</string>
 				<key>workflowonly</key>
 				<false/>
 			</dict>
@@ -6479,6 +6479,12 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 		<string>volmid</string>
 		<key>volume_down</key>
 		<string>volume_down</string>
+		<key>volume_max</key>
+		<string>100</string>
+		<key>volume_mid</key>
+		<string>50</string>
+		<key>volume_min</key>
+		<string>0</string>
 		<key>volume_up</key>
 		<string>volume_up</string>
 	</dict>

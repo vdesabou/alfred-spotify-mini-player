@@ -7,46 +7,46 @@ $w = new Workflows('com.vdesabou.spotify.mini.player');
 // Report all PHP errors
 error_reporting(E_ALL);
 
-$query         = $argv[1];
-$type          = $argv[2];
+$query		 = $argv[1];
+$type		  = $argv[2];
 $add_to_option = $argv[3];
 
-$arg                       = mb_unserialize($query);
-$track_uri                 = $arg[0];
-$album_uri                 = $arg[1];
-$artist_uri                = $arg[2];
-$playlist_uri              = $arg[3];
-$spotify_command           = $arg[4];
-$original_query            = $arg[5];
-$other_settings            = $arg[6];
-$other_action              = $arg[7];
-$artist_name               = $arg[8];
-$track_name                = $arg[9];
-$album_name                = $arg[10];
-$track_artwork_path        = $arg[11];
-$artist_artwork_path       = $arg[12];
-$album_artwork_path        = $arg[13];
-$playlist_name             = $arg[14];
-$playlist_artwork_path     = $arg[15];
+$arg					   = mb_unserialize($query);
+$track_uri				 = $arg[0];
+$album_uri				 = $arg[1];
+$artist_uri				= $arg[2];
+$playlist_uri			  = $arg[3];
+$spotify_command		   = $arg[4];
+$original_query			= $arg[5];
+$other_settings			= $arg[6];
+$other_action			  = $arg[7];
+$artist_name			   = $arg[8];
+$track_name				= $arg[9];
+$album_name				= $arg[10];
+$track_artwork_path		= $arg[11];
+$artist_artwork_path	   = $arg[12];
+$album_artwork_path		= $arg[13];
+$playlist_name			 = $arg[14];
+$playlist_artwork_path	 = $arg[15];
 
 
 //
 // Read settings from JSON
 //
-$settings                  = getSettings($w);
+$settings				  = getSettings($w);
 $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
 $now_playing_notifications = $settings->now_playing_notifications;
-$alfred_playlist_uri       = $settings->alfred_playlist_uri;
-$alfred_playlist_name      = $settings->alfred_playlist_name;
-$country_code              = $settings->country_code;
-$userid                    = $settings->userid;
-$oauth_client_id           = $settings->oauth_client_id;
-$oauth_client_secret       = $settings->oauth_client_secret;
-$oauth_redirect_uri        = $settings->oauth_redirect_uri;
-$oauth_access_token        = $settings->oauth_access_token;
-$use_mopidy                = $settings->use_mopidy;
-$volume_percent            = $settings->volume_percent;
-$use_artworks              = $settings->use_artworks;
+$alfred_playlist_uri	   = $settings->alfred_playlist_uri;
+$alfred_playlist_name	  = $settings->alfred_playlist_name;
+$country_code			  = $settings->country_code;
+$userid					= $settings->userid;
+$oauth_client_id		   = $settings->oauth_client_id;
+$oauth_client_secret	   = $settings->oauth_client_secret;
+$oauth_redirect_uri		= $settings->oauth_redirect_uri;
+$oauth_access_token		= $settings->oauth_access_token;
+$use_mopidy				= $settings->use_mopidy;
+$volume_percent			= $settings->volume_percent;
+$use_artworks			  = $settings->use_artworks;
 
 if($other_action != "reset_settings" && $other_action != "spot_mini_debug") {
 	if ($oauth_client_id == '' || $oauth_client_secret == '' || $oauth_access_token == '') {
@@ -123,7 +123,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 					$artist  = $artists[0];
 					logMsg("Unknown track $track_uri / $track_name / $artist_name replaced by track: $track->uri / $track->name / $artist->name");
 					$track_uri = $track->uri;
-					$tmp       = explode(':', $track_uri);
+					$tmp	   = explode(':', $track_uri);
 
 				} else {
 					logMsg("Could not find track: $track_uri / $track_name / $artist_name");
@@ -293,12 +293,12 @@ if ($type == "TRACK" && $other_settings == "" &&
 				}
 		}
 	} else if ($type == "DOWNLOAD_ARTWORKS") {
-        if($use_artworks) {
-    		if (downloadArtworks($w) == false) {
-    			displayNotificationWithArtwork($w,"Error when downloading artworks", './images/warning.png', 'Error!');
-    			return;
-    		}
-        }
+		if($use_artworks) {
+			if (downloadArtworks($w) == false) {
+				displayNotificationWithArtwork($w,"Error when downloading artworks", './images/warning.png', 'Error!');
+				return;
+			}
+		}
 		return;
 	} else if ($type == "ARTIST_OR_PLAYLIST_PRIVACY") {
 		if ($artist_name != "") {
@@ -442,7 +442,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 			// add track to playlist
 			if ($track_uri != '') {
 				$track_artwork_path = getTrackOrAlbumArtwork($w, $track_uri, true, false, false, $use_artworks);
-				$tmp                = explode(':', $track_uri);
+				$tmp				= explode(':', $track_uri);
 				if ($tmp[1] == 'local') {
 					// local track, look it up online
 					$query   = 'track:' . strtolower($track_name) . ' artist:' . strtolower($artist_name);
@@ -455,7 +455,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 						$artist  = $artists[0];
 						logMsg("Unknown track $track_uri / $track_name / $artist_name replaced by track: $track->uri / $track->name / $artist->name");
 						$track_uri = $track->uri;
-						$tmp       = explode(':', $track_uri);
+						$tmp	   = explode(':', $track_uri);
 
 					} else {
 						logMsg("Could not find track: $track_uri / $track_name / $artist_name");
@@ -477,7 +477,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 			} // add playlist to playlist
 			elseif ($playlist_uri != '') {
 				$playlist_artwork_path = getPlaylistArtwork($w, $playlist_uri, true, true, $use_artworks);
-				$ret                   = addTracksToPlaylist($w, getThePlaylistTracks($w, $playlist_uri), $setting[1], $setting[2], false);
+				$ret				   = addTracksToPlaylist($w, getThePlaylistTracks($w, $playlist_uri), $setting[1], $setting[2], false);
 				if ($userid != 'vdesabou') {
 					stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);
 				}
@@ -491,7 +491,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 			} // add album to playlist
 			elseif ($album_uri != '') {
 				$album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, true, false, false, $use_artworks);
-				$ret                = addTracksToPlaylist($w, getTheAlbumTracks($w, $album_uri), $setting[1], $setting[2], false);
+				$ret				= addTracksToPlaylist($w, getTheAlbumTracks($w, $album_uri), $setting[1], $setting[2], false);
 				if ($userid != 'vdesabou') {
 					stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);
 				}
@@ -512,12 +512,12 @@ if ($type == "TRACK" && $other_settings == "" &&
 			// remove track from playlist
 			if ($track_uri != '') {
 				$track_artwork_path = getTrackOrAlbumArtwork($w, $track_uri, true, false, false, $use_artworks);
-				$tmp                = explode(':', $track_uri);
+				$tmp				= explode(':', $track_uri);
 				if ($tmp[1] == 'local') {
 					displayNotificationWithArtwork($w,'Cannot remove local track ' . $track_name, './images/warning.png', 'Error!');
 					return;
 				}
-				$ret                = removeTrackFromPlaylist($w, $tmp[2], $setting[1], $setting[2]);
+				$ret				= removeTrackFromPlaylist($w, $tmp[2], $setting[1], $setting[2]);
 				if ($userid != 'vdesabou') {
 					stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);
 				}
@@ -534,7 +534,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 			// add track to your music
 			if ($track_uri != '') {
 				$track_artwork_path = getTrackOrAlbumArtwork($w, $track_uri, true, false, false, $use_artworks);
-				$tmp                = explode(':', $track_uri);
+				$tmp				= explode(':', $track_uri);
 				if ($tmp[1] == 'local') {
 					// local track, look it up online
 
@@ -548,7 +548,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 						$artist  = $artists[0];
 						logMsg("Unknown track $track_uri / $track_name / $artist_name replaced by track: $track->uri / $track->name / $artist->name");
 						$track_uri = $track->uri;
-						$tmp       = explode(':', $track_uri);
+						$tmp	   = explode(':', $track_uri);
 
 					} else {
 						logMsg("Could not find track: $track_uri / $track_name / $artist_name");
@@ -570,7 +570,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 			} // add playlist to your music
 			elseif ($playlist_uri != '') {
 				$playlist_artwork_path = getPlaylistArtwork($w, $playlist_uri, true, true, $use_artworks);
-				$ret                   = addTracksToYourMusic($w, getThePlaylistTracks($w, $playlist_uri), false);
+				$ret				   = addTracksToYourMusic($w, getThePlaylistTracks($w, $playlist_uri), false);
 				if ($userid != 'vdesabou') {
 					stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);
 				}
@@ -584,7 +584,7 @@ if ($type == "TRACK" && $other_settings == "" &&
 			} // add album to your music
 			elseif ($album_uri != '') {
 				$album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, true, false, false, $use_artworks);
-				$ret                = addTracksToYourMusic($w, getTheAlbumTracks($w, $album_uri), false);
+				$ret				= addTracksToYourMusic($w, getTheAlbumTracks($w, $album_uri), false);
 				if ($userid != 'vdesabou') {
 					stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);
 				}
@@ -604,8 +604,8 @@ if ($type == "TRACK" && $other_settings == "" &&
 			// remove track from your music
 			if ($track_uri != '') {
 				$track_artwork_path = getTrackOrAlbumArtwork($w, $track_uri, true, false, false, $use_artworks);
-				$tmp                = explode(':', $track_uri);
-				$ret                = removeTrackFromYourMusic($w, $tmp[2]);
+				$tmp				= explode(':', $track_uri);
+				$ret				= removeTrackFromYourMusic($w, $tmp[2]);
 				if ($userid != 'vdesabou') {
 					stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);
 				}
@@ -692,11 +692,11 @@ if ($type == "TRACK" && $other_settings == "" &&
 		} else if ($other_action == "disable_artworks") {
 			$ret = updateSetting($w, 'use_artworks', 0);
 			if ($ret == true) {
-                if (file_exists($w->data() . "/artwork")):
-                    exec("rm -rf '" . $w->data() . "/artwork'");
-                    displayNotificationWithArtwork($w,"All artworks have been erased", './images/warning.png', 'Warning!');
-                    updateLibrary($w);
-                endif;
+				if (file_exists($w->data() . "/artwork")):
+					exec("rm -rf '" . $w->data() . "/artwork'");
+					displayNotificationWithArtwork($w,"All artworks have been erased", './images/warning.png', 'Warning!');
+					updateLibrary($w);
+				endif;
 				displayNotificationWithArtwork($w,"Artworks are now disabled", './images/disable_artworks.png', 'Settings');
 			} else {
 				displayNotificationWithArtwork($w,"Error while updating settings", './images/settings.png', 'Error!');
@@ -760,8 +760,8 @@ if ($type == "TRACK" && $other_settings == "" &&
 			}
 			return;
 		} else if ($other_action == "switch_to_green_icons") {
-    		stathat_ez_count('AlfredSpotifyMiniPlayer', 'theme_changed', 1);
-            switchToGreenIcons($w);
+			stathat_ez_count('AlfredSpotifyMiniPlayer', 'theme_changed', 1);
+			switchToGreenIcons($w);
 			return;
 		} else if ($other_action == "disable_mopidy") {
 			exec("./src/spotify_mini_player_notifications.ksh -d \"" . $w->data() . "\" -a stop >> \"" . $w->cache() . "/action.log\" 2>&1 & ");
@@ -915,11 +915,11 @@ if ($type == "TRACK" && $other_settings == "" &&
 			}
 			return;
 		} else if ($other_action == "delete_artwork_folder") {
-            if (file_exists($w->data() . "/artwork")):
-                exec("rm -rf '" . $w->data() . "/artwork'");
-                displayNotificationWithArtwork($w,"All artworks have been erased", './images/warning.png', 'Warning!');
-                updateLibrary($w);
-            endif;
+			if (file_exists($w->data() . "/artwork")):
+				exec("rm -rf '" . $w->data() . "/artwork'");
+				displayNotificationWithArtwork($w,"All artworks have been erased", './images/warning.png', 'Warning!');
+				updateLibrary($w);
+			endif;
 
 			return;
 		} else if ($other_action == "Oauth_Login") {
@@ -970,8 +970,8 @@ if ($type == "TRACK" && $other_settings == "" &&
 			$check_results = checkForUpdate($w, 0, true);
 			if ($check_results != null && is_array($check_results)) {
 				exec("open \"$check_results[1]\"");
-			    displayNotificationWithArtwork($w,"Please install the new version with Alfred", './images/check_update.png', 'Update available');
-			    return;
+				displayNotificationWithArtwork($w,"Please install the new version with Alfred", './images/check_update.png', 'Update available');
+				return;
 			}
 			return;
 		}  else if ($other_action == "previous") {
@@ -1131,85 +1131,89 @@ if ($type == "TRACK" && $other_settings == "" &&
 		} else if ($other_action == "volume_up") {
 			if ($use_mopidy) {
 				$theVolume = invokeMopidyMethod($w, "core.mixer.get_volume", array());
-				if(($theVolume+$volume_percent) > 100) {
-					$theVolume = 100;
-					displayNotificationWithArtwork($w,'Spotify volume is at maximum level.', './images/volume_up.png', 'Volume Up');
+				if(($theVolume+$volume_percent) > getenv("volume_max")) {
+					$theVolume = getenv("volume_max");
+					displayNotificationWithArtwork($w,'Spotify volume is at maximum level ' . getenv("volume_max") . '%.', './images/volume_up.png', 'Volume Up');
 				} else {
 					$theVolume = $theVolume+$volume_percent;
 					displayNotificationWithArtwork($w,'Spotify volume has been increased to ' . $theVolume . '%', './images/volume_up.png', 'Volume Up');
 				}
 				invokeMopidyMethod($w, "core.mixer.set_volume", array('volume' => $theVolume));
 			} else {
+				$volume_max = getenv("volume_max");
 				$command_output = exec("osascript -e 'tell application \"Spotify\"
-                if it is running then
-					if (sound volume + $volume_percent) > 100 then
-						set theVolume to 100
+				if it is running then
+					if (sound volume + $volume_percent) > $volume_max then
+						set theVolume to $volume_max
 						set sound volume to theVolume
-						return \"Spotify volume is at maximum level.\"
+						return \"Spotify volume is at maximum level \" & theVolume & \"%.\"
 					else
 						set theVolume to (sound volume + $volume_percent)
 						set sound volume to theVolume
 						return \"Spotify volume has been increased to \" & theVolume & \"%.\"
 					end if
-                end if
-            end tell'");
-            	displayNotificationWithArtwork($w,$command_output, './images/volume_up.png', 'Volume Up');
+				end if
+			end tell'");
+				displayNotificationWithArtwork($w,$command_output, './images/volume_up.png', 'Volume Up');
 			}
 
 			return;
 		} else if ($other_action == "volume_down") {
 			if ($use_mopidy) {
 				$theVolume = invokeMopidyMethod($w, "core.mixer.get_volume", array());
-				if(($theVolume-$volume_percent) < 0) {
-					$theVolume = 0;
-					displayNotificationWithArtwork($w,'Spotify volume is at minimum level.', './images/volume_down.png', 'Volume Down');
+				if(($theVolume-$volume_percent) < getenv("volume_min")) {
+					$theVolume = getenv("volume_min");
+					displayNotificationWithArtwork($w,'Spotify volume is at minimum level ' . getenv("volume_min") . '%.', './images/volume_down.png', 'Volume Down');
 				} else {
 					$theVolume = $theVolume-$volume_percent;
 					displayNotificationWithArtwork($w,'Spotify volume has been decreased to ' . $theVolume . '%', './images/volume_down.png', 'Volume Down');
 				}
 				invokeMopidyMethod($w, "core.mixer.set_volume", array('volume' => $theVolume));
 			} else {
+				$volume_min = getenv("volume_min");
 				$command_output = exec("osascript -e 'tell application \"Spotify\"
-                if it is running then
-					if (sound volume - $volume_percent) < 0 then
-						set theVolume to 0
+				if it is running then
+					if (sound volume - $volume_percent) < $volume_min then
+						set theVolume to $volume_min
 						set sound volume to theVolume
-						return \"Spotify volume is at minimum level.\"
+						return \"Spotify volume is at minimum level \" & theVolume & \"%.\"
 					else
 						set theVolume to (sound volume - $volume_percent)
 						set sound volume to theVolume
 						return \"Spotify volume has been decreased to \" & theVolume & \"%.\"
 					end if
-                    set sound volume to theVolume
-                end if
-            end tell'");
-            	displayNotificationWithArtwork($w,$command_output, './images/volume_down.png', 'Volume Down');
+					set sound volume to theVolume
+				end if
+			end tell'");
+				displayNotificationWithArtwork($w,$command_output, './images/volume_down.png', 'Volume Down');
 			}
 
 			return;
 		} else if ($other_action == "volmax") {
 			if ($use_mopidy) {
-				invokeMopidyMethod($w, "core.mixer.set_volume", array('volume' => 100));
+				invokeMopidyMethod($w, "core.mixer.set_volume", array('volume' => getenv("volume_max")));
 			} else {
+				$volume_max = getenv("volume_max");
 				exec("osascript -e 'tell application \"Spotify\"
-                if it is running then
-                    set sound volume to 100
-                end if
-            end tell'");
+				if it is running then
+					set sound volume to $volume_max
+				end if
+			end tell'");
 			}
-			displayNotificationWithArtwork($w,"Spotify volume has been set to maximum", './images/volmax.png', 'Volume Max');
+			displayNotificationWithArtwork($w,"Spotify volume has been set to maximum " . $volume_max . "%", './images/volmax.png', 'Volume Max');
 			return;
 		} else if ($other_action == "volmid") {
 			if ($use_mopidy) {
-				invokeMopidyMethod($w, "core.mixer.set_volume", array('volume' => 50));
+				invokeMopidyMethod($w, "core.mixer.set_volume", array('volume' => getenv("volume_mid")));
 			} else {
+				$volume_mid = getenv("volume_mid");
 				exec("osascript -e 'tell application \"Spotify\"
-                if it is running then
-                    set sound volume to 50
-                end if
-            end tell'");
+				if it is running then
+					set sound volume to $volume_mid
+				end if
+			end tell'");
 			}
-			displayNotificationWithArtwork($w,"Spotify volume has been set to 50%", './images/volmid.png', 'Volume 50%');
+			displayNotificationWithArtwork($w,"Spotify volume has been set to " . $volume_mid . "%", './images/volmid.png', 'Volume ' . $volume_mid . '%');
 			return;
 		} else if ($other_action == "mute") {
 			if ($use_mopidy) {
@@ -1223,14 +1227,14 @@ if ($type == "TRACK" && $other_settings == "" &&
 				}
 			} else {
 				$command_output = exec("osascript -e 'tell application \"Spotify\"
-                if sound volume is less than or equal to 0 then
-                    set sound volume to 100
-                    return \"Spotify volume is unmuted.\"
-                else
-                    set sound volume to 0
-                    return \"Spotify volume is muted.\"
-                end if
-            end tell'");
+				if sound volume is less than or equal to 0 then
+					set sound volume to 100
+					return \"Spotify volume is unmuted.\"
+				else
+					set sound volume to 0
+					return \"Spotify volume is muted.\"
+				end if
+			end tell'");
 			}
 			displayNotificationWithArtwork($w,$command_output, './images/mute.png', 'Mute');
 			return;
@@ -1246,9 +1250,9 @@ if ($type == "TRACK" && $other_settings == "" &&
 				}
 			} else {
 				$command_output = exec("osascript -e '
-    	tell application \"Spotify\"
-    	if shuffling enabled is true then
-    		if shuffling is true then
+		tell application \"Spotify\"
+		if shuffling enabled is true then
+			if shuffling is true then
 				set shuffling to false
 				return \"Shuffle is now disabled.\"
 			else
@@ -1274,9 +1278,9 @@ if ($type == "TRACK" && $other_settings == "" &&
 				}
 			} else {
 				$command_output = exec("osascript -e '
-    	tell application \"Spotify\"
-    	if repeating enabled is true then
-    		if repeating is true then
+		tell application \"Spotify\"
+		if repeating enabled is true then
+			if repeating is true then
 				set repeating to false
 				return \"Repeating is now disabled.\"
 			else
