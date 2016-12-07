@@ -9,25 +9,26 @@ class SessionTest extends PHPUnit_Framework_TestCase
     private function setupStub($expectedMethod, $expectedUri, $expectedParameters, $expectedHeaders, $expectedReturn)
     {
         $stub = $this->getMockBuilder('Request')
-                ->setMethods(array('account'))
+                ->setMethods(['account'])
                 ->getMock();
 
         $stub->expects($this->once())
                  ->method('account')
                  ->with(
-                    $this->equalTo($expectedMethod),
-                    $this->equalTo($expectedUri),
-                    $this->equalTo($expectedParameters),
-                    $this->equalTo($expectedHeaders)
-                )
-                ->willReturn($expectedReturn);
+                     $this->equalTo($expectedMethod),
+                     $this->equalTo($expectedUri),
+                     $this->equalTo($expectedParameters),
+                     $this->equalTo($expectedHeaders)
+                 )
+                 ->willReturn($expectedReturn);
 
         return $stub;
     }
 
     public function testGetAuthorizeUrl()
     {
-        $expected = sprintf('https://accounts.spotify.com/authorize/?client_id=%s&redirect_uri=%s&response_type=%s&show_dialog=%s',
+        $expected = sprintf(
+            'https://accounts.spotify.com/authorize/?client_id=%s&redirect_uri=%s&response_type=%s&show_dialog=%s',
             $this->clientID,
             urlencode($this->redirectURI),
             'code',
@@ -35,16 +36,17 @@ class SessionTest extends PHPUnit_Framework_TestCase
         );
 
         $session = new SpotifyWebAPI\Session($this->clientID, $this->clientSecret, $this->redirectURI);
-        $url = $session->getAuthorizeUrl(array(
+        $url = $session->getAuthorizeUrl([
             'show_dialog' => true,
-        ));
+        ]);
 
         $this->assertEquals($expected, $url);
     }
 
     public function testGetAuthorizeUrlScope()
     {
-        $expected = sprintf('https://accounts.spotify.com/authorize/?client_id=%s&redirect_uri=%s&response_type=%s&scope=%s',
+        $expected = sprintf(
+            'https://accounts.spotify.com/authorize/?client_id=%s&redirect_uri=%s&response_type=%s&scope=%s',
             $this->clientID,
             urlencode($this->redirectURI),
             'code',
@@ -52,9 +54,9 @@ class SessionTest extends PHPUnit_Framework_TestCase
         );
 
         $session = new SpotifyWebAPI\Session($this->clientID, $this->clientSecret, $this->redirectURI);
-        $url = $session->getAuthorizeUrl(array(
-            'scope' => array('user-read-email'),
-        ));
+        $url = $session->getAuthorizeUrl([
+            'scope' => ['user-read-email'],
+        ]);
 
         $this->assertEquals($expected, $url);
     }
@@ -62,7 +64,8 @@ class SessionTest extends PHPUnit_Framework_TestCase
     public function testGetAuthorizeUrlState()
     {
         $state = 'foobar';
-        $expected = sprintf('https://accounts.spotify.com/authorize/?client_id=%s&redirect_uri=%s&response_type=%s&state=%s',
+        $expected = sprintf(
+            'https://accounts.spotify.com/authorize/?client_id=%s&redirect_uri=%s&response_type=%s&state=%s',
             $this->clientID,
             urlencode($this->redirectURI),
             'code',
@@ -70,9 +73,9 @@ class SessionTest extends PHPUnit_Framework_TestCase
         );
 
         $session = new SpotifyWebAPI\Session($this->clientID, $this->clientSecret, $this->redirectURI);
-        $url = $session->getAuthorizeUrl(array(
+        $url = $session->getAuthorizeUrl([
             'state' => $state,
-        ));
+        ]);
 
         $this->assertEquals($expected, $url);
     }
@@ -109,18 +112,18 @@ class SessionTest extends PHPUnit_Framework_TestCase
 
     public function testRefreshAccessToken()
     {
-        $expected = array(
+        $expected = [
             'grant_type' => 'refresh_token',
             'refresh_token' => $this->refreshToken,
-        );
+        ];
 
-        $headers = array(
+        $headers = [
             'Authorization' => 'Basic Yjc3NzI5MmFmMGRlZjIyZjkyNTc5OTFmYzc3MGI1MjA6NmEwNDE5ZjQzZDBhYTkzYjJhZTg4MTQyOWI2YjliYzI=',
-        );
+        ];
 
-        $return = array(
+        $return = [
             'body' => get_fixture('refresh-token'),
-        );
+        ];
 
         $stub = $this->setupStub(
             'POST',
@@ -140,23 +143,23 @@ class SessionTest extends PHPUnit_Framework_TestCase
     public function testRequestAccessToken()
     {
         $authorizationCode = 'd1e893a80f79d9ab5e7d322ed922da540964a63c';
-        $expected = array(
+        $expected = [
             'client_id' => $this->clientID,
             'client_secret' => $this->clientSecret,
             'code' => $authorizationCode,
             'grant_type' => 'authorization_code',
             'redirect_uri' => $this->redirectURI,
-        );
+        ];
 
-        $return = array(
+        $return = [
             'body' => get_fixture('access-token'),
-        );
+        ];
 
         $stub = $this->setupStub(
             'POST',
             '/api/token',
             $expected,
-            array(),
+            [],
             $return
         );
 
@@ -171,18 +174,18 @@ class SessionTest extends PHPUnit_Framework_TestCase
 
     public function testRequestCredentialsToken()
     {
-        $expected = array(
+        $expected = [
             'grant_type' => 'client_credentials',
             'scope' => 'user-read-email',
-        );
+        ];
 
-        $headers = array(
+        $headers = [
             'Authorization' => 'Basic Yjc3NzI5MmFmMGRlZjIyZjkyNTc5OTFmYzc3MGI1MjA6NmEwNDE5ZjQzZDBhYTkzYjJhZTg4MTQyOWI2YjliYzI=',
-        );
+        ];
 
-        $return = array(
+        $return = [
             'body' => get_fixture('access-token'),
-        );
+        ];
 
         $stub = $this->setupStub(
             'POST',
@@ -193,7 +196,7 @@ class SessionTest extends PHPUnit_Framework_TestCase
         );
 
         $session = new SpotifyWebAPI\Session($this->clientID, $this->clientSecret, $this->redirectURI, $stub);
-        $result = $session->requestCredentialsToken(array('user-read-email'));
+        $result = $session->requestCredentialsToken(['user-read-email']);
 
         $this->assertTrue($result);
         $this->assertNotEmpty($session->getAccessToken());

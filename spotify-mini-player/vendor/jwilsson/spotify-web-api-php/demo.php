@@ -18,12 +18,12 @@ if (isset($_GET['code'])) {
 
     print_r($api->me());
 } else {
-    $scopes = array(
-        'scope' => array(
+    $scopes = [
+        'scope' => [
             'user-read-email',
             'user-library-modify',
-        ),
-    );
+        ],
+    ];
 
     header('Location: ' . $session->getAuthorizeUrl($scopes));
 }

@@ -1,0 +1,285 @@
+/*******************************************************************************
+Slate Theme for GitHub Pages
+by Jason Costello, @jsncostello
+*******************************************************************************/
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    font-size: 18px;
+    overflow-y: scroll;
+}
+
+body {
+    background-color: #f2f2f2;
+    color: #373737;
+    font: 1rem/1.5 'Myriad Pro', Calibri, Helvetica, Arial, sans-serif;
+    margin: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #222;
+    font-family: 'Lucida Grande', 'Calibri', Helvetica, Arial, sans-serif;
+    font-weight: 700;
+    letter-spacing: -1px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    text-rendering: optimizeLegibility;
+}
+
+h1 {
+    font-size: 2rem;
+}
+
+h2 {
+    border-bottom: 1px dotted #cecece;
+    font-size: 1.8rem;
+    padding-bottom: 5px;
+}
+
+h3 {
+    border-top: 1px solid #cecece;
+    font-size: 1.3rem;
+    margin-top: 1em;
+    padding-top: 1em;
+}
+
+h3:first-of-type {
+    border-top: 0;
+    padding-top: 0;
+    margin-top: 0;
+}
+
+h4 {
+    font-size: 1.2rem;
+}
+
+h5 {
+    font-size: 1rem;
+}
+
+h6 {
+    font-size: 0.9rem;
+}
+
+p {
+    margin-bottom: 15px;
+    margin-top: 10px;
+}
+
+a {
+    background-color: transparent;
+    color: #007edf;
+    text-decoration: none;
+    text-shadow: none;
+}
+
+a:active,
+a:hover {
+    outline: 0;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+h1 a {
+    color: #fff;
+}
+
+footer a {
+    color: #f2f2f2;
+    text-decoration: underline;
+}
+
+pre,
+code {
+    background-color: #fff;
+    border-radius: 2px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    color: #222;
+    font-family: Monaco, 'Bitstream Vera Sans Mono', 'Lucida Console', Terminal, monospace;
+    font-size: 0.8rem;
+    width: 100%;
+}
+
+pre {
+    overflow: auto;
+    padding: 10px;
+}
+
+code {
+    margin: 0 3px;
+    padding: 3px;
+}
+
+pre code {
+    box-shadow: none;
+    display: block;
+}
+
+ul,
+ol {
+    margin: 0;
+    padding-left: 20px;
+}
+
+hr {
+    background: url(img/bg-hr.png) repeat-x center;
+    border: 0;
+    height: 1px;
+    margin-bottom: 5px;
+}
+
+.wrapper {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 960px;
+    padding: 20px 10px;
+    position: relative;
+}
+
+.forkme-banner {
+    background: url(img/blacktocat.png) #0090ff no-repeat 95% 50%;
+    border-bottom-left-radius: 2px;
+    border-bottom-right-radius: 2px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    color: #fff;
+    display: block;
+    font-weight: 700;
+    height: 47px;
+    line-height: 47px;
+    padding-left: 10px;
+    padding-right: 50px;
+    position: absolute;
+    right: 10px;
+    top: 0;
+}
+
+.main-header {
+    background-color: #212121;
+}
+
+.project-title {
+    color: #fff;
+    font-size: 2.3rem;
+    font-weight: 700;
+    margin-bottom: 0;
+    margin-top: 0;
+    text-shadow: #111 0 0 10px;
+}
+
+.project-tagline {
+    border-bottom: 0;
+    color: #fff;
+    font-size: 1.3rem;
+    font-weight: 300;
+    padding-bottom: 0;
+    text-shadow: #111 0 0 10px;
+}
+
+.downloads {
+    background: url(img/icon-download.png) no-repeat 0 90%;
+    bottom: -40px;
+    height: 70px;
+    position: absolute;
+    right: 0;
+    width: 210px;
+    z-index: 2;
+}
+
+.zip-download-link,
+.tar-download-link {
+    background: url(img/sprite-download.png) no-repeat;
+    display: block;
+    float: right;
+    height: inherit;
+    overflow: hidden;
+    text-indent: -5000px;
+    width: 90px;
+}
+
+.zip-download-link {
+    background-position: bottom left;
+}
+
+.tar-download-link {
+    background-position: bottom right;
+    margin-left: 10px;
+}
+
+.zip-download-link:hover {
+    background-position: top left;
+}
+
+.tar-download-link:hover {
+    background-position: top right;
+}
+
+.main-footer {
+    background-color: #212121;
+    color: #f2f2f2;
+}
+
+@media screen and (max-width: 480px) {
+    html {
+        font-size: 14px;
+    }
+
+    body {
+        font-size: 0.8rem;
+    }
+
+    .downloads {
+        display: none;
+    }
+
+    .wrapper {
+        max-width: 480px;
+        min-width: 320px;
+    }
+
+    .project-title {
+        font-size: 1.8rem;
+    }
+
+    h1 {
+        font-size: 1.55rem;
+    }
+
+    h2 {
+        font-size: 1.3rem;
+    }
+
+    h3 {
+        font-size: 1.2rem;
+    }
+
+    h4 {
+        font-size: 1rem;
+    }
+
+    h5 {
+        font-size: 0.8rem;
+    }
+
+    h6 {
+        font-size: 0.7rem;
+    }
+
+    code,
+    pre {
+        font-size: 0.6rem;
+        max-width: 480px;
+        min-width: 320px;
+    }
+}

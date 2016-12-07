@@ -1,6 +1,6 @@
 {
     "name": "jwilsson/spotify-web-api-php",
-    "description": "PHP implementation of Spotify's Web API.",
+    "description": "A PHP wrapper for Spotify's Web API.",
     "type": "library",
     "license": "MIT",
     "keywords": ["spotify"],
@@ -12,13 +12,13 @@
         }
     ],
     "require": {
-        "php": ">=5.5",
+        "php": "^5.5 || ^7.0",
         "ext-curl": "*"
     },
     "require-dev": {
-        "phpunit/phpunit": "4.*",
+        "phpunit/phpunit": "^4.0",
         "satooshi/php-coveralls": "dev-master",
-        "squizlabs/php_codesniffer": "2.*"
+        "squizlabs/php_codesniffer": "^2.0"
     },
     "autoload": {
         "psr-4": {
@@ -26,6 +26,6 @@
         }
     },
     "scripts": {
-        "test": "phpcs src -v --standard=PSR2 && phpunit"
+        "test": "phpcs src -v && phpunit"
     }
 }

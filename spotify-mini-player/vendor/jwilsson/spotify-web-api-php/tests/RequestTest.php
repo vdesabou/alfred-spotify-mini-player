@@ -17,9 +17,9 @@ class RequestTest extends PHPUnit_Framework_TestCase
 
     public function testApiParameters()
     {
-        $response = $this->request->api('GET', '/v1/albums', array(
+        $response = $this->request->api('GET', '/v1/albums', [
             'ids' => '1oR3KrPIp4CbagPa3PhtPp,6lPb7Eoon6QPbscWbMsk6a',
-        ));
+        ]);
 
         $this->assertObjectHasAttribute('id', $response['body']->albums[0]);
         $this->assertObjectHasAttribute('id', $response['body']->albums[1]);
@@ -38,13 +38,13 @@ class RequestTest extends PHPUnit_Framework_TestCase
         $clientSecret = 'INVALID_SECRET';
         $payload = base64_encode($clientID . ':' . $clientSecret);
 
-        $parameters = array(
+        $parameters = [
             'grant_type' => 'client_credentials'
-        );
+        ];
 
-        $headers = array(
+        $headers = [
             'Authorization' => 'Basic ' . $payload,
-        );
+        ];
 
         $this->setExpectedException('SpotifyWebAPI\SpotifyWebAPIException');
 
@@ -60,9 +60,9 @@ class RequestTest extends PHPUnit_Framework_TestCase
 
     public function testSendDelete()
     {
-        $parameters = array(
+        $parameters = [
             'foo' => 'bar',
-        );
+        ];
 
         $response = $this->request->send('DELETE', 'https://httpbin.org/delete', $parameters);
 
@@ -71,9 +71,9 @@ class RequestTest extends PHPUnit_Framework_TestCase
 
     public function testSendPost()
     {
-        $parameters = array(
+        $parameters = [
             'foo' => 'bar',
-        );
+        ];
 
         $response = $this->request->send('POST', 'https://httpbin.org/post', $parameters);
 
@@ -82,9 +82,9 @@ class RequestTest extends PHPUnit_Framework_TestCase
 
     public function testSendPut()
     {
-        $parameters = array(
+        $parameters = [
             'foo' => 'bar',
-        );
+        ];
 
         $response = $this->request->send('PUT', 'https://httpbin.org/put', $parameters);
 
@@ -93,9 +93,9 @@ class RequestTest extends PHPUnit_Framework_TestCase
 
     public function testSendParameters()
     {
-        $response = $this->request->send('GET', 'https://api.spotify.com/v1/albums', array(
+        $response = $this->request->send('GET', 'https://api.spotify.com/v1/albums', [
             'ids' => '1oR3KrPIp4CbagPa3PhtPp,6lPb7Eoon6QPbscWbMsk6a',
-        ));
+        ]);
 
         $this->assertObjectHasAttribute('id', $response['body']->albums[0]);
         $this->assertObjectHasAttribute('id', $response['body']->albums[1]);

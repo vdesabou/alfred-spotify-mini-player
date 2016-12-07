@@ -3,14 +3,13 @@ namespace SpotifyWebAPI;
 
 class Session
 {
-    private $accessToken = '';
-    private $clientId = '';
-    private $clientSecret = '';
-    private $expirationTime = 0;
-    private $redirectUri = '';
-    private $refreshToken = '';
-
-    private $request = null;
+    protected $accessToken = '';
+    protected $clientId = '';
+    protected $clientSecret = '';
+    protected $expirationTime = 0;
+    protected $redirectUri = '';
+    protected $refreshToken = '';
+    protected $request = null;
 
     /**
      * Constructor

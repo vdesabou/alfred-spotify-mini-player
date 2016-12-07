@@ -1,28 +1,29 @@
 [
     {
         "name": "jwilsson/spotify-web-api-php",
-        "version": "0.7.0",
-        "version_normalized": "0.7.0.0",
+        "version": "1.4.2",
+        "version_normalized": "1.4.2.0",
         "source": {
             "type": "git",
             "url": "https://github.com/jwilsson/spotify-web-api-php.git",
-            "reference": "d5f412617f163b2473f3c44aca76e548a6e94cd3"
+            "reference": "c5ff81911ac04b54b596ab77c87d98ebd40b25e2"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/jwilsson/spotify-web-api-php/zipball/d5f412617f163b2473f3c44aca76e548a6e94cd3",
-            "reference": "d5f412617f163b2473f3c44aca76e548a6e94cd3",
+            "url": "https://api.github.com/repos/jwilsson/spotify-web-api-php/zipball/c5ff81911ac04b54b596ab77c87d98ebd40b25e2",
+            "reference": "c5ff81911ac04b54b596ab77c87d98ebd40b25e2",
             "shasum": ""
         },
         "require": {
-            "php": ">=5.3.3"
+            "ext-curl": "*",
+            "php": "^5.5 || ^7.0"
         },
         "require-dev": {
-            "phpunit/phpunit": "4.*",
+            "phpunit/phpunit": "^4.0",
             "satooshi/php-coveralls": "dev-master",
-            "vlucas/phpdotenv": "1.*"
+            "squizlabs/php_codesniffer": "^2.0"
         },
-        "time": "2014-12-06 08:40:51",
+        "time": "2016-10-27 16:46:42",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -40,8 +41,8 @@
                 "email": "jonathan.wilsson@gmail.com"
             }
         ],
-        "description": "PHP implementation of Spotify's Web API.",
-        "homepage": "https://github.com/jwilsson/spotify-web-api-php",
+        "description": "A PHP wrapper for Spotify's Web API.",
+        "homepage": "http://jwilsson.github.io/spotify-web-api-php/",
         "keywords": [
             "spotify"
         ]

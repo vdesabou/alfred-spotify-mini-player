@@ -3,9 +3,9 @@ namespace SpotifyWebAPI;
 
 class SpotifyWebAPI
 {
-    private $accessToken = '';
-    private $lastResponse = [];
-    private $request = null;
+    protected $accessToken = '';
+    protected $lastResponse = [];
+    protected $request = null;
 
     /**
      * Constructor
@@ -43,6 +43,7 @@ class SpotifyWebAPI
      */
     protected function idToUri($ids)
     {
+        // Always reset the indexes
         $ids = array_values((array) $ids);
 
         for ($i = 0; $i < count($ids); $i++) {
