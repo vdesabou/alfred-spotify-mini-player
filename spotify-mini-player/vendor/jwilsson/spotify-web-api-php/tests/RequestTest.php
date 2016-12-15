@@ -51,6 +51,15 @@ class RequestTest extends PHPUnit_Framework_TestCase
         $response = $this->request->account('POST', '/api/token', $parameters, $headers);
     }
 
+    public function testGetLastResponse()
+    {
+        $this->request->send('GET', 'https://api.spotify.com/v1/albums/7u6zL7kqpgLPISZYXNTgYk');
+
+        $response = $this->request->getLastResponse();
+
+        $this->assertObjectHasAttribute('id', $response['body']);
+    }
+
     public function testSend()
     {
         $response = $this->request->send('GET', 'https://api.spotify.com/v1/albums/7u6zL7kqpgLPISZYXNTgYk');

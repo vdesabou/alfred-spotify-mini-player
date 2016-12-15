@@ -16,4 +16,4 @@ The second way is by using [Composer](https://getcomposer.org/) and adding `spot
         "jwilsson/spotify-web-api-php": "^1.0.0"
     }
 
-Now, take a look at the [Authorization steps](authorization.html), the [Method Reference]({{ site.baseurl }}/method-reference/) and some [examples]({{ site.baseurl }}/examples/).
+Now, take a look at the [Authorization steps](authorization.html), the [Method Reference]({{ site.baseurl }}/method-reference/), and some [examples]({{ site.baseurl }}/examples/).

@@ -1,4 +1,17 @@
 # Changelog
+## 1.4.2 (2016-12-11)
+* Added a `Request::getLastResponse()` method. ([21b72b0](https://github.com/jwilsson/spotify-web-api-php/commit/21b72b040ec10550649ded9050a431f890081f08))
+* Added a `SpotifyWebAPI::getRequest` method.
+([bab8924](https://github.com/jwilsson/spotify-web-api-php/commit/bab8924b1636e7d19f45722add8a0b769818983d))
+* The `$tracks` option for `SpotifyWebAPI::deleteUserPlaylistTracks()` now also supports objects. ([ce230e7](https://github.com/jwilsson/spotify-web-api-php/commit/ce230e7c9c850ebe2837924bf0808ae5bb7a26af))
+* Response compression will now be automatically negotiated by the client and server. ([3f4a643](https://github.com/jwilsson/spotify-web-api-php/commit/3f4a6434acb6bbcafe20d85bf09a74e0af2c403f))
+* Made sure `SpotifyWebAPI::getAlbums()` can handle objects for the `$options` argument properly. ([42cf5d0](https://github.com/jwilsson/spotify-web-api-php/commit/42cf5d0345be270431156d270239d7538f0d2c82))
+* Replaced `for`-loops with `array_map()`. ([cfc32b7](https://github.com/jwilsson/spotify-web-api-php/commit/cfc32b75226678274d39f631c27d80bcfd4941ec))
+* CI tests are run on PHP 7.1. ([74cb084](https://github.com/jwilsson/spotify-web-api-php/commit/74cb084a24195ca24461587aa8977dda92f63dd2))
+* Added documentation on error handling. ([57ba164](https://github.com/jwilsson/spotify-web-api-php/commit/57ba164ee15b6289358eec4998dff7796e7162f0))
+* Fixed a typo in the `SpotifyWebAPI::reorderUserPlaylistTracks()` docs. ([b25dec4](https://github.com/jwilsson/spotify-web-api-php/commit/b25dec43039abbb57144a0ab6a2c45f5ac722c02))
+* Fixed a typo in the `SpotifyWebAPI::getLastResponse()` docs. ([bdd3ecc](https://github.com/jwilsson/spotify-web-api-php/commit/bdd3ecc393ff83bc2d4af983c363cdaddb1b544b))
+
 ## 1.4.2 (2016-10-27)
 * Array indexes in SpotifyWebAPI::idToUri() are now always reset to prevent undefined offset errors. ([ae8bd96](https://github.com/jwilsson/spotify-web-api-php/commit/ae8bd9673795747fad40ff4caf6b12f17c045fc5))
 

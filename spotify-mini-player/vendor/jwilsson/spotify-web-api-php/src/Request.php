@@ -3,10 +3,25 @@ namespace SpotifyWebAPI;
 
 class Request
 {
+    protected $lastResponse = [];
     protected $returnAssoc = false;
 
     const ACCOUNT_URL = 'https://accounts.spotify.com';
     const API_URL = 'https://api.spotify.com';
+
+    /**
+     * Get the latest full response from the Spotify API.
+     *
+     * @return array Response data.
+     * - array|object body The response body. Type is controlled by Request::setReturnAssoc().
+     * - array headers Response headers.
+     * - int status HTTP status code.
+     * - string url The requested URL.
+     */
+    public function getLastResponse()
+    {
+        return $this->lastResponse;
+    }
 
     /**
      * Parse the response body and handle API errors.
@@ -20,8 +35,10 @@ class Request
      */
     protected function parseBody($body, $status)
     {
+        $this->lastResponse['body'] = json_decode($body, $this->returnAssoc);
+
         if ($status >= 200 && $status <= 299) {
-            return json_decode($body, $this->returnAssoc);
+            return $this->lastResponse['body'];
         }
 
         $body = json_decode($body);
@@ -128,7 +145,10 @@ class Request
      */
     public function send($method, $url, $parameters = [], $headers = [])
     {
-        // Sometimes a JSON object is passed
+        // Reset any old responses
+        $this->lastResponse = [];
+
+        // Sometimes a stringified JSON object is passed
         if (is_array($parameters) || is_object($parameters)) {
             $parameters = http_build_query($parameters);
         }
@@ -140,6 +160,7 @@ class Request
 
         $options = [
             CURLOPT_CAINFO => __DIR__ . '/cacert.pem',
+            CURLOPT_ENCODING => '',
             CURLOPT_HEADER => true,
             CURLOPT_HTTPHEADER => $mergedHeaders,
             CURLOPT_RETURNTRANSFER => true,
@@ -171,7 +192,6 @@ class Request
         }
 
         $options[CURLOPT_URL] = $url;
-        $options[CURLOPT_ENCODING] = "gzip";
 
         $ch = curl_init();
         curl_setopt_array($ch, $options);
@@ -186,16 +206,19 @@ class Request
 
         $status = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $headers = $this->parseHeaders($headers);
-        $body = $this->parseBody($body, $status);
 
-        curl_close($ch);
-
-        return [
-            'body' => $body,
+        $this->lastResponse = [
             'headers' => $headers,
             'status' => $status,
             'url' => $url,
         ];
+
+        // Run this here since we might throw
+        $body = $this->parseBody($body, $status);
+
+        curl_close($ch);
+
+        return $this->lastResponse;
     }
 
     /**

@@ -5,6 +5,7 @@ title: Examples
 
 *Note: All examples assume the use of Composer or a autoloader.*
 
+* [Error handling](error-handling.html)
 * [Following artists, playlists and users](following.html)
 * [Getting artists, albums or tracks](getting-objects.html)
 * [Getting Spotify featured content](getting-spotify-content.html)

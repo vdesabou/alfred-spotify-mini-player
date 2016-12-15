@@ -4005,8 +4005,11 @@ function updateLibrary($w)
                 $retry = false;
             } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
                 logMsg('Error(getUserPlaylists): retry '.$nb_retry.' (exception '.print_r($e).')');
-
-                if ($e->getCode() == 429 || $e->getCode() == 404 || $e->getCode() == 500
+                 if ($e->getCode() == 429) { // 429 is Too Many Requests
+                    $lastResponse = $api->getRequest()->getLastResponse();
+                    $retryAfter = $lastResponse['headers']['Retry-After'];
+                    sleep(retryAfter);
+                 } else if ($e->getCode() == 404 || $e->getCode() == 500
                     || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 0) {
                     // retry
                     if ($nb_retry > 20) {
@@ -4055,7 +4058,11 @@ function updateLibrary($w)
             } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
                 logMsg('Error(getMySavedTracks): retry '.$nb_retry.' (exception '.print_r($e).')');
 
-                if ($e->getCode() == 429 || $e->getCode() == 404 || $e->getCode() == 500
+                 if ($e->getCode() == 429) { // 429 is Too Many Requests
+                    $lastResponse = $api->getRequest()->getLastResponse();
+                    $retryAfter = $lastResponse['headers']['Retry-After'];
+                    sleep(retryAfter);
+                 } else if ($e->getCode() == 404 || $e->getCode() == 500
                     || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 0) {
                     // retry
                     if ($nb_retry > 20) {
@@ -4180,7 +4187,11 @@ function updateLibrary($w)
                 } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
                     logMsg('Error(getUserPlaylists): retry '.$nb_retry.' (exception '.print_r($e).')');
 
-                    if ($e->getCode() == 429 || $e->getCode() == 404 || $e->getCode() == 500
+                     if ($e->getCode() == 429) { // 429 is Too Many Requests
+                        $lastResponse = $api->getRequest()->getLastResponse();
+                        $retryAfter = $lastResponse['headers']['Retry-After'];
+                        sleep(retryAfter);
+                     } else if ($e->getCode() == 404 || $e->getCode() == 500
                         || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 0) {
                         // retry
                         if ($nb_retry > 20) {
@@ -4728,7 +4739,11 @@ function refreshLibrary($w)
             } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
                 logMsg('Error(getUserPlaylists): retry '.$nb_retry.' (exception '.print_r($e).')');
 
-                if ($e->getCode() == 429 || $e->getCode() == 404 || $e->getCode() == 500
+                 if ($e->getCode() == 429) { // 429 is Too Many Requests
+                    $lastResponse = $api->getRequest()->getLastResponse();
+                    $retryAfter = $lastResponse['headers']['Retry-After'];
+                    sleep(retryAfter);
+                 } else if ($e->getCode() == 404 || $e->getCode() == 500
                     || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 0) {
                     // retry
                     if ($nb_retry > 20) {
@@ -4825,7 +4840,11 @@ function refreshLibrary($w)
                     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
                         logMsg('Error(getUserPlaylistTracks): retry '.$nb_retry.' (exception '.print_r($e).')');
 
-                        if ($e->getCode() == 429 || $e->getCode() == 404 || $e->getCode() == 500
+                         if ($e->getCode() == 429) { // 429 is Too Many Requests
+                            $lastResponse = $api->getRequest()->getLastResponse();
+                            $retryAfter = $lastResponse['headers']['Retry-After'];
+                            sleep(retryAfter);
+                         } else if ($e->getCode() == 404 || $e->getCode() == 500
                             || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 0) {
                             // retry
                             if ($nb_retry > 20) {
@@ -5048,7 +5067,11 @@ function refreshLibrary($w)
                         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
                             logMsg('Error(getUserPlaylistTracks): retry '.$nb_retry.' (exception '.print_r($e).')');
 
-                            if ($e->getCode() == 429 || $e->getCode() == 404 || $e->getCode() == 500
+                             if ($e->getCode() == 429) { // 429 is Too Many Requests
+                                $lastResponse = $api->getRequest()->getLastResponse();
+                                $retryAfter = $lastResponse['headers']['Retry-After'];
+                                sleep(retryAfter);
+                             } else if ($e->getCode() == 404 || $e->getCode() == 500
                                 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 0) {
                                 // retry
                                 if ($nb_retry > 20) {
@@ -5265,7 +5288,11 @@ function refreshLibrary($w)
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
             logMsg('Error(getMySavedTracks): retry '.$nb_retry.' (exception '.print_r($e).')');
 
-            if ($e->getCode() == 429 || $e->getCode() == 404 || $e->getCode() == 500
+             if ($e->getCode() == 429) { // 429 is Too Many Requests
+                $lastResponse = $api->getRequest()->getLastResponse();
+                $retryAfter = $lastResponse['headers']['Retry-After'];
+                sleep(retryAfter);
+             } else if ($e->getCode() == 404 || $e->getCode() == 500
                 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 0) {
                 // retry
                 if ($nb_retry > 20) {
@@ -5336,7 +5363,11 @@ function refreshLibrary($w)
                 } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
                     logMsg('Error(getMySavedTracks): retry '.$nb_retry.' (exception '.print_r($e).')');
 
-                    if ($e->getCode() == 429 || $e->getCode() == 404 || $e->getCode() == 500
+                     if ($e->getCode() == 429) { // 429 is Too Many Requests
+                        $lastResponse = $api->getRequest()->getLastResponse();
+                        $retryAfter = $lastResponse['headers']['Retry-After'];
+                        sleep(retryAfter);
+                     } else if ($e->getCode() == 404 || $e->getCode() == 500
                         || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 0) {
                         // retry
                         if ($nb_retry > 20) {

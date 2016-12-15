@@ -43,16 +43,13 @@ class SpotifyWebAPI
      */
     protected function idToUri($ids)
     {
-        // Always reset the indexes
-        $ids = array_values((array) $ids);
-
-        for ($i = 0; $i < count($ids); $i++) {
-            if (strpos($ids[$i], 'spotify:track:') !== false) {
-                continue;
+        $ids = array_map(function ($id) {
+            if (substr($id, 0, 14) != 'spotify:track:') {
+                $id = 'spotify:track:' . $id;
             }
 
-            $ids[$i] = 'spotify:track:' . $ids[$i];
-        }
+            return $id;
+        }, (array) $ids);
 
         return (count($ids) == 1) ? $ids[0] : $ids;
     }
@@ -244,7 +241,7 @@ class SpotifyWebAPI
      *
      * @param string $userId ID of the user who owns the playlist.
      * @param string $playlistId ID of the playlist to delete tracks from.
-     * @param array $tracks Array of arrays with tracks to delete.
+     * @param array $tracks Array of arrays or objects with tracks to delete.
      * - id string Required. Spotify track ID.
      * - positions int|array Optional. The track's position(s) in the playlist.
      * @param string $snapshotId Optional. The playlist's snapshot ID.
@@ -254,22 +251,24 @@ class SpotifyWebAPI
     public function deleteUserPlaylistTracks($userId, $playlistId, $tracks, $snapshotId = '')
     {
         $options = [];
+
         if ($snapshotId) {
             $options['snapshot_id'] = $snapshotId;
         }
 
-        $options['tracks'] = [];
-        for ($i = 0; $i < count($tracks); $i++) {
-            $track = [];
+        $options['tracks'] = array_map(function ($track) {
+            $track = (array) $track;
 
-            if (isset($tracks[$i]['positions'])) {
-                $track['positions'] = (array) $tracks[$i]['positions'];
+            if (isset($track['positions'])) {
+                $track['positions'] = (array) $track['positions'];
             }
 
-            $track['uri'] = $this->idToUri($tracks[$i]['id']);
+            $track['uri'] = $this->idToUri($track['id']);
 
-            $options['tracks'][] = $track;
-        }
+            unset($track['id']);
+
+            return $track;
+        }, $tracks);
 
         $options = json_encode($options);
 
@@ -372,6 +371,7 @@ class SpotifyWebAPI
      */
     public function getAlbums($albumIds, $options = [])
     {
+        $options = (array) $options;
         $options['ids'] = implode(',', $albumIds);
 
         $headers = $this->authHeaders();
@@ -663,9 +663,10 @@ class SpotifyWebAPI
      * Get the latest full response from the Spotify API.
      *
      * @return array Response data.
-     * - array|object body The response body. Type is controlled by Request::setReturnAssoc().
-     * - string headers Response headers.
+     * - array|object body The response body. Type is controlled by SpotifyWebAPI::setReturnAssoc().
+     * - array headers Response headers.
      * - int status HTTP status code.
+     * - string url The requested URL.
      */
     public function getLastResponse()
     {
@@ -831,6 +832,16 @@ class SpotifyWebAPI
     public function getReturnAssoc()
     {
         return $this->request->getReturnAssoc();
+    }
+
+    /**
+     * Get the Request object in use.
+     *
+     * @return Request The Request object in use.
+     */
+    public function getRequest()
+    {
+        return $this->request;
     }
 
     /**
@@ -1084,7 +1095,7 @@ class SpotifyWebAPI
      *
      * @param string $userId ID of the user.
      * @param string $playlistId ID of the playlist.
-     * @param array|object $options Options for the new .
+     * @param array|object $options Options for the new tracks.
      * - int range_start Required. Position of the first track to be reordered.
      * - int range_length Optional. The amount of tracks to be reordered.
      * - int insert_before Required. Position where the tracks should be inserted.

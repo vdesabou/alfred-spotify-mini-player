@@ -4,6 +4,22 @@ title: Method Reference - Request
 ---
 
 
+### getLastResponse
+
+    array SpotifyWebAPI\Request::getLastResponse()
+
+Get the latest full response from the Spotify API.
+
+
+#### Return values
+* **array** Response data.
+    * array\|object body The response body. Type is controlled by Request::setReturnAssoc().
+    * array headers Response headers.
+    * int status HTTP status code.
+    * string url The requested URL.
+
+
+
 ### account
 
     array SpotifyWebAPI\Request::account(string $method, string $uri, array $parameters, array $headers)

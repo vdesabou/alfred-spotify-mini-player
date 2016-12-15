@@ -1101,6 +1101,13 @@ class SpotifyWebAPITest extends PHPUnit_Framework_TestCase
         $this->assertTrue($api->getReturnAssoc());
     }
 
+    public function testGetRequest()
+    {
+        $api = new SpotifyWebAPI\SpotifyWebAPI();
+
+        $this->assertInstanceOf(SpotifyWebAPI\Request::class, $api->getRequest());
+    }
+
     public function testGetTrack()
     {
         $options = [
