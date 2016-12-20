@@ -503,7 +503,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress)
     }
 
     while ($track = $stmt->fetch()) {
-        if (checkIfResultAlreadyThere($w->results(), '👤 '.ucfirst($track[0])) == false) {
+        if (checkIfResultAlreadyThere($w->results(), '👤 '.$track[0]) == false) {
             if ($quick_mode) {
                 $w->result(null, serialize(array(
                             '' /*track_uri*/,
@@ -524,7 +524,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress)
                             '', /* playlist_artwork_path */
                         )), '👤 '.$track[0], '⚡️Play artist', $track[2], 'yes', null, '');
             } else {
-                $w->result(null, '', '👤 '.ucfirst($track[0]), 'Browse this artist', $track[2], 'no', null, 'Artist▹'.$track[1].'∙'.$track[0].'▹');
+                $w->result(null, '', '👤 '.$track[0], 'Browse this artist', $track[2], 'no', null, 'Artist▹'.$track[1].'∙'.$track[0].'▹');
             }
         }
     }
@@ -568,7 +568,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress)
             }
             $added = '📌 ';
         }
-        if (checkIfResultAlreadyThere($w->results(), $added.ucfirst($track[7]).' ● '.$track[5]) == false) {
+        if (checkIfResultAlreadyThere($w->results(), $added.$track[7].' ● '.$track[5]) == false) {
             if ($track[14] == true) {
                 $w->result(null, serialize(array(
                             $track[2] /*track_uri*/,
@@ -587,7 +587,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress)
                             $track[11] /* album_artwork_path */,
                             '' /* playlist_name */,
                             '', /* playlist_artwork_path */
-                        )), $added.ucfirst($track[7]).' ● '.$track[5], array(
+                        )), $added.$track[7].' ● '.$track[5], array(
                         $quick_mode_text.$track[16].' ● '.$subtitle.getPlaylistsForTrack($db, $track[2]),
                         'alt' => 'Play album '.$track[6].' in Spotify',
                         'cmd' => 'Play artist '.$track[7].' in Spotify',
@@ -595,11 +595,11 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress)
                         'shift' => 'Add album '.$track[6].' to ...',
                         'ctrl' => 'Search artist '.$track[7].' online',
                     ), $track[9], 'yes', array(
-                        'copy' => ucfirst($track[7]).' ● '.$track[5],
-                        'largetype' => ucfirst($track[7]).' ● '.$track[5],
+                        'copy' => $track[7].' ● '.$track[5],
+                        'largetype' => $track[7].' ● '.$track[5],
                     ), '');
             } else {
-                $w->result(null, '', '🚫 '.ucfirst($track[7]).' ● '.$track[5], $track[16].' ● '.$subtitle.getPlaylistsForTrack($db, $track[2]), $track[9], 'no', null, '');
+                $w->result(null, '', '🚫 '.$track[7].' ● '.$track[5], $track[16].' ● '.$subtitle.getPlaylistsForTrack($db, $track[2]), $track[9], 'no', null, '');
             }
         }
     }
@@ -627,7 +627,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress)
     }
 
     while ($track = $stmt->fetch()) {
-        if (checkIfResultAlreadyThere($w->results(), '💿 '.ucfirst($track[0])) == false) {
+        if (checkIfResultAlreadyThere($w->results(), '💿 '.$track[0]) == false) {
             if ($track[1] == '') {
                 // can happen for local tracks
                 $track[1] = $track[3];
@@ -650,9 +650,9 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress)
                             $track[2] /* album_artwork_path */,
                             '' /* playlist_name */,
                             '', /* playlist_artwork_path */
-                        )), '💿 '.ucfirst($track[0]), '⚡️Play album', $track[2], 'yes', null, '');
+                        )), '💿 '.$track[0], '⚡️Play album', $track[2], 'yes', null, '');
             } else {
-                $w->result(null, '', '💿 '.ucfirst($track[0]), 'Browse this album', $track[2], 'no', null, 'Album▹'.$track[1].'∙'.$track[0].'▹');
+                $w->result(null, '', '💿 '.$track[0], 'Browse this album', $track[2], 'no', null, 'Album▹'.$track[1].'∙'.$track[0].'▹');
             }
         }
     }

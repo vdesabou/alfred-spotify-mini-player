@@ -250,14 +250,14 @@ function firstDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
     while ($track = $stmt->fetch()) {
         $noresult = false;
         $nb_artist_tracks = getNumberOfTracksForArtist($db, $track[0]);
-        if (checkIfResultAlreadyThere($w->results(), '👤 '.ucfirst($track[0]).' ('.$nb_artist_tracks.' tracks)') == false) {
+        if (checkIfResultAlreadyThere($w->results(), '👤 '.$track[0].' ('.$nb_artist_tracks.' tracks)') == false) {
             $uri = $track[2];
             // in case of local track, pass track uri instead
             if ($uri == '') {
                 $uri = $track[3];
             }
 
-            $w->result(null, '', '👤 '.ucfirst($track[0]).' ('.$nb_artist_tracks.' tracks)', 'Browse this artist', $track[1], 'no', null, 'Artist▹'.$uri.'∙'.$track[0].'▹');
+            $w->result(null, '', '👤 '.$track[0].' ('.$nb_artist_tracks.' tracks)', 'Browse this artist', $track[1], 'no', null, 'Artist▹'.$uri.'∙'.$track[0].'▹');
         }
     }
 
@@ -362,8 +362,8 @@ function firstDelimiterAlbums($w, $query, $settings, $db, $update_in_progress)
     while ($track = $stmt->fetch()) {
         $noresult = false;
         $nb_album_tracks = getNumberOfTracksForAlbum($db, $track[3]);
-        if (checkIfResultAlreadyThere($w->results(), ucfirst($track[0]).' ('.$nb_album_tracks.' tracks)') == false) {
-            $w->result(null, '', ucfirst($track[0]).' ('.$nb_album_tracks.' tracks)', $track[4].' by '.$track[2], $track[1], 'no', null, 'Album▹'.$track[3].'∙'.$track[0].'▹');
+        if (checkIfResultAlreadyThere($w->results(), $track[0].' ('.$nb_album_tracks.' tracks)') == false) {
+            $w->result(null, '', $track[0].' ('.$nb_album_tracks.' tracks)', $track[4].' by '.$track[2], $track[1], 'no', null, 'Album▹'.$track[3].'∙'.$track[0].'▹');
         }
     }
 
@@ -553,9 +553,9 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
             $results = searchWebApi($w, $country_code, $query, 'artist', $search_artists_limit, false);
 
             foreach ($results as $artist) {
-                if (checkIfResultAlreadyThere($w->results(), '👤 '.escapeQuery(ucfirst($artist->name))) == false) {
+                if (checkIfResultAlreadyThere($w->results(), '👤 '.escapeQuery($artist->name)) == false) {
                     $noresult = false;
-                    $w->result(null, '', '👤 '.escapeQuery(ucfirst($artist->name)), 'Browse this artist', getArtistArtwork($w, $artist->uri, $artist->name, false, false, false, $use_artworks), 'no', null, 'Online▹'.$artist->uri.'@'.escapeQuery($artist->name).'▹');
+                    $w->result(null, '', '👤 '.escapeQuery($artist->name), 'Browse this artist', getArtistArtwork($w, $artist->uri, $artist->name, false, false, false, $use_artworks), 'no', null, 'Online▹'.$artist->uri.'@'.escapeQuery($artist->name).'▹');
                 }
             }
         }
@@ -577,7 +577,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
             }
 
             foreach ($results as $album) {
-                if (checkIfResultAlreadyThere($w->results(), escapeQuery(ucfirst($album->name))) == false) {
+                if (checkIfResultAlreadyThere($w->results(), escapeQuery($album->name)) == false) {
                     $noresult = false;
 
                     try {
@@ -587,7 +587,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
                         echo $w->tojson();
                         exit;
                     }
-                    $w->result(null, '', escapeQuery(ucfirst($album->name)).' ('.$full_album->tracks->total.' tracks)', $album->album_type.' by '.escapeQuery($full_album->artists[0]->name), getTrackOrAlbumArtwork($w, $album->uri, false, false, false, $use_artworks), 'no', null, 'Online▹'.$full_album->artists[0]->uri.'@'.escapeQuery($full_album->artists[0]->name).'@'.$album->uri.'@'.escapeQuery($album->name).'▹');
+                    $w->result(null, '', escapeQuery($album->name).' ('.$full_album->tracks->total.' tracks)', $album->album_type.' by '.escapeQuery($full_album->artists[0]->name), getTrackOrAlbumArtwork($w, $album->uri, false, false, false, $use_artworks), 'no', null, 'Online▹'.$full_album->artists[0]->uri.'@'.escapeQuery($full_album->artists[0]->name).'@'.$album->uri.'@'.escapeQuery($album->name).'▹');
                 }
             }
         }
@@ -645,7 +645,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
                             '' /* album_artwork_path */,
                             '' /* playlist_name */,
                             '', /* playlist_artwork_path */
-                        )), escapeQuery(ucfirst($artist->name)).' ● '.escapeQuery($track->name), array(
+                        )), escapeQuery($artist->name).' ● '.escapeQuery($track->name), array(
                         beautifyTime($track->duration_ms / 1000).' ● '.escapeQuery($album->name),
                         'alt' => 'Play album '.escapeQuery($album->name).' in Spotify',
                         'cmd' => 'Play artist '.escapeQuery($artist->name).' in Spotify',
@@ -847,10 +847,10 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
             }
         }
         if ($noresult == false) {
-            $w->result(null, '', '👤 '.ucfirst(escapeQuery($results[1])), 'Browse this artist', getArtistArtwork($w, $artist_uri, $results[1], false, false, false, $use_artworks), 'no', null, 'Artist▹'.$artist_uri.'∙'.escapeQuery($results[1]).'▹');
+            $w->result(null, '', '👤 '.escapeQuery($results[1]), 'Browse this artist', getArtistArtwork($w, $artist_uri, $results[1], false, false, false, $use_artworks), 'no', null, 'Artist▹'.$artist_uri.'∙'.escapeQuery($results[1]).'▹');
         } else {
             // artist is not in library
-            $w->result(null, '', '👤 '.ucfirst(escapeQuery($results[1])), 'Browse this artist', getArtistArtwork($w, '' /* empty artist_uri */, $results[1], false, false, false, $use_artworks), 'no', null, 'Artist▹'.$results[4].'∙'.escapeQuery($results[1]).'▹');
+            $w->result(null, '', '👤 '.escapeQuery($results[1]), 'Browse this artist', getArtistArtwork($w, '' /* empty artist_uri */, $results[1], false, false, false, $use_artworks), 'no', null, 'Artist▹'.$results[4].'∙'.escapeQuery($results[1]).'▹');
         }
 
         // use track uri here
@@ -875,7 +875,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                 )), '💿 '.escapeQuery($results[2]), 'Play album', $album_artwork_path, 'yes', null, '');
 
         // use track uri here
-        $w->result(null, '', '💿 '.ucfirst(escapeQuery($results[2])), '☁︎ Query all tracks from this album online..', './images/online_album.png', 'no', null, 'Online▹'.$results[4].'@'.escapeQuery($results[1]).'@'.$results[4].'@'.escapeQuery($results[2]).'▹');
+        $w->result(null, '', '💿 '.escapeQuery($results[2]), '☁︎ Query all tracks from this album online..', './images/online_album.png', 'no', null, 'Online▹'.$results[4].'@'.escapeQuery($results[1]).'@'.$results[4].'@'.escapeQuery($results[2]).'▹');
 
         $w->result(null, '', 'Get Lyrics for track '.escapeQuery($results[0]), 'This will fetch lyrics online', './images/lyrics.png', 'no', null, 'Lyrics▹'.$results[4].'∙'.escapeQuery($results[1]).'∙'.escapeQuery($results[0]));
 
@@ -1046,9 +1046,9 @@ function firstDelimiterYourMusic($w, $query, $settings, $db, $update_in_progress
         }
         $noresult = true;
         while ($track = $stmt->fetch()) {
-            if (checkIfResultAlreadyThere($w->results(), '👤 '.ucfirst($track[0])) == false) {
+            if (checkIfResultAlreadyThere($w->results(), '👤 '.$track[0]) == false) {
                 $noresult = false;
-                $w->result(null, '', '👤 '.ucfirst($track[0]), 'Browse this artist', $track[2], 'no', null, 'Artist▹'.$track[1].'∙'.$track[0].'▹');
+                $w->result(null, '', '👤 '.$track[0], 'Browse this artist', $track[2], 'no', null, 'Artist▹'.$track[1].'∙'.$track[0].'▹');
             }
         }
 
@@ -1076,7 +1076,7 @@ function firstDelimiterYourMusic($w, $query, $settings, $db, $update_in_progress
             $noresult = false;
             $subtitle = $track[6];
 
-            if (checkIfResultAlreadyThere($w->results(), ucfirst($track[7]).' ● '.$track[5]) == false) {
+            if (checkIfResultAlreadyThere($w->results(), $track[7].' ● '.$track[5]) == false) {
                 $w->result(null, serialize(array(
                             $track[2] /*track_uri*/,
                             $track[3] /* album_uri */,
@@ -1094,7 +1094,7 @@ function firstDelimiterYourMusic($w, $query, $settings, $db, $update_in_progress
                             $track[11] /* album_artwork_path */,
                             '' /* playlist_name */,
                             '', /* playlist_artwork_path */
-                        )), ucfirst($track[7]).' ● '.$track[5], $arrayresult = array(
+                        )), $track[7].' ● '.$track[5], $arrayresult = array(
                         $track[16].' ● '.$subtitle.getPlaylistsForTrack($db, $track[2]),
                         'alt' => 'Play album '.$track[6].' in Spotify',
                         'cmd' => 'Play artist '.$track[7].' in Spotify',
@@ -1102,8 +1102,8 @@ function firstDelimiterYourMusic($w, $query, $settings, $db, $update_in_progress
                         'shift' => 'Add album '.$track[6].' to ...',
                         'ctrl' => 'Search artist '.$track[7].' online',
                     ), $track[9], 'yes', array(
-                        'copy' => ucfirst($track[7]).' ● '.$track[5],
-                        'largetype' => ucfirst($track[7]).' ● '.$track[5],
+                        'copy' => $track[7].' ● '.$track[5],
+                        'largetype' => $track[7].' ● '.$track[5],
                     ), '');
             }
         }
@@ -2064,7 +2064,7 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
                 } elseif ($playqueue->type == 'track') {
                     $track_name = $playqueue->name;
                 }
-                $w->result(null, 'help', 'Playing from: '.ucfirst($playqueue->type).' '.$playqueue->name, 'Track '.$current_track_index.' on '.count($tl_tracks).' tracks queued', './images/play_queue.png', 'no', null, '');
+                $w->result(null, 'help', 'Playing from: '.$playqueue->type.' '.$playqueue->name, 'Track '.$current_track_index.' on '.count($tl_tracks).' tracks queued', './images/play_queue.png', 'no', null, '');
                 // $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
                 // $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
                 // $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
@@ -2095,7 +2095,7 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
 
             if (strpos($track_name, '[unplayable]') !== false) {
                 $track_name = str_replace('[unplayable]', '', $track_name);
-                $w->result(null, '', '🚫 '.escapeQuery(ucfirst($artist_name)).' ● '.escapeQuery($track_name), $duration.' ● '.$album_name, $track_artwork, 'no', null, '');
+                $w->result(null, '', '🚫 '.escapeQuery($artist_name).' ● '.escapeQuery($track_name), $duration.' ● '.$album_name, $track_artwork, 'no', null, '');
             } else {
                 $w->result(null, serialize(array(
                             $tl_track->track->uri /*track_uri*/,
@@ -2207,7 +2207,7 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
                 } elseif ($playqueue->type == 'track') {
                     $track_name = $playqueue->name;
                 }
-                $w->result(null, 'help', 'Playing from: '.ucfirst($playqueue->type).' '.$playqueue->name, 'Track '.($playqueue->current_track_index + 1).' on '.count($playqueue->tracks).' tracks queued', './images/play_queue.png', 'no', null, '');
+                $w->result(null, 'help', 'Playing from: '.$playqueue->type.' '.$playqueue->name, 'Track '.($playqueue->current_track_index + 1).' on '.count($playqueue->tracks).' tracks queued', './images/play_queue.png', 'no', null, '');
                 // $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
                 // $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
                 // $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');

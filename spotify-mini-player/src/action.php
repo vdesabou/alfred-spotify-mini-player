@@ -153,7 +153,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
             }
 
             if ($now_playing_notifications == false) {
-                displayNotificationWithArtwork($w, '🔈 '.$track_name.' by '.ucfirst($artist_name), $track_artwork_path);
+                displayNotificationWithArtwork($w, '🔈 '.$track_name.' by '.$artist_name, $track_artwork_path);
             }
             if ($userid != 'vdesabou') {
                 stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
@@ -178,7 +178,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
                     exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
                 }
                 if ($now_playing_notifications == false) {
-                    displayNotificationWithArtwork($w, '🔈 '.$track_name.' by '.ucfirst($artist_name), $track_artwork_path);
+                    displayNotificationWithArtwork($w, '🔈 '.$track_name.' by '.$artist_name, $track_artwork_path);
                 }
                 if ($userid != 'vdesabou') {
                     stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
@@ -262,7 +262,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
     } else {
         exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
     }
-    displayNotificationWithArtwork($w, '🔈 Album '.$album_name.' by '.ucfirst($artist_name), $album_artwork_path, 'Play Album');
+    displayNotificationWithArtwork($w, '🔈 Album '.$album_name.' by '.$artist_name, $album_artwork_path, 'Play Album');
     if ($userid != 'vdesabou') {
         stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
     }
@@ -902,7 +902,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
         }
         $album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, true, false, false, $use_artworks);
         if ($now_playing_notifications == false) {
-            displayNotificationWithArtwork($w, '🔈 '.$track_name.' in album '.$album_name.' by '.ucfirst($artist_name), $album_artwork_path, 'Play Track from Album');
+            displayNotificationWithArtwork($w, '🔈 '.$track_name.' in album '.$album_name.' by '.$artist_name, $album_artwork_path, 'Play Track from Album');
         }
         if ($userid != 'vdesabou') {
             stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
