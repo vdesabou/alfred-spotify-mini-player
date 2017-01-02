@@ -797,7 +797,10 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                     'fn' => 'Add track '.escapeQuery($results[0]).' to ...',
                     'shift' => 'Add album '.escapeQuery($results[2]).' to ...',
                     'ctrl' => 'Search artist '.escapeQuery($results[1]).' online',
-                ), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', null, '');
+                ), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', array(
+                        'copy' => '#NowPlaying ' . escapeQuery($results[0]).' by '.escapeQuery($results[1]),
+                        'largetype' => escapeQuery($results[0]).' by '.escapeQuery($results[1]),
+                    ), '');
         } else {
             $w->result(null, serialize(array(
                         $results[4] /*track_uri*/,
@@ -823,7 +826,10 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                     'fn' => 'Add track '.escapeQuery($results[0]).' to ...',
                     'shift' => 'Add album '.escapeQuery($results[2]).' to ...',
                     'ctrl' => 'Search artist '.escapeQuery($results[1]).' online',
-                ), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', null, '');
+                ), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', array(
+                        'copy' => '#NowPlaying ' . escapeQuery($results[0]).' by '.escapeQuery($results[1]),
+                        'largetype' => escapeQuery($results[0]).' by '.escapeQuery($results[1]),
+                    ), '');
         }
 
         $getTracks = 'select artist_name,artist_uri from tracks where artist_name=:artist_name limit '. 1;
