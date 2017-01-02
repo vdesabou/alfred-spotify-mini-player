@@ -6489,7 +6489,7 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 		<string>volume_up</string>
 	</dict>
 	<key>version</key>
-	<string>6.6</string>
+	<string>6.7</string>
 	<key>webaddress</key>
 	<string>http://alfred-spotify-mini-player.com</string>
 </dict>
