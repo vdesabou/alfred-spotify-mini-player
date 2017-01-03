@@ -767,8 +767,12 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
 
         $href = explode(':', $results[4]);
         $added = '';
+        $shared_url = '';
         if ($href[1] == 'local') {
             $added = '📌 ';
+        } else {
+            $shared_url .= ' https://open.spotify.com/track/';
+            $shared_url .= $href[2];            
         }
         $subtitle = '⌥ (play album) ⌘ (play artist) ctrl (lookup online)';
         $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
@@ -798,7 +802,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                     'shift' => 'Add album '.escapeQuery($results[2]).' to ...',
                     'ctrl' => 'Search artist '.escapeQuery($results[1]).' online',
                 ), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', array(
-                        'copy' => '#NowPlaying ' . escapeQuery($results[0]).' by '.escapeQuery($results[1]),
+                        'copy' => '#NowPlaying ' . escapeQuery($results[0]).' by '.escapeQuery($results[1]) . $shared_url,
                         'largetype' => escapeQuery($results[0]).' by '.escapeQuery($results[1]),
                     ), '');
         } else {
@@ -827,7 +831,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                     'shift' => 'Add album '.escapeQuery($results[2]).' to ...',
                     'ctrl' => 'Search artist '.escapeQuery($results[1]).' online',
                 ), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', array(
-                        'copy' => '#NowPlaying ' . escapeQuery($results[0]).' by '.escapeQuery($results[1]),
+                        'copy' => '#NowPlaying ' . escapeQuery($results[0]).' by '.escapeQuery($results[1]) . $shared_url,
                         'largetype' => escapeQuery($results[0]).' by '.escapeQuery($results[1]),
                     ), '');
         }
