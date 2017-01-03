@@ -60,6 +60,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>0EBF4C61-5630-4629-8B4F-AD91D3470760</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>58B9E278-8EF7-46DC-96DC-D8D127D5EEBB</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>1059D963-473F-44F8-8D60-94CFCE56BFF2</key>
 		<array>
 			<dict>
@@ -863,6 +876,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>9653C27F-400A-4C3F-BB97-FC0C803DFEC7</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>58B9E278-8EF7-46DC-96DC-D8D127D5EEBB</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>9661EF24-91C3-44A1-9066-8E9B9817841D</key>
 		<array>
 			<dict>
@@ -1439,6 +1465,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>E5BAF801-726E-49C0-ABF2-7AD9F9ECD22A</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>58B9E278-8EF7-46DC-96DC-D8D127D5EEBB</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>E63EB492-FCE2-42A1-BD38-7EFE4EA77473</key>
 		<array>
 			<dict>
@@ -1572,6 +1611,29 @@
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<true/>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>php -f ./src/action.php -- "{query}" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>5F3AF2C8-064F-4C10-8D99-22E212825BFE</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>action</key>
 				<integer>0</integer>
 				<key>argument</key>
@@ -1597,29 +1659,6 @@
 			<string>alfred.workflow.trigger.hotkey</string>
 			<key>uid</key>
 			<string>AE6160D1-56EA-4416-991E-CF12B874FFD3</string>
-			<key>version</key>
-			<integer>2</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>concurrently</key>
-				<true/>
-				<key>escaping</key>
-				<integer>38</integer>
-				<key>script</key>
-				<string>php -f ./src/action.php -- "{query}" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1</string>
-				<key>scriptargtype</key>
-				<integer>0</integer>
-				<key>scriptfile</key>
-				<string></string>
-				<key>type</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>5F3AF2C8-064F-4C10-8D99-22E212825BFE</string>
 			<key>version</key>
 			<integer>2</integer>
 		</dict>
@@ -2487,6 +2526,27 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>random</string>
+				<key>subtext</key>
+				<string>Play random track</string>
+				<key>text</key>
+				<string>Random Track</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>8C78472B-13EB-4512-B94D-4BF92867CD92</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>concurrently</key>
 				<false/>
 				<key>escaping</key>
@@ -2510,27 +2570,6 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 			<string>05D01A85-8BDC-4FF6-BEBB-BAF26BB5870A</string>
 			<key>version</key>
 			<integer>2</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>2</integer>
-				<key>keyword</key>
-				<string>random</string>
-				<key>subtext</key>
-				<string>Play random track</string>
-				<key>text</key>
-				<string>Random Track</string>
-				<key>withspace</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>8C78472B-13EB-4512-B94D-4BF92867CD92</string>
-			<key>version</key>
-			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -2724,27 +2763,6 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>argumenttype</key>
-				<integer>2</integer>
-				<key>keyword</key>
-				<string>{var:pause}</string>
-				<key>subtext</key>
-				<string>Pause the current Spotify track</string>
-				<key>text</key>
-				<string>Pause</string>
-				<key>withspace</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>F4382654-9318-4849-82E4-550AC235148C</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>concurrently</key>
 				<false/>
 				<key>escaping</key>
@@ -2765,6 +2783,27 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 			<string>24B8C827-75F2-4421-A412-D48782DA1DB8</string>
 			<key>version</key>
 			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>{var:pause}</string>
+				<key>subtext</key>
+				<string>Pause the current Spotify track</string>
+				<key>text</key>
+				<string>Pause</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>F4382654-9318-4849-82E4-550AC235148C</string>
+			<key>version</key>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -2811,27 +2850,6 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>argumenttype</key>
-				<integer>2</integer>
-				<key>keyword</key>
-				<string>{var:play}</string>
-				<key>subtext</key>
-				<string>Play the current Spotify track</string>
-				<key>text</key>
-				<string>Play</string>
-				<key>withspace</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>5AF7EEEC-2E55-482C-8750-4CE6AD752683</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>concurrently</key>
 				<false/>
 				<key>escaping</key>
@@ -2853,6 +2871,27 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 			<string>98123379-ADC9-4377-9F28-DF79E01715D1</string>
 			<key>version</key>
 			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>{var:play}</string>
+				<key>subtext</key>
+				<string>Play the current Spotify track</string>
+				<key>text</key>
+				<string>Play</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>5AF7EEEC-2E55-482C-8750-4CE6AD752683</string>
+			<key>version</key>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -2907,27 +2946,6 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>argumenttype</key>
-				<integer>2</integer>
-				<key>keyword</key>
-				<string>{var:shuffle}</string>
-				<key>subtext</key>
-				<string>Activate/Deactivate shuffling in Spotify</string>
-				<key>text</key>
-				<string>Shuffle</string>
-				<key>withspace</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>81BA0BC2-F1CB-46DC-A715-C38A1A0E055E</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>concurrently</key>
 				<false/>
 				<key>escaping</key>
@@ -2948,6 +2966,27 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 			<string>873ABD54-A6BC-4C6D-A88B-8FC9DA2C3292</string>
 			<key>version</key>
 			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>{var:shuffle}</string>
+				<key>subtext</key>
+				<string>Activate/Deactivate shuffling in Spotify</string>
+				<key>text</key>
+				<string>Shuffle</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>81BA0BC2-F1CB-46DC-A715-C38A1A0E055E</string>
+			<key>version</key>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -3012,6 +3051,27 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>{var:previous}</string>
+				<key>subtext</key>
+				<string>Play the previous track in Spotify</string>
+				<key>text</key>
+				<string>Previous Track</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>CD9D3654-8137-49B2-80DC-095E97A58E67</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>concurrently</key>
 				<false/>
 				<key>escaping</key>
@@ -3032,27 +3092,6 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 			<string>77BC9498-F4E6-48BB-919D-D0B64DAFEF26</string>
 			<key>version</key>
 			<integer>2</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>2</integer>
-				<key>keyword</key>
-				<string>{var:previous}</string>
-				<key>subtext</key>
-				<string>Play the previous track in Spotify</string>
-				<key>text</key>
-				<string>Previous Track</string>
-				<key>withspace</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>CD9D3654-8137-49B2-80DC-095E97A58E67</string>
-			<key>version</key>
-			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -3109,6 +3148,27 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>{var:next}</string>
+				<key>subtext</key>
+				<string>Play the next track in Spotify</string>
+				<key>text</key>
+				<string>Next Track</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>4EB5FB5E-6472-4757-A479-B206B6080036</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>concurrently</key>
 				<false/>
 				<key>escaping</key>
@@ -3129,27 +3189,6 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 			<string>64953E09-D9D0-485B-B92B-79E7FEC15927</string>
 			<key>version</key>
 			<integer>2</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>2</integer>
-				<key>keyword</key>
-				<string>{var:next}</string>
-				<key>subtext</key>
-				<string>Play the next track in Spotify</string>
-				<key>text</key>
-				<string>Next Track</string>
-				<key>withspace</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>4EB5FB5E-6472-4757-A479-B206B6080036</string>
-			<key>version</key>
-			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -3209,6 +3248,27 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>{var:current}</string>
+				<key>subtext</key>
+				<string>Get current track information</string>
+				<key>text</key>
+				<string>Get Current Track info</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>A38DD404-DE03-42C2-B0CB-A37891B6F24D</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>concurrently</key>
 				<false/>
 				<key>escaping</key>
@@ -3229,27 +3289,6 @@ php -f ./src/action.php -- "$query" "{query}" "" &gt;&gt; "$alfred_workflow_cach
 			<string>BC672665-5E43-4892-B8D3-BFCBA48E34C4</string>
 			<key>version</key>
 			<integer>2</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>2</integer>
-				<key>keyword</key>
-				<string>{var:current}</string>
-				<key>subtext</key>
-				<string>Get current track information</string>
-				<key>text</key>
-				<string>Get Current Track info</string>
-				<key>withspace</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>A38DD404-DE03-42C2-B0CB-A37891B6F24D</string>
-			<key>version</key>
-			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -3304,6 +3343,27 @@ php -f ./src/action.php -- "$query" "{query}" "" &gt;&gt; "$alfred_workflow_cach
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>{var:lyrics}</string>
+				<key>subtext</key>
+				<string>Get current track lyrics</string>
+				<key>text</key>
+				<string>Get Lyrics for current track</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>AC236315-8CDE-41E3-A9BA-BB59D292FE14</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>concurrently</key>
 				<false/>
 				<key>escaping</key>
@@ -3326,27 +3386,6 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 			<string>EB1ED46F-71D7-49D1-B7BB-DA1ECF2F665F</string>
 			<key>version</key>
 			<integer>2</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>2</integer>
-				<key>keyword</key>
-				<string>{var:lyrics}</string>
-				<key>subtext</key>
-				<string>Get current track lyrics</string>
-				<key>text</key>
-				<string>Get Lyrics for current track</string>
-				<key>withspace</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>AC236315-8CDE-41E3-A9BA-BB59D292FE14</string>
-			<key>version</key>
-			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -3574,27 +3613,6 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>argumenttype</key>
-				<integer>2</integer>
-				<key>keyword</key>
-				<string>{var:spot_mini_reset_settings}</string>
-				<key>subtext</key>
-				<string>The authentication will have to be done again</string>
-				<key>text</key>
-				<string>Reset settings for Spotify Mini Player</string>
-				<key>withspace</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>B23712E3-4564-4668-BD6D-4D535839CC8C</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>concurrently</key>
 				<false/>
 				<key>escaping</key>
@@ -3617,6 +3635,27 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 			<string>F2B24FB4-386C-4562-99D2-E4162D26AB4A</string>
 			<key>version</key>
 			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>{var:spot_mini_reset_settings}</string>
+				<key>subtext</key>
+				<string>The authentication will have to be done again</string>
+				<key>text</key>
+				<string>Reset settings for Spotify Mini Player</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>B23712E3-4564-4668-BD6D-4D535839CC8C</string>
+			<key>version</key>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -3888,27 +3927,6 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>argumenttype</key>
-				<integer>2</integer>
-				<key>keyword</key>
-				<string>{var:play_album}</string>
-				<key>subtext</key>
-				<string>Play the current album</string>
-				<key>text</key>
-				<string>Play current album</string>
-				<key>withspace</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>B77F5F98-C065-49A4-BBB1-68ADADDD8E7D</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>concurrently</key>
 				<false/>
 				<key>escaping</key>
@@ -3931,6 +3949,27 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 			<string>23412027-872A-4639-A9D9-DCFD8D8FF36D</string>
 			<key>version</key>
 			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>{var:play_album}</string>
+				<key>subtext</key>
+				<string>Play the current album</string>
+				<key>text</key>
+				<string>Play current album</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>B77F5F98-C065-49A4-BBB1-68ADADDD8E7D</string>
+			<key>version</key>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -4074,6 +4113,25 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>browser</key>
+				<string></string>
+				<key>spaces</key>
+				<string></string>
+				<key>url</key>
+				<string>https://github.com/vdesabou/alfred-spotify-mini-player/issues/new</string>
+				<key>utf8</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.openurl</string>
+			<key>uid</key>
+			<string>899AC4D2-88FA-474F-A075-AFA12F361E2B</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
@@ -4089,25 +4147,6 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 			<string>alfred.workflow.input.keyword</string>
 			<key>uid</key>
 			<string>794A76A7-BB98-4A83-92BE-386A56875120</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>browser</key>
-				<string></string>
-				<key>spaces</key>
-				<string></string>
-				<key>url</key>
-				<string>https://github.com/vdesabou/alfred-spotify-mini-player/issues/new</string>
-				<key>utf8</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.openurl</string>
-			<key>uid</key>
-			<string>899AC4D2-88FA-474F-A075-AFA12F361E2B</string>
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
@@ -4156,6 +4195,27 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>{var:add_current_track_to}</string>
+				<key>subtext</key>
+				<string>Current track will be added to Your Music or a chosen playlist</string>
+				<key>text</key>
+				<string>Add current track to ...</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>7FE5D993-C14D-4B94-9479-B361680F1C40</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>concurrently</key>
 				<false/>
 				<key>escaping</key>
@@ -4178,27 +4238,6 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 			<string>E3BCC85B-A326-41C9-BAC9-623BE1865375</string>
 			<key>version</key>
 			<integer>2</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>2</integer>
-				<key>keyword</key>
-				<string>{var:add_current_track_to}</string>
-				<key>subtext</key>
-				<string>Current track will be added to Your Music or a chosen playlist</string>
-				<key>text</key>
-				<string>Add current track to ...</string>
-				<key>withspace</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>7FE5D993-C14D-4B94-9479-B361680F1C40</string>
-			<key>version</key>
-			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -4253,6 +4292,27 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>{var:lookup_artist_online}</string>
+				<key>subtext</key>
+				<string>☁︎ Query all albums/tracks from this artist online..</string>
+				<key>text</key>
+				<string>Lookup Current Artist online</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>552D77E3-1550-4035-AB49-8B708B081EC9</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>concurrently</key>
 				<false/>
 				<key>escaping</key>
@@ -4275,27 +4335,6 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 			<string>05E1E4AA-E6B1-4DAA-9CB0-36CACDE2DA5B</string>
 			<key>version</key>
 			<integer>2</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>2</integer>
-				<key>keyword</key>
-				<string>{var:lookup_artist_online}</string>
-				<key>subtext</key>
-				<string>☁︎ Query all albums/tracks from this artist online..</string>
-				<key>text</key>
-				<string>Lookup Current Artist online</string>
-				<key>withspace</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>552D77E3-1550-4035-AB49-8B708B081EC9</string>
-			<key>version</key>
-			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -4329,29 +4368,6 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>concurrently</key>
-				<false/>
-				<key>escaping</key>
-				<integer>127</integer>
-				<key>script</key>
-				<string>tell application "System Events"	key code 74 -- escapeend tell</string>
-				<key>scriptargtype</key>
-				<integer>0</integer>
-				<key>scriptfile</key>
-				<string></string>
-				<key>type</key>
-				<integer>6</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>25E3EBDF-2CFA-4599-A13B-8C63B3E5329A</string>
-			<key>version</key>
-			<integer>2</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>argument</key>
 				<string></string>
 				<key>argumenttype</key>
@@ -4373,23 +4389,25 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>argument</key>
-				<string></string>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>triggerid</key>
-				<string>com.vdesabou.miniplayer.keyenter</string>
-				<key>triggername</key>
-				<string>Key Enter</string>
-				<key>workflowonly</key>
+				<key>concurrently</key>
 				<false/>
+				<key>escaping</key>
+				<integer>127</integer>
+				<key>script</key>
+				<string>tell application "System Events"	key code 74 -- escapeend tell</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>6</integer>
 			</dict>
 			<key>type</key>
-			<string>alfred.workflow.trigger.remote</string>
+			<string>alfred.workflow.action.script</string>
 			<key>uid</key>
-			<string>78DAB9D1-72A3-4B44-AB3B-D1C71F13DF7A</string>
+			<string>25E3EBDF-2CFA-4599-A13B-8C63B3E5329A</string>
 			<key>version</key>
-			<integer>1</integer>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -4417,25 +4435,23 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>concurrently</key>
-				<false/>
-				<key>escaping</key>
-				<integer>127</integer>
-				<key>script</key>
-				<string>tell application "System Events"	key code 125 -- downend tell</string>
-				<key>scriptargtype</key>
-				<integer>0</integer>
-				<key>scriptfile</key>
+				<key>argument</key>
 				<string></string>
-				<key>type</key>
-				<integer>6</integer>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>triggerid</key>
+				<string>com.vdesabou.miniplayer.keyenter</string>
+				<key>triggername</key>
+				<string>Key Enter</string>
+				<key>workflowonly</key>
+				<false/>
 			</dict>
 			<key>type</key>
-			<string>alfred.workflow.action.script</string>
+			<string>alfred.workflow.trigger.remote</string>
 			<key>uid</key>
-			<string>13367FE5-35F7-4B94-8728-CF6F3D9F4C2B</string>
+			<string>78DAB9D1-72A3-4B44-AB3B-D1C71F13DF7A</string>
 			<key>version</key>
-			<integer>2</integer>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -4457,6 +4473,29 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 			<string>303A65BF-8E81-48E8-AA28-E1CA408FDD53</string>
 			<key>version</key>
 			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>127</integer>
+				<key>script</key>
+				<string>tell application "System Events"	key code 125 -- downend tell</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>6</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>13367FE5-35F7-4B94-8728-CF6F3D9F4C2B</string>
+			<key>version</key>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -4623,27 +4662,6 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>argumenttype</key>
-				<integer>2</integer>
-				<key>keyword</key>
-				<string>{var:remove_current_track_from}</string>
-				<key>subtext</key>
-				<string>Current track will be removed from Your Music or a chosen playlist</string>
-				<key>text</key>
-				<string>Remove current track from ...</string>
-				<key>withspace</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>62AA861E-C910-4354-84C9-58A5660365D8</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>concurrently</key>
 				<false/>
 				<key>escaping</key>
@@ -4666,6 +4684,27 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 			<string>CB11FDA4-17C4-4684-A145-C0D8FD6F6FDE</string>
 			<key>version</key>
 			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>{var:remove_current_track_from}</string>
+				<key>subtext</key>
+				<string>Current track will be removed from Your Music or a chosen playlist</string>
+				<key>text</key>
+				<string>Remove current track from ...</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>62AA861E-C910-4354-84C9-58A5660365D8</string>
+			<key>version</key>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -4699,27 +4738,6 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>argumenttype</key>
-				<integer>2</integer>
-				<key>keyword</key>
-				<string>{var:random_album}</string>
-				<key>subtext</key>
-				<string>Play random album</string>
-				<key>text</key>
-				<string>Random Album</string>
-				<key>withspace</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>D31A5001-4590-418E-9AB0-6183E75E59DE</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>concurrently</key>
 				<false/>
 				<key>escaping</key>
@@ -4743,6 +4761,27 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 			<string>0ED2ADE7-F998-4BE2-99F5-70CE4B287555</string>
 			<key>version</key>
 			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>{var:random_album}</string>
+				<key>subtext</key>
+				<string>Play random album</string>
+				<key>text</key>
+				<string>Random Album</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>D31A5001-4590-418E-9AB0-6183E75E59DE</string>
+			<key>version</key>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -5308,6 +5347,101 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>{var:share}</string>
+				<key>subtext</key>
+				<string>Share current track using Mac OS X Sharing</string>
+				<key>text</key>
+				<string>Share current track</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>0EBF4C61-5630-4629-8B4F-AD91D3470760</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string></string>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>triggerid</key>
+				<string>com.vdesabou.miniplayer.share</string>
+				<key>triggername</key>
+				<string>Share</string>
+				<key>workflowonly</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.remote</string>
+			<key>uid</key>
+			<string>E5BAF801-726E-49C0-ABF2-7AD9F9ECD22A</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "share" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
+php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>58B9E278-8EF7-46DC-96DC-D8D127D5EEBB</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>0</integer>
+				<key>focusedappvariable</key>
+				<false/>
+				<key>focusedappvariablename</key>
+				<string></string>
+				<key>hotkey</key>
+				<integer>0</integer>
+				<key>hotmod</key>
+				<integer>0</integer>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>0</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>9653C27F-400A-4C3F-BB97-FC0C803DFEC7</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string>Web Site:
@@ -5375,6 +5509,13 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<integer>90</integer>
 			<key>ypos</key>
 			<integer>870</integer>
+		</dict>
+		<key>0EBF4C61-5630-4629-8B4F-AD91D3470760</key>
+		<dict>
+			<key>xpos</key>
+			<integer>300</integer>
+			<key>ypos</key>
+			<integer>11330</integer>
 		</dict>
 		<key>0ED2ADE7-F998-4BE2-99F5-70CE4B287555</key>
 		<dict>
@@ -5643,6 +5784,13 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<integer>300</integer>
 			<key>ypos</key>
 			<real>8090</real>
+		</dict>
+		<key>58B9E278-8EF7-46DC-96DC-D8D127D5EEBB</key>
+		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
+			<key>ypos</key>
+			<integer>11430</integer>
 		</dict>
 		<key>5AF7EEEC-2E55-482C-8750-4CE6AD752683</key>
 		<dict>
@@ -5951,6 +6099,13 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<integer>90</integer>
 			<key>ypos</key>
 			<integer>750</integer>
+		</dict>
+		<key>9653C27F-400A-4C3F-BB97-FC0C803DFEC7</key>
+		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
+			<key>ypos</key>
+			<integer>11540</integer>
 		</dict>
 		<key>9661EF24-91C3-44A1-9066-8E9B9817841D</key>
 		<dict>
@@ -6330,6 +6485,13 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<key>ypos</key>
 			<real>8470</real>
 		</dict>
+		<key>E5BAF801-726E-49C0-ABF2-7AD9F9ECD22A</key>
+		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
+			<key>ypos</key>
+			<integer>11420</integer>
+		</dict>
 		<key>E63EB492-FCE2-42A1-BD38-7EFE4EA77473</key>
 		<dict>
 			<key>xpos</key>
@@ -6459,6 +6621,10 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 		<string>remove_current_track_from</string>
 		<key>repeating</key>
 		<string>repeating</string>
+		<key>share</key>
+		<string>share</string>
+		<key>sharing_service</key>
+		<string>twitter</string>
 		<key>shuffle</key>
 		<string>shuffle</string>
 		<key>song_radio</key>

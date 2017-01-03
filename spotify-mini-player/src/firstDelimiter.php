@@ -921,6 +921,32 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                 ), './images/radio_song.png', 'yes', null, '');
         }
 
+        $w->result(null, serialize(array(
+                    '' /*track_uri*/,
+                    '' /* album_uri */,
+                    '' /* artist_uri */,
+                    '' /* playlist_uri */,
+                    '' /* spotify_command */,
+                    '' /* query */,
+                    '' /* other_settings*/,
+                    'share' /* other_action */,
+                    '' /* artist_name */,
+                    '' /* track_name */,
+                    '' /* album_name */,
+                    '' /* track_artwork_path */,
+                    '' /* artist_artwork_path */,
+                    '' /* album_artwork_path */,
+                    '' /* playlist_name */,
+                    '', /* playlist_artwork_path */
+                )), 'Share current track using Mac OS X Sharing ', array(
+                'This will open the Mac OS X Sharing for the current track',
+                'alt' => 'Not Available',
+                'cmd' => 'Not Available',
+                'shift' => 'Not Available',
+                'fn' => 'Not Available',
+                'ctrl' => 'Not Available',
+            ), './images/share.png', 'yes', null, '');
+
         if ($all_playlists == true) {
             $getTracks = 'select playlist_uri from tracks where uri=:uri limit '.$max_results;
             try {

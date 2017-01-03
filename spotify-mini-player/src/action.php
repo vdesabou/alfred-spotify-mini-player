@@ -1393,6 +1393,45 @@ if ($type == 'TRACK' && $other_settings == '' &&
         displayNotificationWithArtwork($w, $command_output, './images/shuffle.png', 'Shuffle');
 
         return;
+    } elseif ($other_action == 'share') {
+        if ($use_mopidy) {
+            $ret = getCurrentTrackInfoWithMopidy($w, false);
+            $results = explode('▹', $ret);
+        } else {
+            // get info on current song
+            exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
+
+            if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
+                $results = explode('▹', $retArr[count($retArr) - 1]);
+            }
+        }
+
+        if (!isset($results[0])) {
+            displayNotificationWithArtwork($w, 'Cannot get current track', './images/warning.png', 'Error!');
+            return;
+        }
+
+        $service = getenv('sharing_service');
+        $text = '#NowPlaying ';
+        $text .= escapeQuery($results[0]);
+        $text .= ' by ';
+        $text .= escapeQuery($results[1]);
+
+        $tmp = explode(':', $results[4]);
+        if ($tmp[1] != 'local') {
+            $text .= ' https://open.spotify.com/track/';
+            $text .= $tmp[2];
+        }
+        
+        $artwork = getTrackOrAlbumArtwork($w, $results[4], true, false, false, $use_artworks, true);
+
+        if ($artwork != '' && file_exists($artwork)) {
+            copy($artwork, '/tmp/tmp_share.png');
+            exec("./terminal-share.app/Contents/MacOS/terminal-share -service '".$service."' -image '/tmp/tmp_share.png' -text '".$text."'");
+        } else {
+            exec("./terminal-share.app/Contents/MacOS/terminal-share -service '".$service."' -text '".$text."'");
+        }
+        return;
     } elseif ($other_action == 'repeating') {
         if ($use_mopidy) {
             $isRepeatingEnabled = invokeMopidyMethod($w, 'core.tracklist.get_repeat', array());

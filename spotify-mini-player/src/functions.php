@@ -249,6 +249,7 @@ function switchToGreenIcons($w)
             'F250A59C-0B2D-4A08-9085-9CA0A2FB2DCC' => 'volume_up',
             'F4382654-9318-4849-82E4-550AC235148C' => 'pause',
             'F4F5AC18-3C04-4673-9CC3-E563094C9446' => 'add_to',
+            '0EBF4C61-5630-4629-8B4F-AD91D3470760' => 'share',
             'icon' => 'icon',
         );
 
@@ -316,6 +317,7 @@ function switchToGreenIcons($w)
             '6D35BFAD-C96C-4BF8-B76B-5C4BB4313DF9' => 'keydown',
             '5C18A3F0-C5CC-4B8D-B71E-B00B420CA2DC' => 'keyup',
             '4FE5620A-FB79-440E-8633-B8148EE1191E' => 'add_to',
+            'E5BAF801-726E-49C0-ABF2-7AD9F9ECD22A' => 'share',
         );
 
     foreach ($uuid_imgs as $key => $value) {
@@ -3324,7 +3326,7 @@ function downloadArtworks($w)
  * @param mixed $fetchIfNotPresent
  * @param bool  $useArtworks       (default: true)
  */
-function getTrackOrAlbumArtwork($w, $spotifyURL, $fetchIfNotPresent, $fetchLater = false, $isLaterFetch = false, $useArtworks = true)
+function getTrackOrAlbumArtwork($w, $spotifyURL, $fetchIfNotPresent, $fetchLater = false, $isLaterFetch = false, $useArtworks = true, $forceFetch = false)
 {
     $hrefs = explode(':', $spotifyURL);
     $isAlbum = false;
@@ -3363,9 +3365,14 @@ function getTrackOrAlbumArtwork($w, $spotifyURL, $fetchIfNotPresent, $fetchLater
         return $currentArtwork;
     }
 
-    if (!is_file($currentArtwork) || (is_file($currentArtwork) && filesize($currentArtwork) == 0) || $hrefs[2] == 'fakeuri') {
-        if ($fetchIfNotPresent == true || (is_file($currentArtwork) && filesize($currentArtwork) == 0)) {
-            $artwork = getArtworkURL($w, $hrefs[1], $hrefs[2]);
+    if (!is_file($currentArtwork) || (is_file($currentArtwork) && filesize($currentArtwork) == 0) || $hrefs[2] == 'fakeuri' || $forceFetch) {
+        if ($fetchIfNotPresent == true || (is_file($currentArtwork) && filesize($currentArtwork) == 0) || $forceFetch) {
+            if($forceFetch) {
+                $artwork = getArtworkURL($w, $hrefs[1], $hrefs[2], true);
+            } else {
+                $artwork = getArtworkURL($w, $hrefs[1], $hrefs[2]);
+            }
+            
 
             // if return 0, it is a 404 error, no need to fetch
             if (!empty($artwork) || (is_numeric($artwork) && $artwork != 0)) {
@@ -3716,8 +3723,9 @@ function getArtistArtwork($w, $artist_uri, $artist_name, $fetchIfNotPresent = fa
  * @param mixed $w
  * @param mixed $type
  * @param mixed $id
+ * @param boolean $highRes
  */
-function getArtworkURL($w, $type, $id)
+function getArtworkURL($w, $type, $id, $highRes = false)
 {
     $url = '';
 
@@ -3735,20 +3743,34 @@ function getArtworkURL($w, $type, $id)
         }
         if (isset($track->album) && isset($track->album->images)) {
 
-            // 60 px
-            if (isset($track->album->images[2]) && isset($track->album->images[2]->url)) {
-                return $track->album->images[2]->url;
+            if(!$highRes) {
+                // 60 px
+                if (isset($track->album->images[2]) && isset($track->album->images[2]->url)) {
+                    return $track->album->images[2]->url;
+                }
+
+                // 300 px
+                if (isset($track->album->images[1]) && isset($track->album->images[1]->url)) {
+                    return $track->album->images[1]->url;
+                }
+
+                // 600 px
+                if (isset($track->album->images[0]) && isset($track->album->images[0]->url)) {
+                    return $track->album->images[0]->url;
+                }
+            } else {
+                // 600 px
+                if (isset($track->album->images[0]) && isset($track->album->images[0]->url)) {
+                    return $track->album->images[0]->url;
+                }  
+
+                // 300 px
+                if (isset($track->album->images[1]) && isset($track->album->images[1]->url)) {
+                    return $track->album->images[1]->url;
+                }            
             }
 
-            // 300 px
-            if (isset($track->album->images[1]) && isset($track->album->images[1]->url)) {
-                return $track->album->images[1]->url;
-            }
 
-            // 600 px
-            if (isset($track->album->images[0]) && isset($track->album->images[0]->url)) {
-                return $track->album->images[0]->url;
-            }
         }
     } else {
         try {
@@ -3761,20 +3783,34 @@ function getArtworkURL($w, $type, $id)
         }
         if (isset($album->images)) {
 
-            // 60 px
-            if (isset($album->images[2]) && isset($album->images[2]->url)) {
-                return $album->images[2]->url;
+            if(!$highRes) {
+                // 60 px
+                if (isset($album->images[2]) && isset($album->images[2]->url)) {
+                    return $album->images[2]->url;
+                }
+
+                // 300 px
+                if (isset($album->images[1]) && isset($album->images[1]->url)) {
+                    return $album->images[1]->url;
+                }
+
+                // 600 px
+                if (isset($album->images[0]) && isset($album->images[0]->url)) {
+                    return $album->images[0]->url;
+                }
+            } else {
+                // 600 px
+                if (isset($album->images[0]) && isset($album->images[0]->url)) {
+                    return $album->images[0]->url;
+                }
+
+                // 300 px
+                if (isset($album->images[1]) && isset($album->images[1]->url)) {
+                    return $album->images[1]->url;
+                }     
             }
 
-            // 300 px
-            if (isset($album->images[1]) && isset($album->images[1]->url)) {
-                return $album->images[1]->url;
-            }
 
-            // 600 px
-            if (isset($album->images[0]) && isset($album->images[0]->url)) {
-                return $album->images[0]->url;
-            }
         }
     }
 
