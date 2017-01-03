@@ -250,6 +250,7 @@ function switchToGreenIcons($w)
             'F4382654-9318-4849-82E4-550AC235148C' => 'pause',
             'F4F5AC18-3C04-4673-9CC3-E563094C9446' => 'add_to',
             '0EBF4C61-5630-4629-8B4F-AD91D3470760' => 'share',
+            'E5BAF801-726E-49C0-ABF2-7AD9F9ECD22A' => 'share',
             'icon' => 'icon',
         );
 
@@ -317,7 +318,7 @@ function switchToGreenIcons($w)
             '6D35BFAD-C96C-4BF8-B76B-5C4BB4313DF9' => 'keydown',
             '5C18A3F0-C5CC-4B8D-B71E-B00B420CA2DC' => 'keyup',
             '4FE5620A-FB79-440E-8633-B8148EE1191E' => 'add_to',
-            'E5BAF801-726E-49C0-ABF2-7AD9F9ECD22A' => 'share',
+            'C5B9A789-80F3-41BA-9A46-C34DD4CDE050' => 'share',
         );
 
     foreach ($uuid_imgs as $key => $value) {

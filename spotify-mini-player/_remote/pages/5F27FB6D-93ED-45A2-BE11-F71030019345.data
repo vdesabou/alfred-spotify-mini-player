@@ -65,7 +65,23 @@
 			<key>itemuid</key>
 			<string>AA7FA832-013B-46FB-AD02-CDE9BBE67F3D</string>
 		</dict>
-		<dict/>
+		<dict>
+			<key>actionconfig</key>
+			<dict>
+				<key>autoworkflowuid</key>
+				<true/>
+				<key>triggerid</key>
+				<string>com.vdesabou.miniplayer.share</string>
+			</dict>
+			<key>actionuid</key>
+			<string>remote.alfred.runworkflow</string>
+			<key>buttoniconid</key>
+			<string>C5B9A789-80F3-41BA-9A46-C34DD4CDE050</string>
+			<key>buttonlabel</key>
+			<string>Share</string>
+			<key>itemuid</key>
+			<string>503CC6A0-1B8A-4A5C-9AF0-37ECC7BBE0A2</string>
+		</dict>
 		<dict>
 			<key>actionconfig</key>
 			<dict>
