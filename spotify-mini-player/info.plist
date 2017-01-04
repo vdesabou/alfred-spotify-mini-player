@@ -6623,8 +6623,16 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 		<string>repeating</string>
 		<key>share</key>
 		<string>share</string>
+		<key>sharing_hashtag1</key>
+		<string>#NowPlaying</string>
+		<key>sharing_hashtag2</key>
+		<string>#AlfredSpotifyMiniPlayer</string>
 		<key>sharing_service</key>
 		<string>twitter</string>
+		<key>sharing_text1</key>
+		<string></string>
+		<key>sharing_text2</key>
+		<string>♫</string>
 		<key>shuffle</key>
 		<string>shuffle</string>
 		<key>song_radio</key>

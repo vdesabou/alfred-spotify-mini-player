@@ -1412,25 +1412,32 @@ if ($type == 'TRACK' && $other_settings == '' &&
         }
 
         $service = getenv('sharing_service');
-        $text = '#NowPlaying ';
+        $text = getenv('sharing_hashtag1');
+        $text .= ' ';
         $text .= escapeQuery($results[0]);
         $text .= ' by ';
         $text .= escapeQuery($results[1]);
+        $text .= ' ';
+        if(getenv('sharing_text1') != '') {
+            $text .= getenv('sharing_text1');
+            $text .= ' ';
+        }
+        if(getenv('sharing_text2') != '') {
+            $text .= getenv('sharing_text2');
+            $text .= ' ';
+        }
+        if(getenv('sharing_hashtag2') != '') {
+            $text .= getenv('sharing_hashtag2');
+            $text .= ' ';
+        }    
 
         $tmp = explode(':', $results[4]);
         if ($tmp[1] != 'local') {
             $text .= ' https://open.spotify.com/track/';
             $text .= $tmp[2];
         }
+        exec("./terminal-share.app/Contents/MacOS/terminal-share -service '".$service."' -text '".$text."'");
         
-        $artwork = getTrackOrAlbumArtwork($w, $results[4], true, false, false, $use_artworks, true);
-
-        if ($artwork != '' && file_exists($artwork)) {
-            copy($artwork, '/tmp/tmp_share.png');
-            exec("./terminal-share.app/Contents/MacOS/terminal-share -service '".$service."' -image '/tmp/tmp_share.png' -text '".$text."'");
-        } else {
-            exec("./terminal-share.app/Contents/MacOS/terminal-share -service '".$service."' -text '".$text."'");
-        }
         return;
     } elseif ($other_action == 'repeating') {
         if ($use_mopidy) {
