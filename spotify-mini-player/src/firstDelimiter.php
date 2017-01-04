@@ -951,6 +951,32 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                 'ctrl' => 'Not Available',
             ), './images/share.png', 'yes', null, '');
 
+        $w->result(null, serialize(array(
+                    '' /*track_uri*/,
+                    '' /* album_uri */,
+                    '' /* artist_uri */,
+                    '' /* playlist_uri */,
+                    '' /* spotify_command */,
+                    '' /* query */,
+                    '' /* other_settings*/,
+                    'web_search' /* other_action */,
+                    '' /* artist_name */,
+                    '' /* track_name */,
+                    '' /* album_name */,
+                    '' /* track_artwork_path */,
+                    '' /* artist_artwork_path */,
+                    '' /* album_artwork_path */,
+                    '' /* playlist_name */,
+                    '', /* playlist_artwork_path */
+                )), 'Open current track search in ' . getenv('web_search'), array(
+                'This will open the default browser with ' . getenv('web_search') . ' search for current track',
+                'alt' => 'Not Available',
+                'cmd' => 'Not Available',
+                'shift' => 'Not Available',
+                'fn' => 'Not Available',
+                'ctrl' => 'Not Available',
+            ), './images/youtube.png', 'yes', null, '');
+
         if ($all_playlists == true) {
             $getTracks = 'select playlist_uri from tracks where uri=:uri limit '.$max_results;
             try {
