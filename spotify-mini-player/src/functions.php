@@ -6287,6 +6287,7 @@ function getSettings($w)
             'is_display_rating' => 1,
             'is_autoplay_playlist' => 1,
             'use_growl' => 0,
+            'use_facebook' => 0,
         );
 
         $ret = $w->write($default, 'settings.json');
@@ -6346,6 +6347,12 @@ function getSettings($w)
     // add use_artworks if needed
     if (!isset($settings->use_artworks)) {
         updateSetting($w, 'use_artworks', 1);
+        $settings = $w->read('settings.json');
+    }
+
+    // add use_facebook if needed
+    if (!isset($settings->use_facebook)) {
+        updateSetting($w, 'use_facebook', 0);
         $settings = $w->read('settings.json');
     }
 

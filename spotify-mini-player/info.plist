@@ -6627,8 +6627,6 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 		<string>#NowPlaying</string>
 		<key>sharing_hashtag2</key>
 		<string>#AlfredSpotifyMiniPlayer</string>
-		<key>sharing_service</key>
-		<string>twitter</string>
 		<key>sharing_text1</key>
 		<string></string>
 		<key>sharing_text2</key>

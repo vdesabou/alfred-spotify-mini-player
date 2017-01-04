@@ -1274,6 +1274,7 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
     $is_autoplay_playlist = $settings->is_autoplay_playlist;
     $use_growl = $settings->use_growl;
     $use_artworks = $settings->use_artworks;
+    $use_facebook = $settings->use_facebook;
 
     if ($update_in_progress == false) {
         $w->result(null, serialize(array(
@@ -1736,6 +1737,60 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
                 'fn' => 'Not Available',
                 'ctrl' => 'Not Available',
             ), './images/enable_use_growl.png', 'yes', null, '');
+    }
+
+    if ($use_facebook == true) {
+        $w->result(null, serialize(array(
+                    '' /*track_uri*/,
+                    '' /* album_uri */,
+                    '' /* artist_uri */,
+                    '' /* playlist_uri */,
+                    '' /* spotify_command */,
+                    '' /* query */,
+                    '' /* other_settings*/,
+                    'use_twitter' /* other_action */,
+                    '' /* artist_name */,
+                    '' /* track_name */,
+                    '' /* album_name */,
+                    '' /* track_artwork_path */,
+                    '' /* artist_artwork_path */,
+                    '' /* album_artwork_path */,
+                    '' /* playlist_name */,
+                    '', /* playlist_artwork_path */
+                )), 'Use Twitter for sharing', array(
+                'Use Twitter instead of Facebook',
+                'alt' => 'Not Available',
+                'cmd' => 'Not Available',
+                'shift' => 'Not Available',
+                'fn' => 'Not Available',
+                'ctrl' => 'Not Available',
+            ), './images/twitter.png', 'yes', null, '');
+    } else {
+        $w->result(null, serialize(array(
+                    '' /*track_uri*/,
+                    '' /* album_uri */,
+                    '' /* artist_uri */,
+                    '' /* playlist_uri */,
+                    '' /* spotify_command */,
+                    '' /* query */,
+                    '' /* other_settings*/,
+                    'use_facebook' /* other_action */,
+                    '' /* artist_name */,
+                    '' /* track_name */,
+                    '' /* album_name */,
+                    '' /* track_artwork_path */,
+                    '' /* artist_artwork_path */,
+                    '' /* album_artwork_path */,
+                    '' /* playlist_name */,
+                    '', /* playlist_artwork_path */
+                )), 'Enable Facebook for sharing', array(
+                'Use Facebook instead of Twitter',
+                'alt' => 'Not Available',
+                'cmd' => 'Not Available',
+                'shift' => 'Not Available',
+                'fn' => 'Not Available',
+                'ctrl' => 'Not Available',
+            ), './images/facebook.png', 'yes', null, '');
     }
 
     if ($update_in_progress == false) {

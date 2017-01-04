@@ -45,6 +45,7 @@ $oauth_access_token = $settings->oauth_access_token;
 $use_mopidy = $settings->use_mopidy;
 $volume_percent = $settings->volume_percent;
 $use_artworks = $settings->use_artworks;
+$use_facebook = $settings->use_facebook;
 
 if ($other_action != 'reset_settings' && $other_action != 'spot_mini_debug') {
     if ($oauth_client_id == '' || $oauth_client_secret == '' || $oauth_access_token == '') {
@@ -821,6 +822,24 @@ if ($type == 'TRACK' && $other_settings == '' &&
         }
 
         return;
+    } elseif ($other_action == 'use_twitter') {
+        $ret = updateSetting($w, 'use_facebook', 0);
+        if ($ret == true) {
+            displayNotificationWithArtwork($w, 'Twitter is now used for sharing', './images/twitter.png', 'Settings');
+        } else {
+            displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
+        }
+
+        return;
+    } elseif ($other_action == 'use_facebook') {
+        $ret = updateSetting($w, 'use_facebook', 1);
+        if ($ret == true) {
+            displayNotificationWithArtwork($w, 'Facebook is now used for sharing', './images/facebook.png', 'Settings');
+        } else {
+            displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
+        }
+
+        return;
     } elseif ($other_action == 'enable_mopidy') {
         exec('./src/spotify_mini_player_notifications.ksh -d "'.$w->data().'" -a stop >> "'.$w->cache().'/action.log" 2>&1 & ');
         $ret = updateSetting($w, 'use_mopidy', 1);
@@ -1410,8 +1429,12 @@ if ($type == 'TRACK' && $other_settings == '' &&
             displayNotificationWithArtwork($w, 'Cannot get current track', './images/warning.png', 'Error!');
             return;
         }
-
-        $service = getenv('sharing_service');
+        
+        if($use_facebook) {
+           $service = 'facebook'; 
+        } else {
+           $service = 'twitter';  
+        }
         $text = getenv('sharing_hashtag1');
         $text .= ' ';
         $text .= escapeQuery($results[0]);
@@ -1437,7 +1460,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
             $text .= $tmp[2];
         }
         exec("./terminal-share.app/Contents/MacOS/terminal-share -service '".$service."' -text '".$text."'");
-        
+
         return;
     } elseif ($other_action == 'repeating') {
         if ($use_mopidy) {
