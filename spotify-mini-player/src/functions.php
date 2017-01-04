@@ -1224,6 +1224,7 @@ function playCurrentArtist($w)
 
     $use_mopidy = $settings->use_mopidy;
     $country_code = $settings->country_code;
+    $use_artworks = $settings->use_artworks;
 
     if ($use_mopidy) {
         $retArr = array(getCurrentTrackInfoWithMopidy($w));
@@ -3233,7 +3234,7 @@ function downloadArtworks($w)
                 $artists = $stmtGetArtists->execute();
 
                 while ($artist = $stmtGetArtists->fetch()) {
-                    $ret = getArtistArtwork($w, $artist[0], $artist[1], true, false, true, $useArtworks);
+                    $ret = getArtistArtwork($w, $artist[0], $artist[1], true, false, true, $use_artworks);
                     if ($ret == false) {
                         logMsg("WARN: $artist[0] $artist[1] artwork not found, using default");
                     } elseif (!is_string($ret)) {
@@ -3616,7 +3617,6 @@ function getArtistArtwork($w, $artist_uri, $artist_name, $fetchIfNotPresent = fa
     endif;
 
     $currentArtwork = $w->data().'/artwork/'.hash('md5', $parsedArtist.'.png').'/'."$parsedArtist.png";
-
     if ($artist_uri == '') {
         return './images/artists.png';
     }
@@ -4295,7 +4295,7 @@ function updateLibrary($w)
                         $theartisturi = $artist->uri;
                     }
                     if ($use_artworks) {
-                        list($already_present, $artist_artwork_path) = getArtistArtwork($w, $theartisturi, $theartistname, true, true, false, false, $use_artworks);
+                        list($already_present, $artist_artwork_path) = getArtistArtwork($w, $theartisturi, $theartistname, true, true, false, $use_artworks);
                         if ($already_present == false) {
                             $artworksToDownload = true;
                             $stmtArtistArtwork->bindValue(':artist_uri', $artist->uri);
@@ -4304,7 +4304,7 @@ function updateLibrary($w)
                             $stmtArtistArtwork->execute();
                         }
                     } else {
-                        $artist_artwork_path = getArtistArtwork($w, $theartisturi, $theartistname, false, false, false, false, $use_artworks);
+                        $artist_artwork_path = getArtistArtwork($w, $theartisturi, $theartistname, false, false, false, $use_artworks);
                     }
 
                     $thealbumuri = 'spotify:album:fakealbumuri';
@@ -4444,7 +4444,7 @@ function updateLibrary($w)
                 $theartisturi = $artist->uri;
             }
             if ($use_artworks) {
-                list($already_present, $artist_artwork_path) = getArtistArtwork($w, $theartisturi, $theartistname, true, true, false, false, $use_artworks);
+                list($already_present, $artist_artwork_path) = getArtistArtwork($w, $theartisturi, $theartistname, true, true, false, $use_artworks);
                 if ($already_present == false) {
                     $artworksToDownload = true;
                     $stmtArtistArtwork->bindValue(':artist_uri', $artist->uri);
@@ -4453,7 +4453,7 @@ function updateLibrary($w)
                     $stmtArtistArtwork->execute();
                 }
             } else {
-                $artist_artwork_path = getArtistArtwork($w, $theartisturi, $theartistname, false, false, false, false, $use_artworks);
+                $artist_artwork_path = getArtistArtwork($w, $theartisturi, $theartistname, false, false, false, $use_artworks);
             }
 
             $thealbumuri = 'spotify:album:fakealbumuri';
@@ -4947,7 +4947,7 @@ function refreshLibrary($w)
                             $theartisturi = $artist->uri;
                         }
                         if ($use_artworks) {
-                            list($already_present, $artist_artwork_path) = getArtistArtwork($w, $theartisturi, $theartistname, true, true, false, false, $use_artworks);
+                            list($already_present, $artist_artwork_path) = getArtistArtwork($w, $theartisturi, $theartistname, true, true, false, $use_artworks);
                             if ($already_present == false) {
                                 $artworksToDownload = true;
                                 $stmtArtistArtwork->bindValue(':artist_uri', $artist->uri);
@@ -4956,7 +4956,7 @@ function refreshLibrary($w)
                                 $stmtArtistArtwork->execute();
                             }
                         } else {
-                            $artist_artwork_path = getArtistArtwork($w, $theartisturi, $theartistname, false, false, false, false, $use_artworks);
+                            $artist_artwork_path = getArtistArtwork($w, $theartisturi, $theartistname, false, false, false, $use_artworks);
                         }
 
                         $thealbumuri = 'spotify:album:fakealbumuri';
@@ -5176,7 +5176,7 @@ function refreshLibrary($w)
                                 $theartisturi = $artist->uri;
                             }
                             if ($use_artworks) {
-                                list($already_present, $artist_artwork_path) = getArtistArtwork($w, $theartisturi, $theartistname, true, true, false, false, $use_artworks);
+                                list($already_present, $artist_artwork_path) = getArtistArtwork($w, $theartisturi, $theartistname, true, true, false, $use_artworks);
                                 if ($already_present == false) {
                                     $artworksToDownload = true;
                                     $stmtArtistArtwork->bindValue(':artist_uri', $artist->uri);
@@ -5185,7 +5185,7 @@ function refreshLibrary($w)
                                     $stmtArtistArtwork->execute();
                                 }
                             } else {
-                                $artist_artwork_path = getArtistArtwork($w, $theartisturi, $theartistname, false, false, false, false, $use_artworks);
+                                $artist_artwork_path = getArtistArtwork($w, $theartisturi, $theartistname, false, false, false, $use_artworks);
                             }
 
                             $thealbumuri = 'spotify:album:fakealbumuri';
@@ -5471,7 +5471,7 @@ function refreshLibrary($w)
                         $theartisturi = $artist->uri;
                     }
                     if ($use_artworks) {
-                        list($already_present, $artist_artwork_path) = getArtistArtwork($w, $theartisturi, $theartistname, true, true, false, false, $use_artworks);
+                        list($already_present, $artist_artwork_path) = getArtistArtwork($w, $theartisturi, $theartistname, true, true, false, $use_artworks);
                         if ($already_present == false) {
                             $artworksToDownload = true;
                             $stmtArtistArtwork->bindValue(':artist_uri', $artist->uri);
