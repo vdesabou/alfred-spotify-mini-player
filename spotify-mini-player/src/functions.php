@@ -374,7 +374,7 @@ function switchThemeColor($w,$color)
     }
 
     if (!$hasError) {
-        displayNotificationWithArtwork($w, 'All existing icons have been replaced by ' . $color . ' icons', './images/switch_to_green_icons.png', 'Settings');
+        displayNotificationWithArtwork($w, 'All existing icons have been replaced by ' . $color . ' icons', './images/change_theme_color.png', 'Settings');
     } else {
         displayNotificationWithArtwork($w, 'Some icons have not been replaced', './images/warning.png');
     }
