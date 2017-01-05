@@ -968,8 +968,8 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                     '' /* album_artwork_path */,
                     '' /* playlist_name */,
                     '', /* playlist_artwork_path */
-                )), 'Open current track search in ' . getenv('web_search'), array(
-                'This will open the default browser with ' . getenv('web_search') . ' search for current track',
+                )), 'Do a web search for current track or artist on Youtube, Facebook, etc.. ', array(
+                'You will be prompted to choose the web service you want to use',
                 'alt' => 'Not Available',
                 'cmd' => 'Not Available',
                 'shift' => 'Not Available',

@@ -1430,7 +1430,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
             return;
         }
         $search_text = escapeQuery($results[0]);
-        $search_text .= ' ';
+        $search_text .= '▹';
         $search_text .= escapeQuery($results[1]);
 
         exec("osascript -e 'tell application \"Alfred 3\" to run trigger \"web_search\" in workflow \"com.vdesabou.spotify.mini.player\" with argument \"" . $search_text . "\"'");
