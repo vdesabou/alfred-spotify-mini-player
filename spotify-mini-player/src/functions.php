@@ -6291,6 +6291,7 @@ function getSettings($w)
             'is_autoplay_playlist' => 1,
             'use_growl' => 0,
             'use_facebook' => 0,
+            'theme_color' => 'green',
         );
 
         $ret = $w->write($default, 'settings.json');
@@ -6356,6 +6357,12 @@ function getSettings($w)
     // add use_facebook if needed
     if (!isset($settings->use_facebook)) {
         updateSetting($w, 'use_facebook', 0);
+        $settings = $w->read('settings.json');
+    }
+
+    // add theme_color if needed
+    if (!isset($settings->theme_color)) {
+        updateSetting($w, 'theme_color', 'green');
         $settings = $w->read('settings.json');
     }
 
