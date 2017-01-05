@@ -124,11 +124,11 @@ function invokeMopidyMethod($w, $method, $params, $displayError = true)
 }
 
 /**
- * switchToGreenIcons function.
+ * switchThemeColor function.
  *
  * @param mixed $w
  */
-function switchToGreenIcons($w)
+function switchThemeColor($w,$color)
 {
 
     // Read settings from JSON
@@ -145,7 +145,7 @@ function switchToGreenIcons($w)
             continue;
         }
 
-        $green_icon_url = 'https://github.com/vdesabou/alfred-spotify-mini-player/raw/master/resources/images_green/'.$img;
+        $icon_url = 'https://github.com/vdesabou/alfred-spotify-mini-player/raw/master/resources/images_' . $color . '/'.$img;
 
         $fp = fopen('./images/'.$img, 'w+');
         $options = array(
@@ -154,7 +154,7 @@ function switchToGreenIcons($w)
             CURLOPT_TIMEOUT => 5,
         );
 
-        $w->request("$green_icon_url", $options);
+        $w->request("$icon_url", $options);
     }
 
     // check icons from images directory
@@ -167,7 +167,7 @@ function switchToGreenIcons($w)
 
         if (!is_file('./images/'.$img) || (is_file('./images/'.$img) && filesize('./images/'.$img) == 0)) {
             $hasError = true;
-            logMsg('Error(switchToGreenIcons): (failed to load '.$img.')');
+            logMsg('Error(switchThemeColor): (failed to load '.$img.')');
         }
     }
 
@@ -257,7 +257,7 @@ function switchToGreenIcons($w)
         );
 
     foreach ($uuid_imgs as $key => $value) {
-        $green_icon_url = 'https://github.com/vdesabou/alfred-spotify-mini-player/raw/master/resources/images_green/'.$value.'@3x.png';
+        $icon_url = 'https://github.com/vdesabou/alfred-spotify-mini-player/raw/master/resources/images_' . $color . '/'.$value.'@3x.png';
 
         $fp = fopen('./'.$key.'.png', 'w+');
         $options = array(
@@ -266,14 +266,14 @@ function switchToGreenIcons($w)
             CURLOPT_TIMEOUT => 5,
         );
 
-        $w->request("$green_icon_url", $options);
+        $w->request("$icon_url", $options);
     }
 
     // check UUID images
     foreach ($uuid_imgs as $key => $value) {
         if (!is_file('./'.$key.'.png') || (is_file('./'.$key.'.png') && filesize('./'.$key.'.png') == 0)) {
             $hasError = true;
-            logMsg('Error(switchToGreenIcons): (failed to load UUID '.$key.')');
+            logMsg('Error(switchThemeColor): (failed to load UUID '.$key.')');
         }
     }
 
@@ -325,7 +325,7 @@ function switchToGreenIcons($w)
         );
 
     foreach ($uuid_imgs as $key => $value) {
-        $green_icon_url = 'https://github.com/vdesabou/alfred-spotify-mini-player/raw/master/resources/images_green/'.$value.'@3x.png';
+        $icon_url = 'https://github.com/vdesabou/alfred-spotify-mini-player/raw/master/resources/images_' . $color . '/'.$value.'@3x.png';
 
         $fp = fopen('./_remote/images/items/'.$key.'.png', 'w+');
         $options = array(
@@ -334,14 +334,14 @@ function switchToGreenIcons($w)
             CURLOPT_TIMEOUT => 5,
         );
 
-        $w->request("$green_icon_url", $options);
+        $w->request("$icon_url", $options);
     }
 
     // check UUID images
     foreach ($uuid_imgs as $key => $value) {
         if (!is_file('./_remote/images/items/'.$key.'.png') || (is_file('./_remote/images/items/'.$key.'.png') && filesize('./_remote/images/items/'.$key.'.png') == 0)) {
             $hasError = true;
-            logMsg('Error(switchToGreenIcons): (failed to load UUID items remote '.$key.')');
+            logMsg('Error(switchThemeColor): (failed to load UUID items remote '.$key.')');
         }
     }
 
@@ -353,7 +353,7 @@ function switchToGreenIcons($w)
         );
 
     foreach ($uuid_imgs as $key => $value) {
-        $green_icon_url = 'https://github.com/vdesabou/alfred-spotify-mini-player/raw/master/resources/images_green/'.$value.'@3x.png';
+        $icon_url = 'https://github.com/vdesabou/alfred-spotify-mini-player/raw/master/resources/images_' . $color . '/'.$value.'@3x.png';
 
         $fp = fopen('./_remote/images/pages/'.$key.'.png', 'w+');
         $options = array(
@@ -362,19 +362,19 @@ function switchToGreenIcons($w)
             CURLOPT_TIMEOUT => 5,
         );
 
-        $w->request("$green_icon_url", $options);
+        $w->request("$icon_url", $options);
     }
 
     // check UUID images
     foreach ($uuid_imgs as $key => $value) {
         if (!is_file('./_remote/images/pages/'.$key.'.png') || (is_file('./_remote/images/pages/'.$key.'.png') && filesize('./_remote/images/pages/'.$key.'.png') == 0)) {
             $hasError = true;
-            logMsg('Error(switchToGreenIcons): (failed to load UUID pages remote '.$key.')');
+            logMsg('Error(switchThemeColor): (failed to load UUID pages remote '.$key.')');
         }
     }
 
     if (!$hasError) {
-        displayNotificationWithArtwork($w, 'All existing icons have been replaced by green icons', './images/switch_to_green_icons.png', 'Settings');
+        displayNotificationWithArtwork($w, 'All existing icons have been replaced by ' . $color . ' icons', './images/switch_to_green_icons.png', 'Settings');
     } else {
         displayNotificationWithArtwork($w, 'Some icons have not been replaced', './images/warning.png');
     }

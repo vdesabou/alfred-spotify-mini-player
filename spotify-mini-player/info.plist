@@ -413,6 +413,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>450CD09C-F6EB-4270-8FEE-C1E33586165F</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>80AD9430-0A5B-4196-8A02-B3B1CEEE678D</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>455BDE70-BCF4-447F-ABFF-C25D8E5B08B6</key>
 		<array>
 			<dict>
@@ -586,6 +599,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>6AB2756A-CF82-447B-BB7F-AC42AC2A04ED</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>FE00C128-31CE-4143-A647-1F1623539743</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>6BC60709-1E24-4297-A9CB-3B99581AF0C6</key>
 		<array>
 			<dict>
@@ -751,6 +777,19 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>10D173E8-E2FD-4A00-B899-8EBEF9017B05</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>80AD9430-0A5B-4196-8A02-B3B1CEEE678D</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>FA976637-B683-4672-837E-85462CC82B69</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -1803,6 +1842,19 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>6FEAFE02-DF77-4F58-9305-651E6D627144</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>FE00C128-31CE-4143-A647-1F1623539743</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>450CD09C-F6EB-4270-8FEE-C1E33586165F</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -6075,6 +6127,104 @@ echo "$tmp[1]";
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>triggerid</key>
+				<string>change_theme_color</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.external</string>
+			<key>uid</key>
+			<string>6AB2756A-CF82-447B-BB7F-AC42AC2A04ED</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "change_theme_color_for_real" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
+php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>FA976637-B683-4672-837E-85462CC82B69</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>fixedorder</key>
+				<false/>
+				<key>items</key>
+				<string>[{"imagefile":"416366eee910711e509f9c7381a14729a4fec214.png","title":"Switch to pink theme","arg":"pink","subtitle":"Change theme to pink"},{"title":"Switch to green theme","arg":"green","subtitle":"Change theme to green"},{"imagefile":"0ff3394be61c7c822d06e3228c89add5b462084f.png","title":"Switch to legacy theme","arg":"legacy","subtitle":"Change theme to legacy one"}]</string>
+				<key>runningsubtext</key>
+				<string></string>
+				<key>subtext</key>
+				<string></string>
+				<key>title</key>
+				<string></string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.listfilter</string>
+			<key>uid</key>
+			<string>450CD09C-F6EB-4270-8FEE-C1E33586165F</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string></string>
+				<key>variables</key>
+				<dict>
+					<key>theme_color</key>
+					<string>{query}</string>
+				</dict>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.utility.argument</string>
+			<key>uid</key>
+			<string>FE00C128-31CE-4143-A647-1F1623539743</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string></string>
+				<key>variables</key>
+				<dict>
+					<key>chosen_color</key>
+					<string>{query}</string>
+				</dict>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.utility.argument</string>
+			<key>uid</key>
+			<string>80AD9430-0A5B-4196-8A02-B3B1CEEE678D</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string>Web Site:
@@ -6411,6 +6561,13 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<key>ypos</key>
 			<real>8280</real>
 		</dict>
+		<key>450CD09C-F6EB-4270-8FEE-C1E33586165F</key>
+		<dict>
+			<key>xpos</key>
+			<integer>240</integer>
+			<key>ypos</key>
+			<integer>12740</integer>
+		</dict>
 		<key>455BDE70-BCF4-447F-ABFF-C25D8E5B08B6</key>
 		<dict>
 			<key>xpos</key>
@@ -6536,6 +6693,13 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<integer>100</integer>
 			<key>ypos</key>
 			<real>3500</real>
+		</dict>
+		<key>6AB2756A-CF82-447B-BB7F-AC42AC2A04ED</key>
+		<dict>
+			<key>xpos</key>
+			<integer>20</integer>
+			<key>ypos</key>
+			<integer>12740</integer>
 		</dict>
 		<key>6BC60709-1E24-4297-A9CB-3B99581AF0C6</key>
 		<dict>
@@ -6664,6 +6828,15 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<integer>300</integer>
 			<key>ypos</key>
 			<real>2450</real>
+		</dict>
+		<key>80AD9430-0A5B-4196-8A02-B3B1CEEE678D</key>
+		<dict>
+			<key>note</key>
+			<string>set chosen_color variable</string>
+			<key>xpos</key>
+			<integer>430</integer>
+			<key>ypos</key>
+			<integer>12770</integer>
 		</dict>
 		<key>80B80179-E286-4D4A-9FEC-FCBE63AD8AEE</key>
 		<dict>
@@ -7345,12 +7518,28 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<key>ypos</key>
 			<real>10320</real>
 		</dict>
+		<key>FA976637-B683-4672-837E-85462CC82B69</key>
+		<dict>
+			<key>xpos</key>
+			<integer>580</integer>
+			<key>ypos</key>
+			<integer>12740</integer>
+		</dict>
 		<key>FAA5FC99-7909-45B6-9BF0-7601DBAADC4F</key>
 		<dict>
 			<key>xpos</key>
 			<integer>260</integer>
 			<key>ypos</key>
 			<integer>11640</integer>
+		</dict>
+		<key>FE00C128-31CE-4143-A647-1F1623539743</key>
+		<dict>
+			<key>note</key>
+			<string>save theme_color variable</string>
+			<key>xpos</key>
+			<integer>170</integer>
+			<key>ypos</key>
+			<integer>12770</integer>
 		</dict>
 	</dict>
 	<key>variables</key>

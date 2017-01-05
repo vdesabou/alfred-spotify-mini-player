@@ -850,9 +850,14 @@ if ($type == 'TRACK' && $other_settings == '' &&
         }
 
         return;
-    } elseif ($other_action == 'switch_to_green_icons') {
+    } elseif ($other_action == 'change_theme_color') {
+
+        exec("osascript -e 'tell application \"Alfred 3\" to run trigger \"change_theme_color\" in workflow \"com.vdesabou.spotify.mini.player\" with argument \"\"'");
+        return;
+    } elseif ($other_action == 'change_theme_color_for_real') {
+
         stathat_ez_count('AlfredSpotifyMiniPlayer', 'theme_changed', 1);
-        switchToGreenIcons($w);
+        switchThemeColor($w,getenv('chosen_color'));
 
         return;
     } elseif ($other_action == 'disable_mopidy') {
