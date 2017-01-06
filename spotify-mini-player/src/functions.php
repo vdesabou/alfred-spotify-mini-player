@@ -399,9 +399,10 @@ function switchThemeColor($w,$theme_color)
     }
 
     // Get APP 
-    $app_url = 'https://github.com/vdesabou/alfred-spotify-mini-player/raw/master/resources/images_' . $theme_color . '/Spotify Mini Player.app';
+    $app_url = 'https://github.com/vdesabou/alfred-spotify-mini-player/raw/master/resources/images_' . $theme_color . '/' . rawurlencode('Spotify Mini Player.app.zip');
 
-    $fp = fopen('./App/'.$theme_color.'/Spotify Mini Player.app', 'w+');
+    $zip_file = '/tmp/SpotifyMiniPlayer.app.zip';
+    $fp = fopen($zip_file, 'w+');
     $options = array(
         CURLOPT_FILE => $fp,
         CURLOPT_FOLLOWLOCATION => 1,
@@ -412,11 +413,13 @@ function switchThemeColor($w,$theme_color)
     ++$nb_images_downloaded;
     $w->write('Change Theme Color to ' . $theme_color . '▹'.$nb_images_downloaded.'▹'.$nb_images_total.'▹'.$words[3].'▹'.'Icons UUID remote page', 'change_theme_color_in_progress');
 
-    if (!is_dir('./App/'.$theme_color.'/Spotify Mini Player.app') || (is_dir('./App/'.$theme_color.'/Spotify Mini Player.app') && filesize('./App/'.$theme_color.'/Spotify Mini Player.app') == 0)) {
+    if (!is_file($zip_file) || (is_file($zip_file) && filesize($zip_file) == 0)) {
         $hasError = true;
-        logMsg('Error(switchThemeColor): (failed to load Spotify Mini Player.app for '.$theme_color.')');
+        logMsg('Error(switchThemeColor): (failed to load /tmp/SpotifyMiniPlayer.app.zip for '.$theme_color.')');
     }
-
+	$zip_command = 'unzip '  . $zip_file . ' -d ' . '\'./App/'.$theme_color.'/\'';
+	exec($zip_command);
+    
     deleteTheFile($w->data().'/change_theme_color_in_progress');
     if (!$hasError) {
         displayNotificationWithArtwork($w, 'All existing icons have been replaced by ' . $theme_color . ' icons', './images/change_theme_color.png', 'Settings');
