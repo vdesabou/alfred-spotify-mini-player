@@ -6172,7 +6172,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>fixedorder</key>
 				<false/>
 				<key>items</key>
-				<string>[{"imagefile":"416366eee910711e509f9c7381a14729a4fec214.png","title":"Switch to pink theme","arg":"pink","subtitle":"Change theme to pink"},{"title":"Switch to green theme","arg":"green","subtitle":"Change theme to green"},{"imagefile":"33a76cda76a24b29c08fa6a30b306f8d18842a69.png","title":"Switch to blue theme","arg":"blue","subtitle":"Change theme to blue"},{"imagefile":"0ff3394be61c7c822d06e3228c89add5b462084f.png","title":"Switch to legacy theme","arg":"legacy","subtitle":"Change theme to legacy one"}]</string>
+				<string>[{"imagefile":"416366eee910711e509f9c7381a14729a4fec214.png","title":"Switch to pink theme","arg":"pink","subtitle":"Change theme to pink"},{"imagefile":"afb9b5f72d45346d3a11ab99023d14d3dde3eea0.png","title":"Switch to green theme","arg":"green","subtitle":"Change theme to green"},{"imagefile":"33a76cda76a24b29c08fa6a30b306f8d18842a69.png","title":"Switch to blue theme","arg":"blue","subtitle":"Change theme to blue"},{"imagefile":"0ff3394be61c7c822d06e3228c89add5b462084f.png","title":"Switch to legacy theme","arg":"legacy","subtitle":"Change theme to legacy one"}]</string>
 				<key>runningsubtext</key>
 				<string></string>
 				<key>subtext</key>
