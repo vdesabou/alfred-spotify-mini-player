@@ -373,6 +373,23 @@ function switchThemeColor($w,$color)
         }
     }
 
+    // Get APP 
+    $app_url = 'https://github.com/vdesabou/alfred-spotify-mini-player/raw/master/resources/images_' . $color . '/Spotify Mini Player.app';
+
+    $fp = fopen('./App/'.$color.'/Spotify Mini Player.app', 'w+');
+    $options = array(
+        CURLOPT_FILE => $fp,
+        CURLOPT_FOLLOWLOCATION => 1,
+        CURLOPT_TIMEOUT => 5,
+    );
+
+    $w->request("$app_url", $options);
+
+    if (!is_file('./App/'.$color.'/Spotify Mini Player.app') || (is_file('./App/'.$color.'/Spotify Mini Player.app') && filesize('./App/'.$color.'/Spotify Mini Player.app') == 0)) {
+        $hasError = true;
+        logMsg('Error(switchThemeColor): (failed to load Spotify Mini Player.app for '.$color.')');
+    }
+
     if (!$hasError) {
         displayNotificationWithArtwork($w, 'All existing icons have been replaced by ' . $color . ' icons', './images/change_theme_color.png', 'Settings');
     } else {
@@ -3057,9 +3074,14 @@ function displayNotificationWithArtwork($w, $subtitle, $artwork, $title = 'Spoti
 
     $settings = getSettings($w);
     $use_growl = $settings->use_growl;
-    $theme_color = $settings->theme_color;
 
     if (!$use_growl) {
+        $theme_color = $settings->theme_color;
+        if (!is_file('./App/'.$color.'/Spotify Mini Player.app') || (is_file('./App/'.$color.'/Spotify Mini Player.app') && filesize('./App/'.$color.'/Spotify Mini Player.app') == 0)) {
+            // reset to default
+            updateSetting($w, 'theme_color', 'green');
+            $theme_color = $settings->theme_color;
+        }
         if ($artwork != '' && file_exists($artwork)) {
             copy($artwork, '/tmp/tmp');
         }
