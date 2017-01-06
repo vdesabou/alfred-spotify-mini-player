@@ -4,5 +4,5 @@ spotify-mini-player/composer.lock
 spotify-mini-player/composer.phar
 spotify-mini-player/.idea
 *.sublime-workspace
-
+.sass-cache
 *.sublime-project
