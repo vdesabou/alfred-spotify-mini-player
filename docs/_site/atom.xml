@@ -1,0 +1,836 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+    <title>Alfred Spotify Mini Player</title>
+    <generator uri="https://github.com/jekyll/jekyll">Jekyll v3.1.1</generator>
+		<icon>http://alfred-spotify-mini-player.com/apple-touch-icon-precomposed.png</icon>
+    <subtitle>Alfred workflow to control spotify like the built-in iTunes Mini Player</subtitle>
+    <link href="http://alfred-spotify-mini-player.com/atom.xml" rel="self"/>
+    <link href="http://alfred-spotify-mini-player.com/" rel="alternate" type="text/html"/>
+    <updated>2017-01-06T14:59:43+01:00</updated>
+    <id>http://alfred-spotify-mini-player.com/</id>
+    <author>
+			<name>Vincent</name>
+			<uri>http://alfred-spotify-mini-player.com/</uri>
+			<email>alfred.spotify.mini.player@gmail.com</email>
+		</author>
+
+    
+    <entry>
+        <title>Version 6.6 is available</title>
+        <link href="http://alfred-spotify-mini-player.com/blog/Version-6.6/"/>
+        <updated>2016-11-11T00:00:00+01:00</updated>
+        <id>http://alfred-spotify-mini-player.com/blog/Version-6.6</id>
+        <author>
+					<name>Vincent</name>
+					<uri>http://alfred-spotify-mini-player.com/</uri>
+					<email>alfred.spotify.mini.player@gmail.com</email>
+				</author>
+        <content type="html">
+        	
+        	&lt;p&gt;6.6:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;span class=&quot;badge danger&quot;&gt;FIXED&lt;/span&gt; Launching playlist when Spotify app is not opened&lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/147&quot;&gt;#147&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+        </content>
+    </entry>
+    
+    <entry>
+        <title>Switch to green theme</title>
+        <link href="http://alfred-spotify-mini-player.com/articles/green-theme/"/>
+        <updated>2016-09-27T17:39:03+02:00</updated>
+        <id>http://alfred-spotify-mini-player.com/articles/green-theme</id>
+        <author>
+					<name>Vincent</name>
+					<uri>http://alfred-spotify-mini-player.com/</uri>
+					<email>alfred.spotify.mini.player@gmail.com</email>
+				</author>
+        <content type="html">
+        	
+        	&lt;ul&gt;
+  &lt;li&gt;You can switch to a green theme in settings menu:-&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure&gt;
+	&lt;img src=&quot;http://alfred-spotify-mini-player.com/images/green-theme1.jpg&quot; /&gt;
+	&lt;figcaption&gt;Switch to green theme in &lt;b&gt;Settings&lt;/b&gt;.&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;After some time (icons are downloaded from the cloud), you should have the workflow in green mode:-&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure&gt;
+	&lt;img src=&quot;http://alfred-spotify-mini-player.com/images/green-theme2.jpg&quot; /&gt;
+	&lt;figcaption&gt;Green theme icons.&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;Note: To get back to original version with grey icons, simply re-install the workflow (settings and library will be preserved)&lt;/p&gt;
+
+        </content>
+    </entry>
+    
+    <entry>
+        <title>Version 6.5 is available</title>
+        <link href="http://alfred-spotify-mini-player.com/blog/Version-6.5/"/>
+        <updated>2016-09-27T00:00:00+02:00</updated>
+        <id>http://alfred-spotify-mini-player.com/blog/Version-6.5</id>
+        <author>
+					<name>Vincent</name>
+					<uri>http://alfred-spotify-mini-player.com/</uri>
+					<email>alfred.spotify.mini.player@gmail.com</email>
+				</author>
+        <content type="html">
+        	
+        	&lt;p&gt;6.5:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span class=&quot;badge info&quot;&gt;ADDED&lt;/span&gt; Add option to allow to download a green theme &lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/145&quot;&gt;#145&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span class=&quot;badge danger&quot;&gt;FIXED&lt;/span&gt; Make workflow more resilient to AppleScript output errors&lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/144&quot;&gt;#144&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+        </content>
+    </entry>
+    
+    <entry>
+        <title>Version 6.4 is available</title>
+        <link href="http://alfred-spotify-mini-player.com/blog/Version-6.4/"/>
+        <updated>2016-08-19T00:00:00+02:00</updated>
+        <id>http://alfred-spotify-mini-player.com/blog/Version-6.4</id>
+        <author>
+					<name>Vincent</name>
+					<uri>http://alfred-spotify-mini-player.com/</uri>
+					<email>alfred.spotify.mini.player@gmail.com</email>
+				</author>
+        <content type="html">
+        	
+        	&lt;p&gt;6.4:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span class=&quot;badge info&quot;&gt;ADDED&lt;/span&gt; Allow users to rename all commands &lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/132&quot;&gt;#132&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span class=&quot;badge info&quot;&gt;ADDED&lt;/span&gt; Toggle repeat on / off from the workflow. &lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/122&quot;&gt;#122&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span class=&quot;badge info&quot;&gt;ADDED&lt;/span&gt; Add Spotify Mini Player fallback search. &lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/134&quot;&gt;#134&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span class=&quot;badge danger&quot;&gt;FIXED&lt;/span&gt; Playlist starting with emoji is causing issues &lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/129&quot;&gt;#129&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span class=&quot;badge danger&quot;&gt;FIXED&lt;/span&gt; Charts is broken &lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/118&quot;&gt;#118&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span class=&quot;badge danger&quot;&gt;FIXED&lt;/span&gt; Biography is broken &lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/138&quot;&gt;#138&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span class=&quot;badge danger&quot;&gt;FIXED&lt;/span&gt; Radio not working &lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/137&quot;&gt;#137&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+        </content>
+    </entry>
+    
+    <entry>
+        <title>Version 6.3 is available</title>
+        <link href="http://alfred-spotify-mini-player.com/blog/Version-6.3/"/>
+        <updated>2016-05-20T00:00:00+02:00</updated>
+        <id>http://alfred-spotify-mini-player.com/blog/Version-6.3</id>
+        <author>
+					<name>Vincent</name>
+					<uri>http://alfred-spotify-mini-player.com/</uri>
+					<email>alfred.spotify.mini.player@gmail.com</email>
+				</author>
+        <content type="html">
+        	
+        	&lt;p&gt;6.3:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;WARNING&lt;/em&gt;&lt;/strong&gt;: This version is only compatible with Alfred v3&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span class=&quot;badge info&quot;&gt;ADDED&lt;/span&gt; Compatible with Alfred v3&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span class=&quot;badge danger&quot;&gt;FIXED&lt;/span&gt; Lyrics not found &lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/120&quot;&gt;#115&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+        </content>
+    </entry>
+    
+    <entry>
+        <title>Version 6.2.6 is available</title>
+        <link href="http://alfred-spotify-mini-player.com/blog/Version-6.2.6/"/>
+        <updated>2016-04-19T00:00:00+02:00</updated>
+        <id>http://alfred-spotify-mini-player.com/blog/Version-6.2.6</id>
+        <author>
+					<name>Vincent</name>
+					<uri>http://alfred-spotify-mini-player.com/</uri>
+					<email>alfred.spotify.mini.player@gmail.com</email>
+				</author>
+        <content type="html">
+        	
+        	&lt;p&gt;&lt;strong&gt;&lt;em&gt;WARNING&lt;/em&gt;&lt;/strong&gt;: To use Top Artists and Top Tracks new feature, you need to re-authorize the workflow by executing &lt;code class=&quot;highlighter-rouge&quot;&gt;spot_mini_reset_settings&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;List of changes:-&lt;/p&gt;
+
+&lt;p&gt;6.2.6:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span class=&quot;badge info&quot;&gt;ADDED&lt;/span&gt; Add top artists and tracks for user &lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/116&quot;&gt;#116&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span class=&quot;badge success&quot;&gt;IMPROVED&lt;/span&gt; Trigger OS X notifications without changing the current music &lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/109&quot;&gt;#109&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span class=&quot;badge danger&quot;&gt;FIXED&lt;/span&gt; Search online broken if space is used &lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/113&quot;&gt;#113&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span class=&quot;badge danger&quot;&gt;FIXED&lt;/span&gt; localhost site not starting &lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/114&quot;&gt;#114&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span class=&quot;badge danger&quot;&gt;FIXED&lt;/span&gt; Now playing pops up even when disabled &lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/115&quot;&gt;#115&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+        </content>
+    </entry>
+    
+    <entry>
+        <title>Your Tops</title>
+        <link href="http://alfred-spotify-mini-player.com/articles/your-tops/"/>
+        <updated>2016-04-15T17:39:03+02:00</updated>
+        <id>http://alfred-spotify-mini-player.com/articles/your-tops</id>
+        <author>
+					<name>Vincent</name>
+					<uri>http://alfred-spotify-mini-player.com/</uri>
+					<email>alfred.spotify.mini.player@gmail.com</email>
+				</author>
+        <content type="html">
+        	
+        	&lt;ul&gt;
+  &lt;li&gt;You can browse your top artists and top tracks by selecting &lt;code class=&quot;highlighter-rouge&quot;&gt;Your Tops&lt;/code&gt; in main menu:-&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure&gt;
+	&lt;img src=&quot;http://alfred-spotify-mini-player.com/images/yourtops1.jpg&quot; /&gt;
+	&lt;figcaption&gt;Access Your Tops by selecting &lt;b&gt;Your Tops&lt;/b&gt;.&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Then you can choose your top artists or top tracks based on a period of time:-&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure&gt;
+	&lt;img src=&quot;http://alfred-spotify-mini-player.com/images/yourtops2.jpg&quot; /&gt;
+	&lt;figcaption&gt;Choose your top tracks or artists.&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+        </content>
+    </entry>
+    
+    <entry>
+        <title>Version 6.2.5 is available</title>
+        <link href="http://alfred-spotify-mini-player.com/blog/Version-6.2.5/"/>
+        <updated>2016-02-16T00:00:00+01:00</updated>
+        <id>http://alfred-spotify-mini-player.com/blog/Version-6.2.5</id>
+        <author>
+					<name>Vincent</name>
+					<uri>http://alfred-spotify-mini-player.com/</uri>
+					<email>alfred.spotify.mini.player@gmail.com</email>
+				</author>
+        <content type="html">
+        	
+        	&lt;p&gt;List of changes:-&lt;/p&gt;
+
+&lt;p&gt;6.2.5:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span class=&quot;badge info&quot;&gt;ADDED&lt;/span&gt; Growl notifications &lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/107&quot;&gt;#107&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span class=&quot;badge danger&quot;&gt;FIXED&lt;/span&gt; Web API Exception: invalid id when browsing an artist with only local tracks &lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/111&quot;&gt;#111&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span class=&quot;badge danger&quot;&gt;FIXED&lt;/span&gt; Bug with Remove track from Playlist&lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/112&quot;&gt;#112&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+        </content>
+    </entry>
+    
+    <entry>
+        <title>Version 6.2.4 is available</title>
+        <link href="http://alfred-spotify-mini-player.com/blog/Version-6.2.4/"/>
+        <updated>2015-11-13T00:00:00+01:00</updated>
+        <id>http://alfred-spotify-mini-player.com/blog/Version-6.2.4</id>
+        <author>
+					<name>Vincent</name>
+					<uri>http://alfred-spotify-mini-player.com/</uri>
+					<email>alfred.spotify.mini.player@gmail.com</email>
+				</author>
+        <content type="html">
+        	
+        	&lt;p&gt;List of changes:-&lt;/p&gt;
+
+&lt;p&gt;6.2.4:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span class=&quot;badge info&quot;&gt;ADDED&lt;/span&gt; Add volume percent configuration in Settings menu &lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/94&quot;&gt;#94&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span class=&quot;badge info&quot;&gt;ADDED&lt;/span&gt; Add possibility to remove stars/ratings from track names &lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/98&quot;&gt;#98&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span class=&quot;badge info&quot;&gt;ADDED&lt;/span&gt; Add autoplay when starting radio &lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/99&quot;&gt;#99&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span class=&quot;badge info&quot;&gt;ADDED&lt;/span&gt; Improve spot_mini_debug by directly uploading TGZ file to transfer.sh &lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/105&quot;&gt;#105&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span class=&quot;badge danger&quot;&gt;FIXED&lt;/span&gt; Search does not handle spaces &lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/87&quot;&gt;#97&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span class=&quot;badge danger&quot;&gt;FIXED&lt;/span&gt; No ‘error’ provided in response body happening almost every time for one user &lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/104&quot;&gt;#104&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+        </content>
+    </entry>
+    
+    <entry>
+        <title>Version 6.2.3 is available</title>
+        <link href="http://alfred-spotify-mini-player.com/blog/Version-6.2.3/"/>
+        <updated>2015-09-11T00:00:00+02:00</updated>
+        <id>http://alfred-spotify-mini-player.com/blog/Version-6.2.3</id>
+        <author>
+					<name>Vincent</name>
+					<uri>http://alfred-spotify-mini-player.com/</uri>
+					<email>alfred.spotify.mini.player@gmail.com</email>
+				</author>
+        <content type="html">
+        	
+        	&lt;p&gt;List of changes:-&lt;/p&gt;
+
+&lt;p&gt;6.2.3:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span class=&quot;badge info&quot;&gt;ADDED&lt;/span&gt; Add option to create a &lt;a href=&quot;http://alfred-spotify-mini-player.com/articles/complete-collection/&quot;&gt;Complete Collection&lt;/a&gt; playlist for artist&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span class=&quot;badge danger&quot;&gt;FIXED&lt;/span&gt; Fix for issue &lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/86&quot;&gt;#86&lt;/a&gt; Lyrics are broken&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span class=&quot;badge danger&quot;&gt;FIXED&lt;/span&gt; Fix for issue &lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/92&quot;&gt;#92&lt;/a&gt; Volume controls not working (does not decrease)&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+        </content>
+    </entry>
+    
+    <entry>
+        <title>Complete Collection</title>
+        <link href="http://alfred-spotify-mini-player.com/articles/complete-collection/"/>
+        <updated>2015-09-11T00:00:00+02:00</updated>
+        <id>http://alfred-spotify-mini-player.com/articles/complete-collection</id>
+        <author>
+					<name>Vincent</name>
+					<uri>http://alfred-spotify-mini-player.com/</uri>
+					<email>alfred.spotify.mini.player@gmail.com</email>
+				</author>
+        <content type="html">
+        	
+        	&lt;ul&gt;
+  &lt;li&gt;You can create a playlist containing all albums and singles for the artist right from &lt;em&gt;Artist&lt;/em&gt; menu:-&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure&gt;
+	&lt;img src=&quot;http://alfred-spotify-mini-player.com/images/complete-collection1.jpg&quot; /&gt;
+	&lt;figcaption&gt;Create a playlist Complete Collection from Artist menu.&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+
+        </content>
+    </entry>
+    
+    <entry>
+        <title>Version 6.2.2 is available</title>
+        <link href="http://alfred-spotify-mini-player.com/blog/Version-6.2.2/"/>
+        <updated>2015-06-28T00:00:00+02:00</updated>
+        <id>http://alfred-spotify-mini-player.com/blog/Version-6.2.2</id>
+        <author>
+					<name>Vincent</name>
+					<uri>http://alfred-spotify-mini-player.com/</uri>
+					<email>alfred.spotify.mini.player@gmail.com</email>
+				</author>
+        <content type="html">
+        	
+        	&lt;p class=&quot;notice-danger&quot;&gt;&lt;strong&gt;Warning:&lt;/strong&gt; You’ll need to re-create your library after updating the workflow.&lt;/p&gt;
+
+&lt;p&gt;List of changes:-&lt;/p&gt;
+
+&lt;p&gt;6.2.2:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span class=&quot;badge info&quot;&gt;ADDED&lt;/span&gt; Add back volmid and volmax commands &lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/80&quot;&gt;#80&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span class=&quot;badge info&quot;&gt;ADDED&lt;/span&gt; Add collaborative playlist support &lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/81&quot;&gt;#81&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span class=&quot;badge danger&quot;&gt;FIXED&lt;/span&gt; Fix for issue &lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/78&quot;&gt;#78&lt;/a&gt; Just 5 albums in “My Music”&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+        </content>
+    </entry>
+    
+    <entry>
+        <title>Version 6.2.1 is available</title>
+        <link href="http://alfred-spotify-mini-player.com/blog/Version-6.2.1/"/>
+        <updated>2015-04-16T00:00:00+02:00</updated>
+        <id>http://alfred-spotify-mini-player.com/blog/Version-6.2.1</id>
+        <author>
+					<name>Vincent</name>
+					<uri>http://alfred-spotify-mini-player.com/</uri>
+					<email>alfred.spotify.mini.player@gmail.com</email>
+				</author>
+        <content type="html">
+        	
+        	&lt;p class=&quot;notice-danger&quot;&gt;&lt;strong&gt;Warning:&lt;/strong&gt; You’ll need to re-create your library after updating the workflow.&lt;/p&gt;
+
+&lt;p&gt;List of changes:-&lt;/p&gt;
+
+&lt;p&gt;6.2.1:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span class=&quot;badge info&quot;&gt;ADDED&lt;/span&gt; Add Play/Pause (Remote and Action) command &lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/71&quot;&gt;#71&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span class=&quot;badge info&quot;&gt;ADDED&lt;/span&gt; Order albums by date added (newest on top) &lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/77&quot;&gt;#77&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span class=&quot;badge success&quot;&gt;IMPROVED&lt;/span&gt; Better handling of artworks, with lower size (64x64 px)&lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/74&quot;&gt;#74&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span class=&quot;badge danger&quot;&gt;FIXED&lt;/span&gt; Fix for issue &lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/73&quot;&gt;#73&lt;/a&gt; 404 error while updating playlist with “!” in owner id name&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span class=&quot;badge danger&quot;&gt;FIXED&lt;/span&gt; Fix for issue &lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/72&quot;&gt;#72&lt;/a&gt; “Playlist” (browse by playlist) list is empty&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+        </content>
+    </entry>
+    
+    <entry>
+        <title>Version 6.2 is available</title>
+        <link href="http://alfred-spotify-mini-player.com/blog/Version-6.2/"/>
+        <updated>2015-03-31T00:00:00+02:00</updated>
+        <id>http://alfred-spotify-mini-player.com/blog/Version-6.2</id>
+        <author>
+					<name>Vincent</name>
+					<uri>http://alfred-spotify-mini-player.com/</uri>
+					<email>alfred.spotify.mini.player@gmail.com</email>
+				</author>
+        <content type="html">
+        	
+        	&lt;p&gt;List of changes:-&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;span class=&quot;badge info&quot;&gt;ADDED&lt;/span&gt; Added &lt;a href=&quot;https://www.mopidy.com&quot;&gt;Mopidy&lt;/a&gt; compatibility for premium users, see &lt;a href=&quot;http://alfred-spotify-mini-player.com/articles/mopidy/&quot;&gt;article&lt;/a&gt; &lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/40&quot;&gt;#40&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+        </content>
+    </entry>
+    
+    <entry>
+        <title>Mopidy</title>
+        <link href="http://alfred-spotify-mini-player.com/articles/mopidy/"/>
+        <updated>2015-03-31T00:00:00+02:00</updated>
+        <id>http://alfred-spotify-mini-player.com/articles/mopidy</id>
+        <author>
+					<name>Vincent</name>
+					<uri>http://alfred-spotify-mini-player.com/</uri>
+					<email>alfred.spotify.mini.player@gmail.com</email>
+				</author>
+        <content type="html">
+        	
+        	&lt;p&gt;If you’re a &lt;strong&gt;Spotify Premium&lt;/strong&gt; user and using &lt;a href=&quot;https://www.mopidy.com&quot;&gt;Mopidy&lt;/a&gt;, you can use Mopidy instead of Spotify desktop application (which is used only for AppleScript).&lt;/p&gt;
+
+&lt;p class=&quot;notice-info&quot;&gt;&lt;strong&gt;Note:&lt;/strong&gt; You can find installation instructions for Mopidy on this &lt;a href=&quot;https://docs.mopidy.com/en/latest/installation/osx/&quot;&gt;page&lt;/a&gt; and for Mopidy-Spotify &lt;a href=&quot;https://github.com/mopidy/mopidy-spotify&quot;&gt;here&lt;/a&gt;. I’ll not provide support for Mopidy installation&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;You can activate &lt;em&gt;Mopidy&lt;/em&gt; in the &lt;em&gt;Settings&lt;/em&gt; menu:-&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure&gt;
+  &lt;img src=&quot;http://alfred-spotify-mini-player.com/images/mopidy1.jpg&quot; /&gt;
+  &lt;figcaption&gt;Activate Mopidy in Settings menu.&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Then you can change Mopidy server IP/Name and TCP port in &lt;em&gt;Settings&lt;/em&gt; menu if you’re not using default values (127.0.0.1:6680) :-&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure&gt;
+  &lt;img src=&quot;http://alfred-spotify-mini-player.com/images/mopidy2.jpg&quot; /&gt;
+  &lt;figcaption&gt;Change Mopidy server settings.&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+
+        </content>
+    </entry>
+    
+    <entry>
+        <title>Version 6.1.2 is available</title>
+        <link href="http://alfred-spotify-mini-player.com/blog/Version-6.1.2/"/>
+        <updated>2015-03-21T00:00:00+01:00</updated>
+        <id>http://alfred-spotify-mini-player.com/blog/Version-6.1.2</id>
+        <author>
+					<name>Vincent</name>
+					<uri>http://alfred-spotify-mini-player.com/</uri>
+					<email>alfred.spotify.mini.player@gmail.com</email>
+				</author>
+        <content type="html">
+        	
+        	&lt;p&gt;List of changes:-&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;span class=&quot;badge success&quot;&gt;IMPROVED&lt;/span&gt; Better handling of local files &lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/68&quot;&gt;#68&lt;/a&gt;. A local track will be identified with a &lt;img class=&quot;emoji&quot; title=&quot;:pushpin:&quot; alt=&quot;:pushpin:&quot; src=&quot;https://assets.github.com/images/icons/emoji/unicode/1f4cc.png&quot; height=&quot;20&quot; width=&quot;20&quot; align=&quot;absmiddle&quot; /&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Example:&lt;/p&gt;
+
+&lt;figure&gt;
+    &lt;img src=&quot;http://alfred-spotify-mini-player.com/images/blog/version6.1.2.jpg&quot; /&gt;
+    &lt;figcaption&gt;Local tracks with a pushpin&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+
+        </content>
+    </entry>
+    
+    <entry>
+        <title>Issue with latest Spotify update</title>
+        <link href="http://alfred-spotify-mini-player.com/blog/issue-with-latest-spotify-update/"/>
+        <updated>2015-03-20T00:00:00+01:00</updated>
+        <id>http://alfred-spotify-mini-player.com/blog/issue-with-latest-spotify-update</id>
+        <author>
+					<name>Vincent</name>
+					<uri>http://alfred-spotify-mini-player.com/</uri>
+					<email>alfred.spotify.mini.player@gmail.com</email>
+				</author>
+        <content type="html">
+        	
+        	&lt;p class=&quot;notice-info&quot;&gt;&lt;strong&gt;Update (31st March):&lt;/strong&gt; Spotify version &lt;a href=&quot;https://community.spotify.com/t5/Spotify-Announcements/Release-Notes-Spotify-for-Desktop/m-p/1075314&quot;&gt;1.0.3&lt;/a&gt; fixes the problem, this is currently being deployed. Users must wait for the auto-update, there is no way to force update of the Spotify desktop application.&lt;/p&gt;
+
+&lt;p&gt;Spotify has deployed a version 1.0.2.x (latest one is &lt;code class=&quot;highlighter-rouge&quot;&gt;1.0.2.6.g9977a14b&lt;/code&gt;) which breaks the &lt;a href=&quot;https://community.spotify.com/t5/Help-Desktop-Linux-Mac-and/Apple-scripting-broken-in-1-0-1-988-g8f17a348/td-p/1029434&quot;&gt;AppleScript&lt;/a&gt; support.&lt;/p&gt;
+
+&lt;p&gt;If you’re one of the users who have been upgraded to 1.0.2 version, the workflow will no more work. See this &lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/66&quot;&gt;issue&lt;/a&gt; for more details.&lt;/p&gt;
+
+&lt;p&gt;If you have latest version 6.1.2 of the workflow, you’ll get a warning message indicating an AppleScript error :-&lt;/p&gt;
+
+&lt;figure&gt;
+    &lt;img src=&quot;http://alfred-spotify-mini-player.com/images/blog/spotify_update_problem2.jpg&quot; /&gt;
+    &lt;figcaption&gt;Error message you get with version 6.1.1&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;p&gt;There is a &lt;a href=&quot;http://dangercove.github.io/Spotify-AppleScript-Patch/&quot;&gt;workaround&lt;/a&gt; to have AppleScript working with version 1.x &lt;em&gt;BUT&lt;/em&gt; the &lt;code class=&quot;highlighter-rouge&quot;&gt;play track&lt;/code&gt; is still broken with the workaround, so the workflow will not be able to launch tracks or playlists, which is pretty useless.&lt;/p&gt;
+
+&lt;p&gt;The only way is to revert back to previous Spotify version by following steps &lt;a href=&quot;http://supraliminal.net/blog/2013/4/21/how-to-revert-back-to-the-older-better-spotify-client&quot;&gt;here&lt;/a&gt;, see section &lt;em&gt;MAC OS X&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Note that you can download &lt;code class=&quot;highlighter-rouge&quot;&gt;0.9.15.27&lt;/code&gt; and not &lt;code class=&quot;highlighter-rouge&quot;&gt;0.8.5.1356&lt;/code&gt; as described in the article.&lt;/p&gt;
+
+&lt;p&gt;After applying the workaround, you should see a message &lt;em&gt;There was a problem updating Spotify (BAD FILE SIG)&lt;/em&gt; :-&lt;/p&gt;
+
+&lt;figure&gt;
+    &lt;img src=&quot;http://alfred-spotify-mini-player.com/images/blog/spotify_update_problem.jpg&quot; /&gt;
+    &lt;figcaption&gt;Message: There was a problem updating Spotify&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+
+        </content>
+    </entry>
+    
+    <entry>
+        <title>Version 6.1.1 is available</title>
+        <link href="http://alfred-spotify-mini-player.com/blog/Version-6.1.1/"/>
+        <updated>2015-03-13T00:00:00+01:00</updated>
+        <id>http://alfred-spotify-mini-player.com/blog/Version-6.1.1</id>
+        <author>
+					<name>Vincent</name>
+					<uri>http://alfred-spotify-mini-player.com/</uri>
+					<email>alfred.spotify.mini.player@gmail.com</email>
+				</author>
+        <content type="html">
+        	
+        	&lt;p&gt;List of changes:-&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span class=&quot;badge danger&quot;&gt;FIXED&lt;/span&gt; Fix for issue &lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/65&quot;&gt;#65&lt;/a&gt; Ignore playlists with empty names&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span class=&quot;badge success&quot;&gt;IMPROVED&lt;/span&gt; Detect AppleScript execution errors &lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/67&quot;&gt;#67&lt;/a&gt;. This will help users to detect if they have the latest &lt;a href=&quot;http://alfred-spotify-mini-player.com/blog/issue-with-latest-spotify-update/&quot;&gt;buggy Spotify update&lt;/a&gt;.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+
+        </content>
+    </entry>
+    
+    <entry>
+        <title>Version 6.1 is available</title>
+        <link href="http://alfred-spotify-mini-player.com/blog/Version-6.1/"/>
+        <updated>2015-02-27T00:00:00+01:00</updated>
+        <id>http://alfred-spotify-mini-player.com/blog/Version-6.1</id>
+        <author>
+					<name>Vincent</name>
+					<uri>http://alfred-spotify-mini-player.com/</uri>
+					<email>alfred.spotify.mini.player@gmail.com</email>
+				</author>
+        <content type="html">
+        	
+        	&lt;p&gt;List of changes:-&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span class=&quot;badge info&quot;&gt;ADDED&lt;/span&gt; Added &lt;a href=&quot;http://alfred-spotify-mini-player.com/articles/browse-categories/&quot;&gt;Browse Spotify categories&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span class=&quot;badge info&quot;&gt;ADDED&lt;/span&gt; Added &lt;a href=&quot;http://alfred-spotify-mini-player.com/articles/quick-mode/&quot;&gt;Quick Mode&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span class=&quot;badge success&quot;&gt;IMPROVED&lt;/span&gt; The &lt;a href=&quot;http://alfred-spotify-mini-player.com/articles/back-button/&quot;&gt;Back Button&lt;/a&gt; does not appear by default now. You can now make it appear by typing &lt;code class=&quot;highlighter-rouge&quot;&gt;bb&lt;/code&gt; at any time.&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+
+        </content>
+    </entry>
+    
+    <entry>
+        <title>Quick Mode</title>
+        <link href="http://alfred-spotify-mini-player.com/articles/quick-mode/"/>
+        <updated>2015-02-27T00:00:00+01:00</updated>
+        <id>http://alfred-spotify-mini-player.com/articles/quick-mode</id>
+        <author>
+					<name>Vincent</name>
+					<uri>http://alfred-spotify-mini-player.com/</uri>
+					<email>alfred.spotify.mini.player@gmail.com</email>
+				</author>
+        <content type="html">
+        	
+        	&lt;p&gt;By default when you do a search in main menu, you’ll be presented with &lt;em&gt;Browse&lt;/em&gt; options for artists, albums and playlists. You’ll have to go in sub-menu and then launch it. If you want to avoid this extra-step, you can enable &lt;em&gt;Quick Mode&lt;/em&gt; in &lt;em&gt;Settings&lt;/em&gt; menu:-&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;You can activate &lt;em&gt;Quick Mode&lt;/em&gt; in the &lt;em&gt;Settings&lt;/em&gt; menu:-&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure&gt;
+  &lt;img src=&quot;http://alfred-spotify-mini-player.com/images/quick-mode3.jpg&quot; /&gt;
+  &lt;figcaption&gt;Activate Quick Mode in Settings menu.&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Then a search in Main Menu will show:-&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure&gt;
+  &lt;img src=&quot;http://alfred-spotify-mini-player.com/images/quick-mode1.jpg&quot; /&gt;
+  &lt;figcaption&gt;Choose any result to launch it immediately.&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;With Quick Mode disabled (by default), a search in Main Menu will show:-&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure&gt;
+  &lt;img src=&quot;http://alfred-spotify-mini-player.com/images/quick-mode2.jpg&quot; /&gt;
+  &lt;figcaption&gt;Brose options if Quick Mode is disabled.&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+
+        </content>
+    </entry>
+    
+    <entry>
+        <title>Back Button</title>
+        <link href="http://alfred-spotify-mini-player.com/articles/back-button/"/>
+        <updated>2015-02-27T00:00:00+01:00</updated>
+        <id>http://alfred-spotify-mini-player.com/articles/back-button</id>
+        <author>
+					<name>Vincent</name>
+					<uri>http://alfred-spotify-mini-player.com/</uri>
+					<email>alfred.spotify.mini.player@gmail.com</email>
+				</author>
+        <content type="html">
+        	
+        	&lt;ul&gt;
+  &lt;li&gt;You can invoke at any time the &lt;em&gt;Go Back&lt;/em&gt; button by typing &lt;code class=&quot;highlighter-rouge&quot;&gt;bb&lt;/code&gt;:-&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure&gt;
+  &lt;img src=&quot;http://alfred-spotify-mini-player.com/images/back-button.gif&quot; /&gt;
+  &lt;figcaption&gt;Activate Go Back button when typing &#39;bb&#39;.&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+        </content>
+    </entry>
+    
+    <entry>
+        <title>Browse Spotify categories</title>
+        <link href="http://alfred-spotify-mini-player.com/articles/browse-categories/"/>
+        <updated>2015-02-23T00:00:00+01:00</updated>
+        <id>http://alfred-spotify-mini-player.com/articles/browse-categories</id>
+        <author>
+					<name>Vincent</name>
+					<uri>http://alfred-spotify-mini-player.com/</uri>
+					<email>alfred.spotify.mini.player@gmail.com</email>
+				</author>
+        <content type="html">
+        	
+        	&lt;ul&gt;
+  &lt;li&gt;You can browse the categories from Spotify in the &lt;em&gt;main&lt;/em&gt; menu:-&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure&gt;
+  &lt;img src=&quot;http://alfred-spotify-mini-player.com/images/browse-categories1.jpg&quot; /&gt;
+  &lt;figcaption&gt;Browse in Main menu.&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Then you can choose the country you want (any country where Spotify is available can be selected):-&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure&gt;
+  &lt;img src=&quot;http://alfred-spotify-mini-player.com/images/browse-categories2.jpg&quot; /&gt;
+  &lt;figcaption&gt;Choose the country you want.&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Then you get the list of categories and select one to browse it:-&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure&gt;
+  &lt;img src=&quot;http://alfred-spotify-mini-player.com/images/browse-categories3.jpg&quot; /&gt;
+  &lt;figcaption&gt;List of categories in chosen country.&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;And browse the category’s playlists:-&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure&gt;
+  &lt;img src=&quot;http://alfred-spotify-mini-player.com/images/browse-categories4.jpg&quot; /&gt;
+  &lt;figcaption&gt;Browsed category&#39;s playlists.&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;And browse the selected category’s playlist with all &lt;em&gt;usual&lt;/em&gt; options:-&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure&gt;
+  &lt;img src=&quot;http://alfred-spotify-mini-player.com/images/browse-categories5.jpg&quot; /&gt;
+  &lt;figcaption&gt;Browsed selected playlist.&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+        </content>
+    </entry>
+    
+    <entry>
+        <title>Version 6.0.4 is available</title>
+        <link href="http://alfred-spotify-mini-player.com/blog/Version-6.0.4/"/>
+        <updated>2015-02-21T00:00:00+01:00</updated>
+        <id>http://alfred-spotify-mini-player.com/blog/Version-6.0.4</id>
+        <author>
+					<name>Vincent</name>
+					<uri>http://alfred-spotify-mini-player.com/</uri>
+					<email>alfred.spotify.mini.player@gmail.com</email>
+				</author>
+        <content type="html">
+        	
+        	&lt;p&gt;List of changes:-&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span class=&quot;badge info&quot;&gt;ADDED&lt;/span&gt; Add &lt;code class=&quot;highlighter-rouge&quot;&gt;Play Random Album&lt;/code&gt; &lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/60&quot;&gt;#60&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span class=&quot;badge success&quot;&gt;IMPROVED&lt;/span&gt; Better handling of playable tracks. Not playable tracks are displayed with &lt;img class=&quot;emoji&quot; title=&quot;:no_entry_sign:&quot; alt=&quot;:no_entry_sign:&quot; src=&quot;https://assets.github.com/images/icons/emoji/unicode/1f6ab.png&quot; height=&quot;20&quot; width=&quot;20&quot; align=&quot;absmiddle&quot; /&gt; and are not actionable &lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/57&quot;&gt;#57&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span class=&quot;badge success&quot;&gt;IMPROVED&lt;/span&gt; Added check for &lt;a href=&quot;http://alfred-spotify-mini-player.com/known-issues/#php_requirement&quot;&gt;minimal PHP&lt;/a&gt; version which is 5.4 (shipped in Mavericks) &lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/59&quot;&gt;#59&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+
+        </content>
+    </entry>
+    
+    <entry>
+        <title>Version 6.0.3 is available</title>
+        <link href="http://alfred-spotify-mini-player.com/blog/Version-6.0.3/"/>
+        <updated>2015-02-03T00:00:00+01:00</updated>
+        <id>http://alfred-spotify-mini-player.com/blog/Version-6.0.3</id>
+        <author>
+					<name>Vincent</name>
+					<uri>http://alfred-spotify-mini-player.com/</uri>
+					<email>alfred.spotify.mini.player@gmail.com</email>
+				</author>
+        <content type="html">
+        	
+        	&lt;p&gt;Small bug fixes:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;span class=&quot;badge danger&quot;&gt;FIXED&lt;/span&gt; Fix for issue &lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/52&quot;&gt;#52&lt;/a&gt; and &lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/53&quot;&gt;#53&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+        </content>
+    </entry>
+    
+    <entry>
+        <title>Version 6.0.21 is available</title>
+        <link href="http://alfred-spotify-mini-player.com/blog/Version-6.0.21/"/>
+        <updated>2015-01-31T00:00:00+01:00</updated>
+        <id>http://alfred-spotify-mini-player.com/blog/Version-6.0.21</id>
+        <author>
+					<name>Vincent</name>
+					<uri>http://alfred-spotify-mini-player.com/</uri>
+					<email>alfred.spotify.mini.player@gmail.com</email>
+				</author>
+        <content type="html">
+        	
+        	&lt;p&gt;Small bug fixes:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span class=&quot;badge danger&quot;&gt;FIXED&lt;/span&gt; Fix for issue &lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/49&quot;&gt;#49&lt;/a&gt; and &lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/50&quot;&gt;#50&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span class=&quot;badge danger&quot;&gt;FIXED&lt;/span&gt; Control Spotify volume instead of System volume &lt;a href=&quot;https://github.com/vdesabou/alfred-spotify-mini-player/issues/47&quot;&gt;#47&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+
+        </content>
+    </entry>
+    
+</feed>

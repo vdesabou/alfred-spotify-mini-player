@@ -1,0 +1,37 @@
+{% unless ghfr_display == false %}
+  {% if page.ghfr.style %}
+    {% assign ghfr_style = page.ghfr.style %}
+  {% elsif site.ghfr.style %}
+    {% assign ghfr_style = site.ghfr.style %}
+  {% endif %}
+  {% if page.ghfr.class %}
+    {% assign ghfr_class = page.ghfr.class %}
+  {% elsif site.ghfr.class %}
+    {% assign ghfr_class = site.ghfr.class %}
+  {% else %}
+    {% assign ghfr_class = 'left' %}
+  {% endif %}
+  {% if page.ghfr.text %}
+    {% assign ghfr_text = page.ghfr.text %}
+  {% elsif site.ghfr[ghfr_display] %}
+    {% assign ghfr_text = site.ghfr[ghfr_display] %}
+  {% else %}
+    {% assign ghfr_text = site.ghfr.text %}
+  {% endif %}
+  {% if ghfr_display == null %}
+    {% if page.ghfr.link %}
+      {% assign ghfr_link = page.ghfr.link %}
+    {% elsif site.ghfr.link %}
+      {% assign ghfr_link = site.ghfr.link %}
+    {% else %}
+      {% capture ghfr_link %}https://github.com/{{ site.ghfr.organization }}/{{ site.ghfr.project }}{% endcapture %}
+    {% endif %}
+  {% else %}
+    {% capture ghfr_link %}https://github.com/{{ site.ghfr.organization}}/{{ site.ghfr.project }}/{{ ghfr_display }}/{{ site.ghfr.branch }}/{{ page.path }}{% endcapture %}
+  {% endif %}
+<div class="github-fork-ribbon-wrapper {{ ghfr_class }}">
+    <div class="github-fork-ribbon"{% if ghfr_style %} style="{{ ghfr_style }}"{% endif %}>
+      <a href="{{ ghfr_link }}">{{ ghfr_text }}</a>
+    </div>
+</div>
+{% endunless %}

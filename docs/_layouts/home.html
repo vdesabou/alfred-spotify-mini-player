@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>{% if page.title %}{{ page.title }} • {% endif %}{{ site.title }}</title>
+    {% if page.excerpt %}<meta name="description" content="{{ page.excerpt | strip_html }}">{% endif %}
+    {% if page.tags %}<meta name="keywords" content="{{ page.tags | join: ', ' }}">{% endif %}
+    {% if page.author %}
+      {% assign author = site.data.authors[page.author] %}{% else %}{% assign author = site.owner %}
+    {% endif %}
+    {% include open-graph.html %}
+    {% if author.google.plus %}<link rel="author" href="https://plus.google.com/{{ author.google.plus }}"/>{% endif %}
+
+    <link rel="canonical" href="{{ page.url | replace:'index.html','' | prepend: site.url }}">
+
+    <link href="{{ site.url }}/atom.xml" type="application/atom+xml" rel="alternate" title="{{ site.title }} Atom Feed">
+    <link href="{{ site.url }}/sitemap.xml" type="application/xml" rel="sitemap" title="Sitemap">
+
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="cleartype" content="on">
+    <meta name="google-site-verification" content="KiHqOZpui9cwLpmPFuP_5SUgzxM5f_Mi2LFbr6L2438" />
+    <link rel="mask-icon" href="{{ site.url }}/images/apple-tab-icon.svg" color="green">
+
+
+	<!-- meta robots -->
+	{% if page.noindex %}
+	 	<meta name="robots" content="noindex" />
+	{% endif %}
+
+    <link rel="stylesheet" href="{{ site.url }}/css/main.css">
+    <!-- HTML5 Shiv and Media Query Support for IE -->
+    <!--[if lt IE 9]>
+      <script src="{{ site.url }}/js/vendor/html5shiv.min.js"></script>
+      <script src="{{ site.url }}/js/vendor/respond.min.js"></script>
+    <![endif]-->
+	{% include google_analytics.html %}
+    {% if page.ghfr.display != null %}
+      {% assign ghfr_display = page.ghfr.display %}
+    {% else %}
+      {% assign ghfr_display = site.ghfr.display %}
+    {% endif %}
+    {% unless ghfr_display == false %}
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.1.1/gh-fork-ribbon.min.css" />
+    <!--[if lt IE 9]>
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.1.1/gh-fork-ribbon.ie.min.css" />
+    <![endif]-->
+    {% endunless %}
+    {% seo %}
+  </head>
+
+ <body id="js-body">
+    {% include browser-upgrade.html %}
+    {% include ghfr.html %}
+    {% include header.html %}
+    {% include navigation-sliding.html %}
+
+    {% if page.image.feature %}
+    <div class="page-lead" style="background-image:url({{ site.url }}/images/{{ page.image.feature }})">
+      <div class="wrap page-lead-content">
+        <h1>Alfred Spotify Mini Player</h1>
+        <h2>Alfred 3 workflow to control your Spotify library at your fingertips</h2>
+        <a href="https://github.com/packal/repository/raw/master/com.vdesabou.spotify.mini.player/spotifyminiplayer.alfredworkflow" class="btn-success"><i class="fa fa-download"></i> Download (v6.6)</a>  <a href="http://alfred-spotify-mini-player.com/setup/" class="btn-danger"><i class="fa fa-cog"></i> First time use?</a> <!--<a href="https://github.com/vdesabou/alfred-spotify-mini-player/" target="_blank" class="btn-warning"><i class="fa fa-github"></i> View on GitHub</a> --><a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=J5GAJ2SR89TLQ " target="_blank" class="btn-warning"><i class="fa fa-beer"></i> Buy me a beer!</a>
+      </div><!-- /.page-lead-content -->
+    </div><!-- /.page-lead -->
+    {% endif %}
+
+    <div id="page-wrapper">
+
+      <div id="main" role="main">
+        <div class="wrap">
+          <div class="page-title">
+            <h1>{{ page.title }}</h1>
+            {% if page.excerpt %}<h2>{{ page.excerpt }}</h2>{% endif %}
+          </div>
+          <div class="archive-wrap">
+            <div class="page-content">
+              {{ content }}
+            </div><!-- /.page-content -->
+          </div class="archive-wrap"><!-- /.archive-wrap -->
+        </div><!-- /.wrap -->
+      </div><!-- /#main -->
+    </div>
+
+        <div class="page-lead" style="background-image:url({{ site.url }}/images/{{ page.image.feature }})">
+          <div class="wrap page-lead-content">
+            <!-- <h2>Twitter</h2> -->
+                <a class="twitter-timeline" href="https://twitter.com/TheMiniPlayer" data-widget-id="573795404250222592">Tweets de @TheMiniPlayer</a> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+          </div><!-- /.page-lead-content -->
+        </div><!-- /.page-lead -->
+
+	<div id="page-wrapper">
+		 {% include footer.html %}
+	</div>
+    <script src="{{ site.url }}/js/vendor/jquery-1.9.1.min.js"></script>
+    <script src="{{ site.url }}/js/main.js"></script>
+
+  </body>
+
+</html>

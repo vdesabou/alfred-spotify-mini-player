@@ -1,0 +1,13 @@
+# Footer navigation links
+
+- title: <i class="fa fa-home"></i> Home
+  url: /
+
+- title: <i class="fa fa-list"></i> Release Notes
+  url: /release-notes/
+
+- title: <i class="fa fa-bar-chart"></i> Statistics
+  url: /stats/
+
+- title: <i class="fa fa-graduation-cap"></i> Terms
+  url: /terms/

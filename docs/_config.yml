@@ -1,0 +1,122 @@
+# Site wide configuration
+
+title: Alfred Spotify Mini Player
+description: "Alfred workflow to control spotify like the built-in iTunes Mini Player"
+logo: logo-default.jpg # 120x120 px default image used for Twitter summary card
+teaser: teaser-default.jpg # 400x250 px default teaser image used in image archive grid
+locale: en_US
+#url: http://localhost:4000
+url: http://alfred-spotify-mini-player.com
+
+# Jekyll configuration
+
+sass:
+    sass_dir: _sass
+    style: compressed
+permalink: /:categories/:title/
+kramdown:
+  toc_levels: 1..2
+highlighter: rouge
+gems:
+  - jekyll-sitemap
+  - jemoji
+  - jekyll-gist
+  - jekyll-seo-tag
+
+# Octopress configuration
+
+# Default extensions
+post_ext: md
+page_ext: md
+
+# Found in _templates/
+post_layout: article
+page_layout: article
+
+# Format titles with titlecase?
+titlecase: true
+
+# GitHub Fork Ribbon
+
+ghfr:
+    display:  # false to disable, null for visit, else blob/edit/custom
+    organization: # github organization
+    project: vdesabou/alfred-spotify-mini-player # github project
+    branch: # branch this website is hosted on (master/gh-pages)
+    text: Visit on GitHub
+    blob: Source on GitHub
+    edit: Edit on GitHub
+
+# prose
+prose:
+  rooturl: "_posts"
+  siteurl: "http://alfred-spotify-mini-player.com"
+  media: "images"
+  ignore:
+    - _config.yml
+    - /_layouts
+    - /_includes
+  metadata:
+    _posts:
+      - name: "published"
+        field:
+          label: "Published"
+          element: "checkbox"
+          value: "true"
+      - name: "noindex"
+        field:
+          label: "No Index"
+          element: "checkbox"
+          value: "true"
+      - name: "comments"
+        field:
+          label: "Comments"
+          element: "checkbox"
+          value: "true"
+      - name: "categories"
+        field:
+          element: "multiselect"
+          label: "Add Categories"
+          placeholder: "Choose Categories"
+          options:
+            - name: "Article"
+              value: "articles"
+            - name: "Blog"
+              value: "blog"
+      - name: "toc"
+        field:
+          element: "checkbox"
+          label: "toc"
+          value: "true"
+      - name: "layout"
+        field:
+          label: "Layout"
+          element: "text"
+          value: "article"
+      - name: "title"
+        field:
+          label: "Title"
+          element: "text"
+          value: "A awesome Headline!"
+      - name: "excerpt"
+        field:
+          label: "Excerpt"
+          element: "text"
+          value: "the excerpt"
+
+# Site owner
+owner:
+  name: "Vincent"
+  email: alfred.spotify.mini.player@gmail.com
+  twitter: "TheMiniPlayer"
+  github: https://github.com/vdesabou/alfred-spotify-mini-player
+  google:
+    ad-client:
+    ad-slot:
+    youtube: http://youtube.com/c/Alfred-spotify-mini-player
+  bio: "Creator and developer of the workflow."
+  avatar: bio-photo.jpg # 160x160 px image for author byline
+disqus-shortname: #alfred-spotify-mini-player
+
+
+exclude: ["lib", "config.rb", ".sass-cache", "Capfile", "config", "log", "Rakefile", "Rakefile.rb", "tmp", "*.sublime-project", "*.sublime-workspace", "Gemfile", "Gemfile.lock", "README.md", "LICENSE", "node_modules", "Gruntfile.js", "package.json"]
