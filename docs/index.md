@@ -2,7 +2,7 @@
 layout: home
 permalink: /
 image:
-  feature: background.jpg
+  feature: background.svg
 modified: 2016-09-27
 noindex: false
 ---
