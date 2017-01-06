@@ -133,7 +133,7 @@ function switchThemeColor($w,$theme_color)
     touch($w->data().'/change_theme_color_in_progress');
     $nb_images_downloaded = 0;
     $nb_images_total = 222;
-    $w->write('Change Theme Color▹'. 0 .'▹'. $nb_images_total .'▹'.time().'▹'.'starting', 'change_theme_color_in_progress');
+    $w->write('Change Theme Color to ' . $theme_color . '▹'. 0 .'▹'. $nb_images_total .'▹'.time().'▹'.'starting', 'change_theme_color_in_progress');
     $in_progress_data = $w->read('change_theme_color_in_progress');
     $words = explode('▹', $in_progress_data);
 
@@ -164,7 +164,7 @@ function switchThemeColor($w,$theme_color)
 
         ++$nb_images_downloaded;
         if ($nb_images_downloaded % 10 === 0) {
-            $w->write('Change Theme Color▹'.$nb_images_downloaded.'▹'.$nb_images_total.'▹'.$words[3].'▹'.'Icons', 'change_theme_color_in_progress');
+            $w->write('Change Theme Color to ' . $theme_color . '▹'.$nb_images_downloaded.'▹'.$nb_images_total.'▹'.$words[3].'▹'.'Icons', 'change_theme_color_in_progress');
         }
     }
 
@@ -280,7 +280,7 @@ function switchThemeColor($w,$theme_color)
         $w->request("$icon_url", $options);
         ++$nb_images_downloaded;
         if ($nb_images_downloaded % 5 === 0) {
-            $w->write('Change Theme Color▹'.$nb_images_downloaded.'▹'.$nb_images_total.'▹'.$words[3].'▹'.'Icons UUID', 'change_theme_color_in_progress');
+            $w->write('Change Theme Color to ' . $theme_color . '▹'.$nb_images_downloaded.'▹'.$nb_images_total.'▹'.$words[3].'▹'.'Icons UUID', 'change_theme_color_in_progress');
         }
     }
 
@@ -353,7 +353,7 @@ function switchThemeColor($w,$theme_color)
 
         ++$nb_images_downloaded;
         if ($nb_images_downloaded % 5 === 0) {
-            $w->write('Change Theme Color▹'.$nb_images_downloaded.'▹'.$nb_images_total.'▹'.$words[3].'▹'.'Icons remote', 'change_theme_color_in_progress');
+            $w->write('Change Theme Color to ' . $theme_color . '▹'.$nb_images_downloaded.'▹'.$nb_images_total.'▹'.$words[3].'▹'.'Icons remote', 'change_theme_color_in_progress');
         }
     }
 
@@ -386,7 +386,7 @@ function switchThemeColor($w,$theme_color)
 
         ++$nb_images_downloaded;
         if ($nb_images_downloaded % 5 === 0) {
-            $w->write('Change Theme Color▹'.$nb_images_downloaded.'▹'.$nb_images_total.'▹'.$words[3].'▹'.'Icons UUID remote page', 'change_theme_color_in_progress');
+            $w->write('Change Theme Color to ' . $theme_color . '▹'.$nb_images_downloaded.'▹'.$nb_images_total.'▹'.$words[3].'▹'.'Icons UUID remote page', 'change_theme_color_in_progress');
         }
     }
 
@@ -410,9 +410,9 @@ function switchThemeColor($w,$theme_color)
 
     $w->request("$app_url", $options);
     ++$nb_images_downloaded;
-    $w->write('Change Theme Color▹'.$nb_images_downloaded.'▹'.$nb_images_total.'▹'.$words[3].'▹'.'Icons UUID remote page', 'change_theme_color_in_progress');
-    
-    if (!is_file('./App/'.$theme_color.'/Spotify Mini Player.app') || (is_file('./App/'.$theme_color.'/Spotify Mini Player.app') && filesize('./App/'.$theme_color.'/Spotify Mini Player.app') == 0)) {
+    $w->write('Change Theme Color to ' . $theme_color . '▹'.$nb_images_downloaded.'▹'.$nb_images_total.'▹'.$words[3].'▹'.'Icons UUID remote page', 'change_theme_color_in_progress');
+
+    if (!is_dir('./App/'.$theme_color.'/Spotify Mini Player.app') || (is_dir('./App/'.$theme_color.'/Spotify Mini Player.app') && filesize('./App/'.$theme_color.'/Spotify Mini Player.app') == 0)) {
         $hasError = true;
         logMsg('Error(switchThemeColor): (failed to load Spotify Mini Player.app for '.$theme_color.')');
     }
@@ -3105,7 +3105,7 @@ function displayNotificationWithArtwork($w, $subtitle, $artwork, $title = 'Spoti
 
     if (!$use_growl) {
         $theme_color = $settings->theme_color;
-        if (!is_file('./App/'.$theme_color.'/Spotify Mini Player.app') || (is_file('./App/'.$theme_color.'/Spotify Mini Player.app') && filesize('./App/'.$theme_color.'/Spotify Mini Player.app') == 0)) {
+        if (!is_dir('./App/'.$theme_color.'/Spotify Mini Player.app') || (is_dir('./App/'.$theme_color.'/Spotify Mini Player.app') && filesize('./App/'.$theme_color.'/Spotify Mini Player.app') == 0)) {
             // reset to default
             updateSetting($w, 'theme_color', 'green');
             $theme_color = $settings->theme_color;
