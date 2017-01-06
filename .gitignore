@@ -6,3 +6,4 @@ spotify-mini-player/.idea
 *.sublime-workspace
 .sass-cache
 *.sublime-project
+_site
