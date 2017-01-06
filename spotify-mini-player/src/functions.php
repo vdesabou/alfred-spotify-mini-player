@@ -128,7 +128,7 @@ function invokeMopidyMethod($w, $method, $params, $displayError = true)
  *
  * @param mixed $w
  */
-function switchThemeColor($w,$color)
+function switchThemeColor($w,$theme_color)
 {
 
     // Read settings from JSON
@@ -145,7 +145,7 @@ function switchThemeColor($w,$color)
             continue;
         }
 
-        $icon_url = 'https://github.com/vdesabou/alfred-spotify-mini-player/raw/master/resources/images_' . $color . '/'.$img;
+        $icon_url = 'https://github.com/vdesabou/alfred-spotify-mini-player/raw/master/resources/images_' . $theme_color . '/'.$img;
 
         $fp = fopen('./images/'.$img, 'w+');
         $options = array(
@@ -257,7 +257,7 @@ function switchThemeColor($w,$color)
         );
 
     foreach ($uuid_imgs as $key => $value) {
-        $icon_url = 'https://github.com/vdesabou/alfred-spotify-mini-player/raw/master/resources/images_' . $color . '/'.$value.'@3x.png';
+        $icon_url = 'https://github.com/vdesabou/alfred-spotify-mini-player/raw/master/resources/images_' . $theme_color . '/'.$value.'@3x.png';
 
         $fp = fopen('./'.$key.'.png', 'w+');
         $options = array(
@@ -325,7 +325,7 @@ function switchThemeColor($w,$color)
         );
 
     foreach ($uuid_imgs as $key => $value) {
-        $icon_url = 'https://github.com/vdesabou/alfred-spotify-mini-player/raw/master/resources/images_' . $color . '/'.$value.'@3x.png';
+        $icon_url = 'https://github.com/vdesabou/alfred-spotify-mini-player/raw/master/resources/images_' . $theme_color . '/'.$value.'@3x.png';
 
         $fp = fopen('./_remote/images/items/'.$key.'.png', 'w+');
         $options = array(
@@ -353,7 +353,7 @@ function switchThemeColor($w,$color)
         );
 
     foreach ($uuid_imgs as $key => $value) {
-        $icon_url = 'https://github.com/vdesabou/alfred-spotify-mini-player/raw/master/resources/images_' . $color . '/'.$value.'@3x.png';
+        $icon_url = 'https://github.com/vdesabou/alfred-spotify-mini-player/raw/master/resources/images_' . $theme_color . '/'.$value.'@3x.png';
 
         $fp = fopen('./_remote/images/pages/'.$key.'.png', 'w+');
         $options = array(
@@ -374,9 +374,9 @@ function switchThemeColor($w,$color)
     }
 
     // Get APP 
-    $app_url = 'https://github.com/vdesabou/alfred-spotify-mini-player/raw/master/resources/images_' . $color . '/Spotify Mini Player.app';
+    $app_url = 'https://github.com/vdesabou/alfred-spotify-mini-player/raw/master/resources/images_' . $theme_color . '/Spotify Mini Player.app';
 
-    $fp = fopen('./App/'.$color.'/Spotify Mini Player.app', 'w+');
+    $fp = fopen('./App/'.$theme_color.'/Spotify Mini Player.app', 'w+');
     $options = array(
         CURLOPT_FILE => $fp,
         CURLOPT_FOLLOWLOCATION => 1,
@@ -385,13 +385,13 @@ function switchThemeColor($w,$color)
 
     $w->request("$app_url", $options);
 
-    if (!is_file('./App/'.$color.'/Spotify Mini Player.app') || (is_file('./App/'.$color.'/Spotify Mini Player.app') && filesize('./App/'.$color.'/Spotify Mini Player.app') == 0)) {
+    if (!is_file('./App/'.$theme_color.'/Spotify Mini Player.app') || (is_file('./App/'.$theme_color.'/Spotify Mini Player.app') && filesize('./App/'.$theme_color.'/Spotify Mini Player.app') == 0)) {
         $hasError = true;
-        logMsg('Error(switchThemeColor): (failed to load Spotify Mini Player.app for '.$color.')');
+        logMsg('Error(switchThemeColor): (failed to load Spotify Mini Player.app for '.$theme_color.')');
     }
 
     if (!$hasError) {
-        displayNotificationWithArtwork($w, 'All existing icons have been replaced by ' . $color . ' icons', './images/change_theme_color.png', 'Settings');
+        displayNotificationWithArtwork($w, 'All existing icons have been replaced by ' . $theme_color . ' icons', './images/change_theme_color.png', 'Settings');
     } else {
         displayNotificationWithArtwork($w, 'Some icons have not been replaced', './images/warning.png');
     }
@@ -3077,7 +3077,7 @@ function displayNotificationWithArtwork($w, $subtitle, $artwork, $title = 'Spoti
 
     if (!$use_growl) {
         $theme_color = $settings->theme_color;
-        if (!is_file('./App/'.$color.'/Spotify Mini Player.app') || (is_file('./App/'.$color.'/Spotify Mini Player.app') && filesize('./App/'.$color.'/Spotify Mini Player.app') == 0)) {
+        if (!is_file('./App/'.$theme_color.'/Spotify Mini Player.app') || (is_file('./App/'.$theme_color.'/Spotify Mini Player.app') && filesize('./App/'.$theme_color.'/Spotify Mini Player.app') == 0)) {
             // reset to default
             updateSetting($w, 'theme_color', 'green');
             $theme_color = $settings->theme_color;
