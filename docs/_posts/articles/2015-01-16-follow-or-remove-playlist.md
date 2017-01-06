@@ -6,7 +6,7 @@ modified:
 categories: articles
 excerpt: "Follow an online playlist or remove any of your playlists."
 image:
-  teaser: teaser-follow-or-remove-playlist.jpg
+  teaser: bullet-follow-or-remove-playlist.png
   feature:
   credit:
   creditlink:

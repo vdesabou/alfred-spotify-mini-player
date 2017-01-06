@@ -6,7 +6,7 @@ modified:
 categories: articles
 excerpt: "Create artist or song radio playlists from the workflow."
 image:
-  teaser: teaser-radio-playlists.jpg
+  teaser: bullet-radio-playlists.png
   feature:
   credit: 
   creditlink:

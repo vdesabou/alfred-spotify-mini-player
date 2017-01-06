@@ -6,7 +6,7 @@ modified: 2015-01-05T11:39:03-04:00
 categories: articles
 excerpt: "Get the featured playlists in your country or any other country."
 image:
-  teaser: teaser-featured-playlists.jpg
+  teaser: bullet-featured-playlists.png
   feature:
   credit: 
   creditlink:

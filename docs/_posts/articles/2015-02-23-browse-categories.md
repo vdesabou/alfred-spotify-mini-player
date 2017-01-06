@@ -6,7 +6,7 @@ modified:
 categories: articles
 excerpt: "Browse Spotify categories as in the Spotify player’s “Browse” tab."
 image:
-  teaser: teaser-browse-categories.jpg
+  teaser: bullet-browse-spotify-categories.png
   feature:
   credit:
   creditlink:

@@ -6,7 +6,7 @@ modified: 2015-01-27
 categories: articles
 excerpt: "Full Alfred Remote Support."
 image:
-  teaser: teaser-alfred-remote.jpg
+  teaser: bullet-alfred-remote.png
   feature:
   credit:
   creditlink:

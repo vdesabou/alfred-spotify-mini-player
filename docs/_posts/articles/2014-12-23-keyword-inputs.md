@@ -6,7 +6,7 @@ modified: 2015-01-12T11:39:03-04:00
 categories: articles
 excerpt: "Support of many keyword inputs play, pause, mute, next, random, volume_up, shuffle, etc..."
 image:
-  teaser: teaser-keyword-inputs.jpg
+  teaser: bullet-keyword-input.png
   feature:
   credit: 
   creditlink:

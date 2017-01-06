@@ -6,7 +6,7 @@ modified:
 categories: articles
 excerpt: "Follow or unfollow artists."
 image:
-  teaser: teaser-follow.jpg
+  teaser: bullet-follow-or-unfollow-artists.png
   feature:
   credit: 
   creditlink:

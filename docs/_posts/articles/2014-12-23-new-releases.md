@@ -6,7 +6,7 @@ modified:
 categories: articles
 excerpt: "Get the latest album releases in your country or any other country."
 image:
-  teaser: teaser-new-releases.jpg
+  teaser: bullet-new-album-releases.png
   feature:
   credit: 
   creditlink:

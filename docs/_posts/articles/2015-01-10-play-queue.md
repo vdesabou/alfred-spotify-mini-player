@@ -6,7 +6,7 @@ modified: 2015-01-18
 categories: articles
 excerpt: "Get the list of queued tracks directly in the workflow."
 image:
-  teaser: teaser-play-queue.jpg
+  teaser: bullet-play-queue.png
   feature:
   credit:
   creditlink:

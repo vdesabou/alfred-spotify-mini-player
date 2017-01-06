@@ -6,7 +6,7 @@ modified:
 categories: articles
 excerpt: "Change theme"
 image:
-  teaser: teaser-change-theme.jpg
+  teaser: bullet-change-theme.png
   feature:
   credit: 
   creditlink:

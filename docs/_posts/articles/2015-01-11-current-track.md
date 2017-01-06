@@ -6,7 +6,7 @@ modified:
 categories: articles
 excerpt: "Display current track information and various options."
 image:
-  teaser: teaser-current-track.jpg
+  teaser: bullet-current-track.png
   feature:
   credit: 
   creditlink:

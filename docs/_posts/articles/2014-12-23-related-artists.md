@@ -6,7 +6,7 @@ modified:
 categories: articles
 excerpt: "Get the list of related artists for any artist."
 image:
-  teaser: teaser-related-artists.jpg
+  teaser: bullet-related-artists.png
   feature:
   credit: 
   creditlink:

@@ -6,7 +6,7 @@ modified: 2015-01-16
 categories: articles
 excerpt: "Search online for albums, artists, tracks and even playlists."
 image:
-  teaser: teaser-search-online.jpg
+  teaser: bullet-search-online.png
   feature:
   credit:
   creditlink:

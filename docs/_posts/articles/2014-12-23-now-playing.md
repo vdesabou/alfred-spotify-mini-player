@@ -6,7 +6,7 @@ modified: 2016-02-17T11:39:03-04:00
 categories: articles
 excerpt: "Display an OS X or Growl notification for listened tracks."
 image:
-  teaser: teaser-now-playing.jpg
+  teaser: bullet-now-playing.png
   feature:
   credit: 
   creditlink:

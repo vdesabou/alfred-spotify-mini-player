@@ -6,7 +6,7 @@ modified:
 categories: articles
 excerpt: "Quick Mode to launch tracks/artists/albums/playlists as quick as possible."
 image:
-  teaser: teaser-quick-mode.jpg
+  teaser: bullet-quick-mode.png
   feature:
   credit:
   creditlink:

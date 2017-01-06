@@ -6,7 +6,7 @@ modified:
 categories: articles
 excerpt: "Fast and automatic library updates (with artworks downloaded in background)."
 image:
-  teaser: teaser-refresh-library.jpg
+  teaser: bullet-library-update.png
   feature:
   credit: 
   creditlink:

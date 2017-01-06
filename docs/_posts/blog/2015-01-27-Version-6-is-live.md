@@ -6,7 +6,7 @@ modified: 2015-01-31
 categories: blog
 excerpt: "Version 6.0 is live!"
 image:
-  teaser: teaser-new-releases.jpg
+  teaser: bullet-workflow-update.png
   feature:
   credit:
   creditlink:

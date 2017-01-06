@@ -6,7 +6,7 @@ modified:
 categories: articles
 excerpt: "Go Back button to get back to previous menu."
 image:
-  teaser: teaser-back-button.jpg
+  teaser: bullet-back-button.png
   feature:
   credit:
   creditlink:

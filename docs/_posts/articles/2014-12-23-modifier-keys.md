@@ -6,7 +6,7 @@ modified: 2015-01-19
 categories: articles
 excerpt: "Support of modifier keys, shortcuts for common actions."
 image:
-  teaser: teaser-modifier-keys.jpg
+  teaser: bullet-modifier-keys.png
   feature:
   credit: 
   creditlink:

@@ -6,7 +6,7 @@ modified: 2015-01-10T11:39:03-04:00
 categories: articles
 excerpt: "Control Your Music, or a favorite playlist."
 image:
-  teaser: teaser-alfred-playlist.jpg
+  teaser: bullet-control-alfred-playlist-or-your-music.png
   feature:
   credit:
   creditlink:

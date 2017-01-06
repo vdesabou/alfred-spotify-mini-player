@@ -6,7 +6,7 @@ modified:
 categories: articles
 excerpt: "Create a playlist with the complete collection for an artist."
 image:
-  teaser: teaser-complete-collection.jpg
+  teaser: bullet-complete-collection.png
   feature:
   credit:
   creditlink:
