@@ -279,7 +279,7 @@ function switchThemeColor($w,$theme_color)
 
         $w->request("$icon_url", $options);
         ++$nb_images_downloaded;
-        if ($nb_images_downloaded % 10 === 0) {
+        if ($nb_images_downloaded % 5 === 0) {
             $w->write('Change Theme Color▹'.$nb_images_downloaded.'▹'.$nb_images_total.'▹'.$words[3].'▹'.'Icons UUID', 'change_theme_color_in_progress');
         }
     }
@@ -352,7 +352,7 @@ function switchThemeColor($w,$theme_color)
         $w->request("$icon_url", $options);
 
         ++$nb_images_downloaded;
-        if ($nb_images_downloaded % 10 === 0) {
+        if ($nb_images_downloaded % 5 === 0) {
             $w->write('Change Theme Color▹'.$nb_images_downloaded.'▹'.$nb_images_total.'▹'.$words[3].'▹'.'Icons remote', 'change_theme_color_in_progress');
         }
     }
@@ -385,7 +385,7 @@ function switchThemeColor($w,$theme_color)
         $w->request("$icon_url", $options);
 
         ++$nb_images_downloaded;
-        if ($nb_images_downloaded % 10 === 0) {
+        if ($nb_images_downloaded % 5 === 0) {
             $w->write('Change Theme Color▹'.$nb_images_downloaded.'▹'.$nb_images_total.'▹'.$words[3].'▹'.'Icons UUID remote page', 'change_theme_color_in_progress');
         }
     }
@@ -409,7 +409,9 @@ function switchThemeColor($w,$theme_color)
     );
 
     $w->request("$app_url", $options);
-
+    ++$nb_images_downloaded;
+    $w->write('Change Theme Color▹'.$nb_images_downloaded.'▹'.$nb_images_total.'▹'.$words[3].'▹'.'Icons UUID remote page', 'change_theme_color_in_progress');
+    
     if (!is_file('./App/'.$theme_color.'/Spotify Mini Player.app') || (is_file('./App/'.$theme_color.'/Spotify Mini Player.app') && filesize('./App/'.$theme_color.'/Spotify Mini Player.app') == 0)) {
         $hasError = true;
         logMsg('Error(switchThemeColor): (failed to load Spotify Mini Player.app for '.$theme_color.')');
