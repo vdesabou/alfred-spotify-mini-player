@@ -23,11 +23,18 @@ onhomepage : true
 	<figcaption>Change theme in <b>Settings</b>.</figcaption>
 </figure>
 
-* After some time (icons are downloaded from the cloud), you should have the workflow in selected color:-
+* Select the theme you want:-
 
 <figure>
 	<img src="{{ site.url }}/images/change-theme2.jpg">
+	<figcaption>Select theme.</figcaption>
+</figure>
+
+* After some time (icons are downloaded from the cloud), you should have the workflow in selected color:-
+
+<figure>
+	<img src="{{ site.url }}/images/change-theme3.jpg">
 	<figcaption>Selected theme icons.</figcaption>
 </figure>
 
-Note: To get back to original version with green icons, simply re-install the workflow (settings and library will be preserved)
+Notice the progress bar while downloading the icons from the cloud.
