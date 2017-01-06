@@ -130,6 +130,12 @@ function invokeMopidyMethod($w, $method, $params, $displayError = true)
  */
 function switchThemeColor($w,$theme_color)
 {
+    touch($w->data().'/change_theme_color_in_progress');
+    $nb_images_downloaded = 0;
+    $nb_images_total = 222;
+    $w->write('Change Theme Color▹'. 0 .'▹'. $nb_images_total .'▹'.time().'▹'.'starting', 'change_theme_color_in_progress');
+    $in_progress_data = $w->read('change_theme_color_in_progress');
+    $words = explode('▹', $in_progress_data);
 
     // Read settings from JSON
 
@@ -155,6 +161,11 @@ function switchThemeColor($w,$theme_color)
         );
 
         $w->request("$icon_url", $options);
+
+        ++$nb_images_downloaded;
+        if ($nb_images_downloaded % 10 === 0) {
+            $w->write('Change Theme Color▹'.$nb_images_downloaded.'▹'.$nb_images_total.'▹'.$words[3].'▹'.'Icons', 'change_theme_color_in_progress');
+        }
     }
 
     // check icons from images directory
@@ -267,6 +278,10 @@ function switchThemeColor($w,$theme_color)
         );
 
         $w->request("$icon_url", $options);
+        ++$nb_images_downloaded;
+        if ($nb_images_downloaded % 10 === 0) {
+            $w->write('Change Theme Color▹'.$nb_images_downloaded.'▹'.$nb_images_total.'▹'.$words[3].'▹'.'Icons UUID', 'change_theme_color_in_progress');
+        }
     }
 
     // check UUID images
@@ -335,6 +350,11 @@ function switchThemeColor($w,$theme_color)
         );
 
         $w->request("$icon_url", $options);
+
+        ++$nb_images_downloaded;
+        if ($nb_images_downloaded % 10 === 0) {
+            $w->write('Change Theme Color▹'.$nb_images_downloaded.'▹'.$nb_images_total.'▹'.$words[3].'▹'.'Icons remote', 'change_theme_color_in_progress');
+        }
     }
 
     // check UUID images
@@ -363,6 +383,11 @@ function switchThemeColor($w,$theme_color)
         );
 
         $w->request("$icon_url", $options);
+
+        ++$nb_images_downloaded;
+        if ($nb_images_downloaded % 10 === 0) {
+            $w->write('Change Theme Color▹'.$nb_images_downloaded.'▹'.$nb_images_total.'▹'.$words[3].'▹'.'Icons UUID remote page', 'change_theme_color_in_progress');
+        }
     }
 
     // check UUID images
@@ -390,6 +415,7 @@ function switchThemeColor($w,$theme_color)
         logMsg('Error(switchThemeColor): (failed to load Spotify Mini Player.app for '.$theme_color.')');
     }
 
+    deleteTheFile($w->data().'/change_theme_color_in_progress');
     if (!$hasError) {
         displayNotificationWithArtwork($w, 'All existing icons have been replaced by ' . $theme_color . ' icons', './images/change_theme_color.png', 'Settings');
     } else {

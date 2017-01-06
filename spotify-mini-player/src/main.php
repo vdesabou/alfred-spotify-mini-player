@@ -92,6 +92,20 @@ if (file_exists($w->data().'/download_artworks_in_progress')) {
     }
 }
 
+// check for download artworks in progress
+$change_theme_color_in_progress = false;
+if (file_exists($w->data().'/change_theme_color_in_progress')) {
+    $in_progress_data = $w->read('change_theme_color_in_progress');
+    $change_theme_color_in_progress_words = explode('▹', $in_progress_data);
+    $elapsed_time = time() - $change_theme_color_in_progress_words[3];
+    $change_theme_color_in_progress = true;
+    if ($change_theme_color_in_progress_words[2] != 0) {
+        $w->result(null, $w->data().'/change_theme_color_in_progress', $change_theme_color_in_progress_words[0].' in progress since '.beautifyTime($elapsed_time, true).' : '.floatToSquares(intval($change_theme_color_in_progress_words[1]) / intval($change_theme_color_in_progress_words[2])), $change_theme_color_in_progress_words[1].'/'.$change_theme_color_in_progress_words[2].' icons processed so far (empty icons can be seen until full download is complete)', './images/update_in_progress.png', 'no', null, '');
+    } else {
+        $w->result(null, $w->data().'/change_theme_color_in_progress', $change_theme_color_in_progress_words[0].' in progress since '.beautifyTime($elapsed_time, true).' : '.floatToSquares(0), 'No icons processed so far (empty icons can be seen until full download is complete)', './images/update_in_progress.png', 'no', null, '');
+    }
+}
+
 // Read settings from JSON
 
 $settings = getSettings($w);
