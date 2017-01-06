@@ -420,9 +420,10 @@ function switchThemeColor($w,$theme_color)
 	$zip_command = 'unzip '  . $zip_file . ' -d ' . '\'./App/'.$theme_color.'/\'';
 	exec($zip_command);
     
+    exec('open "'.'/App/'.$theme_color.'/Spotify Mini Player.app'.'"');
     //update settings
     $ret = updateSetting($w, 'theme_color', $theme_color);
-    
+
     deleteTheFile($w->data().'/change_theme_color_in_progress');
     if (!$hasError) {
         displayNotificationWithArtwork($w, 'All existing icons have been replaced by ' . $theme_color . ' icons', './images/change_theme_color.png', 'Settings');
