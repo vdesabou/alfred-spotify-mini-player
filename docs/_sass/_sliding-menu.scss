@@ -29,7 +29,7 @@
   display: block;
   width: $button-size * 2;
   height: $button-size * 2;
-  background: $primary-color;
+  background: $green-color;
   outline: 0;
   padding: 0;
   border: 2.5px solid transparent;
@@ -41,7 +41,7 @@
   }
   transition: $sliding-menu-animation;
   &.slide {
-    background: $danger-color;
+    background: $green-color;
     transform: translateX(0); /* don't slide close button on small screens only */
     @include media($medium) {
       transform: translateX(em(-600)); /* reset slide position */
