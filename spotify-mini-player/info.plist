@@ -2501,7 +2501,7 @@
 				<key>scriptfile</key>
 				<string></string>
 				<key>subtext</key>
-				<string>Please send the generated tgz file to the workflow author</string>
+				<string>Please send the generated zip file to the workflow author</string>
 				<key>title</key>
 				<string>Debug tools for Spotify Mini Player</string>
 				<key>type</key>

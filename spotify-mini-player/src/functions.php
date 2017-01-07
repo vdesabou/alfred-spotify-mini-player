@@ -541,13 +541,13 @@ function createDebugFile($w)
     }
     $output = $output."\n";
 
-    exec('cd /tmp;tar cfz spot_mini_debug.tgz spot_mini_debug');
+    exec('cd /tmp;zip -r spot_mini_debug.zip spot_mini_debug');
 
     $output = $output."****\n";
 
-    $output = $output.exec("curl --upload-file /tmp/spot_mini_debug.tgz https://transfer.sh/spot_mini_debug_$userid.tgz");
+    $output = $output.exec("curl --upload-file /tmp/spot_mini_debug.zip https://transfer.sh/spot_mini_debug_$userid.zip");
 
-    exec('cd /tmp;rm -rf spot_mini_debug.tgz spot_mini_debug');
+    exec('cd /tmp;rm -rf spot_mini_debug.zip spot_mini_debug');
 
     $output = $output."\n----------------------------------------------\nCan you describe the problem in a few lines:\n";
 

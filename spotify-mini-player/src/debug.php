@@ -72,7 +72,7 @@ if (mb_strlen($query) > 1) {
             '', /* playlist_artwork_path */
         )), 'Is Mopidy correctly installed and running?', 'Go to the article to get more information', './images/website.png', 'yes', null, '');
     } else {
-        $w->result(null, '', 'Exception occurred: '.$query, 'Use the Send an email to the author option below to send generated spot_mini_debug.tgz', './images/warning.png', 'no', null, '');
+        $w->result(null, '', 'Exception occurred: '.$query, 'Use the Send an email to the author option below to send generated spot_mini_debug.zip', './images/warning.png', 'no', null, '');
     }
 }
 
@@ -93,7 +93,7 @@ $w->result(null, serialize(array(
                         '' /* album_artwork_path */,
                         '' /* playlist_name */,
                         '', /* playlist_artwork_path */
-)), 'Send an email to the author with a link to generated spot_mini_debug.tgz file', 'This will open your default mail application, with all needed information for troubleshooting.', './images/mail.png', 'yes', null, '');
+)), 'Send an email to the author with a link to generated spot_mini_debug.zip file', 'This will open your default mail application, with all needed information for troubleshooting.', './images/mail.png', 'yes', null, '');
 
 $w->result(null, '', 'Quick access to workflow folders:', '', './images/info.png', 'no', null, '');
 
