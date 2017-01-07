@@ -10,7 +10,6 @@ limit: 25
 {% endif %}
     <title>{{ site.title }}</title>
     <generator uri="https://github.com/jekyll/jekyll">Jekyll v{{ jekyll.version }}</generator>
-		<icon>{{ site.url }}/apple-touch-icon-precomposed.png</icon>
     <subtitle>{{ site.description }}</subtitle>
     <link href="{{ base }}{{ page.url }}" rel="self"/>
     <link href="{{ base }}/" rel="alternate" type="text/html"/>
