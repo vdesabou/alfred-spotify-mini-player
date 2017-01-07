@@ -6,7 +6,7 @@ modified:
 categories: articles
 excerpt: "Automatic check for workflow update."
 image:
-  teaser: teaser: bullet-workflow-update.png
+  teaser: bullet-workflow-update.png
   feature:
   credit:
   creditlink:
