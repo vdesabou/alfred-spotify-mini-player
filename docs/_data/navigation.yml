@@ -3,26 +3,26 @@
 - title: <i class="fa fa-check"></i> Features
   url: /#features
   excerpt: "List of all features"
-  image: teaser-features.jpg
+  image: 
 
 - title: <i class="fa fa-cog"></i> Setup
   url: /setup/
   excerpt: "How to setup the workflow"
-  image: teaser-setup.jpg
+  image: 
 
 - title: <i class="fa fa-bug"></i> Support
   url: /articles/support
   excerpt: "Steps to follow when you get an issue."
-  image: teaser-support.jpg
+  image: 
 
 - title: <i class="fa fa-exclamation-triangle"></i> Known Issues
   url: /known-issues/
   excerpt: "List of known issues."
-  image: teaser-known-issues.jpg
+  image: 
 
 - title: <i class="fa fa-rss"></i> Blog
   url: /blog/
   excerpt: "The blog."
-  image: teaser-blog.jpg
+  image:
 
 
