@@ -47,63 +47,6 @@ ghfr:
     blob: Source on GitHub
     edit: Edit on GitHub
 
-# prose
-prose:
-  rooturl: "_posts"
-  siteurl: "http://alfred-spotify-mini-player.com"
-  media: "images"
-  ignore:
-    - _config.yml
-    - /_layouts
-    - /_includes
-  metadata:
-    _posts:
-      - name: "published"
-        field:
-          label: "Published"
-          element: "checkbox"
-          value: "true"
-      - name: "noindex"
-        field:
-          label: "No Index"
-          element: "checkbox"
-          value: "true"
-      - name: "comments"
-        field:
-          label: "Comments"
-          element: "checkbox"
-          value: "true"
-      - name: "categories"
-        field:
-          element: "multiselect"
-          label: "Add Categories"
-          placeholder: "Choose Categories"
-          options:
-            - name: "Article"
-              value: "articles"
-            - name: "Blog"
-              value: "blog"
-      - name: "toc"
-        field:
-          element: "checkbox"
-          label: "toc"
-          value: "true"
-      - name: "layout"
-        field:
-          label: "Layout"
-          element: "text"
-          value: "article"
-      - name: "title"
-        field:
-          label: "Title"
-          element: "text"
-          value: "A awesome Headline!"
-      - name: "excerpt"
-        field:
-          label: "Excerpt"
-          element: "text"
-          value: "the excerpt"
-
 # Site owner
 owner:
   name: "Vincent"
