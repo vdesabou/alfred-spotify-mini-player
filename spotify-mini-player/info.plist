@@ -7558,6 +7558,28 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 		<string>lookup_artist_online</string>
 		<key>lyrics</key>
 		<string>lyrics</string>
+		<key>menu_display_alfred_playlist</key>
+		<string>1</string>
+		<key>menu_display_browse_by_album</key>
+		<string>1</string>
+		<key>menu_display_browse_by_artist</key>
+		<string>1</string>
+		<key>menu_display_browse_by_playlist</key>
+		<string>1</string>
+		<key>menu_display_browse_categories</key>
+		<string>1</string>
+		<key>menu_display_browse_your_music</key>
+		<string>1</string>
+		<key>menu_display_current_track</key>
+		<string>1</string>
+		<key>menu_display_lookup_current_artist_online</key>
+		<string>1</string>
+		<key>menu_display_play_queue</key>
+		<string>1</string>
+		<key>menu_display_search_online</key>
+		<string>1</string>
+		<key>menu_display_your_tops</key>
+		<string>1</string>
 		<key>mute</key>
 		<string>mute</string>
 		<key>next</key>

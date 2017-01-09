@@ -305,60 +305,85 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress)
         $w->result(null, '', 'Search for music in "Your Music" only', 'Begin typing at least 3 characters to start search in your '.$yourmusic_tracks.' tracks'.$quick_mode_text, './images/search_scope_yourmusic_only.png', 'no', null, '');
     }
 
-    $w->result(null, '', 'Current Track', 'Display current track information and browse various options', './images/current_track.png', 'no', null, 'Current Track▹');
+    if(getenv('menu_display_current_track') == 1) {
+        $w->result(null, '', 'Current Track', 'Display current track information and browse various options', './images/current_track.png', 'no', null, 'Current Track▹');
+    }
 
-    $w->result(null, '', 'Play Queue', 'Get the current play queue. Always use the workflow to launch tracks, otherwise play queue will be empty', './images/play_queue.png', 'no', null, 'Play Queue▹');
+    if(getenv('menu_display_play_queue') == 1) {
+        $w->result(null, '', 'Play Queue', 'Get the current play queue. Always use the workflow to launch tracks, otherwise play queue will be empty', './images/play_queue.png', 'no', null, 'Play Queue▹');
+    }
 
-    $w->result(null, serialize(array(
-                '' /*track_uri*/,
-                '' /* album_uri */,
-                '' /* artist_uri */,
-                '' /* playlist_uri */,
-                '' /* spotify_command */,
-                '' /* query */,
-                '' /* other_settings*/,
-                'lookup_current_artist' /* other_action */,
+    if(getenv('menu_display_lookup_current_artist_online') == 1) {
+        $w->result(null, serialize(array(
+                    '' /*track_uri*/,
+                    '' /* album_uri */,
+                    '' /* artist_uri */,
+                    '' /* playlist_uri */,
+                    '' /* spotify_command */,
+                    '' /* query */,
+                    '' /* other_settings*/,
+                    'lookup_current_artist' /* other_action */,
+                    '' /* artist_name */,
+                    '' /* track_name */,
+                    '' /* album_name */,
+                    '' /* track_artwork_path */,
+                    '' /* artist_artwork_path */,
+                    '' /* album_artwork_path */,
+                    '' /* playlist_name */,
+                    '', /* playlist_artwork_path */
+                )), 'Lookup Current Artist online', array(
+                '☁︎ Query all albums/tracks from current artist online..',
+                'alt' => 'Not Available',
+                'cmd' => 'Not Available',
+                'shift' => 'Not Available',
+                'fn' => 'Not Available',
+                'ctrl' => 'Not Available',
+            ), './images/online_artist.png', 'yes', '');
+    }
 
-                '' /* artist_name */,
-                '' /* track_name */,
-                '' /* album_name */,
-                '' /* track_artwork_path */,
-                '' /* artist_artwork_path */,
-                '' /* album_artwork_path */,
-                '' /* playlist_name */,
-                '', /* playlist_artwork_path */
-            )), 'Lookup Current Artist online', array(
-            '☁︎ Query all albums/tracks from current artist online..',
-            'alt' => 'Not Available',
-            'cmd' => 'Not Available',
-            'shift' => 'Not Available',
-            'fn' => 'Not Available',
-            'ctrl' => 'Not Available',
-        ), './images/online_artist.png', 'yes', '');
+    if(getenv('menu_display_search_online') == 1) {
+        $w->result(null, '', 'Search online', '☁︎ You can search tracks, artists, albums and playlists online, i.e not in your library', './images/online.png', 'no', null, 'Search Online▹');
+    }
 
-    $w->result(null, '', 'Search online', '☁︎ You can search tracks, artists, albums and playlists online, i.e not in your library', './images/online.png', 'no', null, 'Search Online▹');
-
-    if ($is_alfred_playlist_active == true) {
-        if ($alfred_playlist_name != '') {
-            $title = 'Alfred Playlist ● '.$alfred_playlist_name;
-            $w->result(null, '', $title, 'Choose one of your playlists and add tracks, album, playlist to it directly from the workflow', './images/alfred_playlist.png', 'no', null, 'Alfred Playlist▹');
-        } else {
-            $title = 'Alfred Playlist ● not set';
-            $w->result(null, '', $title, 'Choose one of your playlists and add tracks, album, playlist to it directly from the workflow', './images/alfred_playlist.png', 'no', null, 'Alfred Playlist▹Set Alfred Playlist▹');
+    if(getenv('menu_display_alfred_playlist') == 1) {
+        if ($is_alfred_playlist_active == true) {
+            if ($alfred_playlist_name != '') {
+                $title = 'Alfred Playlist ● '.$alfred_playlist_name;
+                $w->result(null, '', $title, 'Choose one of your playlists and add tracks, album, playlist to it directly from the workflow', './images/alfred_playlist.png', 'no', null, 'Alfred Playlist▹');
+            } else {
+                $title = 'Alfred Playlist ● not set';
+                $w->result(null, '', $title, 'Choose one of your playlists and add tracks, album, playlist to it directly from the workflow', './images/alfred_playlist.png', 'no', null, 'Alfred Playlist▹Set Alfred Playlist▹');
+            }
         }
     }
-    $w->result(null, '', 'Playlists', 'Browse by playlist'.' ('.$nb_playlists.' playlists)', './images/playlists.png', 'no', null, 'Playlist▹');
-    $w->result(null, '', 'Your Music', 'Browse Your Music'.' ('.$yourmusic_tracks.' tracks ● '.$yourmusic_albums.'  albums ● '.$yourmusic_artists.' artists)', './images/yourmusic.png', 'no', null, 'Your Music▹');
+    if(getenv('menu_display_browse_by_playlist') == 1) {
+        $w->result(null, '', 'Playlists', 'Browse by playlist'.' ('.$nb_playlists.' playlists)', './images/playlists.png', 'no', null, 'Playlist▹');
+    }
+    if(getenv('menu_display_browse_your_music') == 1) {
+        $w->result(null, '', 'Your Music', 'Browse Your Music'.' ('.$yourmusic_tracks.' tracks ● '.$yourmusic_albums.'  albums ● '.$yourmusic_artists.' artists)', './images/yourmusic.png', 'no', null, 'Your Music▹');
+    }
     if ($all_playlists == true) {
-        $w->result(null, '', 'Artists', 'Browse by artist'.' ('.$all_artists.' artists)', './images/artists.png', 'no', null, 'Artist▹');
-        $w->result(null, '', 'Albums', 'Browse by album'.' ('.$all_albums.' albums)', './images/albums.png', 'no', null, 'Album▹');
+        if(getenv('menu_display_browse_by_artist') == 1) {
+            $w->result(null, '', 'Artists', 'Browse by artist'.' ('.$all_artists.' artists)', './images/artists.png', 'no', null, 'Artist▹');
+        }
+        if(getenv('menu_display_browse_by_album') == 1) {
+            $w->result(null, '', 'Albums', 'Browse by album'.' ('.$all_albums.' albums)', './images/albums.png', 'no', null, 'Album▹');
+        }
     } else {
-        $w->result(null, '', 'Artists in "Your Music"', 'Browse by artist'.' ('.$yourmusic_artists.' artists)', './images/artists.png', 'no', null, 'Artist▹');
-        $w->result(null, '', 'Albums in "Your Music"', 'Browse by album'.' ('.$yourmusic_albums.' albums)', './images/albums.png', 'no', null, 'Album▹');
+        if(getenv('menu_display_browse_by_artist') == 1) {
+            $w->result(null, '', 'Artists in "Your Music"', 'Browse by artist'.' ('.$yourmusic_artists.' artists)', './images/artists.png', 'no', null, 'Artist▹');
+        }
+        if(getenv('menu_display_browse_by_album') == 1) {
+            $w->result(null, '', 'Albums in "Your Music"', 'Browse by album'.' ('.$yourmusic_albums.' albums)', './images/albums.png', 'no', null, 'Album▹');
+        }
     }
 
-    $w->result(null, '', 'Browse', 'Browse Spotify by categories, as in the Spotify player’s “Browse” tab', './images/browse.png', 'no', null, 'Browse▹');
-    $w->result(null, '', 'Your Tops', 'Browse your top artists and top tracks', './images/star.png', 'no', null, 'Your Tops▹');
+    if(getenv('menu_display_browse_categories') == 1) {
+        $w->result(null, '', 'Browse', 'Browse Spotify by categories, as in the Spotify player’s “Browse” tab', './images/browse.png', 'no', null, 'Browse▹');
+    }
+    if(getenv('menu_display_your_tops') == 1) {
+        $w->result(null, '', 'Your Tops', 'Browse your top artists and top tracks', './images/star.png', 'no', null, 'Your Tops▹');
+    }
 
     if ($is_alfred_playlist_active == true) {
         $alfred_playlist_state = 'Alfred Playlist';
