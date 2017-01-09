@@ -7650,7 +7650,7 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 		<string>web_search</string>
 	</dict>
 	<key>version</key>
-	<string>6.7</string>
+	<string>7.0</string>
 	<key>webaddress</key>
 	<string>http://alfred-spotify-mini-player.com</string>
 </dict>
