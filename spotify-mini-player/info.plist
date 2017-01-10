@@ -7544,19 +7544,19 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 	</dict>
 	<key>variables</key>
 	<dict>
-		<key>add_current_track_to</key>
+		<key>command_command_command_add_current_track_to</key>
 		<string>add_current_track_to</string>
-		<key>add_current_track_to_alfred_playlist_or_your_music</key>
+		<key>command_add_current_track_to_alfred_playlist_or_your_music</key>
 		<string>add_current_track_to_alfred_playlist_or_your_music</string>
-		<key>artist_radio</key>
+		<key>command_artist_radio</key>
 		<string>artist_radio</string>
-		<key>biography</key>
+		<key>command_biography</key>
 		<string>biography</string>
-		<key>current</key>
+		<key>command_current</key>
 		<string>current</string>
-		<key>lookup_artist_online</key>
+		<key>command_lookup_artist_online</key>
 		<string>lookup_artist_online</string>
-		<key>lyrics</key>
+		<key>command_lyrics</key>
 		<string>lyrics</string>
 		<key>menu_display_alfred_playlist</key>
 		<string>1</string>
@@ -7580,35 +7580,35 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 		<string>1</string>
 		<key>menu_display_your_tops</key>
 		<string>1</string>
-		<key>mute</key>
+		<key>command_mute</key>
 		<string>mute</string>
-		<key>next</key>
+		<key>command_next</key>
 		<string>next</string>
-		<key>pause</key>
+		<key>command_pause</key>
 		<string>pause</string>
-		<key>play</key>
+		<key>command_play</key>
 		<string>play</string>
-		<key>play_album</key>
+		<key>command_play_album</key>
 		<string>play_album</string>
-		<key>play_alfred_playlist</key>
+		<key>command_play_alfred_playlist</key>
 		<string>play_alfred_playlist</string>
-		<key>play_artist</key>
+		<key>command_play_artist</key>
 		<string>play_artist</string>
-		<key>playpause</key>
+		<key>command_playpause</key>
 		<string>playpause</string>
-		<key>previous</key>
+		<key>command_previous</key>
 		<string>previous</string>
-		<key>random</key>
+		<key>command_random</key>
 		<string>random</string>
-		<key>random_album</key>
+		<key>command_random_album</key>
 		<string>random_album</string>
-		<key>refresh_library</key>
+		<key>command_refresh_library</key>
 		<string>refresh_library</string>
-		<key>remove_current_track_from</key>
+		<key>command_remove_current_track_from</key>
 		<string>remove_current_track_from</string>
-		<key>repeating</key>
+		<key>command_repeating</key>
 		<string>repeating</string>
-		<key>share</key>
+		<key>command_share</key>
 		<string>share</string>
 		<key>sharing_hashtag1</key>
 		<string>#NowPlaying</string>
@@ -7618,35 +7618,35 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 		<string></string>
 		<key>sharing_text2</key>
 		<string>♫</string>
-		<key>shuffle</key>
+		<key>command_shuffle</key>
 		<string>shuffle</string>
-		<key>song_radio</key>
+		<key>command_song_radio</key>
 		<string>song_radio</string>
-		<key>spot_mini</key>
+		<key>command_spot_mini</key>
 		<string>spot_mini</string>
-		<key>spot_mini_debug</key>
+		<key>command_spot_mini_debug</key>
 		<string>spot_mini_debug</string>
-		<key>spot_mini_issue</key>
+		<key>command_spot_mini_issue</key>
 		<string>spot_mini_issue</string>
-		<key>spot_mini_kill</key>
+		<key>command_spot_mini_kill</key>
 		<string>spot_mini_kill</string>
-		<key>spot_mini_reset_settings</key>
+		<key>command_spot_mini_reset_settings</key>
 		<string>spot_mini_reset_settings</string>
-		<key>volmax</key>
+		<key>command_volmax</key>
 		<string>volmax</string>
-		<key>volmid</key>
+		<key>command_volmid</key>
 		<string>volmid</string>
-		<key>volume_down</key>
+		<key>command_volume_down</key>
 		<string>volume_down</string>
-		<key>volume_max</key>
+		<key>settings_volume_max</key>
 		<string>100</string>
-		<key>volume_mid</key>
+		<key>settings_volume_mid</key>
 		<string>50</string>
-		<key>volume_min</key>
+		<key>settings_volume_min</key>
 		<string>0</string>
-		<key>volume_up</key>
+		<key>command_volume_up</key>
 		<string>volume_up</string>
-		<key>web_search</key>
+		<key>command_web_search</key>
 		<string>web_search</string>
 	</dict>
 	<key>version</key>
