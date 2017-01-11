@@ -77,11 +77,13 @@ if ($add_to_option != '') {
 }
 
 // start now playing if needed
-$mopidy_arg = '';
-if ($use_mopidy) {
-    $mopidy_arg = 'MOPIDY';
+if($oauth_access_token != '') {
+    $mopidy_arg = '';
+    if ($use_mopidy) {
+        $mopidy_arg = 'MOPIDY';
+    }
+    exec('./src/spotify_mini_player_notifications.ksh -d "'.$w->data().'" -a start -m "'.$mopidy_arg.'"  >> "'.$w->cache().'/action.log" 2>&1 & ');
 }
-exec('./src/spotify_mini_player_notifications.ksh -d "'.$w->data().'" -a start -m "'.$mopidy_arg.'"  >> "'.$w->cache().'/action.log" 2>&1 & ');
 
 // make sure spotify is running
 if (!$use_mopidy) {
