@@ -87,11 +87,13 @@ if($oauth_access_token != '') {
 
 // make sure spotify is running
 if (!$use_mopidy) {
-    exec('./src/is_spotify_running.ksh 2>&1', $retArr, $retVal);
-    if ($retArr[0] != 0) {
-        exec('open -a "Spotify"');
-        // wait for Spotify to start
-        sleep(6);
+    if($oauth_access_token != '') {
+        exec('./src/is_spotify_running.ksh 2>&1', $retArr, $retVal);
+        if ($retArr[0] != 0) {
+            exec('open -a "Spotify"');
+            // wait for Spotify to start
+            sleep(6);
+        }
     }
 }
 
