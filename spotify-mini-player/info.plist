@@ -2042,7 +2042,7 @@
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>keyword</key>
-				<string>{var:spot_mini}</string>
+				<string>{var:command_spot_mini}</string>
 				<key>queuedelaycustom</key>
 				<integer>3</integer>
 				<key>queuedelayimmediatelyinitially</key>
@@ -2483,7 +2483,7 @@
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>keyword</key>
-				<string>{var:spot_mini_debug}</string>
+				<string>{var:command_spot_mini_debug}</string>
 				<key>queuedelaycustom</key>
 				<integer>1</integer>
 				<key>queuedelayimmediatelyinitially</key>
@@ -2679,7 +2679,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:volume_up}</string>
+				<string>{var:command_volume_up}</string>
 				<key>subtext</key>
 				<string>Increase Spotify Volume</string>
 				<key>text</key>
@@ -2753,7 +2753,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:volume_down}</string>
+				<string>{var:command_volume_down}</string>
 				<key>subtext</key>
 				<string>Decrease Spotify Volume</string>
 				<key>text</key>
@@ -2893,7 +2893,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:add_current_track_to_alfred_playlist_or_your_music}</string>
+				<string>{var:command_add_current_track_to_alfred_playlist_or_your_music}</string>
 				<key>subtext</key>
 				<string>Current track will be added to Alfred Playlist or Your Music</string>
 				<key>text</key>
@@ -3056,7 +3056,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:pause}</string>
+				<string>{var:command_pause}</string>
 				<key>subtext</key>
 				<string>Pause the current Spotify track</string>
 				<key>text</key>
@@ -3144,7 +3144,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:play}</string>
+				<string>{var:command_play}</string>
 				<key>subtext</key>
 				<string>Play the current Spotify track</string>
 				<key>text</key>
@@ -3239,7 +3239,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:shuffle}</string>
+				<string>{var:command_shuffle}</string>
 				<key>subtext</key>
 				<string>Activate/Deactivate shuffling in Spotify</string>
 				<key>text</key>
@@ -3320,7 +3320,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:previous}</string>
+				<string>{var:command_previous}</string>
 				<key>subtext</key>
 				<string>Play the previous track in Spotify</string>
 				<key>text</key>
@@ -3417,7 +3417,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:next}</string>
+				<string>{var:command_next}</string>
 				<key>subtext</key>
 				<string>Play the next track in Spotify</string>
 				<key>text</key>
@@ -3517,7 +3517,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:current}</string>
+				<string>{var:command_current}</string>
 				<key>subtext</key>
 				<string>Get current track information</string>
 				<key>text</key>
@@ -3612,7 +3612,7 @@ php -f ./src/action.php -- "$query" "{query}" "" &gt;&gt; "$alfred_workflow_cach
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:lyrics}</string>
+				<string>{var:command_lyrics}</string>
 				<key>subtext</key>
 				<string>Get current track lyrics</string>
 				<key>text</key>
@@ -3709,7 +3709,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:artist_radio}</string>
+				<string>{var:command_artist_radio}</string>
 				<key>subtext</key>
 				<string>Create artist radio playlist</string>
 				<key>text</key>
@@ -3806,7 +3806,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:song_radio}</string>
+				<string>{var:command_song_radio}</string>
 				<key>subtext</key>
 				<string>Create song radio playlist</string>
 				<key>text</key>
@@ -3908,7 +3908,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:spot_mini_reset_settings}</string>
+				<string>{var:command_spot_mini_reset_settings}</string>
 				<key>subtext</key>
 				<string>The authentication will have to be done again</string>
 				<key>text</key>
@@ -3976,7 +3976,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:spot_mini_kill}</string>
+				<string>{var:command_spot_mini_kill}</string>
 				<key>subtext</key>
 				<string>use it if the library update seems stuck</string>
 				<key>text</key>
@@ -4044,7 +4044,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:refresh_library}</string>
+				<string>{var:command_refresh_library}</string>
 				<key>subtext</key>
 				<string>This will refresh the library</string>
 				<key>text</key>
@@ -4099,7 +4099,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:play_artist}</string>
+				<string>{var:command_play_artist}</string>
 				<key>subtext</key>
 				<string>Play the current artist</string>
 				<key>text</key>
@@ -4222,7 +4222,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:play_album}</string>
+				<string>{var:command_play_album}</string>
 				<key>subtext</key>
 				<string>Play the current album</string>
 				<key>text</key>
@@ -4332,7 +4332,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:play_alfred_playlist}</string>
+				<string>{var:command_play_alfred_playlist}</string>
 				<key>subtext</key>
 				<string>This will launch your Alfred Playlist</string>
 				<key>text</key>
@@ -4401,7 +4401,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:spot_mini_issue}</string>
+				<string>{var:command_spot_mini_issue}</string>
 				<key>subtext</key>
 				<string>This will open the GitHub page</string>
 				<key>text</key>
@@ -4464,7 +4464,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:add_current_track_to}</string>
+				<string>{var:command_add_current_track_to}</string>
 				<key>subtext</key>
 				<string>Current track will be added to Your Music or a chosen playlist</string>
 				<key>text</key>
@@ -4561,7 +4561,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:lookup_artist_online}</string>
+				<string>{var:command_lookup_artist_online}</string>
 				<key>subtext</key>
 				<string>☁︎ Query all albums/tracks from this artist online..</string>
 				<key>text</key>
@@ -4821,7 +4821,7 @@ end tell</string>
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:biography}</string>
+				<string>{var:command_biography}</string>
 				<key>subtext</key>
 				<string>Get biography from this artist..</string>
 				<key>text</key>
@@ -4965,7 +4965,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:remove_current_track_from}</string>
+				<string>{var:command_remove_current_track_from}</string>
 				<key>subtext</key>
 				<string>Current track will be removed from Your Music or a chosen playlist</string>
 				<key>text</key>
@@ -5042,7 +5042,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:random_album}</string>
+				<string>{var:command_random_album}</string>
 				<key>subtext</key>
 				<string>Play random album</string>
 				<key>text</key>
@@ -5113,7 +5113,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:mute}</string>
+				<string>{var:command_mute}</string>
 				<key>subtext</key>
 				<string>Mute/Unmute Volume</string>
 				<key>text</key>
@@ -5208,7 +5208,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:playpause}</string>
+				<string>{var:command_playpause}</string>
 				<key>subtext</key>
 				<string>Play or Pause the current Spotify track</string>
 				<key>text</key>
@@ -5306,7 +5306,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:volmax}</string>
+				<string>{var:command_volmax}</string>
 				<key>subtext</key>
 				<string>Set the Spotify volume to maximum</string>
 				<key>text</key>
@@ -5401,7 +5401,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:volmid}</string>
+				<string>{var:command_volmid}</string>
 				<key>subtext</key>
 				<string>Set the Spotify volume to Middle</string>
 				<key>text</key>
@@ -5541,7 +5541,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:repeating}</string>
+				<string>{var:command_repeating}</string>
 				<key>subtext</key>
 				<string>Activate/Deactivate repeating in Spotify</string>
 				<key>text</key>
@@ -5627,7 +5627,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:share}</string>
+				<string>{var:command_share}</string>
 				<key>subtext</key>
 				<string>Share current track using Mac OS X Sharing</string>
 				<key>text</key>
@@ -5722,7 +5722,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:web_search}</string>
+				<string>{var:command_web_search}</string>
 				<key>subtext</key>
 				<string>You will be prompted to choose the web service you want to use</string>
 				<key>text</key>

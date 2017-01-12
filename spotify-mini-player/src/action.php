@@ -50,14 +50,14 @@ $use_facebook = $settings->use_facebook;
 if ($other_action != 'reset_settings' && $other_action != 'spot_mini_debug') {
     if ($oauth_client_id == '' || $oauth_client_secret == '' || $oauth_access_token == '') {
         if ($other_settings != '' && (startsWith($other_settings, 'Oauth_Client') === false && startsWith($other_settings, 'Open') === false)) {
-            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('spot_mini')." \"'");
+            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('command_spot_mini')." \"'");
 
             return;
         }
 
         if ($other_action != '' && $other_action != 'Oauth_Login' &&
             !startsWith($other_action, 'current')) {
-            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('spot_mini')." \"'");
+            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('command_spot_mini')." \"'");
 
             return;
         }
@@ -138,7 +138,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
                     return;
                 }
             }
-            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('spot_mini').' Add▹'.$track_uri.'∙'.escapeQuery($track_name).'▹'."\"'");
+            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('command_spot_mini').' Add▹'.$track_uri.'∙'.escapeQuery($track_name).'▹'."\"'");
 
             return;
         } elseif ($playlist_uri != '') {
@@ -146,7 +146,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
                 exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
                 if ($retVal != 0) {
                     displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-                    exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
+                    exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('command_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
 
                     return;
                 }
@@ -172,7 +172,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
                     exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
                     if ($retVal != 0) {
                         displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-                        exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
+                        exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('command_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
 
                         return;
                     }
@@ -196,7 +196,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
                         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
                         if ($retVal != 0) {
                             displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-                            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
+                            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('command_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
 
                             return;
                         }
@@ -215,7 +215,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
             exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
             if ($retVal != 0) {
                 displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-                exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
+                exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('command_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
 
                 return;
             }
@@ -257,7 +257,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
         if ($retVal != 0) {
             displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
+            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('command_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
 
             return;
         }
@@ -284,7 +284,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
             return;
         }
     }
-    exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('spot_mini').' Online▹'.$artist_uri.'@'.escapeQuery($artist_name).'▹'."\"'");
+    exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('command_spot_mini').' Online▹'.$artist_uri.'@'.escapeQuery($artist_name).'▹'."\"'");
     if ($userid != 'vdesabou') {
         stathat_ez_count('AlfredSpotifyMiniPlayer', 'lookup online', 1);
     }
@@ -308,11 +308,11 @@ if ($type == 'TRACK' && $other_settings == '' &&
                 }
                 $album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, true, false, false, $use_artworks);
             }
-            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('spot_mini').' Add▹'.$album_uri.'∙'.escapeQuery($album_name).'▹'."\"'");
+            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('command_spot_mini').' Add▹'.$album_uri.'∙'.escapeQuery($album_name).'▹'."\"'");
 
             return;
         } elseif ($playlist_uri != '') {
-            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('spot_mini').' Add▹'.$playlist_uri.'∙'.escapeQuery($playlist_name).'▹'."\"'");
+            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('command_spot_mini').' Add▹'.$playlist_uri.'∙'.escapeQuery($playlist_name).'▹'."\"'");
 
             return;
         }
@@ -343,7 +343,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
             exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
             if ($retVal != 0) {
                 displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-                exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
+                exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('command_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
 
                 return;
             }
@@ -918,7 +918,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
             exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
             if ($retVal != 0) {
                 displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-                exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
+                exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('command_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
 
                 return;
             }
@@ -943,7 +943,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
             exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
             if ($retVal != 0) {
                 displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-                exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
+                exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('command_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
 
                 return;
             }
@@ -1141,7 +1141,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
             exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
             if ($retVal != 0) {
                 displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-                exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
+                exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('command_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
 
                 return;
             }
@@ -1164,7 +1164,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
             exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
             if ($retVal != 0) {
                 displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-                exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
+                exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('command_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
 
                 return;
             }
@@ -1202,7 +1202,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
             // pop twice
             $query = array_pop($history);
         $w->write($history, 'history.json');
-        exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('spot_mini')." $query\"'");
+        exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('command_spot_mini')." $query\"'");
 
         return;
     } elseif ($other_action == 'lookup_artist') {
@@ -1214,7 +1214,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
         if ($artist_uri == '') {
             $artist_uri = getArtistUriFromTrack($w, $track_uri);
         }
-        exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('spot_mini').' Online▹'.$artist_uri.'@'.escapeQuery($artist_name).'▹'."\"'");
+        exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('command_spot_mini').' Online▹'.$artist_uri.'@'.escapeQuery($artist_name).'▹'."\"'");
         if ($userid != 'vdesabou') {
             stathat_ez_count('AlfredSpotifyMiniPlayer', 'lookup online', 1);
         }
@@ -1226,7 +1226,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
             exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
             if ($retVal != 0) {
                 displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-                exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
+                exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('command_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
 
                 return;
             }
@@ -1262,7 +1262,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
             exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
             if ($retVal != 0) {
                 displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-                exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
+                exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('command_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
 
                 return;
             }
@@ -1282,16 +1282,16 @@ if ($type == 'TRACK' && $other_settings == '' &&
     } elseif ($other_action == 'volume_up') {
         if ($use_mopidy) {
             $theVolume = invokeMopidyMethod($w, 'core.mixer.get_volume', array());
-            if (($theVolume + $volume_percent) > getenv('volume_max')) {
-                $theVolume = getenv('volume_max');
-                displayNotificationWithArtwork($w, 'Spotify volume is at maximum level '.getenv('volume_max').'%.', './images/volume_up.png', 'Volume Up');
+            if (($theVolume + $volume_percent) > getenv('settings_volume_max')) {
+                $theVolume = getenv('settings_volume_max');
+                displayNotificationWithArtwork($w, 'Spotify volume is at maximum level '.getenv('settings_volume_max').'%.', './images/volume_up.png', 'Volume Up');
             } else {
                 $theVolume = $theVolume + $volume_percent;
                 displayNotificationWithArtwork($w, 'Spotify volume has been increased to '.$theVolume.'%', './images/volume_up.png', 'Volume Up');
             }
             invokeMopidyMethod($w, 'core.mixer.set_volume', array('volume' => $theVolume));
         } else {
-            $volume_max = getenv('volume_max');
+            $volume_max = getenv('settings_volume_max');
             $command_output = exec("osascript -e 'tell application \"Spotify\"
 				if it is running then
 					if (sound volume + $volume_percent) > $volume_max then
@@ -1312,16 +1312,16 @@ if ($type == 'TRACK' && $other_settings == '' &&
     } elseif ($other_action == 'volume_down') {
         if ($use_mopidy) {
             $theVolume = invokeMopidyMethod($w, 'core.mixer.get_volume', array());
-            if (($theVolume - $volume_percent) < getenv('volume_min')) {
-                $theVolume = getenv('volume_min');
-                displayNotificationWithArtwork($w, 'Spotify volume is at minimum level '.getenv('volume_min').'%.', './images/volume_down.png', 'Volume Down');
+            if (($theVolume - $volume_percent) < getenv('settings_volume_min')) {
+                $theVolume = getenv('settings_volume_min');
+                displayNotificationWithArtwork($w, 'Spotify volume is at minimum level '.getenv('settings_volume_min').'%.', './images/volume_down.png', 'Volume Down');
             } else {
                 $theVolume = $theVolume - $volume_percent;
                 displayNotificationWithArtwork($w, 'Spotify volume has been decreased to '.$theVolume.'%', './images/volume_down.png', 'Volume Down');
             }
             invokeMopidyMethod($w, 'core.mixer.set_volume', array('volume' => $theVolume));
         } else {
-            $volume_min = getenv('volume_min');
+            $volume_min = getenv('settings_volume_min');
             $command_output = exec("osascript -e 'tell application \"Spotify\"
 				if it is running then
 					if (sound volume - $volume_percent) < $volume_min then
@@ -1342,9 +1342,9 @@ if ($type == 'TRACK' && $other_settings == '' &&
         return;
     } elseif ($other_action == 'volmax') {
         if ($use_mopidy) {
-            invokeMopidyMethod($w, 'core.mixer.set_volume', array('volume' => getenv('volume_max')));
+            invokeMopidyMethod($w, 'core.mixer.set_volume', array('volume' => getenv('settings_volume_max')));
         } else {
-            $volume_max = getenv('volume_max');
+            $volume_max = getenv('settings_volume_max');
             exec("osascript -e 'tell application \"Spotify\"
 				if it is running then
 					set sound volume to $volume_max
@@ -1356,9 +1356,9 @@ if ($type == 'TRACK' && $other_settings == '' &&
         return;
     } elseif ($other_action == 'volmid') {
         if ($use_mopidy) {
-            invokeMopidyMethod($w, 'core.mixer.set_volume', array('volume' => getenv('volume_mid')));
+            invokeMopidyMethod($w, 'core.mixer.set_volume', array('volume' => getenv('settings_volume_mid')));
         } else {
-            $volume_mid = getenv('volume_mid');
+            $volume_mid = getenv('settings_volume_mid');
             exec("osascript -e 'tell application \"Spotify\"
 				if it is running then
 					set sound volume to $volume_mid

@@ -96,7 +96,7 @@ function invokeMopidyMethod($w, $method, $params, $displayError = true)
     if ($retVal != 0) {
         if ($displayError) {
             displayNotificationWithArtwork($w, 'Mopidy Exception: returned error '.$retVal, './images/warning.png', 'Error!');
-            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('spot_mini_debug').' Mopidy Exception: returned error '.$retVal."\"'");
+            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('command_spot_mini_debug').' Mopidy Exception: returned error '.$retVal."\"'");
         }
 
         return false;
@@ -112,7 +112,7 @@ function invokeMopidyMethod($w, $method, $params, $displayError = true)
 
             if ($displayError) {
                 displayNotificationWithArtwork($w, 'Mopidy Exception: '.htmlspecialchars($result->error->message), './images/warning.png', 'Error!');
-                exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('spot_mini_debug').' Mopidy Exception: '.htmlspecialchars($result->error->message)."\"'");
+                exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('command_spot_mini_debug').' Mopidy Exception: '.htmlspecialchars($result->error->message)."\"'");
             }
 
             return false;
@@ -957,7 +957,7 @@ function updateCurrentTrackIndexFromPlayQueue($w)
     exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
     if ($retVal != 0) {
         displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-        exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
+        exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('command_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
 
         return;
     }
@@ -1188,7 +1188,7 @@ function lookupCurrentArtist($w)
         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
         if ($retVal != 0) {
             displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
+            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('command_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
 
             return;
         }
@@ -1208,7 +1208,7 @@ function lookupCurrentArtist($w)
 
             return;
         }
-        exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('spot_mini').' Online▹'.$artist_uri.'@'.escapeQuery($results[1]).'▹'."\"'");
+        exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('command_spot_mini').' Online▹'.$artist_uri.'@'.escapeQuery($results[1]).'▹'."\"'");
     } else {
         displayNotificationWithArtwork($w, 'No track is playing', './images/warning.png');
     }
@@ -1240,7 +1240,7 @@ function displayCurrentArtistBiography($w)
         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
         if ($retVal != 0) {
             displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
+            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('command_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
 
             return;
         }
@@ -1259,7 +1259,7 @@ function displayCurrentArtistBiography($w)
 
             return;
         }
-        exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('spot_mini').' Biography▹'.$artist_uri.'∙'.escapeQuery($results[1]).'▹'."\"'");
+        exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('command_spot_mini').' Biography▹'.$artist_uri.'∙'.escapeQuery($results[1]).'▹'."\"'");
     } else {
         displayNotificationWithArtwork($w, 'No artist is playing', './images/warning.png');
     }
@@ -1288,7 +1288,7 @@ function playCurrentArtist($w)
         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
         if ($retVal != 0) {
             displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
+            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('command_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
 
             return;
         }
@@ -1341,7 +1341,7 @@ function playCurrentAlbum($w)
         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
         if ($retVal != 0) {
             displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
+            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('command_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
 
             return;
         }
@@ -1384,7 +1384,7 @@ function addCurrentTrackTo($w)
         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
         if ($retVal != 0) {
             displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
+            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('command_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
 
             return;
         }
@@ -1419,7 +1419,7 @@ function addCurrentTrackTo($w)
                 return;
             }
         }
-        exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('spot_mini').' Add▹'.$results[4].'∙'.escapeQuery($results[0]).'▹'."\"'");
+        exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('command_spot_mini').' Add▹'.$results[4].'∙'.escapeQuery($results[0]).'▹'."\"'");
     } else {
         displayNotificationWithArtwork($w, 'No track is playing', './images/warning.png');
     }
@@ -1446,7 +1446,7 @@ function removeCurrentTrackFrom($w)
         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
         if ($retVal != 0) {
             displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
+            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('command_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
 
             return;
         }
@@ -1454,7 +1454,7 @@ function removeCurrentTrackFrom($w)
 
     if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
         $results = explode('▹', $retArr[count($retArr) - 1]);
-        exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('spot_mini').' Remove▹'.$results[4].'∙'.escapeQuery($results[0]).'▹'."\"'");
+        exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('command_spot_mini').' Remove▹'.$results[4].'∙'.escapeQuery($results[0]).'▹'."\"'");
     } else {
         displayNotificationWithArtwork($w, 'No track is playing', './images/warning.png');
     }
@@ -1502,7 +1502,7 @@ function addCurrentTrackToAlfredPlaylist($w)
         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
         if ($retVal != 0) {
             displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
+            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('command_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
 
             return;
         }
@@ -1584,7 +1584,7 @@ function addCurrentTrackToYourMusic($w)
         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
         if ($retVal != 0) {
             displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
+            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('command_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
 
             return;
         }
@@ -2137,7 +2137,7 @@ function createRadioArtistPlaylistForCurrentArtist($w)
         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
         if ($retVal != 0) {
             displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
+            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('command_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
 
             return;
         }
@@ -2344,7 +2344,7 @@ function createRadioSongPlaylistForCurrentTrack($w)
         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
         if ($retVal != 0) {
             displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
+            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('command_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
 
             return;
         }
@@ -3149,7 +3149,7 @@ function displayNotificationForCurrentTrack($w)
         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
         if ($retVal != 0) {
             displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
+            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('command_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
 
             return;
         }
@@ -3187,7 +3187,7 @@ function displayLyricsForCurrentTrack($w)
         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
         if ($retVal != 0) {
             displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
+            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('command_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
 
             return;
         }
@@ -3195,7 +3195,7 @@ function displayLyricsForCurrentTrack($w)
 
     if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
         $results = explode('▹', $retArr[count($retArr) - 1]);
-        exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('spot_mini').' Lyrics▹'.$results[4].'∙'.escapeQuery($results[1]).'∙'.escapeQuery($results[0])."\"'");
+        exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('command_spot_mini').' Lyrics▹'.$results[4].'∙'.escapeQuery($results[1]).'∙'.escapeQuery($results[0])."\"'");
     } else {
         displayNotificationWithArtwork($w, 'There is not track currently playing', './images/warning.png', 'Error!');
     }
@@ -5773,7 +5773,7 @@ function handleDbIssuePdoEcho($dbhandle, $w)
 
     displayNotificationWithArtwork($w, 'DB Exception: '.$errorInfo[2], './images/warning.png');
 
-    exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('spot_mini_debug').' DB Exception: '.escapeQuery($errorInfo[2])."\"'");
+    exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('command_spot_mini_debug').' DB Exception: '.escapeQuery($errorInfo[2])."\"'");
 
     exit;
 }
@@ -5802,7 +5802,7 @@ function handleSpotifyWebAPIException($w, $e)
 
     displayNotificationWithArtwork($w, 'Web API Exception: '.$e->getCode().' - '.$e->getMessage().' use spot_mini_debug command', './images/warning.png', 'Error!');
 
-    exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('spot_mini_debug').' Web API Exception: '.escapeQuery($e->getMessage())."\"'");
+    exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('command_spot_mini_debug').' Web API Exception: '.escapeQuery($e->getMessage())."\"'");
 
     exit;
 }
