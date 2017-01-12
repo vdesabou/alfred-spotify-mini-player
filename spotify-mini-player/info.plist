@@ -1484,19 +1484,6 @@
 				<false/>
 			</dict>
 		</array>
-		<key>CE28CBC8-93FD-4B21-8488-28CBC5A3E63B</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>2C6D07E6-D9AF-4718-862E-D564D034EF80</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-		</array>
 		<key>CEF36AB9-7CC2-4765-BF84-751E88B69023</key>
 		<array>
 			<dict>
@@ -1653,19 +1640,6 @@
 				<false/>
 			</dict>
 		</array>
-		<key>DEB8FB94-8CED-4499-966C-E6DFDED65EC7</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>2C6D07E6-D9AF-4718-862E-D564D034EF80</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-		</array>
 		<key>E241B5C1-14A9-4D50-AD12-22033C647C44</key>
 		<array>
 			<dict>
@@ -1772,19 +1746,6 @@
 		</array>
 		<key>ECC53637-75AD-4FD2-9605-8E038D04C4BF</key>
 		<array/>
-		<key>EF574432-0896-4A92-9944-7DA5DD7295DA</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>2C6D07E6-D9AF-4718-862E-D564D034EF80</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-		</array>
 		<key>F23EB343-6D1D-4D17-9CCC-465756A5F513</key>
 		<array>
 			<dict>
@@ -4818,103 +4779,6 @@ end tell</string>
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>argumenttype</key>
-				<integer>2</integer>
-				<key>keyword</key>
-				<string>{var:command_biography}</string>
-				<key>subtext</key>
-				<string>Get biography from this artist..</string>
-				<key>text</key>
-				<string>Display Current Artist Biography</string>
-				<key>withspace</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>CE28CBC8-93FD-4B21-8488-28CBC5A3E63B</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>concurrently</key>
-				<false/>
-				<key>escaping</key>
-				<integer>38</integer>
-				<key>script</key>
-				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "biography" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-echo "===== DISPLAY CURRENT ARTIST BIOGRAPHY ========" &gt;&gt; "$alfred_workflow_cache/action.log"
-echo "`date` $query" &gt;&gt; "$alfred_workflow_cache/action.log"
-php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
-				<key>scriptargtype</key>
-				<integer>0</integer>
-				<key>scriptfile</key>
-				<string></string>
-				<key>type</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>2C6D07E6-D9AF-4718-862E-D564D034EF80</string>
-			<key>version</key>
-			<integer>2</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argument</key>
-				<string></string>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>triggerid</key>
-				<string>com.vdesabou.miniplayer.displaycurrentartistbiography</string>
-				<key>triggername</key>
-				<string>Display Artist Biography</string>
-				<key>workflowonly</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.trigger.remote</string>
-			<key>uid</key>
-			<string>EF574432-0896-4A92-9944-7DA5DD7295DA</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>action</key>
-				<integer>0</integer>
-				<key>argument</key>
-				<integer>0</integer>
-				<key>focusedappvariable</key>
-				<false/>
-				<key>focusedappvariablename</key>
-				<string></string>
-				<key>hotkey</key>
-				<integer>0</integer>
-				<key>hotmod</key>
-				<integer>0</integer>
-				<key>leftcursor</key>
-				<false/>
-				<key>modsmode</key>
-				<integer>0</integer>
-				<key>relatedAppsMode</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.trigger.hotkey</string>
-			<key>uid</key>
-			<string>DEB8FB94-8CED-4499-966C-E6DFDED65EC7</string>
-			<key>version</key>
-			<integer>2</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>argument</key>
 				<string></string>
 				<key>argumenttype</key>
@@ -6470,13 +6334,6 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<key>ypos</key>
 			<real>6250</real>
 		</dict>
-		<key>2C6D07E6-D9AF-4718-862E-D564D034EF80</key>
-		<dict>
-			<key>xpos</key>
-			<integer>500</integer>
-			<key>ypos</key>
-			<real>8990</real>
-		</dict>
 		<key>2F1F6369-46C0-483B-816F-3796168AE060</key>
 		<dict>
 			<key>xpos</key>
@@ -7278,13 +7135,6 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<key>ypos</key>
 			<real>3930</real>
 		</dict>
-		<key>CE28CBC8-93FD-4B21-8488-28CBC5A3E63B</key>
-		<dict>
-			<key>xpos</key>
-			<integer>300</integer>
-			<key>ypos</key>
-			<real>8990</real>
-		</dict>
 		<key>CEF36AB9-7CC2-4765-BF84-751E88B69023</key>
 		<dict>
 			<key>xpos</key>
@@ -7378,13 +7228,6 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<key>ypos</key>
 			<integer>510</integer>
 		</dict>
-		<key>DEB8FB94-8CED-4499-966C-E6DFDED65EC7</key>
-		<dict>
-			<key>xpos</key>
-			<integer>100</integer>
-			<key>ypos</key>
-			<real>9180</real>
-		</dict>
 		<key>E241B5C1-14A9-4D50-AD12-22033C647C44</key>
 		<dict>
 			<key>xpos</key>
@@ -7476,13 +7319,6 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<key>ypos</key>
 			<real>2820</real>
 		</dict>
-		<key>EF574432-0896-4A92-9944-7DA5DD7295DA</key>
-		<dict>
-			<key>xpos</key>
-			<integer>100</integer>
-			<key>ypos</key>
-			<real>9060</real>
-		</dict>
 		<key>F23EB343-6D1D-4D17-9CCC-465756A5F513</key>
 		<dict>
 			<key>xpos</key>
@@ -7544,42 +7380,18 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 	</dict>
 	<key>variables</key>
 	<dict>
-		<key>command_command_command_add_current_track_to</key>
-		<string>add_current_track_to</string>
 		<key>command_add_current_track_to_alfred_playlist_or_your_music</key>
 		<string>add_current_track_to_alfred_playlist_or_your_music</string>
 		<key>command_artist_radio</key>
 		<string>artist_radio</string>
-		<key>command_biography</key>
-		<string>biography</string>
+		<key>command_command_command_add_current_track_to</key>
+		<string>add_current_track_to</string>
 		<key>command_current</key>
 		<string>current</string>
 		<key>command_lookup_artist_online</key>
 		<string>lookup_artist_online</string>
 		<key>command_lyrics</key>
 		<string>lyrics</string>
-		<key>menu_display_alfred_playlist</key>
-		<string>1</string>
-		<key>menu_display_browse_by_album</key>
-		<string>1</string>
-		<key>menu_display_browse_by_artist</key>
-		<string>1</string>
-		<key>menu_display_browse_by_playlist</key>
-		<string>1</string>
-		<key>menu_display_browse_categories</key>
-		<string>1</string>
-		<key>menu_display_browse_your_music</key>
-		<string>1</string>
-		<key>menu_display_current_track</key>
-		<string>1</string>
-		<key>menu_display_lookup_current_artist_online</key>
-		<string>1</string>
-		<key>menu_display_play_queue</key>
-		<string>1</string>
-		<key>menu_display_search_online</key>
-		<string>1</string>
-		<key>menu_display_your_tops</key>
-		<string>1</string>
 		<key>command_mute</key>
 		<string>mute</string>
 		<key>command_next</key>
@@ -7610,14 +7422,6 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 		<string>repeating</string>
 		<key>command_share</key>
 		<string>share</string>
-		<key>sharing_hashtag1</key>
-		<string>#NowPlaying</string>
-		<key>sharing_hashtag2</key>
-		<string>#AlfredSpotifyMiniPlayer</string>
-		<key>sharing_text1</key>
-		<string></string>
-		<key>sharing_text2</key>
-		<string>♫</string>
 		<key>command_shuffle</key>
 		<string>shuffle</string>
 		<key>command_song_radio</key>
@@ -7638,16 +7442,46 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 		<string>volmid</string>
 		<key>command_volume_down</key>
 		<string>volume_down</string>
+		<key>command_volume_up</key>
+		<string>volume_up</string>
+		<key>command_web_search</key>
+		<string>web_search</string>
+		<key>menu_display_alfred_playlist</key>
+		<string>1</string>
+		<key>menu_display_browse_by_album</key>
+		<string>1</string>
+		<key>menu_display_browse_by_artist</key>
+		<string>1</string>
+		<key>menu_display_browse_by_playlist</key>
+		<string>1</string>
+		<key>menu_display_browse_categories</key>
+		<string>1</string>
+		<key>menu_display_browse_your_music</key>
+		<string>1</string>
+		<key>menu_display_current_track</key>
+		<string>1</string>
+		<key>menu_display_lookup_current_artist_online</key>
+		<string>1</string>
+		<key>menu_display_play_queue</key>
+		<string>1</string>
+		<key>menu_display_search_online</key>
+		<string>1</string>
+		<key>menu_display_your_tops</key>
+		<string>1</string>
 		<key>settings_volume_max</key>
 		<string>100</string>
 		<key>settings_volume_mid</key>
 		<string>50</string>
 		<key>settings_volume_min</key>
 		<string>0</string>
-		<key>command_volume_up</key>
-		<string>volume_up</string>
-		<key>command_web_search</key>
-		<string>web_search</string>
+		<key>sharing_hashtag1</key>
+		<string>#NowPlaying</string>
+		<key>sharing_hashtag2</key>
+		<string>#AlfredSpotifyMiniPlayer</string>
+		<key>sharing_text1</key>
+		<string></string>
+		<key>sharing_text2</key>
+		<string>♫</string>
 	</dict>
 	<key>version</key>
 	<string>7.0</string>
