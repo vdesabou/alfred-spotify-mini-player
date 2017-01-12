@@ -2003,7 +2003,7 @@
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>keyword</key>
-				<string>{var:command_spot_mini}</string>
+				<string>{var:c_spot_mini}</string>
 				<key>queuedelaycustom</key>
 				<integer>3</integer>
 				<key>queuedelayimmediatelyinitially</key>
@@ -2444,7 +2444,7 @@
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>keyword</key>
-				<string>{var:command_spot_mini_debug}</string>
+				<string>{var:c_spot_mini_debug}</string>
 				<key>queuedelaycustom</key>
 				<integer>1</integer>
 				<key>queuedelayimmediatelyinitially</key>
@@ -2640,7 +2640,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:command_volume_up}</string>
+				<string>{var:c_volume_up}</string>
 				<key>subtext</key>
 				<string>Increase Spotify Volume</string>
 				<key>text</key>
@@ -2714,7 +2714,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:command_volume_down}</string>
+				<string>{var:c_volume_down}</string>
 				<key>subtext</key>
 				<string>Decrease Spotify Volume</string>
 				<key>text</key>
@@ -2854,7 +2854,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:command_add_current_track_to_alfred_playlist_or_your_music}</string>
+				<string>{var:c_add_current_track_to_alfred_playlist_or_your_music}</string>
 				<key>subtext</key>
 				<string>Current track will be added to Alfred Playlist or Your Music</string>
 				<key>text</key>
@@ -3017,7 +3017,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:command_pause}</string>
+				<string>{var:c_pause}</string>
 				<key>subtext</key>
 				<string>Pause the current Spotify track</string>
 				<key>text</key>
@@ -3105,7 +3105,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:command_play}</string>
+				<string>{var:c_play}</string>
 				<key>subtext</key>
 				<string>Play the current Spotify track</string>
 				<key>text</key>
@@ -3200,7 +3200,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:command_shuffle}</string>
+				<string>{var:c_shuffle}</string>
 				<key>subtext</key>
 				<string>Activate/Deactivate shuffling in Spotify</string>
 				<key>text</key>
@@ -3281,7 +3281,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:command_previous}</string>
+				<string>{var:c_previous}</string>
 				<key>subtext</key>
 				<string>Play the previous track in Spotify</string>
 				<key>text</key>
@@ -3378,7 +3378,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:command_next}</string>
+				<string>{var:c_next}</string>
 				<key>subtext</key>
 				<string>Play the next track in Spotify</string>
 				<key>text</key>
@@ -3478,7 +3478,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:command_current}</string>
+				<string>{var:c_current}</string>
 				<key>subtext</key>
 				<string>Get current track information</string>
 				<key>text</key>
@@ -3573,7 +3573,7 @@ php -f ./src/action.php -- "$query" "{query}" "" &gt;&gt; "$alfred_workflow_cach
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:command_lyrics}</string>
+				<string>{var:c_lyrics}</string>
 				<key>subtext</key>
 				<string>Get current track lyrics</string>
 				<key>text</key>
@@ -3670,7 +3670,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:command_artist_radio}</string>
+				<string>{var:c_artist_radio}</string>
 				<key>subtext</key>
 				<string>Create artist radio playlist</string>
 				<key>text</key>
@@ -3767,7 +3767,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:command_song_radio}</string>
+				<string>{var:c_song_radio}</string>
 				<key>subtext</key>
 				<string>Create song radio playlist</string>
 				<key>text</key>
@@ -3869,7 +3869,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:command_spot_mini_reset_settings}</string>
+				<string>{var:c_spot_mini_reset_settings}</string>
 				<key>subtext</key>
 				<string>The authentication will have to be done again</string>
 				<key>text</key>
@@ -3937,7 +3937,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:command_spot_mini_kill}</string>
+				<string>{var:c_spot_mini_kill}</string>
 				<key>subtext</key>
 				<string>use it if the library update seems stuck</string>
 				<key>text</key>
@@ -4005,7 +4005,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:command_refresh_library}</string>
+				<string>{var:c_refresh_library}</string>
 				<key>subtext</key>
 				<string>This will refresh the library</string>
 				<key>text</key>
@@ -4060,7 +4060,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:command_play_artist}</string>
+				<string>{var:c_play_artist}</string>
 				<key>subtext</key>
 				<string>Play the current artist</string>
 				<key>text</key>
@@ -4183,7 +4183,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:command_play_album}</string>
+				<string>{var:c_play_album}</string>
 				<key>subtext</key>
 				<string>Play the current album</string>
 				<key>text</key>
@@ -4293,7 +4293,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:command_play_alfred_playlist}</string>
+				<string>{var:c_play_alfred_playlist}</string>
 				<key>subtext</key>
 				<string>This will launch your Alfred Playlist</string>
 				<key>text</key>
@@ -4362,7 +4362,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:command_spot_mini_issue}</string>
+				<string>{var:c_spot_mini_issue}</string>
 				<key>subtext</key>
 				<string>This will open the GitHub page</string>
 				<key>text</key>
@@ -4425,7 +4425,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:command_add_current_track_to}</string>
+				<string>{var:c_add_current_track_to}</string>
 				<key>subtext</key>
 				<string>Current track will be added to Your Music or a chosen playlist</string>
 				<key>text</key>
@@ -4522,7 +4522,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:command_lookup_artist_online}</string>
+				<string>{var:c_lookup_artist_online}</string>
 				<key>subtext</key>
 				<string>☁︎ Query all albums/tracks from this artist online..</string>
 				<key>text</key>
@@ -4829,7 +4829,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:command_remove_current_track_from}</string>
+				<string>{var:c_remove_current_track_from}</string>
 				<key>subtext</key>
 				<string>Current track will be removed from Your Music or a chosen playlist</string>
 				<key>text</key>
@@ -4906,7 +4906,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:command_random_album}</string>
+				<string>{var:c_random_album}</string>
 				<key>subtext</key>
 				<string>Play random album</string>
 				<key>text</key>
@@ -4977,7 +4977,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:command_mute}</string>
+				<string>{var:c_mute}</string>
 				<key>subtext</key>
 				<string>Mute/Unmute Volume</string>
 				<key>text</key>
@@ -5072,7 +5072,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:command_playpause}</string>
+				<string>{var:c_playpause}</string>
 				<key>subtext</key>
 				<string>Play or Pause the current Spotify track</string>
 				<key>text</key>
@@ -5170,7 +5170,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:command_volmax}</string>
+				<string>{var:c_volmax}</string>
 				<key>subtext</key>
 				<string>Set the Spotify volume to maximum</string>
 				<key>text</key>
@@ -5265,7 +5265,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:command_volmid}</string>
+				<string>{var:c_volmid}</string>
 				<key>subtext</key>
 				<string>Set the Spotify volume to Middle</string>
 				<key>text</key>
@@ -5405,7 +5405,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:command_repeating}</string>
+				<string>{var:c_repeating}</string>
 				<key>subtext</key>
 				<string>Activate/Deactivate repeating in Spotify</string>
 				<key>text</key>
@@ -5491,7 +5491,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:command_share}</string>
+				<string>{var:c_share}</string>
 				<key>subtext</key>
 				<string>Share current track using Mac OS X Sharing</string>
 				<key>text</key>
@@ -5586,7 +5586,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>{var:command_web_search}</string>
+				<string>{var:c_web_search}</string>
 				<key>subtext</key>
 				<string>You will be prompted to choose the web service you want to use</string>
 				<key>text</key>
@@ -7380,71 +7380,71 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 	</dict>
 	<key>variables</key>
 	<dict>
-		<key>command_add_current_track_to_alfred_playlist_or_your_music</key>
+		<key>c_add_current_track_to_alfred_playlist_or_your_music</key>
 		<string>add_current_track_to_alfred_playlist_or_your_music</string>
-		<key>command_artist_radio</key>
+		<key>c_artist_radio</key>
 		<string>artist_radio</string>
-		<key>command_command_command_add_current_track_to</key>
+		<key>c_add_current_track_to</key>
 		<string>add_current_track_to</string>
-		<key>command_current</key>
+		<key>c_current</key>
 		<string>current</string>
-		<key>command_lookup_artist_online</key>
+		<key>c_lookup_artist_online</key>
 		<string>lookup_artist_online</string>
-		<key>command_lyrics</key>
+		<key>c_lyrics</key>
 		<string>lyrics</string>
-		<key>command_mute</key>
+		<key>c_mute</key>
 		<string>mute</string>
-		<key>command_next</key>
+		<key>c_next</key>
 		<string>next</string>
-		<key>command_pause</key>
+		<key>c_pause</key>
 		<string>pause</string>
-		<key>command_play</key>
+		<key>c_play</key>
 		<string>play</string>
-		<key>command_play_album</key>
+		<key>c_play_album</key>
 		<string>play_album</string>
-		<key>command_play_alfred_playlist</key>
+		<key>c_play_alfred_playlist</key>
 		<string>play_alfred_playlist</string>
-		<key>command_play_artist</key>
+		<key>c_play_artist</key>
 		<string>play_artist</string>
-		<key>command_playpause</key>
+		<key>c_playpause</key>
 		<string>playpause</string>
-		<key>command_previous</key>
+		<key>c_previous</key>
 		<string>previous</string>
-		<key>command_random</key>
+		<key>c_random</key>
 		<string>random</string>
-		<key>command_random_album</key>
+		<key>c_random_album</key>
 		<string>random_album</string>
-		<key>command_refresh_library</key>
+		<key>c_refresh_library</key>
 		<string>refresh_library</string>
-		<key>command_remove_current_track_from</key>
+		<key>c_remove_current_track_from</key>
 		<string>remove_current_track_from</string>
-		<key>command_repeating</key>
+		<key>c_repeating</key>
 		<string>repeating</string>
-		<key>command_share</key>
+		<key>c_share</key>
 		<string>share</string>
-		<key>command_shuffle</key>
+		<key>c_shuffle</key>
 		<string>shuffle</string>
-		<key>command_song_radio</key>
+		<key>c_song_radio</key>
 		<string>song_radio</string>
-		<key>command_spot_mini</key>
+		<key>c_spot_mini</key>
 		<string>spot_mini</string>
-		<key>command_spot_mini_debug</key>
+		<key>c_spot_mini_debug</key>
 		<string>spot_mini_debug</string>
-		<key>command_spot_mini_issue</key>
+		<key>c_spot_mini_issue</key>
 		<string>spot_mini_issue</string>
-		<key>command_spot_mini_kill</key>
+		<key>c_spot_mini_kill</key>
 		<string>spot_mini_kill</string>
-		<key>command_spot_mini_reset_settings</key>
+		<key>c_spot_mini_reset_settings</key>
 		<string>spot_mini_reset_settings</string>
-		<key>command_volmax</key>
+		<key>c_volmax</key>
 		<string>volmax</string>
-		<key>command_volmid</key>
+		<key>c_volmid</key>
 		<string>volmid</string>
-		<key>command_volume_down</key>
+		<key>c_volume_down</key>
 		<string>volume_down</string>
-		<key>command_volume_up</key>
+		<key>c_volume_up</key>
 		<string>volume_up</string>
-		<key>command_web_search</key>
+		<key>c_web_search</key>
 		<string>web_search</string>
 		<key>menu_display_alfred_playlist</key>
 		<string>1</string>
