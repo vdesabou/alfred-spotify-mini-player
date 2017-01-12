@@ -19,7 +19,7 @@ onhomepage : true
 
 ## Auto-Update
 
-The workflow checks for update once per day.
+The workflow checks for update once per week.
 If an update is available, it will download the new version in your Downloads folder.
 A notification would be sent to warn you that the new version is available.
 
@@ -28,7 +28,7 @@ A notification would be sent to warn you that the new version is available.
 In *Settings* section, you can check for workflow update:-
 
 <figure>
-	<img src="{{ site.url }}/images/workflow-update1.gif"></a>
+	<img src="{{ site.url }}/images/workflow-update1.jpg"></a>
 	<figcaption>Check for a workflow update.</figcaption>
 </figure>
 

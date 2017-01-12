@@ -26,7 +26,7 @@ The Alfred Playlist is simply one of your playlists that you can choose and for 
 
 
 <figure>
-	<a href="{{ site.url }}/images/alfred-playlist1.gif"><img src="{{ site.url }}/images/alfred-playlist1.gif"></a>
+	<a href="{{ site.url }}/images/alfred-playlist1.jpg"><img src="{{ site.url }}/images/alfred-playlist1.jpg"></a>
 	<figcaption>Select or change your Alfred Playlist is easy.</figcaption>
 </figure>
 
@@ -34,7 +34,7 @@ The Alfred Playlist is simply one of your playlists that you can choose and for 
 * To add a track to your Alfred Playlist select it with `fn` modifier, you'll get a menu where you can choose your _Alfred Playlist_ (or any other playlist):-
 
 <figure>
-	<a href="{{ site.url }}/images/alfred-playlist2.gif"><img src="{{ site.url }}/images/alfred-playlist2.gif"></a>
+	<a href="{{ site.url }}/images/alfred-playlist2.jpg"><img src="{{ site.url }}/images/alfred-playlist2.jpg"></a>
 	<figcaption>Use <i>fn</i> on a track and press <i>enter</i>, then choose your Alfred Playlist.</figcaption>
 </figure>
 
@@ -43,7 +43,7 @@ The Alfred Playlist is simply one of your playlists that you can choose and for 
 * To add currently playing track to your Alfred Playlist, you can use `add_current_track` command:
 
 <figure>
-	<a href="{{ site.url }}/images/alfred-playlist3.gif"><img src="{{ site.url }}/images/alfred-playlist3.gif"></a>
+	<a href="{{ site.url }}/images/alfred-playlist3.jpg"><img src="{{ site.url }}/images/alfred-playlist3.jpg"></a>
 	<figcaption>Use <i>add_current_track</i> command to add current playing track to your Alfred Playlist.</figcaption>
 </figure>
 
