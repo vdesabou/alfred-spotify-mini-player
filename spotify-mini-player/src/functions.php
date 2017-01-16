@@ -5106,9 +5106,40 @@ function refreshLibrary($w)
 
             displayNotificationWithArtwork($w, 'Added playlist '.escapeQuery($playlist->name), $playlist_artwork_path, 'Refresh Library');
         } else {
-            // number of tracks has changed or playlist name has changed or the privacy has changed
+
+            // check if this is a self-updated playlist (spotify and 30 tracks)
+            $selfUpdatedPlaylistUpdated = false;
+            $tmp = explode(':',$playlists[0]);
+            if($tmp[2] == 'spotify' && $tracks->total == 30) {
+
+                try {
+                    $getOneTrack = 'select added_at from tracks where playlist_uri=:theplaylisturi order by added_at desc limit 1';
+                    $stmtGetOneTrack = $db->prepare($getOneTrack);
+                    $stmtGetOneTrack->bindValue(':theplaylisturi', $playlists[0]);
+                    $stmtGetOneTrack->execute();
+                    $theOneTrack = $stmtGetOneTrack->fetch();
+                    date_default_timezone_set('UTC');
+                    $today = date("c");
+                    $last_updated  = $theOneTrack[0];
+                    $today_time = strtotime($today);
+                    $last_updated_time = strtotime($last_updated);
+
+                    if( ($today_time - $last_updated_time) > 7*24*3600) {
+                        $selfUpdatedPlaylistUpdated = true;   
+                    }
+                } catch (PDOException $e) {
+                    logMsg('Error(refreshLibrary - self-updated playlist): (exception '.print_r($e).')');
+                    handleDbIssuePdoEcho($db, $w);
+                    $dbartworks = null;
+                    $db = null;
+
+                    return;
+                }
+            }
+
+            // number of tracks has changed or playlist name has changed or the privacy has changed, or spotify playlist (Release Radar, Discover Weekly)
             // update the playlist
-            if ($playlists[2] != $tracks->total || $playlists[1] != escapeQuery($playlist->name) ||
+            if ($selfUpdatedPlaylistUpdated || $playlists[2] != $tracks->total || $playlists[1] != escapeQuery($playlist->name) ||
                 (($playlists[11] == '' && $playlist->public == true) || ($playlists[11] == true && $playlist->public == ''))) {
                 ++$nb_updated_playlists;
 
