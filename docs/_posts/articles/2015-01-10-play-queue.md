@@ -2,7 +2,7 @@
 layout: article
 title: "Play Queue"
 date: 2015-01-10
-modified: 2015-01-18
+modified: 2017-01-17T11:39:03-04:00
 categories: articles
 excerpt: "Get the list of queued tracks directly in the workflow."
 image:

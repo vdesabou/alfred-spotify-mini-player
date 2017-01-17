@@ -2,7 +2,7 @@
 layout: article
 title: "Control Alfred Playlist or Your Music"
 date: 2014-12-22T11:39:03-04:00
-modified: 2015-01-10T11:39:03-04:00
+modified: 2017-01-17T11:39:03-04:00
 categories: articles
 excerpt: "Control Your Music, or a favorite playlist."
 image:

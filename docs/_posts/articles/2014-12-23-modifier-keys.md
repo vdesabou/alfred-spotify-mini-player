@@ -2,7 +2,7 @@
 layout: article
 title: "Modifier keys"
 date: 2014-12-23
-modified: 2015-01-19
+modified: 2017-01-17T11:39:03-04:00
 categories: articles
 excerpt: "Support of modifier keys, shortcuts for common actions."
 image:

@@ -2,9 +2,9 @@
 layout: article
 title: "Change Theme"
 date: 2016-09-27T11:39:03-04:00
-modified:
+modified: 2017-01-17T11:39:03-04:00
 categories: articles
-excerpt: "Change theme"
+excerpt: "Multiple themes are available"
 image:
   teaser: bullet-change-theme.png
   feature:

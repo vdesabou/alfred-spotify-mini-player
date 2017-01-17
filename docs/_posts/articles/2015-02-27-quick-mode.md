@@ -2,7 +2,7 @@
 layout: article
 title: "Quick Mode"
 date: 2015-02-27
-modified:
+modified: 2017-01-17T11:39:03-04:00
 categories: articles
 excerpt: "Quick Mode to launch tracks/artists/albums/playlists as quick as possible."
 image:

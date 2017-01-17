@@ -2,7 +2,7 @@
 layout: article
 title: "Follow or Unfollow artists"
 date: 2015-01-05T11:39:03-04:00
-modified:
+modified: 2017-01-17T11:39:03-04:00
 categories: articles
 excerpt: "Follow or unfollow artists."
 image:

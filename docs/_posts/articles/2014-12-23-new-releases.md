@@ -2,7 +2,7 @@
 layout: article
 title: "New Album Releases"
 date: 2014-12-23T11:39:03-04:00
-modified:
+modified: 2017-01-17T11:39:03-04:00
 categories: articles
 excerpt: "Get the latest album releases in your country or any other country."
 image:

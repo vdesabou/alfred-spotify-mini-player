@@ -2,7 +2,7 @@
 layout: article
 title: "Current Track"
 date: 2015-01-11T11:39:03-04:00
-modified:
+modified: 2017-01-17T11:39:03-04:00
 categories: articles
 excerpt: "Display current track information and various options."
 image:
@@ -38,6 +38,8 @@ The following options are available:-
 * [Remove]( {{ site.url }}/articles/remove) the track from _Your Music_ or one of your playlists
 
 * [Share]( {{ site.url }}/articles/share) the track using Mac OS X Sharing (twitter or facebook)
+
+* [Search]( {{ site.url }}/articles/web-search) the current artist or track on twitter, facebook, wikipedia or youtube
 
 * Create a [radio playlist]( {{ site.url }}/articles/radio-playlists) from the track
 

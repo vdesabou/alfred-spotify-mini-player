@@ -2,7 +2,7 @@
 layout: article
 title: "Now Playing"
 date: 2014-12-23T11:39:03-04:00
-modified: 2016-02-17T11:39:03-04:00
+modified: 2017-01-17T11:39:03-04:00
 categories: articles
 excerpt: "Display an OS X or Growl notification for listened tracks."
 image:

@@ -2,7 +2,7 @@
 layout: article
 title: "Library update"
 date: 2014-12-23T11:39:03-04:00
-modified:
+modified: 2017-01-17T11:39:03-04:00
 categories: articles
 excerpt: "Fast and automatic library updates (with artworks downloaded in background)."
 image:

@@ -2,7 +2,7 @@
 layout: article
 title: "Complete Collection"
 date: 2015-09-11
-modified:
+modified: 2017-01-17T11:39:03-04:00
 categories: articles
 excerpt: "Create a playlist with the complete collection for an artist."
 image:
