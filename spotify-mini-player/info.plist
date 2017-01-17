@@ -7380,12 +7380,12 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 	</dict>
 	<key>variables</key>
 	<dict>
+		<key>c_add_current_track_to</key>
+		<string>add_current_track_to</string>
 		<key>c_add_current_track_to_alfred_playlist_or_your_music</key>
 		<string>add_current_track_to_alfred_playlist_or_your_music</string>
 		<key>c_artist_radio</key>
 		<string>artist_radio</string>
-		<key>c_add_current_track_to</key>
-		<string>add_current_track_to</string>
 		<key>c_current</key>
 		<string>current</string>
 		<key>c_lookup_artist_online</key>
