@@ -19,6 +19,6 @@ onhomepage : true
 * You can invoke at any time the *Go Back* button by typing `bb`:-
 
 <figure>
-  <img src="{{ site.url }}/images/back-button.gif"></a>
+  <img src="{{ site.url }}/images/back-button.gif">
   <figcaption>Activate Go Back button when typing 'bb'.</figcaption>
 </figure>

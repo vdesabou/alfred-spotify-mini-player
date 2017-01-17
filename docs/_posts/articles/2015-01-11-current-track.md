@@ -37,6 +37,8 @@ The following options are available:-
 
 * [Remove]( {{ site.url }}/articles/remove) the track from _Your Music_ or one of your playlists
 
+* [Share]( {{ site.url }}/articles/share) the track using Mac OS X Sharing (twitter or facebook)
+
 * Create a [radio playlist]( {{ site.url }}/articles/radio-playlists) from the track
 
 * Then you have the list of the playlists where the track appears
