@@ -2,7 +2,7 @@
 layout: article
 permalink: /release-notes/
 title: "Release Notes"
-modified: 2016-11-11
+modified: 2017-01-17
 excerpt: "Release Notes."
 image:
   feature:
@@ -12,6 +12,19 @@ share: false
 toc: false
 noindex: false
 ---
+
+<a name="v7.0"></a>
+7.0:
+
+* <span class="badge info">ADDED</span> Make themes configurable[#161](https://github.com/vdesabou/alfred-spotify-mini-player/issues/161), see article [Change Theme](http://alfred-spotify-mini-player.com/articles/change-theme/)
+* <span class="badge info">ADDED</span> Add Sharing feature using Mac OS X Sharing[#158](https://github.com/vdesabou/alfred-spotify-mini-player/issues/158), see article [Share](http://alfred-spotify-mini-player.com/articles/share/)
+* <span class="badge info">ADDED</span> Add new Web Search command for current track[#160](https://github.com/vdesabou/alfred-spotify-mini-player/issues/160), see article [Web Search](http://alfred-spotify-mini-player.com/articles/web-search/)
+* <span class="badge info">ADDED</span> Allow to hide some main menu entries[#163](https://github.com/vdesabou/alfred-spotify-mini-player/issues/163), see article [Customization](http://alfred-spotify-mini-player.com/articles/customization/)
+* <span class="badge info">ADDED</span> Add option to not use artworks[#150][Add option to not use artworks](https://github.com/vdesabou/alfred-spotify-mini-player/issues/150)
+* <span class="badge info">ADDED</span> Set volume min & max as workflow variables[#153](https://github.com/vdesabou/alfred-spotify-mini-player/issues/153)
+* <span class="badge success">IMPROVED</span> Use ZIP instead of TGZ for debug files[#162](https://github.com/vdesabou/alfred-spotify-mini-player/issues/162)
+* <span class="badge danger">FIXED</span> Issue with chinese playlists[#156](https://github.com/vdesabou/alfred-spotify-mini-player/issues/156)
+* <span class="badge danger">FIXED</span> Self-Updated playlists are not updated within the workflow[#165](https://github.com/vdesabou/alfred-spotify-mini-player/issues/165)
 
 <a name="v6.6"></a>
 6.6:
