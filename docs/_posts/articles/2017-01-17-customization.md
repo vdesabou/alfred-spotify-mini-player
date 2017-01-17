@@ -1,0 +1,60 @@
+---
+layout: article
+title: "Customization"
+date: 2017-01-17T11:39:03-04:00
+modified:
+categories: articles
+excerpt: "You can customize the workflow by changing the variables..."
+image:
+  teaser: bullet-customization.png
+  feature:
+  credit: 
+  creditlink:
+noindex: false
+toc: false
+comments: true
+onhomepage : true
+---
+
+* Most of the settings are located in *Settings* menu:-
+
+<figure>
+	<img src="{{ site.url }}/images/customization1.jpg">
+  <figcaption>Settings menu (1/2).</figcaption>
+</figure>
+
+<figure>
+	<img src="{{ site.url }}/images/customization2.jpg">
+  <figcaption>Settings menu (2/2).</figcaption>
+</figure>
+
+But you can also use [Alfred variables](https://www.alfredapp.com/help/workflows/advanced/variables/) to customize the workflow:-
+
+* You can change any workflow command name by modifying variables starting with `c_`, for example replace *spot_mini* by *s*:-
+
+<figure>
+	<img src="{{ site.url }}/images/customization3.jpg">
+	<figcaption>Change workflow command names.</figcaption>
+</figure>
+
+* You can hide some main menu entries by putting `0`(or any other value) by modifying variables starting with `menu_`:-
+
+<figure>
+	<img src="{{ site.url }}/images/customization4.jpg">
+	<figcaption>Hide menu entry by putting value other than 1.</figcaption>
+</figure>
+
+* You can change the volume min, mid, max values by modifying variables starting with `settings_volume`:-
+
+<figure>
+	<img src="{{ site.url }}/images/customization5.jpg">
+	<figcaption>Change volume default values.</figcaption>
+</figure>
+
+* You can change the default text for [sharing]( {{ site.url }}/articles/share) by modifying variables starting with `sharing_`:-
+
+<figure>
+	<img src="{{ site.url }}/images/customization6.jpg">
+	<figcaption>Change default sharing texts.</figcaption>
+</figure>
+
