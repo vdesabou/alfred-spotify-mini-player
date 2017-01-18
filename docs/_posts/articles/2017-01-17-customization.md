@@ -4,7 +4,7 @@ title: "Customization"
 date: 2017-01-17T11:39:03-04:00
 modified:
 categories: articles
-excerpt: "You can customize the workflow by changing the variables..."
+excerpt: "You can customize the workflow by changing settings or variables..."
 image:
   teaser: bullet-customization.png
   feature:
