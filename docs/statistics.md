@@ -43,6 +43,6 @@ noindex: false
 
 <script>StatHatEmbed.render({s1: 'C806H', w: 760, h: 235 , tf:'month_compare'});</script>
 
-* Number of green theme installation 
+* Number of theme installations
 
 <script>StatHatEmbed.render({s1: 'VzRe', w: 760, h: 235 , tf:'month_compare'});</script>
