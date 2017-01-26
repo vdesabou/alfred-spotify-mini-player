@@ -1144,7 +1144,7 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>2B0C8466-4AED-4272-9C10-50F3BCE88043</string>
+				<string>CF46537F-6F59-40DB-A643-72A7BB952840</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -6933,9 +6933,9 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 		<key>A4437594-2A54-42A1-836E-129E46F5DB47</key>
 		<dict>
 			<key>xpos</key>
-			<integer>100</integer>
+			<integer>260</integer>
 			<key>ypos</key>
-			<real>6270</real>
+			<integer>6390</integer>
 		</dict>
 		<key>A4EEDB0D-EEB3-45CE-B8A8-1397DD905470</key>
 		<dict>
@@ -7089,9 +7089,9 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 		<key>C588A188-D8D3-450F-9020-5EBB563F6B8A</key>
 		<dict>
 			<key>xpos</key>
-			<integer>100</integer>
+			<integer>90</integer>
 			<key>ypos</key>
-			<real>6160</real>
+			<integer>6120</integer>
 		</dict>
 		<key>C7CFF014-DBC8-4663-A0AB-219C57A427EE</key>
 		<dict>
