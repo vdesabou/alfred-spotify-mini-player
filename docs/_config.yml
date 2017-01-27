@@ -56,7 +56,7 @@ owner:
   google:
     ad-client:
     ad-slot:
-    youtube: http://youtube.com/c/Alfred-spotify-mini-player
+    youtube:
   bio: "Creator and developer of the workflow."
   avatar: bio-photo.jpg # 160x160 px image for author byline
 disqus-shortname: #alfred-spotify-mini-player
