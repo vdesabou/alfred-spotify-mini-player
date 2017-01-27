@@ -11,6 +11,7 @@ image:
   credit: 
   creditlink:
 noindex: false
+share: false
 toc: false
 comments: true
 onhomepage : true
