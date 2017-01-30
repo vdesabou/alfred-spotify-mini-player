@@ -1,5 +1,21 @@
 # Changelog
-## 1.4.2 (2016-12-11)
+## 1.6.1 (2016-01-28)
+* Bump for bad `1.6.0`.
+
+## 1.6.0 (2016-01-28)
+* Deprecated the following methods and replaced them with ([6aac5c6](https://github.com/jwilsson/spotify-web-api-php/commit/6aac5c6880017e0fadf7a48c5ba740dad2d9e617)):
+    * `Request::getReturnAssoc()` -> `Request::getReturnType()`
+    * `Request::setReturnAssoc()` -> `Request::setReturnType(Request::RETURN_ASSOC)`
+    * `SpotifyWebAPI::getReturnAssoc()` -> `SpotifyWebAPI::getReturnType()`
+    * `SpotifyWebAPI::setReturnAssoc()` -> `SpotifyWebAPI::setReturnType(SpotifyWebAPI::RETURN_ASSOC)`
+* Added the following constants for use with `setReturnType()` ([6aac5c6](https://github.com/jwilsson/spotify-web-api-php/commit/6aac5c6880017e0fadf7a48c5ba740dad2d9e617)):
+    * `Request::RETURN_ASSOC`
+    * `Request::RETURN_OBJECT`
+    * `SpotifyWebAPI::RETURN_ASSOC`
+    * `SpotifyWebAPI::RETURN_OBJECT`
+* Added docs on how to change the return type. ([10b47b5](https://github.com/jwilsson/spotify-web-api-php/commit/10b47b5cb4662ba53d45590cf39f9482a6dcb51e))
+
+## 1.5.0 (2016-12-11)
 * Added a `Request::getLastResponse()` method. ([21b72b0](https://github.com/jwilsson/spotify-web-api-php/commit/21b72b040ec10550649ded9050a431f890081f08))
 * Added a `SpotifyWebAPI::getRequest` method.
 ([bab8924](https://github.com/jwilsson/spotify-web-api-php/commit/bab8924b1636e7d19f45722add8a0b769818983d))

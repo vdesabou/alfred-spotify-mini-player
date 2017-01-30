@@ -3,39 +3,25 @@ layout: default
 title: Method Reference - Request
 ---
 
+## Constants
+**ACCOUNT_URL**
+**API_URL**
+**RETURN_ASSOC**
+**RETURN_OBJECT**
 
-### getLastResponse
-
-    array SpotifyWebAPI\Request::getLastResponse()
-
-Get the latest full response from the Spotify API.
-
-
-#### Return values
-* **array** Response data.
-    * array\|object body The response body. Type is controlled by Request::setReturnAssoc().
-    * array headers Response headers.
-    * int status HTTP status code.
-    * string url The requested URL.
-
-
+## Methods
 
 ### account
+
 
     array SpotifyWebAPI\Request::account(string $method, string $uri, array $parameters, array $headers)
 
 Make a request to the "account" endpoint.
 
-#### Arguments
-* `$method` **string** - The HTTP method to use.
-* `$uri` **string** - The URI to request.
-* `$parameters` **array** - Optional. Query parameters.
-* `$headers` **array** - Optional. HTTP headers.
-
 
 #### Return values
 * **array** Response data.
-    * array\|object body The response body. Type is controlled by Request::setReturnAssoc().
+    * array\|object body The response body. Type is controlled by `Request::setReturnType()`.
     * string headers Response headers.
     * int status HTTP status code.
     * string url The requested URL.
@@ -44,21 +30,33 @@ Make a request to the "account" endpoint.
 
 ### api
 
+
     array SpotifyWebAPI\Request::api(string $method, string $uri, array $parameters, array $headers)
 
 Make a request to the "api" endpoint.
 
-#### Arguments
-* `$method` **string** - The HTTP method to use.
-* `$uri` **string** - The URI to request.
-* `$parameters` **array** - Optional. Query parameters.
-* `$headers` **array** - Optional. HTTP headers.
+
+#### Return values
+* **array** Response data.
+    * array\|object body The response body. Type is controlled by `Request::setReturnType()`.
+    * string headers Response headers.
+    * int status HTTP status code.
+    * string url The requested URL.
+
+
+
+### getLastResponse
+
+
+    array SpotifyWebAPI\Request::getLastResponse()
+
+Get the latest full response from the Spotify API.
 
 
 #### Return values
 * **array** Response data.
-    * array\|object body The response body. Type is controlled by Request::setReturnAssoc().
-    * string headers Response headers.
+    * array\|object body The response body. Type is controlled by `Request::setReturnType()`.
+    * array headers Response headers.
     * int status HTTP status code.
     * string url The requested URL.
 
@@ -66,9 +64,11 @@ Make a request to the "api" endpoint.
 
 ### getReturnAssoc
 
+_Deprecated: Use `Request::getReturnType()` instead._
+
     boolean SpotifyWebAPI\Request::getReturnAssoc()
 
-Get a value indicating the response body type.
+Use `Request::getReturnType()` instead.
 
 
 #### Return values
@@ -76,23 +76,31 @@ Get a value indicating the response body type.
 
 
 
+### getReturnType
+
+
+    string SpotifyWebAPI\Request::getReturnType()
+
+Get a value indicating the response body type.
+
+
+#### Return values
+* **string** A value indicating if the response body is an object or associative array.
+
+
+
 ### send
+
 
     array SpotifyWebAPI\Request::send(string $method, string $url, array $parameters, array $headers)
 
 Make a request to Spotify.<br>
 You'll probably want to use one of the convenience methods instead.
 
-#### Arguments
-* `$method` **string** - The HTTP method to use.
-* `$url` **string** - The URL to request.
-* `$parameters` **array** - Optional. Query parameters.
-* `$headers` **array** - Optional. HTTP headers.
-
 
 #### Return values
 * **array** Response data.
-    * array\|object body The response body. Type is controlled by Request::setReturnAssoc().
+    * array\|object body The response body. Type is controlled by `Request::setReturnType()`.
     * array headers Response headers.
     * int status HTTP status code.
     * string url The requested URL.
@@ -101,12 +109,24 @@ You'll probably want to use one of the convenience methods instead.
 
 ### setReturnAssoc
 
+_Deprecated: Use `Request::setReturnType()` instead._
+
     void SpotifyWebAPI\Request::setReturnAssoc(boolean $returnAssoc)
 
-Set the return type for the response body.
+Use `Request::setReturnType()` instead.
 
-#### Arguments
-* `$returnAssoc` **boolean** - Whether to return an associative array or an stdClass.
+
+#### Return values
+* **void** 
+
+
+
+### setReturnType
+
+
+    void SpotifyWebAPI\Request::setReturnType(string $returnType)
+
+Set the return type for the response body.
 
 
 #### Return values

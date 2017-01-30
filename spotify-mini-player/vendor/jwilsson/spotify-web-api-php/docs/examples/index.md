@@ -5,6 +5,7 @@ title: Examples
 
 *Note: All examples assume the use of Composer or a autoloader.*
 
+* [Changing return type](changing-return-type.html)
 * [Error handling](error-handling.html)
 * [Following artists, playlists and users](following.html)
 * [Getting artists, albums or tracks](getting-objects.html)

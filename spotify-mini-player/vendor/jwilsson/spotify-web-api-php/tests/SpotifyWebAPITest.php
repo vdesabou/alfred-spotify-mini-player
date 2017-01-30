@@ -1091,6 +1091,8 @@ class SpotifyWebAPITest extends PHPUnit_Framework_TestCase
 
     public function testGetReturnAssoc()
     {
+        PHPUnit_Framework_Error_Deprecated::$enabled = false;
+
         $stub = $this->getMock('SpotifyWebAPI\Request');
         $stub->expects($this->once())
             ->method('getReturnAssoc')
@@ -1099,6 +1101,20 @@ class SpotifyWebAPITest extends PHPUnit_Framework_TestCase
         $api = new SpotifyWebAPI\SpotifyWebAPI($stub);
 
         $this->assertTrue($api->getReturnAssoc());
+
+        PHPUnit_Framework_Error_Deprecated::$enabled = true;
+    }
+
+    public function testGetReturnType()
+    {
+        $stub = $this->getMock('SpotifyWebAPI\Request');
+        $stub->expects($this->once())
+            ->method('getReturnType')
+            ->willReturn(SpotifyWebAPI\SpotifyWebAPI::RETURN_ASSOC);
+
+        $api = new SpotifyWebAPI\SpotifyWebAPI($stub);
+
+        $this->assertEquals(SpotifyWebAPI\SpotifyWebAPI::RETURN_ASSOC, $api->getReturnType());
     }
 
     public function testGetRequest()
@@ -1567,13 +1583,28 @@ class SpotifyWebAPITest extends PHPUnit_Framework_TestCase
 
     public function testSetReturnAssoc()
     {
+        PHPUnit_Framework_Error_Deprecated::$enabled = false;
+
         $stub = $this->getMock('SpotifyWebAPI\Request');
         $stub->expects($this->once())
-            ->method('setReturnAssoc')
-            ->with(true);
+            ->method('setReturnType')
+            ->with(SpotifyWebAPI\SpotifyWebAPI::RETURN_ASSOC);
 
         $api = new SpotifyWebAPI\SpotifyWebAPI($stub);
         $api->setReturnAssoc(true);
+
+        PHPUnit_Framework_Error_Deprecated::$enabled = true;
+    }
+
+    public function testSetReturnType()
+    {
+        $stub = $this->getMock('SpotifyWebAPI\Request');
+        $stub->expects($this->once())
+            ->method('setReturnType')
+            ->with(SpotifyWebAPI\SpotifyWebAPI::RETURN_ASSOC);
+
+        $api = new SpotifyWebAPI\SpotifyWebAPI($stub);
+        $api->setReturnType(SpotifyWebAPI\SpotifyWebAPI::RETURN_ASSOC);
     }
 
     public function testUnfollowArtistsOrUsers()

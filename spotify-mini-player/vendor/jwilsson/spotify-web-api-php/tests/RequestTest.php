@@ -138,24 +138,48 @@ class RequestTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(200, $response['status']);
     }
 
+    public function testSendReturnType()
+    {
+        $request = new SpotifyWebAPI\Request();
+        $request->setReturnType(SpotifyWebAPI\Request::RETURN_ASSOC);
+
+        $response = $request->send('GET', 'https://api.spotify.com/v1/albums/7u6zL7kqpgLPISZYXNTgYk');
+        $this->assertArrayHasKey('id', $response['body']);
+    }
+
     public function testSetReturnAssoc()
     {
+        PHPUnit_Framework_Error_Deprecated::$enabled = false;
+
         $request = new SpotifyWebAPI\Request();
         $this->assertFalse($request->getReturnAssoc());
 
         $request->setReturnAssoc(true);
         $this->assertTrue($request->getReturnAssoc());
+        $this->assertEquals(SpotifyWebAPI\Request::RETURN_ASSOC, $request->getReturnType());
 
         $request->setReturnAssoc(false);
         $this->assertFalse($request->getReturnAssoc());
+        $this->assertEquals(SpotifyWebAPI\Request::RETURN_OBJECT, $request->getReturnType());
+
+        PHPUnit_Framework_Error_Deprecated::$enabled = true;
     }
 
-    public function testSendReturnAssoc()
+    public function testSetReturnType()
     {
-        $request = new SpotifyWebAPI\Request();
-        $request->setReturnAssoc(true);
+        PHPUnit_Framework_Error_Deprecated::$enabled = false;
 
-        $response = $request->send('GET', 'https://api.spotify.com/v1/albums/7u6zL7kqpgLPISZYXNTgYk');
-        $this->assertArrayHasKey('id', $response['body']);
+        $request = new SpotifyWebAPI\Request();
+        $this->assertFalse($request->getReturnAssoc());
+
+        $request->setReturnType(SpotifyWebAPI\Request::RETURN_ASSOC);
+        $this->assertTrue($request->getReturnAssoc());
+        $this->assertEquals(SpotifyWebAPI\Request::RETURN_ASSOC, $request->getReturnType());
+
+        $request->setReturnType(SpotifyWebAPI\Request::RETURN_OBJECT);
+        $this->assertFalse($request->getReturnAssoc());
+        $this->assertEquals(SpotifyWebAPI\Request::RETURN_OBJECT, $request->getReturnType());
+
+        PHPUnit_Framework_Error_Deprecated::$enabled = true;
     }
 }
