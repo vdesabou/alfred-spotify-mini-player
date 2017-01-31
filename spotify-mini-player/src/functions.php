@@ -454,7 +454,10 @@ function createDebugFile($w)
     date_default_timezone_set('UTC');
     $date = date('Y-m-d H:i:s', time());
 
-    $output = 'Generated: '.$date."\n";
+    $output = $output."Can you describe the problem in a few lines:\n\n\n\n\n\n";
+
+    $output = $output."----------------------------------------------\n";
+    $output = $output.'Generated: '.$date."\n";
     $output = $output."----------------------------------------------\n";
 
     // check for library update in progress
@@ -548,8 +551,6 @@ function createDebugFile($w)
     $output = $output.exec("curl --upload-file /tmp/spot_mini_debug.zip https://transfer.sh/spot_mini_debug_$userid.zip");
 
     exec('cd /tmp;rm -rf spot_mini_debug.zip spot_mini_debug');
-
-    $output = $output."\n----------------------------------------------\nCan you describe the problem in a few lines:\n";
 
     exec('echo "'.$output.'" | pbcopy');
 
