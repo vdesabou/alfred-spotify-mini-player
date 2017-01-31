@@ -420,7 +420,7 @@ function switchThemeColor($w,$theme_color)
 	$zip_command = 'unzip '  . $zip_file . ' -d ' . '\'./App/'.$theme_color.'/\'';
 	exec($zip_command);
     
-    exec('open "'.'/App/'.$theme_color.'/Spotify Mini Player.app'.'"');
+    exec('open "'.'./App/'.$theme_color.'/Spotify Mini Player.app'.'"');
     //update settings
     $ret = updateSetting($w, 'theme_color', $theme_color);
 
@@ -449,6 +449,7 @@ function createDebugFile($w)
     $oauth_refresh_token = $settings->oauth_refresh_token;
     $display_name = $settings->display_name;
     $userid = $settings->userid;
+    $theme_color = $settings->theme_color;
 
     exec('mkdir -p /tmp/spot_mini_debug');
     date_default_timezone_set('UTC');
@@ -541,6 +542,15 @@ function createDebugFile($w)
         $output = $output.'Spotify desktop version:'.exec("osascript -e 'tell application \"Spotify\" to version'");
     } else {
         $output = $output.'Mopidy version:'.invokeMopidyMethod($w, 'core.get_version', array(), false);
+    }
+    $output = $output."\n";
+
+
+    exec('/usr/bin/xattr "'.'./App/'.$theme_color.'/Spotify Mini Player.app'.'"',$response);
+    $output = $output."xattr Spotify Mini Player.app returned: ";
+    foreach($response as $line) {  
+        $output = $output.$line;
+        $output = $output."\n";
     }
     $output = $output."\n";
 
