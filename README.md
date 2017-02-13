@@ -17,3 +17,6 @@ Find all information and download the workflow [on the web site](http://alfred-s
 Follow [@TheMiniPlayer](https://twitter.com/TheMiniPlayer) to get all the news.
 
 
+Made with ❤ by [@vdesabou](https://github.com/vdesabou).
+
+Love it? Give it a ⭐️ or a tweet to help spread the word!
