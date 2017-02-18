@@ -455,11 +455,20 @@ function createDebugFile($w)
     date_default_timezone_set('UTC');
     $date = date('Y-m-d H:i:s', time());
 
-    $output = $output."Can you describe the problem in a few lines:\n\n\n\n\n\n";
+    $output = $output."Hi!\n\n";
+    $output = $output."I'm a real human who will use his free time to have a look at your problem,\n";
+    $output = $output."so please take time to describe your problem in a few lines:\n";
 
     $output = $output."----------------------------------------------\n";
-    $output = $output.'Generated: '.$date."\n";
+
+    $output = $output."\n\n\n\n";
+
     $output = $output."----------------------------------------------\n";
+
+    $output = $output."\n\n\n";
+
+    $output = $output."-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+\n";
+    $output = $output.'Generated: '.$date."\n";
 
     // check for library update in progress
     if (file_exists($w->data().'/update_library_in_progress')) {
