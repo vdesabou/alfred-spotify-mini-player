@@ -2082,6 +2082,8 @@ function firstDelimiterCheckForUpdate($w, $query, $settings, $db, $update_in_pro
                         '', /* playlist_artwork_path */
                     )), 'Download workflow from Packal', 'This will open the Spotify Mini Player Packal page with your default browser', './images/packal.png', 'yes', null, '');
         }
+        echo $w->tojson();
+        exit;
     }
     echo $w->tojson();
 
