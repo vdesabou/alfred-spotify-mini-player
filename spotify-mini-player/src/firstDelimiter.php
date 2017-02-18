@@ -2086,8 +2086,7 @@ function firstDelimiterCheckForUpdate($w, $query, $settings, $db, $update_in_pro
         exit;
     }
     echo $w->tojson();
-
-    return;
+    exit;
 }
 
 /**
