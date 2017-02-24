@@ -455,7 +455,7 @@ function createDebugFile($w)
     date_default_timezone_set('UTC');
     $date = date('Y-m-d H:i:s', time());
 
-    $output = $output."Hi!\n\n";
+    $output = "Hi!\n\n";
     $output = $output."I'm a real human who will use his free time to have a look at your problem,\n";
     $output = $output."so please take time to describe your problem in a few lines:\n";
 
