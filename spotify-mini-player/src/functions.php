@@ -1986,7 +1986,7 @@ function getArtistUriFromTrack($w, $track_uri)
 
         return $artist->uri;
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        echo 'Error(getArtistUriFromTrack): (exception '.print_r($e).')';
+        logMsg( 'Error(getArtistUriFromTrack): (exception '.print_r($e).')');
         handleSpotifyWebAPIException($w, $e);
     }
 
@@ -2217,7 +2217,7 @@ function createRadioArtistPlaylist($w, $artist_name, $artist_uri)
             'limit' => $radio_number_tracks,
         ));
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        echo 'Error(createRadioArtistPlaylist): (exception '.print_r($e).')';
+        logMsg('Error(createRadioArtistPlaylist): (exception '.print_r($e).')');
         handleSpotifyWebAPIException($w, $e);
         exit;
     }
@@ -2433,7 +2433,7 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name)
             'limit' => $radio_number_tracks,
         ));
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        echo 'Error(createRadioSongPlaylist): (exception '.print_r($e).')';
+        logMsg( 'Error(createRadioSongPlaylist): (exception '.print_r($e).')');
         handleSpotifyWebAPIException($w, $e);
         exit;
     }
@@ -2632,7 +2632,7 @@ function getTheArtistAlbums($w, $artist_uri, $country_code, $actionMode = false,
             echo $w2->toxml();
             exit;
         } else {
-            echo 'Error(getTheArtistAlbums): (exception '.print_r($e).')';
+            logMsg( 'Error(getTheArtistAlbums): (exception '.print_r($e).')');
             handleSpotifyWebAPIException($w, $e);
 
             return false;
@@ -2710,7 +2710,7 @@ function getTheAlbumFullTracks($w, $album_uri, $actionMode = false)
             echo $w2->toxml();
             exit;
         } else {
-            echo 'Error(getTheAlbumFullTracks): (exception '.print_r($e).')';
+            logMsg( 'Error(getTheAlbumFullTracks): (exception '.print_r($e).')');
             handleSpotifyWebAPIException($w, $e);
 
             return false;
@@ -2832,7 +2832,7 @@ function getTheFullTrack($w, $track_uri, $country_code)
 
         return $track;
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        echo 'Error(getTheFullTrack): (exception '.print_r($e).')';
+        logMsg( 'Error(getTheFullTrack): (exception '.print_r($e).')');
         handleSpotifyWebAPIException($w, $e);
     }
 
@@ -3819,7 +3819,7 @@ function getArtworkURL($w, $type, $id, $highRes = false)
             $api = getSpotifyWebAPI($w);
             $track = $api->getTrack($id);
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            echo 'Error(getArtworkURL): (exception '.print_r($e).')';
+            logMsg('Error(getArtworkURL track): (exception '.print_r($e).')');
 
             return $url;
         }
@@ -3859,8 +3859,7 @@ function getArtworkURL($w, $type, $id, $highRes = false)
             $api = getSpotifyWebAPI($w);
             $album = $api->getAlbum($id);
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            echo 'Error(getArtworkURL): (exception '.print_r($e).')';
-
+            logMsg('Error(getArtworkURL album): (exception '.print_r($e).')');
             return $url;
         }
         if (isset($album->images)) {
@@ -3917,7 +3916,7 @@ function getPlaylistArtworkURL($w, $playlist_uri)
                 ),
             ));
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        echo 'Error(getPlaylistArtworkURL): (exception '.print_r($e).')';
+        logMsg( 'Error(getPlaylistArtworkURL): (exception '.print_r($e).')');
 
         return $url;
     }
@@ -3958,7 +3957,7 @@ function getArtistArtworkURL($w, $artist_id)
         $api = getSpotifyWebAPI($w);
         $artist = $api->getArtist($artist_id);
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        echo 'Error(getArtistArtworkURL): (exception '.print_r($e).')';
+        logMsg( 'Error(getArtistArtworkURL): (exception '.print_r($e).')');
 
         return $url;
     }
@@ -4042,7 +4041,7 @@ function updateLibrary($w)
         $db->query('PRAGMA cache_size=700000');
         $db->query('PRAGMA compile_options');
     } catch (PDOException $e) {
-        echo 'Error(updateLibrary): (exception '.print_r($e).")\n";
+        logMsg( 'Error(updateLibrary): (exception '.print_r($e).')');
         handleDbIssuePdoEcho($db, $w);
         $db = null;
 
@@ -6379,6 +6378,7 @@ function startswith($haystack, $needle)
 {
     return substr($haystack, 0, strlen($needle)) === $needle;
 }
+
 
 /**
  * getSettings function.
