@@ -6419,6 +6419,7 @@ function getSettings($w)
             'use_growl' => 0,
             'use_facebook' => 0,
             'theme_color' => 'green',
+            'search_order' => 'playlist▹artist▹track▹album',
         );
 
         $ret = $w->write($default, 'settings.json');
@@ -6490,6 +6491,12 @@ function getSettings($w)
     // add theme_color if needed
     if (!isset($settings->theme_color)) {
         updateSetting($w, 'theme_color', 'green');
+        $settings = $w->read('settings.json');
+    }
+
+    // add search_order if needed
+    if (!isset($settings->search_order)) {
+        updateSetting($w, 'search_order', 'playlist▹artist▹track▹album');
         $settings = $w->read('settings.json');
     }
 

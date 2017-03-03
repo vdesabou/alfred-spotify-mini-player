@@ -547,6 +547,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>63010287-34D8-4CB5-9AE8-7D868883A5E0</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>6FF2EF90-205D-4423-B818-11BCC11D34BE</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>66A0F734-983C-420D-B6E4-F21922513E4B</key>
 		<array>
 			<dict>
@@ -653,6 +666,19 @@
 		</array>
 		<key>6FEAFE02-DF77-4F58-9305-651E6D627144</key>
 		<array/>
+		<key>6FF2EF90-205D-4423-B818-11BCC11D34BE</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>5C5EA309-F6AD-440F-B4CE-6638CD188EB4</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>7224DEC2-8842-4EF7-9D41-8996267F4231</key>
 		<array>
 			<dict>
@@ -1000,6 +1026,19 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>18496AC4-EA42-444C-A906-642E38259C96</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>900B374F-3B5D-48A1-9213-99DEC1975B89</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>63010287-34D8-4CB5-9AE8-7D868883A5E0</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -6089,6 +6128,86 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>triggerid</key>
+				<string>change_search_order</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.external</string>
+			<key>uid</key>
+			<string>900B374F-3B5D-48A1-9213-99DEC1975B89</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>fixedorder</key>
+				<true/>
+				<key>items</key>
+				<string>[{"title":"playlist▹artist▹track▹album","arg":"playlist▹artist▹track▹album","subtitle":""},{"title":"artist▹playlist▹track▹album","arg":"artist▹playlist▹track▹album","subtitle":""},{"title":"track▹playlist▹artist▹album","arg":"track▹playlist▹artist▹album","subtitle":""},{"title":"playlist▹track▹artist▹album","arg":"playlist▹track▹artist▹album","subtitle":""},{"title":"artist▹track▹playlist▹album","arg":"artist▹track▹playlist▹album","subtitle":""},{"title":"track▹artist▹playlist▹album","arg":"track▹artist▹playlist▹album","subtitle":""},{"title":"track▹artist▹album▹playlist","arg":"track▹artist▹album▹playlist","subtitle":""},{"title":"artist▹track▹album▹playlist","arg":"artist▹track▹album▹playlist","subtitle":""},{"title":"album▹track▹artist▹playlist","arg":"album▹track▹artist▹playlist","subtitle":""},{"title":"track▹album▹artist▹playlist","arg":"track▹album▹artist▹playlist","subtitle":""},{"title":"artist▹album▹track▹playlist","arg":"artist▹album▹track▹playlist","subtitle":""},{"title":"album▹artist▹track▹playlist","arg":"album▹artist▹track▹playlist","subtitle":""},{"title":"album▹playlist▹track▹artist","arg":"album▹playlist▹track▹artist","subtitle":""},{"title":"playlist▹album▹track▹artist","arg":"playlist▹album▹track▹artist","subtitle":""},{"title":"track▹album▹playlist▹artist","arg":"track▹album▹playlist▹artist","subtitle":""},{"title":"album▹track▹playlist▹artist","arg":"album▹track▹playlist▹artist","subtitle":""},{"title":"playlist▹track▹album▹artist","arg":"playlist▹track▹album▹artist","subtitle":""},{"title":"track▹playlist▹album▹artist","arg":"track▹playlist▹album▹artist","subtitle":""},{"title":"artist▹playlist▹album▹track","arg":"artist▹playlist▹album▹track","subtitle":""},{"title":"playlist▹artist▹album▹track","arg":"playlist▹artist▹album▹track","subtitle":""},{"title":"album▹artist▹playlist▹track","arg":"album▹artist▹playlist▹track","subtitle":""},{"title":"artist▹album▹playlist▹track","arg":"artist▹album▹playlist▹track","subtitle":""},{"title":"playlist▹album▹artist▹track","arg":"playlist▹album▹artist▹track","subtitle":""},{"title":"album▹playlist▹artist▹track","arg":"album▹playlist▹artist▹track","subtitle":""}]</string>
+				<key>runningsubtext</key>
+				<string></string>
+				<key>subtext</key>
+				<string></string>
+				<key>title</key>
+				<string></string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.listfilter</string>
+			<key>uid</key>
+			<string>63010287-34D8-4CB5-9AE8-7D868883A5E0</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "change_search_order_for_real" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
+php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>5C5EA309-F6AD-440F-B4CE-6638CD188EB4</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string></string>
+				<key>variables</key>
+				<dict>
+					<key>chosen_search_order</key>
+					<string>{query}</string>
+				</dict>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.utility.argument</string>
+			<key>uid</key>
+			<string>6FF2EF90-205D-4423-B818-11BCC11D34BE</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string>Web Site:
@@ -6488,6 +6607,13 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<key>ypos</key>
 			<real>3360</real>
 		</dict>
+		<key>5C5EA309-F6AD-440F-B4CE-6638CD188EB4</key>
+		<dict>
+			<key>xpos</key>
+			<integer>580</integer>
+			<key>ypos</key>
+			<integer>12910</integer>
+		</dict>
 		<key>5EB4A672-01BC-4DBB-AD39-60EBB0F79A67</key>
 		<dict>
 			<key>xpos</key>
@@ -6515,6 +6641,13 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<integer>300</integer>
 			<key>ypos</key>
 			<real>9370</real>
+		</dict>
+		<key>63010287-34D8-4CB5-9AE8-7D868883A5E0</key>
+		<dict>
+			<key>xpos</key>
+			<integer>220</integer>
+			<key>ypos</key>
+			<integer>12910</integer>
 		</dict>
 		<key>64953E09-D9D0-485B-B92B-79E7FEC15927</key>
 		<dict>
@@ -6592,6 +6725,15 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<integer>440</integer>
 			<key>ypos</key>
 			<integer>11810</integer>
+		</dict>
+		<key>6FF2EF90-205D-4423-B818-11BCC11D34BE</key>
+		<dict>
+			<key>note</key>
+			<string>set chosen_search_order variable</string>
+			<key>xpos</key>
+			<integer>430</integer>
+			<key>ypos</key>
+			<integer>12940</integer>
 		</dict>
 		<key>71AACE30-7E8D-4D3C-8BD1-F98FEE578AEC</key>
 		<dict>
@@ -6838,6 +6980,13 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<integer>90</integer>
 			<key>ypos</key>
 			<integer>750</integer>
+		</dict>
+		<key>900B374F-3B5D-48A1-9213-99DEC1975B89</key>
+		<dict>
+			<key>xpos</key>
+			<integer>30</integer>
+			<key>ypos</key>
+			<integer>12910</integer>
 		</dict>
 		<key>9653C27F-400A-4C3F-BB97-FC0C803DFEC7</key>
 		<dict>

@@ -858,11 +858,19 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
         exec("osascript -e 'tell application \"Alfred 3\" to run trigger \"change_theme_color\" in workflow \"com.vdesabou.spotify.mini.player\" with argument \"\"'");
         return;
+    } elseif ($other_action == 'change_search_order') {
+        exec("osascript -e 'tell application \"Alfred 3\" to run trigger \"change_search_order\" in workflow \"com.vdesabou.spotify.mini.player\" with argument \"\"'");
+        return;
     } elseif ($other_action == 'change_theme_color_for_real') {
 
         stathat_ez_count('AlfredSpotifyMiniPlayer', 'theme_changed', 1);
         switchThemeColor($w,getenv('chosen_color'));
-        
+        return;
+    } elseif ($other_action == 'change_search_order_for_real') {
+
+        updateSetting($w, 'search_order', getenv('chosen_search_order'));
+
+        displayNotificationWithArtwork($w, 'Search order results is now changed', './images/search.png', 'Settings');
         return;
     } elseif ($other_action == 'disable_mopidy') {
         exec('./src/spotify_mini_player_notifications.ksh -d "'.$w->data().'" -a stop >> "'.$w->cache().'/action.log" 2>&1 & ');
