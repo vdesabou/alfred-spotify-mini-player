@@ -387,6 +387,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>3AA52DF5-6A73-4739-A088-0F78F446B447</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>10D173E8-E2FD-4A00-B899-8EBEF9017B05</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>3F85747B-FC44-4B07-AA6E-3645F0CC0DF7</key>
 		<array>
 			<dict>
@@ -2652,6 +2665,35 @@
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>0</integer>
+				<key>focusedappvariable</key>
+				<false/>
+				<key>focusedappvariablename</key>
+				<string></string>
+				<key>hotkey</key>
+				<integer>0</integer>
+				<key>hotmod</key>
+				<integer>0</integer>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>0</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>C8B5A68F-5328-48B7-84C1-E73601716B7E</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>concurrently</key>
 				<false/>
 				<key>escaping</key>
@@ -2719,7 +2761,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 			<key>type</key>
 			<string>alfred.workflow.trigger.hotkey</string>
 			<key>uid</key>
-			<string>C8B5A68F-5328-48B7-84C1-E73601716B7E</string>
+			<string>3AA52DF5-6A73-4739-A088-0F78F446B447</string>
 			<key>version</key>
 			<integer>2</integer>
 		</dict>
@@ -6523,6 +6565,13 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<key>ypos</key>
 			<integer>30</integer>
 		</dict>
+		<key>3AA52DF5-6A73-4739-A088-0F78F446B447</key>
+		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
+			<key>ypos</key>
+			<integer>2380</integer>
+		</dict>
 		<key>3F85747B-FC44-4B07-AA6E-3645F0CC0DF7</key>
 		<dict>
 			<key>xpos</key>
@@ -7254,7 +7303,7 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<key>xpos</key>
 			<integer>100</integer>
 			<key>ypos</key>
-			<real>2370</real>
+			<integer>2260</integer>
 		</dict>
 		<key>C91B7486-D357-4C1C-8661-83290128E78E</key>
 		<dict>
