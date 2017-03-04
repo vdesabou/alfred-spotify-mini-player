@@ -460,6 +460,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
     $display_name = $settings->display_name;
     $userid = $settings->userid;
     $use_artworks = $settings->use_artworks;
+    $search_order = $settings->search_order;
 
     // Search online
 
@@ -544,115 +545,131 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
 
         $noresult = true;
 
-        if ($search_artists == true) {
-            // Search Artists
+        $search_categories = explode('▹', $search_order);
 
-            // call to web api, if it fails,
-            // it displays an error in main window
-            $query = 'artist:'.strtolower($the_query);
-            $results = searchWebApi($w, $country_code, $query, 'artist', $search_artists_limit, false);
+        foreach($search_categories as $search_category) {
 
-            foreach ($results as $artist) {
-                if (checkIfResultAlreadyThere($w->results(), '👤 '.escapeQuery($artist->name)) == false) {
-                    $noresult = false;
-                    $w->result(null, '', '👤 '.escapeQuery($artist->name), 'Browse this artist', getArtistArtwork($w, $artist->uri, $artist->name, false, false, false, $use_artworks), 'no', null, 'Online▹'.$artist->uri.'@'.escapeQuery($artist->name).'▹');
+            if($search_category == 'artist') {
+
+                if ($search_artists == true) {
+                    // Search Artists
+
+                    // call to web api, if it fails,
+                    // it displays an error in main window
+                    $query = 'artist:'.strtolower($the_query);
+                    $results = searchWebApi($w, $country_code, $query, 'artist', $search_artists_limit, false);
+
+                    foreach ($results as $artist) {
+                        if (checkIfResultAlreadyThere($w->results(), '👤 '.escapeQuery($artist->name)) == false) {
+                            $noresult = false;
+                            $w->result(null, '', '👤 '.escapeQuery($artist->name), 'Browse this artist', getArtistArtwork($w, $artist->uri, $artist->name, false, false, false, $use_artworks), 'no', null, 'Online▹'.$artist->uri.'@'.escapeQuery($artist->name).'▹');
+                        }
+                    }
                 }
             }
-        }
 
-        if ($search_albums == true) {
-            // Search Albums
+            if($search_category == 'album') {
 
-            // call to web api, if it fails,
-            // it displays an error in main window
-            $query = 'album:'.strtolower($the_query);
-            $results = searchWebApi($w, $country_code, $query, 'album', $search_albums_limit, false);
+                if ($search_albums == true) {
+                    // Search Albums
 
-            try {
-                $api = getSpotifyWebAPI($w);
-            } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-                $w->result(null, 'help', 'Exception occurred', ''.$e->getMessage(), './images/warning.png', 'no', null, '');
-                echo $w->tojson();
-                exit;
-            }
-
-            foreach ($results as $album) {
-                if (checkIfResultAlreadyThere($w->results(), escapeQuery($album->name)) == false) {
-                    $noresult = false;
+                    // call to web api, if it fails,
+                    // it displays an error in main window
+                    $query = 'album:'.strtolower($the_query);
+                    $results = searchWebApi($w, $country_code, $query, 'album', $search_albums_limit, false);
 
                     try {
-                        $full_album = $api->getAlbum($album->id);
+                        $api = getSpotifyWebAPI($w);
                     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
                         $w->result(null, 'help', 'Exception occurred', ''.$e->getMessage(), './images/warning.png', 'no', null, '');
                         echo $w->tojson();
                         exit;
                     }
-                    $w->result(null, '', escapeQuery($album->name).' ('.$full_album->tracks->total.' tracks)', $album->album_type.' by '.escapeQuery($full_album->artists[0]->name), getTrackOrAlbumArtwork($w, $album->uri, false, false, false, $use_artworks), 'no', null, 'Online▹'.$full_album->artists[0]->uri.'@'.escapeQuery($full_album->artists[0]->name).'@'.$album->uri.'@'.escapeQuery($album->name).'▹');
+
+                    foreach ($results as $album) {
+                        if (checkIfResultAlreadyThere($w->results(), escapeQuery($album->name)) == false) {
+                            $noresult = false;
+
+                            try {
+                                $full_album = $api->getAlbum($album->id);
+                            } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+                                $w->result(null, 'help', 'Exception occurred', ''.$e->getMessage(), './images/warning.png', 'no', null, '');
+                                echo $w->tojson();
+                                exit;
+                            }
+                            $w->result(null, '', escapeQuery($album->name).' ('.$full_album->tracks->total.' tracks)', $album->album_type.' by '.escapeQuery($full_album->artists[0]->name), getTrackOrAlbumArtwork($w, $album->uri, false, false, false, $use_artworks), 'no', null, 'Online▹'.$full_album->artists[0]->uri.'@'.escapeQuery($full_album->artists[0]->name).'@'.$album->uri.'@'.escapeQuery($album->name).'▹');
+                        }
+                    }
                 }
             }
-        }
 
-        if ($search_playlists == true) {
-            // Search Playlists
+            if($search_category == 'playlist') {
 
-            // call to web api, if it fails,
-            // it displays an error in main window
-            $query = 'playlist:'.strtolower($the_query);
-            $results = searchWebApi($w, $country_code, $query, 'playlist', $search_playlists_limit, false);
+                if ($search_playlists == true) {
+                    // Search Playlists
 
-            foreach ($results as $playlist) {
-                $noresult = false;
-                $w->result(null, '', '🎵'.escapeQuery($playlist->name), 'by '.$playlist->owner->id.' ● '.$playlist->tracks->total.' tracks', getPlaylistArtwork($w, $playlist->uri, false, false, $use_artworks), 'no', null, 'Online Playlist▹'.$playlist->uri.'∙'.escapeQuery($playlist->name).'▹');
+                    // call to web api, if it fails,
+                    // it displays an error in main window
+                    $query = 'playlist:'.strtolower($the_query);
+                    $results = searchWebApi($w, $country_code, $query, 'playlist', $search_playlists_limit, false);
+
+                    foreach ($results as $playlist) {
+                        $noresult = false;
+                        $w->result(null, '', '🎵'.escapeQuery($playlist->name), 'by '.$playlist->owner->id.' ● '.$playlist->tracks->total.' tracks', getPlaylistArtwork($w, $playlist->uri, false, false, $use_artworks), 'no', null, 'Online Playlist▹'.$playlist->uri.'∙'.escapeQuery($playlist->name).'▹');
+                    }
+                }
             }
-        }
 
-        if ($search_tracks == true) {
-            // Search Tracks
+            if($search_category == 'artist') {
+                if ($search_tracks == true) {
+                    // Search Tracks
 
-            // call to web api, if it fails,
-            // it displays an error in main window
-            $query = 'track:'.strtolower($the_query);
-            $results = searchWebApi($w, $country_code, $query, 'track', $search_tracks_limit, false);
-            $first = true;
-            foreach ($results as $track) {
-                // if ($first == true) {
-                //     $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-                //     $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
-                //     $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
-                // }
-                // $first         = false;
-                $noresult = false;
-                $track_artwork = getTrackOrAlbumArtwork($w, $track->uri, false, false, false, $use_artworks);
+                    // call to web api, if it fails,
+                    // it displays an error in main window
+                    $query = 'track:'.strtolower($the_query);
+                    $results = searchWebApi($w, $country_code, $query, 'track', $search_tracks_limit, false);
+                    $first = true;
+                    foreach ($results as $track) {
+                        // if ($first == true) {
+                        //     $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
+                        //     $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
+                        //     $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
+                        // }
+                        // $first         = false;
+                        $noresult = false;
+                        $track_artwork = getTrackOrAlbumArtwork($w, $track->uri, false, false, false, $use_artworks);
 
-                $artists = $track->artists;
-                $artist = $artists[0];
-                $album = $track->album;
+                        $artists = $track->artists;
+                        $artist = $artists[0];
+                        $album = $track->album;
 
-                $w->result(null, serialize(array(
-                            $track->uri /*track_uri*/,
-                            $album->uri /* album_uri */,
-                            $artist->uri /* artist_uri */,
-                            '' /* playlist_uri */,
-                            '' /* spotify_command */,
-                            '' /* query */,
-                            '' /* other_settings*/,
-                            'play_track_in_album_context' /* other_action */,
-                            escapeQuery($artist->name) /* artist_name */,
-                            escapeQuery($track->name) /* track_name */,
-                            escapeQuery($album->name) /* album_name */,
-                            $track_artwork /* track_artwork_path */,
-                            '' /* artist_artwork_path */,
-                            '' /* album_artwork_path */,
-                            '' /* playlist_name */,
-                            '', /* playlist_artwork_path */
-                        )), escapeQuery($artist->name).' ● '.escapeQuery($track->name), array(
-                        beautifyTime($track->duration_ms / 1000).' ● '.escapeQuery($album->name),
-                        'alt' => 'Play album '.escapeQuery($album->name).' in Spotify',
-                        'cmd' => 'Play artist '.escapeQuery($artist->name).' in Spotify',
-                        'fn' => 'Add track '.escapeQuery($track->name).' to ...',
-                        'shift' => 'Add album '.escapeQuery($album->name).' to ...',
-                        'ctrl' => 'Search artist '.escapeQuery($artist->name).' online',
-                    ), $track_artwork, 'yes', null, '');
+                        $w->result(null, serialize(array(
+                                    $track->uri /*track_uri*/,
+                                    $album->uri /* album_uri */,
+                                    $artist->uri /* artist_uri */,
+                                    '' /* playlist_uri */,
+                                    '' /* spotify_command */,
+                                    '' /* query */,
+                                    '' /* other_settings*/,
+                                    'play_track_in_album_context' /* other_action */,
+                                    escapeQuery($artist->name) /* artist_name */,
+                                    escapeQuery($track->name) /* track_name */,
+                                    escapeQuery($album->name) /* album_name */,
+                                    $track_artwork /* track_artwork_path */,
+                                    '' /* artist_artwork_path */,
+                                    '' /* album_artwork_path */,
+                                    '' /* playlist_name */,
+                                    '', /* playlist_artwork_path */
+                                )), escapeQuery($artist->name).' ● '.escapeQuery($track->name), array(
+                                beautifyTime($track->duration_ms / 1000).' ● '.escapeQuery($album->name),
+                                'alt' => 'Play album '.escapeQuery($album->name).' in Spotify',
+                                'cmd' => 'Play artist '.escapeQuery($artist->name).' in Spotify',
+                                'fn' => 'Add track '.escapeQuery($track->name).' to ...',
+                                'shift' => 'Add album '.escapeQuery($album->name).' to ...',
+                                'ctrl' => 'Search artist '.escapeQuery($artist->name).' online',
+                            ), $track_artwork, 'yes', null, '');
+                    }
+                }
             }
         }
 
