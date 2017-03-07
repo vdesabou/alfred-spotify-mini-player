@@ -1,8 +1,21 @@
 # Changelog
-## 1.6.1 (2016-01-28)
+## 1.8.0 (2017-03-05)
+* Added the `SpotifyWebAPI::getMyRecentTracks()` method. ([fd8ea0d](https://github.com/jwilsson/spotify-web-api-php/commit/fd8ea0d70d690bbb0072a917530eba2b8c02e2a1))
+
+## 1.7.0 (2017-02-25)
+* The following methods can now also accept Spotify URIs:
+    * `SpotifyWebAPI::addMyAlbums()` ([eecaea4](https://github.com/jwilsson/spotify-web-api-php/commit/eecaea4f8fe5d6554104da1018ba39002889c873))
+    * `SpotifyWebAPI::addMyTracks()` ([1b63d90](https://github.com/jwilsson/spotify-web-api-php/commit/1b63d907d9127bba7ad013ce1fdf0617d894cd95))
+    * `SpotifyWebAPI::deleteMyAlbums()` ([eecaea4](https://github.com/jwilsson/spotify-web-api-php/commit/eecaea4f8fe5d6554104da1018ba39002889c873))
+    * `SpotifyWebAPI::deleteMyTracks()` ([eecaea4](https://github.com/jwilsson/spotify-web-api-php/commit/eecaea4f8fe5d6554104da1018ba39002889c873))
+    * `SpotifyWebAPI::myAlbumsContains()` ([beb48e2](https://github.com/jwilsson/spotify-web-api-php/commit/beb48e2e397391a90129570ee1556347af70a95f))
+    * `SpotifyWebAPI::myTracksContains()` ([edd72d7](https://github.com/jwilsson/spotify-web-api-php/commit/edd72d77ea834fff15c716e5f085e0d058966e0d))
+* PHPUnit 5 is now used whenever possible. ([9892fe4](https://github.com/jwilsson/spotify-web-api-php/commit/9892fe481dd3193d719a251d43ce429d40202df8))
+
+## 1.6.1 (2017-01-28)
 * Bump for bad `1.6.0`.
 
-## 1.6.0 (2016-01-28)
+## 1.6.0 (2017-01-28)
 * Deprecated the following methods and replaced them with ([6aac5c6](https://github.com/jwilsson/spotify-web-api-php/commit/6aac5c6880017e0fadf7a48c5ba740dad2d9e617)):
     * `Request::getReturnAssoc()` -> `Request::getReturnType()`
     * `Request::setReturnAssoc()` -> `Request::setReturnType(Request::RETURN_ASSOC)`
@@ -29,7 +42,7 @@
 * Fixed a typo in the `SpotifyWebAPI::getLastResponse()` docs. ([bdd3ecc](https://github.com/jwilsson/spotify-web-api-php/commit/bdd3ecc393ff83bc2d4af983c363cdaddb1b544b))
 
 ## 1.4.2 (2016-10-27)
-* Array indexes in SpotifyWebAPI::idToUri() are now always reset to prevent undefined offset errors. ([ae8bd96](https://github.com/jwilsson/spotify-web-api-php/commit/ae8bd9673795747fad40ff4caf6b12f17c045fc5))
+* Array indexes in `SpotifyWebAPI::idToUri()` are now always reset to prevent undefined offset errors. ([ae8bd96](https://github.com/jwilsson/spotify-web-api-php/commit/ae8bd9673795747fad40ff4caf6b12f17c045fc5))
 
 ## 1.4.1 (2016-10-25)
 * All requests will now be compressed using gzip. ([5eeabde](https://github.com/jwilsson/spotify-web-api-php/commit/5eeabde90d1c21832384f42d96c1208ce6fda287))

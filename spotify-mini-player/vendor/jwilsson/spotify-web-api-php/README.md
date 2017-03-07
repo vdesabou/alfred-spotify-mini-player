@@ -435,7 +435,7 @@ $api->userFollowsPlaylist('owner_id', 'playlist_id', [
 ]);
 ```
 
-For more examples, please see the [homepage](http://jwilsson.github.io/spotify-web-api-php/examples/).
+For more examples, please see the [homepage](http://jwilsson.github.io/spotify-web-api-php/examples/). The [Spotify Web API Console](https://developer.spotify.com/web-api/console/) can also be of great help when trying out the API.
 
 ## License
 MIT license. Please see [LICENSE.md](LICENSE.md) for more information.

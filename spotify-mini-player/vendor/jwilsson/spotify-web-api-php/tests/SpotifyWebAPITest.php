@@ -27,9 +27,16 @@ class SpotifyWebAPITest extends PHPUnit_Framework_TestCase
         $albums = [
             '1oR3KrPIp4CbagPa3PhtPp',
             '6lPb7Eoon6QPbscWbMsk6a',
+            'spotify:album:1oR3KrPIp4CbagPa3PhtPp',
         ];
 
-        $expected = json_encode($albums);
+        $expectedAlbums = [
+            '1oR3KrPIp4CbagPa3PhtPp',
+            '6lPb7Eoon6QPbscWbMsk6a',
+            '1oR3KrPIp4CbagPa3PhtPp',
+        ];
+
+        $expected = json_encode($expectedAlbums);
 
         $headers = [
             'Authorization' => 'Bearer ' . $this->accessToken,
@@ -60,9 +67,16 @@ class SpotifyWebAPITest extends PHPUnit_Framework_TestCase
         $tracks = [
             '1id6H6vcwSB9GGv9NXh5cl',
             '3mqRLlD9j92BBv1ueFhJ1l',
+            'spotify:track:1id6H6vcwSB9GGv9NXh5cl',
         ];
 
-        $expected = json_encode($tracks);
+        $expectedTracks = [
+            '1id6H6vcwSB9GGv9NXh5cl',
+            '3mqRLlD9j92BBv1ueFhJ1l',
+            '1id6H6vcwSB9GGv9NXh5cl',
+        ];
+
+        $expected = json_encode($expectedTracks);
 
         $headers = [
             'Authorization' => 'Bearer ' . $this->accessToken,
@@ -212,9 +226,16 @@ class SpotifyWebAPITest extends PHPUnit_Framework_TestCase
         $albums = [
             '1oR3KrPIp4CbagPa3PhtPp',
             '6lPb7Eoon6QPbscWbMsk6a',
+            'spotify:album:1oR3KrPIp4CbagPa3PhtPp'
         ];
 
-        $expected = json_encode($albums);
+        $expectedAlbums = [
+            '1oR3KrPIp4CbagPa3PhtPp',
+            '6lPb7Eoon6QPbscWbMsk6a',
+            '1oR3KrPIp4CbagPa3PhtPp'
+        ];
+
+        $expected = json_encode($expectedAlbums);
 
         $headers = [
             'Authorization' => 'Bearer ' . $this->accessToken,
@@ -245,9 +266,16 @@ class SpotifyWebAPITest extends PHPUnit_Framework_TestCase
         $tracks = [
             '1id6H6vcwSB9GGv9NXh5cl',
             '3mqRLlD9j92BBv1ueFhJ1l',
+            'spotify:track:1id6H6vcwSB9GGv9NXh5cl',
         ];
 
-        $expected = json_encode($tracks);
+        $expectedTracks = [
+            '1id6H6vcwSB9GGv9NXh5cl',
+            '3mqRLlD9j92BBv1ueFhJ1l',
+            '1id6H6vcwSB9GGv9NXh5cl',
+        ];
+
+        $expected = json_encode($expectedTracks);
 
         $headers = [
             'Authorization' => 'Bearer ' . $this->accessToken,
@@ -1093,10 +1121,13 @@ class SpotifyWebAPITest extends PHPUnit_Framework_TestCase
     {
         PHPUnit_Framework_Error_Deprecated::$enabled = false;
 
-        $stub = $this->getMock('SpotifyWebAPI\Request');
+        $stub = $this->getMockBuilder('Request')
+                ->setMethods(['getReturnAssoc'])
+                ->getMock();
+
         $stub->expects($this->once())
-            ->method('getReturnAssoc')
-            ->willReturn(true);
+                ->method('getReturnAssoc')
+                ->willReturn(true);
 
         $api = new SpotifyWebAPI\SpotifyWebAPI($stub);
 
@@ -1107,10 +1138,13 @@ class SpotifyWebAPITest extends PHPUnit_Framework_TestCase
 
     public function testGetReturnType()
     {
-        $stub = $this->getMock('SpotifyWebAPI\Request');
+        $stub = $this->getMockBuilder('Request')
+                ->setMethods(['getReturnType'])
+                ->getMock();
+
         $stub->expects($this->once())
-            ->method('getReturnType')
-            ->willReturn(SpotifyWebAPI\SpotifyWebAPI::RETURN_ASSOC);
+                ->method('getReturnType')
+                ->willReturn(SpotifyWebAPI\SpotifyWebAPI::RETURN_ASSOC);
 
         $api = new SpotifyWebAPI\SpotifyWebAPI($stub);
 
@@ -1390,10 +1424,11 @@ class SpotifyWebAPITest extends PHPUnit_Framework_TestCase
         $albums = [
             '1oR3KrPIp4CbagPa3PhtPp',
             '6lPb7Eoon6QPbscWbMsk6a',
+            'spotify:album:1oR3KrPIp4CbagPa3PhtPp',
         ];
 
         $expected = [
-            'ids' => '1oR3KrPIp4CbagPa3PhtPp,6lPb7Eoon6QPbscWbMsk6a',
+            'ids' => '1oR3KrPIp4CbagPa3PhtPp,6lPb7Eoon6QPbscWbMsk6a,1oR3KrPIp4CbagPa3PhtPp',
         ];
 
         $headers = [
@@ -1423,11 +1458,12 @@ class SpotifyWebAPITest extends PHPUnit_Framework_TestCase
     {
         $tracks = [
             '1id6H6vcwSB9GGv9NXh5cl',
-            '3mqRLlD9j92BBv1ueFhJ1l'
+            '3mqRLlD9j92BBv1ueFhJ1l',
+            'spotify:track:1id6H6vcwSB9GGv9NXh5cl',
         ];
 
         $expected = [
-            'ids' => '1id6H6vcwSB9GGv9NXh5cl,3mqRLlD9j92BBv1ueFhJ1l',
+            'ids' => '1id6H6vcwSB9GGv9NXh5cl,3mqRLlD9j92BBv1ueFhJ1l,1id6H6vcwSB9GGv9NXh5cl',
         ];
 
         $headers = [
@@ -1585,10 +1621,13 @@ class SpotifyWebAPITest extends PHPUnit_Framework_TestCase
     {
         PHPUnit_Framework_Error_Deprecated::$enabled = false;
 
-        $stub = $this->getMock('SpotifyWebAPI\Request');
+        $stub = $this->getMockBuilder('Request')
+                ->setMethods(['setReturnType'])
+                ->getMock();
+
         $stub->expects($this->once())
-            ->method('setReturnType')
-            ->with(SpotifyWebAPI\SpotifyWebAPI::RETURN_ASSOC);
+                ->method('setReturnType')
+                ->willReturn(SpotifyWebAPI\SpotifyWebAPI::RETURN_ASSOC);
 
         $api = new SpotifyWebAPI\SpotifyWebAPI($stub);
         $api->setReturnAssoc(true);
@@ -1598,10 +1637,13 @@ class SpotifyWebAPITest extends PHPUnit_Framework_TestCase
 
     public function testSetReturnType()
     {
-        $stub = $this->getMock('SpotifyWebAPI\Request');
+        $stub = $this->getMockBuilder('Request')
+                ->setMethods(['setReturnType'])
+                ->getMock();
+
         $stub->expects($this->once())
-            ->method('setReturnType')
-            ->with(SpotifyWebAPI\SpotifyWebAPI::RETURN_ASSOC);
+                ->method('setReturnType')
+                ->willReturn(SpotifyWebAPI\SpotifyWebAPI::RETURN_ASSOC);
 
         $api = new SpotifyWebAPI\SpotifyWebAPI($stub);
         $api->setReturnType(SpotifyWebAPI\SpotifyWebAPI::RETURN_ASSOC);
@@ -1750,4 +1792,37 @@ class SpotifyWebAPITest extends PHPUnit_Framework_TestCase
 
         $this->assertTrue($response[0]);
     }
+
+    public function testGetMyRecentTracks()
+    {
+        $options = [
+            'limit' => '2'
+        ];
+
+        $expected = [
+            'limit' => '2'
+        ];
+
+        $headers = [
+            'Authorization' => 'Bearer ' . $this->accessToken,
+        ];
+
+        $return = [
+            'body' => get_fixture('recently-played'),
+        ];
+
+        $stub = $this->setupStub(
+            'GET',
+            '/v1/me/player/recently-played',
+            $expected,
+            $headers,
+            $return
+        );
+
+        $api = new SpotifyWebAPI\SpotifyWebAPI($stub);
+        $api->setAccessToken($this->accessToken);
+        $response = $api->getMyRecentTracks($options);
+
+        $this->assertObjectHasAttribute('items', $response);
+    }        
 }

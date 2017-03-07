@@ -41,20 +41,42 @@ class SpotifyWebAPI
      * Convert Spotify object IDs to Spotify URIs.
      *
      * @param array|string $ids ID(s) to convert.
+     * @param string $type Optional. Spotify object type. Default is 'track'.
      *
      * @return array|string Spotify URI(s).
      */
-    protected function idToUri($ids)
+    protected function idToUri($ids, $type = 'track')
     {
-        $ids = array_map(function ($id) {
-            if (substr($id, 0, 14) != 'spotify:track:') {
-                $id = 'spotify:track:' . $id;
+        $type = 'spotify:' . $type . ':';
+
+        $ids = array_map(function ($id) use ($type) {
+            if (substr($id, 0, strlen($type)) != $type) {
+                $id = $type . $id;
             }
 
             return $id;
         }, (array) $ids);
 
         return (count($ids) == 1) ? $ids[0] : $ids;
+    }
+
+    /**
+     * Convert Spotify URIs to Spotify object IDs
+     *
+     * @param array|string $uriIds URI(s) to convert.
+     * @param string $type Optional. Spotify object type. Default is 'track'.
+     *
+     * @return array|string Spotify ID(s).
+     */
+    protected function uriToId($uriIds, $type = 'track')
+    {
+        $type = 'spotify:' . $type . ':';
+
+        $uriIds = array_map(function ($id) use ($type) {
+            return str_replace($type, '', $id);
+        }, (array) $uriIds);
+
+        return (count($uriIds) == 1) ? $uriIds[0] : $uriIds;
     }
 
     /**
@@ -68,6 +90,7 @@ class SpotifyWebAPI
      */
     public function addMyAlbums($albums)
     {
+        $albums = $this->uriToId($albums, 'album');
         $albums = json_encode((array) $albums);
 
         $headers = $this->authHeaders();
@@ -91,6 +114,7 @@ class SpotifyWebAPI
      */
     public function addMyTracks($tracks)
     {
+        $tracks = $this->uriToId($tracks);
         $tracks = json_encode((array) $tracks);
 
         $headers = $this->authHeaders();
@@ -198,6 +222,7 @@ class SpotifyWebAPI
      */
     public function deleteMyAlbums($albums)
     {
+        $albums = $this->uriToId($albums, 'album');
         $albums = json_encode(
             (array) $albums
         );
@@ -223,6 +248,7 @@ class SpotifyWebAPI
      */
     public function deleteMyTracks($tracks)
     {
+        $tracks = $this->uriToId($tracks);
         $tracks = json_encode(
             (array) $tracks
         );
@@ -1069,7 +1095,9 @@ class SpotifyWebAPI
      */
     public function myAlbumsContains($albums)
     {
+        $albums = $this->uriToId($albums, 'album');
         $albums = implode(',', (array) $albums);
+
         $options = [
             'ids' => $albums,
         ];
@@ -1094,7 +1122,9 @@ class SpotifyWebAPI
      */
     public function myTracksContains($tracks)
     {
+        $tracks = $this->uriToId($tracks);
         $tracks = implode(',', (array) $tracks);
+
         $options = [
             'ids' => $tracks,
         ];
@@ -1348,6 +1378,26 @@ class SpotifyWebAPI
 
         $this->lastResponse = $this->request->api('GET', $uri, $options, $headers);
 
+        return $this->lastResponse['body'];
+    }
+    
+   /**
+     * Get tracks from the current user’s recent play history.
+     * https://developer.spotify.com/web-api/web-api-personalization-endpoints/get-recently-played/
+     *
+     * @param array|object $options Optional. Options to get tracks history.
+     * - int limit Optional. Maximum number of items to return. Default: 20. Minimum: 1. Maximum: 50
+     * - string after Optional. Unix timestamp in ms (13 digits). Returns all items after this cursor position.
+     * - string before Optional. Unix timestamp in ms (13 digits). Returns all items before this cursor position.
+     *
+     * @return array|object Most recent tracks played by a user. Type is controlled by `SpotifyWebAPI::setReturnType()`.
+     */
+    public function getMyRecentTracks($options = [])
+    {
+        $options = (array) $options;
+        $headers = $this->authHeaders();
+        $uri = '/v1/me/player/recently-played';
+        $this->lastResponse = $this->request->api('GET', $uri, $options, $headers);
         return $this->lastResponse['body'];
     }
 }
