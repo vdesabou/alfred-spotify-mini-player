@@ -50,7 +50,7 @@ function secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
             $w->result(null, 'help', 'The artist cannot be retrieved from track uri', 'URI was '.$tmp[0], './images/warning.png', 'no', null, '');
             echo $w->tojson();
 
-            return;
+            exit;
         }
     }
     if ($href[1] == 'local') {
@@ -59,7 +59,7 @@ function secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
             $w->result(null, 'help', 'The artist cannot be retrieved from local track uri', 'URI was '.$tmp[0], './images/warning.png', 'no', null, '');
             echo $w->tojson();
 
-            return;
+            exit;
         }
     }
     if (mb_strlen($track) < 2) {
@@ -313,7 +313,7 @@ function secondDelimiterAlbums($w, $query, $settings, $db, $update_in_progress)
             $w->result(null, 'help', 'The album cannot be retrieved from track uri', 'URI was '.$tmp[0], './images/warning.png', 'no', null, '');
             echo $w->tojson();
 
-            return;
+            exit;
         }
     }
 
@@ -801,8 +801,7 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
             if ($album_uri == false) {
                 $w->result(null, 'help', 'The album cannot be retrieved from track uri', 'URI was '.$track_uri, './images/warning.png', 'no', null, '');
                 echo $w->tojson();
-
-                return;
+                exit;
             }
         }
         $href = explode(':', $artist_uri);
@@ -812,8 +811,7 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
             if ($artist_uri == false) {
                 $w->result(null, 'help', 'The artist cannot be retrieved from track uri', 'URI was '.$track_uri, './images/warning.png', 'no', null, '');
                 echo $w->tojson();
-
-                return;
+                exit;
             }
         }
         $album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, false, false, false, $use_artworks);
@@ -2973,7 +2971,7 @@ function secondDelimiterBrowse($w, $query, $settings, $db, $update_in_progress)
             $w->result(null, 'help', 'Exception occurred', ''.$e->getMessage(), './images/warning.png', 'no', null, '');
             echo $w->tojson();
 
-            return;
+            exit;
         }
     }
 }

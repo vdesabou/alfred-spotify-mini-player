@@ -10,10 +10,6 @@ require './vendor/autoload.php';
  */
 function getSpotifyWebAPI($w, $old_api = null)
 {
-    if (!$w->internet()) {
-        throw new SpotifyWebAPI\SpotifyWebAPIException('No internet connection', 100);
-    }
-
     // Read settings from JSON
 
     $settings = getSettings($w);
@@ -4127,7 +4123,7 @@ function updateLibrary($w)
                     $retryAfter = $lastResponse['headers']['Retry-After'];
                     sleep(retryAfter);
                  } else if ($e->getCode() == 404 || $e->getCode() == 500
-                    || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 0) {
+                    || $e->getCode() == 502 || $e->getCode() == 503) {
                     // retry
                     if ($nb_retry > 20) {
                         handleSpotifyWebAPIException($w, $e);
@@ -4183,7 +4179,7 @@ function updateLibrary($w)
                     // skip
                     continue;
                 } else if ($e->getCode() == 500
-                || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 0) {
+                || $e->getCode() == 502 || $e->getCode() == 503) {
                 // retry
                 if ($nb_retry > 20) {
                     handleSpotifyWebAPIException($w, $e);
@@ -4315,7 +4311,7 @@ function updateLibrary($w)
                             // skip
                             break;
                      } else if ($e->getCode() == 500
-                        || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 0) {
+                        || $e->getCode() == 502 || $e->getCode() == 503) {
                         // retry
                         if ($nb_retry > 20) {
                             handleSpotifyWebAPIException($w, $e);
@@ -4867,7 +4863,7 @@ function refreshLibrary($w)
                     $retryAfter = $lastResponse['headers']['Retry-After'];
                     sleep(retryAfter);
                  } else if ($e->getCode() == 404 || $e->getCode() == 500
-                    || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 0) {
+                    || $e->getCode() == 502 || $e->getCode() == 503) {
                     // retry
                     if ($nb_retry > 20) {
                         handleSpotifyWebAPIException($w, $e);
@@ -4971,7 +4967,7 @@ function refreshLibrary($w)
                                 // skip
                                 continue;
                         } else if ($e->getCode() == 500
-                            || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 0) {
+                            || $e->getCode() == 502 || $e->getCode() == 503) {
                             // retry
                             if ($nb_retry > 20) {
                                 handleSpotifyWebAPIException($w, $e);
@@ -5232,7 +5228,7 @@ function refreshLibrary($w)
                                     // skip
                                     continue;
                             } else if ($e->getCode() == 500
-                                || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 0) {
+                                || $e->getCode() == 502 || $e->getCode() == 503) {
                                 // retry
                                 if ($nb_retry > 20) {
                                     handleSpotifyWebAPIException($w, $e);
@@ -5456,7 +5452,7 @@ function refreshLibrary($w)
                 // skip
                 continue;
             } else if ($e->getCode() == 500
-            || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 0) {
+            || $e->getCode() == 502 || $e->getCode() == 503) {
             // retry
             if ($nb_retry > 20) {
                 handleSpotifyWebAPIException($w, $e);
@@ -5534,7 +5530,7 @@ function refreshLibrary($w)
                             // skip
                             break;
                      } else if ($e->getCode() == 500
-                        || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 0) {
+                        || $e->getCode() == 502 || $e->getCode() == 503) {
                         // retry
                         if ($nb_retry > 20) {
                             handleSpotifyWebAPIException($w, $e);
