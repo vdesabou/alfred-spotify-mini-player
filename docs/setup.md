@@ -3,7 +3,7 @@ layout: article
 permalink: /setup/
 title: "Setup"
 date: 2015-01-01
-modified: 2015-01-29
+modified: 2017-03-20
 toc: true
 share: false
 noindex: false
@@ -12,6 +12,12 @@ noindex: false
 {% include toc.html %}
 
 Setting up the workflow is easy, you just need to follow these steps:-
+
+## Download and install the workflow
+
+[Download](https://github.com/packal/repository/raw/master/com.vdesabou.spotify.mini.player/spotifyminiplayer.alfredworkflow) the workflow
+
+Open spotifyminiplayer.alfredworkflow by double-clicking it or dragging it into Alfred.
 
 ## Create a Spotify Application
 
