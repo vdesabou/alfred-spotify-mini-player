@@ -714,7 +714,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
     } elseif ($other_action == 'enable_now_playing_notifications') {
         $ret = updateSetting($w, 'now_playing_notifications', 1);
         if ($ret == true) {
-            displayNotificationWithArtwork($w, 'Now Playing notifications are g enabled', './images/enable_now_playing.png', 'Settings');
+            displayNotificationWithArtwork($w, 'Now Playing notifications are now enabled', './images/enable_now_playing.png', 'Settings');
         } else {
             displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
         }
