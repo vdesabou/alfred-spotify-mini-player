@@ -2509,3 +2509,128 @@ function firstDelimiterYourTops($w, $query, $settings, $db, $update_in_progress)
 
     $w->result(null, '', 'Get your top tracks (all time)', 'Get your top tracks for all time', './images/your_tops_tracks.png', 'no', null, 'Your Tops▹Tracks▹long_term');
 }
+
+/**
+ * firstDelimiterYourRecentTracks function.
+ *
+ * @param mixed $w
+ * @param mixed $query
+ * @param mixed $settings
+ * @param mixed $db
+ * @param mixed $update_in_progress
+ */
+function firstDelimiterYourRecentTracks($w, $query, $settings, $db, $update_in_progress)
+{
+    $words = explode('▹', $query);
+    $kind = $words[0];
+    $time_range = $words[2];
+
+    $all_playlists = $settings->all_playlists;
+    $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
+    $radio_number_tracks = $settings->radio_number_tracks;
+    $now_playing_notifications = $settings->now_playing_notifications;
+    $max_results = $settings->max_results;
+    $alfred_playlist_uri = $settings->alfred_playlist_uri;
+    $alfred_playlist_name = $settings->alfred_playlist_name;
+    $country_code = $settings->country_code;
+    $last_check_update_time = $settings->last_check_update_time;
+    $oauth_client_id = $settings->oauth_client_id;
+    $oauth_client_secret = $settings->oauth_client_secret;
+    $oauth_redirect_uri = $settings->oauth_redirect_uri;
+    $oauth_access_token = $settings->oauth_access_token;
+    $oauth_expires = $settings->oauth_expires;
+    $oauth_refresh_token = $settings->oauth_refresh_token;
+    $display_name = $settings->display_name;
+    $userid = $settings->userid;
+    $use_artworks = $settings->use_artworks;
+
+    try {
+        $api = getSpotifyWebAPI($w);
+
+        $recentTracks = $api->getMyRecentTracks(array(
+                'limit' => ($max_results <= 50) ? $max_results : 50,
+            ));
+
+        $noresult = true;
+        $items = $recentTracks->items;
+    
+        foreach ($items as $item) {
+
+            $track = $item->track;
+
+            // if ($noresult) {
+            //     $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
+            //     $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
+            //     $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
+            // }
+
+            $noresult = false;
+            $artists = $track->artists;
+            $artist = $artists[0];
+
+            $track_artwork_path = getTrackOrAlbumArtwork($w, $track->uri, false, false, false, $use_artworks);
+            $w->result(null, serialize(array(
+                        $track->uri /*track_uri*/,
+                        '' /* album_uri */,
+                        $artist->uri /* artist_uri */,
+                        $theplaylisturi /* playlist_uri */,
+                        '' /* spotify_command */,
+                        '' /* query */,
+                        '' /* other_settings*/,
+                        '' /* other_action */,
+                        escapeQuery($artist->name) /* artist_name */,
+                        escapeQuery($track->name) /* track_name */,
+                        ''/* album_name */,
+                        $track_artwork_path /* track_artwork_path */,
+                        '' /* artist_artwork_path */,
+                        '' /* album_artwork_path */,
+                        '' /* playlist_name */,
+                        '', /* playlist_artwork_path */
+                    )), escapeQuery($artist->name).' ● '.escapeQuery($track->name), array(
+                    beautifyTime($track->duration_ms / 1000).' ● '.time2str($item->played_at),
+                    'alt' => 'Not Available',
+                    'cmd' => 'Play artist '.escapeQuery($artist->name).' in Spotify',
+                    'fn' => 'Add track '.escapeQuery($track->name).' to ...',
+                    'shift' => 'Not Available',
+                    'ctrl' => 'Search artist '.escapeQuery($artist->name).' online',
+                ), $track_artwork_path, 'yes', null, '');
+            ++$nb_results;
+        }
+
+        if ($noresult) {
+            $w->result(null, 'help', 'There is no result for your recent tracks', '', './images/warning.png', 'no', null, '');
+        }
+    } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+        if($e->getMessage() == 'Insufficient client scope') {
+            $w->result(null, serialize(array(
+                        '' /*track_uri*/,
+                        '' /* album_uri */,
+                        '' /* artist_uri */,
+                        '' /* playlist_uri */,
+                        '' /* spotify_command */,
+                        '' /* query */,
+                        '' /* other_settings*/,
+                        'reset_oauth_settings' /* other_action */,
+                        '' /* artist_name */,
+                        '' /* track_name */,
+                        '' /* album_name */,
+                        '' /* track_artwork_path */,
+                        '' /* artist_artwork_path */,
+                        '' /* album_artwork_path */,
+                        '' /* playlist_name */,
+                        '', /* playlist_artwork_path */
+                    )), 'The workflow needs more privilages to do this, click to restart authentication', array(
+                    'Next time you invoke the workflow, you will have to re-authenticate',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/warning.png', 'yes', null, '');
+        } else {
+            $w->result(null, 'help', 'Exception occurred', ''.$e->getMessage(), './images/warning.png', 'no', null, '');
+        }
+        echo $w->tojson();
+        exit;
+    }
+}

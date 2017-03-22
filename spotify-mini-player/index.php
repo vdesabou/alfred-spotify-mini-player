@@ -29,7 +29,8 @@ try {
                     'playlist-modify-public',
                     'playlist-modify-private',
                     'playlist-read-collaborative',
-                    'user-top-read', ),
+                    'user-top-read',
+                    'user-read-recently-played' ),
                 'show_dialog' => true, )));
 } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
     echo 'There was an error during the authentication flow (exception '.$e.')';

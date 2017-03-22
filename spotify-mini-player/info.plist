@@ -1188,6 +1188,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>8A63B1A6-0F0E-481A-9312-C75557A9DA71</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>18496AC4-EA42-444C-A906-642E38259C96</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>8B3222AF-02D9-4F13-9F79-6C4A935FD76F</key>
 		<array>
 			<dict>
@@ -2149,6 +2162,19 @@
 		</array>
 		<key>ECC53637-75AD-4FD2-9605-8E038D04C4BF</key>
 		<array/>
+		<key>F0ED23FA-8524-4769-B610-828611958D6A</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>18496AC4-EA42-444C-A906-642E38259C96</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>F23EB343-6D1D-4D17-9CCC-465756A5F513</key>
 		<array>
 			<dict>
@@ -2742,6 +2768,60 @@
 			<string>3040749D-6B5C-4CCD-AF95-AEC0F83B48D9</string>
 			<key>version</key>
 			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string>Recent Tracks▹</string>
+				<key>argumenttype</key>
+				<integer>3</integer>
+				<key>triggerid</key>
+				<string>com.vdesabou.miniplayer.recenttrack</string>
+				<key>triggername</key>
+				<string>Show Recent Tracks</string>
+				<key>workflowonly</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.remote</string>
+			<key>uid</key>
+			<string>F0ED23FA-8524-4769-B610-828611958D6A</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>3</integer>
+				<key>argumenttext</key>
+				<string>Recent Tracks▹</string>
+				<key>focusedappvariable</key>
+				<false/>
+				<key>focusedappvariablename</key>
+				<string></string>
+				<key>hotkey</key>
+				<integer>15</integer>
+				<key>hotmod</key>
+				<integer>1310720</integer>
+				<key>hotstring</key>
+				<string>R</string>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>2</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>8A63B1A6-0F0E-481A-9312-C75557A9DA71</string>
+			<key>version</key>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -7308,7 +7388,7 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 		<key>3040749D-6B5C-4CCD-AF95-AEC0F83B48D9</key>
 		<dict>
 			<key>xpos</key>
-			<integer>130</integer>
+			<integer>90</integer>
 			<key>ypos</key>
 			<integer>990</integer>
 		</dict>
@@ -7844,6 +7924,13 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<integer>520</integer>
 			<key>ypos</key>
 			<integer>4470</integer>
+		</dict>
+		<key>8A63B1A6-0F0E-481A-9312-C75557A9DA71</key>
+		<dict>
+			<key>xpos</key>
+			<integer>30</integer>
+			<key>ypos</key>
+			<integer>1220</integer>
 		</dict>
 		<key>8B3222AF-02D9-4F13-9F79-6C4A935FD76F</key>
 		<dict>
@@ -8460,6 +8547,13 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<key>ypos</key>
 			<integer>2820</integer>
 		</dict>
+		<key>F0ED23FA-8524-4769-B610-828611958D6A</key>
+		<dict>
+			<key>xpos</key>
+			<integer>90</integer>
+			<key>ypos</key>
+			<integer>1120</integer>
+		</dict>
 		<key>F23EB343-6D1D-4D17-9CCC-465756A5F513</key>
 		<dict>
 			<key>xpos</key>
@@ -8621,6 +8715,8 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 		<string>0</string>
 		<key>menu_display_search_online</key>
 		<string>1</string>
+		<key>menu_display_your_recent_tracks</key>
+		<string>1</string>
 		<key>menu_display_your_tops</key>
 		<string>1</string>
 		<key>settings_volume_max</key>
@@ -8639,7 +8735,7 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 		<string>♫</string>
 	</dict>
 	<key>version</key>
-	<string>7.0.1</string>
+	<string>7.1</string>
 	<key>webaddress</key>
 	<string>http://alfred-spotify-mini-player.com</string>
 </dict>

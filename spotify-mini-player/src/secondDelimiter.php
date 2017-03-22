@@ -1471,6 +1471,7 @@ function secondDelimiterYourTopTracks($w, $query, $settings, $db, $update_in_pro
         $noresult = true;
 
         $items = $topTracks->items;
+
         foreach ($items as $track) {
             // if ($noresult) {
             //     $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";

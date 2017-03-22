@@ -310,6 +310,8 @@ if (mb_strlen($query) < 2) {
                 firstDelimiterBrowse($w, $query, $settings, $db, $update_in_progress);
             } elseif ($kind == 'Your Tops') {
                 firstDelimiterYourTops($w, $query, $settings, $db, $update_in_progress);
+            } elseif ($kind == 'Recent Tracks') {
+                firstDelimiterYourRecentTracks($w, $query, $settings, $db, $update_in_progress);
             }
         }
         ////////////

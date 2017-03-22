@@ -82,7 +82,23 @@
 			<key>itemuid</key>
 			<string>9091F837-9889-4FAC-9599-7F33D0041138</string>
 		</dict>
-		<dict/>
+		<dict>
+			<key>actionconfig</key>
+			<dict>
+				<key>autoworkflowuid</key>
+				<true/>
+				<key>triggerid</key>
+				<string>com.vdesabou.miniplayer.recenttrack</string>
+			</dict>
+			<key>actionuid</key>
+			<string>remote.alfred.runworkflow</string>
+			<key>buttoniconid</key>
+			<string>E9C9194B-AF5F-4BAD-88AB-DB7AFED380BF</string>
+			<key>buttonlabel</key>
+			<string>Show Recent Tracks</string>
+			<key>itemuid</key>
+			<string>71DB6D1E-06F1-4796-9D75-380826512CD1</string>
+		</dict>
 		<dict>
 			<key>actionconfig</key>
 			<dict>

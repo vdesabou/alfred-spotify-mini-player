@@ -356,6 +356,10 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress)
             }
         }
     }
+
+    if(getenv('menu_display_your_recent_tracks') == 1) {
+        $w->result(null, '', 'Your Recent Tracks', 'Browse your recent tracks', './images/recent.png', 'no', null, 'Recent Tracks▹');
+    }
     if(getenv('menu_display_browse_by_playlist') == 1) {
         $w->result(null, '', 'Playlists', 'Browse by playlist'.' ('.$nb_playlists.' playlists)', './images/playlists.png', 'no', null, 'Playlist▹');
     }
@@ -763,6 +767,9 @@ function searchCategoriesFastAccess($w, $query, $settings, $db, $update_in_progr
     }
     if (strpos(strtolower('your top'), strtolower($query)) !== false) {
         $w->result(null, '', 'Your Tops', 'Browse your top artists and top tracks', './images/star.png', 'no', null, 'Your Tops▹');
+    }
+    if (strpos(strtolower('recent'), strtolower($query)) !== false) {
+        $w->result(null, '', 'Your Recent Tracks', 'Browse your recent tracks', './images/recent.png', 'no', null, 'Recent Tracks▹');
     }
     if (strpos(strtolower('lookup current artist online'), strtolower($query)) !== false) {
         $w->result(null, serialize(array(
