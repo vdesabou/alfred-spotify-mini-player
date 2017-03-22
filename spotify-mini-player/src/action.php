@@ -721,7 +721,6 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
         return;
     } elseif ($other_action == 'disable_now_playing_notifications') {
-        exec('./src/spotify_mini_player_notifications.ksh -d "'.$w->data().'" -a stop >> "'.$w->cache().'/action.log" 2>&1 & ');
         $ret = updateSetting($w, 'now_playing_notifications', 0);
         if ($ret == true) {
             displayNotificationWithArtwork($w, 'Now Playing notifications are now disabled', './images/disable_now_playing.png', 'Settings');
@@ -1071,10 +1070,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
         return;
     } elseif ($other_action == 'current') {
-        if ($now_playing_notifications == true ||
-                ($now_playing_notifications == false && $type == '')) {
-            displayNotificationForCurrentTrack($w);
-        }
+        displayNotificationForCurrentTrack($w);
         if (!$use_mopidy) {
             if ($type != 'playing') {
                 updateCurrentTrackIndexFromPlayQueue($w);

@@ -3157,6 +3157,7 @@ function displayNotificationForCurrentTrack($w)
     $use_mopidy = $settings->use_mopidy;
     $is_display_rating = $settings->is_display_rating;
     $use_artworks = $settings->use_artworks;
+    $now_playing_notifications = $settings->now_playing_notifications;
 
     if ($use_mopidy) {
         $retArr = array(getCurrentTrackInfoWithMopidy($w));
@@ -3173,7 +3174,15 @@ function displayNotificationForCurrentTrack($w)
 
     if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
         $results = explode('▹', $retArr[count($retArr) - 1]);
-        displayNotificationWithArtwork($w, '🔈 '.escapeQuery($results[0]).' by '.escapeQuery($results[1]).' in album '.escapeQuery($results[2]), getTrackOrAlbumArtwork($w, $results[4], true, false, false, $use_artworks), 'Now Playing '.floatToStars(($results[6] / 100) ? $is_display_rating : 0).' ('.beautifyTime($results[5] / 1000).')');
+        // download artwork for current track view
+        $album_artwork_path = getTrackOrAlbumArtwork($w, $results[4], true, false, false, $use_artworks);
+        $artist_uri = getArtistUriFromTrack($w, $results[4]);
+        if ($artist_uri != false) {
+            $artist_artwork_path = getArtistArtwork($w, $artist_uri, $results[1], true, false, false, $use_artworks);
+        }
+        if($now_playing_notifications) {
+            displayNotificationWithArtwork($w, '🔈 '.escapeQuery($results[0]).' by '.escapeQuery($results[1]).' in album '.escapeQuery($results[2]), $album_artwork_path, 'Now Playing '.floatToStars(($results[6] / 100) ? $is_display_rating : 0).' ('.beautifyTime($results[5] / 1000).')');
+        }
     }
 }
 

@@ -877,7 +877,9 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
             $w->result(null, '', '👤 '.escapeQuery($results[1]), 'Browse this artist', getArtistArtwork($w, $artist_uri, $results[1], false, false, false, $use_artworks), 'no', null, 'Artist▹'.$artist_uri.'∙'.escapeQuery($results[1]).'▹');
         } else {
             // artist is not in library
-            $w->result(null, '', '👤 '.escapeQuery($results[1]), 'Browse this artist', getArtistArtwork($w, '' /* empty artist_uri */, $results[1], false, false, false, $use_artworks), 'no', null, 'Artist▹'.$results[4].'∙'.escapeQuery($results[1]).'▹');
+            $artist_uri = getArtistUriFromTrack($w, $results[4]);
+
+            $w->result(null, '', '👤 '.escapeQuery($results[1]), 'Browse this artist', getArtistArtwork($w, $artist_uri /* empty artist_uri */, $results[1], false, false, false, $use_artworks), 'no', null, 'Artist▹'.$results[4].'∙'.escapeQuery($results[1]).'▹');
         }
 
         // use track uri here
