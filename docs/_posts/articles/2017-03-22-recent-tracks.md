@@ -33,7 +33,7 @@ onhomepage : true
 
 Notes: 
 
-* 1 track currently playing will not be visible in play history until it has completed. 
+* A track currently playing will not be visible in play history until it has completed. 
 
 * A track must be played for more than 30 seconds to be included in play history.
 
