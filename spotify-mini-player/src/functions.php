@@ -1955,7 +1955,7 @@ function getArtistUriFromTrack($w, $track_uri)
 
     $settings = getSettings($w);
     $country_code = $settings->country_code;
-    
+
     try {
         $tmp = explode(':', $track_uri);
 
@@ -5799,9 +5799,9 @@ function handleDbIssuePdoXml($dbhandle)
 {
     $errorInfo = $dbhandle->errorInfo();
     $w = new Workflows('com.vdesabou.spotify.mini.player');
-    $w->result(uniqid(), '', 'Database Error: '.$errorInfo[0].' '.$errorInfo[1].' '.$errorInfo[2], '', './images/warning.png', 'no', null, '');
-    $w->result(uniqid(), '', 'There is a problem with the library, try to re-create it.', 'Select Re-Create Library library below', './images/warning.png', 'no', null, '');
-    $w->result(uniqid(), serialize(array(
+    $w->result(null, '', 'Database Error: '.$errorInfo[0].' '.$errorInfo[1].' '.$errorInfo[2], '', './images/warning.png', 'no', null, '');
+    $w->result(null, '', 'There is a problem with the library, try to re-create it.', 'Select Re-Create Library library below', './images/warning.png', 'no', null, '');
+    $w->result(null, serialize(array(
                 '' /*track_uri*/,
                 '' /* album_uri */,
                 '' /* artist_uri */,
