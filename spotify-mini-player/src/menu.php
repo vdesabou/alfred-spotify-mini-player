@@ -262,7 +262,7 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress)
     } catch (PDOException $e) {
         handleDbIssuePdoXml($db);
 
-        return;
+        exit;
     }
 
     $all_tracks = $counter[0];

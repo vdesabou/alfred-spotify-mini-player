@@ -341,7 +341,7 @@ function secondDelimiterAlbums($w, $query, $settings, $db, $update_in_progress)
     } catch (PDOException $e) {
         handleDbIssuePdoXml($db);
 
-        return;
+        exit;
     }
 
     $album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, false, false, false, $use_artworks);
@@ -374,7 +374,7 @@ function secondDelimiterAlbums($w, $query, $settings, $db, $update_in_progress)
     } catch (PDOException $e) {
         handleDbIssuePdoXml($db);
 
-        return;
+        exit;
     }
 
     $w->result(null, '', '💿 '.$album_name, '☁︎ Query all tracks from this album online..', './images/online_album.png', 'no', null, 'Online▹'.$onetrack[0].'@'.$onetrack[1].'@'.$album_uri.'@'.$album_name.'▹');
@@ -668,7 +668,7 @@ function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progres
     } catch (PDOException $e) {
         handleDbIssuePdoXml($db);
 
-        return;
+        exit;
     }
 }
 
@@ -1351,7 +1351,7 @@ function secondDelimiterYourMusicAlbums($w, $query, $settings, $db, $update_in_p
     } catch (PDOException $e) {
         handleDbIssuePdoXml($db);
 
-        return;
+        exit;
     }
 
     // display all albums
@@ -1583,7 +1583,7 @@ function secondDelimiterYourMusicArtists($w, $query, $settings, $db, $update_in_
     } catch (PDOException $e) {
         handleDbIssuePdoXml($db);
 
-        return;
+        exit;
     }
 
     // display all artists
@@ -2230,7 +2230,7 @@ function secondDelimiterAdd($w, $query, $settings, $db, $update_in_progress)
     } catch (PDOException $e) {
         handleDbIssuePdoXml($db);
 
-        return;
+        exit;
     }
 
     while ($playlist = $stmt->fetch()) {
@@ -2397,7 +2397,7 @@ function secondDelimiterRemove($w, $query, $settings, $db, $update_in_progress)
     } catch (PDOException $e) {
         handleDbIssuePdoXml($db);
 
-        return;
+        exit;
     }
 
     if ($noresult) {

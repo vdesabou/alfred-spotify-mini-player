@@ -49,7 +49,7 @@ function firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress
     } catch (PDOException $e) {
         handleDbIssuePdoXml($db);
 
-        return;
+        exit;
     }
 
     $noresult = true;
@@ -242,7 +242,7 @@ function firstDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
     } catch (PDOException $e) {
         handleDbIssuePdoXml($db);
 
-        return;
+        exit;
     }
 
     // display all artists
@@ -354,7 +354,7 @@ function firstDelimiterAlbums($w, $query, $settings, $db, $update_in_progress)
     } catch (PDOException $e) {
         handleDbIssuePdoXml($db);
 
-        return;
+        exit;
     }
 
     // display all albums
