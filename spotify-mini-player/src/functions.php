@@ -1951,6 +1951,11 @@ function getRandomAlbum($w)
  */
 function getArtistUriFromTrack($w, $track_uri)
 {
+    // Read settings from JSON
+
+    $settings = getSettings($w);
+    $country_code = $settings->country_code;
+    
     try {
         $tmp = explode(':', $track_uri);
 
