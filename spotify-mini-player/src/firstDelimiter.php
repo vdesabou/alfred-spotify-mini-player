@@ -2575,7 +2575,7 @@ function firstDelimiterYourRecentTracks($w, $query, $settings, $db, $update_in_p
                         $track->uri /*track_uri*/,
                         '' /* album_uri */,
                         $artist->uri /* artist_uri */,
-                        $theplaylisturi /* playlist_uri */,
+                        '' /* playlist_uri */,
                         '' /* spotify_command */,
                         '' /* query */,
                         '' /* other_settings*/,
