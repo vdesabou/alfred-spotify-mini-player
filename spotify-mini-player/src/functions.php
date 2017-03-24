@@ -3296,7 +3296,9 @@ function downloadArtworks($w)
             $nb_artworks_total += intval($count[0]);
 
             if ($nb_artworks_total != 0) {
-                displayNotificationWithArtwork($w, 'Start downloading '.$nb_artworks_total.' artworks', './images/artworks.png', 'Artworks');
+                if(getenv('reduce_notifications') == 0) {
+                    displayNotificationWithArtwork($w, 'Start downloading '.$nb_artworks_total.' artworks', './images/artworks.png', 'Artworks');
+                }
 
                 // artists
                 $getArtists = 'select artist_uri,artist_name from artists where already_fetched=0';
@@ -3401,8 +3403,10 @@ function downloadArtworks($w)
     deleteTheFile($w->data().'/download_artworks_in_progress');
     logMsg('End of Download Artworks');
     if ($nb_artworks_total != 0) {
-        $elapsed_time = time() - $words[3];
-        displayNotificationWithArtwork($w, 'All artworks have been downloaded ('.$nb_artworks_total.' artworks) - took '.beautifyTime($elapsed_time, true), './images/artworks.png', 'Artworks');
+        if(getenv('reduce_notifications') == 0) {
+            $elapsed_time = time() - $words[3];
+            displayNotificationWithArtwork($w, 'All artworks have been downloaded ('.$nb_artworks_total.' artworks) - took '.beautifyTime($elapsed_time, true), './images/artworks.png', 'Artworks');
+        }
         if ($userid != 'vdesabou') {
             stathat_ez_count('AlfredSpotifyMiniPlayer', 'artworks', $nb_artworks_total);
         }
@@ -5774,7 +5778,9 @@ function refreshLibrary($w)
         $message = 'No change';
     }
 
-    displayNotificationWithArtwork($w, $message.' - took '.beautifyTime($elapsed_time, true), './images/update.png', 'Library refreshed');
+    if(getenv('reduce_notifications') == 0) {
+        displayNotificationWithArtwork($w, $message.' - took '.beautifyTime($elapsed_time, true), './images/update.png', 'Library refreshed');
+    }
 
     if (file_exists($w->data().'/library_old.db')) {
         deleteTheFile($w->data().'/library_old.db');
