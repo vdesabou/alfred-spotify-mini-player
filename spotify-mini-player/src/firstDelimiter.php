@@ -2028,6 +2028,8 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
             'ctrl' => 'Not Available',
         ), './images/search.png', 'yes', null, '');
 
+    $w->result(null, '', 'Change Spotify user (currently '.$userid.')', 'Change Spotify user', getUserArtwork($w, $userid), 'no', null, 'Settings▹Users▹');
+
     $w->result(null, '', 'Check for workflow update', 'Last checked: '.beautifyTime(time() - $last_check_update_time, true).' ago (note this is automatically done otherwise once per week)', './images/check_update.png', 'no', null, 'Check for update...'.'▹');
 
     $w->result(null, serialize(array(

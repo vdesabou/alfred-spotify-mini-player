@@ -73,6 +73,8 @@ function oAuthChecks($w, $query, $settings, $update_in_progress)
                         '' /* playlist_name */,
                         '', /* playlist_artwork_path */
                     )), 'Go to the website alfred-spotify-mini-player.com to see setup tutorial', 'This will open the Application page with your default browser', './images/website.png', 'yes', null, '');
+
+            listUsers($w);
         } elseif (mb_strlen($query) != 32) {
             $w->result(null, '', 'The Application Client ID does not seem valid!', 'The length is not 32. Make sure to copy the Client ID from https://developer.spotify.com/my-applications', './images/warning.png', 'no', null, '');
         } else {
@@ -138,6 +140,8 @@ function oAuthChecks($w, $query, $settings, $update_in_progress)
                         '' /* playlist_name */,
                         '', /* playlist_artwork_path */
                     )), 'Go to the website alfred-spotify-mini-player.com to see setup tutorial', 'This will open the Application page with your default browser', './images/website.png', 'yes', null, '');
+
+            listUsers($w);
         } elseif (mb_strlen($query) != 32) {
             $w->result(null, '', 'The Application Client Secret does not seem valid!', 'The length is not 32. Make sure to copy the Client Secret from https://developer.spotify.com/my-applications', './images/warning.png', 'no', null, '');
         } elseif ($query == $oauth_client_id) {
@@ -210,6 +214,9 @@ function oAuthChecks($w, $query, $settings, $update_in_progress)
                     '' /* playlist_name */,
                     '', /* playlist_artwork_path */
                 )), 'Go to the website alfred-spotify-mini-player.com to see setup tutorial', 'This will open the Application page with your default browser', './images/website.png', 'yes', null, '');
+
+        listUsers($w);
+        
         echo $w->tojson();
         exit;
     }

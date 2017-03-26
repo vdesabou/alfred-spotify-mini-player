@@ -4,6 +4,214 @@ require_once './src/workflows.php';
 require './vendor/autoload.php';
 
 /**
+ * getUserArtworkURL function.
+ *
+ * @param mixed $w
+ */
+function getUserArtworkURL($w, $user_id)
+{
+    $url = '';
+    try {
+        $api = getSpotifyWebAPI($w);
+        $user = $api->getUser(urlencode($user_id));
+    } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+        logMsg( 'Error(getUserArtwork): (exception '.print_r($e).')');
+
+        return $url;
+    }
+
+    if (isset($user->images)) {
+
+        if (isset($user->images[0]) && isset($user->images[0]->url)) {
+            return $user->images[0]->url;
+        }
+    }
+
+    return $url;
+}
+
+/**
+ * getUserArtwork function.
+ *
+ * @param mixed $w
+ */
+function getUserArtwork($w, $user_id, $forceFetch = false)
+{
+    $user_folder = $w->data().'/users/'.$user_id;
+    $currentArtwork = $user_folder.'/'.$user_id.'.png';
+
+    if(!$forceFetch) {
+        if(file_exists($currentArtwork)) {
+            return $currentArtwork;
+        }
+    }
+
+    $url = getUserArtworkURL($w, $user_id);
+
+    if($url != '') {
+        if (!file_exists($user_folder)) {
+            return './images/artists.png';
+        }
+
+        $fp = fopen($currentArtwork, 'w+');
+        $options = array(
+            CURLOPT_FILE => $fp,
+            CURLOPT_FOLLOWLOCATION => 1,
+            CURLOPT_TIMEOUT => 5,
+        );
+        $w->request("$url", $options);
+
+        return $currentArtwork;
+    } else {
+        copy('./images/artists.png', $currentArtwork);
+        return './images/artists.png';
+    }
+}
+
+/**
+ * getCurrentUser function.
+ *
+ * @param mixed $w
+ */
+function getCurrentUser($w)
+{
+    $current_user = $w->read('current_user.json');
+
+    if ($current_user == false) {
+        // This should only happen once
+
+        $settings = getSettings($w);
+        $userid = $settings->userid;
+
+        if($userid == false) {
+            return;
+        }
+        
+        $ret = $w->write($userid, 'current_user.json');
+
+        $user_folder = $w->data().'/users/'.$userid;
+        if (!file_exists($user_folder)) {
+                exec("mkdir -p '".$user_folder."'");
+
+                if (file_exists($w->data().'/library.db')) {
+                    rename($w->data().'/library.db', $user_folder.'/library.db');
+                    link($user_folder.'/library.db',$w->data().'/library.db');
+                }
+                if (file_exists($w->data().'/settings.json')) {
+                    rename($w->data().'/settings.json', $user_folder.'/settings.json');
+                    link($user_folder.'/settings.json',$w->data().'/settings.json');
+                }
+                if (file_exists($w->data().'/history.json')) {
+                    rename($w->data().'/history.json', $user_folder.'/history.json');
+                    link($user_folder.'/history.json',$w->data().'/history.json');
+                }
+        }
+
+        $current_user = $w->read('current_user.json');
+    }
+
+    return $current_user;
+}
+
+/**
+ * switchUser function.
+ *
+ * @param mixed $w
+ */
+function switchUser($w, $new_user)
+{
+    $new_user_folder = $w->data().'/users/'.$new_user;
+    
+    if (file_exists($w->data().'/library.db')) {
+        deleteTheFile($w->data().'/library.db');   
+    }
+    if (file_exists($new_user_folder.'/library.db')) {
+        link($new_user_folder.'/library.db',$w->data().'/library.db');
+    }
+
+    if (file_exists($w->data().'/settings.json')) {
+        deleteTheFile($w->data().'/settings.json');
+    }
+    if (file_exists($new_user_folder.'/settings.json')) {
+        link($new_user_folder.'/settings.json',$w->data().'/settings.json');
+    }
+
+    if (file_exists($w->data().'/history.json')) {
+        deleteTheFile($w->data().'/history.json');
+    }
+    if (file_exists($new_user_folder.'/history.json')) {
+        link($new_user_folder.'/history.json',$w->data().'/history.json');
+    }
+
+    $ret = $w->write($new_user, 'current_user.json');
+
+    displayNotificationWithArtwork($w, 'Current user is now ' . $new_user, getUserArtwork($w, $new_user, true), 'Switch User');
+
+    return;
+}
+
+/**
+ * newUser function.
+ *
+ * @param mixed $w
+ */
+function newUser($w)
+{   
+    if (file_exists($w->data().'/library.db')) {
+        deleteTheFile($w->data().'/library.db');
+    }
+    if (file_exists($w->data().'/settings.json')) {
+        deleteTheFile($w->data().'/settings.json');
+    }
+    if (file_exists($w->data().'/history.json')) {
+        deleteTheFile($w->data().'/history.json');
+    }
+
+    // just delete the file 
+    if (file_exists($w->data().'/current_user.json')) {
+        deleteTheFile($w->data().'/current_user.json');
+    }
+
+    exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('c_spot_mini')." $query\"'");
+
+    return;
+}
+
+/**
+ * listUsers function.
+ *
+ * @param mixed $w
+ */
+function listUsers($w)
+{ 
+    $users_folder = $w->data().'/users/';
+    $users = scandir($users_folder);
+    // loop on users
+    foreach ($users as $user) {
+        if ($user == '.' || $user == '..') {
+            continue;
+        }
+        $w->result(null, serialize(array(
+                    '' /*track_uri*/,
+                    '' /* album_uri */,
+                    '' /* artist_uri */,
+                    '' /* playlist_uri */,
+                    '' /* spotify_command */,
+                    '' /* query */,
+                    'SWITCH_USER▹'.$user /* other_settings*/,
+                    '' /* other_action */,
+                    '' /* artist_name */,
+                    '' /* track_name */,
+                    '' /* album_name */,
+                    '' /* track_artwork_path */,
+                    '' /* artist_artwork_path */,
+                    '' /* album_artwork_path */,
+                    '' /* playlist_name */,
+                    '', /* playlist_artwork_path */
+                )), 'Switch user to <'.$user.'>', 'Type enter to validate', './images/artists.png', 'yes', null, '');
+    }
+}
+/**
  * getSpotifyWebAPI function.
  *
  * @param mixed $w
@@ -4701,6 +4909,9 @@ function updateLibrary($w)
         }
     }
     deleteTheFile($w->data().'/update_library_in_progress');
+
+    // in case of new user, force creation of links and current_user.json
+    getCurrentUser($w);
 }
 
 /**

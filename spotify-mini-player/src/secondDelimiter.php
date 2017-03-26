@@ -1670,6 +1670,59 @@ function secondDelimiterSettings($w, $query, $settings, $db, $update_in_progress
                 $w->result(null, '', 'The Max Results value entered is not valid', 'Please fix it', './images/warning.png', 'no', null, '');
             }
         }
+    } elseif ($setting_kind == 'Users') {
+
+        $user_id = getCurrentUser($w);
+        $w->result(null, '', 'Current User is <' . $user_id . '>', 'Select one of the options below', './images/info.png', 'no', null, '');
+
+        $users_folder = $w->data().'/users/';
+
+        $users = scandir($users_folder);
+
+        // loop on users
+        foreach ($users as $user) {
+            if ($user == '.' || $user == '..') {
+                continue;
+            }
+            $w->result(null, serialize(array(
+                        '' /*track_uri*/,
+                        '' /* album_uri */,
+                        '' /* artist_uri */,
+                        '' /* playlist_uri */,
+                        '' /* spotify_command */,
+                        '' /* query */,
+                        'SWITCH_USER▹'.$user /* other_settings*/,
+                        '' /* other_action */,
+                        '' /* artist_name */,
+                        '' /* track_name */,
+                        '' /* album_name */,
+                        '' /* track_artwork_path */,
+                        '' /* artist_artwork_path */,
+                        '' /* album_artwork_path */,
+                        '' /* playlist_name */,
+                        '', /* playlist_artwork_path */
+                    )), 'Switch user to <'.$user.'>', 'Type enter to validate', getUserArtwork($w, $user), 'yes', null, '');
+        }
+
+        $w->result(null, serialize(array(
+                        '' /*track_uri*/,
+                        '' /* album_uri */,
+                        '' /* artist_uri */,
+                        '' /* playlist_uri */,
+                        '' /* spotify_command */,
+                        '' /* query */,
+                        'SWITCH_USER▹NEW_USER' /* other_settings*/,
+                        '' /* other_action */,
+                        '' /* artist_name */,
+                        '' /* track_name */,
+                        '' /* album_name */,
+                        '' /* track_artwork_path */,
+                        '' /* artist_artwork_path */,
+                        '' /* album_artwork_path */,
+                        '' /* playlist_name */,
+                        '', /* playlist_artwork_path */
+                    )), 'Add a new user', 'Type enter to validate', './images/artists.png', 'yes', null, '');
+
     } elseif ($setting_kind == 'RadioTracks') {
         if (mb_strlen($the_query) == 0) {
             $w->result(null, '', 'Enter the number of tracks to get when creating a radio Playlist:', 'Must be between 1 and 100', './images/settings.png', 'no', null, '');
