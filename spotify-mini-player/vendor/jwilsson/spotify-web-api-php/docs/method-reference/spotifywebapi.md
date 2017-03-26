@@ -30,7 +30,6 @@ Set up Request object.
     boolean SpotifyWebAPI\SpotifyWebAPI::addMyAlbums(string|array $albums)
 
 Add albums to the current user's Spotify library.<br>
-Requires a valid access token.<br>
 [https://developer.spotify.com/web-api/save-albums-user/](https://developer.spotify.com/web-api/save-albums-user/)
 
 #### Arguments
@@ -48,7 +47,6 @@ Requires a valid access token.<br>
     boolean SpotifyWebAPI\SpotifyWebAPI::addMyTracks(string|array $tracks)
 
 Add tracks to the current user's Spotify library.<br>
-Requires a valid access token.<br>
 [https://developer.spotify.com/web-api/save-tracks-user/](https://developer.spotify.com/web-api/save-tracks-user/)
 
 #### Arguments
@@ -66,7 +64,6 @@ Requires a valid access token.<br>
     boolean SpotifyWebAPI\SpotifyWebAPI::addUserPlaylistTracks(string $userId, string $playlistId, string|array $tracks, array|object $options)
 
 Add tracks to a user's playlist.<br>
-Requires a valid access token.<br>
 [https://developer.spotify.com/web-api/add-tracks-to-playlist/](https://developer.spotify.com/web-api/add-tracks-to-playlist/)
 
 #### Arguments
@@ -89,7 +86,6 @@ Requires a valid access token.<br>
     array|object SpotifyWebAPI\SpotifyWebAPI::createUserPlaylist(string $userId, array|object $options)
 
 Create a new playlist for a user.<br>
-Requires a valid access token.<br>
 [https://developer.spotify.com/web-api/create-playlist/](https://developer.spotify.com/web-api/create-playlist/)
 
 #### Arguments
@@ -111,7 +107,6 @@ Requires a valid access token.<br>
     array SpotifyWebAPI\SpotifyWebAPI::currentUserFollows(string $type, string|array $ids)
 
 Check to see if the current user is following one or more artists or other Spotify users.<br>
-Requires a valid access token.<br>
 [https://developer.spotify.com/web-api/check-current-user-follows/](https://developer.spotify.com/web-api/check-current-user-follows/)
 
 #### Arguments
@@ -130,7 +125,6 @@ Requires a valid access token.<br>
     boolean SpotifyWebAPI\SpotifyWebAPI::deleteMyAlbums(string|array $albums)
 
 Delete albums from current user's Spotify library.<br>
-Requires a valid access token.<br>
 [https://developer.spotify.com/web-api/remove-albums-user/](https://developer.spotify.com/web-api/remove-albums-user/)
 
 #### Arguments
@@ -148,7 +142,6 @@ Requires a valid access token.<br>
     boolean SpotifyWebAPI\SpotifyWebAPI::deleteMyTracks(string|array $tracks)
 
 Delete tracks from current user's Spotify library.<br>
-Requires a valid access token.<br>
 [https://developer.spotify.com/web-api/remove-tracks-user/](https://developer.spotify.com/web-api/remove-tracks-user/)
 
 #### Arguments
@@ -166,7 +159,6 @@ Requires a valid access token.<br>
     string|boolean SpotifyWebAPI\SpotifyWebAPI::deleteUserPlaylistTracks(string $userId, string $playlistId, array $tracks, string $snapshotId)
 
 Delete tracks from a playlist and retrieve a new snapshot ID.<br>
-Requires a valid access token.<br>
 [https://developer.spotify.com/web-api/remove-tracks-playlist/](https://developer.spotify.com/web-api/remove-tracks-playlist/)
 
 #### Arguments
@@ -190,7 +182,6 @@ Requires a valid access token.<br>
     boolean SpotifyWebAPI\SpotifyWebAPI::followArtistsOrUsers(string $type, string|array $ids)
 
 Add the current user as a follower of one or more artists or other Spotify users.<br>
-Requires a valid access token.<br>
 [https://developer.spotify.com/web-api/follow-artists-users/](https://developer.spotify.com/web-api/follow-artists-users/)
 
 #### Arguments
@@ -209,7 +200,6 @@ Requires a valid access token.<br>
     boolean SpotifyWebAPI\SpotifyWebAPI::followPlaylist(string $userId, string $playlistId, array|object $options)
 
 Add the current user as a follower of a playlist.<br>
-Requires a valid access token.<br>
 [https://developer.spotify.com/web-api/follow-playlist/](https://developer.spotify.com/web-api/follow-playlist/)
 
 #### Arguments
@@ -384,7 +374,6 @@ Get an artist's top tracks in a country.<br>
     array|object SpotifyWebAPI\SpotifyWebAPI::getAudioFeatures(array $trackIds)
 
 Get track audio features.<br>
-Requires a valid access token.<br>
 [https://developer.spotify.com/web-api/get-several-audio-features/](https://developer.spotify.com/web-api/get-several-audio-features/)
 
 #### Arguments
@@ -396,13 +385,29 @@ Requires a valid access token.<br>
 
 
 
+### getAudioAnalysis
+
+
+    object SpotifyWebAPI\SpotifyWebAPI::getAudioAnalysis(string $trackId)
+
+Get audio analysis for track.<br>
+[https://developer.spotify.com/web-api/get-audio-analysis/](https://developer.spotify.com/web-api/get-audio-analysis/)
+
+#### Arguments
+* `$trackId` **string** - ID of the track.
+
+
+#### Return values
+* **object** The track&#039;s audio analysis. Type is controlled by `SpotifyWebAPI::setReturnType()`.
+
+
+
 ### getCategoriesList
 
 
     array|object SpotifyWebAPI\SpotifyWebAPI::getCategoriesList(array|object $options)
 
 Get a list of categories used to tag items in Spotify (on, for example, the Spotify player’s "Browse" tab).<br>
-Requires a valid access token.<br>
 [https://developer.spotify.com/web-api/get-list-categories/](https://developer.spotify.com/web-api/get-list-categories/)
 
 #### Arguments
@@ -425,7 +430,6 @@ Requires a valid access token.<br>
     array|object SpotifyWebAPI\SpotifyWebAPI::getCategory(string $categoryId, array|object $options)
 
 Get a single category used to tag items in Spotify (on, for example, the Spotify player’s "Browse" tab).<br>
-Requires a valid access token.<br>
 [https://developer.spotify.com/web-api/get-category/](https://developer.spotify.com/web-api/get-category/)
 
 #### Arguments
@@ -447,7 +451,6 @@ Requires a valid access token.<br>
     array|object SpotifyWebAPI\SpotifyWebAPI::getCategoryPlaylists(string $categoryId, array|object $options)
 
 Get a list of Spotify playlists tagged with a particular category.<br>
-Requires a valid access token.<br>
 [https://developer.spotify.com/web-api/get-categorys-playlists/](https://developer.spotify.com/web-api/get-categorys-playlists/)
 
 #### Arguments
@@ -470,7 +473,6 @@ Requires a valid access token.<br>
     array|object SpotifyWebAPI\SpotifyWebAPI::getFeaturedPlaylists(array|object $options)
 
 Get Spotify featured playlists.<br>
-Requires a valid access token.<br>
 [https://developer.spotify.com/web-api/get-list-featured-playlists/](https://developer.spotify.com/web-api/get-list-featured-playlists/)
 
 #### Arguments
@@ -494,7 +496,6 @@ Requires a valid access token.<br>
     array|object SpotifyWebAPI\SpotifyWebAPI::getGenreSeeds()
 
 Get a list of possible seed genres.<br>
-Requires a valid access token.<br>
 [https://developer.spotify.com/web-api/get-recommendations/](https://developer.spotify.com/web-api/get-recommendations/)#available-genre-seeds
 
 
@@ -526,7 +527,6 @@ Get the latest full response from the Spotify API.
     array|object SpotifyWebAPI\SpotifyWebAPI::getNewReleases(array|object $options)
 
 Get new releases.<br>
-Requires a valid access token.<br>
 [https://developer.spotify.com/web-api/get-list-new-releases/](https://developer.spotify.com/web-api/get-list-new-releases/)
 
 #### Arguments
@@ -548,7 +548,6 @@ Requires a valid access token.<br>
     array|object SpotifyWebAPI\SpotifyWebAPI::getMyPlaylists(array|object $options)
 
 Get the current user’s playlists.<br>
-Requires a valid access token.<br>
 [https://developer.spotify.com/web-api/get-a-list-of-current-users-playlists/](https://developer.spotify.com/web-api/get-a-list-of-current-users-playlists/)
 
 #### Arguments
@@ -569,7 +568,6 @@ Requires a valid access token.<br>
     array|object SpotifyWebAPI\SpotifyWebAPI::getMySavedAlbums(array|object $options)
 
 Get the current user’s saved albums.<br>
-Requires a valid access token.<br>
 [https://developer.spotify.com/web-api/get-users-saved-albums/](https://developer.spotify.com/web-api/get-users-saved-albums/)
 
 #### Arguments
@@ -591,7 +589,6 @@ Requires a valid access token.<br>
     array|object SpotifyWebAPI\SpotifyWebAPI::getMySavedTracks(array|object $options)
 
 Get the current user’s saved tracks.<br>
-Requires a valid access token.<br>
 [https://developer.spotify.com/web-api/get-users-saved-tracks/](https://developer.spotify.com/web-api/get-users-saved-tracks/)
 
 #### Arguments
@@ -613,7 +610,6 @@ Requires a valid access token.<br>
     array|object SpotifyWebAPI\SpotifyWebAPI::getMyTop(string $type, $options)
 
 Get the current user's top tracks or artists.<br>
-Requires a valid access token.<br>
 [https://developer.spotify.com/web-api/get-users-top-artists-and-tracks/](https://developer.spotify.com/web-api/get-users-top-artists-and-tracks/)
 
 #### Arguments
@@ -632,7 +628,6 @@ Requires a valid access token.<br>
     array|object SpotifyWebAPI\SpotifyWebAPI::getRecommendations(array|object $options)
 
 Get recommendations based on artists, tracks, or genres.<br>
-Requires a valid access token.<br>
 [https://developer.spotify.com/web-api/get-recommendations/](https://developer.spotify.com/web-api/get-recommendations/)
 
 #### Arguments
@@ -756,7 +751,6 @@ Get a user.<br>
     array|object SpotifyWebAPI\SpotifyWebAPI::getUserFollowedArtists(array|object $options)
 
 Get the artists followed by the current user.<br>
-Requires a valid access token.<br>
 [https://developer.spotify.com/web-api/get-followed-artists/](https://developer.spotify.com/web-api/get-followed-artists/)
 
 #### Arguments
@@ -777,7 +771,6 @@ Requires a valid access token.<br>
     array|object SpotifyWebAPI\SpotifyWebAPI::getUserPlaylist(string $userId, string $playlistId, array|object $options)
 
 Get a user's specific playlist.<br>
-Requires a valid access token.<br>
 [https://developer.spotify.com/web-api/get-playlist/](https://developer.spotify.com/web-api/get-playlist/)
 
 #### Arguments
@@ -800,7 +793,6 @@ Requires a valid access token.<br>
     array|object SpotifyWebAPI\SpotifyWebAPI::getUserPlaylists(string $userId, array|object $options)
 
 Get a user's playlists.<br>
-Requires a valid access token.<br>
 [https://developer.spotify.com/web-api/get-list-users-playlists/](https://developer.spotify.com/web-api/get-list-users-playlists/)
 
 #### Arguments
@@ -822,7 +814,6 @@ Requires a valid access token.<br>
     array|object SpotifyWebAPI\SpotifyWebAPI::getUserPlaylistTracks(string $userId, string $playlistId, array|object $options)
 
 Get the tracks in a user's playlist.<br>
-Requires a valid access token.<br>
 [https://developer.spotify.com/web-api/get-playlists-tracks/](https://developer.spotify.com/web-api/get-playlists-tracks/)
 
 #### Arguments
@@ -847,7 +838,6 @@ Requires a valid access token.<br>
     array|object SpotifyWebAPI\SpotifyWebAPI::me()
 
 Get the currently authenticated user.<br>
-Requires a valid access token.<br>
 [https://developer.spotify.com/web-api/get-current-users-profile/](https://developer.spotify.com/web-api/get-current-users-profile/)
 
 
@@ -862,7 +852,6 @@ Requires a valid access token.<br>
     array SpotifyWebAPI\SpotifyWebAPI::myAlbumsContains(string|array $albums)
 
 Check if albums are saved in the current user's Spotify library.<br>
-Requires a valid access token.<br>
 [https://developer.spotify.com/web-api/check-users-saved-albums/](https://developer.spotify.com/web-api/check-users-saved-albums/)
 
 #### Arguments
@@ -880,7 +869,6 @@ Requires a valid access token.<br>
     array SpotifyWebAPI\SpotifyWebAPI::myTracksContains(string|array $tracks)
 
 Check if tracks are saved in the current user's Spotify library.<br>
-Requires a valid access token.<br>
 [https://developer.spotify.com/web-api/check-users-saved-tracks/](https://developer.spotify.com/web-api/check-users-saved-tracks/)
 
 #### Arguments
@@ -898,7 +886,6 @@ Requires a valid access token.<br>
     string|boolean SpotifyWebAPI\SpotifyWebAPI::reorderUserPlaylistTracks(string $userId, string $playlistId, array|object $options)
 
 Reorder the tracks in a user's playlist.<br>
-Requires a valid access token.<br>
 [https://developer.spotify.com/web-api/reorder-playlists-tracks/](https://developer.spotify.com/web-api/reorder-playlists-tracks/)
 
 #### Arguments
@@ -923,7 +910,6 @@ Requires a valid access token.<br>
     boolean SpotifyWebAPI\SpotifyWebAPI::replaceUserPlaylistTracks(string $userId, string $playlistId, string|array $tracks)
 
 Replace all tracks in a user's playlist with new ones.<br>
-Requires a valid access token.<br>
 [https://developer.spotify.com/web-api/replace-playlists-tracks/](https://developer.spotify.com/web-api/replace-playlists-tracks/)
 
 #### Arguments
@@ -1016,7 +1002,6 @@ Set the return type for the response body.
     boolean SpotifyWebAPI\SpotifyWebAPI::unfollowArtistsOrUsers(string $type, string|array $ids)
 
 Remove the current user as a follower of one or more artists or other Spotify users.<br>
-Requires a valid access token.<br>
 [https://developer.spotify.com/web-api/unfollow-artists-users/](https://developer.spotify.com/web-api/unfollow-artists-users/)
 
 #### Arguments
@@ -1035,7 +1020,6 @@ Requires a valid access token.<br>
     boolean SpotifyWebAPI\SpotifyWebAPI::unfollowPlaylist(string $userId, string $playlistId)
 
 Remove the current user as a follower of a playlist.<br>
-Requires a valid access token.<br>
 [https://developer.spotify.com/web-api/unfollow-playlist/](https://developer.spotify.com/web-api/unfollow-playlist/)
 
 #### Arguments
@@ -1054,7 +1038,6 @@ Requires a valid access token.<br>
     boolean SpotifyWebAPI\SpotifyWebAPI::updateUserPlaylist(string $userId, string $playlistId, array|object $options)
 
 Update the details of a user's playlist.<br>
-Requires a valid access token.<br>
 [https://developer.spotify.com/web-api/change-playlist-details/](https://developer.spotify.com/web-api/change-playlist-details/)
 
 #### Arguments
@@ -1077,7 +1060,6 @@ Requires a valid access token.<br>
     array SpotifyWebAPI\SpotifyWebAPI::userFollowsPlaylist(string $ownerId, string $playlistId, array|object $options)
 
 Check if a user is following a playlist.<br>
-Requires a valid access token.<br>
 [https://developer.spotify.com/web-api/check-user-following-playlist/](https://developer.spotify.com/web-api/check-user-following-playlist/)
 
 #### Arguments

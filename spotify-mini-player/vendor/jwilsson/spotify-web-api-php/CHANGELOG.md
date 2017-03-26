@@ -1,4 +1,7 @@
 # Changelog
+## 1.9.0 (2017-03-24)
+* Added the `SpotifyWebAPI::getMyRecentTracks()` method. ([4df889f](https://github.com/jwilsson/spotify-web-api-php/commit/4df889f2aa44c171d492f2784b45fd1155429b57))
+
 ## 1.8.0 (2017-03-05)
 * Added the `SpotifyWebAPI::getMyRecentTracks()` method. ([fd8ea0d](https://github.com/jwilsson/spotify-web-api-php/commit/fd8ea0d70d690bbb0072a917530eba2b8c02e2a1))
 

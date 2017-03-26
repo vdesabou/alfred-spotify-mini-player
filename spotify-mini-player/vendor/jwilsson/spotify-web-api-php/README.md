@@ -185,6 +185,13 @@ $features = $api->getAudioFeatures([
 print_r($features);
 ```
 
+Get track audio analysis
+```php
+$analysis = $api->getAudioAnalysis('0eGsygTp906u18L0Oimnem');
+
+print_r($analysis);
+```
+
 Get Spotify list of categories
 ```php
 $categories = $api->getCategoriesList([
@@ -240,6 +247,13 @@ Get the current user's playlists
 $playlists = $api->getMyPlaylists();
 
 print_r($playlists);
+```
+
+Get the current user’s recently played tracks
+```php
+$tracks = $api->getMyRecentTracks();
+
+print_r($tracks);
 ```
 
 Get the current user's saved albums

@@ -727,6 +727,33 @@ class SpotifyWebAPITest extends PHPUnit_Framework_TestCase
         $this->assertObjectHasAttribute('audio_features', $response);
     }
 
+    public function testGetAudioAnalysis()
+    {
+        $track = '0eGsygTp906u18L0Oimnem';
+
+        $headers = [
+            'Authorization' => 'Bearer ' . $this->accessToken,
+        ];
+
+        $return = [
+            'body' => get_fixture('audio-analysis'),
+        ];
+
+        $stub = $this->setupStub(
+            'GET',
+            '/v1/audio-analysis/' . $track,
+            [],
+            $headers,
+            $return
+        );
+
+        $api = new SpotifyWebAPI\SpotifyWebAPI($stub);
+        $api->setAccessToken($this->accessToken);
+        $response = $api->getAudioAnalysis($track);
+
+        $this->assertObjectHasAttribute('audio_analysis', $response);
+    }
+
     public function testGetCategoriesList()
     {
         $options = [
