@@ -739,9 +739,6 @@ function createDebugFile($w)
 
     if (!file_exists($w->data().'/users')) {
         $output = $output.'The directory '.$w->data()."/users is not present\n";
-    } else {
-        copy($w->data().'/users', '/tmp/spot_mini_debug/users');
-        copyDirectory($w->data().'/users', '/tmp/spot_mini_debug/users');
     }
 
     $output = $output.exec('uname -a');
