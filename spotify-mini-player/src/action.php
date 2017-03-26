@@ -47,7 +47,7 @@ $volume_percent = $settings->volume_percent;
 $use_artworks = $settings->use_artworks;
 $use_facebook = $settings->use_facebook;
 
-if ($other_action != 'reset_settings' && $other_action != 'spot_mini_debug') {
+if ($other_action != 'reset_settings' && $other_action != 'spot_mini_debug' && !startswith($other_settings,'SWITCH_USER▹')) {
     if ($oauth_client_id == '' || $oauth_client_secret == '' || $oauth_access_token == '') {
         if ($other_settings != '' && (startsWith($other_settings, 'Oauth_Client') === false && startsWith($other_settings, 'Open') === false)) {
             exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('c_spot_mini')." \"'");
@@ -691,7 +691,17 @@ if ($type == 'TRACK' && $other_settings == '' &&
         }
 
         return;
-    }
+    } elseif ($setting[0] == 'SWITCH_USER') {
+        
+        if($setting[1] == 'NEW_USER') {
+            newUser($w);
+        } else {
+            switchUser($w, $setting[1]);
+        }
+        
+
+        return;
+    } 
 } elseif ($other_action != '') {
     if ($other_action == 'disable_all_playlist') {
         $ret = updateSetting($w, 'all_playlists', 0);
