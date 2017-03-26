@@ -208,7 +208,7 @@ function listUsers($w)
                     '' /* album_artwork_path */,
                     '' /* playlist_name */,
                     '', /* playlist_artwork_path */
-                )), 'Switch user to <'.$user.'>', 'Type enter to validate', './images/artists.png', 'yes', null, '');
+                )), 'Switch user to '.$user.'', 'Type enter to validate', getUserArtwork($w, $user), 'yes', null, '');
     }
 }
 /**

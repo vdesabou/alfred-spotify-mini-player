@@ -1673,7 +1673,7 @@ function secondDelimiterSettings($w, $query, $settings, $db, $update_in_progress
     } elseif ($setting_kind == 'Users') {
 
         $user_id = getCurrentUser($w);
-        $w->result(null, '', 'Current User is <' . $user_id . '>', 'Select one of the options below', './images/info.png', 'no', null, '');
+        $w->result(null, '', 'Current user is ' . $user_id . '', 'Select one of the options below', './images/info.png', 'no', null, '');
 
         $users_folder = $w->data().'/users/';
 
@@ -1681,7 +1681,7 @@ function secondDelimiterSettings($w, $query, $settings, $db, $update_in_progress
 
         // loop on users
         foreach ($users as $user) {
-            if ($user == '.' || $user == '..') {
+            if ($user == '.' || $user == '..' || $user == $user_id) {
                 continue;
             }
             $w->result(null, serialize(array(
@@ -1701,7 +1701,7 @@ function secondDelimiterSettings($w, $query, $settings, $db, $update_in_progress
                         '' /* album_artwork_path */,
                         '' /* playlist_name */,
                         '', /* playlist_artwork_path */
-                    )), 'Switch user to <'.$user.'>', 'Type enter to validate', getUserArtwork($w, $user), 'yes', null, '');
+                    )), 'Switch user to '.$user.'', 'Type enter to validate', getUserArtwork($w, $user), 'yes', null, '');
         }
 
         $w->result(null, serialize(array(
