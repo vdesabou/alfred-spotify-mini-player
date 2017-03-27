@@ -17,6 +17,8 @@ comments: true
 onhomepage : true
 ---
 
+You can use multiple user libraries from the workflow (note that it does not change the account used in Spotify desktop application, you must logout/login by yourself).
+
 * You can switch user from the *Settings* menu:-
 
 <figure>
