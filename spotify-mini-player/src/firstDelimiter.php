@@ -777,6 +777,15 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
     if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
         $results = explode('▹', $retArr[count($retArr) - 1]);
         if ($results[1] == '' || $results[2] == '') {
+
+            $tmp = explode(':', $results[4]);
+
+            if (isset($tmp[1]) && $tmp[1] == 'ad') {
+                $w->result(null, 'help', 'Current track is an Ad', 'Wait for the end of the ad and try again', './images/warning.png', 'no', null, '');
+                echo $w->tojson();
+                exit;
+            }
+
             $w->result(null, 'help', 'Current track is not valid: Artist or Album name is missing', 'Fill missing information in Spotify and retry again', './images/warning.png', 'no', null, '');
             echo $w->tojson();
             exit;

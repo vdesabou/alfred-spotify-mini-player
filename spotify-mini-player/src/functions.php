@@ -2171,6 +2171,10 @@ function getArtistUriFromTrack($w, $track_uri)
     try {
         $tmp = explode(':', $track_uri);
 
+        if (isset($tmp[1]) && $tmp[1] == 'ad') {
+            return false;
+        }
+
         if (isset($tmp[1]) && $tmp[1] == 'local') {
             // local track, look it up online
             // spotify:local:The+D%c3%b8:On+My+Shoulders+-+Single:On+My+Shoulders:318
@@ -3391,6 +3395,13 @@ function displayNotificationForCurrentTrack($w)
 
     if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
         $results = explode('▹', $retArr[count($retArr) - 1]);
+
+        $tmp = explode(':', $results[4]);
+
+        if (isset($tmp[1]) && $tmp[1] == 'ad') {
+            return;
+        }
+
         // download artwork for current track view
         $album_artwork_path = getTrackOrAlbumArtwork($w, $results[4], true, false, false, $use_artworks);
         $artist_uri = getArtistUriFromTrack($w, $results[4]);
