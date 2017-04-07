@@ -36,6 +36,9 @@ Setting up the workflow is easy, you just need to follow these steps:-
 
 ## Create the library
 
+**Warning:** If you use a proxy, make sure to activate **Use macOS http proxy settings for scripts** in Advanced tab of Alfred Settings
+{: .notice-danger}
+
 * Invoke the workflow (with keyword `spot_mini`, or with an [hotkey]({{ site.url }}/articles/hotkeys) ) 
 
 * Follow the steps as below by copy/pasting the Client ID and Client Secret into Alfred window when asked:
