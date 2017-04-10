@@ -2,7 +2,7 @@
 layout: article
 permalink: /release-notes/
 title: "Release Notes"
-modified: 2017-01-17
+modified: 2017-04-10
 excerpt: "Release Notes."
 image:
   feature:
@@ -13,6 +13,18 @@ toc: false
 noindex: false
 ---
 
+<a name="v7.1"></a>
+7.1:
+
+* <span class="badge info">ADDED</span> Support multiple Spotify accounts[#171](https://github.com/vdesabou/alfred-spotify-mini-player/issues/171), see article [Multiple Users](http://alfred-spotify-mini-player.com/articles/multiple-users/)
+* <span class="badge info">ADDED</span> Add recently played tracks[#184](https://github.com/vdesabou/alfred-spotify-mini-player/issues/184), see article [Recent Tracks](http://alfred-spotify-mini-player.com/articles/recent-tracks/)
+* <span class="badge info">ADDED</span> Add a setting to put albums at the top of search lists[#173](https://github.com/vdesabou/alfred-spotify-mini-player/issues/173)
+* <span class="badge info">ADDED</span> Add external trigger for every command[#176](https://github.com/vdesabou/alfred-spotify-mini-player/issues/176)
+* <span class="badge info">ADDED</span> Add option to reduce number of notifications[#183](https://github.com/vdesabou/alfred-spotify-mini-player/issues/183)
+* <span class="badge success">IMPROVED</span> Album cover in ✧Current Track view[#181](https://github.com/vdesabou/alfred-spotify-mini-player/issues/181)
+* <span class="badge danger">FIXED</span> Volume Down hotkey[#175](https://github.com/vdesabou/alfred-spotify-mini-player/issues/175)
+
+
 <a name="v7.0"></a>
 7.0:
 
@@ -20,7 +32,7 @@ noindex: false
 * <span class="badge info">ADDED</span> Add Sharing feature using Mac OS X Sharing[#158](https://github.com/vdesabou/alfred-spotify-mini-player/issues/158), see article [Share](http://alfred-spotify-mini-player.com/articles/share/)
 * <span class="badge info">ADDED</span> Add new Web Search command for current track[#160](https://github.com/vdesabou/alfred-spotify-mini-player/issues/160), see article [Web Search](http://alfred-spotify-mini-player.com/articles/web-search/)
 * <span class="badge info">ADDED</span> Allow to hide some main menu entries[#163](https://github.com/vdesabou/alfred-spotify-mini-player/issues/163), see article [Customization](http://alfred-spotify-mini-player.com/articles/customization/)
-* <span class="badge info">ADDED</span> Add option to not use artworks[#150][Add option to not use artworks](https://github.com/vdesabou/alfred-spotify-mini-player/issues/150)
+* <span class="badge info">ADDED</span> Add option to not use artworks[#150](https://github.com/vdesabou/alfred-spotify-mini-player/issues/150)
 * <span class="badge info">ADDED</span> Set volume min & max as workflow variables[#153](https://github.com/vdesabou/alfred-spotify-mini-player/issues/153)
 * <span class="badge success">IMPROVED</span> Use ZIP instead of TGZ for debug files[#162](https://github.com/vdesabou/alfred-spotify-mini-player/issues/162)
 * <span class="badge danger">FIXED</span> Issue with chinese playlists[#156](https://github.com/vdesabou/alfred-spotify-mini-player/issues/156)
