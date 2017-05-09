@@ -15,8 +15,6 @@ function getUserArtworkURL($w, $user_id)
         $api = getSpotifyWebAPI($w);
         $user = $api->getUser(urlencode($user_id));
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        logMsg( 'Error(getUserArtwork): (exception '.print_r($e).')');
-
         return $url;
     }
 
@@ -188,7 +186,7 @@ function listUsers($w)
     $users = scandir($users_folder);
     // loop on users
     foreach ($users as $user) {
-        if ($user == '.' || $user == '..') {
+        if ($user == '.' || $user == '..' || $user == '.DS_Store') {
             continue;
         }
         $w->result(null, serialize(array(
