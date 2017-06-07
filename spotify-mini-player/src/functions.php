@@ -2201,8 +2201,8 @@ function getArtistUriFromTrack($w, $track_uri)
 
         return $artist->uri;
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        logMsg( 'Error(getArtistUriFromTrack): (exception '.print_r($e).')');
-        handleSpotifyWebAPIException($w, $e);
+        //logMsg( 'Error(getArtistUriFromTrack): (exception '.print_r($e).')');
+        //handleSpotifyWebAPIException($w, $e);
     }
 
     return false;
