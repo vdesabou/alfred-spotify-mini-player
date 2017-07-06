@@ -1,8 +1,3 @@
----
-layout: default
-title: Method Reference - Request
----
-
 ## Constants
 
 * **ACCOUNT_URL**
@@ -22,7 +17,7 @@ Make a request to the "account" endpoint.
 #### Arguments
 * `$method` **string** - The HTTP method to use.
 * `$uri` **string** - The URI to request.
-* `$parameters` **array** - Optional. Query parameters.
+* `$parameters` **array** - Optional. Query string parameters or HTTP body, depending on $method.
 * `$headers` **array** - Optional. HTTP headers.
 
 
@@ -33,6 +28,8 @@ Make a request to the "account" endpoint.
     * int status HTTP status code.
     * string url The requested URL.
 
+
+---
 
 
 ### api
@@ -45,7 +42,7 @@ Make a request to the "api" endpoint.
 #### Arguments
 * `$method` **string** - The HTTP method to use.
 * `$uri` **string** - The URI to request.
-* `$parameters` **array** - Optional. Query parameters.
+* `$parameters` **array** - Optional. Query string parameters or HTTP body, depending on $method.
 * `$headers` **array** - Optional. HTTP headers.
 
 
@@ -56,6 +53,8 @@ Make a request to the "api" endpoint.
     * int status HTTP status code.
     * string url The requested URL.
 
+
+---
 
 
 ### getLastResponse
@@ -74,6 +73,8 @@ Get the latest full response from the Spotify API.
     * string url The requested URL.
 
 
+---
+
 
 ### getReturnAssoc
 
@@ -88,6 +89,8 @@ Use `Request::getReturnType()` instead.
 * **boolean** Whether the body is returned as an associative array or an stdClass.
 
 
+---
+
 
 ### getReturnType
 
@@ -101,6 +104,8 @@ Get a value indicating the response body type.
 * **string** A value indicating if the response body is an object or associative array.
 
 
+---
+
 
 ### send
 
@@ -113,7 +118,7 @@ You'll probably want to use one of the convenience methods instead.
 #### Arguments
 * `$method` **string** - The HTTP method to use.
 * `$url` **string** - The URL to request.
-* `$parameters` **array** - Optional. Query parameters.
+* `$parameters` **array** - Optional. Query string parameters or HTTP body, depending on $method.
 * `$headers` **array** - Optional. HTTP headers.
 
 
@@ -124,6 +129,8 @@ You'll probably want to use one of the convenience methods instead.
     * int status HTTP status code.
     * string url The requested URL.
 
+
+---
 
 
 ### setReturnAssoc
@@ -142,6 +149,8 @@ Use `Request::setReturnType()` instead.
 * **void** 
 
 
+---
+
 
 ### setReturnType
 
@@ -157,4 +166,6 @@ Set the return type for the response body.
 #### Return values
 * **void** 
 
+
+---
 

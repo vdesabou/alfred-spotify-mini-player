@@ -1,5 +1,0 @@
-name: "spotify-web-api-php"
-description: "A PHP implementation of Spotify's Web API."
-
-baseurl: /spotify-web-api-php
-encoding: utf-8

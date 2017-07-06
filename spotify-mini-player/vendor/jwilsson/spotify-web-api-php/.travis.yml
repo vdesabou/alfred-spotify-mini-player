@@ -9,6 +9,7 @@ php:
   - hhvm
 
 sudo: false
+dist: trusty
 
 matrix:
   fast_finish: true

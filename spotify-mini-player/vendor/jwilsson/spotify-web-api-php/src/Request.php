@@ -75,7 +75,7 @@ class Request
      *
      * @param string $method The HTTP method to use.
      * @param string $uri The URI to request.
-     * @param array $parameters Optional. Query parameters.
+     * @param array $parameters Optional. Query string parameters or HTTP body, depending on $method.
      * @param array $headers Optional. HTTP headers.
      *
      * @return array Response data.
@@ -94,7 +94,7 @@ class Request
      *
      * @param string $method The HTTP method to use.
      * @param string $uri The URI to request.
-     * @param array $parameters Optional. Query parameters.
+     * @param array $parameters Optional. Query string parameters or HTTP body, depending on $method.
      * @param array $headers Optional. HTTP headers.
      *
      * @return array Response data.
@@ -155,7 +155,7 @@ class Request
      *
      * @param string $method The HTTP method to use.
      * @param string $url The URL to request.
-     * @param array $parameters Optional. Query parameters.
+     * @param array $parameters Optional. Query string parameters or HTTP body, depending on $method.
      * @param array $headers Optional. HTTP headers.
      *
      * @throws SpotifyWebAPIException

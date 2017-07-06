@@ -1,8 +1,3 @@
----
-layout: default
-title: Method Reference - Session
----
-
 ## Constants
 
 
@@ -24,6 +19,8 @@ Set up client credentials.
 
 
 
+---
+
 
 ### getAuthorizeUrl
 
@@ -44,6 +41,8 @@ Get the authorization URL.
 * **string** The authorization URL.
 
 
+---
+
 
 ### getAccessToken
 
@@ -56,6 +55,8 @@ Get the access token.
 #### Return values
 * **string** The access token.
 
+
+---
 
 
 ### getClientId
@@ -70,6 +71,8 @@ Get the client ID.
 * **string** The client ID.
 
 
+---
+
 
 ### getClientSecret
 
@@ -82,6 +85,8 @@ Get the client secret.
 #### Return values
 * **string** The client secret.
 
+
+---
 
 
 ### getTokenExpiration
@@ -96,6 +101,8 @@ Get the access token expiration time.
 * **integer** A Unix timestamp indicating the token expiration time.
 
 
+---
+
 
 ### getRedirectUri
 
@@ -109,6 +116,8 @@ Get the client's redirect URI.
 * **string** The redirect URI.
 
 
+---
+
 
 ### getRefreshToken
 
@@ -121,6 +130,8 @@ Get the refresh token.
 #### Return values
 * **string** The refresh token.
 
+
+---
 
 
 ### refreshAccessToken
@@ -138,6 +149,8 @@ Refresh an access token.
 * **boolean** Whether the access token was successfully refreshed.
 
 
+---
+
 
 ### requestCredentialsToken
 
@@ -153,6 +166,8 @@ Request an access token using the Client Credentials Flow.
 #### Return values
 * **boolean** True when an access token was successfully granted, false otherwise.
 
+
+---
 
 
 ### requestAccessToken
@@ -170,6 +185,8 @@ Request an access token given an authorization code.
 * **boolean** True when the access token was successfully granted, false otherwise.
 
 
+---
+
 
 ### setClientId
 
@@ -185,6 +202,8 @@ Set the client ID.
 #### Return values
 * **void** 
 
+
+---
 
 
 ### setClientSecret
@@ -202,6 +221,8 @@ Set the client secret.
 * **void** 
 
 
+---
+
 
 ### setRedirectUri
 
@@ -217,4 +238,6 @@ Set the client's redirect URI.
 #### Return values
 * **void** 
 
+
+---
 

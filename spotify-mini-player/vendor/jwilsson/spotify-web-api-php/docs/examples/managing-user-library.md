@@ -1,68 +1,56 @@
----
-layout: default
-title: Managing a user's library
----
+# Managing a User's Library
 
-There are lots of operations involving a user's library that can be performed.
-First off, you'll need an access token with the correct scope.
-In this example, we'll request all available library scopes, in a real world application you'll probably won't need all of them so just request the ones you need.
+There are lots of operations involving a user's library that can be performed. Remember to request the correct [scopes](working-with-scopes.md) beforehand.
 
-    <?php
-    require 'vendor/autoload.php';
+## Listing the tracks in a user's library
 
-    $session = new SpotifyWebAPI\Session('SPOTIFY_CLIENT_ID', 'SPOTIFY_CLIENT_SECRET', 'SPOTIFY_REDIRECT_URI');
-    $api = new SpotifyWebAPI\SpotifyWebAPI();
+```php
+$tracks = $api->getMySavedTracks([
+    'limit' => 5,
+]);
 
-    if (isset($_GET['code'])) {
-        $session->requestAccessToken($_GET['code']);
-        $api->setAccessToken($session->getAccessToken());
-    } else {
-        header('Location: ' . $session->getAuthorizeUrl(array(
-            'scope' => array(
-                'user-library-modify',
-                'user-library-read',
-            )
-        )));
-        die();
-    }
+foreach ($tracks->items as $track) {
+    $track = $track->track;
 
-### Listing the tracks in a user's library
+    echo '<a href="' . $track->external_urls->spotify . '">' . $track->name . '</a> <br>';
+}
+```
 
-    <?php
-    $tracks = $api->getMySavedTracks('USER_ID', array(
-        'limit' => 5
-    ));
+It's also possible to list the albums in a user's library using `getMySavedAlbums`.
 
-    foreach ($tracks->items as $track) {
-        $track = $track->track;
+## Adding tracks to a user's library
 
-        echo '<a href="' . $track->external_urls->spotify . '">' . $track->name . '</a> <br>';
-    }
+```php
+$api->addMyTracks([
+    'TRACK_ID',
+    'TRACK_ID',
+]);
+```
 
-### Adding tracks to a user's library
+It's also possible to add a whole album to a user's library using `addMyAlbums`.
 
-    <?php
-    $api->addMyTracks(array(
-        '1oR3KrPIp4CbagPa3PhtPp',
-        '6lPb7Eoon6QPbscWbMsk6a'
-    ));
+## Deleting tracks from a user's library
 
-### Deleting tracks from a user's library
+```php
+$api->deleteMyTracks([
+    'TRACK_ID',
+    'TRACK_ID',
+]);
+```
 
-    <?php
-    $api->deleteMyTracks(array(
-        '1oR3KrPIp4CbagPa3PhtPp',
-        '6lPb7Eoon6QPbscWbMsk6a'
-    ));
+It's also possible to delete a whole album from a user's library using `deleteMyAlbums`.
 
-### Checking if tracks are present in a user's library
+## Checking if tracks are present in a user's library
 
-    <?php
-    $contains = $api->myTracksContains(array(
-        '0eGsygTp906u18L0Oimnem',
-        '1lDWb6b6ieDQ2xT7ewTC3G'
-    ));
+```php
+$contains = $api->myTracksContains([
+    'TRACK_ID',
+    'TRACK_ID',
+]);
 
-    var_dump($contains);
+var_dump($contains);
+```
 
-Please see the [method reference]({{ site.baseurl }}/method-reference/spotifywebapi.html) for more available options for each method.
+It's also possible to check if a whole album is present in a user's library using `myAlbumsContains`.
+
+Please see the [method reference](/docs/method-reference/SpotifyWebAPI.md) for more available options for each method.

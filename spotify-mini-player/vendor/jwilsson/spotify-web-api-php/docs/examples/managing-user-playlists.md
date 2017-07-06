@@ -1,111 +1,93 @@
----
-layout: default
-title: Managing a user's playlists
----
+# Managing a User's Playlists
 
-There are lots of operations involving user's playlists that can be performed.
-First off, you'll need an access token with the correct scope.
-In this example, we'll request all available playlist scopes, in a real world application you'll probably won't need all of them so just request the ones you need.
+There are lots of operations involving user's playlists that can be performed. Remember to request the correct [scopes](working-with-scopes.md) beforehand.
 
-    <?php
-    require 'vendor/autoload.php';
+## Listing a user's playlists
 
-    $session = new SpotifyWebAPI\Session('SPOTIFY_CLIENT_ID', 'SPOTIFY_CLIENT_SECRET', 'SPOTIFY_REDIRECT_URI');
-    $api = new SpotifyWebAPI\SpotifyWebAPI();
+```php
+$playlists = $api->getUserPlaylists('USER_ID', [
+    'limit' => 5
+]);
 
-    if (isset($_GET['code'])) {
-        $session->requestAccessToken($_GET['code']);
-        $api->setAccessToken($session->getAccessToken());
-    } else {
-        header('Location: ' . $session->getAuthorizeUrl(array(
-            'scope' => array(
-                'playlist-modify-private',
-                'playlist-modify-public',
-                'playlist-read-private',
-            )
-        )));
-        die();
-    }
+foreach ($playlists->items as $playlist) {
+    echo '<a href="' . $playlist->external_urls->spotify . '">' . $playlist->name . '</a> <br>';
+}
+```
 
-### Listing a user's playlists
+## Getting info about a specific playlist
 
-    <?php
-    $playlists = $api->getUserPlaylists('USER_ID', array(
-        'limit' => 5
-    ));
+```php
+$playlist = $api->getUserPlaylist('USER_ID', 'PLAYLIST_ID');
 
-    foreach ($playlists->items as $playlist) {
-        echo '<a href="' . $playlist->external_urls->spotify . '">' . $playlist->name . '</a> <br>';
-    }
+echo $playlist->name;
+```
 
-### Getting info about a specific playlist
+## Getting all tracks in a playlist
 
-    <?php
-    $playlist = $api->getUserPlaylist('USER_ID', 'PLAYLIST_ID');
+```php
+$playlistTracks = $api->getUserPlaylistTracks('USER_ID', 'PLAYLIST_ID');
 
-    echo $playlist->name;
+foreach ($playlistTracks->items as $track) {
+    $track = $track->track;
 
-### Getting all tracks in a playlist
+    echo '<a href="' . $track->external_urls->spotify . '">' . $track->name . '</a> <br>';
+}
+```
 
-    <?php
-    $playlistTracks = $api->getUserPlaylistTracks('USER_ID', 'PLAYLIST_ID');
+## Creating a new playlist
 
-    foreach ($playlistTracks->items as $track) {
-        $track = $track->track;
+```php
+$api->createUserPlaylist('USER_ID', [
+    'name' => 'My shiny playlist'
+]);
+```
 
-        echo '<a href="' . $track->external_urls->spotify . '">' . $track->name . '</a> <br>';
-    }
+## Updating the details of a user's playlist
 
-### Creating a new playlist
+```php
+$api->updateUserPlaylist('USER_ID', 'PLAYLIST_ID', [
+    'name' => 'New name'
+]);
+```
 
-    <?php
-    $api->createUserPlaylist('USER_ID', array(
-        'name' => 'My shiny playlist'
-    ));
+## Adding tracks to a user's playlist
 
+```php
+$api->addUserPlaylistTracks('USER_ID', 'PLAYLIST_ID', [
+    'TRACK_ID',
+    'TRACK_ID'
+]);
+```
 
-### Updating the details of a user's playlist
+## Delete tracks from a user's playlist
 
-    <?php
-    $api->updateUserPlaylist('USER_ID', 'PLAYLIST_ID', array(
-        'name' => 'New name'
-    ));
+```php
+$tracks = [
+    ['id' => 'TRACK_ID'],
+    ['id' => 'TRACK_ID'],
+];
 
+$api->deleteUserPlaylistTracks('USER_ID', 'PLAYLIST_ID', $tracks, 'SNAPSHOT_ID');
+```
 
-### Adding tracks to a user's playlist
+## Replacing all tracks in a user's playlist with new ones
 
-    <?php
-    $api->addUserPlaylistTracks('USER_ID', 'PLAYLIST_ID', array(
-        '1oR3KrPIp4CbagPa3PhtPp',
-        '6lPb7Eoon6QPbscWbMsk6a'
-    ));
+```php
+$api->replaceUserPlaylistTracks('USER_ID', 'PLAYLIST_ID', [
+    'TRACK_ID',
+    'TRACK_ID'
+]);
+```
 
-### Delete tracks from a user's playlist
+## Reorder the tracks in a user's playlist
 
-    <?php
-    $tracks = array(
-        array('id' => '1oR3KrPIp4CbagPa3PhtPp'),
-        array('id' => '6lPb7Eoon6QPbscWbMsk6a')
-    );
+```php
+$api->reorderUserPlaylistTracks('USER_ID', 'PLAYLIST_ID', [
+    'range_start' => 1,
+    'range_length' => 5,
+    'insert_before' => 10,
+    'snapshot_id' => 'SNAPSHOT_ID'
+]);
+```
 
-    $api->deleteUserPlaylistTracks('USER_ID', 'PLAYLIST_ID', $tracks, 'SNAPSHOT_ID');
-
-### Replacing all tracks in a user's playlist with new ones
-
-    <?php
-    $api->replaceUserPlaylistTracks('USER_ID', 'PLAYLIST_ID', array(
-        '0eGsygTp906u18L0Oimnem',
-        '1lDWb6b6ieDQ2xT7ewTC3G'
-    ));
-
-### Reorder the tracks in a user's playlist
-
-    <?php
-    $api->reorderUserPlaylistTracks('USER_ID', 'PLAYLIST_ID', array(
-        'range_start' => 1,
-        'range_length' => 5,
-        'insert_before' => 10,
-        'snapshot_id' => 'SNAPSHOT_ID'
-    ));
-
-Please see the [method reference]({{ site.baseurl }}/method-reference/spotifywebapi.html) for more available options for each method.
+Please see the [method reference](/docs/method-reference/SpotifyWebAPI.md) for more available options for each method.
