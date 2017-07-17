@@ -2,7 +2,7 @@
 layout: article
 title: "Customization"
 date: 2017-01-17T11:39:03-04:00
-modified:
+modified: 2017-07-17
 categories: articles
 excerpt: "You can customize the workflow by changing settings or variables..."
 image:
@@ -59,3 +59,9 @@ But you can also use [Alfred variables](https://www.alfredapp.com/help/workflows
 	<figcaption>Change default sharing texts.</figcaption>
 </figure>
 
+* You can decide to append to the playlist when adding track(s), instead of putting tracks at beginning, by modifying variable `append_to_playlist_when_adding_tracks`:-
+
+<figure>
+	<img src="{{ site.url }}/images/customization7.jpg">
+	<figcaption>Append to the playlist when adding track(s). 1 for appending, 0 otherwise.</figcaption>
+</figure>
