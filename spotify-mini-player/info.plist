@@ -8639,6 +8639,8 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 	</dict>
 	<key>variables</key>
 	<dict>
+		<key>append_to_playlist_when_adding_tracks</key>
+		<string>1</string>
 		<key>c_add_current_track_to</key>
 		<string>add_current_track_to</string>
 		<key>c_add_current_track_to_alfred_playlist_or_your_music</key>

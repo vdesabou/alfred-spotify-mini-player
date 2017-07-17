@@ -1971,9 +1971,14 @@ function addTracksToPlaylist($w, $tracks, $playlist_uri, $playlist_name, $allow_
                 if (count($output)) {
                     // refresh api
                     $api = getSpotifyWebAPI($w, $api);
-                    $api->addUserPlaylistTracks(urlencode($userid), $tmp[4], $output, array(
-                            'position' => 0,
-                        ));
+
+                    if(getenv('append_to_playlist_when_adding_tracks') == 0) {
+                        $api->addUserPlaylistTracks(urlencode($userid), $tmp[4], $output, array(
+                                'position' => 0,
+                            ));
+                    } else {
+                        $api->addUserPlaylistTracks(urlencode($userid), $tmp[4], $output);
+                    }
                     ++$i;
                 }
                 /*
