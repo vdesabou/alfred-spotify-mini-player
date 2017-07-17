@@ -16,7 +16,7 @@ noindex: false
 <a name="v7.2"></a>
 7.2:
 
-<span class="badge info">ADDED</span> Add option to append to a playlist when adding tracks [#190](https://github.com/vdesabou/alfred-spotify-mini-player/issues/190), see article [Customization](http://alfred-spotify-mini-player.com/articles/customization/)
+* <span class="badge info">ADDED</span> Add option to append to a playlist when adding tracks [#190](https://github.com/vdesabou/alfred-spotify-mini-player/issues/190), see article [Customization](http://alfred-spotify-mini-player.com/articles/customization/)
 
 <a name="v7.1"></a>
 7.1:
