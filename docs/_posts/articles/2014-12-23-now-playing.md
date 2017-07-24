@@ -49,3 +49,11 @@ You get in the notification:-
 	<img src="{{ site.url }}/images/now-playing4.jpg">
 	<figcaption>Disable all notifications in OS X preferences.</figcaption>
 </figure>
+
+
+* Also, as explained in [Customization]( {{ site.url }}/articles/customization), you can reduce the number of notifications, by modifying variable `reduce_notifications`:-
+
+<figure>
+	<img src="{{ site.url }}/images/customization8.jpg">
+	<figcaption>Reduce notifications. 1 for reducing, 0 otherwise.</figcaption>
+</figure>

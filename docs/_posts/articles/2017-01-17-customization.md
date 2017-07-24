@@ -65,3 +65,10 @@ But you can also use [Alfred variables](https://www.alfredapp.com/help/workflows
 	<img src="{{ site.url }}/images/customization7.jpg">
 	<figcaption>Append to the playlist when adding track(s). 1 for appending, 0 otherwise.</figcaption>
 </figure>
+
+* You can reduce the number of notifications, by modifying variable `reduce_notifications`:-
+
+<figure>
+	<img src="{{ site.url }}/images/customization8.jpg">
+	<figcaption>Reduce notifications. 1 for reducing, 0 otherwise.</figcaption>
+</figure>
