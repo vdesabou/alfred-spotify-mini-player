@@ -1064,8 +1064,8 @@ if ($type == 'TRACK' && $other_settings == '' &&
         return;
     } elseif ($other_action == 'Oauth_Login') {
         // check PHP version
-            $version = explode('.', phpversion());
-        if ($version[1] < 4) {
+        $version = explode('.', phpversion());
+        if ($version[0] < 5 && $version[1] < 4) {
             displayNotificationWithArtwork($w, 'PHP 5.4.0 or later is required for authentication', './images/warning.png', 'Error!');
             exec('open http://alfred-spotify-mini-player.com/known-issues/#php_requirement');
 
