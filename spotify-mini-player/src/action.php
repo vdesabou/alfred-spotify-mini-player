@@ -46,6 +46,7 @@ $use_mopidy = $settings->use_mopidy;
 $volume_percent = $settings->volume_percent;
 $use_artworks = $settings->use_artworks;
 $use_facebook = $settings->use_facebook;
+$always_display_lyrics_in_browser = $settings->always_display_lyrics_in_browser;
 
 if ($other_action != 'reset_settings' && $other_action != 'spot_mini_debug' && !startswith($other_settings,'SWITCH_USER▹')) {
     if ($oauth_client_id == '' || $oauth_client_secret == '' || $oauth_access_token == '') {
@@ -830,6 +831,24 @@ if ($type == 'TRACK' && $other_settings == '' &&
         $ret = updateSetting($w, 'use_growl', 0);
         if ($ret == true) {
             displayNotificationWithArtwork($w, 'Growl is now disabled', './images/disable_use_growl.png', 'Settings');
+        } else {
+            displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
+        }
+
+        return;
+    }elseif ($other_action == 'enable_always_display_lyrics_in_browser') {
+        $ret = updateSetting($w, 'always_display_lyrics_in_browser', 1);
+        if ($ret == true) {
+            displayNotificationWithArtwork($w, 'Lyrics will be displayed in browser', './images/lyrics.png', 'Settings');
+        } else {
+            displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
+        }
+
+        return;
+    } elseif ($other_action == 'disable_always_display_lyrics_in_browser') {
+        $ret = updateSetting($w, 'always_display_lyrics_in_browser', 0);
+        if ($ret == true) {
+            displayNotificationWithArtwork($w, 'Lyrics will be displayed in Alfred', './images/lyrics.png', 'Settings');
         } else {
             displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
         }

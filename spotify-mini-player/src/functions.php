@@ -3439,6 +3439,7 @@ function displayLyricsForCurrentTrack($w)
     $settings = getSettings($w);
 
     $use_mopidy = $settings->use_mopidy;
+    $always_display_lyrics_in_browser = $settings->always_display_lyrics_in_browser;
 
     if ($use_mopidy) {
         $retArr = array(getCurrentTrackInfoWithMopidy($w));
@@ -3455,7 +3456,20 @@ function displayLyricsForCurrentTrack($w)
 
     if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
         $results = explode('▹', $retArr[count($retArr) - 1]);
-        exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('c_spot_mini').' Lyrics▹'.$results[4].'∙'.escapeQuery($results[1]).'∙'.escapeQuery($results[0])."\"'");
+
+        if($always_display_lyrics_in_browser == false) {
+            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('c_spot_mini').' Lyrics▹'.$results[4].'∙'.escapeQuery($results[1]).'∙'.escapeQuery($results[0])."\"'");
+        } else {
+            // display lyrics in default browser
+            list($lyrics_url, $lyrics) = getLyrics($w, escapeQuery($results[1]), escapeQuery($results[0]));
+
+            if ($lyrics_url != false) {
+                exec('open '.$lyrics_url); 
+            } else {
+                displayNotificationWithArtwork($w, 'No lyrics found!', './images/warning.png', 'Error!');
+            }
+        }
+
     } else {
         displayNotificationWithArtwork($w, 'There is not track currently playing', './images/warning.png', 'Error!');
     }
@@ -6669,6 +6683,7 @@ function getSettings($w)
             'use_facebook' => 0,
             'theme_color' => 'green',
             'search_order' => 'playlist▹artist▹track▹album',
+            'always_display_lyrics_in_browser' => 0,
         );
 
         $ret = $w->write($default, 'settings.json');
@@ -6746,6 +6761,12 @@ function getSettings($w)
     // add search_order if needed
     if (!isset($settings->search_order)) {
         updateSetting($w, 'search_order', 'playlist▹artist▹track▹album');
+        $settings = $w->read('settings.json');
+    }
+
+    // add always_display_lyrics_in_browser if needed
+    if (!isset($settings->always_display_lyrics_in_browser)) {
+        updateSetting($w, 'always_display_lyrics_in_browser', 0);
         $settings = $w->read('settings.json');
     }
 

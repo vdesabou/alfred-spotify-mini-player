@@ -693,6 +693,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
     $use_mopidy = $settings->use_mopidy;
     $is_display_rating = $settings->is_display_rating;
     $use_artworks = $settings->use_artworks;
+    $always_display_lyrics_in_browser = $settings->always_display_lyrics_in_browser;
 
     if ($use_mopidy) {
         $retArr = array(getCurrentTrackInfoWithMopidy($w));
@@ -865,7 +866,36 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
         // use track uri here
         $w->result(null, '', '💿 '.escapeQuery($results[2]), '☁︎ Query all tracks from this album online..', './images/online_album.png', 'no', null, 'Online▹'.$results[4].'@'.escapeQuery($results[1]).'@'.$results[4].'@'.escapeQuery($results[2]).'▹');
 
-        $w->result(null, '', 'Get Lyrics for track '.escapeQuery($results[0]), 'This will fetch lyrics online', './images/lyrics.png', 'no', null, 'Lyrics▹'.$results[4].'∙'.escapeQuery($results[1]).'∙'.escapeQuery($results[0]));
+        if($always_display_lyrics_in_browser == false) {
+            $w->result(null, '', 'Get Lyrics for track '.escapeQuery($results[0]), 'This will fetch lyrics online and display them in Alfred', './images/lyrics.png', 'no', null, 'Lyrics▹'.$results[4].'∙'.escapeQuery($results[1]).'∙'.escapeQuery($results[0]));
+        } else {
+            $w->result(null, serialize(array(
+                        '' /*track_uri*/,
+                        '' /* album_uri */,
+                        '' /* artist_uri */,
+                        '' /* playlist_uri */,
+                        '' /* spotify_command */,
+                        '' /* query */,
+                        '' /* other_settings*/,
+                        'lyrics' /* other_action */,
+                        '' /* artist_name */,
+                        '' /* track_name */,
+                        '' /* album_name */,
+                        '' /* track_artwork_path */,
+                        '' /* artist_artwork_path */,
+                        '' /* album_artwork_path */,
+                        '' /* playlist_name */,
+                        '', /* playlist_artwork_path */
+                    )), 'Get Lyrics for track '.escapeQuery($results[0]), array(
+                    'This will display them in default browser',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/lyrics.png', 'yes', null, '');    
+        }
+
 
         if ($update_in_progress == false) {
             $w->result(null, '', 'Add track '.escapeQuery($results[0]).' to...', 'This will add current track to Your Music or a playlist you will choose in next step', './images/add.png', 'no', null, 'Add▹'.$results[4].'∙'.escapeQuery($results[0]).'▹');
@@ -1279,6 +1309,7 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
     $use_growl = $settings->use_growl;
     $use_artworks = $settings->use_artworks;
     $use_facebook = $settings->use_facebook;
+    $always_display_lyrics_in_browser = $settings->always_display_lyrics_in_browser;
 
     if ($update_in_progress == false) {
         $w->result(null, serialize(array(
@@ -1743,6 +1774,60 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
                 'fn' => 'Not Available',
                 'ctrl' => 'Not Available',
             ), './images/enable_use_growl.png', 'yes', null, '');
+    }
+
+    if ($always_display_lyrics_in_browser == true) {
+        $w->result(null, serialize(array(
+                    '' /*track_uri*/,
+                    '' /* album_uri */,
+                    '' /* artist_uri */,
+                    '' /* playlist_uri */,
+                    '' /* spotify_command */,
+                    '' /* query */,
+                    '' /* other_settings*/,
+                    'disable_always_display_lyrics_in_browser' /* other_action */,
+                    '' /* artist_name */,
+                    '' /* track_name */,
+                    '' /* album_name */,
+                    '' /* track_artwork_path */,
+                    '' /* artist_artwork_path */,
+                    '' /* album_artwork_path */,
+                    '' /* playlist_name */,
+                    '', /* playlist_artwork_path */
+                )), 'Display lyrics in Alfred', array(
+                'Lyrics will be displayed in Alfred',
+                'alt' => 'Not Available',
+                'cmd' => 'Not Available',
+                'shift' => 'Not Available',
+                'fn' => 'Not Available',
+                'ctrl' => 'Not Available',
+            ), './images/lyrics.png', 'yes', null, '');
+    } else {
+        $w->result(null, serialize(array(
+                    '' /*track_uri*/,
+                    '' /* album_uri */,
+                    '' /* artist_uri */,
+                    '' /* playlist_uri */,
+                    '' /* spotify_command */,
+                    '' /* query */,
+                    '' /* other_settings*/,
+                    'enable_always_display_lyrics_in_browser' /* other_action */,
+                    '' /* artist_name */,
+                    '' /* track_name */,
+                    '' /* album_name */,
+                    '' /* track_artwork_path */,
+                    '' /* artist_artwork_path */,
+                    '' /* album_artwork_path */,
+                    '' /* playlist_name */,
+                    '', /* playlist_artwork_path */
+                )), 'Display lyrics in Browser', array(
+                'Lyrics will be displayed in default browser',
+                'alt' => 'Not Available',
+                'cmd' => 'Not Available',
+                'shift' => 'Not Available',
+                'fn' => 'Not Available',
+                'ctrl' => 'Not Available',
+            ), './images/lyrics.png', 'yes', null, '');
     }
 
     if ($use_facebook == true) {
