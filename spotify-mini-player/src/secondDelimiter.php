@@ -607,10 +607,6 @@ function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progres
             if($theplaylisturi == $alfred_playlist_uri) {
                 if ($update_in_progress == false) {
                     $w->result(null, '', 'Change your Alfred playlist', 'Select one of your playlists as your Alfred playlist', './images/settings.png', 'no', null, 'Alfred Playlist▹Set Alfred Playlist▹');
-
-                    // if (strtolower($r[3]) != strtolower('Starred')) {
-                    //     $w->result(null, '', 'Clear your Alfred Playlist', 'This will remove all the tracks in your current Alfred Playlist', './images/uncheck.png', 'no', null, 'Alfred Playlist▹Confirm Clear Alfred Playlist▹');
-                    // }
                 }
             }
 
@@ -667,6 +663,14 @@ function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progres
 
             if ($noresult) {
                 $w->result(null, 'help', 'There is no result for your search', '', './images/warning.png', 'no', null, '');
+            }
+        }
+
+        if($theplaylisturi == $alfred_playlist_uri) {
+            if ($update_in_progress == false) {
+                if (strtolower($r[3]) != strtolower('Starred')) {
+                    $w->result(null, '', 'Clear your Alfred Playlist', 'This will remove all the tracks in your current Alfred Playlist', './images/uncheck.png', 'no', null, 'Alfred Playlist▹Confirm Clear Alfred Playlist▹');
+                }
             }
         }
 
