@@ -253,6 +253,7 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress)
     $oauth_refresh_token = $settings->oauth_refresh_token;
     $display_name = $settings->display_name;
     $userid = $settings->userid;
+    $use_artworks = $settings->use_artworks;
 
     $quick_mode = $settings->quick_mode;
 
@@ -355,8 +356,10 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress)
     if(getenv('menu_display_alfred_playlist') == 1) {
         if ($is_alfred_playlist_active == true) {
             if ($alfred_playlist_name != '') {
-                $title = 'Alfred Playlist ● '.$alfred_playlist_name;
-                $w->result(null, '', $title, 'Choose one of your playlists and add tracks, album, playlist to it directly from the workflow', './images/alfred_playlist.png', 'no', null, 'Alfred Playlist▹');
+
+                $r = explode(':', $alfred_playlist_uri);
+
+                $w->result(null, '', 'Browse your Alfred playlist ('.$alfred_playlist_name.' by '.$r[2].')', 'You can change the Alfred Playlist during next step', getPlaylistArtwork($w, $alfred_playlist_uri, false, false, $use_artworks), 'no', null, 'Playlist▹'.$alfred_playlist_uri.'▹');
             } else {
                 $title = 'Alfred Playlist ● not set';
                 $w->result(null, '', $title, 'Choose one of your playlists and add tracks, album, playlist to it directly from the workflow', './images/alfred_playlist.png', 'no', null, 'Alfred Playlist▹Set Alfred Playlist▹');

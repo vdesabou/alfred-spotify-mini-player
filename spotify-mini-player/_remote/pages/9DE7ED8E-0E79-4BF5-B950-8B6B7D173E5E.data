@@ -37,16 +37,16 @@
 				<key>autoworkflowuid</key>
 				<true/>
 				<key>triggerid</key>
-				<string>com.vdesabou.miniplayer.alfredplaylist</string>
+				<string>com.vdesabou.miniplayer.showalfredplaylist</string>
 			</dict>
 			<key>actionuid</key>
 			<string>remote.alfred.runworkflow</string>
 			<key>buttoniconid</key>
-			<string>178DD46F-F3E2-4105-B579-2ED25639AF43</string>
+			<string>26215986-3B9E-4491-A93B-67878CE04EB5</string>
 			<key>buttonlabel</key>
 			<string>Show Alfred Playlist</string>
 			<key>itemuid</key>
-			<string>1FE1C328-8744-427A-A3E4-5CD8A1F26A5D</string>
+			<string>94A2F569-92F3-4296-B96C-C74282909B32</string>
 		</dict>
 		<dict>
 			<key>actionconfig</key>

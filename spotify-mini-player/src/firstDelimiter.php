@@ -135,56 +135,6 @@ function firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress
 }
 
 /**
- * firstDelimiterAlfredPlaylist function.
- *
- * @param mixed $w
- * @param mixed $query
- * @param mixed $settings
- * @param mixed $db
- * @param mixed $update_in_progress
- */
-function firstDelimiterAlfredPlaylist($w, $query, $settings, $db, $update_in_progress)
-{
-    $words = explode('▹', $query);
-    $kind = $words[0];
-
-    $all_playlists = $settings->all_playlists;
-    $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
-    $radio_number_tracks = $settings->radio_number_tracks;
-    $now_playing_notifications = $settings->now_playing_notifications;
-    $max_results = $settings->max_results;
-    $alfred_playlist_uri = $settings->alfred_playlist_uri;
-    $alfred_playlist_name = $settings->alfred_playlist_name;
-    $country_code = $settings->country_code;
-    $last_check_update_time = $settings->last_check_update_time;
-    $oauth_client_id = $settings->oauth_client_id;
-    $oauth_client_secret = $settings->oauth_client_secret;
-    $oauth_redirect_uri = $settings->oauth_redirect_uri;
-    $oauth_access_token = $settings->oauth_access_token;
-    $oauth_expires = $settings->oauth_expires;
-    $oauth_refresh_token = $settings->oauth_refresh_token;
-    $display_name = $settings->display_name;
-    $userid = $settings->userid;
-    $use_artworks = $settings->use_artworks;
-
-    // Alfred Playlist
-
-    $playlist = $words[1];
-
-    $r = explode(':', $alfred_playlist_uri);
-
-    $w->result(null, '', 'Browse your Alfred playlist ('.$alfred_playlist_name.' by '.$r[2].')', 'You can change the playlist by selecting Change your Alfred playlist below', getPlaylistArtwork($w, $alfred_playlist_uri, false, false, $use_artworks), 'no', null, 'Playlist▹'.$alfred_playlist_uri.'▹');
-
-    if ($update_in_progress == false) {
-        $w->result(null, '', 'Change your Alfred playlist', 'Select one of your playlists below as your Alfred playlist', './images/settings.png', 'no', null, 'Alfred Playlist▹Set Alfred Playlist▹');
-
-        if (strtolower($r[3]) != strtolower('Starred')) {
-            $w->result(null, '', 'Clear your Alfred Playlist', 'This will remove all the tracks in your current Alfred Playlist', './images/uncheck.png', 'no', null, 'Alfred Playlist▹Confirm Clear Alfred Playlist▹');
-        }
-    }
-}
-
-/**
  * firstDelimiterArtists function.
  *
  * @param mixed $w

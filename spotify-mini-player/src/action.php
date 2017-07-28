@@ -1568,6 +1568,15 @@ if ($type == 'TRACK' && $other_settings == '' &&
         createCompleteCollectionArtistPlaylist($w, $artist_name, $artist_uri);
 
         return;
+    } elseif ($other_action == 'show_alfred_playlist') {
+
+        if($alfred_playlist_uri != '' ) {
+            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('c_spot_mini').' Playlist▹'.$alfred_playlist_uri.'▹'."\"'");
+        } else {
+            displayNotificationWithArtwork($w, 'Alfred Playlist is not set', './images/warning.png', 'Error!');
+        }
+
+        return;
     } elseif ($other_action == 'play_alfred_playlist') {
         playAlfredPlaylist($w);
         if ($userid != 'vdesabou') {
