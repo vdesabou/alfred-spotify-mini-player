@@ -387,6 +387,7 @@ function switchThemeColor($w,$theme_color)
     // replace UUID images
     $uuid_imgs = array(
             '0A7E4CC3-BA4A-4DD4-AB4B-E2E8F9DBBE8C' => 'playpause',
+            'F0ED23FA-8524-4769-B610-828611958D6A' => 'recent',
             '0B75CF43-8B04-405F-86C3-2FFC59AC4A70' => 'artists',
             '05F86AA1-D3EE-4409-9A58-898B36FFE503' => 'kill',
             '15209065-AB33-44E4-ADFC-BAFC5033762E' => 'numbers',
@@ -518,6 +519,7 @@ function switchThemeColor($w,$theme_color)
             '2737969D-A8B4-4550-8568-3C926D36DD81' => 'add_to_ap_yourmusic',
             '2375184C-CC97-4763-A846-D2FAB1259FD1' => 'random_album',
             '707403B7-FF4A-4995-99F3-AB2B5F39B34F' => 'debug',
+            'E9C9194B-AF5F-4BAD-88AB-DB7AFED380BF' => 'recent',
             '163265DD-5CAB-4D11-B984-F86871709AEE' => 'icon',
             '9045D879-6632-4113-9915-85534EBECBB1' => 'online',
             '5365AF85-EDB1-4789-9ABD-B272A8C96AA0' => 'volume_down',
