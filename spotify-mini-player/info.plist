@@ -7489,6 +7489,10 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 		</dict>
 		<key>30833563-364F-4EC4-B467-F63A7F66EB06</key>
 		<dict>
+			<key>colorindex</key>
+			<integer>1</integer>
+			<key>note</key>
+			<string>This external trigger is internal stuff, DO NOT USE !</string>
 			<key>xpos</key>
 			<integer>10</integer>
 			<key>ypos</key>
@@ -7748,6 +7752,10 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 		</dict>
 		<key>6AB2756A-CF82-447B-BB7F-AC42AC2A04ED</key>
 		<dict>
+			<key>colorindex</key>
+			<integer>1</integer>
+			<key>note</key>
+			<string>This external trigger is internal stuff, DO NOT USE !</string>
 			<key>xpos</key>
 			<integer>20</integer>
 			<key>ypos</key>
@@ -8080,6 +8088,10 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 		</dict>
 		<key>900B374F-3B5D-48A1-9213-99DEC1975B89</key>
 		<dict>
+			<key>colorindex</key>
+			<integer>1</integer>
+			<key>note</key>
+			<string>This external trigger is internal stuff, DO NOT USE !</string>
 			<key>xpos</key>
 			<integer>30</integer>
 			<key>ypos</key>
