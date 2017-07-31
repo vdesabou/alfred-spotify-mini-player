@@ -634,6 +634,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>479B0769-F60E-4F2B-A2A6-BA361F3B0BF2</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>C3F966D4-D292-4B70-9024-B8788BA5488F</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>4BE9FB30-9B4F-4E44-861D-D178507A7568</key>
 		<array>
 			<dict>
@@ -1900,6 +1913,16 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
+				<string>C9ACB578-CE2A-492F-84CA-CFCA5E528458</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
 				<string>8347A3BC-6F50-447F-84B3-3497D4BF720D</string>
 				<key>modifiers</key>
 				<integer>0</integer>
@@ -2035,6 +2058,19 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>2609AC90-5B4D-4043-8F13-D5187B14833F</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>C9ACB578-CE2A-492F-84CA-CFCA5E528458</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>479B0769-F60E-4F2B-A2A6-BA361F3B0BF2</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -7107,6 +7143,75 @@ php -f ./src/action.php -- "$query" "TRACK" ""</string>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>browser</key>
+				<string></string>
+				<key>spaces</key>
+				<string>%20</string>
+				<key>url</key>
+				<string>https://soundcloud.com/search?q={query}</string>
+				<key>utf8</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.openurl</string>
+			<key>uid</key>
+			<string>C3F966D4-D292-4B70-9024-B8788BA5488F</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>100</integer>
+				<key>script</key>
+				<string>&lt;?php
+
+$web_search = getenv('web_search');
+
+$tmp = explode('▹',$web_search);
+
+echo "$tmp[1] $tmp[0]";
+
+?&gt;</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>1</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>479B0769-F60E-4F2B-A2A6-BA361F3B0BF2</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>inputstring</key>
+				<string>{query}</string>
+				<key>matchcasesensitive</key>
+				<true/>
+				<key>matchmode</key>
+				<integer>0</integer>
+				<key>matchstring</key>
+				<string>soundcloud</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.utility.filter</string>
+			<key>uid</key>
+			<string>C9ACB578-CE2A-492F-84CA-CFCA5E528458</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>concurrently</key>
 				<false/>
 				<key>escaping</key>
@@ -7194,7 +7299,7 @@ echo "$tmp[1] $tmp[0]";
 				<key>fixedorder</key>
 				<false/>
 				<key>items</key>
-				<string>[{"imagefile":"7f73299e44208b1bf3ea24353e08897cc883f3fb.png","title":"Youtube","arg":"youtube","subtitle":"Select to search current track on Youtube"},{"imagefile":"23dbf40eac5c981b0171d90427f6ba54b71239e0.png","title":"Wikipedia","arg":"wikipedia","subtitle":"Select to search current artist on Wikipedia"},{"imagefile":"82859060e592ee7da3bc7067150201773fdcfdda.png","title":"Facebook","arg":"facebook","subtitle":"Select to search current artist on Facebook"},{"imagefile":"078886c96323cf8fa4dc08c047f730f210d436c3.png","title":"Twitter","arg":"twitter","subtitle":"Select to search current artist on Twitter"}]</string>
+				<string>[{"imagefile":"7f73299e44208b1bf3ea24353e08897cc883f3fb.png","title":"Youtube","arg":"youtube","subtitle":"Select to search current track on Youtube"},{"imagefile":"23dbf40eac5c981b0171d90427f6ba54b71239e0.png","title":"Wikipedia","arg":"wikipedia","subtitle":"Select to search current artist on Wikipedia"},{"imagefile":"82859060e592ee7da3bc7067150201773fdcfdda.png","title":"Facebook","arg":"facebook","subtitle":"Select to search current artist on Facebook"},{"imagefile":"078886c96323cf8fa4dc08c047f730f210d436c3.png","title":"Twitter","arg":"twitter","subtitle":"Select to search current artist on Twitter"},{"imagefile":"5438218af54404741e979e30029dffc8cfa027e0.png","title":"Soundcloud","arg":"soundcloud","subtitle":"Select to search current track on Soundcloud"}]</string>
 				<key>runningsubtext</key>
 				<string></string>
 				<key>subtext</key>
@@ -8055,6 +8160,15 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<integer>300</integer>
 			<key>ypos</key>
 			<real>5650</real>
+		</dict>
+		<key>479B0769-F60E-4F2B-A2A6-BA361F3B0BF2</key>
+		<dict>
+			<key>note</key>
+			<string>get "artist_name track_name"</string>
+			<key>xpos</key>
+			<integer>590</integer>
+			<key>ypos</key>
+			<integer>11940</integer>
 		</dict>
 		<key>4BE9FB30-9B4F-4E44-861D-D178507A7568</key>
 		<dict>
@@ -8921,6 +9035,13 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<key>ypos</key>
 			<integer>11810</integer>
 		</dict>
+		<key>C3F966D4-D292-4B70-9024-B8788BA5488F</key>
+		<dict>
+			<key>xpos</key>
+			<integer>770</integer>
+			<key>ypos</key>
+			<integer>11940</integer>
+		</dict>
 		<key>C40074F8-D8EC-4270-AE0C-05A98F3E2DCD</key>
 		<dict>
 			<key>note</key>
@@ -8964,6 +9085,13 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<integer>300</integer>
 			<key>ypos</key>
 			<real>5350</real>
+		</dict>
+		<key>C9ACB578-CE2A-492F-84CA-CFCA5E528458</key>
+		<dict>
+			<key>xpos</key>
+			<integer>500</integer>
+			<key>ypos</key>
+			<integer>11970</integer>
 		</dict>
 		<key>CB11FDA4-17C4-4684-A145-C0D8FD6F6FDE</key>
 		<dict>
