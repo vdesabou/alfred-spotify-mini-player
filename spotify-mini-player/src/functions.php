@@ -4380,11 +4380,14 @@ function updateLibrary($w)
                 $retry = false;
             } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
                 logMsg('Error(getUserPlaylists): retry '.$nb_retry.' (exception '.print_r($e).')');
-                 if ($e->getCode() == 429) { // 429 is Too Many Requests
+                if ($e->getCode() == 429) { // 429 is Too Many Requests
                     $lastResponse = $api->getRequest()->getLastResponse();
                     $retryAfter = $lastResponse['headers']['Retry-After'];
                     sleep(retryAfter);
-                 } else if ($e->getCode() == 404 || $e->getCode() == 500
+                } else if ($e->getCode() == 404) {
+                        // skip
+                        break;
+                } else if ($e->getCode() == 500
                     || $e->getCode() == 502 || $e->getCode() == 503) {
                     // retry
                     if ($nb_retry > 20) {
@@ -4439,7 +4442,7 @@ function updateLibrary($w)
                 sleep(retryAfter);
                 } else if ($e->getCode() == 404) {
                     // skip
-                    continue;
+                    break;
                 } else if ($e->getCode() == 500
                 || $e->getCode() == 502 || $e->getCode() == 503) {
                 // retry
@@ -5123,11 +5126,14 @@ function refreshLibrary($w)
             } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
                 logMsg('Error(getUserPlaylists): retry '.$nb_retry.' (exception '.print_r($e).')');
 
-                 if ($e->getCode() == 429) { // 429 is Too Many Requests
+                if ($e->getCode() == 429) { // 429 is Too Many Requests
                     $lastResponse = $api->getRequest()->getLastResponse();
                     $retryAfter = $lastResponse['headers']['Retry-After'];
                     sleep(retryAfter);
-                 } else if ($e->getCode() == 404 || $e->getCode() == 500
+                } else if ($e->getCode() == 404) {
+                        // skip
+                        break;
+                } else if ($e->getCode() == 500
                     || $e->getCode() == 502 || $e->getCode() == 503) {
                     // retry
                     if ($nb_retry > 20) {
@@ -5230,7 +5236,7 @@ function refreshLibrary($w)
                             sleep(retryAfter);
                         } else if ($e->getCode() == 404) {
                                 // skip
-                                continue;
+                                break;
                         } else if ($e->getCode() == 500
                             || $e->getCode() == 502 || $e->getCode() == 503) {
                             // retry
@@ -5491,7 +5497,7 @@ function refreshLibrary($w)
                                 sleep(retryAfter);
                             } else if ($e->getCode() == 404) {
                                     // skip
-                                    continue;
+                                    break;
                             } else if ($e->getCode() == 500
                                 || $e->getCode() == 502 || $e->getCode() == 503) {
                                 // retry
@@ -5715,7 +5721,7 @@ function refreshLibrary($w)
             sleep(retryAfter);
             } else if ($e->getCode() == 404) {
                 // skip
-                continue;
+                break;
             } else if ($e->getCode() == 500
             || $e->getCode() == 502 || $e->getCode() == 503) {
             // retry
