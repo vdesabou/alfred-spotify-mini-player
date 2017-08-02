@@ -4,6 +4,46 @@ require_once './src/workflows.php';
 require './vendor/autoload.php';
 
 /**
+ * isShuffleActive function.
+ *
+ */
+function isShuffleActive()
+{
+    $w = new Workflows('com.vdesabou.spotify.mini.player');
+
+    // Read settings from JSON
+
+    $settings = getSettings($w);
+
+    $use_mopidy = $settings->use_mopidy;
+
+    if ($use_mopidy) {
+        $isShuffleEnabled = invokeMopidyMethod($w, 'core.tracklist.get_random', array());
+        if ($isShuffleEnabled) {
+            $command_output = 'true';
+        } else {
+            $command_output = 'false';
+        }
+    } else {
+        $command_output = exec("osascript -e '
+    tell application \"Spotify\"
+    if shuffling enabled is true then
+        if shuffling is true then
+            return \"true\"
+        else
+            return \"false\"
+        end if
+    else
+        return \"false\"
+    end if
+    end tell'");
+    }
+    displayNotificationWithArtwork($w, $command_output, './images/shuffle.png', 'Shuffle');
+    echo $command_output;
+    return $command_output;
+}
+
+/**
  * getUserArtworkURL function.
  *
  * @param mixed $w
@@ -420,11 +460,11 @@ function switchThemeColor($w,$theme_color)
             '79F70A28-E2D9-4705-81A9-86F3EA8EB47F' => 'alfred_playlist',
             '7FE5D993-C14D-4B94-9479-B361680F1C40' => 'add_to',
             '7FF09231-F068-4EA0-8537-6C1EB608CA5A' => 'volume_down',
-            '81BA0BC2-F1CB-46DC-A715-C38A1A0E055E' => 'shuffle',
             '8339BE15-274E-4A77-A6A0-CEDF30EFD0E5' => 'next',
             '8598A5C9-72B6-4CEF-A498-D6C2ED06DC88' => 'radio_song',
             '873EF61A-BD03-4946-87B0-C7AE5DFC5E5B' => 'debug',
             '89BC46B4-E178-4855-8863-393730814F6E' => 'shuffle',
+            'BD255BDB-07A5-4EE9-858F-A58C6207D191' => 'shuffle',
             '8C78472B-13EB-4512-B94D-4BF92867CD92' => 'random',
             '8E4347FE-0FC3-4FF1-AAAF-E0C6CD084BB5' => 'volume_down',
             '8F478980-199B-45B5-AD41-EBA185446705' => 'issue',
