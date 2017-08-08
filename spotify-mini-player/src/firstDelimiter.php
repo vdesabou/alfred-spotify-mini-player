@@ -560,7 +560,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
 
                     // call to web api, if it fails,
                     // it displays an error in main window
-                    $query = 'playlist:'.strtolower($the_query);
+                    $query = strtolower($the_query);
                     $results = searchWebApi($w, $country_code, $query, 'playlist', $search_playlists_limit, false);
 
                     foreach ($results as $playlist) {
