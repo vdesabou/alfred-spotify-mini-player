@@ -1323,6 +1323,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
             $theVolume = invokeMopidyMethod($w, 'core.mixer.get_volume', array());
             if (($theVolume + $volume_percent) > getenv('settings_volume_max')) {
                 $theVolume = getenv('settings_volume_max');
+                $theVolume = $theVolume + 0;
                 displayNotificationWithArtwork($w, 'Spotify volume is at maximum level '.getenv('settings_volume_max').'%.', './images/volume_up.png', 'Volume Up');
             } else {
                 $theVolume = $theVolume + $volume_percent;
