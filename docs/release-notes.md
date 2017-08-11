@@ -2,7 +2,7 @@
 layout: article
 permalink: /release-notes/
 title: "Release Notes"
-modified: 2017-04-10
+modified: 2017-08-11
 excerpt: "Release Notes."
 image:
   feature:
@@ -12,6 +12,18 @@ share: false
 toc: false
 noindex: false
 ---
+
+<a name="v7.3"></a>
+7.3:
+
+* <span class="badge info">ADDED</span> How to instantly see my Alfred playlist?  [#194](https://github.com/vdesabou/alfred-spotify-mini-player/issues/194)
+* <span class="badge info">ADDED</span> Add settings to open lyrics directly in the default browser   [#193](https://github.com/vdesabou/alfred-spotify-mini-player/issues/193)
+* <span class="badge info">ADDED</span> Add Soundcloud to web search [#196](https://github.com/vdesabou/alfred-spotify-mini-player/issues/196)
+* <span class="badge info">ADDED</span> Add missing external triggers [#195](https://github.com/vdesabou/alfred-spotify-mini-player/issues/195)
+* <span class="badge danger">FIXED</span> Installation failure on 10.13  [#192](https://github.com/vdesabou/alfred-spotify-mini-player/issues/192)
+* <span class="badge danger">FIXED</span> Online playlist search  [#198](https://github.com/vdesabou/alfred-spotify-mini-player/issues/198)
+* <span class="badge danger">FIXED</span> Exception when raising volume above 100% with Mopidy  [#199](https://github.com/vdesabou/alfred-spotify-mini-player/issues/199)
+* <span class="badge danger">FIXED</span> Infinite loop during refresh library when getting 404 error [#197](https://github.com/vdesabou/alfred-spotify-mini-player/issues/197)
 
 <a name="v7.2"></a>
 7.2:
