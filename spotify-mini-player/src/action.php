@@ -47,6 +47,8 @@ $volume_percent = $settings->volume_percent;
 $use_artworks = $settings->use_artworks;
 $use_facebook = $settings->use_facebook;
 $always_display_lyrics_in_browser = $settings->always_display_lyrics_in_browser;
+$use_spotify_connect = $settings->use_spotify_connect;
+
 
 if ($other_action != 'reset_settings' && $other_action != 'spot_mini_debug' && !startswith($other_settings,'SWITCH_USER▹')) {
     if ($oauth_client_id == '' || $oauth_client_secret == '' || $oauth_access_token == '') {
@@ -79,15 +81,19 @@ if ($add_to_option != '') {
 
 // start now playing if needed
 if($oauth_access_token != '') {
-    $mopidy_arg = '';
+    $app_arg = '';
     if ($use_mopidy) {
-        $mopidy_arg = 'MOPIDY';
+        $app_arg = 'MOPIDY';
+    } else if(!$use_spotify_connect) {
+        $app_arg = 'SPOTIFY';
+    } else {
+        $app_arg = 'CONNECT';
     }
-    exec('./src/spotify_mini_player_notifications.ksh -d "'.$w->data().'" -a start -m "'.$mopidy_arg.'"  >> "'.$w->cache().'/action.log" 2>&1 & ');
+    exec('./src/spotify_mini_player_notifications.ksh -d "'.$w->data().'" -a start -m "'.$app_arg.'"  >> "'.$w->cache().'/action.log" 2>&1 & ');
 }
 
 // make sure spotify is running
-if (!$use_mopidy) {
+if (!$use_mopidy && !$use_spotify_connect) {
     if($oauth_access_token != '' && $other_action != 'update_library' && $other_action != 'refresh_library' && $type != 'DOWNLOAD_ARTWORKS') {
         exec('./src/is_spotify_running.ksh 2>&1', $retArr, $retVal);
         if ($retArr[0] != 0) {
@@ -106,7 +112,6 @@ if ($spotify_command != '' && $type == 'TRACK' && $add_to_option == '') {
     } else {
         exec("osascript -e 'tell application \"Spotify\" to $spotify_command'");
     }
-
     return;
 }
 
@@ -143,19 +148,17 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
             return;
         } elseif ($playlist_uri != '') {
-            if (!$use_mopidy) {
-                exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
-                if ($retVal != 0) {
-                    displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-                    exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('c_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
-
-                    return;
-                }
-            }
             if ($use_mopidy) {
                 playTrackInContextWithMopidy($w, $track_uri, $playlist_uri);
-            } else {
+            } else if(!$use_spotify_connect) {
                 exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\" in context \"$playlist_uri\"'");
+            } else {
+                $device_id = getSpotifyConnectCurrentDeviceId($w);
+                if($device_id != '') {
+                    playTrackSpotifyConnect($w, $device_id, $track_uri, $playlist_uri);
+                } else {
+                    displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+                }
             }
 
             if ($now_playing_notifications == false) {
@@ -169,19 +172,17 @@ if ($type == 'TRACK' && $other_settings == '' &&
             return;
         } else {
             if ($other_action == '' || $other_action == 'play_track_from_play_queue') {
-                if (!$use_mopidy) {
-                    exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
-                    if ($retVal != 0) {
-                        displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-                        exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('c_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
-
-                        return;
-                    }
-                }
                 if ($use_mopidy) {
                     playUriWithMopidyWithoutClearing($w, $track_uri);
-                } else {
+                } else if(!$use_spotify_connect) {
                     exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
+                } else {
+                    $device_id = getSpotifyConnectCurrentDeviceId($w);
+                    if($device_id != '') {
+                        playTrackSpotifyConnect($w, $device_id, $track_uri, '');
+                    } else {
+                        displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+                    }
                 }
                 if ($now_playing_notifications == false) {
                     displayNotificationWithArtwork($w, '🔈 '.$track_name.' by '.$artist_name, $track_artwork_path);
@@ -192,7 +193,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
                 if ($other_action == '') {
                     if ($use_mopidy) {
                         $retArr = array(getCurrentTrackInfoWithMopidy($w));
-                    } else {
+                    } else if(!$use_spotify_connect) {
                         // get info on current song
                         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
                         if ($retVal != 0) {
@@ -201,6 +202,8 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
                             return;
                         }
+                    } else {
+                        $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
                     }
                     if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
                         $results = explode('▹', $retArr[count($retArr) - 1]);
@@ -212,19 +215,17 @@ if ($type == 'TRACK' && $other_settings == '' &&
             }
         }
     } elseif ($playlist_uri != '') {
-        if (!$use_mopidy) {
-            exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
-            if ($retVal != 0) {
-                displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-                exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('c_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
-
-                return;
-            }
-        }
         if ($use_mopidy) {
             playUriWithMopidy($w, $playlist_uri);
-        } else {
+        } else if(!$use_spotify_connect) {
             exec("osascript -e 'tell application \"Spotify\" to play track \"$playlist_uri\"'");
+        } else {
+            $device_id = getSpotifyConnectCurrentDeviceId($w);
+            if($device_id != '') {
+                playTrackSpotifyConnect($w, $device_id, '', $playlist_uri);
+            } else {
+                displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+            }
         }
 
         if ($playlist_artwork_path == '') {
@@ -254,19 +255,17 @@ if ($type == 'TRACK' && $other_settings == '' &&
         }
         $album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, true, false, false, $use_artworks);
     }
-    if (!$use_mopidy) {
-        exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
-        if ($retVal != 0) {
-            displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('c_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
-
-            return;
-        }
-    }
     if ($use_mopidy) {
         playUriWithMopidy($w, $album_uri);
-    } else {
+    } else if(!$use_spotify_connect) {
         exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
+    } else {
+        $device_id = getSpotifyConnectCurrentDeviceId($w);
+        if($device_id != '') {
+            playTrackSpotifyConnect($w, $device_id, '', $album_uri);
+        } else {
+            displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+        }
     }
     displayNotificationWithArtwork($w, '🔈 Album '.$album_name.' by '.$artist_name, $album_artwork_path, 'Play Album');
     if ($userid != 'vdesabou') {
@@ -340,19 +339,17 @@ if ($type == 'TRACK' && $other_settings == '' &&
             }
             $artist_artwork_path = getArtistArtwork($w, $artist_uri, $artist_name, true, false, false, $use_artworks);
         }
-        if (!$use_mopidy) {
-            exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
-            if ($retVal != 0) {
-                displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-                exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('c_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
-
-                return;
-            }
-        }
         if ($use_mopidy) {
             playUriWithMopidy($w, $artist_uri);
-        } else {
+        } else if(!$use_spotify_connect) {
             exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
+        } else {
+            $device_id = getSpotifyConnectCurrentDeviceId($w);
+            if($device_id != '') {
+                playTrackSpotifyConnect($w, $device_id, '', $artist_uri);
+            } else {
+                displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+            }
         }
 
         displayNotificationWithArtwork($w, '🔈 Artist '.$artist_name, $artist_artwork_path, 'Play Artist');
@@ -702,6 +699,10 @@ if ($type == 'TRACK' && $other_settings == '' &&
         
 
         return;
+    } elseif ($setting[0] == 'CHANGE_DEVICE') {
+        
+        changeUserDevice($w, $setting[1]);
+        return;
     } 
 } elseif ($other_action != '') {
     if ($other_action == 'disable_all_playlist') {
@@ -950,19 +951,17 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
         return;
     } elseif ($other_action == 'play_track_in_album_context') {
-        if (!$use_mopidy) {
-            exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
-            if ($retVal != 0) {
-                displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-                exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('c_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
-
-                return;
-            }
-        }
         if ($use_mopidy) {
             playTrackInContextWithMopidy($w, $track_uri, $album_uri);
-        } else {
+        } else if(!$use_spotify_connect) {
             exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\" in context \"$album_uri\"'");
+        } else {
+            $device_id = getSpotifyConnectCurrentDeviceId($w);
+            if($device_id != '') {
+                playTrackSpotifyConnect($w, $device_id, $track_uri, $album_uri);
+            } else {
+                displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+            }
         }
         $album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, true, false, false, $use_artworks);
         if ($now_playing_notifications == false) {
@@ -975,27 +974,32 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
         return;
     } elseif ($other_action == 'play') {
-        if (!$use_mopidy) {
-            exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
-            if ($retVal != 0) {
-                displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-                exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('c_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
-
-                return;
-            }
-        }
         if ($use_mopidy) {
             invokeMopidyMethod($w, 'core.playback.resume', array());
-        } else {
+        } else if(!$use_spotify_connect) {
             exec("osascript -e 'tell application \"Spotify\" to play'");
+        } else {
+            $device_id = getSpotifyConnectCurrentDeviceId($w);
+            if($device_id != '') {
+                playSpotifyConnect($w, $device_id);
+            } else {
+                displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+            }
         }
 
         return;
     } elseif ($other_action == 'pause') {
         if ($use_mopidy) {
             invokeMopidyMethod($w, 'core.playback.pause', array());
-        } else {
+        } else if(!$use_spotify_connect) {
             exec("osascript -e 'tell application \"Spotify\" to pause'");
+        } else {
+            $device_id = getSpotifyConnectCurrentDeviceId($w);
+            if($device_id != '') {
+                pauseSpotifyConnect($w, $device_id);
+            } else {
+                displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+            }
         }
 
         return;
@@ -1007,8 +1011,15 @@ if ($type == 'TRACK' && $other_settings == '' &&
             } else {
                 invokeMopidyMethod($w, 'core.playback.resume', array());
             }
-        } else {
+        } else if(!$use_spotify_connect) {
             exec("osascript -e 'tell application \"Spotify\" to playpause'");
+        } else {
+            $device_id = getSpotifyConnectCurrentDeviceId($w);
+            if($device_id != '') {
+                playpauseSpotifyConnect($w, $device_id, $country_code);
+            } else {
+                displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+            }
         }
 
         return;
@@ -1112,6 +1123,11 @@ if ($type == 'TRACK' && $other_settings == '' &&
         echo "$ret";
 
         return;
+    } elseif ($other_action == 'current_connect') {
+        $ret = getCurrentTrackInfoWithSpotifyConnect($w, false);
+        echo "$ret";
+
+        return;
     } elseif ($other_action == 'add_current_track_to') {
         if (file_exists($w->data().'/update_library_in_progress')) {
             displayNotificationWithArtwork($w, 'Cannot modify library while update is in progress', './images/warning.png', 'Error!');
@@ -1143,16 +1159,30 @@ if ($type == 'TRACK' && $other_settings == '' &&
     } elseif ($other_action == 'previous') {
         if ($use_mopidy) {
             invokeMopidyMethod($w, 'core.playback.previous', array());
-        } else {
+        } else if(!$use_spotify_connect) {
             exec("osascript -e 'tell application \"Spotify\" to previous track'");
+        } else {
+            $device_id = getSpotifyConnectCurrentDeviceId($w);
+            if($device_id != '') {
+                previousTrackSpotifyConnect($w, $device_id);
+            } else {
+                displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+            }
         }
 
         return;
     } elseif ($other_action == 'next') {
         if ($use_mopidy) {
             invokeMopidyMethod($w, 'core.playback.next', array());
-        } else {
+        } else if(!$use_spotify_connect) {
             exec("osascript -e 'tell application \"Spotify\" to next track'");
+        } else {
+            $device_id = getSpotifyConnectCurrentDeviceId($w);
+            if($device_id != '') {
+                nextTrackSpotifyConnect($w, $device_id);
+            } else {
+                displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+            }
         }
 
         return;
@@ -1170,19 +1200,17 @@ if ($type == 'TRACK' && $other_settings == '' &&
         return;
     } elseif ($other_action == 'random') {
         list($track_uri, $track_name, $artist_name, $album_name, $duration) = getRandomTrack($w);
-        if (!$use_mopidy) {
-            exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
-            if ($retVal != 0) {
-                displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-                exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('c_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
-
-                return;
-            }
-        }
         if ($use_mopidy) {
             playUriWithMopidyWithoutClearing($w, $track_uri);
-        } else {
+        } else if(!$use_spotify_connect) {
             exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
+        } else {
+            $device_id = getSpotifyConnectCurrentDeviceId($w);
+            if($device_id != '') {
+                playTrackSpotifyConnect($w, $device_id, $track_uri, '');
+            } else {
+                displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+            }
         }
 
         if ($userid != 'vdesabou') {
@@ -1193,19 +1221,17 @@ if ($type == 'TRACK' && $other_settings == '' &&
         return;
     } elseif ($other_action == 'random_album') {
         list($album_uri, $album_name, $theartistname) = getRandomAlbum($w);
-        if (!$use_mopidy) {
-            exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
-            if ($retVal != 0) {
-                displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-                exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('c_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
-
-                return;
-            }
-        }
         if ($use_mopidy) {
             playUriWithMopidy($w, $album_uri);
-        } else {
+        } else if(!$use_spotify_connect) {
             exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
+        } else {
+            $device_id = getSpotifyConnectCurrentDeviceId($w);
+            if($device_id != '') {
+                playTrackSpotifyConnect($w, $device_id, '', $album_uri);
+            } else {
+                displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+            }
         }
         displayNotificationWithArtwork($w, '🔈 Album '.$album_name.' by '.$theartistname, getTrackOrAlbumArtwork($w, $album_uri, true, false, false, $use_artworks), 'Play Random Album');
         if ($userid != 'vdesabou') {
@@ -1261,19 +1287,17 @@ if ($type == 'TRACK' && $other_settings == '' &&
         return;
     } elseif ($other_action == 'playartist') {
         $artist_artwork_path = getArtistArtwork($w, $artist_uri, $artist_name, true, false, false, $use_artworks);
-        if (!$use_mopidy) {
-            exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
-            if ($retVal != 0) {
-                displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-                exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('c_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
-
-                return;
-            }
-        }
         if ($use_mopidy) {
             playUriWithMopidy($w, $artist_uri);
-        } else {
+        } else if(!$use_spotify_connect) {
             exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
+        } else {
+            $device_id = getSpotifyConnectCurrentDeviceId($w);
+            if($device_id != '') {
+                playTrackSpotifyConnect($w, $device_id, '', $artist_uri);
+            } else {
+                displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+            }
         }
         displayNotificationWithArtwork($w, '🔈 Artist '.$artist_name, $artist_artwork_path, 'Play Artist');
         if ($userid != 'vdesabou') {
@@ -1297,19 +1321,17 @@ if ($type == 'TRACK' && $other_settings == '' &&
             }
         }
         $album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, true, false, false, $use_artworks);
-        if (!$use_mopidy) {
-            exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
-            if ($retVal != 0) {
-                displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-                exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('c_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
-
-                return;
-            }
-        }
         if ($use_mopidy) {
             playUriWithMopidy($w, $album_uri);
-        } else {
+        } else if(!$use_spotify_connect) {
             exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
+        } else {
+            $device_id = getSpotifyConnectCurrentDeviceId($w);
+            if($device_id != '') {
+                playTrackSpotifyConnect($w, $device_id, '', $album_uri);
+            } else {
+                displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+            }
         }
         displayNotificationWithArtwork($w, '🔈 Album '.$album_name, $album_artwork_path, 'Play Album');
         if ($userid != 'vdesabou') {
@@ -1330,7 +1352,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
                 displayNotificationWithArtwork($w, 'Spotify volume has been increased to '.$theVolume.'%', './images/volume_up.png', 'Volume Up');
             }
             invokeMopidyMethod($w, 'core.mixer.set_volume', array('volume' => $theVolume));
-        } else {
+        } else if(!$use_spotify_connect) {
             $volume_max = getenv('settings_volume_max');
             $command_output = exec("osascript -e 'tell application \"Spotify\"
 				if it is running then
@@ -1346,6 +1368,26 @@ if ($type == 'TRACK' && $other_settings == '' &&
 				end if
 			end tell'");
             displayNotificationWithArtwork($w, $command_output, './images/volume_up.png', 'Volume Up');
+        } else {
+            $device_id = getSpotifyConnectCurrentDeviceId($w);
+            if($device_id != '') {
+                $theVolume = getVolumeSpotifyConnect($w,$device_id);
+                if(!$theVolume) {
+                    displayNotificationWithArtwork($w, 'Cannot control volume on this Spotify Connect device', './images/warning.png', 'Error!');
+                    return;
+                }
+                if (($theVolume + $volume_percent) > getenv('settings_volume_max')) {
+                    $theVolume = getenv('settings_volume_max');
+                    $theVolume = $theVolume + 0;
+                    displayNotificationWithArtwork($w, 'Spotify volume is at maximum level '.getenv('settings_volume_max').'%.', './images/volume_up.png', 'Volume Up');
+                } else {
+                    $theVolume = $theVolume + $volume_percent;
+                    displayNotificationWithArtwork($w, 'Spotify volume has been increased to '.$theVolume.'%', './images/volume_up.png', 'Volume Up');
+                }                
+                changeVolumeSpotifyConnect($w, $device_id, $theVolume);
+            } else {
+                displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+            }
         }
 
         return;
@@ -1360,7 +1402,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
                 displayNotificationWithArtwork($w, 'Spotify volume has been decreased to '.$theVolume.'%', './images/volume_down.png', 'Volume Down');
             }
             invokeMopidyMethod($w, 'core.mixer.set_volume', array('volume' => $theVolume));
-        } else {
+        } else if(!$use_spotify_connect) {
             $volume_min = getenv('settings_volume_min');
             $command_output = exec("osascript -e 'tell application \"Spotify\"
 				if it is running then
@@ -1377,19 +1419,51 @@ if ($type == 'TRACK' && $other_settings == '' &&
 				end if
 			end tell'");
             displayNotificationWithArtwork($w, $command_output, './images/volume_down.png', 'Volume Down');
+        } else {
+            $device_id = getSpotifyConnectCurrentDeviceId($w);
+            if($device_id != '') {
+                $theVolume = getVolumeSpotifyConnect($w,$device_id);
+                if(!$theVolume) {
+                    displayNotificationWithArtwork($w, 'Cannot control volume on this Spotify Connect device', './images/warning.png', 'Error!');
+                    return;
+                }
+                if (($theVolume - $volume_percent) < getenv('settings_volume_min')) {
+                    $theVolume = getenv('settings_volume_min');
+                    displayNotificationWithArtwork($w, 'Spotify volume is at minimum level '.getenv('settings_volume_min').'%.', './images/volume_down.png', 'Volume Down');
+                } else {
+                    $theVolume = $theVolume - $volume_percent;
+                    displayNotificationWithArtwork($w, 'Spotify volume has been decreased to '.$theVolume.'%', './images/volume_down.png', 'Volume Down');
+                }               
+                changeVolumeSpotifyConnect($w, $device_id, $theVolume);
+            } else {
+                displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+            }
         }
 
         return;
     } elseif ($other_action == 'volmax') {
         if ($use_mopidy) {
             invokeMopidyMethod($w, 'core.mixer.set_volume', array('volume' => getenv('settings_volume_max')));
-        } else {
+        } else if(!$use_spotify_connect) {
             $volume_max = getenv('settings_volume_max');
             exec("osascript -e 'tell application \"Spotify\"
 				if it is running then
 					set sound volume to $volume_max
 				end if
 			end tell'");
+        } else {
+            $device_id = getSpotifyConnectCurrentDeviceId($w);
+            if($device_id != '') {
+                $theVolume = getVolumeSpotifyConnect($w,$device_id);
+                if(!$theVolume) {
+                    displayNotificationWithArtwork($w, 'Cannot control volume on this Spotify Connect device', './images/warning.png', 'Error!');
+                    return;
+                }
+                $volume_max = getenv('settings_volume_max');              
+                changeVolumeSpotifyConnect($w, $device_id, $volume_max);
+            } else {
+                displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+            }
         }
         displayNotificationWithArtwork($w, 'Spotify volume has been set to maximum '.$volume_max.'%', './images/volmax.png', 'Volume Max');
 
@@ -1397,37 +1471,75 @@ if ($type == 'TRACK' && $other_settings == '' &&
     } elseif ($other_action == 'volmid') {
         if ($use_mopidy) {
             invokeMopidyMethod($w, 'core.mixer.set_volume', array('volume' => getenv('settings_volume_mid')));
-        } else {
+        } else if(!$use_spotify_connect) {
             $volume_mid = getenv('settings_volume_mid');
             exec("osascript -e 'tell application \"Spotify\"
 				if it is running then
 					set sound volume to $volume_mid
 				end if
 			end tell'");
+        } else {
+            $device_id = getSpotifyConnectCurrentDeviceId($w);
+            if($device_id != '') {
+                $theVolume = getVolumeSpotifyConnect($w,$device_id);
+                if(!$theVolume) {
+                    displayNotificationWithArtwork($w, 'Cannot control volume on this Spotify Connect device', './images/warning.png', 'Error!');
+                    return;
+                }
+                $volume_mid = getenv('settings_volume_mid');             
+                changeVolumeSpotifyConnect($w, $device_id, $volume_mid);
+            } else {
+                displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+            }
         }
         displayNotificationWithArtwork($w, 'Spotify volume has been set to '.$volume_mid.'%', './images/volmid.png', 'Volume '.$volume_mid.'%');
 
         return;
     } elseif ($other_action == 'mute') {
+        $volume_max = getenv('settings_volume_max');
+        $volume_min = getenv('settings_volume_min');
         if ($use_mopidy) {
             $volume = invokeMopidyMethod($w, 'core.mixer.get_volume', array());
             if ($volume <= 0) {
-                invokeMopidyMethod($w, 'core.mixer.set_volume', array('volume' => 100));
+                invokeMopidyMethod($w, 'core.mixer.set_volume', array('volume' => $volume_max));
                 $command_output = 'Spotify volume is unmuted.';
             } else {
-                invokeMopidyMethod($w, 'core.mixer.set_volume', array('volume' => 0));
+                invokeMopidyMethod($w, 'core.mixer.set_volume', array('volume' => $volume_min));
                 $command_output = 'Spotify volume is muted.';
             }
-        } else {
+        } else if(!$use_spotify_connect) {
             $command_output = exec("osascript -e 'tell application \"Spotify\"
-				if sound volume is less than or equal to 0 then
-					set sound volume to 100
+				if sound volume is less than or equal to $volume_min then
+					set sound volume to $volume_max
 					return \"Spotify volume is unmuted.\"
 				else
-					set sound volume to 0
+					set sound volume to $volume_min
 					return \"Spotify volume is muted.\"
 				end if
 			end tell'");
+        } else {
+            $device_id = getSpotifyConnectCurrentDeviceId($w);
+            if($device_id != '') {
+                $theVolume = getVolumeSpotifyConnect($w,$device_id);
+                if(!$theVolume) {
+                    displayNotificationWithArtwork($w, 'Cannot control volume on this Spotify Connect device', './images/warning.png', 'Error!');
+                    return;
+                }
+                if ($theVolume <= 0) {
+                    changeVolumeSpotifyConnect($w, $device_id, $volume_max);
+                    $command_output = 'Spotify volume is unmuted.';
+                } else {
+                    if($volume_min == 0) {
+                        // there is a bug that if we set 0 then volume
+                        // control is no more possible
+                        $volume_min = 5;
+                    }
+                    changeVolumeSpotifyConnect($w, $device_id, $volume_min);
+                    $command_output = 'Spotify volume is muted.';
+                }           
+            } else {
+                displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+            }
         }
         displayNotificationWithArtwork($w, $command_output, './images/mute.png', 'Mute');
 
@@ -1465,13 +1577,16 @@ if ($type == 'TRACK' && $other_settings == '' &&
         if ($use_mopidy) {
             $ret = getCurrentTrackInfoWithMopidy($w, false);
             $results = explode('▹', $ret);
-        } else {
+        } else if(!$use_spotify_connect) {
             // get info on current song
             exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
 
             if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
                 $results = explode('▹', $retArr[count($retArr) - 1]);
             }
+        } else {
+            $ret = getCurrentTrackInfoWithSpotifyConnect($w, false);
+            $results = explode('▹', $ret);
         }
 
         if (!isset($results[0])) {
@@ -1488,13 +1603,16 @@ if ($type == 'TRACK' && $other_settings == '' &&
         if ($use_mopidy) {
             $ret = getCurrentTrackInfoWithMopidy($w, false);
             $results = explode('▹', $ret);
-        } else {
+        } else if(!$use_spotify_connect) {
             // get info on current song
             exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
 
             if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
                 $results = explode('▹', $retArr[count($retArr) - 1]);
             }
+        } else {
+            $ret = getCurrentTrackInfoWithSpotifyConnect($w, false);
+            $results = explode('▹', $ret);
         }
 
         if (!isset($results[0])) {

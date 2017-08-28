@@ -296,6 +296,8 @@ if (mb_strlen($query) < 2) {
                 firstDelimiterNewReleases($w, $query, $settings, $db, $update_in_progress);
             } elseif ($kind == 'Current Track') {
                 firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progress);
+            } elseif ($kind == 'Spotify Connect') {
+                firstDelimiterSpotifyConnect($w, $query, $settings, $db, $update_in_progress);
             } elseif ($kind == 'Your Music') {
                 firstDelimiterYourMusic($w, $query, $settings, $db, $update_in_progress);
             } elseif ($kind == 'Lyrics') {

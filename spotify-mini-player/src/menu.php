@@ -254,7 +254,7 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress)
     $display_name = $settings->display_name;
     $userid = $settings->userid;
     $use_artworks = $settings->use_artworks;
-
+    $use_spotify_connect = $settings->use_spotify_connect;
     $quick_mode = $settings->quick_mode;
 
     ////////
@@ -315,6 +315,12 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress)
 
     if(getenv('menu_display_current_track') == 1) {
         $w->result(null, '', 'Current Track', 'Display current track information and browse various options', './images/current_track.png', 'no', null, 'Current Track▹');
+    }
+
+    if($use_spotify_connect) {
+        if(getenv('menu_display_spotify_connect') == 1) {
+            $w->result(null, '', 'Spotify Connect', 'Display Spotify Connect information and choose various options', './images/connect.png', 'no', null, 'Spotify Connect▹');
+        }
     }
 
     if(getenv('menu_display_play_queue') == 1) {
@@ -835,7 +841,10 @@ function searchCategoriesFastAccess($w, $query, $settings, $db, $update_in_progr
         $w->result(null, '', 'Your Music', 'Browse Your Music', './images/tracks.png', 'no', null, 'Your Music▹');
     }
     if (strpos(strtolower('current track'), strtolower($query)) !== false) {
-        $w->result(null, '', 'Current Track', 'Display current track information and browse various options', './images/tracks.png', 'no', null, 'Current Track▹');
+        $w->result(null, '', 'Current Track', 'Display current track information and browse various options', './images/current_track.png', 'no', null, 'Current Track▹');
+    }
+    if (strpos(strtolower('spotify connect'), strtolower($query)) !== false) {
+        $w->result(null, '', 'Spotify Connect', 'Display Spotify Connect information and choose various options', './images/connect.png', 'no', null, 'Spotify Connect▹');
     }
 }
 

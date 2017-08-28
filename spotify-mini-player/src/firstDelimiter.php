@@ -694,10 +694,11 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
     $is_display_rating = $settings->is_display_rating;
     $use_artworks = $settings->use_artworks;
     $always_display_lyrics_in_browser = $settings->always_display_lyrics_in_browser;
+    $use_spotify_connect = $settings->use_spotify_connect;
 
     if ($use_mopidy) {
         $retArr = array(getCurrentTrackInfoWithMopidy($w));
-    } else {
+    } else if(!$use_spotify_connect) {
         // get info on current song
         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
         if ($retVal != 0) {
@@ -723,6 +724,8 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
 
             return;
         }
+    } else {
+        $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));   
     }
 
     if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
@@ -811,6 +814,74 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                         'copy' => '#NowPlaying ' . escapeQuery($results[0]).' by '.escapeQuery($results[1]) . $shared_url,
                         'largetype' => escapeQuery($results[0]).' by '.escapeQuery($results[1]),
                     ), '');
+        }
+
+
+        if ($use_spotify_connect) {
+            try {
+                $api = getSpotifyWebAPI($w);
+    
+                $playback_info = $api->getMyCurrentPlaybackInfo(array(
+                    'market' => $country_code,
+                    ));
+    
+                $track_name = $playback_info->item->name;
+                $artist_name = $playback_info->item->artists[0]->name;
+                $album_name = $playback_info->item->album->name;
+                $is_playing = $playback_info->is_playing;
+                if($is_playing) {
+                    $state = 'playing';
+                } else {
+                    $state = 'paused';
+                }
+                $track_uri = $playback_info->item->uri;
+                $length = ($playback_info->item->duration_ms/1000);
+                $popularity = $playback_info->item->popularity;
+                
+                // device
+                $device_name = $playback_info->device->name;
+                $device_type = $playback_info->device->type;
+    
+                $shuffle_state = $playback_info->shuffle_state;
+                $repeat_state = $playback_info->repeat_state;
+                
+
+                if ($device_name != '') {
+                    $w->result(null, 'help', 'Playing on ' . $device_type . ' ' . $device_name, 'shuffle_state ' . $shuffle_state . ' repeat_state ' . $repeat_state, './images/info.png', 'no', null, '');
+                }    
+            }  catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+                if($e->getMessage() == 'Permissions missing') {
+                    $w->result(null, serialize(array(
+                                '' /*track_uri*/,
+                                '' /* album_uri */,
+                                '' /* artist_uri */,
+                                '' /* playlist_uri */,
+                                '' /* spotify_command */,
+                                '' /* query */,
+                                '' /* other_settings*/,
+                                'reset_oauth_settings' /* other_action */,
+                                '' /* artist_name */,
+                                '' /* track_name */,
+                                '' /* album_name */,
+                                '' /* track_artwork_path */,
+                                '' /* artist_artwork_path */,
+                                '' /* album_artwork_path */,
+                                '' /* playlist_name */,
+                                '', /* playlist_artwork_path */
+                            )), 'The workflow needs more privilages to do this, click to restart authentication', array(
+                            'Next time you invoke the workflow, you will have to re-authenticate',
+                            'alt' => 'Not Available',
+                            'cmd' => 'Not Available',
+                            'shift' => 'Not Available',
+                            'fn' => 'Not Available',
+                            'ctrl' => 'Not Available',
+                        ), './images/warning.png', 'yes', null, '');
+                } else {
+                    $w->result(null, 'help', 'Exception occurred', ''.$e->getMessage(), './images/warning.png', 'no', null, '');
+                }
+                echo $w->tojson();
+                exit;
+            } 
         }
 
         $getTracks = 'select artist_name,artist_uri from tracks where artist_name=:artist_name limit '. 1;
@@ -1040,6 +1111,153 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
     }
 }
 
+/**
+ * firstDelimiterSpotifyConnect function.
+ *
+ * @param mixed $w
+ * @param mixed $query
+ * @param mixed $settings
+ * @param mixed $db
+ * @param mixed $update_in_progress
+ */
+ function firstDelimiterSpotifyConnect($w, $query, $settings, $db, $update_in_progress)
+ {
+     $words = explode('▹', $query);
+     $kind = $words[0];
+ 
+     $all_playlists = $settings->all_playlists;
+     $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
+     $radio_number_tracks = $settings->radio_number_tracks;
+     $now_playing_notifications = $settings->now_playing_notifications;
+     $max_results = $settings->max_results;
+     $alfred_playlist_uri = $settings->alfred_playlist_uri;
+     $alfred_playlist_name = $settings->alfred_playlist_name;
+     $country_code = $settings->country_code;
+     $last_check_update_time = $settings->last_check_update_time;
+     $oauth_client_id = $settings->oauth_client_id;
+     $oauth_client_secret = $settings->oauth_client_secret;
+     $oauth_redirect_uri = $settings->oauth_redirect_uri;
+     $oauth_access_token = $settings->oauth_access_token;
+     $oauth_expires = $settings->oauth_expires;
+     $oauth_refresh_token = $settings->oauth_refresh_token;
+     $display_name = $settings->display_name;
+     $userid = $settings->userid;
+     $is_public_playlists = $settings->is_public_playlists;
+     $use_mopidy = $settings->use_mopidy;
+     $is_display_rating = $settings->is_display_rating;
+     $use_artworks = $settings->use_artworks;
+     $always_display_lyrics_in_browser = $settings->always_display_lyrics_in_browser;
+     $use_spotify_connect = $settings->use_spotify_connect;
+
+    //TODO: retry
+    try {
+        $api = getSpotifyWebAPI($w);
+
+        $noresult = true;
+
+        $savedDevices = array();
+        foreach ($api->getMyDevices()->devices as $device) {
+            if ($device->is_active) {
+                array_unshift($savedDevices , $device);
+            } else {
+                $savedDevices[] = $device;
+            }
+            $noresult = false;
+        }
+
+        if(!$noresult) {
+            $w->result(null, '', 'Select one of your Spotify Connect devices', 'Select one of your Spotify Connect devices below as your listening device', './images/connect.png', 'no', null, '');
+
+            foreach ($savedDevices as $device) {
+                $added = '';
+                if($device->is_active) {
+                    $added = '🔈';
+                }
+                // TODO
+                if($device->type == 'Computer') {
+                    $icon = './images/computer.png';
+                } else if($device->type == 'Smartphone') {
+                    $icon = './images/smartphone.png';
+                } else {
+                    $icon = './images/speaker.png';
+                }
+                $volume = '';
+                if($device->volume_percent != null) {
+                    $volume = '(volume: '.floatToSquares($device->volume_percent/100).')';
+                }
+                if($device->is_restricted) {
+                    $w->result(null, 'help', $added.'Device '.$device->name.' cannot be controlled', '⚠ This device cannot be controlled by Spotify WEB API', $icon, 'no', null, '');
+                } else {
+                    if (!$device->is_active) {
+                        $w->result(null, serialize(array(
+                            '' /*track_uri*/,
+                            '' /* album_uri */,
+                            '' /* artist_uri */,
+                            '' /* playlist_uri */,
+                            '' /* spotify_command */,
+                            '' /* query */,
+                            'CHANGE_DEVICE▹'.$device->id /* other_settings*/,
+                            '' /* other_action */,
+                            '' /* artist_name */,
+                            '' /* track_name */,
+                            '' /* album_name */,
+                            '' /* track_artwork_path */,
+                            '' /* artist_artwork_path */,
+                            '' /* album_artwork_path */,
+                            '' /* playlist_name */,
+                            '', /* playlist_artwork_path */
+                        )), $added.'Switch playback to '.$device->name.' '.$volume, array(
+                        'Type enter to validate',
+                        'alt' => 'Not Available',
+                        'cmd' => 'Not Available',
+                        'shift' => 'Not Available',
+                        'fn' => 'Not Available',
+                        'ctrl' => 'Not Available',
+                        ), $icon, 'yes', null, '');
+                    } else {
+                        $w->result(null, 'help', $added.' '.$device->name.' is currently active '.$volume, 'This device is the currently active device', $icon, 'no', null, '');
+                    }
+                }
+            }
+
+        } else {
+            $w->result(null, 'help', 'There was no Spotify Connect device found!', '', './images/warning.png', 'no', null, '');
+        }
+    }  catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+        if($e->getMessage() == 'Permissions missing') {
+            $w->result(null, serialize(array(
+                        '' /*track_uri*/,
+                        '' /* album_uri */,
+                        '' /* artist_uri */,
+                        '' /* playlist_uri */,
+                        '' /* spotify_command */,
+                        '' /* query */,
+                        '' /* other_settings*/,
+                        'reset_oauth_settings' /* other_action */,
+                        '' /* artist_name */,
+                        '' /* track_name */,
+                        '' /* album_name */,
+                        '' /* track_artwork_path */,
+                        '' /* artist_artwork_path */,
+                        '' /* album_artwork_path */,
+                        '' /* playlist_name */,
+                        '', /* playlist_artwork_path */
+                    )), 'The workflow needs more privilages to do this, click to restart authentication', array(
+                    'Next time you invoke the workflow, you will have to re-authenticate',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/warning.png', 'yes', null, '');
+        } else {
+            $w->result(null, 'help', 'Exception occurred', ''.$e->getMessage(), './images/warning.png', 'no', null, '');
+        }
+        echo $w->tojson();
+        exit;
+    } 
+
+ }
 /**
  * firstDelimiterYourMusic function.
  *

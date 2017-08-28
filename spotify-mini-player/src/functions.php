@@ -3,6 +3,252 @@
 require_once './src/workflows.php';
 require './vendor/autoload.php';
 
+
+/**
+ * getVolumeSpotifyConnect function.
+ *
+ * @param mixed $w
+ */
+ function getVolumeSpotifyConnect($w, $device_id)
+ {
+     try {
+        $api = getSpotifyWebAPI($w);
+        
+        foreach ($api->getMyDevices()->devices as $device) {
+            if ($device->is_active) {
+                return $device->volume_percent;
+            }
+        }
+        return false;  
+     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+        logMsg('Error(getVolumeSpotifyConnect): (exception '.print_r($e).')');
+        handleSpotifyWebAPIException($w, $e);
+     }
+ }
+
+/**
+ * changeVolumeSpotifyConnect function.
+ *
+ * @param mixed $w
+ */
+ function changeVolumeSpotifyConnect($w, $device_id, $volume_percent)
+ {
+     try {
+         $api = getSpotifyWebAPI($w);
+         $api->changeVolume([
+            'volume_percent' => $volume_percent,
+        ]);
+     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+        logMsg('Error(changeVolumeSpotifyConnect): (exception '.print_r($e).')');
+        handleSpotifyWebAPIException($w, $e);
+     }
+ }
+
+/**
+ * playTrackSpotifyConnect function.
+ *
+ * @param mixed $w
+ */
+ function playTrackSpotifyConnect($w, $device_id, $track_uri, $context_uri)
+ {
+     try {
+         $api = getSpotifyWebAPI($w);
+
+         if($context_uri != '') {
+            if($track_uri != '') {
+                $offset = [
+                    'uri' => $track_uri,
+                ];
+                $options = [
+                    'context_uri' => $context_uri,
+                    'offset' => $offset,
+                ];
+            } else {
+                $options = [
+                    'context_uri' => $context_uri,
+                ];
+            }
+            $api->play($device_id, $options);
+         } else {
+            $uris = array();
+            $uris[] = $track_uri;
+            $options = [
+                'uris' => $uris
+            ];
+            $api->play($device_id, $options);
+         }
+         
+     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+        logMsg('Error(playTrackSpotifyConnect): (exception '.print_r($e).')');
+        handleSpotifyWebAPIException($w, $e);
+     }
+ }
+
+/**
+ * nextTrackSpotifyConnect function.
+ *
+ * @param mixed $w
+ */
+ function nextTrackSpotifyConnect($w, $device_id)
+ {
+     try {
+         $api = getSpotifyWebAPI($w);
+         $api->next($device_id);
+     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+        logMsg('Error(nextTrackSpotifyConnect): (exception '.print_r($e).')');
+        handleSpotifyWebAPIException($w, $e);
+     }
+ }
+
+/**
+ * previousTrackSpotifyConnect function.
+ *
+ * @param mixed $w
+ */
+ function previousTrackSpotifyConnect($w, $device_id)
+ {
+     try {
+         $api = getSpotifyWebAPI($w);
+         $api->previous($device_id);
+     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+        logMsg('Error(previousTrackSpotifyConnect): (exception '.print_r($e).')');
+        handleSpotifyWebAPIException($w, $e);
+     }
+ }
+
+/**
+ * playpauseSpotifyConnect function.
+ *
+ * @param mixed $w
+ */
+ function playpauseSpotifyConnect($w, $device_id, $country_code)
+ {
+     try {
+         $api = getSpotifyWebAPI($w);
+
+        $playback_info = $api->getMyCurrentPlaybackInfo(array(
+            'market' => $country_code,
+            ));
+
+        $is_playing = $playback_info->is_playing;
+        if($is_playing) {
+            $api->pause($device_id);
+        } else {
+            $api->play($device_id);
+        }
+     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+        logMsg('Error(playpauseSpotifyConnect): (exception '.print_r($e).')');
+        handleSpotifyWebAPIException($w, $e);
+     }
+ }
+
+/**
+ * playSpotifyConnect function.
+ *
+ * @param mixed $w
+ */
+ function playSpotifyConnect($w, $device_id)
+ {
+     try {
+         $api = getSpotifyWebAPI($w);
+         $api->play($device_id);
+     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+        logMsg('Error(playSpotifyConnect): (exception '.print_r($e).')');
+        handleSpotifyWebAPIException($w, $e);
+     }
+ }
+
+/**
+ * pauseSpotifyConnect function.
+ *
+ * @param mixed $w
+ */
+ function pauseSpotifyConnect($w, $device_id)
+ {
+     try {
+         $api = getSpotifyWebAPI($w);
+         $api->pause($device_id);
+     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+        logMsg('Error(pauseSpotifyConnect): (exception '.print_r($e).')');
+        handleSpotifyWebAPIException($w, $e);
+     }
+ }
+
+/**
+ * getSpotifyConnectCurrentDeviceId function.
+ *
+ * @param mixed $w
+ */
+ function getSpotifyConnectCurrentDeviceId($w)
+ {
+    try {
+        $api = getSpotifyWebAPI($w);
+
+        foreach ($api->getMyDevices()->devices as $device) {
+            if ($device->is_active) {
+                return $device->id;
+            }
+        }
+        return '';  
+    }  catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+        if($e->getMessage() == 'Permissions missing') {
+            $w->result(null, serialize(array(
+                        '' /*track_uri*/,
+                        '' /* album_uri */,
+                        '' /* artist_uri */,
+                        '' /* playlist_uri */,
+                        '' /* spotify_command */,
+                        '' /* query */,
+                        '' /* other_settings*/,
+                        'reset_oauth_settings' /* other_action */,
+                        '' /* artist_name */,
+                        '' /* track_name */,
+                        '' /* album_name */,
+                        '' /* track_artwork_path */,
+                        '' /* artist_artwork_path */,
+                        '' /* album_artwork_path */,
+                        '' /* playlist_name */,
+                        '', /* playlist_artwork_path */
+                    )), 'The workflow needs more privilages to do this, click to restart authentication', array(
+                    'Next time you invoke the workflow, you will have to re-authenticate',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/warning.png', 'yes', null, '');
+        } else {
+            logMsg('Error(getSpotifyConnectCurrentDeviceId): (exception '.print_r($e).')');
+            handleSpotifyWebAPIException($w, $e);
+        }
+    }
+ }
+
+
+/**
+ * changeUserDevice function.
+ *
+ * @param mixed $w
+ */
+ function changeUserDevice($w, $device_id)
+ {
+    $options = [
+        'device_ids' => $device_id,
+        'play' => true
+    ];
+     try {
+         $api = getSpotifyWebAPI($w);
+         $api->changeMyDevice($options);
+     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+        logMsg('Error(changeUserDevice): (exception '.print_r($e).')');
+        handleSpotifyWebAPIException($w, $e);
+
+        return false;
+     }
+ 
+     return true;
+ }
+
 /**
  * isShuffleActive function.
  *
@@ -509,6 +755,7 @@ function switchThemeColor($w,$theme_color)
             'E5BAF801-726E-49C0-ABF2-7AD9F9ECD22A' => 'share',
             'FAA5FC99-7909-45B6-9BF0-7601DBAADC4F' => 'youtube',
             'C323BECC-0183-4562-B817-65624E13B3F3' => 'share',
+            'B8D706BB-D6E9-4AE3-B36B-ED6D4B34AD5F' => 'connect',
             'icon' => 'icon',
         );
 
@@ -583,6 +830,7 @@ function switchThemeColor($w,$theme_color)
             '4FE5620A-FB79-440E-8633-B8148EE1191E' => 'add_to',
             'C5B9A789-80F3-41BA-9A46-C34DD4CDE050' => 'share',
             '15D6EBE2-6D82-4F2C-A4B3-5949424B4EF9' => 'youtube',
+            '28180F27-0728-414D-88F3-76E99A58FA7D' => 'connect',
         );
 
     foreach ($uuid_imgs as $key => $value) {
@@ -869,6 +1117,52 @@ function getCurrentTrackInfoWithMopidy($w, $displayError = true)
 
     return ''.$track_name.'▹'.$artist_name.'▹'.$album_name.'▹'.$state.'▹'.$track_uri.'▹'.$length.'▹'.'0';
 }
+
+/**
+ * getCurrentTrackInfoWithSpotifyConnect function.
+ *
+ * @param mixed $w
+ * @param bool  $displayError (default: true)
+ */
+ function getCurrentTrackInfoWithSpotifyConnect($w, $displayError = true)
+ {
+    // Read settings from JSON
+    $settings = getSettings($w);
+    $country_code = $settings->country_code;
+
+    $track_name = '';
+    $artist_name = '';
+    $album_name = '';
+    $track_uri = '';
+    $length = 0;
+
+    try {
+        $api = getSpotifyWebAPI($w);
+
+        $current_track_info = $api->getMyCurrentTrack(array(
+            'market' => $country_code,
+            ));
+
+        $track_name = $current_track_info->item->name;
+        $artist_name = $current_track_info->item->artists[0]->name;
+        $album_name = $current_track_info->item->album->name;
+        $is_playing = $current_track_info->is_playing;
+        if($is_playing) {
+            $state = 'playing';
+        } else {
+            $state = 'paused';
+        }
+        $track_uri = $current_track_info->item->uri;
+        $length = ($current_track_info->item->duration_ms);
+        $popularity = $current_track_info->item->popularity;
+        
+        $retArr = array(''.$track_name.'▹'.$artist_name.'▹'.$album_name.'▹'.$state.'▹'.$track_uri.'▹'.$length.'▹'.$popularity);
+    }  catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+        logMsg('Error(playSpotifyConnect): (exception '.print_r($e).')');
+        return 'connect_stopped';
+    } 
+     return ''.$track_name.'▹'.$artist_name.'▹'.$album_name.'▹'.$state.'▹'.$track_uri.'▹'.$length.'▹'.'0';
+ }
 
 /**
  * playUriWithMopidyWithoutClearing function.
@@ -1224,12 +1518,27 @@ function updateCurrentTrackIndexFromPlayQueue($w)
     if ($playqueue == false) {
         displayNotificationWithArtwork($w, 'No play queue yet', './images/warning.png', 'Error!');
     }
-    exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
-    if ($retVal != 0) {
-        displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-        exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('c_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
 
-        return;
+    // Read settings from JSON
+
+    $settings = getSettings($w);
+    
+    $use_mopidy = $settings->use_mopidy;
+    $use_spotify_connect = $settings->use_spotify_connect;
+
+    if ($use_mopidy) {
+        $retArr = array(getCurrentTrackInfoWithMopidy($w));
+    } else if(!$use_spotify_connect) {
+        // get info on current song
+        exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
+        if ($retVal != 0) {
+            displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
+            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('c_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
+
+            return;
+        }
+    } else {
+        $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
     }
 
     if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
@@ -1450,10 +1759,11 @@ function lookupCurrentArtist($w)
     $settings = getSettings($w);
 
     $use_mopidy = $settings->use_mopidy;
+    $use_spotify_connect = $settings->use_spotify_connect;
 
     if ($use_mopidy) {
         $retArr = array(getCurrentTrackInfoWithMopidy($w));
-    } else {
+    } else if(!$use_spotify_connect) {
         // get info on current song
         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
         if ($retVal != 0) {
@@ -1462,6 +1772,8 @@ function lookupCurrentArtist($w)
 
             return;
         }
+    } else {
+        $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
     }
 
     if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
@@ -1502,10 +1814,11 @@ function displayCurrentArtistBiography($w)
     $settings = getSettings($w);
 
     $use_mopidy = $settings->use_mopidy;
+    $use_spotify_connect = $settings->use_spotify_connect;
 
     if ($use_mopidy) {
         $retArr = array(getCurrentTrackInfoWithMopidy($w));
-    } else {
+    } else if(!$use_spotify_connect) {
         // get info on current song
         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
         if ($retVal != 0) {
@@ -1514,6 +1827,8 @@ function displayCurrentArtistBiography($w)
 
             return;
         }
+    } else {
+        $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
     }
 
     if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
@@ -1550,10 +1865,11 @@ function playCurrentArtist($w)
     $use_mopidy = $settings->use_mopidy;
     $country_code = $settings->country_code;
     $use_artworks = $settings->use_artworks;
+    $use_spotify_connect = $settings->use_spotify_connect;
 
     if ($use_mopidy) {
         $retArr = array(getCurrentTrackInfoWithMopidy($w));
-    } else {
+    } else if(!$use_spotify_connect) {
         // get info on current song
         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
         if ($retVal != 0) {
@@ -1562,6 +1878,8 @@ function playCurrentArtist($w)
 
             return;
         }
+    } else {
+        $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
     }
 
     if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
@@ -1603,10 +1921,11 @@ function playCurrentAlbum($w)
 
     $use_mopidy = $settings->use_mopidy;
     $use_artworks = $settings->use_artworks;
+    $use_spotify_connect = $settings->use_spotify_connect;
 
     if ($use_mopidy) {
         $retArr = array(getCurrentTrackInfoWithMopidy($w));
-    } else {
+    } else if(!$use_spotify_connect) {
         // get info on current song
         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
         if ($retVal != 0) {
@@ -1615,6 +1934,8 @@ function playCurrentAlbum($w)
 
             return;
         }
+    } else {
+        $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
     }
 
     if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
@@ -1646,10 +1967,11 @@ function addCurrentTrackTo($w)
     $settings = getSettings($w);
 
     $use_mopidy = $settings->use_mopidy;
+    $use_spotify_connect = $settings->use_spotify_connect;
 
     if ($use_mopidy) {
         $retArr = array(getCurrentTrackInfoWithMopidy($w));
-    } else {
+    } else if(!$use_spotify_connect) {
         // get info on current song
         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
         if ($retVal != 0) {
@@ -1658,6 +1980,8 @@ function addCurrentTrackTo($w)
 
             return;
         }
+    } else {
+        $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
     }
 
     if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
@@ -1711,7 +2035,7 @@ function removeCurrentTrackFrom($w)
 
     if ($use_mopidy) {
         $retArr = array(getCurrentTrackInfoWithMopidy($w));
-    } else {
+    } else if(!$use_spotify_connect) {
         // get info on current song
         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
         if ($retVal != 0) {
@@ -1764,10 +2088,11 @@ function addCurrentTrackToAlfredPlaylist($w)
     $settings = getSettings($w);
 
     $use_mopidy = $settings->use_mopidy;
+    $use_spotify_connect = $settings->use_spotify_connect;
 
     if ($use_mopidy) {
         $retArr = array(getCurrentTrackInfoWithMopidy($w));
-    } else {
+    } else if(!$use_spotify_connect) {
         // get info on current song
         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
         if ($retVal != 0) {
@@ -1776,6 +2101,8 @@ function addCurrentTrackToAlfredPlaylist($w)
 
             return;
         }
+    } else {
+        $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
     }
 
     if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
@@ -1846,10 +2173,11 @@ function addCurrentTrackToYourMusic($w)
 
     $use_mopidy = $settings->use_mopidy;
     $use_artworks = $settings->use_artworks;
+    $use_spotify_connect = $settings->use_spotify_connect;
 
     if ($use_mopidy) {
         $retArr = array(getCurrentTrackInfoWithMopidy($w));
-    } else {
+    } else if(!$use_spotify_connect) {
         // get info on current song
         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
         if ($retVal != 0) {
@@ -1858,6 +2186,8 @@ function addCurrentTrackToYourMusic($w)
 
             return;
         }
+    } else {
+        $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
     }
 
     if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
@@ -2413,10 +2743,11 @@ function createRadioArtistPlaylistForCurrentArtist($w)
     $settings = getSettings($w);
 
     $use_mopidy = $settings->use_mopidy;
+    $use_spotify_connect = $settings->use_spotify_connect;
 
     if ($use_mopidy) {
         $retArr = array(getCurrentTrackInfoWithMopidy($w));
-    } else {
+    } else if(!$use_spotify_connect) {
         // get info on current song
         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
         if ($retVal != 0) {
@@ -2425,6 +2756,8 @@ function createRadioArtistPlaylistForCurrentArtist($w)
 
             return;
         }
+    } else {
+        $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
     }
 
     if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
@@ -2620,10 +2953,11 @@ function createRadioSongPlaylistForCurrentTrack($w)
     $settings = getSettings($w);
 
     $use_mopidy = $settings->use_mopidy;
+    $use_spotify_connect = $settings->use_spotify_connect;
 
     if ($use_mopidy) {
         $retArr = array(getCurrentTrackInfoWithMopidy($w));
-    } else {
+    } else if(!$use_spotify_connect) {
         // get info on current song
         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
         if ($retVal != 0) {
@@ -2632,6 +2966,8 @@ function createRadioSongPlaylistForCurrentTrack($w)
 
             return;
         }
+    } else {
+        $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
     }
 
     if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
@@ -3426,10 +3762,11 @@ function displayNotificationForCurrentTrack($w)
     $is_display_rating = $settings->is_display_rating;
     $use_artworks = $settings->use_artworks;
     $now_playing_notifications = $settings->now_playing_notifications;
+    $use_spotify_connect = $settings->use_spotify_connect;
 
     if ($use_mopidy) {
         $retArr = array(getCurrentTrackInfoWithMopidy($w));
-    } else {
+    } else if(!$use_spotify_connect) {
         // get info on current song
         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
         if ($retVal != 0) {
@@ -3438,6 +3775,8 @@ function displayNotificationForCurrentTrack($w)
 
             return;
         }
+    } else {
+        $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
     }
 
     if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
@@ -3480,10 +3819,11 @@ function displayLyricsForCurrentTrack($w)
 
     $use_mopidy = $settings->use_mopidy;
     $always_display_lyrics_in_browser = $settings->always_display_lyrics_in_browser;
+    $use_spotify_connect = $settings->use_spotify_connect;
 
     if ($use_mopidy) {
         $retArr = array(getCurrentTrackInfoWithMopidy($w));
-    } else {
+    } else if(!$use_spotify_connect) {
         // get info on current song
         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
         if ($retVal != 0) {
@@ -3492,6 +3832,8 @@ function displayLyricsForCurrentTrack($w)
 
             return;
         }
+    } else {
+        $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
     }
 
     if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
@@ -6730,6 +7072,7 @@ function getSettings($w)
             'theme_color' => 'green',
             'search_order' => 'playlist▹artist▹track▹album',
             'always_display_lyrics_in_browser' => 0,
+            'use_spotify_connect' => 0,
         );
 
         $ret = $w->write($default, 'settings.json');
@@ -6816,6 +7159,12 @@ function getSettings($w)
         $settings = $w->read('settings.json');
     }
 
+    // add use_spotify_connect if needed
+    if (!isset($settings->use_spotify_connect)) {
+        updateSetting($w, 'use_spotify_connect', 0);
+        $settings = $w->read('settings.json');
+    }
+    
     return $settings;
 }
 

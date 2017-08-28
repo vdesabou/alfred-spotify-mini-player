@@ -116,7 +116,23 @@
 			<key>itemuid</key>
 			<string>70E29B81-95AB-45F3-AA49-37E0A6417F8C</string>
 		</dict>
-		<dict/>
+		<dict>
+			<key>actionconfig</key>
+			<dict>
+				<key>autoworkflowuid</key>
+				<true/>
+				<key>triggerid</key>
+				<string>com.vdesabou.miniplayer.connect</string>
+			</dict>
+			<key>actionuid</key>
+			<string>remote.alfred.runworkflow</string>
+			<key>buttoniconid</key>
+			<string>28180F27-0728-414D-88F3-76E99A58FA7D</string>
+			<key>buttonlabel</key>
+			<string>Show Connect</string>
+			<key>itemuid</key>
+			<string>DE668106-4F4A-4805-BFE3-7A61ABA752C2</string>
+		</dict>
 		<dict>
 			<key>actionconfig</key>
 			<dict>

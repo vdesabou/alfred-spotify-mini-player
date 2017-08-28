@@ -2,7 +2,7 @@
 
 DATADIR=""
 ACTION=""
-USE_MOPIDY=""
+APP=""
 
 while getopts ':d:a:m:' arguments
 	do
@@ -14,7 +14,7 @@ while getopts ':d:a:m:' arguments
 			ACTION="${OPTARG}"
 			;;
 		m)
-			USE_MOPIDY="${OPTARG}"
+			APP="${OPTARG}"
 			;;
 	   \?)
 			print "ERROR: ${OPTARG} is not a valid option"
@@ -110,6 +110,39 @@ function StartMopidy
 	done
 }
 
+function StartSpotifyConnect
+{
+	result=""
+	query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "current_connect" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
+	current_track_url=""
+	old_player_state=""
+	player_state=""
+	track_url=""
+
+	until [ "${result}" == "connect_stopped" ]
+	do
+		result=$(php -f ./src/action.php -- "$query" "TRACK" "")
+
+		track_url=$(echo "${result}" | awk -F '▹' '{print $5}')
+		player_state=$(echo "${result}" | awk -F '▹' '{print $4}')
+
+		if [ "${track_url}" != "${current_track_url}" ]
+		then
+			current_track_url=$(echo "${result}" | awk -F '▹' '{print $5}')
+			osascript -e 'tell application "Alfred 3" to run trigger "display_current_track_notification" in workflow "com.vdesabou.spotify.mini.player" with argument "${track_url}"'
+		fi
+
+		if [ "${player_state}" != "${old_player_state}" ] && [ "${player_state}" == "playing" ]
+		then
+			osascript -e 'tell application "Alfred 3" to run trigger "display_current_track_notification" in workflow "com.vdesabou.spotify.mini.player" with argument "${player_state}"'
+		fi
+
+		old_player_state=${player_state}
+
+		sleep 3
+	done
+}
+
 if [ "${ACTION}" = "stop" ]
 then
 	for pid in $(ps -efx | grep "spotify_mini_player_notifications" | grep -v grep | awk '{print $2}')
@@ -149,9 +182,13 @@ traceit "INFO: creating lock file . `date`"
 echo $$ > "${DATADIR}/spotify_mini_player_notifications.lock"
 
 # call to main function
-if [ "${USE_MOPIDY}" = "" ]
+if [ "${APP}" = "SPOTIFY" ]
 then
 	StartAppleScript
+elif [ "${APP}" = "CONNECT" ]
+then
+	StartSpotifyConnect
+	traceit "INFO: StartSpotifyConnect . `date`"
 else
 	StartMopidy
 fi
