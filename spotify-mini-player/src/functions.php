@@ -3,6 +3,71 @@
 require_once './src/workflows.php';
 require './vendor/autoload.php';
 
+/**
+ * getArtistName function.
+ *
+ * @param mixed $w
+ * @param mixed $artist_uri
+ */
+ function getArtistName($w, $artist_uri)
+ {
+     try {
+         $api = getSpotifyWebAPI($w);
+         $artist = $api->getArtist($artist_uri);
+
+        return $artist->name;
+     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+         logMsg('Error(getArtistName): (exception '.print_r($e).')');
+ 
+         return '';
+     }
+ }
+
+/**
+ * getAlbumName function.
+ *
+ * @param mixed $w
+ * @param mixed $album_uri
+ */
+ function getAlbumName($w, $album_uri)
+ {
+     try {
+         $api = getSpotifyWebAPI($w);
+         $album = $api->getAlbum($album_uri);
+
+        return $album->name;
+     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+         logMsg('Error(getAlbumName): (exception '.print_r($e).')');
+ 
+         return '';
+     }
+ }
+
+/**
+ * getPlaylistName function.
+ *
+ * @param mixed $w
+ * @param mixed $playlist_uri
+ */
+ function getPlaylistName($w, $playlist_uri)
+ {
+     $url = '';
+     $tmp = explode(':', $playlist_uri);
+     try {
+         $api = getSpotifyWebAPI($w);
+         $playlist = $api->getUserPlaylist(urlencode($tmp[2]), $tmp[4], array(
+                 'fields' => array(
+                     'name',
+                 ),
+             ));
+
+        return $playlist->name;
+     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+         logMsg('Error(getPlaylistName): (exception '.print_r($e).')');
+ 
+         return '';
+     }
+ }
 
 /**
  * getVolumeSpotifyConnect function.

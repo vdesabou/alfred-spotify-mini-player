@@ -842,12 +842,38 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                 $device_name = $playback_info->device->name;
                 $device_type = $playback_info->device->type;
     
-                $shuffle_state = $playback_info->shuffle_state;
-                $repeat_state = $playback_info->repeat_state;
+
+                $shuffle_state = "inactive";
+                if($playback_info->shuffle_state) {
+                    $shuffle_state = "active";
+                }
+
+                $context_type = '';
+                if($playback_info->context != null) {
+                    $context_type = $playback_info->context->type;
+                    if($context_type == 'playlist') {
+                        $playlist_uri = $playback_info->context->uri;
+                        $context = 'playlist ' . getPlaylistName($w, $playlist_uri). ' ';
+                    } else if($context_type == 'album') {
+                        $album_uri = $playback_info->context->uri;
+                        $context = 'album ' . getAlbumName($w, $album_uri) . ' ';
+                    } else if($context_type == 'artist') {
+                        $artist_uri = $playback_info->context->uri;
+                        $context = 'artist ' . getArtistName($w, $artist_uri) . ' ';
+                    }
+                    
+
+                }
+                $repeat_state = "Repeat is <inactive>";
+                if($playback_info->repeat_state == 'track') {
+                    $repeat_state = "Repeat track is <active>";
+                } else if($playback_info->repeat_state == 'track') {
+                    $repeat_state = "Repeat " . $context_type . " is <active>";
+                }
                 
 
                 if ($device_name != '') {
-                    $w->result(null, 'help', 'Playing on ' . $device_type . ' ' . $device_name, 'shuffle_state ' . $shuffle_state . ' repeat_state ' . $repeat_state, './images/info.png', 'no', null, '');
+                    $w->result(null, 'help', 'Playing ' . $context . 'on ' . $device_type . ' ' . $device_name, 'Shuffle is <' . $shuffle_state . '>. ' . $repeat_state, './images/connect.png', 'no', null, '');
                 }    
             }  catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
                 if($e->getMessage() == 'Permissions missing') {
