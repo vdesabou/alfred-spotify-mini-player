@@ -4,6 +4,30 @@ require_once './src/workflows.php';
 require './vendor/autoload.php';
 
 /**
+ * isUserPremiumSubscriber function.
+ *
+ * @param mixed $w
+ */
+ function isUserPremiumSubscriber($w)
+ {
+     try {
+         $api = getSpotifyWebAPI($w);
+         $me = $api->me();
+     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+         logMsg('Error(isUserPremiumSubscriber): (exception '.print_r($e).')');
+         return false;
+     }
+ 
+     if (isset($me->product)) {
+        if($me->product == 'premium') {
+            return true;
+        }
+     }
+ 
+     return false;
+ }
+
+/**
  * getArtistName function.
  *
  * @param mixed $w
@@ -326,9 +350,9 @@ function isShuffleActive()
 
     $settings = getSettings($w);
 
-    $use_mopidy = $settings->use_mopidy;
+    $output_application = $settings->output_application;
 
-    if ($use_mopidy) {
+    if ($output_application == 'MOPIDY') {
         $isShuffleEnabled = invokeMopidyMethod($w, 'core.tracklist.get_random', array());
         if ($isShuffleEnabled) {
             $command_output = 'true';
@@ -693,7 +717,7 @@ function switchThemeColor($w,$theme_color)
     // Read settings from JSON
 
     $settings = getSettings($w);
-    $use_mopidy = $settings->use_mopidy;
+    $output_application = $settings->output_application;
 
     $imgs = scandir('./images/');
 
@@ -1002,7 +1026,7 @@ function createDebugFile($w)
     // Read settings from JSON
 
     $settings = getSettings($w);
-    $use_mopidy = $settings->use_mopidy;
+    $output_application = $settings->output_application;
     $oauth_client_secret = $settings->oauth_client_secret;
     $oauth_access_token = $settings->oauth_access_token;
     $oauth_refresh_token = $settings->oauth_refresh_token;
@@ -1110,7 +1134,7 @@ function createDebugFile($w)
     $output = $output."\n";
     $output = $output.'alfred_debug:'.getenv('alfred_debug');
     $output = $output."\n";
-    if (!$use_mopidy) {
+    if ($output_application != 'MOPIDY') {
         $output = $output.'Spotify desktop version:'.exec("osascript -e 'tell application \"Spotify\" to version'");
     } else {
         $output = $output.'Mopidy version:'.invokeMopidyMethod($w, 'core.get_version', array(), false);
@@ -1385,9 +1409,9 @@ function addPlaylistToPlayQueue($w, $playlist_uri, $playlist_name)
     // Read settings from JSON
 
     $settings = getSettings($w);
-    $use_mopidy = $settings->use_mopidy;
+    $output_application = $settings->output_application;
 
-    if (!$use_mopidy) {
+    if ($output_application != 'MOPIDY') {
         $tracks = getThePlaylistFullTracks($w, $playlist_uri);
         if ($tracks == false) {
             displayNotificationWithArtwork($w, 'Cannot get tracks for playlist '.$playlist_name, './images/warning.png', 'Error!');
@@ -1423,9 +1447,9 @@ function addAlbumToPlayQueue($w, $album_uri, $album_name)
     // Read settings from JSON
 
     $settings = getSettings($w);
-    $use_mopidy = $settings->use_mopidy;
+    $output_application = $settings->output_application;
 
-    if (!$use_mopidy) {
+    if ($output_application != 'MOPIDY') {
         $tracks = getTheAlbumFullTracks($w, $album_uri);
         if ($tracks == false) {
             displayNotificationWithArtwork($w, 'Cannot get tracks for album '.$album_name, './images/warning.png', 'Error!');
@@ -1463,10 +1487,10 @@ function addArtistToPlayQueue($w, $artist_uri, $artist_name, $country_code)
     // Read settings from JSON
 
     $settings = getSettings($w);
-    $use_mopidy = $settings->use_mopidy;
+    $output_application = $settings->output_application;
     $country_code = $settings->country_code;
 
-    if (!$use_mopidy) {
+    if ($output_application != 'MOPIDY') {
         $tracks = getTheArtistFullTracks($w, $artist_uri, $country_code);
         if ($tracks == false) {
             displayNotificationWithArtwork($w, 'Cannot get tracks for artist '.$artist_name, './images/warning.png', 'Error!');
@@ -1507,10 +1531,10 @@ function addTrackToPlayQueue($w, $track_uri, $track_name, $artist_name, $album_n
     // Read settings from JSON
 
     $settings = getSettings($w);
-    $use_mopidy = $settings->use_mopidy;
+    $output_application = $settings->output_application;
 
     $track = new stdClass();
-    if (!$use_mopidy) {
+    if ($output_application != 'MOPIDY') {
         $tracks = array();
         $track = getTheFullTrack($w, $track_uri, $country_code);
         if ($track == false) {
@@ -1548,7 +1572,7 @@ function addTrackToPlayQueue($w, $track_uri, $track_name, $artist_name, $album_n
     } else {
         // replace current track by new track
         $playqueue->tracks[$playqueue->current_track_index] = $track;
-        if (!$use_mopidy) {
+        if ($output_application != 'MOPIDY') {
             $tracks = $playqueue->tracks;
         }
         if ($playqueue->type != '') {
@@ -1588,12 +1612,12 @@ function updateCurrentTrackIndexFromPlayQueue($w)
 
     $settings = getSettings($w);
     
-    $use_mopidy = $settings->use_mopidy;
-    $use_spotify_connect = $settings->use_spotify_connect;
+    $output_application = $settings->output_application;
+    
 
-    if ($use_mopidy) {
+    if ($output_application == 'MOPIDY') {
         $retArr = array(getCurrentTrackInfoWithMopidy($w));
-    } else if(!$use_spotify_connect) {
+    } else if($output_application == 'APPLESCRIPT') {
         // get info on current song
         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
         if ($retVal != 0) {
@@ -1792,7 +1816,7 @@ function playAlfredPlaylist($w)
     $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
     $alfred_playlist_uri = $settings->alfred_playlist_uri;
     $alfred_playlist_name = $settings->alfred_playlist_name;
-    $use_mopidy = $settings->use_mopidy;
+    $output_application = $settings->output_application;
     $use_artworks = $settings->use_artworks;
 
     if ($alfred_playlist_uri == '' || $alfred_playlist_name == '') {
@@ -1800,7 +1824,7 @@ function playAlfredPlaylist($w)
 
         return;
     }
-    if ($use_mopidy) {
+    if ($output_application == 'MOPIDY') {
         playUriWithMopidy($w, $alfred_playlist_uri);
     } else {
         exec("osascript -e 'tell application \"Spotify\" to play track \"$alfred_playlist_uri\"'");
@@ -1823,12 +1847,12 @@ function lookupCurrentArtist($w)
 
     $settings = getSettings($w);
 
-    $use_mopidy = $settings->use_mopidy;
-    $use_spotify_connect = $settings->use_spotify_connect;
+    $output_application = $settings->output_application;
+    
 
-    if ($use_mopidy) {
+    if ($output_application == 'MOPIDY') {
         $retArr = array(getCurrentTrackInfoWithMopidy($w));
-    } else if(!$use_spotify_connect) {
+    } else if($output_application == 'APPLESCRIPT') {
         // get info on current song
         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
         if ($retVal != 0) {
@@ -1878,12 +1902,12 @@ function displayCurrentArtistBiography($w)
 
     $settings = getSettings($w);
 
-    $use_mopidy = $settings->use_mopidy;
-    $use_spotify_connect = $settings->use_spotify_connect;
+    $output_application = $settings->output_application;
+    
 
-    if ($use_mopidy) {
+    if ($output_application == 'MOPIDY') {
         $retArr = array(getCurrentTrackInfoWithMopidy($w));
-    } else if(!$use_spotify_connect) {
+    } else if($output_application == 'APPLESCRIPT') {
         // get info on current song
         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
         if ($retVal != 0) {
@@ -1927,14 +1951,14 @@ function playCurrentArtist($w)
 
     $settings = getSettings($w);
 
-    $use_mopidy = $settings->use_mopidy;
+    $output_application = $settings->output_application;
     $country_code = $settings->country_code;
     $use_artworks = $settings->use_artworks;
-    $use_spotify_connect = $settings->use_spotify_connect;
+    
 
-    if ($use_mopidy) {
+    if ($output_application == 'MOPIDY') {
         $retArr = array(getCurrentTrackInfoWithMopidy($w));
-    } else if(!$use_spotify_connect) {
+    } else if($output_application == 'APPLESCRIPT') {
         // get info on current song
         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
         if ($retVal != 0) {
@@ -1960,7 +1984,7 @@ function playCurrentArtist($w)
 
             return;
         }
-        if ($use_mopidy) {
+        if ($output_application == 'MOPIDY') {
             playUriWithMopidy($w, $artist_uri);
         } else {
             exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
@@ -1984,13 +2008,13 @@ function playCurrentAlbum($w)
 
     $settings = getSettings($w);
 
-    $use_mopidy = $settings->use_mopidy;
+    $output_application = $settings->output_application;
     $use_artworks = $settings->use_artworks;
-    $use_spotify_connect = $settings->use_spotify_connect;
+    
 
-    if ($use_mopidy) {
+    if ($output_application == 'MOPIDY') {
         $retArr = array(getCurrentTrackInfoWithMopidy($w));
-    } else if(!$use_spotify_connect) {
+    } else if($output_application == 'APPLESCRIPT') {
         // get info on current song
         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
         if ($retVal != 0) {
@@ -2031,12 +2055,12 @@ function addCurrentTrackTo($w)
 
     $settings = getSettings($w);
 
-    $use_mopidy = $settings->use_mopidy;
-    $use_spotify_connect = $settings->use_spotify_connect;
+    $output_application = $settings->output_application;
+    
 
-    if ($use_mopidy) {
+    if ($output_application == 'MOPIDY') {
         $retArr = array(getCurrentTrackInfoWithMopidy($w));
-    } else if(!$use_spotify_connect) {
+    } else if($output_application == 'APPLESCRIPT') {
         // get info on current song
         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
         if ($retVal != 0) {
@@ -2096,11 +2120,11 @@ function removeCurrentTrackFrom($w)
 
     $settings = getSettings($w);
 
-    $use_mopidy = $settings->use_mopidy;
+    $output_application = $settings->output_application;
 
-    if ($use_mopidy) {
+    if ($output_application == 'MOPIDY') {
         $retArr = array(getCurrentTrackInfoWithMopidy($w));
-    } else if(!$use_spotify_connect) {
+    } else if($output_application == 'APPLESCRIPT') {
         // get info on current song
         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
         if ($retVal != 0) {
@@ -2152,12 +2176,12 @@ function addCurrentTrackToAlfredPlaylist($w)
 
     $settings = getSettings($w);
 
-    $use_mopidy = $settings->use_mopidy;
-    $use_spotify_connect = $settings->use_spotify_connect;
+    $output_application = $settings->output_application;
+    
 
-    if ($use_mopidy) {
+    if ($output_application == 'MOPIDY') {
         $retArr = array(getCurrentTrackInfoWithMopidy($w));
-    } else if(!$use_spotify_connect) {
+    } else if($output_application == 'APPLESCRIPT') {
         // get info on current song
         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
         if ($retVal != 0) {
@@ -2236,13 +2260,13 @@ function addCurrentTrackToYourMusic($w)
 
     $settings = getSettings($w);
 
-    $use_mopidy = $settings->use_mopidy;
+    $output_application = $settings->output_application;
     $use_artworks = $settings->use_artworks;
-    $use_spotify_connect = $settings->use_spotify_connect;
+    
 
-    if ($use_mopidy) {
+    if ($output_application == 'MOPIDY') {
         $retArr = array(getCurrentTrackInfoWithMopidy($w));
-    } else if(!$use_spotify_connect) {
+    } else if($output_application == 'APPLESCRIPT') {
         // get info on current song
         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
         if ($retVal != 0) {
@@ -2807,12 +2831,12 @@ function createRadioArtistPlaylistForCurrentArtist($w)
 
     $settings = getSettings($w);
 
-    $use_mopidy = $settings->use_mopidy;
-    $use_spotify_connect = $settings->use_spotify_connect;
+    $output_application = $settings->output_application;
+    
 
-    if ($use_mopidy) {
+    if ($output_application == 'MOPIDY') {
         $retArr = array(getCurrentTrackInfoWithMopidy($w));
-    } else if(!$use_spotify_connect) {
+    } else if($output_application == 'APPLESCRIPT') {
         // get info on current song
         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
         if ($retVal != 0) {
@@ -3017,12 +3041,12 @@ function createRadioSongPlaylistForCurrentTrack($w)
 
     $settings = getSettings($w);
 
-    $use_mopidy = $settings->use_mopidy;
-    $use_spotify_connect = $settings->use_spotify_connect;
+    $output_application = $settings->output_application;
+    
 
-    if ($use_mopidy) {
+    if ($output_application == 'MOPIDY') {
         $retArr = array(getCurrentTrackInfoWithMopidy($w));
-    } else if(!$use_spotify_connect) {
+    } else if($output_application == 'APPLESCRIPT') {
         // get info on current song
         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
         if ($retVal != 0) {
@@ -3823,15 +3847,15 @@ function displayNotificationForCurrentTrack($w)
 
     $settings = getSettings($w);
 
-    $use_mopidy = $settings->use_mopidy;
+    $output_application = $settings->output_application;
     $is_display_rating = $settings->is_display_rating;
     $use_artworks = $settings->use_artworks;
     $now_playing_notifications = $settings->now_playing_notifications;
-    $use_spotify_connect = $settings->use_spotify_connect;
+    
 
-    if ($use_mopidy) {
+    if ($output_application == 'MOPIDY') {
         $retArr = array(getCurrentTrackInfoWithMopidy($w));
-    } else if(!$use_spotify_connect) {
+    } else if($output_application == 'APPLESCRIPT') {
         // get info on current song
         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
         if ($retVal != 0) {
@@ -3882,13 +3906,13 @@ function displayLyricsForCurrentTrack($w)
 
     $settings = getSettings($w);
 
-    $use_mopidy = $settings->use_mopidy;
+    $output_application = $settings->output_application;
     $always_display_lyrics_in_browser = $settings->always_display_lyrics_in_browser;
-    $use_spotify_connect = $settings->use_spotify_connect;
+    
 
-    if ($use_mopidy) {
+    if ($output_application == 'MOPIDY') {
         $retArr = array(getCurrentTrackInfoWithMopidy($w));
-    } else if(!$use_spotify_connect) {
+    } else if($output_application == 'APPLESCRIPT') {
         // get info on current song
         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
         if ($retVal != 0) {
@@ -7126,7 +7150,7 @@ function getSettings($w)
             'userid' => '',
             'is_public_playlists' => 0,
             'quick_mode' => 0,
-            'use_mopidy' => 0,
+            'output_application' => 'APPLESCRIPT',
             'mopidy_server' => '127.0.0.1',
             'mopidy_port' => '6680',
             'volume_percent' => 20,
@@ -7137,7 +7161,6 @@ function getSettings($w)
             'theme_color' => 'green',
             'search_order' => 'playlist▹artist▹track▹album',
             'always_display_lyrics_in_browser' => 0,
-            'use_spotify_connect' => 0,
         );
 
         $ret = $w->write($default, 'settings.json');
@@ -7149,12 +7172,6 @@ function getSettings($w)
     // add quick_mode if needed
     if (!isset($settings->quick_mode)) {
         updateSetting($w, 'quick_mode', 0);
-        $settings = $w->read('settings.json');
-    }
-
-    // add usemopidy if needed
-    if (!isset($settings->use_mopidy)) {
-        updateSetting($w, 'use_mopidy', 0);
         $settings = $w->read('settings.json');
     }
 
@@ -7224,9 +7241,14 @@ function getSettings($w)
         $settings = $w->read('settings.json');
     }
 
-    // add use_spotify_connect if needed
-    if (!isset($settings->use_spotify_connect)) {
-        updateSetting($w, 'use_spotify_connect', 0);
+    // migrate use_mopidy
+    if (isset($settings->use_mopidy)) {
+        if ($output_application == 'MOPIDY') {
+            updateSetting($w, 'output_application', 'MOPIDY');
+        } else {
+            updateSetting($w, 'output_application', 'APPLESCRIPT');
+        }
+        removeSetting($w,'use_mopidy');
         $settings = $w->read('settings.json');
     }
     
@@ -7268,6 +7290,36 @@ function updateSetting($w, $setting_name, $setting_new_value, $settings_file = '
 
     return $ret;
 }
+
+/**
+ * removeSetting function.
+ *
+ * @param mixed  $w
+ * @param mixed  $setting_name
+ * @param string $settings_file     (default: 'settings.json')
+ */
+ function removeSetting($w, $setting_name, $settings_file = 'settings.json')
+ {
+     $settings = $w->read($settings_file);
+ 
+     if ($settings == false) {
+         logMsg('Error: removeSetting failed while reading JSON file');
+ 
+         return false;
+     }
+     $new_settings = array();
+ 
+     foreach ($settings as $key => $value) {
+         if ($key == $setting_name) {
+             // do nothing
+         } else {
+             $new_settings[$key] = $value;
+         }
+     }
+     $ret = $w->write($new_settings, $settings_file);
+ 
+     return $ret;
+ }
 
 /**
  * logMsg function.

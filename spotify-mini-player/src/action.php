@@ -42,12 +42,11 @@ $oauth_client_id = $settings->oauth_client_id;
 $oauth_client_secret = $settings->oauth_client_secret;
 $oauth_redirect_uri = $settings->oauth_redirect_uri;
 $oauth_access_token = $settings->oauth_access_token;
-$use_mopidy = $settings->use_mopidy;
 $volume_percent = $settings->volume_percent;
 $use_artworks = $settings->use_artworks;
 $use_facebook = $settings->use_facebook;
 $always_display_lyrics_in_browser = $settings->always_display_lyrics_in_browser;
-$use_spotify_connect = $settings->use_spotify_connect;
+$output_application = $settings->output_application;
 
 
 if ($other_action != 'reset_settings' && $other_action != 'spot_mini_debug' && !startswith($other_settings,'SWITCH_USER▹')) {
@@ -82,9 +81,9 @@ if ($add_to_option != '') {
 // start now playing if needed
 if($oauth_access_token != '') {
     $app_arg = '';
-    if ($use_mopidy) {
+    if ($output_application == 'MOPIDY') {
         $app_arg = 'MOPIDY';
-    } else if(!$use_spotify_connect) {
+    } else if($output_application == 'APPLESCRIPT') {
         $app_arg = 'SPOTIFY';
     } else {
         $app_arg = 'CONNECT';
@@ -93,7 +92,7 @@ if($oauth_access_token != '') {
 }
 
 // make sure spotify is running
-if (!$use_mopidy && !$use_spotify_connect) {
+if ($output_application == 'APPLESCRIPT') {
     if($oauth_access_token != '' && $other_action != 'update_library' && $other_action != 'refresh_library' && $type != 'DOWNLOAD_ARTWORKS') {
         exec('./src/is_spotify_running.ksh 2>&1', $retArr, $retVal);
         if ($retArr[0] != 0) {
@@ -148,9 +147,9 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
             return;
         } elseif ($playlist_uri != '') {
-            if ($use_mopidy) {
+            if ($output_application == 'MOPIDY') {
                 playTrackInContextWithMopidy($w, $track_uri, $playlist_uri);
-            } else if(!$use_spotify_connect) {
+            } else if($output_application == 'APPLESCRIPT') {
                 exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\" in context \"$playlist_uri\"'");
             } else {
                 $device_id = getSpotifyConnectCurrentDeviceId($w);
@@ -172,9 +171,9 @@ if ($type == 'TRACK' && $other_settings == '' &&
             return;
         } else {
             if ($other_action == '' || $other_action == 'play_track_from_play_queue') {
-                if ($use_mopidy) {
+                if ($output_application == 'MOPIDY') {
                     playUriWithMopidyWithoutClearing($w, $track_uri);
-                } else if(!$use_spotify_connect) {
+                } else if($output_application == 'APPLESCRIPT') {
                     exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
                 } else {
                     $device_id = getSpotifyConnectCurrentDeviceId($w);
@@ -191,9 +190,9 @@ if ($type == 'TRACK' && $other_settings == '' &&
                     stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
                 }
                 if ($other_action == '') {
-                    if ($use_mopidy) {
+                    if ($output_application == 'MOPIDY') {
                         $retArr = array(getCurrentTrackInfoWithMopidy($w));
-                    } else if(!$use_spotify_connect) {
+                    } else if($output_application == 'APPLESCRIPT') {
                         // get info on current song
                         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
                         if ($retVal != 0) {
@@ -215,9 +214,9 @@ if ($type == 'TRACK' && $other_settings == '' &&
             }
         }
     } elseif ($playlist_uri != '') {
-        if ($use_mopidy) {
+        if ($output_application == 'MOPIDY') {
             playUriWithMopidy($w, $playlist_uri);
-        } else if(!$use_spotify_connect) {
+        } else if($output_application == 'APPLESCRIPT') {
             exec("osascript -e 'tell application \"Spotify\" to play track \"$playlist_uri\"'");
         } else {
             $device_id = getSpotifyConnectCurrentDeviceId($w);
@@ -255,9 +254,9 @@ if ($type == 'TRACK' && $other_settings == '' &&
         }
         $album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, true, false, false, $use_artworks);
     }
-    if ($use_mopidy) {
+    if ($output_application == 'MOPIDY') {
         playUriWithMopidy($w, $album_uri);
-    } else if(!$use_spotify_connect) {
+    } else if($output_application == 'APPLESCRIPT') {
         exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
     } else {
         $device_id = getSpotifyConnectCurrentDeviceId($w);
@@ -339,9 +338,9 @@ if ($type == 'TRACK' && $other_settings == '' &&
             }
             $artist_artwork_path = getArtistArtwork($w, $artist_uri, $artist_name, true, false, false, $use_artworks);
         }
-        if ($use_mopidy) {
+        if ($output_application == 'MOPIDY') {
             playUriWithMopidy($w, $artist_uri);
-        } else if(!$use_spotify_connect) {
+        } else if($output_application == 'APPLESCRIPT') {
             exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
         } else {
             $device_id = getSpotifyConnectCurrentDeviceId($w);
@@ -875,9 +874,35 @@ if ($type == 'TRACK' && $other_settings == '' &&
         return;
     } elseif ($other_action == 'enable_mopidy') {
         exec('./src/spotify_mini_player_notifications.ksh -d "'.$w->data().'" -a stop >> "'.$w->cache().'/action.log" 2>&1 & ');
-        $ret = updateSetting($w, 'use_mopidy', 1);
+        $ret = updateSetting($w, 'output_application', 'MOPIDY');
         if ($ret == true) {
-            displayNotificationWithArtwork($w, 'Mopidy is now enabled', './images/enable_mopidy.png', 'Settings');
+            displayNotificationWithArtwork($w, 'Mopidy is now used', './images/mopidy.png', 'Settings');
+        } else {
+            displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
+        }
+
+        return;
+    } elseif ($other_action == 'enable_applescript') {
+        exec('./src/spotify_mini_player_notifications.ksh -d "'.$w->data().'" -a stop >> "'.$w->cache().'/action.log" 2>&1 & ');
+        if ($output_application == 'MOPIDY') {
+            invokeMopidyMethod($w, 'core.playback.pause', array());
+        }
+        $ret = updateSetting($w, 'output_application', 'APPLESCRIPT');
+        if ($ret == true) {
+            displayNotificationWithArtwork($w, 'Spotify Desktop is now used', './images/spotify.png', 'Settings');
+        } else {
+            displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
+        }
+
+        return;
+    } elseif ($other_action == 'enable_connect') {
+        exec('./src/spotify_mini_player_notifications.ksh -d "'.$w->data().'" -a stop >> "'.$w->cache().'/action.log" 2>&1 & ');
+        if ($output_application == 'MOPIDY') {
+            invokeMopidyMethod($w, 'core.playback.pause', array());
+        }
+        $ret = updateSetting($w, 'output_application', 'CONNECT');
+        if ($ret == true) {
+            displayNotificationWithArtwork($w, 'Spotify Connect is now used', './images/connect.png', 'Settings');
         } else {
             displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
         }
@@ -900,19 +925,6 @@ if ($type == 'TRACK' && $other_settings == '' &&
         updateSetting($w, 'search_order', getenv('chosen_search_order'));
 
         displayNotificationWithArtwork($w, 'Search order results is now changed', './images/search.png', 'Settings');
-        return;
-    } elseif ($other_action == 'disable_mopidy') {
-        exec('./src/spotify_mini_player_notifications.ksh -d "'.$w->data().'" -a stop >> "'.$w->cache().'/action.log" 2>&1 & ');
-        if ($use_mopidy) {
-            invokeMopidyMethod($w, 'core.playback.pause', array());
-        }
-        $ret = updateSetting($w, 'use_mopidy', 0);
-        if ($ret == true) {
-            displayNotificationWithArtwork($w, 'Mopidy is now disabled', './images/disable_mopidy.png', 'Settings');
-        } else {
-            displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
-        }
-
         return;
     } elseif ($other_action == 'enable_alfred_playlist') {
         $ret = updateSetting($w, 'is_alfred_playlist_active', 1);
@@ -951,9 +963,9 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
         return;
     } elseif ($other_action == 'play_track_in_album_context') {
-        if ($use_mopidy) {
+        if ($output_application == 'MOPIDY') {
             playTrackInContextWithMopidy($w, $track_uri, $album_uri);
-        } else if(!$use_spotify_connect) {
+        } else if($output_application == 'APPLESCRIPT') {
             exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\" in context \"$album_uri\"'");
         } else {
             $device_id = getSpotifyConnectCurrentDeviceId($w);
@@ -974,9 +986,9 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
         return;
     } elseif ($other_action == 'play') {
-        if ($use_mopidy) {
+        if ($output_application == 'MOPIDY') {
             invokeMopidyMethod($w, 'core.playback.resume', array());
-        } else if(!$use_spotify_connect) {
+        } else if($output_application == 'APPLESCRIPT') {
             exec("osascript -e 'tell application \"Spotify\" to play'");
         } else {
             $device_id = getSpotifyConnectCurrentDeviceId($w);
@@ -989,9 +1001,9 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
         return;
     } elseif ($other_action == 'pause') {
-        if ($use_mopidy) {
+        if ($output_application == 'MOPIDY') {
             invokeMopidyMethod($w, 'core.playback.pause', array());
-        } else if(!$use_spotify_connect) {
+        } else if($output_application == 'APPLESCRIPT') {
             exec("osascript -e 'tell application \"Spotify\" to pause'");
         } else {
             $device_id = getSpotifyConnectCurrentDeviceId($w);
@@ -1004,14 +1016,14 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
         return;
     } elseif ($other_action == 'playpause') {
-        if ($use_mopidy) {
+        if ($output_application == 'MOPIDY') {
             $state = invokeMopidyMethod($w, 'core.playback.get_state', array());
             if ($state == 'playing') {
                 invokeMopidyMethod($w, 'core.playback.pause', array());
             } else {
                 invokeMopidyMethod($w, 'core.playback.resume', array());
             }
-        } else if(!$use_spotify_connect) {
+        } else if($output_application == 'APPLESCRIPT') {
             exec("osascript -e 'tell application \"Spotify\" to playpause'");
         } else {
             $device_id = getSpotifyConnectCurrentDeviceId($w);
@@ -1111,10 +1123,8 @@ if ($type == 'TRACK' && $other_settings == '' &&
         return;
     } elseif ($other_action == 'current') {
         displayNotificationForCurrentTrack($w);
-        if (!$use_mopidy) {
-            if ($type != 'playing') {
-                updateCurrentTrackIndexFromPlayQueue($w);
-            }
+        if ($type != 'playing') {
+            updateCurrentTrackIndexFromPlayQueue($w);
         }
 
         return;
@@ -1157,9 +1167,9 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
         return;
     } elseif ($other_action == 'previous') {
-        if ($use_mopidy) {
+        if ($output_application == 'MOPIDY') {
             invokeMopidyMethod($w, 'core.playback.previous', array());
-        } else if(!$use_spotify_connect) {
+        } else if($output_application == 'APPLESCRIPT') {
             exec("osascript -e 'tell application \"Spotify\" to previous track'");
         } else {
             $device_id = getSpotifyConnectCurrentDeviceId($w);
@@ -1172,9 +1182,9 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
         return;
     } elseif ($other_action == 'next') {
-        if ($use_mopidy) {
+        if ($output_application == 'MOPIDY') {
             invokeMopidyMethod($w, 'core.playback.next', array());
-        } else if(!$use_spotify_connect) {
+        } else if($output_application == 'APPLESCRIPT') {
             exec("osascript -e 'tell application \"Spotify\" to next track'");
         } else {
             $device_id = getSpotifyConnectCurrentDeviceId($w);
@@ -1200,9 +1210,9 @@ if ($type == 'TRACK' && $other_settings == '' &&
         return;
     } elseif ($other_action == 'random') {
         list($track_uri, $track_name, $artist_name, $album_name, $duration) = getRandomTrack($w);
-        if ($use_mopidy) {
+        if ($output_application == 'MOPIDY') {
             playUriWithMopidyWithoutClearing($w, $track_uri);
-        } else if(!$use_spotify_connect) {
+        } else if($output_application == 'APPLESCRIPT') {
             exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
         } else {
             $device_id = getSpotifyConnectCurrentDeviceId($w);
@@ -1221,9 +1231,9 @@ if ($type == 'TRACK' && $other_settings == '' &&
         return;
     } elseif ($other_action == 'random_album') {
         list($album_uri, $album_name, $theartistname) = getRandomAlbum($w);
-        if ($use_mopidy) {
+        if ($output_application == 'MOPIDY') {
             playUriWithMopidy($w, $album_uri);
-        } else if(!$use_spotify_connect) {
+        } else if($output_application == 'APPLESCRIPT') {
             exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
         } else {
             $device_id = getSpotifyConnectCurrentDeviceId($w);
@@ -1287,9 +1297,9 @@ if ($type == 'TRACK' && $other_settings == '' &&
         return;
     } elseif ($other_action == 'playartist') {
         $artist_artwork_path = getArtistArtwork($w, $artist_uri, $artist_name, true, false, false, $use_artworks);
-        if ($use_mopidy) {
+        if ($output_application == 'MOPIDY') {
             playUriWithMopidy($w, $artist_uri);
-        } else if(!$use_spotify_connect) {
+        } else if($output_application == 'APPLESCRIPT') {
             exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
         } else {
             $device_id = getSpotifyConnectCurrentDeviceId($w);
@@ -1321,9 +1331,9 @@ if ($type == 'TRACK' && $other_settings == '' &&
             }
         }
         $album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, true, false, false, $use_artworks);
-        if ($use_mopidy) {
+        if ($output_application == 'MOPIDY') {
             playUriWithMopidy($w, $album_uri);
-        } else if(!$use_spotify_connect) {
+        } else if($output_application == 'APPLESCRIPT') {
             exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
         } else {
             $device_id = getSpotifyConnectCurrentDeviceId($w);
@@ -1341,7 +1351,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
         return;
     } elseif ($other_action == 'volume_up') {
-        if ($use_mopidy) {
+        if ($output_application == 'MOPIDY') {
             $theVolume = invokeMopidyMethod($w, 'core.mixer.get_volume', array());
             if (($theVolume + $volume_percent) > getenv('settings_volume_max')) {
                 $theVolume = getenv('settings_volume_max');
@@ -1352,7 +1362,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
                 displayNotificationWithArtwork($w, 'Spotify volume has been increased to '.$theVolume.'%', './images/volume_up.png', 'Volume Up');
             }
             invokeMopidyMethod($w, 'core.mixer.set_volume', array('volume' => $theVolume));
-        } else if(!$use_spotify_connect) {
+        } else if($output_application == 'APPLESCRIPT') {
             $volume_max = getenv('settings_volume_max');
             $command_output = exec("osascript -e 'tell application \"Spotify\"
 				if it is running then
@@ -1392,7 +1402,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
         return;
     } elseif ($other_action == 'volume_down') {
-        if ($use_mopidy) {
+        if ($output_application == 'MOPIDY') {
             $theVolume = invokeMopidyMethod($w, 'core.mixer.get_volume', array());
             if (($theVolume - $volume_percent) < getenv('settings_volume_min')) {
                 $theVolume = getenv('settings_volume_min');
@@ -1402,7 +1412,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
                 displayNotificationWithArtwork($w, 'Spotify volume has been decreased to '.$theVolume.'%', './images/volume_down.png', 'Volume Down');
             }
             invokeMopidyMethod($w, 'core.mixer.set_volume', array('volume' => $theVolume));
-        } else if(!$use_spotify_connect) {
+        } else if($output_application == 'APPLESCRIPT') {
             $volume_min = getenv('settings_volume_min');
             $command_output = exec("osascript -e 'tell application \"Spotify\"
 				if it is running then
@@ -1442,9 +1452,9 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
         return;
     } elseif ($other_action == 'volmax') {
-        if ($use_mopidy) {
+        if ($output_application == 'MOPIDY') {
             invokeMopidyMethod($w, 'core.mixer.set_volume', array('volume' => getenv('settings_volume_max')));
-        } else if(!$use_spotify_connect) {
+        } else if($output_application == 'APPLESCRIPT') {
             $volume_max = getenv('settings_volume_max');
             exec("osascript -e 'tell application \"Spotify\"
 				if it is running then
@@ -1469,9 +1479,9 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
         return;
     } elseif ($other_action == 'volmid') {
-        if ($use_mopidy) {
+        if ($output_application == 'MOPIDY') {
             invokeMopidyMethod($w, 'core.mixer.set_volume', array('volume' => getenv('settings_volume_mid')));
-        } else if(!$use_spotify_connect) {
+        } else if($output_application == 'APPLESCRIPT') {
             $volume_mid = getenv('settings_volume_mid');
             exec("osascript -e 'tell application \"Spotify\"
 				if it is running then
@@ -1498,7 +1508,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
     } elseif ($other_action == 'mute') {
         $volume_max = getenv('settings_volume_max');
         $volume_min = getenv('settings_volume_min');
-        if ($use_mopidy) {
+        if ($output_application == 'MOPIDY') {
             $volume = invokeMopidyMethod($w, 'core.mixer.get_volume', array());
             if ($volume <= 0) {
                 invokeMopidyMethod($w, 'core.mixer.set_volume', array('volume' => $volume_max));
@@ -1507,7 +1517,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
                 invokeMopidyMethod($w, 'core.mixer.set_volume', array('volume' => $volume_min));
                 $command_output = 'Spotify volume is muted.';
             }
-        } else if(!$use_spotify_connect) {
+        } else if($output_application == 'APPLESCRIPT') {
             $command_output = exec("osascript -e 'tell application \"Spotify\"
 				if sound volume is less than or equal to $volume_min then
 					set sound volume to $volume_max
@@ -1545,7 +1555,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
         return;
     } elseif ($other_action == 'shuffle') {
-        if ($use_mopidy) {
+        if ($output_application == 'MOPIDY') {
             $isShuffleEnabled = invokeMopidyMethod($w, 'core.tracklist.get_random', array());
             if ($isShuffleEnabled) {
                 invokeMopidyMethod($w, 'core.tracklist.set_random', array('value' => false));
@@ -1574,10 +1584,10 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
         return;
     } elseif ($other_action == 'web_search') {
-        if ($use_mopidy) {
+        if ($output_application == 'MOPIDY') {
             $ret = getCurrentTrackInfoWithMopidy($w, false);
             $results = explode('▹', $ret);
-        } else if(!$use_spotify_connect) {
+        } else if($output_application == 'APPLESCRIPT') {
             // get info on current song
             exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
 
@@ -1600,10 +1610,10 @@ if ($type == 'TRACK' && $other_settings == '' &&
         exec("osascript -e 'tell application \"Alfred 3\" to run trigger \"web_search\" in workflow \"com.vdesabou.spotify.mini.player\" with argument \"" . $search_text . "\"'");
         return;
     } elseif ($other_action == 'share') {
-        if ($use_mopidy) {
+        if ($output_application == 'MOPIDY') {
             $ret = getCurrentTrackInfoWithMopidy($w, false);
             $results = explode('▹', $ret);
-        } else if(!$use_spotify_connect) {
+        } else if($output_application == 'APPLESCRIPT') {
             // get info on current song
             exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
 
@@ -1653,7 +1663,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
         return;
     } elseif ($other_action == 'repeating') {
-        if ($use_mopidy) {
+        if ($output_application == 'MOPIDY') {
             $isRepeatingEnabled = invokeMopidyMethod($w, 'core.tracklist.get_repeat', array());
             if ($isRepeatingEnabled) {
                 invokeMopidyMethod($w, 'core.tracklist.set_repeat', array('value' => false));

@@ -254,7 +254,7 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress)
     $display_name = $settings->display_name;
     $userid = $settings->userid;
     $use_artworks = $settings->use_artworks;
-    $use_spotify_connect = $settings->use_spotify_connect;
+    $output_application = $settings->output_application;
     $quick_mode = $settings->quick_mode;
 
     ////////
@@ -317,7 +317,7 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress)
         $w->result(null, '', 'Current Track', 'Display current track information and browse various options', './images/current_track.png', 'no', null, 'Current Track▹');
     }
 
-    if($use_spotify_connect) {
+    if($output_application == 'CONNECT') {
         if(getenv('menu_display_spotify_connect') == 1) {
             $w->result(null, '', 'Spotify Connect', 'Display Spotify Connect information and choose various options', './images/connect.png', 'no', null, 'Spotify Connect▹');
         }
@@ -449,7 +449,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress)
     $display_name = $settings->display_name;
     $userid = $settings->userid;
     $quick_mode = $settings->quick_mode;
-    $use_mopidy = $settings->use_mopidy;
+    $output_application = $settings->output_application;
     $search_order = $settings->search_order;
 
     $search_categories = explode('▹', $search_order);
@@ -617,7 +617,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress)
                 $subtitle = $track[6];
                 $added = '';
                 if ($track[18] == true) {
-                    if ($use_mopidy) {
+                    if ($output_application == 'MOPIDY') {
                         // skip local tracks if using Mopidy
                         continue;
                     }
@@ -717,7 +717,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress)
     } // end foreach search_category
 
 
-    if (!$use_mopidy) {
+    if ($output_application != 'MOPIDY') {
         $w->result(null, serialize(array(
                     '' /*track_uri*/,
                     '' /* album_uri */,
@@ -877,7 +877,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
     $display_name = $settings->display_name;
     $userid = $settings->userid;
 
-    $use_mopidy = $settings->use_mopidy;
+    $output_application = $settings->output_application;
     $mopidy_server = $settings->mopidy_server;
     $mopidy_port = $settings->mopidy_port;
 
@@ -1433,7 +1433,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                     '', /* playlist_artwork_path */
                 )), 'Set Spotify Volume to 50%', 'Set the Spotify volume to 50%', './images/volmid.png', 'yes', '');
 
-        if ($use_mopidy == true) {
+        if ($output_application == 'MOPIDY') {
             $w->result('SpotifyMiniPlayer_'.'disable_mopidy', serialize(array(
                         '' /*track_uri*/,
                         '' /* album_uri */,
@@ -2137,7 +2137,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
         }
 
         if (strpos(strtolower('mopidy'), strtolower($query)) !== false) {
-            if ($use_mopidy == true) {
+            if ($output_application == 'MOPIDY') {
                 $w->result('SpotifyMiniPlayer_'.'disable_mopidy', serialize(array(
                             '' /*track_uri*/,
                             '' /* album_uri */,

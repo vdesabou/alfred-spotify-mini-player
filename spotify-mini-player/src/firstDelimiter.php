@@ -165,6 +165,7 @@ function firstDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
     $oauth_refresh_token = $settings->oauth_refresh_token;
     $display_name = $settings->display_name;
     $userid = $settings->userid;
+    $output_application = $settings->output_application;
 
     // Search artists
 
@@ -213,7 +214,7 @@ function firstDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
 
     if ($noresult) {
         $w->result(null, 'help', 'There is no result for your search', '', './images/warning.png', 'no', null, '');
-        if (!$use_mopidy) {
+        if ($output_application != 'MOPIDY') {
             $w->result(null, serialize(array(
                         '' /*track_uri*/,
                         '' /* album_uri */,
@@ -275,6 +276,7 @@ function firstDelimiterAlbums($w, $query, $settings, $db, $update_in_progress)
     $oauth_refresh_token = $settings->oauth_refresh_token;
     $display_name = $settings->display_name;
     $userid = $settings->userid;
+    $output_application = $settings->output_application;
 
     // New Releases menu
     $w->result(null, '', 'New Releases', 'Browse new album releases', './images/new_releases.png', 'no', null, 'New Releases▹');
@@ -319,7 +321,7 @@ function firstDelimiterAlbums($w, $query, $settings, $db, $update_in_progress)
 
     if ($noresult) {
         $w->result(null, 'help', 'There is no result for your search', '', './images/warning.png', 'no', null, '');
-        if (!$use_mopidy) {
+        if ($output_application != 'MOPIDY') {
             $w->result(null, serialize(array(
                         '' /*track_uri*/,
                         '' /* album_uri */,
@@ -690,15 +692,15 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
     $display_name = $settings->display_name;
     $userid = $settings->userid;
     $is_public_playlists = $settings->is_public_playlists;
-    $use_mopidy = $settings->use_mopidy;
+    $output_application = $settings->output_application;
     $is_display_rating = $settings->is_display_rating;
     $use_artworks = $settings->use_artworks;
     $always_display_lyrics_in_browser = $settings->always_display_lyrics_in_browser;
-    $use_spotify_connect = $settings->use_spotify_connect;
+    
 
-    if ($use_mopidy) {
+    if ($output_application == 'MOPIDY') {
         $retArr = array(getCurrentTrackInfoWithMopidy($w));
-    } else if(!$use_spotify_connect) {
+    } else if($output_application == 'APPLESCRIPT') {
         // get info on current song
         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
         if ($retVal != 0) {
@@ -817,7 +819,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
         }
 
 
-        if ($use_spotify_connect) {
+        if ($output_application == 'CONNECT') {
             try {
                 $api = getSpotifyWebAPI($w);
     
@@ -1169,11 +1171,11 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
      $display_name = $settings->display_name;
      $userid = $settings->userid;
      $is_public_playlists = $settings->is_public_playlists;
-     $use_mopidy = $settings->use_mopidy;
+     $output_application = $settings->output_application;
      $is_display_rating = $settings->is_display_rating;
      $use_artworks = $settings->use_artworks;
      $always_display_lyrics_in_browser = $settings->always_display_lyrics_in_browser;
-     $use_spotify_connect = $settings->use_spotify_connect;
+     
 
     //TODO: retry
     try {
@@ -1199,7 +1201,6 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                 if($device->is_active) {
                     $added = '🔈';
                 }
-                // TODO
                 if($device->type == 'Computer') {
                     $icon = './images/computer.png';
                 } else if($device->type == 'Smartphone') {
@@ -1544,7 +1545,7 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
     $userid = $settings->userid;
     $is_public_playlists = $settings->is_public_playlists;
     $quick_mode = $settings->quick_mode;
-    $use_mopidy = $settings->use_mopidy;
+    $output_application = $settings->output_application;
     $mopidy_server = $settings->mopidy_server;
     $mopidy_port = $settings->mopidy_port;
     $is_display_rating = $settings->is_display_rating;
@@ -1695,6 +1696,13 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
     $w->result(null, '', 'Configure Max Number of Results (currently '.$max_results.')', 'Number of results displayed (it does not apply to the list of your playlists)', './images/results_numbers.png', 'no', null, 'Settings▹MaxResults▹');
     $w->result(null, '', 'Configure Number of Radio tracks (currently '.$radio_number_tracks.')', 'Number of tracks when creating a Radio Playlist.', './images/radio_numbers.png', 'no', null, 'Settings▹RadioTracks▹');
     $w->result(null, '', 'Configure Volume Percent (currently '.$volume_percent.'%)', 'The percentage of volume which is increased or decreased.', './images/volume_up.png', 'no', null, 'Settings▹VolumePercentage▹');
+
+    $w->result(null, '', 'Select the output: Spotify Connect, Mopidy or Spotify Desktop', 'The workflow supports 3 kinds of outputs', './images/speaker.png', 'no', null, 'Settings▹Output▹');
+
+    if ($output_application == 'MOPIDY') {
+        $w->result(null, '', 'Configure Mopidy server (currently '.$mopidy_server.')', 'Server name/ip where Mopidy server is running', './images/mopidy_server.png', 'no', null, 'Settings▹MopidyServer▹');
+        $w->result(null, '', 'Configure Mopidy port (currently '.$mopidy_port.')', 'TCP port where Mopidy server is running', './images/mopidy_port.png', 'no', null, 'Settings▹MopidyPort▹');
+    }
 
     if ($now_playing_notifications == true) {
         $w->result(null, serialize(array(
@@ -2210,62 +2218,6 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
             ), './images/enable_public_playlists.png', 'yes', null, '');
     }
 
-    if ($use_mopidy == true) {
-        $w->result(null, serialize(array(
-                    '' /*track_uri*/,
-                    '' /* album_uri */,
-                    '' /* artist_uri */,
-                    '' /* playlist_uri */,
-                    '' /* spotify_command */,
-                    '' /* query */,
-                    '' /* other_settings*/,
-                    'disable_mopidy' /* other_action */,
-                    '' /* artist_name */,
-                    '' /* track_name */,
-                    '' /* album_name */,
-                    '' /* track_artwork_path */,
-                    '' /* artist_artwork_path */,
-                    '' /* album_artwork_path */,
-                    '' /* playlist_name */,
-                    '', /* playlist_artwork_path */
-                )), 'Disable Mopidy', array(
-                'You will use Spotify Desktop app with AppleScript instead',
-                'alt' => 'Not Available',
-                'cmd' => 'Not Available',
-                'shift' => 'Not Available',
-                'fn' => 'Not Available',
-                'ctrl' => 'Not Available',
-            ), './images/disable_mopidy.png', 'yes', null, '');
-        $w->result(null, '', 'Configure Mopidy server (currently '.$mopidy_server.')', 'Server name/ip where Mopidy server is running', './images/mopidy_server.png', 'no', null, 'Settings▹MopidyServer▹');
-        $w->result(null, '', 'Configure Mopidy port (currently '.$mopidy_port.')', 'TCP port where Mopidy server is running', './images/mopidy_port.png', 'no', null, 'Settings▹MopidyPort▹');
-    } else {
-        $w->result(null, serialize(array(
-                    '' /*track_uri*/,
-                    '' /* album_uri */,
-                    '' /* artist_uri */,
-                    '' /* playlist_uri */,
-                    '' /* spotify_command */,
-                    '' /* query */,
-                    '' /* other_settings*/,
-                    'enable_mopidy' /* other_action */,
-                    '' /* artist_name */,
-                    '' /* track_name */,
-                    '' /* album_name */,
-                    '' /* track_artwork_path */,
-                    '' /* artist_artwork_path */,
-                    '' /* album_artwork_path */,
-                    '' /* playlist_name */,
-                    '', /* playlist_artwork_path */
-                )), 'Enable Mopidy', array(
-                'You will use Mopidy',
-                'alt' => 'Not Available',
-                'cmd' => 'Not Available',
-                'shift' => 'Not Available',
-                'fn' => 'Not Available',
-                'ctrl' => 'Not Available',
-            ), './images/enable_mopidy.png', 'yes', null, '');
-    }
-
     $w->result(null, serialize(array(
                 '' /*track_uri*/,
                 '' /* album_uri */,
@@ -2455,10 +2407,10 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
     $oauth_refresh_token = $settings->oauth_refresh_token;
     $display_name = $settings->display_name;
     $userid = $settings->userid;
-    $use_mopidy = $settings->use_mopidy;
+    $output_application = $settings->output_application;
     $use_artworks = $settings->use_artworks;
 
-    if ($use_mopidy) {
+    if ($output_application == 'MOPIDY') {
         $playqueue = $w->read('playqueue.json');
         if ($playqueue == false) {
             $w->result(null, 'help', 'There is no track in the play queue', 'Make sure to always use the workflow to launch tracks, playlists, etc..Internet connectivity is also required', './images/warning.png', 'no', null, '');
