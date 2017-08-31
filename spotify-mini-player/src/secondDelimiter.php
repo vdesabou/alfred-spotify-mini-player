@@ -1696,7 +1696,7 @@ function secondDelimiterSettings($w, $query, $settings, $db, $update_in_progress
 
         // loop on users
         foreach ($users as $user) {
-            if ($user == '.' || $user == '..' || $user == $user_id) {
+            if ($user == '.' || $user == '..' || $user == $user_id || $user == '.DS_Store') {
                 continue;
             }
             $w->result(null, serialize(array(
