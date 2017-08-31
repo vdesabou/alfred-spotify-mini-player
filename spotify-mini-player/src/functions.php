@@ -100,19 +100,48 @@ require './vendor/autoload.php';
  */
  function getVolumeSpotifyConnect($w, $device_id)
  {
-     try {
-        $api = getSpotifyWebAPI($w);
-        
-        foreach ($api->getMyDevices()->devices as $device) {
-            if ($device->is_active) {
-                return $device->volume_percent;
+    $retry = true;
+    $nb_retry = 0;
+    while ($retry) {
+        try {
+            $api = getSpotifyWebAPI($w);
+            
+            foreach ($api->getMyDevices()->devices as $device) {
+                if ($device->is_active) {
+                    $retry = false;
+                    return $device->volume_percent;
+                }
+            }
+            $retry = false;
+            return false;
+        } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+            logMsg('Error(getVolumeSpotifyConnect): retry '.$nb_retry.' (exception '.print_r($e).')');
+            if ($e->getCode() == 429) { // 429 is Too Many Requests
+                $lastResponse = $api->getRequest()->getLastResponse();
+                $retryAfter = $lastResponse['headers']['Retry-After'];
+                sleep(retryAfter);
+            } else if ($e->getCode() == 404) {
+                // skip
+                break;
+            } else if ($e->getCode() == 500
+                || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+                // retry
+                if ($nb_retry > 5) {
+                    handleSpotifyWebAPIException($w, $e);
+                    $retry = false;
+
+                    return false;
+                }
+                ++$nb_retry;
+                sleep(5);
+            } else {
+                handleSpotifyWebAPIException($w, $e);
+                $retry = false;
+
+                return false;
             }
         }
-        return false;  
-     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        logMsg('Error(getVolumeSpotifyConnect): (exception '.print_r($e).')');
-        handleSpotifyWebAPIException($w, $e);
-     }
+    }
  }
 
 /**
@@ -122,15 +151,43 @@ require './vendor/autoload.php';
  */
  function changeVolumeSpotifyConnect($w, $device_id, $volume_percent)
  {
-     try {
-         $api = getSpotifyWebAPI($w);
-         $api->changeVolume([
-            'volume_percent' => $volume_percent,
-        ]);
-     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        logMsg('Error(changeVolumeSpotifyConnect): (exception '.print_r($e).')');
-        handleSpotifyWebAPIException($w, $e);
-     }
+    $retry = true;
+    $nb_retry = 0;
+    while ($retry) {
+        try {
+            $api = getSpotifyWebAPI($w);
+            $api->changeVolume([
+                'volume_percent' => $volume_percent,
+            ]);
+            $retry = false;
+        } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+            logMsg('Error(changeVolumeSpotifyConnect): retry '.$nb_retry.' (exception '.print_r($e).')');
+            if ($e->getCode() == 429) { // 429 is Too Many Requests
+                $lastResponse = $api->getRequest()->getLastResponse();
+                $retryAfter = $lastResponse['headers']['Retry-After'];
+                sleep(retryAfter);
+            } else if ($e->getCode() == 404) {
+                // skip
+                break;
+            } else if ($e->getCode() == 500
+                || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+                // retry
+                if ($nb_retry > 5) {
+                    handleSpotifyWebAPIException($w, $e);
+                    $retry = false;
+
+                    return false;
+                }
+                ++$nb_retry;
+                sleep(5);
+            } else {
+                handleSpotifyWebAPIException($w, $e);
+                $retry = false;
+
+                return false;
+            }
+        }
+    }
  }
 
 /**
@@ -140,37 +197,65 @@ require './vendor/autoload.php';
  */
  function playTrackSpotifyConnect($w, $device_id, $track_uri, $context_uri)
  {
-     try {
-         $api = getSpotifyWebAPI($w);
+    $retry = true;
+    $nb_retry = 0;
+    while ($retry) {
+        try {
+            $api = getSpotifyWebAPI($w);
 
-         if($context_uri != '') {
-            if($track_uri != '') {
-                $offset = [
-                    'uri' => $track_uri,
-                ];
-                $options = [
-                    'context_uri' => $context_uri,
-                    'offset' => $offset,
-                ];
+            if ($context_uri != '') {
+                if ($track_uri != '') {
+                    $offset = [
+                        'uri' => $track_uri,
+                    ];
+                    $options = [
+                        'context_uri' => $context_uri,
+                        'offset' => $offset,
+                    ];
+                } else {
+                    $options = [
+                        'context_uri' => $context_uri,
+                    ];
+                }
+                $api->play($device_id, $options);
+                $retry = false;
             } else {
+                $uris = array();
+                $uris[] = $track_uri;
                 $options = [
-                    'context_uri' => $context_uri,
+                    'uris' => $uris
                 ];
+                $api->play($device_id, $options);
+                $retry = false;
             }
-            $api->play($device_id, $options);
-         } else {
-            $uris = array();
-            $uris[] = $track_uri;
-            $options = [
-                'uris' => $uris
-            ];
-            $api->play($device_id, $options);
-         }
-         
-     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        logMsg('Error(playTrackSpotifyConnect): (exception '.print_r($e).')');
-        handleSpotifyWebAPIException($w, $e);
-     }
+        } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+            logMsg('Error(playTrackSpotifyConnect): retry '.$nb_retry.' (exception '.print_r($e).')');
+            if ($e->getCode() == 429) { // 429 is Too Many Requests
+                $lastResponse = $api->getRequest()->getLastResponse();
+                $retryAfter = $lastResponse['headers']['Retry-After'];
+                sleep(retryAfter);
+            } else if ($e->getCode() == 404) {
+                // skip
+                break;
+            } else if ($e->getCode() == 500
+                || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+                // retry
+                if ($nb_retry > 5) {
+                    handleSpotifyWebAPIException($w, $e);
+                    $retry = false;
+
+                    return false;
+                }
+                ++$nb_retry;
+                sleep(5);
+            } else {
+                handleSpotifyWebAPIException($w, $e);
+                $retry = false;
+
+                return false;
+            }
+        }
+    }
  }
 
 /**
@@ -180,13 +265,41 @@ require './vendor/autoload.php';
  */
  function nextTrackSpotifyConnect($w, $device_id)
  {
-     try {
-         $api = getSpotifyWebAPI($w);
-         $api->next($device_id);
-     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        logMsg('Error(nextTrackSpotifyConnect): (exception '.print_r($e).')');
-        handleSpotifyWebAPIException($w, $e);
-     }
+    $retry = true;
+    $nb_retry = 0;
+    while ($retry) {
+        try {
+            $api = getSpotifyWebAPI($w);
+            $api->next($device_id);
+            $retry = false;
+        } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+            logMsg('Error(nextTrackSpotifyConnect): retry '.$nb_retry.' (exception '.print_r($e).')');
+            if ($e->getCode() == 429) { // 429 is Too Many Requests
+                $lastResponse = $api->getRequest()->getLastResponse();
+                $retryAfter = $lastResponse['headers']['Retry-After'];
+                sleep(retryAfter);
+            } else if ($e->getCode() == 404) {
+                // skip
+                break;
+            } else if ($e->getCode() == 500
+                || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+                // retry
+                if ($nb_retry > 5) {
+                    handleSpotifyWebAPIException($w, $e);
+                    $retry = false;
+
+                    return false;
+                }
+                ++$nb_retry;
+                sleep(5);
+            } else {
+                handleSpotifyWebAPIException($w, $e);
+                $retry = false;
+
+                return false;
+            }
+        }
+    }
  }
 
 /**
@@ -196,13 +309,41 @@ require './vendor/autoload.php';
  */
  function previousTrackSpotifyConnect($w, $device_id)
  {
-     try {
-         $api = getSpotifyWebAPI($w);
-         $api->previous($device_id);
-     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        logMsg('Error(previousTrackSpotifyConnect): (exception '.print_r($e).')');
-        handleSpotifyWebAPIException($w, $e);
-     }
+    $retry = true;
+    $nb_retry = 0;
+    while ($retry) {
+        try {
+            $api = getSpotifyWebAPI($w);
+            $api->previous($device_id);
+            $retry = false;
+        } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+            logMsg('Error(previousTrackSpotifyConnect): retry '.$nb_retry.' (exception '.print_r($e).')');
+            if ($e->getCode() == 429) { // 429 is Too Many Requests
+                $lastResponse = $api->getRequest()->getLastResponse();
+                $retryAfter = $lastResponse['headers']['Retry-After'];
+                sleep(retryAfter);
+            } else if ($e->getCode() == 404) {
+                // skip
+                break;
+            } else if ($e->getCode() == 500
+                || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+                // retry
+                if ($nb_retry > 5) {
+                    handleSpotifyWebAPIException($w, $e);
+                    $retry = false;
+
+                    return false;
+                }
+                ++$nb_retry;
+                sleep(5);
+            } else {
+                handleSpotifyWebAPIException($w, $e);
+                $retry = false;
+
+                return false;
+            }
+        }
+    }
  }
 
 /**
@@ -212,23 +353,51 @@ require './vendor/autoload.php';
  */
  function playpauseSpotifyConnect($w, $device_id, $country_code)
  {
-     try {
-         $api = getSpotifyWebAPI($w);
+    $retry = true;
+    $nb_retry = 0;
+    while ($retry) {
+        try {
+            $api = getSpotifyWebAPI($w);
 
-        $playback_info = $api->getMyCurrentPlaybackInfo(array(
+            $playback_info = $api->getMyCurrentPlaybackInfo(array(
             'market' => $country_code,
             ));
 
-        $is_playing = $playback_info->is_playing;
-        if($is_playing) {
-            $api->pause($device_id);
-        } else {
-            $api->play($device_id);
+            $is_playing = $playback_info->is_playing;
+            if ($is_playing) {
+                $api->pause($device_id);
+            } else {
+                $api->play($device_id);
+            }
+            $retry = false;
+        } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+            logMsg('Error(playpauseSpotifyConnect): retry '.$nb_retry.' (exception '.print_r($e).')');
+            if ($e->getCode() == 429) { // 429 is Too Many Requests
+                $lastResponse = $api->getRequest()->getLastResponse();
+                $retryAfter = $lastResponse['headers']['Retry-After'];
+                sleep(retryAfter);
+            } else if ($e->getCode() == 404) {
+                // skip
+                break;
+            } else if ($e->getCode() == 500
+                || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+                // retry
+                if ($nb_retry > 5) {
+                    handleSpotifyWebAPIException($w, $e);
+                    $retry = false;
+
+                    return false;
+                }
+                ++$nb_retry;
+                sleep(5);
+            } else {
+                handleSpotifyWebAPIException($w, $e);
+                $retry = false;
+
+                return false;
+            }
         }
-     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        logMsg('Error(playpauseSpotifyConnect): (exception '.print_r($e).')');
-        handleSpotifyWebAPIException($w, $e);
-     }
+    }
  }
 
 /**
@@ -238,13 +407,41 @@ require './vendor/autoload.php';
  */
  function playSpotifyConnect($w, $device_id)
  {
-     try {
-         $api = getSpotifyWebAPI($w);
-         $api->play($device_id);
-     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        logMsg('Error(playSpotifyConnect): (exception '.print_r($e).')');
-        handleSpotifyWebAPIException($w, $e);
-     }
+    $retry = true;
+    $nb_retry = 0;
+    while ($retry) {
+        try {
+            $api = getSpotifyWebAPI($w);
+            $api->play($device_id);
+            $retry = false;
+        } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+            logMsg('Error(playSpotifyConnect): retry '.$nb_retry.' (exception '.print_r($e).')');
+            if ($e->getCode() == 429) { // 429 is Too Many Requests
+                $lastResponse = $api->getRequest()->getLastResponse();
+                $retryAfter = $lastResponse['headers']['Retry-After'];
+                sleep(retryAfter);
+            } else if ($e->getCode() == 404) {
+                // skip
+                break;
+            } else if ($e->getCode() == 500
+                || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+                // retry
+                if ($nb_retry > 5) {
+                    handleSpotifyWebAPIException($w, $e);
+                    $retry = false;
+
+                    return false;
+                }
+                ++$nb_retry;
+                sleep(5);
+            } else {
+                handleSpotifyWebAPIException($w, $e);
+                $retry = false;
+
+                return false;
+            }
+        }
+    }
  }
 
 /**
@@ -254,13 +451,41 @@ require './vendor/autoload.php';
  */
  function pauseSpotifyConnect($w, $device_id)
  {
-     try {
-         $api = getSpotifyWebAPI($w);
-         $api->pause($device_id);
-     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        logMsg('Error(pauseSpotifyConnect): (exception '.print_r($e).')');
-        handleSpotifyWebAPIException($w, $e);
-     }
+    $retry = true;
+    $nb_retry = 0;
+    while ($retry) {
+        try {
+            $api = getSpotifyWebAPI($w);
+            $api->pause($device_id);
+            $retry = false;
+        } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+            logMsg('Error(pauseSpotifyConnect): retry '.$nb_retry.' (exception '.print_r($e).')');
+            if ($e->getCode() == 429) { // 429 is Too Many Requests
+                $lastResponse = $api->getRequest()->getLastResponse();
+                $retryAfter = $lastResponse['headers']['Retry-After'];
+                sleep(retryAfter);
+            } else if ($e->getCode() == 404) {
+                // skip
+                break;
+            } else if ($e->getCode() == 500
+                || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+                // retry
+                if ($nb_retry > 5) {
+                    handleSpotifyWebAPIException($w, $e);
+                    $retry = false;
+
+                    return false;
+                }
+                ++$nb_retry;
+                sleep(5);
+            } else {
+                handleSpotifyWebAPIException($w, $e);
+                $retry = false;
+
+                return false;
+            }
+        }
+    }
  }
 
 /**
@@ -270,45 +495,75 @@ require './vendor/autoload.php';
  */
  function getSpotifyConnectCurrentDeviceId($w)
  {
-    try {
-        $api = getSpotifyWebAPI($w);
+    $retry = true;
+    $nb_retry = 0;
+    while ($retry) {
+        try {
+            $api = getSpotifyWebAPI($w);
 
-        foreach ($api->getMyDevices()->devices as $device) {
-            if ($device->is_active) {
-                return $device->id;
+            foreach ($api->getMyDevices()->devices as $device) {
+                if ($device->is_active) {
+                    $retry = false;
+                    return $device->id;
+                }
             }
-        }
-        return '';  
-    }  catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        if($e->getMessage() == 'Permissions missing') {
-            $w->result(null, serialize(array(
-                        '' /*track_uri*/,
-                        '' /* album_uri */,
-                        '' /* artist_uri */,
-                        '' /* playlist_uri */,
-                        '' /* spotify_command */,
-                        '' /* query */,
-                        '' /* other_settings*/,
-                        'reset_oauth_settings' /* other_action */,
-                        '' /* artist_name */,
-                        '' /* track_name */,
-                        '' /* album_name */,
-                        '' /* track_artwork_path */,
-                        '' /* artist_artwork_path */,
-                        '' /* album_artwork_path */,
-                        '' /* playlist_name */,
-                        '', /* playlist_artwork_path */
-                    )), 'The workflow needs more privilages to do this, click to restart authentication', array(
-                    'Next time you invoke the workflow, you will have to re-authenticate',
-                    'alt' => 'Not Available',
-                    'cmd' => 'Not Available',
-                    'shift' => 'Not Available',
-                    'fn' => 'Not Available',
-                    'ctrl' => 'Not Available',
-                ), './images/warning.png', 'yes', null, '');
-        } else {
-            logMsg('Error(getSpotifyConnectCurrentDeviceId): (exception '.print_r($e).')');
-            handleSpotifyWebAPIException($w, $e);
+            $retry = false;
+            return '';
+        } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+            if ($e->getMessage() == 'Permissions missing') {
+                $retry = false;
+                $w->result(null, serialize(array(
+                            '' /*track_uri*/,
+                            '' /* album_uri */,
+                            '' /* artist_uri */,
+                            '' /* playlist_uri */,
+                            '' /* spotify_command */,
+                            '' /* query */,
+                            '' /* other_settings*/,
+                            'reset_oauth_settings' /* other_action */,
+                            '' /* artist_name */,
+                            '' /* track_name */,
+                            '' /* album_name */,
+                            '' /* track_artwork_path */,
+                            '' /* artist_artwork_path */,
+                            '' /* album_artwork_path */,
+                            '' /* playlist_name */,
+                            '', /* playlist_artwork_path */
+                        )), 'The workflow needs more privilages to do this, click to restart authentication', array(
+                        'Next time you invoke the workflow, you will have to re-authenticate',
+                        'alt' => 'Not Available',
+                        'cmd' => 'Not Available',
+                        'shift' => 'Not Available',
+                        'fn' => 'Not Available',
+                        'ctrl' => 'Not Available',
+                    ), './images/warning.png', 'yes', null, '');
+            } else {
+                logMsg('Error(getSpotifyConnectCurrentDeviceId): retry '.$nb_retry.' (exception '.print_r($e).')');
+                if ($e->getCode() == 429) { // 429 is Too Many Requests
+                    $lastResponse = $api->getRequest()->getLastResponse();
+                    $retryAfter = $lastResponse['headers']['Retry-After'];
+                    sleep(retryAfter);
+                } else if ($e->getCode() == 404) {
+                    // skip
+                    break;
+                } else if ($e->getCode() == 500
+                    || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+                    // retry
+                    if ($nb_retry > 5) {
+                        handleSpotifyWebAPIException($w, $e);
+                        $retry = false;
+    
+                        return false;
+                    }
+                    ++$nb_retry;
+                    sleep(5);
+                } else {
+                    handleSpotifyWebAPIException($w, $e);
+                    $retry = false;
+    
+                    return false;
+                }
+            }
         }
     }
  }
@@ -325,15 +580,43 @@ require './vendor/autoload.php';
         'device_ids' => $device_id,
         'play' => true
     ];
-     try {
-         $api = getSpotifyWebAPI($w);
-         $api->changeMyDevice($options);
-     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        logMsg('Error(changeUserDevice): (exception '.print_r($e).')');
-        handleSpotifyWebAPIException($w, $e);
 
-        return false;
-     }
+    $retry = true;
+    $nb_retry = 0;
+    while ($retry) {
+        try {
+            $api = getSpotifyWebAPI($w);
+            $api->changeMyDevice($options);
+            $retry = false;
+        } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+            logMsg('Error(changeUserDevice): retry '.$nb_retry.' (exception '.print_r($e).')');
+            if ($e->getCode() == 429) { // 429 is Too Many Requests
+                $lastResponse = $api->getRequest()->getLastResponse();
+                $retryAfter = $lastResponse['headers']['Retry-After'];
+                sleep(retryAfter);
+            } else if ($e->getCode() == 404) {
+                // skip
+                break;
+            } else if ($e->getCode() == 500
+                || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+                // retry
+                if ($nb_retry > 5) {
+                    handleSpotifyWebAPIException($w, $e);
+                    $retry = false;
+
+                    return false;
+                }
+                ++$nb_retry;
+                sleep(5);
+            } else {
+                handleSpotifyWebAPIException($w, $e);
+                $retry = false;
+
+                return false;
+            }
+            return false;
+        }
+    }
  
      return true;
  }
