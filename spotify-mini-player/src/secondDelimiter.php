@@ -1825,64 +1825,68 @@ function secondDelimiterSettings($w, $query, $settings, $db, $update_in_progress
                 ), './images/spotify.png', 'yes', null, '');
         }
 
-        if ($output_application != 'CONNECT') {
-            if (isUserPremiumSubscriber($w)) {
-                // only propose if user is premimum
-                    $w->result(null, serialize(array(
-                        '' /*track_uri*/,
-                        '' /* album_uri */,
-                        '' /* artist_uri */,
-                        '' /* playlist_uri */,
-                        '' /* spotify_command */,
-                        '' /* query */,
-                        '' /* other_settings*/,
-                        'enable_connect' /* other_action */,
-                        '' /* artist_name */,
-                        '' /* track_name */,
-                        '' /* album_name */,
-                        '' /* track_artwork_path */,
-                        '' /* artist_artwork_path */,
-                        '' /* album_artwork_path */,
-                        '' /* playlist_name */,
-                        '', /* playlist_artwork_path */
-                    )), 'Use Spotify Connect', array(
-                    'You will use Spotify Connect to control your devices',
-                    'alt' => 'Not Available',
-                    'cmd' => 'Not Available',
-                    'shift' => 'Not Available',
-                    'fn' => 'Not Available',
-                    'ctrl' => 'Not Available',
+        if (isUserPremiumSubscriber($w)) {
+            // only propose if user is premimum
+            if ($output_application != 'CONNECT') {
+                $w->result(null, serialize(array(
+                    '' /*track_uri*/,
+                    '' /* album_uri */,
+                    '' /* artist_uri */,
+                    '' /* playlist_uri */,
+                    '' /* spotify_command */,
+                    '' /* query */,
+                    '' /* other_settings*/,
+                    'enable_connect' /* other_action */,
+                    '' /* artist_name */,
+                    '' /* track_name */,
+                    '' /* album_name */,
+                    '' /* track_artwork_path */,
+                    '' /* artist_artwork_path */,
+                    '' /* album_artwork_path */,
+                    '' /* playlist_name */,
+                    '', /* playlist_artwork_path */
+                )), 'Use Spotify Connect', array(
+                'You will use Spotify Connect to control your devices',
+                'alt' => 'Not Available',
+                'cmd' => 'Not Available',
+                'shift' => 'Not Available',
+                'fn' => 'Not Available',
+                'ctrl' => 'Not Available',
                 ), './images/connect.png', 'yes', null, '');
             }
+
+            if ($output_application != 'MOPIDY') {
+                $w->result(null, serialize(array(
+                    '' /*track_uri*/,
+                    '' /* album_uri */,
+                    '' /* artist_uri */,
+                    '' /* playlist_uri */,
+                    '' /* spotify_command */,
+                    '' /* query */,
+                    '' /* other_settings*/,
+                    'enable_mopidy' /* other_action */,
+                    '' /* artist_name */,
+                    '' /* track_name */,
+                    '' /* album_name */,
+                    '' /* track_artwork_path */,
+                    '' /* artist_artwork_path */,
+                    '' /* album_artwork_path */,
+                    '' /* playlist_name */,
+                    '', /* playlist_artwork_path */
+                )), 'Use Mopidy', array(
+                'You will use Mopidy',
+                'alt' => 'Not Available',
+                'cmd' => 'Not Available',
+                'shift' => 'Not Available',
+                'fn' => 'Not Available',
+                'ctrl' => 'Not Available',
+                ), './images/enable_mopidy.png', 'yes', null, '');
+            }
+        } else {
+            $w->result(null, 'help', 'Only premium users can use Mopidy and Spotify Connect', 'This is a Spotify limitation', './images/warning.png', 'no', null, '');
         }
 
-        if ($output_application != 'MOPIDY') {
-            $w->result(null, serialize(array(
-                '' /*track_uri*/,
-                '' /* album_uri */,
-                '' /* artist_uri */,
-                '' /* playlist_uri */,
-                '' /* spotify_command */,
-                '' /* query */,
-                '' /* other_settings*/,
-                'enable_mopidy' /* other_action */,
-                '' /* artist_name */,
-                '' /* track_name */,
-                '' /* album_name */,
-                '' /* track_artwork_path */,
-                '' /* artist_artwork_path */,
-                '' /* album_artwork_path */,
-                '' /* playlist_name */,
-                '', /* playlist_artwork_path */
-            )), 'Use Mopidy', array(
-            'You will use Mopidy',
-            'alt' => 'Not Available',
-            'cmd' => 'Not Available',
-            'shift' => 'Not Available',
-            'fn' => 'Not Available',
-            'ctrl' => 'Not Available',
-        ), './images/enable_mopidy.png', 'yes', null, '');
-        }
+
     } elseif ($setting_kind == 'MopidyServer') {
         if (mb_strlen($the_query) == 0) {
             $w->result(null, '', 'Enter the server name or IP where Mopidy server is running:', 'Example: 192.168.0.5 or myserver.mydomain.mydomainextension', './images/settings.png', 'no', null, '');

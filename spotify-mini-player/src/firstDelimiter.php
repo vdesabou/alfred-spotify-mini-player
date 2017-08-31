@@ -1697,7 +1697,7 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
     $w->result(null, '', 'Configure Number of Radio tracks (currently '.$radio_number_tracks.')', 'Number of tracks when creating a Radio Playlist.', './images/radio_numbers.png', 'no', null, 'Settings▹RadioTracks▹');
     $w->result(null, '', 'Configure Volume Percent (currently '.$volume_percent.'%)', 'The percentage of volume which is increased or decreased.', './images/volume_up.png', 'no', null, 'Settings▹VolumePercentage▹');
 
-    $w->result(null, '', 'Select the output: Spotify Connect, Mopidy or Spotify Desktop', 'The workflow supports 3 kinds of outputs', './images/speaker.png', 'no', null, 'Settings▹Output▹');
+    $w->result(null, '', 'Select the output: Spotify Connect, Mopidy or Spotify Desktop', 'Spotify Connect and Mopidy are for premium users only', './images/speaker.png', 'no', null, 'Settings▹Output▹');
 
     if ($output_application == 'MOPIDY') {
         $w->result(null, '', 'Configure Mopidy server (currently '.$mopidy_server.')', 'Server name/ip where Mopidy server is running', './images/mopidy_server.png', 'no', null, 'Settings▹MopidyServer▹');
