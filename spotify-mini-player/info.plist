@@ -4376,7 +4376,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<key>runningsubtext</key>
 				<string></string>
 				<key>script</key>
-				<string>result=$(php -r "require './src/functions.php'; isShuffleActive();")
+				<string>result=$(php -r "require './src/functions.php'; isShuffleActive(true);")
 
 
 if [ $result == "true" ] 

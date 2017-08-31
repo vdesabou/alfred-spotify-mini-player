@@ -2556,7 +2556,7 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
             echo $w->tojson();
             exit;
         }
-    } else {
+    } else if($output_application == 'APPLESCRIPT' || $output_application == 'CONNECT') {
         $playqueue = $w->read('playqueue.json');
         if ($playqueue == false) {
             $w->result(null, 'help', 'There is no track in the play queue', 'Make sure to always use the workflow to launch tracks, playlists, etc..Internet connectivity is also required', './images/warning.png', 'no', null, '');
@@ -2581,19 +2581,7 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
             echo $w->tojson();
             exit;
         }
-        $command_output = exec("osascript -e '
-        tell application \"Spotify\"
-        if shuffling enabled is true then
-            if shuffling is true then
-                return \"enabled\"
-            else
-                return \"disabled\"
-            end if
-        else
-            return \"disabled\"
-        end if
-        end tell'");
-        if ($command_output == 'enabled') {
+        if (isShuffleActive(false) == 'true') {
             $w->result(null, 'help', 'Shuffle is enabled', 'The order of tracks presented below is not relevant', './images/warning.png', 'no', null, '');
         }
         $noresult = true;

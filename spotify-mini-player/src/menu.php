@@ -829,7 +829,7 @@ function searchCategoriesFastAccess($w, $query, $settings, $db, $update_in_progr
         }
     }
     if (strpos(strtolower('alfred'), strtolower($query)) !== false) {
-        $w->result(null, '', 'Alfred Playlist (currently set to <'.$alfred_playlist_name.'>)', 'Choose one of your playlists and add tracks, album, playlist to it directly from the workflow', './images/alfred_playlist.png', 'no', null, 'Alfred Playlist▹');
+        $w->result(null, '', 'Alfred Playlist (currently set to <'.$alfred_playlist_name.'>)', 'Choose one of your playlists and add tracks, album, playlist to it directly from the workflow', './images/alfred_playlist.png', 'no', null, 'Alfred Playlist▹Set Alfred Playlist▹');
     }
     if (strpos(strtolower('settings'), strtolower($query)) !== false) {
         $w->result(null, '', 'Settings', 'Go to settings', './images/settings.png', 'no', null, 'Settings▹');
@@ -1432,60 +1432,6 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                     '' /* playlist_name */,
                     '', /* playlist_artwork_path */
                 )), 'Set Spotify Volume to 50%', 'Set the Spotify volume to 50%', './images/volmid.png', 'yes', '');
-
-        if ($output_application == 'MOPIDY') {
-            $w->result('SpotifyMiniPlayer_'.'disable_mopidy', serialize(array(
-                        '' /*track_uri*/,
-                        '' /* album_uri */,
-                        '' /* artist_uri */,
-                        '' /* playlist_uri */,
-                        '' /* spotify_command */,
-                        '' /* query */,
-                        '' /* other_settings*/,
-                        'disable_mopidy' /* other_action */,
-                        '' /* artist_name */,
-                        '' /* track_name */,
-                        '' /* album_name */,
-                        '' /* track_artwork_path */,
-                        '' /* artist_artwork_path */,
-                        '' /* album_artwork_path */,
-                        '' /* playlist_name */,
-                        '', /* playlist_artwork_path */
-                    )), 'Disable Mopidy', array(
-                    'You will use Spotify Desktop app with AppleScript instead',
-                    'alt' => 'Not Available',
-                    'cmd' => 'Not Available',
-                    'shift' => 'Not Available',
-                    'fn' => 'Not Available',
-                    'ctrl' => 'Not Available',
-                ), './images/disable_mopidy.png', 'yes', null, '');
-        } else {
-            $w->result('SpotifyMiniPlayer_'.'enable_mopidy', serialize(array(
-                        '' /*track_uri*/,
-                        '' /* album_uri */,
-                        '' /* artist_uri */,
-                        '' /* playlist_uri */,
-                        '' /* spotify_command */,
-                        '' /* query */,
-                        '' /* other_settings*/,
-                        'enable_mopidy' /* other_action */,
-                        '' /* artist_name */,
-                        '' /* track_name */,
-                        '' /* album_name */,
-                        '' /* track_artwork_path */,
-                        '' /* artist_artwork_path */,
-                        '' /* album_artwork_path */,
-                        '' /* playlist_name */,
-                        '', /* playlist_artwork_path */
-                    )), 'Enable Mopidy', array(
-                    'You will use Mopidy',
-                    'alt' => 'Not Available',
-                    'cmd' => 'Not Available',
-                    'shift' => 'Not Available',
-                    'fn' => 'Not Available',
-                    'ctrl' => 'Not Available',
-                ), './images/enable_mopidy.png', 'yes', null, '');
-        }
     } else {
 
         // Search commands for fast access
@@ -2134,62 +2080,6 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                         '' /* playlist_name */,
                         '', /* playlist_artwork_path */
                     )), 'Set Spotify Volume to 50%', 'Set the Spotify volume to 50%', './images/volmid.png', 'yes', '');
-        }
-
-        if (strpos(strtolower('mopidy'), strtolower($query)) !== false) {
-            if ($output_application == 'MOPIDY') {
-                $w->result('SpotifyMiniPlayer_'.'disable_mopidy', serialize(array(
-                            '' /*track_uri*/,
-                            '' /* album_uri */,
-                            '' /* artist_uri */,
-                            '' /* playlist_uri */,
-                            '' /* spotify_command */,
-                            '' /* query */,
-                            '' /* other_settings*/,
-                            'disable_mopidy' /* other_action */,
-                            '' /* artist_name */,
-                            '' /* track_name */,
-                            '' /* album_name */,
-                            '' /* track_artwork_path */,
-                            '' /* artist_artwork_path */,
-                            '' /* album_artwork_path */,
-                            '' /* playlist_name */,
-                            '', /* playlist_artwork_path */
-                        )), 'Disable Mopidy', array(
-                        'You will use Spotify Desktop app with AppleScript instead',
-                        'alt' => 'Not Available',
-                        'cmd' => 'Not Available',
-                        'shift' => 'Not Available',
-                        'fn' => 'Not Available',
-                        'ctrl' => 'Not Available',
-                    ), './images/disable_mopidy.png', 'yes', null, '');
-            } else {
-                $w->result('SpotifyMiniPlayer_'.'enable_mopidy', serialize(array(
-                            '' /*track_uri*/,
-                            '' /* album_uri */,
-                            '' /* artist_uri */,
-                            '' /* playlist_uri */,
-                            '' /* spotify_command */,
-                            '' /* query */,
-                            '' /* other_settings*/,
-                            'enable_mopidy' /* other_action */,
-                            '' /* artist_name */,
-                            '' /* track_name */,
-                            '' /* album_name */,
-                            '' /* track_artwork_path */,
-                            '' /* artist_artwork_path */,
-                            '' /* album_artwork_path */,
-                            '' /* playlist_name */,
-                            '', /* playlist_artwork_path */
-                        )), 'Enable Mopidy', array(
-                        'You will use Mopidy',
-                        'alt' => 'Not Available',
-                        'cmd' => 'Not Available',
-                        'shift' => 'Not Available',
-                        'fn' => 'Not Available',
-                        'ctrl' => 'Not Available',
-                    ), './images/enable_mopidy.png', 'yes', null, '');
-            }
         }
     }
 }

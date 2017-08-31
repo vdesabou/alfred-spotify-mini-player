@@ -624,7 +624,7 @@ require './vendor/autoload.php';
  * isShuffleActive function.
  *
  */
-function isShuffleActive()
+function isShuffleActive($print_output)
 {
     $w = new Workflows('com.vdesabou.spotify.mini.player');
 
@@ -633,6 +633,7 @@ function isShuffleActive()
     $settings = getSettings($w);
 
     $output_application = $settings->output_application;
+    $country_code = $settings->country_code;
 
     if ($output_application == 'MOPIDY') {
         $isShuffleEnabled = invokeMopidyMethod($w, 'core.tracklist.get_random', array());
@@ -641,7 +642,7 @@ function isShuffleActive()
         } else {
             $command_output = 'false';
         }
-    } else {
+    } else if($output_application == 'APPLESCRIPT') {
         $command_output = exec("osascript -e '
     tell application \"Spotify\"
     if shuffling enabled is true then
@@ -654,9 +655,56 @@ function isShuffleActive()
         return \"false\"
     end if
     end tell'");
+    } else {
+        $retry = true;
+        $nb_retry = 0;
+        while ($retry) {
+            try {
+                $api = getSpotifyWebAPI($w);
+    
+                $playback_info = $api->getMyCurrentPlaybackInfo(array(
+                'market' => $country_code,
+                ));
+
+                if($playback_info->shuffle_state) {
+                    $command_output = 'true';
+                } else {
+                    $command_output = 'false';
+                }
+    
+                $retry = false;
+            } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+                logMsg('Error(isShuffleActive): retry '.$nb_retry.' (exception '.print_r($e).')');
+                if ($e->getCode() == 429) { // 429 is Too Many Requests
+                    $lastResponse = $api->getRequest()->getLastResponse();
+                    $retryAfter = $lastResponse['headers']['Retry-After'];
+                    sleep(retryAfter);
+                } else if ($e->getCode() == 404) {
+                    // skip
+                    break;
+                } else if ($e->getCode() == 500
+                    || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+                    // retry
+                    if ($nb_retry > 5) {
+                        $retry = false;
+    
+                        return false;
+                    }
+                    ++$nb_retry;
+                    sleep(5);
+                } else {
+                    $retry = false;
+    
+                    return false;
+                }
+            }
+        }
     }
-    displayNotificationWithArtwork($w, $command_output, './images/shuffle.png', 'Shuffle');
-    echo $command_output;
+    if($print_output) {
+        displayNotificationWithArtwork($w, $command_output, './images/shuffle.png', 'Shuffle');
+        echo $command_output;
+    }
+
     return $command_output;
 }
 
@@ -2138,9 +2186,16 @@ function playAlfredPlaylist($w)
     }
     if ($output_application == 'MOPIDY') {
         playUriWithMopidy($w, $alfred_playlist_uri);
-    } else {
+    } else if($output_application == 'APPLESCRIPT') {
         exec("osascript -e 'tell application \"Spotify\" to play track \"$alfred_playlist_uri\"'");
         addPlaylistToPlayQueue($w, $alfred_playlist_uri, $alfred_playlist_name);
+    } else {
+        $device_id = getSpotifyConnectCurrentDeviceId($w);
+        if($device_id != '') {
+            playTrackSpotifyConnect($w, $device_id, '', $alfred_playlist_uri);
+        } else {
+            displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+        }
     }
 
     $playlist_artwork_path = getPlaylistArtwork($w, $alfred_playlist_uri, true, true, $use_artworks);
@@ -2298,10 +2353,18 @@ function playCurrentArtist($w)
         }
         if ($output_application == 'MOPIDY') {
             playUriWithMopidy($w, $artist_uri);
-        } else {
+        } else if($output_application == 'APPLESCRIPT') {
             exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
             addArtistToPlayQueue($w, $artist_uri, escapeQuery($results[1]), $country_code);
+        } else {
+            $device_id = getSpotifyConnectCurrentDeviceId($w);
+            if($device_id != '') {
+                playTrackSpotifyConnect($w, $device_id, '', $artist_uri);
+            } else {
+                displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+            }
         }
+
         displayNotificationWithArtwork($w, '🔈 Artist '.escapeQuery($results[1]), getArtistArtwork($w, $artist_uri, $results[1], true, false, false, $use_artworks), 'Play Current Artist');
     } else {
         displayNotificationWithArtwork($w, 'No artist is playing', './images/warning.png');
