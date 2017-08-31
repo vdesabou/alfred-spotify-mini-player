@@ -1583,7 +1583,6 @@ function getCurrentTrackInfoWithMopidy($w, $displayError = true)
             $retArr = array(''.$track_name.'▹'.$artist_name.'▹'.$album_name.'▹'.$state.'▹'.$track_uri.'▹'.$length.'▹'.$popularity);
             return ''.$track_name.'▹'.$artist_name.'▹'.$album_name.'▹'.$state.'▹'.$track_uri.'▹'.$length.'▹'.'0';
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            logMsg('Error(nextTrackSpotifyConnect): retry '.$nb_retry.' (exception '.print_r($e).')');
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
                 $retryAfter = $lastResponse['headers']['Retry-After'];
@@ -1594,8 +1593,7 @@ function getCurrentTrackInfoWithMopidy($w, $displayError = true)
             } else if ($e->getCode() == 500
                 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
                 // retry
-                if ($nb_retry > 5) {
-                    //handleSpotifyWebAPIException($w, $e);
+                if ($nb_retry > 2) {
                     $retry = false;
 
                     return 'connect_stopped';
@@ -1603,7 +1601,6 @@ function getCurrentTrackInfoWithMopidy($w, $displayError = true)
                 ++$nb_retry;
                 sleep(5);
             } else {
-                //handleSpotifyWebAPIException($w, $e);
                 $retry = false;
 
                 return 'connect_stopped';
