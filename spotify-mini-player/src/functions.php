@@ -14,7 +14,6 @@ require './vendor/autoload.php';
          $api = getSpotifyWebAPI($w);
          $me = $api->me();
      } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-         logMsg('Error(isUserPremiumSubscriber): (exception '.print_r($e).')');
          return false;
      }
  
@@ -1508,32 +1507,62 @@ function getCurrentTrackInfoWithMopidy($w, $displayError = true)
     $track_uri = '';
     $length = 0;
 
-    try {
-        $api = getSpotifyWebAPI($w);
+    $retry = true;
+    $nb_retry = 0;
+    while ($retry) {
+        try {
+            $api = getSpotifyWebAPI($w);
 
-        $current_track_info = $api->getMyCurrentTrack(array(
+            $current_track_info = $api->getMyCurrentTrack(array(
             'market' => $country_code,
             ));
 
-        $track_name = $current_track_info->item->name;
-        $artist_name = $current_track_info->item->artists[0]->name;
-        $album_name = $current_track_info->item->album->name;
-        $is_playing = $current_track_info->is_playing;
-        if($is_playing) {
-            $state = 'playing';
-        } else {
-            $state = 'paused';
-        }
-        $track_uri = $current_track_info->item->uri;
-        $length = ($current_track_info->item->duration_ms);
-        $popularity = $current_track_info->item->popularity;
+            $retry = false;
+
+            $track_name = $current_track_info->item->name;
+            $artist_name = $current_track_info->item->artists[0]->name;
+            $album_name = $current_track_info->item->album->name;
+            $is_playing = $current_track_info->is_playing;
+            if ($is_playing) {
+                $state = 'playing';
+            } else {
+                $state = 'paused';
+            }
+            $track_uri = $current_track_info->item->uri;
+            $length = ($current_track_info->item->duration_ms);
+            $popularity = $current_track_info->item->popularity;
         
-        $retArr = array(''.$track_name.'▹'.$artist_name.'▹'.$album_name.'▹'.$state.'▹'.$track_uri.'▹'.$length.'▹'.$popularity);
-    }  catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        logMsg('Error(playSpotifyConnect): (exception '.print_r($e).')');
-        return 'connect_stopped';
-    } 
-     return ''.$track_name.'▹'.$artist_name.'▹'.$album_name.'▹'.$state.'▹'.$track_uri.'▹'.$length.'▹'.'0';
+            $retArr = array(''.$track_name.'▹'.$artist_name.'▹'.$album_name.'▹'.$state.'▹'.$track_uri.'▹'.$length.'▹'.$popularity);
+            return ''.$track_name.'▹'.$artist_name.'▹'.$album_name.'▹'.$state.'▹'.$track_uri.'▹'.$length.'▹'.'0';
+        } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+            logMsg('Error(nextTrackSpotifyConnect): retry '.$nb_retry.' (exception '.print_r($e).')');
+            if ($e->getCode() == 429) { // 429 is Too Many Requests
+                $lastResponse = $api->getRequest()->getLastResponse();
+                $retryAfter = $lastResponse['headers']['Retry-After'];
+                sleep(retryAfter);
+            } else if ($e->getCode() == 404) {
+                // skip
+                break;
+            } else if ($e->getCode() == 500
+                || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+                // retry
+                if ($nb_retry > 5) {
+                    //handleSpotifyWebAPIException($w, $e);
+                    $retry = false;
+
+                    return 'connect_stopped';
+                }
+                ++$nb_retry;
+                sleep(5);
+            } else {
+                //handleSpotifyWebAPIException($w, $e);
+                $retry = false;
+
+                return 'connect_stopped';
+            }
+            return 'connect_stopped';
+        }
+    }
  }
 
 /**
@@ -7526,7 +7555,7 @@ function getSettings($w)
 
     // migrate use_mopidy
     if (isset($settings->use_mopidy)) {
-        if ($output_application == 'MOPIDY') {
+        if ($settings->use_mopidy) {
             updateSetting($w, 'output_application', 'MOPIDY');
         } else {
             updateSetting($w, 'output_application', 'APPLESCRIPT');
