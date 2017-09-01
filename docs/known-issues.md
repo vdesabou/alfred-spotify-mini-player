@@ -28,6 +28,10 @@ As a workaround, you can create a new playlist (called 'Starred' for example) an
 
 * You cannot have more than 10000 tracks in _Your Music_.
 
+* You cannot launch _Your Music_, there is no API available to do that.
+
+* The special playlists like _Daily Mix_ or _Discover Weekly_ are not supported by the workflow, there is no API available to do that.
+
 <a name="php_requirement"></a>
 
 ## PHP Requirement
