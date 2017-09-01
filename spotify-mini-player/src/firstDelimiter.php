@@ -1210,7 +1210,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                 }
                 $volume = '';
                 if($device->volume_percent != null) {
-                    $volume = '(volume: '.floatToSquares($device->volume_percent/100).')';
+                    $volume = '- current volume: '.floatToSquares($device->volume_percent/100);
                 }
                 if($device->is_restricted) {
                     $w->result(null, 'help', $added.'Device '.$device->name.' cannot be controlled', '⚠ This device cannot be controlled by Spotify WEB API', $icon, 'no', null, '');

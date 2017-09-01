@@ -319,7 +319,7 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress)
 
     if($output_application == 'CONNECT') {
         if(getenv('menu_display_spotify_connect') == 1) {
-            $w->result(null, '', 'Spotify Connect', 'Display Spotify Connect information and choose various options', './images/connect.png', 'no', null, 'Spotify Connect▹');
+            $w->result(null, '', 'Spotify Connect', 'Display Spotify Connect devices', './images/connect.png', 'no', null, 'Spotify Connect▹');
         }
     }
 
@@ -844,7 +844,7 @@ function searchCategoriesFastAccess($w, $query, $settings, $db, $update_in_progr
         $w->result(null, '', 'Current Track', 'Display current track information and browse various options', './images/current_track.png', 'no', null, 'Current Track▹');
     }
     if (strpos(strtolower('spotify connect'), strtolower($query)) !== false) {
-        $w->result(null, '', 'Spotify Connect', 'Display Spotify Connect information and choose various options', './images/connect.png', 'no', null, 'Spotify Connect▹');
+        $w->result(null, '', 'Spotify Connect', 'Display Spotify Connect devices', './images/connect.png', 'no', null, 'Spotify Connect▹');
     }
 }
 
