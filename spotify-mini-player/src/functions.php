@@ -93,6 +93,53 @@ require './vendor/autoload.php';
  }
 
 /**
+ * setShuffleStateSpotifyConnect function.
+ *
+ * @param mixed $w
+ */
+ function setShuffleStateSpotifyConnect($w, $device_id, $state)
+ {
+    $retry = true;
+    $nb_retry = 0;
+    while ($retry) {
+        try {
+            $api = getSpotifyWebAPI($w);
+            $api->shuffle([
+                'state' => $state,
+                'device_id' => $device_id,
+            ]);
+            $retry = false;
+        } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+            logMsg('Error(setShuffleStateSpotifyConnect): retry '.$nb_retry.' (exception '.print_r($e).')');
+            if ($e->getCode() == 429) { // 429 is Too Many Requests
+                $lastResponse = $api->getRequest()->getLastResponse();
+                $retryAfter = $lastResponse['headers']['Retry-After'];
+                sleep(retryAfter);
+            } else if ($e->getCode() == 404) {
+                // skip
+                break;
+            } else if ($e->getCode() == 500
+                || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+                // retry
+                if ($nb_retry > 5) {
+                    handleSpotifyWebAPIException($w, $e);
+                    $retry = false;
+
+                    return false;
+                }
+                ++$nb_retry;
+                sleep(5);
+            } else {
+                handleSpotifyWebAPIException($w, $e);
+                $retry = false;
+
+                return false;
+            }
+        }
+    }
+ }
+
+/**
  * getVolumeSpotifyConnect function.
  *
  * @param mixed $w
@@ -701,7 +748,6 @@ function isShuffleActive($print_output)
         }
     }
     if($print_output) {
-        displayNotificationWithArtwork($w, $command_output, './images/shuffle.png', 'Shuffle');
         echo $command_output;
     }
 

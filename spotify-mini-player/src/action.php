@@ -1564,7 +1564,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
                 invokeMopidyMethod($w, 'core.tracklist.set_random', array('value' => true));
                 $command_output = 'Shuffle is now enabled.';
             }
-        } else {
+        } else if($output_application == 'APPLESCRIPT') {
             $command_output = exec("osascript -e '
 		tell application \"Spotify\"
 		if shuffling enabled is true then
@@ -1579,6 +1579,19 @@ if ($type == 'TRACK' && $other_settings == '' &&
 			return \"Shuffle is not currently enabled.\"
 		end if
 		end tell'");
+        } else {
+            $device_id = getSpotifyConnectCurrentDeviceId($w);
+            if($device_id != '') {
+                if (isShuffleActive(false) == 'true') {
+                    setShuffleStateSpotifyConnect($w, $device_id, false);
+                    $command_output = 'Shuffle is now disabled.'.$ret ;
+                } else {
+                    setShuffleStateSpotifyConnect($w, $device_id, true);
+                    $command_output = 'Shuffle is now enabled.';
+                }
+            } else {
+                displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+            }
         }
         displayNotificationWithArtwork($w, $command_output, './images/shuffle.png', 'Shuffle');
 
