@@ -93,6 +93,117 @@ require './vendor/autoload.php';
  }
 
 /**
+ * setRepeatStateSpotifyConnect function.
+ *
+ * @param mixed $w
+ */
+ function setRepeatStateSpotifyConnect($w, $device_id, $state)
+ {
+    if($state) {
+        $repeat_state = 'context';
+    } else {
+        $repeat_state = 'off';
+    }
+    $retry = true;
+    $nb_retry = 0;
+    while ($retry) {
+        try {
+            $api = getSpotifyWebAPI($w);
+            $api->repeat([
+                'state' => $repeat_state,
+                'device_id' => $device_id,
+            ]);
+            $retry = false;
+        } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+            logMsg('Error(setRepeatStateSpotifyConnect): retry '.$nb_retry.' (exception '.print_r($e).')');
+            if ($e->getCode() == 429) { // 429 is Too Many Requests
+                $lastResponse = $api->getRequest()->getLastResponse();
+                $retryAfter = $lastResponse['headers']['Retry-After'];
+                sleep(retryAfter);
+            } else if ($e->getCode() == 404) {
+                // skip
+                break;
+            } else if ($e->getCode() == 500
+                || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+                // retry
+                if ($nb_retry > 5) {
+                    handleSpotifyWebAPIException($w, $e);
+                    $retry = false;
+
+                    return false;
+                }
+                ++$nb_retry;
+                sleep(5);
+            } else {
+                handleSpotifyWebAPIException($w, $e);
+                $retry = false;
+
+                return false;
+            }
+        }
+    }
+ }
+
+/**
+ * isRepeatStateSpotifyConnectActive function.
+ *
+ * @param mixed $w
+ */
+ function isRepeatStateSpotifyConnectActive($w)
+ {
+    // Read settings from JSON
+
+    $settings = getSettings($w);
+    
+    $country_code = $settings->country_code;
+
+    $retry = true;
+    $nb_retry = 0;
+    while ($retry) {
+        try {
+            $api = getSpotifyWebAPI($w);
+
+            $playback_info = $api->getMyCurrentPlaybackInfo(array(
+            'market' => $country_code,
+            ));
+            $retry = false;
+
+            if($playback_info->repeat_state == 'track') {
+                return true;
+            } else if($playback_info->repeat_state == 'context') {
+                return true;
+            }
+            return false;
+        } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+            logMsg('Error(isRepeatStateSpotifyConnectActive): retry '.$nb_retry.' (exception '.print_r($e).')');
+            if ($e->getCode() == 429) { // 429 is Too Many Requests
+                $lastResponse = $api->getRequest()->getLastResponse();
+                $retryAfter = $lastResponse['headers']['Retry-After'];
+                sleep(retryAfter);
+            } else if ($e->getCode() == 404) {
+                // skip
+                break;
+            } else if ($e->getCode() == 500
+                || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+                // retry
+                if ($nb_retry > 5) {
+                    $retry = false;
+
+                    return false;
+                }
+                ++$nb_retry;
+                sleep(5);
+            } else {
+                $retry = false;
+
+                return false;
+            }
+        }
+    }
+ }
+
+ 
+/**
  * setShuffleStateSpotifyConnect function.
  *
  * @param mixed $w
@@ -188,7 +299,7 @@ require './vendor/autoload.php';
             }
         }
     }
- }
+}
 
 /**
  * changeVolumeSpotifyConnect function.

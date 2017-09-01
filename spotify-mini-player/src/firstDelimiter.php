@@ -869,7 +869,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                 $repeat_state = "Repeat is <inactive>";
                 if($playback_info->repeat_state == 'track') {
                     $repeat_state = "Repeat track is <active>";
-                } else if($playback_info->repeat_state == 'track') {
+                } else if($playback_info->repeat_state == 'context') {
                     $repeat_state = "Repeat " . $context_type . " is <active>";
                 }
                 

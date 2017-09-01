@@ -1685,7 +1685,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
                 invokeMopidyMethod($w, 'core.tracklist.set_repeat', array('value' => true));
                 $command_output = 'Repeating is now enabled.';
             }
-        } else {
+        } else if($output_application == 'APPLESCRIPT') {
             $command_output = exec("osascript -e '
 		tell application \"Spotify\"
 		if repeating enabled is true then
@@ -1700,6 +1700,19 @@ if ($type == 'TRACK' && $other_settings == '' &&
 			return \"Repeating is not currently enabled.\"
 		end if
 		end tell'");
+        } else {
+            $device_id = getSpotifyConnectCurrentDeviceId($w);
+            if($device_id != '') {
+                if (isRepeatStateSpotifyConnectActive($w)) {
+                    setRepeatStateSpotifyConnect($w, $device_id, false);
+                    $command_output = 'Repeating is now disabled.';
+                } else {
+                    setRepeatStateSpotifyConnect($w, $device_id, true);
+                    $command_output = 'Repeating is now enabled.';
+                }
+            } else {
+                displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+            }
         }
         displayNotificationWithArtwork($w, $command_output, './images/repeating.png', 'Repeating');
 
