@@ -375,15 +375,15 @@ if (mb_strlen($query) < 2) {
         // THIRD DELIMITER
 
         ////////////
-            elseif (substr_count($query, '▹') == 3) {
-                $words = explode('▹', $query);
-                $kind = $words[0];
-                if ($kind == 'Add') {
-                    thirdDelimiterAdd($w, $query, $settings, $db, $update_in_progress);
-                } elseif ($kind == 'Browse') {
-                    thirdDelimiterBrowse($w, $query, $settings, $db, $update_in_progress);
-                }
+        elseif (substr_count($query, '▹') == 3) {
+            $words = explode('▹', $query);
+            $kind = $words[0];
+            if ($kind == 'Add') {
+                thirdDelimiterAdd($w, $query, $settings, $db, $update_in_progress);
+            } elseif ($kind == 'Browse') {
+                thirdDelimiterBrowse($w, $query, $settings, $db, $update_in_progress);
             }
+        }
     }
 }
 /*

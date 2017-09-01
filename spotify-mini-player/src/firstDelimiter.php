@@ -1177,54 +1177,93 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
      $always_display_lyrics_in_browser = $settings->always_display_lyrics_in_browser;
      
 
-    //TODO: retry
-    try {
-        $api = getSpotifyWebAPI($w);
+     $retry = true;
+     $nb_retry = 0;
+     while ($retry) {
+        try {
+            $api = getSpotifyWebAPI($w);
 
-        $noresult = true;
+            $noresult = true;
 
-        $savedDevices = array();
-        foreach ($api->getMyDevices()->devices as $device) {
-            if ($device->is_active) {
-                array_unshift($savedDevices , $device);
-            } else {
-                $savedDevices[] = $device;
+            $savedDevices = array();
+            foreach ($api->getMyDevices()->devices as $device) {
+                if ($device->is_active) {
+                    array_unshift($savedDevices , $device);
+                } else {
+                    $savedDevices[] = $device;
+                }
+                $noresult = false;
             }
-            $noresult = false;
-        }
+            $retry = false;
 
-        if(!$noresult) {
-            $w->result(null, '', 'Select one of your Spotify Connect devices', 'Select one of your Spotify Connect devices below as your listening device', './images/connect.png', 'no', null, '');
+            if(!$noresult) {
+                $w->result(null, '', 'Select one of your Spotify Connect devices', 'Select one of your Spotify Connect devices below as your listening device', './images/connect.png', 'no', null, '');
 
-            foreach ($savedDevices as $device) {
-                $added = '';
-                if($device->is_active) {
-                    $added = '🔈';
+                foreach ($savedDevices as $device) {
+                    $added = '';
+                    if($device->is_active) {
+                        $added = '🔈';
+                    }
+                    if($device->type == 'Computer') {
+                        $icon = './images/computer.png';
+                    } else if($device->type == 'Smartphone') {
+                        $icon = './images/smartphone.png';
+                    } else {
+                        $icon = './images/speaker.png';
+                    }
+                    $volume = '';
+                    if(isset($device->volume_percent)) {
+                        $volume = '- current volume: '.floatToSquares($device->volume_percent/100);
+                    }
+                    if($device->is_restricted) {
+                        $w->result(null, 'help', $added.'Device '.$device->name.' cannot be controlled', '⚠ This device cannot be controlled by Spotify WEB API', $icon, 'no', null, '');
+                    } else {
+                        if (!$device->is_active) {
+                            $w->result(null, serialize(array(
+                                '' /*track_uri*/,
+                                '' /* album_uri */,
+                                '' /* artist_uri */,
+                                '' /* playlist_uri */,
+                                '' /* spotify_command */,
+                                '' /* query */,
+                                'CHANGE_DEVICE▹'.$device->id /* other_settings*/,
+                                '' /* other_action */,
+                                '' /* artist_name */,
+                                '' /* track_name */,
+                                '' /* album_name */,
+                                '' /* track_artwork_path */,
+                                '' /* artist_artwork_path */,
+                                '' /* album_artwork_path */,
+                                '' /* playlist_name */,
+                                '', /* playlist_artwork_path */
+                            )), $added.'Switch playback to '.$device->name.' '.$volume, array(
+                            'Type enter to validate',
+                            'alt' => 'Not Available',
+                            'cmd' => 'Not Available',
+                            'shift' => 'Not Available',
+                            'fn' => 'Not Available',
+                            'ctrl' => 'Not Available',
+                            ), $icon, 'yes', null, '');
+                        } else {
+                            $w->result(null, 'help', $added.' '.$device->name.' is currently active '.$volume, 'This device is the currently active device', $icon, 'no', null, '');
+                        }
+                    }
                 }
-                if($device->type == 'Computer') {
-                    $icon = './images/computer.png';
-                } else if($device->type == 'Smartphone') {
-                    $icon = './images/smartphone.png';
-                } else {
-                    $icon = './images/speaker.png';
-                }
-                $volume = '';
-                if($device->volume_percent != null) {
-                    $volume = '- current volume: '.floatToSquares($device->volume_percent/100);
-                }
-                if($device->is_restricted) {
-                    $w->result(null, 'help', $added.'Device '.$device->name.' cannot be controlled', '⚠ This device cannot be controlled by Spotify WEB API', $icon, 'no', null, '');
-                } else {
-                    if (!$device->is_active) {
-                        $w->result(null, serialize(array(
+
+            } else {
+                $w->result(null, 'help', 'There was no Spotify Connect device found!', '', './images/warning.png', 'no', null, '');
+            }
+        }  catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+            if($e->getMessage() == 'Permissions missing') {
+                $w->result(null, serialize(array(
                             '' /*track_uri*/,
                             '' /* album_uri */,
                             '' /* artist_uri */,
                             '' /* playlist_uri */,
                             '' /* spotify_command */,
                             '' /* query */,
-                            'CHANGE_DEVICE▹'.$device->id /* other_settings*/,
-                            '' /* other_action */,
+                            '' /* other_settings*/,
+                            'reset_oauth_settings' /* other_action */,
                             '' /* artist_name */,
                             '' /* track_name */,
                             '' /* album_name */,
@@ -1233,56 +1272,47 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                             '' /* album_artwork_path */,
                             '' /* playlist_name */,
                             '', /* playlist_artwork_path */
-                        )), $added.'Switch playback to '.$device->name.' '.$volume, array(
-                        'Type enter to validate',
+                        )), 'The workflow needs more privilages to do this, click to restart authentication', array(
+                        'Next time you invoke the workflow, you will have to re-authenticate',
                         'alt' => 'Not Available',
                         'cmd' => 'Not Available',
                         'shift' => 'Not Available',
                         'fn' => 'Not Available',
                         'ctrl' => 'Not Available',
-                        ), $icon, 'yes', null, '');
-                    } else {
-                        $w->result(null, 'help', $added.' '.$device->name.' is currently active '.$volume, 'This device is the currently active device', $icon, 'no', null, '');
+                    ), './images/warning.png', 'yes', null, '');
+                    echo $w->tojson();
+                    exit;
+            } else {
+                if ($e->getCode() == 429) { // 429 is Too Many Requests
+                    $lastResponse = $api->getRequest()->getLastResponse();
+                    $retryAfter = $lastResponse['headers']['Retry-After'];
+                    sleep(retryAfter);
+                } else if ($e->getCode() == 404) {
+                    $retry = false;
+                    $w->result(null, 'help', 'Exception occurred', ''.$e->getMessage(), './images/warning.png', 'no', null, '');
+                    echo $w->tojson();
+                    exit;
+                } else if ($e->getCode() == 500
+                    || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+                    // retry
+                    if ($nb_retry > 2) {
+                        $retry = false;
+                        $w->result(null, 'help', 'Exception occurred', ''.$e->getMessage(), './images/warning.png', 'no', null, '');
+                        
+                        echo $w->tojson();
+                        exit;
                     }
+                    ++$nb_retry;
+                    sleep(5);
+                } else {
+                    $retry = false;
+                    $w->result(null, 'help', 'Exception occurred', ''.$e->getMessage(), './images/warning.png', 'no', null, '');
+                    echo $w->tojson();
+                    exit;
                 }
             }
-
-        } else {
-            $w->result(null, 'help', 'There was no Spotify Connect device found!', '', './images/warning.png', 'no', null, '');
         }
-    }  catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        if($e->getMessage() == 'Permissions missing') {
-            $w->result(null, serialize(array(
-                        '' /*track_uri*/,
-                        '' /* album_uri */,
-                        '' /* artist_uri */,
-                        '' /* playlist_uri */,
-                        '' /* spotify_command */,
-                        '' /* query */,
-                        '' /* other_settings*/,
-                        'reset_oauth_settings' /* other_action */,
-                        '' /* artist_name */,
-                        '' /* track_name */,
-                        '' /* album_name */,
-                        '' /* track_artwork_path */,
-                        '' /* artist_artwork_path */,
-                        '' /* album_artwork_path */,
-                        '' /* playlist_name */,
-                        '', /* playlist_artwork_path */
-                    )), 'The workflow needs more privilages to do this, click to restart authentication', array(
-                    'Next time you invoke the workflow, you will have to re-authenticate',
-                    'alt' => 'Not Available',
-                    'cmd' => 'Not Available',
-                    'shift' => 'Not Available',
-                    'fn' => 'Not Available',
-                    'ctrl' => 'Not Available',
-                ), './images/warning.png', 'yes', null, '');
-        } else {
-            $w->result(null, 'help', 'Exception occurred', ''.$e->getMessage(), './images/warning.png', 'no', null, '');
-        }
-        echo $w->tojson();
-        exit;
-    } 
+    }
 
  }
 /**
