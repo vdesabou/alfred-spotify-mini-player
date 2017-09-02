@@ -7768,6 +7768,21 @@ echo "$tmp[1]";
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>browser</key>
+				<string></string>
+				<key>searcher</key>
+				<integer>1635218547</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.systemwebsearch</string>
+			<key>uid</key>
+			<string>1A2C6EE5-E029-45EE-89D0-4C6182C7E5E0</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>concurrently</key>
 				<false/>
 				<key>escaping</key>
@@ -7795,21 +7810,6 @@ echo "$tmp[1]";
 			<string>8B3222AF-02D9-4F13-9F79-6C4A935FD76F</string>
 			<key>version</key>
 			<integer>2</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>browser</key>
-				<string></string>
-				<key>searcher</key>
-				<integer>1635218547</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.systemwebsearch</string>
-			<key>uid</key>
-			<string>1A2C6EE5-E029-45EE-89D0-4C6182C7E5E0</string>
-			<key>version</key>
-			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -9890,7 +9890,7 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 		<string>♫</string>
 	</dict>
 	<key>version</key>
-	<string>7.3</string>
+	<string>7.4</string>
 	<key>webaddress</key>
 	<string>http://alfred-spotify-mini-player.com</string>
 </dict>
