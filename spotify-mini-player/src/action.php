@@ -66,7 +66,7 @@ if ($other_action != 'reset_settings' && $other_action != 'spot_mini_debug' && !
     }
 }
 
-if ($userid != 'vdesabou' && !startsWith($other_action, 'current')) {
+if (!startsWith($other_action, 'current')) {
     stathat_ez_count('AlfredSpotifyMiniPlayer', 'workflow used', 1);
 }
 
