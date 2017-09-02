@@ -4651,9 +4651,7 @@ function downloadArtworks($w)
             $elapsed_time = time() - $words[3];
             displayNotificationWithArtwork($w, 'All artworks have been downloaded ('.$nb_artworks_total.' artworks) - took '.beautifyTime($elapsed_time, true), './images/artworks.png', 'Artworks');
         }
-        if ($userid != 'vdesabou') {
-            stathat_ez_count('AlfredSpotifyMiniPlayer', 'artworks', $nb_artworks_total);
-        }
+        stathat_ez_count('AlfredSpotifyMiniPlayer', 'artworks', $nb_artworks_total);
     }
 
     return true;
