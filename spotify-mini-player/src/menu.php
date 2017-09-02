@@ -976,31 +976,6 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 'ctrl' => 'Not Available',
             ), './images/lyrics.png', 'yes', '');
 
-//		$w->result('SpotifyMiniPlayer_' . 'biography', serialize(array(
-//					'' /*track_uri*/ ,
-//					'' /* album_uri */ ,
-//					'' /* artist_uri */ ,
-//					'' /* playlist_uri */ ,
-//					'' /* spotify_command */ ,
-//					'' /* query */ ,
-//					'' /* other_settings*/ ,
-//					'biography' /* other_action */ ,
-//					'' /* artist_name */ ,
-//					'' /* track_name */ ,
-//					'' /* album_name */ ,
-//					'' /* track_artwork_path */ ,
-//					'' /* artist_artwork_path */ ,
-//					'' /* album_artwork_path */ ,
-//					'' /* playlist_name */ ,
-//					'' /* playlist_artwork_path */
-//				)), 'Display biography', array(
-//				"This will display the artist biography, twitter and official website",
-//				'alt' => 'Not Available',
-//				'cmd' => 'Not Available',
-//				'shift' => 'Not Available',
-//				'fn' => 'Not Available',
-//				'ctrl' => 'Not Available'
-//			), './images/biography.png', 'yes', '');
 
         $w->result('SpotifyMiniPlayer_'.'play', serialize(array(
                     '' /*track_uri*/,
