@@ -1191,6 +1191,58 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                     '', /* playlist_artwork_path */
                 )), 'Repeating', 'Activate/Deactivate repeating in Spotify', './images/repeating.png', 'yes', '');
 
+            $w->result(null, serialize(array(
+                '' /*track_uri*/,
+                '' /* album_uri */,
+                '' /* artist_uri */,
+                '' /* playlist_uri */,
+                '' /* spotify_command */,
+                '' /* query */,
+                '' /* other_settings*/,
+                'share' /* other_action */,
+                '' /* artist_name */,
+                '' /* track_name */,
+                '' /* album_name */,
+                '' /* track_artwork_path */,
+                '' /* artist_artwork_path */,
+                '' /* album_artwork_path */,
+                '' /* playlist_name */,
+                '', /* playlist_artwork_path */
+            )), 'Share current track using Mac OS X Sharing ', array(
+            'This will open the Mac OS X Sharing for the current track',
+            'alt' => 'Not Available',
+            'cmd' => 'Not Available',
+            'shift' => 'Not Available',
+            'fn' => 'Not Available',
+            'ctrl' => 'Not Available',
+        ), './images/share.png', 'yes', null, '');
+
+        $w->result(null, serialize(array(
+            '' /*track_uri*/,
+            '' /* album_uri */,
+            '' /* artist_uri */,
+            '' /* playlist_uri */,
+            '' /* spotify_command */,
+            '' /* query */,
+            '' /* other_settings*/,
+            'web_search' /* other_action */,
+            '' /* artist_name */,
+            '' /* track_name */,
+            '' /* album_name */,
+            '' /* track_artwork_path */,
+            '' /* artist_artwork_path */,
+            '' /* album_artwork_path */,
+            '' /* playlist_name */,
+            '', /* playlist_artwork_path */
+        )), 'Do a web search for current track or artist on Youtube, Facebook, etc.. ', array(
+        'You will be prompted to choose the web service you want to use',
+        'alt' => 'Not Available',
+        'cmd' => 'Not Available',
+        'shift' => 'Not Available',
+        'fn' => 'Not Available',
+        'ctrl' => 'Not Available',
+    ), './images/youtube.png', 'yes', null, '');
+
         if ($update_in_progress == false) {
             $w->result('SpotifyMiniPlayer_'.'refresh_library', serialize(array(
                         '' /*track_uri*/,
@@ -1435,7 +1487,60 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
     } else {
 
         // Search commands for fast access
-
+        if (strpos(strtolower('share'), strtolower($query)) !== false) {
+            $w->result(null, serialize(array(
+                '' /*track_uri*/,
+                '' /* album_uri */,
+                '' /* artist_uri */,
+                '' /* playlist_uri */,
+                '' /* spotify_command */,
+                '' /* query */,
+                '' /* other_settings*/,
+                'share' /* other_action */,
+                '' /* artist_name */,
+                '' /* track_name */,
+                '' /* album_name */,
+                '' /* track_artwork_path */,
+                '' /* artist_artwork_path */,
+                '' /* album_artwork_path */,
+                '' /* playlist_name */,
+                '', /* playlist_artwork_path */
+            )), 'Share current track using Mac OS X Sharing ', array(
+            'This will open the Mac OS X Sharing for the current track',
+            'alt' => 'Not Available',
+            'cmd' => 'Not Available',
+            'shift' => 'Not Available',
+            'fn' => 'Not Available',
+            'ctrl' => 'Not Available',
+        ), './images/share.png', 'yes', null, '');
+        }
+        if (strpos(strtolower('web search'), strtolower($query)) !== false) {
+            $w->result(null, serialize(array(
+                '' /*track_uri*/,
+                '' /* album_uri */,
+                '' /* artist_uri */,
+                '' /* playlist_uri */,
+                '' /* spotify_command */,
+                '' /* query */,
+                '' /* other_settings*/,
+                'web_search' /* other_action */,
+                '' /* artist_name */,
+                '' /* track_name */,
+                '' /* album_name */,
+                '' /* track_artwork_path */,
+                '' /* artist_artwork_path */,
+                '' /* album_artwork_path */,
+                '' /* playlist_name */,
+                '', /* playlist_artwork_path */
+            )), 'Do a web search for current track or artist on Youtube, Facebook, etc.. ', array(
+            'You will be prompted to choose the web service you want to use',
+            'alt' => 'Not Available',
+            'cmd' => 'Not Available',
+            'shift' => 'Not Available',
+            'fn' => 'Not Available',
+            'ctrl' => 'Not Available',
+        ), './images/youtube.png', 'yes', null, '');
+        }
         if (strpos(strtolower('next'), strtolower($query)) !== false) {
             $w->result(null, serialize(array(
                         '' /*track_uri*/,
