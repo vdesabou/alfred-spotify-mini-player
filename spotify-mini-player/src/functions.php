@@ -7143,6 +7143,18 @@ function handleSpotifyWebAPIException($w, $e)
 }
 
 /**
+ * floatToCircles function.
+ *
+ * @param mixed $decimal
+ */
+ function floatToCircles($decimal)
+ {
+     $squares = ($decimal < 1) ? floor($decimal * 10) : 10;
+ 
+     return str_repeat('●', $squares).str_repeat('○︎', 10 - $squares);
+ }
+
+/**
  * floatToSquares function.
  *
  * @param mixed $decimal

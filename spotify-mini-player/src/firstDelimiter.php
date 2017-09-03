@@ -842,6 +842,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                     $track_uri = $playback_info->item->uri;
                     $length = ($playback_info->item->duration_ms/1000);
                     $popularity = $playback_info->item->popularity;
+                    $progress_ms = $playback_info->progress_ms;
                     
                     // device
                     $device_name = $playback_info->device->name;
@@ -866,8 +867,6 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                             $artist_uri = $playback_info->context->uri;
                             $context = 'artist ' . getArtistName($w, $artist_uri) . ' ';
                         }
-                        
-
                     }
                     $repeat_state = "Repeat is <inactive>";
                     if($playback_info->repeat_state == 'track') {
@@ -876,9 +875,8 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                         $repeat_state = "Repeat " . $context_type . " is <active>";
                     }
                     
-
                     if ($device_name != '') {
-                        $w->result(null, 'help', 'Playing ' . $context . 'on ' . $device_type . ' ' . $device_name, 'Shuffle is <' . $shuffle_state . '>. ' . $repeat_state, './images/connect.png', 'no', null, '');
+                        $w->result(null, 'help', 'Playing ' . $context . 'on ' . $device_type . ' ' . $device_name, 'Progress: ' . floatToCircles($progress_ms / $results[5]) . ' Shuffle is <' . $shuffle_state . '> ' . $repeat_state, './images/connect.png', 'no', null, '');
                     }    
                 }  catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
                     if($e->getMessage() == 'Permissions missing') {
