@@ -1738,7 +1738,7 @@ function getCurrentTrackInfoWithMopidy($w, $displayError = true)
             $popularity = $current_track_info->item->popularity;
         
             $retArr = array(''.$track_name.'▹'.$artist_name.'▹'.$album_name.'▹'.$state.'▹'.$track_uri.'▹'.$length.'▹'.$popularity);
-            return ''.$track_name.'▹'.$artist_name.'▹'.$album_name.'▹'.$state.'▹'.$track_uri.'▹'.$length.'▹'.'0';
+            return ''.$track_name.'▹'.$artist_name.'▹'.$album_name.'▹'.$state.'▹'.$track_uri.'▹'.$length.'▹'.$popularity;
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
