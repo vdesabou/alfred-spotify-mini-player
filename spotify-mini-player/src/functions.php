@@ -7159,11 +7159,11 @@ function handleSpotifyWebAPIException($w, $e)
  *
  * @param mixed $decimal
  */
-function floatToSquares($decimal)
+function floatToSquares($decimal, $numSquares = 10)
 {
-    $squares = ($decimal < 1) ? floor($decimal * 10) : 10;
+    $squares = ($decimal < 1) ? floor($decimal * $numSquares) : $numSquares;
 
-    return str_repeat('◼︎', $squares).str_repeat('◻︎', 10 - $squares);
+    return str_repeat('◼︎', $squares).str_repeat('◻︎', $numSquares - $squares);
 }
 
 /**
