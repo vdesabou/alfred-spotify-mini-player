@@ -263,13 +263,15 @@ require './vendor/autoload.php';
         try {
             $api = getSpotifyWebAPI($w);
             
-            foreach ($api->getMyDevices()->devices as $device) {
-                if ($device->is_active) {
-                    $retry = false;
-                    return $device->volume_percent;
+            $devices = $api->getMyDevices();
+            $retry = false;
+            if(isset($devices->devices)) {
+                foreach ($devices->devices as $device) {
+                    if ($device->is_active) {
+                        return $device->volume_percent;
+                    }
                 }
             }
-            $retry = false;
             return false;
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
             logMsg('Error(getVolumeSpotifyConnect): retry '.$nb_retry.' (exception '.print_r($e).')');
@@ -657,14 +659,15 @@ require './vendor/autoload.php';
     while ($retry) {
         try {
             $api = getSpotifyWebAPI($w);
-
-            foreach ($api->getMyDevices()->devices as $device) {
-                if ($device->is_active) {
-                    $retry = false;
-                    return $device->id;
+            $devices = $api->getMyDevices();
+            $retry = false;
+            if(isset($devices->devices)) {
+                foreach ($devices->devices as $device) {
+                    if ($device->is_active) {
+                        return $device->id;
+                    }
                 }
             }
-            $retry = false;
             return '';
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
             if ($e->getMessage() == 'Permissions missing') {

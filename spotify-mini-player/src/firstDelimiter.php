@@ -1209,15 +1209,18 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
             $noresult = true;
 
             $savedDevices = array();
-            foreach ($api->getMyDevices()->devices as $device) {
-                if ($device->is_active) {
-                    array_unshift($savedDevices , $device);
-                } else {
-                    $savedDevices[] = $device;
-                }
-                $noresult = false;
-            }
+            $devices = $api->getMyDevices();
             $retry = false;
+            if(isset($devices->devices)) {
+                foreach ($devices->devices as $device) {
+                    if ($device->is_active) {
+                        array_unshift($savedDevices , $device);
+                    } else {
+                        $savedDevices[] = $device;
+                    }
+                    $noresult = false;
+                }
+            }
 
             if(!$noresult) {
                 $w->result(null, '', 'Select one of your Spotify Connect devices', 'Select one of your Spotify Connect devices below as your listening device', './images/connect.png', 'no', null, '');
