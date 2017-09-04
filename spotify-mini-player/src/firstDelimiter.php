@@ -1242,7 +1242,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                         $volume = '- volume: '.floatToSquares($device->volume_percent/100, 5);
                     }
                     if($device->is_restricted) {
-                        $w->result(null, 'help', $added.'Device '.$device->name.' cannot be controlled', '⚠ This device cannot be controlled by Spotify WEB API', $icon, 'no', null, '');
+                        $w->result(null, 'help', $added . $device->type . ' ' .$device->name.' cannot be controlled', '⚠ This device cannot be controlled by Spotify WEB API', $icon, 'no', null, '');
                     } else {
                         if (!$device->is_active) {
                             $w->result(null, serialize(array(
@@ -1262,7 +1262,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                                 '' /* album_artwork_path */,
                                 '' /* playlist_name */,
                                 '', /* playlist_artwork_path */
-                            )), $added.'Switch playback to '.$device->name.' '.$volume, array(
+                            )), $added.'Switch playback to '. $device->type . ' '.$device->name.' '.$volume, array(
                             'Type enter to validate',
                             'alt' => 'Not Available',
                             'cmd' => 'Not Available',
@@ -1271,7 +1271,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                             'ctrl' => 'Not Available',
                             ), $icon, 'yes', null, '');
                         } else {
-                            $w->result(null, 'help', $added.' '.$device->name.' is currently active '.$volume, 'This device is the currently active device', $icon, 'no', null, '');
+                            $w->result(null, 'help', $added.' '. $device->type . ' '.$device->name.' is currently active '.$volume, 'This device is the currently active device', $icon, 'no', null, '');
                         }
                     }
                 }
