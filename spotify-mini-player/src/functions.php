@@ -2345,7 +2345,6 @@ function playAlfredPlaylist($w)
         playUriWithMopidy($w, $alfred_playlist_uri);
     } else if($output_application == 'APPLESCRIPT') {
         exec("osascript -e 'tell application \"Spotify\" to play track \"$alfred_playlist_uri\"'");
-        addPlaylistToPlayQueue($w, $alfred_playlist_uri, $alfred_playlist_name);
     } else {
         $device_id = getSpotifyConnectCurrentDeviceId($w);
         if($device_id != '') {
@@ -2354,7 +2353,7 @@ function playAlfredPlaylist($w)
             displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
         }
     }
-
+    addPlaylistToPlayQueue($w, $alfred_playlist_uri, $alfred_playlist_name);
     $playlist_artwork_path = getPlaylistArtwork($w, $alfred_playlist_uri, true, true, $use_artworks);
     displayNotificationWithArtwork($w, '🔈 Alfred Playlist '.$alfred_playlist_name, $playlist_artwork_path, 'Play Alfred Playlist');
 }
@@ -2512,7 +2511,6 @@ function playCurrentArtist($w)
             playUriWithMopidy($w, $artist_uri);
         } else if($output_application == 'APPLESCRIPT') {
             exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
-            addArtistToPlayQueue($w, $artist_uri, escapeQuery($results[1]), $country_code);
         } else {
             $device_id = getSpotifyConnectCurrentDeviceId($w);
             if($device_id != '') {
@@ -2521,7 +2519,7 @@ function playCurrentArtist($w)
                 displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
             }
         }
-
+        addArtistToPlayQueue($w, $artist_uri, escapeQuery($results[1]), $country_code);
         displayNotificationWithArtwork($w, '🔈 Artist '.escapeQuery($results[1]), getArtistArtwork($w, $artist_uri, $results[1], true, false, false, $use_artworks), 'Play Current Artist');
     } else {
         displayNotificationWithArtwork($w, 'No artist is playing', './images/warning.png');
@@ -2568,7 +2566,20 @@ function playCurrentAlbum($w)
 
             return;
         }
-        exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
+
+        if ($output_application == 'MOPIDY') {
+            playUriWithMopidy($w, $album_uri);
+        } else if($output_application == 'APPLESCRIPT') {
+            exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
+        } else {
+            $device_id = getSpotifyConnectCurrentDeviceId($w);
+            if($device_id != '') {
+                playTrackSpotifyConnect($w, $device_id, '', $album_uri);
+            } else {
+                displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+            }
+        }
+        addAlbumToPlayQueue($w, $album_uri, escapeQuery($results[2]));        
         displayNotificationWithArtwork($w, '🔈 Album '.escapeQuery($results[2]), getTrackOrAlbumArtwork($w, $results[4], true, false, false, $use_artworks), 'Play Current Album', $use_artworks);
     } else {
         displayNotificationWithArtwork($w, 'No track is playing', './images/warning.png');
@@ -3420,6 +3431,7 @@ function createRadioArtistPlaylist($w, $artist_name, $artist_uri)
     $is_autoplay_playlist = $settings->is_autoplay_playlist;
     $country_code = $settings->country_code;
     $use_artworks = $settings->use_artworks;
+    $output_application = $settings->output_application;
 
     $public = false;
     if ($is_public_playlists) {
@@ -3463,7 +3475,20 @@ function createRadioArtistPlaylist($w, $artist_name, $artist_uri)
         if (is_numeric($ret) && $ret > 0) {
             if ($is_autoplay_playlist) {
                 sleep(2);
-                exec("osascript -e 'tell application \"Spotify\" to play track \"$json->uri\"'");
+
+                if ($output_application == 'MOPIDY') {
+                    playUriWithMopidy($w, $json->uri);
+                } else if($output_application == 'APPLESCRIPT') {
+                    exec("osascript -e 'tell application \"Spotify\" to play track \"$json->uri\"'");
+                } else {
+                    $device_id = getSpotifyConnectCurrentDeviceId($w);
+                    if($device_id != '') {
+                        playTrackSpotifyConnect($w, $device_id, '', $json->uri);
+                    } else {
+                        displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+                    }
+                }
+                addPlaylistToPlayQueue($w, $json->uri, $json->name);
                 $playlist_artwork_path = getPlaylistArtwork($w, $json->uri, true, false, $use_artworks);
                 displayNotificationWithArtwork($w, '🔈 Playlist '.$json->name, $playlist_artwork_path, 'Launch Artist Radio Playlist');
             }
@@ -3476,7 +3501,7 @@ function createRadioArtistPlaylist($w, $artist_name, $artist_uri)
             return;
         }
     } else {
-        displayNotificationWithArtwork($w, 'Artist was not found in Echo Nest', './images/warning.png', 'Error!');
+        displayNotificationWithArtwork($w, 'Artist was not found with Spotify API', './images/warning.png', 'Error!');
 
         return false;
     }
@@ -3501,6 +3526,7 @@ function createCompleteCollectionArtistPlaylist($w, $artist_name, $artist_uri)
     $is_public_playlists = $settings->is_public_playlists;
     $is_autoplay_playlist = $settings->is_autoplay_playlist;
     $use_artworks = $settings->use_artworks;
+    $output_application = $settings->output_application;
 
     $public = false;
     if ($is_public_playlists) {
@@ -3540,7 +3566,19 @@ function createCompleteCollectionArtistPlaylist($w, $artist_name, $artist_uri)
         if (is_numeric($ret) && $ret > 0) {
             if ($is_autoplay_playlist) {
                 sleep(2);
-                exec("osascript -e 'tell application \"Spotify\" to play track \"$json->uri\"'");
+                if ($output_application == 'MOPIDY') {
+                    playUriWithMopidy($w, $json->uri);
+                } else if($output_application == 'APPLESCRIPT') {
+                    exec("osascript -e 'tell application \"Spotify\" to play track \"$json->uri\"'");
+                } else {
+                    $device_id = getSpotifyConnectCurrentDeviceId($w);
+                    if($device_id != '') {
+                        playTrackSpotifyConnect($w, $device_id, '', $json->uri);
+                    } else {
+                        displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+                    }
+                }
+                addPlaylistToPlayQueue($w, $json->uri, $json->name);
                 $playlist_artwork_path = getPlaylistArtwork($w, $json->uri, true, false, $use_artworks);
                 displayNotificationWithArtwork($w, '🔈 Playlist '.$json->name, $playlist_artwork_path, 'Launch Complete Collection Playlist');
             }
@@ -3682,7 +3720,20 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name)
         if (is_numeric($ret) && $ret > 0) {
             if ($is_autoplay_playlist) {
                 sleep(2);
-                exec("osascript -e 'tell application \"Spotify\" to play track \"$json->uri\"'");
+
+                if ($output_application == 'MOPIDY') {
+                    playUriWithMopidy($w, $json->uri);
+                } else if($output_application == 'APPLESCRIPT') {
+                    exec("osascript -e 'tell application \"Spotify\" to play track \"$json->uri\"'");
+                } else {
+                    $device_id = getSpotifyConnectCurrentDeviceId($w);
+                    if($device_id != '') {
+                        playTrackSpotifyConnect($w, $device_id, '', $json->uri);
+                    } else {
+                        displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+                    }
+                }
+                addPlaylistToPlayQueue($w, $json->uri, $json->name);
                 $playlist_artwork_path = getPlaylistArtwork($w, $json->uri, true, false, $use_artworks);
                 displayNotificationWithArtwork($w, '🔈 Playlist '.$json->name, $playlist_artwork_path, 'Launch Radio Playlist');
             }
