@@ -3657,6 +3657,7 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name)
     $is_public_playlists = $settings->is_public_playlists;
     $is_autoplay_playlist = $settings->is_autoplay_playlist;
     $use_artworks = $settings->use_artworks;
+    $output_application = $settings->output_application;
 
     $public = false;
     if ($is_public_playlists) {
