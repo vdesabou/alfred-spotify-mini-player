@@ -3,7 +3,7 @@ layout: article
 permalink: /setup/
 title: "Setup"
 date: 2015-01-01
-modified: 2017-03-20
+modified: 2017-09-11
 toc: true
 share: false
 noindex: false
@@ -33,6 +33,18 @@ Setting up the workflow is easy, you just need to follow these steps:-
 	<figcaption>Example of Spotify Application (click to enlarge).</figcaption>
 </figure>
 
+
+Note: if you're using a firewall or a software that blocks communication, note that you'll have to unblock the following domains to use the workflow:-
+
+* https://api.spotify.com (for interaction with Spotify)
+
+* https://raw.githubusercontent.com (for downloading new release from Packal)
+
+* https://github.com/ (for downloading images when changing theme)
+
+* http://api.stathat.com (for statistics)
+
+* https://transfer.sh (for DEBUG Zip file)
 
 ## Create the library
 
