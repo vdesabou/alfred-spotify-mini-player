@@ -7,7 +7,7 @@ require './src/secondDelimiter.php';
 require './src/thirdDelimiter.php';
 require_once './src/workflows.php';
 
-$begin_time = computeTime();
+// $begin_time = computeTime();
 // Report all PHP errors
 //error_reporting(E_ALL);
 error_reporting(0);
@@ -390,8 +390,8 @@ if (mb_strlen($query) < 2) {
     }
 }
 
-$end_time = computeTime();
-$total_temp = ($end_time-$begin_time);
-$w->result(null, 'debug', "Processed in " . $total_temp*1000 . ' ms', '', './images/info.png', 'no', null, '');
+// $end_time = computeTime();
+// $total_temp = ($end_time-$begin_time);
+// $w->result(null, 'debug', "Processed in " . $total_temp*1000 . ' ms', '', './images/info.png', 'no', null, '');
 
 echo $w->tojson();
