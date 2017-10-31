@@ -7,7 +7,7 @@ require './src/secondDelimiter.php';
 require './src/thirdDelimiter.php';
 require_once './src/workflows.php';
 
-// $begin_time = computeTime();
+$begin_time = computeTime();
 // Report all PHP errors
 //error_reporting(E_ALL);
 error_reporting(0);
@@ -185,6 +185,9 @@ try {
     $db->query('PRAGMA default_cache_size=700000');
     $db->query('PRAGMA cache_size=700000');
     $db->query('PRAGMA compile_options');
+    // Problems with search on russian language #210
+    // thanks to https://blog.amartynov.ru/php-sqlite-case-insensitive-like-utf8/
+    $db->sqliteCreateFunction('like', "lexa_ci_utf8_like", 2);
 } catch (PDOException $e) {
     handleDbIssuePdoXml($db);
 
@@ -386,9 +389,9 @@ if (mb_strlen($query) < 2) {
         }
     }
 }
-/*
+
 $end_time = computeTime();
 $total_temp = ($end_time-$begin_time);
 $w->result(null, 'debug', "Processed in " . $total_temp*1000 . ' ms', '', './images/info.png', 'no', null, '');
-*/
+
 echo $w->tojson();

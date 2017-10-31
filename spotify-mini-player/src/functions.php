@@ -5347,6 +5347,9 @@ function updateLibrary($w)
         $db->query('PRAGMA default_cache_size=700000');
         $db->query('PRAGMA cache_size=700000');
         $db->query('PRAGMA compile_options');
+        // Problems with search on russian language #210
+        // thanks to https://blog.amartynov.ru/php-sqlite-case-insensitive-like-utf8/
+        $db->sqliteCreateFunction('like', "lexa_ci_utf8_like", 2);
     } catch (PDOException $e) {
         logMsg( 'Error(updateLibrary): (exception '.print_r($e).')');
         handleDbIssuePdoEcho($db, $w);
@@ -8205,4 +8208,16 @@ function time2str($ts)
         if(date('n', $ts) == date('n') + 1) return 'next month';
         return date('F Y', $ts);
     }
+}
+
+// Problems with search on russian language #210
+// thanks to https://blog.amartynov.ru/php-sqlite-case-insensitive-like-utf8/
+function lexa_ci_utf8_like($mask, $value) {
+    $mask = str_replace(
+        array("%", "_"),
+        array(".*?", "."),
+        preg_quote($mask, "/")
+    );
+    $mask = "/^$mask$/ui";
+    return preg_match($mask, $value);
 }
