@@ -508,7 +508,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
 
                     // call to web api, if it fails,
                     // it displays an error in main window
-                    $query = 'artist:'.strtolower($the_query);
+                    $query = 'artist:'.$the_query;
                     $results = searchWebApi($w, $country_code, $query, 'artist', $search_artists_limit, false);
 
                     foreach ($results as $artist) {
@@ -527,7 +527,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
 
                     // call to web api, if it fails,
                     // it displays an error in main window
-                    $query = 'album:'.strtolower($the_query);
+                    $query = 'album:'.$the_query;
                     $results = searchWebApi($w, $country_code, $query, 'album', $search_albums_limit, false);
 
                     try {
@@ -562,7 +562,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
 
                     // call to web api, if it fails,
                     // it displays an error in main window
-                    $query = strtolower($the_query);
+                    $query = $the_query;
                     $results = searchWebApi($w, $country_code, $query, 'playlist', $search_playlists_limit, false);
 
                     foreach ($results as $playlist) {
@@ -578,7 +578,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
 
                     // call to web api, if it fails,
                     // it displays an error in main window
-                    $query = 'track:'.strtolower($the_query);
+                    $query = 'track:'.$the_query;
                     $results = searchWebApi($w, $country_code, $query, 'track', $search_tracks_limit, false);
                     $first = true;
                     foreach ($results as $track) {

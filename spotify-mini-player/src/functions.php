@@ -2627,7 +2627,7 @@ function addCurrentTrackTo($w)
             $country_code = $settings->country_code;
             // local track, look it up online
 
-            $query = 'track:'.strtolower(escapeQuery($results[0])).' artist:'.strtolower(escapeQuery($results[1]));
+            $query = 'track:'.escapeQuery($results[0]).' artist:'.escapeQuery($results[1]);
             $searchResults = searchWebApi($w, $country_code, $query, 'track', 1);
 
             if (count($searchResults) > 0) {
@@ -2760,7 +2760,7 @@ function addCurrentTrackToAlfredPlaylist($w)
         if (isset($tmp[1]) && $tmp[1] == 'local') {
             // local track, look it up online
 
-            $query = 'track:'.strtolower(escapeQuery($results[0])).' artist:'.strtolower(escapeQuery($results[1]));
+            $query = 'track:'.escapeQuery($results[0]).' artist:'.escapeQuery($results[1]);
             $searchResults = searchWebApi($w, $country_code, $query, 'track', 1);
 
             if (count($searchResults) > 0) {
@@ -2833,7 +2833,7 @@ function addCurrentTrackToYourMusic($w)
             $country_code = $settings->country_code;
             // local track, look it up online
 
-            $query = 'track:'.strtolower(escapeQuery($results[0])).' artist:'.strtolower(escapeQuery($results[1]));
+            $query = 'track:'.escapeQuery($results[0]).' artist:'.escapeQuery($results[1]);
             $searchResults = searchWebApi($w, $country_code, $query, 'track', 1);
 
             if (count($searchResults) > 0) {
@@ -3189,7 +3189,7 @@ function getArtistUriFromTrack($w, $track_uri)
             // spotify:local:The+D%c3%b8:On+My+Shoulders+-+Single:On+My+Shoulders:318
             // spotify:local:Damien+Rice:B-Sides:Woman+Like+a+Man+%28Live%2c+Unplugged%29:284
 
-            $query = 'track:'.urldecode(strtolower($tmp[4])).' artist:'.urldecode(strtolower($tmp[2]));
+            $query = 'track:'.urldecode($tmp[4]).' artist:'.urldecode($tmp[2]);
             $results = searchWebApi($w, $country_code, $query, 'track', 1);
 
             if (count($results) > 0) {
@@ -3272,7 +3272,7 @@ function getAlbumUriFromTrack($w, $track_uri)
             // spotify:local:The+D%c3%b8:On+My+Shoulders+-+Single:On+My+Shoulders:318
             // spotify:local:Damien+Rice:B-Sides:Woman+Like+a+Man+%28Live%2c+Unplugged%29:284
 
-            $query = 'track:'.urldecode(strtolower($tmp[4])).' artist:'.urldecode(strtolower($tmp[2]));
+            $query = 'track:'.urldecode($tmp[4]).' artist:'.urldecode($tmp[2]);
             $results = searchWebApi($w, $country_code, $query, 'track', 1);
 
             if (count($results) > 0) {
@@ -3670,7 +3670,7 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name)
         // spotify:local:The+D%c3%b8:On+My+Shoulders+-+Single:On+My+Shoulders:318
         // spotify:local:Damien+Rice:B-Sides:Woman+Like+a+Man+%28Live%2c+Unplugged%29:284
 
-        $query = 'track:'.urldecode(strtolower($tmp[4])).' artist:'.urldecode(strtolower($tmp[2]));
+        $query = 'track:'.urldecode($tmp[4]).' artist:'.urldecode($tmp[2]);
         $results = searchWebApi($w, $country_code, $query, 'track', 1);
 
         if (count($results) > 0) {
@@ -4086,7 +4086,7 @@ function getTheFullTrack($w, $track_uri, $country_code)
             // spotify:local:The+D%c3%b8:On+My+Shoulders+-+Single:On+My+Shoulders:318
             // spotify:local:Damien+Rice:B-Sides:Woman+Like+a+Man+%28Live%2c+Unplugged%29:284
 
-            $query = 'track:'.urldecode(strtolower($tmp[4])).' artist:'.urldecode(strtolower($tmp[2]));
+            $query = 'track:'.urldecode($tmp[4]).' artist:'.urldecode($tmp[2]);
             $results = searchWebApi($w, $country_code, $query, 'track', 1);
 
             if (count($results) > 0) {

@@ -125,7 +125,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
             $tmp = explode(':', $track_uri);
             if ($tmp[1] == 'local') {
                 // local track, look it up online
-                $query = 'track:'.strtolower($track_name).' artist:'.strtolower($artist_name);
+                $query = 'track:'.$track_name.' artist:'.$artist_name;
                 $results = searchWebApi($w, $country_code, $query, 'track', 1);
 
                 if (count($results) > 0) {
@@ -473,7 +473,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
                 $tmp = explode(':', $track_uri);
                 if ($tmp[1] == 'local') {
                     // local track, look it up online
-                    $query = 'track:'.strtolower($track_name).' artist:'.strtolower($artist_name);
+                    $query = 'track:'.$track_name.' artist:'.$artist_name;
                     $results = searchWebApi($w, $country_code, $query, 'track', 1);
 
                     if (count($results) > 0) {
@@ -572,7 +572,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
                 if ($tmp[1] == 'local') {
                     // local track, look it up online
 
-                    $query = 'track:'.strtolower($track_name).' artist:'.strtolower($artist_name);
+                    $query = 'track:'.$track_name.' artist:'.$artist_name;
                     $results = searchWebApi($w, $country_code, $query, 'track', 1);
 
                     if (count($results) > 0) {
