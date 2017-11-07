@@ -79,7 +79,7 @@ if ($add_to_option != '') {
 }
 
 // start now playing if needed
-if($oauth_access_token != '') {
+if($oauth_access_token != '' && $now_playing_notifications == true) {
     $app_arg = '';
     if ($output_application == 'MOPIDY') {
         $app_arg = 'MOPIDY';
@@ -712,6 +712,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
         return;
     } elseif ($other_action == 'disable_now_playing_notifications') {
+        exec('./src/spotify_mini_player_notifications.ksh -d "'.$w->data().'" -a stop >> "'.$w->cache().'/action.log" 2>&1 & ');
         $ret = updateSetting($w, 'now_playing_notifications', 0);
         if ($ret == true) {
             displayNotificationWithArtwork($w, 'Now Playing notifications are now disabled', './images/disable_now_playing.png', 'Settings');
