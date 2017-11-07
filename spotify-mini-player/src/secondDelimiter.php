@@ -1980,57 +1980,11 @@ function secondDelimiterFeaturedPlaylist($w, $query, $settings, $db, $update_in_
     $search = $words[2];
 
     if ($country == 'Choose a Country') {
-        // list taken from http://charts.spotify.com/docs
-        $spotify_country_codes = array(
-            'ar',
-            'at',
-            'au',
-            'be',
-            'bg',
-            'ch',
-            'cl',
-            'co',
-            'cr',
-            'cz',
-            'de',
-            'dk',
-            'ec',
-            'ee',
-            'es',
-            'fi',
-            'fr',
-            'gb',
-            'gr',
-            'gt',
-            'hk',
-            'hu',
-            'ie',
-            'is',
-            'it',
-            'li',
-            'lt',
-            'lu',
-            'lv',
-            'mx',
-            'my',
-            'nl',
-            'no',
-            'nz',
-            'pe',
-            'pl',
-            'pt',
-            'se',
-            'sg',
-            'sk',
-            'sv',
-            'tr',
-            'tw',
-            'us',
-            'uy',
-        );
+        
+        $spotify_country_codes = getSpotifyCountryCodesList();
+
         foreach ($spotify_country_codes as $spotify_country_code) {
             if (strtoupper($spotify_country_code) != 'US' && strtoupper($spotify_country_code) != 'GB' && strtoupper($spotify_country_code) != strtoupper($country_code)) {
-
 
                 if (mb_strlen($search) < 1 || strpos(strtolower($spotify_country_code), strtolower($search)) !== false || strpos(strtolower(getCountryName(strtoupper($spotify_country_code))), strtolower($search)) !== false) {
 
@@ -2099,54 +2053,9 @@ function secondDelimiterNewReleases($w, $query, $settings, $db, $update_in_progr
     $search = $words[2];
 
     if ($country == 'Choose a Country') {
-        // list taken from http://charts.spotify.com/docs
-        $spotify_country_codes = array(
-            'ar',
-            'at',
-            'au',
-            'be',
-            'bg',
-            'ch',
-            'cl',
-            'co',
-            'cr',
-            'cz',
-            'de',
-            'dk',
-            'ec',
-            'ee',
-            'es',
-            'fi',
-            'fr',
-            'gb',
-            'gr',
-            'gt',
-            'hk',
-            'hu',
-            'ie',
-            'is',
-            'it',
-            'li',
-            'lt',
-            'lu',
-            'lv',
-            'mx',
-            'my',
-            'nl',
-            'no',
-            'nz',
-            'pe',
-            'pl',
-            'pt',
-            'se',
-            'sg',
-            'sk',
-            'sv',
-            'tr',
-            'tw',
-            'us',
-            'uy',
-        );
+        
+        $spotify_country_codes = getSpotifyCountryCodesList();
+
         foreach ($spotify_country_codes as $spotify_country_code) {
             if (strtoupper($spotify_country_code) != 'US' && strtoupper($spotify_country_code) != 'GB' && strtoupper($spotify_country_code) != strtoupper($country_code)) {
 
@@ -3065,54 +2974,9 @@ function secondDelimiterBrowse($w, $query, $settings, $db, $update_in_progress)
     $search = $words[2];
 
     if ($country == 'Choose a Country') {
-        // list taken from http://charts.spotify.com/docs
-        $spotify_country_codes = array(
-            'ar',
-            'at',
-            'au',
-            'be',
-            'bg',
-            'ch',
-            'cl',
-            'co',
-            'cr',
-            'cz',
-            'de',
-            'dk',
-            'ec',
-            'ee',
-            'es',
-            'fi',
-            'fr',
-            'gb',
-            'gr',
-            'gt',
-            'hk',
-            'hu',
-            'ie',
-            'is',
-            'it',
-            'li',
-            'lt',
-            'lu',
-            'lv',
-            'mx',
-            'my',
-            'nl',
-            'no',
-            'nz',
-            'pe',
-            'pl',
-            'pt',
-            'se',
-            'sg',
-            'sk',
-            'sv',
-            'tr',
-            'tw',
-            'us',
-            'uy',
-        );
+        
+        $spotify_country_codes = getSpotifyCountryCodesList();
+
         foreach ($spotify_country_codes as $spotify_country_code) {
             if (strtoupper($spotify_country_code) != 'US' && strtoupper($spotify_country_code) != 'GB' && strtoupper($spotify_country_code) != strtoupper($country_code)) {
 
