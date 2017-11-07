@@ -2822,6 +2822,8 @@
 			<dict>
 				<key>alfredfiltersresults</key>
 				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
 				<key>argumenttrimmode</key>
 				<integer>0</integer>
 				<key>argumenttype</key>
@@ -3495,7 +3497,7 @@
 			<key>config</key>
 			<dict>
 				<key>argument</key>
-				<string>✧Browse▹</string>
+				<string>✧Spotify Connect▹</string>
 				<key>variables</key>
 				<dict/>
 			</dict>
@@ -3606,6 +3608,8 @@
 			<dict>
 				<key>alfredfiltersresults</key>
 				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
 				<key>argumenttrimmode</key>
 				<integer>0</integer>
 				<key>argumenttype</key>
@@ -4393,6 +4397,8 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 			<dict>
 				<key>alfredfiltersresults</key>
 				<true/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
 				<key>argumenttrimmode</key>
 				<integer>0</integer>
 				<key>argumenttype</key>
