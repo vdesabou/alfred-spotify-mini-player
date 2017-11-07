@@ -2810,7 +2810,7 @@ function firstDelimiterYourRecentTracks($w, $query, $settings, $db, $update_in_p
 {
     $words = explode('▹', $query);
     $kind = $words[0];
-    $time_range = $words[2];
+    $search = $words[1];
 
     $all_playlists = $settings->all_playlists;
     $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
@@ -2844,44 +2844,39 @@ function firstDelimiterYourRecentTracks($w, $query, $settings, $db, $update_in_p
         foreach ($items as $item) {
 
             $track = $item->track;
-
-            // if ($noresult) {
-            //     $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-            //     $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
-            //     $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
-            // }
-
             $noresult = false;
             $artists = $track->artists;
             $artist = $artists[0];
 
-            $track_artwork_path = getTrackOrAlbumArtwork($w, $track->uri, false, false, false, $use_artworks);
-            $w->result(null, serialize(array(
-                        $track->uri /*track_uri*/,
-                        '' /* album_uri */,
-                        $artist->uri /* artist_uri */,
-                        '' /* playlist_uri */,
-                        '' /* spotify_command */,
-                        '' /* query */,
-                        '' /* other_settings*/,
-                        '' /* other_action */,
-                        escapeQuery($artist->name) /* artist_name */,
-                        escapeQuery($track->name) /* track_name */,
-                        ''/* album_name */,
-                        $track_artwork_path /* track_artwork_path */,
-                        '' /* artist_artwork_path */,
-                        '' /* album_artwork_path */,
-                        '' /* playlist_name */,
-                        '', /* playlist_artwork_path */
-                    )), escapeQuery($artist->name).' ● '.escapeQuery($track->name), array(
-                    beautifyTime($track->duration_ms / 1000).' ● '.time2str($item->played_at),
-                    'alt' => 'Not Available',
-                    'cmd' => 'Play artist '.escapeQuery($artist->name).' in Spotify',
-                    'fn' => 'Add track '.escapeQuery($track->name).' to ...',
-                    'shift' => 'Not Available',
-                    'ctrl' => 'Search artist '.escapeQuery($artist->name).' online',
-                ), $track_artwork_path, 'yes', null, '');
-            ++$nb_results;
+            if (mb_strlen($search) < 2 || strpos(strtolower($track->name), strtolower($search)) !== false || strpos(strtolower($artist->name), strtolower($search)) !== false) {
+                $track_artwork_path = getTrackOrAlbumArtwork($w, $track->uri, false, false, false, $use_artworks);
+                $w->result(null, serialize(array(
+                            $track->uri /*track_uri*/,
+                            '' /* album_uri */,
+                            $artist->uri /* artist_uri */,
+                            '' /* playlist_uri */,
+                            '' /* spotify_command */,
+                            '' /* query */,
+                            '' /* other_settings*/,
+                            '' /* other_action */,
+                            escapeQuery($artist->name) /* artist_name */,
+                            escapeQuery($track->name) /* track_name */,
+                            ''/* album_name */,
+                            $track_artwork_path /* track_artwork_path */,
+                            '' /* artist_artwork_path */,
+                            '' /* album_artwork_path */,
+                            '' /* playlist_name */,
+                            '', /* playlist_artwork_path */
+                        )), escapeQuery($artist->name).' ● '.escapeQuery($track->name), array(
+                        beautifyTime($track->duration_ms / 1000).' ● '.time2str($item->played_at),
+                        'alt' => 'Not Available',
+                        'cmd' => 'Play artist '.escapeQuery($artist->name).' in Spotify',
+                        'fn' => 'Add track '.escapeQuery($track->name).' to ...',
+                        'shift' => 'Not Available',
+                        'ctrl' => 'Search artist '.escapeQuery($artist->name).' online',
+                    ), $track_artwork_path, 'yes', null, '');
+                ++$nb_results;
+            }
         }
 
         if ($noresult) {
