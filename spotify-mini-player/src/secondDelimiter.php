@@ -1977,6 +1977,7 @@ function secondDelimiterFeaturedPlaylist($w, $query, $settings, $db, $update_in_
     $use_artworks = $settings->use_artworks;
 
     $country = $words[1];
+    $search = $words[2];
 
     if ($country == 'Choose a Country') {
         // list taken from http://charts.spotify.com/docs
@@ -2029,7 +2030,12 @@ function secondDelimiterFeaturedPlaylist($w, $query, $settings, $db, $update_in_
         );
         foreach ($spotify_country_codes as $spotify_country_code) {
             if (strtoupper($spotify_country_code) != 'US' && strtoupper($spotify_country_code) != 'GB' && strtoupper($spotify_country_code) != strtoupper($country_code)) {
-                $w->result(null, '', getCountryName(strtoupper($spotify_country_code)), 'Browse the current featured playlists in '.getCountryName(strtoupper($spotify_country_code)), './images/star.png', 'no', null, 'Featured Playlist▹'.strtoupper($spotify_country_code).'▹');
+
+
+                if (mb_strlen($search) < 1 || strpos(strtolower($spotify_country_code), strtolower($search)) !== false || strpos(strtolower(getCountryName(strtoupper($spotify_country_code))), strtolower($search)) !== false) {
+
+                    $w->result(null, '', getCountryName(strtoupper($spotify_country_code)), 'Browse the current featured playlists in '.getCountryName(strtoupper($spotify_country_code)), './images/star.png', 'no', null, 'Featured Playlist▹'.strtoupper($spotify_country_code).'▹');
+                }
             }
         }
     } else {
@@ -2090,6 +2096,7 @@ function secondDelimiterNewReleases($w, $query, $settings, $db, $update_in_progr
     $use_artworks = $settings->use_artworks;
 
     $country = $words[1];
+    $search = $words[2];
 
     if ($country == 'Choose a Country') {
         // list taken from http://charts.spotify.com/docs
@@ -2142,7 +2149,10 @@ function secondDelimiterNewReleases($w, $query, $settings, $db, $update_in_progr
         );
         foreach ($spotify_country_codes as $spotify_country_code) {
             if (strtoupper($spotify_country_code) != 'US' && strtoupper($spotify_country_code) != 'GB' && strtoupper($spotify_country_code) != strtoupper($country_code)) {
-                $w->result(null, '', getCountryName(strtoupper($spotify_country_code)), 'Browse the new album releases in '.getCountryName(strtoupper($spotify_country_code)), './images/new_releases.png', 'no', null, 'New Releases▹'.strtoupper($spotify_country_code).'▹');
+
+                if (mb_strlen($search) < 1 || strpos(strtolower($spotify_country_code), strtolower($search)) !== false || strpos(strtolower(getCountryName(strtoupper($spotify_country_code))), strtolower($search)) !== false) {
+                    $w->result(null, '', getCountryName(strtoupper($spotify_country_code)), 'Browse the new album releases in '.getCountryName(strtoupper($spotify_country_code)), './images/new_releases.png', 'no', null, 'New Releases▹'.strtoupper($spotify_country_code).'▹');
+                }
             }
         }
     } else {
@@ -3052,6 +3062,7 @@ function secondDelimiterBrowse($w, $query, $settings, $db, $update_in_progress)
     $use_artworks = $settings->use_artworks;
 
     $country = $words[1];
+    $search = $words[2];
 
     if ($country == 'Choose a Country') {
         // list taken from http://charts.spotify.com/docs
@@ -3104,7 +3115,10 @@ function secondDelimiterBrowse($w, $query, $settings, $db, $update_in_progress)
         );
         foreach ($spotify_country_codes as $spotify_country_code) {
             if (strtoupper($spotify_country_code) != 'US' && strtoupper($spotify_country_code) != 'GB' && strtoupper($spotify_country_code) != strtoupper($country_code)) {
-                $w->result(null, '', getCountryName(strtoupper($spotify_country_code)), 'Browse the Spotify categories in '.getCountryName(strtoupper($spotify_country_code)), './images/browse.png', 'no', null, 'Browse▹'.strtoupper($spotify_country_code).'▹');
+
+                if (mb_strlen($search) < 1 || strpos(strtolower($spotify_country_code), strtolower($search)) !== false || strpos(strtolower(getCountryName(strtoupper($spotify_country_code))), strtolower($search)) !== false) {
+                    $w->result(null, '', getCountryName(strtoupper($spotify_country_code)), 'Browse the Spotify categories in '.getCountryName(strtoupper($spotify_country_code)), './images/browse.png', 'no', null, 'Browse▹'.strtoupper($spotify_country_code).'▹');
+                }
             }
         }
     } else {
