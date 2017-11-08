@@ -930,6 +930,7 @@ function secondDelimiterOnlineRelated($w, $query, $settings, $db, $update_in_pro
 {
     $words = explode('▹', $query);
     $kind = $words[0];
+    $search = $words[2];
 
     $all_playlists = $settings->all_playlists;
     $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
@@ -964,7 +965,9 @@ function secondDelimiterOnlineRelated($w, $query, $settings, $db, $update_in_pro
         $relateds = getTheArtistRelatedArtists($w, trim($artist_uri));
 
         foreach ($relateds as $related) {
-            $w->result(null, '', '👤 '.$related->name, '☁︎ Query all albums/tracks from this artist online..', getArtistArtwork($w, $related->uri, $related->name, false, false, false, $use_artworks), 'no', null, 'Online▹'.$related->uri.'@'.$related->name.'▹');
+            if (mb_strlen($search) < 2 || strpos(strtolower($related->name), strtolower($search)) !== false) {
+                $w->result(null, '', '👤 '.$related->name, '☁︎ Query all albums/tracks from this artist online..', getArtistArtwork($w, $related->uri, $related->name, false, false, false, $use_artworks), 'no', null, 'Online▹'.$related->uri.'@'.$related->name.'▹');
+            }
         }
     }
 }
