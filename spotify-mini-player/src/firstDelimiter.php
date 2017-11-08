@@ -364,20 +364,29 @@ function firstDelimiterFeaturedPlaylist($w, $query, $settings, $db, $update_in_p
 {
     $words = explode('▹', $query);
     $kind = $words[0];
+    $search = $words[1];
 
     $country_code = $settings->country_code;
 
-    $w->result(null, '', getCountryName($country_code), 'Browse the current featured playlists in '.getCountryName($country_code), './images/star.png', 'no', null, 'Featured Playlist▹'.$country_code.'▹');
-
-    if ($country_code != 'US') {
-        $w->result(null, '', getCountryName('US'), 'Browse the current featured playlists in '.getCountryName('US'), './images/star.png', 'no', null, 'Featured Playlist▹US▹');
+    if (mb_strlen($search) < 2 || strpos(strtolower(getCountryName($country_code)), strtolower($search)) !== false) {
+        $w->result(null, '', getCountryName($country_code), 'Browse the current featured playlists in '.getCountryName($country_code), './images/star.png', 'no', null, 'Featured Playlist▹'.$country_code.'▹');
     }
 
-    if ($country_code != 'GB') {
-        $w->result(null, '', getCountryName('GB'), 'Browse the current featured playlists in '.getCountryName('GB'), './images/star.png', 'no', null, 'Featured Playlist▹GB▹');
+    if (mb_strlen($search) < 2 || strpos(strtolower(getCountryName('US')), strtolower($search)) !== false) {
+        if ($country_code != 'US') {
+            $w->result(null, '', getCountryName('US'), 'Browse the current featured playlists in '.getCountryName('US'), './images/star.png', 'no', null, 'Featured Playlist▹US▹');
+        }
     }
 
-    $w->result(null, '', 'Choose Another country', 'Browse the current featured playlists in another country of your choice', './images/star.png', 'no', null, 'Featured Playlist▹Choose a Country▹');
+    if (mb_strlen($search) < 2 || strpos(strtolower(getCountryName('GB')), strtolower($search)) !== false) {
+        if ($country_code != 'GB') {
+            $w->result(null, '', getCountryName('GB'), 'Browse the current featured playlists in '.getCountryName('GB'), './images/star.png', 'no', null, 'Featured Playlist▹GB▹');
+        }
+    }
+
+    if (mb_strlen($search) < 2 || strpos(strtolower('Choose Another country'), strtolower($search)) !== false) {
+        $w->result(null, '', 'Choose Another country', 'Browse the current featured playlists in another country of your choice', './images/star.png', 'no', null, 'Featured Playlist▹Choose a Country▹');
+    }
 }
 
 /**
@@ -644,20 +653,29 @@ function firstDelimiterNewReleases($w, $query, $settings, $db, $update_in_progre
 {
     $words = explode('▹', $query);
     $kind = $words[0];
+    $search = $words[1];
 
     $country_code = $settings->country_code;
 
-    $w->result(null, '', getCountryName($country_code), 'Browse the new album releases in '.getCountryName($country_code), './images/new_releases.png', 'no', null, 'New Releases▹'.$country_code.'▹');
-
-    if ($country_code != 'US') {
-        $w->result(null, '', getCountryName('US'), 'Browse the new album releases in '.getCountryName('US'), './images/new_releases.png', 'no', null, 'New Releases▹US▹');
+    if (mb_strlen($search) < 2 || strpos(strtolower(getCountryName($country_code)), strtolower($search)) !== false) {
+        $w->result(null, '', getCountryName($country_code), 'Browse the new album releases in '.getCountryName($country_code), './images/new_releases.png', 'no', null, 'New Releases▹'.$country_code.'▹');
     }
 
-    if ($country_code != 'GB') {
-        $w->result(null, '', getCountryName('GB'), 'Browse the new album releases in '.getCountryName('GB'), './images/new_releases.png', 'no', null, 'New Releases▹GB▹');
+    if (mb_strlen($search) < 2 || strpos(strtolower(getCountryName('US')), strtolower($search)) !== false) {
+        if ($country_code != 'US') {
+            $w->result(null, '', getCountryName('US'), 'Browse the new album releases in '.getCountryName('US'), './images/new_releases.png', 'no', null, 'New Releases▹US▹');
+        }
     }
 
-    $w->result(null, '', 'Choose Another country', 'Browse the new album releases in another country of your choice', './images/new_releases.png', 'no', null, 'New Releases▹Choose a Country▹');
+    if (mb_strlen($search) < 2 || strpos(strtolower(getCountryName('GB')), strtolower($search)) !== false) {
+        if ($country_code != 'GB') {
+            $w->result(null, '', getCountryName('GB'), 'Browse the new album releases in '.getCountryName('GB'), './images/new_releases.png', 'no', null, 'New Releases▹GB▹');
+        }
+    }
+
+    if (mb_strlen($search) < 2 || strpos(strtolower('Choose Another country'), strtolower($search)) !== false) {
+        $w->result(null, '', 'Choose Another country', 'Browse the new album releases in another country of your choice', './images/new_releases.png', 'no', null, 'New Releases▹Choose a Country▹');
+    }
 }
 
 /**
@@ -2754,20 +2772,28 @@ function firstDelimiterBrowse($w, $query, $settings, $db, $update_in_progress)
 {
     $words = explode('▹', $query);
     $kind = $words[0];
+    $search = $words[1];
 
     $country_code = $settings->country_code;
 
-    $w->result(null, '', getCountryName($country_code), 'Browse the Spotify categories in '.getCountryName($country_code), './images/browse.png', 'no', null, 'Browse▹'.$country_code.'▹');
-
-    if ($country_code != 'US') {
-        $w->result(null, '', getCountryName('US'), 'Browse the Spotify categories in '.getCountryName('US'), './images/browse.png', 'no', null, 'Browse▹US▹');
+    if (mb_strlen($search) < 2 || strpos(strtolower(getCountryName($country_code)), strtolower($search)) !== false) {
+        $w->result(null, '', getCountryName($country_code), 'Browse the Spotify categories in '.getCountryName($country_code), './images/browse.png', 'no', null, 'Browse▹'.$country_code.'▹');
     }
 
-    if ($country_code != 'GB') {
-        $w->result(null, '', getCountryName('GB'), 'Browse the Spotify categories in '.getCountryName('GB'), './images/browse.png', 'no', null, 'Browse▹GB▹');
+    if (mb_strlen($search) < 2 || strpos(strtolower(getCountryName('US')), strtolower($search)) !== false) {
+        if ($country_code != 'US') {
+            $w->result(null, '', getCountryName('US'), 'Browse the Spotify categories in '.getCountryName('US'), './images/browse.png', 'no', null, 'Browse▹US▹');
+        }
     }
 
-    $w->result(null, '', 'Choose Another country', 'Browse the Spotify categories in another country of your choice', './images/browse.png', 'no', null, 'Browse▹Choose a Country▹');
+    if (mb_strlen($search) < 2 || strpos(strtolower(getCountryName('GB')), strtolower($search)) !== false) {
+        if ($country_code != 'GB') {
+            $w->result(null, '', getCountryName('GB'), 'Browse the Spotify categories in '.getCountryName('GB'), './images/browse.png', 'no', null, 'Browse▹GB▹');
+        }
+    }
+    if (mb_strlen($search) < 2 || strpos(strtolower('Choose Another country'), strtolower($search)) !== false) {
+        $w->result(null, '', 'Choose Another country', 'Browse the Spotify categories in another country of your choice', './images/browse.png', 'no', null, 'Browse▹Choose a Country▹');
+    }
 }
 
 /**
