@@ -185,6 +185,7 @@ function thirdDelimiterBrowse($w, $query, $settings, $db, $update_in_progress)
 
     $country = $words[1];
     $category = $words[2];
+    $search = $words[3];
 
     try {
         $offsetCategoryPlaylists = 0;
@@ -203,7 +204,9 @@ function thirdDelimiterBrowse($w, $query, $settings, $db, $update_in_progress)
             $playlists = $listPlaylists->playlists;
             $items = $playlists->items;
             foreach ($items as $playlist) {
-                $w->result(null, '', '🎵'.escapeQuery($playlist->name), 'by '.$playlist->owner->id.' ● '.$playlist->tracks->total.' tracks', getPlaylistArtwork($w, $playlist->uri, false, false, $use_artworks), 'no', null, 'Online Playlist▹'.$playlist->uri.'∙'.escapeQuery($playlist->name).'▹');
+                if (mb_strlen($search) < 2 || strpos(strtolower($playlist->name), strtolower($search)) !== false) {
+                    $w->result(null, '', '🎵'.escapeQuery($playlist->name), 'by '.$playlist->owner->id.' ● '.$playlist->tracks->total.' tracks', getPlaylistArtwork($w, $playlist->uri, false, false, $use_artworks), 'no', null, 'Online Playlist▹'.$playlist->uri.'∙'.escapeQuery($playlist->name).'▹');
+                }
             }
 
             $offsetCategoryPlaylists += $limitCategoryPlaylists;

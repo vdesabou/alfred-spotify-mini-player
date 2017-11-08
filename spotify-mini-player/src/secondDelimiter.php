@@ -3002,8 +3002,13 @@ function secondDelimiterBrowse($w, $query, $settings, $db, $update_in_progress)
                 $offsetListCategories += $limitListCategories;
             } while ($offsetListCategories < $listCategories->categories->total);
 
+            
+
             foreach ($listCategories->categories->items as $category) {
-                $w->result(null, '', escapeQuery($category->name), 'Browse this category', getCategoryArtwork($w, $category->id, $category->icons[0]->url, true, false, $use_artworks), 'no', null, 'Browse▹'.$country.'▹'.$category->id.'▹');
+
+                if (mb_strlen($search) < 2 || strpos(strtolower($category->name), strtolower($search)) !== false) {
+                    $w->result(null, '', escapeQuery($category->name), 'Browse this category', getCategoryArtwork($w, $category->id, $category->icons[0]->url, true, false, $use_artworks), 'no', null, 'Browse▹'.$country.'▹'.$category->id.'▹');
+                }
             }
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
             $w->result(null, 'help', 'Exception occurred', ''.$e->getMessage(), './images/warning.png', 'no', null, '');
