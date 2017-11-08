@@ -699,6 +699,7 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
 {
     $words = explode('▹', $query);
     $kind = $words[0];
+    $search = $words[2];
 
     $all_playlists = $settings->all_playlists;
     $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
@@ -732,7 +733,8 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
         $artist_name = $words[1];
 
         $artist_artwork_path = getArtistArtwork($w, $artist_uri, $artist_name, false, false, false, $use_artworks);
-        $w->result(null, serialize(array(
+        if (mb_strlen($search) < 2) {
+            $w->result(null, serialize(array(
                     '' /*track_uri*/,
                     '' /* album_uri */,
                     $artist_uri /* artist_uri */,
@@ -750,15 +752,19 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
                     '' /* playlist_name */,
                     '', /* playlist_artwork_path */
                 )), '👤 '.escapeQuery($artist_name), 'Play artist', $artist_artwork_path, 'yes', null, '');
+        }
 
         //$w->result(null, '', "Display biography", "This will display the artist biography, twitter and official website", './images/biography.png', 'no', null, "Biography▹" . $artist_uri . '∙' . escapeQuery($artist_name) . '▹');
 
-        $w->result(null, '', 'Follow/Unfollow Artist', 'Display options to follow/unfollow the artist', './images/follow.png', 'no', null, 'Follow/Unfollow▹'.$artist_uri.'@'.$artist_name.'▹');
+        if (mb_strlen($search) < 2) {
+            $w->result(null, '', 'Follow/Unfollow Artist', 'Display options to follow/unfollow the artist', './images/follow.png', 'no', null, 'Follow/Unfollow▹'.$artist_uri.'@'.$artist_name.'▹');
 
-        $w->result(null, '', 'Related Artists', 'Browse related artists', './images/related.png', 'no', null, 'OnlineRelated▹'.$artist_uri.'@'.$artist_name.'▹');
+            $w->result(null, '', 'Related Artists', 'Browse related artists', './images/related.png', 'no', null, 'OnlineRelated▹'.$artist_uri.'@'.$artist_name.'▹');
+        }
 
         if ($update_in_progress == false) {
-            $w->result(null, serialize(array(
+            if (mb_strlen($search) < 2) {
+                $w->result(null, serialize(array(
                         '' /*track_uri*/,
                         '' /* album_uri */,
                         $artist_uri /* artist_uri */,
@@ -776,13 +782,16 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
                         '' /* playlist_name */,
                         '', /* playlist_artwork_path */
                     )), 'Create a Radio Playlist for '.$artist_name, 'This will create a radio playlist with '.$radio_number_tracks.' tracks for the artist', './images/radio_artist.png', 'yes', null, '');
+            }
         }
 
         // call to web api, if it fails,
         // it displays an error in main window
         $albums = getTheArtistAlbums($w, $artist_uri, $country_code);
 
-        $w->result(null, 'help', 'Select an album below to browse it', 'singles and compilations are also displayed', './images/info.png', 'no', null, '');
+        if (mb_strlen($search) < 2) {
+            $w->result(null, 'help', 'Select an album below to browse it', 'singles and compilations are also displayed', './images/info.png', 'no', null, '');
+        }
 
         $noresult = true;
         foreach ($albums as $album) {
@@ -790,7 +799,10 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
                 $noresult = false;
                 $genre = (count($album->genres) > 0) ? ' ● Genre: '.implode('|', $album->genres) : '';
                 $tracks = $album->tracks;
-                $w->result(null, '', $album->name.' ('.count($album->tracks->items).' tracks)', $album->album_type.' by '.$artist_name.' ● Release date: '.$album->release_date.$genre, getTrackOrAlbumArtwork($w, $album->uri, false, false, false, $use_artworks), 'no', null, 'Online▹'.$artist_uri.'@'.$artist_name.'@'.$album->uri.'@'.$album->name.'▹');
+                if (mb_strlen($search) < 2 || strpos(strtolower($artist_name), strtolower($search)) !== false
+                || strpos(strtolower($album->name), strtolower($search)) !== false) {
+                    $w->result(null, '', $album->name.' ('.count($album->tracks->items).' tracks)', $album->album_type.' by '.$artist_name.' ● Release date: '.$album->release_date.$genre, getTrackOrAlbumArtwork($w, $album->uri, false, false, false, $use_artworks), 'no', null, 'Online▹'.$artist_uri.'@'.$artist_name.'@'.$album->uri.'@'.$album->name.'▹');
+                }
             }
         }
 
@@ -829,7 +841,8 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
             }
         }
         $album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, false, false, false, $use_artworks);
-        $w->result(null, serialize(array(
+        if (mb_strlen($search) < 2) {
+            $w->result(null, serialize(array(
                     '' /*track_uri*/,
                     $album_uri /* album_uri */,
                     '' /* artist_uri */,
@@ -847,9 +860,12 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
                     '' /* playlist_name */,
                     '', /* playlist_artwork_path */
                 )), '💿 '.escapeQuery($album_name), 'Play album', $album_artwork_path, 'yes', null, '');
+        }
 
         if ($update_in_progress == false) {
-            $w->result(null, '', 'Add album '.escapeQuery($album_name).' to...', 'This will add the album to Your Music or a playlist you will choose in next step', './images/add.png', 'no', null, 'Add▹'.$album_uri.'∙'.escapeQuery($album_name).'▹');
+            if (mb_strlen($search) < 2) {
+                $w->result(null, '', 'Add album '.escapeQuery($album_name).' to...', 'This will add the album to Your Music or a playlist you will choose in next step', './images/add.png', 'no', null, 'Add▹'.$album_uri.'∙'.escapeQuery($album_name).'▹');
+            }
         }
 
         // call to web api, if it fails,
@@ -857,15 +873,14 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
         $tracks = getTheAlbumFullTracks($w, $album_uri);
         $noresult = true;
         foreach ($tracks as $track) {
-            // if ($noresult == true) {
-            //     $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-            //     $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
-            //     $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
-            // }
+
             $track_artwork = getTrackOrAlbumArtwork($w, $track->uri, false, false, false, $use_artworks);
             if (isset($track->is_playable) && $track->is_playable) {
                 $noresult = false;
-                $w->result(null, serialize(array(
+                if (mb_strlen($search) < 2 || strpos(strtolower($artist->name), strtolower($search)) !== false
+                || strpos(strtolower($track->name), strtolower($search)) !== false
+                || strpos(strtolower($album->name), strtolower($search)) !== false) {
+                    $w->result(null, serialize(array(
                             $track->uri /*track_uri*/,
                             $album_uri /* album_uri */,
                             $artist_uri /* artist_uri */,
@@ -890,8 +905,13 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
                         'shift' => 'Add album '.escapeQuery($album_name).' to ...',
                         'ctrl' => 'Search artist '.escapeQuery($artist_name).' online',
                     ), $track_artwork, 'yes', null, '');
+                }
             } else {
-                $w->result(null, '', '🚫 '.escapeQuery($artist_name).' ● '.escapeQuery($track->name), beautifyTime($track->duration_ms / 1000).' ● '.$album_name, $track_artwork, 'no', null, '');
+                if (mb_strlen($search) < 2 || strpos(strtolower($artist->name), strtolower($search)) !== false
+                || strpos(strtolower($track->name), strtolower($search)) !== false
+                || strpos(strtolower($album->name), strtolower($search)) !== false) {
+                    $w->result(null, '', '🚫 '.escapeQuery($artist_name).' ● '.escapeQuery($track->name), beautifyTime($track->duration_ms / 1000).' ● '.$album_name, $track_artwork, 'no', null, '');
+                }
             }
         }
     }
@@ -993,7 +1013,7 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
     $playlist_id = $url[4];
 
     $theplaylistname = $tmp[1];
-    $thetrack = $words[2];
+    $search = $words[2];
     $savedPlaylistTracks = array();
     $duration_playlist = 0;
     $nb_tracks = 0;
@@ -1037,7 +1057,8 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
         $subtitle = "$subtitle ,⇧ ▹ add playlist to ...";
     }
     $playlist_artwork_path = getPlaylistArtwork($w, $theplaylisturi, false, false, $use_artworks);
-    $w->result(null, serialize(array(
+    if (mb_strlen($search) < 2) {
+        $w->result(null, serialize(array(
                 '' /*track_uri*/,
                 '' /* album_uri */,
                 '' /* artist_uri */,
@@ -1065,9 +1086,11 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
             'fn' => 'Not Available',
             'ctrl' => 'Not Available',
         ), $playlist_artwork_path, 'yes', null, '');
+    }
 
     if ($output_application != 'MOPIDY') {
-        $w->result(null, serialize(array(
+        if (mb_strlen($search) < 2) {
+            $w->result(null, serialize(array(
                     '' /*track_uri*/,
                     '' /* album_uri */,
                     '' /* artist_uri */,
@@ -1086,6 +1109,7 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
                     '' /* playlist_name */,
                     '', /* playlist_artwork_path */
                 )), 'Open playlist '.$theplaylistname.' in Spotify', 'This will open the playlist in Spotify', './images/spotify.png', 'yes', null, '');
+            }
     }
     if ($update_in_progress == false) {
         $added = 'privately';
@@ -1094,7 +1118,8 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
             $added = 'publicly';
             $privacy_status = 'public';
         }
-        $w->result(null, serialize(array(
+        if (mb_strlen($search) < 2) {
+            $w->result(null, serialize(array(
                     '' /*track_uri*/,
                     '' /* album_uri */,
                     '' /* artist_uri */,
@@ -1112,6 +1137,7 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
                     $theplaylistname /* playlist_name */,
                     '', /* playlist_artwork_path */
                 )), 'Follow '.$added.' playlist '.$theplaylistname, 'This will add the playlist (marked as '.$privacy_status.') to your library', './images/follow.png', 'yes', null, '');
+            }
     }
 
     $noresult = true;
@@ -1121,11 +1147,6 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
             break;
         }
         $track = $item->track;
-        // if ($noresult) {
-        //     $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-        //     $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
-        //     $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
-        // }
         $noresult = false;
         $artists = $track->artists;
         $artist = $artists[0];
@@ -1133,7 +1154,11 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
 
         $track_artwork_path = getTrackOrAlbumArtwork($w, $track->uri, false, false, false, $use_artworks);
         if (isset($track->is_playable) && $track->is_playable) {
-            $w->result(null, serialize(array(
+
+            if (mb_strlen($search) < 2 || strpos(strtolower($artist->name), strtolower($search)) !== false
+                                        || strpos(strtolower($track->name), strtolower($search)) !== false
+                                        || strpos(strtolower($album->name), strtolower($search)) !== false) {
+                $w->result(null, serialize(array(
                         $track->uri /*track_uri*/,
                         $album->uri /* album_uri */,
                         $artist->uri /* artist_uri */,
@@ -1158,7 +1183,8 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
                     'shift' => 'Add album '.escapeQuery($album->name).' to ...',
                     'ctrl' => 'Search artist '.escapeQuery($artist->name).' online',
                 ), $track_artwork_path, 'yes', null, '');
-            ++$nb_results;
+                ++$nb_results;
+            }
         } else {
             $added = '';
             if (isset($item->is_local) && $item->is_local) {
@@ -1166,8 +1192,12 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
             } else {
                 $added = '🚫 ';
             }
-            $w->result(null, '', $added.escapeQuery($artist->name).' ● '.escapeQuery($track->name), beautifyTime($track->duration_ms / 1000).' ● '.escapeQuery($album->name), $track_artwork_path, 'no', null, '');
-            ++$nb_results;
+            if (mb_strlen($search) < 2 || strpos(strtolower($artist->name), strtolower($search)) !== false
+            || strpos(strtolower($track->name), strtolower($search)) !== false
+            || strpos(strtolower($album->name), strtolower($search)) !== false) {
+                $w->result(null, '', $added.escapeQuery($artist->name).' ● '.escapeQuery($track->name), beautifyTime($track->duration_ms / 1000).' ● '.escapeQuery($album->name), $track_artwork_path, 'no', null, '');
+                 ++$nb_results;
+            }
         }
     }
 }
@@ -1208,7 +1238,7 @@ function secondDelimiterYourMusicTracks($w, $query, $settings, $db, $update_in_p
 
     // display tracks for Your Music
 
-    $thetrack = $words[2];
+    $search = $words[2];
 
     if (mb_strlen($thetrack) < 2) {
         $getTracks = 'select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where yourmusic=1 order by added_at desc limit '.$max_results;
