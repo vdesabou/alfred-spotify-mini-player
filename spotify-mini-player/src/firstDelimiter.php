@@ -2462,6 +2462,7 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
 {
     $words = explode('▹', $query);
     $kind = $words[0];
+    $search = $words[1];
 
     $all_playlists = $settings->all_playlists;
     $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
@@ -2542,15 +2543,16 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
                 } elseif ($playqueue->type == 'track') {
                     $track_name = $playqueue->name;
                 }
-                $w->result(null, 'help', 'Playing from: '.$playqueue->type.' '.$playqueue->name, 'Track '.$current_track_index.' on '.count($tl_tracks).' tracks queued', './images/play_queue.png', 'no', null, '');
-                // $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-                // $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
-                // $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
+                if (mb_strlen($search) < 2) {
+                    $w->result(null, 'help', 'Playing from: '.$playqueue->type.' '.$playqueue->name, 'Track '.$current_track_index.' on '.count($tl_tracks).' tracks queued', './images/play_queue.png', 'no', null, '');
+                }
             }
             $firstTime = false;
             $max_tracks_displayed = 150;
             if ($nb_tracks >= $max_tracks_displayed) {
-                $w->result(null, 'help', '[...] '.(count($tl_tracks) - $max_tracks_displayed).' additional tracks are in the queue', 'A maximum of '.$max_tracks_displayed.' tracks is displayed.', './images/info.png', 'no', null, '');
+                if (mb_strlen($search) < 2) {
+                    $w->result(null, 'help', '[...] '.(count($tl_tracks) - $max_tracks_displayed).' additional tracks are in the queue', 'A maximum of '.$max_tracks_displayed.' tracks is displayed.', './images/info.png', 'no', null, '');
+                }
                 break;
             }
             $track_name = '';
@@ -2573,9 +2575,16 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
 
             if (strpos($track_name, '[unplayable]') !== false) {
                 $track_name = str_replace('[unplayable]', '', $track_name);
-                $w->result(null, '', '🚫 '.escapeQuery($artist_name).' ● '.escapeQuery($track_name), $duration.' ● '.$album_name, $track_artwork, 'no', null, '');
+                if (mb_strlen($search) < 2 || strpos(strtolower($artist_name), strtolower($search)) !== false
+                || strpos(strtolower($track_name), strtolower($search)) !== false
+                || strpos(strtolower($album_name), strtolower($search)) !== false) {
+                    $w->result(null, '', '🚫 '.escapeQuery($artist_name).' ● '.escapeQuery($track_name), $duration.' ● '.$album_name, $track_artwork, 'no', null, '');
+                }
             } else {
-                $w->result(null, serialize(array(
+                if (mb_strlen($search) < 2 || strpos(strtolower($artist_name), strtolower($search)) !== false
+                || strpos(strtolower($track_name), strtolower($search)) !== false
+                || strpos(strtolower($album_name), strtolower($search)) !== false) {
+                    $w->result(null, serialize(array(
                             $tl_track->track->uri /*track_uri*/,
                             '' /* album_uri */,
                             '' /* artist_uri */,
@@ -2600,6 +2609,7 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
                         'shift' => 'Add album '.escapeQuery($album_name).' to ...',
                         'ctrl' => 'Search artist '.escapeQuery($artist_name).' online',
                     ), $track_artwork, 'yes', null, '');
+                }
             }
             $noresult = false;
             $added = '';
@@ -2655,7 +2665,9 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
             exit;
         }
         if (isShuffleActive(false) == 'true') {
-            $w->result(null, 'help', 'Shuffle is enabled', 'The order of tracks presented below is not relevant', './images/warning.png', 'no', null, '');
+            if (mb_strlen($search) < 2) {
+                $w->result(null, 'help', 'Shuffle is enabled', 'The order of tracks presented below is not relevant', './images/warning.png', 'no', null, '');
+            }
         }
         $noresult = true;
         $nb_tracks = 0;
@@ -2673,14 +2685,15 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
                 } elseif ($playqueue->type == 'track') {
                     $track_name = $playqueue->name;
                 }
-                $w->result(null, 'help', 'Playing from: '.$playqueue->type.' '.$playqueue->name, 'Track '.($playqueue->current_track_index + 1).' on '.count($playqueue->tracks).' tracks queued', './images/play_queue.png', 'no', null, '');
-                // $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-                // $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
-                // $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
+                if (mb_strlen($search) < 2) {
+                    $w->result(null, 'help', 'Playing from: '.$playqueue->type.' '.$playqueue->name, 'Track '.($playqueue->current_track_index + 1).' on '.count($playqueue->tracks).' tracks queued', './images/play_queue.png', 'no', null, '');
+                }
             }
             $max_tracks_displayed = 150;
             if ($nb_tracks >= $max_tracks_displayed) {
-                $w->result(null, 'help', '[...] '.(count($playqueue->tracks) - $max_tracks_displayed).' additional tracks are in the queue', 'A maximum of '.$max_tracks_displayed.' tracks is displayed.', './images/info.png', 'no', null, '');
+                if (mb_strlen($search) < 2) {
+                    $w->result(null, 'help', '[...] '.(count($playqueue->tracks) - $max_tracks_displayed).' additional tracks are in the queue', 'A maximum of '.$max_tracks_displayed.' tracks is displayed.', './images/info.png', 'no', null, '');
+                }
                 break;
             }
             $track_name = '';
@@ -2703,7 +2716,10 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
                 $duration = $track->duration;
             }
             $track_artwork = getTrackOrAlbumArtwork($w, $track->uri, false, false, false, $use_artworks);
-            $w->result(null, serialize(array(
+            if (mb_strlen($search) < 2 || strpos(strtolower($artist_name), strtolower($search)) !== false
+            || strpos(strtolower($track_name), strtolower($search)) !== false
+            || strpos(strtolower($album_name), strtolower($search)) !== false) {
+                $w->result(null, serialize(array(
                         $track->uri /*track_uri*/,
                         '' /* album_uri */,
                         '' /* artist_uri */,
@@ -2728,6 +2744,7 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
                     'shift' => 'Add album '.escapeQuery($album_name).' to ...',
                     'ctrl' => 'Search artist '.escapeQuery($artist_name).' online',
                 ), $track_artwork, 'yes', null, '');
+            }
             $noresult = false;
             $added = '';
             $nb_tracks += 1;
