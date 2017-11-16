@@ -36,11 +36,16 @@ require './vendor/autoload.php';
  {
      try {
          $api = getSpotifyWebAPI($w);
+         // check if it is part collection
+         $tmp = explode(':', $artist_uri);
+         if (isset($tmp[3]) && $tmp[3] == 'collection') {
+            $artist_uri = 'spotify:artist:' . $tmp[5];
+         }
          $artist = $api->getArtist($artist_uri);
 
         return $artist->name;
      } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-         logMsg('Error(getArtistName): (exception '.print_r($e).')');
+         $w->result(null, '', 'Error: Spotify WEB API returned error '.$e->getMessage(), 'function getArtistName, artist_uri=' . $artist_uri, './images/warning.png', 'no', null, '');
  
          return '';
      }
@@ -56,11 +61,17 @@ require './vendor/autoload.php';
  {
      try {
          $api = getSpotifyWebAPI($w);
+         // check if it is part collection
+         $tmp = explode(':', $album_uri);
+         if (isset($tmp[3]) && $tmp[3] == 'collection') {
+            $album_uri = 'spotify:album:' . $tmp[5];
+         }
+
          $album = $api->getAlbum($album_uri);
 
         return $album->name;
      } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-         logMsg('Error(getAlbumName): (exception '.print_r($e).')');
+         $w->result(null, '', 'Error: Spotify WEB API returned error '.$e->getMessage(), 'function getAlbumName, album_uri=' . $album_uri, './images/warning.png', 'no', null, '');
  
          return '';
      }
@@ -86,8 +97,8 @@ require './vendor/autoload.php';
 
         return $playlist->name;
      } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-         logMsg('Error(getPlaylistName): (exception '.print_r($e).')');
- 
+        $w->result(null, '', 'Error: Spotify WEB API returned error '.$e->getMessage(), 'function getPlaylistName, playlist_uri=' . $playlist_uri, './images/warning.png', 'no', null, '');
+
          return '';
      }
  }
@@ -3747,7 +3758,7 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name)
             return;
         }
     } else {
-        displayNotificationWithArtwork($w, 'Track was not found in Echo Nest', './images/warning.png', 'Error!');
+        displayNotificationWithArtwork($w, 'Track was not found using Spotify API', './images/warning.png', 'Error!');
 
         return false;
     }
