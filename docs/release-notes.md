@@ -2,7 +2,7 @@
 layout: article
 permalink: /release-notes/
 title: "Release Notes"
-modified: 2017-11-06
+modified: 2017-11-17
 excerpt: "Release Notes."
 image:
   feature:
@@ -12,6 +12,12 @@ share: false
 toc: false
 noindex: false
 ---
+<a name="v7.6"></a>
+7.6:
+
+* <span class="badge success">IMPROVED</span> Add more searchable results[#213](https://github.com/vdesabou/alfred-spotify-mini-player/issues/213)
+* <span class="badge success">IMPROVED</span> Reddit search of track only searches for artist name [#214](https://github.com/vdesabou/alfred-spotify-mini-player/issues/214)
+* <span class="badge danger">FIXED</span> Disabling Now Playing notifications is doing nothing [#211](https://github.com/vdesabou/alfred-spotify-mini-player/issues/211)
 
 <a name="v7.5"></a>
 7.5:
