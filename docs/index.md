@@ -24,7 +24,7 @@ You can also <a href="{{ site.url }}/articles/remove">remove</a> tracks.</p>
 <hr>
 
 <sectionright>
-  <leftside><a href="{{ site.url }}/images/index3.gif"><img src="{{ site.url }}/images/index1.gif"></a></leftside>
+  <leftside><a href="{{ site.url }}/images/index1.gif"><img src="{{ site.url }}/images/index1.gif"></a></leftside>
   <rightside>
 
 <h2><i class="fa fa-bolt"></i> Lightning search !</h2>
