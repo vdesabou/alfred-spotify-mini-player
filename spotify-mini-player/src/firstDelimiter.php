@@ -1296,6 +1296,26 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
 
             } else {
                 $w->result(null, 'help', 'There was no Spotify Connect device found!', '', './images/warning.png', 'no', null, '');
+                if(isSpotifyAppInstalled()) {
+                    $w->result('SpotifyMiniPlayer_'.'open_spotify_app', serialize(array(
+                        '' /*track_uri*/,
+                        '' /* album_uri */,
+                        '' /* artist_uri */,
+                        '' /* playlist_uri */,
+                        '' /* spotify_command */,
+                        '' /* query */,
+                        '' /* other_settings*/,
+                        'open_spotify_app' /* other_action */,
+                        '' /* artist_name */,
+                        '' /* track_name */,
+                        '' /* album_name */,
+                        '' /* track_artwork_path */,
+                        '' /* artist_artwork_path */,
+                        '' /* album_artwork_path */,
+                        '' /* playlist_name */,
+                        '', /* playlist_artwork_path */
+                    )), 'Open Spotify application', 'This will open Spotify', './images/spotify.png', 'yes', null, '');
+                }
             }
         }  catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
             if($e->getMessage() == 'Permissions missing') {

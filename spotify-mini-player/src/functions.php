@@ -792,6 +792,14 @@ require './vendor/autoload.php';
      return true;
  }
 
+function isSpotifyAppInstalled()
+{
+	exec("osascript -e 'id of application \"Spotify\"'", $retArr, $retVal);
+	if ($retVal != 0) {
+		return false;
+    }
+    return true;
+}
 /**
  * isShuffleActive function.
  *

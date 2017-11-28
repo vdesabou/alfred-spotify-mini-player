@@ -980,6 +980,14 @@ if ($type == 'TRACK' && $other_settings == '' &&
         }
 
         return;
+    } elseif ($other_action == 'change_theme_color') {
+
+        exec("osascript -e 'tell application \"Alfred 3\" to run trigger \"change_theme_color\" in workflow \"com.vdesabou.spotify.mini.player\" with argument \"\"'");
+        return;
+    } elseif ($other_action == 'open_spotify_app') {
+        
+        exec("osascript -e 'tell application \"Spotify\" to activate'");
+        return;
     } elseif ($other_action == 'pause') {
         if ($output_application == 'MOPIDY') {
             invokeMopidyMethod($w, 'core.playback.pause', array());
