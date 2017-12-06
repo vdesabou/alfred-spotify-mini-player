@@ -785,7 +785,6 @@ require './vendor/autoload.php';
 
                 return false;
             }
-            return false;
         }
     }
  
