@@ -3508,7 +3508,8 @@ function createRadioArtistPlaylist($w, $artist_name, $artist_uri)
                 $playlist_artwork_path = getPlaylistArtwork($w, $json->uri, true, false, $use_artworks);
                 displayNotificationWithArtwork($w, '🔈 Playlist '.$json->name, $playlist_artwork_path, 'Launch Artist Radio Playlist');
             }
-            refreshLibrary($w);
+            // do not add the playlist to the library
+            unfollowThePlaylist($w, $json->uri);
 
             return;
         } elseif (is_numeric($ret) && $ret == 0) {
@@ -3754,7 +3755,8 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name)
                 $playlist_artwork_path = getPlaylistArtwork($w, $json->uri, true, false, $use_artworks);
                 displayNotificationWithArtwork($w, '🔈 Playlist '.$json->name, $playlist_artwork_path, 'Launch Radio Playlist');
             }
-            refreshLibrary($w);
+            // do not add the playlist to the library
+            unfollowThePlaylist($w, $json->uri);
 
             return;
         } elseif (is_numeric($ret) && $ret == 0) {
