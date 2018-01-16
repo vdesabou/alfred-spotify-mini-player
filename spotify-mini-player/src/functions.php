@@ -4431,7 +4431,7 @@ function displayNotificationWithArtwork($w, $subtitle, $artwork, $title = 'Spoti
         if ($artwork != '' && file_exists($artwork)) {
             copy($artwork, '/tmp/tmp');
         }
-        exec("./terminal-notifier.app/Contents/MacOS/terminal-notifier -title '".$title."' -sender 'com.spotify.miniplayer.".$theme_color."' -contentImage '/tmp/tmp' -message '".$subtitle."'");
+        exec("./terminal-notifier.app/Contents/MacOS/terminal-notifier -title '".$title."' -sender 'com.spotify.miniplayer.".$theme_color."' -appIcon '/tmp/tmp' -message '".$subtitle."'");
     } else {
         exec('./src/growl_notification.ksh -t "'.$title.'" -s "'.$subtitle.'" >> "'.$w->cache().'/action.log" 2>&1 & ');
     }
