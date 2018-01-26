@@ -955,16 +955,44 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                 }
             }
             if ($noresult == false) {
-                $w->result(null, '', '👤 '.escapeQuery($results[1]), 'Browse this artist', getArtistArtwork($w, $artist_uri, $results[1], false, false, false, $use_artworks), 'no', null, 'Artist▹'.$artist_uri.'∙'.escapeQuery($results[1]).'▹');
+
+                $href = explode(':', $artist_uri);
+                $shared_url .= ' https://open.spotify.com/artist/';
+                $shared_url .= $href[2]; 
+
+                $w->result(null, '', '👤 '.escapeQuery($results[1]), 'Browse this artist', getArtistArtwork($w, $artist_uri, $results[1], false, false, false, $use_artworks), 'no', array(
+                    'copy' => '#NowPlaying artist ' . escapeQuery($results[1]).' ' . $shared_url,
+                    'largetype' => escapeQuery($results[1]),
+                ), 'Artist▹'.$artist_uri.'∙'.escapeQuery($results[1]).'▹');
+                
             } else {
                 // artist is not in library
                 $artist_uri = getArtistUriFromTrack($w, $results[4]);
 
-                $w->result(null, '', '👤 '.escapeQuery($results[1]), 'Browse this artist', getArtistArtwork($w, $artist_uri /* empty artist_uri */, $results[1], false, false, false, $use_artworks), 'no', null, 'Artist▹'.$results[4].'∙'.escapeQuery($results[1]).'▹');
+                $href = explode(':', $artist_uri);
+                $shared_url .= ' https://open.spotify.com/artist/';
+                $shared_url .= $href[2]; 
+
+                $w->result(null, '', '👤 '.escapeQuery($results[1]), 'Browse this artist', getArtistArtwork($w, $artist_uri /* empty artist_uri */, $results[1], false, false, false, $use_artworks), 'no', array(
+                    'copy' => '#NowPlaying artist ' . escapeQuery($results[1]).' ' . $shared_url,
+                    'largetype' => escapeQuery($results[1]),
+                ), 'Artist▹'.$results[4].'∙'.escapeQuery($results[1]).'▹');
             }
         }
 
         if (mb_strlen($input) < 2 || strpos(strtolower('play album'), strtolower($input)) !== false) { 
+
+            $album_uri = getAlbumUriFromTrack($w, $results[4]);
+
+            $shared_url = '';
+            if ($album_uri != false) {
+                displayNotificationWithArtwork($w, 'Cannot get current album', './images/warning.png', 'Error!');
+                $href = explode(':', $album_uri);
+                $shared_url .= ' https://open.spotify.com/album/';
+                $shared_url .= $href[2]; 
+            }
+
+
             // use track uri here
             $album_artwork_path = getTrackOrAlbumArtwork($w, $results[4], false, false, false, $use_artworks);
             $w->result(null, serialize(array(
@@ -984,7 +1012,10 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                         $album_artwork_path /* album_artwork_path */,
                         '' /* playlist_name */,
                         '', /* playlist_artwork_path */
-                    )), '💿 '.escapeQuery($results[2]), 'Play album', $album_artwork_path, 'yes', null, '');
+                    )), '💿 '.escapeQuery($results[2]), 'Play album', $album_artwork_path, 'yes', array(
+                        'copy' => '#NowPlaying album ' . escapeQuery($results[2]).' ' . $shared_url,
+                        'largetype' => escapeQuery($results[2]),
+                    ), '');
         }
 
         // use track uri here
