@@ -2,7 +2,7 @@
 layout: article
 title: "Radio Playlists"
 date: 2014-12-23T11:39:03-04:00
-modified: 2017-01-17T11:39:03-04:00
+modified: 2018-01-26
 categories: articles
 excerpt: "Create artist or song radio playlists from the workflow."
 image:
@@ -54,4 +54,11 @@ It will create the playlist and automatically refresh your library.
 <figure>
 	<img src="{{ site.url }}/images/radio-playlists2.jpg">
 	<figcaption>Change number of tracks in a radio playlist in Settings menu.</figcaption>
+</figure>
+
+* Also, as explained in [Customization]( {{ site.url }}/articles/customization), you can decide to not add the radio playlist to your library, by modifying variable `add_created_radio_playlist_to_library`:-
+
+<figure>
+	<img src="{{ site.url }}/images/customization9.jpg">
+	<figcaption>Add radio playlist to library. 1 for adding to library, 0 otherwise.</figcaption>
 </figure>

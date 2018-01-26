@@ -2,7 +2,7 @@
 layout: article
 title: "Customization"
 date: 2017-01-17T11:39:03-04:00
-modified: 2017-07-17
+modified: 2018-01-26
 categories: articles
 excerpt: "You can customize the workflow by changing settings or variables..."
 image:
@@ -71,4 +71,11 @@ But you can also use [Alfred variables](https://www.alfredapp.com/help/workflows
 <figure>
 	<img src="{{ site.url }}/images/customization8.jpg">
 	<figcaption>Reduce notifications. 1 for reducing, 0 otherwise.</figcaption>
+</figure>
+
+* You can decide to not add to your library the radio playlist, by modifying variable `add_created_radio_playlist_to_library`:-
+
+<figure>
+	<img src="{{ site.url }}/images/customization9.jpg">
+	<figcaption>Add radio playlist to library. 1 for adding to library, 0 otherwise.</figcaption>
 </figure>

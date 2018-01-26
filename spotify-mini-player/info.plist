@@ -9782,6 +9782,8 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 	</dict>
 	<key>variables</key>
 	<dict>
+		<key>add_created_radio_playlist_to_library</key>
+		<string>1</string>
 		<key>append_to_playlist_when_adding_tracks</key>
 		<string>0</string>
 		<key>c_add_current_track_to</key>
