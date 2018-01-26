@@ -2,7 +2,7 @@
 layout: article
 permalink: /release-notes/
 title: "Release Notes"
-modified: 2017-11-17
+modified: 2018-01-26
 excerpt: "Release Notes."
 image:
   feature:
@@ -12,6 +12,17 @@ share: false
 toc: false
 noindex: false
 ---
+
+<a name="v7.7"></a>
+7.7:
+
+* <span class="badge success">IMPROVED</span> Play Random Album (but only from main Album list)[#215](https://github.com/vdesabou/alfred-spotify-mini-player/issues/215)
+* <span class="badge success">IMPROVED</span> Create Song and Artist radio without creating playlists? [#219](https://github.com/vdesabou/alfred-spotify-mini-player/issues/219)
+* <span class="badge success">IMPROVED</span> Copy URL to clipboard for current track, artist and album [#221](https://github.com/vdesabou/alfred-spotify-mini-player/issues/221)
+* <span class="badge success">IMPROVED</span> Song notification artwork[#224](https://github.com/vdesabou/alfred-spotify-mini-player/issues/224)
+* <span class="badge danger">FIXED</span> Exception when getting current track played from "Album" view in Spotify app [#216](https://github.com/vdesabou/alfred-spotify-mini-player/issues/216)
+
+
 <a name="v7.6"></a>
 7.6:
 
