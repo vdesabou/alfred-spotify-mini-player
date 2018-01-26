@@ -137,7 +137,7 @@ require './vendor/autoload.php';
             } else if ($e->getCode() == 500
                 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
                 // retry
-                if ($nb_retry > 5) {
+                if ($nb_retry > 2) {
                     handleSpotifyWebAPIException($w, $e);
                     $retry = false;
 
@@ -197,7 +197,7 @@ require './vendor/autoload.php';
             } else if ($e->getCode() == 500
                 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
                 // retry
-                if ($nb_retry > 5) {
+                if ($nb_retry > 2) {
                     $retry = false;
 
                     return false;
@@ -243,7 +243,7 @@ require './vendor/autoload.php';
             } else if ($e->getCode() == 500
                 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
                 // retry
-                if ($nb_retry > 5) {
+                if ($nb_retry > 2) {
                     handleSpotifyWebAPIException($w, $e);
                     $retry = false;
 
@@ -296,7 +296,7 @@ require './vendor/autoload.php';
             } else if ($e->getCode() == 500
                 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
                 // retry
-                if ($nb_retry > 5) {
+                if ($nb_retry > 2) {
                     handleSpotifyWebAPIException($w, $e);
                     $retry = false;
 
@@ -342,7 +342,7 @@ require './vendor/autoload.php';
             } else if ($e->getCode() == 500
                 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
                 // retry
-                if ($nb_retry > 5) {
+                if ($nb_retry > 2) {
                     handleSpotifyWebAPIException($w, $e);
                     $retry = false;
 
@@ -410,7 +410,7 @@ require './vendor/autoload.php';
             } else if ($e->getCode() == 500
                 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
                 // retry
-                if ($nb_retry > 5) {
+                if ($nb_retry > 2) {
                     handleSpotifyWebAPIException($w, $e);
                     $retry = false;
 
@@ -454,7 +454,7 @@ require './vendor/autoload.php';
             } else if ($e->getCode() == 500
                 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
                 // retry
-                if ($nb_retry > 5) {
+                if ($nb_retry > 2) {
                     handleSpotifyWebAPIException($w, $e);
                     $retry = false;
 
@@ -498,7 +498,7 @@ require './vendor/autoload.php';
             } else if ($e->getCode() == 500
                 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
                 // retry
-                if ($nb_retry > 5) {
+                if ($nb_retry > 2) {
                     handleSpotifyWebAPIException($w, $e);
                     $retry = false;
 
@@ -552,7 +552,7 @@ require './vendor/autoload.php';
             } else if ($e->getCode() == 500
                 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
                 // retry
-                if ($nb_retry > 5) {
+                if ($nb_retry > 2) {
                     handleSpotifyWebAPIException($w, $e);
                     $retry = false;
 
@@ -596,7 +596,7 @@ require './vendor/autoload.php';
             } else if ($e->getCode() == 500
                 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
                 // retry
-                if ($nb_retry > 5) {
+                if ($nb_retry > 2) {
                     handleSpotifyWebAPIException($w, $e);
                     $retry = false;
 
@@ -640,7 +640,7 @@ require './vendor/autoload.php';
             } else if ($e->getCode() == 500
                 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
                 // retry
-                if ($nb_retry > 5) {
+                if ($nb_retry > 2) {
                     handleSpotifyWebAPIException($w, $e);
                     $retry = false;
 
@@ -720,7 +720,7 @@ require './vendor/autoload.php';
                 } else if ($e->getCode() == 500
                     || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
                     // retry
-                    if ($nb_retry > 5) {
+                    if ($nb_retry > 2) {
                         handleSpotifyWebAPIException($w, $e);
                         $retry = false;
     
@@ -771,7 +771,7 @@ require './vendor/autoload.php';
             } else if ($e->getCode() == 500
                 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
                 // retry
-                if ($nb_retry > 5) {
+                if ($nb_retry > 2) {
                     handleSpotifyWebAPIException($w, $e);
                     $retry = false;
 
@@ -864,7 +864,7 @@ function isShuffleActive($print_output)
                 } else if ($e->getCode() == 500
                     || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
                     // retry
-                    if ($nb_retry > 5) {
+                    if ($nb_retry > 2) {
                         $retry = false;
     
                         return false;
