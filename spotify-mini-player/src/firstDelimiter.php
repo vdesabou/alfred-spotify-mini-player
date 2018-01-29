@@ -986,12 +986,10 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
 
             $shared_url = '';
             if ($album_uri != false) {
-                displayNotificationWithArtwork($w, 'Cannot get current album', './images/warning.png', 'Error!');
                 $href = explode(':', $album_uri);
                 $shared_url .= ' https://open.spotify.com/album/';
                 $shared_url .= $href[2]; 
             }
-
 
             // use track uri here
             $album_artwork_path = getTrackOrAlbumArtwork($w, $results[4], false, false, false, $use_artworks);
