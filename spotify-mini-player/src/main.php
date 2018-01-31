@@ -28,9 +28,23 @@ if (file_exists($w->data().'/update_library_in_progress')) {
     if (!file_exists($w->data().'/library_old.db')) {
         if (startsWith($update_library_in_progress_words[0], 'Init')) {
             if ($elapsed_time < 1800) {
-                $w->result(null, $w->data().'/update_library_in_progress', 'Initialization phase since '.beautifyTime($elapsed_time, true).' : '.floatToSquares(0), 'Waiting for Spotify servers to return required data, it may take time depending on your library', './images/update_in_progress.png', 'no', null, '');
+                $w->result(null, $w->data().'/update_library_in_progress', 'Initialization phase since '.beautifyTime($elapsed_time, true).' : '.floatToSquares(0),array(
+                    'Waiting for Spotify servers to return required data it may take time depending on your library',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/update_in_progress.png', 'no', null, '');
             } else {
-                $w->result(null, '', 'There is a problem, the initialization phase took more than 30 minutes', 'Choose kill update library below, and report to the author', './images/warning.png', 'no', null, '');
+                $w->result(null, '', 'There is a problem, the initialization phase took more than 30 minutes' ,array(
+                    'Choose kill update library below and report to the author',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/warning.png', 'no', null, '');
                 $w->result(null, serialize(array(
                     '' /*track_uri*/,
                     '' /* album_uri */,
@@ -67,9 +81,23 @@ if (file_exists($w->data().'/update_library_in_progress')) {
             }
 
             if ($update_library_in_progress_words[2] != 0) {
-                $w->result(null, $w->data().'/update_library_in_progress', $update_library_in_progress_words[0].' in progress since '.beautifyTime($elapsed_time, true).' : '.floatToSquares(intval($update_library_in_progress_words[1]) / intval($update_library_in_progress_words[2])), $update_library_in_progress_words[1].'/'.$update_library_in_progress_words[2].' '.$type.' processed so far. Currently processing <'.$update_library_in_progress_words[4].'>', './images/update_in_progress.png', 'no', null, '');
+                $w->result(null, $w->data().'/update_library_in_progress', $update_library_in_progress_words[0].' in progress since '.beautifyTime($elapsed_time, true).' : '.floatToSquares(intval($update_library_in_progress_words[1]) / intval($update_library_in_progress_words[2])),array(
+                     $update_library_in_progress_words[1].'/'.$update_library_in_progress_words[2].' '.$type.' processed so far. Currently processing <'.$update_library_in_progress_words[4].'>',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/update_in_progress.png', 'no', null, '');
             } else {
-                $w->result(null, $w->data().'/update_library_in_progress', $update_library_in_progress_words[0].' in progress since '.beautifyTime($elapsed_time, true).' : '.floatToSquares(0), 'No '.$type.' processed so far', './images/update_in_progress.png', 'no', null, '');
+                $w->result(null, $w->data().'/update_library_in_progress', $update_library_in_progress_words[0].' in progress since '.beautifyTime($elapsed_time, true).' : '.floatToSquares(0),array(
+                     'No '.$type.' processed so far',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/update_in_progress.png', 'no', null, '');
             }
         }
         echo $w->tojson();
@@ -86,9 +114,23 @@ if (file_exists($w->data().'/download_artworks_in_progress')) {
     $elapsed_time = time() - $download_artworks_in_progress_words[3];
     $download_artworks_in_progress = true;
     if ($download_artworks_in_progress_words[2] != 0) {
-        $w->result(null, $w->data().'/download_artworks_in_progress', $download_artworks_in_progress_words[0].' in progress since '.beautifyTime($elapsed_time, true).' : '.floatToSquares(intval($download_artworks_in_progress_words[1]) / intval($download_artworks_in_progress_words[2])), $download_artworks_in_progress_words[1].'/'.$download_artworks_in_progress_words[2].' artworks processed so far (empty artworks can be seen until full download is complete)', './images/artworks.png', 'no', null, '');
+        $w->result(null, $w->data().'/download_artworks_in_progress', $download_artworks_in_progress_words[0].' in progress since '.beautifyTime($elapsed_time, true).' : '.floatToSquares(intval($download_artworks_in_progress_words[1]) / intval($download_artworks_in_progress_words[2])),array(
+                     $download_artworks_in_progress_words[1].'/'.$download_artworks_in_progress_words[2].' artworks processed so far (empty artworks can be seen until full download is complete)',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/artworks.png', 'no', null, '');
     } else {
-        $w->result(null, $w->data().'/download_artworks_in_progress', $download_artworks_in_progress_words[0].' in progress since '.beautifyTime($elapsed_time, true).' : '.floatToSquares(0), 'No artwork processed so far (empty artworks can be seen until full download is complete)', './images/artworks.png', 'no', null, '');
+        $w->result(null, $w->data().'/download_artworks_in_progress', $download_artworks_in_progress_words[0].' in progress since '.beautifyTime($elapsed_time, true).' : '.floatToSquares(0),array(
+                     'No artwork processed so far (empty artworks can be seen until full download is complete)',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/artworks.png', 'no', null, '');
     }
 }
 
@@ -100,9 +142,23 @@ if (file_exists($w->data().'/change_theme_color_in_progress')) {
     $elapsed_time = time() - $change_theme_color_in_progress_words[3];
     $change_theme_color_in_progress = true;
     if ($change_theme_color_in_progress_words[2] != 0) {
-        $w->result(null, $w->data().'/change_theme_color_in_progress', $change_theme_color_in_progress_words[0].' in progress since '.beautifyTime($elapsed_time, true).' : '.floatToSquares(intval($change_theme_color_in_progress_words[1]) / intval($change_theme_color_in_progress_words[2])), $change_theme_color_in_progress_words[1].'/'.$change_theme_color_in_progress_words[2].' icons processed so far (old icons can be seen until full download is complete)', './images/update_in_progress.png', 'no', null, '');
+        $w->result(null, $w->data().'/change_theme_color_in_progress', $change_theme_color_in_progress_words[0].' in progress since '.beautifyTime($elapsed_time, true).' : '.floatToSquares(intval($change_theme_color_in_progress_words[1]) / intval($change_theme_color_in_progress_words[2])),array(
+                     $change_theme_color_in_progress_words[1].'/'.$change_theme_color_in_progress_words[2].' icons processed so far (old icons can be seen until full download is complete)',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/update_in_progress.png', 'no', null, '');
     } else {
-        $w->result(null, $w->data().'/change_theme_color_in_progress', $change_theme_color_in_progress_words[0].' in progress since '.beautifyTime($elapsed_time, true).' : '.floatToSquares(0), 'No icons processed so far (old icons can be seen until full download is complete)', './images/update_in_progress.png', 'no', null, '');
+        $w->result(null, $w->data().'/change_theme_color_in_progress', $change_theme_color_in_progress_words[0].' in progress since '.beautifyTime($elapsed_time, true).' : '.floatToSquares(0),array(
+                     'No icons processed so far (old icons can be seen until full download is complete)',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/update_in_progress.png', 'no', null, '');
     }
 }
 

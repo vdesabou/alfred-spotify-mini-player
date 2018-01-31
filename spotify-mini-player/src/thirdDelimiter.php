@@ -68,7 +68,14 @@ function thirdDelimiterAdd($w, $query, $settings, $db, $update_in_progress)
     $the_query = $words[3];
 
     if ($update_in_progress == true) {
-        $w->result(null, '', 'Cannot add tracks/albums/playlists while update is in progress', 'Please retry when update is finished', './images/warning.png', 'no', null, '');
+        $w->result(null, '', 'Cannot add tracks/albums/playlists while update is in progress',array(
+                     'Please retry when update is finished',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/warning.png', 'no', null, '');
 
         echo $w->tojson();
 
@@ -80,9 +87,23 @@ function thirdDelimiterAdd($w, $query, $settings, $db, $update_in_progress)
         if ($is_public_playlists) {
             $privacy_status = 'public';
         }
-        $w->result(null, '', 'Enter the name of the new playlist: ', 'This will create a new '.$privacy_status.' playlist with the name entered', './images/create_playlist.png', 'no', null, '');
+        $w->result(null, '', 'Enter the name of the new playlist: ',array(
+                     'This will create a new '.$privacy_status.' playlist with the name entered',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/create_playlist.png', 'no', null, '');
 
-        $w->result(null, 'help', 'Or choose an alternative below', 'Some playlists names are proposed below', './images/info.png', 'no', null, '');
+        $w->result(null, 'help', 'Or choose an alternative below',array(
+                     'Some playlists names are proposed below',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/info.png', 'no', null, '');
 
         if ($album_name != '') {
             $w->result(null, serialize(array(
@@ -205,14 +226,28 @@ function thirdDelimiterBrowse($w, $query, $settings, $db, $update_in_progress)
             $items = $playlists->items;
             foreach ($items as $playlist) {
                 if (mb_strlen($search) < 2 || strpos(strtolower($playlist->name), strtolower($search)) !== false) {
-                    $w->result(null, '', '🎵'.escapeQuery($playlist->name), 'by '.$playlist->owner->id.' ● '.$playlist->tracks->total.' tracks', getPlaylistArtwork($w, $playlist->uri, false, false, $use_artworks), 'no', null, 'Online Playlist▹'.$playlist->uri.'∙'.escapeQuery($playlist->name).'▹');
+                    $w->result(null, '', '🎵'.escapeQuery($playlist->name), 'by '.$playlist->owner->id.' ● '.$playlist->tracks->total.' tracks', getPlaylistArtwork($w, $playlist->uri, false,array(
+                     false,
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), $use_artworks), 'no', null, 'Online Playlist▹'.$playlist->uri.'∙'.escapeQuery($playlist->name).'▹');
                 }
             }
 
             $offsetCategoryPlaylists += $limitCategoryPlaylists;
         } while ($offsetCategoryPlaylists < $listPlaylists->playlists->total);
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        $w->result(null, 'help', 'Exception occurred', ''.$e->getMessage(), './images/warning.png', 'no', null, '');
+        $w->result(null, 'help', 'Exception occurred',array(
+                     ''.$e->getMessage(),
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/warning.png', 'no', null, '');
         echo $w->tojson();
         exit;
     }

@@ -45,7 +45,14 @@ require './vendor/autoload.php';
 
         return $artist->name;
      } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-         $w->result(null, '', 'Error: Spotify WEB API returned error '.$e->getMessage(), 'function getArtistName, artist_uri=' . $artist_uri, './images/warning.png', 'no', null, '');
+         $w->result(null, '', 'Error: Spotify WEB API returned error '.$e->getMessage(),array(
+            'function getArtistName artist_uri=' . $artist_uri,
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/warning.png', 'no', null, '');
  
          return '';
      }
@@ -71,7 +78,14 @@ require './vendor/autoload.php';
 
         return $album->name;
      } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-         $w->result(null, '', 'Error: Spotify WEB API returned error '.$e->getMessage(), 'function getAlbumName, album_uri=' . $album_uri, './images/warning.png', 'no', null, '');
+         $w->result(null, '', 'Error: Spotify WEB API returned error '.$e->getMessage(),array(
+            'function getAlbumName album_uri=' . $album_uri,
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/warning.png', 'no', null, '');
  
          return '';
      }
@@ -97,7 +111,14 @@ require './vendor/autoload.php';
 
         return $playlist->name;
      } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        $w->result(null, '', 'Error: Spotify WEB API returned error '.$e->getMessage(), 'function getPlaylistName, playlist_uri=' . $playlist_uri, './images/warning.png', 'no', null, '');
+        $w->result(null, '', 'Error: Spotify WEB API returned error '.$e->getMessage(),array(
+            'function getPlaylistName playlist_uri=' . $playlist_uri,
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/warning.png', 'no', null, '');
 
          return '';
      }
@@ -7138,8 +7159,22 @@ function handleDbIssuePdoXml($dbhandle)
 {
     $errorInfo = $dbhandle->errorInfo();
     $w = new Workflows('com.vdesabou.spotify.mini.player');
-    $w->result(null, '', 'Database Error: '.$errorInfo[0].' '.$errorInfo[1].' '.$errorInfo[2], '', './images/warning.png', 'no', null, '');
-    $w->result(null, '', 'There is a problem with the library, try to re-create it.', 'Select Re-Create Library library below', './images/warning.png', 'no', null, '');
+    $w->result(null, '', 'Database Error: '.$errorInfo[0].' '.$errorInfo[1].' '.$errorInfo[2],array(
+                     '',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/warning.png', 'no', null, '');
+    $w->result(null, '', 'There is a problem with the library, try to re-create it.',array(
+                     'Select Re-Create Library library below',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/warning.png', 'no', null, '');
     $w->result(null, serialize(array(
                 '' /*track_uri*/,
                 '' /* album_uri */,
@@ -7604,7 +7639,14 @@ function doJsonRequest($w, $url, $actionMode = true)
 
             exit;
         } else {
-            $w->result(null, '', 'Error: No internet connection', $url, './images/warning.png', 'no', null, '');
+            $w->result(null, '', 'Error: No internet connection',array(
+                     $url,
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/warning.png', 'no', null, '');
             echo $w->tojson();
             exit;
         }
@@ -7617,7 +7659,14 @@ function doJsonRequest($w, $url, $actionMode = true)
 
             exit;
         } else {
-            $w->result(null, '', 'Error: JSON request returned empty result', $url, './images/warning.png', 'no', null, '');
+            $w->result(null, '', 'Error: JSON request returned empty result',array(
+                     $url,
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/warning.png', 'no', null, '');
             echo $w->tojson();
             exit;
         }
@@ -7633,7 +7682,14 @@ function doJsonRequest($w, $url, $actionMode = true)
 
             exit;
         } else {
-            $w->result(null, '', 'Error: JSON request returned error '.json_last_error().' ('.json_last_error_msg().')', 'Try again or report to author', './images/warning.png', 'no', null, '');
+            $w->result(null, '', 'Error: JSON request returned error '.json_last_error().' ('.json_last_error_msg().')',array(
+                     'Try again or report to author',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/warning.png', 'no', null, '');
             echo $w->tojson();
             exit;
         }

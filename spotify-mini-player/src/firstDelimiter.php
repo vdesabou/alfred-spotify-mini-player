@@ -66,7 +66,14 @@ function firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress
                 }
             }
             if (startswith($playlist[1], 'Artist radio for')) {
-                $w->result(null, '', '🎵 '.$playlist[1], $public_status.' playlist by '.$playlist[3].' ● '.$playlist[7].' tracks ● '.$playlist[8], $playlist[5], 'no', null, 'Playlist▹'.$playlist[0].'▹');
+                $w->result(null, '', '🎵 '.$playlist[1],array(
+                     $public_status.' playlist by '.$playlist[3].' ● '.$playlist[7].' tracks ● '.$playlist[8],
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), $playlist[5], 'no', null, 'Playlist▹'.$playlist[0].'▹');
             }
         }
     } elseif ($query == 'Playlist▹Song radio') {
@@ -82,7 +89,14 @@ function firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress
                 }
             }
             if (startswith($playlist[1], 'Song radio for')) {
-                $w->result(null, '', '🎵 '.$playlist[1], $public_status.' playlist by '.$playlist[3].' ● '.$playlist[7].' tracks ● '.$playlist[8], $playlist[5], 'no', null, 'Playlist▹'.$playlist[0].'▹');
+                $w->result(null, '', '🎵 '.$playlist[1],array(
+                     $public_status.' playlist by '.$playlist[3].' ● '.$playlist[7].' tracks ● '.$playlist[8],
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), $playlist[5], 'no', null, 'Playlist▹'.$playlist[0].'▹');
             }
         }
     } else {
@@ -105,12 +119,33 @@ function firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress
 
         if (mb_strlen($theplaylist) < 2) {
             if ($nb_artist_radio_playlist > 0) {
-                $w->result(null, '', 'Browse your artist radio playlists ('.$nb_artist_radio_playlist.' playlists)', 'Display all your artist radio playlists', './images/radio_artist.png', 'no', null, 'Playlist▹Artist radio');
+                $w->result(null, '', 'Browse your artist radio playlists ('.$nb_artist_radio_playlist.' playlists)',array(
+                     'Display all your artist radio playlists',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/radio_artist.png', 'no', null, 'Playlist▹Artist radio');
             }
             if ($nb_song_radio_playlist > 0) {
-                $w->result(null, '', 'Browse your song radio playlists ('.$nb_song_radio_playlist.' playlists)', 'Display all your song radio playlists', './images/radio_song.png', 'no', null, 'Playlist▹Song radio');
+                $w->result(null, '', 'Browse your song radio playlists ('.$nb_song_radio_playlist.' playlists)',array(
+                     'Display all your song radio playlists',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/radio_song.png', 'no', null, 'Playlist▹Song radio');
             }
-            $w->result(null, '', 'Featured Playlists', 'Browse the current featured playlists', './images/star.png', 'no', null, 'Featured Playlist▹');
+            $w->result(null, '', 'Featured Playlists',array(
+                     'Browse the current featured playlists',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/star.png', 'no', null, 'Featured Playlist▹');
         }
 
         foreach ($savedPlaylists as $playlist) {
@@ -125,12 +160,26 @@ function firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress
                     $public_status = 'private';
                 }
             }
-            $w->result(null, '', '🎵'.$added.$playlist[1], $public_status.' playlist by '.$playlist[3].' ● '.$playlist[7].' tracks ● '.$playlist[8], $playlist[5], 'no', null, 'Playlist▹'.$playlist[0].'▹');
+            $w->result(null, '', '🎵'.$added.$playlist[1],array(
+                     $public_status.' playlist by '.$playlist[3].' ● '.$playlist[7].' tracks ● '.$playlist[8],
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), $playlist[5], 'no', null, 'Playlist▹'.$playlist[0].'▹');
         }
     }
 
     if ($noresult) {
-        $w->result(null, 'help', 'There is no result for your search', '', './images/warning.png', 'no', null, '');
+        $w->result(null, 'help', 'There is no result for your search',array(
+                     '',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/warning.png', 'no', null, '');
     }
 }
 
@@ -208,12 +257,26 @@ function firstDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
                 $uri = $track[3];
             }
 
-            $w->result(null, '', '👤 '.$track[0].' ('.$nb_artist_tracks.' tracks)', 'Browse this artist', $track[1], 'no', null, 'Artist▹'.$uri.'∙'.$track[0].'▹');
+            $w->result(null, '', '👤 '.$track[0].' ('.$nb_artist_tracks.' tracks)',array(
+                     'Browse this artist',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), $track[1], 'no', null, 'Artist▹'.$uri.'∙'.$track[0].'▹');
         }
     }
 
     if ($noresult) {
-        $w->result(null, 'help', 'There is no result for your search', '', './images/warning.png', 'no', null, '');
+        $w->result(null, 'help', 'There is no result for your search',array(
+                     '',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/warning.png', 'no', null, '');
         if ($output_application != 'MOPIDY') {
             $w->result(null, serialize(array(
                         '' /*track_uri*/,
@@ -279,7 +342,14 @@ function firstDelimiterAlbums($w, $query, $settings, $db, $update_in_progress)
     $output_application = $settings->output_application;
 
     // New Releases menu
-    $w->result(null, '', 'New Releases', 'Browse new album releases', './images/new_releases.png', 'no', null, 'New Releases▹');
+    $w->result(null, '', 'New Releases',array(
+                     'Browse new album releases',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/new_releases.png', 'no', null, 'New Releases▹');
 
     // Search albums
 
@@ -315,12 +385,26 @@ function firstDelimiterAlbums($w, $query, $settings, $db, $update_in_progress)
         $noresult = false;
         $nb_album_tracks = getNumberOfTracksForAlbum($db, $track[3]);
         if (checkIfResultAlreadyThere($w->results(), $track[0].' ('.$nb_album_tracks.' tracks)') == false) {
-            $w->result(null, '', $track[0].' ('.$nb_album_tracks.' tracks)', $track[4].' by '.$track[2], $track[1], 'no', null, 'Album▹'.$track[3].'∙'.$track[0].'▹');
+            $w->result(null, '', $track[0].' ('.$nb_album_tracks.' tracks)',array(
+                     $track[4].' by '.$track[2],
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), $track[1], 'no', null, 'Album▹'.$track[3].'∙'.$track[0].'▹');
         }
     }
 
     if ($noresult) {
-        $w->result(null, 'help', 'There is no result for your search', '', './images/warning.png', 'no', null, '');
+        $w->result(null, 'help', 'There is no result for your search',array(
+                     '',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/warning.png', 'no', null, '');
         if ($output_application != 'MOPIDY') {
             $w->result(null, serialize(array(
                         '' /*track_uri*/,
@@ -345,7 +429,7 @@ function firstDelimiterAlbums($w, $query, $settings, $db, $update_in_progress)
                     'cmd' => 'Not Available',
                     'shift' => 'Not Available',
                     'fn' => 'Not Available',
-                    'ctrl' => 'Not Available',
+                    'ctrl' => 'Not Available'
                 ), './images/spotify.png', 'yes', null, '');
         }
     }
@@ -369,23 +453,51 @@ function firstDelimiterFeaturedPlaylist($w, $query, $settings, $db, $update_in_p
     $country_code = $settings->country_code;
 
     if (mb_strlen($search) < 2 || strpos(strtolower(getCountryName($country_code)), strtolower($search)) !== false) {
-        $w->result(null, '', getCountryName($country_code), 'Browse the current featured playlists in '.getCountryName($country_code), './images/star.png', 'no', null, 'Featured Playlist▹'.$country_code.'▹');
+        $w->result(null, '', getCountryName($country_code),array(
+                     'Browse the current featured playlists in '.getCountryName($country_code),
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/star.png', 'no', null, 'Featured Playlist▹'.$country_code.'▹');
     }
 
     if (mb_strlen($search) < 2 || strpos(strtolower(getCountryName('US')), strtolower($search)) !== false) {
         if ($country_code != 'US') {
-            $w->result(null, '', getCountryName('US'), 'Browse the current featured playlists in '.getCountryName('US'), './images/star.png', 'no', null, 'Featured Playlist▹US▹');
+            $w->result(null, '', getCountryName('US'),array(
+                     'Browse the current featured playlists in '.getCountryName('US'),
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/star.png', 'no', null, 'Featured Playlist▹US▹');
         }
     }
 
     if (mb_strlen($search) < 2 || strpos(strtolower(getCountryName('GB')), strtolower($search)) !== false) {
         if ($country_code != 'GB') {
-            $w->result(null, '', getCountryName('GB'), 'Browse the current featured playlists in '.getCountryName('GB'), './images/star.png', 'no', null, 'Featured Playlist▹GB▹');
+            $w->result(null, '', getCountryName('GB'),array(
+                     'Browse the current featured playlists in '.getCountryName('GB'),
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/star.png', 'no', null, 'Featured Playlist▹GB▹');
         }
     }
 
     if (mb_strlen($search) < 2 || strpos(strtolower('Choose Another country'), strtolower($search)) !== false) {
-        $w->result(null, '', 'Choose Another country', 'Browse the current featured playlists in another country of your choice', './images/star.png', 'no', null, 'Featured Playlist▹Choose a Country▹');
+        $w->result(null, '', 'Choose Another country',array(
+                     'Browse the current featured playlists in another country of your choice',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/star.png', 'no', null, 'Featured Playlist▹Choose a Country▹');
     }
 }
 
@@ -429,7 +541,14 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
 
     if (mb_strlen($the_query) < 2) {
         if ($kind == 'Search Online') {
-            $w->result(null, 'help', 'Search for playlists, artists, albums or tracks online, i.e not in your library', 'Begin typing at least 3 characters to start search online. This is using slow Spotify API, be patient.', './images/info.png', 'no', null, '');
+            $w->result(null, 'help', 'Search for playlists, artists, albums or tracks online, i.e not in your library',array(
+                'Begin typing at least 3 characters to start search online. This is using slow Spotify API be patient.',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/info.png', 'no', null, '');
 
             $w->result(null, null, 'Search for playlists only', array(
                     'This will search for playlists online, i.e not in your library',
@@ -467,13 +586,41 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
                     'ctrl' => 'Not Available',
                 ), './images/albums.png', 'no', null, 'Search Albums Online▹');
         } elseif ($kind == 'Search Playlists Online') {
-            $w->result(null, 'help', 'Search playlists online, i.e not in your library', 'Begin typing at least 3 characters to start search online. This is using slow Spotify API, be patient.', './images/info.png', 'no', null, '');
+            $w->result(null, 'help', 'Search playlists online, i.e not in your library',array(
+                'Begin typing at least 3 characters to start search online. This is using slow Spotify API be patient.',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/info.png', 'no', null, '');
         } elseif ($kind == 'Search Artists Online') {
-            $w->result(null, 'help', 'Search artists online, i.e not in your library', 'Begin typing at least 3 characters to start search online. This is using slow Spotify API, be patient.', './images/info.png', 'no', null, '');
+            $w->result(null, 'help', 'Search artists online, i.e not in your library',array(
+                    'Begin typing at least 3 characters to start search online. This is using slow Spotify API be patient.',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/info.png', 'no', null, '');
         } elseif ($kind == 'Search Tracks Online') {
-            $w->result(null, 'help', 'Search tracks online, i.e not in your library', 'Begin typing at least 3 characters to start search online. This is using slow Spotify API, be patient.', './images/info.png', 'no', null, '');
+            $w->result(null, 'help', 'Search tracks online, i.e not in your library',array(
+                    'Begin typing at least 3 characters to start search online. This is using slow Spotify API be patient.',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/info.png', 'no', null, '');
         } elseif ($kind == 'Search Albums Online') {
-            $w->result(null, 'help', 'Search albums online, i.e not in your library', 'Begin typing at least 3 characters to start search online. This is using slow Spotify API, be patient.', './images/info.png', 'no', null, '');
+            $w->result(null, 'help', 'Search albums online, i.e not in your library',array(
+                    'Begin typing at least 3 characters to start search online. This is using slow Spotify API be patient.',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/info.png', 'no', null, '');
         }
     } else {
         $search_playlists = false;
@@ -523,7 +670,14 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
                     foreach ($results as $artist) {
                         if (checkIfResultAlreadyThere($w->results(), '👤 '.escapeQuery($artist->name)) == false) {
                             $noresult = false;
-                            $w->result(null, '', '👤 '.escapeQuery($artist->name), 'Browse this artist', getArtistArtwork($w, $artist->uri, $artist->name, false, false, false, $use_artworks), 'no', null, 'Online▹'.$artist->uri.'@'.escapeQuery($artist->name).'▹');
+                            $w->result(null, '', '👤 '.escapeQuery($artist->name), 'Browse this artist', getArtistArtwork($w, $artist->uri, $artist->name, false, false,array(
+                     false,
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), $use_artworks), 'no', null, 'Online▹'.$artist->uri.'@'.escapeQuery($artist->name).'▹');
                         }
                     }
                 }
@@ -542,7 +696,14 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
                     try {
                         $api = getSpotifyWebAPI($w);
                     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-                        $w->result(null, 'help', 'Exception occurred', ''.$e->getMessage(), './images/warning.png', 'no', null, '');
+                        $w->result(null, 'help', 'Exception occurred',array(
+                     ''.$e->getMessage(),
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/warning.png', 'no', null, '');
                         echo $w->tojson();
                         exit;
                     }
@@ -554,11 +715,25 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
                             try {
                                 $full_album = $api->getAlbum($album->id);
                             } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-                                $w->result(null, 'help', 'Exception occurred', ''.$e->getMessage(), './images/warning.png', 'no', null, '');
+                                $w->result(null, 'help', 'Exception occurred',array(
+                     ''.$e->getMessage(),
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/warning.png', 'no', null, '');
                                 echo $w->tojson();
                                 exit;
                             }
-                            $w->result(null, '', escapeQuery($album->name).' ('.$full_album->tracks->total.' tracks)', $album->album_type.' by '.escapeQuery($full_album->artists[0]->name), getTrackOrAlbumArtwork($w, $album->uri, false, false, false, $use_artworks), 'no', null, 'Online▹'.$full_album->artists[0]->uri.'@'.escapeQuery($full_album->artists[0]->name).'@'.$album->uri.'@'.escapeQuery($album->name).'▹');
+                            $w->result(null, '', escapeQuery($album->name).' ('.$full_album->tracks->total.' tracks)', $album->album_type.' by '.escapeQuery($full_album->artists[0]->name), getTrackOrAlbumArtwork($w, $album->uri, false, false,array(
+                     false,
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), $use_artworks), 'no', null, 'Online▹'.$full_album->artists[0]->uri.'@'.escapeQuery($full_album->artists[0]->name).'@'.$album->uri.'@'.escapeQuery($album->name).'▹');
                         }
                     }
                 }
@@ -576,7 +751,14 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
 
                     foreach ($results as $playlist) {
                         $noresult = false;
-                        $w->result(null, '', '🎵'.escapeQuery($playlist->name), 'by '.$playlist->owner->id.' ● '.$playlist->tracks->total.' tracks', getPlaylistArtwork($w, $playlist->uri, false, false, $use_artworks), 'no', null, 'Online Playlist▹'.$playlist->uri.'∙'.escapeQuery($playlist->name).'▹');
+                        $w->result(null, '', '🎵'.escapeQuery($playlist->name), 'by '.$playlist->owner->id.' ● '.$playlist->tracks->total.' tracks', getPlaylistArtwork($w, $playlist->uri, false,array(
+                     false,
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), $use_artworks), 'no', null, 'Online Playlist▹'.$playlist->uri.'∙'.escapeQuery($playlist->name).'▹');
                     }
                 }
             }
@@ -591,12 +773,6 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
                     $results = searchWebApi($w, $country_code, $query, 'track', $search_tracks_limit, false);
                     $first = true;
                     foreach ($results as $track) {
-                        // if ($first == true) {
-                        //     $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-                        //     $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
-                        //     $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
-                        // }
-                        // $first         = false;
                         $noresult = false;
                         $track_artwork = getTrackOrAlbumArtwork($w, $track->uri, false, false, false, $use_artworks);
 
@@ -635,7 +811,14 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
         }
 
         if ($noresult) {
-            $w->result(null, 'help', 'There is no result for this search', '', './images/warning.png', 'no', null, '');
+            $w->result(null, 'help', 'There is no result for this search',array(
+                     '',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/warning.png', 'no', null, '');
         }
     }
 }
@@ -658,23 +841,51 @@ function firstDelimiterNewReleases($w, $query, $settings, $db, $update_in_progre
     $country_code = $settings->country_code;
 
     if (mb_strlen($search) < 2 || strpos(strtolower(getCountryName($country_code)), strtolower($search)) !== false) {
-        $w->result(null, '', getCountryName($country_code), 'Browse the new album releases in '.getCountryName($country_code), './images/new_releases.png', 'no', null, 'New Releases▹'.$country_code.'▹');
+        $w->result(null, '', getCountryName($country_code),array(
+                     'Browse the new album releases in '.getCountryName($country_code),
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/new_releases.png', 'no', null, 'New Releases▹'.$country_code.'▹');
     }
 
     if (mb_strlen($search) < 2 || strpos(strtolower(getCountryName('US')), strtolower($search)) !== false) {
         if ($country_code != 'US') {
-            $w->result(null, '', getCountryName('US'), 'Browse the new album releases in '.getCountryName('US'), './images/new_releases.png', 'no', null, 'New Releases▹US▹');
+            $w->result(null, '', getCountryName('US'),array(
+                     'Browse the new album releases in '.getCountryName('US'),
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/new_releases.png', 'no', null, 'New Releases▹US▹');
         }
     }
 
     if (mb_strlen($search) < 2 || strpos(strtolower(getCountryName('GB')), strtolower($search)) !== false) {
         if ($country_code != 'GB') {
-            $w->result(null, '', getCountryName('GB'), 'Browse the new album releases in '.getCountryName('GB'), './images/new_releases.png', 'no', null, 'New Releases▹GB▹');
+            $w->result(null, '', getCountryName('GB'),array(
+                     'Browse the new album releases in '.getCountryName('GB'),
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/new_releases.png', 'no', null, 'New Releases▹GB▹');
         }
     }
 
     if (mb_strlen($search) < 2 || strpos(strtolower('Choose Another country'), strtolower($search)) !== false) {
-        $w->result(null, '', 'Choose Another country', 'Browse the new album releases in another country of your choice', './images/new_releases.png', 'no', null, 'New Releases▹Choose a Country▹');
+        $w->result(null, '', 'Choose Another country',array(
+                     'Browse the new album releases in another country of your choice',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/new_releases.png', 'no', null, 'New Releases▹Choose a Country▹');
     }
 }
 
@@ -723,7 +934,14 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
         // get info on current song
         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
         if ($retVal != 0) {
-            $w->result(null, 'help', 'AppleScript execution failed!', 'Message: '.htmlspecialchars($retArr[0]), './images/warning.png', 'no', null, '');
+            $w->result(null, 'help', 'AppleScript execution failed!',array(
+                     'Message: '.htmlspecialchars($retArr[0]),
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/warning.png', 'no', null, '');
             $w->result(null, serialize(array(
                         '' /*track_uri*/,
                         '' /* album_uri */,
@@ -756,12 +974,26 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
             $tmp = explode(':', $results[4]);
 
             if (isset($tmp[1]) && $tmp[1] == 'ad') {
-                $w->result(null, 'help', 'Current track is an Ad', 'Wait for the end of the ad and try again', './images/warning.png', 'no', null, '');
+                $w->result(null, 'help', 'Current track is an Ad',array(
+                     'Wait for the end of the ad and try again',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/warning.png', 'no', null, '');
                 echo $w->tojson();
                 exit;
             }
 
-            $w->result(null, 'help', 'Current track is not valid: Artist or Album name is missing', 'Fill missing information in Spotify and retry again', './images/warning.png', 'no', null, '');
+            $w->result(null, 'help', 'Current track is not valid: Artist or Album name is missing',array(
+                     'Fill missing information in Spotify and retry again',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/warning.png', 'no', null, '');
             echo $w->tojson();
             exit;
         }
@@ -894,7 +1126,14 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                     }
                     
                     if ($device_name != '') {
-                        $w->result(null, 'help', 'Playing ' . $context . 'on ' . $device_type . ' ' . $device_name, 'Progress: ' . floatToCircles($progress_ms / $results[5]) . ' Shuffle is <' . $shuffle_state . '> ' . $repeat_state, './images/connect.png', 'no', null, '');
+                        $w->result(null, 'help', 'Playing ' . $context . 'on ' . $device_type . ' ' . $device_name,array(
+                     'Progress: ' . floatToCircles($progress_ms / $results[5]) . ' Shuffle is <' . $shuffle_state . '> ' . $repeat_state,
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/connect.png', 'no', null, '');
                     }    
                 }  catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
                     if($e->getMessage() == 'Permissions missing') {
@@ -924,7 +1163,14 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                                 'ctrl' => 'Not Available',
                             ), './images/warning.png', 'yes', null, '');
                     } else {
-                        $w->result(null, 'help', 'Exception occurred', ''.$e->getMessage(), './images/warning.png', 'no', null, '');
+                        $w->result(null, 'help', 'Exception occurred',array(
+                     ''.$e->getMessage(),
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/warning.png', 'no', null, '');
                     }
                     echo $w->tojson();
                     exit;
@@ -960,7 +1206,14 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                 $shared_url .= ' https://open.spotify.com/artist/';
                 $shared_url .= $href[2]; 
 
-                $w->result(null, '', '👤 '.escapeQuery($results[1]), 'Browse this artist', getArtistArtwork($w, $artist_uri, $results[1], false, false, false, $use_artworks), 'no', array(
+                $w->result(null, '', '👤 '.escapeQuery($results[1]), 'Browse this artist', getArtistArtwork($w, $artist_uri, $results[1], false, false,array(
+                     false,
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), $use_artworks), 'no', array(
                     'copy' => '#NowPlaying artist ' . escapeQuery($results[1]).' ' . $shared_url,
                     'largetype' => escapeQuery($results[1]),
                 ), 'Artist▹'.$artist_uri.'∙'.escapeQuery($results[1]).'▹');
@@ -973,7 +1226,14 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                 $shared_url .= ' https://open.spotify.com/artist/';
                 $shared_url .= $href[2]; 
 
-                $w->result(null, '', '👤 '.escapeQuery($results[1]), 'Browse this artist', getArtistArtwork($w, $artist_uri /* empty artist_uri */, $results[1], false, false, false, $use_artworks), 'no', array(
+                $w->result(null, '', '👤 '.escapeQuery($results[1]), 'Browse this artist', getArtistArtwork($w, $artist_uri /* empty artist_uri */, $results[1], false, false,array(
+                     false,
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), $use_artworks), 'no', array(
                     'copy' => '#NowPlaying artist ' . escapeQuery($results[1]).' ' . $shared_url,
                     'largetype' => escapeQuery($results[1]),
                 ), 'Artist▹'.$results[4].'∙'.escapeQuery($results[1]).'▹');
@@ -1018,12 +1278,26 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
 
         // use track uri here
         if (mb_strlen($input) < 2 || strpos(strtolower('query lookup online'), strtolower($input)) !== false) {  
-            $w->result(null, '', '💿 '.escapeQuery($results[2]), '☁︎ Query all tracks from this album online..', './images/online_album.png', 'no', null, 'Online▹'.$results[4].'@'.escapeQuery($results[1]).'@'.$results[4].'@'.escapeQuery($results[2]).'▹');
+            $w->result(null, '', '💿 '.escapeQuery($results[2]),array(
+                     '☁︎ Query all tracks from this album online..',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/online_album.png', 'no', null, 'Online▹'.$results[4].'@'.escapeQuery($results[1]).'@'.$results[4].'@'.escapeQuery($results[2]).'▹');
         }
 
         if (mb_strlen($input) < 2 || strpos(strtolower('get lyrics'), strtolower($input)) !== false) {        
             if($always_display_lyrics_in_browser == false) {
-                $w->result(null, '', 'Get Lyrics for track '.escapeQuery($results[0]), 'This will fetch lyrics online and display them in Alfred', './images/lyrics.png', 'no', null, 'Lyrics▹'.$results[4].'∙'.escapeQuery($results[1]).'∙'.escapeQuery($results[0]));
+                $w->result(null, '', 'Get Lyrics for track '.escapeQuery($results[0]),array(
+                     'This will fetch lyrics online and display them in Alfred',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/lyrics.png', 'no', null, 'Lyrics▹'.$results[4].'∙'.escapeQuery($results[1]).'∙'.escapeQuery($results[0]));
             } else {
                 $w->result(null, serialize(array(
                             '' /*track_uri*/,
@@ -1056,11 +1330,25 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
 
         if ($update_in_progress == false) {
             if (mb_strlen($input) < 2 || strpos(strtolower('add'), strtolower($input)) !== false) { 
-                $w->result(null, '', 'Add track '.escapeQuery($results[0]).' to...', 'This will add current track to Your Music or a playlist you will choose in next step', './images/add.png', 'no', null, 'Add▹'.$results[4].'∙'.escapeQuery($results[0]).'▹');
+                $w->result(null, '', 'Add track '.escapeQuery($results[0]).' to...',array(
+                     'This will add current track to Your Music or a playlist you will choose in next step',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/add.png', 'no', null, 'Add▹'.$results[4].'∙'.escapeQuery($results[0]).'▹');
             }
 
             if (mb_strlen($input) < 2 || strpos(strtolower('remove'), strtolower($input)) !== false) { 
-                $w->result(null, '', 'Remove track '.escapeQuery($results[0]).' from...', 'This will remove current track from Your Music or a playlist you will choose in next step', './images/remove.png', 'no', null, 'Remove▹'.$results[4].'∙'.escapeQuery($results[0]).'▹');
+                $w->result(null, '', 'Remove track '.escapeQuery($results[0]).' from...',array(
+                     'This will remove current track from Your Music or a playlist you will choose in next step',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/remove.png', 'no', null, 'Remove▹'.$results[4].'∙'.escapeQuery($results[0]).'▹');
             }
 
             $privacy_status = 'private';
@@ -1168,7 +1456,14 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                 while ($track = $stmtgetTracks->fetch()) {
                     if ($track[0] == '') {
                         // The track is in Your Music
-                        $w->result(null, '', 'In "Your Music"', 'The track is in Your Music', './images/yourmusic.png', 'no', null, 'Your Music▹Tracks▹'.escapeQuery($results[0]));
+                        $w->result(null, '', 'In "Your Music"',array(
+                     'The track is in Your Music',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/yourmusic.png', 'no', null, 'Your Music▹Tracks▹'.escapeQuery($results[0]));
                     } else {
                         $getPlaylists = 'select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist,collaborative,public from playlists where uri=:uri';
 
@@ -1197,7 +1492,14 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                                         $public_status = 'private';
                                     }
                                 }
-                                $w->result(null, '', '🎵'.$added.'In playlist '.$playlist[1], $public_status.' playlist by '.$playlist[3].' ● '.$playlist[7].' tracks ● '.$playlist[8], $playlist[5], 'no', null, 'Playlist▹'.$playlist[0].'▹');
+                                $w->result(null, '', '🎵'.$added.'In playlist '.$playlist[1],array(
+                     $public_status.' playlist by '.$playlist[3].' ● '.$playlist[7].' tracks ● '.$playlist[8],
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), $playlist[5], 'no', null, 'Playlist▹'.$playlist[0].'▹');
                             }
                         }
                     }
@@ -1205,7 +1507,14 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
             }
         }
     } else {
-        $w->result(null, 'help', 'There is no track currently playing', 'Launch a track and come back here', './images/warning.png', 'no', null, '');
+        $w->result(null, 'help', 'There is no track currently playing',array(
+                     'Launch a track and come back here',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/warning.png', 'no', null, '');
     }
 }
 
@@ -1270,7 +1579,14 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
             }
 
             if(!$noresult) {
-                $w->result(null, '', 'Select one of your Spotify Connect devices', 'Select one of your Spotify Connect devices below as your listening device', './images/connect.png', 'no', null, '');
+                $w->result(null, '', 'Select one of your Spotify Connect devices',array(
+                     'Select one of your Spotify Connect devices below as your listening device',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/connect.png', 'no', null, '');
 
                 foreach ($savedDevices as $device) {
                     $added = '';
@@ -1289,7 +1605,14 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                         $volume = '- volume: '.floatToSquares($device->volume_percent/100, 5);
                     }
                     if($device->is_restricted) {
-                        $w->result(null, 'help', $added . $device->type . ' ' .$device->name.' cannot be controlled', '⚠ This device cannot be controlled by Spotify WEB API', $icon, 'no', null, '');
+                        $w->result(null, 'help', $added . $device->type . ' ' .$device->name.' cannot be controlled',array(
+                     '⚠ This device cannot be controlled by Spotify WEB API',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), $icon, 'no', null, '');
                     } else {
                         if (!$device->is_active) {
                             $w->result(null, serialize(array(
@@ -1318,13 +1641,27 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                             'ctrl' => 'Not Available',
                             ), $icon, 'yes', null, '');
                         } else {
-                            $w->result(null, 'help', $added.' '. $device->type . ' '.$device->name.' is currently active '.$volume, 'This device is the currently active device', $icon, 'no', null, '');
+                            $w->result(null, 'help', $added.' '. $device->type . ' '.$device->name.' is currently active '.$volume,array(
+                     'This device is the currently active device',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), $icon, 'no', null, '');
                         }
                     }
                 }
 
             } else {
-                $w->result(null, 'help', 'There was no Spotify Connect device found!', '', './images/warning.png', 'no', null, '');
+                $w->result(null, 'help', 'There was no Spotify Connect device found!',array(
+                     '',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/warning.png', 'no', null, '');
                 if(isSpotifyAppInstalled()) {
                     $w->result('SpotifyMiniPlayer_'.'open_spotify_app', serialize(array(
                         '' /*track_uri*/,
@@ -1382,7 +1719,14 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                     sleep(retryAfter);
                 } else if ($e->getCode() == 404) {
                     $retry = false;
-                    $w->result(null, 'help', 'Exception occurred', ''.$e->getMessage(), './images/warning.png', 'no', null, '');
+                    $w->result(null, 'help', 'Exception occurred',array(
+                     ''.$e->getMessage(),
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/warning.png', 'no', null, '');
                     echo $w->tojson();
                     exit;
                 } else if ($e->getCode() == 500
@@ -1390,7 +1734,14 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                     // retry
                     if ($nb_retry > 2) {
                         $retry = false;
-                        $w->result(null, 'help', 'Exception occurred', ''.$e->getMessage(), './images/warning.png', 'no', null, '');
+                        $w->result(null, 'help', 'Exception occurred',array(
+                     ''.$e->getMessage(),
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/warning.png', 'no', null, '');
                         
                         echo $w->tojson();
                         exit;
@@ -1399,7 +1750,14 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                     sleep(5);
                 } else {
                     $retry = false;
-                    $w->result(null, 'help', 'Exception occurred', ''.$e->getMessage(), './images/warning.png', 'no', null, '');
+                    $w->result(null, 'help', 'Exception occurred',array(
+                     ''.$e->getMessage(),
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/warning.png', 'no', null, '');
                     echo $w->tojson();
                     exit;
                 }
@@ -1463,9 +1821,30 @@ function firstDelimiterYourMusic($w, $query, $settings, $db, $update_in_progress
         $yourmusic_albums = $counter[5];
         $nb_playlists = $counter[6];
 
-        $w->result(null, '', 'Tracks', 'Browse your '.$yourmusic_tracks.' tracks in Your Music', './images/tracks.png', 'no', null, 'Your Music▹Tracks▹');
-        $w->result(null, '', 'Albums', 'Browse your '.$yourmusic_albums.' albums in Your Music', './images/albums.png', 'no', null, 'Your Music▹Albums▹');
-        $w->result(null, '', 'Artists', 'Browse your '.$yourmusic_artists.' artists in Your Music', './images/artists.png', 'no', null, 'Your Music▹Artists▹');
+        $w->result(null, '', 'Tracks',array(
+                     'Browse your '.$yourmusic_tracks.' tracks in Your Music',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/tracks.png', 'no', null, 'Your Music▹Tracks▹');
+        $w->result(null, '', 'Albums',array(
+                     'Browse your '.$yourmusic_albums.' albums in Your Music',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/albums.png', 'no', null, 'Your Music▹Albums▹');
+        $w->result(null, '', 'Artists',array(
+                     'Browse your '.$yourmusic_artists.' artists in Your Music',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/artists.png', 'no', null, 'Your Music▹Artists▹');
     } else {
 
         // Search artists
@@ -1486,7 +1865,14 @@ function firstDelimiterYourMusic($w, $query, $settings, $db, $update_in_progress
         while ($track = $stmt->fetch()) {
             if (checkIfResultAlreadyThere($w->results(), '👤 '.$track[0]) == false) {
                 $noresult = false;
-                $w->result(null, '', '👤 '.$track[0], 'Browse this artist', $track[2], 'no', null, 'Artist▹'.$track[1].'∙'.$track[0].'▹');
+                $w->result(null, '', '👤 '.$track[0],array(
+                     'Browse this artist',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), $track[2], 'no', null, 'Artist▹'.$track[1].'∙'.$track[0].'▹');
             }
         }
 
@@ -1506,11 +1892,6 @@ function firstDelimiterYourMusic($w, $query, $settings, $db, $update_in_progress
         }
 
         while ($track = $stmt->fetch()) {
-            // if ($noresult == true) {
-            //     $subtitle = "⌥ (play album) ⌘ (play artist) ctrl (lookup online)";
-            //     $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
-            //     $w->result(null, 'help', "Select a track below to play it (or choose alternative described below)", $subtitle, './images/info.png', 'no', null, '');
-            // }
             $noresult = false;
             $subtitle = $track[6];
 
@@ -1547,7 +1928,14 @@ function firstDelimiterYourMusic($w, $query, $settings, $db, $update_in_progress
         }
 
         if ($noresult) {
-            $w->result(null, 'help', 'There is no result for your search', '', './images/warning.png', 'no', null, '');
+            $w->result(null, 'help', 'There is no result for your search',array(
+                     '',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/warning.png', 'no', null, '');
         }
     }
 }
@@ -1624,10 +2012,24 @@ function firstDelimiterLyrics($w, $query, $settings, $db, $update_in_progress)
             $lyrics_sentances = explode("\n", $wrapped);
 
             for ($i = 0; $i < count($lyrics_sentances); ++$i) {
-                $w->result(null, '', $lyrics_sentances[$i], '', $track_artwork, 'no', null, '');
+                $w->result(null, '', $lyrics_sentances[$i],array(
+                     '',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), $track_artwork, 'no', null, '');
             }
         } else {
-            $w->result(null, 'help', 'No lyrics found!', '', './images/warning.png', 'no', null, '');
+            $w->result(null, 'help', 'No lyrics found!',array(
+                     '',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/warning.png', 'no', null, '');
             echo $w->tojson();
             exit;
         }
@@ -1706,7 +2108,14 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
             ), './images/update.png', 'yes', null, '');
     }
 
-    $w->result(null, '', 'Switch Spotify user (currently '.$userid.')', 'Switch to another Spotify user', getUserArtwork($w, $userid), 'no', null, 'Settings▹Users▹');
+    $w->result(null, '', 'Switch Spotify user (currently '.$userid.')', array(
+        'Switch to another Spotify user',
+        'alt' => 'Not Available',
+        'cmd' => 'Not Available',
+        'shift' => 'Not Available',
+        'fn' => 'Not Available',
+        'ctrl' => 'Not Available',
+    ), getUserArtwork($w, $userid), 'no', null, 'Settings▹Users▹');
 
     if ($is_alfred_playlist_active == true) {
         $w->result(null, serialize(array(
@@ -1815,15 +2224,57 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
                 'ctrl' => 'Not Available',
             ), './images/search.png', 'yes', null, '');
     }
-    $w->result(null, '', 'Configure Max Number of Results (currently '.$max_results.')', 'Number of results displayed (it does not apply to the list of your playlists)', './images/results_numbers.png', 'no', null, 'Settings▹MaxResults▹');
-    $w->result(null, '', 'Configure Number of Radio tracks (currently '.$radio_number_tracks.')', 'Number of tracks when creating a Radio Playlist.', './images/radio_numbers.png', 'no', null, 'Settings▹RadioTracks▹');
-    $w->result(null, '', 'Configure Volume Percent (currently '.$volume_percent.'%)', 'The percentage of volume which is increased or decreased.', './images/volume_up.png', 'no', null, 'Settings▹VolumePercentage▹');
+    $w->result(null, '', 'Configure Max Number of Results (currently '.$max_results.')',array(
+                     'Number of results displayed (it does not apply to the list of your playlists)',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/results_numbers.png', 'no', null, 'Settings▹MaxResults▹');
+    $w->result(null, '', 'Configure Number of Radio tracks (currently '.$radio_number_tracks.')',array(
+                     'Number of tracks when creating a Radio Playlist.',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/radio_numbers.png', 'no', null, 'Settings▹RadioTracks▹');
+    $w->result(null, '', 'Configure Volume Percent (currently '.$volume_percent.'%)',array(
+                     'The percentage of volume which is increased or decreased.',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/volume_up.png', 'no', null, 'Settings▹VolumePercentage▹');
 
-    $w->result(null, '', 'Select the output: Spotify Connect, Mopidy or Spotify Desktop', 'Spotify Connect and Mopidy are for premium users only', './images/speaker.png', 'no', null, 'Settings▹Output▹');
+    $w->result(null, '', 'Select the output: Spotify Connect, Mopidy or Spotify Desktop',array(
+                     'Spotify Connect and Mopidy are for premium users only',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/speaker.png', 'no', null, 'Settings▹Output▹');
 
     if ($output_application == 'MOPIDY') {
-        $w->result(null, '', 'Configure Mopidy server (currently '.$mopidy_server.')', 'Server name/ip where Mopidy server is running', './images/mopidy_server.png', 'no', null, 'Settings▹MopidyServer▹');
-        $w->result(null, '', 'Configure Mopidy port (currently '.$mopidy_port.')', 'TCP port where Mopidy server is running', './images/mopidy_port.png', 'no', null, 'Settings▹MopidyPort▹');
+        $w->result(null, '', 'Configure Mopidy server (currently '.$mopidy_server.')',array(
+                     'Server name/ip where Mopidy server is running',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/mopidy_server.png', 'no', null, 'Settings▹MopidyServer▹');
+        $w->result(null, '', 'Configure Mopidy port (currently '.$mopidy_port.')',array(
+                     'TCP port where Mopidy server is running',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/mopidy_port.png', 'no', null, 'Settings▹MopidyPort▹');
     }
 
     if ($now_playing_notifications == true) {
@@ -2392,7 +2843,14 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
             'ctrl' => 'Not Available',
         ), './images/search.png', 'yes', null, '');
 
-    $w->result(null, '', 'Check for workflow update', 'Last checked: '.beautifyTime(time() - $last_check_update_time, true).' ago (note this is automatically done otherwise once per week)', './images/check_update.png', 'no', null, 'Check for update...'.'▹');
+        $w->result(null, '', 'Check for workflow update', array(
+            'Last checked: '.beautifyTime(time() - $last_check_update_time, true).' ago (note this is automatically done otherwise once per week)',
+            'alt' => 'Not Available',
+            'cmd' => 'Not Available',
+            'shift' => 'Not Available',
+            'fn' => 'Not Available',
+            'ctrl' => 'Not Available',
+        ), './images/check_update.png', 'no', null, 'Check for update...'.'▹');
 
     $w->result(null, serialize(array(
                 '' /*track_uri*/,
@@ -2448,7 +2906,14 @@ function firstDelimiterCheckForUpdate($w, $query, $settings, $db, $update_in_pro
 
     $check_results = checkForUpdate($w, 0);
     if ($check_results != null && is_array($check_results)) {
-        $w->result(null, '', 'New version '.$check_results[0].' is available !', $check_results[2], './images/info.png', 'no', null, '');
+        $w->result(null, '', 'New version '.$check_results[0].' is available !',array(
+                     $check_results[2],
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/info.png', 'no', null, '');
         $w->result(null, serialize(array(
                     '' /*track_uri*/,
                     '' /* album_uri */,
@@ -2468,9 +2933,23 @@ function firstDelimiterCheckForUpdate($w, $query, $settings, $db, $update_in_pro
                     '', /* playlist_artwork_path */
                 )), 'Click to open and install the new version', 'This will open the new version of the Spotify Mini Player workflow', './images/alfred-workflow-icon.png', 'yes', null, '');
     } elseif ($check_results == null) {
-        $w->result(null, '', 'No update available', 'You are good to go!', './images/info.png', 'no', null, '');
+        $w->result(null, '', 'No update available',array(
+                     'You are good to go!',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/info.png', 'no', null, '');
     } else {
-        $w->result(null, '', 'Error happened : '.$check_results, 'The check for workflow update could not be done', './images/warning.png', 'no', null, '');
+        $w->result(null, '', 'Error happened : '.$check_results,array(
+                     'The check for workflow update could not be done',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/warning.png', 'no', null, '');
         if ($check_results == 'This release has not been downloaded from Packal') {
             $w->result(null, serialize(array(
                         '' /*track_uri*/,
@@ -2536,7 +3015,14 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
     if ($output_application == 'MOPIDY') {
         $playqueue = $w->read('playqueue.json');
         if ($playqueue == false) {
-            $w->result(null, 'help', 'There is no track in the play queue', 'Make sure to always use the workflow to launch tracks, playlists, etc..Internet connectivity is also required', './images/warning.png', 'no', null, '');
+            $w->result(null, 'help',array(
+                'There is no track in the play queue', 'Make sure to always use the workflow to launch tracks, playlists etc..Internet connectivity is also required',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/warning.png', 'no', null, '');
             $w->result(null, serialize(array(
                         '' /*track_uri*/,
                         '' /* album_uri */,
@@ -2563,7 +3049,14 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
 
         $isShuffleEnabled = invokeMopidyMethod($w, 'core.tracklist.get_random', array());
         if ($isShuffleEnabled) {
-            $w->result(null, 'help', 'Shuffle is enabled', 'The order of tracks presented below is not relevant', './images/warning.png', 'no', null, '');
+            $w->result(null, 'help', 'Shuffle is enabled',array(
+                     'The order of tracks presented below is not relevant',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/warning.png', 'no', null, '');
         }
         $noresult = true;
         $firstTime = true;
@@ -2593,14 +3086,28 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
                     $track_name = $playqueue->name;
                 }
                 if (mb_strlen($search) < 2) {
-                    $w->result(null, 'help', 'Playing from: '.$playqueue->type.' '.$playqueue->name, 'Track '.$current_track_index.' on '.count($tl_tracks).' tracks queued', './images/play_queue.png', 'no', null, '');
+                    $w->result(null, 'help', 'Playing from: '.$playqueue->type.' '.$playqueue->name,array(
+                     'Track '.$current_track_index.' on '.count($tl_tracks).' tracks queued',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/play_queue.png', 'no', null, '');
                 }
             }
             $firstTime = false;
             $max_tracks_displayed = 150;
             if ($nb_tracks >= $max_tracks_displayed) {
                 if (mb_strlen($search) < 2) {
-                    $w->result(null, 'help', '[...] '.(count($tl_tracks) - $max_tracks_displayed).' additional tracks are in the queue', 'A maximum of '.$max_tracks_displayed.' tracks is displayed.', './images/info.png', 'no', null, '');
+                    $w->result(null, 'help', '[...] '.(count($tl_tracks) - $max_tracks_displayed).' additional tracks are in the queue',array(
+                     'A maximum of '.$max_tracks_displayed.' tracks is displayed.',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/info.png', 'no', null, '');
                 }
                 break;
             }
@@ -2627,7 +3134,14 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
                 if (mb_strlen($search) < 2 || strpos(strtolower($artist_name), strtolower($search)) !== false
                 || strpos(strtolower($track_name), strtolower($search)) !== false
                 || strpos(strtolower($album_name), strtolower($search)) !== false) {
-                    $w->result(null, '', '🚫 '.escapeQuery($artist_name).' ● '.escapeQuery($track_name), $duration.' ● '.$album_name, $track_artwork, 'no', null, '');
+                    $w->result(null, '', '🚫 '.escapeQuery($artist_name).' ● '.escapeQuery($track_name),array(
+                     $duration.' ● '.$album_name,
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), $track_artwork, 'no', null, '');
                 }
             } else {
                 if (mb_strlen($search) < 2 || strpos(strtolower($artist_name), strtolower($search)) !== false
@@ -2666,7 +3180,14 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
         }
 
         if ($noresult) {
-            $w->result(null, 'help', 'There is no track in the play queue from Mopidy', 'Make sure to always use the workflow to launch tracks, playlists, etc..Internet connectivity is also required', './images/warning.png', 'no', null, '');
+            $w->result(null, 'help', 'There is no track in the play queue from Mopidy',array(
+                'Make sure to always use the workflow to launch tracks, playlists etc..Internet connectivity is also required',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/warning.png', 'no', null, '');
             $w->result(null, serialize(array(
                         '' /*track_uri*/,
                         '' /* album_uri */,
@@ -2691,7 +3212,14 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
     } else if($output_application == 'APPLESCRIPT' || $output_application == 'CONNECT') {
         $playqueue = $w->read('playqueue.json');
         if ($playqueue == false) {
-            $w->result(null, 'help', 'There is no track in the play queue', 'Make sure to always use the workflow to launch tracks, playlists, etc..Internet connectivity is also required', './images/warning.png', 'no', null, '');
+            $w->result(null, 'help', 'There is no track in the play queue',array(
+                'Make sure to always use the workflow to launch tracks, playlists etc..Internet connectivity is also required',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/warning.png', 'no', null, '');
             $w->result(null, serialize(array(
                         '' /*track_uri*/,
                         '' /* album_uri */,
@@ -2715,7 +3243,14 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
         }
         if (isShuffleActive(false) == 'true') {
             if (mb_strlen($search) < 2) {
-                $w->result(null, 'help', 'Shuffle is enabled', 'The order of tracks presented below is not relevant', './images/warning.png', 'no', null, '');
+                $w->result(null, 'help', 'Shuffle is enabled',array(
+                     'The order of tracks presented below is not relevant',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/warning.png', 'no', null, '');
             }
         }
         $noresult = true;
@@ -2735,13 +3270,27 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
                     $track_name = $playqueue->name;
                 }
                 if (mb_strlen($search) < 2) {
-                    $w->result(null, 'help', 'Playing from: '.$playqueue->type.' '.$playqueue->name, 'Track '.($playqueue->current_track_index + 1).' on '.count($playqueue->tracks).' tracks queued', './images/play_queue.png', 'no', null, '');
+                    $w->result(null, 'help', 'Playing from: '.$playqueue->type.' '.$playqueue->name,array(
+                     'Track '.($playqueue->current_track_index + 1).' on '.count($playqueue->tracks).' tracks queued',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/play_queue.png', 'no', null, '');
                 }
             }
             $max_tracks_displayed = 150;
             if ($nb_tracks >= $max_tracks_displayed) {
                 if (mb_strlen($search) < 2) {
-                    $w->result(null, 'help', '[...] '.(count($playqueue->tracks) - $max_tracks_displayed).' additional tracks are in the queue', 'A maximum of '.$max_tracks_displayed.' tracks is displayed.', './images/info.png', 'no', null, '');
+                    $w->result(null, 'help', '[...] '.(count($playqueue->tracks) - $max_tracks_displayed).' additional tracks are in the queue',array(
+                     'A maximum of '.$max_tracks_displayed.' tracks is displayed.',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/info.png', 'no', null, '');
                 }
                 break;
             }
@@ -2800,7 +3349,14 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
         }
 
         if ($noresult) {
-            $w->result(null, 'help', 'There is no track in the play queue', 'Make sure to always use the workflow to launch tracks, playlists, etc..Internet connectivity is also required', './images/warning.png', 'no', null, '');
+            $w->result(null, 'help', 'There is no track in the play queue',array(
+                'Make sure to always use the workflow to launch tracks, playlists etc..Internet connectivity is also required',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/warning.png', 'no', null, '');
             $w->result(null, serialize(array(
                         '' /*track_uri*/,
                         '' /* album_uri */,
@@ -2843,22 +3399,50 @@ function firstDelimiterBrowse($w, $query, $settings, $db, $update_in_progress)
     $country_code = $settings->country_code;
 
     if (mb_strlen($search) < 2 || strpos(strtolower(getCountryName($country_code)), strtolower($search)) !== false) {
-        $w->result(null, '', getCountryName($country_code), 'Browse the Spotify categories in '.getCountryName($country_code), './images/browse.png', 'no', null, 'Browse▹'.$country_code.'▹');
+        $w->result(null, '', getCountryName($country_code),array(
+                     'Browse the Spotify categories in '.getCountryName($country_code),
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/browse.png', 'no', null, 'Browse▹'.$country_code.'▹');
     }
 
     if (mb_strlen($search) < 2 || strpos(strtolower(getCountryName('US')), strtolower($search)) !== false) {
         if ($country_code != 'US') {
-            $w->result(null, '', getCountryName('US'), 'Browse the Spotify categories in '.getCountryName('US'), './images/browse.png', 'no', null, 'Browse▹US▹');
+            $w->result(null, '', getCountryName('US'),array(
+                     'Browse the Spotify categories in '.getCountryName('US'),
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/browse.png', 'no', null, 'Browse▹US▹');
         }
     }
 
     if (mb_strlen($search) < 2 || strpos(strtolower(getCountryName('GB')), strtolower($search)) !== false) {
         if ($country_code != 'GB') {
-            $w->result(null, '', getCountryName('GB'), 'Browse the Spotify categories in '.getCountryName('GB'), './images/browse.png', 'no', null, 'Browse▹GB▹');
+            $w->result(null, '', getCountryName('GB'),array(
+                     'Browse the Spotify categories in '.getCountryName('GB'),
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/browse.png', 'no', null, 'Browse▹GB▹');
         }
     }
     if (mb_strlen($search) < 2 || strpos(strtolower('Choose Another country'), strtolower($search)) !== false) {
-        $w->result(null, '', 'Choose Another country', 'Browse the Spotify categories in another country of your choice', './images/browse.png', 'no', null, 'Browse▹Choose a Country▹');
+        $w->result(null, '', 'Choose Another country',array(
+                     'Browse the Spotify categories in another country of your choice',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/browse.png', 'no', null, 'Browse▹Choose a Country▹');
     }
 }
 
@@ -2876,17 +3460,59 @@ function firstDelimiterYourTops($w, $query, $settings, $db, $update_in_progress)
     $words = explode('▹', $query);
     $kind = $words[0];
 
-    $w->result(null, '', 'Get your top artists (last 4 weeks)', 'Get your top artists for last 4 weeks', './images/your_tops_artists.png', 'no', null, 'Your Tops▹Artists▹short_term');
+    $w->result(null, '', 'Get your top artists (last 4 weeks)',array(
+                     'Get your top artists for last 4 weeks',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/your_tops_artists.png', 'no', null, 'Your Tops▹Artists▹short_term');
 
-    $w->result(null, '', 'Get your top artists (last 6 months)', 'Get your top artists for last 6 months', './images/your_tops_artists.png', 'no', null, 'Your Tops▹Artists▹medium_term');
+    $w->result(null, '', 'Get your top artists (last 6 months)',array(
+                     'Get your top artists for last 6 months',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/your_tops_artists.png', 'no', null, 'Your Tops▹Artists▹medium_term');
 
-    $w->result(null, '', 'Get your top artists (all time)', 'Get your top artists for all time', './images/your_tops_artists.png', 'no', null, 'Your Tops▹Artists▹long_term');
+    $w->result(null, '', 'Get your top artists (all time)',array(
+                     'Get your top artists for all time',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/your_tops_artists.png', 'no', null, 'Your Tops▹Artists▹long_term');
 
-    $w->result(null, '', 'Get your top tracks (last 4 weeks)', 'Get your top tracks for last 4 weeks', './images/your_tops_tracks.png', 'no', null, 'Your Tops▹Tracks▹short_term');
+    $w->result(null, '', 'Get your top tracks (last 4 weeks)',array(
+                     'Get your top tracks for last 4 weeks',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/your_tops_tracks.png', 'no', null, 'Your Tops▹Tracks▹short_term');
 
-    $w->result(null, '', 'Get your top tracks (last 6 months)', 'Get your top tracks for last 6 months', './images/your_tops_tracks.png', 'no', null, 'Your Tops▹Tracks▹medium_term');
+    $w->result(null, '', 'Get your top tracks (last 6 months)',array(
+                     'Get your top tracks for last 6 months',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/your_tops_tracks.png', 'no', null, 'Your Tops▹Tracks▹medium_term');
 
-    $w->result(null, '', 'Get your top tracks (all time)', 'Get your top tracks for all time', './images/your_tops_tracks.png', 'no', null, 'Your Tops▹Tracks▹long_term');
+    $w->result(null, '', 'Get your top tracks (all time)',array(
+                     'Get your top tracks for all time',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/your_tops_tracks.png', 'no', null, 'Your Tops▹Tracks▹long_term');
 }
 
 /**
@@ -2972,7 +3598,14 @@ function firstDelimiterYourRecentTracks($w, $query, $settings, $db, $update_in_p
         }
 
         if ($noresult) {
-            $w->result(null, 'help', 'There is no result for your recent tracks', '', './images/warning.png', 'no', null, '');
+            $w->result(null, 'help', 'There is no result for your recent tracks',array(
+                     '',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/warning.png', 'no', null, '');
         }
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
         if($e->getMessage() == 'Insufficient client scope') {
@@ -3002,7 +3635,14 @@ function firstDelimiterYourRecentTracks($w, $query, $settings, $db, $update_in_p
                     'ctrl' => 'Not Available',
                 ), './images/warning.png', 'yes', null, '');
         } else {
-            $w->result(null, 'help', 'Exception occurred', ''.$e->getMessage(), './images/warning.png', 'no', null, '');
+            $w->result(null, 'help', 'Exception occurred',array(
+                     ''.$e->getMessage(),
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/warning.png', 'no', null, '');
         }
         echo $w->tojson();
         exit;
