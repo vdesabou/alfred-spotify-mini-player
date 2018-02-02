@@ -842,7 +842,6 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
     $display_name = $settings->display_name;
     $userid = $settings->userid;
     $use_artworks = $settings->use_artworks;
-    $use_artworks = $settings->use_artworks;
 
     if (substr_count($query, '@') == 1) {
 
@@ -1050,6 +1049,8 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
         $tracks = getTheAlbumFullTracks($w, $album_uri);
         $noresult = true;
         foreach ($tracks as $track) {
+            $artists = $track->artists;
+            $artist = $artists[0];
 
             $track_artwork = getTrackOrAlbumArtwork($w, $track->uri, false, false, false, $use_artworks);
             if (isset($track->is_playable) && $track->is_playable) {
@@ -1066,7 +1067,7 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
                             '' /* query */,
                             '' /* other_settings*/,
                             'play_track_in_album_context' /* other_action */,
-                            $artist_name /* artist_name */,
+                            $artist->name /* artist_name */,
                             $track->name /* track_name */,
                             $album_name /* album_name */,
                             $track_artwork /* track_artwork_path */,
@@ -1074,20 +1075,20 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
                             '' /* album_artwork_path */,
                             '' /* playlist_name */,
                             '', /* playlist_artwork_path */
-                        )), escapeQuery($artist_name).' ● '.escapeQuery($track->name), array(
+                        )), escapeQuery($artist->name).' ● '.escapeQuery($track->name), array(
                         beautifyTime($track->duration_ms / 1000).' ● '.$album_name,
                         'alt' => 'Play album '.escapeQuery($album_name).' in Spotify',
-                        'cmd' => 'Play artist '.escapeQuery($artist_name).' in Spotify',
+                        'cmd' => 'Play artist '.escapeQuery($artist->name).' in Spotify',
                         'fn' => 'Add track '.escapeQuery($track->name).' to ...',
                         'shift' => 'Add album '.escapeQuery($album_name).' to ...',
-                        'ctrl' => 'Search artist '.escapeQuery($artist_name).' online',
+                        'ctrl' => 'Search artist '.escapeQuery($artist->name).' online',
                     ), $track_artwork, 'yes', null, '');
                 }
             } else {
                 if (mb_strlen($search) < 2 || strpos(strtolower($artist->name), strtolower($search)) !== false
                 || strpos(strtolower($track->name), strtolower($search)) !== false
                 || strpos(strtolower($album->name), strtolower($search)) !== false) {
-                    $w->result(null, '', '🚫 '.escapeQuery($artist_name).' ● '.escapeQuery($track->name),array(
+                    $w->result(null, '', '🚫 '.escapeQuery($artist->name).' ● '.escapeQuery($track->name),array(
                      beautifyTime($track->duration_ms / 1000).' ● '.$album_name,
                     'alt' => 'Not Available',
                     'cmd' => 'Not Available',
