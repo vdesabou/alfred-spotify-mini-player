@@ -10,7 +10,6 @@ class Request
     const RETURN_OBJECT = 'object';
 
     protected $lastResponse = [];
-    protected $returnAssoc = false;
     protected $returnType = self::RETURN_OBJECT;
 
     /**
@@ -32,7 +31,7 @@ class Request
         }
 
         $body = json_decode($body);
-        $error = (isset($body->error)) ? $body->error : null;
+        $error = $body->error ?? null;
 
         if (isset($error->message) && isset($error->status)) {
             // API call error
@@ -120,23 +119,6 @@ class Request
     public function getLastResponse()
     {
         return $this->lastResponse;
-    }
-
-    /**
-     * Get a value indicating the response body type.
-     *
-     * @deprecated Use `Request::getReturnType()` instead.
-     *
-     * @return bool Whether the body is returned as an associative array or an stdClass.
-     */
-    public function getReturnAssoc()
-    {
-        trigger_error(
-            'Request::getReturnAssoc() is deprecated. Use Request::getReturnType() instead.',
-            E_USER_DEPRECATED
-        );
-
-        return $this->returnAssoc;
     }
 
     /**
@@ -247,33 +229,12 @@ class Request
     /**
      * Set the return type for the response body.
      *
-     * @deprecated Use `Request::setReturnType()` instead.
-     *
-     * @param bool $returnAssoc Whether to return an associative array or an stdClass.
-     *
-     * @return void
-     */
-    public function setReturnAssoc($returnAssoc)
-    {
-        trigger_error(
-            'Request::setReturnType() is deprecated. Use Request::setReturnType() instead.',
-            E_USER_DEPRECATED
-        );
-
-        $this->returnAssoc = $returnAssoc;
-        $this->returnType = $returnAssoc ? self::RETURN_ASSOC : self::RETURN_OBJECT;
-    }
-
-    /**
-     * Set the return type for the response body.
-     *
      * @param string $returnType One of the `Request::RETURN_*` constants.
      *
      * @return void
      */
     public function setReturnType($returnType)
     {
-        $this->returnAssoc = $returnType == self::RETURN_ASSOC;
         $this->returnType = $returnType;
     }
 }

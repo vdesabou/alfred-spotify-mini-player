@@ -41,11 +41,11 @@ class SpotifyWebAPI
      * Convert Spotify object IDs to Spotify URIs.
      *
      * @param array|string $ids ID(s) to convert.
-     * @param string $type Optional. Spotify object type. Default is 'track'.
+     * @param string $type Spotify object type.
      *
      * @return array|string Spotify URI(s).
      */
-    protected function idToUri($ids, $type = 'track')
+    protected function idToUri($ids, $type)
     {
         $type = 'spotify:' . $type . ':';
 
@@ -64,11 +64,11 @@ class SpotifyWebAPI
      * Convert Spotify URIs to Spotify object IDs
      *
      * @param array|string $uriIds URI(s) to convert.
-     * @param string $type Optional. Spotify object type. Default is 'track'.
+     * @param string $type Spotify object type.
      *
      * @return array|string Spotify ID(s).
      */
-    protected function uriToId($uriIds, $type = 'track')
+    protected function uriToId($uriIds, $type)
     {
         $type = 'spotify:' . $type . ':';
 
@@ -112,7 +112,7 @@ class SpotifyWebAPI
      */
     public function addMyTracks($tracks)
     {
-        $tracks = $this->uriToId($tracks);
+        $tracks = $this->uriToId($tracks, 'track');
         $tracks = json_encode((array) $tracks);
 
         $headers = $this->authHeaders();
@@ -141,7 +141,7 @@ class SpotifyWebAPI
     {
         $options = http_build_query($options);
 
-        $tracks = $this->idToUri($tracks);
+        $tracks = $this->idToUri($tracks, 'track');
         $tracks = json_encode((array) $tracks);
 
         $headers = $this->authHeaders();
@@ -295,7 +295,7 @@ class SpotifyWebAPI
      */
     public function deleteMyTracks($tracks)
     {
-        $tracks = $this->uriToId($tracks);
+        $tracks = $this->uriToId($tracks, 'track');
         $tracks = json_encode((array) $tracks);
 
         $headers = $this->authHeaders();
@@ -336,7 +336,7 @@ class SpotifyWebAPI
                 $track['positions'] = (array) $track['positions'];
             }
 
-            $track['uri'] = $this->idToUri($track['id']);
+            $track['uri'] = $this->idToUri($track['id'], 'track');
 
             unset($track['id']);
 
@@ -617,7 +617,7 @@ class SpotifyWebAPI
      */
     public function getAudioFeatures($trackIds)
     {
-        $trackIds = $this->uriToId($trackIds);
+        $trackIds = $this->uriToId($trackIds, 'track');
         $options = [
             'ids' => implode(',', (array) $trackIds),
         ];
@@ -1004,23 +1004,6 @@ class SpotifyWebAPI
     }
 
     /**
-     * Get the return type for the response body.
-     *
-     * @deprecated Use `SpotifyWebAPI::getReturnType()` instead.
-     *
-     * @return bool Whether an associative array or an stdClass is returned.
-     */
-    public function getReturnAssoc()
-    {
-        trigger_error(
-            'SpotifyWebAPI::getReturnAssoc() is deprecated. Use SpotifyWebAPI::getReturnType() instead.',
-            E_USER_DEPRECATED
-        );
-
-        return $this->request->getReturnAssoc();
-    }
-
-    /**
      * Get a value indicating the response body type.
      *
      * @return string A value indicating if the response body is an object or associative array.
@@ -1054,7 +1037,7 @@ class SpotifyWebAPI
     {
         $headers = $this->authHeaders();
 
-        $trackId = $this->uriToId($trackId);
+        $trackId = $this->uriToId($trackId, 'track');
         $uri = '/v1/tracks/' . $trackId;
 
         $this->lastResponse = $this->request->api('GET', $uri, $options, $headers);
@@ -1074,7 +1057,7 @@ class SpotifyWebAPI
      */
     public function getTracks($trackIds, $options = [])
     {
-        $trackIds = $this->uriToId($trackIds);
+        $trackIds = $this->uriToId($trackIds, 'track');
         $options['ids'] = implode(',', (array) $trackIds);
 
         $headers = $this->authHeaders();
@@ -1275,7 +1258,7 @@ class SpotifyWebAPI
      */
     public function myTracksContains($tracks)
     {
-        $tracks = $this->uriToId($tracks);
+        $tracks = $this->uriToId($tracks, 'track');
         $tracks = implode(',', (array) $tracks);
 
         $options = [
@@ -1466,7 +1449,7 @@ class SpotifyWebAPI
      */
     public function replaceUserPlaylistTracks($userId, $playlistId, $tracks)
     {
-        $tracks = $this->idToUri($tracks);
+        $tracks = $this->idToUri($tracks, 'track');
         $tracks = json_encode([
             'uris' => (array) $tracks,
         ]);
@@ -1548,27 +1531,6 @@ class SpotifyWebAPI
     public function setAccessToken($accessToken)
     {
         $this->accessToken = $accessToken;
-    }
-
-    /**
-     * Set the return type for the response body.
-     *
-     * @deprecated Use `SpotifyWebAPI::setReturnType()` instead.
-     *
-     * @param bool $returnAssoc Whether to return an associative array or an stdClass.
-     *
-     * @return void
-     */
-    public function setReturnAssoc($returnAssoc)
-    {
-        trigger_error(
-            'SpotifyWebAPI::setReturnAssoc() is deprecated. Use SpotifyWebAPI::setReturnType() instead.',
-            E_USER_DEPRECATED
-        );
-
-        $returnType = $returnAssoc ? self::RETURN_ASSOC : self::RETURN_OBJECT;
-
-        $this->request->setReturnType($returnType);
     }
 
     /**
@@ -1667,6 +1629,8 @@ class SpotifyWebAPI
      * @param string $userId ID or Spotify URI of the user who owns the playlist.
      * @param string $playlistId ID or Spotify URI of the playlist to update.
      * @param array|object $options Options for the playlist.
+     * - collaborative bool Optional. Whether the playlist should be collaborative or not.
+     * - description string Optional. Description of the playlist.
      * - name string Optional. Name of the playlist.
      * - public bool Optional. Whether the playlist should be public or not.
      *
@@ -1687,6 +1651,30 @@ class SpotifyWebAPI
         $this->lastResponse = $this->request->api('PUT', $uri, $options, $headers);
 
         return $this->lastResponse['status'] == 200;
+    }
+
+    /**
+     * Update the image of a user's playlist.
+     * https://developer.spotify.com/web-api/upload-a-custom-playlist-cover-image/
+     *
+     * @param string $userId ID or Spotify URI of the user who owns the playlist.
+     * @param string $playlistId ID or Spotify URI of the playlist to update.
+     * @param string $imageData. Base64 encoded JPEG image data, maximum 256 KB in size.
+     *
+     * @return bool Whether the playlist was successfully updated.
+     */
+    public function updateUserPlaylistImage($userId, $playlistId, $imageData)
+    {
+        $headers = $this->authHeaders();
+
+        $userId = $this->uriToId($userId, 'user');
+        $playlistId = $this->uriToId($playlistId, 'playlist');
+
+        $uri = '/v1/users/' . $userId . '/playlists/' . $playlistId . '/images';
+
+        $this->lastResponse = $this->request->api('PUT', $uri, $imageData, $headers);
+
+        return $this->lastResponse['status'] == 202;
     }
 
     /**
