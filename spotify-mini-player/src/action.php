@@ -157,6 +157,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
                     playTrackSpotifyConnect($w, $device_id, $track_uri, $playlist_uri);
                 } else {
                     displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+                    return;
                 }
             }
 
@@ -222,6 +223,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
                 playTrackSpotifyConnect($w, $device_id, '', $playlist_uri);
             } else {
                 displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+                return;
             }
         }
 
@@ -261,6 +263,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
             playTrackSpotifyConnect($w, $device_id, '', $album_uri);
         } else {
             displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+            return;
         }
     }
     displayNotificationWithArtwork($w, '🔈 Album '.$album_name.' by '.$artist_name, $album_artwork_path, 'Play Album');
@@ -341,6 +344,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
                 playTrackSpotifyConnect($w, $device_id, '', $artist_uri);
             } else {
                 displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+                return;
             }
         }
 
@@ -955,6 +959,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
                 playTrackSpotifyConnect($w, $device_id, $track_uri, $album_uri);
             } else {
                 displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+                return;
             }
         }
         $album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, true, false, false, $use_artworks);
@@ -977,6 +982,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
                 playSpotifyConnect($w, $device_id);
             } else {
                 displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+                return;
             }
         }
 
@@ -1000,6 +1006,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
                 pauseSpotifyConnect($w, $device_id);
             } else {
                 displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+                return;
             }
         }
 
@@ -1020,6 +1027,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
                 playpauseSpotifyConnect($w, $device_id, $country_code);
             } else {
                 displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+                return;
             }
         }
 
@@ -1156,6 +1164,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
                 previousTrackSpotifyConnect($w, $device_id);
             } else {
                 displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+                return;
             }
         }
 
@@ -1171,6 +1180,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
                 nextTrackSpotifyConnect($w, $device_id);
             } else {
                 displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+                return;
             }
         }
 
@@ -1197,6 +1207,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
                 playTrackSpotifyConnect($w, $device_id, $track_uri, '');
             } else {
                 displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+                return;
             }
         }
         stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
@@ -1215,6 +1226,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
                 playTrackSpotifyConnect($w, $device_id, '', $album_uri);
             } else {
                 displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+                return;
             }
         }
         displayNotificationWithArtwork($w, '🔈 Album '.$album_name.' by '.$theartistname, getTrackOrAlbumArtwork($w, $album_uri, true, false, false, $use_artworks), 'Play Random Album');
@@ -1274,6 +1286,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
                 playTrackSpotifyConnect($w, $device_id, '', $artist_uri);
             } else {
                 displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+                return;
             }
         }
         displayNotificationWithArtwork($w, '🔈 Artist '.$artist_name, $artist_artwork_path, 'Play Artist');
@@ -1307,6 +1320,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
                 playTrackSpotifyConnect($w, $device_id, '', $album_uri);
             } else {
                 displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+                return;
             }
         }
         displayNotificationWithArtwork($w, '🔈 Album '.$album_name, $album_artwork_path, 'Play Album');
@@ -1362,6 +1376,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
                 changeVolumeSpotifyConnect($w, $device_id, $theVolume);
             } else {
                 displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+                return;
             }
         }
 
@@ -1412,6 +1427,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
                 changeVolumeSpotifyConnect($w, $device_id, $theVolume);
             } else {
                 displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+                return;
             }
         }
 
@@ -1438,6 +1454,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
                 changeVolumeSpotifyConnect($w, $device_id, $volume_max);
             } else {
                 displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+                return;
             }
         }
         displayNotificationWithArtwork($w, 'Spotify volume has been set to maximum '.$volume_max.'%', './images/volmax.png', 'Volume Max');
@@ -1465,6 +1482,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
                 changeVolumeSpotifyConnect($w, $device_id, $volume_mid);
             } else {
                 displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+                return;
             }
         }
         displayNotificationWithArtwork($w, 'Spotify volume has been set to '.$volume_mid.'%', './images/volmid.png', 'Volume '.$volume_mid.'%');
@@ -1514,6 +1532,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
                 }           
             } else {
                 displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+                return;
             }
         }
         displayNotificationWithArtwork($w, $command_output, './images/mute.png', 'Mute');
@@ -1556,6 +1575,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
                 }
             } else {
                 displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+                return;
             }
         }
         displayNotificationWithArtwork($w, $command_output, './images/shuffle.png', 'Shuffle');
@@ -1677,6 +1697,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
                 }
             } else {
                 displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+                return;
             }
         }
         displayNotificationWithArtwork($w, $command_output, './images/repeating.png', 'Repeating');

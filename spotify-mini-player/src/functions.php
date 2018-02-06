@@ -2424,6 +2424,7 @@ function playAlfredPlaylist($w)
             playTrackSpotifyConnect($w, $device_id, '', $alfred_playlist_uri);
         } else {
             displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+            return;
         }
     }
     addPlaylistToPlayQueue($w, $alfred_playlist_uri, $alfred_playlist_name);
@@ -2590,6 +2591,7 @@ function playCurrentArtist($w)
                 playTrackSpotifyConnect($w, $device_id, '', $artist_uri);
             } else {
                 displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+                return;
             }
         }
         addArtistToPlayQueue($w, $artist_uri, escapeQuery($results[1]), $country_code);
@@ -2650,6 +2652,7 @@ function playCurrentAlbum($w)
                 playTrackSpotifyConnect($w, $device_id, '', $album_uri);
             } else {
                 displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+                return;
             }
         }
         addAlbumToPlayQueue($w, $album_uri, escapeQuery($results[2]));        
@@ -3559,6 +3562,7 @@ function createRadioArtistPlaylist($w, $artist_name, $artist_uri)
                         playTrackSpotifyConnect($w, $device_id, '', $json->uri);
                     } else {
                         displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+                        return;
                     }
                 }
                 addPlaylistToPlayQueue($w, $json->uri, $json->name);
@@ -3654,6 +3658,7 @@ function createCompleteCollectionArtistPlaylist($w, $artist_name, $artist_uri)
                         playTrackSpotifyConnect($w, $device_id, '', $json->uri);
                     } else {
                         displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+                        return;
                     }
                 }
                 addPlaylistToPlayQueue($w, $json->uri, $json->name);
@@ -3810,6 +3815,7 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name)
                         playTrackSpotifyConnect($w, $device_id, '', $json->uri);
                     } else {
                         displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+                        return;
                     }
                 }
                 addPlaylistToPlayQueue($w, $json->uri, $json->name);
