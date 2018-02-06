@@ -3,6 +3,34 @@
 require_once './src/workflows.php';
 require './vendor/autoload.php';
 
+/**
+ * resetPlaylistNumberTimesPlayed function.
+ *
+ * @param mixed $w
+ */
+function resetPlaylistNumberTimesPlayed($w)
+{
+    $dbfile = $w->data().'/library.db';
+    
+    try {
+        $db = new PDO("sqlite:$dbfile", '', '', array(
+                PDO::ATTR_PERSISTENT => true,
+            ));
+        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    
+        $resetPlaylistNumberTimesPlayed = 'update playlists set nb_times_played=0';
+        $stmtResetPlaylistNumberTimesPlayed = $db->prepare($resetPlaylistNumberTimesPlayed);
+        $stmtResetPlaylistNumberTimesPlayed->execute();
+
+    } catch (PDOException $e) {
+        logMsg('Error(resetPlaylistNumberTimesPlayed): (exception '.print_r($e).')');
+        handleDbIssuePdoEcho($db, $w);
+        $db = null;
+    
+        return false;
+    }
+    return true;
+}
 
 /**
  * updatePlaylistNumberTimesPlayed function.
@@ -35,9 +63,6 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
     }
     return true;
 }
-
-
-
 
 /**
  * isUserPremiumSubscriber function.

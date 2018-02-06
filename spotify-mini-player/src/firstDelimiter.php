@@ -181,6 +181,25 @@ function firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress
                     'ctrl' => 'Not Available',
                 ), './images/warning.png', 'no', null, '');
     }
+
+    $w->result(null, serialize(array(
+        '' /*track_uri*/,
+        '' /* album_uri */,
+        '' /* artist_uri */,
+        '' /* playlist_uri */,
+        '' /* spotify_command */,
+        '' /* query */,
+        '' /* other_settings*/,
+        'reset_playlist_number_times_played' /* other_action */,
+        '' /* artist_name */,
+        '' /* track_name */,
+        '' /* album_name */,
+        '' /* track_artwork_path */,
+        '' /* artist_artwork_path */,
+        '' /* album_artwork_path */,
+        '' /* playlist_name */,
+        '', /* playlist_artwork_path */
+    )), 'Reset number of times played for playlists', 'This will reset playlists all times played counters to 0', './images/settings.png', 'yes', '');
 }
 
 /**

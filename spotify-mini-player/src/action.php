@@ -1185,6 +1185,12 @@ if ($type == 'TRACK' && $other_settings == '' &&
         }
 
         return;
+    } elseif ($other_action == 'reset_playlist_number_times_played') {
+        resetPlaylistNumberTimesPlayed($w);
+
+        displayNotificationWithArtwork($w, 'Reset number of times played for playlists has been done', './images/settings.png', 'Info');
+
+        return;
     } elseif ($other_action == 'add_current_track') {
         if (file_exists($w->data().'/update_library_in_progress')) {
             displayNotificationWithArtwork($w, 'Cannot modify library while update is in progress', './images/warning.png', 'Error!');
