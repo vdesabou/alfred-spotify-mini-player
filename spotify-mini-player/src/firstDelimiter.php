@@ -37,10 +37,10 @@ function firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress
     $theplaylist = $words[1];
     try {
         if (mb_strlen($theplaylist) < 2) {
-            $getPlaylists = 'select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist,collaborative,public from playlists';
+            $getPlaylists = 'select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist,collaborative,public from playlists order by nb_times_played desc';
             $stmt = $db->prepare($getPlaylists);
         } else {
-            $getPlaylists = 'select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist,collaborative,public from playlists where (name like :query or author like :query)';
+            $getPlaylists = 'select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist,collaborative,public from playlists where (name like :query or author like :query) order by nb_times_played desc';
             $stmt = $db->prepare($getPlaylists);
             $stmt->bindValue(':query', '%'.$theplaylist.'%');
         }

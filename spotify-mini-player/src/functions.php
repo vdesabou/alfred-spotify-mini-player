@@ -3,6 +3,42 @@
 require_once './src/workflows.php';
 require './vendor/autoload.php';
 
+
+/**
+ * updatePlaylistNumberTimesPlayed function.
+ *
+ * @param mixed $w
+ * @param mixed $playlist_uri
+ */
+function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
+{
+    $dbfile = $w->data().'/library.db';
+    
+    try {
+        $db = new PDO("sqlite:$dbfile", '', '', array(
+                PDO::ATTR_PERSISTENT => true,
+            ));
+        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    
+        $updatePlaylistNumberTimesPlayed = 'update playlists set nb_times_played=nb_times_played+1 where uri=:uri';
+        $stmtUpdatePlaylistNumberTimesPlayed = $db->prepare($updatePlaylistNumberTimesPlayed);
+
+        $stmtUpdatePlaylistNumberTimesPlayed->bindValue(':uri', $playlist_uri);
+        $stmtUpdatePlaylistNumberTimesPlayed->execute();
+
+    } catch (PDOException $e) {
+        logMsg('Error(updatePlaylistNumberTimesPlayed): (exception '.print_r($e).')');
+        handleDbIssuePdoEcho($db, $w);
+        $db = null;
+    
+        return false;
+    }
+    return true;
+}
+
+
+
+
 /**
  * isUserPremiumSubscriber function.
  *

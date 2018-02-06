@@ -231,6 +231,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
         displayNotificationWithArtwork($w, '🔈 Playlist '.$playlist_name, $playlist_artwork_path, 'Launch Playlist');
         stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
         addPlaylistToPlayQueue($w, $playlist_uri, $playlist_name);
+        updatePlaylistNumberTimesPlayed($w, $playlist_uri);
 
         return;
     }
