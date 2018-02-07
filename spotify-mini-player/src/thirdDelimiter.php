@@ -226,14 +226,14 @@ function thirdDelimiterBrowse($w, $query, $settings, $db, $update_in_progress)
             $items = $playlists->items;
             foreach ($items as $playlist) {
                 if (mb_strlen($search) < 2 || strpos(strtolower($playlist->name), strtolower($search)) !== false) {
-                    $w->result(null, '', '🎵'.escapeQuery($playlist->name), 'by '.$playlist->owner->id.' ● '.$playlist->tracks->total.' tracks', getPlaylistArtwork($w, $playlist->uri, false,array(
+                    $w->result(null, '', '🎵'.escapeQuery($playlist->name), 'by '.$playlist->owner->id.' ● '.$playlist->tracks->total.' tracks', getPlaylistArtwork($w, $playlist->uri, false),array(
                      false,
                     'alt' => 'Not Available',
                     'cmd' => 'Not Available',
                     'shift' => 'Not Available',
                     'fn' => 'Not Available',
                     'ctrl' => 'Not Available',
-                ), $use_artworks), 'no', null, 'Online Playlist▹'.$playlist->uri.'∙'.escapeQuery($playlist->name).'▹');
+                ), $use_artworks, 'no', null, 'Online Playlist▹'.$playlist->uri.'∙'.escapeQuery($playlist->name).'▹');
                 }
             }
 
