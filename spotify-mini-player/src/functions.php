@@ -3414,7 +3414,7 @@ function clearPlaylist($w, $playlist_uri, $playlist_name)
         $tmp = explode(':', $playlist_uri);
         $emptytracks = array();
         $api = getSpotifyWebAPI($w);
-        $api->replacePlaylistTracks(urlencode($tmp[2]), $tmp[4], $emptytracks);
+        $api->replaceUserPlaylistTracks(urlencode($tmp[2]), $tmp[4], $emptytracks);
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
         logMsg('Error(clearPlaylist): playlist uri '.$playlist_uri.' (exception '.print_r($e).')');
         handleSpotifyWebAPIException($w, $e);
