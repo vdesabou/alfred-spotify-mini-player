@@ -3907,6 +3907,9 @@ function getThePlaylistTracks($w, $playlist_uri)
                 ));
 
             foreach ($userPlaylistTracks->items as $item) {
+                if(!isset($item->track)) {
+                    continue;
+                }
                 $track = $item->track;
                 if (isset($track->is_playable) && $track->is_playable) {
                     if (isset($track->linked_from) && isset($track->linked_from->id)) {
@@ -4141,6 +4144,9 @@ function getThePlaylistFullTracks($w, $playlist_uri)
                 ));
 
             foreach ($userPlaylistTracks->items as $item) {
+                if(!isset($item->track)) {
+                    continue;
+                }
                 $tracks[] = $item->track;
             }
 
@@ -5767,6 +5773,9 @@ function updateLibrary($w)
             }
 
             foreach ($userPlaylistTracks->items as $item) {
+                if(!isset($item->track)) {
+                    continue;
+                }
                 $track = $item->track;
                 $artists = $track->artists;
                 $artist = $artists[0];
@@ -6429,6 +6438,9 @@ function refreshLibrary($w)
                 }
 
                 foreach ($userPlaylistTracks->items as $item) {
+                    if(!isset($item->track)) {
+                        continue;
+                    }
                     $track = $item->track;
                     $artists = $track->artists;
                     $artist = $artists[0];
@@ -6690,6 +6702,9 @@ function refreshLibrary($w)
                     }
 
                     foreach ($userPlaylistTracks->items as $item) {
+                        if(!isset($item->track)) {
+                            continue;
+                        }
                         $track = $item->track;
                         $artists = $track->artists;
                         $artist = $artists[0];
@@ -6992,6 +7007,9 @@ function refreshLibrary($w)
             }
 
             foreach ($userMySavedTracks->items as $item) {
+                if(!isset($item->track)) {
+                    continue;
+                }
                 $track = $item->track;
                 $artists = $track->artists;
                 $artist = $artists[0];
