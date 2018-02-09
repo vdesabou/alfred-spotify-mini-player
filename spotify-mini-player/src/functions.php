@@ -1825,6 +1825,9 @@ function getCurrentTrackInfoWithMopidy($w, $displayError = true)
 
             $retry = false;
 
+            if(!isset($current_track_info->item->name)) {
+                return '';
+            }
             $track_name = $current_track_info->item->name;
             $artist_name = $current_track_info->item->artists[0]->name;
             $album_name = $current_track_info->item->album->name;
