@@ -2,7 +2,7 @@
 layout: article
 permalink: /release-notes/
 title: "Release Notes"
-modified: 2018-01-26
+modified: 2018-02-12
 excerpt: "Release Notes."
 image:
   feature:
@@ -12,6 +12,14 @@ share: false
 toc: false
 noindex: false
 ---
+
+<a name="v7.8"></a>
+7.8:
+
+* <span class="badge success">IMPROVED</span> Order playlists by number of times played[#230](https://github.com/vdesabou/alfred-spotify-mini-player/issues/230)
+* <span class="badge danger">FIXED</span> Clear your Alfred Playlist not working  [#231](https://github.com/vdesabou/alfred-spotify-mini-player/issues/231)
+* <span class="badge danger">FIXED</span> Search Online with album does not display correct artist names for compilation [#228](https://github.com/vdesabou/alfred-spotify-mini-player/issues/228)
+* <span class="badge danger">FIXED</span> Current track: Cannot get current album [#226](https://github.com/vdesabou/alfred-spotify-mini-player/issues/226)
 
 <a name="v7.7"></a>
 7.7:
