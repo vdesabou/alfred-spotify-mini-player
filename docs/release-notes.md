@@ -13,6 +13,11 @@ toc: false
 noindex: false
 ---
 
+<a name="v7.9"></a>
+7.9:
+
+* <span class="badge danger">FIXED</span> Set back PHP minimum version to 5.x [#232](https://github.com/vdesabou/alfred-spotify-mini-player/issues/232)
+
 <a name="v7.8"></a>
 7.8:
 
