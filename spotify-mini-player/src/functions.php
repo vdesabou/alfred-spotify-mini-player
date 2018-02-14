@@ -1837,7 +1837,12 @@ function getCurrentTrackInfoWithMopidy($w, $displayError = true)
             } else {
                 $state = 'paused';
             }
-            $track_uri = $current_track_info->item->uri;
+            if (isset($current_track_info->item->linked_from) && isset($current_track_info->item->linked_from->uri)) {
+                $track_uri = $current_track_info->item->linked_from->uri;
+            } else {
+                $track_uri = $current_track_info->item->uri;
+            }
+            
             $length = ($current_track_info->item->duration_ms);
             $popularity = $current_track_info->item->popularity;
         
