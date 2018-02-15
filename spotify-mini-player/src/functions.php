@@ -4594,7 +4594,11 @@ function displayNotificationForCurrentTrack($w)
             $artist_artwork_path = getArtistArtwork($w, $artist_uri, $results[1], true, false, false, $use_artworks);
         }
         if (isset($results[0]) && $results[0] != '') {
-            displayNotificationWithArtwork($w, '🔈 '.escapeQuery($results[0]).' by '.escapeQuery($results[1]).' in album '.escapeQuery($results[2]), $album_artwork_path, 'Now Playing '.floatToStars(($results[6] / 100) ? $is_display_rating : 0).' ('.beautifyTime($results[5] / 1000).')');
+            $popularity = '';
+            if($is_display_rating) {
+                $popularity = floatToStars($results[6]/100);
+            }
+            displayNotificationWithArtwork($w, '🔈 '.escapeQuery($results[0]).' by '.escapeQuery($results[1]).' in album '.escapeQuery($results[2]), $album_artwork_path, 'Now Playing '.$popularity.' ('.beautifyTime($results[5] / 1000).')');
         }
     }
 }
