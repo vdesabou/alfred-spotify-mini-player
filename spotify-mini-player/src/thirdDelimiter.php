@@ -96,6 +96,7 @@ function thirdDelimiterAdd($w, $query, $settings, $db, $update_in_progress)
                     'ctrl' => 'Not Available',
                 ), './images/create_playlist.png', 'no', null, '');
 
+        if ($album_name != '' || $playlist_name != '') {
         $w->result(null, 'help', 'Or choose an alternative below',array(
                      'Some playlists names are proposed below',
                     'alt' => 'Not Available',
@@ -104,6 +105,7 @@ function thirdDelimiterAdd($w, $query, $settings, $db, $update_in_progress)
                     'fn' => 'Not Available',
                     'ctrl' => 'Not Available',
                 ), './images/info.png', 'no', null, '');
+        }
 
         if ($album_name != '') {
             $w->result(null, serialize(array(
