@@ -463,14 +463,14 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress)
 
                 $r = explode(':', $alfred_playlist_uri);
 
-                $w->result(null, '', 'Browse your Alfred playlist ('.$alfred_playlist_name.' by '.$r[2].')', 'You can change the Alfred Playlist during next step', getPlaylistArtwork($w, $alfred_playlist_uri, false),array(
-                     false,
-                    'alt' => 'Not Available',
-                    'cmd' => 'Not Available',
-                    'shift' => 'Not Available',
-                    'fn' => 'Not Available',
-                    'ctrl' => 'Not Available',
-                ), $use_artworks, 'no', null, 'Playlist▹'.$alfred_playlist_uri.'▹');
+                $w->result(null, '', 'Browse your Alfred playlist ('.$alfred_playlist_name.' by '.$r[2].')', array(
+                    'You can change the Alfred Playlist during next step',
+                   'alt' => 'Not Available',
+                   'cmd' => 'Not Available',
+                   'shift' => 'Not Available',
+                   'fn' => 'Not Available',
+                   'ctrl' => 'Not Available',
+               ), getPlaylistArtwork($w, $alfred_playlist_uri, false, false, $use_artworks), 'no', null, 'Playlist▹'.$alfred_playlist_uri.'▹');
             } else {
                 $title = 'Alfred Playlist ● not set';
                 $w->result(null, '', $title, array(
