@@ -242,14 +242,7 @@ function secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
                         'ctrl' => 'Search artist '.$track[7].' online',
                     ), $track[9], 'yes', null, '');
             } else {
-                $w->result(null, '', array(
-                    '🚫 '.$track[7].' ● '.$track[5], $track[16].' ● '.$subtitle.getPlaylistsForTrack($db, $track[2]), $track[9],
-                    'alt' => 'Not Available',
-                    'cmd' => 'Not Available',
-                    'shift' => 'Not Available',
-                    'fn' => 'Not Available',
-                    'ctrl' => 'Not Available',
-                ), 'no', null, '');
+                $w->result(null, '', '🚫 '.$track[7].' ● '.$track[5], $track[16].' ● '.$subtitle.getPlaylistsForTrack($db, $track[2]), $track[9], 'no', null, '');
             }
         }
     }
@@ -486,14 +479,7 @@ function secondDelimiterAlbums($w, $query, $settings, $db, $update_in_progress)
                         'ctrl' => 'Search artist '.$track[7].' online',
                     ), $track[9], 'yes', null, '');
             } else {
-                $w->result(null, '', array(
-                    '🚫 '.$track[7].' ● '.$track[5], $track[16].' ● '.$subtitle.getPlaylistsForTrack($db, $track[2]),
-                    'alt' => 'Not Available',
-                    'cmd' => 'Not Available',
-                    'shift' => 'Not Available',
-                    'fn' => 'Not Available',
-                    'ctrl' => 'Not Available',
-                ), $track[9], 'no', null, '');
+                $w->result(null, '', '🚫 '.$track[7].' ● '.$track[5], $track[16].' ● '.$subtitle.getPlaylistsForTrack($db, $track[2]), $track[9], 'no', null, '');
             }
         }
     }
@@ -744,14 +730,7 @@ function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progres
                                 'ctrl' => 'Search artist '.$track[7].' online',
                             ), $track[9], 'yes', null, '');
                     } else {
-                        $w->result(null, '', array(
-                            '🚫 '.$track[7].' ● '.$track[5], $track[16].' ● '.$subtitle.getPlaylistsForTrack($db, $track[2]), $track[9],
-                            'alt' => 'Not Available',
-                            'cmd' => 'Not Available',
-                            'shift' => 'Not Available',
-                            'fn' => 'Not Available',
-                            'ctrl' => 'Not Available',
-                        ), 'no', null, '');
+                        $w->result(null, '', '🚫 '.$track[7].' ● '.$track[5], $track[16].' ● '.$subtitle.getPlaylistsForTrack($db, $track[2]), $track[9], 'no', null, '');
                     }
                 }
             }
@@ -942,14 +921,7 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
                 $tracks = $album->tracks;
                 if (mb_strlen($search) < 2 || strpos(strtolower($artist_name), strtolower($search)) !== false
                 || strpos(strtolower($album->name), strtolower($search)) !== false) {
-                    $w->result(null, '', $album->name.' ('.count($album->tracks->items).' tracks)', $album->album_type.' by '.$artist_name.' ● Release date: '.$album->release_date.$genre, getTrackOrAlbumArtwork($w, $album->uri, false, false,array(
-                     false,
-                    'alt' => 'Not Available',
-                    'cmd' => 'Not Available',
-                    'shift' => 'Not Available',
-                    'fn' => 'Not Available',
-                    'ctrl' => 'Not Available',
-                ), $use_artworks), 'no', null, 'Online▹'.$artist_uri.'@'.$artist_name.'@'.$album->uri.'@'.$album->name.'▹');
+                    $w->result(null, '', $album->name.' ('.count($album->tracks->items).' tracks)', $album->album_type.' by '.$artist_name.' ● Release date: '.$album->release_date.$genre, getTrackOrAlbumArtwork($w, $album->uri, false, false, false, $use_artworks), 'no', null, 'Online▹'.$artist_uri.'@'.$artist_name.'@'.$album->uri.'@'.$album->name.'▹');
                 }
             }
         }
@@ -1151,14 +1123,7 @@ function secondDelimiterOnlineRelated($w, $query, $settings, $db, $update_in_pro
 
         foreach ($relateds as $related) {
             if (mb_strlen($search) < 2 || strpos(strtolower($related->name), strtolower($search)) !== false) {
-                $w->result(null, '', '👤 '.$related->name, '☁︎ Query all albums/tracks from this artist online..', getArtistArtwork($w, $related->uri, $related->name, false, false,array(
-                     false,
-                    'alt' => 'Not Available',
-                    'cmd' => 'Not Available',
-                    'shift' => 'Not Available',
-                    'fn' => 'Not Available',
-                    'ctrl' => 'Not Available',
-                ), $use_artworks), 'no', null, 'Online▹'.$related->uri.'@'.$related->name.'▹');
+                $w->result(null, '', '👤 '.$related->name, '☁︎ Query all albums/tracks from this artist online..', getArtistArtwork($w, $related->uri, $related->name, false, false, false, $use_artworks), 'no', null, 'Online▹'.$related->uri.'@'.$related->name.'▹');
             }
         }
     }
@@ -1501,14 +1466,7 @@ function secondDelimiterYourMusicTracks($w, $query, $settings, $db, $update_in_p
                         'ctrl' => 'Search artist '.$track[7].' online',
                     ), $track[9], 'yes', null, '');
             } else {
-                $w->result(null, '', array(
-                    '🚫 '.$track[7].' ● '.$track[5], $track[16].' ● '.$subtitle.getPlaylistsForTrack($db, $track[2]),
-                    'alt' => 'Not Available',
-                    'cmd' => 'Not Available',
-                    'shift' => 'Not Available',
-                    'fn' => 'Not Available',
-                    'ctrl' => 'Not Available',
-                ), $track[9], 'no', null, '');
+                $w->result(null, '', '🚫 '.$track[7].' ● '.$track[5], $track[16].' ● '.$subtitle.getPlaylistsForTrack($db, $track[2]), $track[9], 'no', null, '');
             }
         }
     }
@@ -1690,14 +1648,7 @@ function secondDelimiterYourTopArtists($w, $query, $settings, $db, $update_in_pr
         $noresult = true;
         foreach ($items as $artist) {
             $noresult = false;
-            $w->result(null, '', '👤 '.$artist->name, 'Browse this artist', getArtistArtwork($w, $artist->uri, $artist->name, false, false,array(
-                     false,
-                    'alt' => 'Not Available',
-                    'cmd' => 'Not Available',
-                    'shift' => 'Not Available',
-                    'fn' => 'Not Available',
-                    'ctrl' => 'Not Available',
-                ), $use_artworks), 'no', null, 'Artist▹'.$artist->uri.'∙'.$artist->name.'▹');
+            $w->result(null, '', '👤 '.$artist->name, 'Browse this artist', getArtistArtwork($w, $artist->uri, $artist->name, false, false, false, $use_artworks), 'no', null, 'Artist▹'.$artist->uri.'∙'.$artist->name.'▹');
         }
 
         if ($noresult) {
@@ -2410,14 +2361,7 @@ function secondDelimiterFeaturedPlaylist($w, $query, $settings, $db, $update_in_
                 ), './images/info.png', 'no', null, '');
             $items = $playlists->items;
             foreach ($items as $playlist) {
-                $w->result(null, '', '🎵'.escapeQuery($playlist->name), 'by '.$playlist->owner->id.' ● '.$playlist->tracks->total.' tracks', getPlaylistArtwork($w, $playlist->uri, false),array(
-                     false,
-                    'alt' => 'Not Available',
-                    'cmd' => 'Not Available',
-                    'shift' => 'Not Available',
-                    'fn' => 'Not Available',
-                    'ctrl' => 'Not Available',
-                ), $use_artworks, 'no', null, 'Online Playlist▹'.$playlist->uri.'∙'.escapeQuery($playlist->name).'▹');
+                $w->result(null, '', '🎵'.escapeQuery($playlist->name), 'by '.$playlist->owner->id.' ● '.$playlist->tracks->total.' tracks', getPlaylistArtwork($w, $playlist->uri, false, false, $use_artworks), 'no', null, 'Online Playlist▹'.$playlist->uri.'∙'.escapeQuery($playlist->name).'▹');
             }
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
             $w->result(null, 'help', 'Exception occurred',array(
@@ -3627,14 +3571,7 @@ function secondDelimiterBrowse($w, $query, $settings, $db, $update_in_progress)
             foreach ($listCategories->categories->items as $category) {
 
                 if (mb_strlen($search) < 2 || strpos(strtolower($category->name), strtolower($search)) !== false) {
-                    $w->result(null, '', escapeQuery($category->name), 'Browse this category', getCategoryArtwork($w, $category->id, $category->icons[0]->url, true,array(
-                     false,
-                    'alt' => 'Not Available',
-                    'cmd' => 'Not Available',
-                    'shift' => 'Not Available',
-                    'fn' => 'Not Available',
-                    'ctrl' => 'Not Available',
-                ), $use_artworks), 'no', null, 'Browse▹'.$country.'▹'.$category->id.'▹');
+                    $w->result(null, '', escapeQuery($category->name), 'Browse this category', getCategoryArtwork($w, $category->id, $category->icons[0]->url, true, false, $use_artworks), 'no', null, 'Browse▹'.$country.'▹'.$category->id.'▹');
                 }
             }
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {

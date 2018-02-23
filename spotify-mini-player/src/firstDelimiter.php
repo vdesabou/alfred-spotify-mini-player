@@ -689,14 +689,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
                     foreach ($results as $artist) {
                         if (checkIfResultAlreadyThere($w->results(), '👤 '.escapeQuery($artist->name)) == false) {
                             $noresult = false;
-                            $w->result(null, '', '👤 '.escapeQuery($artist->name), 'Browse this artist', getArtistArtwork($w, $artist->uri, $artist->name, false, false,array(
-                     false,
-                    'alt' => 'Not Available',
-                    'cmd' => 'Not Available',
-                    'shift' => 'Not Available',
-                    'fn' => 'Not Available',
-                    'ctrl' => 'Not Available',
-                ), $use_artworks), 'no', null, 'Online▹'.$artist->uri.'@'.escapeQuery($artist->name).'▹');
+                            $w->result(null, '', '👤 '.escapeQuery($artist->name), 'Browse this artist', getArtistArtwork($w, $artist->uri, $artist->name, false, false, false, $use_artworks), 'no', null, 'Online▹'.$artist->uri.'@'.escapeQuery($artist->name).'▹');
                         }
                     }
                 }
@@ -745,14 +738,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
                                 echo $w->tojson();
                                 exit;
                             }
-                            $w->result(null, '', escapeQuery($album->name).' ('.$full_album->tracks->total.' tracks)', $album->album_type.' by '.escapeQuery($full_album->artists[0]->name), getTrackOrAlbumArtwork($w, $album->uri, false, false,array(
-                     false,
-                    'alt' => 'Not Available',
-                    'cmd' => 'Not Available',
-                    'shift' => 'Not Available',
-                    'fn' => 'Not Available',
-                    'ctrl' => 'Not Available',
-                ), $use_artworks), 'no', null, 'Online▹'.$full_album->artists[0]->uri.'@'.escapeQuery($full_album->artists[0]->name).'@'.$album->uri.'@'.escapeQuery($album->name).'▹');
+                            $w->result(null, '', escapeQuery($album->name).' ('.$full_album->tracks->total.' tracks)', $album->album_type.' by '.escapeQuery($full_album->artists[0]->name), getTrackOrAlbumArtwork($w, $album->uri, false, false, false, $use_artworks), 'no', null, 'Online▹'.$full_album->artists[0]->uri.'@'.escapeQuery($full_album->artists[0]->name).'@'.$album->uri.'@'.escapeQuery($album->name).'▹');
                         }
                     }
                 }
@@ -770,14 +756,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
 
                     foreach ($results as $playlist) {
                         $noresult = false;
-                        $w->result(null, '', '🎵'.escapeQuery($playlist->name), 'by '.$playlist->owner->id.' ● '.$playlist->tracks->total.' tracks', getPlaylistArtwork($w, $playlist->uri, false),array(
-                     false,
-                    'alt' => 'Not Available',
-                    'cmd' => 'Not Available',
-                    'shift' => 'Not Available',
-                    'fn' => 'Not Available',
-                    'ctrl' => 'Not Available',
-                ), $use_artworks, 'no', null, 'Online Playlist▹'.$playlist->uri.'∙'.escapeQuery($playlist->name).'▹');
+                        $w->result(null, '', '🎵'.escapeQuery($playlist->name), 'by '.$playlist->owner->id.' ● '.$playlist->tracks->total.' tracks', getPlaylistArtwork($w, $playlist->uri, false, false, $use_artworks), 'no', null, 'Online Playlist▹'.$playlist->uri.'∙'.escapeQuery($playlist->name).'▹');
                     }
                 }
             }
@@ -1229,14 +1208,13 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                 $shared_url .= ' https://open.spotify.com/artist/';
                 $shared_url .= $href[2]; 
 
-                $w->result(null, '', '👤 '.escapeQuery($results[1]), 'Browse this artist', getArtistArtwork($w, $artist_uri, $results[1], false, false,array(
+                $w->result(null, '', '👤 '.escapeQuery($results[1]), 'Browse this artist', getArtistArtwork($w, $artist_uri, $results[1], false, false, false, $use_artworks), 'no', array(
                      false,
                     'alt' => 'Not Available',
                     'cmd' => 'Not Available',
                     'shift' => 'Not Available',
                     'fn' => 'Not Available',
                     'ctrl' => 'Not Available',
-                ), $use_artworks), 'no', array(
                     'copy' => '#NowPlaying artist ' . escapeQuery($results[1]).' ' . $shared_url,
                     'largetype' => escapeQuery($results[1]),
                 ), 'Artist▹'.$artist_uri.'∙'.escapeQuery($results[1]).'▹');
@@ -1249,14 +1227,13 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                 $shared_url .= ' https://open.spotify.com/artist/';
                 $shared_url .= $href[2]; 
 
-                $w->result(null, '', '👤 '.escapeQuery($results[1]), 'Browse this artist', getArtistArtwork($w, $artist_uri /* empty artist_uri */, $results[1], false, false,array(
+                $w->result(null, '', '👤 '.escapeQuery($results[1]), 'Browse this artist', getArtistArtwork($w, $artist_uri /* empty artist_uri */, $results[1], false, false, false, $use_artworks), 'no', array(
                      false,
                     'alt' => 'Not Available',
                     'cmd' => 'Not Available',
                     'shift' => 'Not Available',
                     'fn' => 'Not Available',
                     'ctrl' => 'Not Available',
-                ), $use_artworks), 'no', array(
                     'copy' => '#NowPlaying artist ' . escapeQuery($results[1]).' ' . $shared_url,
                     'largetype' => escapeQuery($results[1]),
                 ), 'Artist▹'.$results[4].'∙'.escapeQuery($results[1]).'▹');
