@@ -4457,30 +4457,6 @@ function getNumberOfTracksForArtist($db, $artist_name, $yourmusiconly = false)
 }
 
 /**
- * remove_emoji function.
- * https://gist.github.com/quantizer/5744907
- * @param mixed $text
- */
-function remove_emoji($text)
-{
-    $cleanText = "";
-
-    // Match Emoticons
-    $regexEmoticons = '/[\x{1F600}-\x{1F64F}]/u';
-    $cleanText = preg_replace($regexEmoticons, '', $text);
-
-    // Match Miscellaneous Symbols and Pictographs
-    $regexSymbols = '/[\x{1F300}-\x{1F5FF}]/u';
-    $cleanText = preg_replace($regexSymbols, '', $cleanText);
-
-    // Match Transport And Map Symbols
-    $regexTransport = '/[\x{1F680}-\x{1F6FF}]/u';
-    $cleanText = preg_replace($regexTransport, '', $cleanText);
-
-    return $cleanText;
-}
-
-/**
  * escapeQuery function.
  *
  * @param mixed $text
@@ -4499,8 +4475,6 @@ function escapeQuery($text)
     if (startswith($text, '’')) {
         $text = ltrim($text, '’');
     }
-
-    $text = remove_emoji($text);
     
     return $text;
 }

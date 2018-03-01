@@ -1172,7 +1172,8 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
     $owner_id = $url[2];
     $playlist_id = $url[4];
 
-    $theplaylistname = $tmp[1];
+    // playlist name is encoded in base64
+    $theplaylistname = base64_decode($tmp[1]);
     $search = $words[2];
     $savedPlaylistTracks = array();
     $duration_playlist = 0;
@@ -2361,7 +2362,7 @@ function secondDelimiterFeaturedPlaylist($w, $query, $settings, $db, $update_in_
                 ), './images/info.png', 'no', null, '');
             $items = $playlists->items;
             foreach ($items as $playlist) {
-                $w->result(null, '', '🎵'.escapeQuery($playlist->name), 'by '.$playlist->owner->id.' ● '.$playlist->tracks->total.' tracks', getPlaylistArtwork($w, $playlist->uri, false, false, $use_artworks), 'no', null, 'Online Playlist▹'.$playlist->uri.'∙'.escapeQuery($playlist->name).'▹');
+                $w->result(null, '', '🎵'.escapeQuery($playlist->name), 'by '.$playlist->owner->id.' ● '.$playlist->tracks->total.' tracks', getPlaylistArtwork($w, $playlist->uri, false, false, $use_artworks), 'no', null, 'Online Playlist▹'.$playlist->uri.'∙'.base64_encode($playlist->name).'▹');
             }
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
             $w->result(null, 'help', 'Exception occurred',array(

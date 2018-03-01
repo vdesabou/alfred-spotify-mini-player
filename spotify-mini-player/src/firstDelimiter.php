@@ -756,7 +756,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
 
                     foreach ($results as $playlist) {
                         $noresult = false;
-                        $w->result(null, '', '🎵'.escapeQuery($playlist->name), 'by '.$playlist->owner->id.' ● '.$playlist->tracks->total.' tracks', getPlaylistArtwork($w, $playlist->uri, false, false, $use_artworks), 'no', null, 'Online Playlist▹'.$playlist->uri.'∙'.escapeQuery($playlist->name).'▹');
+                        $w->result(null, '', '🎵'.escapeQuery($playlist->name), 'by '.$playlist->owner->id.' ● '.$playlist->tracks->total.' tracks', getPlaylistArtwork($w, $playlist->uri, false, false, $use_artworks), 'no', null, 'Online Playlist▹'.$playlist->uri.'∙'.base64_encode($playlist->name).'▹');
                     }
                 }
             }
