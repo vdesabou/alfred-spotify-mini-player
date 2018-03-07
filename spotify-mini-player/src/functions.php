@@ -1275,7 +1275,7 @@ function invokeMopidyMethod($w, $method, $params, $displayError = true)
             return $result->result;
         }
         if (isset($result->error)) {
-            logMsg('ERROR: invokeMopidyMethod() method: '.$method.' params: '.json_encode($params, JSON_HEX_APOS).' exception:'.print_r($result));
+            logMsg('Error(invokeMopidyMethod): '.$method.' params: '.json_encode($params, JSON_HEX_APOS).' exception:'.print_r($result));
 
             if ($displayError) {
                 displayNotificationWithArtwork($w, 'Mopidy Exception: '.htmlspecialchars($result->error->message), './images/warning.png', 'Error!');
@@ -1285,7 +1285,7 @@ function invokeMopidyMethod($w, $method, $params, $displayError = true)
             return false;
         }
     } else {
-        logMsg('ERROR: empty response from Mopidy method: '.$method.' params: '.json_encode($params, JSON_HEX_APOS));
+        logMsg('Error(invokeMopidyMethod): empty response from Mopidy method: '.$method.' params: '.json_encode($params, JSON_HEX_APOS));
         displayNotificationWithArtwork($w, 'ERROR: empty response from Mopidy method: '.$method.' params: '.json_encode($params, JSON_HEX_APOS), './images/warning.png');
     }
 }
@@ -2745,10 +2745,10 @@ function addCurrentTrackTo($w)
                 $artists = $track->artists;
                 $artist = $artists[0];
                 $album = $track->album;
-                logMsg("Unknown track $results[4] / $results[0] / $results[1] replaced by track: $track->uri / $track->name / $artist->name / $album->uri");
+                logMsg("Info(addCurrentTrackTo): Unknown track $results[4] / $results[0] / $results[1] replaced by track: $track->uri / $track->name / $artist->name / $album->uri");
                 $results[4] = $track->uri;
             } else {
-                logMsg("Could not find track: $results[4] / $results[0] / $results[1] ");
+                logMsg("Error(addCurrentTrackTo): Could not find track: $results[4] / $results[0] / $results[1] ");
                 displayNotificationWithArtwork($w, 'Local track '.escapeQuery($results[0]).' has not online match', './images/warning.png', 'Error!');
 
                 return;
@@ -2878,10 +2878,10 @@ function addCurrentTrackToAlfredPlaylist($w)
                 $artists = $track->artists;
                 $artist = $artists[0];
                 $album = $track->album;
-                logMsg("Unknown track $results[4] / $results[0] / $results[1] replaced by track: $track->uri / $track->name / $artist->name / $album->uri");
+                logMsg("Info(addCurrentTrackToAlfredPlaylist): Unknown track $results[4] / $results[0] / $results[1] replaced by track: $track->uri / $track->name / $artist->name / $album->uri");
                 $results[4] = $track->uri;
             } else {
-                logMsg("Could not find track: $results[4] / $results[0] / $results[1] ");
+                logMsg("Error(addCurrentTrackToAlfredPlaylist): Could not find track: $results[4] / $results[0] / $results[1] ");
                 displayNotificationWithArtwork($w, 'Local track '.escapeQuery($results[0]).' has not online match', './images/warning.png', 'Error!');
 
                 return;
@@ -2951,10 +2951,10 @@ function addCurrentTrackToYourMusic($w)
                 $artists = $track->artists;
                 $artist = $artists[0];
                 $album = $track->album;
-                logMsg("Unknown track $results[4] / $results[0] / $results[1] replaced by track: $track->uri / $track->name / $artist->name / $album->uri");
+                logMsg("Info(addCurrentTrackToYourMusic): Unknown track $results[4] / $results[0] / $results[1] replaced by track: $track->uri / $track->name / $artist->name / $album->uri");
                 $results[4] = $track->uri;
             } else {
-                logMsg("Could not find track: $results[4] / $results[0] / $results[1] ");
+                logMsg("Error(addCurrentTrackToYourMusic): Could not find track: $results[4] / $results[0] / $results[1] ");
                 displayNotificationWithArtwork($w, 'Local track '.escapeQuery($results[0]).' has not online match', './images/warning.png', 'Error!');
 
                 return;
@@ -3309,7 +3309,7 @@ function getArtistUriFromTrack($w, $track_uri)
 
                 return $artist->uri;
             } else {
-                logMsg("Could not find artist from uri: $track_uri");
+                logMsg("Error(getArtistUriFromTrack): Could not find artist from uri: $track_uri");
 
                 return false;
             }
@@ -3321,8 +3321,7 @@ function getArtistUriFromTrack($w, $track_uri)
 
         return $artist->uri;
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        //logMsg( 'Error(getArtistUriFromTrack): (exception '.print_r($e).')');
-        //handleSpotifyWebAPIException($w, $e);
+        // do nothing
     }
 
     return false;
@@ -3391,7 +3390,7 @@ function getAlbumUriFromTrack($w, $track_uri)
 
                 return $album->uri;
             } else {
-                logMsg("Could not find album from uri: $track_uri");
+                logMsg("Error(getAlbumUriFromTrack): Could not find album from uri: $track_uri");
 
                 return false;
             }
@@ -3794,7 +3793,7 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name)
             $track = $results[0];
             $track_uri = $track->uri;
         } else {
-            logMsg("Could not find track from uri: $track_uri");
+            logMsg("Error(createRadioSongPlaylist): Could not find track from uri: $track_uri");
 
             return false;
         }
@@ -4223,7 +4222,7 @@ function getTheFullTrack($w, $track_uri, $country_code)
 
                 return $track;
             } else {
-                logMsg("Could not find track from uri: $track_uri");
+                logMsg("Error(getTheFullTrack): Could not find track from uri: $track_uri");
 
                 return false;
             }
@@ -4758,11 +4757,7 @@ function downloadArtworks($w)
                 while ($artist = $stmtGetArtists->fetch()) {
                     $ret = getArtistArtwork($w, $artist[0], $artist[1], true, false, true, $use_artworks);
                     if ($ret == false) {
-                        logMsg("WARN: $artist[0] $artist[1] artwork not found, using default");
-                    } elseif (!is_string($ret)) {
-                        //logMsg("INFO: $artist[0] $artist[1] artwork was fetched ");
-                    } elseif (is_string($ret)) {
-                        //logMsg("INFO: $artist[0] $artist[1] artwork was already there $ret ");
+                        logMsg("Error(downloadArtworks): $artist[0] $artist[1] artwork not found, using default");
                     }
 
                     $stmtUpdateArtist->bindValue(':artist_uri', $artist[0]);
@@ -4782,11 +4777,7 @@ function downloadArtworks($w)
                 while ($track = $stmtGetTracks->fetch()) {
                     $ret = getTrackOrAlbumArtwork($w, $track[0], true, false, true, $use_artworks);
                     if ($ret == false) {
-                        logMsg("WARN: $track[0] artwork not found, using default");
-                    } elseif (!is_string($ret)) {
-                        //logMsg("INFO: $track[0] artwork was fetched ");
-                    } elseif (is_string($ret)) {
-                        //logMsg("INFO: $artist[0] artwork was already there $ret ");
+                        logMsg("Error(downloadArtworks): $track[0] artwork not found, using default");
                     }
 
                     $stmtUpdateTrack->bindValue(':track_uri', $track[0]);
@@ -4806,11 +4797,7 @@ function downloadArtworks($w)
                 while ($album = $stmtGetAlbums->fetch()) {
                     $ret = getTrackOrAlbumArtwork($w, $album[0], true, false, true, $use_artworks);
                     if ($ret == false) {
-                        logMsg("WARN: $album[0] artwork not found, using default ");
-                    } elseif (!is_string($ret)) {
-                        //logMsg("INFO: $album[0] artwork was fetched ");
-                    } elseif (is_string($ret)) {
-                        //logMsg("INFO: $artist[0] artwork was already there $ret ");
+                        logMsg("Error(downloadArtworks): $album[0] artwork not found, using default ");
                     }
 
                     $stmtUpdateAlbum->bindValue(':album_uri', $album[0]);
@@ -4830,7 +4817,6 @@ function downloadArtworks($w)
         }
     }
     deleteTheFile($w->data().'/download_artworks_in_progress');
-    logMsg('End of Download Artworks');
     if ($nb_artworks_total != 0) {
         if(getenv('reduce_notifications') == 0) {
             $elapsed_time = time() - $words[3];
@@ -5497,7 +5483,6 @@ function updateLibrary($w)
         // kill previous process if running
         $pid = exec("ps -efx | grep \"php\" | egrep \"DOWNLOAD_ARTWORKS\" | grep -v grep | awk '{print $2}'");
         if ($pid != '') {
-            logMsg("KILL Download daemon <$pid>");
             $ret = exec("kill -9 \"$pid\"");
         }
         $dbfile = $w->data().'/fetch_artworks.db';
@@ -6187,7 +6172,6 @@ function refreshLibrary($w)
         // kill previous process if running
         $pid = exec("ps -efx | grep \"php\" | egrep \"DOWNLOAD_ARTWORKS\" | grep -v grep | awk '{print $2}'");
         if ($pid != '') {
-            logMsg("KILL Download daemon <$pid>");
             $ret = exec("kill -9 \"$pid\"");
         }
         if (file_exists($w->data().'/download_artworks_in_progress')) {
@@ -7240,7 +7224,6 @@ function refreshLibrary($w)
 
     if ($use_artworks) {
         // Download artworks in background
-        logMsg('========DOWNLOAD_ARTWORKS DURING REFRESH LIBRARY ========');
         exec('php -f ./src/action.php -- "" "DOWNLOAD_ARTWORKS" "DOWNLOAD_ARTWORKS" >> "'.$w->cache().'/action.log" 2>&1 & ');
     }
 
@@ -7305,7 +7288,7 @@ function handleDbIssuePdoXml($dbhandle)
 function handleDbIssuePdoEcho($dbhandle, $w)
 {
     $errorInfo = $dbhandle->errorInfo();
-    logMsg('DB Exception: '.$errorInfo[0].' '.$errorInfo[1].' '.$errorInfo[2]);
+    logMsg('Error(DB Exception): '.$errorInfo[0].' '.$errorInfo[1].' '.$errorInfo[2]);
 
     if (file_exists($w->data().'/update_library_in_progress')) {
         deleteTheFile($w->data().'/update_library_in_progress');
@@ -8327,7 +8310,7 @@ function updateSetting($w, $setting_name, $setting_new_value, $settings_file = '
     $settings = $w->read($settings_file);
 
     if ($settings == false) {
-        logMsg('Error: updateSetting failed while reading JSON file');
+        logMsg('Error(updateSetting) failed while reading JSON file');
 
         return false;
     }
@@ -8362,7 +8345,7 @@ function updateSetting($w, $setting_name, $setting_new_value, $settings_file = '
      $settings = $w->read($settings_file);
  
      if ($settings == false) {
-         logMsg('Error: removeSetting failed while reading JSON file');
+         logMsg('Error(removeSetting) failed while reading JSON file');
  
          return false;
      }
@@ -8512,7 +8495,7 @@ function do_async_post_request($url, $params)
         fwrite($fp, $out);
         fclose($fp);
     } else {
-        logMsg('Error: Problem when updating stat with stathat');
+        logMsg('Error(do_async_post_request): Problem when updating stat with stathat');
     }
 }
 

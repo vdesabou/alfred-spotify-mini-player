@@ -133,11 +133,11 @@ if ($type == 'TRACK' && $other_settings == '' &&
                     $track = $results[0];
                     $artists = $track->artists;
                     $artist = $artists[0];
-                    logMsg("Unknown track $track_uri / $track_name / $artist_name replaced by track: $track->uri / $track->name / $artist->name");
+                    logMsg("Error(action): Unknown track $track_uri / $track_name / $artist_name replaced by track: $track->uri / $track->name / $artist->name");
                     $track_uri = $track->uri;
                     $tmp = explode(':', $track_uri);
                 } else {
-                    logMsg("Could not find track: $track_uri / $track_name / $artist_name");
+                    logMsg("Error(action): Could not find track: $track_uri / $track_name / $artist_name");
                     displayNotificationWithArtwork($w, 'Local track '.$track_name.' has not online match', './images/warning.png', 'Error!');
 
                     return;
@@ -486,11 +486,11 @@ if ($type == 'TRACK' && $other_settings == '' &&
                         $track = $results[0];
                         $artists = $track->artists;
                         $artist = $artists[0];
-                        logMsg("Unknown track $track_uri / $track_name / $artist_name replaced by track: $track->uri / $track->name / $artist->name");
+                        logMsg("Error(action): Unknown track $track_uri / $track_name / $artist_name replaced by track: $track->uri / $track->name / $artist->name");
                         $track_uri = $track->uri;
                         $tmp = explode(':', $track_uri);
                     } else {
-                        logMsg("Could not find track: $track_uri / $track_name / $artist_name");
+                        logMsg("Error(action): Could not find track: $track_uri / $track_name / $artist_name");
                         displayNotificationWithArtwork($w, 'Local track '.$track_name.' has not online match', './images/warning.png', 'Error!');
 
                         return;
@@ -585,11 +585,11 @@ if ($type == 'TRACK' && $other_settings == '' &&
                         $track = $results[0];
                         $artists = $track->artists;
                         $artist = $artists[0];
-                        logMsg("Unknown track $track_uri / $track_name / $artist_name replaced by track: $track->uri / $track->name / $artist->name");
+                        logMsg("Error(action): Unknown track $track_uri / $track_name / $artist_name replaced by track: $track->uri / $track->name / $artist->name");
                         $track_uri = $track->uri;
                         $tmp = explode(':', $track_uri);
                     } else {
-                        logMsg("Could not find track: $track_uri / $track_name / $artist_name");
+                        logMsg("Error(action): Could not find track: $track_uri / $track_name / $artist_name");
                         displayNotificationWithArtwork($w, 'Local track '.$track_name.' has not online match', './images/warning.png', 'Error!');
 
                         return;

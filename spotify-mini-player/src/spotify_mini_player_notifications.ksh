@@ -178,7 +178,6 @@ then
 	fi
 fi
 
-traceit "INFO: creating lock file . `date`"
 echo $$ > "${DATADIR}/spotify_mini_player_notifications.lock"
 
 # call to main function
