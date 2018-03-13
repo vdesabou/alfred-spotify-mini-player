@@ -37,10 +37,10 @@ function firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress
     $theplaylist = $words[1];
     try {
         if (mb_strlen($theplaylist) < 2) {
-            $getPlaylists = 'select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist,collaborative,public from playlists order by nb_times_played desc';
+            $getPlaylists = 'select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist,collaborative,public,nb_times_played from playlists order by nb_times_played desc';
             $stmt = $db->prepare($getPlaylists);
         } else {
-            $getPlaylists = 'select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist,collaborative,public from playlists where (name like :query or author like :query) order by nb_times_played desc';
+            $getPlaylists = 'select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist,collaborative,public,nb_times_played from playlists where (name like :query or author like :query) order by nb_times_played desc';
             $stmt = $db->prepare($getPlaylists);
             $stmt->bindValue(':query', '%'.$theplaylist.'%');
         }
@@ -67,7 +67,7 @@ function firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress
             }
             if (startswith($playlist[1], 'Artist radio for')) {
                 $w->result(null, '', '🎵 '.$playlist[1],array(
-                     $public_status.' playlist by '.$playlist[3].' ● '.$playlist[7].' tracks ● '.$playlist[8],
+                     $public_status.' playlist by '.$playlist[3].' ● '.$playlist[7].' tracks ● '.$playlist[8].' ● '.$playlist[11].' times played',
                     'alt' => 'Not Available',
                     'cmd' => 'Not Available',
                     'shift' => 'Not Available',
@@ -90,7 +90,7 @@ function firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress
             }
             if (startswith($playlist[1], 'Song radio for')) {
                 $w->result(null, '', '🎵 '.$playlist[1],array(
-                     $public_status.' playlist by '.$playlist[3].' ● '.$playlist[7].' tracks ● '.$playlist[8],
+                     $public_status.' playlist by '.$playlist[3].' ● '.$playlist[7].' tracks ● '.$playlist[8].' ● '.$playlist[11].' times played',
                     'alt' => 'Not Available',
                     'cmd' => 'Not Available',
                     'shift' => 'Not Available',
@@ -161,7 +161,7 @@ function firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress
                 }
             }
             $w->result(null, '', '🎵'.$added.$playlist[1],array(
-                     $public_status.' playlist by '.$playlist[3].' ● '.$playlist[7].' tracks ● '.$playlist[8],
+                     $public_status.' playlist by '.$playlist[3].' ● '.$playlist[7].' tracks ● '.$playlist[8].' ● '.$playlist[11].' times played',
                     'alt' => 'Not Available',
                     'cmd' => 'Not Available',
                     'shift' => 'Not Available',
