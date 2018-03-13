@@ -653,7 +653,7 @@ function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progres
                     'shift' => 'Not Available',
                     'fn' => 'Not Available',
                     'ctrl' => 'Not Available',
-                ), './images/add.png', 'no', null, 'Add▹'.$playlist[0].'∙'.escapeQuery($playlist[1]).'▹');
+                ), './images/add.png', 'no', null, 'Add▹'.$playlist[0].'∙'.base64_encode($playlist[1]).'▹');
                 }
 
                 if ($update_in_progress == false) {
@@ -664,7 +664,7 @@ function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progres
                     'shift' => 'Not Available',
                     'fn' => 'Not Available',
                     'ctrl' => 'Not Available',
-                ), './images/uncheck.png', 'no', null, 'Confirm Remove Playlist▹'.$playlist[0].'∙'.escapeQuery($playlist[1]).'▹');
+                ), './images/uncheck.png', 'no', null, 'Confirm Remove Playlist▹'.$playlist[0].'∙'.base64_encode($playlist[1]).'▹');
                 }
                 $getTracks = 'select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where playlist_uri=:theplaylisturi order by added_at desc limit '.$max_results;
                 $stmt = $db->prepare($getTracks);
@@ -2586,6 +2586,7 @@ function secondDelimiterNewReleases($w, $query, $settings, $db, $update_in_progr
  */
 function secondDelimiterAdd($w, $query, $settings, $db, $update_in_progress)
 {
+    
     $words = explode('▹', $query);
     $kind = $words[0];
 
@@ -2637,21 +2638,25 @@ function secondDelimiterAdd($w, $query, $settings, $db, $update_in_progress)
     $href = explode(':', $uri);
     $message = '';
     $type = '';
+    $value = '';
     if ($href[1] == 'track') {
         $type = 'track';
         $track_name = $tmp[1];
         $track_uri = $uri;
         $message = 'track '.$track_name;
+        $value = $track_name;
     } elseif ($href[1] == 'album') {
         $type = 'album';
         $album_name = $tmp[1];
         $album_uri = $uri;
         $message = 'album  '.$album_name;
+        $value = $album_name;
     } elseif ($href[1] == 'user') {
         $type = 'playlist';
-        $playlist_name = $tmp[1];
+        $playlist_name = base64_decode($tmp[1]);
         $playlist_uri = $uri;
         $message = 'playlist '.$playlist_name;
+        $value = $playlist_name;
     } elseif ($href[1] == 'local') {
         $w->result(null, '', 'Cannot add local track to playlist using the Web API',array(
                      'This is a limitation of Spotify Web API',
@@ -2672,7 +2677,7 @@ function secondDelimiterAdd($w, $query, $settings, $db, $update_in_progress)
             $getPlaylists = 'select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist from playlists where ownedbyuser=1';
             $stmt = $db->prepare($getPlaylists);
 
-            $w->result(null, '', 'Add '.$type.' '.$tmp[1].' to Your Music or one of your playlists below..',array(
+            $w->result(null, '', 'Add '.$type.' '.$value.' to Your Music or one of your playlists below..',array(
                      'Select Your Music or one of your playlists below to add the '.$message,
                     'alt' => 'Not Available',
                     'cmd' => 'Not Available',
