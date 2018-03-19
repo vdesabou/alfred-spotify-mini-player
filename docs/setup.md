@@ -46,6 +46,15 @@ Note: if you're using a firewall or a software that blocks communication, note t
 
 * https://transfer.sh (for DEBUG Zip file)
 
+
+Also, if you're using a proxy, don't forget to enable this option in Alfred preferences:-
+
+<figure>
+	<a href="{{ site.url }}/images/setup6.jpg"><img src="{{ site.url }}/images/setup6.jpg"></a>
+	<figcaption>Use Mac OS http proxy settings for scripts option.</figcaption>
+</figure>
+
+
 ## Create the library
 
 **Warning:** If you use a proxy, make sure to activate **Use macOS http proxy settings for scripts** in Advanced tab of Alfred Settings
