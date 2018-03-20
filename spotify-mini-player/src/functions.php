@@ -760,6 +760,10 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
                         return $device->id;
                     }
                 }
+                // no active device, get first in the list
+                foreach ($devices->devices as $device) {
+                    return $device->id;
+                }
             }
             return '';
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
