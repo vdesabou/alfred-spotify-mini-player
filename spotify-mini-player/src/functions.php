@@ -765,6 +765,13 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
                     return $device->id;
                 }
             }
+            // open Spotify App
+            if(getenv('automatically_open_spotify_app')) {
+                $retry = true;
+                exec("osascript -e 'tell application \"Spotify\" to activate'");
+                sleep(5);
+                continue;
+            }
             return '';
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
             if ($e->getMessage() == 'Permissions missing') {
