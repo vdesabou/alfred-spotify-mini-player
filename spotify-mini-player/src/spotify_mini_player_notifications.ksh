@@ -166,13 +166,12 @@ then
 	if [ "$(ps -p `cat "${DATADIR}/spotify_mini_player_notifications.lock"` | wc -l)" -gt 1 ]
 	then
 		# process is still running
-		# traceit "INFO: Already running: process `cat "${DATADIR}/spotify_mini_player_notifications.lock"`, `date`"
 		return 0
 	else
 		# process not running, but lock file not deleted?
 		traceit "INFO: orphan lock file warning, process spotify_mini_player_notifications not running."
 		rm "${DATADIR}/spotify_mini_player_notifications.lock"
-		traceit "INFO: Lock file deleted. `date`"
+		traceit "INFO: Lock file deleted"
 
 		# Now go ahead
 	fi
@@ -187,7 +186,7 @@ then
 elif [ "${APP}" = "CONNECT" ]
 then
 	StartSpotifyConnect
-	traceit "INFO: StartSpotifyConnect . `date`"
+	traceit "INFO: StartSpotifyConnect"
 else
 	StartMopidy
 fi
