@@ -2292,7 +2292,6 @@ function updateCurrentTrackIndexFromPlayQueue($w)
                 'current_track_index' => 0,
                 'tracks' => array(),
             );
-            // displayNotificationWithArtwork($w,"Play Queue has been reset!", './images/warning.png', 'Error!');
         } else {
             $newplayqueue = array(
                 'type' => $playqueue->type,
@@ -2303,8 +2302,6 @@ function updateCurrentTrackIndexFromPlayQueue($w)
             );
         }
         $w->write($newplayqueue, 'playqueue.json');
-    } else {
-        displayNotificationWithArtwork($w, 'No track is playing', './images/warning.png');
     }
 }
 
