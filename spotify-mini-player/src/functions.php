@@ -610,18 +610,22 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
     while ($retry) {
         try {
             $api = getSpotifyWebAPI($w);
-
+      
             $playback_info = $api->getMyCurrentPlaybackInfo(array(
             'market' => $country_code,
             ));
 
-            $is_playing = $playback_info->is_playing;
-            if ($is_playing) {
-                $api->pause($device_id);
+            if(isset($playback_info->is_playing)) {
+                $is_playing = $playback_info->is_playing;
+                if ($is_playing) {
+                    $api->pause($device_id);
+                } else {
+                    $api->play($device_id);
+                }
+                $retry = false;
             } else {
-                $api->play($device_id);
+                logMsg('Error(playpauseSpotifyConnect): is_playing not set '.$device_id);
             }
-            $retry = false;
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
             logMsg('Error(playpauseSpotifyConnect): retry '.$nb_retry.' (exception '.print_r($e).')');
             if ($e->getCode() == 429) { // 429 is Too Many Requests
@@ -762,6 +766,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
                 }
                 // no active device, get first in the list
                 foreach ($devices->devices as $device) {
+                    changeUserDevice($w, $device->id);
                     return $device->id;
                 }
             }
