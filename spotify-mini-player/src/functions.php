@@ -1724,6 +1724,8 @@ function createDebugFile($w)
         $output = $output.'The directory '.$w->data()."/users is not present\n";
     }
 
+    copyDirectory($w->path().'/src', '/tmp/spot_mini_debug/src');
+
     $output = $output.exec('uname -a');
     $output = $output."\n";
     $output = $output.exec('sw_vers -productVersion');
@@ -1758,7 +1760,7 @@ function createDebugFile($w)
 
     $output = $output."****\n";
 
-    $output = $output.exec("curl --upload-file /tmp/spot_mini_debug.zip https://transfer.sh/spot_mini_debug_$userid.zip");
+    $output = $output.exec("curl -s --upload-file /tmp/spot_mini_debug.zip https://transfer.sh/spot_mini_debug_$userid.zip > /dev/null");
 
     exec('cd /tmp;rm -rf spot_mini_debug.zip spot_mini_debug');
 
