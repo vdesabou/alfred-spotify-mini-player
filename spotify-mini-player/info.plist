@@ -3984,7 +3984,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<integer>38</integer>
 				<key>script</key>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "random" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-echo "`date` ===== RANDOM ========" &gt;&gt; "$alfred_workflow_cache/action.log"
+
 
 php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;
 </string>
@@ -4095,7 +4095,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<integer>38</integer>
 				<key>script</key>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "add_current_track" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-echo "`date` ===== ADD_CURRENT_TRACK ========" &gt;&gt; "$alfred_workflow_cache/action.log"
+
 
 php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
 				<key>scriptargtype</key>
@@ -4958,7 +4958,7 @@ php -f ./src/action.php -- "$query" "{query}" "" &gt;&gt; "$alfred_workflow_cach
 				<integer>38</integer>
 				<key>script</key>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "lyrics" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-echo "`date` ===== LYRICS ========" &gt;&gt; "$alfred_workflow_cache/action.log"
+
 
 php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
 				<key>scriptargtype</key>
@@ -5068,7 +5068,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<integer>38</integer>
 				<key>script</key>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "current_artist_radio" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-echo "`date` ===== CURRENT_ARTIST_RADIO ========" &gt;&gt; "$alfred_workflow_cache/action.log"
+
 
 php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
 				<key>scriptargtype</key>
@@ -5178,7 +5178,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<integer>38</integer>
 				<key>script</key>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "current_track_radio" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-echo "`date` ===== CURRENT_TRACK_RADIO ========" &gt;&gt; "$alfred_workflow_cache/action.log"
+
 
 php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
 				<key>scriptargtype</key>
@@ -5267,7 +5267,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<integer>38</integer>
 				<key>script</key>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "reset_settings" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-echo "`date` ===== RESET_SETTINGS ========" &gt;&gt; "$alfred_workflow_cache/action.log"
+
 
 php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
 				<key>scriptargtype</key>
@@ -5348,7 +5348,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<integer>127</integer>
 				<key>script</key>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "kill_update" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-echo "`date` ===== KILL_UPDATE ========" &gt;&gt; "$alfred_workflow_cache/action.log"
+
 
 php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
 				<key>scriptargtype</key>
@@ -5408,7 +5408,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<integer>38</integer>
 				<key>script</key>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "refresh_library" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-echo "`date` ===== REFRESH_LIBRARY ========" &gt;&gt; "$alfred_workflow_cache/action.log"
+
 
 php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
 				<key>scriptargtype</key>
@@ -5489,7 +5489,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<integer>38</integer>
 				<key>script</key>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "play_current_artist" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-echo "`date` ===== PLAY_CURRENT_ARTIST ========" &gt;&gt; "$alfred_workflow_cache/action.log"
+
 
 php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
 				<key>scriptargtype</key>
@@ -5620,7 +5620,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<integer>38</integer>
 				<key>script</key>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "play_current_album" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-echo "`date` ===== PLAY_CURRENT_ALBUM ========" &gt;&gt; "$alfred_workflow_cache/action.log"
+
 
 php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
 				<key>scriptargtype</key>
@@ -5730,7 +5730,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<integer>38</integer>
 				<key>script</key>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "play_alfred_playlist" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-echo "`date` ===== PLAY_ALFRED_PLAYLIST ========" &gt;&gt; "$alfred_workflow_cache/action.log"
+
 
 php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
 				<key>scriptargtype</key>
@@ -5893,7 +5893,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<integer>38</integer>
 				<key>script</key>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "add_current_track_to" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-echo "`date` ===== ADD_CURRENT_TRACK_TO ========" &gt;&gt; "$alfred_workflow_cache/action.log"
+
 
 php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
 				<key>scriptargtype</key>
@@ -6003,7 +6003,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<integer>38</integer>
 				<key>script</key>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "lookup_current_artist" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-echo "`date` ===== LOOKUP_CURRENT_ARTIST ========" &gt;&gt; "$alfred_workflow_cache/action.log"
+
 
 php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
 				<key>scriptargtype</key>
@@ -6297,7 +6297,7 @@ end tell</string>
 				<integer>38</integer>
 				<key>script</key>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "show_alfred_playlist" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-echo "`date` ===== SHOW_ALFRED_PLAYLIST ========" &gt;&gt; "$alfred_workflow_cache/action.log"
+
 
 php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
 				<key>scriptargtype</key>
@@ -6428,7 +6428,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<integer>38</integer>
 				<key>script</key>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "remove_current_track_from" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-echo "`date` ===== REMOVE_CURRENT_TRACK_FROM ========" &gt;&gt; "$alfred_workflow_cache/action.log"
+
 
 php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
 				<key>scriptargtype</key>
@@ -6496,7 +6496,7 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 				<integer>38</integer>
 				<key>script</key>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "random_album" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-echo "`date` ===== RANDOM ALBUM========" &gt;&gt; "$alfred_workflow_cache/action.log"
+
 
 php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;
 </string>

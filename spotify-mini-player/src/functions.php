@@ -4769,9 +4769,6 @@ function downloadArtworks($w)
 
                 while ($artist = $stmtGetArtists->fetch()) {
                     $ret = getArtistArtwork($w, $artist[0], $artist[1], true, false, true, $use_artworks);
-                    if ($ret == false) {
-                        logMsg("Error(downloadArtworks): $artist[0] $artist[1] artwork not found, using default");
-                    }
 
                     $stmtUpdateArtist->bindValue(':artist_uri', $artist[0]);
                     $stmtUpdateArtist->execute();
@@ -4789,9 +4786,6 @@ function downloadArtworks($w)
 
                 while ($track = $stmtGetTracks->fetch()) {
                     $ret = getTrackOrAlbumArtwork($w, $track[0], true, false, true, $use_artworks);
-                    if ($ret == false) {
-                        logMsg("Error(downloadArtworks): $track[0] artwork not found, using default");
-                    }
 
                     $stmtUpdateTrack->bindValue(':track_uri', $track[0]);
                     $stmtUpdateTrack->execute();
@@ -4809,9 +4803,6 @@ function downloadArtworks($w)
 
                 while ($album = $stmtGetAlbums->fetch()) {
                     $ret = getTrackOrAlbumArtwork($w, $album[0], true, false, true, $use_artworks);
-                    if ($ret == false) {
-                        logMsg("Error(downloadArtworks): $album[0] artwork not found, using default ");
-                    }
 
                     $stmtUpdateAlbum->bindValue(':album_uri', $album[0]);
                     $stmtUpdateAlbum->execute();
