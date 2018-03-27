@@ -82,7 +82,7 @@ try {
 
 }
 catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-	echo "There was an error during the authentication (exception " . $e . ")";
+	echo "There was an error during the authentication (exception " . jTraceEx($e) . ")";
 }
 
 exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk '{print $2}')");

@@ -23,7 +23,7 @@ function resetPlaylistNumberTimesPlayed($w)
         $stmtResetPlaylistNumberTimesPlayed->execute();
 
     } catch (PDOException $e) {
-        logMsg('Error(resetPlaylistNumberTimesPlayed): (exception '.print_r($e).')');
+        logMsg('Error(resetPlaylistNumberTimesPlayed): (exception '.jTraceEx($e).')');
         handleDbIssuePdoEcho($db, $w);
         $db = null;
     
@@ -55,7 +55,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
         $stmtUpdatePlaylistNumberTimesPlayed->execute();
 
     } catch (PDOException $e) {
-        logMsg('Error(updatePlaylistNumberTimesPlayed): (exception '.print_r($e).')');
+        logMsg('Error(updatePlaylistNumberTimesPlayed): (exception '.jTraceEx($e).')');
         handleDbIssuePdoEcho($db, $w);
         $db = null;
     
@@ -208,7 +208,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
             ]);
             $retry = false;
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            logMsg('Error(setRepeatStateSpotifyConnect): retry '.$nb_retry.' (exception '.print_r($e).')');
+            logMsg('Error(setRepeatStateSpotifyConnect): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
                 $retryAfter = $lastResponse['headers']['Retry-After'];
@@ -268,7 +268,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
             }
             return false;
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            logMsg('Error(isRepeatStateSpotifyConnectActive): retry '.$nb_retry.' (exception '.print_r($e).')');
+            logMsg('Error(isRepeatStateSpotifyConnectActive): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
                 $retryAfter = $lastResponse['headers']['Retry-After'];
@@ -314,7 +314,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
             ]);
             $retry = false;
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            logMsg('Error(setShuffleStateSpotifyConnect): retry '.$nb_retry.' (exception '.print_r($e).')');
+            logMsg('Error(setShuffleStateSpotifyConnect): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
                 $retryAfter = $lastResponse['headers']['Retry-After'];
@@ -367,7 +367,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
             }
             return false;
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            logMsg('Error(getVolumeSpotifyConnect): retry '.$nb_retry.' (exception '.print_r($e).')');
+            logMsg('Error(getVolumeSpotifyConnect): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
                 $retryAfter = $lastResponse['headers']['Retry-After'];
@@ -413,7 +413,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
             ]);
             $retry = false;
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            logMsg('Error(changeVolumeSpotifyConnect): retry '.$nb_retry.' (exception '.print_r($e).')');
+            logMsg('Error(changeVolumeSpotifyConnect): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
                 $retryAfter = $lastResponse['headers']['Retry-After'];
@@ -481,7 +481,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
                 $retry = false;
             }
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            logMsg('Error(playTrackSpotifyConnect): retry '.$nb_retry.' (exception '.print_r($e).')');
+            logMsg('Error(playTrackSpotifyConnect): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
                 $retryAfter = $lastResponse['headers']['Retry-After'];
@@ -525,7 +525,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
             $api->next($device_id);
             $retry = false;
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            logMsg('Error(nextTrackSpotifyConnect): retry '.$nb_retry.' (exception '.print_r($e).')');
+            logMsg('Error(nextTrackSpotifyConnect): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
                 $retryAfter = $lastResponse['headers']['Retry-After'];
@@ -569,7 +569,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
             $api->previous($device_id);
             $retry = false;
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            logMsg('Error(previousTrackSpotifyConnect): retry '.$nb_retry.' (exception '.print_r($e).')');
+            logMsg('Error(previousTrackSpotifyConnect): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
                 $retryAfter = $lastResponse['headers']['Retry-After'];
@@ -627,7 +627,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
                 logMsg('Error(playpauseSpotifyConnect): is_playing not set '.$device_id);
             }
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            logMsg('Error(playpauseSpotifyConnect): retry '.$nb_retry.' (exception '.print_r($e).')');
+            logMsg('Error(playpauseSpotifyConnect): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
                 $retryAfter = $lastResponse['headers']['Retry-After'];
@@ -671,7 +671,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
             $api->play($device_id);
             $retry = false;
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            logMsg('Error(playSpotifyConnect): retry '.$nb_retry.' (exception '.print_r($e).')');
+            logMsg('Error(playSpotifyConnect): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
                 $retryAfter = $lastResponse['headers']['Retry-After'];
@@ -715,7 +715,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
             $api->pause($device_id);
             $retry = false;
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            logMsg('Error(pauseSpotifyConnect): retry '.$nb_retry.' (exception '.print_r($e).')');
+            logMsg('Error(pauseSpotifyConnect): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
                 $retryAfter = $lastResponse['headers']['Retry-After'];
@@ -807,7 +807,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
                         'ctrl' => 'Not Available',
                     ), './images/warning.png', 'yes', null, '');
             } else {
-                logMsg('Error(getSpotifyConnectCurrentDeviceId): retry '.$nb_retry.' (exception '.print_r($e).')');
+                logMsg('Error(getSpotifyConnectCurrentDeviceId): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
                 if ($e->getCode() == 429) { // 429 is Too Many Requests
                     $lastResponse = $api->getRequest()->getLastResponse();
                     $retryAfter = $lastResponse['headers']['Retry-After'];
@@ -858,7 +858,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
             $api->changeMyDevice($options);
             $retry = false;
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            logMsg('Error(changeUserDevice): retry '.$nb_retry.' (exception '.print_r($e).')');
+            logMsg('Error(changeUserDevice): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
                 $retryAfter = $lastResponse['headers']['Retry-After'];
@@ -951,7 +951,7 @@ function isShuffleActive($print_output)
     
                 $retry = false;
             } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-                logMsg('Error(isShuffleActive): retry '.$nb_retry.' (exception '.print_r($e).')');
+                logMsg('Error(isShuffleActive): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
                 if ($e->getCode() == 429) { // 429 is Too Many Requests
                     $lastResponse = $api->getRequest()->getLastResponse();
                     $retryAfter = $lastResponse['headers']['Retry-After'];
@@ -1967,7 +1967,7 @@ function setThePlaylistPrivacy($w, $playlist_uri, $playlist_name, $public)
             refreshLibrary($w);
         }
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        logMsg('Error(updateUserPlaylist): (exception '.print_r($e).')');
+        logMsg('Error(updateUserPlaylist): (exception '.jTraceEx($e).')');
         handleSpotifyWebAPIException($w, $e);
 
         return false;
@@ -2001,7 +2001,7 @@ function followThePlaylist($w, $playlist_uri)
             refreshLibrary($w);
         }
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        logMsg('Error(followThePlaylist): (exception '.print_r($e).')');
+        logMsg('Error(followThePlaylist): (exception '.jTraceEx($e).')');
         handleSpotifyWebAPIException($w, $e);
 
         return false;
@@ -2025,7 +2025,7 @@ function unfollowThePlaylist($w, $playlist_uri)
             refreshLibrary($w);
         }
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        logMsg('Error(unfollowPlaylist): (exception '.print_r($e).')');
+        logMsg('Error(unfollowPlaylist): (exception '.jTraceEx($e).')');
         handleSpotifyWebAPIException($w, $e);
 
         return false;
@@ -2423,7 +2423,7 @@ function searchWebApi($w, $country_code, $query, $type, $limit = 50, $actionMode
         }
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
         if ($actionMode == true) {
-            logMsg('Error(search): (exception '.print_r($e).')');
+            logMsg('Error(search): (exception '.jTraceEx($e).')');
             handleSpotifyWebAPIException($w, $e);
         } else {
             $w2 = new Workflows('com.vdesabou.spotify.mini.player');
@@ -3020,7 +3020,7 @@ function addTracksToYourMusic($w, $tracks, $allow_duplicate = true)
 
             $tracks = $tracks_with_no_dup;
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            logMsg('Error(addTracksToYourMusic): (exception '.print_r($e).')');
+            logMsg('Error(addTracksToYourMusic): (exception '.jTraceEx($e).')');
             handleSpotifyWebAPIException($w, $e);
 
             return false;
@@ -3042,7 +3042,7 @@ function addTracksToYourMusic($w, $tracks, $allow_duplicate = true)
                 }
             } while (count($output) > 0);
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            logMsg('Error(addTracksToYourMusic): (exception '.print_r($e).')');
+            logMsg('Error(addTracksToYourMusic): (exception '.jTraceEx($e).')');
             handleSpotifyWebAPIException($w, $e);
 
             return false;
@@ -3117,7 +3117,7 @@ function addTracksToPlaylist($w, $tracks, $playlist_uri, $playlist_name, $allow_
                 */
             } while (count($output) > 0);
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            logMsg('Error(addTracksToPlaylist): (exception '.print_r($e).')');
+            logMsg('Error(addTracksToPlaylist): (exception '.jTraceEx($e).')');
             handleSpotifyWebAPIException($w, $e);
 
             return false;
@@ -3157,7 +3157,7 @@ function removeTrackFromPlaylist($w, $track_uri, $playlist_uri, $playlist_name, 
                 ),
             ));
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        logMsg('Error(removeTrackFromPlaylist): (exception '.print_r($e).')');
+        logMsg('Error(removeTrackFromPlaylist): (exception '.jTraceEx($e).')');
         handleSpotifyWebAPIException($w, $e);
 
         return false;
@@ -3189,7 +3189,7 @@ function removeTrackFromYourMusic($w, $track_uri, $refreshLibrary = true)
         $api = getSpotifyWebAPI($w);
         $api->deleteMyTracks($track_uri);
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        logMsg('Error(removeTrackFromYourMusic): (exception '.print_r($e).')');
+        logMsg('Error(removeTrackFromYourMusic): (exception '.jTraceEx($e).')');
         handleSpotifyWebAPIException($w, $e);
 
         return false;
@@ -3412,7 +3412,7 @@ function getAlbumUriFromTrack($w, $track_uri)
         $track = $api->getTrack($tmp[2]);
         $album = $track->album;
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        logMsg('Error(getAlbumUriFromTrack): (exception '.print_r($e).')');
+        logMsg('Error(getAlbumUriFromTrack): (exception '.jTraceEx($e).')');
         handleSpotifyWebAPIException($w, $e);
 
         return false;
@@ -3436,7 +3436,7 @@ function clearPlaylist($w, $playlist_uri, $playlist_name)
         $api = getSpotifyWebAPI($w);
         $api->replaceUserPlaylistTracks(urlencode($tmp[2]), $tmp[4], $emptytracks);
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        logMsg('Error(clearPlaylist): playlist uri '.$playlist_uri.' (exception '.print_r($e).')');
+        logMsg('Error(clearPlaylist): playlist uri '.$playlist_uri.' (exception '.jTraceEx($e).')');
         handleSpotifyWebAPIException($w, $e);
 
         return false;
@@ -3474,7 +3474,7 @@ function createTheUserPlaylist($w, $playlist_name)
                 'public' => $public,
             ));
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        logMsg('Error(createUserPlaylist): createUserPlaylist '.$playlist_name.' (exception '.print_r($e).')');
+        logMsg('Error(createUserPlaylist): createUserPlaylist '.$playlist_name.' (exception '.jTraceEx($e).')');
         handleSpotifyWebAPIException($w, $e);
 
         return false;
@@ -3568,7 +3568,7 @@ function createRadioArtistPlaylist($w, $artist_name, $artist_uri)
             'limit' => $radio_number_tracks,
         ));
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        logMsg('Error(createRadioArtistPlaylist): (exception '.print_r($e).')');
+        logMsg('Error(createRadioArtistPlaylist): (exception '.jTraceEx($e).')');
         handleSpotifyWebAPIException($w, $e);
         exit;
     }
@@ -3586,7 +3586,7 @@ function createRadioArtistPlaylist($w, $artist_name, $artist_uri)
                     'public' => $public,
                 ));
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            logMsg('Error(createUserPlaylist): radio artist '.$artist_name.' (exception '.print_r($e).')');
+            logMsg('Error(createUserPlaylist): radio artist '.$artist_name.' (exception '.jTraceEx($e).')');
             handleSpotifyWebAPIException($w, $e);
 
             return false;
@@ -3683,7 +3683,7 @@ function createCompleteCollectionArtistPlaylist($w, $artist_name, $artist_uri)
                     'public' => $public,
                 ));
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            logMsg('Error(createCompleteCollectionArtistPlaylist): Complete Collection '.$artist_name.' (exception '.print_r($e).')');
+            logMsg('Error(createCompleteCollectionArtistPlaylist): Complete Collection '.$artist_name.' (exception '.jTraceEx($e).')');
             handleSpotifyWebAPIException($w, $e);
 
             return false;
@@ -3821,7 +3821,7 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name)
             'limit' => $radio_number_tracks,
         ));
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        logMsg( 'Error(createRadioSongPlaylist): (exception '.print_r($e).')');
+        logMsg( 'Error(createRadioSongPlaylist): (exception '.jTraceEx($e).')');
         handleSpotifyWebAPIException($w, $e);
         exit;
     }
@@ -3839,7 +3839,7 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name)
                     'public' => $public,
                 ));
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            logMsg('Error(createUserPlaylist): radio song '.escapeQuery($track_name).' (exception '.print_r($e).')');
+            logMsg('Error(createUserPlaylist): radio song '.escapeQuery($track_name).' (exception '.jTraceEx($e).')');
             handleSpotifyWebAPIException($w, $e);
 
             return false;
@@ -3942,7 +3942,7 @@ function getThePlaylistTracks($w, $playlist_uri)
             $offsetGetUserPlaylistTracks += $limitGetUserPlaylistTracks;
         } while ($offsetGetUserPlaylistTracks < $userPlaylistTracks->total);
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        logMsg('Error(getThePlaylistTracks): playlist uri '.$playlist_uri.' (exception '.print_r($e).')');
+        logMsg('Error(getThePlaylistTracks): playlist uri '.$playlist_uri.' (exception '.jTraceEx($e).')');
         handleSpotifyWebAPIException($w, $e);
 
         return false;
@@ -3979,7 +3979,7 @@ function getTheAlbumTracks($w, $album_uri)
             $offsetGetAlbumTracks += $limitGetAlbumTracks;
         } while ($offsetGetAlbumTracks < $albumTracks->total);
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        logMsg('Error(getTheAlbumTracks): (exception '.print_r($e).')');
+        logMsg('Error(getTheAlbumTracks): (exception '.jTraceEx($e).')');
         handleSpotifyWebAPIException($w, $e);
 
         return false;
@@ -4042,7 +4042,7 @@ function getTheArtistAlbums($w, $artist_uri, $country_code, $actionMode = false,
             echo $w2->toxml();
             exit;
         } else {
-            logMsg( 'Error(getTheArtistAlbums): (exception '.print_r($e).')');
+            logMsg( 'Error(getTheArtistAlbums): (exception '.jTraceEx($e).')');
             handleSpotifyWebAPIException($w, $e);
 
             return false;
@@ -4120,7 +4120,7 @@ function getTheAlbumFullTracks($w, $album_uri, $actionMode = false)
             echo $w2->toxml();
             exit;
         } else {
-            logMsg( 'Error(getTheAlbumFullTracks): (exception '.print_r($e).')');
+            logMsg( 'Error(getTheAlbumFullTracks): (exception '.jTraceEx($e).')');
             handleSpotifyWebAPIException($w, $e);
 
             return false;
@@ -4170,7 +4170,7 @@ function getThePlaylistFullTracks($w, $playlist_uri)
             $offsetGetUserPlaylistTracks += $limitGetUserPlaylistTracks;
         } while ($offsetGetUserPlaylistTracks < $userPlaylistTracks->total);
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        logMsg('Error(getThePlaylistFullTracks): playlist uri '.$playlist_uri.' (exception '.print_r($e).')');
+        logMsg('Error(getThePlaylistFullTracks): playlist uri '.$playlist_uri.' (exception '.jTraceEx($e).')');
         handleSpotifyWebAPIException($w, $e);
 
         return false;
@@ -4200,7 +4200,7 @@ function getTheArtistFullTracks($w, $artist_uri, $country_code)
             $tracks[] = $track;
         }
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        logMsg('Error(getTheArtistFullTracks): artist uri '.$artist_uri.' (exception '.print_r($e).')');
+        logMsg('Error(getTheArtistFullTracks): artist uri '.$artist_uri.' (exception '.jTraceEx($e).')');
         handleSpotifyWebAPIException($w, $e);
 
         return false;
@@ -4245,7 +4245,7 @@ function getTheFullTrack($w, $track_uri, $country_code)
 
         return $track;
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        logMsg( 'Error(getTheFullTrack): (exception '.print_r($e).')');
+        logMsg( 'Error(getTheFullTrack): (exception '.jTraceEx($e).')');
         handleSpotifyWebAPIException($w, $e);
     }
 
@@ -5250,7 +5250,7 @@ function getArtworkURL($w, $type, $id, $highRes = false)
             $api = getSpotifyWebAPI($w);
             $track = $api->getTrack($id);
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            logMsg('Error(getArtworkURL track): (exception '.print_r($e).')');
+            logMsg('Error(getArtworkURL track): (exception '.jTraceEx($e).')');
 
             return $url;
         }
@@ -5290,7 +5290,7 @@ function getArtworkURL($w, $type, $id, $highRes = false)
             $api = getSpotifyWebAPI($w);
             $album = $api->getAlbum($id);
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            logMsg('Error(getArtworkURL album): (exception '.print_r($e).')');
+            logMsg('Error(getArtworkURL album): (exception '.jTraceEx($e).')');
             return $url;
         }
         if (isset($album->images)) {
@@ -5347,7 +5347,7 @@ function getPlaylistArtworkURL($w, $playlist_uri)
                 ),
             ));
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        logMsg( 'Error(getPlaylistArtworkURL): (exception '.print_r($e).')');
+        logMsg( 'Error(getPlaylistArtworkURL): (exception '.jTraceEx($e).')');
 
         return $url;
     }
@@ -5388,7 +5388,7 @@ function getArtistArtworkURL($w, $artist_id)
         $api = getSpotifyWebAPI($w);
         $artist = $api->getArtist($artist_id);
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        logMsg( 'Error(getArtistArtworkURL): (exception '.print_r($e).')');
+        logMsg( 'Error(getArtistArtworkURL): (exception '.jTraceEx($e).')');
 
         return $url;
     }
@@ -5475,7 +5475,7 @@ function updateLibrary($w)
         // thanks to https://blog.amartynov.ru/php-sqlite-case-insensitive-like-utf8/
         $db->sqliteCreateFunction('like', "lexa_ci_utf8_like", 2);
     } catch (PDOException $e) {
-        logMsg( 'Error(updateLibrary): (exception '.print_r($e).')');
+        logMsg( 'Error(updateLibrary): (exception '.jTraceEx($e).')');
         handleDbIssuePdoEcho($db, $w);
         $db = null;
 
@@ -5503,7 +5503,7 @@ function updateLibrary($w)
                 ));
             $dbartworks->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
-            logMsg('Error(updateLibrary): (exception '.print_r($e).')');
+            logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
             handleDbIssuePdoEcho($dbartworks, $w);
             $dbartworks = null;
             $db = null;
@@ -5517,7 +5517,7 @@ function updateLibrary($w)
             $dbartworks->exec('create table tracks (track_uri text PRIMARY KEY NOT NULL, already_fetched boolean)');
             $dbartworks->exec('create table albums (album_uri text PRIMARY KEY NOT NULL, already_fetched boolean)');
         } catch (PDOException $e) {
-            logMsg('Error(updateLibrary): (exception '.print_r($e).')');
+            logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
             handleDbIssuePdoEcho($dbartworks, $w);
             $dbartworks = null;
             $db = null;
@@ -5533,7 +5533,7 @@ function updateLibrary($w)
     try {
         $api = getSpotifyWebAPI($w);
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        logMsg('Error(getUserPlaylists): (exception '.print_r($e).')');
+        logMsg('Error(getUserPlaylists): (exception '.jTraceEx($e).')');
         handleSpotifyWebAPIException($w, $e);
 
         return false;
@@ -5554,7 +5554,7 @@ function updateLibrary($w)
                     ));
                 $retry = false;
             } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-                logMsg('Error(getUserPlaylists): retry '.$nb_retry.' (exception '.print_r($e).')');
+                logMsg('Error(getUserPlaylists): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
                 if ($e->getCode() == 429) { // 429 is Too Many Requests
                     $lastResponse = $api->getRequest()->getLastResponse();
                     $retryAfter = $lastResponse['headers']['Retry-After'];
@@ -5609,7 +5609,7 @@ function updateLibrary($w)
                     ));
                 $retry = false;
             } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-                logMsg('Error(getMySavedTracks): retry '.$nb_retry.' (exception '.print_r($e).')');
+                logMsg('Error(getMySavedTracks): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
 
                 if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
@@ -5665,7 +5665,7 @@ function updateLibrary($w)
         $insertTrack = 'insert into tracks values (:yourmusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_type,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:added_at,:duration,:nb_times_played,:local_track)';
         $stmtTrack = $db->prepare($insertTrack);
     } catch (PDOException $e) {
-        logMsg('Error(updateLibrary): (exception '.print_r($e).')');
+        logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
         handleDbIssuePdoEcho($db, $w);
         $dbartworks = null;
         $db = null;
@@ -5685,7 +5685,7 @@ function updateLibrary($w)
             $insertAlbumArtwork = 'insert or ignore into albums values (:album_uri,:already_fetched)';
             $stmtAlbumArtwork = $dbartworks->prepare($insertAlbumArtwork);
         } catch (PDOException $e) {
-            logMsg('Error(updateLibrary): (exception '.print_r($e).')');
+            logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
             handleDbIssuePdoEcho($dbartworks, $w);
             $dbartworks = null;
             $db = null;
@@ -5712,7 +5712,7 @@ function updateLibrary($w)
         try {
             $api = getSpotifyWebAPI($w);
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            logMsg('Error(getUserPlaylistTracks): playlist id '.$playlist->id.' (exception '.print_r($e).')');
+            logMsg('Error(getUserPlaylistTracks): playlist id '.$playlist->id.' (exception '.jTraceEx($e).')');
             handleSpotifyWebAPIException($w, $e);
 
             return false;
@@ -5741,7 +5741,7 @@ function updateLibrary($w)
                         ));
                     $retry = false;
                 } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-                    logMsg('Error(getUserPlaylists): retry '.$nb_retry.' (exception '.print_r($e).')');
+                    logMsg('Error(getUserPlaylists): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
 
                      if ($e->getCode() == 429) { // 429 is Too Many Requests
                         $lastResponse = $api->getRequest()->getLastResponse();
@@ -5848,7 +5848,7 @@ function updateLibrary($w)
                         $album_artwork_path = getTrackOrAlbumArtwork($w, $thealbumuri, false, false, false, $use_artworks);
                     }
                 } catch (PDOException $e) {
-                    logMsg('Error(updateLibrary): (exception '.print_r($e).')');
+                    logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
                     handleDbIssuePdoEcho($dbartworks, $w);
                     $dbartworks = null;
                     $db = null;
@@ -5880,7 +5880,7 @@ function updateLibrary($w)
                     $stmtTrack->bindValue(':local_track', $local_track);
                     $stmtTrack->execute();
                 } catch (PDOException $e) {
-                    logMsg('Error(updateLibrary): (exception '.print_r($e).')');
+                    logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
                     handleDbIssuePdoEcho($db, $w);
                     $dbartworks = null;
                     $db = null;
@@ -5912,7 +5912,7 @@ function updateLibrary($w)
             $stmtPlaylist->bindValue(':public', $playlist->public);
             $stmtPlaylist->execute();
         } catch (PDOException $e) {
-            logMsg('Error(updateLibrary): (exception '.print_r($e).')');
+            logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
             handleDbIssuePdoEcho($db, $w);
             $dbartworks = null;
             $db = null;
@@ -5997,7 +5997,7 @@ function updateLibrary($w)
                 $album_artwork_path = getTrackOrAlbumArtwork($w, $thealbumuri, false, false, false, $use_artworks);
             }
         } catch (PDOException $e) {
-            logMsg('Error(updateLibrary): (exception '.print_r($e).')');
+            logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
             handleDbIssuePdoEcho($dbartworks, $w);
             $dbartworks = null;
             $db = null;
@@ -6027,7 +6027,7 @@ function updateLibrary($w)
             $stmtTrack->bindValue(':local_track', $local_track);
             $stmtTrack->execute();
         } catch (PDOException $e) {
-            logMsg('Error(updateLibrary): (exception '.print_r($e).')');
+            logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
             handleDbIssuePdoEcho($db, $w);
             $dbartworks = null;
             $db = null;
@@ -6090,7 +6090,7 @@ function updateLibrary($w)
         $stmt->bindValue(':playlists', $playlists_count[0]);
         $stmt->execute();
     } catch (PDOException $e) {
-        logMsg('Error(updateLibrary): (exception '.print_r($e).')');
+        logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
         handleDbIssuePdoEcho($db, $w);
         $dbartworks = null;
         $db = null;
@@ -6188,7 +6188,7 @@ function refreshLibrary($w)
                 ));
             $dbartworks->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
-            logMsg('Error(refreshLibrary): (exception '.print_r($e).')');
+            logMsg('Error(refreshLibrary): (exception '.jTraceEx($e).')');
             handleDbIssuePdoEcho($dbartworks, $w);
             $dbartworks = null;
             $db = null;
@@ -6203,7 +6203,7 @@ function refreshLibrary($w)
                 $dbartworks->exec('create table tracks (track_uri text PRIMARY KEY NOT NULL, already_fetched boolean)');
                 $dbartworks->exec('create table albums (album_uri text PRIMARY KEY NOT NULL, already_fetched boolean)');
             } catch (PDOException $e) {
-                logMsg('Error(updateLibrary): (exception '.print_r($e).')');
+                logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
                 handleDbIssuePdoEcho($dbartworks, $w);
                 $dbartworks = null;
                 $db = null;
@@ -6223,7 +6223,7 @@ function refreshLibrary($w)
             $insertAlbumArtwork = 'insert or ignore into albums values (:album_uri,:already_fetched)';
             $stmtAlbumArtwork = $dbartworks->prepare($insertAlbumArtwork);
         } catch (PDOException $e) {
-            logMsg('Error(updateLibrary): (exception '.print_r($e).')');
+            logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
             handleDbIssuePdoEcho($dbartworks, $w);
             $dbartworks = null;
             $db = null;
@@ -6268,7 +6268,7 @@ function refreshLibrary($w)
         $deleteFromTracksYourMusic = 'delete from tracks where yourmusic=:yourmusic';
         $stmtDeleteFromTracksYourMusic = $db->prepare($deleteFromTracksYourMusic);
     } catch (PDOException $e) {
-        logMsg('Error(refreshLibrary): (exception '.print_r($e).')');
+        logMsg('Error(refreshLibrary): (exception '.jTraceEx($e).')');
         handleDbIssuePdoEcho($db, $w);
         $dbartworks = null;
         $db = null;
@@ -6285,7 +6285,7 @@ function refreshLibrary($w)
         try {
             $api = getSpotifyWebAPI($w);
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            logMsg('Error(refreshLibrary): (exception '.print_r($e).')');
+            logMsg('Error(refreshLibrary): (exception '.jTraceEx($e).')');
             handleSpotifyWebAPIException($w, $e);
 
             return false;
@@ -6301,7 +6301,7 @@ function refreshLibrary($w)
                     ));
                 $retry = false;
             } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-                logMsg('Error(getUserPlaylists): retry '.$nb_retry.' (exception '.print_r($e).')');
+                logMsg('Error(getUserPlaylists): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
 
                 if ($e->getCode() == 429) { // 429 is Too Many Requests
                     $lastResponse = $api->getRequest()->getLastResponse();
@@ -6360,7 +6360,7 @@ function refreshLibrary($w)
                 break;
             }
         } catch (PDOException $e) {
-            logMsg('Error(refreshLibrary): (exception '.print_r($e).')');
+            logMsg('Error(refreshLibrary): (exception '.jTraceEx($e).')');
             handleDbIssuePdoEcho($db, $w);
             $dbartworks = null;
             $db = null;
@@ -6405,7 +6405,7 @@ function refreshLibrary($w)
                             ));
                         $retry = false;
                     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-                        logMsg('Error(getUserPlaylistTracks): retry '.$nb_retry.' (exception '.print_r($e).')');
+                        logMsg('Error(getUserPlaylistTracks): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
 
                         if ($e->getCode() == 429) { // 429 is Too Many Requests
                             $lastResponse = $api->getRequest()->getLastResponse();
@@ -6511,7 +6511,7 @@ function refreshLibrary($w)
                             $album_artwork_path = getTrackOrAlbumArtwork($w, $thealbumuri, false, false, false, $use_artworks);
                         }
                     } catch (PDOException $e) {
-                        logMsg('Error(updateLibrary): (exception '.print_r($e).')');
+                        logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
                         handleDbIssuePdoEcho($dbartworks, $w);
                         $dbartworks = null;
                         $db = null;
@@ -6543,7 +6543,7 @@ function refreshLibrary($w)
                         $stmtTrack->bindValue(':local_track', $local_track);
                         $stmtTrack->execute();
                     } catch (PDOException $e) {
-                        logMsg('Error(refreshLibrary): (exception '.print_r($e).')');
+                        logMsg('Error(refreshLibrary): (exception '.jTraceEx($e).')');
                         handleDbIssuePdoEcho($db, $w);
                         $dbartworks = null;
                         $db = null;
@@ -6571,7 +6571,7 @@ function refreshLibrary($w)
                 $stmtPlaylist->bindValue(':public', $playlist->public);
                 $stmtPlaylist->execute();
             } catch (PDOException $e) {
-                logMsg('Error(refreshLibrary): (exception '.print_r($e).')');
+                logMsg('Error(refreshLibrary): (exception '.jTraceEx($e).')');
                 handleDbIssuePdoEcho($db, $w);
                 $dbartworks = null;
                 $db = null;
@@ -6603,7 +6603,7 @@ function refreshLibrary($w)
                         $selfUpdatedPlaylistUpdated = true;   
                     }
                 } catch (PDOException $e) {
-                    logMsg('Error(refreshLibrary - self-updated playlist): (exception '.print_r($e).')');
+                    logMsg('Error(refreshLibrary - self-updated playlist): (exception '.jTraceEx($e).')');
                     handleDbIssuePdoEcho($db, $w);
                     $dbartworks = null;
                     $db = null;
@@ -6634,7 +6634,7 @@ function refreshLibrary($w)
                     $stmtDeleteFromTracks->bindValue(':playlist_uri', $playlist->uri);
                     $stmtDeleteFromTracks->execute();
                 } catch (PDOException $e) {
-                    logMsg('Error(refreshLibrary): (exception '.print_r($e).')');
+                    logMsg('Error(refreshLibrary): (exception '.jTraceEx($e).')');
                     handleDbIssuePdoEcho($db, $w);
                     $dbartworks = null;
                     $db = null;
@@ -6669,7 +6669,7 @@ function refreshLibrary($w)
                                 ));
                             $retry = false;
                         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-                            logMsg('Error(getUserPlaylistTracks): retry '.$nb_retry.' (exception '.print_r($e).')');
+                            logMsg('Error(getUserPlaylistTracks): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
 
                             if ($e->getCode() == 429) { // 429 is Too Many Requests
                                 $lastResponse = $api->getRequest()->getLastResponse();
@@ -6777,7 +6777,7 @@ function refreshLibrary($w)
                                 $album_artwork_path = getTrackOrAlbumArtwork($w, $thealbumuri, false, false, false, $use_artworks);
                             }
                         } catch (PDOException $e) {
-                            logMsg('Error(updateLibrary): (exception '.print_r($e).')');
+                            logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
                             handleDbIssuePdoEcho($dbartworks, $w);
                             $dbartworks = null;
                             $db = null;
@@ -6808,7 +6808,7 @@ function refreshLibrary($w)
                             $stmtTrack->bindValue(':local_track', $local_track);
                             $stmtTrack->execute();
                         } catch (PDOException $e) {
-                            logMsg('Error(refreshLibrary): (exception '.print_r($e).')');
+                            logMsg('Error(refreshLibrary): (exception '.jTraceEx($e).')');
                             handleDbIssuePdoEcho($db, $w);
                             $dbartworks = null;
                             $db = null;
@@ -6829,7 +6829,7 @@ function refreshLibrary($w)
                     $stmtUpdatePlaylistsNbTracks->bindValue(':public', $playlist->public);
                     $stmtUpdatePlaylistsNbTracks->execute();
                 } catch (PDOException $e) {
-                    logMsg('Error(refreshLibrary): (exception '.print_r($e).')');
+                    logMsg('Error(refreshLibrary): (exception '.jTraceEx($e).')');
                     handleDbIssuePdoEcho($db, $w);
                     $dbartworks = null;
                     $db = null;
@@ -6873,7 +6873,7 @@ function refreshLibrary($w)
             }
         }
     } catch (PDOException $e) {
-        logMsg('Error(refreshLibrary): (exception '.print_r($e).')');
+        logMsg('Error(refreshLibrary): (exception '.jTraceEx($e).')');
         handleDbIssuePdoEcho($db, $w);
         $dbartworks = null;
         $db = null;
@@ -6896,7 +6896,7 @@ function refreshLibrary($w)
                 ));
             $retry = false;
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            logMsg('Error(getMySavedTracks): retry '.$nb_retry.' (exception '.print_r($e).')');
+            logMsg('Error(getMySavedTracks): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
 
             if ($e->getCode() == 429) { // 429 is Too Many Requests
             $lastResponse = $api->getRequest()->getLastResponse();
@@ -6932,7 +6932,7 @@ function refreshLibrary($w)
         $stmt->execute();
         $yourmusic_tracks = $stmt->fetch();
     } catch (PDOException $e) {
-        logMsg('Error(refreshLibrary): (exception '.print_r($e).')');
+        logMsg('Error(refreshLibrary): (exception '.jTraceEx($e).')');
         handleDbIssuePdoEcho($db, $w);
         $db = null;
 
@@ -6951,7 +6951,7 @@ function refreshLibrary($w)
             $stmtDeleteFromTracksYourMusic->bindValue(':yourmusic', 1);
             $stmtDeleteFromTracksYourMusic->execute();
         } catch (PDOException $e) {
-            logMsg('Error(refreshLibrary): (exception '.print_r($e).')');
+            logMsg('Error(refreshLibrary): (exception '.jTraceEx($e).')');
             handleDbIssuePdoEcho($db, $w);
             $db = null;
 
@@ -6974,7 +6974,7 @@ function refreshLibrary($w)
                         ));
                     $retry = false;
                 } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-                    logMsg('Error(getMySavedTracks): retry '.$nb_retry.' (exception '.print_r($e).')');
+                    logMsg('Error(getMySavedTracks): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
 
                      if ($e->getCode() == 429) { // 429 is Too Many Requests
                         $lastResponse = $api->getRequest()->getLastResponse();
@@ -7081,7 +7081,7 @@ function refreshLibrary($w)
                         $album_artwork_path = getTrackOrAlbumArtwork($w, $thealbumuri, false, false, false, $use_artworks);
                     }
                 } catch (PDOException $e) {
-                    logMsg('Error(updateLibrary): (exception '.print_r($e).')');
+                    logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
                     handleDbIssuePdoEcho($dbartworks, $w);
                     $dbartworks = null;
                     $db = null;
@@ -7111,7 +7111,7 @@ function refreshLibrary($w)
                     $stmtTrack->bindValue(':local_track', $local_track);
                     $stmtTrack->execute();
                 } catch (PDOException $e) {
-                    logMsg('Error(refreshLibrary): (exception '.print_r($e).')');
+                    logMsg('Error(refreshLibrary): (exception '.jTraceEx($e).')');
                     handleDbIssuePdoEcho($db, $w);
                     $db = null;
 
@@ -7172,7 +7172,7 @@ function refreshLibrary($w)
         $stmt->bindValue(':playlists', $playlists_count[0]);
         $stmt->execute();
     } catch (PDOException $e) {
-        logMsg('Error(updateLibrary): (exception '.print_r($e).')');
+        logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
         handleDbIssuePdoEcho($db, $w);
         $dbartworks = null;
         $db = null;
@@ -8673,4 +8673,48 @@ function lexa_ci_utf8_like($mask, $value) {
     );
     $mask = "/^$mask$/ui";
     return preg_match($mask, $value);
+}
+
+/**
+* jTraceEx() - provide a Java style exception trace
+* @param $exception
+* @param $seen      - array passed to recursive calls to accumulate trace lines already seen
+*                     leave as NULL when calling this function
+* @return array of strings, one entry per trace line
+*/
+function jTraceEx($e, $seen=null) {
+    $starter = $seen ? 'Caused by: ' : '';
+    $result = array();
+    if (!$seen) $seen = array();
+    $trace  = $e->getTrace();
+    $prev   = $e->getPrevious();
+    $result[] = sprintf('%s%s: %s', $starter, get_class($e), $e->getMessage());
+    $file = $e->getFile();
+    $line = $e->getLine();
+    while (true) {
+        $current = "$file:$line";
+        if (is_array($seen) && in_array($current, $seen)) {
+            $result[] = sprintf(' ... %d more', count($trace)+1);
+            break;
+        }
+        $result[] = sprintf(' at %s%s%s(%s%s%s)',
+                                    count($trace) && array_key_exists('class', $trace[0]) ? str_replace('\\', '.', $trace[0]['class']) : '',
+                                    count($trace) && array_key_exists('class', $trace[0]) && array_key_exists('function', $trace[0]) ? '.' : '',
+                                    count($trace) && array_key_exists('function', $trace[0]) ? str_replace('\\', '.', $trace[0]['function']) : '(main)',
+                                    $line === null ? $file : basename($file),
+                                    $line === null ? '' : ':',
+                                    $line === null ? '' : $line);
+        if (is_array($seen))
+            $seen[] = "$file:$line";
+        if (!count($trace))
+            break;
+        $file = array_key_exists('file', $trace[0]) ? $trace[0]['file'] : 'Unknown Source';
+        $line = array_key_exists('file', $trace[0]) && array_key_exists('line', $trace[0]) && $trace[0]['line'] ? $trace[0]['line'] : null;
+        array_shift($trace);
+    }
+    $result = join("\n", $result);
+    if ($prev)
+        $result  .= "\n" . jTraceEx($prev, $seen);
+
+    return $result;
 }

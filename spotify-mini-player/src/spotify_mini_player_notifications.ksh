@@ -26,8 +26,8 @@ while getopts ':d:a:m:' arguments
 
 function traceit
 {
-	datestr=$(date '+%Y/%m/%d %H:%M:%S');
-	print "${datestr} : ${1}";
+	datestr=$(date -u '+%Y-%m-%d %H:%M:%S');
+	print "${datestr}|${1}";
 }
 
 function StartAppleScript
@@ -150,7 +150,6 @@ then
 		if [ "$pid" != "" ]
 		then
 			pkill -P $pid
-			traceit "INFO: killed PID $pid"
 			if [ -f "${DATADIR}/spotify_mini_player_notifications.lock" ]
 			then
 				rm "${DATADIR}/spotify_mini_player_notifications.lock"
@@ -168,11 +167,8 @@ then
 		# process is still running
 		return 0
 	else
-		# process not running, but lock file not deleted?
-		traceit "INFO: orphan lock file warning, process spotify_mini_player_notifications not running."
+		# process not running, but lock file not deleted?	
 		rm "${DATADIR}/spotify_mini_player_notifications.lock"
-		traceit "INFO: Lock file deleted"
-
 		# Now go ahead
 	fi
 fi
@@ -186,7 +182,7 @@ then
 elif [ "${APP}" = "CONNECT" ]
 then
 	StartSpotifyConnect
-	traceit "INFO: StartSpotifyConnect"
+	traceit "Info(spotify_mini_player_notifications.ksh): StartSpotifyConnect"
 else
 	StartMopidy
 fi
