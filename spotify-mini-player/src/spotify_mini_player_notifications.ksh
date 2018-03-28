@@ -182,7 +182,6 @@ then
 elif [ "${APP}" = "CONNECT" ]
 then
 	StartSpotifyConnect
-	traceit "Info(spotify_mini_player_notifications.ksh): StartSpotifyConnect"
 else
 	StartMopidy
 fi
