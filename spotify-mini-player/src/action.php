@@ -1574,7 +1574,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
             if($device_id != '') {
                 if (isShuffleActive(false) == 'true') {
                     setShuffleStateSpotifyConnect($w, $device_id, false);
-                    $command_output = 'Shuffle is now disabled.'.$ret ;
+                    $command_output = 'Shuffle is now disabled.';
                 } else {
                     setShuffleStateSpotifyConnect($w, $device_id, true);
                     $command_output = 'Shuffle is now enabled.';
