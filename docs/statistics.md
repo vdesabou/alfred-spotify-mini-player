@@ -2,7 +2,7 @@
 layout: article
 permalink: /stats/
 title: "Statistics"
-modified: 2016-09-28
+modified: 2018-03-30
 excerpt: "Workflow Statistics."
 image:
   feature:
@@ -43,6 +43,6 @@ noindex: false
 
 <script>StatHatEmbed.render({s1: 'C806H', w: 760, h: 235 , tf:'month_compare'});</script>
 
-* Number of theme installations
+* Number of workflow installations
 
-<script>StatHatEmbed.render({s1: 'VzRe', w: 760, h: 235 , tf:'month_compare'});</script>
+<script>StatHatEmbed.render({s1: 'CHJ1', w: 760, h: 235 , tf:'month_compare'});</script>

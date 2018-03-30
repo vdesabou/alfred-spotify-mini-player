@@ -7636,7 +7636,7 @@ function strip_string($string)
  */
 function checkForUpdate($w, $last_check_update_time, $download = false)
 {
-    if (time() - $last_check_update_time > 604800 || $download == true) {
+    if (time() - $last_check_update_time > 172800 || $download == true) {
         // update last_check_update_time
         $ret = updateSetting($w, 'last_check_update_time', time());
         if ($ret == false) {
@@ -7655,6 +7655,19 @@ function checkForUpdate($w, $last_check_update_time, $download = false)
         $workflow = new SimpleXMLElement($xml);
         $local_version = $workflow->version;
         $remote_json = 'https://raw.githubusercontent.com/vdesabou/alfred-spotify-mini-player/master/remote.json';
+
+
+        // Read settings from JSON
+
+        $settings = getSettings($w);
+    
+        $workflow_version = $settings->workflow_version;
+
+        if($local_version != $workflow_version) {
+            // update workflow_version
+            $ret = updateSetting($w, 'workflow_version', ''.$local_version);
+            stathat_ez_count('AlfredSpotifyMiniPlayer', 'workflow_installations', 1);
+        }
 
         // get remote information
         $jsonDataRemote = $w->request($remote_json);
@@ -8209,6 +8222,7 @@ function getSettings($w)
             'theme_color' => 'green',
             'search_order' => 'playlist▹artist▹track▹album',
             'always_display_lyrics_in_browser' => 0,
+            'workflow_version' => '',
         );
 
         $ret = $w->write($default, 'settings.json');
@@ -8286,6 +8300,12 @@ function getSettings($w)
     // add always_display_lyrics_in_browser if needed
     if (!isset($settings->always_display_lyrics_in_browser)) {
         updateSetting($w, 'always_display_lyrics_in_browser', 0);
+        $settings = $w->read('settings.json');
+    }
+
+    // add workflow_version if needed
+    if (!isset($settings->workflow_version)) {
+        updateSetting($w, 'workflow_version', '');
         $settings = $w->read('settings.json');
     }
 

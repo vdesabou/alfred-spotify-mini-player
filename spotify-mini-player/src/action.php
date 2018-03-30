@@ -903,7 +903,6 @@ if ($type == 'TRACK' && $other_settings == '' &&
         return;
     } elseif ($other_action == 'change_theme_color_for_real') {
 
-        stathat_ez_count('AlfredSpotifyMiniPlayer', 'theme_changed', 1);
         switchThemeColor($w,getenv('chosen_color'));
         return;
     } elseif ($other_action == 'change_search_order_for_real') {
