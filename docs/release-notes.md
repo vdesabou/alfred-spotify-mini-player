@@ -2,7 +2,7 @@
 layout: article
 permalink: /release-notes/
 title: "Release Notes"
-modified: 2018-02-12
+modified: 2018-04-03
 excerpt: "Release Notes."
 image:
   feature:
@@ -12,6 +12,32 @@ share: false
 toc: false
 noindex: false
 ---
+
+<a name="v7.13"></a>
+7.13:
+
+* <span class="badge danger">FIXED</span> Debug ZIP upload is broken [#243](https://github.com/vdesabou/alfred-spotify-mini-player/issues/243)
+
+<a name="v7.12"></a>
+7.12:
+
+* <span class="badge success">IMPROVED</span> Add StatHat counter to track number of workflow installations #242 [#242](https://github.com/vdesabou/alfred-spotify-mini-player/issues/242)
+
+
+<a name="v7.11"></a>
+7.11:
+
+* <span class="badge success">IMPROVED</span> Offer to automatically open Spotify app when using Spotify Connect [#241](https://github.com/vdesabou/alfred-spotify-mini-player/issues/241)
+* <span class="badge danger">FIXED</span> Problem with online playlist with emoji in its name [#240](https://github.com/vdesabou/alfred-spotify-mini-player/issues/240)
+
+<a name="v7.10"></a>
+7.10:
+
+* <span class="badge danger">FIXED</span> Error "The current track is not in Your Music or one of your playlists" [#233](https://github.com/vdesabou/alfred-spotify-mini-player/issues/233)
+* <span class="badge danger">FIXED</span> Track rating is broken [#234](https://github.com/vdesabou/alfred-spotify-mini-player/issues/234)
+* <span class="badge danger">FIXED</span> Browse your Alfred playlist menu is broken [#237](https://github.com/vdesabou/alfred-spotify-mini-player/issues/237)
+* <span class="badge danger">FIXED</span> Unable to browse playlists [#238](https://github.com/vdesabou/alfred-spotify-mini-player/issues/238)
+
 
 <a name="v7.9"></a>
 7.9:
