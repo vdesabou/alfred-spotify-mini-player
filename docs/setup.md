@@ -54,6 +54,8 @@ Also, if you're using a proxy, don't forget to enable this option in Alfred pref
 	<figcaption>Use Mac OS http proxy settings for scripts option.</figcaption>
 </figure>
 
+**Warning:** If you have troubles with authentication using Chrome, use Safari as default browser for the time of authentication process.
+{: .notice-danger}
 
 ## Create the library
 
