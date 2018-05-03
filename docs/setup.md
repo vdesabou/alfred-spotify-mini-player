@@ -3,7 +3,7 @@ layout: article
 permalink: /setup/
 title: "Setup"
 date: 2015-01-01
-modified: 2017-09-11
+modified: 2018-05-03
 toc: true
 share: false
 noindex: false
@@ -21,50 +21,95 @@ Setting up the workflow is easy, you just need to follow these steps:-
 
 ## Create a Spotify Application
 
-* Create an [Application on Spotify](https://developer.spotify.com/my-applications) (this is for both free and premium users)
-    * You can set Application Name and Description to whatever you want
-    * ***Redirect URI must be set to*** `http://localhost:15298/callback.php`
+* Create an [application on Spotify](https://developer.spotify.com/my-applications) (this is for both free and premium users)
 
-**Warning:** Make sure to click 'Save' button once you set the Redirect URI
-{: .notice-danger}
+   * Click on *Create an App* :-
 
 <figure>
 	<a href="{{ site.url }}/images/setup1.jpg"><img src="{{ site.url }}/images/setup1.jpg"></a>
-	<figcaption>Example of Spotify Application (click to enlarge).</figcaption>
+	<figcaption>Create an app.</figcaption>
 </figure>
 
 
-Note: if you're using a firewall or a software that blocks communication, note that you'll have to unblock the following domains to use the workflow:-
+  * Step 1: Set *App or Hardware Name* and *App or Hardware Description* as following, and select *Desktop App* :-
 
-* https://api.spotify.com (for interaction with Spotify)
+<figure>
+	<a href="{{ site.url }}/images/setup7.jpg"><img src="{{ site.url }}/images/setup7.jpg"></a>
+	<figcaption>Step 1.</figcaption>
+</figure>
 
-* https://raw.githubusercontent.com (for downloading new release from Packal)
+  * Step 2: Respond with **No** :-
 
-* https://github.com/ (for downloading images when changing theme)
+<figure>
+	<a href="{{ site.url }}/images/setup8.jpg"><img src="{{ site.url }}/images/setup8.jpg"></a>
+	<figcaption>Step 2.</figcaption>
+</figure>
 
-* http://api.stathat.com (for statistics)
+  * Step 3: Tick all the boxes and click on *Submit* :-
 
-* https://transfer.sh (for DEBUG Zip file)
+<figure>
+	<a href="{{ site.url }}/images/setup9.jpg"><img src="{{ site.url }}/images/setup9.jpg"></a>
+	<figcaption>Step 3.</figcaption>
+</figure>
+
+  * On the application page, click on *Edit Settings* :-
+
+<figure>
+	<a href="{{ site.url }}/images/setup10.jpg"><img src="{{ site.url }}/images/setup10.jpg"></a>
+	<figcaption>Edit Settings.</figcaption>
+</figure>
+
+  * Redirect URI must be set to `http://localhost:15298/callback.php`, then click *Add*, and then click *Save* :-
+
+<figure>
+	<a href="{{ site.url }}/images/setup11.jpg"><img src="{{ site.url }}/images/setup11.jpg"></a>
+	<figcaption>Settings.</figcaption>
+</figure>
 
 
-Also, if you're using a proxy, don't forget to enable this option in Alfred preferences:-
+**Warning:** Make sure you've clicked *Save* button once you set the Redirect URI
+{: .notice-danger}
+
+  * The *Client ID* and *Client Secret* (needed in next steps) are then available :-
+
+<figure>
+	<a href="{{ site.url }}/images/setup12.jpg"><img src="{{ site.url }}/images/setup12.jpg"></a>
+	<figcaption>Access Client ID and Client Secret.</figcaption>
+</figure>
+
+## Notes
+
+* if you're using a firewall or a software that blocks communication, note that you'll have to unblock the following domains to use the workflow:-
+
+  * https://api.spotify.com (for interaction with Spotify)
+
+  * https://raw.githubusercontent.com (for downloading new release from Packal)
+
+  * https://github.com/ (for downloading images when changing theme)
+
+  * http://api.stathat.com (for statistics)
+
+  * https://transfer.sh (for DEBUG Zip file)
+
+
+* if you're using a proxy, don't forget to enable this option in Alfred preferences:-
 
 <figure>
 	<a href="{{ site.url }}/images/setup6.jpg"><img src="{{ site.url }}/images/setup6.jpg"></a>
 	<figcaption>Use Mac OS http proxy settings for scripts option.</figcaption>
 </figure>
 
-**Warning:** If you have troubles with authentication using Chrome, use Safari as default browser for the time of authentication process.
-{: .notice-danger}
+* If you have troubles with authentication using Chrome, use Safari as default browser for the time of authentication process.
+
+* If you use a proxy, make sure to activate **Use macOS http proxy settings for scripts** in Advanced tab of Alfred Settings
 
 ## Create the library
 
-**Warning:** If you use a proxy, make sure to activate **Use macOS http proxy settings for scripts** in Advanced tab of Alfred Settings
-{: .notice-danger}
+
 
 * Invoke the workflow (with keyword `spot_mini`, or with an [hotkey]({{ site.url }}/articles/hotkeys) ) 
 
-* Follow the steps as below by copy/pasting the Client ID and Client Secret into Alfred window when asked:
+* Follow the steps as below by copy/pasting the *Client ID* and *Client Secret* into Alfred window when asked:
 
 <figure>
 	<a href="{{ site.url }}/images/setup.gif"><img src="{{ site.url }}/images/setup.gif"></a>
