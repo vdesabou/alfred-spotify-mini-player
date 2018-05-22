@@ -935,7 +935,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress)
                     '' /* album_uri */,
                     '' /* artist_uri */,
                     '' /* playlist_uri */,
-                    $query /* spotify_command */,
+                    base64_encode($query) /* spotify_command */,
                     '' /* query */,
                     '' /* other_settings*/,
                     '' /* other_action */,
