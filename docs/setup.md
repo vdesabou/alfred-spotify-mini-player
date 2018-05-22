@@ -119,7 +119,7 @@ Setting up the workflow is easy, you just need to follow these steps:-
 
     *Hello xxx ! You are now successfully logged and you can close this window.*
 
-**Warning:** If you have troubles with authentication using Chrome, use Safari as default browser for the time of authentication process.
+**Warning:** If you have troubles with authentication using Chrome, make sure you disable *Wappalyzer* extension if you use it, or use Safari as default browser for the time of authentication process.
 {: .notice-danger}
 
 * Invoke the workflow again and Create the library.
