@@ -891,9 +891,9 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
 
 function isSpotifyAppInstalled()
 {
-	exec("osascript -e 'id of application \"Spotify\"'", $retArr, $retVal);
-	if ($retVal != 0) {
-		return false;
+    exec("osascript -e 'id of application \"Spotify\"'", $retArr, $retVal);
+    if ($retVal != 0) {
+        return false;
     }
     return true;
 }
@@ -1606,8 +1606,8 @@ function switchThemeColor($w,$theme_color)
         $hasError = true;
         logMsg('Error(switchThemeColor): (failed to load /tmp/SpotifyMiniPlayer.app.zip for '.$theme_color.')');
     }
-	$zip_command = 'unzip '  . $zip_file . ' -d ' . '\'./App/'.$theme_color.'/\'';
-	exec($zip_command);
+    $zip_command = 'unzip '  . $zip_file . ' -d ' . '\'./App/'.$theme_color.'/\'';
+    exec($zip_command);
     
     exec('open "'.'./App/'.$theme_color.'/Spotify Mini Player.app'.'"');
     //update settings
@@ -4693,7 +4693,7 @@ function downloadArtworks($w)
     }
     if (!$w->internet()) {
         displayNotificationWithArtwork($w, 'Download Artworks,
-	No internet connection', './images/warning.png');
+    No internet connection', './images/warning.png');
 
         return;
     }

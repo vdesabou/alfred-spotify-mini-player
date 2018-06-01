@@ -1351,18 +1351,18 @@ if ($type == 'TRACK' && $other_settings == '' &&
         } else if($output_application == 'APPLESCRIPT') {
             $volume_max = getenv('settings_volume_max');
             $command_output = exec("osascript -e 'tell application \"Spotify\"
-				if it is running then
-					if (sound volume + $volume_percent) > $volume_max then
-						set theVolume to $volume_max
-						set sound volume to theVolume
-						return \"Spotify volume is at maximum level \" & theVolume & \"%.\"
-					else
-						set theVolume to (sound volume + $volume_percent)
-						set sound volume to theVolume
-						return \"Spotify volume has been increased to \" & theVolume & \"%.\"
-					end if
-				end if
-			end tell'");
+                if it is running then
+                    if (sound volume + $volume_percent) > $volume_max then
+                        set theVolume to $volume_max
+                        set sound volume to theVolume
+                        return \"Spotify volume is at maximum level \" & theVolume & \"%.\"
+                    else
+                        set theVolume to (sound volume + $volume_percent)
+                        set sound volume to theVolume
+                        return \"Spotify volume has been increased to \" & theVolume & \"%.\"
+                    end if
+                end if
+            end tell'");
             displayNotificationWithArtwork($w, $command_output, './images/volume_up.png', 'Volume Up');
         } else {
             $device_id = getSpotifyConnectCurrentDeviceId($w);
@@ -1402,19 +1402,19 @@ if ($type == 'TRACK' && $other_settings == '' &&
         } else if($output_application == 'APPLESCRIPT') {
             $volume_min = getenv('settings_volume_min');
             $command_output = exec("osascript -e 'tell application \"Spotify\"
-				if it is running then
-					if (sound volume - $volume_percent) < $volume_min then
-						set theVolume to $volume_min
-						set sound volume to theVolume
-						return \"Spotify volume is at minimum level \" & theVolume & \"%.\"
-					else
-						set theVolume to (sound volume - $volume_percent)
-						set sound volume to theVolume
-						return \"Spotify volume has been decreased to \" & theVolume & \"%.\"
-					end if
-					set sound volume to theVolume
-				end if
-			end tell'");
+                if it is running then
+                    if (sound volume - $volume_percent) < $volume_min then
+                        set theVolume to $volume_min
+                        set sound volume to theVolume
+                        return \"Spotify volume is at minimum level \" & theVolume & \"%.\"
+                    else
+                        set theVolume to (sound volume - $volume_percent)
+                        set sound volume to theVolume
+                        return \"Spotify volume has been decreased to \" & theVolume & \"%.\"
+                    end if
+                    set sound volume to theVolume
+                end if
+            end tell'");
             displayNotificationWithArtwork($w, $command_output, './images/volume_down.png', 'Volume Down');
         } else {
             $device_id = getSpotifyConnectCurrentDeviceId($w);
@@ -1445,10 +1445,10 @@ if ($type == 'TRACK' && $other_settings == '' &&
         } else if($output_application == 'APPLESCRIPT') {
             $volume_max = getenv('settings_volume_max');
             exec("osascript -e 'tell application \"Spotify\"
-				if it is running then
-					set sound volume to $volume_max
-				end if
-			end tell'");
+                if it is running then
+                    set sound volume to $volume_max
+                end if
+            end tell'");
         } else {
             $device_id = getSpotifyConnectCurrentDeviceId($w);
             if($device_id != '') {
@@ -1473,10 +1473,10 @@ if ($type == 'TRACK' && $other_settings == '' &&
         } else if($output_application == 'APPLESCRIPT') {
             $volume_mid = getenv('settings_volume_mid');
             exec("osascript -e 'tell application \"Spotify\"
-				if it is running then
-					set sound volume to $volume_mid
-				end if
-			end tell'");
+                if it is running then
+                    set sound volume to $volume_mid
+                end if
+            end tell'");
         } else {
             $device_id = getSpotifyConnectCurrentDeviceId($w);
             if($device_id != '') {
@@ -1509,14 +1509,14 @@ if ($type == 'TRACK' && $other_settings == '' &&
             }
         } else if($output_application == 'APPLESCRIPT') {
             $command_output = exec("osascript -e 'tell application \"Spotify\"
-				if sound volume is less than or equal to $volume_min then
-					set sound volume to $volume_max
-					return \"Spotify volume is unmuted.\"
-				else
-					set sound volume to $volume_min
-					return \"Spotify volume is muted.\"
-				end if
-			end tell'");
+                if sound volume is less than or equal to $volume_min then
+                    set sound volume to $volume_max
+                    return \"Spotify volume is unmuted.\"
+                else
+                    set sound volume to $volume_min
+                    return \"Spotify volume is muted.\"
+                end if
+            end tell'");
         } else {
             $device_id = getSpotifyConnectCurrentDeviceId($w);
             if($device_id != '') {
@@ -1557,19 +1557,19 @@ if ($type == 'TRACK' && $other_settings == '' &&
             }
         } else if($output_application == 'APPLESCRIPT') {
             $command_output = exec("osascript -e '
-		tell application \"Spotify\"
-		if shuffling enabled is true then
-			if shuffling is true then
-				set shuffling to false
-				return \"Shuffle is now disabled.\"
-			else
-				set shuffling to true
-				return \"Shuffle is now enabled.\"
-			end if
-		else
-			return \"Shuffle is not currently enabled.\"
-		end if
-		end tell'");
+        tell application \"Spotify\"
+        if shuffling enabled is true then
+            if shuffling is true then
+                set shuffling to false
+                return \"Shuffle is now disabled.\"
+            else
+                set shuffling to true
+                return \"Shuffle is now enabled.\"
+            end if
+        else
+            return \"Shuffle is not currently enabled.\"
+        end if
+        end tell'");
         } else {
             $device_id = getSpotifyConnectCurrentDeviceId($w);
             if($device_id != '') {
@@ -1679,19 +1679,19 @@ if ($type == 'TRACK' && $other_settings == '' &&
             }
         } else if($output_application == 'APPLESCRIPT') {
             $command_output = exec("osascript -e '
-		tell application \"Spotify\"
-		if repeating enabled is true then
-			if repeating is true then
-				set repeating to false
-				return \"Repeating is now disabled.\"
-			else
-				set repeating to true
-				return \"Repeating is now enabled.\"
-			end if
-		else
-			return \"Repeating is not currently enabled.\"
-		end if
-		end tell'");
+        tell application \"Spotify\"
+        if repeating enabled is true then
+            if repeating is true then
+                set repeating to false
+                return \"Repeating is now disabled.\"
+            else
+                set repeating to true
+                return \"Repeating is now enabled.\"
+            end if
+        else
+            return \"Repeating is not currently enabled.\"
+        end if
+        end tell'");
         } else {
             $device_id = getSpotifyConnectCurrentDeviceId($w);
             if($device_id != '') {
