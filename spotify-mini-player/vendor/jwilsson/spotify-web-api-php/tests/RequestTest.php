@@ -1,5 +1,5 @@
 <?php
-class RequestTest extends PHPUnit_Framework_TestCase
+class RequestTest extends PHPUnit\Framework\TestCase
 {
     private function setupStub($expectedMethod, $expectedUri, $expectedParameters, $expectedHeaders, $expectedReturn)
     {
@@ -67,7 +67,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
 
     public function testApiMalformed()
     {
-        $this->setExpectedException('SpotifyWebAPI\SpotifyWebAPIException');
+        $this->expectException(SpotifyWebAPI\SpotifyWebAPIException::class);
 
         $request = new SpotifyWebAPI\Request();
         $response = $request->api('GET', '/v1/albums/NON_EXISTING_ALBUM');
@@ -87,7 +87,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
             'Authorization' => 'Basic ' . $payload,
         ];
 
-        $this->setExpectedException('SpotifyWebAPI\SpotifyWebAPIException');
+        $this->expectException(SpotifyWebAPI\SpotifyWebAPIException::class);
 
         $request = new SpotifyWebAPI\Request();
         $response = $request->account('POST', '/api/token', $parameters, $headers);
@@ -160,7 +160,7 @@ class RequestTest extends PHPUnit_Framework_TestCase
          * GET requests with parameters. So it'll throw which we ignore.
          * Not super pretty, but we really just want to assert the URL creation.
          */
-        $this->setExpectedException('SpotifyWebAPI\SpotifyWebAPIException');
+        $this->expectException(SpotifyWebAPI\SpotifyWebAPIException::class);
 
         $response = $request->send('GET', 'https://httpbin.org/get', $parameters);
 
@@ -209,39 +209,14 @@ class RequestTest extends PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('url', $response['body']);
     }
 
-    public function testSetReturnAssoc()
-    {
-        PHPUnit_Framework_Error_Deprecated::$enabled = false;
-
-        $request = new SpotifyWebAPI\Request();
-        $this->assertFalse($request->getReturnAssoc());
-
-        $request->setReturnAssoc(true);
-        $this->assertTrue($request->getReturnAssoc());
-        $this->assertEquals(SpotifyWebAPI\Request::RETURN_ASSOC, $request->getReturnType());
-
-        $request->setReturnAssoc(false);
-        $this->assertFalse($request->getReturnAssoc());
-        $this->assertEquals(SpotifyWebAPI\Request::RETURN_OBJECT, $request->getReturnType());
-
-        PHPUnit_Framework_Error_Deprecated::$enabled = true;
-    }
-
     public function testSetReturnType()
     {
-        PHPUnit_Framework_Error_Deprecated::$enabled = false;
-
         $request = new SpotifyWebAPI\Request();
-        $this->assertFalse($request->getReturnAssoc());
 
         $request->setReturnType(SpotifyWebAPI\Request::RETURN_ASSOC);
-        $this->assertTrue($request->getReturnAssoc());
         $this->assertEquals(SpotifyWebAPI\Request::RETURN_ASSOC, $request->getReturnType());
 
         $request->setReturnType(SpotifyWebAPI\Request::RETURN_OBJECT);
-        $this->assertFalse($request->getReturnAssoc());
         $this->assertEquals(SpotifyWebAPI\Request::RETURN_OBJECT, $request->getReturnType());
-
-        PHPUnit_Framework_Error_Deprecated::$enabled = true;
     }
 }

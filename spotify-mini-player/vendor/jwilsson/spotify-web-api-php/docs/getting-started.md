@@ -1,7 +1,7 @@
 # Getting Started
 
 ## Requirements
-* PHP 5.5 or greater.
+* PHP 5.6 or later.
 * PHP [cURL extension](http://php.net/manual/en/book.curl.php) (Usually included with PHP).
 
 ## Autoloading

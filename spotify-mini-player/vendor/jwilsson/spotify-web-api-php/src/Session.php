@@ -152,12 +152,8 @@ class Session
         if (isset($response->access_token)) {
             $this->accessToken = $response->access_token;
             $this->expirationTime = time() + $response->expires_in;
-            if (isset($response->scope)) {
-                $this->scope = $response->scope;
-            }
-            if (isset($response->refresh_token)) {
-                $this->refreshToken = $response->refreshToken;
-            }
+            $this->scope = isset($response->scope) ? $response->scope : $this->scope;
+            $this->refreshToken = isset($response->refresh_token) ? $response->refresh_token : $this->refreshToken;
 
             return true;
         }
@@ -188,9 +184,8 @@ class Session
         if (isset($response->access_token)) {
             $this->accessToken = $response->access_token;
             $this->expirationTime = time() + $response->expires_in;
-            if (isset($response->scope)) {
-                $this->scope = $response->scope;
-            }
+            $this->scope = isset($response->scope) ? $response->scope : $this->scope;
+
             return true;
         }
 
@@ -221,9 +216,8 @@ class Session
             $this->refreshToken = $response->refresh_token;
             $this->accessToken = $response->access_token;
             $this->expirationTime = time() + $response->expires_in;
-            if (isset($response->scope)) {
-                $this->scope = $response->scope;
-            }
+            $this->scope = isset($response->scope) ? $response->scope : $this->scope;
+
             return true;
         }
 

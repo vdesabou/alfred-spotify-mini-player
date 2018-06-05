@@ -76,22 +76,6 @@ Get the latest full response from the Spotify API.
 ---
 
 
-### getReturnAssoc
-
-_Deprecated: Use `Request::getReturnType()` instead._
-
-    boolean SpotifyWebAPI\Request::getReturnAssoc()
-
-Use `Request::getReturnType()` instead.
-
-
-#### Return values
-* **boolean** Whether the body is returned as an associative array or an stdClass.
-
-
----
-
-
 ### getReturnType
 
 
@@ -128,25 +112,6 @@ You'll probably want to use one of the convenience methods instead.
     * array headers Response headers.
     * int status HTTP status code.
     * string url The requested URL.
-
-
----
-
-
-### setReturnAssoc
-
-_Deprecated: Use `Request::setReturnType()` instead._
-
-    void SpotifyWebAPI\Request::setReturnAssoc(boolean $returnAssoc)
-
-Use `Request::setReturnType()` instead.
-
-#### Arguments
-* `$returnAssoc` **boolean** - Whether to return an associative array or an stdClass.
-
-
-#### Return values
-* **void** 
 
 
 ---

@@ -219,11 +219,15 @@ Delete tracks from a playlist and retrieve a new snapshot ID.<br>
 #### Arguments
 * `$userId` **string** - ID or Spotify URI of the user who owns the playlist.
 * `$playlistId` **string** - ID or Spotify URI of the playlist to delete tracks from.
-* `$tracks` **array** - Array of arrays or objects with tracks to delete.
+* `$tracks` **array** - An array with the key &quot;tracks&quot; containing arrays or objects with tracks to delete.
+Or an array with the key &quot;positions&quot; containing integer positions of the tracks to delete.
+For legacy reasons, the &quot;tracks&quot; key can be omitted but its use is deprecated.
+If the &quot;tracks&quot; key is used, the following fields are also available:
     * string id Required. Track ID or Spotify URI.
     * int\|array positions Optional. The track&#039;s position(s) in the playlist.
 
-* `$snapshotId` **string** - Optional. The playlist&#039;s snapshot ID.
+* `$snapshotId` **string** - Required when $tracks[&#039;positions&#039;] is used, optional otherwise.
+The playlist&#039;s snapshot ID.
 
 
 #### Return values
@@ -834,22 +838,6 @@ Get recommendations based on artists, tracks, or genres.<br>
 ---
 
 
-### getReturnAssoc
-
-_Deprecated: Use `SpotifyWebAPI::getReturnType()` instead._
-
-    boolean SpotifyWebAPI\SpotifyWebAPI::getReturnAssoc()
-
-Use `SpotifyWebAPI::getReturnType()` instead.
-
-
-#### Return values
-* **boolean** Whether an associative array or an stdClass is returned.
-
-
----
-
-
 ### getReturnType
 
 
@@ -1307,25 +1295,6 @@ Set the access token to use.
 ---
 
 
-### setReturnAssoc
-
-_Deprecated: Use `SpotifyWebAPI::setReturnType()` instead._
-
-    void SpotifyWebAPI\SpotifyWebAPI::setReturnAssoc(boolean $returnAssoc)
-
-Use `SpotifyWebAPI::setReturnType()` instead.
-
-#### Arguments
-* `$returnAssoc` **boolean** - Whether to return an associative array or an stdClass.
-
-
-#### Return values
-* **void** 
-
-
----
-
-
 ### setReturnType
 
 
@@ -1418,9 +1387,32 @@ Update the details of a user's playlist.<br>
 * `$userId` **string** - ID or Spotify URI of the user who owns the playlist.
 * `$playlistId` **string** - ID or Spotify URI of the playlist to update.
 * `$options` **array\|object** - Options for the playlist.
+    * collaborative bool Optional. Whether the playlist should be collaborative or not.
+    * description string Optional. Description of the playlist.
     * name string Optional. Name of the playlist.
     * public bool Optional. Whether the playlist should be public or not.
 
+
+
+#### Return values
+* **boolean** Whether the playlist was successfully updated.
+
+
+---
+
+
+### updateUserPlaylistImage
+
+
+    boolean SpotifyWebAPI\SpotifyWebAPI::updateUserPlaylistImage(string $userId, string $playlistId, $imageData)
+
+Update the image of a user's playlist.<br>
+[https://developer.spotify.com/web-api/upload-a-custom-playlist-cover-image/](https://developer.spotify.com/web-api/upload-a-custom-playlist-cover-image/)
+
+#### Arguments
+* `$userId` **string** - ID or Spotify URI of the user who owns the playlist.
+* `$playlistId` **string** - ID or Spotify URI of the playlist to update.
+* `$imageData` **mixed**
 
 
 #### Return values

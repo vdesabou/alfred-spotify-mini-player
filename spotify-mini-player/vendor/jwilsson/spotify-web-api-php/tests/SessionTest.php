@@ -1,5 +1,5 @@
 <?php
-class SessionTest extends PHPUnit_Framework_TestCase
+class SessionTest extends PHPUnit\Framework\TestCase
 {
     private $clientID = 'b777292af0def22f9257991fc770b520';
     private $clientSecret = '6a0419f43d0aa93b2ae881429b6b9bc2';
@@ -137,7 +137,9 @@ class SessionTest extends PHPUnit_Framework_TestCase
         $session->refreshAccessToken($this->refreshToken);
 
         $this->assertNotEmpty($session->getAccessToken());
+        $this->assertNotEmpty($session->getRefreshToken());
         $this->assertEquals(time() + 3600, $session->getTokenExpiration());
+        $this->assertEquals(['user-follow-read', 'user-follow-modify'], $session->getScope());
     }
 
     public function testRequestAccessToken()
@@ -170,13 +172,13 @@ class SessionTest extends PHPUnit_Framework_TestCase
         $this->assertNotEmpty($session->getAccessToken());
         $this->assertNotEmpty($session->getRefreshToken());
         $this->assertEquals(time() + 3600, $session->getTokenExpiration());
+        $this->assertEquals(['user-follow-read', 'user-follow-modify', 'user-library-read', 'user-library-modify'], $session->getScope());
     }
 
     public function testRequestCredentialsToken()
     {
         $expected = [
             'grant_type' => 'client_credentials',
-            'scope' => 'user-read-email',
         ];
 
         $headers = [
@@ -196,7 +198,7 @@ class SessionTest extends PHPUnit_Framework_TestCase
         );
 
         $session = new SpotifyWebAPI\Session($this->clientID, $this->clientSecret, $this->redirectURI, $stub);
-        $result = $session->requestCredentialsToken(['user-read-email']);
+        $result = $session->requestCredentialsToken();
 
         $this->assertTrue($result);
         $this->assertNotEmpty($session->getAccessToken());
