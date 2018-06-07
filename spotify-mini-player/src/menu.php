@@ -1198,6 +1198,11 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
     $mopidy_server = $settings->mopidy_server;
     $mopidy_port = $settings->mopidy_port;
 
+    $cmd = 'Not Available';
+    if ($output_application == 'CONNECT') {
+        $cmd = 'Activate/Deactivate repeating in Spotify for current track';
+    }
+    
     if (mb_strlen($query) < 2) {
         ////////
 
@@ -1481,7 +1486,14 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                     '' /* album_artwork_path */,
                     '' /* playlist_name */,
                     '', /* playlist_artwork_path */
-                )), 'Repeating', 'Activate/Deactivate repeating in Spotify', './images/repeating.png', 'yes', '');
+                )), 'Repeating', array(
+                    'Activate/Deactivate repeating in Spotify',
+                   'alt' => 'Not Available',
+                   'cmd' => $cmd,
+                   'shift' => 'Not Available',
+                   'fn' => 'Not Available',
+                   'ctrl' => 'Not Available',
+               ), './images/repeating.png', 'yes', '');
 
             $w->result(null, serialize(array(
                 '' /*track_uri*/,
@@ -2209,7 +2221,14 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                         '' /* album_artwork_path */,
                         '' /* playlist_name */,
                         '', /* playlist_artwork_path */
-                    )), 'Repeating', 'Activate/Deactivate repeating in Spotify', './images/repeating.png', 'yes', '');
+                    )), 'Repeating', array(
+                        'Activate/Deactivate repeating in Spotify',
+                       'alt' => 'Not Available',
+                       'cmd' => $cmd,
+                       'shift' => 'Not Available',
+                       'fn' => 'Not Available',
+                       'ctrl' => 'Not Available',
+                   ), './images/repeating.png', 'yes', '');
         }
         if (strpos(strtolower('refresh'), strtolower($query)) !== false) {
             if ($update_in_progress == false) {

@@ -325,6 +325,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
     return;
 } elseif ($type == 'ARTIST_OR_PLAYLIST_PRIVACY') {
+    
     if ($artist_name != '') {
         if ($artist_uri == '') {
             // case of current song with cmd
@@ -380,6 +381,27 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
         return;
     }
+
+    if ($other_action == 'repeating' && $output_application == 'CONNECT') {
+        $device_id = getSpotifyConnectCurrentDeviceId($w);
+        if($device_id != '') {
+            if (isRepeatStateSpotifyConnectActive($w)) {
+                setRepeatStateSpotifyConnect($w, $device_id, 'off');
+                $command_output = 'Repeating is now disabled.';
+            } else {
+                // called with COMMAND
+                setRepeatStateSpotifyConnect($w, $device_id, 'track');
+                $command_output = 'Repeating is now enabled for current track.';
+            }
+        } else {
+            displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+            return;
+        }
+        displayNotificationWithArtwork($w, $command_output, './images/repeating.png', 'Repeating');
+
+        return;
+    }
+
 } elseif ($other_settings != '') {
     $setting = explode('▹', $other_settings);
     if ($setting[0] == 'MAX_RESULTS') {
@@ -1696,10 +1718,10 @@ if ($type == 'TRACK' && $other_settings == '' &&
             $device_id = getSpotifyConnectCurrentDeviceId($w);
             if($device_id != '') {
                 if (isRepeatStateSpotifyConnectActive($w)) {
-                    setRepeatStateSpotifyConnect($w, $device_id, false);
+                    setRepeatStateSpotifyConnect($w, $device_id, 'off');
                     $command_output = 'Repeating is now disabled.';
                 } else {
-                    setRepeatStateSpotifyConnect($w, $device_id, true);
+                    setRepeatStateSpotifyConnect($w, $device_id, 'context');
                     $command_output = 'Repeating is now enabled.';
                 }
             } else {

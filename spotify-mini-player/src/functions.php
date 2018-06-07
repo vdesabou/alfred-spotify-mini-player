@@ -188,22 +188,17 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
 /**
  * setRepeatStateSpotifyConnect function.
  *
- * @param mixed $w
+ * @param string $w
  */
  function setRepeatStateSpotifyConnect($w, $device_id, $state)
  {
-    if($state) {
-        $repeat_state = 'context';
-    } else {
-        $repeat_state = 'off';
-    }
     $retry = true;
     $nb_retry = 0;
     while ($retry) {
         try {
             $api = getSpotifyWebAPI($w);
             $api->repeat([
-                'state' => $repeat_state,
+                'state' => $state,
                 'device_id' => $device_id,
             ]);
             $retry = false;
