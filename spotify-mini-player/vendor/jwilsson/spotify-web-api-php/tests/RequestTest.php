@@ -87,7 +87,7 @@ class RequestTest extends PHPUnit\Framework\TestCase
             'Authorization' => 'Basic ' . $payload,
         ];
 
-        $this->expectException(SpotifyWebAPI\SpotifyWebAPIException::class);
+        $this->expectException(SpotifyWebAPI\SpotifyWebAPIAuthException::class);
 
         $request = new SpotifyWebAPI\Request();
         $response = $request->account('POST', '/api/token', $parameters, $headers);

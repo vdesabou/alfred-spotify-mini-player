@@ -338,19 +338,19 @@ class SpotifyWebAPI
         } else {
             $tracks = isset($tracks['tracks']) ? $tracks['tracks'] : $tracks;
 
-        $options['tracks'] = array_map(function ($track) {
-            $track = (array) $track;
+            $options['tracks'] = array_map(function ($track) {
+                $track = (array) $track;
 
-            if (isset($track['positions'])) {
-                $track['positions'] = (array) $track['positions'];
-            }
+                if (isset($track['positions'])) {
+                    $track['positions'] = (array) $track['positions'];
+                }
 
-            $track['uri'] = $this->idToUri($track['id'], 'track');
+                $track['uri'] = $this->idToUri($track['id'], 'track');
 
-            unset($track['id']);
+                unset($track['id']);
 
-            return $track;
-        }, $tracks);
+                return $track;
+            }, $tracks);
         }
 
         $options = json_encode($options);

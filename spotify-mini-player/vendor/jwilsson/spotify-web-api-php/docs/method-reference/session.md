@@ -253,3 +253,21 @@ Set the client's redirect URI.
 
 ---
 
+
+### setRefreshToken
+
+
+    void SpotifyWebAPI\Session::setRefreshToken(string $refreshToken)
+
+Set the session's refresh token.
+
+#### Arguments
+* `$refreshToken` **string** - The refresh token.
+
+
+#### Return values
+* **void** 
+
+
+---
+

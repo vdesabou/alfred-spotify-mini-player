@@ -142,6 +142,66 @@ class SessionTest extends PHPUnit\Framework\TestCase
         $this->assertEquals(['user-follow-read', 'user-follow-modify'], $session->getScope());
     }
 
+    public function testRefreshAccessTokenNoReturnedToken()
+    {
+        $refreshToken = 'refresh-token';
+        $expected = [
+            'grant_type' => 'refresh_token',
+            'refresh_token' => $refreshToken,
+        ];
+
+        $headers = [
+            'Authorization' => 'Basic Yjc3NzI5MmFmMGRlZjIyZjkyNTc5OTFmYzc3MGI1MjA6NmEwNDE5ZjQzZDBhYTkzYjJhZTg4MTQyOWI2YjliYzI=',
+        ];
+
+        $return = [
+            'body' => get_fixture('refresh-token-no-refresh-token'),
+        ];
+
+        $stub = $this->setupStub(
+            'POST',
+            '/api/token',
+            $expected,
+            $headers,
+            $return
+        );
+
+        $session = new SpotifyWebAPI\Session($this->clientID, $this->clientSecret, $this->redirectURI, $stub);
+        $session->setRefreshToken($this->refreshToken);
+        $session->refreshAccessToken($refreshToken);
+
+        $this->assertEquals($session->getRefreshToken(), $this->refreshToken);
+    }
+
+    public function testRefreshAccessTokenNoPreviousToken()
+    {
+        $expected = [
+            'grant_type' => 'refresh_token',
+            'refresh_token' => $this->refreshToken,
+        ];
+
+        $headers = [
+            'Authorization' => 'Basic Yjc3NzI5MmFmMGRlZjIyZjkyNTc5OTFmYzc3MGI1MjA6NmEwNDE5ZjQzZDBhYTkzYjJhZTg4MTQyOWI2YjliYzI=',
+        ];
+
+        $return = [
+            'body' => get_fixture('refresh-token-no-refresh-token'),
+        ];
+
+        $stub = $this->setupStub(
+            'POST',
+            '/api/token',
+            $expected,
+            $headers,
+            $return
+        );
+
+        $session = new SpotifyWebAPI\Session($this->clientID, $this->clientSecret, $this->redirectURI, $stub);
+        $session->refreshAccessToken($this->refreshToken);
+
+        $this->assertEquals($session->getRefreshToken(), $this->refreshToken);
+    }
+
     public function testRequestAccessToken()
     {
         $authorizationCode = 'd1e893a80f79d9ab5e7d322ed922da540964a63c';
@@ -233,5 +293,15 @@ class SessionTest extends PHPUnit\Framework\TestCase
         $session->setRedirectUri($expected);
 
         $this->assertEquals($expected, $session->getRedirectUri());
+    }
+
+    public function testSetRefreshToken()
+    {
+        $session = new SpotifyWebAPI\Session($this->clientID, $this->clientSecret, $this->redirectURI);
+        $expected = $this->refreshToken;
+
+        $session->setRefreshToken($expected);
+
+        $this->assertEquals($expected, $session->getRefreshToken());
     }
 }

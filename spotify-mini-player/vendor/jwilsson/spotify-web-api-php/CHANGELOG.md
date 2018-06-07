@@ -1,4 +1,11 @@
 # Changelog
+## 2.4.0 (2018-06-06)
+* Authentication errors will now throw an `SpotifyWebAPIAuthException` instead of the regular `SpotifyWebAPIException`. ([4b068d0](https://github.com/jwilsson/spotify-web-api-php/commit/4b068d0f0e9951fbb0f938a5a8e95ead7813f53b))
+
+## 2.3.0 (2018-06-05)
+* Restored support for PHP 5.6. It's used by too many at this point and nothing PHP 7 specific is really used. ([ff3de71](https://github.com/jwilsson/spotify-web-api-php/commit/ff3de719dde9604aeb9e3647fd92adbba20f9130))
+* Added a `Session::setRefreshToken()` method ([c30ebfe](https://github.com/jwilsson/spotify-web-api-php/commit/c30ebfed76963df046b0cacf1ae3f888f0e44bce))
+
 ## 2.2.1 (2018-05-05)
 * When running behind a proxy, the first set of proxy response headers are now stripped. ([a9dfa55](https://github.com/jwilsson/spotify-web-api-php/commit/a9dfa559ded1584001b30d4518fee1ce84e21dc2))
 

@@ -19,6 +19,7 @@ class Request
      * @param int $status The HTTP status code, used to see if additional error handling is needed.
      *
      * @throws SpotifyWebAPIException
+     * @throws SpotifyWebAPIAuthException
      *
      * @return array|object The parsed response body. Type is controlled by `Request::setReturnType()`.
      */
@@ -38,7 +39,7 @@ class Request
             throw new SpotifyWebAPIException($error->message, $error->status);
         } elseif (isset($body->error_description)) {
             // Auth call error
-            throw new SpotifyWebAPIException($body->error_description, $status);
+            throw new SpotifyWebAPIAuthException($body->error_description, $status);
         } else {
             // Something went really wrong
             throw new SpotifyWebAPIException('An unknown error occurred.', $status);
@@ -77,6 +78,9 @@ class Request
      * @param array $parameters Optional. Query string parameters or HTTP body, depending on $method.
      * @param array $headers Optional. HTTP headers.
      *
+     * @throws SpotifyWebAPIException
+     * @throws SpotifyWebAPIAuthException
+     *
      * @return array Response data.
      * - array|object body The response body. Type is controlled by `Request::setReturnType()`.
      * - string headers Response headers.
@@ -95,6 +99,9 @@ class Request
      * @param string $uri The URI to request.
      * @param array $parameters Optional. Query string parameters or HTTP body, depending on $method.
      * @param array $headers Optional. HTTP headers.
+     *
+     * @throws SpotifyWebAPIException
+     * @throws SpotifyWebAPIAuthException
      *
      * @return array Response data.
      * - array|object body The response body. Type is controlled by `Request::setReturnType()`.
@@ -141,6 +148,7 @@ class Request
      * @param array $headers Optional. HTTP headers.
      *
      * @throws SpotifyWebAPIException
+     * @throws SpotifyWebAPIAuthException
      *
      * @return array Response data.
      * - array|object body The response body. Type is controlled by `Request::setReturnType()`.
