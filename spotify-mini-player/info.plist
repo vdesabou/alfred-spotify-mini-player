@@ -818,6 +818,19 @@
 		</array>
 		<key>5F3AF2C8-064F-4C10-8D99-22E212825BFE</key>
 		<array/>
+		<key>5F3F806B-0B88-4C17-92E7-72A944CEB1A6</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>5B323D08-37EF-46D8-ACAD-9E21B74F6767</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>5F5E8A6D-8707-41FC-B5D1-660CD11685F0</key>
 		<array/>
 		<key>6008947F-A428-45E7-8B9C-1F3402278D3A</key>
@@ -877,6 +890,19 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>6FF2EF90-205D-4423-B818-11BCC11D34BE</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>66723864-4D1C-439D-A1DE-5F90BCB03CCC</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>5B323D08-37EF-46D8-ACAD-9E21B74F6767</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -1007,6 +1033,19 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>A2C8ACBA-F98F-457A-90E8-11BA2112342C</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>6EA904F5-F25E-4B1E-A6DD-5E94263ADBC8</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>5B323D08-37EF-46D8-ACAD-9E21B74F6767</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -1258,6 +1297,19 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>05D01A85-8BDC-4FF6-BEBB-BAF26BB5870A</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>81536C26-DB7C-42CE-95C0-B78FA1C7934E</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>5B323D08-37EF-46D8-ACAD-9E21B74F6767</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -7131,6 +7183,114 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>argument</key>
+				<string></string>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>triggerid</key>
+				<string>com.vdesabou.miniplayer.repeating.current.track</string>
+				<key>triggername</key>
+				<string>Activate Repeating Track</string>
+				<key>workflowonly</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.remote</string>
+			<key>uid</key>
+			<string>81536C26-DB7C-42CE-95C0-B78FA1C7934E</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>triggerid</key>
+				<string>repeating_current_track</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.external</string>
+			<key>uid</key>
+			<string>66723864-4D1C-439D-A1DE-5F90BCB03CCC</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "repeating" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
+php -f ./src/action.php -- "$query" "ARTIST_OR_PLAYLIST_PRIVACY" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>5B323D08-37EF-46D8-ACAD-9E21B74F6767</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>{var:c_repeating_current_track}</string>
+				<key>subtext</key>
+				<string>Activate/Deactivate repeating current track in Spotify</string>
+				<key>text</key>
+				<string>Repeating current track (only possible when using Spotify Connect)</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>5F3F806B-0B88-4C17-92E7-72A944CEB1A6</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>0</integer>
+				<key>focusedappvariable</key>
+				<false/>
+				<key>focusedappvariablename</key>
+				<string></string>
+				<key>hotkey</key>
+				<integer>0</integer>
+				<key>hotmod</key>
+				<integer>0</integer>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>0</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>6EA904F5-F25E-4B1E-A6DD-5E94263ADBC8</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>concurrently</key>
 				<false/>
 				<key>escaping</key>
@@ -8075,9 +8235,9 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 		<key>0749257A-D830-483B-9EF5-580E33C10BB8</key>
 		<dict>
 			<key>xpos</key>
-			<integer>790</integer>
+			<integer>980</integer>
 			<key>ypos</key>
-			<integer>11040</integer>
+			<integer>10960</integer>
 		</dict>
 		<key>0A7E4CC3-BA4A-4DD4-AB4B-E2E8F9DBBE8C</key>
 		<dict>
@@ -8103,9 +8263,9 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 		<key>0CAE95A9-03D6-4305-A30B-153796564AD1</key>
 		<dict>
 			<key>xpos</key>
-			<integer>560</integer>
+			<integer>750</integer>
 			<key>ypos</key>
-			<integer>10940</integer>
+			<integer>10830</integer>
 		</dict>
 		<key>0EBF4C61-5630-4629-8B4F-AD91D3470760</key>
 		<dict>
@@ -8329,9 +8489,9 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 		<key>2F1F6369-46C0-483B-816F-3796168AE060</key>
 		<dict>
 			<key>xpos</key>
-			<integer>300</integer>
+			<integer>490</integer>
 			<key>ypos</key>
-			<integer>11040</integer>
+			<integer>10960</integer>
 		</dict>
 		<key>2FC567E2-E6C5-4A91-B42E-1996532B78C9</key>
 		<dict>
@@ -8396,9 +8556,9 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 		<key>3435F565-E791-4FE9-A7B9-85B4A2EA353C</key>
 		<dict>
 			<key>xpos</key>
-			<integer>100</integer>
+			<integer>290</integer>
 			<key>ypos</key>
-			<integer>11100</integer>
+			<integer>11020</integer>
 		</dict>
 		<key>3617F927-558D-4F30-B8D1-B7789F863AB0</key>
 		<dict>
@@ -8563,6 +8723,13 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<key>ypos</key>
 			<real>3420</real>
 		</dict>
+		<key>5B323D08-37EF-46D8-ACAD-9E21B74F6767</key>
+		<dict>
+			<key>xpos</key>
+			<integer>800</integer>
+			<key>ypos</key>
+			<integer>11130</integer>
+		</dict>
 		<key>5BB099A1-224D-4702-BBBC-52919BDCCF62</key>
 		<dict>
 			<key>xpos</key>
@@ -8597,6 +8764,13 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<integer>610</integer>
 			<key>ypos</key>
 			<integer>10</integer>
+		</dict>
+		<key>5F3F806B-0B88-4C17-92E7-72A944CEB1A6</key>
+		<dict>
+			<key>xpos</key>
+			<integer>310</integer>
+			<key>ypos</key>
+			<integer>11130</integer>
 		</dict>
 		<key>5F5E8A6D-8707-41FC-B5D1-660CD11685F0</key>
 		<dict>
@@ -8646,6 +8820,13 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<integer>860</integer>
 			<key>ypos</key>
 			<integer>4280</integer>
+		</dict>
+		<key>66723864-4D1C-439D-A1DE-5F90BCB03CCC</key>
+		<dict>
+			<key>xpos</key>
+			<integer>610</integer>
+			<key>ypos</key>
+			<integer>11040</integer>
 		</dict>
 		<key>66A0F734-983C-420D-B6E4-F21922513E4B</key>
 		<dict>
@@ -8727,6 +8908,13 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<integer>300</integer>
 			<key>ypos</key>
 			<real>10140</real>
+		</dict>
+		<key>6EA904F5-F25E-4B1E-A6DD-5E94263ADBC8</key>
+		<dict>
+			<key>xpos</key>
+			<integer>110</integer>
+			<key>ypos</key>
+			<integer>11190</integer>
 		</dict>
 		<key>6EC5159F-1577-4384-9869-4777146F362E</key>
 		<dict>
@@ -8894,6 +9082,13 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<integer>100</integer>
 			<key>ypos</key>
 			<real>2750</real>
+		</dict>
+		<key>81536C26-DB7C-42CE-95C0-B78FA1C7934E</key>
+		<dict>
+			<key>xpos</key>
+			<integer>110</integer>
+			<key>ypos</key>
+			<integer>11030</integer>
 		</dict>
 		<key>817080F0-4CE8-4336-A972-550D43D063B1</key>
 		<dict>
@@ -9158,9 +9353,9 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 		<key>A41190FA-4B23-4908-A4B7-16A14F338C11</key>
 		<dict>
 			<key>xpos</key>
-			<integer>100</integer>
+			<integer>290</integer>
 			<key>ypos</key>
-			<integer>10940</integer>
+			<integer>10860</integer>
 		</dict>
 		<key>A4437594-2A54-42A1-836E-129E46F5DB47</key>
 		<dict>
@@ -9828,6 +10023,8 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 		<string>remove_current_track_from</string>
 		<key>c_repeating</key>
 		<string>repeating</string>
+		<key>c_repeating_current_track</key>
+		<string>repeating_current_track</string>
 		<key>c_share</key>
 		<string>share</string>
 		<key>c_show_alfred_playlist</key>
