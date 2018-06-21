@@ -1146,7 +1146,7 @@ function newUser($w)
         deleteTheFile($w->data().'/current_user.json');
     }
 
-    exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('c_spot_mini')." $query\"'");
+    exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('c_spot_mini')."\"'");
 
     return;
 }
