@@ -5,7 +5,7 @@ When requesting data from Spotify the default return format is an PHP object, so
 ## Changing the return type
 
 ```php
-$api->setReturnType(SpotifyWebAPI::RETURN_ASSOC);
+$api->setReturnType(SpotifyWebAPI\SpotifyWebAPI::RETURN_ASSOC);
 
 $user = $api->me(); // Will be an associative array
 ```
@@ -18,5 +18,5 @@ var_dump($api->getReturnType()); // 'assoc'
 
 The possible values are:
 
-* `SpotifyWebAPI::RETURN_ASSOC` - Return associative arrays.
-* `SpotifyWebAPI::RETURN_OBJECT` - Return objects (default).
+* `SpotifyWebAPI\SpotifyWebAPI::RETURN_ASSOC` - Return associative arrays.
+* `SpotifyWebAPI\SpotifyWebAPI::RETURN_OBJECT` - Return objects (default).

@@ -1,17 +1,17 @@
 [
     {
         "name": "jwilsson/spotify-web-api-php",
-        "version": "2.4.0",
-        "version_normalized": "2.4.0.0",
+        "version": "2.5.0",
+        "version_normalized": "2.5.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/jwilsson/spotify-web-api-php.git",
-            "reference": "99dec0e2068b53f940f3a6fe952fb5fb5b6052d4"
+            "reference": "1153e83f9f6678a1f15726749eee6c0750be9085"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/jwilsson/spotify-web-api-php/zipball/99dec0e2068b53f940f3a6fe952fb5fb5b6052d4",
-            "reference": "99dec0e2068b53f940f3a6fe952fb5fb5b6052d4",
+            "url": "https://api.github.com/repos/jwilsson/spotify-web-api-php/zipball/1153e83f9f6678a1f15726749eee6c0750be9085",
+            "reference": "1153e83f9f6678a1f15726749eee6c0750be9085",
             "shasum": ""
         },
         "require": {
@@ -23,7 +23,7 @@
             "phpunit/phpunit": "^5.7 || ^6.0",
             "squizlabs/php_codesniffer": "^3.0"
         },
-        "time": "2018-06-06T18:11:35+00:00",
+        "time": "2018-07-03T18:40:38+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {

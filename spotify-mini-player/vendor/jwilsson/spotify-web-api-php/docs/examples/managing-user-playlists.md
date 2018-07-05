@@ -17,7 +17,7 @@ foreach ($playlists->items as $playlist) {
 ## Getting info about a specific playlist
 
 ```php
-$playlist = $api->getUserPlaylist('USER_ID', 'PLAYLIST_ID');
+$playlist = $api->getPlaylist('USER_ID', 'PLAYLIST_ID');
 
 echo $playlist->name;
 ```
@@ -25,7 +25,7 @@ echo $playlist->name;
 ## Getting all tracks in a playlist
 
 ```php
-$playlistTracks = $api->getUserPlaylistTracks('USER_ID', 'PLAYLIST_ID');
+$playlistTracks = $api->getPlaylistTracks('USER_ID', 'PLAYLIST_ID');
 
 foreach ($playlistTracks->items as $track) {
     $track = $track->track;
@@ -37,7 +37,7 @@ foreach ($playlistTracks->items as $track) {
 ## Creating a new playlist
 
 ```php
-$api->createUserPlaylist('USER_ID', [
+$api->createPlaylist('USER_ID', [
     'name' => 'My shiny playlist'
 ]);
 ```
@@ -45,7 +45,7 @@ $api->createUserPlaylist('USER_ID', [
 ## Updating the details of a user's playlist
 
 ```php
-$api->updateUserPlaylist('USER_ID', 'PLAYLIST_ID', [
+$api->updatePlaylist('USER_ID', 'PLAYLIST_ID', [
     'name' => 'New name'
 ]);
 ```
@@ -54,13 +54,13 @@ $api->updateUserPlaylist('USER_ID', 'PLAYLIST_ID', [
 ```php
 $imageData = base64_encode(file_get_contents('image.jpg'));
 
-$api->updateUserPlaylistImage('USER_ID', 'PLAYLIST_ID', $imageData);
+$api->updatePlaylistImage('USER_ID', 'PLAYLIST_ID', $imageData);
 ```
 
 ## Adding tracks to a user's playlist
 
 ```php
-$api->addUserPlaylistTracks('USER_ID', 'PLAYLIST_ID', [
+$api->addPlaylistTracks('USER_ID', 'PLAYLIST_ID', [
     'TRACK_ID',
     'TRACK_ID'
 ]);
@@ -76,7 +76,7 @@ $tracks = [
     ],
 ];
 
-$api->deleteUserPlaylistTracks('USER_ID', 'PLAYLIST_ID', $tracks, 'SNAPSHOT_ID');
+$api->deletePlaylistTracks('USER_ID', 'PLAYLIST_ID', $tracks, 'SNAPSHOT_ID');
 ```
 
 ## Delete tracks from a user's playlist based on positions
@@ -87,13 +87,13 @@ $trackPositions = [
     12,
 ];
 
-$api->deleteUserPlaylistTracks('USER_ID', 'PLAYLIST_ID', $trackPositions, 'SNAPSHOT_ID');
+$api->deletePlaylistTracks('USER_ID', 'PLAYLIST_ID', $trackPositions, 'SNAPSHOT_ID');
 ```
 
 ## Replacing all tracks in a user's playlist with new ones
 
 ```php
-$api->replaceUserPlaylistTracks('USER_ID', 'PLAYLIST_ID', [
+$api->replacePlaylistTracks('USER_ID', 'PLAYLIST_ID', [
     'TRACK_ID',
     'TRACK_ID'
 ]);
@@ -102,7 +102,7 @@ $api->replaceUserPlaylistTracks('USER_ID', 'PLAYLIST_ID', [
 ## Reorder the tracks in a user's playlist
 
 ```php
-$api->reorderUserPlaylistTracks('USER_ID', 'PLAYLIST_ID', [
+$api->reorderPlaylistTracks('USER_ID', 'PLAYLIST_ID', [
     'range_start' => 1,
     'range_length' => 5,
     'insert_before' => 10,

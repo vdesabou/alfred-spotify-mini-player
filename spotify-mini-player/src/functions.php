@@ -3,6 +3,46 @@
 require_once './src/workflows.php';
 require './vendor/autoload.php';
 
+
+/**
+ * getPlaylistOwner function.
+ *
+ * @param mixed $w
+ * @param mixed $playlist_uri
+ */
+function getPlaylistOwner($w, $playlist_uri)
+{
+    $url = '';
+    $tmp = explode(':', $playlist_uri);
+    if(isset($tmp[4])) {
+        $playlist_id = $tmp[4];
+    } else {
+        $playlist_id = $tmp[2];
+    }
+    try {
+        $api = getSpotifyWebAPI($w);
+        $playlist = $api->getPlaylist($playlist_id, array(
+                'fields' => array(
+                    'owner',
+                ),
+            ));
+
+       return $playlist->owner->id;
+    } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+       $w->result(null, '', 'Error: Spotify WEB API returned error '.$e->getMessage(),array(
+           'function getPlaylistOwner playlist_uri=' . $playlist_uri,
+                   'alt' => 'Not Available',
+                   'cmd' => 'Not Available',
+                   'shift' => 'Not Available',
+                   'fn' => 'Not Available',
+                   'ctrl' => 'Not Available',
+               ), './images/warning.png', 'no', null, '');
+
+        return '';
+    }
+}
+
+
 /**
  * resetPlaylistNumberTimesPlayed function.
  *
@@ -162,9 +202,14 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
  {
      $url = '';
      $tmp = explode(':', $playlist_uri);
+     if(isset($tmp[4])) {
+        $playlist_id = $tmp[4];
+    } else {
+        $playlist_id = $tmp[2];
+    }
      try {
          $api = getSpotifyWebAPI($w);
-         $playlist = $api->getUserPlaylist(urlencode($tmp[2]), $tmp[4], array(
+         $playlist = $api->getPlaylist($playlist_id, array(
                  'fields' => array(
                      'name',
                  ),
@@ -207,7 +252,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
                 $retryAfter = $lastResponse['headers']['Retry-After'];
-                sleep(retryAfter);
+                sleep($retryAfter);
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
@@ -267,7 +312,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
                 $retryAfter = $lastResponse['headers']['Retry-After'];
-                sleep(retryAfter);
+                sleep($retryAfter);
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
@@ -313,7 +358,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
                 $retryAfter = $lastResponse['headers']['Retry-After'];
-                sleep(retryAfter);
+                sleep($retryAfter);
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
@@ -366,7 +411,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
                 $retryAfter = $lastResponse['headers']['Retry-After'];
-                sleep(retryAfter);
+                sleep($retryAfter);
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
@@ -412,7 +457,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
                 $retryAfter = $lastResponse['headers']['Retry-After'];
-                sleep(retryAfter);
+                sleep($retryAfter);
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
@@ -480,7 +525,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
                 $retryAfter = $lastResponse['headers']['Retry-After'];
-                sleep(retryAfter);
+                sleep($retryAfter);
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
@@ -524,7 +569,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
                 $retryAfter = $lastResponse['headers']['Retry-After'];
-                sleep(retryAfter);
+                sleep($retryAfter);
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
@@ -568,7 +613,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
                 $retryAfter = $lastResponse['headers']['Retry-After'];
-                sleep(retryAfter);
+                sleep($retryAfter);
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
@@ -626,7 +671,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
                 $retryAfter = $lastResponse['headers']['Retry-After'];
-                sleep(retryAfter);
+                sleep($retryAfter);
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
@@ -670,7 +715,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
                 $retryAfter = $lastResponse['headers']['Retry-After'];
-                sleep(retryAfter);
+                sleep($retryAfter);
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
@@ -714,7 +759,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
                 $retryAfter = $lastResponse['headers']['Retry-After'];
-                sleep(retryAfter);
+                sleep($retryAfter);
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
@@ -806,7 +851,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
                 if ($e->getCode() == 429) { // 429 is Too Many Requests
                     $lastResponse = $api->getRequest()->getLastResponse();
                     $retryAfter = $lastResponse['headers']['Retry-After'];
-                    sleep(retryAfter);
+                    sleep($retryAfter);
                 } else if ($e->getCode() == 404) {
                     // skip
                     break;
@@ -857,7 +902,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
                 $retryAfter = $lastResponse['headers']['Retry-After'];
-                sleep(retryAfter);
+                sleep($retryAfter);
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
@@ -950,7 +995,7 @@ function isShuffleActive($print_output)
                 if ($e->getCode() == 429) { // 429 is Too Many Requests
                     $lastResponse = $api->getRequest()->getLastResponse();
                     $retryAfter = $lastResponse['headers']['Retry-After'];
-                    sleep(retryAfter);
+                    sleep($retryAfter);
                 } else if ($e->getCode() == 404) {
                     // skip
                     break;
@@ -1865,7 +1910,7 @@ function getCurrentTrackInfoWithMopidy($w, $displayError = true)
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
                 $retryAfter = $lastResponse['headers']['Retry-After'];
-                sleep(retryAfter);
+                sleep($retryAfter);
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
@@ -1957,14 +2002,19 @@ function setThePlaylistPrivacy($w, $playlist_uri, $playlist_name, $public)
     try {
         $tmp = explode(':', $playlist_uri);
         $api = getSpotifyWebAPI($w);
-        $ret = $api->updateUserPlaylist(urlencode($tmp[2]), $tmp[4], array('name' => escapeQuery($playlist_name),
+        if(isset($tmp[4])) {
+            $playlist_id = $tmp[4];
+        } else {
+            $playlist_id = $tmp[2];
+        }
+        $ret = $api->updatePlaylist($playlist_id, array('name' => escapeQuery($playlist_name),
                 'public' => $public, ));
         if ($ret == true) {
             // refresh library
             refreshLibrary($w);
         }
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        logMsg('Error(updateUserPlaylist): (exception '.jTraceEx($e).')');
+        logMsg('Error(updatePlaylist): (exception '.jTraceEx($e).')');
         handleSpotifyWebAPIException($w, $e);
 
         return false;
@@ -1989,10 +2039,17 @@ function followThePlaylist($w, $playlist_uri)
     if ($is_public_playlists) {
         $public = true;
     }
+    $tmp = explode(':', $playlist_uri);
+    if(isset($tmp[4])) {
+        $playlist_id = $tmp[4];
+    } else {
+        $playlist_id = $tmp[2];
+    }
+    $owner = getPlaylistOwner($w,$playlist_uri);
     try {
         $tmp = explode(':', $playlist_uri);
         $api = getSpotifyWebAPI($w);
-        $ret = $api->followPlaylist(urlencode($tmp[2]), $tmp[4], array('public' => $public));
+        $ret = $api->followPlaylist($owner, $playlist_id, array('public' => $public));
         if ($ret == true) {
             // refresh library
             refreshLibrary($w);
@@ -2016,7 +2073,13 @@ function unfollowThePlaylist($w, $playlist_uri)
     try {
         $tmp = explode(':', $playlist_uri);
         $api = getSpotifyWebAPI($w);
-        $ret = $api->unfollowPlaylist($tmp[2], $tmp[4]);
+        if(isset($tmp[4])) {
+            $playlist_id = $tmp[4];
+        } else {
+            $playlist_id = $tmp[2];
+        }
+        $owner = getPlaylistOwner($w,$playlist_uri);
+        $ret = $api->unfollowPlaylist($owner, $playlist_id);
         if ($ret == true) {
             // refresh library
             refreshLibrary($w);
@@ -3064,12 +3127,6 @@ function addTracksToYourMusic($w, $tracks, $allow_duplicate = true)
  */
 function addTracksToPlaylist($w, $tracks, $playlist_uri, $playlist_name, $allow_duplicate = true, $refreshLibrary = true)
 {
-
-    // Read settings from JSON
-
-    $settings = getSettings($w);
-    $userid = $settings->userid;
-
     $tracks_with_no_dup = array();
     if (!$allow_duplicate) {
         $playlist_tracks = getThePlaylistTracks($w, $playlist_uri);
@@ -3086,6 +3143,12 @@ function addTracksToPlaylist($w, $tracks, $playlist_uri, $playlist_name, $allow_
             $api = getSpotifyWebAPI($w);
             $tmp = explode(':', $playlist_uri);
 
+            if(isset($tmp[4])) {
+                $playlist_id = $tmp[4];
+            } else {
+                $playlist_id = $tmp[2];
+            }
+
             // Note: max 100 Ids
             $offset = 0;
             $i = 0;
@@ -3098,11 +3161,11 @@ function addTracksToPlaylist($w, $tracks, $playlist_uri, $playlist_name, $allow_
                     $api = getSpotifyWebAPI($w, $api);
 
                     if(getenv('append_to_playlist_when_adding_tracks') == 0) {
-                        $api->addUserPlaylistTracks(urlencode($userid), $tmp[4], $output, array(
+                        $api->addPlaylistTracks($playlist_id, $output, array(
                                 'position' => 0,
                             ));
                     } else {
-                        $api->addUserPlaylistTracks(urlencode($userid), $tmp[4], $output);
+                        $api->addPlaylistTracks($playlist_id, $output);
                     }
                     ++$i;
                 }
@@ -3140,15 +3203,15 @@ function addTracksToPlaylist($w, $tracks, $playlist_uri, $playlist_name, $allow_
 function removeTrackFromPlaylist($w, $track_uri, $playlist_uri, $playlist_name, $refreshLibrary = true)
 {
 
-    // Read settings from JSON
-
-    $settings = getSettings($w);
-    $userid = $settings->userid;
-
     try {
         $api = getSpotifyWebAPI($w);
         $tmp = explode(':', $playlist_uri);
-        $api->deleteUserPlaylistTracks(urlencode($userid), $tmp[4], array(
+        if(isset($tmp[4])) {
+            $playlist_id = $tmp[4];
+        } else {
+            $playlist_id = $tmp[2];
+        }
+        $api->deletePlaylistTracks($playlist_id, array(
                 array(
                     'id' => $track_uri,
                 ),
@@ -3429,9 +3492,14 @@ function clearPlaylist($w, $playlist_uri, $playlist_name)
 {
     try {
         $tmp = explode(':', $playlist_uri);
+        if(isset($tmp[4])) {
+            $playlist_id = $tmp[4];
+        } else {
+            $playlist_id = $tmp[2];
+        }
         $emptytracks = array();
         $api = getSpotifyWebAPI($w);
-        $api->replaceUserPlaylistTracks(urlencode($tmp[2]), $tmp[4], $emptytracks);
+        $api->replacePlaylistTracks($playlist_id, $emptytracks);
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
         logMsg('Error(clearPlaylist): playlist uri '.$playlist_uri.' (exception '.jTraceEx($e).')');
         handleSpotifyWebAPIException($w, $e);
@@ -3457,7 +3525,6 @@ function createTheUserPlaylist($w, $playlist_name)
     // Read settings from JSON
 
     $settings = getSettings($w);
-    $userid = $settings->userid;
     $is_public_playlists = $settings->is_public_playlists;
 
     $public = false;
@@ -3466,12 +3533,12 @@ function createTheUserPlaylist($w, $playlist_name)
     }
     try {
         $api = getSpotifyWebAPI($w);
-        $json = $api->createUserPlaylist(urlencode($userid), array(
+        $json = $api->createPlaylist(array(
                 'name' => $playlist_name,
                 'public' => $public,
             ));
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        logMsg('Error(createUserPlaylist): createUserPlaylist '.$playlist_name.' (exception '.jTraceEx($e).')');
+        logMsg('Error(createPlaylist): createPlaylist '.$playlist_name.' (exception '.jTraceEx($e).')');
         handleSpotifyWebAPIException($w, $e);
 
         return false;
@@ -3578,12 +3645,12 @@ function createRadioArtistPlaylist($w, $artist_name, $artist_uri)
     if (count($newplaylisttracks) > 0) {
         try {
             $api = getSpotifyWebAPI($w);
-            $json = $api->createUserPlaylist($userid, array(
+            $json = $api->createPlaylist(array(
                     'name' => 'Artist radio for '.escapeQuery($artist_name),
                     'public' => $public,
                 ));
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            logMsg('Error(createUserPlaylist): radio artist '.$artist_name.' (exception '.jTraceEx($e).')');
+            logMsg('Error(createPlaylist): radio artist '.$artist_name.' (exception '.jTraceEx($e).')');
             handleSpotifyWebAPIException($w, $e);
 
             return false;
@@ -3675,7 +3742,7 @@ function createCompleteCollectionArtistPlaylist($w, $artist_name, $artist_uri)
     if (count($newplaylisttracks) > 0) {
         try {
             $api = getSpotifyWebAPI($w);
-            $json = $api->createUserPlaylist($userid, array(
+            $json = $api->createPlaylist(array(
                     'name' => 'CC for '.escapeQuery($artist_name),
                     'public' => $public,
                 ));
@@ -3831,12 +3898,12 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name)
     if (count($newplaylisttracks) > 0) {
         try {
             $api = getSpotifyWebAPI($w);
-            $json = $api->createUserPlaylist($userid, array(
+            $json = $api->createPlaylist(array(
                     'name' => 'Song radio for '.escapeQuery($track_name).' by '.escapeQuery($artist_name),
                     'public' => $public,
                 ));
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            logMsg('Error(createUserPlaylist): radio song '.escapeQuery($track_name).' (exception '.jTraceEx($e).')');
+            logMsg('Error(createPlaylist): radio song '.escapeQuery($track_name).' (exception '.jTraceEx($e).')');
             handleSpotifyWebAPIException($w, $e);
 
             return false;
@@ -3904,12 +3971,17 @@ function getThePlaylistTracks($w, $playlist_uri)
     try {
         $api = getSpotifyWebAPI($w);
         $tmp = explode(':', $playlist_uri);
+        if(isset($tmp[4])) {
+            $playlist_id = $tmp[4];
+        } else {
+            $playlist_id = $tmp[2];
+        }
         $offsetGetUserPlaylistTracks = 0;
         $limitGetUserPlaylistTracks = 100;
         do {
             // refresh api
             $api = getSpotifyWebAPI($w, $api);
-            $userPlaylistTracks = $api->getUserPlaylistTracks($tmp[2], $tmp[4], array(
+            $userPlaylistTracks = $api->getPlaylistTracks($playlist_id, array(
                     'fields' => array(
                         'total',
                         'items.track(id,is_playable,linked_from)',
@@ -4139,12 +4211,17 @@ function getThePlaylistFullTracks($w, $playlist_uri)
     try {
         $api = getSpotifyWebAPI($w);
         $tmp = explode(':', $playlist_uri);
+        if(isset($tmp[4])) {
+            $playlist_id = $tmp[4];
+        } else {
+            $playlist_id = $tmp[2];
+        }
         $offsetGetUserPlaylistTracks = 0;
         $limitGetUserPlaylistTracks = 100;
         do {
             // refresh api
             $api = getSpotifyWebAPI($w, $api);
-            $userPlaylistTracks = $api->getUserPlaylistTracks($tmp[2], $tmp[4], array(
+            $userPlaylistTracks = $api->getPlaylistTracks($playlist_id, array(
                     'fields' => array(
                         'total',
                         'items(added_at)',
@@ -5011,7 +5088,12 @@ function getPlaylistArtwork($w, $playlist_uri, $fetchIfNotPresent, $forceFetch =
     }
 
     $tmp = explode(':', $playlist_uri);
-    $filename = ''.$tmp[2].'_'.$tmp[4];
+    if(isset($tmp[4])) {
+        $playlist_id = $tmp[4];
+    } else {
+        $playlist_id = $tmp[2];
+    }
+    $filename = ''.$playlist_id;
     $artwork = '';
 
     if (!file_exists($w->data().'/artwork')):
@@ -5242,84 +5324,147 @@ function getArtworkURL($w, $type, $id, $highRes = false)
     if (startswith($id, 'fake')) {
         return $url;
     }
-    if ($type == 'track') {
-        try {
-            $api = getSpotifyWebAPI($w);
-            $track = $api->getTrack($id);
-        } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            logMsg('Error(getArtworkURL track): (exception '.jTraceEx($e).')');
 
-            return $url;
-        }
-        if (isset($track->album) && isset($track->album->images)) {
+    $retry = true;
+    $nb_retry = 0;
+    while ($retry) {
 
-            if(!$highRes) {
-                // 60 px
-                if (isset($track->album->images[2]) && isset($track->album->images[2]->url)) {
-                    return $track->album->images[2]->url;
+        if ($type == 'track') {
+            try {
+                $api = getSpotifyWebAPI($w);
+                $track = $api->getTrack($id);
+                $retry = false;
+            } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+                if ($e->getCode() != 429) {
+                    logMsg('Error(getArtworkURL track): (exception '.jTraceEx($e).')');
                 }
 
-                // 300 px
-                if (isset($track->album->images[1]) && isset($track->album->images[1]->url)) {
-                    return $track->album->images[1]->url;
+                if ($e->getCode() == 429) { // 429 is Too Many Requests
+                    $lastResponse = $api->getRequest()->getLastResponse();
+                    $retryAfter = $lastResponse['headers']['Retry-After'];
+                    sleep($retryAfter);
+                } else if ($e->getCode() == 404) {
+                        // skip
+                        break;
+                } else if ($e->getCode() == 500
+                    || $e->getCode() == 502 || $e->getCode() == 503) {
+                    // retry
+                    if ($nb_retry > 20) {
+                        handleSpotifyWebAPIException($w, $e);
+                        $retry = false;
+
+                        return $url;
+                    }
+                    ++$nb_retry;
+                    sleep(15);
+                } else {
+                    handleSpotifyWebAPIException($w, $e);
+                    $retry = false;
+
+                    return $url;
                 }
 
-                // 600 px
-                if (isset($track->album->images[0]) && isset($track->album->images[0]->url)) {
-                    return $track->album->images[0]->url;
-                }
-            } else {
-                // 600 px
-                if (isset($track->album->images[0]) && isset($track->album->images[0]->url)) {
-                    return $track->album->images[0]->url;
-                }  
-
-                // 300 px
-                if (isset($track->album->images[1]) && isset($track->album->images[1]->url)) {
-                    return $track->album->images[1]->url;
-                }            
+                return $url;
             }
+            if (isset($track->album) && isset($track->album->images)) {
 
+                if(!$highRes) {
+                    // 60 px
+                    if (isset($track->album->images[2]) && isset($track->album->images[2]->url)) {
+                        return $track->album->images[2]->url;
+                    }
 
-        }
-    } else {
-        try {
-            $api = getSpotifyWebAPI($w);
-            $album = $api->getAlbum($id);
-        } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            logMsg('Error(getArtworkURL album): (exception '.jTraceEx($e).')');
-            return $url;
-        }
-        if (isset($album->images)) {
+                    // 300 px
+                    if (isset($track->album->images[1]) && isset($track->album->images[1]->url)) {
+                        return $track->album->images[1]->url;
+                    }
 
-            if(!$highRes) {
-                // 60 px
-                if (isset($album->images[2]) && isset($album->images[2]->url)) {
-                    return $album->images[2]->url;
+                    // 600 px
+                    if (isset($track->album->images[0]) && isset($track->album->images[0]->url)) {
+                        return $track->album->images[0]->url;
+                    }
+                } else {
+                    // 600 px
+                    if (isset($track->album->images[0]) && isset($track->album->images[0]->url)) {
+                        return $track->album->images[0]->url;
+                    }  
+
+                    // 300 px
+                    if (isset($track->album->images[1]) && isset($track->album->images[1]->url)) {
+                        return $track->album->images[1]->url;
+                    }            
                 }
 
-                // 300 px
-                if (isset($album->images[1]) && isset($album->images[1]->url)) {
-                    return $album->images[1]->url;
-                }
 
-                // 600 px
-                if (isset($album->images[0]) && isset($album->images[0]->url)) {
-                    return $album->images[0]->url;
-                }
-            } else {
-                // 600 px
-                if (isset($album->images[0]) && isset($album->images[0]->url)) {
-                    return $album->images[0]->url;
-                }
-
-                // 300 px
-                if (isset($album->images[1]) && isset($album->images[1]->url)) {
-                    return $album->images[1]->url;
-                }     
             }
+        } else {
+            try {
+                $api = getSpotifyWebAPI($w);
+                $album = $api->getAlbum($id);
+                $retry = false;
+            } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+                if ($e->getCode() != 429) {
+                    logMsg('Error(getArtworkURL album): (exception '.jTraceEx($e).')');
+                }
+
+                if ($e->getCode() == 429) { // 429 is Too Many Requests
+                    $lastResponse = $api->getRequest()->getLastResponse();
+                    $retryAfter = $lastResponse['headers']['Retry-After'];
+                    sleep($retryAfter);
+                } else if ($e->getCode() == 404) {
+                        // skip
+                        break;
+                } else if ($e->getCode() == 500
+                    || $e->getCode() == 502 || $e->getCode() == 503) {
+                    // retry
+                    if ($nb_retry > 20) {
+                        handleSpotifyWebAPIException($w, $e);
+                        $retry = false;
+
+                        return $url;
+                    }
+                    ++$nb_retry;
+                    sleep(15);
+                } else {
+                    handleSpotifyWebAPIException($w, $e);
+                    $retry = false;
+
+                    return $url;
+                }
+
+                return $url;
+            }
+            if (isset($album->images)) {
+
+                if(!$highRes) {
+                    // 60 px
+                    if (isset($album->images[2]) && isset($album->images[2]->url)) {
+                        return $album->images[2]->url;
+                    }
+
+                    // 300 px
+                    if (isset($album->images[1]) && isset($album->images[1]->url)) {
+                        return $album->images[1]->url;
+                    }
+
+                    // 600 px
+                    if (isset($album->images[0]) && isset($album->images[0]->url)) {
+                        return $album->images[0]->url;
+                    }
+                } else {
+                    // 600 px
+                    if (isset($album->images[0]) && isset($album->images[0]->url)) {
+                        return $album->images[0]->url;
+                    }
+
+                    // 300 px
+                    if (isset($album->images[1]) && isset($album->images[1]->url)) {
+                        return $album->images[1]->url;
+                    }     
+                }
 
 
+            }
         }
     }
 
@@ -5338,7 +5483,7 @@ function getPlaylistArtworkURL($w, $playlist_uri)
     $tmp = explode(':', $playlist_uri);
     try {
         $api = getSpotifyWebAPI($w);
-        $playlist = $api->getUserPlaylist(urlencode($tmp[2]), $tmp[4], array(
+        $playlist = $api->getPlaylist($tmp[4], array(
                 'fields' => array(
                     'images',
                 ),
@@ -5530,7 +5675,7 @@ function updateLibrary($w)
     try {
         $api = getSpotifyWebAPI($w);
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        logMsg('Error(getUserPlaylists): (exception '.jTraceEx($e).')');
+        logMsg('Error(getPlaylists): (exception '.jTraceEx($e).')');
         handleSpotifyWebAPIException($w, $e);
 
         return false;
@@ -5555,7 +5700,7 @@ function updateLibrary($w)
                 if ($e->getCode() == 429) { // 429 is Too Many Requests
                     $lastResponse = $api->getRequest()->getLastResponse();
                     $retryAfter = $lastResponse['headers']['Retry-After'];
-                    sleep(retryAfter);
+                    sleep($retryAfter);
                 } else if ($e->getCode() == 404) {
                         // skip
                         break;
@@ -5611,7 +5756,7 @@ function updateLibrary($w)
                 if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
                 $retryAfter = $lastResponse['headers']['Retry-After'];
-                sleep(retryAfter);
+                sleep($retryAfter);
                 } else if ($e->getCode() == 404) {
                     // skip
                     break;
@@ -5709,7 +5854,7 @@ function updateLibrary($w)
         try {
             $api = getSpotifyWebAPI($w);
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            logMsg('Error(getUserPlaylistTracks): playlist id '.$playlist->id.' (exception '.jTraceEx($e).')');
+            logMsg('Error(getPlaylistTracks): playlist id '.$playlist->id.' (exception '.jTraceEx($e).')');
             handleSpotifyWebAPIException($w, $e);
 
             return false;
@@ -5723,7 +5868,7 @@ function updateLibrary($w)
                 try {
                     // refresh api
                     $api = getSpotifyWebAPI($w, $api);
-                    $userPlaylistTracks = $api->getUserPlaylistTracks(urlencode($owner->id), $playlist->id, array(
+                    $userPlaylistTracks = $api->getPlaylistTracks($playlist->id, array(
                             'fields' => array(
                                 'total',
                                 'items(added_at)',
@@ -5743,7 +5888,7 @@ function updateLibrary($w)
                      if ($e->getCode() == 429) { // 429 is Too Many Requests
                         $lastResponse = $api->getRequest()->getLastResponse();
                         $retryAfter = $lastResponse['headers']['Retry-After'];
-                        sleep(retryAfter);
+                        sleep($retryAfter);
                      } else if ($e->getCode() == 404) {
                             // skip
                             break;
@@ -6303,7 +6448,7 @@ function refreshLibrary($w)
                 if ($e->getCode() == 429) { // 429 is Too Many Requests
                     $lastResponse = $api->getRequest()->getLastResponse();
                     $retryAfter = $lastResponse['headers']['Retry-After'];
-                    sleep(retryAfter);
+                    sleep($retryAfter);
                 } else if ($e->getCode() == 404) {
                         // skip
                         break;
@@ -6387,7 +6532,7 @@ function refreshLibrary($w)
                     try {
                         // refresh api
                         $api = getSpotifyWebAPI($w, $api);
-                        $userPlaylistTracks = $api->getUserPlaylistTracks(urlencode($owner->id), $playlist->id, array(
+                        $userPlaylistTracks = $api->getPlaylistTracks($playlist->id, array(
                                 'fields' => array(
                                     'total',
                                     'items(added_at)',
@@ -6402,12 +6547,12 @@ function refreshLibrary($w)
                             ));
                         $retry = false;
                     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-                        logMsg('Error(getUserPlaylistTracks): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
+                        logMsg('Error(getPlaylistTracks): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
 
                         if ($e->getCode() == 429) { // 429 is Too Many Requests
                             $lastResponse = $api->getRequest()->getLastResponse();
                             $retryAfter = $lastResponse['headers']['Retry-After'];
-                            sleep(retryAfter);
+                            sleep($retryAfter);
                         } else if ($e->getCode() == 404) {
                                 // skip
                                 break;
@@ -6581,8 +6726,10 @@ function refreshLibrary($w)
 
             // check if this is a self-updated playlist (spotify and 30 tracks)
             $selfUpdatedPlaylistUpdated = false;
-            $tmp = explode(':',$playlists[0]);
-            if($tmp[2] == 'spotify' && $tracks->total == 30) {
+            
+            $owner = getPlaylistOwner($w,$playlists[0]);
+
+            if($owner == 'spotify' && $tracks->total == 30) {
 
                 try {
                     $getOneTrack = 'select added_at from tracks where playlist_uri=:theplaylisturi order by added_at desc limit 1';
@@ -6651,7 +6798,7 @@ function refreshLibrary($w)
                         try {
                             // refresh api
                             $api = getSpotifyWebAPI($w, $api);
-                            $userPlaylistTracks = $api->getUserPlaylistTracks(urlencode($owner->id), $playlist->id, array(
+                            $userPlaylistTracks = $api->getPlaylistTracks($playlist->id, array(
                                     'fields' => array(
                                         'total',
                                         'items(added_at)',
@@ -6666,12 +6813,12 @@ function refreshLibrary($w)
                                 ));
                             $retry = false;
                         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-                            logMsg('Error(getUserPlaylistTracks): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
+                            logMsg('Error(getPlaylistTracks): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
 
                             if ($e->getCode() == 429) { // 429 is Too Many Requests
                                 $lastResponse = $api->getRequest()->getLastResponse();
                                 $retryAfter = $lastResponse['headers']['Retry-After'];
-                                sleep(retryAfter);
+                                sleep($retryAfter);
                             } else if ($e->getCode() == 404) {
                                     // skip
                                     break;
@@ -6898,7 +7045,7 @@ function refreshLibrary($w)
             if ($e->getCode() == 429) { // 429 is Too Many Requests
             $lastResponse = $api->getRequest()->getLastResponse();
             $retryAfter = $lastResponse['headers']['Retry-After'];
-            sleep(retryAfter);
+            sleep($retryAfter);
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
@@ -6976,7 +7123,7 @@ function refreshLibrary($w)
                      if ($e->getCode() == 429) { // 429 is Too Many Requests
                         $lastResponse = $api->getRequest()->getLastResponse();
                         $retryAfter = $lastResponse['headers']['Retry-After'];
-                        sleep(retryAfter);
+                        sleep($retryAfter);
                      } else if ($e->getCode() == 404) {
                             // skip
                             break;

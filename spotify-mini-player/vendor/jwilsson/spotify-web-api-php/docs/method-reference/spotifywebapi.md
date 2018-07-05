@@ -59,13 +59,36 @@ Add tracks to the current user's Spotify library.<br>
 ---
 
 
+### addPlaylistTracks
+
+
+    boolean SpotifyWebAPI\SpotifyWebAPI::addPlaylistTracks(string $playlistId, string|array $tracks, array|object $options)
+
+Add tracks to a playlist.<br>
+[https://developer.spotify.com/web-api/add-tracks-to-playlist/](https://developer.spotify.com/web-api/add-tracks-to-playlist/)
+
+#### Arguments
+* `$playlistId` **string** - ID of the playlist to add tracks to.
+* `$tracks` **string\|array** - ID(s) or Spotify URI(s) of the track(s) to add.
+* `$options` **array\|object** - Optional. Options for the new tracks.
+    * int position Optional. Zero-based track position in playlist. Tracks will be appened if omitted or false.
+
+
+
+#### Return values
+* **boolean** Whether the tracks was successfully added.
+
+
+---
+
+
 ### addUserPlaylistTracks
 
+_Deprecated: _
 
     boolean SpotifyWebAPI\SpotifyWebAPI::addUserPlaylistTracks(string $userId, string $playlistId, string|array $tracks, array|object $options)
 
-Add tracks to a user's playlist.<br>
-[https://developer.spotify.com/web-api/add-tracks-to-playlist/](https://developer.spotify.com/web-api/add-tracks-to-playlist/)
+
 
 #### Arguments
 * `$userId` **string** - ID of the user who owns the playlist.
@@ -127,13 +150,35 @@ Change playback volume for the current user.<br>
 ---
 
 
+### createPlaylist
+
+
+    array|object SpotifyWebAPI\SpotifyWebAPI::createPlaylist(array|object $options)
+
+Create a new playlist.<br>
+[https://developer.spotify.com/web-api/create-playlist/](https://developer.spotify.com/web-api/create-playlist/)
+
+#### Arguments
+* `$options` **array\|object** - Options for the new playlist.
+    * string name Required. Name of the playlist.
+    * bool public Optional. Whether the playlist should be public or not.
+
+
+
+#### Return values
+* **array\|object** The new playlist. Type is controlled by `SpotifyWebAPI::setReturnType()`.
+
+
+---
+
+
 ### createUserPlaylist
 
+_Deprecated: _
 
     array|object SpotifyWebAPI\SpotifyWebAPI::createUserPlaylist(string $userId, array|object $options)
 
-Create a new playlist for a user.<br>
-[https://developer.spotify.com/web-api/create-playlist/](https://developer.spotify.com/web-api/create-playlist/)
+
 
 #### Arguments
 * `$userId` **string** - ID or Spotify URI of the user to create the playlist for.
@@ -208,13 +253,41 @@ Delete tracks from current user's Spotify library.<br>
 ---
 
 
-### deleteUserPlaylistTracks
+### deletePlaylistTracks
 
 
-    string|boolean SpotifyWebAPI\SpotifyWebAPI::deleteUserPlaylistTracks(string $userId, string $playlistId, array $tracks, string $snapshotId)
+    string|boolean SpotifyWebAPI\SpotifyWebAPI::deletePlaylistTracks(string $playlistId, array $tracks, string $snapshotId)
 
 Delete tracks from a playlist and retrieve a new snapshot ID.<br>
 [https://developer.spotify.com/web-api/remove-tracks-playlist/](https://developer.spotify.com/web-api/remove-tracks-playlist/)
+
+#### Arguments
+* `$playlistId` **string** - ID or Spotify URI of the playlist to delete tracks from.
+* `$tracks` **array** - An array with the key &quot;tracks&quot; containing arrays or objects with tracks to delete.
+Or an array with the key &quot;positions&quot; containing integer positions of the tracks to delete.
+For legacy reasons, the &quot;tracks&quot; key can be omitted but its use is deprecated.
+If the &quot;tracks&quot; key is used, the following fields are also available:
+    * string id Required. Track ID or Spotify URI.
+    * int\|array positions Optional. The track&#039;s position(s) in the playlist.
+
+* `$snapshotId` **string** - Required when $tracks[&#039;positions&#039;] is used, optional otherwise.
+The playlist&#039;s snapshot ID.
+
+
+#### Return values
+* **string\|boolean** A new snapshot ID or false if the tracks weren&#039;t successfully deleted.
+
+
+---
+
+
+### deleteUserPlaylistTracks
+
+_Deprecated: _
+
+    string|boolean SpotifyWebAPI\SpotifyWebAPI::deleteUserPlaylistTracks(string $userId, string $playlistId, array $tracks, string $snapshotId)
+
+
 
 #### Arguments
 * `$userId` **string** - ID or Spotify URI of the user who owns the playlist.
@@ -810,6 +883,54 @@ Get new releases.<br>
 ---
 
 
+### getPlaylist
+
+
+    array|object SpotifyWebAPI\SpotifyWebAPI::getPlaylist(string $playlistId, array|object $options)
+
+Get a specific playlist.<br>
+[https://developer.spotify.com/web-api/get-playlist/](https://developer.spotify.com/web-api/get-playlist/)
+
+#### Arguments
+* `$playlistId` **string** - ID or Spotify URI of the playlist.
+* `$options` **array\|object** - Optional. Options for the playlist.
+    * string\|array fields Optional. A list of fields to return. See Spotify docs for more info.
+    * string market Optional. An ISO 3166-1 alpha-2 country code, provide this if you wish to apply Track Relinking.
+
+
+
+#### Return values
+* **array\|object** The user&#039;s playlist. Type is controlled by `SpotifyWebAPI::setReturnType()`.
+
+
+---
+
+
+### getPlaylistTracks
+
+
+    array|object SpotifyWebAPI\SpotifyWebAPI::getPlaylistTracks(string $playlistId, array|object $options)
+
+Get the tracks in a playlist.<br>
+[https://developer.spotify.com/web-api/get-playlists-tracks/](https://developer.spotify.com/web-api/get-playlists-tracks/)
+
+#### Arguments
+* `$playlistId` **string** - ID or Spotify URI of the playlist.
+* `$options` **array\|object** - Optional. Options for the tracks.
+    * string\|array fields Optional. A list of fields to return. See Spotify docs for more info.
+    * int limit Optional. Limit the number of tracks.
+    * int offset Optional. Number of tracks to skip.
+    * string market Optional. An ISO 3166-1 alpha-2 country code, provide this if you wish to apply Track Relinking.
+
+
+
+#### Return values
+* **array\|object** The tracks in the playlist. Type is controlled by `SpotifyWebAPI::setReturnType()`.
+
+
+---
+
+
 ### getRecommendations
 
 
@@ -955,11 +1076,11 @@ Get the artists followed by the current user.<br>
 
 ### getUserPlaylist
 
+_Deprecated: _
 
     array|object SpotifyWebAPI\SpotifyWebAPI::getUserPlaylist(string $userId, string $playlistId, array|object $options)
 
-Get a user's specific playlist.<br>
-[https://developer.spotify.com/web-api/get-playlist/](https://developer.spotify.com/web-api/get-playlist/)
+
 
 #### Arguments
 * `$userId` **string** - ID or Spotify URI of the user.
@@ -1002,11 +1123,11 @@ Get a user's playlists.<br>
 
 ### getUserPlaylistTracks
 
+_Deprecated: _
 
     array|object SpotifyWebAPI\SpotifyWebAPI::getUserPlaylistTracks(string $userId, string $playlistId, array|object $options)
 
-Get the tracks in a user's playlist.<br>
-[https://developer.spotify.com/web-api/get-playlists-tracks/](https://developer.spotify.com/web-api/get-playlists-tracks/)
+
 
 #### Arguments
 * `$userId` **string** - ID or Spotify URI of the user.
@@ -1161,13 +1282,38 @@ Play the previous track in the current users's queue.<br>
 ---
 
 
+### reorderPlaylistTracks
+
+
+    string|boolean SpotifyWebAPI\SpotifyWebAPI::reorderPlaylistTracks(string $playlistId, array|object $options)
+
+Reorder the tracks in a playlist.<br>
+[https://developer.spotify.com/web-api/reorder-playlists-tracks/](https://developer.spotify.com/web-api/reorder-playlists-tracks/)
+
+#### Arguments
+* `$playlistId` **string** - ID or Spotify URI of the playlist.
+* `$options` **array\|object** - Options for the new tracks.
+    * int range_start Required. Position of the first track to be reordered.
+    * int range_length Optional. The amount of tracks to be reordered.
+    * int insert_before Required. Position where the tracks should be inserted.
+    * string snapshot_id Optional. The playlist&#039;s snapshot ID.
+
+
+
+#### Return values
+* **string\|boolean** A new snapshot ID or false if the tracks weren&#039;t successfully reordered.
+
+
+---
+
+
 ### reorderUserPlaylistTracks
 
+_Deprecated: _
 
     string|boolean SpotifyWebAPI\SpotifyWebAPI::reorderUserPlaylistTracks(string $userId, string $playlistId, array|object $options)
 
-Reorder the tracks in a user's playlist.<br>
-[https://developer.spotify.com/web-api/reorder-playlists-tracks/](https://developer.spotify.com/web-api/reorder-playlists-tracks/)
+
 
 #### Arguments
 * `$userId` **string** - ID or Spotify URI of the user.
@@ -1209,13 +1355,33 @@ Set repeat mode for the current user’s playback.<br>
 ---
 
 
+### replacePlaylistTracks
+
+
+    boolean SpotifyWebAPI\SpotifyWebAPI::replacePlaylistTracks(string $playlistId, string|array $tracks)
+
+Replace all tracks in a playlist with new ones.<br>
+[https://developer.spotify.com/web-api/replace-playlists-tracks/](https://developer.spotify.com/web-api/replace-playlists-tracks/)
+
+#### Arguments
+* `$playlistId` **string** - ID or Spotify URI of the playlist.
+* `$tracks` **string\|array** - ID(s) or Spotify URI(s) of the track(s) to add.
+
+
+#### Return values
+* **boolean** Whether the tracks was successfully replaced.
+
+
+---
+
+
 ### replaceUserPlaylistTracks
 
+_Deprecated: _
 
     boolean SpotifyWebAPI\SpotifyWebAPI::replaceUserPlaylistTracks(string $userId, string $playlistId, string|array $tracks)
 
-Replace all tracks in a user's playlist with new ones.<br>
-[https://developer.spotify.com/web-api/replace-playlists-tracks/](https://developer.spotify.com/web-api/replace-playlists-tracks/)
+
 
 #### Arguments
 * `$userId` **string** - ID or Spotify URI of the user.
@@ -1375,6 +1541,31 @@ Remove the current user as a follower of a playlist.<br>
 ---
 
 
+### updatePlaylist
+
+
+    boolean SpotifyWebAPI\SpotifyWebAPI::updatePlaylist(string $playlistId, array|object $options)
+
+Update the details of a playlist.<br>
+[https://developer.spotify.com/web-api/change-playlist-details/](https://developer.spotify.com/web-api/change-playlist-details/)
+
+#### Arguments
+* `$playlistId` **string** - ID or Spotify URI of the playlist to update.
+* `$options` **array\|object** - Options for the playlist.
+    * collaborative bool Optional. Whether the playlist should be collaborative or not.
+    * description string Optional. Description of the playlist.
+    * name string Optional. Name of the playlist.
+    * public bool Optional. Whether the playlist should be public or not.
+
+
+
+#### Return values
+* **boolean** Whether the playlist was successfully updated.
+
+
+---
+
+
 ### updateUserPlaylist
 
 
@@ -1401,13 +1592,33 @@ Update the details of a user's playlist.<br>
 ---
 
 
+### updatePlaylistImage
+
+
+    boolean SpotifyWebAPI\SpotifyWebAPI::updatePlaylistImage(string $playlistId, $imageData)
+
+Update the image of a playlist.<br>
+[https://developer.spotify.com/web-api/upload-a-custom-playlist-cover-image/](https://developer.spotify.com/web-api/upload-a-custom-playlist-cover-image/)
+
+#### Arguments
+* `$playlistId` **string** - ID or Spotify URI of the playlist to update.
+* `$imageData` **mixed**
+
+
+#### Return values
+* **boolean** Whether the playlist was successfully updated.
+
+
+---
+
+
 ### updateUserPlaylistImage
 
+_Deprecated: _
 
     boolean SpotifyWebAPI\SpotifyWebAPI::updateUserPlaylistImage(string $userId, string $playlistId, $imageData)
 
-Update the image of a user's playlist.<br>
-[https://developer.spotify.com/web-api/upload-a-custom-playlist-cover-image/](https://developer.spotify.com/web-api/upload-a-custom-playlist-cover-image/)
+
 
 #### Arguments
 * `$userId` **string** - ID or Spotify URI of the user who owns the playlist.

@@ -1,4 +1,26 @@
 # Changelog
+## 2.5.0 (2018-07-03)
+* Because of [recent changes](https://developer.spotify.com/community/news/2018/06/12/changes-to-playlist-uris/) in the handling of playlist related calls, the following methods are deprecated ([a05db96](https://github.com/jwilsson/spotify-web-api-php/commit/a05db96755928d914ceae83c20cc8c72fe5f1568)):
+    * `SpotifyWebAPI::addUserPlaylistTracks()`
+    * `SpotifyWebAPI::createUserPlaylist()`
+    * `SpotifyWebAPI::deleteUserPlaylistTracks()`
+    * `SpotifyWebAPI::getUserPlaylist()`
+    * `SpotifyWebAPI::getUserPlaylistTracks()`
+    * `SpotifyWebAPI::reorderUserPlaylistTracks()`
+    * `SpotifyWebAPI::replaceUserPlaylistTracks()`
+    * `SpotifyWebAPI::updateUserPlaylist()`
+    * `SpotifyWebAPI::updateUserPlaylistImage()`
+* The following methods should be used instead, accepting the same arguments except for `$userId` ([a05db96](https://github.com/jwilsson/spotify-web-api-php/commit/a05db96755928d914ceae83c20cc8c72fe5f1568)):
+    * `SpotifyWebAPI::addPlaylistTracks()`
+    * `SpotifyWebAPI::createPlaylist()`
+    * `SpotifyWebAPI::deletePlaylistTracks()`
+    * `SpotifyWebAPI::getPlaylist()`
+    * `SpotifyWebAPI::getPlaylistTracks()`
+    * `SpotifyWebAPI::reorderPlaylistTracks()`
+    * `SpotifyWebAPI::replacePlaylistTracks()`
+    * `SpotifyWebAPI::updatePlaylist()`
+    * `SpotifyWebAPI::updatePlaylistImage()`
+
 ## 2.4.0 (2018-06-06)
 * Authentication errors will now throw an `SpotifyWebAPIAuthException` instead of the regular `SpotifyWebAPIException`. ([4b068d0](https://github.com/jwilsson/spotify-web-api-php/commit/4b068d0f0e9951fbb0f938a5a8e95ead7813f53b))
 

@@ -358,13 +358,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
         return;
     } elseif ($playlist_uri != '') {
         // case cmd on playlist: change privacy
-            // in other_action, the privacy is set
-            $tmp = explode(':', $playlist_uri);
-        if ($userid != $tmp[2]) {
-            displayNotificationWithArtwork($w, 'You cannot update a playlist you don’t own', './images/warning.png', 'Error!');
-
-            return;
-        }
+        // in other_action, the privacy is set
         if ($other_action == 'set_playlist_privacy_to_public') {
             $public = true;
             $msgPublic = 'public';

@@ -1716,7 +1716,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                 if ($e->getCode() == 429) { // 429 is Too Many Requests
                     $lastResponse = $api->getRequest()->getLastResponse();
                     $retryAfter = $lastResponse['headers']['Retry-After'];
-                    sleep(retryAfter);
+                    sleep($retryAfter);
                 } else if ($e->getCode() == 404) {
                     $retry = false;
                     $w->result(null, 'help', 'Exception occurred',array(

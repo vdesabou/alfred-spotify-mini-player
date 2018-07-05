@@ -1169,7 +1169,6 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
     $tmp = explode('∙', $words[1]);
     $theplaylisturi = $tmp[0];
     $url = explode(':', $theplaylisturi);
-    $owner_id = $url[2];
     $playlist_id = $url[4];
 
     // playlist name is encoded in base64
@@ -1185,7 +1184,7 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
         do {
             // refresh api
             $api = getSpotifyWebAPI($w, false, $api);
-            $userPlaylistTracks = $api->getUserPlaylistTracks($owner_id, $playlist_id, array(
+            $userPlaylistTracks = $api->getPlaylistTracks($playlist_id, array(
                     'fields' => array(
                         'total',
                         'items(added_at)',
