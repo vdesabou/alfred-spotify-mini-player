@@ -2,7 +2,7 @@
 layout: article
 permalink: /release-notes/
 title: "Release Notes"
-modified: 2018-04-03
+modified: 2018-07-18
 excerpt: "Release Notes."
 image:
   feature:
@@ -12,6 +12,13 @@ share: false
 toc: false
 noindex: false
 ---
+
+<a name="v7.14"></a>
+7.14:
+
+* <span class="badge success">IMPROVED</span> Adapt workflow to changes to Playlist URIs coming to Spotify Web API [#246](https://github.com/vdesabou/alfred-spotify-mini-player/issues/246)
+* <span class="badge danger">FIXED</span> Search for X in Spotify doesn't work when X is a non-latin [#245](https://github.com/vdesabou/alfred-spotify-mini-player/issues/245)
+
 
 <a name="v7.13"></a>
 7.13:
