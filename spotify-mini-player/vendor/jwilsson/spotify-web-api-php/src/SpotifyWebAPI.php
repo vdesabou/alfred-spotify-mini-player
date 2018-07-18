@@ -242,7 +242,7 @@ class SpotifyWebAPI
         $headers = $this->authHeaders();
         $headers['Content-Type'] = 'application/json';
 
-        $uri = '/v1/playlists';
+        $uri = '/v1/me/playlists';
 
         $this->lastResponse = $this->request->api('POST', $uri, $options, $headers);
 
