@@ -2928,6 +2928,8 @@ function removeCurrentTrackFrom($w)
 
             return;
         }
+    } else {
+        $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
     }
 
     if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
