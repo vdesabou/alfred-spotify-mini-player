@@ -5426,7 +5426,6 @@ function getArtworkURL($w, $type, $id, $highRes = false)
                     || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
                     // retry
                     if ($nb_retry > 2) {
-                        handleSpotifyWebAPIException($w, $e);
                         $retry = false;
 
                         return $url;
@@ -5434,7 +5433,6 @@ function getArtworkURL($w, $type, $id, $highRes = false)
                     ++$nb_retry;
                     sleep(5);
                 } else {
-                    handleSpotifyWebAPIException($w, $e);
                     $retry = false;
 
                     return $url;
@@ -5497,7 +5495,6 @@ function getArtworkURL($w, $type, $id, $highRes = false)
                     || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
                     // retry
                     if ($nb_retry > 2) {
-                        handleSpotifyWebAPIException($w, $e);
                         $retry = false;
 
                         return $url;
@@ -5505,7 +5502,6 @@ function getArtworkURL($w, $type, $id, $highRes = false)
                     ++$nb_retry;
                     sleep(5);
                 } else {
-                    handleSpotifyWebAPIException($w, $e);
                     $retry = false;
 
                     return $url;
@@ -5558,33 +5554,69 @@ function getPlaylistArtworkURL($w, $playlist_uri)
 {
     $url = '';
     $tmp = explode(':', $playlist_uri);
-    try {
-        $api = getSpotifyWebAPI($w);
-        $playlist = $api->getPlaylist($tmp[4], array(
-                'fields' => array(
-                    'images',
-                ),
-            ));
-    } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        logMsg( 'Error(getPlaylistArtworkURL): (exception '.jTraceEx($e).')');
 
-        return $url;
-    }
-    if (isset($playlist->images)) {
+    $retry = true;
+    $nb_retry = 0;
+    while ($retry) {
+        try {
+            $api = getSpotifyWebAPI($w);
+            $playlist = $api->getPlaylist($tmp[4], array(
+                    'fields' => array(
+                        'images',
+                    ),
+                ));
+            $retry = false;
+        } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+            if ($e->getCode() != 429) {
+                logMsg('Error(getPlaylistArtworkURL): (exception '.jTraceEx($e).')');
+            }
 
-        // 60 px
-        if (isset($playlist->images[2]) && isset($playlist->images[2]->url)) {
-            return $playlist->images[2]->url;
+            if ($e->getCode() == 429) { // 429 is Too Many Requests
+                $lastResponse = $api->getRequest()->getLastResponse();
+                $retryAfter = $lastResponse['headers']['Retry-After'];
+                sleep($retryAfter);
+            } else if ($e->getCode() == 404) {
+                // skip
+                break;
+            } else if (strpos($e->getMessage(), 'ssl') !== false) {
+                // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
+                // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
+                // retry any SSL error
+                ++$nb_retry;
+            } else if ($e->getCode() == 500
+                || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+                // retry
+                if ($nb_retry > 2) {
+                    $retry = false;
+
+                    return $url;
+                }
+                ++$nb_retry;
+                sleep(5);
+            } else {
+                $retry = false;
+
+                return $url;
+            }
+
+            return $url;
         }
+        if (isset($playlist->images)) {
 
-        // 300 px
-        if (isset($playlist->images[1]) && isset($playlist->images[1]->url)) {
-            return $playlist->images[1]->url;
-        }
+            // 60 px
+            if (isset($playlist->images[2]) && isset($playlist->images[2]->url)) {
+                return $playlist->images[2]->url;
+            }
 
-        // 600 px
-        if (isset($playlist->images[0]) && isset($playlist->images[0]->url)) {
-            return $playlist->images[0]->url;
+            // 300 px
+            if (isset($playlist->images[1]) && isset($playlist->images[1]->url)) {
+                return $playlist->images[1]->url;
+            }
+
+            // 600 px
+            if (isset($playlist->images[0]) && isset($playlist->images[0]->url)) {
+                return $playlist->images[0]->url;
+            }
         }
     }
 
@@ -5603,33 +5635,67 @@ function getArtistArtworkURL($w, $artist_id)
     if (startswith($artist_id, 'fake')) {
         return $url;
     }
-    try {
-        $api = getSpotifyWebAPI($w);
-        $artist = $api->getArtist($artist_id);
-    } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        logMsg( 'Error(getArtistArtworkURL): (exception '.jTraceEx($e).')');
+    $retry = true;
+    $nb_retry = 0;
+    while ($retry) {
+        try {
+            $api = getSpotifyWebAPI($w);
+            $artist = $api->getArtist($artist_id);
+            $retry = false;
+        } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+            if ($e->getCode() != 429) {
+                logMsg('Error(getArtistArtworkURL): (exception '.jTraceEx($e).')');
+            }
 
-        return $url;
+            if ($e->getCode() == 429) { // 429 is Too Many Requests
+                $lastResponse = $api->getRequest()->getLastResponse();
+                $retryAfter = $lastResponse['headers']['Retry-After'];
+                sleep($retryAfter);
+            } else if ($e->getCode() == 404) {
+                // skip
+                break;
+            } else if (strpos($e->getMessage(), 'ssl') !== false) {
+                // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
+                // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
+                // retry any SSL error
+                ++$nb_retry;
+            } else if ($e->getCode() == 500
+                || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+                // retry
+                if ($nb_retry > 2) {
+                    $retry = false;
+
+                    return $url;
+                }
+                ++$nb_retry;
+                sleep(5);
+            } else {
+                $retry = false;
+
+                return $url;
+            }
+
+            return $url;
+        }
+
+        if (isset($artist->images)) {
+
+            // 60 px
+            if (isset($artist->images[2]) && isset($artist->images[2]->url)) {
+                return $artist->images[2]->url;
+            }
+
+            // 300 px
+            if (isset($artist->images[1]) && isset($artist->images[1]->url)) {
+                return $artist->images[1]->url;
+            }
+
+            // 600 px
+            if (isset($artist->images[0]) && isset($artist->images[0]->url)) {
+                return $artist->images[0]->url;
+            }
+        }
     }
-
-    if (isset($artist->images)) {
-
-        // 60 px
-        if (isset($artist->images[2]) && isset($artist->images[2]->url)) {
-            return $artist->images[2]->url;
-        }
-
-        // 300 px
-        if (isset($artist->images[1]) && isset($artist->images[1]->url)) {
-            return $artist->images[1]->url;
-        }
-
-        // 600 px
-        if (isset($artist->images[0]) && isset($artist->images[0]->url)) {
-            return $artist->images[0]->url;
-        }
-    }
-
     return $url;
 }
 
