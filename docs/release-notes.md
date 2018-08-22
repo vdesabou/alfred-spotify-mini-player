@@ -2,7 +2,7 @@
 layout: article
 permalink: /release-notes/
 title: "Release Notes"
-modified: 2018-07-18
+modified: 2018-08-22
 excerpt: "Release Notes."
 image:
   feature:
@@ -12,6 +12,12 @@ share: false
 toc: false
 noindex: false
 ---
+
+<a name="v7.15"></a>
+7.15:
+
+* <span class="badge danger">FIXED</span> cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error [#251](https://github.com/vdesabou/alfred-spotify-mini-player/issues/251)
+* <span class="badge danger">FIXED</span> Do not pop up error when displaying Now Playing notification [#252](https://github.com/vdesabou/alfred-spotify-mini-player/issues/252)
 
 <a name="v7.14"></a>
 7.14:
