@@ -92,17 +92,15 @@ Setting up the workflow is easy, you just need to follow these steps:-
   * https://transfer.sh (for DEBUG Zip file)
 
 
-* if you're using a proxy, don't forget to enable this option in Alfred preferences:-
+* if you're using a proxy, don't forget to enable this option in Alfred preferences, ***except for the time of authentication, it must be disabled*** :-
 
 <figure>
 	<a href="{{ site.url }}/images/setup6.jpg"><img src="{{ site.url }}/images/setup6.jpg"></a>
-	<figcaption>Use Mac OS http proxy settings for scripts option.</figcaption>
+	<figcaption>Use Mac OS http proxy settings for scripts option (except for authentication).</figcaption>
 </figure>
 
-* If you use a proxy, make sure to activate **Use macOS http proxy settings for scripts** in Advanced tab of Alfred Settings
 
 ## Create the library
-
 
 
 * Invoke the workflow (with keyword `spot_mini`, or with an [hotkey]({{ site.url }}/articles/hotkeys) ) 
