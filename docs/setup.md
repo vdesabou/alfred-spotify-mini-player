@@ -79,7 +79,7 @@ Setting up the workflow is easy, you just need to follow these steps:-
 
 ## Notes
 
-* if you're using a firewall or a software that blocks communication, note that you'll have to unblock the following domains to use the workflow:-
+* if you're using a firewall or a software that blocks communications, note that you'll have to unblock the following domains to use the workflow:-
 
   * https://api.spotify.com (for interaction with Spotify)
 
@@ -91,13 +91,14 @@ Setting up the workflow is easy, you just need to follow these steps:-
 
   * https://transfer.sh (for DEBUG Zip file)
 
-
 * if you're using a proxy, don't forget to enable this option in Alfred preferences, ***except for the time of authentication, it must be disabled*** :-
 
 <figure>
 	<a href="{{ site.url }}/images/setup6.jpg"><img src="{{ site.url }}/images/setup6.jpg"></a>
 	<figcaption>Use Mac OS http proxy settings for scripts option (except for authentication).</figcaption>
 </figure>
+
+* **Wappalyzer** browser extension interfere with authentication process: make sure to disable it during time of authentication.
 
 
 ## Create the library
@@ -116,9 +117,6 @@ Setting up the workflow is easy, you just need to follow these steps:-
 * Invoke the workflow again and select Authenticate with Spotify, your web browser will open and you'll be prompted to login with Spotify and allow access to your application. At the end you should see a message like this:-
 
     *Hello xxx ! You are now successfully logged and you can close this window.*
-
-**Warning:** If you have troubles with authentication using Chrome, make sure you disable *Wappalyzer* extension if you use it, or use Safari as default browser for the time of authentication process.
-{: .notice-danger}
 
 * Invoke the workflow again and Create the library.
 

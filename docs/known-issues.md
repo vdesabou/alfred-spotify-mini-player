@@ -2,7 +2,7 @@
 layout: article
 permalink: /known-issues/
 title: "Known Issues"
-modified: 2016-09-23
+modified: 2018-09-11
 excerpt: "List of Known Issues."
 image:
   feature:
@@ -16,6 +16,12 @@ noindex: false
 {% include toc.html %}
 
 This is the list of current known issues:
+
+## Authentication issues
+
+* Make sure to **disable** *Mac OS http proxy settings for scripts* option in Alfred advanced preferences during time of authentication
+
+* **Wappalyzer** browser extension interfere with authentication process: make sure to disable it during time of authentication.
 
 ## Spotify AppleScript bug
 
