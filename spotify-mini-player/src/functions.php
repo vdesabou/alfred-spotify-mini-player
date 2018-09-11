@@ -5600,14 +5600,13 @@ function getArtworkURL($w, $type, $id, $highRes = false)
 function getPlaylistArtworkURL($w, $playlist_uri)
 {
     $url = '';
-    $tmp = explode(':', $playlist_uri);
 
     $retry = true;
     $nb_retry = 0;
     while ($retry) {
         try {
             $api = getSpotifyWebAPI($w);
-            $playlist = $api->getPlaylist($tmp[4], array(
+            $playlist = $api->getPlaylist($playlist_uri, array(
                     'fields' => array(
                         'images',
                     ),
