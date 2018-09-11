@@ -1987,6 +1987,8 @@
 				<false/>
 			</dict>
 		</array>
+		<key>BC672665-5E43-4892-B8D3-BFCBA48E34C4</key>
+		<array/>
 		<key>BD255BDB-07A5-4EE9-858F-A58C6207D191</key>
 		<array>
 			<dict>
@@ -2005,6 +2007,19 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>18496AC4-EA42-444C-A906-642E38259C96</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>C032FA5B-9A40-4D07-8D22-4951FC736C88</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>78C0F9B3-408C-43E4-BC40-86523A54AFDA</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -4875,27 +4890,6 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>argumenttype</key>
-				<integer>2</integer>
-				<key>keyword</key>
-				<string>{var:c_current}</string>
-				<key>subtext</key>
-				<string>Get current track information</string>
-				<key>text</key>
-				<string>Get Current Track info</string>
-				<key>withspace</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>A38DD404-DE03-42C2-B0CB-A37891B6F24D</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>concurrently</key>
 				<false/>
 				<key>escaping</key>
@@ -4916,6 +4910,27 @@ php -f ./src/action.php -- "$query" "{query}" "" &gt;&gt; "$alfred_workflow_cach
 			<string>BC672665-5E43-4892-B8D3-BFCBA48E34C4</string>
 			<key>version</key>
 			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>{var:c_current}</string>
+				<key>subtext</key>
+				<string>Get current track information</string>
+				<key>text</key>
+				<string>Get Current Track info</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>A38DD404-DE03-42C2-B0CB-A37891B6F24D</string>
+			<key>version</key>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -8178,6 +8193,43 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>triggerid</key>
+				<string>copy_current_track_url_to_clipboard</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.external</string>
+			<key>uid</key>
+			<string>C032FA5B-9A40-4D07-8D22-4951FC736C88</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "copy_current_track_url_to_clipboard" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
+php -f ./src/action.php -- "$query" "{query}" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>78C0F9B3-408C-43E4-BC40-86523A54AFDA</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string>Web Site:
@@ -8997,6 +9049,13 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<key>ypos</key>
 			<integer>3930</integer>
 		</dict>
+		<key>78C0F9B3-408C-43E4-BC40-86523A54AFDA</key>
+		<dict>
+			<key>xpos</key>
+			<integer>420</integer>
+			<key>ypos</key>
+			<integer>13110</integer>
+		</dict>
 		<key>78DAB9D1-72A3-4B44-AB3B-D1C71F13DF7A</key>
 		<dict>
 			<key>xpos</key>
@@ -9346,9 +9405,9 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 		<key>A38DD404-DE03-42C2-B0CB-A37891B6F24D</key>
 		<dict>
 			<key>xpos</key>
-			<integer>300</integer>
+			<integer>270</integer>
 			<key>ypos</key>
-			<real>4610</real>
+			<integer>4650</integer>
 		</dict>
 		<key>A41190FA-4B23-4908-A4B7-16A14F338C11</key>
 		<dict>
@@ -9540,6 +9599,16 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<integer>90</integer>
 			<key>ypos</key>
 			<integer>620</integer>
+		</dict>
+		<key>C032FA5B-9A40-4D07-8D22-4951FC736C88</key>
+		<dict>
+			<key>note</key>
+			<string>Copy current track url to clipboard
+Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
+			<key>xpos</key>
+			<integer>170</integer>
+			<key>ypos</key>
+			<integer>13110</integer>
 		</dict>
 		<key>C10A975C-0DAE-4A45-AEAB-4E07CF125703</key>
 		<dict>

@@ -5,6 +5,51 @@ require './vendor/autoload.php';
 
 
 /**
+ * copyCurrentTrackUrlToClipboard function.
+ *
+ * @param mixed $w
+ */
+function copyCurrentTrackUrlToClipboard($w)
+{
+
+    // Read settings from JSON
+
+    $settings = getSettings($w);
+
+    $output_application = $settings->output_application;
+    
+
+    if ($output_application == 'MOPIDY') {
+        $retArr = array(getCurrentTrackInfoWithMopidy($w));
+    } else if($output_application == 'APPLESCRIPT') {
+        // get info on current song
+        exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
+        if ($retVal != 0) {
+            displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
+            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('c_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
+
+            return;
+        }
+    } else {
+        $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
+    }
+
+    if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
+        $results = explode('▹', $retArr[count($retArr) - 1]);
+
+        $tmp = explode(':', $results[4]);
+        if ($tmp[1] != 'local') {
+            $text = 'https://open.spotify.com/track/';
+            $text .= $tmp[2];
+
+            exec('echo "'.$text.'" | pbcopy');
+        }
+    } else {
+        displayNotificationWithArtwork($w, 'No track is playing', './images/warning.png');
+    }
+}
+
+/**
  * getPlaylistOwner function.
  *
  * @param mixed $w
@@ -2366,7 +2411,7 @@ function addTrackToPlayQueue($w, $track_uri, $track_name, $artist_name, $album_n
 }
 
 /**
- * updateCurrentTrackIndexFromPlayQueue function.
+ * updategkIndexFromPlayQueue function.
  *
  * @param mixed $w
  */

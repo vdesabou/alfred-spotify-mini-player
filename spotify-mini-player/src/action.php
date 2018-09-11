@@ -1132,6 +1132,10 @@ if ($type == 'TRACK' && $other_settings == '' &&
         }
 
         return;
+    } elseif ($other_action == 'copy_current_track_url_to_clipboard') {
+        copyCurrentTrackUrlToClipboard($w);
+        
+        return;
     } elseif ($other_action == 'current_mopidy') {
         $ret = getCurrentTrackInfoWithMopidy($w, false);
         echo "$ret";
