@@ -1169,7 +1169,7 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
     $tmp = explode('∙', $words[1]);
     $theplaylisturi = $tmp[0];
     $url = explode(':', $theplaylisturi);
-    $playlist_id = $url[4];
+    $playlist_id = $url[2];
 
     // playlist name is encoded in base64
     $theplaylistname = base64_decode($tmp[1]);
