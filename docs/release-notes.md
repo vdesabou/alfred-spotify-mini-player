@@ -2,7 +2,7 @@
 layout: article
 permalink: /release-notes/
 title: "Release Notes"
-modified: 2018-08-22
+modified: 2018-09-12
 excerpt: "Release Notes."
 image:
   feature:
@@ -12,6 +12,12 @@ share: false
 toc: false
 noindex: false
 ---
+
+<a name="v7.16"></a>
+7.16:
+
+* <span class="badge danger">FIXED</span> Fix issues due to Sept, 11th Spotify playlist changes [#256](https://github.com/vdesabou/alfred-spotify-mini-player/issues/256)
+* <span class="badge success">IMPROVED</span> Add ability to save currently playing song 'share link' to clipboard [#255](https://github.com/vdesabou/alfred-spotify-mini-player/issues/255)
 
 <a name="v7.15"></a>
 7.15:
