@@ -58,11 +58,11 @@ function thirdDelimiterAdd($w, $query, $settings, $db, $update_in_progress)
         $album_name = $tmp[1];
         $album_uri = $uri;
         $message = 'album  '.$album_name;
-    } elseif ($href[1] == 'user') {
+    } elseif ($href[1] == 'user' || $href[1] == 'playlist') {
         $type = 'playlist';
-        $playlist_name = $tmp[1];
+        $playlist_name = base64_decode($tmp[1]);
         $playlist_uri = $uri;
-        $message = 'playlist '.base64_decode($playlist_name);
+        $message = 'playlist '.$playlist_name;
     }
 
     $the_query = $words[3];
@@ -148,7 +148,7 @@ function thirdDelimiterAdd($w, $query, $settings, $db, $update_in_progress)
                         '' /* album_artwork_path */,
                         $playlist_name /* playlist_name */,
                         '', /* playlist_artwork_path */
-                    )), "Create a copy of playlist named '".base64_decode($playlist_name)."'", 'This will copy the existing playlist '.base64_decode($playlist_name).' to a new one', './images/add.png', 'yes', null, '');
+                    )), "Create a copy of playlist named '".$playlist_name."'", 'This will copy the existing playlist '.$playlist_name.' to a new one', './images/add.png', 'yes', null, '');
         }
     } else {
         // playlist name has been set
@@ -159,7 +159,7 @@ function thirdDelimiterAdd($w, $query, $settings, $db, $update_in_progress)
                     $playlist_uri /* playlist_uri */,
                     '' /* spotify_command */,
                     '' /* query */,
-                    'ADD_TO_PLAYLIST▹'.'notset'.'▹'.ltrim(rtrim($the_query)) /* other_settings*/,
+                    'ADD_TO_PLAYLIST▹'.'notset'.'▹'.$the_query /* other_settings*/,
                     '' /* other_action */,
                     '' /* artist_name */,
                     $track_name /* track_name */,
@@ -169,7 +169,7 @@ function thirdDelimiterAdd($w, $query, $settings, $db, $update_in_progress)
                     '' /* album_artwork_path */,
                     $playlist_name /* playlist_name */,
                     '', /* playlist_artwork_path */
-                )), 'Create playlist '.ltrim(rtrim($the_query)), 'This will create the playlist and add the '.$message, './images/add.png', 'yes', null, '');
+                )), 'Create playlist '.$the_query, 'This will create the playlist and add the '.$message, './images/add.png', 'yes', null, '');
     }
 }
 

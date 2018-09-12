@@ -2654,7 +2654,7 @@ function secondDelimiterAdd($w, $query, $settings, $db, $update_in_progress)
         $album_uri = $uri;
         $message = 'album  '.$album_name;
         $value = $album_name;
-    } elseif ($href[1] == 'user') {
+    } elseif ($href[1] == 'user' || $href[1] == 'playlist') {
         $type = 'playlist';
         $playlist_name = base64_decode($tmp[1]);
         $playlist_uri = $uri;
