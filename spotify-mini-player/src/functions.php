@@ -5221,7 +5221,7 @@ function getPlaylistArtwork($w, $playlist_uri, $fetchIfNotPresent, $forceFetch =
 
     if (!is_file($currentArtwork) || (is_file($currentArtwork) && filesize($currentArtwork) == 0) || $forceFetch) {
         if ($fetchIfNotPresent == true || (is_file($currentArtwork) && filesize($currentArtwork) == 0) || $forceFetch) {
-            $artwork = getPlaylistArtworkURL($w, $playlist_uri);
+            $artwork = getPlaylistArtworkURL($w, $playlist_id);
             // if return 0, it is a 404 error, no need to fetch
             if (!empty($artwork) || (is_numeric($artwork) && $artwork != 0)) {
                 if (!file_exists($w->data().'/artwork/'.hash('md5', $filename.'.png'))):

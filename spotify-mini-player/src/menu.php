@@ -461,9 +461,7 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress)
         if ($is_alfred_playlist_active == true) {
             if ($alfred_playlist_name != '') {
 
-                $r = explode(':', $alfred_playlist_uri);
-
-                $w->result(null, '', 'Browse your Alfred playlist ('.$alfred_playlist_name.' by '.$r[2].')', array(
+                $w->result(null, '', 'Browse your Alfred playlist ('.$alfred_playlist_name.')', array(
                     'You can change the Alfred Playlist during next step',
                    'alt' => 'Not Available',
                    'cmd' => 'Not Available',

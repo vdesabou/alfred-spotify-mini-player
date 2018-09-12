@@ -62,7 +62,7 @@ function thirdDelimiterAdd($w, $query, $settings, $db, $update_in_progress)
         $type = 'playlist';
         $playlist_name = $tmp[1];
         $playlist_uri = $uri;
-        $message = 'playlist '.$playlist_name;
+        $message = 'playlist '.base64_decode($playlist_name);
     }
 
     $the_query = $words[3];
@@ -97,7 +97,7 @@ function thirdDelimiterAdd($w, $query, $settings, $db, $update_in_progress)
                 ), './images/create_playlist.png', 'no', null, '');
 
         if ($album_name != '' || $playlist_name != '') {
-        $w->result(null, 'help', 'Or choose an alternative below',array(
+            $w->result(null, 'help', 'Or choose an alternative below',array(
                      'Some playlists names are proposed below',
                     'alt' => 'Not Available',
                     'cmd' => 'Not Available',
@@ -148,7 +148,7 @@ function thirdDelimiterAdd($w, $query, $settings, $db, $update_in_progress)
                         '' /* album_artwork_path */,
                         $playlist_name /* playlist_name */,
                         '', /* playlist_artwork_path */
-                    )), "Create a copy of playlist named '".$playlist_name."'", 'This will copy the existing playlist '.$playlist_name.' to a new one', './images/add.png', 'yes', null, '');
+                    )), "Create a copy of playlist named '".base64_decode($playlist_name)."'", 'This will copy the existing playlist '.base64_decode($playlist_name).' to a new one', './images/add.png', 'yes', null, '');
         }
     } else {
         // playlist name has been set

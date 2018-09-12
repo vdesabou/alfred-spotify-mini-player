@@ -532,11 +532,11 @@ if ($type == 'TRACK' && $other_settings == '' &&
                 $ret = addTracksToPlaylist($w, getThePlaylistTracks($w, $playlist_uri), $setting[1], $setting[2], false);
                 stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);
                 if (is_numeric($ret) && $ret > 0) {
-                    displayNotificationWithArtwork($w, 'Playlist '.$playlist_name.' added to '.$setting[2].' playlist', $playlist_artwork_path, 'Add Playlist to Playlist');
+                    displayNotificationWithArtwork($w, 'Playlist '.base64_decode($playlist_name).' added to '.$setting[2].' playlist', $playlist_artwork_path, 'Add Playlist to Playlist');
 
                     return;
                 } elseif (is_numeric($ret) && $ret == 0) {
-                    displayNotificationWithArtwork($w, 'Playlist '.$playlist_name.' is already in '.$setting[2].' playlist', './images/warning.png', 'Error!');
+                    displayNotificationWithArtwork($w, 'Playlist '.base64_decode($playlist_name).' is already in '.$setting[2].' playlist', './images/warning.png', 'Error!');
 
                     return;
                 }
