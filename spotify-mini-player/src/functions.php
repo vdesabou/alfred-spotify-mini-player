@@ -2160,11 +2160,9 @@ function followThePlaylist($w, $playlist_uri)
     } else {
         $playlist_id = $tmp[2];
     }
-    $owner = getPlaylistOwner($w,$playlist_uri);
     try {
-        $tmp = explode(':', $playlist_uri);
         $api = getSpotifyWebAPI($w);
-        $ret = $api->followPlaylist($owner, $playlist_id, array('public' => $public));
+        $ret = $api->followPlaylistForCurrentUser($playlist_id, array('public' => $public));
         if ($ret == true) {
             // refresh library
             refreshLibrary($w);
@@ -2193,8 +2191,7 @@ function unfollowThePlaylist($w, $playlist_uri)
         } else {
             $playlist_id = $tmp[2];
         }
-        $owner = getPlaylistOwner($w,$playlist_uri);
-        $ret = $api->unfollowPlaylist($owner, $playlist_id);
+        $ret = $api->unfollowPlaylistForCurrentUser($playlist_id);
         if ($ret == true) {
             // refresh library
             refreshLibrary($w);
