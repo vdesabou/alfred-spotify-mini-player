@@ -29,6 +29,11 @@ $api->next();
 $api->getMyCurrentTrack();
 ```
 
+## Get info about the current playback
+```php
+$api->getMyCurrentPlaybackInfo();
+```
+
 ## Move to a specific position in a track
 ```php
 $api->seek([

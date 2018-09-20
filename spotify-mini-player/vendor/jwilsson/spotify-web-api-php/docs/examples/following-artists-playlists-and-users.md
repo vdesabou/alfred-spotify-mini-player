@@ -24,13 +24,13 @@ var_dump($following);
 ## Following a playlist
 
 ```php
-$api->followPlaylist('USER_ID', 'PLAYLIST_ID');
+$api->followPlaylistForCurrentUser('PLAYLIST_ID');
 ```
 
 ## Unfollowing a playlist
 
 ```php
-$api->unfollowPlaylist('USER_ID', 'PLAYLIST_ID');
+$api->unfollowPlaylistForCurrentUser('PLAYLIST_ID');
 ```
 
 ## Checking if user(s) are following a playlist
@@ -41,7 +41,7 @@ $users = [
     'USER_2',
 ];
 
-$api->userFollowsPlaylist('OWNER_ID', 'PLAYLIST_ID', [
+$api->usersFollowsPlaylist('PLAYLIST_ID', [
     'ids' => $users,
 ]);
 ```

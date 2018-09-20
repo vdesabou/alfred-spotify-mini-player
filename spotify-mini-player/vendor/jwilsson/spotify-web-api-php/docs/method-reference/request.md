@@ -24,7 +24,7 @@ Make a request to the "account" endpoint.
 #### Return values
 * **array** Response data.
     * array\|object body The response body. Type is controlled by `Request::setReturnType()`.
-    * string headers Response headers.
+    * array headers Response headers.
     * int status HTTP status code.
     * string url The requested URL.
 
@@ -49,7 +49,7 @@ Make a request to the "api" endpoint.
 #### Return values
 * **array** Response data.
     * array\|object body The response body. Type is controlled by `Request::setReturnType()`.
-    * string headers Response headers.
+    * array headers Response headers.
     * int status HTTP status code.
     * string url The requested URL.
 

@@ -83,7 +83,7 @@ class Request
      *
      * @return array Response data.
      * - array|object body The response body. Type is controlled by `Request::setReturnType()`.
-     * - string headers Response headers.
+     * - array headers Response headers.
      * - int status HTTP status code.
      * - string url The requested URL.
      */
@@ -105,7 +105,7 @@ class Request
      *
      * @return array Response data.
      * - array|object body The response body. Type is controlled by `Request::setReturnType()`.
-     * - string headers Response headers.
+     * - array headers Response headers.
      * - int status HTTP status code.
      * - string url The requested URL.
      */

@@ -208,7 +208,7 @@ class SpotifyWebAPITest extends PHPUnit\Framework\TestCase
         $this->assertTrue($response);
     }
 
-    public function testCreatePlaylist()
+    public function testCreateUserPlaylist()
     {
         $options = [
             'name' => 'Test playlist',
@@ -228,7 +228,7 @@ class SpotifyWebAPITest extends PHPUnit\Framework\TestCase
 
         $stub = $this->setupStub(
             'POST',
-            '/v1/playlists',
+            '/v1/me/playlists',
             $expected,
             $headers,
             $return
@@ -236,7 +236,8 @@ class SpotifyWebAPITest extends PHPUnit\Framework\TestCase
 
         $api = new SpotifyWebAPI\SpotifyWebAPI($stub);
         $api->setAccessToken($this->accessToken);
-        $response = $api->createPlaylist(
+        $response = $api->createUserPlaylist(
+            'mcgurk',
             $options
         );
 
@@ -593,7 +594,7 @@ class SpotifyWebAPITest extends PHPUnit\Framework\TestCase
 
         $stub = $this->setupStub(
             'PUT',
-            '/v1/users/mcgurk/playlists/0UZ0Ll4HJHR7yvURYbHJe9/followers',
+            '/v1/playlists/0UZ0Ll4HJHR7yvURYbHJe9/followers',
             $expected,
             $headers,
             $return
@@ -2170,7 +2171,7 @@ class SpotifyWebAPITest extends PHPUnit\Framework\TestCase
 
         $stub = $this->setupStub(
             'DELETE',
-            '/v1/users/mcgurk/playlists/0UZ0Ll4HJHR7yvURYbHJe9/followers',
+            '/v1/playlists/0UZ0Ll4HJHR7yvURYbHJe9/followers',
             [],
             $headers,
             $return
@@ -2277,7 +2278,7 @@ class SpotifyWebAPITest extends PHPUnit\Framework\TestCase
 
         $stub = $this->setupStub(
             'GET',
-            '/v1/users/mcgurk/playlists/0UZ0Ll4HJHR7yvURYbHJe9/followers/contains',
+            '/v1/playlists/0UZ0Ll4HJHR7yvURYbHJe9/followers/contains',
             $expected,
             $headers,
             $return
