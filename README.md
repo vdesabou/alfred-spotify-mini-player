@@ -1,4 +1,4 @@
-# Alfred Spotify Mini Player [![Workflows](https://img.shields.io/badge/More%20Workflows-🎩-purple.svg)](https://github.com/learn-anything/alfred-workflows#amazing-alfred-workflows-)
+# Alfred Spotify Mini Player [![Workflows](https://img.shields.io/badge/-more%20workflows-0a0a0a.svg?style=flat&colorA=0a0a0a)](https://github.com/learn-anything/alfred-workflows#readme)
 
 Find all information and download the workflow [on the web site](http://alfred-spotify-mini-player.com)
 
