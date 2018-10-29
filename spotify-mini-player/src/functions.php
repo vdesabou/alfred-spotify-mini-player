@@ -301,7 +301,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
-            } else if (strpos($e->getMessage(), 'ssl') !== false) {
+            } else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
                 // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                 // retry any SSL error
@@ -366,7 +366,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
-            } else if (strpos($e->getMessage(), 'ssl') !== false) {
+            } else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
                 // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                 // retry any SSL error
@@ -417,7 +417,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
-            } else if (strpos($e->getMessage(), 'ssl') !== false) {
+            } else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
                 // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                 // retry any SSL error
@@ -475,7 +475,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
-            } else if (strpos($e->getMessage(), 'ssl') !== false) {
+            } else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
                 // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                 // retry any SSL error
@@ -526,7 +526,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
-            } else if (strpos($e->getMessage(), 'ssl') !== false) {
+            } else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
                 // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                 // retry any SSL error
@@ -599,7 +599,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
-            } else if (strpos($e->getMessage(), 'ssl') !== false) {
+            } else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
                 // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                 // retry any SSL error
@@ -648,7 +648,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
-            } else if (strpos($e->getMessage(), 'ssl') !== false) {
+            } else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
                 // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                 // retry any SSL error
@@ -697,7 +697,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
-            } else if (strpos($e->getMessage(), 'ssl') !== false) {
+            } else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
                 // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                 // retry any SSL error
@@ -760,7 +760,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
-            } else if (strpos($e->getMessage(), 'ssl') !== false) {
+            } else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
                 // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                 // retry any SSL error
@@ -809,7 +809,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
-            } else if (strpos($e->getMessage(), 'ssl') !== false) {
+            } else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
                 // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                 // retry any SSL error
@@ -858,7 +858,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
-            } else if (strpos($e->getMessage(), 'ssl') !== false) {
+            } else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
                 // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                 // retry any SSL error
@@ -955,7 +955,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
                 } else if ($e->getCode() == 404) {
                     // skip
                     break;
-                } else if (strpos($e->getMessage(), 'ssl') !== false) {
+                } else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
                     // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
                     // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                     // retry any SSL error
@@ -1011,7 +1011,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
-            } else if (strpos($e->getMessage(), 'ssl') !== false) {
+            } else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
                 // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                 // retry any SSL error
@@ -2024,7 +2024,7 @@ function getCurrentTrackInfoWithMopidy($w, $displayError = true)
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
-            } else if (strpos($e->getMessage(), 'ssl') !== false) {
+            } else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
                 // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                 // retry any SSL error
@@ -5463,7 +5463,7 @@ function getArtworkURL($w, $type, $id, $highRes = false)
                 } else if ($e->getCode() == 404) {
                     // skip
                     break;
-                } else if (strpos($e->getMessage(), 'ssl') !== false) {
+                } else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
                     // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
                     // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                     // retry any SSL error
@@ -5532,7 +5532,7 @@ function getArtworkURL($w, $type, $id, $highRes = false)
                 } else if ($e->getCode() == 404) {
                     // skip
                     break;
-                } else if (strpos($e->getMessage(), 'ssl') !== false) {
+                } else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
                     // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
                     // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                     // retry any SSL error
@@ -5623,7 +5623,7 @@ function getPlaylistArtworkURL($w, $playlist_uri)
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
-            } else if (strpos($e->getMessage(), 'ssl') !== false) {
+            } else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
                 // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                 // retry any SSL error
@@ -5699,7 +5699,7 @@ function getArtistArtworkURL($w, $artist_id)
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
-            } else if (strpos($e->getMessage(), 'ssl') !== false) {
+            } else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
                 // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                 // retry any SSL error
@@ -5892,7 +5892,7 @@ function updateLibrary($w)
                 } else if ($e->getCode() == 404) {
                     // skip
                     break;
-                } else if (strpos($e->getMessage(), 'ssl') !== false) {
+                } else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
                     // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
                     // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                     // retry any SSL error
@@ -5953,7 +5953,7 @@ function updateLibrary($w)
                 } else if ($e->getCode() == 404) {
                     // skip
                     break;
-                } else if (strpos($e->getMessage(), 'ssl') !== false) {
+                } else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
                     // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
                     // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                     // retry any SSL error
@@ -6090,7 +6090,7 @@ function updateLibrary($w)
                     } else if ($e->getCode() == 404) {
                         // skip
                         break;
-                    } else if (strpos($e->getMessage(), 'ssl') !== false) {
+                    } else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
                         // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
                         // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                         // retry any SSL error
@@ -6655,7 +6655,7 @@ function refreshLibrary($w)
                 } else if ($e->getCode() == 404) {
                     // skip
                     break;
-                } else if (strpos($e->getMessage(), 'ssl') !== false) {
+                } else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
                     // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
                     // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                     // retry any SSL error
@@ -6764,7 +6764,7 @@ function refreshLibrary($w)
                         } else if ($e->getCode() == 404) {
                             // skip
                             break;
-                        } else if (strpos($e->getMessage(), 'ssl') !== false) {
+                        } else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
                             // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
                             // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                             // retry any SSL error
@@ -7035,7 +7035,7 @@ function refreshLibrary($w)
                             } else if ($e->getCode() == 404) {
                                 // skip
                                 break;
-                            } else if (strpos($e->getMessage(), 'ssl') !== false) {
+                            } else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
                                 // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
                                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                                 // retry any SSL error
@@ -7267,7 +7267,7 @@ function refreshLibrary($w)
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
-            } else if (strpos($e->getMessage(), 'ssl') !== false) {
+            } else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
                 // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                 // retry any SSL error
@@ -7350,7 +7350,7 @@ function refreshLibrary($w)
                     } else if ($e->getCode() == 404) {
                         // skip
                         break;
-                    } else if (strpos($e->getMessage(), 'ssl') !== false) {
+                    } else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
                         // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
                         // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                         // retry any SSL error
