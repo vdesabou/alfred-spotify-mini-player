@@ -2,7 +2,7 @@
 layout: article
 permalink: /release-notes/
 title: "Release Notes"
-modified: 2018-09-12
+modified: 2018-10-29
 excerpt: "Release Notes."
 image:
   feature:
@@ -12,6 +12,12 @@ share: false
 toc: false
 noindex: false
 ---
+
+<a name="v7.17"></a>
+7.17:
+
+* <span class="badge success">IMPROVED</span> Make Mac OS notifications interactive [#257](https://github.com/vdesabou/alfred-spotify-mini-player/issues/257)
+* <span class="badge success">IMPROVED</span> Use file.io instead of transfer.sh as it is closing [#262](https://github.com/vdesabou/alfred-spotify-mini-player/issues/262)
 
 <a name="v7.16"></a>
 7.16:
