@@ -7,7 +7,7 @@ subtitle="$3"
 actions=""
 if [[ "${title}" == Now* ]]
 then
-	actions="-actions ⏭Next,⏸Pause,🎤Lyrics,➕Add,🔗Share"
+	actions="-actions Next,Pause,Lyrics,Add,Share"
 fi
 
 ANSWER=$(./alerter -title "${title}" -sender "com.spotify.miniplayer.${theme_color}" -appIcon "/tmp/tmp" -message "${subtitle}" -timeout 10 -closeLabel Close ${actions})
@@ -16,19 +16,19 @@ case ${ANSWER} in
     "@CLOSED") echo "You clicked on the default alert' close button" ;;
     "@CONTENTCLICKED") open -a "Spotify" ;;
     #"@ACTIONCLICKED") echo "You clicked the alert default action button" ;;
-    "⏭Next") 
+    "Next") 
 		osascript -e 'tell application "Alfred 3" to run trigger "next" in workflow "com.vdesabou.spotify.mini.player" with argument "test"' 
 		;;
-    "⏸XPause") 
+    "Pause") 
 		osascript -e 'tell application "Alfred 3" to run trigger "playpause" in workflow "com.vdesabou.spotify.mini.player" with argument "test"' 
 		;;
-    "🎤Lyrics") 
+    "Lyrics") 
 		osascript -e 'tell application "Alfred 3" to run trigger "lyrics" in workflow "com.vdesabou.spotify.mini.player" with argument "test"' 
 		;;
-    "➕Add") 
+    "Add") 
 		osascript -e 'tell application "Alfred 3" to run trigger "add_current_track_to" in workflow "com.vdesabou.spotify.mini.player" with argument "test"' 
 		;;
-    "🔗Share") 
+    "Share") 
 		osascript -e 'tell application "Alfred 3" to run trigger "share" in workflow "com.vdesabou.spotify.mini.player" with argument "test"' 
 		;;
     **) 
