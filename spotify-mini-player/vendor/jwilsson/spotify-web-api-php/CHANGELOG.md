@@ -1,4 +1,7 @@
 # Changelog
+## 2.6.1 (2018-11-07)
+* Corrected the authorization URL ([891cd0f](https://github.com/jwilsson/spotify-web-api-php/commit/891cd0f1be525def4bf9f9969bfb6e34bd7b0ffc))
+
 ## 2.6.0 (2018-09-19)
 * Added new methods for handling following of playlists, no longer requiring `$userId` ([6f1bb6b](https://github.com/jwilsson/spotify-web-api-php/commit/6f1bb6b01e253e5b44e02333d6dbd4815773552b)):
     * `SpotifyWebAPI::followPlaylistForCurrentUser()`
