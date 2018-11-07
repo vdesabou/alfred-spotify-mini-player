@@ -28,7 +28,7 @@ class SessionTest extends PHPUnit\Framework\TestCase
     public function testGetAuthorizeUrl()
     {
         $expected = sprintf(
-            'https://accounts.spotify.com/authorize/?client_id=%s&redirect_uri=%s&response_type=%s&show_dialog=%s',
+            'https://accounts.spotify.com/authorize?client_id=%s&redirect_uri=%s&response_type=%s&show_dialog=%s',
             $this->clientID,
             urlencode($this->redirectURI),
             'code',
@@ -46,7 +46,7 @@ class SessionTest extends PHPUnit\Framework\TestCase
     public function testGetAuthorizeUrlScope()
     {
         $expected = sprintf(
-            'https://accounts.spotify.com/authorize/?client_id=%s&redirect_uri=%s&response_type=%s&scope=%s',
+            'https://accounts.spotify.com/authorize?client_id=%s&redirect_uri=%s&response_type=%s&scope=%s',
             $this->clientID,
             urlencode($this->redirectURI),
             'code',
@@ -65,7 +65,7 @@ class SessionTest extends PHPUnit\Framework\TestCase
     {
         $state = 'foobar';
         $expected = sprintf(
-            'https://accounts.spotify.com/authorize/?client_id=%s&redirect_uri=%s&response_type=%s&state=%s',
+            'https://accounts.spotify.com/authorize?client_id=%s&redirect_uri=%s&response_type=%s&state=%s',
             $this->clientID,
             urlencode($this->redirectURI),
             'code',

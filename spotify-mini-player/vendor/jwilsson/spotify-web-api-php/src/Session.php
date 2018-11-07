@@ -53,7 +53,7 @@ class Session
             'state' => isset($options['state']) ? $options['state'] : null,
         ];
 
-        return Request::ACCOUNT_URL . '/authorize/?' . http_build_query($parameters);
+        return Request::ACCOUNT_URL . '/authorize?' . http_build_query($parameters);
     }
 
     /**
