@@ -2,7 +2,7 @@
 layout: article
 permalink: /release-notes/
 title: "Release Notes"
-modified: 2018-10-29
+modified: 2018-11-07
 excerpt: "Release Notes."
 image:
   feature:
@@ -12,6 +12,11 @@ share: false
 toc: false
 noindex: false
 ---
+
+<a name="v7.18"></a>
+7.18:
+
+* <span class="badge danger">FIXED</span> Authorisation is broken since November 6th [#265](https://github.com/vdesabou/alfred-spotify-mini-player/issues/265)
 
 <a name="v7.17"></a>
 7.17:
