@@ -4737,7 +4737,7 @@ function displayNotificationWithArtwork($w, $subtitle, $artwork, $title = 'Spoti
             $theme_color = $settings->theme_color;
         }
         if ($artwork != '' && file_exists($artwork)) {
-            copy($artwork, '/tmp/tmp');
+            copy($artwork, '/tmp/tmp_' . exec("whoami") );
         }
 
         exec("./src/alerter.ksh '".$title."' '".$theme_color."' '".$subtitle."' 2>&1 & ");
