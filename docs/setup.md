@@ -89,7 +89,7 @@ Setting up the workflow is easy, you just need to follow these steps:-
 
   * http://api.stathat.com (for statistics)
 
-  * https://file.io (for DEBUG Zip file)
+  * https://transfer.sh (for DEBUG Zip file)
 
 * if you're using a proxy, don't forget to enable this option in Alfred preferences, ***except for the time of authentication, it must be disabled*** :-
 

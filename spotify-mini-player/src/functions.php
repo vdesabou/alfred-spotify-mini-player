@@ -1910,9 +1910,11 @@ function createDebugFile($w)
 
     $output = $output."****\n";
 
-    $output = $output.exec("./src/file.io.sh /tmp/spot_mini_debug.zip");
+    $output = $output.exec("curl -s --upload-file /tmp/spot_mini_debug.zip https://transfer.sh/spot_mini_debug_$userid.zip");
 
     exec('cd /tmp;rm -rf spot_mini_debug.zip spot_mini_debug');
+
+    exec('echo "'.$output.'" | pbcopy');
 
     exec("open \"mailto:alfred.spotify.mini.player@gmail.com?subject=Alfred Spotify Mini Player debug file&body=$output\"");
 }
