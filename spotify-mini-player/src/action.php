@@ -1179,6 +1179,8 @@ if ($type == 'TRACK' && $other_settings == '' &&
             invokeMopidyMethod($w, 'core.playback.previous', array());
         } else if($output_application == 'APPLESCRIPT') {
             exec("osascript -e 'tell application \"Spotify\" to previous track'");
+            // Previous track command does not go to previous track #270
+            exec("osascript -e 'tell application \"Spotify\" to previous track'");
         } else {
             $device_id = getSpotifyConnectCurrentDeviceId($w);
             if($device_id != '') {
