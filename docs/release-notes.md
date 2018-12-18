@@ -2,7 +2,7 @@
 layout: article
 permalink: /release-notes/
 title: "Release Notes"
-modified: 2018-11-07
+modified: 2018-12-18
 excerpt: "Release Notes."
 image:
   feature:
@@ -12,6 +12,14 @@ share: false
 toc: false
 noindex: false
 ---
+
+
+<a name="v7.19"></a>
+7.19:
+
+* <span class="badge success">IMPROVED</span> Set back transfer.sh as it is not closing finally[#269](https://github.com/vdesabou/alfred-spotify-mini-player/issues/269)
+* <span class="badge danger">FIXED</span> Previous track command does not go to previous track [#270](https://github.com/vdesabou/alfred-spotify-mini-player/issues/270)
+* <span class="badge danger">FIXED</span> Notification images not working when using multiple OSX accounts [#267](https://github.com/vdesabou/alfred-spotify-mini-player/issues/267)
 
 <a name="v7.18"></a>
 7.18:
