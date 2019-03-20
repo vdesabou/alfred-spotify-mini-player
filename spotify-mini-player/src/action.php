@@ -1611,30 +1611,25 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
         return;
     } elseif ($other_action == 'web_search') {
-        if ($output_application == 'MOPIDY') {
-            $ret = getCurrentTrackInfoWithMopidy($w, false);
-            $results = explode('▹', $ret);
-        } else if($output_application == 'APPLESCRIPT') {
-            // get info on current song
-            exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
-
-            if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
-                $results = explode('▹', $retArr[count($retArr) - 1]);
-            }
-        } else {
-            $ret = getCurrentTrackInfoWithSpotifyConnect($w, false);
-            $results = explode('▹', $ret);
-        }
-
-        if (!isset($results[0])) {
-            displayNotificationWithArtwork($w, 'Cannot get current track', './images/warning.png', 'Error!');
-            return;
-        }
-        $search_text = escapeQuery($results[0]);
-        $search_text .= '▹';
-        $search_text .= escapeQuery($results[1]);
+        $search_text = getCurrentArtistAndTrackName($w, $output_application);
 
         exec("osascript -e 'tell application \"Alfred 3\" to run trigger \"web_search\" in workflow \"com.vdesabou.spotify.mini.player\" with argument \"" . $search_text . "\"'");
+        return;
+    } elseif ($other_action == 'web_search_artist_track') {
+        $search_text = getCurrentArtistAndTrackName($w, $output_application);
+
+        $tmp = explode('▹',$search_text);
+
+        echo "$tmp[1] $tmp[0]";
+        
+        return;
+    } elseif ($other_action == 'web_search_artist') {
+        $search_text = getCurrentArtistAndTrackName($w, $output_application);
+
+        $tmp = explode('▹',$search_text);
+
+        echo "$tmp[1]";
+        
         return;
     } elseif ($other_action == 'share') {
         if ($output_application == 'MOPIDY') {

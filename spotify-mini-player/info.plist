@@ -47,6 +47,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>090D4A5C-85C3-4083-B936-3E61ED83B1A3</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>B91D4F9A-DEA5-426E-B984-372482E03125</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>0A7E4CC3-BA4A-4DD4-AB4B-E2E8F9DBBE8C</key>
 		<array>
 			<dict>
@@ -91,6 +104,19 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>0749257A-D830-483B-9EF5-580E33C10BB8</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>0E45EEB7-EA6D-4E6F-8655-98731989AEE0</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>B5D85A55-8E85-4B14-81EF-0656DC5E7594</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -465,6 +491,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>30F45FDA-252D-4C22-894C-444F7E3E8E78</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>39C34247-AE29-43A1-879B-3965F3AAF475</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>318D20CD-D753-4CCC-B931-BB3CFC6A1D0A</key>
 		<array>
 			<dict>
@@ -561,6 +600,19 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>18496AC4-EA42-444C-A906-642E38259C96</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>39C34247-AE29-43A1-879B-3965F3AAF475</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>C91B7486-D357-4C1C-8661-83290128E78E</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -691,6 +743,19 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>18496AC4-EA42-444C-A906-642E38259C96</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>528C59BE-0DAD-4C1D-876E-09EEE2B889FA</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>C3F966D4-D292-4B70-9024-B8788BA5488F</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -1567,6 +1632,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>93DE48B5-E0D6-4B64-B972-D01EB36E71C7</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>528C59BE-0DAD-4C1D-876E-09EEE2B889FA</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>9653C27F-400A-4C3F-BB97-FC0C803DFEC7</key>
 		<array>
 			<dict>
@@ -1608,6 +1686,19 @@
 		</array>
 		<key>9845C770-A2CC-4752-A542-D71BE1081691</key>
 		<array/>
+		<key>99E823C3-8271-4C60-B4F9-8F5F9C48F1CE</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>1A2C6EE5-E029-45EE-89D0-4C6182C7E5E0</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>9B1431EC-8D2F-4149-9EC0-7DBFD487D93E</key>
 		<array>
 			<dict>
@@ -1652,6 +1743,19 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>6E7D21ED-AC05-4EC3-974C-ECB80BB744CA</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>9F9919C7-33FD-472E-B18D-212D95BF1470</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>99E823C3-8271-4C60-B4F9-8F5F9C48F1CE</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -1894,6 +1998,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>B2454113-3905-495E-B8E0-0E25AC384525</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>DADFE8E3-A419-4AE9-84E0-322B797F8F98</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>B2A423FC-AF28-40F1-8BAF-CC7A29B86788</key>
 		<array>
 			<dict>
@@ -1940,6 +2057,19 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>18496AC4-EA42-444C-A906-642E38259C96</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>B91D4F9A-DEA5-426E-B984-372482E03125</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>E81FC8A2-529A-4350-9734-0AEE58EB8D95</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -2390,6 +2520,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>DADFE8E3-A419-4AE9-84E0-322B797F8F98</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>71AACE30-7E8D-4D3C-8BD1-F98FEE578AEC</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>DAE270E5-CA94-4F36-99FE-D8EC996608C0</key>
 		<array>
 			<dict>
@@ -2579,6 +2722,19 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>18496AC4-EA42-444C-A906-642E38259C96</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>F1A83FA9-AEB1-4136-BA2C-6BA9615A1E6B</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>0E45EEB7-EA6D-4E6F-8655-98731989AEE0</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -7378,27 +7534,6 @@ php -f ./src/action.php -- "$query" "ARTIST_OR_PLAYLIST_PRIVACY" "" &gt;&gt; "$a
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>argument</key>
-				<string></string>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>triggerid</key>
-				<string>com.vdesabou.miniplayer.share</string>
-				<key>triggername</key>
-				<string>Share</string>
-				<key>workflowonly</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.trigger.remote</string>
-			<key>uid</key>
-			<string>E5BAF801-726E-49C0-ABF2-7AD9F9ECD22A</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>concurrently</key>
 				<false/>
 				<key>escaping</key>
@@ -7423,6 +7558,27 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>argument</key>
+				<string></string>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>triggerid</key>
+				<string>com.vdesabou.miniplayer.share</string>
+				<key>triggername</key>
+				<string>Share</string>
+				<key>workflowonly</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.remote</string>
+			<key>uid</key>
+			<string>E5BAF801-726E-49C0-ABF2-7AD9F9ECD22A</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>triggerid</key>
 				<string>web_search_current_track</string>
 			</dict>
@@ -7432,6 +7588,30 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 			<string>DD89687E-99D0-4A06-9965-86C62CB2AC5C</string>
 			<key>version</key>
 			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "web_search" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
+php -f ./src/action.php -- "$query" "TRACK" ""</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>6FEAFE02-DF77-4F58-9305-651E6D627144</string>
+			<key>version</key>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -7465,30 +7645,6 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>concurrently</key>
-				<false/>
-				<key>escaping</key>
-				<integer>38</integer>
-				<key>script</key>
-				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "web_search" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-php -f ./src/action.php -- "$query" "TRACK" ""</string>
-				<key>scriptargtype</key>
-				<integer>0</integer>
-				<key>scriptfile</key>
-				<string></string>
-				<key>type</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>6FEAFE02-DF77-4F58-9305-651E6D627144</string>
-			<key>version</key>
-			<integer>2</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
@@ -7506,6 +7662,43 @@ php -f ./src/action.php -- "$query" "TRACK" ""</string>
 			<string>FAA5FC99-7909-45B6-9BF0-7601DBAADC4F</string>
 			<key>version</key>
 			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>triggerid</key>
+				<string>reddit_search_current_track</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.external</string>
+			<key>uid</key>
+			<string>090D4A5C-85C3-4083-B936-3E61ED83B1A3</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "web_search_artist_track" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
+php -f ./src/action.php -- "$query" "TRACK" ""</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>B91D4F9A-DEA5-426E-B984-372482E03125</string>
+			<key>version</key>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -7596,6 +7789,43 @@ echo "$tmp[1] $tmp[0]";
 			<string>68A6C7CD-CB82-4A31-A935-E38F8E414772</string>
 			<key>version</key>
 			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>triggerid</key>
+				<string>soundcloud_search_current_track</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.external</string>
+			<key>uid</key>
+			<string>93DE48B5-E0D6-4B64-B972-D01EB36E71C7</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "web_search_artist_track" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
+php -f ./src/action.php -- "$query" "TRACK" ""</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>528C59BE-0DAD-4C1D-876E-09EEE2B889FA</string>
+			<key>version</key>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -7729,6 +7959,43 @@ echo "$tmp[1] $tmp[0]";
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "web_search_artist_track" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
+php -f ./src/action.php -- "$query" "TRACK" ""</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>39C34247-AE29-43A1-879B-3965F3AAF475</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>triggerid</key>
+				<string>youtube_search_current_track</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.external</string>
+			<key>uid</key>
+			<string>30F45FDA-252D-4C22-894C-444F7E3E8E78</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>browser</key>
 				<string></string>
 				<key>searcher</key>
@@ -7821,6 +8088,30 @@ echo "$tmp[1]";
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "web_search_artist" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
+php -f ./src/action.php -- "$query" "TRACK" ""</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>0E45EEB7-EA6D-4E6F-8655-98731989AEE0</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>browser</key>
 				<string></string>
 				<key>searcher</key>
@@ -7843,6 +8134,19 @@ echo "$tmp[1]";
 			<string>alfred.workflow.trigger.external</string>
 			<key>uid</key>
 			<string>30833563-364F-4EC4-B467-F63A7F66EB06</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>triggerid</key>
+				<string>wikipedia_search_current_track</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.external</string>
+			<key>uid</key>
+			<string>F1A83FA9-AEB1-4136-BA2C-6BA9615A1E6B</string>
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
@@ -7882,6 +8186,43 @@ echo "$tmp[1]";
 			<string>B2A423FC-AF28-40F1-8BAF-CC7A29B86788</string>
 			<key>version</key>
 			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>triggerid</key>
+				<string>facebook_search_current_track</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.external</string>
+			<key>uid</key>
+			<string>B2454113-3905-495E-B8E0-0E25AC384525</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "web_search_artist" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
+php -f ./src/action.php -- "$query" "TRACK" ""</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>DADFE8E3-A419-4AE9-84E0-322B797F8F98</string>
+			<key>version</key>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -7947,6 +8288,43 @@ echo "$tmp[1]";
 			<string>1B841176-1A95-46BD-8123-583075FAB8E4</string>
 			<key>version</key>
 			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>triggerid</key>
+				<string>twitter_search_current_track</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.external</string>
+			<key>uid</key>
+			<string>9F9919C7-33FD-472E-B18D-212D95BF1470</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "web_search_artist" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
+php -f ./src/action.php -- "$query" "TRACK" ""</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>99E823C3-8271-4C60-B4F9-8F5F9C48F1CE</string>
+			<key>version</key>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -8293,6 +8671,13 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<key>ypos</key>
 			<integer>10960</integer>
 		</dict>
+		<key>090D4A5C-85C3-4083-B936-3E61ED83B1A3</key>
+		<dict>
+			<key>xpos</key>
+			<integer>940</integer>
+			<key>ypos</key>
+			<integer>11780</integer>
+		</dict>
 		<key>0A7E4CC3-BA4A-4DD4-AB4B-E2E8F9DBBE8C</key>
 		<dict>
 			<key>xpos</key>
@@ -8320,6 +8705,13 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<integer>750</integer>
 			<key>ypos</key>
 			<integer>10830</integer>
+		</dict>
+		<key>0E45EEB7-EA6D-4E6F-8655-98731989AEE0</key>
+		<dict>
+			<key>xpos</key>
+			<integer>1120</integer>
+			<key>ypos</key>
+			<integer>12270</integer>
 		</dict>
 		<key>0EBF4C61-5630-4629-8B4F-AD91D3470760</key>
 		<dict>
@@ -8586,6 +8978,13 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<key>ypos</key>
 			<integer>12270</integer>
 		</dict>
+		<key>30F45FDA-252D-4C22-894C-444F7E3E8E78</key>
+		<dict>
+			<key>xpos</key>
+			<integer>940</integer>
+			<key>ypos</key>
+			<integer>12080</integer>
+		</dict>
 		<key>318D20CD-D753-4CCC-B931-BB3CFC6A1D0A</key>
 		<dict>
 			<key>xpos</key>
@@ -8648,6 +9047,13 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<integer>90</integer>
 			<key>ypos</key>
 			<integer>10</integer>
+		</dict>
+		<key>39C34247-AE29-43A1-879B-3965F3AAF475</key>
+		<dict>
+			<key>xpos</key>
+			<integer>1110</integer>
+			<key>ypos</key>
+			<integer>12080</integer>
 		</dict>
 		<key>3AA52DF5-6A73-4739-A088-0F78F446B447</key>
 		<dict>
@@ -8728,6 +9134,13 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<key>ypos</key>
 			<real>8850</real>
 		</dict>
+		<key>528C59BE-0DAD-4C1D-876E-09EEE2B889FA</key>
+		<dict>
+			<key>xpos</key>
+			<integer>1110</integer>
+			<key>ypos</key>
+			<integer>11930</integer>
+		</dict>
 		<key>5372B0DF-11F6-41D9-8E6C-ED8C2A7EBE70</key>
 		<dict>
 			<key>xpos</key>
@@ -8766,9 +9179,9 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 		<key>58B9E278-8EF7-46DC-96DC-D8D127D5EEBB</key>
 		<dict>
 			<key>xpos</key>
-			<integer>790</integer>
+			<integer>800</integer>
 			<key>ypos</key>
-			<integer>11430</integer>
+			<integer>11360</integer>
 		</dict>
 		<key>5AF7EEEC-2E55-482C-8750-4CE6AD752683</key>
 		<dict>
@@ -8989,7 +9402,7 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<key>xpos</key>
 			<integer>780</integer>
 			<key>ypos</key>
-			<integer>11580</integer>
+			<integer>11510</integer>
 		</dict>
 		<key>6FF2EF90-205D-4423-B818-11BCC11D34BE</key>
 		<dict>
@@ -9320,6 +9733,13 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<key>ypos</key>
 			<integer>9800</integer>
 		</dict>
+		<key>93DE48B5-E0D6-4B64-B972-D01EB36E71C7</key>
+		<dict>
+			<key>xpos</key>
+			<integer>940</integer>
+			<key>ypos</key>
+			<integer>11930</integer>
+		</dict>
 		<key>9653C27F-400A-4C3F-BB97-FC0C803DFEC7</key>
 		<dict>
 			<key>xpos</key>
@@ -9355,6 +9775,13 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<key>ypos</key>
 			<integer>250</integer>
 		</dict>
+		<key>99E823C3-8271-4C60-B4F9-8F5F9C48F1CE</key>
+		<dict>
+			<key>xpos</key>
+			<integer>1120</integer>
+			<key>ypos</key>
+			<integer>12590</integer>
+		</dict>
 		<key>9B1431EC-8D2F-4149-9EC0-7DBFD487D93E</key>
 		<dict>
 			<key>xpos</key>
@@ -9382,6 +9809,13 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<integer>100</integer>
 			<key>ypos</key>
 			<real>10680</real>
+		</dict>
+		<key>9F9919C7-33FD-472E-B18D-212D95BF1470</key>
+		<dict>
+			<key>xpos</key>
+			<integer>950</integer>
+			<key>ypos</key>
+			<integer>12590</integer>
 		</dict>
 		<key>A0EAB8B1-F034-490F-9534-44ADF572AF4E</key>
 		<dict>
@@ -9518,6 +9952,13 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<key>ypos</key>
 			<real>5830</real>
 		</dict>
+		<key>B2454113-3905-495E-B8E0-0E25AC384525</key>
+		<dict>
+			<key>xpos</key>
+			<integer>960</integer>
+			<key>ypos</key>
+			<integer>12430</integer>
+		</dict>
 		<key>B2A423FC-AF28-40F1-8BAF-CC7A29B86788</key>
 		<dict>
 			<key>xpos</key>
@@ -9559,6 +10000,13 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<integer>90</integer>
 			<key>ypos</key>
 			<integer>520</integer>
+		</dict>
+		<key>B91D4F9A-DEA5-426E-B984-372482E03125</key>
+		<dict>
+			<key>xpos</key>
+			<integer>1110</integer>
+			<key>ypos</key>
+			<integer>11780</integer>
 		</dict>
 		<key>B953E1B7-2F6E-4E88-A66B-5F12999EE0E2</key>
 		<dict>
@@ -9812,6 +10260,13 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>ypos</key>
 			<real>10800</real>
 		</dict>
+		<key>DADFE8E3-A419-4AE9-84E0-322B797F8F98</key>
+		<dict>
+			<key>xpos</key>
+			<integer>1130</integer>
+			<key>ypos</key>
+			<integer>12430</integer>
+		</dict>
 		<key>DAE270E5-CA94-4F36-99FE-D8EC996608C0</key>
 		<dict>
 			<key>xpos</key>
@@ -9965,6 +10420,13 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<integer>90</integer>
 			<key>ypos</key>
 			<integer>960</integer>
+		</dict>
+		<key>F1A83FA9-AEB1-4136-BA2C-6BA9615A1E6B</key>
+		<dict>
+			<key>xpos</key>
+			<integer>950</integer>
+			<key>ypos</key>
+			<integer>12270</integer>
 		</dict>
 		<key>F23EB343-6D1D-4D17-9CCC-465756A5F513</key>
 		<dict>

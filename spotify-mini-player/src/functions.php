@@ -5,6 +5,40 @@ require './vendor/autoload.php';
 
 
 /**
+ * getCurrentArtistAndTrackName function.
+ *
+ * @param mixed $w
+ * @param mixed $output_application
+ */
+function getCurrentArtistAndTrackName($w, $output_application)
+{
+    if ($output_application == 'MOPIDY') {
+        $ret = getCurrentTrackInfoWithMopidy($w, false);
+        $results = explode('▹', $ret);
+    } else if($output_application == 'APPLESCRIPT') {
+        // get info on current song
+        exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
+
+        if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
+            $results = explode('▹', $retArr[count($retArr) - 1]);
+        }
+    } else {
+        $ret = getCurrentTrackInfoWithSpotifyConnect($w, false);
+        $results = explode('▹', $ret);
+    }
+
+    if (!isset($results[0])) {
+        displayNotificationWithArtwork($w, 'Cannot get current track', './images/warning.png', 'Error!');
+        return;
+    }
+    $search_text = escapeQuery($results[0]);
+    $search_text .= '▹';
+    $search_text .= escapeQuery($results[1]);
+
+    return $search_text;
+}
+
+/**
  * copyCurrentTrackUrlToClipboard function.
  *
  * @param mixed $w
