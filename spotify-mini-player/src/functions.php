@@ -42,10 +42,34 @@ function copyCurrentTrackUrlToClipboard($w)
             $text = 'https://open.spotify.com/track/';
             $text .= $tmp[2];
 
-            exec('echo "'.$text.'" | pbcopy');
+            copy2clipboard($text);
         }
     } else {
         displayNotificationWithArtwork($w, 'No track is playing', './images/warning.png');
+    }
+}
+
+/**
+ * copy2clipboard function.
+ *
+ * @param mixed $string
+ * 
+ * https://stackoverflow.com/questions/29181038/how-to-copy-string-to-system-clipboard-with-php-which-runs-as-client-side
+ */
+function copy2clipboard($string) {
+    $descriptorspec = array(
+        0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
+        1 => array("pipe", "w"),  // stdout is a pipe that the child will write to
+        2 => array("file", "a.txt", "a") // stderr is a file to write to
+    );
+    $process = proc_open('pbcopy', $descriptorspec, $pipes);
+    if (is_resource($process)) {
+        fwrite($pipes[0], $string);
+        fclose($pipes[0]);
+        fclose($pipes[1]);
+
+        $return_value = proc_close($process);
+        return $return_value;
     }
 }
 
@@ -1914,7 +1938,7 @@ function createDebugFile($w)
 
     exec('cd /tmp;rm -rf spot_mini_debug.zip spot_mini_debug');
 
-    exec('echo "'.$output.'" | pbcopy');
+    copy2clipboard($output);
 
     exec("open \"mailto:alfred.spotify.mini.player@gmail.com?subject=Alfred Spotify Mini Player debug file&body=$output\"");
 }
