@@ -2,7 +2,7 @@
 layout: article
 permalink: /release-notes/
 title: "Release Notes"
-modified: 2018-12-18
+modified: 2019-06-03
 excerpt: "Release Notes."
 image:
   feature:
@@ -13,6 +13,18 @@ toc: false
 noindex: false
 ---
 
+<a name="v8.0"></a>
+8.0:
+
+The workflow is now compatible with Alfred 3 and Alfred 4:
+
+* <span class="badge danger">FIXED</span> Workflow not working with Alfred 4 [#284](https://github.com/vdesabou/alfred-spotify-mini-player/issues/284)
+
+<a name="v7.20"></a>
+7.20:
+
+* <span class="badge success">IMPROVED</span> Add a way to search current song instantly on Reddit/YouTube from external trigger [#277](https://github.com/vdesabou/alfred-spotify-mini-player/issues/277)
+* <span class="badge danger">FIXED</span> There is empty space attached with the spotify URL track [#279](https://github.com/vdesabou/alfred-spotify-mini-player/issues/279)
 
 <a name="v7.19"></a>
 7.19:
