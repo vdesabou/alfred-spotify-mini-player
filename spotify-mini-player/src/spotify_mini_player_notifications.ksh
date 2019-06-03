@@ -5,7 +5,7 @@ ACTION=""
 APP=""
 ALFRED_VERSION=""
 
-while getopts ':d:a:m:' arguments
+while getopts ':v:d:a:m:' arguments
 	do
 	  case ${arguments} in
 		d)
@@ -22,7 +22,7 @@ while getopts ':d:a:m:' arguments
 			;;
 	   \?)
 			print "ERROR: ${OPTARG} is not a valid option"
-			print "Usage: $0 -d <data dir> -a <action> -m <mopidy server:port>"
+			print "Usage: $0 -d <data dir> -a <action> -m <mopidy server:port> -v <alfred_name>"
 			exit 1;;
 	  esac
 	done
