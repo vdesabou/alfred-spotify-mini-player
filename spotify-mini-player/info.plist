@@ -2037,8 +2037,6 @@
 				<false/>
 			</dict>
 		</array>
-		<key>B3898D11-D401-41BC-B831-E83A35F982D3</key>
-		<array/>
 		<key>B77F5F98-C065-49A4-BBB1-68ADADDD8E7D</key>
 		<array>
 			<dict>
@@ -2472,7 +2470,7 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>B3898D11-D401-41BC-B831-E83A35F982D3</string>
+				<string>18496AC4-EA42-444C-A906-642E38259C96</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -3904,6 +3902,19 @@
 			<string>alfred.workflow.trigger.external</string>
 			<key>uid</key>
 			<string>327849A3-A34A-46BA-AC04-1F5115824DC3</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>text</key>
+				<string>Search Spotify Mini Player for '{query}'</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.fallback</string>
+			<key>uid</key>
+			<string>D781BC43-654A-4261-A7E4-648287517182</string>
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
@@ -7464,42 +7475,6 @@ php -f ./src/action.php -- "$query" "ARTIST_OR_PLAYLIST_PRIVACY" "" &gt;&gt; "$a
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>concurrently</key>
-				<false/>
-				<key>escaping</key>
-				<integer>70</integer>
-				<key>script</key>
-				<string>osascript -e 'tell application "Alfred 3" to search "'"$c_spot_mini $1"'"'</string>
-				<key>scriptargtype</key>
-				<integer>1</integer>
-				<key>scriptfile</key>
-				<string></string>
-				<key>type</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>B3898D11-D401-41BC-B831-E83A35F982D3</string>
-			<key>version</key>
-			<integer>2</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>text</key>
-				<string>Search Spotify Mini Player for '{query}'</string>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.trigger.fallback</string>
-			<key>uid</key>
-			<string>D781BC43-654A-4261-A7E4-648287517182</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>triggerid</key>
 				<string>share</string>
 			</dict>
@@ -9973,13 +9948,6 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<key>ypos</key>
 			<integer>830</integer>
 		</dict>
-		<key>B3898D11-D401-41BC-B831-E83A35F982D3</key>
-		<dict>
-			<key>xpos</key>
-			<integer>450</integer>
-			<key>ypos</key>
-			<integer>11240</integer>
-		</dict>
 		<key>B5D85A55-8E85-4B14-81EF-0656DC5E7594</key>
 		<dict>
 			<key>xpos</key>
@@ -10233,9 +10201,9 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 		<key>D781BC43-654A-4261-A7E4-648287517182</key>
 		<dict>
 			<key>xpos</key>
-			<integer>100</integer>
+			<integer>440</integer>
 			<key>ypos</key>
-			<integer>11240</integer>
+			<integer>1970</integer>
 		</dict>
 		<key>D8C53798-B7E2-4A51-AC12-37FEBDB624E0</key>
 		<dict>
@@ -10630,7 +10598,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 		<string>♫</string>
 	</dict>
 	<key>version</key>
-	<string>7.20</string>
+	<string>8.0</string>
 	<key>webaddress</key>
 	<string>http://alfred-spotify-mini-player.com</string>
 </dict>
