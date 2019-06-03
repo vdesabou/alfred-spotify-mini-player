@@ -3,6 +3,7 @@
 DATADIR=""
 ACTION=""
 APP=""
+ALFRED_VERSION=""
 
 while getopts ':d:a:m:' arguments
 	do
@@ -15,6 +16,9 @@ while getopts ':d:a:m:' arguments
 			;;
 		m)
 			APP="${OPTARG}"
+			;;
+		v)
+			ALFRED_VERSION="${OPTARG}"
 			;;
 	   \?)
 			print "ERROR: ${OPTARG} is not a valid option"
@@ -56,13 +60,13 @@ try
 			if track_url ≠ current_track_url then
 				set current_track_url to spotify url of current track
 
-				tell application "Alfred 3"
+				tell application "${ALFRED_VERSION}"
 					run trigger "display_current_track_notification" in workflow "com.vdesabou.spotify.mini.player" with argument track_url
 				end tell
 			end if
 
 			if player_state ≠ old_player_state and player_state is "playing" then
-				tell application "Alfred 3"
+				tell application "${ALFRED_VERSION}"
 					run trigger "display_current_track_notification" in workflow "com.vdesabou.spotify.mini.player" with argument player_state
 				end tell
 			end if
@@ -96,12 +100,12 @@ function StartMopidy
 		if [ "${track_url}" != "${current_track_url}" ]
 		then
 			current_track_url=$(echo "${result}" | awk -F '▹' '{print $5}')
-			osascript -e 'tell application "Alfred 3" to run trigger "display_current_track_notification" in workflow "com.vdesabou.spotify.mini.player" with argument "${track_url}"'
+			osascript -e "tell application \"${alfred_name}\" to run trigger \"display_current_track_notification\" in workflow \"com.vdesabou.spotify.mini.player\" with argument \"${track_url}\""
 		fi
 
 		if [ "${player_state}" != "${old_player_state}" ] && [ "${player_state}" == "playing" ]
 		then
-			osascript -e 'tell application "Alfred 3" to run trigger "display_current_track_notification" in workflow "com.vdesabou.spotify.mini.player" with argument "${player_state}"'
+			osascript -e "tell application \"${alfred_name}\" to run trigger \"display_current_track_notification\" in workflow \"com.vdesabou.spotify.mini.player\" with argument \"${player_state}\""
 		fi
 
 		old_player_state=${player_state}
@@ -129,12 +133,12 @@ function StartSpotifyConnect
 		if [ "${track_url}" != "${current_track_url}" ]
 		then
 			current_track_url=$(echo "${result}" | awk -F '▹' '{print $5}')
-			osascript -e 'tell application "Alfred 3" to run trigger "display_current_track_notification" in workflow "com.vdesabou.spotify.mini.player" with argument "${track_url}"'
+			osascript -e "tell application \"${alfred_name}\" to run trigger \"display_current_track_notification\" in workflow \"com.vdesabou.spotify.mini.player\" with argument \"${track_url}\""
 		fi
 
 		if [ "${player_state}" != "${old_player_state}" ] && [ "${player_state}" == "playing" ]
 		then
-			osascript -e 'tell application "Alfred 3" to run trigger "display_current_track_notification" in workflow "com.vdesabou.spotify.mini.player" with argument "${player_state}"'
+			osascript -e "tell application \"${alfred_name}\" to run trigger \"display_current_track_notification\" in workflow \"com.vdesabou.spotify.mini.player\" with argument \"${player_state}\""
 		fi
 
 		old_player_state=${player_state}

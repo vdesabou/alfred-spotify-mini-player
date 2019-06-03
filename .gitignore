@@ -7,3 +7,4 @@ spotify-mini-player/.idea
 .sass-cache
 *.sublime-project
 _site
+.DS_Store

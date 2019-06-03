@@ -52,14 +52,14 @@ $output_application = $settings->output_application;
 if ($other_action != 'reset_settings' && $other_action != 'spot_mini_debug' && !startswith($other_settings,'SWITCH_USER▹')) {
     if ($oauth_client_id == '' || $oauth_client_secret == '' || $oauth_access_token == '') {
         if ($other_settings != '' && (startsWith($other_settings, 'Oauth_Client') === false && startsWith($other_settings, 'Open') === false)) {
-            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('c_spot_mini')." \"'");
+            exec("osascript -e 'tell application \"".getAlfredName()."\" to search \"".getenv('c_spot_mini')." \"'");
 
             return;
         }
 
         if ($other_action != '' && $other_action != 'Oauth_Login' &&
             !startsWith($other_action, 'current')) {
-            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('c_spot_mini')." \"'");
+            exec("osascript -e 'tell application \"".getAlfredName()."\" to search \"".getenv('c_spot_mini')." \"'");
 
             return;
         }
@@ -88,7 +88,7 @@ if($oauth_access_token != '' && $now_playing_notifications == true) {
     } else {
         $app_arg = 'CONNECT';
     }
-    exec('./src/spotify_mini_player_notifications.ksh -d "'.$w->data().'" -a start -m "'.$app_arg.'"  >> "'.$w->cache().'/action.log" 2>&1 & ');
+    exec('./src/spotify_mini_player_notifications.ksh -d "'.$w->data().'" -a start -m "'.$app_arg.'" -v "'.getAlfredName().'"  >> "'.$w->cache().'/action.log" 2>&1 & ');
 }
 
 // make sure spotify is running
@@ -145,7 +145,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
                     return;
                 }
             }
-            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('c_spot_mini').' Add▹'.$track_uri.'∙'.escapeQuery($track_name).'▹'."\"'");
+            exec("osascript -e 'tell application \"".getAlfredName()."\" to search \"".getenv('c_spot_mini').' Add▹'.$track_uri.'∙'.escapeQuery($track_name).'▹'."\"'");
 
             return;
         } elseif ($playlist_uri != '') {
@@ -198,7 +198,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
                         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
                         if ($retVal != 0) {
                             displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-                            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('c_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
+                            exec("osascript -e 'tell application \"".getAlfredName()."\" to search \"".getenv('c_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
 
                             return;
                         }
@@ -283,7 +283,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
             return;
         }
     }
-    exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('c_spot_mini').' Online▹'.$artist_uri.'@'.escapeQuery($artist_name).'▹'."\"'");
+    exec("osascript -e 'tell application \"".getAlfredName()."\" to search \"".getenv('c_spot_mini').' Online▹'.$artist_uri.'@'.escapeQuery($artist_name).'▹'."\"'");
     stathat_ez_count('AlfredSpotifyMiniPlayer', 'lookup online', 1);
 
     return;
@@ -305,11 +305,11 @@ if ($type == 'TRACK' && $other_settings == '' &&
                 }
                 $album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, true, false, false, $use_artworks);
             }
-            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('c_spot_mini').' Add▹'.$album_uri.'∙'.escapeQuery($album_name).'▹'."\"'");
+            exec("osascript -e 'tell application \"".getAlfredName()."\" to search \"".getenv('c_spot_mini').' Add▹'.$album_uri.'∙'.escapeQuery($album_name).'▹'."\"'");
 
             return;
         } elseif ($playlist_uri != '') {
-            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('c_spot_mini').' Add▹'.$playlist_uri.'∙'.escapeQuery($playlist_name).'▹'."\"'");
+            exec("osascript -e 'tell application \"".getAlfredName()."\" to search \"".getenv('c_spot_mini').' Add▹'.$playlist_uri.'∙'.escapeQuery($playlist_name).'▹'."\"'");
 
             return;
         }
@@ -735,7 +735,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
         return;
     } elseif ($other_action == 'disable_now_playing_notifications') {
-        exec('./src/spotify_mini_player_notifications.ksh -d "'.$w->data().'" -a stop >> "'.$w->cache().'/action.log" 2>&1 & ');
+        exec('./src/spotify_mini_player_notifications.ksh -d "'.$w->data().'" -a stop -v "'.getAlfredName().'" >> "'.$w->cache().'/action.log" 2>&1 & ');
         $ret = updateSetting($w, 'now_playing_notifications', 0);
         if ($ret == true) {
             displayNotificationWithArtwork($w, 'Now Playing notifications are now disabled', './images/disable_now_playing.png', 'Settings');
@@ -877,7 +877,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
         return;
     } elseif ($other_action == 'enable_mopidy') {
-        exec('./src/spotify_mini_player_notifications.ksh -d "'.$w->data().'" -a stop >> "'.$w->cache().'/action.log" 2>&1 & ');
+        exec('./src/spotify_mini_player_notifications.ksh -d "'.$w->data().'" -a stop -v "'.getAlfredName().'" >> "'.$w->cache().'/action.log" 2>&1 & ');
         $ret = updateSetting($w, 'output_application', 'MOPIDY');
         if ($ret == true) {
             displayNotificationWithArtwork($w, 'Mopidy is now used', './images/mopidy.png', 'Settings');
@@ -887,7 +887,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
         return;
     } elseif ($other_action == 'enable_applescript') {
-        exec('./src/spotify_mini_player_notifications.ksh -d "'.$w->data().'" -a stop >> "'.$w->cache().'/action.log" 2>&1 & ');
+        exec('./src/spotify_mini_player_notifications.ksh -d "'.$w->data().'" -a stop -v "'.getAlfredName().'" >> "'.$w->cache().'/action.log" 2>&1 & ');
         if ($output_application == 'MOPIDY') {
             invokeMopidyMethod($w, 'core.playback.pause', array());
         }
@@ -900,7 +900,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
         return;
     } elseif ($other_action == 'enable_connect') {
-        exec('./src/spotify_mini_player_notifications.ksh -d "'.$w->data().'" -a stop >> "'.$w->cache().'/action.log" 2>&1 & ');
+        exec('./src/spotify_mini_player_notifications.ksh -d "'.$w->data().'" -a stop -v "'.getAlfredName().'" >> "'.$w->cache().'/action.log" 2>&1 & ');
         if ($output_application == 'MOPIDY') {
             invokeMopidyMethod($w, 'core.playback.pause', array());
         }
@@ -914,10 +914,10 @@ if ($type == 'TRACK' && $other_settings == '' &&
         return;
     } elseif ($other_action == 'change_theme_color') {
 
-        exec("osascript -e 'tell application \"Alfred 3\" to run trigger \"change_theme_color\" in workflow \"com.vdesabou.spotify.mini.player\" with argument \"\"'");
+        exec("osascript -e 'tell application \"".getAlfredName()."\" to run trigger \"change_theme_color\" in workflow \"com.vdesabou.spotify.mini.player\" with argument \"\"'");
         return;
     } elseif ($other_action == 'change_search_order') {
-        exec("osascript -e 'tell application \"Alfred 3\" to run trigger \"change_search_order\" in workflow \"com.vdesabou.spotify.mini.player\" with argument \"\"'");
+        exec("osascript -e 'tell application \"".getAlfredName()."\" to run trigger \"change_search_order\" in workflow \"com.vdesabou.spotify.mini.player\" with argument \"\"'");
         return;
     } elseif ($other_action == 'change_theme_color_for_real') {
 
@@ -1006,7 +1006,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
         return;
     } elseif ($other_action == 'change_theme_color') {
 
-        exec("osascript -e 'tell application \"Alfred 3\" to run trigger \"change_theme_color\" in workflow \"com.vdesabou.spotify.mini.player\" with argument \"\"'");
+        exec("osascript -e 'tell application \"".getAlfredName()."\" to run trigger \"change_theme_color\" in workflow \"com.vdesabou.spotify.mini.player\" with argument \"\"'");
         return;
     } elseif ($other_action == 'open_spotify_app') {
         
@@ -1287,7 +1287,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
             // pop twice
             $query = array_pop($history);
         $w->write($history, 'history.json');
-        exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('c_spot_mini')." $query\"'");
+        exec("osascript -e 'tell application \"".getAlfredName()."\" to search \"".getenv('c_spot_mini')." $query\"'");
 
         return;
     } elseif ($other_action == 'lookup_artist') {
@@ -1299,7 +1299,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
         if ($artist_uri == '') {
             $artist_uri = getArtistUriFromTrack($w, $track_uri);
         }
-        exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('c_spot_mini').' Online▹'.$artist_uri.'@'.escapeQuery($artist_name).'▹'."\"'");
+        exec("osascript -e 'tell application \"".getAlfredName()."\" to search \"".getenv('c_spot_mini').' Online▹'.$artist_uri.'@'.escapeQuery($artist_name).'▹'."\"'");
         stathat_ez_count('AlfredSpotifyMiniPlayer', 'lookup online', 1);
 
         return;
@@ -1613,7 +1613,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
     } elseif ($other_action == 'web_search') {
         $search_text = getCurrentArtistAndTrackName($w, $output_application);
 
-        exec("osascript -e 'tell application \"Alfred 3\" to run trigger \"web_search\" in workflow \"com.vdesabou.spotify.mini.player\" with argument \"" . $search_text . "\"'");
+        exec("osascript -e 'tell application \"".getAlfredName()."\" to run trigger \"web_search\" in workflow \"com.vdesabou.spotify.mini.player\" with argument \"" . $search_text . "\"'");
         return;
     } elseif ($other_action == 'web_search_artist_track') {
         $search_text = getCurrentArtistAndTrackName($w, $output_application);
@@ -1753,7 +1753,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
     } elseif ($other_action == 'show_alfred_playlist') {
 
         if($alfred_playlist_uri != '' ) {
-            exec("osascript -e 'tell application \"Alfred 3\" to search \"".getenv('c_spot_mini').' Playlist▹'.$alfred_playlist_uri.'▹'."\"'");
+            exec("osascript -e 'tell application \"".getAlfredName()."\" to search \"".getenv('c_spot_mini').' Playlist▹'.$alfred_playlist_uri.'▹'."\"'");
         } else {
             displayNotificationWithArtwork($w, 'Alfred Playlist is not set', './images/warning.png', 'Error!');
         }
