@@ -19,19 +19,19 @@ case ${ANSWER} in
     "@CONTENTCLICKED") open -a "Spotify" ;;
     #"@ACTIONCLICKED") echo "You clicked the alert default action button" ;;
     "Next") 
-		osascript -e "tell application \"$alfred_name\" to run trigger \"next\" in workflow \"com.vdesabou.spotify.mini.player\" with argument \"test\""
+		osascript -e "tell application id \"$alfred_name\" to run trigger \"next\" in workflow \"com.vdesabou.spotify.mini.player\" with argument \"test\""
 		;;
     "Pause") 
-		osascript -e "tell application \"$alfred_name\" to run trigger \"playpause\" in workflow \"com.vdesabou.spotify.mini.player\" with argument \"test\""
+		osascript -e "tell application id \"$alfred_name\" to run trigger \"playpause\" in workflow \"com.vdesabou.spotify.mini.player\" with argument \"test\""
 		;;
     "Lyrics") 
-		osascript -e "tell application \"$alfred_name\" to run trigger \"lyrics\" in workflow \"com.vdesabou.spotify.mini.player\" with argument \"test\"" 
+		osascript -e "tell application id \"$alfred_name\" to run trigger \"lyrics\" in workflow \"com.vdesabou.spotify.mini.player\" with argument \"test\"" 
 		;;
     "Add") 
-		osascript -e "tell application \"$alfred_name\" to run trigger \"add_current_track_to\" in workflow \"com.vdesabou.spotify.mini.player\" with argument \"test\""
+		osascript -e "tell application id \"$alfred_name\" to run trigger \"add_current_track_to\" in workflow \"com.vdesabou.spotify.mini.player\" with argument \"test\""
 		;;
     "Share") 
-		osascript -e "tell application \"$alfred_name\" to run trigger \"share\" in workflow \"com.vdesabou.spotify.mini.player\" with argument \"test\""
+		osascript -e "tell application id \"$alfred_name\" to run trigger \"share\" in workflow \"com.vdesabou.spotify.mini.player\" with argument \"test\""
 		;;
     **) 
 		echo "? --> $ANSWER" 

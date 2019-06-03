@@ -3,9 +3,9 @@
 DATADIR=""
 ACTION=""
 APP=""
-ALFRED_VERSION=""
+ALFRED_NAME=""
 
-while getopts ':v:d:a:m:' arguments
+while getopts 'v:d:a:m:' arguments
 	do
 	  case ${arguments} in
 		d)
@@ -18,15 +18,14 @@ while getopts ':v:d:a:m:' arguments
 			APP="${OPTARG}"
 			;;
 		v)
-			ALFRED_VERSION="${OPTARG}"
+			ALFRED_NAME="${OPTARG}"
 			;;
-	   \?)
+		\?)
 			print "ERROR: ${OPTARG} is not a valid option"
 			print "Usage: $0 -d <data dir> -a <action> -m <mopidy server:port> -v <alfred_name>"
 			exit 1;;
 	  esac
 	done
-
 
 function traceit
 {
@@ -60,13 +59,13 @@ try
 			if track_url ≠ current_track_url then
 				set current_track_url to spotify url of current track
 
-				tell application "${ALFRED_VERSION}"
+				tell application id "${ALFRED_NAME}"
 					run trigger "display_current_track_notification" in workflow "com.vdesabou.spotify.mini.player" with argument track_url
 				end tell
 			end if
 
 			if player_state ≠ old_player_state and player_state is "playing" then
-				tell application "${ALFRED_VERSION}"
+				tell application id "${ALFRED_NAME}"
 					run trigger "display_current_track_notification" in workflow "com.vdesabou.spotify.mini.player" with argument player_state
 				end tell
 			end if
@@ -99,13 +98,22 @@ function StartMopidy
 
 		if [ "${track_url}" != "${current_track_url}" ]
 		then
-			current_track_url=$(echo "${result}" | awk -F '▹' '{print $5}')
-			osascript -e "tell application \"${alfred_name}\" to run trigger \"display_current_track_notification\" in workflow \"com.vdesabou.spotify.mini.player\" with argument \"${track_url}\""
+			cmd='tell application id "com.runningwithcrayons.Alfred-3" to run trigger "display_current_track_notification" in workflow "com.vdesabou.spotify.mini.player" with argument "test"'
+			if [ "${ALFRED_NAME}" == "com.runningwithcrayons.Alfred" ]
+			then
+				cmd='tell application id "com.runningwithcrayons.Alfred" to run trigger "display_current_track_notification" in workflow "com.vdesabou.spotify.mini.player" with argument "test"'
+			fi
+			osascript -e "$cmd"	
 		fi
 
 		if [ "${player_state}" != "${old_player_state}" ] && [ "${player_state}" == "playing" ]
 		then
-			osascript -e "tell application \"${alfred_name}\" to run trigger \"display_current_track_notification\" in workflow \"com.vdesabou.spotify.mini.player\" with argument \"${player_state}\""
+			cmd='tell application id "com.runningwithcrayons.Alfred-3" to run trigger "display_current_track_notification" in workflow "com.vdesabou.spotify.mini.player" with argument "test"'
+			if [ "${ALFRED_NAME}" == "com.runningwithcrayons.Alfred" ]
+			then
+				cmd='tell application id "com.runningwithcrayons.Alfred" to run trigger "display_current_track_notification" in workflow "com.vdesabou.spotify.mini.player" with argument "test"'
+			fi
+			osascript -e "$cmd"	
 		fi
 
 		old_player_state=${player_state}
@@ -132,13 +140,22 @@ function StartSpotifyConnect
 
 		if [ "${track_url}" != "${current_track_url}" ]
 		then
-			current_track_url=$(echo "${result}" | awk -F '▹' '{print $5}')
-			osascript -e "tell application \"${alfred_name}\" to run trigger \"display_current_track_notification\" in workflow \"com.vdesabou.spotify.mini.player\" with argument \"${track_url}\""
+			cmd='tell application id "com.runningwithcrayons.Alfred-3" to run trigger "display_current_track_notification" in workflow "com.vdesabou.spotify.mini.player" with argument "test"'
+			if [ "${ALFRED_NAME}" == "com.runningwithcrayons.Alfred" ]
+			then
+				cmd='tell application id "com.runningwithcrayons.Alfred" to run trigger "display_current_track_notification" in workflow "com.vdesabou.spotify.mini.player" with argument "test"'
+			fi
+			osascript -e "$cmd"			
 		fi
 
 		if [ "${player_state}" != "${old_player_state}" ] && [ "${player_state}" == "playing" ]
 		then
-			osascript -e "tell application \"${alfred_name}\" to run trigger \"display_current_track_notification\" in workflow \"com.vdesabou.spotify.mini.player\" with argument \"${player_state}\""
+			cmd='tell application id "com.runningwithcrayons.Alfred-3" to run trigger "display_current_track_notification" in workflow "com.vdesabou.spotify.mini.player" with argument "test"'
+			if [ "${ALFRED_NAME}" == "com.runningwithcrayons.Alfred" ]
+			then
+				cmd='tell application id "com.runningwithcrayons.Alfred" to run trigger "display_current_track_notification" in workflow "com.vdesabou.spotify.mini.player" with argument "test"'
+			fi
+			osascript -e "$cmd"	
 		fi
 
 		old_player_state=${player_state}
@@ -153,7 +170,7 @@ then
 	do
 		if [ "$pid" != "" ]
 		then
-			pkill -P $pid
+			kill -9 $pid
 			if [ -f "${DATADIR}/spotify_mini_player_notifications.lock" ]
 			then
 				rm "${DATADIR}/spotify_mini_player_notifications.lock"

@@ -3233,10 +3233,10 @@ function secondDelimiterFollowOrUnfollow($w, $query, $settings, $db, $update_in_
             if ($ret) {
                 if ($follow) {
                     displayNotificationWithArtwork($w, 'You are now following the artist '.$artist_name, './images/follow.png', 'Follow');
-                    exec("osascript -e 'tell application \"".getAlfredName()."\" to search \"".getenv('c_spot_mini').' Artist▹'.$artist_uri.'∙'.escapeQuery($artist_name).'▹'."\"'");
+                    exec("osascript -e 'tell application id \"".getAlfredName()."\" to search \"".getenv('c_spot_mini').' Artist▹'.$artist_uri.'∙'.escapeQuery($artist_name).'▹'."\"'");
                 } else {
                     displayNotificationWithArtwork($w, 'You are no more following the artist '.$artist_name, './images/follow.png', 'Unfollow');
-                    exec("osascript -e 'tell application \"".getAlfredName()."\" to search \"".getenv('c_spot_mini').' Artist▹'.$artist_uri.'∙'.escapeQuery($artist_name).'▹'."\"'");
+                    exec("osascript -e 'tell application id \"".getAlfredName()."\" to search \"".getenv('c_spot_mini').' Artist▹'.$artist_uri.'∙'.escapeQuery($artist_name).'▹'."\"'");
                 }
             } else {
                 $w->result(null, '', 'Error!',array(
