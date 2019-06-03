@@ -2,7 +2,7 @@
 /**
  * Name:        Workflows
  * Description:    This PHP class object provides several useful functions for retrieving, parsing,
- *                and formatting data to be used with Alfred 3 Workflows.
+ *                and formatting data to be used with Alfred 4 Workflows.
  * Author:        David Ferguson (@jdfwarrior)
  * Revised:        2/9/2013
  * Version:        0.3.
@@ -39,8 +39,8 @@ class Workflows
 				$this->bundle = $this->get('bundleid', 'info.plist');
 			endif;
 		endif;
-		$this->cache = $this->home . '/Library/Caches/com.runningwithcrayons.Alfred-3/Workflow Data/' . $this->bundle;
-		$this->data = $this->home . '/Library/Application Support/Alfred 3/Workflow Data/' . $this->bundle;
+		$this->cache = getenv('alfred_workflow_cache');
+		$this->data = getenv('alfred_workflow_data');
 		if (!file_exists($this->cache)):
 			exec("mkdir -p '" . $this->cache . "'");
 		endif;
