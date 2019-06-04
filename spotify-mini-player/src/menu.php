@@ -446,6 +446,34 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress)
             ), './images/online_artist.png', 'yes', '');
     }
 
+    if(getenv('menu_display_show_in_spotify') == 1) {
+        $w->result(null, serialize(array(
+                    '' /*track_uri*/,
+                    '' /* album_uri */,
+                    '' /* artist_uri */,
+                    '' /* playlist_uri */,
+                    '' /* spotify_command */,
+                    '' /* query */,
+                    '' /* other_settings*/,
+                    'show_in_spotify' /* other_action */,
+                    '' /* artist_name */,
+                    '' /* track_name */,
+                    '' /* album_name */,
+                    '' /* track_artwork_path */,
+                    '' /* artist_artwork_path */,
+                    '' /* album_artwork_path */,
+                    '' /* playlist_name */,
+                    '', /* playlist_artwork_path */
+                )), 'Show current track in Spotify Desktop', array(
+                'This will open Spotify Desktop with current track',
+                'alt' => 'Not Available',
+                'cmd' => 'Not Available',
+                'shift' => 'Not Available',
+                'fn' => 'Not Available',
+                'ctrl' => 'Not Available',
+            ), './images/spotify.png', 'yes', '');
+    }
+
     if(getenv('menu_display_search_online') == 1) {
         $w->result(null, '', 'Search online',array(
             '☁︎ You can search tracks, artists, albums and playlists online i.e not in your library',
@@ -1269,6 +1297,32 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 'fn' => 'Not Available',
                 'ctrl' => 'Not Available',
             ), './images/online_artist.png', 'yes', '');
+
+        $w->result(null, serialize(array(
+                    '' /*track_uri*/,
+                    '' /* album_uri */,
+                    '' /* artist_uri */,
+                    '' /* playlist_uri */,
+                    '' /* spotify_command */,
+                    '' /* query */,
+                    '' /* other_settings*/,
+                    'show_in_spotify' /* other_action */,
+                    '' /* artist_name */,
+                    '' /* track_name */,
+                    '' /* album_name */,
+                    '' /* track_artwork_path */,
+                    '' /* artist_artwork_path */,
+                    '' /* album_artwork_path */,
+                    '' /* playlist_name */,
+                    '', /* playlist_artwork_path */
+                )), 'Show current track in Spotify Desktop', array(
+                'This will open Spotify Desktop with current track',
+                'alt' => 'Not Available',
+                'cmd' => 'Not Available',
+                'shift' => 'Not Available',
+                'fn' => 'Not Available',
+                'ctrl' => 'Not Available',
+            ), './images/spotify.png', 'yes', '');
 
         $w->result('SpotifyMiniPlayer_'.'lyrics', serialize(array(
                     '' /*track_uri*/,

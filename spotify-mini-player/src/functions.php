@@ -121,6 +121,45 @@ function copy2clipboard($string) {
 }
 
 /**
+ * showInSpotify function.
+ *
+ * @param mixed $w
+ */
+function showInSpotify($w)
+{
+
+    // Read settings from JSON
+
+    $settings = getSettings($w);
+
+    $output_application = $settings->output_application;
+    
+
+    if ($output_application == 'MOPIDY') {
+        $retArr = array(getCurrentTrackInfoWithMopidy($w));
+    } else if($output_application == 'APPLESCRIPT') {
+        // get info on current song
+        exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
+        if ($retVal != 0) {
+            displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
+            exec("osascript -e 'tell application id \"".getAlfredName()."\" to search \"".getenv('c_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
+
+            return;
+        }
+    } else {
+        $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
+    }
+
+    if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
+        $results = explode('▹', $retArr[count($retArr) - 1]);
+        exec("osascript -e 'tell application \"Spotify\" to activate'");
+        exec("osascript -e 'set uri to \"$results[4]\"' -e 'tell application \"Spotify\" to open location uri'");
+    } else {
+        displayNotificationWithArtwork($w, 'No track is playing', './images/warning.png');
+    }
+}
+
+/**
  * getPlaylistOwner function.
  *
  * @param mixed $w
@@ -1599,6 +1638,7 @@ function switchThemeColor($w,$theme_color)
             '1F30DEA9-0A81-4E00-9CF0-E7D086C6B5B0' => 'keyup',
             '2B0C6211-1DD0-4CE6-8082-37957F15CC1D' => 'mute',
             '2B0C8466-4AED-4272-9C10-50F3BCE88043' => 'update',
+            '804D8959-D2AE-453E-BBC1-3C11B275597B' => 'spotify',
             '2F1F6369-46C0-483B-816F-3796168AE060' => 'repeating',
             '2FC567E2-E6C5-4A91-B42E-1996532B78C9' => 'albums',
             '303A65BF-8E81-48E8-AA28-E1CA408FDD53' => 'keydown',
@@ -1710,6 +1750,7 @@ function switchThemeColor($w,$theme_color)
             'E7ECAC10-DDC2-4860-A342-A876756D8812' => 'playpause',
             'DF3FC215-4E94-472D-91B2-9D94A3B8632F' => 'keyenter',
             'D427D63A-3C3A-420D-87D5-46185FE361E3' => 'online_artist',
+            'DA2F787C-11F7-4C7A-B275-A4CFFE171012' => 'spotify',
             'D191C6F2-CF3A-4F3A-AEDB-9D8B03EA7EC9' => 'albums',
             'D51D9C70-68AF-4D63-ABD0-09906D9B1EC9' => 'playlists',
             'CED135C7-B958-4C68-8C47-956FBAA9086A' => 'remove_from',

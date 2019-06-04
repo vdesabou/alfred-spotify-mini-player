@@ -1058,6 +1058,10 @@ if ($type == 'TRACK' && $other_settings == '' &&
         lookupCurrentArtist($w);
 
         return;
+    } elseif ($other_action == 'show_in_spotify') {
+        showInSpotify($w);
+
+        return;
     } elseif ($other_action == 'unfollow_playlist') {
         unfollowThePlaylist($w, $playlist_uri);
 
