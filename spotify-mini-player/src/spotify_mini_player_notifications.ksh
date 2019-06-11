@@ -98,6 +98,7 @@ function StartMopidy
 
 		if [ "${track_url}" != "${current_track_url}" ]
 		then
+			current_track_url=$(echo "${result}" | awk -F '▹' '{print $5}')
 			cmd='tell application id "com.runningwithcrayons.Alfred-3" to run trigger "display_current_track_notification" in workflow "com.vdesabou.spotify.mini.player" with argument "test"'
 			if [ "${ALFRED_NAME}" == "com.runningwithcrayons.Alfred" ]
 			then
@@ -140,6 +141,7 @@ function StartSpotifyConnect
 
 		if [ "${track_url}" != "${current_track_url}" ]
 		then
+			current_track_url=$(echo "${result}" | awk -F '▹' '{print $5}')
 			cmd='tell application id "com.runningwithcrayons.Alfred-3" to run trigger "display_current_track_notification" in workflow "com.vdesabou.spotify.mini.player" with argument "test"'
 			if [ "${ALFRED_NAME}" == "com.runningwithcrayons.Alfred" ]
 			then
