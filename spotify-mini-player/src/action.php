@@ -47,7 +47,7 @@ $use_artworks = $settings->use_artworks;
 $use_facebook = $settings->use_facebook;
 $always_display_lyrics_in_browser = $settings->always_display_lyrics_in_browser;
 $output_application = $settings->output_application;
-
+$theme_color = $settings->theme_color;
 
 if ($other_action != 'reset_settings' && $other_action != 'spot_mini_debug' && !startswith($other_settings,'SWITCH_USER▹')) {
     if ($oauth_client_id == '' || $oauth_client_secret == '' || $oauth_access_token == '') {
@@ -88,6 +88,7 @@ if($oauth_access_token != '' && $now_playing_notifications == true) {
     } else {
         $app_arg = 'CONNECT';
     }
+    exec('open "'.'./App/'.$theme_color.'/Spotify Mini Player.app'.'"');
     exec('./src/spotify_mini_player_notifications.ksh -d "'.$w->data().'" -a start -m "'.$app_arg.'" -v "'.getAlfredName().'"  >> "'.$w->cache().'/action.log" 2>&1 & ');
 }
 
@@ -727,6 +728,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
         return;
     } elseif ($other_action == 'enable_now_playing_notifications') {
         $ret = updateSetting($w, 'now_playing_notifications', 1);
+        exec('open "'.'./App/'.$theme_color.'/Spotify Mini Player.app'.'"');
         if ($ret == true) {
             displayNotificationWithArtwork($w, 'Now Playing notifications are now enabled', './images/enable_now_playing.png', 'Settings');
         } else {
