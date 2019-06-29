@@ -359,8 +359,10 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
      $tmp = explode(':', $playlist_uri);
      if(isset($tmp[4])) {
         $playlist_id = $tmp[4];
-    } else {
+    } else if(isset($tmp[2])) {
         $playlist_id = $tmp[2];
+    } else {
+        return ''; 
     }
      try {
          $api = getSpotifyWebAPI($w);
@@ -2997,7 +2999,7 @@ function playCurrentAlbum($w)
  *
  * @param mixed $w
  */
-function addCurrentTrackTo($w)
+function addCurrentTrackTo($w,$playlist_uri='')
 {
 
     // Read settings from JSON
@@ -3005,7 +3007,7 @@ function addCurrentTrackTo($w)
     $settings = getSettings($w);
 
     $output_application = $settings->output_application;
-    
+    $use_artworks = $settings->use_artworks;
 
     if ($output_application == 'MOPIDY') {
         $retArr = array(getCurrentTrackInfoWithMopidy($w));
@@ -3051,7 +3053,23 @@ function addCurrentTrackTo($w)
                 return;
             }
         }
-        exec("osascript -e 'tell application id \"".getAlfredName()."\" to search \"".getenv('c_spot_mini').' Add▹'.$results[4].'∙'.escapeQuery($results[0]).'▹'."\"'");
+        if($playlist_uri == '' ) {
+            exec("osascript -e 'tell application id \"".getAlfredName()."\" to search \"".getenv('c_spot_mini').' Add▹'.$results[4].'∙'.escapeQuery($results[0]).'▹'."\"'");
+        } else {
+            $tmp = explode(':', $results[4]);
+            $playlist_name = getPlaylistName($w, $playlist_uri);
+
+            if($playlist_name == '') {
+                displayNotificationWithArtwork($w, 'Cannot get playlist name using playlist uri <'.$playlist_uri.'>', './images/warning.png', 'Error!');
+                return;
+            }
+            $ret = addTracksToPlaylist($w, $tmp[2], $playlist_uri, $playlist_name, false);
+            if (is_numeric($ret) && $ret > 0) {
+                displayNotificationWithArtwork($w, ''.escapeQuery($results[0]).' by '.escapeQuery($results[1]).' added to Playlist '.$playlist_name, getTrackOrAlbumArtwork($w, $results[4], true, false, false, $use_artworks), 'Add Current Track to Playlist');
+            } elseif (is_numeric($ret) && $ret == 0) {
+                displayNotificationWithArtwork($w, ''.escapeQuery($results[0]).' by '.escapeQuery($results[1]).' is already in Alfred Playlist '.$playlist_name, './images/warning.png', 'Error!');
+            }
+        }
     } else {
         displayNotificationWithArtwork($w, 'No track is playing', './images/warning.png');
     }

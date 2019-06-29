@@ -1157,7 +1157,12 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
             return;
         }
-        addCurrentTrackTo($w);
+        if($type == '') {
+            addCurrentTrackTo($w);
+        } else {
+            $playlist_uri = $type;
+            addCurrentTrackTo($w,$playlist_uri);
+        }
 
         return;
     } elseif ($other_action == 'remove_current_track_from') {
