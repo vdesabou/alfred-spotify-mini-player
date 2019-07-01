@@ -13,6 +13,13 @@ toc: false
 noindex: false
 ---
 
+<a name="v8.1"></a>
+8.1:
+
+* <span class="badge success">IMPROVED</span> External Trigger: Add current playing song to a playlist by providing URI[#296](https://github.com/vdesabou/alfred-spotify-mini-player/issues/296)
+* <span class="badge success">IMPROVED</span> Shortcut / Hotkey for searching in Spotify[#282](https://github.com/vdesabou/alfred-spotify-mini-player/issues/282)
+* <span class="badge danger">FIXED</span> Now Playing notifications are looping [#293](https://github.com/vdesabou/alfred-spotify-mini-player/issues/293)
+
 <a name="v8.0"></a>
 8.0:
 
