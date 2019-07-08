@@ -2,7 +2,7 @@
 layout: article
 permalink: /known-issues/
 title: "Known Issues"
-modified: 2018-09-11
+modified: 2019-07-08
 excerpt: "List of Known Issues."
 image:
   feature:
@@ -18,6 +18,8 @@ noindex: false
 This is the list of current known issues:
 
 ## Authentication issues
+
+* `Illegal scope` error during authentication: this is a Spotify issue that affects some users. See [bug](https://github.com/vdesabou/alfred-spotify-mini-player/issues/287) for further details
 
 * Make sure to **disable** *Mac OS http proxy settings for scripts* option in Alfred advanced preferences during time of authentication
 
@@ -48,4 +50,9 @@ As a workaround, you can create a new playlist (called 'Starred' for example) an
 ## Mopidy
 
 * Local tracks are not supported by Mopidy, this is a [known issue](https://github.com/mopidy/mopidy/issues/519). The workflow will not display local tracks when Mopidy is used.
+
+## Sonos
+
+* Sonos speakers are not appearing in the workflow due to a Spotify issue, see [bug](https://github.com/vdesabou/alfred-spotify-mini-player/issues/207)
+
 
