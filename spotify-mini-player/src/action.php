@@ -990,19 +990,58 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
         return;
     } elseif ($other_action == 'play') {
-        if ($output_application == 'MOPIDY') {
-            invokeMopidyMethod($w, 'core.playback.resume', array());
-        } else if($output_application == 'APPLESCRIPT') {
-            exec("osascript -e 'tell application \"Spotify\" to play'");
-        } else {
-            $device_id = getSpotifyConnectCurrentDeviceId($w);
-            if($device_id != '') {
-                playSpotifyConnect($w, $device_id);
+
+        if($type == '') {
+            if ($output_application == 'MOPIDY') {
+                invokeMopidyMethod($w, 'core.playback.resume', array());
+            } else if($output_application == 'APPLESCRIPT') {
+                exec("osascript -e 'tell application \"Spotify\" to play'");
             } else {
-                displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+                $device_id = getSpotifyConnectCurrentDeviceId($w);
+                if($device_id != '') {
+                    playSpotifyConnect($w, $device_id);
+                } else {
+                    displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+                    return;
+                }
+            }
+        } else {
+            $track_uri = '';
+            // URL can be either passed as URI or full URL
+            //spotify:track:7agPIlFzTpgKnqyxUVt7aM
+            //https://open.spotify.com/track/7agPIlFzTpgKnqyxUVt7aM?si=Jd3E3TCERuuU6gGS5QWkFg
+            $tmp = explode(':', $type);
+            if ($tmp[1] == 'track') {
+                $track_uri = $type;
+            } else {
+                $tmp = explode('/', $type);
+                
+                if ($tmp[3] == 'track') {
+                    $tmp2 = explode('?', $tmp[4]);
+                    $track_uri = "spotify:track:" . $tmp2[0];
+                } 
+            }
+
+            if($track_uri == "") {
+                displayNotificationWithArtwork($w, 'Could not retrieve track with argument <'.$type.'>', './images/warning.png', 'Error!');
                 return;
             }
+
+            
+            if ($output_application == 'MOPIDY') {
+                playUriWithMopidyWithoutClearing($w, $track_uri);
+            } else if($output_application == 'APPLESCRIPT') {
+                exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
+            } else {
+                $device_id = getSpotifyConnectCurrentDeviceId($w);
+                if($device_id != '') {
+                    playTrackSpotifyConnect($w, $device_id, $track_uri, '');
+                } else {
+                    displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+                }
+            }
         }
+
 
         return;
     } elseif ($other_action == 'change_theme_color') {
