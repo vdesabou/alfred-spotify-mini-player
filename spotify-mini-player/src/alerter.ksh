@@ -12,7 +12,7 @@ then
 fi
 
 APPICON="/tmp/tmp_"$(whoami)
-ANSWER=$(./alerter -title "${title}" -sender "com.spotify.miniplayer.${theme_color}" -appIcon "${APPICON}" -message "${subtitle}" -timeout 10 -closeLabel Close ${actions})
+ANSWER=$(./alerter -title "${title}" -sender "com.spotify.miniplayer.${theme_color}" -appIcon "${APPICON}" -message "${subtitle}" -closeLabel Close ${actions} -timeout 10 -group com.spotify.miniplayer -remove com.spotify.miniplayer)
 case ${ANSWER} in
     "@TIMEOUT") echo "Timeout man, sorry" ;;
     "@CLOSED") echo "You clicked on the default alert' close button" ;;
