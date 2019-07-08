@@ -81,6 +81,9 @@ function copyCurrentTrackUrlToClipboard($w)
         $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
     }
 
+    if(count($retArr) == 0) {
+        return;
+    }
     if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
         $results = explode('▹', $retArr[count($retArr) - 1]);
 
@@ -150,6 +153,9 @@ function showInSpotify($w)
         $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
     }
 
+    if(count($retArr) == 0) {
+        return;
+    }
     if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
         $results = explode('▹', $retArr[count($retArr) - 1]);
         exec("osascript -e 'tell application \"Spotify\" to activate'");
@@ -2555,6 +2561,9 @@ function updateCurrentTrackIndexFromPlayQueue($w)
         $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
     }
 
+    if(count($retArr) == 0) {
+        return;
+    }
     if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
         $results = explode('▹', $retArr[count($retArr) - 1]);
         $found = false;
@@ -2794,6 +2803,9 @@ function lookupCurrentArtist($w)
         $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
     }
 
+    if(count($retArr) == 0) {
+        return;
+    }
     if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
         $results = explode('▹', $retArr[count($retArr) - 1]);
         $tmp = explode(':', $results[4]);
@@ -2849,6 +2861,9 @@ function displayCurrentArtistBiography($w)
         $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
     }
 
+    if(count($retArr) == 0) {
+        return;
+    }
     if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
         $results = explode('▹', $retArr[count($retArr) - 1]);
         $tmp = explode(':', $results[4]);
@@ -2900,6 +2915,9 @@ function playCurrentArtist($w)
         $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
     }
 
+    if(count($retArr) == 0) {
+        return;
+    }
     if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
         $results = explode('▹', $retArr[count($retArr) - 1]);
         $tmp = explode(':', $results[4]);
@@ -2964,6 +2982,9 @@ function playCurrentAlbum($w)
         $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
     }
 
+    if(count($retArr) == 0) {
+        return;
+    }
     if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
         $results = explode('▹', $retArr[count($retArr) - 1]);
         $tmp = explode(':', $results[4]);
@@ -3024,6 +3045,9 @@ function addCurrentTrackTo($w,$playlist_uri='')
         $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
     }
 
+    if(count($retArr) == 0) {
+        return;
+    }
     if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
         $results = explode('▹', $retArr[count($retArr) - 1]);
         $tmp = explode(':', $results[4]);
@@ -3104,6 +3128,9 @@ function removeCurrentTrackFrom($w)
         $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
     }
 
+    if(count($retArr) == 0) {
+        return;
+    }
     if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
         $results = explode('▹', $retArr[count($retArr) - 1]);
         exec("osascript -e 'tell application id \"".getAlfredName()."\" to search \"".getenv('c_spot_mini').' Remove▹'.$results[4].'∙'.escapeQuery($results[0]).'▹'."\"'");
@@ -3163,6 +3190,9 @@ function addCurrentTrackToAlfredPlaylist($w)
         $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
     }
 
+    if(count($retArr) == 0) {
+        return;
+    }
     if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
         $results = explode('▹', $retArr[count($retArr) - 1]);
 
@@ -3248,6 +3278,9 @@ function addCurrentTrackToYourMusic($w)
         $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
     }
 
+    if(count($retArr) == 0) {
+        return;
+    }
     if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
         $results = explode('▹', $retArr[count($retArr) - 1]);
         $tmp = explode(':', $results[4]);
@@ -3821,6 +3854,9 @@ function createRadioArtistPlaylistForCurrentArtist($w)
         $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
     }
 
+    if(count($retArr) == 0) {
+        return;
+    }
     if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
         $results = explode('▹', $retArr[count($retArr) - 1]);
         $tmp = explode(':', $results[4]);
@@ -4065,6 +4101,9 @@ function createRadioSongPlaylistForCurrentTrack($w)
         $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
     }
 
+    if(count($retArr) == 0) {
+        return;
+    }
     if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
         $results = explode('▹', $retArr[count($retArr) - 1]);
         createRadioSongPlaylist($w, $results[0], $results[4], $results[1]);
@@ -4910,6 +4949,9 @@ function displayNotificationForCurrentTrack($w)
         $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
     }
 
+    if(count($retArr) == 0) {
+        return;
+    }
     if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
         $results = explode('▹', $retArr[count($retArr) - 1]);
 
@@ -4971,6 +5013,9 @@ function displayLyricsForCurrentTrack($w)
         $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
     }
 
+    if(count($retArr) == 0) {
+        return;
+    }
     if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
         $results = explode('▹', $retArr[count($retArr) - 1]);
 
