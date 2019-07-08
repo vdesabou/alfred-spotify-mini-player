@@ -155,7 +155,6 @@ function StartSpotifyConnect
 			osascript -e "$cmd"
 
 			old_player_state=${player_state}
-			traceit "CONTINUE"
 			sleep 3
 			continue		
 		fi
