@@ -21,6 +21,7 @@ First, start by checking out the [Getting started guide](/docs/getting-started.m
 * **Working with the API**
     * [Changing return type](/docs/examples/changing-return-type.md)
     * [Handling errors](/docs/examples/handling-errors.md)
+    * [Setting custom cURL options](/docs/setting-custom-curl-options.md)
 
 ## Method Reference
 A full method reference listing all public methods is [available here](/docs/method-reference/).

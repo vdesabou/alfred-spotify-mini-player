@@ -2079,6 +2079,15 @@ class SpotifyWebAPITest extends PHPUnit\Framework\TestCase
         $this->assertTrue($response);
     }
 
+    public function testSetReasonOnSpotifyWebAPIException()
+    {
+        $expectedReason = 'NO_ACTIVE_DEVICE';
+
+        $exception = new \SpotifyWebAPI\SpotifyWebAPIException();
+        $exception->setReason($expectedReason);
+        $this->assertEquals($expectedReason, $exception->getReason());
+    }
+
     public function testSetReturnType()
     {
         $stub = $this->getMockBuilder('Request')

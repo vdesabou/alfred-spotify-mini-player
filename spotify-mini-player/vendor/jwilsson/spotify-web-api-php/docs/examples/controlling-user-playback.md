@@ -58,7 +58,6 @@ $api->changeVolume([
     'volume_percent' => 78,
 ]);
 ```
-
 ## Retrying API calls
 Sometimes, a API call might return a `202 Accepted` response code. When this occurs, you should retry the request after a few seconds. For example:
 
@@ -74,7 +73,9 @@ try {
         }
     }
 } catch (Exception $e) {
-    // Handle the error
+    $reason = $e->getReason();
+
+    // Check the reason for the failure and handle the error
 }
 ```
 

@@ -9,6 +9,7 @@ class Request
     const RETURN_ASSOC = 'assoc';
     const RETURN_OBJECT = 'object';
 
+    protected $curlOptions = [];
     protected $lastResponse = [];
     protected $returnType = self::RETURN_OBJECT;
 
@@ -36,7 +37,13 @@ class Request
 
         if (isset($error->message) && isset($error->status)) {
             // API call error
-            throw new SpotifyWebAPIException($error->message, $error->status);
+            $exception = new SpotifyWebAPIException($error->message, $error->status);
+
+            if (isset($error->reason)) {
+                $exception->setReason($error->reason);
+            }
+
+            throw $exception;
         } elseif (isset($body->error_description)) {
             // Auth call error
             throw new SpotifyWebAPIAuthException($body->error_description, $status);
@@ -207,7 +214,7 @@ class Request
         $options[CURLOPT_URL] = $url;
 
         $ch = curl_init();
-        curl_setopt_array($ch, $options);
+        curl_setopt_array($ch, array_replace($options, $this->curlOptions));
 
         $response = curl_exec($ch);
 
@@ -237,6 +244,20 @@ class Request
         curl_close($ch);
 
         return $this->lastResponse;
+    }
+
+    /**
+     * Set custom cURL options.
+     *
+     * Any options passed here will be merged with the defaults, overriding existing ones.
+     *
+     * @param array $options One of the `Request::RETURN_*` constants.
+     *
+     * @return void
+     */
+    public function setCurlOptions($options)
+    {
+        $this->curlOptions = $options;
     }
 
     /**

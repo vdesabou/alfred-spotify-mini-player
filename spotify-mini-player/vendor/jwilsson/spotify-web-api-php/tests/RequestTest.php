@@ -1,4 +1,5 @@
 <?php
+
 class RequestTest extends PHPUnit\Framework\TestCase
 {
     private function setupStub($expectedMethod, $expectedUri, $expectedParameters, $expectedHeaders, $expectedReturn)
@@ -7,15 +8,20 @@ class RequestTest extends PHPUnit\Framework\TestCase
                 ->setMethods(['send'])
                 ->getMock();
 
-        $stub->expects($this->once())
+        $invocation = $stub->expects($this->once())
                  ->method('send')
                  ->with(
                      $this->equalTo($expectedMethod),
                      $this->equalTo($expectedUri),
                      $this->equalTo($expectedParameters),
                      $this->equalTo($expectedHeaders)
-                 )
-                ->willReturn($expectedReturn);
+                 );
+
+        if ($expectedReturn instanceof Exception) {
+            $invocation->willThrowException($expectedReturn);
+        } else {
+            $invocation->willReturn($expectedReturn);
+        }
 
         return $stub;
     }
@@ -88,9 +94,77 @@ class RequestTest extends PHPUnit\Framework\TestCase
         ];
 
         $this->expectException(SpotifyWebAPI\SpotifyWebAPIAuthException::class);
-
         $request = new SpotifyWebAPI\Request();
-        $response = $request->account('POST', '/api/token', $parameters, $headers);
+        try {
+            $response = $request->account('POST', '/api/token', $parameters, $headers);
+        } catch (Exception $e) {
+            $this->assertInstanceOf(SpotifyWebAPI\SpotifyWebAPIAuthException::class, $e);
+            $this->assertTrue($e->hasInvalidCredentials());
+            throw $e; // throw again for last test
+        }
+    }
+
+    public function testExpiredToken()
+    {
+        $headers = [
+            'Authorization' => 'Bearer Expired token',
+        ];
+
+        $return = new SpotifyWebAPI\SpotifyWebAPIException('The access token expired', 401);
+
+        $request = $this->setupStub(
+            'GET',
+            'https://api.spotify.com/v1/tracks/2TpxZ7JUBn3uw46aR7qd6V',
+            [],
+            $headers,
+            $return
+        );
+
+        $this->expectException(SpotifyWebAPI\SpotifyWebAPIException::class);
+
+        try {
+            $response = $request->api('GET', '/v1/tracks/2TpxZ7JUBn3uw46aR7qd6V', [], $headers);
+        } catch (Exception $e) {
+            $this->assertInstanceOf(SpotifyWebAPI\SpotifyWebAPIException::class, $e);
+            $this->assertTrue($e->hasExpiredToken());
+            throw $e;
+        }
+    }
+
+    public function testInvalidRefreshToken()
+    {
+        $clientID = 'VALID_ID';
+        $clientSecret = 'VALID_ID';
+        $payload = base64_encode($clientID . ':' . $clientSecret);
+
+        $parameters = [
+            'grant_type' => 'refresh_token',
+            'refresh_token' => 'Invalid refresh token',
+        ];
+
+        $headers = [
+            'Authorization' => 'Basic ' . $payload,
+        ];
+
+        $return = new SpotifyWebAPI\SpotifyWebAPIAuthException('Invalid refresh token', 400);
+
+        $request = $this->setupStub(
+            'POST',
+            'https://accounts.spotify.com/api/token',
+            $parameters,
+            $headers,
+            $return
+        );
+
+        $this->expectException(SpotifyWebAPI\SpotifyWebAPIAuthException::class);
+
+        try {
+            $response = $request->account('POST', '/api/token', $parameters, $headers);
+        } catch (Exception $e) {
+            $this->assertInstanceOf(SpotifyWebAPI\SpotifyWebAPIAuthException::class, $e);
+            $this->assertTrue($e->hasInvalidRefreshToken());
+            throw $e;
+        }
     }
 
     public function testGetLastResponse()

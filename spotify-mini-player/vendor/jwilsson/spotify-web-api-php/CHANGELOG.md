@@ -1,4 +1,11 @@
 # Changelog
+## 2.8.0 (2019-06-29)
+* Added a `Request::setCurlOptions()` method to make it possible to set custom cURL options. ([5a8b1e5](https://github.com/jwilsson/spotify-web-api-php/commit/5a8b1e5cd7cc3b4969ea615e55ac3dd66b12a872))
+
+## 2.7.0 (2019-06-19)
+* Added a `SpotifyWebAPIException::getReason()` method to retrieve the reason for a player error. ([ce728e1](https://github.com/jwilsson/spotify-web-api-php/commit/ce728e1319996894d2cd1eb90f7bc8e8482fa327))
+* Updated CA bundle. ([4732256](https://github.com/jwilsson/spotify-web-api-php/commit/4732256b21a430f7fffe67bec79a915d445fc8ec))
+
 ## 2.6.1 (2018-11-07)
 * Corrected the authorization URL ([891cd0f](https://github.com/jwilsson/spotify-web-api-php/commit/891cd0f1be525def4bf9f9969bfb6e34bd7b0ffc))
 
