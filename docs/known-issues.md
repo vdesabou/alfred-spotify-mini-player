@@ -2,7 +2,7 @@
 layout: article
 permalink: /known-issues/
 title: "Known Issues"
-modified: 2019-07-08
+modified: 2019-07-28
 excerpt: "List of Known Issues."
 image:
   feature:
@@ -18,8 +18,6 @@ noindex: false
 This is the list of current known issues:
 
 ## Authentication issues
-
-* `Illegal scope` error during authentication: this is a Spotify issue that affects some users. See [bug](https://github.com/vdesabou/alfred-spotify-mini-player/issues/287) for further details
 
 * Make sure to **disable** *Mac OS http proxy settings for scripts* option in Alfred advanced preferences during time of authentication
 
