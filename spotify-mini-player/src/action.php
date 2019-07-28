@@ -1007,27 +1007,26 @@ if ($type == 'TRACK' && $other_settings == '' &&
             }
         } else {
             $track_uri = '';
-            // URL can be either passed as URI or full URL
+            // URL can be either passed as URI or full URL (works for tracks, playlists, artists and albums)
             //spotify:track:7agPIlFzTpgKnqyxUVt7aM
             //https://open.spotify.com/track/7agPIlFzTpgKnqyxUVt7aM?si=Jd3E3TCERuuU6gGS5QWkFg
             $tmp = explode(':', $type);
-            if ($tmp[1] == 'track') {
+            if ($tmp[1] == 'track' || $tmp[1] == 'playlist' || $tmp[1] == 'artist' || $tmp[1] == 'album') {
                 $track_uri = $type;
             } else {
                 $tmp = explode('/', $type);
                 
-                if ($tmp[3] == 'track') {
+                if ($tmp[3] == 'track' || $tmp[3] == 'playlist' || $tmp[3] == 'artist' || $tmp[3] == 'album') {
                     $tmp2 = explode('?', $tmp[4]);
-                    $track_uri = "spotify:track:" . $tmp2[0];
+                    $track_uri = "spotify:" . $tmp[3] . ":" . $tmp2[0];
                 } 
             }
-
+        
             if($track_uri == "") {
-                displayNotificationWithArtwork($w, 'Could not retrieve track with argument <'.$type.'>', './images/warning.png', 'Error!');
+                displayNotificationWithArtwork($w, 'Could not retrieve track/artist/playlist/album with argument <'.$type.'>', './images/warning.png', 'Error!');
                 return;
             }
 
-            
             if ($output_application == 'MOPIDY') {
                 playUriWithMopidyWithoutClearing($w, $track_uri);
             } else if($output_application == 'APPLESCRIPT') {
@@ -1035,7 +1034,13 @@ if ($type == 'TRACK' && $other_settings == '' &&
             } else {
                 $device_id = getSpotifyConnectCurrentDeviceId($w);
                 if($device_id != '') {
-                    playTrackSpotifyConnect($w, $device_id, $track_uri, '');
+                    $tmp = explode(':', $track_uri);
+                    if ($tmp[1] == 'track') {
+                        playTrackSpotifyConnect($w, $device_id, $track_uri, '');
+                    } else {
+                        playTrackSpotifyConnect($w, $device_id, '', $track_uri);
+                    }
+                    
                 } else {
                     displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
                 }
