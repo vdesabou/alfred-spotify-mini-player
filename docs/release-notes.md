@@ -2,7 +2,7 @@
 layout: article
 permalink: /release-notes/
 title: "Release Notes"
-modified: 2019-06-03
+modified: 2019-07-29
 excerpt: "Release Notes."
 image:
   feature:
@@ -12,6 +12,12 @@ share: false
 toc: false
 noindex: false
 ---
+
+<a name="v8.2"></a>
+8.2:
+
+* <span class="badge success">IMPROVED</span> Is there a way to play a specific song from external trigger?[#298](https://github.com/vdesabou/alfred-spotify-mini-player/issues/298)
+* <span class="badge danger">FIXED</span> Now Playing notifications settings not working fine [#299](https://github.com/vdesabou/alfred-spotify-mini-player/issues/299)
 
 <a name="v8.1"></a>
 8.1:
