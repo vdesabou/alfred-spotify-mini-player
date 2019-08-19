@@ -991,7 +991,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
         return;
     } elseif ($other_action == 'play') {
 
-        if($type == '') {
+        if($type == '' || $type == 'TRACK') {
             if ($output_application == 'MOPIDY') {
                 invokeMopidyMethod($w, 'core.playback.resume', array());
             } else if($output_application == 'APPLESCRIPT') {
