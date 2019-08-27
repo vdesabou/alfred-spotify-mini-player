@@ -3,7 +3,7 @@ layout: article
 permalink: /setup/
 title: "Setup"
 date: 2015-01-01
-modified: 2018-05-03
+modified: 2019-08-27
 toc: true
 share: false
 noindex: false
@@ -104,7 +104,7 @@ Setting up the workflow is easy, you just need to follow these steps:-
 ## Create the library
 
 
-* Invoke the workflow (with keyword `spot_mini`, or with an [hotkey]({{ site.url }}/articles/hotkeys) ) 
+* Invoke the workflow (with keyword `spot_mini`, or **highly recommended** with an [hotkey]({{ site.url }}/articles/hotkeys) ) 
 
 * Follow the steps as below by copy/pasting the *Client ID* and *Client Secret* into Alfred window when asked:
 
