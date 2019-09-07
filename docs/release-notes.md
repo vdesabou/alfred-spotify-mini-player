@@ -2,7 +2,7 @@
 layout: article
 permalink: /release-notes/
 title: "Release Notes"
-modified: 2019-07-29
+modified: 2019-09-07
 excerpt: "Release Notes."
 image:
   feature:
@@ -12,6 +12,13 @@ share: false
 toc: false
 noindex: false
 ---
+
+<a name="v8.3"></a>
+8.3:
+
+* <span class="badge success">IMPROVED</span> Handle "Refresh token revoked" issue more gracefully[#301](https://github.com/vdesabou/alfred-spotify-mini-player/issues/301)
+* <span class="badge danger">FIXED</span> Spot_mini > play doesn't work anymore on 8.2 [#300](https://github.com/vdesabou/alfred-spotify-mini-player/issues/300)
+  
 
 <a name="v8.2"></a>
 8.2:

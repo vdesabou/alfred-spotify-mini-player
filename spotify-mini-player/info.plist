@@ -10797,7 +10797,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 		<string>♫</string>
 	</dict>
 	<key>version</key>
-	<string>8.2</string>
+	<string>8.3</string>
 	<key>webaddress</key>
 	<string>http://alfred-spotify-mini-player.com</string>
 </dict>
