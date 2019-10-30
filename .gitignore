@@ -8,3 +8,4 @@ spotify-mini-player/.idea
 *.sublime-project
 _site
 .DS_Store
+*.txt

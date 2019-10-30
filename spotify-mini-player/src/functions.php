@@ -64,7 +64,7 @@ function copyCurrentTrackUrlToClipboard($w)
     $settings = getSettings($w);
 
     $output_application = $settings->output_application;
-    
+
 
     if ($output_application == 'MOPIDY') {
         $retArr = array(getCurrentTrackInfoWithMopidy($w));
@@ -103,7 +103,7 @@ function copyCurrentTrackUrlToClipboard($w)
  * copy2clipboard function.
  *
  * @param mixed $string
- * 
+ *
  * https://stackoverflow.com/questions/29181038/how-to-copy-string-to-system-clipboard-with-php-which-runs-as-client-side
  */
 function copy2clipboard($string) {
@@ -136,7 +136,7 @@ function showInSpotify($w)
     $settings = getSettings($w);
 
     $output_application = $settings->output_application;
-    
+
 
     if ($output_application == 'MOPIDY') {
         $retArr = array(getCurrentTrackInfoWithMopidy($w));
@@ -212,13 +212,13 @@ function getPlaylistOwner($w, $playlist_uri)
 function resetPlaylistNumberTimesPlayed($w)
 {
     $dbfile = $w->data().'/library.db';
-    
+
     try {
         $db = new PDO("sqlite:$dbfile", '', '', array(
                 PDO::ATTR_PERSISTENT => true,
             ));
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    
+
         $resetPlaylistNumberTimesPlayed = 'update playlists set nb_times_played=0';
         $stmtResetPlaylistNumberTimesPlayed = $db->prepare($resetPlaylistNumberTimesPlayed);
         $stmtResetPlaylistNumberTimesPlayed->execute();
@@ -227,7 +227,7 @@ function resetPlaylistNumberTimesPlayed($w)
         logMsg('Error(resetPlaylistNumberTimesPlayed): (exception '.jTraceEx($e).')');
         handleDbIssuePdoEcho($db, $w);
         $db = null;
-    
+
         return false;
     }
     return true;
@@ -242,13 +242,13 @@ function resetPlaylistNumberTimesPlayed($w)
 function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
 {
     $dbfile = $w->data().'/library.db';
-    
+
     try {
         $db = new PDO("sqlite:$dbfile", '', '', array(
                 PDO::ATTR_PERSISTENT => true,
             ));
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    
+
         $updatePlaylistNumberTimesPlayed = 'update playlists set nb_times_played=nb_times_played+1 where uri=:uri';
         $stmtUpdatePlaylistNumberTimesPlayed = $db->prepare($updatePlaylistNumberTimesPlayed);
 
@@ -259,7 +259,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
         logMsg('Error(updatePlaylistNumberTimesPlayed): (exception '.jTraceEx($e).')');
         handleDbIssuePdoEcho($db, $w);
         $db = null;
-    
+
         return false;
     }
     return true;
@@ -278,13 +278,13 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
      } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
          return false;
      }
- 
+
      if (isset($me->product)) {
         if($me->product == 'premium') {
             return true;
         }
      }
- 
+
      return false;
  }
 
@@ -315,7 +315,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
                     'fn' => 'Not Available',
                     'ctrl' => 'Not Available',
                 ), './images/warning.png', 'no', null, '');
- 
+
          return '';
      }
  }
@@ -348,7 +348,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
                     'fn' => 'Not Available',
                     'ctrl' => 'Not Available',
                 ), './images/warning.png', 'no', null, '');
- 
+
          return '';
      }
  }
@@ -368,7 +368,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
     } else if(isset($tmp[2])) {
         $playlist_id = $tmp[2];
     } else {
-        return ''; 
+        return '';
     }
      try {
          $api = getSpotifyWebAPI($w);
@@ -455,7 +455,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
     // Read settings from JSON
 
     $settings = getSettings($w);
-    
+
     $country_code = $settings->country_code;
 
     $retry = true;
@@ -508,7 +508,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
     }
  }
 
- 
+
 /**
  * setShuffleStateSpotifyConnect function.
  *
@@ -573,7 +573,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
     while ($retry) {
         try {
             $api = getSpotifyWebAPI($w);
-            
+
             $devices = $api->getMyDevices();
             $retry = false;
             if(isset($devices->devices)) {
@@ -853,7 +853,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
     while ($retry) {
         try {
             $api = getSpotifyWebAPI($w);
-      
+
             $playback_info = $api->getMyCurrentPlaybackInfo(array(
             'market' => $country_code,
             ));
@@ -1153,7 +1153,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
             }
         }
     }
- 
+
      return true;
  }
 
@@ -1206,7 +1206,7 @@ function isShuffleActive($print_output)
         while ($retry) {
             try {
                 $api = getSpotifyWebAPI($w);
-    
+
                 $playback_info = $api->getMyCurrentPlaybackInfo(array(
                 'market' => $country_code,
                 ));
@@ -1216,7 +1216,7 @@ function isShuffleActive($print_output)
                 } else {
                     $command_output = 'false';
                 }
-    
+
                 $retry = false;
             } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
                 logMsg('Error(isShuffleActive): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
@@ -1232,14 +1232,14 @@ function isShuffleActive($print_output)
                     // retry
                     if ($nb_retry > 2) {
                         $retry = false;
-    
+
                         return false;
                     }
                     ++$nb_retry;
                     sleep(5);
                 } else {
                     $retry = false;
-    
+
                     return false;
                 }
             }
@@ -1333,7 +1333,7 @@ function getCurrentUser($w)
         if($userid == false) {
             return;
         }
-        
+
         $ret = $w->write($userid, 'current_user.json');
 
         $user_folder = $w->data().'/users/'.$userid;
@@ -1368,9 +1368,9 @@ function getCurrentUser($w)
 function switchUser($w, $new_user)
 {
     $new_user_folder = $w->data().'/users/'.$new_user;
-    
+
     if (file_exists($w->data().'/library.db')) {
-        deleteTheFile($w->data().'/library.db');   
+        deleteTheFile($w->data().'/library.db');
     }
     if (file_exists($new_user_folder.'/library.db')) {
         link($new_user_folder.'/library.db',$w->data().'/library.db');
@@ -1403,7 +1403,7 @@ function switchUser($w, $new_user)
  * @param mixed $w
  */
 function newUser($w)
-{   
+{
     if (file_exists($w->data().'/library.db')) {
         deleteTheFile($w->data().'/library.db');
     }
@@ -1414,7 +1414,7 @@ function newUser($w)
         deleteTheFile($w->data().'/history.json');
     }
 
-    // just delete the file 
+    // just delete the file
     if (file_exists($w->data().'/current_user.json')) {
         deleteTheFile($w->data().'/current_user.json');
     }
@@ -1430,7 +1430,7 @@ function newUser($w)
  * @param mixed $w
  */
 function listUsers($w)
-{ 
+{
     $users_folder = $w->data().'/users/';
     $users = scandir($users_folder);
     // loop on users
@@ -1857,7 +1857,7 @@ function switchThemeColor($w,$theme_color)
         }
     }
 
-    // Get APP 
+    // Get APP
     $app_url = 'https://github.com/vdesabou/alfred-spotify-mini-player/raw/master/resources/images_' . $theme_color . '/' . rawurlencode('Spotify Mini Player.app.zip');
 
     $zip_file = '/tmp/SpotifyMiniPlayer.app.zip';
@@ -1878,7 +1878,7 @@ function switchThemeColor($w,$theme_color)
     }
     $zip_command = 'unzip '  . $zip_file . ' -d ' . '\'./App/'.$theme_color.'/\'';
     exec($zip_command);
-    
+
     exec('open "'.'./App/'.$theme_color.'/Spotify Mini Player.app'.'"');
     //update settings
     $ret = updateSetting($w, 'theme_color', $theme_color);
@@ -2020,7 +2020,14 @@ function createDebugFile($w)
 
     exec('/usr/bin/xattr "'.'./App/'.$theme_color.'/Spotify Mini Player.app'.'"',$response);
     $output = $output."xattr Spotify Mini Player.app returned: ";
-    foreach($response as $line) {  
+    foreach($response as $line) {
+        $output = $output.$line;
+        $output = $output."\n";
+    }
+    $output = $output."\n";
+    exec('/usr/bin/xattr "'.'./terminal-notifier.app'.'"',$response);
+    $output = $output."xattr alerter returned: ";
+    foreach($response as $line) {
         $output = $output.$line;
         $output = $output."\n";
     }
@@ -2130,10 +2137,10 @@ function getCurrentTrackInfoWithMopidy($w, $displayError = true)
             } else {
                 $track_uri = $current_track_info->item->uri;
             }
-            
+
             $length = ($current_track_info->item->duration_ms);
             $popularity = $current_track_info->item->popularity;
-        
+
             $retArr = array(''.$track_name.'▹'.$artist_name.'▹'.$album_name.'▹'.$state.'▹'.$track_uri.'▹'.$length.'▹'.$popularity);
             return ''.$track_name.'▹'.$artist_name.'▹'.$album_name.'▹'.$state.'▹'.$track_uri.'▹'.$length.'▹'.$popularity;
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
@@ -2542,9 +2549,9 @@ function updateCurrentTrackIndexFromPlayQueue($w)
     // Read settings from JSON
 
     $settings = getSettings($w);
-    
+
     $output_application = $settings->output_application;
-    
+
 
     if ($output_application == 'MOPIDY') {
         $retArr = array(getCurrentTrackInfoWithMopidy($w));
@@ -2786,7 +2793,7 @@ function lookupCurrentArtist($w)
     $settings = getSettings($w);
 
     $output_application = $settings->output_application;
-    
+
 
     if ($output_application == 'MOPIDY') {
         $retArr = array(getCurrentTrackInfoWithMopidy($w));
@@ -2844,7 +2851,7 @@ function displayCurrentArtistBiography($w)
     $settings = getSettings($w);
 
     $output_application = $settings->output_application;
-    
+
 
     if ($output_application == 'MOPIDY') {
         $retArr = array(getCurrentTrackInfoWithMopidy($w));
@@ -2898,7 +2905,7 @@ function playCurrentArtist($w)
     $output_application = $settings->output_application;
     $country_code = $settings->country_code;
     $use_artworks = $settings->use_artworks;
-    
+
 
     if ($output_application == 'MOPIDY') {
         $retArr = array(getCurrentTrackInfoWithMopidy($w));
@@ -2965,7 +2972,7 @@ function playCurrentAlbum($w)
 
     $output_application = $settings->output_application;
     $use_artworks = $settings->use_artworks;
-    
+
 
     if ($output_application == 'MOPIDY') {
         $retArr = array(getCurrentTrackInfoWithMopidy($w));
@@ -3008,7 +3015,7 @@ function playCurrentAlbum($w)
                 return;
             }
         }
-        addAlbumToPlayQueue($w, $album_uri, escapeQuery($results[2]));        
+        addAlbumToPlayQueue($w, $album_uri, escapeQuery($results[2]));
         displayNotificationWithArtwork($w, '🔈 Album '.escapeQuery($results[2]), getTrackOrAlbumArtwork($w, $results[4], true, false, false, $use_artworks), 'Play Current Album', $use_artworks);
     } else {
         displayNotificationWithArtwork($w, 'No track is playing', './images/warning.png');
@@ -3173,7 +3180,7 @@ function addCurrentTrackToAlfredPlaylist($w)
     $settings = getSettings($w);
 
     $output_application = $settings->output_application;
-    
+
 
     if ($output_application == 'MOPIDY') {
         $retArr = array(getCurrentTrackInfoWithMopidy($w));
@@ -3261,7 +3268,7 @@ function addCurrentTrackToYourMusic($w)
 
     $output_application = $settings->output_application;
     $use_artworks = $settings->use_artworks;
-    
+
 
     if ($output_application == 'MOPIDY') {
         $retArr = array(getCurrentTrackInfoWithMopidy($w));
@@ -3837,7 +3844,7 @@ function createRadioArtistPlaylistForCurrentArtist($w)
     $settings = getSettings($w);
 
     $output_application = $settings->output_application;
-    
+
 
     if ($output_application == 'MOPIDY') {
         $retArr = array(getCurrentTrackInfoWithMopidy($w));
@@ -3964,7 +3971,7 @@ function createRadioArtistPlaylist($w, $artist_name, $artist_uri)
             } else {
                 refreshLibrary($w);
             }
-            
+
             return;
         } elseif (is_numeric($ret) && $ret == 0) {
             displayNotificationWithArtwork($w, 'Playlist '.$json->name.' cannot be added', './images/warning.png', 'Error!');
@@ -4084,7 +4091,7 @@ function createRadioSongPlaylistForCurrentTrack($w)
     $settings = getSettings($w);
 
     $output_application = $settings->output_application;
-    
+
 
     if ($output_application == 'MOPIDY') {
         $retArr = array(getCurrentTrackInfoWithMopidy($w));
@@ -4844,7 +4851,7 @@ function escapeQuery($text)
     if (startswith($text, '’')) {
         $text = ltrim($text, '’');
     }
-    
+
     return $text;
 }
 
@@ -4911,8 +4918,8 @@ function displayNotificationWithArtwork($w, $subtitle, $artwork, $title = 'Spoti
             copy($artwork, '/tmp/tmp_' . exec("whoami") );
         }
 
-        exec("./src/alerter.ksh '".$title."' '".$theme_color."' '".$subtitle."' '".getAlfredName()."' 2>&1 & ");
-    
+        //exec("./src/alerter.ksh '".$title."' '".$theme_color."' '".$subtitle."' '".getAlfredName()."' 2>&1 & ");
+        exec("./terminal-notifier.app/Contents/MacOS/terminal-notifier -title '".$title."' -sender 'com.spotify.miniplayer.".$theme_color."' -appIcon '/tmp/tmp' -message '".$subtitle."'");
     } else {
         exec('./src/growl_notification.ksh -t "'.$title.'" -s "'.$subtitle.'" >> "'.$w->cache().'/action.log" 2>&1 & ');
     }
@@ -4932,7 +4939,7 @@ function displayNotificationForCurrentTrack($w)
 
     $output_application = $settings->output_application;
     $is_display_rating = $settings->is_display_rating;
-    $use_artworks = $settings->use_artworks;    
+    $use_artworks = $settings->use_artworks;
 
     if ($output_application == 'MOPIDY') {
         $retArr = array(getCurrentTrackInfoWithMopidy($w));
@@ -4996,7 +5003,7 @@ function displayLyricsForCurrentTrack($w)
 
     $output_application = $settings->output_application;
     $always_display_lyrics_in_browser = $settings->always_display_lyrics_in_browser;
-    
+
 
     if ($output_application == 'MOPIDY') {
         $retArr = array(getCurrentTrackInfoWithMopidy($w));
@@ -5026,7 +5033,7 @@ function displayLyricsForCurrentTrack($w)
             list($lyrics_url, $lyrics) = getLyrics($w, escapeQuery($results[1]), escapeQuery($results[0]));
 
             if ($lyrics_url != false) {
-                exec('open '.$lyrics_url); 
+                exec('open '.$lyrics_url);
             } else {
                 displayNotificationWithArtwork($w, 'No lyrics found!', './images/warning.png', 'Error!');
             }
@@ -5251,7 +5258,7 @@ function getTrackOrAlbumArtwork($w, $spotifyURL, $fetchIfNotPresent, $fetchLater
             } else {
                 $artwork = getArtworkURL($w, $hrefs[1], $hrefs[2]);
             }
-            
+
 
             // if return 0, it is a 404 error, no need to fetch
             if (!empty($artwork) || (is_numeric($artwork) && $artwork != 0)) {
@@ -5680,12 +5687,12 @@ function getArtworkURL($w, $type, $id, $highRes = false)
                     // 600 px
                     if (isset($track->album->images[0]) && isset($track->album->images[0]->url)) {
                         return $track->album->images[0]->url;
-                    }  
+                    }
 
                     // 300 px
                     if (isset($track->album->images[1]) && isset($track->album->images[1]->url)) {
                         return $track->album->images[1]->url;
-                    }            
+                    }
                 }
 
 
@@ -5754,7 +5761,7 @@ function getArtworkURL($w, $type, $id, $highRes = false)
                     // 300 px
                     if (isset($album->images[1]) && isset($album->images[1]->url)) {
                         return $album->images[1]->url;
-                    }     
+                    }
                 }
 
 
@@ -6035,6 +6042,7 @@ function updateLibrary($w)
     $nb_tracktotal = 0;
     $nb_skipped = 0;
     $savedListPlaylist = array();
+    $savedListAlbums = array();
     try {
         $api = getSpotifyWebAPI($w);
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
@@ -6160,6 +6168,68 @@ function updateLibrary($w)
 
         $offsetGetMySavedTracks += $limitGetMySavedTracks;
     } while ($offsetGetMySavedTracks < $userMySavedTracks->total);
+
+    // $savedMySavedAlbums = array();
+    // $offsetGetMySavedAlbums = 0;
+    // $limitGetMySavedAlbums = 50;
+    // do {
+    //     $retry = true;
+    //     $nb_retry = 0;
+    //     while ($retry) {
+    //         try {
+    //             // refresh api
+    //             $api = getSpotifyWebAPI($w, $api);
+    //             $userMySavedAlbums = $api->getMySavedAlbums(array(
+    //                     'limit' => $limitGetMySavedAlbums,
+    //                     'offset' => $offsetGetMySavedAlbums,
+    //                     'market' => $country_code,
+    //                 ));
+    //             $retry = false;
+    //         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+    //             logMsg('Error(getMySavedAlbums): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
+
+    //             if ($e->getCode() == 429) { // 429 is Too Many Requests
+    //                 $lastResponse = $api->getRequest()->getLastResponse();
+    //                 $retryAfter = $lastResponse['headers']['Retry-After'];
+    //                 sleep($retryAfter);
+    //             } else if ($e->getCode() == 404) {
+    //                 // skip
+    //                 break;
+    //             } else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
+    //                 // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
+    //                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
+    //                 // retry any SSL error
+    //                 ++$nb_retry;
+    //             } else if ($e->getCode() == 500
+    //                 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+    //                 // retry
+    //                 if ($nb_retry > 2) {
+    //                     handleSpotifyWebAPIException($w, $e);
+    //                     $retry = false;
+
+    //                     return false;
+    //                 }
+    //                 ++$nb_retry;
+    //                 sleep(5);
+    //             } else {
+    //                 handleSpotifyWebAPIException($w, $e);
+    //                 $retry = false;
+
+    //                 return false;
+    //             }
+    //         }
+    //     }
+
+    //     foreach ($userMySavedAlbums->items as $album) {
+    //         $tracks = $album->tracks;
+    //         $nb_tracktotal += $tracks->total;
+    //         if ($album->name != '') {
+    //             $savedListAlbums[] = $album;
+    //         }
+    //     }
+
+    //     $offsetGetMySavedAlbums += $limitGetMySavedAlbums;
+    // } while ($offsetGetMySavedAlbums < $userMySavedAlbums->total);
 
     // Handle playlists
     $w->write('Create Library▹0▹'.$nb_tracktotal.'▹'.$words[3].'▹'.'starting', 'update_library_in_progress');
@@ -7114,7 +7184,7 @@ function refreshLibrary($w)
 
             // check if this is a self-updated playlist (spotify and 30 tracks)
             $selfUpdatedPlaylistUpdated = false;
-            
+
             $owner = getPlaylistOwner($w,$playlists[0]);
 
             if($owner == 'spotify' && $tracks->total == 30) {
@@ -7132,7 +7202,7 @@ function refreshLibrary($w)
                     $last_updated_time = strtotime($last_updated);
 
                     if( ($today_time - $last_updated_time) > 7*24*3600) {
-                        $selfUpdatedPlaylistUpdated = true;   
+                        $selfUpdatedPlaylistUpdated = true;
                     }
                 } catch (PDOException $e) {
                     logMsg('Error(refreshLibrary - self-updated playlist): (exception '.jTraceEx($e).')');
@@ -7898,7 +7968,7 @@ function handleSpotifyWebAPIException($w, $e)
  function floatToCircles($decimal)
  {
      $squares = ($decimal < 1) ? floor($decimal * 10) : 10;
- 
+
      return str_repeat('●', $squares).str_repeat('○︎', 10 - $squares);
  }
 
@@ -8205,7 +8275,7 @@ function checkForUpdate($w, $last_check_update_time, $download = false)
         // Read settings from JSON
 
         $settings = getSettings($w);
-    
+
         $workflow_version = $settings->workflow_version;
 
         if($local_version != $workflow_version) {
@@ -8864,7 +8934,7 @@ function getSettings($w)
         removeSetting($w,'use_mopidy');
         $settings = $w->read('settings.json');
     }
-    
+
     return $settings;
 }
 
@@ -8914,14 +8984,14 @@ function updateSetting($w, $setting_name, $setting_new_value, $settings_file = '
  function removeSetting($w, $setting_name, $settings_file = 'settings.json')
  {
      $settings = $w->read($settings_file);
- 
+
      if ($settings == false) {
          logMsg('Error(removeSetting) failed while reading JSON file');
- 
+
          return false;
      }
      $new_settings = array();
- 
+
      foreach ($settings as $key => $value) {
          if ($key == $setting_name) {
              // do nothing
@@ -8930,7 +9000,7 @@ function updateSetting($w, $setting_name, $setting_new_value, $settings_file = '
          }
      }
      $ret = $w->write($new_settings, $settings_file);
- 
+
      return $ret;
  }
 
