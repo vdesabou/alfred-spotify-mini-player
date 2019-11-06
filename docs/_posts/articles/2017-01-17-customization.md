@@ -2,13 +2,13 @@
 layout: article
 title: "Customization"
 date: 2017-01-17T11:39:03-04:00
-modified: 2018-01-26
+modified: 2019-11-05
 categories: articles
 excerpt: "You can customize the workflow by changing settings or variables..."
 image:
   teaser: bullet-customization.png
   feature:
-  credit: 
+  credit:
   creditlink:
 noindex: false
 share: false
@@ -79,3 +79,8 @@ But you can also use [Alfred variables](https://www.alfredapp.com/help/workflows
 	<img src="{{ site.url }}/images/customization9.jpg">
 	<figcaption>Add radio playlist to library. 1 for adding to library, 0 otherwise.</figcaption>
 </figure>
+
+* You can change behaviour of `Previous Track`, by modifying variable `previous_track_for_real`:-
+
+  * 1 for going to previous track
+  * 0 for going back to beginning of the track
