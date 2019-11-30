@@ -1731,50 +1731,32 @@ function secondDelimiterYourTopTracks($w, $query, $settings, $db, $update_in_pro
             $album = $track->album;
 
             $track_artwork_path = getTrackOrAlbumArtwork($w, $track->uri, false, false, false, $use_artworks);
-            if (isset($track->is_playable) && $track->is_playable) {
-                $w->result(null, serialize(array(
-                            $track->uri /*track_uri*/,
-                            $album->uri /* album_uri */,
-                            $artist->uri /* artist_uri */,
-                            $theplaylisturi /* playlist_uri */,
-                            '' /* spotify_command */,
-                            '' /* query */,
-                            '' /* other_settings*/,
-                            '' /* other_action */,
-                            escapeQuery($artist->name) /* artist_name */,
-                            escapeQuery($track->name) /* track_name */,
-                            escapeQuery($album->name) /* album_name */,
-                            $track_artwork_path /* track_artwork_path */,
-                            '' /* artist_artwork_path */,
-                            '' /* album_artwork_path */,
-                            '' /* playlist_name */,
-                            '', /* playlist_artwork_path */
-                        )), escapeQuery($artist->name).' ● '.escapeQuery($track->name), array(
-                        beautifyTime($track->duration_ms / 1000).' ● '.escapeQuery($album->name),
-                        'alt' => 'Play album '.escapeQuery($album->name).' in Spotify',
-                        'cmd' => 'Play artist '.escapeQuery($artist->name).' in Spotify',
-                        'fn' => 'Add track '.escapeQuery($track->name).' to ...',
-                        'shift' => 'Add album '.escapeQuery($album->name).' to ...',
-                        'ctrl' => 'Search artist '.escapeQuery($artist->name).' online',
-                    ), $track_artwork_path, 'yes', null, '');
+            $w->result(null, serialize(array(
+                        $track->uri /*track_uri*/,
+                        $album->uri /* album_uri */,
+                        $artist->uri /* artist_uri */,
+                        $theplaylisturi /* playlist_uri */,
+                        '' /* spotify_command */,
+                        '' /* query */,
+                        '' /* other_settings*/,
+                        '' /* other_action */,
+                        escapeQuery($artist->name) /* artist_name */,
+                        escapeQuery($track->name) /* track_name */,
+                        escapeQuery($album->name) /* album_name */,
+                        $track_artwork_path /* track_artwork_path */,
+                        '' /* artist_artwork_path */,
+                        '' /* album_artwork_path */,
+                        '' /* playlist_name */,
+                        '', /* playlist_artwork_path */
+                    )), escapeQuery($artist->name).' ● '.escapeQuery($track->name), array(
+                    beautifyTime($track->duration_ms / 1000).' ● '.escapeQuery($album->name),
+                    'alt' => 'Play album '.escapeQuery($album->name).' in Spotify',
+                    'cmd' => 'Play artist '.escapeQuery($artist->name).' in Spotify',
+                    'fn' => 'Add track '.escapeQuery($track->name).' to ...',
+                    'shift' => 'Add album '.escapeQuery($album->name).' to ...',
+                    'ctrl' => 'Search artist '.escapeQuery($artist->name).' online',
+                ), $track_artwork_path, 'yes', null, '');
                 ++$nb_results;
-            } else {
-                $added = '';
-                if (isset($item->is_local) && $item->is_local) {
-                    $added = '📌 ';
-                } else {
-                    $added = '🚫 ';
-                }
-                $w->result(null, '', $added.escapeQuery($artist->name).' ● '.escapeQuery($track->name),array(
-                     beautifyTime($track->duration_ms / 1000).' ● '.escapeQuery($album->name),
-                    'alt' => 'Not Available',
-                    'cmd' => 'Not Available',
-                    'shift' => 'Not Available',
-                    'fn' => 'Not Available',
-                    'ctrl' => 'Not Available',
-                ), $track_artwork_path, 'no', null, '');
-                ++$nb_results;
-            }
         }
 
         if ($noresult) {
@@ -2325,7 +2307,7 @@ function secondDelimiterFeaturedPlaylist($w, $query, $settings, $db, $update_in_
     $search = $words[2];
 
     if ($country == 'Choose a Country') {
-        
+
         $spotify_country_codes = getSpotifyCountryCodesList();
 
         foreach ($spotify_country_codes as $spotify_country_code) {
@@ -2419,7 +2401,7 @@ function secondDelimiterNewReleases($w, $query, $settings, $db, $update_in_progr
     $search = $words[2];
 
     if ($country == 'Choose a Country') {
-        
+
         $spotify_country_codes = getSpotifyCountryCodesList();
 
         foreach ($spotify_country_codes as $spotify_country_code) {
@@ -2454,7 +2436,7 @@ function secondDelimiterNewReleases($w, $query, $settings, $db, $update_in_progr
                     'shift' => 'Not Available',
                     'fn' => 'Not Available',
                     'ctrl' => 'Not Available',
-                ), './images/info.png', 'no', null, ''); 
+                ), './images/info.png', 'no', null, '');
             }
 
 
@@ -2500,8 +2482,8 @@ function secondDelimiterNewReleases($w, $query, $settings, $db, $update_in_progr
             $words = explode('@', $data);
             $album_uri = $words[0];
             $album_name = $words[1];
-            
-            
+
+
             $album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, false, false, false, $use_artworks);
             if (mb_strlen($search) < 2 ) {
                 $w->result(null, serialize(array(
@@ -2589,7 +2571,7 @@ function secondDelimiterNewReleases($w, $query, $settings, $db, $update_in_progr
  */
 function secondDelimiterAdd($w, $query, $settings, $db, $update_in_progress)
 {
-    
+
     $words = explode('▹', $query);
     $kind = $words[0];
 
@@ -3540,7 +3522,7 @@ function secondDelimiterBrowse($w, $query, $settings, $db, $update_in_progress)
     $search = $words[2];
 
     if ($country == 'Choose a Country') {
-        
+
         $spotify_country_codes = getSpotifyCountryCodesList();
 
         foreach ($spotify_country_codes as $spotify_country_code) {
@@ -3575,7 +3557,7 @@ function secondDelimiterBrowse($w, $query, $settings, $db, $update_in_progress)
                 $offsetListCategories += $limitListCategories;
             } while ($offsetListCategories < $listCategories->categories->total);
 
-            
+
 
             foreach ($listCategories->categories->items as $category) {
 
