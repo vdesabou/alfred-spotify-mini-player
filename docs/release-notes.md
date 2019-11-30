@@ -2,7 +2,7 @@
 layout: article
 permalink: /release-notes/
 title: "Release Notes"
-modified: 2019-09-07
+modified: 2019-11-30
 excerpt: "Release Notes."
 image:
   feature:
@@ -13,12 +13,19 @@ toc: false
 noindex: false
 ---
 
+<a name="v8.4"></a>
+8.4:
+
+* <span class="badge danger">FIXED</span> Catalina refuses to run alerter [#304](https://github.com/vdesabou/alfred-spotify-mini-player/issues/304)
+* <span class="badge success">IMPROVED</span> Feature request: Add option to replay current song [#313](https://github.com/vdesabou/alfred-spotify-mini-player/issues/313)
+* <span class="badge danger">FIXED</span> Cannot play songs from Your Tops>Tracks [#317](https://github.com/vdesabou/alfred-spotify-mini-player/issues/317)
+
 <a name="v8.3"></a>
 8.3:
 
 * <span class="badge success">IMPROVED</span> Handle "Refresh token revoked" issue more gracefully[#301](https://github.com/vdesabou/alfred-spotify-mini-player/issues/301)
 * <span class="badge danger">FIXED</span> Spot_mini > play doesn't work anymore on 8.2 [#300](https://github.com/vdesabou/alfred-spotify-mini-player/issues/300)
-  
+
 
 <a name="v8.2"></a>
 8.2:
@@ -238,7 +245,7 @@ The workflow is now compatible with Alfred 3 and Alfred 4:
 <a name="v6.2.6"></a>
 6.2.6:
 
-***WARNING***: To use Top Artists and Top Tracks new feature, you need to re-authorize the workflow by executing ```spot_mini_reset_settings``` 
+***WARNING***: To use Top Artists and Top Tracks new feature, you need to re-authorize the workflow by executing ```spot_mini_reset_settings```
 
 * <span class="badge info">ADDED</span> Add top artists and tracks for user [#116](https://github.com/vdesabou/alfred-spotify-mini-player/issues/116)
 
@@ -280,7 +287,7 @@ The workflow is now compatible with Alfred 3 and Alfred 4:
 <a name="v6.2.3"></a>
 6.2.3:
 
-* <span class="badge info">ADDED</span> Add option to create a [Complete Collection](http://alfred-spotify-mini-player.com/articles/complete-collection/) playlist for artist 
+* <span class="badge info">ADDED</span> Add option to create a [Complete Collection](http://alfred-spotify-mini-player.com/articles/complete-collection/) playlist for artist
 
 * <span class="badge danger">FIXED</span> Fix for issue [#86](https://github.com/vdesabou/alfred-spotify-mini-player/issues/86) Lyrics are broken
 
