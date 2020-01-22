@@ -1201,7 +1201,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
             return;
         }
-        if($type == '') {
+        if($type == '' || $type == 'TRACK') {
             addCurrentTrackTo($w);
         } else {
             $playlist_uri = $type;
