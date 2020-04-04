@@ -2,7 +2,7 @@
 layout: article
 permalink: /release-notes/
 title: "Release Notes"
-modified: 2020-04-04
+modified: 2019-11-30
 excerpt: "Release Notes."
 image:
   feature:
@@ -12,14 +12,6 @@ share: false
 toc: false
 noindex: false
 ---
-
-<a name="v8.5"></a>
-8.5:
-
-**IMPORTANT: This is the last release compatible with Alfred 3**
-
-* <span class="badge danger">FIXED</span> playlist_uri assigned value <TRACK> [#322](https://github.com/vdesabou/alfred-spotify-mini-player/issues/322)
-* <span class="badge danger">FIXED</span> No artwork when using OS notifications (v8.4) [#332](https://github.com/vdesabou/alfred-spotify-mini-player/issues/332)
 
 <a name="v8.4"></a>
 8.4:
