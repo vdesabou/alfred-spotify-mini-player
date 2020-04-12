@@ -7584,7 +7584,7 @@ php -f ./src/action.php -- "$query" "ARTIST_OR_PLAYLIST_PRIVACY" "" &gt;&gt; "$a
 				<key>keyword</key>
 				<string>{var:c_share}</string>
 				<key>subtext</key>
-				<string>Share current track using Mac OS X Sharing</string>
+				<string>Share current track using Mac OS X Sharing (up to Mac Os 10.13)</string>
 				<key>text</key>
 				<string>Share current track</string>
 				<key>withspace</key>

@@ -1743,6 +1743,13 @@ if ($type == 'TRACK' && $other_settings == '' &&
         } else {
            $service = 'twitter';
         }
+
+        $osx_version = exec('sw_vers -productVersion');
+        if(version_compare($osx_version, '10,14', '>=')) {
+            displayNotificationWithArtwork($w, 'Sharing using '.$service.' is no more supported by Mac Os', './images/warning.png', 'Error!');
+            return;
+        }
+
         $text = getenv('sharing_hashtag1');
         $text .= ' ';
         $text .= escapeQuery($results[0]);

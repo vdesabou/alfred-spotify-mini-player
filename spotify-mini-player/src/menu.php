@@ -251,7 +251,7 @@ function oAuthChecks($w, $query, $settings, $update_in_progress)
                 )), 'Go to the website alfred-spotify-mini-player.com to see setup tutorial', 'This will open the Application page with your default browser', './images/website.png', 'yes', null, '');
 
         listUsers($w);
-        
+
         echo $w->tojson();
         exit;
     }
@@ -1228,7 +1228,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
     if ($output_application == 'CONNECT') {
         $cmd = 'Activate/Deactivate repeating in Spotify for current track';
     }
-    
+
     if (mb_strlen($query) < 2) {
         ////////
 
@@ -1547,31 +1547,34 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                    'ctrl' => 'Not Available',
                ), './images/repeating.png', 'yes', '');
 
-            $w->result(null, serialize(array(
-                '' /*track_uri*/,
-                '' /* album_uri */,
-                '' /* artist_uri */,
-                '' /* playlist_uri */,
-                '' /* spotify_command */,
-                '' /* query */,
-                '' /* other_settings*/,
-                'share' /* other_action */,
-                '' /* artist_name */,
-                '' /* track_name */,
-                '' /* album_name */,
-                '' /* track_artwork_path */,
-                '' /* artist_artwork_path */,
-                '' /* album_artwork_path */,
-                '' /* playlist_name */,
-                '', /* playlist_artwork_path */
-            )), 'Share current track using Mac OS X Sharing ', array(
-            'This will open the Mac OS X Sharing for the current track',
-            'alt' => 'Not Available',
-            'cmd' => 'Not Available',
-            'shift' => 'Not Available',
-            'fn' => 'Not Available',
-            'ctrl' => 'Not Available',
-        ), './images/share.png', 'yes', null, '');
+        $osx_version = exec('sw_vers -productVersion');
+        if(version_compare($osx_version, '10,14', '<')) {
+                $w->result(null, serialize(array(
+                    '' /*track_uri*/,
+                    '' /* album_uri */,
+                    '' /* artist_uri */,
+                    '' /* playlist_uri */,
+                    '' /* spotify_command */,
+                    '' /* query */,
+                    '' /* other_settings*/,
+                    'share' /* other_action */,
+                    '' /* artist_name */,
+                    '' /* track_name */,
+                    '' /* album_name */,
+                    '' /* track_artwork_path */,
+                    '' /* artist_artwork_path */,
+                    '' /* album_artwork_path */,
+                    '' /* playlist_name */,
+                    '', /* playlist_artwork_path */
+                )), 'Share current track using Mac OS X Sharing ', array(
+                'This will open the Mac OS X Sharing for the current track',
+                'alt' => 'Not Available',
+                'cmd' => 'Not Available',
+                'shift' => 'Not Available',
+                'fn' => 'Not Available',
+                'ctrl' => 'Not Available',
+            ), './images/share.png', 'yes', null, '');
+        }
 
         $w->result('SpotifyMiniPlayer_'.'reset_playlist_number_times_played', serialize(array(
             '' /*track_uri*/,
@@ -1863,31 +1866,34 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
 
         // Search commands for fast access
         if (strpos(strtolower('share'), strtolower($query)) !== false) {
-            $w->result(null, serialize(array(
-                '' /*track_uri*/,
-                '' /* album_uri */,
-                '' /* artist_uri */,
-                '' /* playlist_uri */,
-                '' /* spotify_command */,
-                '' /* query */,
-                '' /* other_settings*/,
-                'share' /* other_action */,
-                '' /* artist_name */,
-                '' /* track_name */,
-                '' /* album_name */,
-                '' /* track_artwork_path */,
-                '' /* artist_artwork_path */,
-                '' /* album_artwork_path */,
-                '' /* playlist_name */,
-                '', /* playlist_artwork_path */
-            )), 'Share current track using Mac OS X Sharing ', array(
-            'This will open the Mac OS X Sharing for the current track',
-            'alt' => 'Not Available',
-            'cmd' => 'Not Available',
-            'shift' => 'Not Available',
-            'fn' => 'Not Available',
-            'ctrl' => 'Not Available',
-        ), './images/share.png', 'yes', null, '');
+            $osx_version = exec('sw_vers -productVersion');
+            if(version_compare($osx_version, '10,14', '<')) {
+                    $w->result(null, serialize(array(
+                        '' /*track_uri*/,
+                        '' /* album_uri */,
+                        '' /* artist_uri */,
+                        '' /* playlist_uri */,
+                        '' /* spotify_command */,
+                        '' /* query */,
+                        '' /* other_settings*/,
+                        'share' /* other_action */,
+                        '' /* artist_name */,
+                        '' /* track_name */,
+                        '' /* album_name */,
+                        '' /* track_artwork_path */,
+                        '' /* artist_artwork_path */,
+                        '' /* album_artwork_path */,
+                        '' /* playlist_name */,
+                        '', /* playlist_artwork_path */
+                    )), 'Share current track using Mac OS X Sharing ', array(
+                    'This will open the Mac OS X Sharing for the current track',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/share.png', 'yes', null, '');
+            }
         }
         if (strpos(strtolower('web search'), strtolower($query)) !== false) {
             $w->result(null, serialize(array(

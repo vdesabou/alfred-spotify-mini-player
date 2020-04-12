@@ -1385,7 +1385,10 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
         }
 
         if (mb_strlen($input) < 2 || strpos(strtolower('share'), strtolower($input)) !== false) {
-            $w->result(null, serialize(array(
+
+            $osx_version = exec('sw_vers -productVersion');
+            if(version_compare($osx_version, '10,14', '<')) {
+                    $w->result(null, serialize(array(
                         '' /*track_uri*/,
                         '' /* album_uri */,
                         '' /* artist_uri */,
@@ -1410,6 +1413,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                     'fn' => 'Not Available',
                     'ctrl' => 'Not Available',
                 ), './images/share.png', 'yes', null, '');
+            }
         }
 
         if (mb_strlen($input) < 2 || strpos(strtolower('web search'), strtolower($input)) !== false) {
