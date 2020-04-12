@@ -924,7 +924,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
     $is_display_rating = $settings->is_display_rating;
     $use_artworks = $settings->use_artworks;
     $always_display_lyrics_in_browser = $settings->always_display_lyrics_in_browser;
-    
+
 
     if ($output_application == 'MOPIDY') {
         $retArr = array(getCurrentTrackInfoWithMopidy($w));
@@ -962,7 +962,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
             return;
         }
     } else {
-        $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));   
+        $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
     }
 
     if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
@@ -1003,7 +1003,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
             $added = '📌 ';
         } else {
             $shared_url .= ' https://open.spotify.com/track/';
-            $shared_url .= $href[2];            
+            $shared_url .= $href[2];
         }
         $subtitle = '⌥ (play album) ⌘ (play artist) ctrl (lookup online)';
         $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
@@ -1077,11 +1077,11 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
             if (mb_strlen($input) < 2) {
                 try {
                     $api = getSpotifyWebAPI($w);
-        
+
                     $playback_info = $api->getMyCurrentPlaybackInfo(array(
                         'market' => $country_code,
                         ));
-        
+
                     $track_name = $playback_info->item->name;
                     $artist_name = $playback_info->item->artists[0]->name;
                     $album_name = $playback_info->item->album->name;
@@ -1095,11 +1095,11 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                     $length = ($playback_info->item->duration_ms/1000);
                     $popularity = $playback_info->item->popularity;
                     $progress_ms = $playback_info->progress_ms;
-                    
+
                     // device
                     $device_name = $playback_info->device->name;
                     $device_type = $playback_info->device->type;
-        
+
 
                     $shuffle_state = "inactive";
                     if($playback_info->shuffle_state) {
@@ -1126,7 +1126,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                     } else if($playback_info->repeat_state == 'context') {
                         $repeat_state = "Repeat " . $context_type . " is <active>";
                     }
-                    
+
                     if ($device_name != '') {
                         $w->result(null, 'help', 'Playing ' . $context . 'on ' . $device_type . ' ' . $device_name,array(
                      'Progress: ' . floatToCircles($progress_ms / $results[5]) . ' Shuffle is <' . $shuffle_state . '> ' . $repeat_state,
@@ -1136,7 +1136,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                     'fn' => 'Not Available',
                     'ctrl' => 'Not Available',
                 ), './images/connect.png', 'no', null, '');
-                    }    
+                    }
                 }  catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
                     if($e->getMessage() == 'Permissions missing') {
                         $w->result(null, serialize(array(
@@ -1177,7 +1177,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                     echo $w->tojson();
                     exit;
                 }
-            } 
+            }
         }
 
 
@@ -1193,7 +1193,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
             return;
         }
 
-        if (mb_strlen($input) < 2 || strpos(strtolower('browse artist'), strtolower($input)) !== false) { 
+        if (mb_strlen($input) < 2 || strpos(strtolower('browse artist'), strtolower($input)) !== false) {
             // check if artist is in library
             $noresult = true;
             while ($track = $stmt->fetch()) {
@@ -1206,7 +1206,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
 
                 $href = explode(':', $artist_uri);
                 $shared_url .= ' https://open.spotify.com/artist/';
-                $shared_url .= $href[2]; 
+                $shared_url .= $href[2];
 
                 $w->result(null, '', '👤 '.escapeQuery($results[1]), 'Browse this artist', getArtistArtwork($w, $artist_uri, $results[1], false, false, false, $use_artworks), 'no', array(
                      false,
@@ -1218,14 +1218,14 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                     'copy' => '#NowPlaying artist ' . escapeQuery($results[1]).' ' . $shared_url,
                     'largetype' => escapeQuery($results[1]),
                 ), 'Artist▹'.$artist_uri.'∙'.escapeQuery($results[1]).'▹');
-                
+
             } else {
                 // artist is not in library
                 $artist_uri = getArtistUriFromTrack($w, $results[4]);
 
                 $href = explode(':', $artist_uri);
                 $shared_url .= ' https://open.spotify.com/artist/';
-                $shared_url .= $href[2]; 
+                $shared_url .= $href[2];
 
                 $w->result(null, '', '👤 '.escapeQuery($results[1]), 'Browse this artist', getArtistArtwork($w, $artist_uri /* empty artist_uri */, $results[1], false, false, false, $use_artworks), 'no', array(
                      false,
@@ -1240,7 +1240,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
             }
         }
 
-        if (mb_strlen($input) < 2 || strpos(strtolower('play album'), strtolower($input)) !== false) { 
+        if (mb_strlen($input) < 2 || strpos(strtolower('play album'), strtolower($input)) !== false) {
 
             $album_uri = getAlbumUriFromTrack($w, $results[4]);
 
@@ -1248,7 +1248,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
             if ($album_uri != false) {
                 $href = explode(':', $album_uri);
                 $shared_url .= ' https://open.spotify.com/album/';
-                $shared_url .= $href[2]; 
+                $shared_url .= $href[2];
             }
 
             // use track uri here
@@ -1277,7 +1277,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
         }
 
         // use track uri here
-        if (mb_strlen($input) < 2 || strpos(strtolower('query lookup online'), strtolower($input)) !== false) {  
+        if (mb_strlen($input) < 2 || strpos(strtolower('query lookup online'), strtolower($input)) !== false) {
             $w->result(null, '', '💿 '.escapeQuery($results[2]),array(
                      '☁︎ Query all tracks from this album online..',
                     'alt' => 'Not Available',
@@ -1288,7 +1288,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                 ), './images/online_album.png', 'no', null, 'Online▹'.$results[4].'@'.escapeQuery($results[1]).'@'.$results[4].'@'.escapeQuery($results[2]).'▹');
         }
 
-        if (mb_strlen($input) < 2 || strpos(strtolower('get lyrics'), strtolower($input)) !== false) {        
+        if (mb_strlen($input) < 2 || strpos(strtolower('get lyrics'), strtolower($input)) !== false) {
             if($always_display_lyrics_in_browser == false) {
                 $w->result(null, '', 'Get Lyrics for track '.escapeQuery($results[0]),array(
                      'This will fetch lyrics online and display them in Alfred',
@@ -1323,13 +1323,13 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                         'shift' => 'Not Available',
                         'fn' => 'Not Available',
                         'ctrl' => 'Not Available',
-                    ), './images/lyrics.png', 'yes', null, '');    
+                    ), './images/lyrics.png', 'yes', null, '');
             }
         }
 
 
         if ($update_in_progress == false) {
-            if (mb_strlen($input) < 2 || strpos(strtolower('add'), strtolower($input)) !== false) { 
+            if (mb_strlen($input) < 2 || strpos(strtolower('add'), strtolower($input)) !== false) {
                 $w->result(null, '', 'Add track '.escapeQuery($results[0]).' to...',array(
                      'This will add current track to Your Music or a playlist you will choose in next step',
                     'alt' => 'Not Available',
@@ -1340,7 +1340,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                 ), './images/add.png', 'no', null, 'Add▹'.$results[4].'∙'.escapeQuery($results[0]).'▹');
             }
 
-            if (mb_strlen($input) < 2 || strpos(strtolower('remove'), strtolower($input)) !== false) { 
+            if (mb_strlen($input) < 2 || strpos(strtolower('remove'), strtolower($input)) !== false) {
                 $w->result(null, '', 'Remove track '.escapeQuery($results[0]).' from...',array(
                      'This will remove current track from Your Music or a playlist you will choose in next step',
                     'alt' => 'Not Available',
@@ -1355,7 +1355,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
             if ($is_public_playlists) {
                 $privacy_status = 'public';
             }
-            if (mb_strlen($input) < 2 || strpos(strtolower('song radio'), strtolower($input)) !== false) { 
+            if (mb_strlen($input) < 2 || strpos(strtolower('song radio'), strtolower($input)) !== false) {
                 $w->result(null, serialize(array(
                             '' /*track_uri*/,
                             '' /* album_uri */,
@@ -1384,7 +1384,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                 }
         }
 
-        if (mb_strlen($input) < 2 || strpos(strtolower('share'), strtolower($input)) !== false) { 
+        if (mb_strlen($input) < 2 || strpos(strtolower('share'), strtolower($input)) !== false) {
             $w->result(null, serialize(array(
                         '' /*track_uri*/,
                         '' /* album_uri */,
@@ -1412,7 +1412,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                 ), './images/share.png', 'yes', null, '');
         }
 
-        if (mb_strlen($input) < 2 || strpos(strtolower('web search'), strtolower($input)) !== false) { 
+        if (mb_strlen($input) < 2 || strpos(strtolower('web search'), strtolower($input)) !== false) {
             $w->result(null, serialize(array(
                         '' /*track_uri*/,
                         '' /* album_uri */,
@@ -1440,7 +1440,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                 ), './images/youtube.png', 'yes', null, '');
         }
 
-        if (mb_strlen($input) < 2) { 
+        if (mb_strlen($input) < 2) {
             if ($all_playlists == true) {
                 $getTracks = 'select playlist_uri from tracks where uri=:uri limit '.$max_results;
                 try {
@@ -1531,7 +1531,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
  {
      $words = explode('▹', $query);
      $kind = $words[0];
- 
+
      $all_playlists = $settings->all_playlists;
      $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
      $radio_number_tracks = $settings->radio_number_tracks;
@@ -1554,7 +1554,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
      $is_display_rating = $settings->is_display_rating;
      $use_artworks = $settings->use_artworks;
      $always_display_lyrics_in_browser = $settings->always_display_lyrics_in_browser;
-     
+
 
      $retry = true;
      $nb_retry = 0;
@@ -1742,7 +1742,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                     'fn' => 'Not Available',
                     'ctrl' => 'Not Available',
                 ), './images/warning.png', 'no', null, '');
-                        
+
                         echo $w->tojson();
                         exit;
                     }
@@ -3558,7 +3558,7 @@ function firstDelimiterYourRecentTracks($w, $query, $settings, $db, $update_in_p
 
         $noresult = true;
         $items = $recentTracks->items;
-    
+
         foreach ($items as $item) {
 
             $track = $item->track;
