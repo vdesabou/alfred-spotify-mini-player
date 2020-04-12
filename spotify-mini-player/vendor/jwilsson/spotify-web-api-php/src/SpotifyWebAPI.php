@@ -103,6 +103,30 @@ class SpotifyWebAPI
     }
 
     /**
+     * Add shows to the current user's Spotify library.
+     * https://developer.spotify.com/documentation/web-api/reference/library/save-shows-user/
+     *
+     * @param string|array $shows ID(s) or Spotify URI(s) of the show(s) to add.
+     *
+     * @return bool Whether the shows was successfully added.
+     */
+    public function addMyShows($shows)
+    {
+        $shows = $this->uriToId($shows, 'show');
+        $shows = json_encode((array) $shows);
+
+        $headers = $this->authHeaders();
+        $headers['Content-Type'] = 'application/json';
+
+        $uri = '/v1/me/shows';
+
+        $this->lastResponse = $this->request->api('PUT', $uri, $shows, $headers);
+
+        return $this->lastResponse['status'] == 200;
+    }
+    
+    
+    /**
      * Add tracks to the current user's Spotify library.
      * https://developer.spotify.com/documentation/web-api/reference/library/save-tracks-user/
      *
@@ -319,6 +343,29 @@ class SpotifyWebAPI
     }
 
     /**
+     * Delete shows from current user's Spotify library.
+     * https://developer.spotify.com/documentation/web-api/reference/library/remove-shows-user/
+     *
+     * @param string|array $shows ID(s) or Spotify URI(s) of the show(s) to delete.
+     *
+     * @return bool Whether the shows was successfully deleted.
+     */
+    public function deleteMyShows($shows)
+    {
+        $shows = $this->uriToId($shows, 'show');
+        $shows = json_encode((array) $shows);
+
+        $headers = $this->authHeaders();
+        $headers['Content-Type'] = 'application/json';
+
+        $uri = '/v1/me/shows';
+
+        $this->lastResponse = $this->request->api('DELETE', $uri, $shows, $headers);
+
+        return $this->lastResponse['status'] == 200;
+    }
+    
+    /**
      * Delete tracks from current user's Spotify library.
      * https://developer.spotify.com/documentation/web-api/reference/library/remove-tracks-user/
      *
@@ -400,6 +447,8 @@ class SpotifyWebAPI
 
         if (isset($body->snapshot_id)) {
             return $body->snapshot_id;
+        } elseif (isset($body['snapshot_id'])) {
+            return $body['snapshot_id'];
         }
 
         return false;
@@ -804,6 +853,50 @@ class SpotifyWebAPI
     }
 
     /**
+     * Get an episode.
+     * https://developer.spotify.com/documentation/web-api/reference/episodes/get-an-episode/
+     *
+     * @param string $episodeId ID or Spotify URI of the episode.
+     * @param array|object $options Optional. Options for the episode.
+     * - string market Optional. An ISO 3166-1 alpha-2 country code, limit results to episodes available in that market.
+     *
+     * @return array|object The requested episode. Type is controlled by the `return_assoc` option.
+     */
+    public function getEpisode($episodeId, $options = [])
+    {
+        $headers = $this->authHeaders();
+        $episodeId = $this->uriToId($episodeId, 'episode');
+        $uri = '/v1/episodes/' . $episodeId;
+
+        $this->lastResponse = $this->request->api('GET', $uri, $options, $headers);
+
+        return $this->lastResponse['body'];
+    }
+
+    /**
+     * Get multiple episodes.
+     * https://developer.spotify.com/documentation/web-api/reference/episodes/get-several-episodes/
+     *
+     * @param array $episodeIds IDs or Spotify URIs of the episodes.
+     * @param array|object $options Optional. Options for the episodes.
+     * - string market Optional. An ISO 3166-1 alpha-2 country code, limit results to episodes available in that market.
+     *
+     * @return array|object The requested episodes. Type is controlled by the `return_assoc` option.
+     */
+    public function getEpisodes($episodeIds, $options = [])
+    {
+        $headers = $this->authHeaders();
+        $episodeIds = $this->uriToId($episodeIds, 'episode');
+        $options['ids'] = implode(',', (array) $episodeIds);
+
+        $uri = '/v1/episodes/';
+
+        $this->lastResponse = $this->request->api('GET', $uri, $options, $headers);
+
+        return $this->lastResponse['body'];
+    }
+    
+    /**
      * Get Spotify featured playlists.
      * https://developer.spotify.com/documentation/web-api/reference/browse/get-list-featured-playlists/
      *
@@ -864,6 +957,7 @@ class SpotifyWebAPI
      *
      * @param array|object $options Optional. Options for the track.
      * - string market Optional. An ISO 3166-1 alpha-2 country code, provide this if you wish to apply Track Relinking.
+     * - string|array additional_types Optional. Types of media to return info about.
      *
      * @return array|object The user's currently playing track. Type is controlled by `SpotifyWebAPI::setReturnType()`.
      */
@@ -873,6 +967,10 @@ class SpotifyWebAPI
 
         $uri = '/v1/me/player/currently-playing';
 
+        if (isset($options['additional_types']) && is_array($options['additional_types'])) {
+            $options['additional_types'] = implode(',', $options['additional_types']);
+        }
+        
         $this->lastResponse = $this->request->api('GET', $uri, $options, $headers);
 
         return $this->lastResponse['body'];
@@ -1005,6 +1103,27 @@ class SpotifyWebAPI
         return $this->lastResponse['body'];
     }
 
+    /**
+     * Get the current user’s saved shows.
+     * https://developer.spotify.com/documentation/web-api/reference/library/get-users-saved-shows/
+     *
+     * @param array|object $options Optional. Options for the shows.
+     * - int limit Optional. Limit the number of shows.
+     * - int offset Optional. Number of shows to skip.
+     *
+     * @return array|object The user's saved shows. Type is controlled by the `return_assoc` option.
+     */
+    public function getMySavedShows($options = [])
+    {
+        $headers = $this->authHeaders();
+        
+        $uri = '/v1/me/shows';
+
+        $this->lastResponse = $this->request->api('GET', $uri, $options, $headers);
+
+        return $this->lastResponse['body'];
+    }
+    
     /**
      * Get the current user's top tracks or artists.
      * https://developer.spotify.com/documentation/web-api/reference/personalization/get-users-top-artists-and-tracks/
@@ -1167,6 +1286,76 @@ class SpotifyWebAPI
         return $this->request;
     }
 
+    /**
+     * Get a show.
+     * https://developer.spotify.com/documentation/web-api/reference/shows/get-a-show/
+     *
+     * @param string $showId ID or Spotify URI of the show.
+     * @param array|object $options Optional. Options for the show.
+     * - string market Optional. An ISO 3166-1 alpha-2 country code, limit results to shows available in that market.
+     *
+     * @return array|object The requested show. Type is controlled by the `return_assoc` option.
+     */
+    public function getShow($showId, $options = [])
+    {
+        $headers = $this->authHeaders();
+        
+        $showId = $this->uriToId($showId, 'show');
+        $uri = '/v1/shows/' . $showId;
+
+        $this->lastResponse = $this->request->api('GET', $uri, $options, $headers);
+
+        return $this->lastResponse['body'];
+    }
+
+    /**
+     * Get a show's episodes.
+     * https://developer.spotify.com/documentation/web-api/reference/shows/get-shows-episodes/
+     *
+     * @param string $albumId ID or Spotify URI of the album.
+     * @param array|object $options Optional. Options for the episodes.
+     * - int limit Optional. Limit the number of episodes.
+     * - int offset Optional. Number of episodes to skip.
+     * - string market Optional. An ISO 3166-1 alpha-2 country code, limit results to episodes available in that market.
+     *
+     * @return array|object The requested show episodes. Type is controlled by the `return_assoc` option.
+     */
+    public function getShowEpisodes($showId, $options = [])
+    {
+        $headers = $this->authHeaders();
+        
+        $showId = $this->uriToId($showId, 'show');
+        $uri = '/v1/shows/' . $showId . '/episodes';
+
+        $this->lastResponse = $this->request->api('GET', $uri, $options, $headers);
+
+        return $this->lastResponse['body'];
+    }
+
+    /**
+     * Get multiple shows.
+     * https://developer.spotify.com/documentation/web-api/reference/shows/get-several-shows/
+     *
+     * @param array $showIds IDs or Spotify URIs of the shows.
+     * @param array|object $options Optional. Options for the shows.
+     * - string market Optional. An ISO 3166-1 alpha-2 country code, limit results to shows available in that market.
+     *
+     * @return array|object The requested shows. Type is controlled by the `return_assoc` option.
+     */
+    public function getShows($showIds, $options = [])
+    {
+        $headers = $this->authHeaders();
+        
+        $showIds = $this->uriToId($showIds, 'show');
+        $options['ids'] = implode(',', (array) $showIds);
+
+        $uri = '/v1/shows/';
+
+        $this->lastResponse = $this->request->api('GET', $uri, $options, $headers);
+
+        return $this->lastResponse['body'];
+    }
+    
     /**
      * Get a track.
      * https://developer.spotify.com/documentation/web-api/reference/tracks/get-track/
@@ -1367,6 +1556,32 @@ class SpotifyWebAPI
     }
 
     /**
+     * Check if shows are saved in the current user's Spotify library.
+     * https://developer.spotify.com/documentation/web-api/reference/library/check-users-saved-shows/
+     *
+     * @param string|array $shows ID(s) or Spotify URI(s) of the show(s) to check for.
+     *
+     * @return array Whether each show is saved.
+     */
+    public function myShowsContains($shows)
+    {
+        $headers = $this->authHeaders();
+        
+        $shows = $this->uriToId($shows, 'show');
+        $shows = implode(',', (array) $shows);
+
+        $options = [
+            'ids' => $shows,
+        ];
+
+        $uri = '/v1/me/shows/contains';
+
+        $this->lastResponse = $this->request->api('GET', $uri, $options, $headers);
+
+        return $this->lastResponse['body'];
+    }
+    
+    /**
      * Check if tracks are saved in the current user's Spotify library.
      * https://developer.spotify.com/documentation/web-api/reference/library/check-users-saved-tracks/
      *
@@ -1548,6 +1763,8 @@ class SpotifyWebAPI
 
         if (isset($body->snapshot_id)) {
             return $body->snapshot_id;
+        } elseif (isset($body['snapshot_id'])) {
+            return $body['snapshot_id'];
         }
 
         return false;
