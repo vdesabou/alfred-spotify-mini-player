@@ -12,7 +12,8 @@ then
 fi
 
 APPICON="/tmp/tmp_"$(whoami)
-ANSWER=$(./alerter -title "${title}" -sender "com.spotify.miniplayer.${theme_color}" -appIcon "${APPICON}" -message "${subtitle}" -closeLabel Close ${actions} -timeout 10 -group com.spotify.miniplayer -remove com.spotify.miniplayer)
+# FIXTHIS: https://github.com/vjeantet/alerter/issues/25 and https://github.com/vdesabou/alfred-spotify-mini-player/issues/335
+ANSWER=$(/usr/local/bin/alerter -title "${title}" -sender "com.spotify.miniplayer.${theme_color}" -appIcon "${APPICON}" -message "${subtitle}" -closeLabel Close ${actions} -timeout 10 -group com.spotify.miniplayer -remove com.spotify.miniplayer)
 case ${ANSWER} in
     "@TIMEOUT") echo "Timeout man, sorry" ;;
     "@CLOSED") echo "You clicked on the default alert' close button" ;;
