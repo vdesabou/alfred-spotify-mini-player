@@ -287,6 +287,28 @@ if ($type == 'TRACK' && $other_settings == '' &&
     stathat_ez_count('AlfredSpotifyMiniPlayer', 'lookup online', 1);
 
     return;
+} elseif ($type == 'ADDTOQUEUE') {
+    if ($track_uri != '') {
+
+        if ($output_application == 'CONNECT') {
+            $device_id = getSpotifyConnectCurrentDeviceId($w);
+            addToQueueSpotifyConnect($w, $track_uri, $device_id);
+            if(getenv('reduce_notifications') == 0) {
+                $track_artwork_path = getTrackOrAlbumArtwork($w, $track_uri, true, false, false, $use_artworks);
+                displayNotificationWithArtwork($w, ''.$track_name.' added to queue', $track_artwork_path, 'Add Track to Queue');
+            }
+        } else {
+
+            displayNotificationWithArtwork($w, 'Add to queue is only available with Spotify Connect', './images/warning.png', 'Error!');
+            return;
+        }
+
+    } else {
+        displayNotificationWithArtwork($w, 'Missing Track URI when trying to add to queue', './images/warning.png', 'Error!');
+        return;
+    }
+
+    return;
 } elseif ($type == 'ALBUM_OR_PLAYLIST') {
     if ($add_to_option != '') {
         if ($album_name != '') {

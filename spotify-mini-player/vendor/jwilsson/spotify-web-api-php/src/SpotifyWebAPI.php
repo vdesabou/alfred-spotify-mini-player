@@ -1496,6 +1496,30 @@ class SpotifyWebAPI
     }
 
     /**
+     * Play the next track in the current users's queue.
+     * https://developer.spotify.com/documentation/web-api/reference/player/add-to-queue/
+     *
+     * @param string $deviceId Optional. ID of the device to target.
+     *
+     * @return bool Whether the track was successfully queued.
+     */
+    public function addToQueue($trackId, $deviceId = '')
+    {
+        $headers = $this->authHeaders();
+
+        $uri = '/v1/me/player/queue';
+        $uri = $uri . '?uri=' . $trackId;
+        // We need to manually append data to the URI since it's a POST request
+        if ($deviceId) {
+            $uri = $uri . '&device_id=' . $deviceId;
+        }
+
+        $this->lastResponse = $this->request->api('POST', $uri, [], $headers);
+
+        return $this->lastResponse['status'] == 204;
+    }
+
+    /**
      * Reorder the tracks in a playlist.
      * https://developer.spotify.com/documentation/web-api/reference/playlists/reorder-playlists-tracks/
      *
