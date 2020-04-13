@@ -612,7 +612,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
                 'shift' => 'Not Available',
                 'fn' => 'Not Available',
                 'ctrl' => 'Not Available',
-            ), './images/shows.png', 'no', null, 'Search Episodes Online▹');
+            ), './images/episodes.png', 'no', null, 'Search Episodes Online▹');
 
             $w->result(null, null, 'Search for albums only', array(
                     'This will search for albums online, i.e not in your library',
