@@ -3213,50 +3213,94 @@ function secondDelimiterFollowUnfollow($w, $query, $settings, $db, $update_in_pr
 
     if (substr_count($query, '@') == 1) {
 
-        // Follow / Unfollow artist Option menu
-
         $tmp = $words[1];
         $words = explode('@', $tmp);
-        $artist_uri = $words[0];
-        $tmp_uri = explode(':', $artist_uri);
+        $uri = $words[0];
+        $tmp_uri = explode(':', $uri);
 
-        $artist_name = $words[1];
+        if($tmp_uri[1] == 'artist') {
+            $artist_uri = $words[0];
+            // Follow / Unfollow artist Option menu
+            $artist_name = $words[1];
 
-        try {
-            $api = getSpotifyWebAPI($w);
-            $isArtistFollowed = $api->currentUserFollows('artist', $tmp_uri[2]);
+            try {
+                $api = getSpotifyWebAPI($w);
+                $isArtistFollowed = $api->currentUserFollows('artist', $tmp_uri[2]);
 
-            $artist_artwork_path = getArtistArtwork($w, $artist_uri, $artist_name, false, false, false, $use_artworks);
-            if (!$isArtistFollowed[0]) {
-                $w->result(null, '', 'Follow artist '.$artist_name,array(
-                     'You are not currently following the artist',
-                    'alt' => 'Not Available',
-                    'cmd' => 'Not Available',
-                    'shift' => 'Not Available',
-                    'fn' => 'Not Available',
-                    'ctrl' => 'Not Available',
-                ), $artist_artwork_path, 'no', null, 'Follow▹'.$artist_uri.'@'.$artist_name.'▹');
-            } else {
-                $w->result(null, '', 'Unfollow artist '.$artist_name,array(
-                     'You are currently following the artist',
-                    'alt' => 'Not Available',
-                    'cmd' => 'Not Available',
-                    'shift' => 'Not Available',
-                    'fn' => 'Not Available',
-                    'ctrl' => 'Not Available',
-                ), $artist_artwork_path, 'no', null, 'Unfollow▹'.$artist_uri.'@'.$artist_name.'▹');
+                $artist_artwork_path = getArtistArtwork($w, $artist_uri, $artist_name, false, false, false, $use_artworks);
+                if (!$isArtistFollowed[0]) {
+                    $w->result(null, '', 'Follow artist '.$artist_name,array(
+                        'You are not currently following the artist',
+                        'alt' => 'Not Available',
+                        'cmd' => 'Not Available',
+                        'shift' => 'Not Available',
+                        'fn' => 'Not Available',
+                        'ctrl' => 'Not Available',
+                    ), $artist_artwork_path, 'no', null, 'Follow▹'.$artist_uri.'@'.$artist_name.'▹');
+                } else {
+                    $w->result(null, '', 'Unfollow artist '.$artist_name,array(
+                        'You are currently following the artist',
+                        'alt' => 'Not Available',
+                        'cmd' => 'Not Available',
+                        'shift' => 'Not Available',
+                        'fn' => 'Not Available',
+                        'ctrl' => 'Not Available',
+                    ), $artist_artwork_path, 'no', null, 'Unfollow▹'.$artist_uri.'@'.$artist_name.'▹');
+                }
+            } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+                $w->result(null, 'help', 'Exception occurred',array(
+                        ''.$e->getMessage(),
+                        'alt' => 'Not Available',
+                        'cmd' => 'Not Available',
+                        'shift' => 'Not Available',
+                        'fn' => 'Not Available',
+                        'ctrl' => 'Not Available',
+                    ), './images/warning.png', 'no', null, '');
+                echo $w->tojson();
+                exit;
             }
-        } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            $w->result(null, 'help', 'Exception occurred',array(
-                     ''.$e->getMessage(),
-                    'alt' => 'Not Available',
-                    'cmd' => 'Not Available',
-                    'shift' => 'Not Available',
-                    'fn' => 'Not Available',
-                    'ctrl' => 'Not Available',
-                ), './images/warning.png', 'no', null, '');
-            echo $w->tojson();
-            exit;
+        } else if($tmp_uri[1] == 'show') {
+            $show_uri = $words[0];
+
+            // Follow / Unfollow show Option menu
+            $show_name = $words[1];
+
+            try {
+                $api = getSpotifyWebAPI($w);
+                $isShowFollowed = $api->myShowsContains($show_uri);
+
+                $show_artwork_path = getShowArtwork($w, $show_uri, $show_name, false, false, false, $use_artworks);
+                if (!$isShowFollowed[0]) {
+                    $w->result(null, '', 'Follow show '.$show_name,array(
+                        'You are not currently following the show',
+                        'alt' => 'Not Available',
+                        'cmd' => 'Not Available',
+                        'shift' => 'Not Available',
+                        'fn' => 'Not Available',
+                        'ctrl' => 'Not Available',
+                    ), $show_artwork_path, 'no', null, 'Follow▹'.$show_uri.'@'.$show_name.'▹');
+                } else {
+                    $w->result(null, '', 'Unfollow show '.$show_name,array(
+                        'You are currently following the show',
+                        'alt' => 'Not Available',
+                        'cmd' => 'Not Available',
+                        'shift' => 'Not Available',
+                        'fn' => 'Not Available',
+                        'ctrl' => 'Not Available',
+                    ), $show_artwork_path, 'no', null, 'Unfollow▹'.$show_uri.'@'.$show_name.'▹');
+                }
+            } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+                $w->result(null, 'help', 'Exception occurred',array(
+                        ''.$e->getMessage(),
+                        'alt' => 'Not Available',
+                        'cmd' => 'Not Available',
+                        'shift' => 'Not Available',
+                        'fn' => 'Not Available',
+                        'ctrl' => 'Not Available',
+                    ), './images/warning.png', 'no', null, '');
+                echo $w->tojson();
+                exit;
+            }
         }
     }
 }
@@ -3295,57 +3339,103 @@ function secondDelimiterFollowOrUnfollow($w, $query, $settings, $db, $update_in_
 
     if (substr_count($query, '@') == 1) {
 
-        // Follow / Unfollow actions
-
-        $tmp = $words[1];
-        $words = explode('@', $tmp);
-        $artist_uri = $words[0];
-        $tmp_uri = explode(':', $artist_uri);
-
-        $artist_name = $words[1];
-
         if ($kind == 'Follow') {
             $follow = true;
         } else {
             $follow = false;
         }
-        try {
-            $api = getSpotifyWebAPI($w);
-            if ($follow) {
-                $ret = $api->followArtistsOrUsers('artist', $tmp_uri[2]);
-            } else {
-                $ret = $api->unfollowArtistsOrUsers('artist', $tmp_uri[2]);
-            }
 
-            if ($ret) {
+        $tmp = $words[1];
+        $words = explode('@', $tmp);
+        $uri = $words[0];
+        $tmp_uri = explode(':', $uri);
+
+        if($tmp_uri[1] == 'artist') {
+            // Follow / Unfollow artist actions
+            $artist_uri = $words[0];
+            $artist_name = $words[1];
+
+            try {
+                $api = getSpotifyWebAPI($w);
                 if ($follow) {
-                    displayNotificationWithArtwork($w, 'You are now following the artist '.$artist_name, './images/follow.png', 'Follow');
-                    exec("osascript -e 'tell application id \"".getAlfredName()."\" to search \"".getenv('c_spot_mini').' Artist▹'.$artist_uri.'∙'.escapeQuery($artist_name).'▹'."\"'");
+                    $ret = $api->followArtistsOrUsers('artist', $tmp_uri[2]);
                 } else {
-                    displayNotificationWithArtwork($w, 'You are no more following the artist '.$artist_name, './images/follow.png', 'Unfollow');
-                    exec("osascript -e 'tell application id \"".getAlfredName()."\" to search \"".getenv('c_spot_mini').' Artist▹'.$artist_uri.'∙'.escapeQuery($artist_name).'▹'."\"'");
+                    $ret = $api->unfollowArtistsOrUsers('artist', $tmp_uri[2]);
                 }
-            } else {
-                $w->result(null, '', 'Error!',array(
-                    'An error happened! try again or report to the author',
-                    'alt' => 'Not Available',
-                    'cmd' => 'Not Available',
-                    'shift' => 'Not Available',
-                    'fn' => 'Not Available',
-                    'ctrl' => 'Not Available',
-                ), './images/warning.png', 'no', null, '');
+
+                if ($ret) {
+                    if ($follow) {
+                        displayNotificationWithArtwork($w, 'You are now following the artist '.$artist_name, './images/follow.png', 'Follow');
+                        exec("osascript -e 'tell application id \"".getAlfredName()."\" to search \"".getenv('c_spot_mini').' Artist▹'.$artist_uri.'∙'.escapeQuery($artist_name).'▹'."\"'");
+                    } else {
+                        displayNotificationWithArtwork($w, 'You are no more following the artist '.$artist_name, './images/follow.png', 'Unfollow');
+                        exec("osascript -e 'tell application id \"".getAlfredName()."\" to search \"".getenv('c_spot_mini').' Artist▹'.$artist_uri.'∙'.escapeQuery($artist_name).'▹'."\"'");
+                    }
+                } else {
+                    $w->result(null, '', 'Error!',array(
+                        'An error happened! try again or report to the author',
+                        'alt' => 'Not Available',
+                        'cmd' => 'Not Available',
+                        'shift' => 'Not Available',
+                        'fn' => 'Not Available',
+                        'ctrl' => 'Not Available',
+                    ), './images/warning.png', 'no', null, '');
+                }
+            } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+                $w->result(null, 'help', 'Exception occurred',array(
+                        ''.$e->getMessage(),
+                        'alt' => 'Not Available',
+                        'cmd' => 'Not Available',
+                        'shift' => 'Not Available',
+                        'fn' => 'Not Available',
+                        'ctrl' => 'Not Available',
+                    ), './images/warning.png', 'no', null, '');
+                echo $w->tojson();
+                exit;
             }
-        } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            $w->result(null, 'help', 'Exception occurred',array(
-                     ''.$e->getMessage(),
-                    'alt' => 'Not Available',
-                    'cmd' => 'Not Available',
-                    'shift' => 'Not Available',
-                    'fn' => 'Not Available',
-                    'ctrl' => 'Not Available',
-                ), './images/warning.png', 'no', null, '');
-            echo $w->tojson();
-            exit;
+        } else if($tmp_uri[1] == 'show') {
+            // Follow / Unfollow show actions
+            $show_uri = $words[0];
+            $show_name = $words[1];
+
+            try {
+                $api = getSpotifyWebAPI($w);
+                if ($follow) {
+                    $ret = $api->addMyShows($show_uri);
+                } else {
+                    $ret = $api->deleteMyShows($show_uri);
+                }
+
+                if ($ret) {
+                    if ($follow) {
+                        displayNotificationWithArtwork($w, 'You are now following the show '.$show_name, './images/follow.png', 'Follow');
+                        exec("osascript -e 'tell application id \"".getAlfredName()."\" to search \"".getenv('c_spot_mini').' Show▹'.$show_uri.'∙'.escapeQuery($show_name).'▹'."\"'");
+                    } else {
+                        displayNotificationWithArtwork($w, 'You are no more following the show '.$show_name, './images/follow.png', 'Unfollow');
+                        exec("osascript -e 'tell application id \"".getAlfredName()."\" to search \"".getenv('c_spot_mini').' Show▹'.$show_uri.'∙'.escapeQuery($show_name).'▹'."\"'");
+                    }
+                } else {
+                    $w->result(null, '', 'Error!',array(
+                        'An error happened! try again or report to the author',
+                        'alt' => 'Not Available',
+                        'cmd' => 'Not Available',
+                        'shift' => 'Not Available',
+                        'fn' => 'Not Available',
+                        'ctrl' => 'Not Available',
+                    ), './images/warning.png', 'no', null, '');
+                }
+            } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+                $w->result(null, 'help', 'Exception occurred',array(
+                        ''.$e->getMessage(),
+                        'alt' => 'Not Available',
+                        'cmd' => 'Not Available',
+                        'shift' => 'Not Available',
+                        'fn' => 'Not Available',
+                        'ctrl' => 'Not Available',
+                    ), './images/warning.png', 'no', null, '');
+                echo $w->tojson();
+                exit;
+            }
         }
     }
 }
