@@ -315,6 +315,7 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress)
     $all_albums = $counter[4];
     $yourmusic_albums = $counter[5];
     $nb_playlists = $counter[6];
+    $nb_shows = $counter[7];
 
     if ($update_in_progress == true) {
         $in_progress_data = $w->read('update_library_in_progress');
@@ -583,6 +584,17 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress)
                     'ctrl' => 'Not Available',
                 ), './images/albums.png', 'no', null, 'Album▹');
         }
+    }
+
+    if(getenv('menu_display_browse_by_show') == 1) {
+        $w->result(null, '', 'Shows',array(
+                 'Browse by show'.' ('.$nb_shows.' shows)',
+                'alt' => 'Not Available',
+                'cmd' => 'Not Available',
+                'shift' => 'Not Available',
+                'fn' => 'Not Available',
+                'ctrl' => 'Not Available',
+            ), './images/shows.png', 'no', null, 'Show▹');
     }
 
     if(getenv('menu_display_browse_categories') == 1) {

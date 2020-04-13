@@ -328,6 +328,117 @@ function firstDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
 }
 
 /**
+ * firstDelimiterShows function.
+ *
+ * @param mixed $w
+ * @param mixed $query
+ * @param mixed $settings
+ * @param mixed $db
+ * @param mixed $update_in_progress
+ */
+function firstDelimiterShows($w, $query, $settings, $db, $update_in_progress)
+{
+    $words = explode('▹', $query);
+    $kind = $words[0];
+
+    $all_playlists = $settings->all_playlists;
+    $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
+    $radio_number_tracks = $settings->radio_number_tracks;
+    $now_playing_notifications = $settings->now_playing_notifications;
+    $max_results = $settings->max_results;
+    $alfred_playlist_uri = $settings->alfred_playlist_uri;
+    $alfred_playlist_name = $settings->alfred_playlist_name;
+    $country_code = $settings->country_code;
+    $last_check_update_time = $settings->last_check_update_time;
+    $oauth_client_id = $settings->oauth_client_id;
+    $oauth_client_secret = $settings->oauth_client_secret;
+    $oauth_redirect_uri = $settings->oauth_redirect_uri;
+    $oauth_access_token = $settings->oauth_access_token;
+    $oauth_expires = $settings->oauth_expires;
+    $oauth_refresh_token = $settings->oauth_refresh_token;
+    $display_name = $settings->display_name;
+    $userid = $settings->userid;
+    $output_application = $settings->output_application;
+
+    // Search artists
+
+    $show = $words[1];
+
+    try {
+        if (mb_strlen($show) < 2) {
+            $getShows = 'select uri,name,description,media_type,show_artwork_path,explicit,added_at,languages from shows group by name'.' limit '.$max_results;
+            $stmt = $db->prepare($getShows);
+        } else {
+            $getShows = 'select uri,name,description,media_type,show_artwork_path,explicit,added_at,languages from shows where name like :query limit '.$max_results;
+            $stmt = $db->prepare($getShows);
+            $stmt->bindValue(':query', '%'.$artist.'%');
+        }
+
+        $tracks = $stmt->execute();
+    } catch (PDOException $e) {
+        handleDbIssuePdoXml($db);
+
+        exit;
+    }
+
+    // display all shows
+    $noresult = true;
+    while ($show = $stmt->fetch()) {
+        $noresult = false;
+        $nb_episodes = getNumberOfEpisodesForShow($db, $show[1]);
+        if (checkIfResultAlreadyThere($w->results(), '🎙 '.$show[1].' ('.$nb_episodes.' episodes)') == false) {
+            $w->result(null, '', '🎙 '.$show[1].' ('.$nb_episodes.' episodes)',array(
+                     'Browse this show',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), $show[4], 'no', null, 'Show'.$show[0].'∙'.$show[1].'▹');
+        }
+    }
+
+    if ($noresult) {
+        $w->result(null, 'help', 'There is no result for your search',array(
+                     '',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/warning.png', 'no', null, '');
+        if ($output_application != 'MOPIDY') {
+            $w->result(null, serialize(array(
+                        '' /*track_uri*/,
+                        '' /* album_uri */,
+                        '' /* artist_uri */,
+                        '' /* playlist_uri */,
+                        base64_encode('show:'.$show) /* spotify_command */,
+                        '' /* query */,
+                        '' /* other_settings*/,
+                        '' /* other_action */,
+
+                        '' /* artist_name */,
+                        '' /* track_name */,
+                        '' /* album_name */,
+                        '' /* track_artwork_path */,
+                        '' /* artist_artwork_path */,
+                        '' /* album_artwork_path */,
+                        '' /* playlist_name */,
+                        '', /* playlist_artwork_path */
+                    )), 'Search for show '.$show.' in Spotify', array(
+                    'This will start a new search in Spotify',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/spotify.png', 'yes', null, '');
+        }
+    }
+}
+
+/**
  * firstDelimiterAlbums function.
  *
  * @param mixed $w

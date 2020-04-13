@@ -345,6 +345,8 @@ if (mb_strlen($query) < 2) {
                 firstDelimiterAlfredPlaylist($w, $query, $settings, $db, $update_in_progress);
             } elseif ($kind == 'Artist') {
                 firstDelimiterArtists($w, $query, $settings, $db, $update_in_progress);
+            } elseif ($kind == 'Show') {
+                firstDelimiterShows($w, $query, $settings, $db, $update_in_progress);
             } elseif ($kind == 'Album') {
                 firstDelimiterAlbums($w, $query, $settings, $db, $update_in_progress);
             } elseif ($kind == 'Featured Playlist') {

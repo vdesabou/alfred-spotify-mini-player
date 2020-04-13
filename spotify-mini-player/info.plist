@@ -10807,6 +10807,8 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 		<string>1</string>
 		<key>menu_display_browse_by_playlist</key>
 		<string>1</string>
+		<key>menu_display_browse_by_show</key>
+		<string>1</string>
 		<key>menu_display_browse_categories</key>
 		<string>1</string>
 		<key>menu_display_browse_your_music</key>

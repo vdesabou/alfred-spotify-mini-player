@@ -4991,6 +4991,28 @@ function getNumberOfTracksForArtist($db, $artist_name, $yourmusiconly = false)
 }
 
 /**
+ * getNumberOfEpisodesForShow function.
+ *
+ * @param mixed $db
+ * @param mixed $show_name
+ */
+function getNumberOfEpisodesForShow($db, $show_name)
+{
+    $getNumberOfEpisodesForShow = 'select count(distinct name) from episodes where show_name=:show_name';
+
+    try {
+        $stmt = $db->prepare($getNumberOfEpisodesForShow);
+        $stmt->bindValue(':show_name', ''.$show_name.'');
+        $stmt->execute();
+        $nb = $stmt->fetch();
+    } catch (PDOException $e) {
+        return 0;
+    }
+
+    return $nb[0];
+}
+
+/**
  * escapeQuery function.
  *
  * @param mixed $text
@@ -6788,6 +6810,75 @@ function updateLibrary($w)
         $offsetGetMySavedShows += $limitGetMySavedShows;
     } while ($offsetGetMySavedShows < $userMySavedShows->total);
 
+    $savedMySavedEpisodes = array();
+
+    // Handle Episodes
+    foreach ($savedMySavedShows as $item) {
+
+        $show = $item->show;
+
+        $offsetGetMySavedEpisodes = 0;
+        $limitGetMySavedEpisodes = 50;
+        do {
+            $retry = true;
+            $nb_retry = 0;
+            while ($retry) {
+                try {
+                    // refresh api
+                    $api = getSpotifyWebAPI($w, $api);
+                    $userMySavedEpisodes = $api->getShowEpisodes($show->uri, array(
+                            'limit' => $limitGetMySavedEpisodes,
+                            'offset' => $offsetGetMySavedEpisodes,
+                            'market' => $country_code,
+                        ));
+                    $retry = false;
+                } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+                    logMsg('Error(getShowEpisodes): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
+
+                    if ($e->getCode() == 429) { // 429 is Too Many Requests
+                        $lastResponse = $api->getRequest()->getLastResponse();
+                        $retryAfter = $lastResponse['headers']['Retry-After'];
+                        sleep($retryAfter);
+                    } else if ($e->getCode() == 404) {
+                        // skip
+                        break;
+                    } else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
+                        // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
+                        // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
+                        // retry any SSL error
+                        ++$nb_retry;
+                    } else if ($e->getCode() == 500
+                        || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+                        // retry
+                        if ($nb_retry > 2) {
+                            handleSpotifyWebAPIException($w, $e);
+                            $retry = false;
+
+                            return false;
+                        }
+                        ++$nb_retry;
+                        sleep(5);
+                    } else {
+                        handleSpotifyWebAPIException($w, $e);
+                        $retry = false;
+
+                        return false;
+                    }
+                }
+            }
+
+            foreach ($userMySavedEpisodes->items as $episode) {
+                $episode->show_uri = $show->uri;
+                $episode->show_name = $show->name;
+                $savedMySavedEpisodes[] = $episode;
+                $nb_tracktotal += 1;
+            }
+
+            $offsetGetMySavedEpisodes += $limitGetMySavedEpisodes;
+        } while ($offsetGetMySavedEpisodes < $userMySavedEpisodes->total);
+    }
+
+
     // $savedMySavedAlbums = array();
     // $offsetGetMySavedAlbums = 0;
     // $limitGetMySavedAlbums = 50;
@@ -6860,16 +6951,21 @@ function updateLibrary($w)
         $db->exec('CREATE INDEX IndexPlaylistUri ON tracks (playlist_uri)');
         $db->exec('CREATE INDEX IndexArtistName ON tracks (artist_name)');
         $db->exec('CREATE INDEX IndexAlbumName ON tracks (album_name)');
-        $db->exec('create table counters (all_tracks int, yourmusic_tracks int, all_artists int, yourmusic_artists int, all_albums int, yourmusic_albums int, playlists int, shows int)');
+        $db->exec('create table counters (all_tracks int, yourmusic_tracks int, all_artists int, yourmusic_artists int, all_albums int, yourmusic_albums int, playlists int, shows int, episodes int)');
         $db->exec('create table playlists (uri text PRIMARY KEY NOT NULL, name text, nb_tracks int, author text, username text, playlist_artwork_path text, ownedbyuser boolean, nb_playable_tracks int, duration_playlist text, nb_times_played int, collaborative boolean, public boolean)');
 
         $db->exec('create table shows (uri text PRIMARY KEY NOT NULL, name text, description text, media_type text, show_artwork_path text, explicit boolean, added_at text, languages text, nb_times_played int, is_externally_hosted boolean)');
+
+        $db->exec('create table episodes (uri text PRIMARY KEY NOT NULL, name text, show_uri text, show_name text, description text, media_type text, episode_artwork_path text, is_playable boolean, languages text, nb_times_played int, is_externally_hosted boolean, duration_ms int, explicit boolean, release_date text, release_date_precision text, audio_preview_url text)');
 
         $insertPlaylist = 'insert into playlists values (:uri,:name,:nb_tracks,:owner,:username,:playlist_artwork_path,:ownedbyuser,:nb_playable_tracks,:duration_playlist,:nb_times_played,:collaborative,:public)';
         $stmtPlaylist = $db->prepare($insertPlaylist);
 
         $insertShow = 'insert into shows values (:uri,:name,:description,:media_type,:show_artwork_path,:explicit,:added_at,:languages,:nb_times_played,:is_externally_hosted)';
         $stmtShow = $db->prepare($insertShow);
+
+        $insertEpisode = 'insert into episodes values (:uri,:name,:show_uri,:show_name,:description,:episode_artwork_path,:is_playable,:languages,:nb_times_played,:is_externally_hosted,:duration_ms,:explicit,:release_date,:release_date_precision,:audio_preview_url)';
+        $stmtEpisode = $db->prepare($insertEpisode);
 
         $insertTrack = 'insert into tracks values (:yourmusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_type,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:added_at,:duration,:nb_times_played,:local_track)';
         $stmtTrack = $db->prepare($insertTrack);
@@ -7311,6 +7407,60 @@ function updateLibrary($w)
         }
     }
 
+    // Handle Show Episodes
+    foreach ($savedMySavedEpisodes as $episode) {
+
+        try {
+
+            // Download artworks in Fetch later mode
+            if ($use_artworks) {
+                list($already_present, $episode_artwork_path) = getEpisodeArtwork($w, $episode->uri, $episode->name, true, true, false, $use_artworks);
+                if ($already_present == false) {
+                    $artworksToDownload = true;
+                    $stmtEpisodeArtwork->bindValue(':episode_uri', $episode->uri);
+                    $stmtEpisodeArtwork->bindValue(':already_fetched', 0);
+                    $stmtEpisodeArtwork->execute();
+                }
+            } else {
+                $episode_artwork_path = getShowArtwork($w, $episode->uri, $episode->name, false, false, false, $use_artworks);
+            }
+        } catch (PDOException $e) {
+            logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
+            handleDbIssuePdoEcho($dbartworks, $w);
+            $dbartworks = null;
+            $db = null;
+
+            return false;
+        }
+        $insertEpisode = 'insert into episodes values (:uri,:name,:show_uri,:show_name,:description,:episode_artwork_path,:is_playable,:languages,:nb_times_played,:is_externally_hosted,:duration_ms,:explicit,:release_date,:release_date_precision,:audio_preview_url)';
+
+        try {
+            $stmtEpisode->bindValue(':uri', $episode->uri);
+            $stmtEpisode->bindValue(':name', escapeQuery($episode->name));
+            $stmtEpisode->bindValue(':show_uri', $episode->show_uri);
+            $stmtEpisode->bindValue(':show_name', escapeQuery($episode->show_name));
+            $stmtEpisode->bindValue(':description', escapeQuery($episode->description));
+            $stmtEpisode->bindValue(':episode_artwork_path', $episode_artwork_path);
+            $stmtEpisode->bindValue(':is_playable', $episode->is_playable);
+            $stmtEpisode->bindValue(':languages', 'FIXTHIS');
+            $stmtEpisode->bindValue(':nb_times_played', 0);
+            $stmtEpisode->bindValue(':is_externally_hosted', $episode->is_externally_hosted);
+            $stmtEpisode->bindValue(':duration_ms', $episode->duration_ms);
+            $stmtEpisode->bindValue(':explicit', $episode->explicit);
+            $stmtEpisode->bindValue(':release_date', $episode->release_date);
+            $stmtEpisode->bindValue(':release_date_precision', $episode->release_date_precision);
+            $stmtEpisode->bindValue(':audio_preview_url', $episode->audio_preview_url);
+            $stmtEpisode->execute();
+        } catch (PDOException $e) {
+            logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
+            handleDbIssuePdoEcho($db, $w);
+            $dbartworks = null;
+            $db = null;
+
+            return false;
+        }
+    }
+
     // update counters
     try {
         $getCount = 'select count(distinct uri) from tracks';
@@ -7353,7 +7503,12 @@ function updateLibrary($w)
         $stmt->execute();
         $shows_count = $stmt->fetch();
 
-        $insertCounter = 'insert into counters values (:all_tracks,:yourmusic_tracks,:all_artists,:yourmusic_artists,:all_albums,:yourmusic_albums,:playlists,:shows)';
+        $getCount = 'select count(*) from episodes';
+        $stmt = $db->prepare($getCount);
+        $stmt->execute();
+        $episodes_count = $stmt->fetch();
+
+        $insertCounter = 'insert into counters values (:all_tracks,:yourmusic_tracks,:all_artists,:yourmusic_artists,:all_albums,:yourmusic_albums,:playlists,:shows,:episodes)';
         $stmt = $db->prepare($insertCounter);
 
         $stmt->bindValue(':all_tracks', $all_tracks[0]);
@@ -7364,6 +7519,7 @@ function updateLibrary($w)
         $stmt->bindValue(':yourmusic_albums', $yourmusic_albums[0]);
         $stmt->bindValue(':playlists', $playlists_count[0]);
         $stmt->bindValue(':shows', $shows_count[0]);
+        $stmt->bindValue(':episodes', $episodes_count[0]);
         $stmt->execute();
     } catch (PDOException $e) {
         logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
