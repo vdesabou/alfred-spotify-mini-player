@@ -1034,6 +1034,28 @@ if ($type == 'TRACK' && $other_settings == '' &&
         //addAlbumToPlayQueue($w, $album_uri, $album_name);
 
         return;
+    } elseif ($other_action == 'play_episode_simplified') {
+        if ($output_application == 'MOPIDY') {
+            playUriWithMopidy($w, $track_uri);
+        } else if($output_application == 'APPLESCRIPT') {
+            exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"");
+        } else {
+            $device_id = getSpotifyConnectCurrentDeviceId($w);
+            if($device_id != '') {
+                playTrackSpotifyConnect($w, $device_id, $track_uri, '');
+            } else {
+                displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+                return;
+            }
+        }
+        if ($now_playing_notifications == false) {
+            displayNotificationWithArtwork($w, '🔈 '.$track_name, $track_artwork_path, 'Play Episode');
+        }
+
+        stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
+        //addAlbumToPlayQueue($w, $album_uri, $album_name);
+
+        return;
     } elseif ($other_action == 'play') {
 
         if($type == '' || $type == 'TRACK') {

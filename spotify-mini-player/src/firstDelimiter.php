@@ -605,6 +605,15 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
                 'ctrl' => 'Not Available',
             ), './images/shows.png', 'no', null, 'Search Shows Online▹');
 
+            $w->result(null, null, 'Search for show episodes only', array(
+                'This will search for show episodes online, i.e not in your library',
+                'alt' => 'Not Available',
+                'cmd' => 'Not Available',
+                'shift' => 'Not Available',
+                'fn' => 'Not Available',
+                'ctrl' => 'Not Available',
+            ), './images/shows.png', 'no', null, 'Search Episodes Online▹');
+
             $w->result(null, null, 'Search for albums only', array(
                     'This will search for albums online, i.e not in your library',
                     'alt' => 'Not Available',
@@ -649,6 +658,15 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
                     'fn' => 'Not Available',
                     'ctrl' => 'Not Available',
                 ), './images/info.png', 'no', null, '');
+        } elseif ($kind == 'Search Episodes Online') {
+            $w->result(null, 'help', 'Search show episodes online, i.e not in your library',array(
+                    'Begin typing at least 3 characters to start search online. This is using slow Spotify API be patient.',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/info.png', 'no', null, '');
         } elseif ($kind == 'Search Albums Online') {
             $w->result(null, 'help', 'Search albums online, i.e not in your library',array(
                     'Begin typing at least 3 characters to start search online. This is using slow Spotify API be patient.',
@@ -665,6 +683,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
         $search_albums = false;
         $search_tracks = false;
         $search_shows = false;
+        $search_episodes = false;
 
         if ($kind == 'Search Online') {
             $search_playlists = true;
@@ -672,11 +691,13 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
             $search_albums = true;
             $search_tracks = true;
             $search_shows = true;
+            $search_episodes = true;
             $search_playlists_limit = 8;
             $search_artists_limit = 5;
             $search_albums_limit = 5;
             $search_tracks_limit = 20;
             $search_shows_limit = 5;
+            $search_episodes_limit = 10;
         } elseif ($kind == 'Search Playlists Online') {
             $search_playlists = true;
             $search_playlists_limit = ($max_results <= 50) ? $max_results : 50;
@@ -689,6 +710,9 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
         } elseif ($kind == 'Search Shows Online') {
             $search_shows = true;
             $search_shows_limit = ($max_results <= 50) ? $max_results : 50;
+        } elseif ($kind == 'Search Episodes Online') {
+            $search_episodes = true;
+            $search_episodes_limit = ($max_results <= 50) ? $max_results : 50;
         } elseif ($kind == 'Search Tracks Online') {
             $search_tracks = true;
             $search_tracks_limit = ($max_results <= 50) ? $max_results : 50;
@@ -732,6 +756,51 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
                         if (checkIfResultAlreadyThere($w->results(), '🎙 '.escapeQuery($show->name)) == false) {
                             $noresult = false;
                             $w->result(null, '', '🎙 '.escapeQuery($show->name), 'Browse this show', getShowArtwork($w, $show->uri, $show->name, false, false, false, $use_artworks), 'no', null, 'Online▹'.$show->uri.'@'.escapeQuery($show->name).'▹');
+                        }
+                    }
+                }
+            }
+
+            if($search_category == 'episode') {
+
+                if ($search_episodes == true) {
+                    // Search show episodes
+
+                    // call to web api, if it fails,
+                    // it displays an error in main window
+                    $query = 'episode:'.$the_query;
+                    $results = searchWebApi($w, $country_code, $query, 'episode', $search_episodes_limit, false);
+                    foreach ($results as $episode) {
+                        if (checkIfResultAlreadyThere($w->results(), $episode->name) == false) {
+                            $noresult = false;
+                            if (mb_strlen($search) < 2
+                            || strpos(strtolower($episode->name), strtolower($search)) !== false) {
+                                $episode_artwork_path = getEpisodeArtwork($w, $episode->uri, $episode->name, false, false, false, $use_artworks);
+                                $w->result(null, serialize(array(
+                                    $episode->uri /*track_uri*/,
+                                    '' /* album_uri */,
+                                    '' /* artist_uri */,
+                                    '' /* playlist_uri */,
+                                    '' /* spotify_command */,
+                                    '' /* query */,
+                                    '' /* other_settings*/,
+                                    'play_episode_simplified' /* other_action */,
+                                    '' /* artist_name */,
+                                    escapeQuery($episode->name) /* track_name */,
+                                    '' /* album_name */,
+                                    $episode_artwork_path /* track_artwork_path */,
+                                    '' /* artist_artwork_path */,
+                                    '' /* album_artwork_path */,
+                                    '' /* playlist_name */,
+                                    '', /* playlist_artwork_path */
+                                )), $episode->name, array($episode->episode_type.' Duration '.beautifyTime($episode->duration_ms / 1000).' ● Release date: '.$episode->release_date,
+                                'alt' => 'Not Available',
+                                'cmd' => 'Not Available',
+                                'shift' => 'Not Available',
+                                'fn' => 'Not Available',
+                                'ctrl' => 'Not Available',
+                            ), $episode_artwork_path, 'yes', null, '');
+                            }
                         }
                     }
                 }
