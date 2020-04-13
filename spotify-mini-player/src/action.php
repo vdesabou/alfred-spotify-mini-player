@@ -120,6 +120,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
     (startsWith($other_action, 'set_playlist_privacy_to_') || $other_action == 'play_track_from_play_queue' || $other_action == ''
         || ($other_action == 'play_track_in_album_context' && $add_to_option != '')
         || ($other_action == 'play' && $add_to_option != '')
+        || ($other_action == 'play_episode' && $add_to_option != '')
         || ($other_action == 'playpause' && $add_to_option != '')
         || ($other_action == 'pause' && $add_to_option != ''))) {
     if ($track_uri != '') {
@@ -1009,6 +1010,28 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
         stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
         addAlbumToPlayQueue($w, $album_uri, $album_name);
+
+        return;
+    } elseif ($other_action == 'play_episode') {
+        if ($output_application == 'MOPIDY') {
+            playTrackInContextWithMopidy($w, $track_uri, $album_uri);
+        } else if($output_application == 'APPLESCRIPT') {
+            exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\" in context \"$album_uri\"'");
+        } else {
+            $device_id = getSpotifyConnectCurrentDeviceId($w);
+            if($device_id != '') {
+                playTrackSpotifyConnect($w, $device_id, $track_uri, $album_uri);
+            } else {
+                displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+                return;
+            }
+        }
+        if ($now_playing_notifications == false) {
+            displayNotificationWithArtwork($w, '🔈 '.$track_name.' in show '.$album_name, $track_artwork_path, 'Play Episode from Show');
+        }
+
+        stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
+        //addAlbumToPlayQueue($w, $album_uri, $album_name);
 
         return;
     } elseif ($other_action == 'play') {

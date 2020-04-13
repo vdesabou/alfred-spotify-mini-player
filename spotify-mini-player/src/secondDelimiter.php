@@ -824,58 +824,20 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
 
     if (substr_count($query, '@') == 1) {
 
-        // Search Artist Online
-
         $tmp = $words[1];
         $words = explode('@', $tmp);
-        $artist_uri = $words[0];
-        $tmp_uri = explode(':', $artist_uri);
+        $uri = $words[0];
+        $tmp_uri = explode(':', $uri);
 
-        $artist_name = $words[1];
+        if($tmp_uri[1] == 'artist') {
 
-        $artist_artwork_path = getArtistArtwork($w, $artist_uri, $artist_name, false, false, false, $use_artworks);
-        if (mb_strlen($search) < 2) {
-            $w->result(null, serialize(array(
-                    '' /*track_uri*/,
-                    '' /* album_uri */,
-                    $artist_uri /* artist_uri */,
-                    '' /* playlist_uri */,
-                    '' /* spotify_command */,
-                    '' /* query */,
-                    '' /* other_settings*/,
-                    'playartist' /* other_action */,
-                    $artist_name /* artist_name */,
-                    '' /* track_name */,
-                    '' /* album_name */,
-                    '' /* track_artwork_path */,
-                    $artist_artwork_path /* artist_artwork_path */,
-                    '' /* album_artwork_path */,
-                    '' /* playlist_name */,
-                    '', /* playlist_artwork_path */
-                )), '👤 '.escapeQuery($artist_name), 'Play artist', $artist_artwork_path, 'yes', null, '');
-        }
+            // Search Artist Online
 
-        if (mb_strlen($search) < 2) {
-            $w->result(null, '', 'Follow/Unfollow Artist',array(
-                     'Display options to follow/unfollow the artist',
-                    'alt' => 'Not Available',
-                    'cmd' => 'Not Available',
-                    'shift' => 'Not Available',
-                    'fn' => 'Not Available',
-                    'ctrl' => 'Not Available',
-                ), './images/follow.png', 'no', null, 'Follow/Unfollow▹'.$artist_uri.'@'.$artist_name.'▹');
+            $artist_uri = $uri;
 
-            $w->result(null, '', 'Related Artists',array(
-                     'Browse related artists',
-                    'alt' => 'Not Available',
-                    'cmd' => 'Not Available',
-                    'shift' => 'Not Available',
-                    'fn' => 'Not Available',
-                    'ctrl' => 'Not Available',
-                ), './images/related.png', 'no', null, 'OnlineRelated▹'.$artist_uri.'@'.$artist_name.'▹');
-        }
+            $artist_name = $words[1];
 
-        if ($update_in_progress == false) {
+            $artist_artwork_path = getArtistArtwork($w, $artist_uri, $artist_name, false, false, false, $use_artworks);
             if (mb_strlen($search) < 2) {
                 $w->result(null, serialize(array(
                         '' /*track_uri*/,
@@ -885,56 +847,199 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
                         '' /* spotify_command */,
                         '' /* query */,
                         '' /* other_settings*/,
-                        'radio_artist' /* other_action */,
+                        'playartist' /* other_action */,
                         $artist_name /* artist_name */,
                         '' /* track_name */,
                         '' /* album_name */,
                         '' /* track_artwork_path */,
-                        '' /* artist_artwork_path */,
+                        $artist_artwork_path /* artist_artwork_path */,
                         '' /* album_artwork_path */,
                         '' /* playlist_name */,
                         '', /* playlist_artwork_path */
-                    )), 'Create a Radio Playlist for '.$artist_name, 'This will create a radio playlist with '.$radio_number_tracks.' tracks for the artist', './images/radio_artist.png', 'yes', null, '');
+                    )), '👤 '.escapeQuery($artist_name), 'Play artist', $artist_artwork_path, 'yes', null, '');
             }
-        }
 
-        // call to web api, if it fails,
-        // it displays an error in main window
-        $albums = getTheArtistAlbums($w, $artist_uri, $country_code);
+            if (mb_strlen($search) < 2) {
+                $w->result(null, '', 'Follow/Unfollow Artist',array(
+                         'Display options to follow/unfollow the artist',
+                        'alt' => 'Not Available',
+                        'cmd' => 'Not Available',
+                        'shift' => 'Not Available',
+                        'fn' => 'Not Available',
+                        'ctrl' => 'Not Available',
+                    ), './images/follow.png', 'no', null, 'Follow/Unfollow▹'.$artist_uri.'@'.$artist_name.'▹');
 
-        if (mb_strlen($search) < 2) {
-            $w->result(null, 'help', 'Select an album below to browse it',array(
-                     'singles and compilations are also displayed',
-                    'alt' => 'Not Available',
-                    'cmd' => 'Not Available',
-                    'shift' => 'Not Available',
-                    'fn' => 'Not Available',
-                    'ctrl' => 'Not Available',
-                ), './images/info.png', 'no', null, '');
-        }
+                $w->result(null, '', 'Related Artists',array(
+                         'Browse related artists',
+                        'alt' => 'Not Available',
+                        'cmd' => 'Not Available',
+                        'shift' => 'Not Available',
+                        'fn' => 'Not Available',
+                        'ctrl' => 'Not Available',
+                    ), './images/related.png', 'no', null, 'OnlineRelated▹'.$artist_uri.'@'.$artist_name.'▹');
+            }
 
-        $noresult = true;
-        foreach ($albums as $album) {
-            if (checkIfResultAlreadyThere($w->results(), $album->name.' ('.count($album->tracks->items).' tracks)') == false) {
-                $noresult = false;
-                $genre = (count($album->genres) > 0) ? ' ● Genre: '.implode('|', $album->genres) : '';
-                $tracks = $album->tracks;
-                if (mb_strlen($search) < 2 || strpos(strtolower($artist_name), strtolower($search)) !== false
-                || strpos(strtolower($album->name), strtolower($search)) !== false) {
-                    $w->result(null, '', $album->name.' ('.count($album->tracks->items).' tracks)', $album->album_type.' by '.$artist_name.' ● Release date: '.$album->release_date.$genre, getTrackOrAlbumArtwork($w, $album->uri, false, false, false, $use_artworks), 'no', null, 'Online▹'.$artist_uri.'@'.$artist_name.'@'.$album->uri.'@'.$album->name.'▹');
+            if ($update_in_progress == false) {
+                if (mb_strlen($search) < 2) {
+                    $w->result(null, serialize(array(
+                            '' /*track_uri*/,
+                            '' /* album_uri */,
+                            $artist_uri /* artist_uri */,
+                            '' /* playlist_uri */,
+                            '' /* spotify_command */,
+                            '' /* query */,
+                            '' /* other_settings*/,
+                            'radio_artist' /* other_action */,
+                            $artist_name /* artist_name */,
+                            '' /* track_name */,
+                            '' /* album_name */,
+                            '' /* track_artwork_path */,
+                            '' /* artist_artwork_path */,
+                            '' /* album_artwork_path */,
+                            '' /* playlist_name */,
+                            '', /* playlist_artwork_path */
+                        )), 'Create a Radio Playlist for '.$artist_name, 'This will create a radio playlist with '.$radio_number_tracks.' tracks for the artist', './images/radio_artist.png', 'yes', null, '');
                 }
             }
-        }
 
-        if ($noresult) {
-            $w->result(null, 'help', 'There is no album for this artist',array(
-                     '',
-                    'alt' => 'Not Available',
-                    'cmd' => 'Not Available',
-                    'shift' => 'Not Available',
-                    'fn' => 'Not Available',
-                    'ctrl' => 'Not Available',
-                ), './images/warning.png', 'no', null, '');
+            // call to web api, if it fails,
+            // it displays an error in main window
+            $albums = getTheArtistAlbums($w, $artist_uri, $country_code);
+
+            if (mb_strlen($search) < 2) {
+                $w->result(null, 'help', 'Select an album below to browse it',array(
+                         'singles and compilations are also displayed',
+                        'alt' => 'Not Available',
+                        'cmd' => 'Not Available',
+                        'shift' => 'Not Available',
+                        'fn' => 'Not Available',
+                        'ctrl' => 'Not Available',
+                    ), './images/info.png', 'no', null, '');
+            }
+
+            $noresult = true;
+            foreach ($albums as $album) {
+                if (checkIfResultAlreadyThere($w->results(), $album->name.' ('.count($album->tracks->items).' tracks)') == false) {
+                    $noresult = false;
+                    $genre = (count($album->genres) > 0) ? ' ● Genre: '.implode('|', $album->genres) : '';
+                    $tracks = $album->tracks;
+                    if (mb_strlen($search) < 2 || strpos(strtolower($artist_name), strtolower($search)) !== false
+                    || strpos(strtolower($album->name), strtolower($search)) !== false) {
+                        $w->result(null, '', $album->name.' ('.count($album->tracks->items).' tracks)', $album->album_type.' by '.$artist_name.' ● Release date: '.$album->release_date.$genre, getTrackOrAlbumArtwork($w, $album->uri, false, false, false, $use_artworks), 'no', null, 'Online▹'.$artist_uri.'@'.$artist_name.'@'.$album->uri.'@'.$album->name.'▹');
+                    }
+                }
+            }
+
+            if ($noresult) {
+                $w->result(null, 'help', 'There is no album for this artist',array(
+                         '',
+                        'alt' => 'Not Available',
+                        'cmd' => 'Not Available',
+                        'shift' => 'Not Available',
+                        'fn' => 'Not Available',
+                        'ctrl' => 'Not Available',
+                    ), './images/warning.png', 'no', null, '');
+            }
+        } else if($tmp_uri[1] == 'show') {
+            // Search Show Online
+
+            $show_uri = $uri;
+
+            $show_name = $words[1];
+
+            $show_artwork_path = getShowArtwork($w, $show_uri, $show_name, false, false, false, $use_artworks);
+            if (mb_strlen($search) < 2) {
+                $w->result(null, serialize(array(
+                        '' /*track_uri*/,
+                        '' /* album_uri */,
+                        $show_uri /* artist_uri */,
+                        '' /* playlist_uri */,
+                        '' /* spotify_command */,
+                        '' /* query */,
+                        '' /* other_settings*/,
+                        'playshow' /* other_action */,
+                        $show_name /* show_name */,
+                        '' /* track_name */,
+                        '' /* album_name */,
+                        '' /* track_artwork_path */,
+                        $show_artwork_path /* show_artwork_path */,
+                        '' /* album_artwork_path */,
+                        '' /* playlist_name */,
+                        '', /* playlist_artwork_path */
+                    )), '🎙 '.escapeQuery($show_name), 'Play show', $show_artwork_path, 'yes', null, '');
+            }
+
+            if (mb_strlen($search) < 2) {
+                $w->result(null, '', 'Follow/Unfollow Show',array(
+                         'Display options to follow/unfollow the show',
+                        'alt' => 'Not Available',
+                        'cmd' => 'Not Available',
+                        'shift' => 'Not Available',
+                        'fn' => 'Not Available',
+                        'ctrl' => 'Not Available',
+                    ), './images/follow.png', 'no', null, 'Follow/Unfollow▹'.$show_uri.'@'.$show_name.'▹');
+            }
+
+            // call to web api, if it fails,
+            // it displays an error in main window
+            $episodes = getTheShowEpisodes($w, $show_uri, $country_code);
+
+            if (mb_strlen($search) < 2) {
+                $w->result(null, 'help', 'Select an episode below to browse it',array(
+                         'singles and compilations are also displayed',
+                        'alt' => 'Not Available',
+                        'cmd' => 'Not Available',
+                        'shift' => 'Not Available',
+                        'fn' => 'Not Available',
+                        'ctrl' => 'Not Available',
+                    ), './images/info.png', 'no', null, '');
+            }
+
+            $noresult = true;
+            foreach ($episodes as $episode) {
+                if (checkIfResultAlreadyThere($w->results(), $episode->name) == false) {
+                    $noresult = false;
+                    if (mb_strlen($search) < 2
+                    || strpos(strtolower($episode->name), strtolower($search)) !== false) {
+                        $w->result(null, serialize(array(
+                            $episode->uri /*track_uri*/,
+                            $show_uri /* album_uri */,
+                            '' /* artist_uri */,
+                            '' /* playlist_uri */,
+                            '' /* spotify_command */,
+                            '' /* query */,
+                            '' /* other_settings*/,
+                            'play_episode' /* other_action */,
+                            '' /* artist_name */,
+                            escapeQuery($episode->name) /* track_name */,
+                            escapeQuery($show_name) /* album_name */,
+                            $show_artwork_path /* track_artwork_path */,
+                            '' /* artist_artwork_path */,
+                            '' /* album_artwork_path */,
+                            '' /* playlist_name */,
+                            '', /* playlist_artwork_path */
+                        )), $episode->name, array(
+                        $episode->episode_type.' Duration '.beautifyTime($episode->duration_ms / 1000).' ● Release date: '.$episode->release_date,
+                        'alt' => 'Not Available',
+                        'cmd' => 'Not Available',
+                        'shift' => 'Not Available',
+                        'fn' => 'Not Available',
+                        'ctrl' => 'Not Available',
+                    ), $show_artwork_path, 'yes', null, '');
+                    }
+                }
+            }
+
+            if ($noresult) {
+                $w->result(null, 'help', 'There is no episode for this show',array(
+                         '',
+                        'alt' => 'Not Available',
+                        'cmd' => 'Not Available',
+                        'shift' => 'Not Available',
+                        'fn' => 'Not Available',
+                        'ctrl' => 'Not Available',
+                    ), './images/warning.png', 'no', null, '');
+            }
         }
     } elseif (substr_count($query, '@') == 3) {
 

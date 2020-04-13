@@ -2818,6 +2818,10 @@ function searchWebApi($w, $country_code, $query, $type, $limit = 50, $actionMode
             foreach ($searchResults->albums->items as $item) {
                 $results[] = $item;
             }
+        } elseif ($type == 'show') {
+            foreach ($searchResults->shows->items as $item) {
+                $results[] = $item;
+            }
         } elseif ($type == 'playlist') {
             foreach ($searchResults->playlists->items as $item) {
                 $results[] = $item;
@@ -4537,6 +4541,56 @@ function getTheArtistAlbums($w, $artist_uri, $country_code, $actionMode = false,
 }
 
 /**
+ * getTheShowEpisodes function.
+ *
+ * @param mixed $w
+ * @param mixed $show_uri
+ * @param mixed $country_code
+ * @param bool  $actionMode   (default: false)
+ */
+function getTheShowEpisodes($w, $show_uri, $country_code, $actionMode = false)
+{
+    $episodes = array();
+
+    try {
+        $api = getSpotifyWebAPI($w);
+        $tmp = explode(':', $show_uri);
+        $offsetGetShowEpisodes = 0;
+        $limitGetShowEpisodes = 20;
+
+        do {
+            // refresh api
+            $api = getSpotifyWebAPI($w, $api);
+            $userShowEpisodes = $api->getShowEpisodes($tmp[2], array(
+                    'market' => $country_code,
+                    'limit' => $limitGetShowEpisodes,
+                    'offset' => $offsetGetShowEpisodes,
+                ));
+
+            foreach ($userShowEpisodes->items as $episode) {
+                $episodes[] = $episode;
+            }
+
+            $offsetGetShowEpisodes += $limitGetShowEpisodes;
+        } while ($offsetGetShowEpisodes < $userShowEpisodes->total);
+    } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+        if ($actionMode == false) {
+            $w2 = new Workflows('com.vdesabou.spotify.mini.player');
+            $w2->result(null, '', 'Error: Spotify WEB API getShowEpisodes returned error '.$e->getMessage(), 'Try again or report to author', './images/warning.png', 'no', null, '');
+            echo $w2->toxml();
+            exit;
+        } else {
+            logMsg( 'Error(getTheShowEpisodes): (exception '.jTraceEx($e).')');
+            handleSpotifyWebAPIException($w, $e);
+
+            return false;
+        }
+    }
+
+    return $episodes;
+}
+
+/**
  * getTheAlbumFullTracks function.
  *
  * @param mixed $w
@@ -5583,6 +5637,130 @@ function getCategoryArtwork($w, $categoryId, $categoryURI, $fetchIfNotPresent, $
 }
 
 /**
+ * getShowArtwork function.
+ *
+ * @param mixed $w
+ * @param mixed $show_uri
+ * @param mixed $show_name
+ * @param bool  $fetchIfNotPresent (default: false)
+ * @param bool  $fetchLater        (default: false)
+ * @param bool  $isLaterFetch      (default: false)
+ * @param bool  $useArtworks       (default: true)
+ */
+function getShowArtwork($w, $show_uri, $show_name, $fetchIfNotPresent = false, $fetchLater = false, $isLaterFetch = false, $useArtworks = true)
+{
+    if (!$useArtworks) {
+        return './images/shows.png';
+    }
+    $parsedShow = urlencode(escapeQuery($show_name));
+
+    if (!file_exists($w->data().'/artwork')):
+        exec("mkdir '".$w->data()."/artwork'");
+    endif;
+
+    $currentArtwork = $w->data().'/artwork/'.hash('md5', $parsedShow.'.png').'/'."$parsedShow.png";
+    if ($show_uri == '') {
+        return './images/shows.png';
+    }
+
+    $tmp = explode(':', $show_uri);
+    if (isset($tmp[2])) {
+        $show_uri = $tmp[2];
+    }
+    $artwork = '';
+
+    if ($fetchLater == true) {
+        if (!is_file($currentArtwork)) {
+            return array(
+                false,
+                $currentArtwork,
+            );
+        } else {
+            return array(
+                true,
+                $currentArtwork,
+            );
+        }
+        // always return currentArtwork
+        return $currentArtwork;
+    }
+
+    if (!is_file($currentArtwork) || (is_file($currentArtwork) && filesize($currentArtwork) == 0)) {
+        if ($fetchIfNotPresent == true || (is_file($currentArtwork) && filesize($currentArtwork) == 0)) {
+            $artwork = getShowArtworkURL($w, $show_uri);
+
+            // if return 0, it is a 404 error, no need to fetch
+            if (!empty($artwork) || (is_numeric($artwork) && $artwork != 0)) {
+                if (!file_exists($w->data().'/artwork/'.hash('md5', $parsedShow.'.png'))):
+                    exec("mkdir '".$w->data().'/artwork/'.hash('md5', $parsedShow.'.png')."'");
+                endif;
+                $fp = fopen($currentArtwork, 'w+');
+                $options = array(
+                    CURLOPT_FILE => $fp,
+                    CURLOPT_FOLLOWLOCATION => 1,
+                    CURLOPT_TIMEOUT => 5,
+                );
+                $w->request("$artwork", $options);
+                stathat_ez_count('AlfredSpotifyMiniPlayer', 'artworks', 1);
+                if ($isLaterFetch == true) {
+                    return true;
+                }
+            } else {
+                if ($isLaterFetch == true) {
+                    if (!file_exists($w->data().'/artwork/'.hash('md5', $parsedShow.'.png'))):
+                        exec("mkdir '".$w->data().'/artwork/'.hash('md5', $parsedShow.'.png')."'");
+                    endif;
+                    copy('./images/shows.png', $currentArtwork);
+
+                    return false;
+                } else {
+                    return './images/shows.png';
+                }
+            }
+        } else {
+            if ($isLaterFetch == true) {
+                if (!file_exists($w->data().'/artwork/'.hash('md5', $parsedShow.'.png'))):
+                    exec("mkdir '".$w->data().'/artwork/'.hash('md5', $parsedShow.'.png')."'");
+                endif;
+                copy('./images/shows.png', $currentArtwork);
+
+                return false;
+            } else {
+                return './images/shows.png';
+            }
+        }
+    } else {
+        if (filesize($currentArtwork) == 0) {
+            if ($isLaterFetch == true) {
+                if (!file_exists($w->data().'/artwork/'.hash('md5', $parsedShow.'.png'))):
+                    exec("mkdir '".$w->data().'/artwork/'.hash('md5', $parsedShow.'.png')."'");
+                endif;
+                copy('./images/shows.png', $currentArtwork);
+
+                return false;
+            } else {
+                return './images/shows.png';
+            }
+        }
+    }
+
+    if (is_numeric($artwork) && $artwork == 0) {
+        if ($isLaterFetch == true) {
+            if (!file_exists($w->data().'/artwork/'.hash('md5', $parsedShow.'.png'))):
+                exec("mkdir '".$w->data().'/artwork/'.hash('md5', $parsedShow.'.png')."'");
+            endif;
+            copy('./images/shows.png', $currentArtwork);
+
+            return false;
+        } else {
+            return './images/shows.png';
+        }
+    } else {
+        return $currentArtwork;
+    }
+}
+
+/**
  * getArtistArtwork function.
  *
  * @param mixed $w
@@ -5946,6 +6124,82 @@ function getPlaylistArtworkURL($w, $playlist_uri)
         }
     }
 
+    return $url;
+}
+
+/**
+ * getShowArtworkURL function.
+ *
+ * @param mixed $w
+ * @param mixed $show_id
+ */
+function getShowArtworkURL($w, $show_id)
+{
+    $url = '';
+    if (startswith($show_id, 'fake')) {
+        return $url;
+    }
+    $retry = true;
+    $nb_retry = 0;
+    while ($retry) {
+        try {
+            $api = getSpotifyWebAPI($w);
+            $show = $api->getShow($show_id);
+            $retry = false;
+        } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+            if ($e->getCode() != 429) {
+                logMsg('Error(getShowArtworkURL): (exception '.jTraceEx($e).')');
+            }
+
+            if ($e->getCode() == 429) { // 429 is Too Many Requests
+                $lastResponse = $api->getRequest()->getLastResponse();
+                $retryAfter = $lastResponse['headers']['Retry-After'];
+                sleep($retryAfter);
+            } else if ($e->getCode() == 404) {
+                // skip
+                break;
+            } else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
+                // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
+                // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
+                // retry any SSL error
+                ++$nb_retry;
+            } else if ($e->getCode() == 500
+                || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+                // retry
+                if ($nb_retry > 2) {
+                    $retry = false;
+
+                    return $url;
+                }
+                ++$nb_retry;
+                sleep(5);
+            } else {
+                $retry = false;
+
+                return $url;
+            }
+
+            return $url;
+        }
+
+        if (isset($show->images)) {
+
+            // 60 px
+            if (isset($show->images[2]) && isset($show->images[2]->url)) {
+                return $show->images[2]->url;
+            }
+
+            // 300 px
+            if (isset($show->images[1]) && isset($show->images[1]->url)) {
+                return $show->images[1]->url;
+            }
+
+            // 600 px
+            if (isset($show->images[0]) && isset($show->images[0]->url)) {
+                return $show->images[0]->url;
+            }
+        }
+    }
     return $url;
 }
 
@@ -8934,7 +9188,7 @@ function getSettings($w)
             'use_growl' => 0,
             'use_facebook' => 0,
             'theme_color' => 'green',
-            'search_order' => 'playlist▹artist▹track▹album',
+            'search_order' => 'playlist▹artist▹track▹album▹show',
             'always_display_lyrics_in_browser' => 0,
             'workflow_version' => '',
         );
@@ -9006,8 +9260,8 @@ function getSettings($w)
     }
 
     // add search_order if needed
-    if (!isset($settings->search_order)) {
-        updateSetting($w, 'search_order', 'playlist▹artist▹track▹album');
+    if (!isset($settings->search_order) || strpos($settings->search_order, 'show') == false) {
+        updateSetting($w, 'search_order', 'playlist▹artist▹track▹album▹show');
         $settings = $w->read('settings.json');
     }
 

@@ -596,6 +596,15 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
                     'ctrl' => 'Not Available',
                 ), './images/artists.png', 'no', null, 'Search Artists Online▹');
 
+            $w->result(null, null, 'Search for shows only', array(
+                'This will search for shows online, i.e not in your library',
+                'alt' => 'Not Available',
+                'cmd' => 'Not Available',
+                'shift' => 'Not Available',
+                'fn' => 'Not Available',
+                'ctrl' => 'Not Available',
+            ), './images/shows.png', 'no', null, 'Search Shows Online▹');
+
             $w->result(null, null, 'Search for albums only', array(
                     'This will search for albums online, i.e not in your library',
                     'alt' => 'Not Available',
@@ -631,6 +640,15 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
                     'fn' => 'Not Available',
                     'ctrl' => 'Not Available',
                 ), './images/info.png', 'no', null, '');
+        } elseif ($kind == 'Search Shows Online') {
+            $w->result(null, 'help', 'Search shows online, i.e not in your library',array(
+                    'Begin typing at least 3 characters to start search online. This is using slow Spotify API be patient.',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/info.png', 'no', null, '');
         } elseif ($kind == 'Search Albums Online') {
             $w->result(null, 'help', 'Search albums online, i.e not in your library',array(
                     'Begin typing at least 3 characters to start search online. This is using slow Spotify API be patient.',
@@ -646,16 +664,19 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
         $search_artists = false;
         $search_albums = false;
         $search_tracks = false;
+        $search_shows = false;
 
         if ($kind == 'Search Online') {
             $search_playlists = true;
             $search_artists = true;
             $search_albums = true;
             $search_tracks = true;
+            $search_shows = true;
             $search_playlists_limit = 8;
             $search_artists_limit = 5;
             $search_albums_limit = 5;
             $search_tracks_limit = 20;
+            $search_shows_limit = 5;
         } elseif ($kind == 'Search Playlists Online') {
             $search_playlists = true;
             $search_playlists_limit = ($max_results <= 50) ? $max_results : 50;
@@ -665,6 +686,9 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
         } elseif ($kind == 'Search Albums Online') {
             $search_albums = true;
             $search_albums_limit = ($max_results <= 50) ? $max_results : 50;
+        } elseif ($kind == 'Search Shows Online') {
+            $search_shows = true;
+            $search_shows_limit = ($max_results <= 50) ? $max_results : 50;
         } elseif ($kind == 'Search Tracks Online') {
             $search_tracks = true;
             $search_tracks_limit = ($max_results <= 50) ? $max_results : 50;
@@ -690,6 +714,24 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
                         if (checkIfResultAlreadyThere($w->results(), '👤 '.escapeQuery($artist->name)) == false) {
                             $noresult = false;
                             $w->result(null, '', '👤 '.escapeQuery($artist->name), 'Browse this artist', getArtistArtwork($w, $artist->uri, $artist->name, false, false, false, $use_artworks), 'no', null, 'Online▹'.$artist->uri.'@'.escapeQuery($artist->name).'▹');
+                        }
+                    }
+                }
+            }
+
+            if($search_category == 'show') {
+
+                if ($search_shows == true) {
+                    // Search shows
+
+                    // call to web api, if it fails,
+                    // it displays an error in main window
+                    $query = 'show:'.$the_query;
+                    $results = searchWebApi($w, $country_code, $query, 'show', $search_shows_limit, false);
+                    foreach ($results as $show) {
+                        if (checkIfResultAlreadyThere($w->results(), '🎙 '.escapeQuery($show->name)) == false) {
+                            $noresult = false;
+                            $w->result(null, '', '🎙 '.escapeQuery($show->name), 'Browse this show', getShowArtwork($w, $show->uri, $show->name, false, false, false, $use_artworks), 'no', null, 'Online▹'.$show->uri.'@'.escapeQuery($show->name).'▹');
                         }
                     }
                 }
