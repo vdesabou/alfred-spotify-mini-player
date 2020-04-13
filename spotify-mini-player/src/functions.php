@@ -7478,6 +7478,8 @@ function refreshLibrary($w)
                 $dbartworks->exec('create table artists (artist_uri text PRIMARY KEY NOT NULL, artist_name text, already_fetched boolean)');
                 $dbartworks->exec('create table tracks (track_uri text PRIMARY KEY NOT NULL, already_fetched boolean)');
                 $dbartworks->exec('create table albums (album_uri text PRIMARY KEY NOT NULL, already_fetched boolean)');
+                $dbartworks->exec('create table shows (show_uri text PRIMARY KEY NOT NULL, already_fetched boolean)');
+                $dbartworks->exec('create table episodes (episode_uri text PRIMARY KEY NOT NULL, already_fetched boolean)');
             } catch (PDOException $e) {
                 logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
                 handleDbIssuePdoEcho($dbartworks, $w);
@@ -7543,6 +7545,13 @@ function refreshLibrary($w)
 
         $deleteFromTracksYourMusic = 'delete from tracks where yourmusic=:yourmusic';
         $stmtDeleteFromTracksYourMusic = $db->prepare($deleteFromTracksYourMusic);
+
+        // assume low number of podcast subscriptions
+        $db->exec('drop table shows');
+        $db->exec('create table shows (uri text PRIMARY KEY NOT NULL, name text, description text, media_type text, show_artwork_path text, explicit boolean, added_at text, languages text, nb_times_played int, is_externally_hosted boolean)');
+
+        $insertShow = 'insert into shows values (:uri,:name,:description,:media_type,:show_artwork_path,:explicit,:added_at,:languages,:nb_times_played,:is_externally_hosted)';
+        $stmtShow = $db->prepare($insertShow);
     } catch (PDOException $e) {
         logMsg('Error(refreshLibrary): (exception '.jTraceEx($e).')');
         handleDbIssuePdoEcho($db, $w);
@@ -8426,6 +8435,114 @@ function refreshLibrary($w)
         } while ($offsetGetMySavedTracks < $userMySavedTracks->total);
     }
 
+    // Handle Shows
+
+    $savedMySavedShows = array();
+    $offsetGetMySavedShows = 0;
+    $limitGetMySavedShows = 50;
+    do {
+        $retry = true;
+        $nb_retry = 0;
+        while ($retry) {
+            try {
+                // refresh api
+                $api = getSpotifyWebAPI($w, $api);
+                $userMySavedShows = $api->getMySavedShows(array(
+                        'limit' => $limitGetMySavedShows,
+                        'offset' => $offsetGetMySavedShows,
+                        'market' => $country_code,
+                    ));
+                $retry = false;
+            } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+                logMsg('Error(getMySavedShows): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
+
+                if ($e->getCode() == 429) { // 429 is Too Many Requests
+                    $lastResponse = $api->getRequest()->getLastResponse();
+                    $retryAfter = $lastResponse['headers']['Retry-After'];
+                    sleep($retryAfter);
+                } else if ($e->getCode() == 404) {
+                    // skip
+                    break;
+                } else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
+                    // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
+                    // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
+                    // retry any SSL error
+                    ++$nb_retry;
+                } else if ($e->getCode() == 500
+                    || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+                    // retry
+                    if ($nb_retry > 2) {
+                        handleSpotifyWebAPIException($w, $e);
+                        $retry = false;
+
+                        return false;
+                    }
+                    ++$nb_retry;
+                    sleep(5);
+                } else {
+                    handleSpotifyWebAPIException($w, $e);
+                    $retry = false;
+
+                    return false;
+                }
+            }
+        }
+
+        foreach ($userMySavedShows->items as $show) {
+            $savedMySavedShows[] = $show;
+        }
+
+        $offsetGetMySavedShows += $limitGetMySavedShows;
+    } while ($offsetGetMySavedShows < $userMySavedShows->total);
+
+    foreach ($savedMySavedShows as $item) {
+
+        $show = $item->show;
+        try {
+
+            // Download artworks in Fetch later mode
+            if ($use_artworks) {
+                list($already_present, $show_artwork_path) = getShowArtwork($w, $show->uri, $show->name, true, true, false, $use_artworks);
+                if ($already_present == false) {
+                    $artworksToDownload = true;
+                    $stmtShowArtwork->bindValue(':show_uri', $show->uri);
+                    $stmtShowArtwork->bindValue(':already_fetched', 0);
+                    $stmtShowArtwork->execute();
+                }
+            } else {
+                $show_artwork_path = getShowArtwork($w, $show->uri, $show->name, false, false, false, $use_artworks);
+            }
+        } catch (PDOException $e) {
+            logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
+            handleDbIssuePdoEcho($dbartworks, $w);
+            $dbartworks = null;
+            $db = null;
+
+            return false;
+        }
+
+        try {
+            $stmtShow->bindValue(':uri', $show->uri);
+            $stmtShow->bindValue(':name', escapeQuery($show->name));
+            $stmtShow->bindValue(':description', escapeQuery($show->description));
+            $stmtShow->bindValue(':media_type', escapeQuery($show->media_type));
+            $stmtShow->bindValue(':show_artwork_path', $show_artwork_path);
+            $stmtShow->bindValue(':explicit', $show->explicit);
+            $stmtShow->bindValue(':languages', 'FIXTHIS');
+            $stmtShow->bindValue(':added_at', $item->added_at);
+            $stmtShow->bindValue(':nb_times_played', 0);
+            $stmtShow->bindValue(':added_at', $show->is_externally_hosted);
+            $stmtShow->execute();
+        } catch (PDOException $e) {
+            logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
+            handleDbIssuePdoEcho($db, $w);
+            $dbartworks = null;
+            $db = null;
+
+            return false;
+        }
+    }
+
     // update counters
     try {
         $getCount = 'select count(distinct uri) from tracks';
@@ -8463,7 +8580,12 @@ function refreshLibrary($w)
         $stmt->execute();
         $playlists_count = $stmt->fetch();
 
-        $insertCounter = 'insert into counters values (:all_tracks,:yourmusic_tracks,:all_artists,:yourmusic_artists,:all_albums,:yourmusic_albums,:playlists)';
+        $getCount = 'select count(*) from shows';
+        $stmt = $db->prepare($getCount);
+        $stmt->execute();
+        $shows_count = $stmt->fetch();
+
+        $insertCounter = 'insert into counters values (:all_tracks,:yourmusic_tracks,:all_artists,:yourmusic_artists,:all_albums,:yourmusic_albums,:playlists, :shows)';
         $stmt = $db->prepare($insertCounter);
 
         $stmt->bindValue(':all_tracks', $all_tracks[0]);
@@ -8473,6 +8595,7 @@ function refreshLibrary($w)
         $stmt->bindValue(':all_albums', $all_albums[0]);
         $stmt->bindValue(':yourmusic_albums', $yourmusic_albums[0]);
         $stmt->bindValue(':playlists', $playlists_count[0]);
+        $stmt->bindValue(':shows', $shows_count[0]);
         $stmt->execute();
     } catch (PDOException $e) {
         logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
