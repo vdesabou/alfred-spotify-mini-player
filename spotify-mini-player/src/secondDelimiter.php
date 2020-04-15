@@ -116,7 +116,7 @@ function secondDelimiterShows($w, $query, $settings, $db, $update_in_progress)
                             'ctrl' => 'Not Available',
                     ), $episodes[6], 'yes', null, '');
             } else {
-                $w->result(null, '', '🚫 '.$episodes[6].' ● '.$episodes[5], $episodes[16].' ● '.$subtitle.getPlaylistsForTrack($db, $episodes[2]), $episodes[9], 'no', null, '');
+                $w->result(null, '', '🚫 '.$episodes[1], $episode->episode_type.' Duration '.beautifyTime($episodes[11] / 1000).' ● Release date: '.$episodes[13], $episodes[6], 'no', null, '');
             }
         }
     }

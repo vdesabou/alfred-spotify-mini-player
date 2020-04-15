@@ -964,6 +964,91 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress)
                 }
             }
         }
+
+
+        if($search_category == 'show') {
+            // Search show
+            try {
+                $getShows = 'select uri,name,description,media_type,show_artwork_path,explicit,added_at,languages from shows where name like :query limit '.$max_results;
+                $stmt = $db->prepare($getShows);
+                $stmt->bindValue(':query', '%'.$query.'%');
+
+                $shows = $stmt->execute();
+            } catch (PDOException $e) {
+                handleDbIssuePdoXml($db);
+
+                exit;
+            }
+
+            // display all shows
+            $noresult = true;
+            while ($show = $stmt->fetch()) {
+                $noresult = false;
+                $nb_episodes = getNumberOfEpisodesForShow($db, $show[1]);
+                if (checkIfResultAlreadyThere($w->results(), '🎙 '.$show[1].' ('.$nb_episodes.' episodes)') == false) {
+                    $w->result(null, '', '🎙 '.$show[1].' ('.$nb_episodes.' episodes)',array(
+                             'Browse this show',
+                            'alt' => 'Not Available',
+                            'cmd' => 'Not Available',
+                            'shift' => 'Not Available',
+                            'fn' => 'Not Available',
+                            'ctrl' => 'Not Available',
+                        ), $show[4], 'no', null, 'Show▹'.$show[0].'∙'.$show[1].'▹');
+                }
+            }
+        }
+
+        if($search_category == 'episode') {
+            // Search episodes
+            try {
+                $getEpisodes = 'select uri, name, uri, show_uri, show_name, description, episode_artwork_path, is_playable, languages, nb_times_played, is_externally_hosted, duration_ms, explicit, release_date, release_date_precision, audio_preview_url from episodes where name like :name limit '.$max_results;
+                $stmt = $db->prepare($getEpisodes);
+                $stmt->bindValue(':name', '%'.$query.'%');
+                $episodes = $stmt->execute();
+            } catch (PDOException $e) {
+                handleDbIssuePdoXml($db);
+
+                exit;
+            }
+
+            while ($episodes = $stmt->fetch()) {
+                $noresult = false;
+                $subtitle = $episodes[6];
+
+                if (checkIfResultAlreadyThere($w->results(), '🎙 '.$episodes[1]) == false) {
+                    if ($episodes[7] == true) {
+                        $w->result(null, serialize(array(
+                                    $episodes[2] /*track_uri*/,
+                                    $episodes[3] /* album_uri */,
+                                    $episodes[4] /* artist_uri */,
+                                    '' /* playlist_uri */,
+                                    '' /* spotify_command */,
+                                    '' /* query */,
+                                    '' /* other_settings*/,
+                                    'play_episode' /* other_action */,
+                                    $episodes[7] /* artist_name */,
+                                    $episodes[5] /* track_name */,
+                                    $episodes[6] /* album_name */,
+                                    $episodes[9] /* track_artwork_path */,
+                                    $episodes[10] /* artist_artwork_path */,
+                                    $episodes[11] /* album_artwork_path */,
+                                    '' /* playlist_name */,
+                                    '', /* playlist_artwork_path */
+                                )), '🎙 '.$episodes[1], array(
+                                    $episode->episode_type.' Duration '.beautifyTime($episodes[11] / 1000).' ● Release date: '.$episodes[13],
+                                    'alt' => 'Not Available',
+                                    'cmd' => 'Not Available',
+                                    'shift' => 'Not Available',
+                                    'fn' => 'Not Available',
+                                    'ctrl' => 'Not Available',
+                            ), $episodes[6], 'yes', null, '');
+                    } else {
+                        $w->result(null, '', '🚫 '.'🎙 '.$episodes[1], $episode->episode_type.' Duration '.beautifyTime($episodes[11] / 1000).' ● Release date: '.$episodes[13], $episodes[6], 'no', null, '');
+                    }
+                }
+            }
+        }
+
     } // end foreach search_category
 
 

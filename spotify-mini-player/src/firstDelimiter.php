@@ -360,7 +360,7 @@ function firstDelimiterShows($w, $query, $settings, $db, $update_in_progress)
     $userid = $settings->userid;
     $output_application = $settings->output_application;
 
-    // Search artists
+    // Search shows
 
     $show = $words[1];
 
