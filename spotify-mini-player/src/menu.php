@@ -1214,6 +1214,17 @@ function searchCategoriesFastAccess($w, $query, $settings, $db, $update_in_progr
                     'ctrl' => 'Not Available',
                 ), './images/artists.png', 'no', null, 'Artist▹');
     }
+    if (strpos(strtolower('show'), strtolower($query)) !== false ||
+        strpos(strtolower('pod'), strtolower($query)) !== false) {
+        $w->result(null, '', 'Shows',array(
+                     'Browse by show',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/shows.png', 'no', null, 'Show▹');
+    }
     if (strpos(strtolower('play queue'), strtolower($query)) !== false) {
         if ($now_playing_notifications == true) {
             $w->result(null, '', 'Play Queue',array(
