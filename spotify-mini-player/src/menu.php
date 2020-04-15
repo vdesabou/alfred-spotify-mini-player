@@ -477,7 +477,7 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress)
 
     if(getenv('menu_display_search_online') == 1) {
         $w->result(null, '', 'Search online',array(
-            '☁︎ You can search tracks, artists, albums and playlists online i.e not in your library',
+            '☁︎ You can search playlists, artists, albums, shows, episodes or tracks online, i.e not in your library',
                     'alt' => 'Not Available',
                     'cmd' => 'Not Available',
                     'shift' => 'Not Available',
@@ -1186,7 +1186,7 @@ function searchCategoriesFastAccess($w, $query, $settings, $db, $update_in_progr
     }
     if (strpos(strtolower('search online'), strtolower($query)) !== false) {
         $w->result(null, '', 'Search online',array(
-            '☁︎ You can search tracks, artists, albums and playlists online i.e not in your library',
+            '☁︎ You can search playlists, artists, albums, shows, episodes or tracks online, i.e not in your librar',
                     'alt' => 'Not Available',
                     'cmd' => 'Not Available',
                     'shift' => 'Not Available',

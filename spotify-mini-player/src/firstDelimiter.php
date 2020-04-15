@@ -671,7 +671,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
 
     if (mb_strlen($the_query) < 2) {
         if ($kind == 'Search Online') {
-            $w->result(null, 'help', 'Search for playlists, artists, albums or tracks online, i.e not in your library',array(
+            $w->result(null, 'help', 'Search for playlists, artists, albums, shows, episodes or tracks online, i.e not in your library',array(
                 'Begin typing at least 3 characters to start search online. This is using slow Spotify API be patient.',
                     'alt' => 'Not Available',
                     'cmd' => 'Not Available',
