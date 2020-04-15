@@ -243,6 +243,12 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
 {
     $dbfile = $w->data().'/library.db';
 
+    if (!file_exists($dbfile)) {
+        // update library is in progress
+        // ignore
+        return;
+    }
+
     try {
         $db = new PDO("sqlite:$dbfile", '', '', array(
                 PDO::ATTR_PERSISTENT => true,
