@@ -394,7 +394,7 @@ function firstDelimiterShows($w, $query, $settings, $db, $update_in_progress)
                     'shift' => 'Not Available',
                     'fn' => 'Not Available',
                     'ctrl' => 'Not Available',
-                ), $show[4], 'no', null, 'Show'.$show[0].'∙'.$show[1].'▹');
+                ), $show[4], 'no', null, 'Show▹'.$show[0].'∙'.$show[1].'▹');
         }
     }
 
@@ -866,7 +866,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
                     foreach ($results as $show) {
                         if (checkIfResultAlreadyThere($w->results(), '🎙 '.escapeQuery($show->name)) == false) {
                             $noresult = false;
-                            $w->result(null, '', '🎙 '.escapeQuery($show->name), 'Browse this show', getShowArtwork($w, $show->uri, $show->name, false, false, false, $use_artworks), 'no', null, 'Online▹'.$show->uri.'@'.escapeQuery($show->name).'▹');
+                            $w->result(null, '', '🎙 '.escapeQuery($show->name), 'Browse this show', getShowArtwork($w, $show->uri, false, false, false, $use_artworks), 'no', null, 'Online▹'.$show->uri.'@'.escapeQuery($show->name).'▹');
                         }
                     }
                 }
@@ -886,7 +886,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
                             $noresult = false;
                             if (mb_strlen($search) < 2
                             || strpos(strtolower($episode->name), strtolower($search)) !== false) {
-                                $episode_artwork_path = getEpisodeArtwork($w, $episode->uri, $episode->name, false, false, false, $use_artworks);
+                                $episode_artwork_path = getEpisodeArtwork($w, $episode->uri, true, false, false, $use_artworks);
                                 $w->result(null, serialize(array(
                                     $episode->uri /*track_uri*/,
                                     '' /* album_uri */,

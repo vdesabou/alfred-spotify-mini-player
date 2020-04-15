@@ -1,6 +1,179 @@
 <?php
 
 /**
+ * secondDelimiterShows function.
+ *
+ * @param mixed $w
+ * @param mixed $query
+ * @param mixed $settings
+ * @param mixed $db
+ * @param mixed $update_in_progress
+ */
+function secondDelimiterShows($w, $query, $settings, $db, $update_in_progress)
+{
+    $words = explode('▹', $query);
+    $kind = $words[0];
+
+    $all_playlists = $settings->all_playlists;
+    $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
+    $radio_number_tracks = $settings->radio_number_tracks;
+    $now_playing_notifications = $settings->now_playing_notifications;
+    $max_results = $settings->max_results;
+    $alfred_playlist_uri = $settings->alfred_playlist_uri;
+    $alfred_playlist_name = $settings->alfred_playlist_name;
+    $country_code = $settings->country_code;
+    $last_check_update_time = $settings->last_check_update_time;
+    $oauth_client_id = $settings->oauth_client_id;
+    $oauth_client_secret = $settings->oauth_client_secret;
+    $oauth_redirect_uri = $settings->oauth_redirect_uri;
+    $oauth_access_token = $settings->oauth_access_token;
+    $oauth_expires = $settings->oauth_expires;
+    $oauth_refresh_token = $settings->oauth_refresh_token;
+    $display_name = $settings->display_name;
+    $userid = $settings->userid;
+    $is_public_playlists = $settings->is_public_playlists;
+    $output_application = $settings->output_application;
+    $use_artworks = $settings->use_artworks;
+
+    // display episodes for selected show
+
+    $tmp = explode('∙', $words[1]);
+    $show_uri = $tmp[0];
+    $show_name = $tmp[1];
+    $episode = $words[2];
+
+    if (mb_strlen($episode) < 2) {
+        $show_artwork_path = getShowArtwork($w, $show_uri, false, false, false, $use_artworks);
+        $w->result(null, serialize(array(
+                    '' /*track_uri*/,
+                    '' /* album_uri */,
+                    $show_uri /* artist_uri */,
+                    '' /* playlist_uri */,
+                    '' /* spotify_command */,
+                    '' /* query */,
+                    '' /* other_settings*/,
+                    'playshow' /* other_action */,
+                    $show_name /* artist_name */,
+                    '' /* track_name */,
+                    '' /* album_name */,
+                    '' /* track_artwork_path */,
+                    $show_artwork_path /* artist_artwork_path */,
+                    '' /* album_artwork_path */,
+                    '' /* playlist_name */,
+                    '', /* playlist_artwork_path */
+                )), '🎙 '.$show_name, 'Play show', $show_artwork_path, 'yes', null, '');
+
+
+        $w->result(null, '', 'Follow/Unfollow Show',array(
+                'Display options to follow/unfollow the show',
+                'alt' => 'Not Available',
+                'cmd' => 'Not Available',
+                'shift' => 'Not Available',
+                'fn' => 'Not Available',
+                'ctrl' => 'Not Available',
+            ), './images/follow.png', 'no', null, 'Follow/Unfollow▹'.$show_uri.'@'.$show_name.'▹');
+
+        $getEpisodes = 'select uri, name, uri, show_uri, show_name, description, episode_artwork_path, is_playable, languages, nb_times_played, is_externally_hosted, duration_ms, explicit, release_date, release_date_precision, audio_preview_url from episodes where show_uri=:show_uri limit '.$max_results;
+        $stmt = $db->prepare($getEpisodes);
+        $stmt->bindValue(':show_uri', $show_uri);
+    } else {
+        $getEpisodes = 'select uri, name, uri, show_uri, show_name, description, episode_artwork_path, is_playable, languages, nb_times_played, is_externally_hosted, duration_ms, explicit, release_date, release_date_precision, audio_preview_url from episodes where show_uri=:show_uri and name like :name limit '.$max_results;
+        $stmt = $db->prepare($getEpisodes);
+        $stmt->bindValue(':show_uri', $show_uri);
+        $stmt->bindValue(':name', '%'.$episode.'%');
+    }
+    $episodes = $stmt->execute();
+    $noresult = true;
+    while ($episodes = $stmt->fetch()) {
+        $noresult = false;
+        $subtitle = $episodes[6];
+
+        if (checkIfResultAlreadyThere($w->results(), $episodes[1]) == false) {
+            if ($episodes[7] == true) {
+                $w->result(null, serialize(array(
+                            $episodes[2] /*track_uri*/,
+                            $episodes[3] /* album_uri */,
+                            $episodes[4] /* artist_uri */,
+                            '' /* playlist_uri */,
+                            '' /* spotify_command */,
+                            '' /* query */,
+                            '' /* other_settings*/,
+                            'play_episode' /* other_action */,
+                            $episodes[7] /* artist_name */,
+                            $episodes[5] /* track_name */,
+                            $episodes[6] /* album_name */,
+                            $episodes[9] /* track_artwork_path */,
+                            $episodes[10] /* artist_artwork_path */,
+                            $episodes[11] /* album_artwork_path */,
+                            '' /* playlist_name */,
+                            '', /* playlist_artwork_path */
+                        )), $episodes[1], array(
+                            $episode->episode_type.' Duration '.beautifyTime($episodes[11] / 1000).' ● Release date: '.$episodes[13],
+                            'alt' => 'Not Available',
+                            'cmd' => 'Not Available',
+                            'shift' => 'Not Available',
+                            'fn' => 'Not Available',
+                            'ctrl' => 'Not Available',
+                    ), $episodes[6], 'yes', null, '');
+            } else {
+                $w->result(null, '', '🚫 '.$episodes[6].' ● '.$episodes[5], $episodes[16].' ● '.$subtitle.getPlaylistsForTrack($db, $episodes[2]), $episodes[9], 'no', null, '');
+            }
+        }
+    }
+
+    if ($noresult) {
+        if (mb_strlen($episode) < 2) {
+            $w->result(null, 'help', 'There is no episode in your library for the show '.escapeQuery($show_name),array(
+                     'Choose one of the options above',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/info.png', 'no', null, '');
+        } else {
+            $w->result(null, 'help', 'There is no result for your search',array(
+                     '',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/warning.png', 'no', null, '');
+        }
+    }
+
+    if ($output_application != 'MOPIDY') {
+        $w->result(null, serialize(array(
+                    '' /*track_uri*/,
+                    '' /* album_uri */,
+                    '' /* artist_uri */,
+                    '' /* playlist_uri */,
+                    base64_encode('show:'.$show_name) /* spotify_command */,
+                    '' /* query */,
+                    '' /* other_settings*/,
+                    '' /* other_action */,
+
+                    '' /* artist_name */,
+                    '' /* track_name */,
+                    '' /* album_name */,
+                    '' /* track_artwork_path */,
+                    '' /* artist_artwork_path */,
+                    '' /* album_artwork_path */,
+                    '' /* playlist_name */,
+                    '', /* playlist_artwork_path */
+                )), 'Search for show '.$show_name.' in Spotify', array(
+                'This will start a new search in Spotify',
+                'alt' => 'Not Available',
+                'cmd' => 'Not Available',
+                'shift' => 'Not Available',
+                'fn' => 'Not Available',
+                'ctrl' => 'Not Available',
+            ), './images/spotify.png', 'yes', null, '');
+    }
+}
+
+/**
  * secondDelimiterArtists function.
  *
  * @param mixed $w
@@ -947,7 +1120,7 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
 
             $show_name = $words[1];
 
-            $show_artwork_path = getShowArtwork($w, $show_uri, $show_name, false, false, false, $use_artworks);
+            $show_artwork_path = getShowArtwork($w, $show_uri, false, false, false, $use_artworks);
             if (mb_strlen($search) < 2) {
                 $w->result(null, serialize(array(
                         '' /*track_uri*/,
@@ -3269,7 +3442,7 @@ function secondDelimiterFollowUnfollow($w, $query, $settings, $db, $update_in_pr
                 $api = getSpotifyWebAPI($w);
                 $isShowFollowed = $api->myShowsContains($show_uri);
 
-                $show_artwork_path = getShowArtwork($w, $show_uri, $show_name, false, false, false, $use_artworks);
+                $show_artwork_path = getShowArtwork($w, $show_uri, false, false, false, $use_artworks);
                 if (!$isShowFollowed[0]) {
                     $w->result(null, '', 'Follow show '.$show_name,array(
                         'You are not currently following the show',

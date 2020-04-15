@@ -5287,6 +5287,18 @@ function downloadArtworks($w)
             $count = $stmt->fetch();
             $nb_artworks_total += intval($count[0]);
 
+            $getCount = 'select count(show_uri) from shows where already_fetched=0';
+            $stmt = $dbartworks->prepare($getCount);
+            $stmt->execute();
+            $count = $stmt->fetch();
+            $nb_artworks_total += intval($count[0]);
+
+            $getCount = 'select count(episode_uri) from episodes where already_fetched=0';
+            $stmt = $dbartworks->prepare($getCount);
+            $stmt->execute();
+            $count = $stmt->fetch();
+            $nb_artworks_total += intval($count[0]);
+
             if ($nb_artworks_total != 0) {
                 if(getenv('reduce_notifications') == 0) {
                     displayNotificationWithArtwork($w, 'Start downloading '.$nb_artworks_total.' artworks', './images/artworks.png', 'Artworks');
@@ -5312,6 +5324,20 @@ function downloadArtworks($w)
 
                 $updateAlbum = 'update albums set already_fetched=1 where album_uri=:album_uri';
                 $stmtUpdateAlbum = $dbartworks->prepare($updateAlbum);
+
+                // shows
+                $getShows = 'select show_uri from shows where already_fetched=0';
+                $stmtGetShows = $dbartworks->prepare($getShows);
+
+                $updateShow = 'update shows set already_fetched=1 where show_uri=:show_uri';
+                $stmtUpdateShow = $dbartworks->prepare($updateShow);
+
+                // episodes
+                $getEpisodes = 'select episode_uri from episodes where already_fetched=0';
+                $stmtGetEpisodes = $dbartworks->prepare($getEpisodes);
+
+                $updateEpisode = 'update episodes set already_fetched=1 where episode_uri=:episode_uri';
+                $stmtUpdateEpisode = $dbartworks->prepare($updateEpisode);
 
                 ////
                 // Artists
@@ -5357,6 +5383,40 @@ function downloadArtworks($w)
 
                     $stmtUpdateAlbum->bindValue(':album_uri', $album[0]);
                     $stmtUpdateAlbum->execute();
+
+                    ++$nb_artworks;
+                    if ($nb_artworks % 5 === 0) {
+                        $w->write('Download Artworks▹'.$nb_artworks.'▹'.$nb_artworks_total.'▹'.$words[3], 'download_artworks_in_progress');
+                    }
+                }
+
+                ////
+                // Shows
+
+                $shows = $stmtGetShows->execute();
+
+                while ($show = $stmtGetShows->fetch()) {
+                    $ret = getShowArtwork($w, $show[0], true, false, true, $use_artworks);
+
+                    $stmtUpdateShow->bindValue(':show_uri', $show[0]);
+                    $stmtUpdateShow->execute();
+
+                    ++$nb_artworks;
+                    if ($nb_artworks % 5 === 0) {
+                        $w->write('Download Artworks▹'.$nb_artworks.'▹'.$nb_artworks_total.'▹'.$words[3], 'download_artworks_in_progress');
+                    }
+                }
+
+                ////
+                // Episodes
+
+                $episodes = $stmtGetEpisodes->execute();
+
+                while ($episode = $stmtGetEpisodes->fetch()) {
+                    $ret = getEpisodeArtwork($w, $episode[0], true, false, true, $use_artworks);
+
+                    $stmtUpdateEpisode->bindValue(':episode_uri', $episode[0]);
+                    $stmtUpdateEpisode->execute();
 
                     ++$nb_artworks;
                     if ($nb_artworks % 5 === 0) {
@@ -5667,24 +5727,25 @@ function getCategoryArtwork($w, $categoryId, $categoryURI, $fetchIfNotPresent, $
  *
  * @param mixed $w
  * @param mixed $show_uri
- * @param mixed $show_name
  * @param bool  $fetchIfNotPresent (default: false)
  * @param bool  $fetchLater        (default: false)
  * @param bool  $isLaterFetch      (default: false)
  * @param bool  $useArtworks       (default: true)
  */
-function getShowArtwork($w, $show_uri, $show_name, $fetchIfNotPresent = false, $fetchLater = false, $isLaterFetch = false, $useArtworks = true)
+function getShowArtwork($w, $show_uri, $fetchIfNotPresent = false, $fetchLater = false, $isLaterFetch = false, $useArtworks = true)
 {
     if (!$useArtworks) {
         return './images/shows.png';
     }
-    $parsedShow = urlencode(escapeQuery($show_name));
+    $tmp = explode(':', $show_uri);
+    $filename = ''.$tmp[2];
+    $artwork = '';
 
     if (!file_exists($w->data().'/artwork')):
         exec("mkdir '".$w->data()."/artwork'");
     endif;
 
-    $currentArtwork = $w->data().'/artwork/'.hash('md5', $parsedShow.'.png').'/'."$parsedShow.png";
+    $currentArtwork = $w->data().'/artwork/'.hash('md5', $filename.'.png').'/'."$filename.png";
     if ($show_uri == '') {
         return './images/shows.png';
     }
@@ -5717,8 +5778,8 @@ function getShowArtwork($w, $show_uri, $show_name, $fetchIfNotPresent = false, $
 
             // if return 0, it is a 404 error, no need to fetch
             if (!empty($artwork) || (is_numeric($artwork) && $artwork != 0)) {
-                if (!file_exists($w->data().'/artwork/'.hash('md5', $parsedShow.'.png'))):
-                    exec("mkdir '".$w->data().'/artwork/'.hash('md5', $parsedShow.'.png')."'");
+                if (!file_exists($w->data().'/artwork/'.hash('md5', $filename.'.png'))):
+                    exec("mkdir '".$w->data().'/artwork/'.hash('md5', $filename.'.png')."'");
                 endif;
                 $fp = fopen($currentArtwork, 'w+');
                 $options = array(
@@ -5733,8 +5794,8 @@ function getShowArtwork($w, $show_uri, $show_name, $fetchIfNotPresent = false, $
                 }
             } else {
                 if ($isLaterFetch == true) {
-                    if (!file_exists($w->data().'/artwork/'.hash('md5', $parsedShow.'.png'))):
-                        exec("mkdir '".$w->data().'/artwork/'.hash('md5', $parsedShow.'.png')."'");
+                    if (!file_exists($w->data().'/artwork/'.hash('md5', $filename.'.png'))):
+                        exec("mkdir '".$w->data().'/artwork/'.hash('md5', $filename.'.png')."'");
                     endif;
                     copy('./images/shows.png', $currentArtwork);
 
@@ -5745,8 +5806,8 @@ function getShowArtwork($w, $show_uri, $show_name, $fetchIfNotPresent = false, $
             }
         } else {
             if ($isLaterFetch == true) {
-                if (!file_exists($w->data().'/artwork/'.hash('md5', $parsedShow.'.png'))):
-                    exec("mkdir '".$w->data().'/artwork/'.hash('md5', $parsedShow.'.png')."'");
+                if (!file_exists($w->data().'/artwork/'.hash('md5', $filename.'.png'))):
+                    exec("mkdir '".$w->data().'/artwork/'.hash('md5', $filename.'.png')."'");
                 endif;
                 copy('./images/shows.png', $currentArtwork);
 
@@ -5758,8 +5819,8 @@ function getShowArtwork($w, $show_uri, $show_name, $fetchIfNotPresent = false, $
     } else {
         if (filesize($currentArtwork) == 0) {
             if ($isLaterFetch == true) {
-                if (!file_exists($w->data().'/artwork/'.hash('md5', $parsedShow.'.png'))):
-                    exec("mkdir '".$w->data().'/artwork/'.hash('md5', $parsedShow.'.png')."'");
+                if (!file_exists($w->data().'/artwork/'.hash('md5', $filename.'.png'))):
+                    exec("mkdir '".$w->data().'/artwork/'.hash('md5', $filename.'.png')."'");
                 endif;
                 copy('./images/shows.png', $currentArtwork);
 
@@ -5772,8 +5833,8 @@ function getShowArtwork($w, $show_uri, $show_name, $fetchIfNotPresent = false, $
 
     if (is_numeric($artwork) && $artwork == 0) {
         if ($isLaterFetch == true) {
-            if (!file_exists($w->data().'/artwork/'.hash('md5', $parsedShow.'.png'))):
-                exec("mkdir '".$w->data().'/artwork/'.hash('md5', $parsedShow.'.png')."'");
+            if (!file_exists($w->data().'/artwork/'.hash('md5', $filename.'.png'))):
+                exec("mkdir '".$w->data().'/artwork/'.hash('md5', $filename.'.png')."'");
             endif;
             copy('./images/shows.png', $currentArtwork);
 
@@ -5791,24 +5852,25 @@ function getShowArtwork($w, $show_uri, $show_name, $fetchIfNotPresent = false, $
  *
  * @param mixed $w
  * @param mixed $episode_uri
- * @param mixed $episode_name
  * @param bool  $fetchIfNotPresent (default: false)
  * @param bool  $fetchLater        (default: false)
  * @param bool  $isLaterFetch      (default: false)
  * @param bool  $useArtworks       (default: true)
  */
-function getEpisodeArtwork($w, $episode_uri, $episode_name, $fetchIfNotPresent = false, $fetchLater = false, $isLaterFetch = false, $useArtworks = true)
+function getEpisodeArtwork($w, $episode_uri, $fetchIfNotPresent = false, $fetchLater = false, $isLaterFetch = false, $useArtworks = true)
 {
     if (!$useArtworks) {
         return './images/episodes.png';
     }
-    $parsedEpisode = urlencode(escapeQuery($episode_name));
+    $tmp = explode(':', $episode_uri);
+    $filename = ''.$tmp[2];
+    $artwork = '';
 
     if (!file_exists($w->data().'/artwork')):
         exec("mkdir '".$w->data()."/artwork'");
     endif;
 
-    $currentArtwork = $w->data().'/artwork/'.hash('md5', $parsedEpisode.'.png').'/'."$parsedEpisode.png";
+    $currentArtwork = $w->data().'/artwork/'.hash('md5', $filename.'.png').'/'."$filename.png";
     if ($episode_uri == '') {
         return './images/episodes.png';
     }
@@ -5841,8 +5903,8 @@ function getEpisodeArtwork($w, $episode_uri, $episode_name, $fetchIfNotPresent =
 
             // if return 0, it is a 404 error, no need to fetch
             if (!empty($artwork) || (is_numeric($artwork) && $artwork != 0)) {
-                if (!file_exists($w->data().'/artwork/'.hash('md5', $parsedEpisode.'.png'))):
-                    exec("mkdir '".$w->data().'/artwork/'.hash('md5', $parsedEpisode.'.png')."'");
+                if (!file_exists($w->data().'/artwork/'.hash('md5', $filename.'.png'))):
+                    exec("mkdir '".$w->data().'/artwork/'.hash('md5', $filename.'.png')."'");
                 endif;
                 $fp = fopen($currentArtwork, 'w+');
                 $options = array(
@@ -5857,8 +5919,8 @@ function getEpisodeArtwork($w, $episode_uri, $episode_name, $fetchIfNotPresent =
                 }
             } else {
                 if ($isLaterFetch == true) {
-                    if (!file_exists($w->data().'/artwork/'.hash('md5', $parsedEpisode.'.png'))):
-                        exec("mkdir '".$w->data().'/artwork/'.hash('md5', $parsedEpisode.'.png')."'");
+                    if (!file_exists($w->data().'/artwork/'.hash('md5', $filename.'.png'))):
+                        exec("mkdir '".$w->data().'/artwork/'.hash('md5', $filename.'.png')."'");
                     endif;
                     copy('./images/episodes.png', $currentArtwork);
 
@@ -5869,8 +5931,8 @@ function getEpisodeArtwork($w, $episode_uri, $episode_name, $fetchIfNotPresent =
             }
         } else {
             if ($isLaterFetch == true) {
-                if (!file_exists($w->data().'/artwork/'.hash('md5', $parsedEpisode.'.png'))):
-                    exec("mkdir '".$w->data().'/artwork/'.hash('md5', $parsedEpisode.'.png')."'");
+                if (!file_exists($w->data().'/artwork/'.hash('md5', $filename.'.png'))):
+                    exec("mkdir '".$w->data().'/artwork/'.hash('md5', $filename.'.png')."'");
                 endif;
                 copy('./images/episodes.png', $currentArtwork);
 
@@ -5882,8 +5944,8 @@ function getEpisodeArtwork($w, $episode_uri, $episode_name, $fetchIfNotPresent =
     } else {
         if (filesize($currentArtwork) == 0) {
             if ($isLaterFetch == true) {
-                if (!file_exists($w->data().'/artwork/'.hash('md5', $parsedEpisode.'.png'))):
-                    exec("mkdir '".$w->data().'/artwork/'.hash('md5', $parsedEpisode.'.png')."'");
+                if (!file_exists($w->data().'/artwork/'.hash('md5', $filename.'.png'))):
+                    exec("mkdir '".$w->data().'/artwork/'.hash('md5', $filename.'.png')."'");
                 endif;
                 copy('./images/episodes.png', $currentArtwork);
 
@@ -5896,8 +5958,8 @@ function getEpisodeArtwork($w, $episode_uri, $episode_name, $fetchIfNotPresent =
 
     if (is_numeric($artwork) && $artwork == 0) {
         if ($isLaterFetch == true) {
-            if (!file_exists($w->data().'/artwork/'.hash('md5', $parsedEpisode.'.png'))):
-                exec("mkdir '".$w->data().'/artwork/'.hash('md5', $parsedEpisode.'.png')."'");
+            if (!file_exists($w->data().'/artwork/'.hash('md5', $filename.'.png'))):
+                exec("mkdir '".$w->data().'/artwork/'.hash('md5', $filename.'.png')."'");
             endif;
             copy('./images/episodes.png', $currentArtwork);
 
@@ -6281,12 +6343,12 @@ function getPlaylistArtworkURL($w, $playlist_uri)
  * getShowArtworkURL function.
  *
  * @param mixed $w
- * @param mixed $show_id
+ * @param mixed $show_uri
  */
-function getShowArtworkURL($w, $show_id)
+function getShowArtworkURL($w, $show_uri)
 {
     $url = '';
-    if (startswith($show_id, 'fake')) {
+    if (startswith($show_uri, 'fake')) {
         return $url;
     }
     $retry = true;
@@ -6294,7 +6356,7 @@ function getShowArtworkURL($w, $show_id)
     while ($retry) {
         try {
             $api = getSpotifyWebAPI($w);
-            $show = $api->getShow($show_id);
+            $show = $api->getShow($show_uri);
             $retry = false;
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
             if ($e->getCode() != 429) {
@@ -6956,7 +7018,7 @@ function updateLibrary($w)
 
         $db->exec('create table shows (uri text PRIMARY KEY NOT NULL, name text, description text, media_type text, show_artwork_path text, explicit boolean, added_at text, languages text, nb_times_played int, is_externally_hosted boolean)');
 
-        $db->exec('create table episodes (uri text PRIMARY KEY NOT NULL, name text, show_uri text, show_name text, description text, media_type text, episode_artwork_path text, is_playable boolean, languages text, nb_times_played int, is_externally_hosted boolean, duration_ms int, explicit boolean, release_date text, release_date_precision text, audio_preview_url text)');
+        $db->exec('create table episodes (uri text PRIMARY KEY NOT NULL, name text, show_uri text, show_name text, description text, episode_artwork_path text, is_playable boolean, languages text, nb_times_played int, is_externally_hosted boolean, duration_ms int, explicit boolean, release_date text, release_date_precision text, audio_preview_url text)');
 
         $insertPlaylist = 'insert into playlists values (:uri,:name,:nb_tracks,:owner,:username,:playlist_artwork_path,:ownedbyuser,:nb_playable_tracks,:duration_playlist,:nb_times_played,:collaborative,:public)';
         $stmtPlaylist = $db->prepare($insertPlaylist);
@@ -7366,7 +7428,7 @@ function updateLibrary($w)
 
             // Download artworks in Fetch later mode
             if ($use_artworks) {
-                list($already_present, $show_artwork_path) = getShowArtwork($w, $show->uri, $show->name, true, true, false, $use_artworks);
+                list($already_present, $show_artwork_path) = getShowArtwork($w, $show->uri, true, true, false, $use_artworks);
                 if ($already_present == false) {
                     $artworksToDownload = true;
                     $stmtShowArtwork->bindValue(':show_uri', $show->uri);
@@ -7374,7 +7436,7 @@ function updateLibrary($w)
                     $stmtShowArtwork->execute();
                 }
             } else {
-                $show_artwork_path = getShowArtwork($w, $show->uri, $show->name, false, false, false, $use_artworks);
+                $show_artwork_path = getShowArtwork($w, $show->uri, false, false, false, $use_artworks);
             }
         } catch (PDOException $e) {
             logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
@@ -7414,7 +7476,7 @@ function updateLibrary($w)
 
             // Download artworks in Fetch later mode
             if ($use_artworks) {
-                list($already_present, $episode_artwork_path) = getEpisodeArtwork($w, $episode->uri, $episode->name, true, true, false, $use_artworks);
+                list($already_present, $episode_artwork_path) = getEpisodeArtwork($w, $episode->uri, true, true, false, $use_artworks);
                 if ($already_present == false) {
                     $artworksToDownload = true;
                     $stmtEpisodeArtwork->bindValue(':episode_uri', $episode->uri);
@@ -7422,7 +7484,7 @@ function updateLibrary($w)
                     $stmtEpisodeArtwork->execute();
                 }
             } else {
-                $episode_artwork_path = getShowArtwork($w, $episode->uri, $episode->name, false, false, false, $use_artworks);
+                $episode_artwork_path = getEpisodeArtwork($w, $episode->uri, false, false, false, $use_artworks);
             }
         } catch (PDOException $e) {
             logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
@@ -7656,6 +7718,12 @@ function refreshLibrary($w)
 
             $insertAlbumArtwork = 'insert or ignore into albums values (:album_uri,:already_fetched)';
             $stmtAlbumArtwork = $dbartworks->prepare($insertAlbumArtwork);
+
+            $insertShowArtwork = 'insert or ignore into shows values (:show_uri,:already_fetched)';
+            $stmtShowArtwork = $dbartworks->prepare($insertShowArtwork);
+
+            $insertEpisodeArtwork = 'insert or ignore into episodes values (:episode_uri,:already_fetched)';
+            $stmtEpisodeArtwork = $dbartworks->prepare($insertEpisodeArtwork);
         } catch (PDOException $e) {
             logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
             handleDbIssuePdoEcho($dbartworks, $w);
@@ -8658,7 +8726,7 @@ function refreshLibrary($w)
 
             // Download artworks in Fetch later mode
             if ($use_artworks) {
-                list($already_present, $show_artwork_path) = getShowArtwork($w, $show->uri, $show->name, true, true, false, $use_artworks);
+                list($already_present, $show_artwork_path) = getShowArtwork($w, $show->uri, true, true, false, $use_artworks);
                 if ($already_present == false) {
                     $artworksToDownload = true;
                     $stmtShowArtwork->bindValue(':show_uri', $show->uri);
@@ -8666,7 +8734,7 @@ function refreshLibrary($w)
                     $stmtShowArtwork->execute();
                 }
             } else {
-                $show_artwork_path = getShowArtwork($w, $show->uri, $show->name, false, false, false, $use_artworks);
+                $show_artwork_path = getShowArtwork($w, $show->uri, false, false, false, $use_artworks);
             }
         } catch (PDOException $e) {
             logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');

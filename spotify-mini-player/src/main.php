@@ -387,6 +387,8 @@ if (mb_strlen($query) < 2) {
             $kind = $words[0];
             if ($kind == 'Artist') {
                 secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress);
+            } elseif ($kind == 'Show') {
+                secondDelimiterShows($w, $query, $settings, $db, $update_in_progress);
             } elseif ($kind == 'Album') {
                 secondDelimiterAlbums($w, $query, $settings, $db, $update_in_progress);
             } elseif ($kind == 'Playlist') {
