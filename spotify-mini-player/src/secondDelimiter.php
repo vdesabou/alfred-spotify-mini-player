@@ -73,11 +73,11 @@ function secondDelimiterShows($w, $query, $settings, $db, $update_in_progress)
                 'ctrl' => 'Not Available',
             ), './images/follow.png', 'no', null, 'Follow/Unfollow▹'.$show_uri.'@'.$show_name.'▹');
 
-        $getEpisodes = 'select uri, name, uri, show_uri, show_name, description, episode_artwork_path, is_playable, languages, nb_times_played, is_externally_hosted, duration_ms, explicit, release_date, release_date_precision, audio_preview_url from episodes where show_uri=:show_uri limit '.$max_results;
+        $getEpisodes = 'select uri, name, uri, show_uri, show_name, description, episode_artwork_path, is_playable, languages, nb_times_played, is_externally_hosted, duration_ms, explicit, release_date, release_date_precision, audio_preview_url from episodes where show_uri=:show_uri order by release_date desc limit '.$max_results;
         $stmt = $db->prepare($getEpisodes);
         $stmt->bindValue(':show_uri', $show_uri);
     } else {
-        $getEpisodes = 'select uri, name, uri, show_uri, show_name, description, episode_artwork_path, is_playable, languages, nb_times_played, is_externally_hosted, duration_ms, explicit, release_date, release_date_precision, audio_preview_url from episodes where show_uri=:show_uri and name like :name limit '.$max_results;
+        $getEpisodes = 'select uri, name, uri, show_uri, show_name, description, episode_artwork_path, is_playable, languages, nb_times_played, is_externally_hosted, duration_ms, explicit, release_date, release_date_precision, audio_preview_url from episodes where show_uri=:show_uri and name like :name order by release_date desc limit '.$max_results;
         $stmt = $db->prepare($getEpisodes);
         $stmt->bindValue(':show_uri', $show_uri);
         $stmt->bindValue(':name', '%'.$episode.'%');

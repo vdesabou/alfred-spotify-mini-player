@@ -1001,7 +1001,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress)
         if($search_category == 'episode') {
             // Search episodes
             try {
-                $getEpisodes = 'select uri, name, uri, show_uri, show_name, description, episode_artwork_path, is_playable, languages, nb_times_played, is_externally_hosted, duration_ms, explicit, release_date, release_date_precision, audio_preview_url from episodes where name like :name limit '.$max_results;
+                $getEpisodes = 'select uri, name, uri, show_uri, show_name, description, episode_artwork_path, is_playable, languages, nb_times_played, is_externally_hosted, duration_ms, explicit, release_date, release_date_precision, audio_preview_url from episodes where name like :name order by release_date desc limit '.$max_results;
                 $stmt = $db->prepare($getEpisodes);
                 $stmt->bindValue(':name', '%'.$query.'%');
                 $episodes = $stmt->execute();
