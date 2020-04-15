@@ -6568,11 +6568,11 @@ function getArtistArtworkURL($w, $artist_id)
 }
 
 /**
- * updateLibrary function.
+ * createLibrary function.
  *
  * @param mixed $w
  */
-function updateLibrary($w)
+function createLibrary($w)
 {
     touch($w->data().'/update_library_in_progress');
     $w->write('InitLibrary▹'. 0 .'▹'. 0 .'▹'.time().'▹'.'starting', 'update_library_in_progress');
@@ -6628,7 +6628,7 @@ function updateLibrary($w)
         // thanks to https://blog.amartynov.ru/php-sqlite-case-insensitive-like-utf8/
         $db->sqliteCreateFunction('like', "lexa_ci_utf8_like", 2);
     } catch (PDOException $e) {
-        logMsg( 'Error(updateLibrary): (exception '.jTraceEx($e).')');
+        logMsg( 'Error(createLibrary): (exception '.jTraceEx($e).')');
         handleDbIssuePdoEcho($db, $w);
         $db = null;
 
@@ -6656,7 +6656,7 @@ function updateLibrary($w)
                 ));
             $dbartworks->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
-            logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
+            logMsg('Error(createLibrary): (exception '.jTraceEx($e).')');
             handleDbIssuePdoEcho($dbartworks, $w);
             $dbartworks = null;
             $db = null;
@@ -6672,7 +6672,7 @@ function updateLibrary($w)
             $dbartworks->exec('create table shows (show_uri text PRIMARY KEY NOT NULL, already_fetched boolean)');
             $dbartworks->exec('create table episodes (episode_uri text PRIMARY KEY NOT NULL, already_fetched boolean)');
         } catch (PDOException $e) {
-            logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
+            logMsg('Error(createLibrary): (exception '.jTraceEx($e).')');
             handleDbIssuePdoEcho($dbartworks, $w);
             $dbartworks = null;
             $db = null;
@@ -7032,7 +7032,7 @@ function updateLibrary($w)
         $insertTrack = 'insert into tracks values (:yourmusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_type,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:added_at,:duration,:nb_times_played,:local_track)';
         $stmtTrack = $db->prepare($insertTrack);
     } catch (PDOException $e) {
-        logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
+        logMsg('Error(createLibrary): (exception '.jTraceEx($e).')');
         handleDbIssuePdoEcho($db, $w);
         $dbartworks = null;
         $db = null;
@@ -7058,7 +7058,7 @@ function updateLibrary($w)
             $insertEpisodeArtwork = 'insert or ignore into episodes values (:episode_uri,:already_fetched)';
             $stmtEpisodeArtwork = $dbartworks->prepare($insertEpisodeArtwork);
         } catch (PDOException $e) {
-            logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
+            logMsg('Error(createLibrary): (exception '.jTraceEx($e).')');
             handleDbIssuePdoEcho($dbartworks, $w);
             $dbartworks = null;
             $db = null;
@@ -7226,7 +7226,7 @@ function updateLibrary($w)
                         $album_artwork_path = getTrackOrAlbumArtwork($w, $thealbumuri, false, false, false, $use_artworks);
                     }
                 } catch (PDOException $e) {
-                    logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
+                    logMsg('Error(createLibrary): (exception '.jTraceEx($e).')');
                     handleDbIssuePdoEcho($dbartworks, $w);
                     $dbartworks = null;
                     $db = null;
@@ -7258,7 +7258,7 @@ function updateLibrary($w)
                     $stmtTrack->bindValue(':local_track', $local_track);
                     $stmtTrack->execute();
                 } catch (PDOException $e) {
-                    logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
+                    logMsg('Error(createLibrary): (exception '.jTraceEx($e).')');
                     handleDbIssuePdoEcho($db, $w);
                     $dbartworks = null;
                     $db = null;
@@ -7290,7 +7290,7 @@ function updateLibrary($w)
             $stmtPlaylist->bindValue(':public', $playlist->public);
             $stmtPlaylist->execute();
         } catch (PDOException $e) {
-            logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
+            logMsg('Error(createLibrary): (exception '.jTraceEx($e).')');
             handleDbIssuePdoEcho($db, $w);
             $dbartworks = null;
             $db = null;
@@ -7375,7 +7375,7 @@ function updateLibrary($w)
                 $album_artwork_path = getTrackOrAlbumArtwork($w, $thealbumuri, false, false, false, $use_artworks);
             }
         } catch (PDOException $e) {
-            logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
+            logMsg('Error(createLibrary): (exception '.jTraceEx($e).')');
             handleDbIssuePdoEcho($dbartworks, $w);
             $dbartworks = null;
             $db = null;
@@ -7405,7 +7405,7 @@ function updateLibrary($w)
             $stmtTrack->bindValue(':local_track', $local_track);
             $stmtTrack->execute();
         } catch (PDOException $e) {
-            logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
+            logMsg('Error(createLibrary): (exception '.jTraceEx($e).')');
             handleDbIssuePdoEcho($db, $w);
             $dbartworks = null;
             $db = null;
@@ -7439,7 +7439,7 @@ function updateLibrary($w)
                 $show_artwork_path = getShowArtwork($w, $show->uri, false, false, false, $use_artworks);
             }
         } catch (PDOException $e) {
-            logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
+            logMsg('Error(createLibrary): (exception '.jTraceEx($e).')');
             handleDbIssuePdoEcho($dbartworks, $w);
             $dbartworks = null;
             $db = null;
@@ -7460,7 +7460,7 @@ function updateLibrary($w)
             $stmtShow->bindValue(':added_at', $show->is_externally_hosted);
             $stmtShow->execute();
         } catch (PDOException $e) {
-            logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
+            logMsg('Error(createLibrary): (exception '.jTraceEx($e).')');
             handleDbIssuePdoEcho($db, $w);
             $dbartworks = null;
             $db = null;
@@ -7487,7 +7487,7 @@ function updateLibrary($w)
                 $episode_artwork_path = getEpisodeArtwork($w, $episode->uri, false, false, false, $use_artworks);
             }
         } catch (PDOException $e) {
-            logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
+            logMsg('Error(createLibrary): (exception '.jTraceEx($e).')');
             handleDbIssuePdoEcho($dbartworks, $w);
             $dbartworks = null;
             $db = null;
@@ -7514,7 +7514,7 @@ function updateLibrary($w)
             $stmtEpisode->bindValue(':audio_preview_url', $episode->audio_preview_url);
             $stmtEpisode->execute();
         } catch (PDOException $e) {
-            logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
+            logMsg('Error(createLibrary): (exception '.jTraceEx($e).')');
             handleDbIssuePdoEcho($db, $w);
             $dbartworks = null;
             $db = null;
@@ -7584,7 +7584,7 @@ function updateLibrary($w)
         $stmt->bindValue(':episodes', $episodes_count[0]);
         $stmt->execute();
     } catch (PDOException $e) {
-        logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
+        logMsg('Error(createLibrary): (exception '.jTraceEx($e).')');
         handleDbIssuePdoEcho($db, $w);
         $dbartworks = null;
         $db = null;
@@ -7699,7 +7699,7 @@ function refreshLibrary($w)
                 $dbartworks->exec('create table shows (show_uri text PRIMARY KEY NOT NULL, already_fetched boolean)');
                 $dbartworks->exec('create table episodes (episode_uri text PRIMARY KEY NOT NULL, already_fetched boolean)');
             } catch (PDOException $e) {
-                logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
+                logMsg('Error(createLibrary): (exception '.jTraceEx($e).')');
                 handleDbIssuePdoEcho($dbartworks, $w);
                 $dbartworks = null;
                 $db = null;
@@ -7725,7 +7725,7 @@ function refreshLibrary($w)
             $insertEpisodeArtwork = 'insert or ignore into episodes values (:episode_uri,:already_fetched)';
             $stmtEpisodeArtwork = $dbartworks->prepare($insertEpisodeArtwork);
         } catch (PDOException $e) {
-            logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
+            logMsg('Error(createLibrary): (exception '.jTraceEx($e).')');
             handleDbIssuePdoEcho($dbartworks, $w);
             $dbartworks = null;
             $db = null;
@@ -8030,7 +8030,7 @@ function refreshLibrary($w)
                             $album_artwork_path = getTrackOrAlbumArtwork($w, $thealbumuri, false, false, false, $use_artworks);
                         }
                     } catch (PDOException $e) {
-                        logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
+                        logMsg('Error(createLibrary): (exception '.jTraceEx($e).')');
                         handleDbIssuePdoEcho($dbartworks, $w);
                         $dbartworks = null;
                         $db = null;
@@ -8303,7 +8303,7 @@ function refreshLibrary($w)
                                 $album_artwork_path = getTrackOrAlbumArtwork($w, $thealbumuri, false, false, false, $use_artworks);
                             }
                         } catch (PDOException $e) {
-                            logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
+                            logMsg('Error(createLibrary): (exception '.jTraceEx($e).')');
                             handleDbIssuePdoEcho($dbartworks, $w);
                             $dbartworks = null;
                             $db = null;
@@ -8617,7 +8617,7 @@ function refreshLibrary($w)
                         $album_artwork_path = getTrackOrAlbumArtwork($w, $thealbumuri, false, false, false, $use_artworks);
                     }
                 } catch (PDOException $e) {
-                    logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
+                    logMsg('Error(createLibrary): (exception '.jTraceEx($e).')');
                     handleDbIssuePdoEcho($dbartworks, $w);
                     $dbartworks = null;
                     $db = null;
@@ -8737,7 +8737,7 @@ function refreshLibrary($w)
                 $show_artwork_path = getShowArtwork($w, $show->uri, false, false, false, $use_artworks);
             }
         } catch (PDOException $e) {
-            logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
+            logMsg('Error(createLibrary): (exception '.jTraceEx($e).')');
             handleDbIssuePdoEcho($dbartworks, $w);
             $dbartworks = null;
             $db = null;
@@ -8758,7 +8758,7 @@ function refreshLibrary($w)
             $stmtShow->bindValue(':added_at', $show->is_externally_hosted);
             $stmtShow->execute();
         } catch (PDOException $e) {
-            logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
+            logMsg('Error(createLibrary): (exception '.jTraceEx($e).')');
             handleDbIssuePdoEcho($db, $w);
             $dbartworks = null;
             $db = null;
@@ -8822,7 +8822,7 @@ function refreshLibrary($w)
         $stmt->bindValue(':shows', $shows_count[0]);
         $stmt->execute();
     } catch (PDOException $e) {
-        logMsg('Error(updateLibrary): (exception '.jTraceEx($e).')');
+        logMsg('Error(createLibrary): (exception '.jTraceEx($e).')');
         handleDbIssuePdoEcho($db, $w);
         $dbartworks = null;
         $db = null;

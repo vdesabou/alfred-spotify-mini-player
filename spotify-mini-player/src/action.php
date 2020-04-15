@@ -790,7 +790,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
         $ret = updateSetting($w, 'use_artworks', 1);
         if ($ret == true) {
             displayNotificationWithArtwork($w, 'Artworks are now enabled, library update is started', './images/enable_artworks.png', 'Settings');
-            updateLibrary($w);
+            createLibrary($w);
         } else {
             displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
         }
@@ -802,7 +802,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
             if (file_exists($w->data().'/artwork')):
                     exec("rm -rf '".$w->data()."/artwork'");
             displayNotificationWithArtwork($w, 'All artworks have been erased', './images/warning.png', 'Warning!');
-            updateLibrary($w);
+            createLibrary($w);
             endif;
             displayNotificationWithArtwork($w, 'Artworks are now disabled', './images/disable_artworks.png', 'Settings');
         } else {
@@ -1220,7 +1220,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
         if (file_exists($w->data().'/artwork')):
                 exec("rm -rf '".$w->data()."/artwork'");
         displayNotificationWithArtwork($w, 'All artworks have been erased', './images/warning.png', 'Warning!');
-        updateLibrary($w);
+        createLibrary($w);
         endif;
 
         return;
@@ -1908,7 +1908,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
             return;
         }
-        updateLibrary($w);
+        createLibrary($w);
         stathat_ez_count('AlfredSpotifyMiniPlayer', 'update library', 1);
 
         return;
