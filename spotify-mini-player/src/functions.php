@@ -1878,6 +1878,7 @@ function switchThemeColor($w,$theme_color)
             '4368A343-21A8-44C7-96F9-4870FA1C2EFB' => 'previous',
             '924A7250-A8D3-4944-BDEF-74B3DD32DC75' => 'volume_up',
             '749D3ABB-38FB-4EFB-9E3D-881C5AF5CAC9' => 'next',
+            '809D6161-95A3-45B0-A6EE-CEBACFE2D8D5' => 'shows',
             '577A4640-8D94-4813-9223-B355BE7FE1BD' => 'shuffle',
             '569B0F42-A04A-40B7-9E86-EA1C61EF0AE5' => 'play_queue',
             '26215986-3B9E-4491-A93B-67878CE04EB5' => 'alfred_playlist',

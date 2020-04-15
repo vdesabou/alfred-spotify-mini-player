@@ -252,7 +252,23 @@
 			<key>itemuid</key>
 			<string>BE4EB8B2-D511-4664-BFC1-5D0A609D9B6C</string>
 		</dict>
-		<dict/>
+		<dict>
+			<key>actionconfig</key>
+			<dict>
+				<key>autoworkflowuid</key>
+				<true/>
+				<key>triggerid</key>
+				<string>com.vdesabou.miniplayer.showshows</string>
+			</dict>
+			<key>actionuid</key>
+			<string>remote.alfred.runworkflow</string>
+			<key>buttoniconid</key>
+			<string>809D6161-95A3-45B0-A6EE-CEBACFE2D8D5</string>
+			<key>buttonlabel</key>
+			<string>Show Shows</string>
+			<key>itemuid</key>
+			<string>09C2955F-9C67-4F2A-9402-35573C542BB3</string>
+		</dict>
 		<dict>
 			<key>actionconfig</key>
 			<dict>

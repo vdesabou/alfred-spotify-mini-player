@@ -644,6 +644,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>3D74AA18-A55B-43C6-80CB-44954233EC63</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>18496AC4-EA42-444C-A906-642E38259C96</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>3F85747B-FC44-4B07-AA6E-3645F0CC0DF7</key>
 		<array>
 			<dict>
@@ -1735,6 +1748,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>9AD5CF1B-939A-4180-8BA0-192367A6C69C</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>D2C50D8B-0429-4F72-9D40-4B4AE14BCBAE</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>9B1431EC-8D2F-4149-9EC0-7DBFD487D93E</key>
 		<array>
 			<dict>
@@ -2000,6 +2026,19 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>EB1ED46F-71D7-49D1-B7BB-DA1ECF2F665F</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>AD51D057-762E-41B1-BDC6-D89411E01468</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>18496AC4-EA42-444C-A906-642E38259C96</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -2442,6 +2481,19 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>2609AC90-5B4D-4043-8F13-D5187B14833F</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>D2C50D8B-0429-4F72-9D40-4B4AE14BCBAE</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>18496AC4-EA42-444C-A906-642E38259C96</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -3819,6 +3871,19 @@
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>triggerid</key>
+				<string>show_shows</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.external</string>
+			<key>uid</key>
+			<string>9AD5CF1B-939A-4180-8BA0-192367A6C69C</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>action</key>
 				<integer>0</integer>
 				<key>argument</key>
@@ -3857,6 +3922,42 @@
 			<key>config</key>
 			<dict>
 				<key>argument</key>
+				<string>✧Show▹</string>
+				<key>variables</key>
+				<dict/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.utility.argument</string>
+			<key>uid</key>
+			<string>D2C50D8B-0429-4F72-9D40-4B4AE14BCBAE</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string>✧Show▹</string>
+				<key>argumenttype</key>
+				<integer>3</integer>
+				<key>triggerid</key>
+				<string>com.vdesabou.miniplayer.showshows</string>
+				<key>triggername</key>
+				<string>Show Shows</string>
+				<key>workflowonly</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.remote</string>
+			<key>uid</key>
+			<string>3D74AA18-A55B-43C6-80CB-44954233EC63</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
 				<string>✧Play Queue▹</string>
 				<key>argumenttype</key>
 				<integer>3</integer>
@@ -3873,6 +3974,39 @@
 			<string>3617F927-558D-4F30-B8D1-B7789F863AB0</string>
 			<key>version</key>
 			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>3</integer>
+				<key>argumenttext</key>
+				<string>✧Show▹</string>
+				<key>focusedappvariable</key>
+				<false/>
+				<key>focusedappvariablename</key>
+				<string></string>
+				<key>hotkey</key>
+				<integer>1</integer>
+				<key>hotmod</key>
+				<integer>1441792</integer>
+				<key>hotstring</key>
+				<string>S</string>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>2</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>AD51D057-762E-41B1-BDC6-D89411E01468</string>
+			<key>version</key>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -9238,6 +9372,13 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<key>ypos</key>
 			<integer>2380</integer>
 		</dict>
+		<key>3D74AA18-A55B-43C6-80CB-44954233EC63</key>
+		<dict>
+			<key>xpos</key>
+			<integer>295</integer>
+			<key>ypos</key>
+			<integer>1570</integer>
+		</dict>
 		<key>3F85747B-FC44-4B07-AA6E-3645F0CC0DF7</key>
 		<dict>
 			<key>xpos</key>
@@ -9979,6 +10120,13 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<key>ypos</key>
 			<integer>12590</integer>
 		</dict>
+		<key>9AD5CF1B-939A-4180-8BA0-192367A6C69C</key>
+		<dict>
+			<key>xpos</key>
+			<integer>430</integer>
+			<key>ypos</key>
+			<integer>1510</integer>
+		</dict>
 		<key>9B1431EC-8D2F-4149-9EC0-7DBFD487D93E</key>
 		<dict>
 			<key>xpos</key>
@@ -10141,6 +10289,13 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<integer>300</integer>
 			<key>ypos</key>
 			<real>5050</real>
+		</dict>
+		<key>AD51D057-762E-41B1-BDC6-D89411E01468</key>
+		<dict>
+			<key>xpos</key>
+			<integer>295</integer>
+			<key>ypos</key>
+			<integer>1680</integer>
 		</dict>
 		<key>AE6160D1-56EA-4416-991E-CF12B874FFD3</key>
 		<dict>
@@ -10398,6 +10553,13 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<integer>610</integer>
 			<key>ypos</key>
 			<integer>5240</integer>
+		</dict>
+		<key>D2C50D8B-0429-4F72-9D40-4B4AE14BCBAE</key>
+		<dict>
+			<key>xpos</key>
+			<integer>560</integer>
+			<key>ypos</key>
+			<integer>1540</integer>
 		</dict>
 		<key>D31A5001-4590-418E-9AB0-6183E75E59DE</key>
 		<dict>
