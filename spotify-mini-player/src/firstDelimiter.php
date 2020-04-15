@@ -861,7 +861,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
 
                     // call to web api, if it fails,
                     // it displays an error in main window
-                    $query = 'show:'.$the_query;
+                    $query = $the_query;
                     $results = searchWebApi($w, $country_code, $query, 'show', $search_shows_limit, false);
                     foreach ($results as $show) {
                         if (checkIfResultAlreadyThere($w->results(), '🎙 '.escapeQuery($show->name)) == false) {
@@ -879,14 +879,14 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
 
                     // call to web api, if it fails,
                     // it displays an error in main window
-                    $query = 'episode:'.$the_query;
+                    $query = $the_query;
                     $results = searchWebApi($w, $country_code, $query, 'episode', $search_episodes_limit, false);
                     foreach ($results as $episode) {
                         if (checkIfResultAlreadyThere($w->results(), $episode->name) == false) {
                             $noresult = false;
                             if (mb_strlen($search) < 2
                             || strpos(strtolower($episode->name), strtolower($search)) !== false) {
-                                $episode_artwork_path = getEpisodeArtwork($w, $episode->uri, true, false, false, $use_artworks);
+                                $episode_artwork_path = getEpisodeArtwork($w, $episode->uri, false, false, false, $use_artworks);
                                 $w->result(null, serialize(array(
                                     $episode->uri /*track_uri*/,
                                     '' /* album_uri */,
