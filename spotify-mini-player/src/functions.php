@@ -7053,10 +7053,10 @@ function createLibrary($w)
         $stmtPlaylist = $db->prepare($insertPlaylist);
 
         $insertShow = 'insert into shows values (:uri,:name,:description,:media_type,:show_artwork_path,:explicit,:added_at,:languages,:nb_times_played,:is_externally_hosted)';
-        $stmtShow = $db->prepare($insertShow);
+        $stmtInsertShow = $db->prepare($insertShow);
 
         $insertEpisode = 'insert into episodes values (:uri,:name,:show_uri,:show_name,:description,:episode_artwork_path,:is_playable,:languages,:nb_times_played,:is_externally_hosted,:duration_ms,:explicit,:release_date,:release_date_precision,:audio_preview_url)';
-        $stmtEpisode = $db->prepare($insertEpisode);
+        $stmtInsertEpisode = $db->prepare($insertEpisode);
 
         $insertTrack = 'insert into tracks values (:yourmusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_type,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:added_at,:duration,:nb_times_played,:local_track)';
         $stmtTrack = $db->prepare($insertTrack);
@@ -7477,17 +7477,17 @@ function createLibrary($w)
         }
 
         try {
-            $stmtShow->bindValue(':uri', $show->uri);
-            $stmtShow->bindValue(':name', escapeQuery($show->name));
-            $stmtShow->bindValue(':description', escapeQuery($show->description));
-            $stmtShow->bindValue(':media_type', escapeQuery($show->media_type));
-            $stmtShow->bindValue(':show_artwork_path', $show_artwork_path);
-            $stmtShow->bindValue(':explicit', $show->explicit);
-            $stmtShow->bindValue(':languages', 'FIXTHIS');
-            $stmtShow->bindValue(':added_at', $item->added_at);
-            $stmtShow->bindValue(':nb_times_played', 0);
-            $stmtShow->bindValue(':added_at', $show->is_externally_hosted);
-            $stmtShow->execute();
+            $stmtInsertShow->bindValue(':uri', $show->uri);
+            $stmtInsertShow->bindValue(':name', escapeQuery($show->name));
+            $stmtInsertShow->bindValue(':description', escapeQuery($show->description));
+            $stmtInsertShow->bindValue(':media_type', escapeQuery($show->media_type));
+            $stmtInsertShow->bindValue(':show_artwork_path', $show_artwork_path);
+            $stmtInsertShow->bindValue(':explicit', $show->explicit);
+            $stmtInsertShow->bindValue(':languages', 'FIXTHIS');
+            $stmtInsertShow->bindValue(':added_at', $item->added_at);
+            $stmtInsertShow->bindValue(':nb_times_played', 0);
+            $stmtInsertShow->bindValue(':added_at', $show->is_externally_hosted);
+            $stmtInsertShow->execute();
         } catch (PDOException $e) {
             logMsg('Error(createLibrary): (exception '.jTraceEx($e).')');
             handleDbIssuePdoEcho($db, $w);
@@ -7526,22 +7526,22 @@ function createLibrary($w)
         $insertEpisode = 'insert into episodes values (:uri,:name,:show_uri,:show_name,:description,:episode_artwork_path,:is_playable,:languages,:nb_times_played,:is_externally_hosted,:duration_ms,:explicit,:release_date,:release_date_precision,:audio_preview_url)';
 
         try {
-            $stmtEpisode->bindValue(':uri', $episode->uri);
-            $stmtEpisode->bindValue(':name', escapeQuery($episode->name));
-            $stmtEpisode->bindValue(':show_uri', $episode->show_uri);
-            $stmtEpisode->bindValue(':show_name', escapeQuery($episode->show_name));
-            $stmtEpisode->bindValue(':description', escapeQuery($episode->description));
-            $stmtEpisode->bindValue(':episode_artwork_path', $episode_artwork_path);
-            $stmtEpisode->bindValue(':is_playable', $episode->is_playable);
-            $stmtEpisode->bindValue(':languages', 'FIXTHIS');
-            $stmtEpisode->bindValue(':nb_times_played', 0);
-            $stmtEpisode->bindValue(':is_externally_hosted', $episode->is_externally_hosted);
-            $stmtEpisode->bindValue(':duration_ms', $episode->duration_ms);
-            $stmtEpisode->bindValue(':explicit', $episode->explicit);
-            $stmtEpisode->bindValue(':release_date', $episode->release_date);
-            $stmtEpisode->bindValue(':release_date_precision', $episode->release_date_precision);
-            $stmtEpisode->bindValue(':audio_preview_url', $episode->audio_preview_url);
-            $stmtEpisode->execute();
+            $stmtInsertEpisode->bindValue(':uri', $episode->uri);
+            $stmtInsertEpisode->bindValue(':name', escapeQuery($episode->name));
+            $stmtInsertEpisode->bindValue(':show_uri', $episode->show_uri);
+            $stmtInsertEpisode->bindValue(':show_name', escapeQuery($episode->show_name));
+            $stmtInsertEpisode->bindValue(':description', escapeQuery($episode->description));
+            $stmtInsertEpisode->bindValue(':episode_artwork_path', $episode_artwork_path);
+            $stmtInsertEpisode->bindValue(':is_playable', $episode->is_playable);
+            $stmtInsertEpisode->bindValue(':languages', 'FIXTHIS');
+            $stmtInsertEpisode->bindValue(':nb_times_played', 0);
+            $stmtInsertEpisode->bindValue(':is_externally_hosted', $episode->is_externally_hosted);
+            $stmtInsertEpisode->bindValue(':duration_ms', $episode->duration_ms);
+            $stmtInsertEpisode->bindValue(':explicit', $episode->explicit);
+            $stmtInsertEpisode->bindValue(':release_date', $episode->release_date);
+            $stmtInsertEpisode->bindValue(':release_date_precision', $episode->release_date_precision);
+            $stmtInsertEpisode->bindValue(':audio_preview_url', $episode->audio_preview_url);
+            $stmtInsertEpisode->execute();
         } catch (PDOException $e) {
             logMsg('Error(createLibrary): (exception '.jTraceEx($e).')');
             handleDbIssuePdoEcho($db, $w);
@@ -7799,12 +7799,12 @@ function refreshLibrary($w)
         $deleteFromTracksYourMusic = 'delete from tracks where yourmusic=:yourmusic';
         $stmtDeleteFromTracksYourMusic = $db->prepare($deleteFromTracksYourMusic);
 
-        // assume low number of podcast subscriptions
-        $db->exec('drop table shows');
-        $db->exec('create table shows (uri text PRIMARY KEY NOT NULL, name text, description text, media_type text, show_artwork_path text, explicit boolean, added_at text, languages text, nb_times_played int, is_externally_hosted boolean)');
+        // // assume low number of podcast subscriptions
+        // $db->exec('drop table shows');
+        // $db->exec('create table shows (uri text PRIMARY KEY NOT NULL, name text, description text, media_type text, show_artwork_path text, explicit boolean, added_at text, languages text, nb_times_played int, is_externally_hosted boolean)');
 
         $insertShow = 'insert into shows values (:uri,:name,:description,:media_type,:show_artwork_path,:explicit,:added_at,:languages,:nb_times_played,:is_externally_hosted)';
-        $stmtShow = $db->prepare($insertShow);
+        $stmtInsertShow = $db->prepare($insertShow);
     } catch (PDOException $e) {
         logMsg('Error(refreshLibrary): (exception '.jTraceEx($e).')');
         handleDbIssuePdoEcho($db, $w);
@@ -8775,17 +8775,17 @@ function refreshLibrary($w)
         }
 
         try {
-            $stmtShow->bindValue(':uri', $show->uri);
-            $stmtShow->bindValue(':name', escapeQuery($show->name));
-            $stmtShow->bindValue(':description', escapeQuery($show->description));
-            $stmtShow->bindValue(':media_type', escapeQuery($show->media_type));
-            $stmtShow->bindValue(':show_artwork_path', $show_artwork_path);
-            $stmtShow->bindValue(':explicit', $show->explicit);
-            $stmtShow->bindValue(':languages', 'FIXTHIS');
-            $stmtShow->bindValue(':added_at', $item->added_at);
-            $stmtShow->bindValue(':nb_times_played', 0);
-            $stmtShow->bindValue(':added_at', $show->is_externally_hosted);
-            $stmtShow->execute();
+            $stmtInsertShow->bindValue(':uri', $show->uri);
+            $stmtInsertShow->bindValue(':name', escapeQuery($show->name));
+            $stmtInsertShow->bindValue(':description', escapeQuery($show->description));
+            $stmtInsertShow->bindValue(':media_type', escapeQuery($show->media_type));
+            $stmtInsertShow->bindValue(':show_artwork_path', $show_artwork_path);
+            $stmtInsertShow->bindValue(':explicit', $show->explicit);
+            $stmtInsertShow->bindValue(':languages', 'FIXTHIS');
+            $stmtInsertShow->bindValue(':added_at', $item->added_at);
+            $stmtInsertShow->bindValue(':nb_times_played', 0);
+            $stmtInsertShow->bindValue(':added_at', $show->is_externally_hosted);
+            $stmtInsertShow->execute();
         } catch (PDOException $e) {
             logMsg('Error(createLibrary): (exception '.jTraceEx($e).')');
             handleDbIssuePdoEcho($db, $w);
