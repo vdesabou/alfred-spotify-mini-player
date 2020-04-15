@@ -1159,7 +1159,7 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
 
             if (mb_strlen($search) < 2) {
                 $w->result(null, 'help', 'Select an episode below to browse it',array(
-                         'singles and compilations are also displayed',
+                         '',
                         'alt' => 'Not Available',
                         'cmd' => 'Not Available',
                         'shift' => 'Not Available',
