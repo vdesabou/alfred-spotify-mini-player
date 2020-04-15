@@ -2,7 +2,7 @@
 layout: article
 title: "Customization"
 date: 2017-01-17T11:39:03-04:00
-modified: 2019-11-05
+modified: 2020-04-15
 categories: articles
 excerpt: "You can customize the workflow by changing settings or variables..."
 image:
@@ -84,3 +84,8 @@ But you can also use [Alfred variables](https://www.alfredapp.com/help/workflows
 
   * 1 for going to previous track
   * 0 for going back to beginning of the track
+
+* You can decide to not automatically refresh the library when you modify your library (adding a track to a playlist for example), by modifying variable `automatically_refresh_library`:-
+
+  * 1 for automatically refresh library
+  * 0 for not automatically refresh library

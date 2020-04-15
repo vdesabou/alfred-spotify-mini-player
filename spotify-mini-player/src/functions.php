@@ -2360,7 +2360,9 @@ function setThePlaylistPrivacy($w, $playlist_uri, $playlist_name, $public)
                 'public' => $public, ));
         if ($ret == true) {
             // refresh library
-            refreshLibrary($w);
+            if(getenv('automatically_refresh_library') == 1) {
+                refreshLibrary($w);
+            }
         }
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
         logMsg('Error(updatePlaylist): (exception '.jTraceEx($e).')');
@@ -2399,7 +2401,9 @@ function followThePlaylist($w, $playlist_uri)
         $ret = $api->followPlaylistForCurrentUser($playlist_id, array('public' => $public));
         if ($ret == true) {
             // refresh library
-            refreshLibrary($w);
+            if(getenv('automatically_refresh_library') == 1) {
+                refreshLibrary($w);
+            }
         }
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
         logMsg('Error(followThePlaylist): (exception '.jTraceEx($e).')');
@@ -2428,7 +2432,9 @@ function unfollowThePlaylist($w, $playlist_uri)
         $ret = $api->unfollowPlaylistForCurrentUser($playlist_id);
         if ($ret == true) {
             // refresh library
-            refreshLibrary($w);
+            if(getenv('automatically_refresh_library') == 1) {
+                refreshLibrary($w);
+            }
         }
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
         logMsg('Error(unfollowPlaylist): (exception '.jTraceEx($e).')');
@@ -3508,7 +3514,9 @@ function addTracksToYourMusic($w, $tracks, $allow_duplicate = true)
         }
 
         // refresh library
-        refreshLibrary($w);
+        if(getenv('automatically_refresh_library') == 1) {
+            refreshLibrary($w);
+        }
     }
 
     return count($tracks);
@@ -3583,7 +3591,9 @@ function addTracksToPlaylist($w, $tracks, $playlist_uri, $playlist_name, $allow_
         }
 
         if ($refreshLibrary) {
-            refreshLibrary($w);
+            if(getenv('automatically_refresh_library') == 1) {
+                refreshLibrary($w);
+            }
         }
     }
 
@@ -3623,7 +3633,9 @@ function removeTrackFromPlaylist($w, $track_uri, $playlist_uri, $playlist_name, 
     }
 
     if ($refreshLibrary) {
-        refreshLibrary($w);
+        if(getenv('automatically_refresh_library') == 1) {
+            refreshLibrary($w);
+        }
     }
 
     return true;
@@ -3655,7 +3667,9 @@ function removeTrackFromYourMusic($w, $track_uri, $refreshLibrary = true)
     }
 
     if ($refreshLibrary) {
-        refreshLibrary($w);
+        if(getenv('automatically_refresh_library') == 1) {
+            refreshLibrary($w);
+        }
     }
 
     return true;
@@ -3907,7 +3921,9 @@ function clearPlaylist($w, $playlist_uri, $playlist_name)
     }
 
     // refresh library
-    refreshLibrary($w);
+    if(getenv('automatically_refresh_library') == 1) {
+        refreshLibrary($w);
+    }
 
     return true;
 }
@@ -4084,7 +4100,9 @@ function createRadioArtistPlaylist($w, $artist_name, $artist_uri)
                 // do not add the playlist to the library
                 unfollowThePlaylist($w, $json->uri);
             } else {
-                refreshLibrary($w);
+                if(getenv('automatically_refresh_library') == 1) {
+                    refreshLibrary($w);
+                }
             }
 
             return;
@@ -4176,7 +4194,9 @@ function createCompleteCollectionArtistPlaylist($w, $artist_name, $artist_uri)
                 $playlist_artwork_path = getPlaylistArtwork($w, $json->uri, true, false, $use_artworks);
                 displayNotificationWithArtwork($w, '🔈 Playlist '.$json->name, $playlist_artwork_path, 'Launch Complete Collection Playlist');
             }
-            refreshLibrary($w);
+            if(getenv('automatically_refresh_library') == 1) {
+                refreshLibrary($w);
+            }
 
             return;
         } elseif (is_numeric($ret) && $ret == 0) {
@@ -4340,7 +4360,9 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name)
                 // do not add the playlist to the library
                 unfollowThePlaylist($w, $json->uri);
             } else {
-                refreshLibrary($w);
+                if(getenv('automatically_refresh_library') == 1) {
+                    refreshLibrary($w);
+                }
             }
 
             return;

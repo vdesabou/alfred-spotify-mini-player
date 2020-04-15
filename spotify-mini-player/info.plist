@@ -10889,6 +10889,8 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 		<string>0</string>
 		<key>automatically_open_spotify_app</key>
 		<string>1</string>
+		<key>automatically_refresh_library</key>
+		<string>1</string>
 		<key>c_add_current_track_to</key>
 		<string>add_current_track_to</string>
 		<key>c_add_current_track_to_alfred_playlist_or_your_music</key>
