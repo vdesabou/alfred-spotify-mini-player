@@ -1,6 +1,8 @@
 <?php
 
-require './src/functions.php';
+require_once './src/functions.php';
+require_once './src/createLibrary.php';
+require_once './src/refreshLibrary.php';
 require_once './src/workflows.php';
 $w = new Workflows('com.vdesabou.spotify.mini.player');
 
