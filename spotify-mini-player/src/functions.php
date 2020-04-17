@@ -4626,6 +4626,40 @@ function getTheShowEpisodes($w, $show_uri, $country_code, $actionMode = false)
 }
 
 /**
+ * getNumberOfEpisodesForShow function.
+ *
+ * @param mixed $w
+ * @param mixed $show_uri
+ * @param mixed $country_code
+ */
+function getNumberOfEpisodesForShow($w, $show_uri, $country_code)
+{
+    $episodes = array();
+
+    try {
+        $api = getSpotifyWebAPI($w);
+        $tmp = explode(':', $show_uri);
+
+        // refresh api
+        $api = getSpotifyWebAPI($w, $api);
+        $userShowEpisodes = $api->getShowEpisodes($tmp[2], array(
+                'market' => $country_code,
+                'limit' => 1,
+            ));
+
+        return $userShowEpisodes->total;
+
+    } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+        logMsg( 'Error(getNumberOfEpisodesForShow): (exception '.jTraceEx($e).')');
+        handleSpotifyWebAPIException($w, $e);
+
+        return false;
+    }
+
+    return false;
+}
+
+/**
  * getTheAlbumFullTracks function.
  *
  * @param mixed $w
@@ -5012,28 +5046,6 @@ function getNumberOfTracksForArtist($db, $artist_name, $yourmusiconly = false)
     try {
         $stmt = $db->prepare($getNumberOfTracksForArtist);
         $stmt->bindValue(':artist_name', ''.$artist_name.'');
-        $stmt->execute();
-        $nb = $stmt->fetch();
-    } catch (PDOException $e) {
-        return 0;
-    }
-
-    return $nb[0];
-}
-
-/**
- * getNumberOfEpisodesForShow function.
- *
- * @param mixed $db
- * @param mixed $show_name
- */
-function getNumberOfEpisodesForShow($db, $show_name)
-{
-    $getNumberOfEpisodesForShow = 'select count(distinct name) from episodes where show_name=:show_name';
-
-    try {
-        $stmt = $db->prepare($getNumberOfEpisodesForShow);
-        $stmt->bindValue(':show_name', ''.$show_name.'');
         $stmt->execute();
         $nb = $stmt->fetch();
     } catch (PDOException $e) {

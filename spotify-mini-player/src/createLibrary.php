@@ -453,14 +453,14 @@ function createLibrary($w)
         $db->exec('create table counters (all_tracks int, yourmusic_tracks int, all_artists int, yourmusic_artists int, all_albums int, yourmusic_albums int, playlists int, shows int, episodes int)');
         $db->exec('create table playlists (uri text PRIMARY KEY NOT NULL, name text, nb_tracks int, author text, username text, playlist_artwork_path text, ownedbyuser boolean, nb_playable_tracks int, duration_playlist text, nb_times_played int, collaborative boolean, public boolean)');
 
-        $db->exec('create table shows (uri text PRIMARY KEY NOT NULL, name text, description text, media_type text, show_artwork_path text, explicit boolean, added_at text, languages text, nb_times_played int, is_externally_hosted boolean)');
+        $db->exec('create table shows (uri text PRIMARY KEY NOT NULL, name text, description text, media_type text, show_artwork_path text, explicit boolean, added_at text, languages text, nb_times_played int, is_externally_hosted boolean, nb_episodes int)');
 
         $db->exec('create table episodes (uri text PRIMARY KEY NOT NULL, name text, show_uri text, show_name text, description text, episode_artwork_path text, is_playable boolean, languages text, nb_times_played int, is_externally_hosted boolean, duration_ms int, explicit boolean, release_date text, release_date_precision text, audio_preview_url text)');
 
         $insertPlaylist = 'insert into playlists values (:uri,:name,:nb_tracks,:owner,:username,:playlist_artwork_path,:ownedbyuser,:nb_playable_tracks,:duration_playlist,:nb_times_played,:collaborative,:public)';
         $stmtPlaylist = $db->prepare($insertPlaylist);
 
-        $insertShow = 'insert into shows values (:uri,:name,:description,:media_type,:show_artwork_path,:explicit,:added_at,:languages,:nb_times_played,:is_externally_hosted)';
+        $insertShow = 'insert into shows values (:uri,:name,:description,:media_type,:show_artwork_path,:explicit,:added_at,:languages,:nb_times_played,:is_externally_hosted, :nb_episodes)';
         $stmtInsertShow = $db->prepare($insertShow);
 
         $insertEpisode = 'insert into episodes values (:uri,:name,:show_uri,:show_name,:description,:episode_artwork_path,:is_playable,:languages,:nb_times_played,:is_externally_hosted,:duration_ms,:explicit,:release_date,:release_date_precision,:audio_preview_url)';
@@ -895,6 +895,7 @@ function createLibrary($w)
             $stmtInsertShow->bindValue(':added_at', $item->added_at);
             $stmtInsertShow->bindValue(':nb_times_played', 0);
             $stmtInsertShow->bindValue(':added_at', $show->is_externally_hosted);
+            $stmtInsertShow->bindValue(':nb_episodes', getNumberOfEpisodesForShow($w, $show->uri, $country_code));
             $stmtInsertShow->execute();
         } catch (PDOException $e) {
             logMsg('Error(createLibrary): (exception '.jTraceEx($e).')');
@@ -931,7 +932,6 @@ function createLibrary($w)
 
             return false;
         }
-        $insertEpisode = 'insert into episodes values (:uri,:name,:show_uri,:show_name,:description,:episode_artwork_path,:is_playable,:languages,:nb_times_played,:is_externally_hosted,:duration_ms,:explicit,:release_date,:release_date_precision,:audio_preview_url)';
 
         try {
             $stmtInsertEpisode->bindValue(':uri', $episode->uri);

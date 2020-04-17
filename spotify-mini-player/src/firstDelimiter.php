@@ -366,10 +366,10 @@ function firstDelimiterShows($w, $query, $settings, $db, $update_in_progress)
 
     try {
         if (mb_strlen($show) < 2) {
-            $getShows = 'select uri,name,description,media_type,show_artwork_path,explicit,added_at,languages from shows group by name'.' limit '.$max_results;
+            $getShows = 'select * from shows group by name'.' limit '.$max_results;
             $stmt = $db->prepare($getShows);
         } else {
-            $getShows = 'select uri,name,description,media_type,show_artwork_path,explicit,added_at,languages from shows where name like :query limit '.$max_results;
+            $getShows = 'select * from shows where name like :query limit '.$max_results;
             $stmt = $db->prepare($getShows);
             $stmt->bindValue(':query', '%'.$artist.'%');
         }
@@ -385,9 +385,8 @@ function firstDelimiterShows($w, $query, $settings, $db, $update_in_progress)
     $noresult = true;
     while ($show = $stmt->fetch()) {
         $noresult = false;
-        $nb_episodes = getNumberOfEpisodesForShow($db, $show[1]);
-        if (checkIfResultAlreadyThere($w->results(), '🎙 '.$show[1].' ('.$nb_episodes.' episodes)') == false) {
-            $w->result(null, '', '🎙 '.$show[1].' ('.$nb_episodes.' episodes)',array(
+        if (checkIfResultAlreadyThere($w->results(), '🎙 '.$show[1].' ('.$show[10].' episodes)') == false) {
+            $w->result(null, '', '🎙 '.$show[1].' ('.$show[10].' episodes)',array(
                      'Browse this show',
                     'alt' => 'Not Available',
                     'cmd' => 'Not Available',

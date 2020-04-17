@@ -969,7 +969,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress)
         if($search_category == 'show') {
             // Search show
             try {
-                $getShows = 'select uri,name,description,media_type,show_artwork_path,explicit,added_at,languages from shows where name like :query limit '.$max_results;
+                $getShows = 'select * from shows where name like :query limit '.$max_results;
                 $stmt = $db->prepare($getShows);
                 $stmt->bindValue(':query', '%'.$query.'%');
 
@@ -984,9 +984,8 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress)
             $noresult = true;
             while ($show = $stmt->fetch()) {
                 $noresult = false;
-                $nb_episodes = getNumberOfEpisodesForShow($db, $show[1]);
-                if (checkIfResultAlreadyThere($w->results(), '🎙 '.$show[1].' ('.$nb_episodes.' episodes)') == false) {
-                    $w->result(null, '', '🎙 '.$show[1].' ('.$nb_episodes.' episodes)',array(
+                if (checkIfResultAlreadyThere($w->results(), '🎙 '.$show[1].' ('.$show[10].' episodes)') == false) {
+                    $w->result(null, '', '🎙 '.$show[1].' ('.$show[10].' episodes)',array(
                              'Browse this show',
                             'alt' => 'Not Available',
                             'cmd' => 'Not Available',
