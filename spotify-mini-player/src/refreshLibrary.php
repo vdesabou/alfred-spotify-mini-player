@@ -38,6 +38,7 @@ function refreshLibrary($w)
     ini_set('memory_limit', '512M');
 
     $nb_playlist = 0;
+    $nb_playlist_total = 0;
 
     if ($use_artworks) {
         // db for fetch artworks
@@ -184,6 +185,16 @@ function refreshLibrary($w)
     do {
         $retry = true;
         $nb_retry = 0;
+
+        try {
+            $api = getSpotifyWebAPI($w);
+        } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+            logMsg('Error(refreshLibrary): (exception '.jTraceEx($e).')');
+            handleSpotifyWebAPIException($w, $e);
+
+            return false;
+        }
+
         while ($retry) {
             try {
                 // refresh api
@@ -231,11 +242,12 @@ function refreshLibrary($w)
 
         foreach ($userMySavedShows->items as $show) {
             $savedMySavedShows[] = $show;
-            ++$nb_playlist_total;
         }
 
         $offsetGetMySavedShows += $limitGetMySavedShows;
     } while ($offsetGetMySavedShows < $userMySavedShows->total);
+
+    $nb_playlist_total += $userMySavedShows->total;
 
     $savedListPlaylist = array();
     $offsetGetUserPlaylists = 0;
@@ -243,14 +255,6 @@ function refreshLibrary($w)
     do {
         $retry = true;
         $nb_retry = 0;
-        try {
-            $api = getSpotifyWebAPI($w);
-        } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            logMsg('Error(refreshLibrary): (exception '.jTraceEx($e).')');
-            handleSpotifyWebAPIException($w, $e);
-
-            return false;
-        }
 
         while ($retry) {
             try {
@@ -1344,6 +1348,8 @@ function refreshLibrary($w)
             }
         }
     }
+
+    $w->write('Refresh Library▹'.$nb_playlist.'▹'.$nb_playlist_total.'▹'.$words[3].'▹'.escapeQuery($show->name), 'update_library_in_progress');
 
     try {
         // check for deleted shows
