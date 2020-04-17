@@ -1192,6 +1192,119 @@ function refreshLibrary($w)
                 return false;
             }
 
+            $savedMySavedEpisodes = array();
+            $offsetGetMySavedEpisodes = 0;
+            $limitGetMySavedEpisodes = 50;
+            do {
+                $retry = true;
+                $nb_retry = 0;
+                while ($retry) {
+                    try {
+                        // refresh api
+                        $api = getSpotifyWebAPI($w, $api);
+                        $userMySavedEpisodes = $api->getShowEpisodes($show->uri, array(
+                                'limit' => $limitGetMySavedEpisodes,
+                                'offset' => $offsetGetMySavedEpisodes,
+                                'market' => $country_code,
+                            ));
+                        $retry = false;
+                    } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+                        logMsg('Error(getShowEpisodes): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
+
+                        if ($e->getCode() == 429) { // 429 is Too Many Requests
+                            $lastResponse = $api->getRequest()->getLastResponse();
+                            $retryAfter = $lastResponse['headers']['Retry-After'];
+                            sleep($retryAfter);
+                        } else if ($e->getCode() == 404) {
+                            // skip
+                            break;
+                        } else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
+                            // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
+                            // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
+                            // retry any SSL error
+                            ++$nb_retry;
+                        } else if ($e->getCode() == 500
+                            || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+                            // retry
+                            if ($nb_retry > 2) {
+                                handleSpotifyWebAPIException($w, $e);
+                                $retry = false;
+
+                                return false;
+                            }
+                            ++$nb_retry;
+                            sleep(5);
+                        } else {
+                            handleSpotifyWebAPIException($w, $e);
+                            $retry = false;
+
+                            return false;
+                        }
+                    }
+                }
+
+                foreach ($userMySavedEpisodes->items as $episode) {
+                    $episode->show_uri = $show->uri;
+                    $episode->show_name = $show->name;
+                    $savedMySavedEpisodes[] = $episode;
+                }
+
+                $offsetGetMySavedEpisodes += $limitGetMySavedEpisodes;
+            } while ($offsetGetMySavedEpisodes < $userMySavedEpisodes->total);
+
+            // Handle Show Episodes
+            foreach ($savedMySavedEpisodes as $episode) {
+
+                try {
+
+                    // Download artworks in Fetch later mode
+                    if ($use_artworks) {
+                        list($already_present, $episode_artwork_path) = getEpisodeArtwork($w, $episode->uri, true, true, false, $use_artworks);
+                        if ($already_present == false) {
+                            $artworksToDownload = true;
+                            $stmtEpisodeArtwork->bindValue(':episode_uri', $episode->uri);
+                            $stmtEpisodeArtwork->bindValue(':already_fetched', 0);
+                            $stmtEpisodeArtwork->execute();
+                        }
+                    } else {
+                        $episode_artwork_path = getEpisodeArtwork($w, $episode->uri, false, false, false, $use_artworks);
+                    }
+                } catch (PDOException $e) {
+                    logMsg('Error(createLibrary): (exception '.jTraceEx($e).')');
+                    handleDbIssuePdoEcho($dbartworks, $w);
+                    $dbartworks = null;
+                    $db = null;
+
+                    return false;
+                }
+
+                try {
+                    $stmtInsertEpisode->bindValue(':uri', $episode->uri);
+                    $stmtInsertEpisode->bindValue(':name', escapeQuery($episode->name));
+                    $stmtInsertEpisode->bindValue(':show_uri', $episode->show_uri);
+                    $stmtInsertEpisode->bindValue(':show_name', escapeQuery($episode->show_name));
+                    $stmtInsertEpisode->bindValue(':description', escapeQuery($episode->description));
+                    $stmtInsertEpisode->bindValue(':episode_artwork_path', $episode_artwork_path);
+                    $stmtInsertEpisode->bindValue(':is_playable', $episode->is_playable);
+                    $stmtInsertEpisode->bindValue(':languages', 'FIXTHIS');
+                    $stmtInsertEpisode->bindValue(':nb_times_played', 0);
+                    $stmtInsertEpisode->bindValue(':is_externally_hosted', $episode->is_externally_hosted);
+                    $stmtInsertEpisode->bindValue(':duration_ms', $episode->duration_ms);
+                    $stmtInsertEpisode->bindValue(':explicit', $episode->explicit);
+                    $stmtInsertEpisode->bindValue(':release_date', $episode->release_date);
+                    $stmtInsertEpisode->bindValue(':release_date_precision', $episode->release_date_precision);
+                    $stmtInsertEpisode->bindValue(':audio_preview_url', $episode->audio_preview_url);
+                    $stmtInsertEpisode->execute();
+                } catch (PDOException $e) {
+                    logMsg('Error(createLibrary): (exception '.jTraceEx($e).')');
+                    handleDbIssuePdoEcho($db, $w);
+                    $dbartworks = null;
+                    $db = null;
+
+                    return false;
+                }
+            }
+
             displayNotificationWithArtwork($w, 'Added show '.escapeQuery($show->name), $show_artwork_path, 'Refresh Library');
         } else {
 
@@ -1268,7 +1381,6 @@ function refreshLibrary($w)
                         $episode->show_uri = $show->uri;
                         $episode->show_name = $show->name;
                         $savedMySavedEpisodes[] = $episode;
-                        $nb_tracktotal += 1;
                     }
 
                     $offsetGetMySavedEpisodes += $limitGetMySavedEpisodes;
