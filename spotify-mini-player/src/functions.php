@@ -2134,7 +2134,7 @@ function createDebugFile($w)
         $output = $output."\n";
     }
     $output = $output."\n";
-    exec('/usr/bin/xattr "'.'./alerter'.'"',$response);
+    exec('/usr/bin/xattr "'.'./terminal-notifier.app'.'"',$response);
     $output = $output."xattr alerter returned: ";
     foreach($response as $line) {
         $output = $output.$line;
@@ -5142,6 +5142,7 @@ function displayNotificationWithArtwork($w, $subtitle, $artwork, $title = 'Spoti
         }
 
         exec("./src/alerter.ksh '".$title."' '".$theme_color."' '".$subtitle."' '".getAlfredName()."' 2>&1 & ");
+        //exec("./terminal-notifier.app/Contents/MacOS/terminal-notifier -title '".$title."' -sender 'com.spotify.miniplayer.".$theme_color."' -appIcon '/tmp/tmp_".exec("whoami")."' -message '".$subtitle."'");
     } else {
         exec('./src/growl_notification.ksh -t "'.$title.'" -s "'.$subtitle.'" >> "'.$w->cache().'/action.log" 2>&1 & ');
     }
