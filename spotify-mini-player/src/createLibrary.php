@@ -1042,7 +1042,7 @@ function createLibrary($w)
         $stmt->execute();
         $all_tracks = $stmt->fetch();
 
-        $getCount = 'select count(distinct uri) from tracks where yourmusic=1';
+        $getCount = 'select count(distinct uri) from tracks where yourmusic=1 and yourmusic_album=0';
         $stmt = $db->prepare($getCount);
         $stmt->execute();
         $yourmusic_tracks = $stmt->fetch();
