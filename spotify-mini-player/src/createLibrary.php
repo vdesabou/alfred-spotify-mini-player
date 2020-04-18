@@ -122,7 +122,6 @@ function createLibrary($w)
     $nb_tracktotal = 0;
     $nb_skipped = 0;
     $savedListPlaylist = array();
-    $savedListAlbums = array();
     try {
         $api = getSpotifyWebAPI($w);
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
@@ -242,7 +241,7 @@ function createLibrary($w)
         }
 
         foreach ($userMySavedTracks->items as $track) {
-            $savedMySavedTracks[] = $track;
+            $savedMySavedTracks[] = $track->track;
             $nb_tracktotal += 1;
         }
 
@@ -378,67 +377,128 @@ function createLibrary($w)
     }
 
 
-    // $savedMySavedAlbums = array();
-    // $offsetGetMySavedAlbums = 0;
-    // $limitGetMySavedAlbums = 50;
-    // do {
-    //     $retry = true;
-    //     $nb_retry = 0;
-    //     while ($retry) {
-    //         try {
-    //             // refresh api
-    //             $api = getSpotifyWebAPI($w, $api);
-    //             $userMySavedAlbums = $api->getMySavedAlbums(array(
-    //                     'limit' => $limitGetMySavedAlbums,
-    //                     'offset' => $offsetGetMySavedAlbums,
-    //                     'market' => $country_code,
-    //                 ));
-    //             $retry = false;
-    //         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-    //             logMsg('Error(getMySavedAlbums): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
+    $savedMySavedAlbums = array();
+    $offsetGetMySavedAlbums = 0;
+    $limitGetMySavedAlbums = 50;
+    do {
+        $retry = true;
+        $nb_retry = 0;
+        while ($retry) {
+            try {
+                // refresh api
+                $api = getSpotifyWebAPI($w, $api);
+                $userMySavedAlbums = $api->getMySavedAlbums(array(
+                        'limit' => $limitGetMySavedAlbums,
+                        'offset' => $offsetGetMySavedAlbums,
+                        'market' => $country_code,
+                    ));
+                $retry = false;
+            } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+                logMsg('Error(getMySavedAlbums): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
 
-    //             if ($e->getCode() == 429) { // 429 is Too Many Requests
-    //                 $lastResponse = $api->getRequest()->getLastResponse();
-    //                 $retryAfter = $lastResponse['headers']['Retry-After'];
-    //                 sleep($retryAfter);
-    //             } else if ($e->getCode() == 404) {
-    //                 // skip
-    //                 break;
-    //             } else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
-    //                 // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
-    //                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
-    //                 // retry any SSL error
-    //                 ++$nb_retry;
-    //             } else if ($e->getCode() == 500
-    //                 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
-    //                 // retry
-    //                 if ($nb_retry > 2) {
-    //                     handleSpotifyWebAPIException($w, $e);
-    //                     $retry = false;
+                if ($e->getCode() == 429) { // 429 is Too Many Requests
+                    $lastResponse = $api->getRequest()->getLastResponse();
+                    $retryAfter = $lastResponse['headers']['Retry-After'];
+                    sleep($retryAfter);
+                } else if ($e->getCode() == 404) {
+                    // skip
+                    break;
+                } else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
+                    // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
+                    // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
+                    // retry any SSL error
+                    ++$nb_retry;
+                } else if ($e->getCode() == 500
+                    || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+                    // retry
+                    if ($nb_retry > 2) {
+                        handleSpotifyWebAPIException($w, $e);
+                        $retry = false;
 
-    //                     return false;
-    //                 }
-    //                 ++$nb_retry;
-    //                 sleep(5);
-    //             } else {
-    //                 handleSpotifyWebAPIException($w, $e);
-    //                 $retry = false;
+                        return false;
+                    }
+                    ++$nb_retry;
+                    sleep(5);
+                } else {
+                    handleSpotifyWebAPIException($w, $e);
+                    $retry = false;
 
-    //                 return false;
-    //             }
-    //         }
-    //     }
+                    return false;
+                }
+            }
+        }
 
-    //     foreach ($userMySavedAlbums->items as $album) {
-    //         $tracks = $album->tracks;
-    //         $nb_tracktotal += $tracks->total;
-    //         if ($album->name != '') {
-    //             $savedListAlbums[] = $album;
-    //         }
-    //     }
+        foreach ($userMySavedAlbums->items as $item) {
+            $album = $item->album;
+            $tracks = $album->tracks;
+            $nb_tracktotal += $tracks->total;
+            if ($album->name != '') {
+                $savedMySavedAlbums[] = $album;
 
-    //     $offsetGetMySavedAlbums += $limitGetMySavedAlbums;
-    // } while ($offsetGetMySavedAlbums < $userMySavedAlbums->total);
+
+
+                $offsetGetMySavedTracks = 0;
+                $limitGetMySavedTracks = 50;
+                do {
+                    $retry = true;
+                    $nb_retry = 0;
+                    while ($retry) {
+                        try {
+                            // refresh api
+                            $api = getSpotifyWebAPI($w, $api);
+                            $tmp = explode(':', $album->uri);
+                            $albumTracks = $api->getAlbumTracks($tmp[2], array(
+                                'limit' => $limitGetMySavedTracks,
+                                'offset' => $offsetGetMySavedTracks,
+                                'market' => $country_code,
+                            ));
+
+                            foreach ($albumTracks->items as $track) {
+                                $allMySavedAlbumsTracks[] = $track;
+                                $nb_tracktotal += 1;
+                            }
+                            $retry = false;
+                        } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+                            logMsg('Error(getAlbumTracks): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
+
+                            if ($e->getCode() == 429) { // 429 is Too Many Requests
+                                $lastResponse = $api->getRequest()->getLastResponse();
+                                $retryAfter = $lastResponse['headers']['Retry-After'];
+                                sleep($retryAfter);
+                            } else if ($e->getCode() == 404) {
+                                // skip
+                                break;
+                            } else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
+                                // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
+                                // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
+                                // retry any SSL error
+                                ++$nb_retry;
+                            } else if ($e->getCode() == 500
+                                || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+                                // retry
+                                if ($nb_retry > 2) {
+                                    handleSpotifyWebAPIException($w, $e);
+                                    $retry = false;
+
+                                    return false;
+                                }
+                                ++$nb_retry;
+                                sleep(5);
+                            } else {
+                                handleSpotifyWebAPIException($w, $e);
+                                $retry = false;
+
+                                return false;
+                            }
+                        }
+                    }
+                    $offsetGetMySavedTracks += $limitGetMySavedTracks;
+                } while ($offsetGetMySavedTracks < $userMySavedTracks->total);
+            }
+        }
+
+        $offsetGetMySavedAlbums += $limitGetMySavedAlbums;
+    } while ($offsetGetMySavedAlbums < $userMySavedAlbums->total);
 
     // Handle playlists
     $w->write('Create Library▹0▹'.$nb_tracktotal.'▹'.$words[3].'▹'.'starting', 'update_library_in_progress');
@@ -737,7 +797,17 @@ function createLibrary($w)
     }
 
     // Handle Your Music
-    foreach ($savedMySavedTracks as $track) {
+
+    // merge allMySavedAlbumsTracks and savedMySavedTracks to handle all Your Music tracks
+    $mergedMySavedTracks = array_merge($allMySavedAlbumsTracks, $savedMySavedTracks);
+
+    logMsg(print_r($allMySavedAlbumsTracks));
+
+    logMsg(print_r($savedMySavedTracks));
+
+    logMsg(print_r($mergedMySavedTracks));
+
+    foreach ($mergedMySavedTracks as $track) {
         $track = $track->track;
         $artists = $track->artists;
         $artist = $artists[0];
@@ -855,7 +925,6 @@ function createLibrary($w)
             $w->write('Create Library▹'.$nb_track.'▹'.$nb_tracktotal.'▹'.$words[3].'▹'.'Your Music', 'update_library_in_progress');
         }
     }
-
 
     // Handle Shows
     foreach ($savedMySavedShows as $item) {
