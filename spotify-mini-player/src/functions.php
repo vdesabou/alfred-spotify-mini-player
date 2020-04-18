@@ -296,6 +296,40 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
      return false;
  }
 
+ /**
+ * getShowFromEpisode function.
+ *
+ * @param mixed $w
+ * @param mixed $episode_uri
+ */
+function getShowFromEpisode($w, $episode_uri)
+{
+    // Read settings from JSON
+
+    $settings = getSettings($w);
+
+    $country_code = $settings->country_code;
+
+    try {
+        $api = getSpotifyWebAPI($w);
+        $episode = $api->getEpisode($episode_uri,array(
+            'market' => $country_code,
+            ));
+       return $episode->show->uri;
+    } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+        $w->result(null, '', 'Error: Spotify WEB API returned error '.$e->getMessage(),array(
+           'function getShowFromEpisode episode_uri=' . $episode_uri,
+                   'alt' => 'Not Available',
+                   'cmd' => 'Not Available',
+                   'shift' => 'Not Available',
+                   'fn' => 'Not Available',
+                   'ctrl' => 'Not Available',
+               ), './images/warning.png', 'no', null, '');
+
+        return '';
+    }
+}
+
 /**
  * getArtistName function.
  *
@@ -369,15 +403,17 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
  */
 function getEpisodeName($w, $episode_uri)
 {
+    // Read settings from JSON
+
+    $settings = getSettings($w);
+
+    $country_code = $settings->country_code;
+
     try {
         $api = getSpotifyWebAPI($w);
-        // check if it is part collection
-        $tmp = explode(':', $episode_uri);
-        if (isset($tmp[3]) && $tmp[3] == 'collection') {
-           $episode_uri = 'spotify:album:' . $tmp[5];
-        }
-
-        $episode = $api->getEpisode($episode_uri);
+        $episode = $api->getEpisode($episode_uri,array(
+            'market' => $country_code,
+            ));
        return $episode->name;
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
         $w->result(null, '', 'Error: Spotify WEB API returned error '.$e->getMessage(),array(
@@ -6505,12 +6541,18 @@ function getShowArtworkURL($w, $show_uri)
  * getEpisodeArtworkURL function.
  *
  * @param mixed $w
- * @param mixed $episode_id
+ * @param mixed $episode_uri
  */
-function getEpisodeArtworkURL($w, $episode_id)
+function getEpisodeArtworkURL($w, $episode_uri)
 {
+    // Read settings from JSON
+
+    $settings = getSettings($w);
+
+    $country_code = $settings->country_code;
+
     $url = '';
-    if (startswith($episode_id, 'fake')) {
+    if (startswith($episode_uri, 'fake')) {
         return $url;
     }
     $retry = true;
@@ -6518,7 +6560,9 @@ function getEpisodeArtworkURL($w, $episode_id)
     while ($retry) {
         try {
             $api = getSpotifyWebAPI($w);
-            $episode = $api->getEpisode($episode_id);
+            $episode = $api->getEpisode($episode_uri,array(
+                'market' => $country_code,
+                ));
             $retry = false;
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
             if ($e->getCode() != 429) {
