@@ -162,7 +162,7 @@ function refreshLibrary($w)
         $insertShow = 'insert into shows values (:uri,:name,:description,:media_type,:show_artwork_path,:explicit,:added_at,:languages,:nb_times_played,:is_externally_hosted, :nb_episodes)';
         $stmtInsertShow = $db->prepare($insertShow);
 
-        $insertEpisode = 'insert into episodes values (:uri,:name,:show_uri,:show_name,:description,:episode_artwork_path,:is_playable,:languages,:nb_times_played,:is_externally_hosted,:duration_ms,:explicit,:release_date,:release_date_precision,:audio_preview_url)';
+        $insertEpisode = 'insert into episodes values (:uri,:name,:show_uri,:show_name,:description,:episode_artwork_path,:is_playable,:languages,:nb_times_played,:is_externally_hosted,:duration_ms,:explicit,:release_date,:release_date_precision,:audio_preview_url,:audio_preview_url,:fully_played,:resume_position_ms)';
         $stmtInsertEpisode = $db->prepare($insertEpisode);
 
         $deleteFromEpisodes = 'delete from episodes where show_uri=:show_uri';
@@ -1479,6 +1479,14 @@ function refreshLibrary($w)
                     $stmtInsertEpisode->bindValue(':release_date', $episode->release_date);
                     $stmtInsertEpisode->bindValue(':release_date_precision', $episode->release_date_precision);
                     $stmtInsertEpisode->bindValue(':audio_preview_url', $episode->audio_preview_url);
+                    if(isset($episode->resume_point)) {
+                        $resume_point = $episode->resume_point;
+                    } else {
+                        updateSetting($w,'oauth_access_token','');
+                        updateSetting($w,'oauth_refresh_token','');
+                        handleSpotifyPermissionException($w, 'Refresh token revoked');
+                        return false;
+                    }
                     $stmtInsertEpisode->execute();
                 } catch (PDOException $e) {
                     logMsg('Error(createLibrary): (exception '.jTraceEx($e).')');
@@ -1614,6 +1622,16 @@ function refreshLibrary($w)
                         $stmtInsertEpisode->bindValue(':release_date', $episode->release_date);
                         $stmtInsertEpisode->bindValue(':release_date_precision', $episode->release_date_precision);
                         $stmtInsertEpisode->bindValue(':audio_preview_url', $episode->audio_preview_url);
+                        if(isset($episode->resume_point)) {
+                            $resume_point = $episode->resume_point;
+                        } else {
+                            updateSetting($w,'oauth_access_token','');
+                            updateSetting($w,'oauth_refresh_token','');
+                            handleSpotifyPermissionException($w, 'Refresh token revoked');
+                            return false;
+                        }
+                        $stmtInsertEpisode->bindValue(':fully_played', $resume_point->fully_played);
+                        $stmtInsertEpisode->bindValue(':resume_position_ms', $resume_point->resume_position_ms);
                         $stmtInsertEpisode->execute();
                     } catch (PDOException $e) {
                         logMsg('Error(refreshLibrary): (exception '.jTraceEx($e).')');

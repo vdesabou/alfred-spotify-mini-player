@@ -271,7 +271,7 @@
 				<key>modifiers</key>
 				<integer>1572864</integer>
 				<key>modifiersubtext</key>
-				<string>Add track to Queue</string>
+				<string>Add track or episode to Queue</string>
 				<key>vitoclose</key>
 				<false/>
 			</dict>

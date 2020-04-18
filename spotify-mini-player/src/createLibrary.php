@@ -519,7 +519,7 @@ function createLibrary($w)
 
         $db->exec('create table shows (uri text PRIMARY KEY NOT NULL, name text, description text, media_type text, show_artwork_path text, explicit boolean, added_at text, languages text, nb_times_played int, is_externally_hosted boolean, nb_episodes int)');
 
-        $db->exec('create table episodes (uri text PRIMARY KEY NOT NULL, name text, show_uri text, show_name text, description text, episode_artwork_path text, is_playable boolean, languages text, nb_times_played int, is_externally_hosted boolean, duration_ms int, explicit boolean, release_date text, release_date_precision text, audio_preview_url text)');
+        $db->exec('create table episodes (uri text PRIMARY KEY NOT NULL, name text, show_uri text, show_name text, description text, episode_artwork_path text, is_playable boolean, languages text, nb_times_played int, is_externally_hosted boolean, duration_ms int, explicit boolean, release_date text, release_date_precision text, audio_preview_url text, fully_played boolean, resume_position_ms int)');
 
         $insertPlaylist = 'insert into playlists values (:uri,:name,:nb_tracks,:owner,:username,:playlist_artwork_path,:ownedbyuser,:nb_playable_tracks,:duration_playlist,:nb_times_played,:collaborative,:public)';
         $stmtPlaylist = $db->prepare($insertPlaylist);
@@ -527,7 +527,7 @@ function createLibrary($w)
         $insertShow = 'insert into shows values (:uri,:name,:description,:media_type,:show_artwork_path,:explicit,:added_at,:languages,:nb_times_played,:is_externally_hosted, :nb_episodes)';
         $stmtInsertShow = $db->prepare($insertShow);
 
-        $insertEpisode = 'insert into episodes values (:uri,:name,:show_uri,:show_name,:description,:episode_artwork_path,:is_playable,:languages,:nb_times_played,:is_externally_hosted,:duration_ms,:explicit,:release_date,:release_date_precision,:audio_preview_url)';
+        $insertEpisode = 'insert into episodes values (:uri,:name,:show_uri,:show_name,:description,:episode_artwork_path,:is_playable,:languages,:nb_times_played,:is_externally_hosted,:duration_ms,:explicit,:release_date,:release_date_precision,:audio_preview_url,:fully_played,:resume_position_ms)';
         $stmtInsertEpisode = $db->prepare($insertEpisode);
 
         $insertTrack = 'insert into tracks values (:yourmusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_type,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:added_at,:duration,:nb_times_played,:local_track,:yourmusic_album)';
@@ -1024,6 +1024,17 @@ function createLibrary($w)
             $stmtInsertEpisode->bindValue(':release_date', $episode->release_date);
             $stmtInsertEpisode->bindValue(':release_date_precision', $episode->release_date_precision);
             $stmtInsertEpisode->bindValue(':audio_preview_url', $episode->audio_preview_url);
+            if(isset($episode->resume_point)) {
+                $resume_point = $episode->resume_point;
+            } else {
+                updateSetting($w,'oauth_access_token','');
+                updateSetting($w,'oauth_refresh_token','');
+                handleSpotifyPermissionException($w, 'Refresh token revoked');
+                return false;
+            }
+
+            $stmtInsertEpisode->bindValue(':fully_played', $resume_point->fully_played);
+            $stmtInsertEpisode->bindValue(':resume_position_ms', $resume_point->resume_position_ms);
             $stmtInsertEpisode->execute();
         } catch (PDOException $e) {
             logMsg('Error(createLibrary): (exception '.jTraceEx($e).')');

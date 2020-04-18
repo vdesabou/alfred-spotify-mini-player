@@ -1482,7 +1482,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
 
         if($isEpisode) {
             $show_uri = getShowFromEpisode($w, $results[4]);
-            $w->result(null, '', '🎙 '.escapeQuery($results[2]).' ('.$results[4].' episodes)',array(
+            $w->result(null, '', '🎙 '.escapeQuery($results[2]).' ('.getNumberOfEpisodesForShow($w, $show_uri, $country_code).' episodes)',array(
                 'Browse this show',
                'alt' => 'Not Available',
                'cmd' => 'Not Available',

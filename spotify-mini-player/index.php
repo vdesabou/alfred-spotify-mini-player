@@ -33,7 +33,8 @@ try {
                     'user-read-recently-played',
                     'user-read-playback-state',
                     'user-modify-playback-state',
-                    'user-read-currently-playing'),
+                    'user-read-currently-playing',
+                    'user-read-playback-position'),
                 'show_dialog' => true, )));
 } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
     echo 'There was an error during the authentication flow (exception '.jTraceEx($e).')';

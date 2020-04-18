@@ -298,7 +298,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
             addToQueueSpotifyConnect($w, $track_uri, $device_id);
             if(getenv('reduce_notifications') == 0) {
                 $track_artwork_path = getTrackOrAlbumArtwork($w, $track_uri, true, false, false, $use_artworks);
-                displayNotificationWithArtwork($w, ''.$track_name.' added to queue', $track_artwork_path, 'Add Track to Queue');
+                displayNotificationWithArtwork($w, ''.$track_name.' added to queue', $track_artwork_path, 'Add Track or Episode to Queue');
             }
         } else {
 
