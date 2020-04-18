@@ -457,6 +457,7 @@ function createLibrary($w)
                                 $myalbum->uri = $album->uri;
                                 $myalbum->name = $album->name;
                                 $myalbum->album_type = $album->album_type;
+                                $myalbum->yourmusic_album = 1;
                                 $track->album = $myalbum;
                                 $allMySavedAlbumsTracks[] = $track;
                                 $nb_tracktotal += 1;
@@ -509,7 +510,7 @@ function createLibrary($w)
     $nb_track = 0;
 
     try {
-        $db->exec('create table tracks (yourmusic boolean, popularity int, uri text, album_uri text, artist_uri text, track_name text, album_name text, artist_name text, album_type text, track_artwork_path text, artist_artwork_path text, album_artwork_path text, playlist_name text, playlist_uri text, playable boolean, added_at text, duration text, nb_times_played int, local_track boolean)');
+        $db->exec('create table tracks (yourmusic boolean, popularity int, uri text, album_uri text, artist_uri text, track_name text, album_name text, artist_name text, album_type text, track_artwork_path text, artist_artwork_path text, album_artwork_path text, playlist_name text, playlist_uri text, playable boolean, added_at text, duration text, nb_times_played int, local_track boolean, yourmusic_album boolean)');
         $db->exec('CREATE INDEX IndexPlaylistUri ON tracks (playlist_uri)');
         $db->exec('CREATE INDEX IndexArtistName ON tracks (artist_name)');
         $db->exec('CREATE INDEX IndexAlbumName ON tracks (album_name)');
@@ -529,7 +530,7 @@ function createLibrary($w)
         $insertEpisode = 'insert into episodes values (:uri,:name,:show_uri,:show_name,:description,:episode_artwork_path,:is_playable,:languages,:nb_times_played,:is_externally_hosted,:duration_ms,:explicit,:release_date,:release_date_precision,:audio_preview_url)';
         $stmtInsertEpisode = $db->prepare($insertEpisode);
 
-        $insertTrack = 'insert into tracks values (:yourmusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_type,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:added_at,:duration,:nb_times_played,:local_track)';
+        $insertTrack = 'insert into tracks values (:yourmusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_type,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:added_at,:duration,:nb_times_played,:local_track,:yourmusic_album)';
         $stmtTrack = $db->prepare($insertTrack);
     } catch (PDOException $e) {
         logMsg('Error(createLibrary): (exception '.jTraceEx($e).')');
@@ -756,6 +757,7 @@ function createLibrary($w)
                     $stmtTrack->bindValue(':duration', beautifyTime($track->duration_ms / 1000));
                     $stmtTrack->bindValue(':nb_times_played', 0);
                     $stmtTrack->bindValue(':local_track', $local_track);
+                    $stmtTrack->bindValue(':yourmusic_album', 0);
                     $stmtTrack->execute();
                 } catch (PDOException $e) {
                     logMsg('Error(createLibrary): (exception '.jTraceEx($e).')');
@@ -910,6 +912,11 @@ function createLibrary($w)
             $stmtTrack->bindValue(':duration', beautifyTime($track->duration_ms / 1000));
             $stmtTrack->bindValue(':nb_times_played', 0);
             $stmtTrack->bindValue(':local_track', $local_track);
+            if(isset($album->yourmusic_album)) {
+                $stmtTrack->bindValue(':yourmusic_album', 1);
+            } else {
+                $stmtTrack->bindValue(':yourmusic_album', 0);
+            }
             $stmtTrack->execute();
         } catch (PDOException $e) {
             logMsg('Error(createLibrary): (exception '.jTraceEx($e).')');
@@ -980,7 +987,6 @@ function createLibrary($w)
     foreach ($savedMySavedEpisodes as $episode) {
 
         try {
-
             // Download artworks in Fetch later mode
             if ($use_artworks) {
                 list($already_present, $episode_artwork_path) = getEpisodeArtwork($w, $episode->uri, true, true, false, $use_artworks);
@@ -1056,7 +1062,7 @@ function createLibrary($w)
         $stmt->execute();
         $all_albums = $stmt->fetch();
 
-        $getCount = 'select count(distinct album_name) from tracks where yourmusic=1';
+        $getCount = 'select count(distinct album_name) from tracks where yourmusic_album=1';
         $stmt = $db->prepare($getCount);
         $stmt->execute();
         $yourmusic_albums = $stmt->fetch();

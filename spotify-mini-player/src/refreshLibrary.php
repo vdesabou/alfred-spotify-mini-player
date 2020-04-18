@@ -142,7 +142,7 @@ function refreshLibrary($w)
         $insertPlaylist = 'insert into playlists values (:uri,:name,:nb_tracks,:owner,:username,:playlist_artwork_path,:ownedbyuser,:nb_playable_tracks,:duration_playlist,:nb_times_played,:collaborative,:public)';
         $stmtPlaylist = $db->prepare($insertPlaylist);
 
-        $insertTrack = 'insert into tracks values (:yourmusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_type,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:added_at,:duration,:nb_times_played,:local_track)';
+        $insertTrack = 'insert into tracks values (:yourmusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_type,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:added_at,:duration,:nb_times_played,:local_track,:yourmusic_album)';
         $stmtTrack = $db->prepare($insertTrack);
 
         $deleteFromTracks = 'delete from tracks where playlist_uri=:playlist_uri';
@@ -517,6 +517,7 @@ function refreshLibrary($w)
                         $stmtTrack->bindValue(':duration', beautifyTime($track->duration_ms / 1000));
                         $stmtTrack->bindValue(':nb_times_played', 0);
                         $stmtTrack->bindValue(':local_track', $local_track);
+                        $stmtTrack->bindValue(':yourmusic_album', 0);
                         $stmtTrack->execute();
                     } catch (PDOException $e) {
                         logMsg('Error(refreshLibrary): (exception '.jTraceEx($e).')');
@@ -789,6 +790,7 @@ function refreshLibrary($w)
                             $stmtTrack->bindValue(':duration', beautifyTime($track->duration_ms / 1000));
                             $stmtTrack->bindValue(':nb_times_played', 0);
                             $stmtTrack->bindValue(':local_track', $local_track);
+                            $stmtTrack->bindValue(':yourmusic_album', 0);
                             $stmtTrack->execute();
                         } catch (PDOException $e) {
                             logMsg('Error(refreshLibrary): (exception '.jTraceEx($e).')');
@@ -882,9 +884,9 @@ function refreshLibrary($w)
             logMsg('Error(getMySavedTracks): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
 
             if ($e->getCode() == 429) { // 429 is Too Many Requests
-            $lastResponse = $api->getRequest()->getLastResponse();
-            $retryAfter = $lastResponse['headers']['Retry-After'];
-            sleep($retryAfter);
+                $lastResponse = $api->getRequest()->getLastResponse();
+                $retryAfter = $lastResponse['headers']['Retry-After'];
+                sleep($retryAfter);
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
@@ -1102,6 +1104,11 @@ function refreshLibrary($w)
                     $stmtTrack->bindValue(':duration', beautifyTime($track->duration_ms / 1000));
                     $stmtTrack->bindValue(':nb_times_played', 0);
                     $stmtTrack->bindValue(':local_track', $local_track);
+                    if(isset($album->yourmusic_album)) {
+                        $stmtTrack->bindValue(':yourmusic_album', 1);
+                    } else {
+                        $stmtTrack->bindValue(':yourmusic_album', 0);
+                    }
                     $stmtTrack->execute();
                 } catch (PDOException $e) {
                     logMsg('Error(refreshLibrary): (exception '.jTraceEx($e).')');
@@ -1529,7 +1536,7 @@ function refreshLibrary($w)
         $stmt->execute();
         $all_albums = $stmt->fetch();
 
-        $getCount = 'select count(distinct album_name) from tracks where yourmusic=1';
+        $getCount = 'select count(distinct album_name) from tracks where yourmusic_album=1';
         $stmt = $db->prepare($getCount);
         $stmt->execute();
         $yourmusic_albums = $stmt->fetch();

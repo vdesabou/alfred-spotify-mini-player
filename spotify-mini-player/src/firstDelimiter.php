@@ -485,18 +485,10 @@ function firstDelimiterAlbums($w, $query, $settings, $db, $update_in_progress)
     $album = $words[1];
     try {
         if (mb_strlen($album) < 2) {
-            if ($all_playlists == false) {
-                $getTracks = 'select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where yourmusic=1'.'  group by album_name order by max(added_at) desc limit '.$max_results;
-            } else {
-                $getTracks = 'select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks group by album_name order by max(added_at) desc limit '.$max_results;
-            }
+            $getTracks = 'select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where yourmusic_album=1'.'  group by album_name order by max(added_at) desc limit '.$max_results;
             $stmt = $db->prepare($getTracks);
         } else {
-            if ($all_playlists == false) {
-                $getTracks = 'select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where yourmusic=1 and album_name like :query group by album_name order by max(added_at) desc limit '.$max_results;
-            } else {
-                $getTracks = 'select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where album_name like :query group by album_name order by max(added_at) desc limit '.$max_results;
-            }
+            $getTracks = 'select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where yourmusic_album=1 and album_name like :query group by album_name order by max(added_at) desc limit '.$max_results;
             $stmt = $db->prepare($getTracks);
             $stmt->bindValue(':query', '%'.$album.'%');
         }
