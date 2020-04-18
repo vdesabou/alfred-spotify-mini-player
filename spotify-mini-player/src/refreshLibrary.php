@@ -126,6 +126,8 @@ function refreshLibrary($w)
     $nb_added_shows = 0;
     $nb_removed_shows = 0;
     $nb_updated_shows = 0;
+    $nb_added_albums = 0;
+    $nb_removed_albums = 0;
 
     try {
         $db = new PDO("sqlite:$dbfile", '', '', array(
@@ -168,6 +170,10 @@ function refreshLibrary($w)
 
         $updateShowsNbEpisodes = 'update shows set nb_episodes=:nb_episodes where uri=:uri';
         $stmtUpdateShowsNbEpisodes = $db->prepare($updateShowsNbEpisodes);
+
+
+        $getYourMusicAlbums = 'select * from tracks where yourmusic_album=1 and album_uri=:album_uri group by album_uri';
+        $stmtYourMusicAlbums = $db->prepare($getYourMusicAlbums);
     } catch (PDOException $e) {
         logMsg('Error(refreshLibrary): (exception '.jTraceEx($e).')');
         handleDbIssuePdoEcho($db, $w);
@@ -177,11 +183,9 @@ function refreshLibrary($w)
         return;
     }
 
-    // Handle Shows
-
-    $savedMySavedShows = array();
-    $offsetGetMySavedShows = 0;
-    $limitGetMySavedShows = 50;
+    $savedMySavedAlbums = array();
+    $offsetGetMySavedAlbums = 0;
+    $limitGetMySavedAlbums = 50;
     do {
         $retry = true;
         $nb_retry = 0;
@@ -194,6 +198,71 @@ function refreshLibrary($w)
 
             return false;
         }
+
+        while ($retry) {
+            try {
+                // refresh api
+                $api = getSpotifyWebAPI($w, $api);
+                $userMySavedAlbums = $api->getMySavedAlbums(array(
+                        'limit' => $limitGetMySavedAlbums,
+                        'offset' => $offsetGetMySavedAlbums,
+                        'market' => $country_code,
+                    ));
+                $retry = false;
+            } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+                logMsg('Error(getMySavedAlbums): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
+
+                if ($e->getCode() == 429) { // 429 is Too Many Requests
+                    $lastResponse = $api->getRequest()->getLastResponse();
+                    $retryAfter = $lastResponse['headers']['Retry-After'];
+                    sleep($retryAfter);
+                } else if ($e->getCode() == 404) {
+                    // skip
+                    break;
+                } else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
+                    // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
+                    // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
+                    // retry any SSL error
+                    ++$nb_retry;
+                } else if ($e->getCode() == 500
+                    || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+                    // retry
+                    if ($nb_retry > 2) {
+                        handleSpotifyWebAPIException($w, $e);
+                        $retry = false;
+
+                        return false;
+                    }
+                    ++$nb_retry;
+                    sleep(5);
+                } else {
+                    handleSpotifyWebAPIException($w, $e);
+                    $retry = false;
+
+                    return false;
+                }
+            }
+        }
+
+        foreach ($userMySavedAlbums->items as $item) {
+            $album = $item->album;
+            $tracks = $album->tracks;
+            if ($album->name != '') {
+                $savedMySavedAlbums[] = $album;
+            }
+        }
+
+        $offsetGetMySavedAlbums += $limitGetMySavedAlbums;
+    } while ($offsetGetMySavedAlbums < $userMySavedAlbums->total);
+
+    // Handle Shows
+
+    $savedMySavedShows = array();
+    $offsetGetMySavedShows = 0;
+    $limitGetMySavedShows = 50;
+    do {
+        $retry = true;
+        $nb_retry = 0;
 
         while ($retry) {
             try {
@@ -866,7 +935,145 @@ function refreshLibrary($w)
         return;
     }
 
-    // check for update to Your Music
+
+
+
+    // check for update to Your Music - albums
+    foreach ($savedMySavedAlbums as $album) {
+
+        ++$nb_playlist;
+        $w->write('Refresh Library▹'.$nb_playlist.'▹'.$nb_playlist_total.'▹'.$words[3].'▹'.escapeQuery($album->name), 'update_library_in_progress');
+
+        try {
+            // Loop on existing albums in library
+            $stmtYourMusicAlbums->bindValue(':album_uri', $album->uri);
+            $stmtYourMusicAlbums->execute();
+
+            $noresult = true;
+            while ($albums = $stmtYourMusicAlbums->fetch()) {
+                $noresult = false;
+                break;
+            }
+        } catch (PDOException $e) {
+            logMsg('Error(refreshLibrary): (exception '.jTraceEx($e).')');
+            handleDbIssuePdoEcho($db, $w);
+            $dbartworks = null;
+            $db = null;
+
+            return;
+        }
+
+        // Album does not exist, add it
+        if ($noresult == true) {
+            $thealbumuri = 'spotify:album:fakealbumuri';
+            if (isset($album->uri)) {
+                $thealbumuri = $album->uri;
+            }
+            ++$nb_added_albums;
+            $album_artwork_path = getTrackOrAlbumArtwork($w, $thealbumuri, true, false, false, $use_artworks);
+
+            $offsetGetMySavedAlbumTracks = 0;
+            $limitGetMySavedAlbumTracks = 50;
+            do {
+                $retry = true;
+                $nb_retry = 0;
+                while ($retry) {
+                    try {
+                        // refresh api
+                        $api = getSpotifyWebAPI($w, $api);
+                        $tmp = explode(':', $album->uri);
+                        $albumTracks = $api->getAlbumTracks($tmp[2], array(
+                            'limit' => $limitGetMySavedAlbumTracks,
+                            'offset' => $offsetGetMySavedAlbumTracks,
+                            'market' => $country_code,
+                        ));
+
+                        foreach ($albumTracks->items as $track) {
+                            // add album details as it is a simplified track
+                            $myalbum = new stdClass();
+                            $myalbum->uri = $album->uri;
+                            $myalbum->name = $album->name;
+                            $myalbum->album_type = $album->album_type;
+                            $myalbum->yourmusic_album = 1;
+                            $track->album = $myalbum;
+                            $allMySavedAlbumsTracks[] = $track;
+                        }
+                        $retry = false;
+                    } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+                        logMsg('Error(getAlbumTracks): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
+
+                        if ($e->getCode() == 429) { // 429 is Too Many Requests
+                            $lastResponse = $api->getRequest()->getLastResponse();
+                            $retryAfter = $lastResponse['headers']['Retry-After'];
+                        } else if ($e->getCode() == 404) {
+                            // skip
+                            break;
+                        } else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
+                            // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
+                            // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
+                            // retry any SSL error
+                            ++$nb_retry;
+                        } else if ($e->getCode() == 500
+                            || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+                            // retry
+                            if ($nb_retry > 2) {
+                                handleSpotifyWebAPIException($w, $e);
+                                $retry = false;
+
+                                return false;
+                            }
+                            ++$nb_retry;
+                            sleep(5);
+                        } else {
+                            handleSpotifyWebAPIException($w, $e);
+                            $retry = false;
+
+                            return false;
+                        }
+                    }
+                }
+                $offsetGetMySavedAlbumTracks += $limitGetMySavedAlbumTracks;
+            } while ($offsetGetMySavedAlbumTracks < $albumTracks->total);
+
+            displayNotificationWithArtwork($w, 'Added album '.escapeQuery($album->name), $album_artwork_path, 'Refresh Library');
+        }
+    }
+
+    try {
+        // check for deleted albums
+        $getAllSavedAlbums = 'select * from tracks where yourmusic_album=1 group by album_uri';
+        $stmt = $db->prepare($getAllSavedAlbums);
+        $stmt->execute();
+
+        while ($album_in_db = $stmt->fetch()) {
+            $found = false;
+            foreach ($savedMySavedAlbums as $album) {
+                if ($album->uri == $album_in_db[0]) {
+                    $found = true;
+                    break;
+                }
+            }
+            if ($found == false) {
+                ++$nb_removed_albums;
+
+                $deleteFromSavedAlbums = 'delete from tracks where yourmusic_album=1 and album_uri=:album_uri';
+                $stmtDelete = $db->prepare($deleteFromSavedAlbums);
+                $stmtDelete->bindValue(':album_uri', $album_in_db[0]);
+                $stmtDelete->execute();
+
+                displayNotificationWithArtwork($w, 'Removed album '.$album_in_db[1], getTrackOrAlbumArtwork($w, $album_in_db[0], false, false, false, $use_artworks), 'Refresh Library');
+            }
+        }
+    } catch (PDOException $e) {
+        logMsg('Error(refreshLibrary): (exception '.jTraceEx($e).')');
+        handleDbIssuePdoEcho($db, $w);
+        $dbartworks = null;
+        $db = null;
+
+        return;
+    }
+
+    // check for update to Your Music - tracks
     $retry = true;
     $nb_retry = 0;
     while ($retry) {
@@ -930,7 +1137,7 @@ function refreshLibrary($w)
     }
 
     $your_music_updated = false;
-    if ($yourmusic_tracks[0] != $userMySavedTracks->total) {
+    if ($yourmusic_tracks[0] != $userMySavedTracks->total || count($allMySavedAlbumsTracks) > 0) {
         $your_music_updated = true;
         // Your Music has changed, update it
         ++$nb_playlist;
@@ -948,6 +1155,7 @@ function refreshLibrary($w)
             return;
         }
 
+        $savedMySavedTracks = array();
         $offsetGetMySavedTracks = 0;
         $limitGetMySavedTracks = 50;
         do {
@@ -998,129 +1206,137 @@ function refreshLibrary($w)
                 }
             }
 
-            foreach ($userMySavedTracks->items as $item) {
-                if(!isset($item->track)) {
-                    continue;
-                }
-                $track = $item->track;
-                $artists = $track->artists;
-                $artist = $artists[0];
-                $album = $track->album;
-
-                $playable = 0;
-                $local_track = 0;
-                if (isset($track->is_playable) && $track->is_playable) {
-                    $playable = 1;
-                    if (isset($track->linked_from) && isset($track->linked_from->uri)) {
-                        $track->uri = $track->linked_from->uri;
-                    }
-                }
-                if (isset($item->is_local) && $item->is_local) {
-                    $playable = 1;
-                    $local_track = 1;
-                }
-
-                try {
-
-                    // Download artworks in Fetch later mode
-                    $thetrackuri = 'spotify:track:faketrackuri';
-                    if ($local_track == 0 && isset($track->uri)) {
-                        $thetrackuri = $track->uri;
-                    }
-                    if ($use_artworks) {
-                        list($already_present, $track_artwork_path) = getTrackOrAlbumArtwork($w, $thetrackuri, true, true, false, $use_artworks);
-                        if ($already_present == false) {
-                            $artworksToDownload = true;
-                            $stmtTrackArtwork->bindValue(':track_uri', $thetrackuri);
-                            $stmtTrackArtwork->bindValue(':already_fetched', 0);
-                            $stmtTrackArtwork->execute();
-                        }
-                    } else {
-                        $track_artwork_path = getTrackOrAlbumArtwork($w, $thetrackuri, false, false, false, $use_artworks);
-                    }
-
-                    $theartistname = 'fakeartist';
-                    if (isset($artist->name)) {
-                        $theartistname = $artist->name;
-                    }
-                    $theartisturi = 'spotify:artist:fakeartisturi';
-                    if (isset($artist->uri)) {
-                        $theartisturi = $artist->uri;
-                    }
-                    if ($use_artworks) {
-                        list($already_present, $artist_artwork_path) = getArtistArtwork($w, $theartisturi, $theartistname, true, true, false, $use_artworks);
-                        if ($already_present == false) {
-                            $artworksToDownload = true;
-                            $stmtArtistArtwork->bindValue(':artist_uri', $artist->uri);
-                            $stmtArtistArtwork->bindValue(':artist_name', $theartistname);
-                            $stmtArtistArtwork->bindValue(':already_fetched', 0);
-                            $stmtArtistArtwork->execute();
-                        }
-                    } else {
-                        $artist_artwork_path = getArtistArtwork($w, $theartisturi, $theartistname, false, false, false, false, $use_artworks);
-                    }
-
-                    $thealbumuri = 'spotify:album:fakealbumuri';
-                    if (isset($album->uri)) {
-                        $thealbumuri = $album->uri;
-                    }
-                    if ($use_artworks) {
-                        list($already_present, $album_artwork_path) = getTrackOrAlbumArtwork($w, $thealbumuri, true, true, false, $use_artworks);
-                        if ($already_present == false) {
-                            $artworksToDownload = true;
-                            $stmtAlbumArtwork->bindValue(':album_uri', $thealbumuri);
-                            $stmtAlbumArtwork->bindValue(':already_fetched', 0);
-                            $stmtAlbumArtwork->execute();
-                        }
-                    } else {
-                        $album_artwork_path = getTrackOrAlbumArtwork($w, $thealbumuri, false, false, false, $use_artworks);
-                    }
-                } catch (PDOException $e) {
-                    logMsg('Error(refreshLibrary): (exception '.jTraceEx($e).')');
-                    handleDbIssuePdoEcho($dbartworks, $w);
-                    $dbartworks = null;
-                    $db = null;
-
-                    return false;
-                }
-
-                try {
-                    $stmtTrack->bindValue(':yourmusic', 1);
-                    $stmtTrack->bindValue(':popularity', $track->popularity);
-                    $stmtTrack->bindValue(':uri', $track->uri);
-                    $stmtTrack->bindValue(':album_uri', $album->uri);
-                    $stmtTrack->bindValue(':artist_uri', $artist->uri);
-                    $stmtTrack->bindValue(':track_name', escapeQuery($track->name));
-                    $stmtTrack->bindValue(':album_name', escapeQuery($album->name));
-                    $stmtTrack->bindValue(':artist_name', escapeQuery($artist->name));
-                    $stmtTrack->bindValue(':album_type', $album->album_type);
-                    $stmtTrack->bindValue(':track_artwork_path', $track_artwork_path);
-                    $stmtTrack->bindValue(':artist_artwork_path', $artist_artwork_path);
-                    $stmtTrack->bindValue(':album_artwork_path', $album_artwork_path);
-                    $stmtTrack->bindValue(':playlist_name', '');
-                    $stmtTrack->bindValue(':playlist_uri', '');
-                    $stmtTrack->bindValue(':playable', $playable);
-                    $stmtTrack->bindValue(':added_at', $item->added_at);
-                    $stmtTrack->bindValue(':duration', beautifyTime($track->duration_ms / 1000));
-                    $stmtTrack->bindValue(':nb_times_played', 0);
-                    $stmtTrack->bindValue(':local_track', $local_track);
-                    if(isset($album->yourmusic_album)) {
-                        $stmtTrack->bindValue(':yourmusic_album', 1);
-                    } else {
-                        $stmtTrack->bindValue(':yourmusic_album', 0);
-                    }
-                    $stmtTrack->execute();
-                } catch (PDOException $e) {
-                    logMsg('Error(refreshLibrary): (exception '.jTraceEx($e).')');
-                    handleDbIssuePdoEcho($db, $w);
-                    $db = null;
-
-                    return;
-                }
+            foreach ($userMySavedTracks->items as $track) {
+                $savedMySavedTracks[] = $track->track;
             }
 
             $offsetGetMySavedTracks += $limitGetMySavedTracks;
         } while ($offsetGetMySavedTracks < $userMySavedTracks->total);
+
+        // merge allMySavedAlbumsTracks and savedMySavedTracks to handle all Your Music tracks
+        $mergedMySavedTracks = array_merge($allMySavedAlbumsTracks, $savedMySavedTracks);
+
+        foreach ($mergedMySavedTracks as $track) {
+            $artists = $track->artists;
+            $artist = $artists[0];
+            $album = $track->album;
+
+            $playable = 0;
+            $local_track = 0;
+            if (isset($track->is_playable) && $track->is_playable) {
+                $playable = 1;
+                if (isset($track->linked_from) && isset($track->linked_from->uri)) {
+                    $track->uri = $track->linked_from->uri;
+                }
+            }
+            if (isset($item->is_local) && $item->is_local) {
+                $playable = 1;
+                $local_track = 1;
+            }
+
+            try {
+
+                // Download artworks in Fetch later mode
+                $thetrackuri = 'spotify:track:faketrackuri';
+                if ($local_track == 0 && isset($track->uri)) {
+                    $thetrackuri = $track->uri;
+                }
+                if ($use_artworks) {
+                    list($already_present, $track_artwork_path) = getTrackOrAlbumArtwork($w, $thetrackuri, true, true, false, $use_artworks);
+                    if ($already_present == false) {
+                        $artworksToDownload = true;
+                        $stmtTrackArtwork->bindValue(':track_uri', $thetrackuri);
+                        $stmtTrackArtwork->bindValue(':already_fetched', 0);
+                        $stmtTrackArtwork->execute();
+                    }
+                } else {
+                    $track_artwork_path = getTrackOrAlbumArtwork($w, $thetrackuri, false, false, false, $use_artworks);
+                }
+
+                $theartistname = 'fakeartist';
+                if (isset($artist->name)) {
+                    $theartistname = $artist->name;
+                }
+                $theartisturi = 'spotify:artist:fakeartisturi';
+                if (isset($artist->uri)) {
+                    $theartisturi = $artist->uri;
+                }
+                if ($use_artworks) {
+                    list($already_present, $artist_artwork_path) = getArtistArtwork($w, $theartisturi, $theartistname, true, true, false, $use_artworks);
+                    if ($already_present == false) {
+                        $artworksToDownload = true;
+                        $stmtArtistArtwork->bindValue(':artist_uri', $artist->uri);
+                        $stmtArtistArtwork->bindValue(':artist_name', $theartistname);
+                        $stmtArtistArtwork->bindValue(':already_fetched', 0);
+                        $stmtArtistArtwork->execute();
+                    }
+                } else {
+                    $artist_artwork_path = getArtistArtwork($w, $theartisturi, $theartistname, false, false, false, $use_artworks);
+                }
+
+                $thealbumuri = 'spotify:album:fakealbumuri';
+                if (isset($album->uri)) {
+                    $thealbumuri = $album->uri;
+                }
+                if ($use_artworks) {
+                    list($already_present, $album_artwork_path) = getTrackOrAlbumArtwork($w, $thealbumuri, true, true, false, $use_artworks);
+                    if ($already_present == false) {
+                        $artworksToDownload = true;
+                        $stmtAlbumArtwork->bindValue(':album_uri', $thealbumuri);
+                        $stmtAlbumArtwork->bindValue(':already_fetched', 0);
+                        $stmtAlbumArtwork->execute();
+                    }
+                } else {
+                    $album_artwork_path = getTrackOrAlbumArtwork($w, $thealbumuri, false, false, false, $use_artworks);
+                }
+            } catch (PDOException $e) {
+                logMsg('Error(createLibrary): (exception '.jTraceEx($e).')');
+                handleDbIssuePdoEcho($dbartworks, $w);
+                $dbartworks = null;
+                $db = null;
+
+                return false;
+            }
+
+            try {
+                $stmtTrack->bindValue(':yourmusic', 1);
+                if(isset($track->popularity)) {
+                    $stmtTrack->bindValue(':popularity', $track->popularity);
+                } else {
+                    $stmtTrack->bindValue(':popularity', 0);
+                }
+                $stmtTrack->bindValue(':uri', $track->uri);
+                $stmtTrack->bindValue(':album_uri', $album->uri);
+                $stmtTrack->bindValue(':artist_uri', $artist->uri);
+                $stmtTrack->bindValue(':track_name', escapeQuery($track->name));
+                $stmtTrack->bindValue(':album_name', escapeQuery($album->name));
+                $stmtTrack->bindValue(':artist_name', escapeQuery($artist->name));
+                $stmtTrack->bindValue(':album_type', $album->album_type);
+                $stmtTrack->bindValue(':track_artwork_path', $track_artwork_path);
+                $stmtTrack->bindValue(':artist_artwork_path', $artist_artwork_path);
+                $stmtTrack->bindValue(':album_artwork_path', $album_artwork_path);
+                $stmtTrack->bindValue(':playlist_name', '');
+                $stmtTrack->bindValue(':playlist_uri', '');
+                $stmtTrack->bindValue(':playable', $playable);
+                $stmtTrack->bindValue(':added_at', $item->added_at);
+                $stmtTrack->bindValue(':duration', beautifyTime($track->duration_ms / 1000));
+                $stmtTrack->bindValue(':nb_times_played', 0);
+                $stmtTrack->bindValue(':local_track', $local_track);
+                if(isset($album->yourmusic_album)) {
+                    $stmtTrack->bindValue(':yourmusic_album', 1);
+                } else {
+                    $stmtTrack->bindValue(':yourmusic_album', 0);
+                }
+                $stmtTrack->execute();
+            } catch (PDOException $e) {
+                logMsg('Error(createLibrary): (exception '.jTraceEx($e).')');
+                handleDbIssuePdoEcho($db, $w);
+                $dbartworks = null;
+                $db = null;
+
+                return false;
+            }
+        }
     }
 
     foreach ($savedMySavedShows as $item) {
@@ -1599,7 +1815,15 @@ function refreshLibrary($w)
     }
 
     if ($your_music_updated) {
-        $yourMusicMsg = ' - Your Music: updated';
+        $yourMusicMsg = ' - Your Music: updated ';
+
+        if ($nb_added_albums > 0) {
+            $yourMusicMsg .= $nb_added_albums.' albums added';
+        }
+
+        if ($nb_removed_albums > 0) {
+            $removedMsg = $nb_removed_albums.' albums removed';
+        }
         $changedYourMusic = true;
     }
 
