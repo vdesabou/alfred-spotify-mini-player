@@ -2303,8 +2303,10 @@ function getCurrentTrackInfoWithMopidy($w, $displayError = true)
                 return '';
             }
             $track_name = $current_track_info->item->name;
-            $artist_name = $current_track_info->item->artists[0]->name;
-            $album_name = $current_track_info->item->album->name;
+            if(isset($current_track_info->item->artists[0]))
+                $artist_name = $current_track_info->item->artists[0]->name;
+            if(isset($current_track_info->item->album))
+                $album_name = $current_track_info->item->album->name;
             $currently_playing_type = $current_track_info->currently_playing_type;
 
             if($currently_playing_type == 'episode') {
@@ -2327,7 +2329,9 @@ function getCurrentTrackInfoWithMopidy($w, $displayError = true)
             }
 
             $length = ($current_track_info->item->duration_ms);
-            $popularity = $current_track_info->item->popularity;
+            $popularity = '';
+            if(isset($current_track_info->item->popularity))
+                $popularity = $current_track_info->item->popularity;
 
             return ''.$track_name.'▹'.$artist_name.'▹'.$album_name.'▹'.$state.'▹'.$track_uri.'▹'.$length.'▹'.$popularity;
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
