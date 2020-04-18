@@ -435,8 +435,6 @@ function createLibrary($w)
             if ($album->name != '') {
                 $savedMySavedAlbums[] = $album;
 
-
-
                 $offsetGetMySavedTracks = 0;
                 $limitGetMySavedTracks = 50;
                 do {
@@ -454,6 +452,12 @@ function createLibrary($w)
                             ));
 
                             foreach ($albumTracks->items as $track) {
+                                // add album details as it is a simplified track
+                                $myalbum = new stdClass();
+                                $myalbum->uri = $album->uri;
+                                $myalbum->name = $album->name;
+                                $myalbum->album_type = $album->album_type;
+                                $track->album = $myalbum;
                                 $allMySavedAlbumsTracks[] = $track;
                                 $nb_tracktotal += 1;
                             }
@@ -464,7 +468,6 @@ function createLibrary($w)
                             if ($e->getCode() == 429) { // 429 is Too Many Requests
                                 $lastResponse = $api->getRequest()->getLastResponse();
                                 $retryAfter = $lastResponse['headers']['Retry-After'];
-                                sleep($retryAfter);
                             } else if ($e->getCode() == 404) {
                                 // skip
                                 break;
@@ -801,14 +804,7 @@ function createLibrary($w)
     // merge allMySavedAlbumsTracks and savedMySavedTracks to handle all Your Music tracks
     $mergedMySavedTracks = array_merge($allMySavedAlbumsTracks, $savedMySavedTracks);
 
-    logMsg(print_r($allMySavedAlbumsTracks));
-
-    logMsg(print_r($savedMySavedTracks));
-
-    logMsg(print_r($mergedMySavedTracks));
-
     foreach ($mergedMySavedTracks as $track) {
-        $track = $track->track;
         $artists = $track->artists;
         $artist = $artists[0];
         $album = $track->album;
@@ -892,7 +888,11 @@ function createLibrary($w)
 
         try {
             $stmtTrack->bindValue(':yourmusic', 1);
-            $stmtTrack->bindValue(':popularity', $track->popularity);
+            if(isset($track->popularity)) {
+                $stmtTrack->bindValue(':popularity', $track->popularity);
+            } else {
+                $stmtTrack->bindValue(':popularity', 0);
+            }
             $stmtTrack->bindValue(':uri', $track->uri);
             $stmtTrack->bindValue(':album_uri', $album->uri);
             $stmtTrack->bindValue(':artist_uri', $artist->uri);
