@@ -362,6 +362,38 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
  }
 
 /**
+ * getEpisodeName function.
+ *
+ * @param mixed $w
+ * @param mixed $episode_uri
+ */
+function getEpisodeName($w, $episode_uri)
+{
+    try {
+        $api = getSpotifyWebAPI($w);
+        // check if it is part collection
+        $tmp = explode(':', $episode_uri);
+        if (isset($tmp[3]) && $tmp[3] == 'collection') {
+           $episode_uri = 'spotify:album:' . $tmp[5];
+        }
+
+        $episode = $api->getEpisode($episode_uri);
+       return $episode->name;
+    } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+        $w->result(null, '', 'Error: Spotify WEB API returned error '.$e->getMessage(),array(
+           'function getEpisodeName episode_uri=' . $episode_uri,
+                   'alt' => 'Not Available',
+                   'cmd' => 'Not Available',
+                   'shift' => 'Not Available',
+                   'fn' => 'Not Available',
+                   'ctrl' => 'Not Available',
+               ), './images/warning.png', 'no', null, '');
+
+        return '';
+    }
+}
+
+/**
  * getPlaylistName function.
  *
  * @param mixed $w
@@ -474,6 +506,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
 
             $playback_info = $api->getMyCurrentPlaybackInfo(array(
             'market' => $country_code,
+            'additional_types' => 'track,episode',
             ));
             $retry = false;
 
@@ -964,6 +997,7 @@ function seekToBeginning($w)
 
             $playback_info = $api->getMyCurrentPlaybackInfo(array(
             'market' => $country_code,
+            'additional_types' => 'track,episode',
             ));
 
             if(isset($playback_info->is_playing)) {
@@ -1317,6 +1351,7 @@ function isShuffleActive($print_output)
 
                 $playback_info = $api->getMyCurrentPlaybackInfo(array(
                 'market' => $country_code,
+                'additional_types' => 'track,episode',
                 ));
 
                 if($playback_info->shuffle_state) {
@@ -2210,13 +2245,11 @@ function getCurrentTrackInfoWithMopidy($w, $displayError = true)
     // Read settings from JSON
     $settings = getSettings($w);
     $country_code = $settings->country_code;
-
     $track_name = '';
     $artist_name = '';
     $album_name = '';
     $track_uri = '';
     $length = 0;
-
     $retry = true;
     $nb_retry = 0;
     while ($retry) {
@@ -2224,7 +2257,8 @@ function getCurrentTrackInfoWithMopidy($w, $displayError = true)
             $api = getSpotifyWebAPI($w);
 
             $current_track_info = $api->getMyCurrentTrack(array(
-            'market' => $country_code,
+                'market' => $country_code,
+                'additional_types' => 'track,episode',
             ));
 
             $retry = false;
@@ -2235,6 +2269,15 @@ function getCurrentTrackInfoWithMopidy($w, $displayError = true)
             $track_name = $current_track_info->item->name;
             $artist_name = $current_track_info->item->artists[0]->name;
             $album_name = $current_track_info->item->album->name;
+            $currently_playing_type = $current_track_info->currently_playing_type;
+
+            if($currently_playing_type == 'episode') {
+                // override
+                $track_name = $current_track_info->item->name;
+                $artist_name = $current_track_info->item->show->publisher;
+                $album_name = $current_track_info->item->show->name;
+            }
+
             $is_playing = $current_track_info->is_playing;
             if ($is_playing) {
                 $state = 'playing';
@@ -2250,7 +2293,6 @@ function getCurrentTrackInfoWithMopidy($w, $displayError = true)
             $length = ($current_track_info->item->duration_ms);
             $popularity = $current_track_info->item->popularity;
 
-            $retArr = array(''.$track_name.'▹'.$artist_name.'▹'.$album_name.'▹'.$state.'▹'.$track_uri.'▹'.$length.'▹'.$popularity);
             return ''.$track_name.'▹'.$artist_name.'▹'.$album_name.'▹'.$state.'▹'.$track_uri.'▹'.$length.'▹'.$popularity;
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
             if ($e->getCode() == 429) { // 429 is Too Many Requests

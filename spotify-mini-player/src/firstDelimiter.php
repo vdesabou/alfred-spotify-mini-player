@@ -1222,6 +1222,9 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
         $shared_url = '';
         if ($href[1] == 'local') {
             $added = '📌 ';
+        } else if ($href[1] == 'episode') {
+            $shared_url .= ' https://open.spotify.com/episode/';
+            $shared_url .= $href[2];
         } else {
             $shared_url .= ' https://open.spotify.com/track/';
             $shared_url .= $href[2];
@@ -1234,78 +1237,152 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                 $popularity = floatToStars($results[6]/100);
             }
             if ($results[3] == 'playing') {
-                $w->result(null, serialize(array(
-                            $results[4] /*track_uri*/,
-                            '' /* album_uri */,
-                            '' /* artist_uri */,
-                            '' /* playlist_uri */,
-                            '' /* spotify_command */,
-                            '' /* query */,
-                            '' /* other_settings*/,
-                            'pause' /* other_action */,
-                            escapeQuery($results[1]) /* artist_name */,
-                            escapeQuery($results[0]) /* track_name */,
-                            escapeQuery($results[2]) /* album_name */,
-                            '' /* track_artwork_path */,
-                            '' /* artist_artwork_path */,
-                            '' /* album_artwork_path */,
-                            '' /* playlist_name */,
-                            '', /* playlist_artwork_path */
-                        )), $added.escapeQuery($results[0]).' ● '.escapeQuery($results[1]).' ● '.escapeQuery($results[2]).' ● '.$popularity.' ('.beautifyTime($results[5] / 1000).')', array(
-                        $subtitle,
-                        'alt' => 'Play album '.escapeQuery($results[2]).' in Spotify',
-                        'cmd' => 'Play artist '.escapeQuery($results[1]).' in Spotify',
-                        'fn' => 'Add track '.escapeQuery($results[0]).' to ...',
-                        'shift' => 'Add album '.escapeQuery($results[2]).' to ...',
-                        'ctrl' => 'Search artist '.escapeQuery($results[1]).' online',
-                    ), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', array(
-                            'copy' => '#NowPlaying ' . escapeQuery($results[0]).' by '.escapeQuery($results[1]) . $shared_url,
-                            'largetype' => escapeQuery($results[0]).' by '.escapeQuery($results[1]),
-                        ), '');
+                if ($href[1] == 'episode') {
+                    $w->result(null, serialize(array(
+                        $results[4] /*track_uri*/,
+                        '' /* album_uri */,
+                        '' /* artist_uri */,
+                        '' /* playlist_uri */,
+                        '' /* spotify_command */,
+                        '' /* query */,
+                        '' /* other_settings*/,
+                        'pause' /* other_action */,
+                        escapeQuery($results[1]) /* artist_name */,
+                        escapeQuery($results[0]) /* track_name */,
+                        escapeQuery($results[2]) /* album_name */,
+                        '' /* track_artwork_path */,
+                        '' /* artist_artwork_path */,
+                        '' /* album_artwork_path */,
+                        '' /* playlist_name */,
+                        '', /* playlist_artwork_path */
+                    )), $added.escapeQuery($results[0]), array(
+                        escapeQuery($results[1]).' ● '.escapeQuery($results[2]).' ● '.' ('.beautifyTime($results[5] / 1000).')',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', array(
+                        'copy' => '#NowPlaying ' . escapeQuery($results[0]).' by '.escapeQuery($results[1]) . $shared_url,
+                        'largetype' => escapeQuery($results[0]).' by '.escapeQuery($results[1]),
+                    ), '');
+                } else {
+                    $w->result(null, serialize(array(
+                        $results[4] /*track_uri*/,
+                        '' /* album_uri */,
+                        '' /* artist_uri */,
+                        '' /* playlist_uri */,
+                        '' /* spotify_command */,
+                        '' /* query */,
+                        '' /* other_settings*/,
+                        'pause' /* other_action */,
+                        escapeQuery($results[1]) /* artist_name */,
+                        escapeQuery($results[0]) /* track_name */,
+                        escapeQuery($results[2]) /* album_name */,
+                        '' /* track_artwork_path */,
+                        '' /* artist_artwork_path */,
+                        '' /* album_artwork_path */,
+                        '' /* playlist_name */,
+                        '', /* playlist_artwork_path */
+                    )), $added.escapeQuery($results[0]).' ● '.escapeQuery($results[1]).' ● '.escapeQuery($results[2]).' ● '.$popularity.' ('.beautifyTime($results[5] / 1000).')', array(
+                    $subtitle,
+                    'alt' => 'Play album '.escapeQuery($results[2]).' in Spotify',
+                    'cmd' => 'Play artist '.escapeQuery($results[1]).' in Spotify',
+                    'fn' => 'Add track '.escapeQuery($results[0]).' to ...',
+                    'shift' => 'Add album '.escapeQuery($results[2]).' to ...',
+                    'ctrl' => 'Search artist '.escapeQuery($results[1]).' online',
+                ), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', array(
+                        'copy' => '#NowPlaying ' . escapeQuery($results[0]).' by '.escapeQuery($results[1]) . $shared_url,
+                        'largetype' => escapeQuery($results[0]).' by '.escapeQuery($results[1]),
+                    ), '');
+                }
             } else {
-                $w->result(null, serialize(array(
-                            $results[4] /*track_uri*/,
-                            '' /* album_uri */,
-                            '' /* artist_uri */,
-                            '' /* playlist_uri */,
-                            '' /* spotify_command */,
-                            '' /* query */,
-                            '' /* other_settings*/,
-                            'play' /* other_action */,
-                            escapeQuery($results[1]) /* artist_name */,
-                            escapeQuery($results[0]) /* track_name */,
-                            escapeQuery($results[2]) /* album_name */,
-                            '' /* track_artwork_path */,
-                            '' /* artist_artwork_path */,
-                            '' /* album_artwork_path */,
-                            '' /* playlist_name */,
-                            '', /* playlist_artwork_path */
-                        )), $added.escapeQuery($results[0]).' ● '.escapeQuery($results[1]).' ● '.escapeQuery($results[2]).' ● '.$popularity.' ('.beautifyTime($results[5] / 1000).')', array(
-                        $subtitle,
-                        'alt' => 'Play album '.escapeQuery($results[2]).' in Spotify',
-                        'cmd' => 'Play artist '.escapeQuery($results[1]).' in Spotify',
-                        'fn' => 'Add track '.escapeQuery($results[0]).' to ...',
-                        'shift' => 'Add album '.escapeQuery($results[2]).' to ...',
-                        'ctrl' => 'Search artist '.escapeQuery($results[1]).' online',
-                    ), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', array(
-                            'copy' => '#NowPlaying ' . escapeQuery($results[0]).' by '.escapeQuery($results[1]) . $shared_url,
-                            'largetype' => escapeQuery($results[0]).' by '.escapeQuery($results[1]),
-                        ), '');
+                if ($href[1] == 'episode') {
+                    $w->result(null, serialize(array(
+                        $results[4] /*track_uri*/,
+                        '' /* album_uri */,
+                        '' /* artist_uri */,
+                        '' /* playlist_uri */,
+                        '' /* spotify_command */,
+                        '' /* query */,
+                        '' /* other_settings*/,
+                        'play' /* other_action */,
+                        escapeQuery($results[1]) /* artist_name */,
+                        escapeQuery($results[0]) /* track_name */,
+                        escapeQuery($results[2]) /* album_name */,
+                        '' /* track_artwork_path */,
+                        '' /* artist_artwork_path */,
+                        '' /* album_artwork_path */,
+                        '' /* playlist_name */,
+                        '', /* playlist_artwork_path */
+                    )), $added.escapeQuery($results[0]), array(
+                        escapeQuery($results[1]).' ● '.escapeQuery($results[2]).' ● '.' ('.beautifyTime($results[5] / 1000).')',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', array(
+                        'copy' => '#NowPlaying ' . escapeQuery($results[0]).' by '.escapeQuery($results[1]) . $shared_url,
+                        'largetype' => escapeQuery($results[0]).' by '.escapeQuery($results[1]),
+                    ), '');
+                } else {
+                    $w->result(null, serialize(array(
+                        $results[4] /*track_uri*/,
+                        '' /* album_uri */,
+                        '' /* artist_uri */,
+                        '' /* playlist_uri */,
+                        '' /* spotify_command */,
+                        '' /* query */,
+                        '' /* other_settings*/,
+                        'play' /* other_action */,
+                        escapeQuery($results[1]) /* artist_name */,
+                        escapeQuery($results[0]) /* track_name */,
+                        escapeQuery($results[2]) /* album_name */,
+                        '' /* track_artwork_path */,
+                        '' /* artist_artwork_path */,
+                        '' /* album_artwork_path */,
+                        '' /* playlist_name */,
+                        '', /* playlist_artwork_path */
+                    )), $added.escapeQuery($results[0]).' ● '.escapeQuery($results[1]).' ● '.escapeQuery($results[2]).' ● '.$popularity.' ('.beautifyTime($results[5] / 1000).')', array(
+                    $subtitle,
+                    'alt' => 'Play album '.escapeQuery($results[2]).' in Spotify',
+                    'cmd' => 'Play artist '.escapeQuery($results[1]).' in Spotify',
+                    'fn' => 'Add track '.escapeQuery($results[0]).' to ...',
+                    'shift' => 'Add album '.escapeQuery($results[2]).' to ...',
+                    'ctrl' => 'Search artist '.escapeQuery($results[1]).' online',
+                ), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', array(
+                        'copy' => '#NowPlaying ' . escapeQuery($results[0]).' by '.escapeQuery($results[1]) . $shared_url,
+                        'largetype' => escapeQuery($results[0]).' by '.escapeQuery($results[1]),
+                    ), '');
+                }
             }
         }
-
+        $isEpisode = false;
         if ($output_application == 'CONNECT') {
+            $context_type = '';
             if (mb_strlen($input) < 2) {
                 try {
                     $api = getSpotifyWebAPI($w);
 
                     $playback_info = $api->getMyCurrentPlaybackInfo(array(
                         'market' => $country_code,
+                        'additional_types' => 'track,episode',
                         ));
-
                     $track_name = $playback_info->item->name;
                     $artist_name = $playback_info->item->artists[0]->name;
                     $album_name = $playback_info->item->album->name;
+
+                    $currently_playing_type = $playback_info->currently_playing_type;
+
+                    if($currently_playing_type == 'episode') {
+                        // override
+                        $track_name = $current_track_info->item->name;
+                        $artist_name = $current_track_info->item->show->publisher;
+                        $album_name = $current_track_info->item->show->name;
+                        $isEpisode = true;
+                    }
+
                     $is_playing = $playback_info->is_playing;
                     if($is_playing) {
                         $state = 'playing';
@@ -1327,7 +1404,6 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                         $shuffle_state = "active";
                     }
 
-                    $context_type = '';
                     if($playback_info->context != null) {
                         $context_type = $playback_info->context->type;
                         if($context_type == 'playlist') {
@@ -1336,6 +1412,9 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                         } else if($context_type == 'album') {
                             $album_uri = $playback_info->context->uri;
                             $context = 'album ' . getAlbumName($w, $album_uri) . ' ';
+                        } else if($context_type == 'episode') {
+                            $episode_uri = $playback_info->context->uri;
+                            $context = 'episode ' . getEpisodeName($w, $episode_uri) . ' ';
                         } else if($context_type == 'artist') {
                             $artist_uri = $playback_info->context->uri;
                             $context = 'artist ' . getArtistName($w, $artist_uri) . ' ';
@@ -1401,6 +1480,10 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
             }
         }
 
+        if($isEpisode) {
+            echo $w->tojson();
+            exit;
+        }
 
         $getTracks = 'select artist_name,artist_uri from tracks where artist_name=:artist_name limit '. 1;
 
