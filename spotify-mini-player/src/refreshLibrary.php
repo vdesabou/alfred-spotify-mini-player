@@ -153,7 +153,7 @@ function refreshLibrary($w)
         $updatePlaylistsNbTracks = 'update playlists set nb_tracks=:nb_tracks,nb_playable_tracks=:nb_playable_tracks,duration_playlist=:duration_playlist,public=:public where uri=:uri';
         $stmtUpdatePlaylistsNbTracks = $db->prepare($updatePlaylistsNbTracks);
 
-        $deleteFromTracksYourMusic = 'delete from tracks where yourmusic=:yourmusic';
+        $deleteFromTracksYourMusic = 'delete from tracks where yourmusic=:yourmusic and yourmusic_album=0';
         $stmtDeleteFromTracksYourMusic = $db->prepare($deleteFromTracksYourMusic);
 
         $getShows = 'select * from shows where uri=:uri';
@@ -170,7 +170,6 @@ function refreshLibrary($w)
 
         $updateShowsNbEpisodes = 'update shows set nb_episodes=:nb_episodes where uri=:uri';
         $stmtUpdateShowsNbEpisodes = $db->prepare($updateShowsNbEpisodes);
-
 
         $getYourMusicAlbums = 'select * from tracks where yourmusic_album=1 and album_uri=:album_uri group by album_uri';
         $stmtYourMusicAlbums = $db->prepare($getYourMusicAlbums);
@@ -246,7 +245,6 @@ function refreshLibrary($w)
 
         foreach ($userMySavedAlbums->items as $item) {
             $album = $item->album;
-            $tracks = $album->tracks;
             if ($album->name != '') {
                 $savedMySavedAlbums[] = $album;
             }
@@ -937,13 +935,11 @@ function refreshLibrary($w)
 
 
 
-
+    $allMySavedAlbumsTracks = array();
     // check for update to Your Music - albums
     foreach ($savedMySavedAlbums as $album) {
-
         ++$nb_playlist;
         $w->write('Refresh Library▹'.$nb_playlist.'▹'.$nb_playlist_total.'▹'.$words[3].'▹'.escapeQuery($album->name), 'update_library_in_progress');
-
         try {
             // Loop on existing albums in library
             $stmtYourMusicAlbums->bindValue(':album_uri', $album->uri);
@@ -1039,40 +1035,6 @@ function refreshLibrary($w)
         }
     }
 
-    try {
-        // check for deleted albums
-        $getAllSavedAlbums = 'select * from tracks where yourmusic_album=1 group by album_uri';
-        $stmt = $db->prepare($getAllSavedAlbums);
-        $stmt->execute();
-
-        while ($album_in_db = $stmt->fetch()) {
-            $found = false;
-            foreach ($savedMySavedAlbums as $album) {
-                if ($album->uri == $album_in_db[0]) {
-                    $found = true;
-                    break;
-                }
-            }
-            if ($found == false) {
-                ++$nb_removed_albums;
-
-                $deleteFromSavedAlbums = 'delete from tracks where yourmusic_album=1 and album_uri=:album_uri';
-                $stmtDelete = $db->prepare($deleteFromSavedAlbums);
-                $stmtDelete->bindValue(':album_uri', $album_in_db[0]);
-                $stmtDelete->execute();
-
-                displayNotificationWithArtwork($w, 'Removed album '.$album_in_db[1], getTrackOrAlbumArtwork($w, $album_in_db[0], false, false, false, $use_artworks), 'Refresh Library');
-            }
-        }
-    } catch (PDOException $e) {
-        logMsg('Error(refreshLibrary): (exception '.jTraceEx($e).')');
-        handleDbIssuePdoEcho($db, $w);
-        $dbartworks = null;
-        $db = null;
-
-        return;
-    }
-
     // check for update to Your Music - tracks
     $retry = true;
     $nb_retry = 0;
@@ -1124,7 +1086,7 @@ function refreshLibrary($w)
 
     try {
         // get current number of track in Your Music
-        $getCount = 'select count(distinct uri) from tracks where yourmusic=1';
+        $getCount = 'select count(distinct uri) from tracks where yourmusic=1 and yourmusic_album=0';
         $stmt = $db->prepare($getCount);
         $stmt->execute();
         $yourmusic_tracks = $stmt->fetch();
@@ -1714,6 +1676,40 @@ function refreshLibrary($w)
                 $stmtDelete->bindValue(':uri', $shows_in_db[0]);
                 $stmtDelete->execute();
                 displayNotificationWithArtwork($w, 'Removed show '.$shows_in_db[1], getShowArtwork($w, $shows_in_db[0], false, false, $use_artworks), 'Refresh Library');
+            }
+        }
+    } catch (PDOException $e) {
+        logMsg('Error(refreshLibrary): (exception '.jTraceEx($e).')');
+        handleDbIssuePdoEcho($db, $w);
+        $dbartworks = null;
+        $db = null;
+
+        return;
+    }
+
+    try {
+        // check for deleted albums
+        $getAllSavedAlbums = 'select album_uri from tracks where yourmusic_album=1 group by album_uri';
+        $stmt = $db->prepare($getAllSavedAlbums);
+        $stmt->execute();
+
+        while ($album_in_db = $stmt->fetch()) {
+            $found = false;
+            foreach ($savedMySavedAlbums as $album) {
+                if ($album->uri == $album_in_db[0]) {
+                    $found = true;
+                    break;
+                }
+            }
+            if ($found == false) {
+                ++$nb_removed_albums;
+
+                $deleteFromSavedAlbums = 'delete from tracks where yourmusic_album=1 and album_uri=:album_uri';
+                $stmtDelete = $db->prepare($deleteFromSavedAlbums);
+                $stmtDelete->bindValue(':album_uri', $album_in_db[0]);
+                $stmtDelete->execute();
+
+                displayNotificationWithArtwork($w, 'Removed album '.$album_in_db[1], getTrackOrAlbumArtwork($w, $album_in_db[0], false, false, false, $use_artworks), 'Refresh Library');
             }
         }
     } catch (PDOException $e) {
