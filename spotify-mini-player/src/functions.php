@@ -5269,18 +5269,26 @@ function displayNotificationForCurrentTrack($w)
             return;
         }
 
-        // download artwork for current track view
-        $album_artwork_path = getTrackOrAlbumArtwork($w, $results[4], true, false, false, $use_artworks);
-        $artist_uri = getArtistUriFromTrack($w, $results[4]);
-        if ($artist_uri != false) {
-            $artist_artwork_path = getArtistArtwork($w, $artist_uri, $results[1], true, false, false, $use_artworks);
-        }
-        if (isset($results[0]) && $results[0] != '') {
-            $popularity = '';
-            if($is_display_rating) {
-                $popularity = floatToStars($results[6]/100);
+        if($tmp[1] == 'episode') {
+            // download artwork for current track view
+            $episode_artwork_path = getEpisodeArtwork($w, $results[4], true, false, false, $use_artworks);
+            if (isset($results[0]) && $results[0] != '') {
+                displayNotificationWithArtwork($w, '🔈🎙 '.escapeQuery($results[2]).' in show '.escapeQuery($results[2]), $episode_artwork_path, 'Now Playing '.' ('.beautifyTime($results[5] / 1000).')');
             }
-            displayNotificationWithArtwork($w, '🔈 '.escapeQuery($results[0]).' by '.escapeQuery($results[1]).' in album '.escapeQuery($results[2]), $album_artwork_path, 'Now Playing '.$popularity.' ('.beautifyTime($results[5] / 1000).')');
+        } else {
+            // download artwork for current track view
+            $album_artwork_path = getTrackOrAlbumArtwork($w, $results[4], true, false, false, $use_artworks);
+            $artist_uri = getArtistUriFromTrack($w, $results[4]);
+            if ($artist_uri != false) {
+                $artist_artwork_path = getArtistArtwork($w, $artist_uri, $results[1], true, false, false, $use_artworks);
+            }
+            if (isset($results[0]) && $results[0] != '') {
+                $popularity = '';
+                if($is_display_rating) {
+                    $popularity = floatToStars($results[6]/100);
+                }
+                displayNotificationWithArtwork($w, '🔈 '.escapeQuery($results[0]).' by '.escapeQuery($results[1]).' in album '.escapeQuery($results[2]), $album_artwork_path, 'Now Playing '.$popularity.' ('.beautifyTime($results[5] / 1000).')');
+            }
         }
     }
 }
