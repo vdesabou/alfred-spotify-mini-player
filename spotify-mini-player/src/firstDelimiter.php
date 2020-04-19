@@ -2566,8 +2566,8 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
                     'ctrl' => 'Not Available',
                 ), './images/volume_up.png', 'no', null, 'Settings▹VolumePercentage▹');
 
-    $w->result(null, '', 'Select the output: Spotify Connect, Mopidy or Spotify Desktop',array(
-                     'Spotify Connect and Mopidy are for premium users only',
+    $w->result(null, '', 'Select the output: Spotify Connect or Spotify Desktop',array(
+                     'Spotify Connect is for premium users only',
                     'alt' => 'Not Available',
                     'cmd' => 'Not Available',
                     'shift' => 'Not Available',

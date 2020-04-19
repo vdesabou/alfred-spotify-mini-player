@@ -2455,7 +2455,7 @@ function secondDelimiterSettings($w, $query, $settings, $db, $update_in_progress
                     '' /* album_artwork_path */,
                     '' /* playlist_name */,
                     '', /* playlist_artwork_path */
-                )), 'Use Mopidy', array(
+                )), 'Use Mopidy (This is deprecated, use at your own risk !)', array(
                 'You will use Mopidy',
                 'alt' => 'Not Available',
                 'cmd' => 'Not Available',
@@ -2465,7 +2465,7 @@ function secondDelimiterSettings($w, $query, $settings, $db, $update_in_progress
                 ), './images/enable_mopidy.png', 'yes', null, '');
             }
         } else {
-            $w->result(null, 'help', 'Only premium users can use Mopidy and Spotify Connect',array(
+            $w->result(null, 'help', 'Only premium users can use Spotify Connect',array(
                      'This is a Spotify limitation',
                     'alt' => 'Not Available',
                     'cmd' => 'Not Available',
