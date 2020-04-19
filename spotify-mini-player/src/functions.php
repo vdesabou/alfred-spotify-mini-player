@@ -6820,6 +6820,35 @@ function handleSpotifyWebAPIException($w, $e)
 }
 
 /**
+ * handleSpotifyPermissionException function.
+ *
+ * @param mixed $w
+ * @param mixed $message
+ */
+function handleSpotifyPermissionException($w, $message)
+{
+    if (file_exists($w->data().'/update_library_in_progress')) {
+        deleteTheFile($w->data().'/update_library_in_progress');
+    }
+
+    // remove the new library (it failed)
+    if (file_exists($w->data().'/library_new.db')) {
+        deleteTheFile($w->data().'/library_new.db');
+    }
+
+    // set back old library
+    if (file_exists($w->data().'/library_old.db')) {
+        rename($w->data().'/library_old.db', $w->data().'/library.db');
+    }
+
+    displayNotificationWithArtwork($w, 'Permission Exception: '.$message.' use spot_mini_debug command', './images/warning.png', 'Error!');
+
+    exec("osascript -e 'tell application id \"".getAlfredName()."\" to search \"".getenv('c_spot_mini_debug').' Permission Exception: '.escapeQuery($message)."\"'");
+
+    exit;
+}
+
+/**
  * floatToCircles function.
  *
  * @param mixed $decimal
