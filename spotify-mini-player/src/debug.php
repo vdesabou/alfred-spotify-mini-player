@@ -127,7 +127,35 @@ if (mb_strlen($query) > 1) {
         ), './images/warning.png', 'yes', null, '');
         echo $w->tojson();
         return;
-    } else {
+    } elseif (startsWith($query, 'Missing permissions')) {
+        $w->result(null, serialize(array(
+            '' /*track_uri*/,
+            '' /* album_uri */,
+             '' /* artist_uri */,
+            '' /* playlist_uri */,
+            '' /* spotify_command */,
+            '' /* query */,
+            '' /* other_settings*/,
+            'reset_oauth_settings' /* other_action */,
+            '' /* artist_name */,
+            '' /* track_name */,
+            '' /* album_name */,
+            '' /* track_artwork_path */,
+            '' /* artist_artwork_path */,
+            '' /* album_artwork_path */,
+            '' /* playlist_name */,
+            '', /* playlist_artwork_path */
+            )), 'The workflow needs to re-authenticate, click to restart authentication', array(
+            'Next time you invoke the workflow, you will have to re-authenticate',
+            'alt' => 'Not Available',
+            'cmd' => 'Not Available',
+            'shift' => 'Not Available',
+            'fn' => 'Not Available',
+            'ctrl' => 'Not Available',
+        ), './images/warning.png', 'yes', null, '');
+        echo $w->tojson();
+        return;
+    }else {
         $w->result(null, '', 'Exception occurred: '.$query,array(
                      'Use the Send an email to the author option below to send generated spot_mini_debug.zip',
                     'alt' => 'Not Available',

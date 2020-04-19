@@ -1029,7 +1029,7 @@ function createLibrary($w)
             } else {
                 updateSetting($w,'oauth_access_token','');
                 updateSetting($w,'oauth_refresh_token','');
-                handleSpotifyPermissionException($w, 'Refresh token revoked');
+                handleSpotifyPermissionException($w, 'Missing permissions');
                 return false;
             }
 

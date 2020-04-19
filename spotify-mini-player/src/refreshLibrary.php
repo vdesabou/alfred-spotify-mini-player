@@ -1484,7 +1484,7 @@ function refreshLibrary($w)
                     } else {
                         updateSetting($w,'oauth_access_token','');
                         updateSetting($w,'oauth_refresh_token','');
-                        handleSpotifyPermissionException($w, 'Refresh token revoked');
+                        handleSpotifyPermissionException($w, 'Missing permissions');
                         return false;
                     }
                     $stmtInsertEpisode->execute();
@@ -1627,7 +1627,7 @@ function refreshLibrary($w)
                         } else {
                             updateSetting($w,'oauth_access_token','');
                             updateSetting($w,'oauth_refresh_token','');
-                            handleSpotifyPermissionException($w, 'Refresh token revoked');
+                            handleSpotifyPermissionException($w, 'Missing permissions');
                             return false;
                         }
                         $stmtInsertEpisode->bindValue(':fully_played', $resume_point->fully_played);
