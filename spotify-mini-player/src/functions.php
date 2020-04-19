@@ -5258,10 +5258,10 @@ function displayNotificationWithArtwork($w, $subtitle, $artwork, $title = 'Spoti
         }
 
         // check for quarantine and remove it if required
-        exec('/usr/bin/xattr ./terminal-notifier.app'.'"',$response);
+        exec('/usr/bin/xattr ./terminal-notifier.app',$response);
         foreach($response as $line) {
             if (strpos($line, 'com.apple.quarantine') !== false) {
-                exec('/usr/bin/xattr -d com.apple.quarantine ./terminal-notifier.app'.'"',$response);
+                exec('/usr/bin/xattr -d com.apple.quarantine ./terminal-notifier.app',$response);
                 exit;
             }
         }
