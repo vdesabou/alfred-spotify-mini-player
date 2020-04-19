@@ -3,7 +3,7 @@ layout: article
 permalink: /setup/
 title: "Setup"
 date: 2015-01-01
-modified: 2019-08-27
+modified: 2020-04-19
 toc: true
 share: false
 noindex: false
@@ -104,7 +104,7 @@ Setting up the workflow is easy, you just need to follow these steps:-
 ## Create the library
 
 
-* Invoke the workflow (with keyword `spot_mini`, or **highly recommended** with an [hotkey]({{ site.url }}/articles/hotkeys) ) 
+* Invoke the workflow (with keyword `spot_mini`, or **highly recommended** with an [hotkey]({{ site.url }}/articles/hotkeys) )
 
 * Follow the steps as below by copy/pasting the *Client ID* and *Client Secret* into Alfred window when asked:
 
@@ -114,7 +114,7 @@ Setting up the workflow is easy, you just need to follow these steps:-
 </figure>
 
 
-* Invoke the workflow again and select Authenticate with Spotify, your web browser will open and you'll be prompted to login with Spotify and allow access to your application. At the end you should see a message like this:-
+* Invoke the workflow again and select Authenticate with Spotify, Google Chrome or Firefox ([Safari is not working for authentication](https://github.com/vdesabou/alfred-spotify-mini-player/issues/341)) will open and you'll be prompted to login with Spotify and allow access to your application. At the end you should see a message like this:-
 
     *Hello xxx ! You are now successfully logged and you can close this window.*
 
