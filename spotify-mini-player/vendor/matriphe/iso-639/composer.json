@@ -1,0 +1,22 @@
+{
+    "name": "matriphe/iso-639",
+    "description": "PHP library to convert ISO-639-1 code to language name.",
+    "keywords": ["iso", "iso-639", "639", "lang", "language", "laravel"],
+    "type": "library",
+    "require-dev": {
+        "phpunit/phpunit": "^4.7"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Muhammad Zamroni",
+            "email": "halo@matriphe.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Matriphe\\ISO639\\": "src/"
+        }
+    }
+}

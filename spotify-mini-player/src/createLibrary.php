@@ -24,6 +24,8 @@ function createLibrary($w)
 
     $words = explode('▹', $in_progress_data);
 
+    $iso = new Matriphe\ISO639\ISO639;
+
     // move legacy artwork files in hash directories if needed
 
     if (file_exists($w->data().'/artwork')) {
@@ -367,7 +369,8 @@ function createLibrary($w)
 
             foreach ($userMySavedEpisodes->items as $show_episode) {
                 $episode = getEpisode($w, $show_episode->uri);
-                $savedMySavedEpisodes[] = $episode;
+                if(isset($episode->uri) && $episode->uri != '')
+                    $savedMySavedEpisodes[] = $episode;
                 $nb_tracktotal += 1;
             }
 
@@ -966,7 +969,14 @@ function createLibrary($w)
             $stmtInsertShow->bindValue(':media_type', escapeQuery($show->media_type));
             $stmtInsertShow->bindValue(':show_artwork_path', $show_artwork_path);
             $stmtInsertShow->bindValue(':explicit', $show->explicit);
-            $stmtInsertShow->bindValue(':languages', 'FIXTHIS');
+            $array_languages = array();
+            foreach ($show->languages as $language) {
+                if (strpos($language, '-') !== false) {
+                    $language = strstr($language, '-', true);
+                }
+                $array_languages[] = $iso->languageByCode1($language);
+            }
+            $stmtInsertShow->bindValue(':languages', implode(",",$array_languages));
             $stmtInsertShow->bindValue(':added_at', $item->added_at);
             $stmtInsertShow->bindValue(':nb_times_played', 0);
             $stmtInsertShow->bindValue(':added_at', $show->is_externally_hosted);
@@ -1015,7 +1025,15 @@ function createLibrary($w)
             $stmtInsertEpisode->bindValue(':description', escapeQuery($episode->description));
             $stmtInsertEpisode->bindValue(':episode_artwork_path', $episode_artwork_path);
             $stmtInsertEpisode->bindValue(':is_playable', $episode->is_playable);
-            $stmtInsertEpisode->bindValue(':languages', 'FIXTHIS');
+            $array_languages = array();
+            logMsg(print_r($episode->languages));
+            foreach ($episode->languages as $language) {
+                if (strpos($language, '-') !== false) {
+                    $language = strstr($language, '-', true);
+                }
+                $array_languages[] = $iso->languageByCode1($language);
+            }
+            $stmtInsertEpisode->bindValue(':languages', implode(",",$array_languages));
             $stmtInsertEpisode->bindValue(':nb_times_played', 0);
             $stmtInsertEpisode->bindValue(':is_externally_hosted', $episode->is_externally_hosted);
             $stmtInsertEpisode->bindValue(':duration_ms', $episode->duration_ms);

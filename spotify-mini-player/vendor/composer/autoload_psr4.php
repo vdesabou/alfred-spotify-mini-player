@@ -7,4 +7,5 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'SpotifyWebAPI\\' => array($vendorDir . '/jwilsson/spotify-web-api-php/src'),
+    'Matriphe\\ISO639\\' => array($vendorDir . '/matriphe/iso-639/src'),
 );

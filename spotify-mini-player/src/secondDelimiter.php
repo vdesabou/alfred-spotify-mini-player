@@ -113,7 +113,7 @@ function secondDelimiterShows($w, $query, $settings, $db, $update_in_progress)
                             '' /* playlist_name */,
                             '', /* playlist_artwork_path */
                         )), $fully_played . $episodes[1], array(
-                            $episode->episode_type.'Progress: ' . floatToSquares(intval($episodes[17]) / intval($episodes[11])) . ' Duration '.beautifyTime($episodes[11] / 1000).' ● Release date: '.$episodes[13],
+                            $episode->episode_type.'Progress: ' . floatToSquares(intval($episodes[17]) / intval($episodes[11])) . ' Duration '.beautifyTime($episodes[11] / 1000).' ● Release date: '.$episodes[13].' ● Languages: '.$episodes[8],
                             'alt' => 'Not Available',
                             'cmd' => 'Not Available',
                             'shift' => 'Not Available',
@@ -121,7 +121,7 @@ function secondDelimiterShows($w, $query, $settings, $db, $update_in_progress)
                             'ctrl' => 'Not Available',
                     ), $episodes[6], 'yes', null, '');
             } else {
-                $w->result(null, '', '🚫 '.$fully_played.$episodes[1], $episode->episode_type.'Progress: ' . floatToSquares(intval($episodes[17]) / intval($episodes[11])) . ' Duration '.beautifyTime($episodes[11] / 1000).' ● Release date: '.$episodes[13], $episodes[6], 'no', null, '');
+                $w->result(null, '', '🚫 '.$fully_played.$episodes[1], $episode->episode_type.'Progress: ' . floatToSquares(intval($episodes[17]) / intval($episodes[11])) . ' Duration '.beautifyTime($episodes[11] / 1000).' ● Release date: '.$episodes[13].' ● Languages: '.$episodes[8], $episodes[6], 'no', null, '');
             }
         }
     }

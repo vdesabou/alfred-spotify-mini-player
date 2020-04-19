@@ -18,6 +18,8 @@ function refreshLibrary($w)
         return;
     }
 
+    $iso = new Matriphe\ISO639\ISO639;
+
     touch($w->data().'/update_library_in_progress');
     $w->write('InitRefreshLibrary▹'. 0 .'▹'. 0 .'▹'.time().'▹'.'starting', 'update_library_in_progress');
 
@@ -1362,7 +1364,14 @@ function refreshLibrary($w)
                 $stmtInsertShow->bindValue(':media_type', escapeQuery($show->media_type));
                 $stmtInsertShow->bindValue(':show_artwork_path', $show_artwork_path);
                 $stmtInsertShow->bindValue(':explicit', $show->explicit);
-                $stmtInsertShow->bindValue(':languages', 'FIXTHIS');
+                $array_languages = array();
+                foreach ($show->languages as $language) {
+                    if (strpos($language, '-') !== false) {
+                        $language = strstr($language, '-', true);
+                    }
+                    $array_languages[] = $iso->languageByCode1($language);
+                }
+                $stmtInsertShow->bindValue(':languages', implode(",",$array_languages));
                 $stmtInsertShow->bindValue(':added_at', $item->added_at);
                 $stmtInsertShow->bindValue(':nb_times_played', 0);
                 $stmtInsertShow->bindValue(':added_at', $show->is_externally_hosted);
@@ -1471,7 +1480,14 @@ function refreshLibrary($w)
                     $stmtInsertEpisode->bindValue(':description', escapeQuery($episode->description));
                     $stmtInsertEpisode->bindValue(':episode_artwork_path', $episode_artwork_path);
                     $stmtInsertEpisode->bindValue(':is_playable', $episode->is_playable);
-                    $stmtInsertEpisode->bindValue(':languages', 'FIXTHIS');
+                    $array_languages = array();
+                    foreach ($episode->languages as $language) {
+                        if (strpos($language, '-') !== false) {
+                            $language = strstr($language, '-', true);
+                        }
+                        $array_languages[] = $iso->languageByCode1($language);
+                    }
+                    $stmtInsertEpisode->bindValue(':languages', implode(",",$array_languages));
                     $stmtInsertEpisode->bindValue(':nb_times_played', 0);
                     $stmtInsertEpisode->bindValue(':is_externally_hosted', $episode->is_externally_hosted);
                     $stmtInsertEpisode->bindValue(':duration_ms', $episode->duration_ms);
@@ -1618,7 +1634,14 @@ function refreshLibrary($w)
                         $stmtInsertEpisode->bindValue(':description', escapeQuery($episode->description));
                         $stmtInsertEpisode->bindValue(':episode_artwork_path', $episode_artwork_path);
                         $stmtInsertEpisode->bindValue(':is_playable', $episode->is_playable);
-                        $stmtInsertEpisode->bindValue(':languages', 'FIXTHIS');
+                        $array_languages = array();
+                        foreach ($episode->languages as $language) {
+                            if (strpos($language, '-') !== false) {
+                                $language = strstr($language, '-', true);
+                            }
+                            $array_languages[] = $iso->languageByCode1($language);
+                        }
+                        $stmtInsertEpisode->bindValue(':languages', implode(",",$array_languages));
                         $stmtInsertEpisode->bindValue(':nb_times_played', 0);
                         $stmtInsertEpisode->bindValue(':is_externally_hosted', $episode->is_externally_hosted);
                         $stmtInsertEpisode->bindValue(':duration_ms', $episode->duration_ms);

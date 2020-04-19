@@ -1,5 +1,6 @@
 {
     "require": {
-        "jwilsson/spotify-web-api-php": "*"
+        "jwilsson/spotify-web-api-php": "*",
+        "matriphe/iso-639": "^1.2"
     }
 }
