@@ -44,24 +44,24 @@ function secondDelimiterShows($w, $query, $settings, $db, $update_in_progress)
 
     if (mb_strlen($episode) < 2) {
         $show_artwork_path = getShowArtwork($w, $show_uri, false, false, false, $use_artworks);
-        $w->result(null, serialize(array(
-                    '' /*track_uri*/,
-                    '' /* album_uri */,
-                    $show_uri /* artist_uri */,
-                    '' /* playlist_uri */,
-                    '' /* spotify_command */,
-                    '' /* query */,
-                    '' /* other_settings*/,
-                    'playshow' /* other_action */,
-                    $show_name /* artist_name */,
-                    '' /* track_name */,
-                    '' /* album_name */,
-                    '' /* track_artwork_path */,
-                    $show_artwork_path /* artist_artwork_path */,
-                    '' /* album_artwork_path */,
-                    '' /* playlist_name */,
-                    '', /* playlist_artwork_path */
-                )), '🎙 '.$show_name, 'Play show', $show_artwork_path, 'yes', null, '');
+        // $w->result(null, serialize(array(
+        //             $show_uri /*track_uri*/,
+        //             '' /* album_uri */,
+        //             '' /* artist_uri */,
+        //             '' /* playlist_uri */,
+        //             '' /* spotify_command */,
+        //             '' /* query */,
+        //             '' /* other_settings*/,
+        //             'playshow' /* other_action */,
+        //             '' /* artist_name */,
+        //             $show_name /* track_name */,
+        //             '' /* album_name */,
+        //             '' /* track_artwork_path */,
+        //             $show_artwork_path /* artist_artwork_path */,
+        //             '' /* album_artwork_path */,
+        //             '' /* playlist_name */,
+        //             '', /* playlist_artwork_path */
+        //         )), '🎙 '.$show_name, 'Play show', $show_artwork_path, 'yes', null, '');
 
 
         $w->result(null, '', 'Follow/Unfollow Show',array(
@@ -1122,24 +1122,24 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
 
             $show_artwork_path = getShowArtwork($w, $show_uri, false, false, false, $use_artworks);
             if (mb_strlen($search) < 2) {
-                $w->result(null, serialize(array(
-                        '' /*track_uri*/,
-                        '' /* album_uri */,
-                        $show_uri /* artist_uri */,
-                        '' /* playlist_uri */,
-                        '' /* spotify_command */,
-                        '' /* query */,
-                        '' /* other_settings*/,
-                        'playshow' /* other_action */,
-                        $show_name /* show_name */,
-                        '' /* track_name */,
-                        '' /* album_name */,
-                        '' /* track_artwork_path */,
-                        $show_artwork_path /* show_artwork_path */,
-                        '' /* album_artwork_path */,
-                        '' /* playlist_name */,
-                        '', /* playlist_artwork_path */
-                    )), '🎙 '.escapeQuery($show_name), 'Play show', $show_artwork_path, 'yes', null, '');
+                // $w->result(null, serialize(array(
+                //         '' /*track_uri*/,
+                //         '' /* album_uri */,
+                //         $show_uri /* artist_uri */,
+                //         '' /* playlist_uri */,
+                //         '' /* spotify_command */,
+                //         '' /* query */,
+                //         '' /* other_settings*/,
+                //         'playshow' /* other_action */,
+                //         $show_name /* show_name */,
+                //         '' /* track_name */,
+                //         '' /* album_name */,
+                //         '' /* track_artwork_path */,
+                //         $show_artwork_path /* show_artwork_path */,
+                //         '' /* album_artwork_path */,
+                //         '' /* playlist_name */,
+                //         '', /* playlist_artwork_path */
+                //     )), '🎙 '.escapeQuery($show_name), 'Play show', $show_artwork_path, 'yes', null, '');
             }
 
             if (mb_strlen($search) < 2) {

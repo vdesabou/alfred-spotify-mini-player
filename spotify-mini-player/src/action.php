@@ -117,15 +117,17 @@ if ($spotify_command != '' && $type == 'TRACK' && $add_to_option == '') {
     }
     return;
 }
-
 if ($type == 'TRACK' && $other_settings == '' &&
     (startsWith($other_action, 'set_playlist_privacy_to_') || $other_action == 'play_track_from_play_queue' || $other_action == ''
         || ($other_action == 'play_track_in_album_context' && $add_to_option != '')
         || ($other_action == 'play' && $add_to_option != '')
         || ($other_action == 'play_episode' && $add_to_option != '')
+        || ($other_action == 'playshow')
         || ($other_action == 'playpause' && $add_to_option != '')
         || ($other_action == 'pause' && $add_to_option != ''))) {
+
     if ($track_uri != '') {
+
         if ($add_to_option != '') {
             $tmp = explode(':', $track_uri);
             if ($tmp[1] == 'local') {
@@ -175,7 +177,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
             return;
         } else {
-            if ($other_action == '' || $other_action == 'play_track_from_play_queue') {
+            if ($other_action == '' || $other_action == 'play_track_from_play_queue' || $other_action == 'playshow') {
                 if ($output_application == 'MOPIDY') {
                     playUriWithMopidyWithoutClearing($w, $track_uri);
                 } else if($output_application == 'APPLESCRIPT') {
