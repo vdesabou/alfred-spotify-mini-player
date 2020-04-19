@@ -5257,8 +5257,7 @@ function displayNotificationWithArtwork($w, $subtitle, $artwork, $title = 'Spoti
             copy($artwork, '/tmp/tmp_' . exec("whoami") );
         }
 
-        exec("./src/alerter.ksh '".$title."' '".$theme_color."' '".$subtitle."' '".getAlfredName()."' 2>&1 & ");
-        //exec("./terminal-notifier.app/Contents/MacOS/terminal-notifier -title '".$title."' -sender 'com.spotify.miniplayer.".$theme_color."' -appIcon '/tmp/tmp_".exec("whoami")."' -message '".$subtitle."'");
+        exec("./terminal-notifier.app/Contents/MacOS/terminal-notifier -title '".$title."' -sender 'com.spotify.miniplayer.".$theme_color."' -appIcon '/tmp/tmp_".exec("whoami")."' -message '".$subtitle."'");
     } else {
         exec('./src/growl_notification.ksh -t "'.$title.'" -s "'.$subtitle.'" >> "'.$w->cache().'/action.log" 2>&1 & ');
     }
