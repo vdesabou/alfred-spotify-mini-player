@@ -365,9 +365,8 @@ function createLibrary($w)
                 }
             }
 
-            foreach ($userMySavedEpisodes->items as $episode) {
-                $episode->show_uri = $show->uri;
-                $episode->show_name = $show->name;
+            foreach ($userMySavedEpisodes->items as $show_episode) {
+                $episode = getEpisode($w, $show_episode->uri);
                 $savedMySavedEpisodes[] = $episode;
                 $nb_tracktotal += 1;
             }
@@ -1011,8 +1010,8 @@ function createLibrary($w)
         try {
             $stmtInsertEpisode->bindValue(':uri', $episode->uri);
             $stmtInsertEpisode->bindValue(':name', escapeQuery($episode->name));
-            $stmtInsertEpisode->bindValue(':show_uri', $episode->show_uri);
-            $stmtInsertEpisode->bindValue(':show_name', escapeQuery($episode->show_name));
+            $stmtInsertEpisode->bindValue(':show_uri', $episode->show->uri);
+            $stmtInsertEpisode->bindValue(':show_name', escapeQuery($episode->show->name));
             $stmtInsertEpisode->bindValue(':description', escapeQuery($episode->description));
             $stmtInsertEpisode->bindValue(':episode_artwork_path', $episode_artwork_path);
             $stmtInsertEpisode->bindValue(':is_playable', $episode->is_playable);
@@ -1026,15 +1025,17 @@ function createLibrary($w)
             $stmtInsertEpisode->bindValue(':audio_preview_url', $episode->audio_preview_url);
             if(isset($episode->resume_point)) {
                 $resume_point = $episode->resume_point;
-            } else {
-                updateSetting($w,'oauth_access_token','');
-                updateSetting($w,'oauth_refresh_token','');
-                handleSpotifyPermissionException($w, 'Missing permissions');
-                return false;
-            }
+                if(isset($resume_point->fully_played)) {
+                    $stmtInsertEpisode->bindValue(':fully_played', $resume_point->fully_played);
+                } else {
+                    $stmtInsertEpisode->bindValue(':fully_played', 0);
+                }
 
-            $stmtInsertEpisode->bindValue(':fully_played', $resume_point->fully_played);
-            $stmtInsertEpisode->bindValue(':resume_position_ms', $resume_point->resume_position_ms);
+                $stmtInsertEpisode->bindValue(':resume_position_ms', $resume_point->resume_position_ms);
+            } else {
+                $stmtInsertEpisode->bindValue(':fully_played', 0);
+                $stmtInsertEpisode->bindValue(':resume_position_ms', 0);
+            }
             $stmtInsertEpisode->execute();
         } catch (PDOException $e) {
             logMsg('Error(createLibrary): (exception '.jTraceEx($e).')');

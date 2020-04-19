@@ -162,7 +162,7 @@ function refreshLibrary($w)
         $insertShow = 'insert into shows values (:uri,:name,:description,:media_type,:show_artwork_path,:explicit,:added_at,:languages,:nb_times_played,:is_externally_hosted, :nb_episodes)';
         $stmtInsertShow = $db->prepare($insertShow);
 
-        $insertEpisode = 'insert into episodes values (:uri,:name,:show_uri,:show_name,:description,:episode_artwork_path,:is_playable,:languages,:nb_times_played,:is_externally_hosted,:duration_ms,:explicit,:release_date,:release_date_precision,:audio_preview_url,:audio_preview_url,:fully_played,:resume_position_ms)';
+        $insertEpisode = 'insert into episodes values (:uri,:name,:show_uri,:show_name,:description,:episode_artwork_path,:is_playable,:languages,:nb_times_played,:is_externally_hosted,:duration_ms,:explicit,:release_date,:release_date_precision,:audio_preview_url,:fully_played,:resume_position_ms)';
         $stmtInsertEpisode = $db->prepare($insertEpisode);
 
         $deleteFromEpisodes = 'delete from episodes where show_uri=:show_uri';
@@ -1466,8 +1466,8 @@ function refreshLibrary($w)
                 try {
                     $stmtInsertEpisode->bindValue(':uri', $episode->uri);
                     $stmtInsertEpisode->bindValue(':name', escapeQuery($episode->name));
-                    $stmtInsertEpisode->bindValue(':show_uri', $episode->show_uri);
-                    $stmtInsertEpisode->bindValue(':show_name', escapeQuery($episode->show_name));
+                    $stmtInsertEpisode->bindValue(':show_uri', $episode->show->uri);
+                    $stmtInsertEpisode->bindValue(':show_name', escapeQuery($episode->show->name));
                     $stmtInsertEpisode->bindValue(':description', escapeQuery($episode->description));
                     $stmtInsertEpisode->bindValue(':episode_artwork_path', $episode_artwork_path);
                     $stmtInsertEpisode->bindValue(':is_playable', $episode->is_playable);
@@ -1481,11 +1481,16 @@ function refreshLibrary($w)
                     $stmtInsertEpisode->bindValue(':audio_preview_url', $episode->audio_preview_url);
                     if(isset($episode->resume_point)) {
                         $resume_point = $episode->resume_point;
+                        if(isset($resume_point->fully_played)) {
+                            $stmtInsertEpisode->bindValue(':fully_played', $resume_point->fully_played);
+                        } else {
+                            $stmtInsertEpisode->bindValue(':fully_played', 0);
+                        }
+
+                        $stmtInsertEpisode->bindValue(':resume_position_ms', $resume_point->resume_position_ms);
                     } else {
-                        updateSetting($w,'oauth_access_token','');
-                        updateSetting($w,'oauth_refresh_token','');
-                        handleSpotifyPermissionException($w, 'Missing permissions');
-                        return false;
+                        $stmtInsertEpisode->bindValue(':fully_played', 0);
+                        $stmtInsertEpisode->bindValue(':resume_position_ms', 0);
                     }
                     $stmtInsertEpisode->execute();
                 } catch (PDOException $e) {
@@ -1570,9 +1575,8 @@ function refreshLibrary($w)
                         }
                     }
 
-                    foreach ($userMySavedEpisodes->items as $episode) {
-                        $episode->show_uri = $show->uri;
-                        $episode->show_name = $show->name;
+                    foreach ($userMySavedEpisodes->items as $show_episode) {
+                        $episode = getEpisode($w, $show_episode->uri);
                         $savedMySavedEpisodes[] = $episode;
                     }
 
@@ -1609,8 +1613,8 @@ function refreshLibrary($w)
                     try {
                         $stmtInsertEpisode->bindValue(':uri', $episode->uri);
                         $stmtInsertEpisode->bindValue(':name', escapeQuery($episode->name));
-                        $stmtInsertEpisode->bindValue(':show_uri', $episode->show_uri);
-                        $stmtInsertEpisode->bindValue(':show_name', escapeQuery($episode->show_name));
+                        $stmtInsertEpisode->bindValue(':show_uri', $episode->show->uri);
+                        $stmtInsertEpisode->bindValue(':show_name', escapeQuery($episode->show->name));
                         $stmtInsertEpisode->bindValue(':description', escapeQuery($episode->description));
                         $stmtInsertEpisode->bindValue(':episode_artwork_path', $episode_artwork_path);
                         $stmtInsertEpisode->bindValue(':is_playable', $episode->is_playable);
@@ -1624,11 +1628,16 @@ function refreshLibrary($w)
                         $stmtInsertEpisode->bindValue(':audio_preview_url', $episode->audio_preview_url);
                         if(isset($episode->resume_point)) {
                             $resume_point = $episode->resume_point;
+                            if(isset($resume_point->fully_played)) {
+                                $stmtInsertEpisode->bindValue(':fully_played', $resume_point->fully_played);
+                            } else {
+                                $stmtInsertEpisode->bindValue(':fully_played', 0);
+                            }
+
+                            $stmtInsertEpisode->bindValue(':resume_position_ms', $resume_point->resume_position_ms);
                         } else {
-                            updateSetting($w,'oauth_access_token','');
-                            updateSetting($w,'oauth_refresh_token','');
-                            handleSpotifyPermissionException($w, 'Missing permissions');
-                            return false;
+                            $stmtInsertEpisode->bindValue(':fully_played', 0);
+                            $stmtInsertEpisode->bindValue(':resume_position_ms', 0);
                         }
                         $stmtInsertEpisode->bindValue(':fully_played', $resume_point->fully_played);
                         $stmtInsertEpisode->bindValue(':resume_position_ms', $resume_point->resume_position_ms);
@@ -1642,8 +1651,6 @@ function refreshLibrary($w)
                         return false;
                     }
                 }
-
-
 
                 try {
                     $stmtUpdateShowsNbEpisodes->bindValue(':nb_episodes', $userMySavedEpisodes->total);

@@ -430,6 +430,40 @@ function getEpisodeName($w, $episode_uri)
 }
 
 /**
+ * getEpisode function.
+ *
+ * @param mixed $w
+ * @param mixed $episode_uri
+ */
+function getEpisode($w, $episode_uri)
+{
+    // Read settings from JSON
+
+    $settings = getSettings($w);
+
+    $country_code = $settings->country_code;
+
+    try {
+        $api = getSpotifyWebAPI($w);
+        $episode = $api->getEpisode($episode_uri,array(
+            'market' => $country_code,
+            ));
+       return $episode;
+    } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+        $w->result(null, '', 'Error: Spotify WEB API returned error '.$e->getMessage(),array(
+           'function getEpisode episode_uri=' . $episode_uri,
+                   'alt' => 'Not Available',
+                   'cmd' => 'Not Available',
+                   'shift' => 'Not Available',
+                   'fn' => 'Not Available',
+                   'ctrl' => 'Not Available',
+               ), './images/warning.png', 'no', null, '');
+
+        return '';
+    }
+}
+
+/**
  * getPlaylistName function.
  *
  * @param mixed $w
