@@ -1026,7 +1026,6 @@ function createLibrary($w)
             $stmtInsertEpisode->bindValue(':episode_artwork_path', $episode_artwork_path);
             $stmtInsertEpisode->bindValue(':is_playable', $episode->is_playable);
             $array_languages = array();
-            logMsg(print_r($episode->languages));
             foreach ($episode->languages as $language) {
                 if (strpos($language, '-') !== false) {
                     $language = strstr($language, '-', true);
