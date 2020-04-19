@@ -2563,6 +2563,56 @@ function unfollowThePlaylist($w, $playlist_uri)
 }
 
 /**
+ * followTheShow function.
+ *
+ * @param mixed $w
+ * @param mixed $show_uri
+ */
+function followTheShow($w, $show_uri)
+{
+    try {
+        $api = getSpotifyWebAPI($w);
+        $ret = $api->addMyShows($show_uri);
+        if ($ret == true) {
+            // refresh library
+            if(getenv('automatically_refresh_library') == 1) {
+                refreshLibrary($w);
+            }
+        }
+    } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+        logMsg('Error(followTheShows): (exception '.jTraceEx($e).')');
+        handleSpotifyWebAPIException($w, $e);
+
+        return false;
+    }
+}
+
+/**
+ * unfollowTheShow function.
+ *
+ * @param mixed $w
+ * @param mixed $show_uri
+ */
+function unfollowTheShow($w, $show_uri)
+{
+    try {
+        $api = getSpotifyWebAPI($w);
+        $ret = $api->deleteMyShows($show_uri);
+        if ($ret == true) {
+            // refresh library
+            if(getenv('automatically_refresh_library') == 1) {
+                refreshLibrary($w);
+            }
+        }
+    } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+        logMsg('Error(unfollowTheShow): (exception '.jTraceEx($e).')');
+        handleSpotifyWebAPIException($w, $e);
+
+        return false;
+    }
+}
+
+/**
  * addPlaylistToPlayQueue function.
  *
  * @param mixed $w

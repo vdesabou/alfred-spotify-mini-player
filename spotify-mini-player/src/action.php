@@ -1186,6 +1186,14 @@ if ($type == 'TRACK' && $other_settings == '' &&
         followThePlaylist($w, $playlist_uri);
 
         return;
+    }  elseif ($other_action == 'unfollow_show') {
+        unfollowTheShow($w, $playlist_uri);
+
+        return;
+    } elseif ($other_action == 'follow_show') {
+        followTheShow($w, $playlist_uri);
+
+        return;
     } elseif ($other_action == 'lyrics') {
         displayLyricsForCurrentTrack($w);
 

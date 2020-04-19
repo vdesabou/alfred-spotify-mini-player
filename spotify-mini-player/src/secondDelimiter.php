@@ -3514,6 +3514,7 @@ function secondDelimiterFollowOrUnfollow($w, $query, $settings, $db, $update_in_
     $oauth_refresh_token = $settings->oauth_refresh_token;
     $display_name = $settings->display_name;
     $userid = $settings->userid;
+    $use_artworks = $settings->use_artworks;
 
     if (substr_count($query, '@') == 1) {
 
@@ -3576,43 +3577,44 @@ function secondDelimiterFollowOrUnfollow($w, $query, $settings, $db, $update_in_
             $show_uri = $words[0];
             $show_name = $words[1];
 
-            try {
-                $api = getSpotifyWebAPI($w);
-                if ($follow) {
-                    $ret = $api->addMyShows($show_uri);
-                } else {
-                    $ret = $api->deleteMyShows($show_uri);
-                }
-
-                if ($ret) {
-                    if ($follow) {
-                        displayNotificationWithArtwork($w, 'You are now following the show '.$show_name, './images/follow.png', 'Follow');
-                        exec("osascript -e 'tell application id \"".getAlfredName()."\" to search \"".getenv('c_spot_mini').' Show▹'.$show_uri.'∙'.escapeQuery($show_name).'▹'."\"'");
-                    } else {
-                        displayNotificationWithArtwork($w, 'You are no more following the show '.$show_name, './images/follow.png', 'Unfollow');
-                        exec("osascript -e 'tell application id \"".getAlfredName()."\" to search \"".getenv('c_spot_mini').' Show▹'.$show_uri.'∙'.escapeQuery($show_name).'▹'."\"'");
-                    }
-                } else {
-                    $w->result(null, '', 'Error!',array(
-                        'An error happened! try again or report to the author',
-                        'alt' => 'Not Available',
-                        'cmd' => 'Not Available',
-                        'shift' => 'Not Available',
-                        'fn' => 'Not Available',
-                        'ctrl' => 'Not Available',
-                    ), './images/warning.png', 'no', null, '');
-                }
-            } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-                $w->result(null, 'help', 'Exception occurred',array(
-                        ''.$e->getMessage(),
-                        'alt' => 'Not Available',
-                        'cmd' => 'Not Available',
-                        'shift' => 'Not Available',
-                        'fn' => 'Not Available',
-                        'ctrl' => 'Not Available',
-                    ), './images/warning.png', 'no', null, '');
-                echo $w->tojson();
-                exit;
+            if ($follow) {
+                $w->result(null, serialize(array(
+                    '' /*track_uri*/,
+                    '' /* album_uri */,
+                    '' /* artist_uri */,
+                    $show_uri /* playlist_uri */,
+                    '' /* spotify_command */,
+                    '' /* query */,
+                    '' /* other_settings*/,
+                    'follow_show' /* other_action */,
+                    '' /* artist_name */,
+                    '' /* track_name */,
+                    '' /* album_name */,
+                    '' /* track_artwork_path */,
+                    '' /* artist_artwork_path */,
+                    '' /* album_artwork_path */,
+                    getShowArtwork($w, $show->uri, false, false, false, $use_artworks) /* playlist_name */,
+                    '', /* playlist_artwork_path */
+                )), 'Follow show '.$show_name, 'This will add the show to your library', './images/follow.png', 'yes', null, '');
+            } else {
+                $w->result(null, serialize(array(
+                    '' /*track_uri*/,
+                    '' /* album_uri */,
+                    '' /* artist_uri */,
+                    $show_uri /* playlist_uri */,
+                    '' /* spotify_command */,
+                    '' /* query */,
+                    '' /* other_settings*/,
+                    'unfollow_show' /* other_action */,
+                    '' /* artist_name */,
+                    '' /* track_name */,
+                    '' /* album_name */,
+                    '' /* track_artwork_path */,
+                    '' /* artist_artwork_path */,
+                    '' /* album_artwork_path */,
+                    getShowArtwork($w, $show->uri, false, false, false, $use_artworks) /* playlist_name */,
+                    '', /* playlist_artwork_path */
+                )), 'Unfollow show '.$show_name, 'This will remove the show from your library', './images/unfollow.png', 'yes', null, '');
             }
         }
     }
