@@ -2240,7 +2240,7 @@ function createDebugFile($w)
     }
     $output = $output."\n";
     exec('/usr/bin/xattr "'.'./terminal-notifier.app'.'"',$response);
-    $output = $output."xattr alerter returned: ";
+    $output = $output."xattr terminal-notifier returned: ";
     foreach($response as $line) {
         $output = $output.$line;
         $output = $output."\n";
@@ -7215,11 +7215,15 @@ function checkForUpdate($w, $last_check_update_time, $download = false)
         $settings = getSettings($w);
 
         $workflow_version = $settings->workflow_version;
+        $theme_color = $settings->theme_color;
 
         if($local_version != $workflow_version) {
             // update workflow_version
             $ret = updateSetting($w, 'workflow_version', ''.$local_version);
             stathat_ez_count('AlfredSpotifyMiniPlayer', 'workflow_installations', 1);
+
+            // open SpotifyMiniPlayer.app for notifications
+            exec('open "'.'./App/'.$theme_color.'/Spotify Mini Player.app'.'"',$response);
         }
 
         // get remote information
