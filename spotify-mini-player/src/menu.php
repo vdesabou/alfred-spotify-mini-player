@@ -1000,7 +1000,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress)
         if($search_category == 'episode') {
             // Search episodes
             try {
-                $getEpisodes = 'select uri, name, uri, show_uri, show_name, description, episode_artwork_path, is_playable, languages, nb_times_played, is_externally_hosted, duration_ms, explicit, release_date, release_date_precision, audio_preview_url from episodes where name like :name order by release_date desc limit '.$max_results;
+                $getEpisodes = 'select uri, name, uri, show_uri, show_name, description, episode_artwork_path, is_playable, languages, nb_times_played, is_externally_hosted, duration_ms, explicit, release_date, release_date_precision, audio_preview_url, fully_played, resume_position_ms from episodes where name like :name order by release_date desc limit '.$max_results;
                 $stmt = $db->prepare($getEpisodes);
                 $stmt->bindValue(':name', '%'.$query.'%');
                 $episodes = $stmt->execute();
@@ -1014,7 +1014,12 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress)
                 $noresult = false;
                 $subtitle = $episodes[6];
 
-                if (checkIfResultAlreadyThere($w->results(), '🎙 '.$episodes[1]) == false) {
+                $fully_played = '';
+                if($episodes[16] == 1) {
+                    // fully_played
+                    $fully_played = '✔️';
+                }
+                if (checkIfResultAlreadyThere($w->results(), '🎙 '.$fully_played.$episodes[1]) == false) {
                     if ($episodes[7] == true) {
                         $w->result(null, serialize(array(
                                     $episodes[2] /*track_uri*/,
@@ -1033,8 +1038,8 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress)
                                     $episodes[11] /* album_artwork_path */,
                                     '' /* playlist_name */,
                                     '', /* playlist_artwork_path */
-                                )), '🎙 '.$episodes[1], array(
-                                    $episode->episode_type.' Duration '.beautifyTime($episodes[11] / 1000).' ● Release date: '.$episodes[13],
+                                )), '🎙 '.$fully_played.$episodes[1], array(
+                                    $episode->episode_type.'Progress: ' . floatToSquares(intval($episodes[17]) / intval($episodes[11])) . ' Duration '.beautifyTime($episodes[11] / 1000).' ● Release date: '.$episodes[13],
                                     'alt' => 'Not Available',
                                     'cmd' => 'Not Available',
                                     'shift' => 'Not Available',
@@ -1042,7 +1047,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress)
                                     'ctrl' => 'Not Available',
                             ), $episodes[6], 'yes', null, '');
                     } else {
-                        $w->result(null, '', '🚫 '.'🎙 '.$episodes[1], $episode->episode_type.' Duration '.beautifyTime($episodes[11] / 1000).' ● Release date: '.$episodes[13], $episodes[6], 'no', null, '');
+                        $w->result(null, '', '🚫 '.'🎙 '.$fully_played.$episodes[1], $episode->episode_type.'Progress: ' . floatToSquares(intval($episodes[17]) / intval($episodes[11])) . ' Duration '.beautifyTime($episodes[11] / 1000).' ● Release date: '.$episodes[13], $episodes[6], 'no', null, '');
                     }
                 }
             }
