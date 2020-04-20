@@ -2,7 +2,7 @@
 layout: article
 permalink: /known-issues/
 title: "Known Issues"
-modified: 2019-07-28
+modified: 2020-04-18
 excerpt: "List of Known Issues."
 image:
   feature:
@@ -19,9 +19,11 @@ This is the list of current known issues:
 
 ## Authentication issues
 
-* Make sure to **disable** *Mac OS http proxy settings for scripts* option in Alfred advanced preferences during time of authentication
+* Make sure to **disable** *Mac OS http proxy settings for scripts* option in Alfred advanced preferences during time of authentication.
 
 * **Wappalyzer** browser extension interfere with authentication process: make sure to disable it during time of authentication.
+
+* Safari [does not work](https://github.com/vdesabou/alfred-spotify-mini-player/issues/341) with authentication, the workflow will try to launch Google Chrome or Firefox instead.
 
 ## Spotify AppleScript bug
 
@@ -44,10 +46,10 @@ As a workaround, you can create a new playlist (called 'Starred' for example) an
 
 * PHP 5.5.0 or later is required for authentication. This is because I am using the PHP CLI [built-in web server](http://php.net/manual/en/features.commandline.webserver.php) for Oauth process. If you use an older version, there is a [workround](https://github.com/vdesabou/alfred-spotify-mini-player/issues/44#issuecomment-72003149). Ask for more details if required.
 
- 
+
 ## Mopidy
 
-* Local tracks are not supported by Mopidy, this is a [known issue](https://github.com/mopidy/mopidy/issues/519). The workflow will not display local tracks when Mopidy is used.
+* Mopidy support in the workflow is deprecated, see reasons [here](https://github.com/vdesabou/alfred-spotify-mini-player/issues/340).
 
 ## Sonos
 
