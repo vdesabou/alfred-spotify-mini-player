@@ -1437,10 +1437,10 @@ function refreshLibrary($w)
                     }
                 }
 
-                foreach ($userMySavedEpisodes->items as $episode) {
-                    $episode->show_uri = $show->uri;
-                    $episode->show_name = $show->name;
-                    $savedMySavedEpisodes[] = $episode;
+                foreach ($userMySavedEpisodes->items as $show_episode) {
+                    $episode = getEpisode($w, $show_episode->uri);
+                    if(isset($episode->uri) && $episode->uri != '')
+                        $savedMySavedEpisodes[] = $episode;
                 }
 
                 $offsetGetMySavedEpisodes += $limitGetMySavedEpisodes;
@@ -1593,7 +1593,8 @@ function refreshLibrary($w)
 
                     foreach ($userMySavedEpisodes->items as $show_episode) {
                         $episode = getEpisode($w, $show_episode->uri);
-                        $savedMySavedEpisodes[] = $episode;
+                        if(isset($episode->uri) && $episode->uri != '')
+                            $savedMySavedEpisodes[] = $episode;
                     }
 
                     $offsetGetMySavedEpisodes += $limitGetMySavedEpisodes;
