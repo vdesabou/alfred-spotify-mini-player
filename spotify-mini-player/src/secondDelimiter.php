@@ -1163,7 +1163,7 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
             $episodes = getTheShowEpisodes($w, $show_uri, $country_code);
 
             if (mb_strlen($search) < 2) {
-                $w->result(null, 'help', 'Select an episode below to browse it',array(
+                $w->result(null, 'help', 'Select an episode below to play it',array(
                          '',
                         'alt' => 'Not Available',
                         'cmd' => 'Not Available',
@@ -1173,12 +1173,22 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
                     ), './images/info.png', 'no', null, '');
             }
 
+            $iso = new Matriphe\ISO639\ISO639;
+
             $noresult = true;
             foreach ($episodes as $episode) {
                 if (checkIfResultAlreadyThere($w->results(), $episode->name) == false) {
                     $noresult = false;
                     if (mb_strlen($search) < 2
                     || strpos(strtolower($episode->name), strtolower($search)) !== false) {
+
+                        $array_languages = array();
+                        foreach ($episode->languages as $language) {
+                            if (strpos($language, '-') !== false) {
+                                $language = strstr($language, '-', true);
+                            }
+                            $array_languages[] = $iso->languageByCode1($language);
+                        }
                         $w->result(null, serialize(array(
                             $episode->uri /*track_uri*/,
                             $show_uri /* album_uri */,
@@ -1197,7 +1207,7 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress)
                             '' /* playlist_name */,
                             '', /* playlist_artwork_path */
                         )), $episode->name, array(
-                        $episode->episode_type.' Duration '.beautifyTime($episode->duration_ms / 1000).' ● Release date: '.$episode->release_date,
+                        $episode->episode_type.' Duration '.beautifyTime($episode->duration_ms / 1000).' ● Release date: '.$episode->release_date.' ● Languages: '.implode(',',$array_languages),
                         'alt' => 'Not Available',
                         'cmd' => 'Not Available',
                         'shift' => 'Not Available',

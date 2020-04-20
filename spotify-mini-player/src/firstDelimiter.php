@@ -876,6 +876,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
                 if ($search_episodes == true) {
                     // Search show episodes
 
+                    $iso = new Matriphe\ISO639\ISO639;
                     // call to web api, if it fails,
                     // it displays an error in main window
                     $query = $the_query;
@@ -886,6 +887,14 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
                             if (mb_strlen($search) < 2
                             || strpos(strtolower($episode->name), strtolower($search)) !== false) {
                                 $episode_artwork_path = getEpisodeArtwork($w, $episode->uri, false, false, false, $use_artworks);
+
+                                $array_languages = array();
+                                foreach ($episode->languages as $language) {
+                                    if (strpos($language, '-') !== false) {
+                                        $language = strstr($language, '-', true);
+                                    }
+                                    $array_languages[] = $iso->languageByCode1($language);
+                                }
                                 $w->result(null, serialize(array(
                                     $episode->uri /*track_uri*/,
                                     '' /* album_uri */,
@@ -903,7 +912,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
                                     '' /* album_artwork_path */,
                                     '' /* playlist_name */,
                                     '', /* playlist_artwork_path */
-                                )), $episode->name, array($episode->episode_type.' Duration '.beautifyTime($episode->duration_ms / 1000).' ● Release date: '.$episode->release_date,
+                                )), $episode->name, array($episode->episode_type.' Duration '.beautifyTime($episode->duration_ms / 1000).' ● Release date: '.$episode->release_date.' ● Languages: '.implode(',',$array_languages),
                                 'alt' => 'Not Available',
                                 'cmd' => 'Not Available',
                                 'shift' => 'Not Available',
