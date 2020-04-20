@@ -912,7 +912,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
                                     '' /* album_artwork_path */,
                                     '' /* playlist_name */,
                                     '', /* playlist_artwork_path */
-                                )), $episode->name, array($episode->episode_type.' Duration '.beautifyTime($episode->duration_ms / 1000).' ● Release date: '.$episode->release_date.' ● Languages: '.implode(',',$array_languages),
+                                )), $episode->name, array($episode->episode_type.'Progress: ' . floatToSquares(intval($episode->resume_point->resume_position_ms) / intval($episode->duration_ms)) . ' Duration '.beautifyTime($episode->duration_ms / 1000).' ● Release date: '.$episode->release_date.' ● Languages: '.implode(',',$array_languages),
                                 'alt' => 'Not Available',
                                 'cmd' => 'Not Available',
                                 'shift' => 'Not Available',
