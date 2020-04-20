@@ -735,6 +735,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>495DA851-3C70-445F-A777-96C2617FE6C8</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>C331E62E-0FB1-4C32-AC93-B6CEDEA179AC</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>4BE9FB30-9B4F-4E44-861D-D178507A7568</key>
 		<array>
 			<dict>
@@ -2338,6 +2351,19 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>6FEAFE02-DF77-4F58-9305-651E6D627144</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>C331E62E-0FB1-4C32-AC93-B6CEDEA179AC</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>C809AD5E-BF4B-4A5E-A257-9FAADFB3DA5D</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -8920,6 +8946,95 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 			<key>version</key>
 			<integer>2</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>applescript</key>
+				<string>on alfred_script(q)
+tell application "System Preferences"	reveal anchor "output" of pane id "com.apple.preference.sound"end telltell application "System Events" to tell process "System Preferences"	repeat with i from 1 to the count of rows of table 1 of scroll area 1 of tab group 1 of window 1		if exists (text field 1 of row i of table 1 of scroll area 1 of tab group 1 of window 1) then			set deviceselected to the value of text field 1 of row i of table 1 of scroll area 1 of tab group 1 of window 1			if deviceselected is equal to q then				set selected of row i of table 1 of scroll area 1 of tab group 1 of window 1 to true			end if		end if	end repeatend telltell application "System Preferences"	quitend tellset theMessage to q
+end alfred_script</string>
+				<key>cachescript</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.applescript</string>
+			<key>uid</key>
+			<string>C331E62E-0FB1-4C32-AC93-B6CEDEA179AC</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<false/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>escaping</key>
+				<integer>32</integer>
+				<key>keyword</key>
+				<string>output</string>
+				<key>queuedelaycustom</key>
+				<integer>1</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<false/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string>Getting output devices...</string>
+				<key>script</key>
+				<string>tell application "System Preferences"	reveal anchor "output" of pane id "com.apple.preference.sound"end tellset deviceselectedXML to ""tell application "System Events" to tell process "System Preferences"	repeat with i from 1 to the count of rows of table 1 of scroll area 1 of tab group 1 of window 1		if exists (text field 1 of row i of table 1 of scroll area 1 of tab group 1 of window 1) then						set deviceselected to the value of text field 1 of row i of table 1 of scroll area 1 of tab group 1 of window 1			set deviceselectedXML to deviceselectedXML &amp; "&lt;item uid='" &amp; deviceselected &amp; "' arg='" &amp; deviceselected &amp; "' valid='YES' autocomplete='" &amp; deviceselected &amp; "'&gt;&lt;title&gt;" &amp; deviceselected &amp; "&lt;/title&gt;"						if (selected of row i of table 1 of scroll area 1 of tab group 1 of window 1) then				set deviceselectedXML to deviceselectedXML &amp; "&lt;subtitle&gt; Currently selected &lt;/subtitle&gt;"			end if			set deviceselectedXML to deviceselectedXML &amp; "&lt;icon&gt;./images/speaker.png&lt;/icon&gt; &lt;/item&gt;"		end if			end repeatend tellset deviceselectedXML to "cat &lt;&lt; EOB 
+&lt;?xml version='1.0'?&gt; &lt;items&gt; " &amp; deviceselectedXML &amp; "&lt;/items&gt; 
+EOB"do shell script deviceselectedXML</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string>Output audio devices</string>
+				<key>title</key>
+				<string>output audio switch</string>
+				<key>type</key>
+				<integer>6</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>495DA851-3C70-445F-A777-96C2617FE6C8</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<false/>
+				<key>removeextension</key>
+				<false/>
+				<key>text</key>
+				<string>{query}</string>
+				<key>title</key>
+				<string>Audio Switch</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.notification</string>
+			<key>uid</key>
+			<string>C809AD5E-BF4B-4A5E-A257-9FAADFB3DA5D</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string>Web Site:
@@ -9422,6 +9537,15 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<integer>590</integer>
 			<key>ypos</key>
 			<integer>11940</integer>
+		</dict>
+		<key>495DA851-3C70-445F-A777-96C2617FE6C8</key>
+		<dict>
+			<key>note</key>
+			<string>Credits to https://github.com/sampayo/Alfred-WorkFlows/tree/master/Audio%20Switch</string>
+			<key>xpos</key>
+			<integer>170</integer>
+			<key>ypos</key>
+			<integer>13560</integer>
 		</dict>
 		<key>4BE9FB30-9B4F-4E44-861D-D178507A7568</key>
 		<dict>
@@ -10447,6 +10571,13 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>ypos</key>
 			<integer>11810</integer>
 		</dict>
+		<key>C331E62E-0FB1-4C32-AC93-B6CEDEA179AC</key>
+		<dict>
+			<key>xpos</key>
+			<integer>365</integer>
+			<key>ypos</key>
+			<integer>13560</integer>
+		</dict>
 		<key>C3F966D4-D292-4B70-9024-B8788BA5488F</key>
 		<dict>
 			<key>xpos</key>
@@ -10483,6 +10614,13 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<integer>300</integer>
 			<key>ypos</key>
 			<real>9860</real>
+		</dict>
+		<key>C809AD5E-BF4B-4A5E-A257-9FAADFB3DA5D</key>
+		<dict>
+			<key>xpos</key>
+			<integer>570</integer>
+			<key>ypos</key>
+			<integer>13560</integer>
 		</dict>
 		<key>C8B5A68F-5328-48B7-84C1-E73601716B7E</key>
 		<dict>
