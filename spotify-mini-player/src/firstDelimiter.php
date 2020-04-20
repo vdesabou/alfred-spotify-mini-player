@@ -3176,7 +3176,7 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
                 '' /* playlist_uri */,
                 '' /* spotify_command */,
                 '' /* query */,
-                'Open▹'.'http://alfred-spotify-mini-player.com' /* other_settings*/,
+                'Open▹'.'http://alfred-spotify-mini-player.com/articles/customization/'/* other_settings*/,
                 '' /* other_action */,
                 '' /* artist_name */,
                 '' /* track_name */,
@@ -3186,7 +3186,7 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
                 '' /* album_artwork_path */,
                 '' /* playlist_name */,
                 '', /* playlist_artwork_path */
-            )), 'Go to the website alfred-spotify-mini-player.com', 'Find out all information on the workflow on the website', './images/website.png', 'yes', null, '');
+            )), 'Missing a setting ? There are others described on the website', 'Find out all possible additional settings on the website', './images/website.png', 'yes', null, '');
 }
 
 /**
