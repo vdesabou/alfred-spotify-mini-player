@@ -3466,7 +3466,7 @@ function secondDelimiterFollowUnfollow($w, $query, $settings, $db, $update_in_pr
                         '' /* album_artwork_path */,
                         $show_artwork_path /* playlist_name */,
                         '', /* playlist_artwork_path */
-                    )), 'Follow show '.$show_name, 'This will add the show to your library', './images/follow.png', 'yes', null, '');
+                    )), 'Follow show '.$show_name, 'This will add the show to your library', $show_artwork_path, 'yes', null, '');
                 } else {
                     $w->result(null, serialize(array(
                         '' /*track_uri*/,
@@ -3485,7 +3485,7 @@ function secondDelimiterFollowUnfollow($w, $query, $settings, $db, $update_in_pr
                         '' /* album_artwork_path */,
                         $show_artwork_path /* playlist_name */,
                         '', /* playlist_artwork_path */
-                    )), 'Unfollow show '.$show_name, 'This will remove the show from your library', './images/unfollow.png', 'yes', null, '');
+                    )), 'Unfollow show '.$show_name, 'This will remove the show from your library', $show_artwork_path, 'yes', null, '');
                 }
             } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
                 $w->result(null, 'help', 'Exception occurred',array(
