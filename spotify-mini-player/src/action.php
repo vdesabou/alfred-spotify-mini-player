@@ -1020,7 +1020,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
         if ($output_application == 'MOPIDY') {
             playTrackInContextWithMopidy($w, $track_uri, $album_uri);
         } else if($output_application == 'APPLESCRIPT') {
-            exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\" in context \"$album_uri\"'");
+            exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
         } else {
             $device_id = getSpotifyConnectCurrentDeviceId($w);
             if($device_id != '') {
