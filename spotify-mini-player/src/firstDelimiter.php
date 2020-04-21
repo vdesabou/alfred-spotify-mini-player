@@ -912,7 +912,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
                                     '' /* album_artwork_path */,
                                     '' /* playlist_name */,
                                     '', /* playlist_artwork_path */
-                                )), $episode->name, array($episode->episode_type.'Progress: ' . floatToSquares(intval($episode->resume_point->resume_position_ms) / intval($episode->duration_ms)) . ' Duration '.beautifyTime($episode->duration_ms / 1000).' ● Release date: '.$episode->release_date.' ● Languages: '.implode(',',$array_languages),
+                                )), $episode->name, array($episode->episode_type.'Progress: ' . floatToCircles(intval($episode->resume_point->resume_position_ms) / intval($episode->duration_ms)) . ' Duration '.beautifyTime($episode->duration_ms / 1000).' ● Release date: '.$episode->release_date.' ● Languages: '.implode(',',$array_languages),
                                 'alt' => 'Not Available',
                                 'cmd' => 'Not Available',
                                 'shift' => 'Not Available',
@@ -1247,34 +1247,71 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
             }
             if ($results[3] == 'playing') {
                 if ($href[1] == 'episode') {
-                    $w->result(null, serialize(array(
-                        $results[4] /*track_uri*/,
-                        '' /* album_uri */,
-                        '' /* artist_uri */,
-                        '' /* playlist_uri */,
-                        '' /* spotify_command */,
-                        '' /* query */,
-                        '' /* other_settings*/,
-                        'pause' /* other_action */,
-                        escapeQuery($results[1]) /* artist_name */,
-                        escapeQuery($results[0]) /* track_name */,
-                        escapeQuery($results[2]) /* album_name */,
-                        '' /* track_artwork_path */,
-                        '' /* artist_artwork_path */,
-                        '' /* album_artwork_path */,
-                        '' /* playlist_name */,
-                        '', /* playlist_artwork_path */
-                    )), $added.escapeQuery($results[0]), array(
-                        escapeQuery($results[1]).' ● '.escapeQuery($results[2]).' ● '.' ('.beautifyTime($results[5] / 1000).')',
-                    'alt' => 'Not Available',
-                    'cmd' => 'Not Available',
-                    'shift' => 'Not Available',
-                    'fn' => 'Not Available',
-                    'ctrl' => 'Not Available',
-                ), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', array(
-                        'copy' => '#NowPlaying ' . escapeQuery($results[0]).' by '.escapeQuery($results[1]) . $shared_url,
-                        'largetype' => escapeQuery($results[0]).' by '.escapeQuery($results[1]),
-                    ), '');
+                    if ($output_application == 'CONNECT') {
+                        $episode = getEpisode($w, $results[4]);
+                        $iso = new Matriphe\ISO639\ISO639;
+                        $array_languages = array();
+                        foreach ($episode->languages as $language) {
+                            if (strpos($language, '-') !== false) {
+                                $language = strstr($language, '-', true);
+                            }
+                            $array_languages[] = $iso->languageByCode1($language);
+                        }
+                        $w->result(null, serialize(array(
+                            $episode->uri /*track_uri*/,
+                            $show_uri /* album_uri */,
+                            '' /* artist_uri */,
+                            '' /* playlist_uri */,
+                            '' /* spotify_command */,
+                            '' /* query */,
+                            '' /* other_settings*/,
+                            'pause' /* other_action */,
+                            '' /* artist_name */,
+                            escapeQuery($episode->name) /* track_name */,
+                            escapeQuery($show_name) /* album_name */,
+                            $show_artwork_path /* track_artwork_path */,
+                            '' /* artist_artwork_path */,
+                            '' /* album_artwork_path */,
+                            '' /* playlist_name */,
+                            '', /* playlist_artwork_path */
+                        )), $episode->name, array($episode->episode_type.'Progress: ' . floatToCircles(intval($episode->resume_point->resume_position_ms) / intval($episode->duration_ms)) . ' Duration '.beautifyTime($episode->duration_ms / 1000).' ● Release date: '.$episode->release_date.' ● Languages: '.implode(',',$array_languages),
+                        'alt' => 'Not Available',
+                        'cmd' => 'Not Available',
+                        'shift' => 'Not Available',
+                        'fn' => 'Not Available',
+                        'ctrl' => 'Not Available',
+                    ), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', 'yes', null, '');
+
+                    } else {
+                        $w->result(null, serialize(array(
+                            $results[4] /*track_uri*/,
+                            '' /* album_uri */,
+                            '' /* artist_uri */,
+                            '' /* playlist_uri */,
+                            '' /* spotify_command */,
+                            '' /* query */,
+                            '' /* other_settings*/,
+                            'pause' /* other_action */,
+                            escapeQuery($results[1]) /* artist_name */,
+                            escapeQuery($results[0]) /* track_name */,
+                            escapeQuery($results[2]) /* album_name */,
+                            '' /* track_artwork_path */,
+                            '' /* artist_artwork_path */,
+                            '' /* album_artwork_path */,
+                            '' /* playlist_name */,
+                            '', /* playlist_artwork_path */
+                        )), $added.escapeQuery($results[0]), array(
+                            escapeQuery($results[1]).' ● '.escapeQuery($results[2]).' ● '.' ('.beautifyTime($results[5] / 1000).')',
+                        'alt' => 'Not Available',
+                        'cmd' => 'Not Available',
+                        'shift' => 'Not Available',
+                        'fn' => 'Not Available',
+                        'ctrl' => 'Not Available',
+                    ), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', array(
+                            'copy' => '#NowPlaying ' . escapeQuery($results[0]).' by '.escapeQuery($results[1]) . $shared_url,
+                            'largetype' => escapeQuery($results[0]).' by '.escapeQuery($results[1]),
+                        ), '');
+                    }
                 } else {
                     $w->result(null, serialize(array(
                         $results[4] /*track_uri*/,
@@ -1307,34 +1344,72 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                 }
             } else {
                 if ($href[1] == 'episode') {
-                    $w->result(null, serialize(array(
-                        $results[4] /*track_uri*/,
-                        '' /* album_uri */,
-                        '' /* artist_uri */,
-                        '' /* playlist_uri */,
-                        '' /* spotify_command */,
-                        '' /* query */,
-                        '' /* other_settings*/,
-                        'play' /* other_action */,
-                        escapeQuery($results[1]) /* artist_name */,
-                        escapeQuery($results[0]) /* track_name */,
-                        escapeQuery($results[2]) /* album_name */,
-                        '' /* track_artwork_path */,
-                        '' /* artist_artwork_path */,
-                        '' /* album_artwork_path */,
-                        '' /* playlist_name */,
-                        '', /* playlist_artwork_path */
-                    )), $added.escapeQuery($results[0]), array(
-                        escapeQuery($results[1]).' ● '.escapeQuery($results[2]).' ● '.' ('.beautifyTime($results[5] / 1000).')',
-                    'alt' => 'Not Available',
-                    'cmd' => 'Not Available',
-                    'shift' => 'Not Available',
-                    'fn' => 'Not Available',
-                    'ctrl' => 'Not Available',
-                ), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', array(
-                        'copy' => '#NowPlaying ' . escapeQuery($results[0]).' by '.escapeQuery($results[1]) . $shared_url,
-                        'largetype' => escapeQuery($results[0]).' by '.escapeQuery($results[1]),
-                    ), '');
+                    if ($output_application == 'CONNECT') {
+
+                        $episode = getEpisode($w, $results[4]);
+                        $iso = new Matriphe\ISO639\ISO639;
+                        $array_languages = array();
+                        foreach ($episode->languages as $language) {
+                            if (strpos($language, '-') !== false) {
+                                $language = strstr($language, '-', true);
+                            }
+                            $array_languages[] = $iso->languageByCode1($language);
+                        }
+                        $w->result(null, serialize(array(
+                            $episode->uri /*track_uri*/,
+                            $show_uri /* album_uri */,
+                            '' /* artist_uri */,
+                            '' /* playlist_uri */,
+                            '' /* spotify_command */,
+                            '' /* query */,
+                            '' /* other_settings*/,
+                            'play' /* other_action */,
+                            '' /* artist_name */,
+                            escapeQuery($episode->name) /* track_name */,
+                            escapeQuery($show_name) /* album_name */,
+                            $show_artwork_path /* track_artwork_path */,
+                            '' /* artist_artwork_path */,
+                            '' /* album_artwork_path */,
+                            '' /* playlist_name */,
+                            '', /* playlist_artwork_path */
+                        )), $episode->name, array($episode->episode_type.'Progress: ' . floatToCircles(intval($episode->resume_point->resume_position_ms) / intval($episode->duration_ms)) . ' Duration '.beautifyTime($episode->duration_ms / 1000).' ● Release date: '.$episode->release_date.' ● Languages: '.implode(',',$array_languages),
+                        'alt' => 'Not Available',
+                        'cmd' => 'Not Available',
+                        'shift' => 'Not Available',
+                        'fn' => 'Not Available',
+                        'ctrl' => 'Not Available',
+                    ), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', 'yes', null, '');
+
+                    } else {
+                        $w->result(null, serialize(array(
+                            $results[4] /*track_uri*/,
+                            '' /* album_uri */,
+                            '' /* artist_uri */,
+                            '' /* playlist_uri */,
+                            '' /* spotify_command */,
+                            '' /* query */,
+                            '' /* other_settings*/,
+                            'play' /* other_action */,
+                            escapeQuery($results[1]) /* artist_name */,
+                            escapeQuery($results[0]) /* track_name */,
+                            escapeQuery($results[2]) /* album_name */,
+                            '' /* track_artwork_path */,
+                            '' /* artist_artwork_path */,
+                            '' /* album_artwork_path */,
+                            '' /* playlist_name */,
+                            '', /* playlist_artwork_path */
+                        )), $added.escapeQuery($results[0]), array(
+                            escapeQuery($results[1]).' ● '.escapeQuery($results[2]).' ● '.' ('.beautifyTime($results[5] / 1000).')',
+                        'alt' => 'Not Available',
+                        'cmd' => 'Not Available',
+                        'shift' => 'Not Available',
+                        'fn' => 'Not Available',
+                        'ctrl' => 'Not Available',
+                    ), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', array(
+                            'copy' => '#NowPlaying ' . escapeQuery($results[0]).' by '.escapeQuery($results[1]) . $shared_url,
+                            'largetype' => escapeQuery($results[0]).' by '.escapeQuery($results[1]),
+                        ), '');
+                    }
                 } else {
                     $w->result(null, serialize(array(
                         $results[4] /*track_uri*/,
