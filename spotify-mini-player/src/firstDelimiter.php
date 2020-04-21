@@ -1197,9 +1197,8 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
 
     if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
         $results = explode('▹', $retArr[count($retArr) - 1]);
-        if ($results[1] == '' || $results[2] == '') {
-
-            $tmp = explode(':', $results[4]);
+        $tmp = explode(':', $results[4]);
+        if ($tmp[1] != 'episode' && ($results[1] == '' || $results[2] == '')) {
 
             if (isset($tmp[1]) && $tmp[1] == 'ad') {
                 $w->result(null, 'help', 'Current track is an Ad',array(
@@ -1225,7 +1224,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
             echo $w->tojson();
             exit;
         }
-
+        $isEpisode = false;
         $href = explode(':', $results[4]);
         $added = '';
         $shared_url = '';
@@ -1283,6 +1282,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                     ), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', 'yes', null, '');
 
                     } else {
+                        $isEpisode = true;
                         $w->result(null, serialize(array(
                             $results[4] /*track_uri*/,
                             '' /* album_uri */,
@@ -1381,6 +1381,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                     ), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', 'yes', null, '');
 
                     } else {
+                        $isEpisode = true;
                         $w->result(null, serialize(array(
                             $results[4] /*track_uri*/,
                             '' /* album_uri */,
@@ -1442,7 +1443,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                 }
             }
         }
-        $isEpisode = false;
+
         if ($output_application == 'CONNECT') {
             $context_type = '';
             if (mb_strlen($input) < 2) {
