@@ -1505,8 +1505,10 @@ function refreshLibrary($w)
 
                         $stmtInsertEpisode->bindValue(':resume_position_ms', $resume_point->resume_position_ms);
                     } else {
-                        $stmtInsertEpisode->bindValue(':fully_played', 0);
-                        $stmtInsertEpisode->bindValue(':resume_position_ms', 0);
+                        updateSetting($w,'oauth_access_token','');
+                        updateSetting($w,'oauth_refresh_token','');
+                        displayNotificationWithArtwork($w, 'Relaunch the workflow to re-authenticate', './images/settings.png', 'Info');
+                        exit;
                     }
                     $stmtInsertEpisode->execute();
                 } catch (PDOException $e) {
@@ -1660,11 +1662,11 @@ function refreshLibrary($w)
 
                             $stmtInsertEpisode->bindValue(':resume_position_ms', $resume_point->resume_position_ms);
                         } else {
-                            $stmtInsertEpisode->bindValue(':fully_played', 0);
-                            $stmtInsertEpisode->bindValue(':resume_position_ms', 0);
+                            updateSetting($w,'oauth_access_token','');
+                            updateSetting($w,'oauth_refresh_token','');
+                            displayNotificationWithArtwork($w, 'Relaunch the workflow to re-authenticate', './images/settings.png', 'Info');
+                            exit;
                         }
-                        $stmtInsertEpisode->bindValue(':fully_played', $resume_point->fully_played);
-                        $stmtInsertEpisode->bindValue(':resume_position_ms', $resume_point->resume_position_ms);
                         $stmtInsertEpisode->execute();
                     } catch (PDOException $e) {
                         logMsg('Error(refreshLibrary): (exception '.jTraceEx($e).')');
