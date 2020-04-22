@@ -415,6 +415,8 @@ if (mb_strlen($query) < 2) {
                 secondDelimiterAdd($w, $query, $settings, $db, $update_in_progress);
             } elseif ($kind == 'Remove') {
                 secondDelimiterRemove($w, $query, $settings, $db, $update_in_progress);
+            } elseif ($kind == 'Preview') {
+                secondDelimiterPreview($w, $query, $settings, $db, $update_in_progress);
             } elseif ($kind == 'Alfred Playlist') {
                 secondDelimiterAlfredPlaylist($w, $query, $settings, $db, $update_in_progress);
             } elseif ($kind == 'Follow/Unfollow') {

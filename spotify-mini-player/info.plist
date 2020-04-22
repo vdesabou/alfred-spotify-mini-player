@@ -275,6 +275,16 @@
 				<key>vitoclose</key>
 				<false/>
 			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>3D692753-4ADE-4CAF-82ED-759B7C742A90</string>
+				<key>modifiers</key>
+				<integer>8519680</integer>
+				<key>modifiersubtext</key>
+				<string>Preview track or episode</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
 		</array>
 		<key>19215BE5-986E-4AC9-9166-C80872C51DBE</key>
 		<array/>
@@ -3673,6 +3683,29 @@
 			<string>F0ED23FA-8524-4769-B610-828611958D6A</string>
 			<key>version</key>
 			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>php -f ./src/action.php -- "{query}" "PREVIEW" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>3D692753-4ADE-4CAF-82ED-759B7C742A90</string>
+			<key>version</key>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -9486,6 +9519,13 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<integer>100</integer>
 			<key>ypos</key>
 			<integer>2380</integer>
+		</dict>
+		<key>3D692753-4ADE-4CAF-82ED-759B7C742A90</key>
+		<dict>
+			<key>xpos</key>
+			<integer>610</integer>
+			<key>ypos</key>
+			<integer>975</integer>
 		</dict>
 		<key>3D74AA18-A55B-43C6-80CB-44954233EC63</key>
 		<dict>

@@ -3938,3 +3938,207 @@ function secondDelimiterBrowse($w, $query, $settings, $db, $update_in_progress)
         }
     }
 }
+
+/**
+ * secondDelimiterPreview function.
+ *
+ * @param mixed $w
+ * @param mixed $query
+ * @param mixed $settings
+ * @param mixed $db
+ * @param mixed $update_in_progress
+ */
+function secondDelimiterPreview($w, $query, $settings, $db, $update_in_progress)
+{
+    $words = explode('▹', $query);
+    $kind = $words[0];
+
+    $all_playlists = $settings->all_playlists;
+    $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
+    $radio_number_tracks = $settings->radio_number_tracks;
+    $now_playing_notifications = $settings->now_playing_notifications;
+    $max_results = $settings->max_results;
+    $alfred_playlist_uri = $settings->alfred_playlist_uri;
+    $alfred_playlist_name = $settings->alfred_playlist_name;
+    $country_code = $settings->country_code;
+    $last_check_update_time = $settings->last_check_update_time;
+    $oauth_client_id = $settings->oauth_client_id;
+    $oauth_client_secret = $settings->oauth_client_secret;
+    $oauth_redirect_uri = $settings->oauth_redirect_uri;
+    $oauth_access_token = $settings->oauth_access_token;
+    $oauth_expires = $settings->oauth_expires;
+    $oauth_refresh_token = $settings->oauth_refresh_token;
+    $display_name = $settings->display_name;
+    $userid = $settings->userid;
+    $use_artworks = $settings->use_artworks;
+    $is_display_rating = $settings->is_display_rating;
+
+    if (!file_exists('/usr/local/bin/mpg123')) {
+        $w->result(null, '', 'mpg123 is not installed, install using brew install mpg123',array(
+            'install using brew install mpg123',
+            'alt' => 'Not Available',
+            'cmd' => 'Not Available',
+            'shift' => 'Not Available',
+            'fn' => 'Not Available',
+            'ctrl' => 'Not Available',
+        ), './images/warning.png', 'no', null, '');
+        echo $w->tojson();
+        exit;
+    }
+
+    $track_uri = $words[1];
+    $search = $words[2];
+
+    $tmp = explode(':', $track_uri);
+    if($tmp[1] == 'track') {
+        $track = getTheFullTrack($w, $track_uri, $country_code);
+        if(isset($track->preview_url) && $track->preview_url != null) {
+            $track_artwork_path = getTrackOrAlbumArtwork($w, $track_uri, false, false, false, $use_artworks);
+            $popularity = '';
+            if($is_display_rating) {
+                $popularity = floatToStars($track->popularity/100);
+            }
+            $subtitle = '⌥ (play album) ⌘ (play artist) ctrl (lookup online)';
+            $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
+            $w->result(null, serialize(array(
+                $track->uri /*track_uri*/,
+                '' /* album_uri */,
+                '' /* artist_uri */,
+                '' /* playlist_uri */,
+                '' /* spotify_command */,
+                '' /* query */,
+                '' /* other_settings*/,
+                '' /* other_action */,
+                escapeQuery($track->artists[0]->name) /* artist_name */,
+                escapeQuery($track->name) /* track_name */,
+                escapeQuery($track->album->name) /* album_name */,
+                '' /* track_artwork_path */,
+                '' /* artist_artwork_path */,
+                '' /* album_artwork_path */,
+                '' /* playlist_name */,
+                '', /* playlist_artwork_path */
+            )), '👁Previewing '.$added.escapeQuery($track->name).' ● '.escapeQuery($track->artists[0]->name).' ● '.escapeQuery($track->album->name).' ● '.$popularity.' ('.beautifyTime($track->duration_ms / 1000).')', array(
+            $subtitle,
+            'alt' => 'Play album '.escapeQuery($track->album->name).' in Spotify',
+            'cmd' => 'Play artist '.escapeQuery($track->artists[0]->name).' in Spotify',
+            'fn' => 'Add track '.escapeQuery($track->name).' to ...',
+            'shift' => 'Add album '.escapeQuery($track->album->name).' to ...',
+            'ctrl' => 'Search artist '.escapeQuery($track->artists[0]->name).' online',
+        ), $track_artwork_path, 'yes', '', '');
+
+            $w->result(null, serialize(array(
+                '' /*track_uri*/,
+                '' /* album_uri */,
+                '' /* artist_uri */,
+                '' /* playlist_uri */,
+                '' /* spotify_command */,
+                '' /* query */,
+                '' /* other_settings*/,
+                'kill_preview' /* other_action */,
+                '' /* artist_name */,
+                '' /* track_name */,
+                '' /* album_name */,
+                '' /* track_artwork_path */,
+                '' /* artist_artwork_path */,
+                '' /* album_artwork_path */,
+                '' /* playlist_name */,
+                '', /* playlist_artwork_path */
+            )), 'Stop the preview', 'This will stop the 30 seconds preview', './images/uncheck.png', 'yes', null, '');
+
+            exec('curl -s '.$track->preview_url.' | /usr/local/bin/mpg123 - > /dev/null 2>&1 &');
+        } else {
+            $w->result(null, '', 'The track . '.$track->name.' does not have a preview',array(
+                'uri='.$track_uri,
+                'alt' => 'Not Available',
+                'cmd' => 'Not Available',
+                'shift' => 'Not Available',
+                'fn' => 'Not Available',
+                'ctrl' => 'Not Available',
+            ), './images/warning.png', 'no', null, '');
+            echo $w->tojson();
+            exit;
+        }
+    } else if ($tmp[1] == 'episode') {
+        $episode = getEpisode($w, $track_uri);
+        if(isset($episode->audio_preview_url) && $episode->audio_preview_url != null) {
+
+            $iso = new Matriphe\ISO639\ISO639;
+            $array_languages = array();
+            foreach ($episode->languages as $language) {
+                if (strpos($language, '-') !== false) {
+                    $language = strstr($language, '-', true);
+                }
+                $array_languages[] = $iso->languageByCode1($language);
+            }
+            $episode_artwork_path = getEpisodeArtwork($w, $episode->uri, false, false, false, $use_artworks);
+            $w->result(null, serialize(array(
+                $episode->uri /*track_uri*/,
+                $episode->show->uri /* album_uri */,
+                '' /* artist_uri */,
+                '' /* playlist_uri */,
+                '' /* spotify_command */,
+                '' /* query */,
+                '' /* other_settings*/,
+                'play_episode' /* other_action */,
+                '' /* artist_name */,
+                escapeQuery($episode->name) /* track_name */,
+                escapeQuery($episode->show->name) /* album_name */,
+                $episode_artwork_path /* track_artwork_path */,
+                '' /* artist_artwork_path */,
+                '' /* album_artwork_path */,
+                '' /* playlist_name */,
+                '', /* playlist_artwork_path */
+            )), '👁Previewing '.$episode->name, array($episode->episode_type.'Progress: ' . floatToCircles(intval($episode->resume_point->resume_position_ms) / intval($episode->duration_ms)) . ' Duration '.beautifyTime($episode->duration_ms / 1000).' ● Release date: '.$episode->release_date.' ● Languages: '.implode(',',$array_languages),
+            'alt' => 'Not Available',
+            'cmd' => 'Not Available',
+            'shift' => 'Not Available',
+            'fn' => 'Not Available',
+            'ctrl' => 'Not Available',
+        ), $episode_artwork_path, 'yes', null, '');
+
+            $w->result(null, serialize(array(
+                '' /*track_uri*/,
+                '' /* album_uri */,
+                '' /* artist_uri */,
+                '' /* playlist_uri */,
+                '' /* spotify_command */,
+                '' /* query */,
+                '' /* other_settings*/,
+                'kill_preview' /* other_action */,
+                '' /* artist_name */,
+                '' /* track_name */,
+                '' /* album_name */,
+                '' /* track_artwork_path */,
+                '' /* artist_artwork_path */,
+                '' /* album_artwork_path */,
+                '' /* playlist_name */,
+                '', /* playlist_artwork_path */
+            )), 'Stop the preview', 'This will stop the 30 seconds preview', './images/uncheck.png', 'yes', null, '');
+
+            exec('curl -s '.$episode->audio_preview_url.' | /usr/local/bin/mpg123 - > /dev/null 2>&1 &');
+        } else {
+            $w->result(null, '', 'The episode . '.$episode->name.' does not have a preview',array(
+                'uri='.$episode->uri,
+                'alt' => 'Not Available',
+                'cmd' => 'Not Available',
+                'shift' => 'Not Available',
+                'fn' => 'Not Available',
+                'ctrl' => 'Not Available',
+            ), './images/warning.png', 'no', null, '');
+            echo $w->tojson();
+            exit;
+        }
+
+    } else {
+        $w->result(null, '', 'Only tracks and episodes can be previewed',array(
+            'uri='.$track_uri,
+            'alt' => 'Not Available',
+            'cmd' => 'Not Available',
+            'shift' => 'Not Available',
+            'fn' => 'Not Available',
+            'ctrl' => 'Not Available',
+        ), './images/warning.png', 'no', null, '');
+        echo $w->tojson();
+        exit;
+    }
+}

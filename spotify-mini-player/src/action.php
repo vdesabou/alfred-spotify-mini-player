@@ -105,6 +105,15 @@ if ($output_application == 'APPLESCRIPT') {
     }
 }
 
+# kill any preview
+if($other_action == 'play' || $other_action == 'play_episode') {
+    $pid = exec("ps -efx | grep \"mpg123\" | grep -v grep | awk '{print $2}'");
+    if($pid != '') {
+        exec("kill -9 $(ps -efx | grep \"mpg123\" | grep -v grep | awk '{print $2}')");
+    }
+}
+
+
 if ($spotify_command != '' && $type == 'TRACK' && $add_to_option == '') {
     $spotify_command = str_replace('\\', '', $spotify_command);
     if (!startsWith($spotify_command, 'activate')) {
@@ -312,6 +321,10 @@ if ($type == 'TRACK' && $other_settings == '' &&
         displayNotificationWithArtwork($w, 'Missing Track URI when trying to add to queue', './images/warning.png', 'Error!');
         return;
     }
+
+    return;
+} elseif ($type == 'PREVIEW') {
+    exec("osascript -e 'tell application id \"".getAlfredName()."\" to search \"".getenv('c_spot_mini').' Preview▹'.$track_uri.'▹'."\"'");
 
     return;
 } elseif ($type == 'ALBUM_OR_PLAYLIST') {
@@ -1169,6 +1182,13 @@ if ($type == 'TRACK' && $other_settings == '' &&
         killUpdate($w);
 
         stathat_ez_count('AlfredSpotifyMiniPlayer', 'kill update', 1);
+        return;
+    } elseif ($other_action == 'kill_preview') {
+        $pid = exec("ps -efx | grep \"mpg123\" | grep -v grep | awk '{print $2}'");
+        if($pid != '') {
+            exec("kill -9 $(ps -efx | grep \"mpg123\" | grep -v grep | awk '{print $2}')");
+        }
+
         return;
     } elseif ($other_action == 'lookup_current_artist') {
         lookupCurrentArtist($w);
