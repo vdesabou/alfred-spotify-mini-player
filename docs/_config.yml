@@ -6,7 +6,7 @@ logo: logo-default.jpg # 120x120 px default image used for Twitter summary card
 teaser: teaser-default.jpg # 400x250 px default teaser image used in image archive grid
 locale: en_US
 #url: http://localhost:4000
-url: http://alfred-spotify-mini-player.com
+url: https://alfred-spotify-mini-player.com
 
 # Jekyll configuration
 
