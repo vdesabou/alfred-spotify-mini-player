@@ -69,6 +69,10 @@ if ($other_action != 'reset_settings' && $other_action != 'spot_mini_debug' && !
 }
 
 if (!startsWith($other_action, 'current')) {
+    $pid = exec("ps -efx | grep \"mpg123\" | grep -v grep | awk '{print $2}'");
+    if($pid != '') {
+        exec("kill -9 $(ps -efx | grep \"mpg123\" | grep -v grep | awk '{print $2}')");
+    }
     stathat_ez_count('AlfredSpotifyMiniPlayer', 'workflow used', 1);
 }
 
@@ -104,15 +108,6 @@ if ($output_application == 'APPLESCRIPT') {
         }
     }
 }
-
-# kill any preview
-if($other_action == 'play' || $other_action == 'play_episode') {
-    $pid = exec("ps -efx | grep \"mpg123\" | grep -v grep | awk '{print $2}'");
-    if($pid != '') {
-        exec("kill -9 $(ps -efx | grep \"mpg123\" | grep -v grep | awk '{print $2}')");
-    }
-}
-
 
 if ($spotify_command != '' && $type == 'TRACK' && $add_to_option == '') {
     $spotify_command = str_replace('\\', '', $spotify_command);

@@ -3972,6 +3972,7 @@ function secondDelimiterPreview($w, $query, $settings, $db, $update_in_progress)
     $userid = $settings->userid;
     $use_artworks = $settings->use_artworks;
     $is_display_rating = $settings->is_display_rating;
+    $output_application = $settings->output_application;
 
     if (!file_exists('/usr/local/bin/mpg123')) {
         $w->result(null, '', 'mpg123 is not installed, install using brew install mpg123',array(
@@ -4045,6 +4046,20 @@ function secondDelimiterPreview($w, $query, $settings, $db, $update_in_progress)
                 '', /* playlist_artwork_path */
             )), 'Stop the preview', 'This will stop the 30 seconds preview', './images/uncheck.png', 'yes', null, '');
 
+            // pause track or episode
+            if ($output_application == 'MOPIDY') {
+                invokeMopidyMethod($w, 'core.playback.pause', array());
+            } else if($output_application == 'APPLESCRIPT') {
+                exec("osascript -e 'tell application \"Spotify\" to pause'");
+            } else {
+                $device_id = getSpotifyConnectCurrentDeviceId($w);
+                if($device_id != '') {
+                    pauseSpotifyConnect($w, $device_id);
+                } else {
+                    displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+                    return;
+                }
+            }
             exec('curl -s '.$track->preview_url.' | /usr/local/bin/mpg123 - > /dev/null 2>&1 &');
         } else {
             $w->result(null, '', 'The track . '.$track->name.' does not have a preview',array(
@@ -4114,6 +4129,21 @@ function secondDelimiterPreview($w, $query, $settings, $db, $update_in_progress)
                 '' /* playlist_name */,
                 '', /* playlist_artwork_path */
             )), 'Stop the preview', 'This will stop the 30 seconds preview', './images/uncheck.png', 'yes', null, '');
+
+            // pause track or episode
+            if ($output_application == 'MOPIDY') {
+                invokeMopidyMethod($w, 'core.playback.pause', array());
+            } else if($output_application == 'APPLESCRIPT') {
+                exec("osascript -e 'tell application \"Spotify\" to pause'");
+            } else {
+                $device_id = getSpotifyConnectCurrentDeviceId($w);
+                if($device_id != '') {
+                    pauseSpotifyConnect($w, $device_id);
+                } else {
+                    displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+                    return;
+                }
+            }
 
             exec('curl -s '.$episode->audio_preview_url.' | /usr/local/bin/mpg123 - > /dev/null 2>&1 &');
         } else {
