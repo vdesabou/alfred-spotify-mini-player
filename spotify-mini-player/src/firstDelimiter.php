@@ -3057,58 +3057,61 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
             ), './images/lyrics.png', 'yes', null, '');
     }
 
-    if ($use_facebook == true) {
-        $w->result(null, serialize(array(
-                    '' /*track_uri*/,
-                    '' /* album_uri */,
-                    '' /* artist_uri */,
-                    '' /* playlist_uri */,
-                    '' /* spotify_command */,
-                    '' /* query */,
-                    '' /* other_settings*/,
-                    'use_twitter' /* other_action */,
-                    '' /* artist_name */,
-                    '' /* track_name */,
-                    '' /* album_name */,
-                    '' /* track_artwork_path */,
-                    '' /* artist_artwork_path */,
-                    '' /* album_artwork_path */,
-                    '' /* playlist_name */,
-                    '', /* playlist_artwork_path */
-                )), 'Use Twitter for sharing', array(
-                'Use Twitter instead of Facebook',
-                'alt' => 'Not Available',
-                'cmd' => 'Not Available',
-                'shift' => 'Not Available',
-                'fn' => 'Not Available',
-                'ctrl' => 'Not Available',
-            ), './images/twitter.png', 'yes', null, '');
-    } else {
-        $w->result(null, serialize(array(
-                    '' /*track_uri*/,
-                    '' /* album_uri */,
-                    '' /* artist_uri */,
-                    '' /* playlist_uri */,
-                    '' /* spotify_command */,
-                    '' /* query */,
-                    '' /* other_settings*/,
-                    'use_facebook' /* other_action */,
-                    '' /* artist_name */,
-                    '' /* track_name */,
-                    '' /* album_name */,
-                    '' /* track_artwork_path */,
-                    '' /* artist_artwork_path */,
-                    '' /* album_artwork_path */,
-                    '' /* playlist_name */,
-                    '', /* playlist_artwork_path */
-                )), 'Enable Facebook for sharing', array(
-                'Use Facebook instead of Twitter',
-                'alt' => 'Not Available',
-                'cmd' => 'Not Available',
-                'shift' => 'Not Available',
-                'fn' => 'Not Available',
-                'ctrl' => 'Not Available',
-            ), './images/facebook.png', 'yes', null, '');
+    $osx_version = exec('sw_vers -productVersion');
+    if(version_compare($osx_version, '10,14', '<')) {
+        if ($use_facebook == true) {
+            $w->result(null, serialize(array(
+                        '' /*track_uri*/,
+                        '' /* album_uri */,
+                        '' /* artist_uri */,
+                        '' /* playlist_uri */,
+                        '' /* spotify_command */,
+                        '' /* query */,
+                        '' /* other_settings*/,
+                        'use_twitter' /* other_action */,
+                        '' /* artist_name */,
+                        '' /* track_name */,
+                        '' /* album_name */,
+                        '' /* track_artwork_path */,
+                        '' /* artist_artwork_path */,
+                        '' /* album_artwork_path */,
+                        '' /* playlist_name */,
+                        '', /* playlist_artwork_path */
+                    )), 'Use Twitter for sharing', array(
+                    'Use Twitter instead of Facebook',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/twitter.png', 'yes', null, '');
+        } else {
+            $w->result(null, serialize(array(
+                        '' /*track_uri*/,
+                        '' /* album_uri */,
+                        '' /* artist_uri */,
+                        '' /* playlist_uri */,
+                        '' /* spotify_command */,
+                        '' /* query */,
+                        '' /* other_settings*/,
+                        'use_facebook' /* other_action */,
+                        '' /* artist_name */,
+                        '' /* track_name */,
+                        '' /* album_name */,
+                        '' /* track_artwork_path */,
+                        '' /* artist_artwork_path */,
+                        '' /* album_artwork_path */,
+                        '' /* playlist_name */,
+                        '', /* playlist_artwork_path */
+                    )), 'Enable Facebook for sharing', array(
+                    'Use Facebook instead of Twitter',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/facebook.png', 'yes', null, '');
+        }
     }
 
     if ($update_in_progress == false) {
