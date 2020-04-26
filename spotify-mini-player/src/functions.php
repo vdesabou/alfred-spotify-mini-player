@@ -4289,6 +4289,119 @@ function createRadioArtistPlaylist($w, $artist_name, $artist_uri)
 }
 
 /**
+ * createSimilarPlaylist function.
+ *
+ * @param mixed $w
+ * @param mixed $playlist_name
+ * @param mixed $playlist_uri
+ */
+function createSimilarPlaylist($w, $playlist_name, $playlist_uri)
+{
+
+    // Read settings from JSON
+
+    $settings = getSettings($w);
+    $radio_number_tracks = $settings->radio_number_tracks;
+    $userid = $settings->userid;
+    $is_public_playlists = $settings->is_public_playlists;
+    $is_autoplay_playlist = $settings->is_autoplay_playlist;
+    $country_code = $settings->country_code;
+    $use_artworks = $settings->use_artworks;
+    $output_application = $settings->output_application;
+
+    $tracks = getThePlaylistTracks($w, $playlist_uri);
+
+    if(count($tracks) < 5) {
+        displayNotificationWithArtwork($w, 'Not enough tracks in playlist to create a similar playlist', './images/warning.png', 'Error!');
+
+        return false;
+    }
+    // Get 5 randoms tracks
+    $random_tracks_id = array_rand($tracks, 5);
+    $random_tracks_uri = array();
+    foreach ($random_tracks_id as $id) {
+        $random_tracks_uri[] = $tracks[$id];
+    }
+
+    $public = false;
+    if ($is_public_playlists) {
+        $public = true;
+    }
+
+    try {
+        $api = getSpotifyWebAPI($w);
+        $recommendations = $api->getRecommendations(array(
+            'seed_tracks' => $random_tracks_uri,
+            'market' => $country_code,
+            'limit' => $radio_number_tracks,
+        ));
+    } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+        logMsg('Error(createSimilarPlaylist): (exception '.jTraceEx($e).')');
+        handleSpotifyWebAPIException($w, $e);
+        exit;
+    }
+
+    $newplaylisttracks = array();
+    foreach ($recommendations->tracks as $track) {
+        $newplaylisttracks[] = $track->id;
+    }
+
+    if (count($newplaylisttracks) > 0) {
+        try {
+            $api = getSpotifyWebAPI($w);
+            $json = $api->createPlaylist(array(
+                    'name' => escapeQuery($playlist_name). ' (2)',
+                    'public' => $public,
+                ));
+        } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+            logMsg('Error(createSimilarPlaylist): similar playlist '.$playlist_name. ' (2) (exception '.jTraceEx($e).')');
+            handleSpotifyWebAPIException($w, $e);
+
+            return false;
+        }
+
+        $ret = addTracksToPlaylist($w, $newplaylisttracks, $json->uri, $json->name, false, false);
+        if (is_numeric($ret) && $ret > 0) {
+            if ($is_autoplay_playlist) {
+                sleep(2);
+
+                if ($output_application == 'MOPIDY') {
+                    playUriWithMopidy($w, $json->uri);
+                } else if($output_application == 'APPLESCRIPT') {
+                    exec("osascript -e 'tell application \"Spotify\" to play track \"$json->uri\"'");
+                } else {
+                    $device_id = getSpotifyConnectCurrentDeviceId($w);
+                    if($device_id != '') {
+                        playTrackSpotifyConnect($w, $device_id, '', $json->uri);
+                    } else {
+                        displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+                        return;
+                    }
+                }
+                addPlaylistToPlayQueue($w, $json->uri, $json->name);
+                $playlist_artwork_path = getPlaylistArtwork($w, $json->uri, true, false, $use_artworks);
+                displayNotificationWithArtwork($w, '🔈 Playlist '.$json->name, $playlist_artwork_path, 'Similar Playlist');
+            }
+            if(getenv('automatically_refresh_library') == 1) {
+                refreshLibrary($w);
+            }
+
+            return;
+        } elseif (is_numeric($ret) && $ret == 0) {
+            displayNotificationWithArtwork($w, 'Playlist '.$json->name.' cannot be added', './images/warning.png', 'Error!');
+
+            return;
+        }
+    } else {
+        displayNotificationWithArtwork($w, 'Similar Playlist could not be created with Spotify API', './images/warning.png', 'Error!');
+
+        return false;
+    }
+
+    return true;
+}
+
+/**
  * createCompleteCollectionArtistPlaylist function.
  *
  * @param mixed $w

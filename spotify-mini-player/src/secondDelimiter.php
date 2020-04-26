@@ -844,6 +844,27 @@ function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progres
                     'ctrl' => 'Not Available',
                 ), './images/uncheck.png', 'no', null, 'Confirm Remove Playlist▹'.$playlist[0].'∙'.base64_encode($playlist[1]).'▹');
                 }
+                if ($update_in_progress == false) {
+                    $w->result(null, serialize(array(
+                                '' /*track_uri*/,
+                                '' /* album_uri */,
+                                '' /* artist_uri */,
+                                $theplaylisturi /* playlist_uri */,
+                                '' /* spotify_command */,
+                                '' /* query */,
+                                '' /* other_settings*/,
+                                'create_similar_playlist' /* other_action */,
+
+                                '' /* artist_name */,
+                                '' /* track_name */,
+                                '' /* album_name */,
+                                '' /* track_artwork_path */,
+                                '' /* artist_artwork_path */,
+                                '' /* album_artwork_path */,
+                                escapeQuery($playlist[1]) /* playlist_name */,
+                                '', /* playlist_artwork_path */
+                            )), 'Create a similar playlist for '.escapeQuery($playlist[1]), 'This will create a similar playlist', './images/playlists.png', 'yes', null, '');
+                }
                 $getTracks = 'select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where playlist_uri=:theplaylisturi order by added_at desc limit '.$max_results;
                 $stmt = $db->prepare($getTracks);
                 $stmt->bindValue(':theplaylisturi', $theplaylisturi);

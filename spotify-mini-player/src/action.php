@@ -1243,6 +1243,10 @@ if ($type == 'TRACK' && $other_settings == '' &&
         stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
 
         return;
+    } elseif ($other_action == 'create_similar_playlist') {
+        createSimilarPlaylist($w, $playlist_name, $playlist_uri);
+
+        return;
     } elseif ($other_action == 'delete_artwork_folder') {
         if (file_exists($w->data().'/artwork')):
                 exec("rm -rf '".$w->data()."/artwork'");

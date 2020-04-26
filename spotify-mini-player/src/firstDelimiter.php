@@ -2914,7 +2914,7 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
                     '' /* playlist_name */,
                     '', /* playlist_artwork_path */
                 )), 'Disable Playlist Autoplay', array(
-                'Do not autoplay playlists (radios and complete collection) when they are created',
+                'Do not autoplay playlists (radios, similar playlists and complete collection) when they are created',
                 'alt' => 'Not Available',
                 'cmd' => 'Not Available',
                 'shift' => 'Not Available',
@@ -2940,7 +2940,7 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
                     '' /* playlist_name */,
                     '', /* playlist_artwork_path */
                 )), 'Enable Playlist Autoplay', array(
-                'Autoplay playlists (radios and complete collection) when they are created',
+                'Autoplay playlists (radios, similar playlists and complete collection) when they are created',
                 'alt' => 'Not Available',
                 'cmd' => 'Not Available',
                 'shift' => 'Not Available',
