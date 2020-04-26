@@ -21,6 +21,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>0554A7C3-1357-4E84-B414-BEA7A183AEE3</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>495DA851-3C70-445F-A777-96C2617FE6C8</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>05F86AA1-D3EE-4409-9A58-898B36FFE503</key>
 		<array>
 			<dict>
@@ -563,6 +576,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>3307B1FA-3D53-4F1A-A577-34564B423FE9</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>495DA851-3C70-445F-A777-96C2617FE6C8</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>3435F565-E791-4FE9-A7B9-85B4A2EA353C</key>
 		<array>
 			<dict>
@@ -646,6 +672,19 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>10D173E8-E2FD-4A00-B899-8EBEF9017B05</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>3C45980B-24A6-465C-B15F-AF0FC6669739</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>495DA851-3C70-445F-A777-96C2617FE6C8</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -8982,6 +9021,19 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>triggerid</key>
+				<string>choose_output</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.external</string>
+			<key>uid</key>
+			<string>0554A7C3-1357-4E84-B414-BEA7A183AEE3</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>applescript</key>
 				<string>on alfred_script(q)
 tell application "System Preferences"	reveal anchor "output" of pane id "com.apple.preference.sound"end telltell application "System Events" to tell process "System Preferences"	repeat with i from 1 to the count of rows of table 1 of scroll area 1 of tab group 1 of window 1		if exists (text field 1 of row i of table 1 of scroll area 1 of tab group 1 of window 1) then			set deviceselected to the value of text field 1 of row i of table 1 of scroll area 1 of tab group 1 of window 1			if deviceselected is equal to q then				set selected of row i of table 1 of scroll area 1 of tab group 1 of window 1 to true			end if		end if	end repeatend telltell application "System Preferences"	quitend tellset theMessage to q
@@ -9068,6 +9120,58 @@ EOB"do shell script deviceselectedXML</string>
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string></string>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>triggerid</key>
+				<string>com.vdesabou.miniplayer.choose_output</string>
+				<key>triggername</key>
+				<string>Choose Output</string>
+				<key>workflowonly</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.remote</string>
+			<key>uid</key>
+			<string>3307B1FA-3D53-4F1A-A577-34564B423FE9</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>0</integer>
+				<key>focusedappvariable</key>
+				<false/>
+				<key>focusedappvariablename</key>
+				<string></string>
+				<key>hotkey</key>
+				<integer>0</integer>
+				<key>hotmod</key>
+				<integer>0</integer>
+				<key>hotstring</key>
+				<string></string>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>0</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>3C45980B-24A6-465C-B15F-AF0FC6669739</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string>Web Site:
@@ -9093,6 +9197,13 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<integer>650</integer>
 			<key>ypos</key>
 			<integer>5530</integer>
+		</dict>
+		<key>0554A7C3-1357-4E84-B414-BEA7A183AEE3</key>
+		<dict>
+			<key>xpos</key>
+			<integer>170</integer>
+			<key>ypos</key>
+			<integer>13525</integer>
 		</dict>
 		<key>05D01A85-8BDC-4FF6-BEBB-BAF26BB5870A</key>
 		<dict>
@@ -9464,6 +9575,13 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<key>ypos</key>
 			<integer>9180</integer>
 		</dict>
+		<key>3307B1FA-3D53-4F1A-A577-34564B423FE9</key>
+		<dict>
+			<key>xpos</key>
+			<integer>20</integer>
+			<key>ypos</key>
+			<integer>13595</integer>
+		</dict>
 		<key>3435F565-E791-4FE9-A7B9-85B4A2EA353C</key>
 		<dict>
 			<key>xpos</key>
@@ -9519,6 +9637,13 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<integer>100</integer>
 			<key>ypos</key>
 			<integer>2380</integer>
+		</dict>
+		<key>3C45980B-24A6-465C-B15F-AF0FC6669739</key>
+		<dict>
+			<key>xpos</key>
+			<integer>15</integer>
+			<key>ypos</key>
+			<integer>13710</integer>
 		</dict>
 		<key>3D692753-4ADE-4CAF-82ED-759B7C742A90</key>
 		<dict>
@@ -9583,9 +9708,9 @@ http://www.packal.org/workflow/spotify-mini-player</string>
 			<key>note</key>
 			<string>Credits to https://github.com/sampayo/Alfred-WorkFlows/tree/master/Audio%20Switch</string>
 			<key>xpos</key>
-			<integer>170</integer>
+			<integer>355</integer>
 			<key>ypos</key>
-			<integer>13560</integer>
+			<integer>13575</integer>
 		</dict>
 		<key>4BE9FB30-9B4F-4E44-861D-D178507A7568</key>
 		<dict>
@@ -10614,9 +10739,9 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 		<key>C331E62E-0FB1-4C32-AC93-B6CEDEA179AC</key>
 		<dict>
 			<key>xpos</key>
-			<integer>365</integer>
+			<integer>550</integer>
 			<key>ypos</key>
-			<integer>13560</integer>
+			<integer>13575</integer>
 		</dict>
 		<key>C3F966D4-D292-4B70-9024-B8788BA5488F</key>
 		<dict>
@@ -10658,9 +10783,9 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 		<key>C809AD5E-BF4B-4A5E-A257-9FAADFB3DA5D</key>
 		<dict>
 			<key>xpos</key>
-			<integer>570</integer>
+			<integer>755</integer>
 			<key>ypos</key>
-			<integer>13560</integer>
+			<integer>13575</integer>
 		</dict>
 		<key>C8B5A68F-5328-48B7-84C1-E73601716B7E</key>
 		<dict>
