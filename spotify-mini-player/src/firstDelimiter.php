@@ -2223,7 +2223,7 @@ function firstDelimiterYourMusic($w, $query, $settings, $db, $update_in_progress
         $yourmusic_albums = $counter[5];
         $nb_playlists = $counter[6];
 
-        $w->result(null, '', 'Tracks',array(
+        $w->result(null, '', 'Liked songs',array(
                      'Browse your '.$yourmusic_tracks.' tracks in Your Music',
                     'alt' => 'Not Available',
                     'cmd' => 'Not Available',
