@@ -1974,6 +1974,25 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                     '' /* playlist_name */,
                     '', /* playlist_artwork_path */
                 )), 'Set Spotify Volume to 50%', 'Set the Spotify volume to 50%', './images/volmid.png', 'yes', '');
+
+        $w->result('SpotifyMiniPlayer_'.'output_audio', serialize(array(
+            '' /*track_uri*/,
+            '' /* album_uri */,
+            '' /* artist_uri */,
+            '' /* playlist_uri */,
+            '' /* spotify_command */,
+            '' /* query */,
+            '' /* other_settings*/,
+            'output_audio' /* other_action */,
+            '' /* artist_name */,
+            '' /* track_name */,
+            '' /* album_name */,
+            '' /* track_artwork_path */,
+            '' /* artist_artwork_path */,
+            '' /* album_artwork_path */,
+            '' /* playlist_name */,
+            '', /* playlist_artwork_path */
+        )), 'Choose audio output device', 'Output audio devices', './images/speaker.png', 'yes', '');
     } else {
 
         // Search commands for fast access
@@ -2033,6 +2052,26 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
             'fn' => 'Not Available',
             'ctrl' => 'Not Available',
         ), './images/youtube.png', 'yes', null, '');
+        }
+        if (strpos(strtolower('output'), strtolower($query)) !== false) {
+            $w->result(null, serialize(array(
+                '' /*track_uri*/,
+                '' /* album_uri */,
+                '' /* artist_uri */,
+                '' /* playlist_uri */,
+                '' /* spotify_command */,
+                '' /* query */,
+                '' /* other_settings*/,
+                'output_audio' /* other_action */,
+                '' /* artist_name */,
+                '' /* track_name */,
+                '' /* album_name */,
+                '' /* track_artwork_path */,
+                '' /* artist_artwork_path */,
+                '' /* album_artwork_path */,
+                '' /* playlist_name */,
+                '', /* playlist_artwork_path */
+            )), 'Choose audio output device', 'Output audio devices', './images/speaker.png', 'yes', '');
         }
         if (strpos(strtolower('next'), strtolower($query)) !== false) {
             $w->result(null, serialize(array(

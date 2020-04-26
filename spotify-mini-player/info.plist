@@ -9086,7 +9086,7 @@ EOB"do shell script deviceselectedXML</string>
 				<key>subtext</key>
 				<string>Output audio devices</string>
 				<key>title</key>
-				<string>output audio switch</string>
+				<string>Choose audio output device</string>
 				<key>type</key>
 				<integer>6</integer>
 				<key>withspace</key>

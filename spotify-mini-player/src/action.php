@@ -1233,10 +1233,8 @@ if ($type == 'TRACK' && $other_settings == '' &&
         stathat_ez_count('AlfredSpotifyMiniPlayer', 'radio', 1);
 
         return;
-    } elseif ($other_action == 'play_current_artist') {
-        playCurrentArtist($w);
-        stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
-
+    } elseif ($other_action == 'output_audio') {
+        exec("osascript -e 'tell application id \"".getAlfredName()."\" to run trigger \"choose_output\" in workflow \"com.vdesabou.spotify.mini.player\" with argument \"\"'");
         return;
     } elseif ($other_action == 'play_current_album') {
         playCurrentAlbum($w);
