@@ -2,13 +2,13 @@
 layout: article
 title: "Modifier keys"
 date: 2014-12-23
-modified: 2017-01-17T11:39:03-04:00
+modified: 2020-04-26
 categories: articles
 excerpt: "Support of modifier keys, shortcuts for common actions."
 image:
   teaser: bullet-modifier-keys.png
   feature:
-  credit: 
+  credit:
   creditlink:
 noindex: false
 share: false
@@ -26,6 +26,10 @@ Alfred modifiers are specific actions you can trigger when pressing special keys
 * Select a track with `^` (ctrl key) to lookup the corresponding artist 'online'
 
 * Select a track with `fn` (function key) to add the track to either _Your Music_, or any of your playlists (you can even create a new one)
+
+* Select a track with `⌘+⌥` (cmd+alt key) to add track to queue
+
+* Select a track or an episode with `fn+⇧` (function key + shift) to preview the track or the episode for 30 seconds (require mpg123 to be installed with [brew](https://brew.sh))
 
 * Select a track with  `⇧` (shift key) to add the album to either _Your Music_, or any of your playlists (you can even create a new one)
 
