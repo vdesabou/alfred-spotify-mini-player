@@ -3,7 +3,7 @@ layout: home
 permalink: /
 image:
   feature: background.svg
-modified: 2017-01-27
+modified: 2020-04-26
 noindex: false
 ---
 
@@ -32,7 +32,7 @@ You can also <a href="{{ site.url }}/articles/remove">remove</a> tracks.</p>
 <p>Search in <em>your</em> Spotify library from <a href="http://www.alfredapp.com">Alfred</a> App.
 
 <br>
-Instantaneous search in your tracks, albums, artists, <em>Your Music</em> and playlists.</p>
+Instantaneous search in your tracks, albums, artists, <em>Your Music</em>, shows, episodes and playlists.</p>
 
   </rightside>
 </sectionright>
@@ -44,7 +44,7 @@ Instantaneous search in your tracks, albums, artists, <em>Your Music</em> and pl
 
 <h2><i class="fa fa-cloud"></i> Search anything online !</h2>
 
-<p>Missing something in your library? Search online for tracks, albums, artists and playlists. Follow new playlists right from the workflow.</p>
+<p>Missing something in your library? Search online for tracks, albums, artists, shows, episodes and playlists. Follow new playlists or shows right from the workflow.</p>
 
 <br>
 <a href="{{ site.url }}/articles/search-online" class="btn-success"><i class="fa fa-book"></i> Read more</a>
