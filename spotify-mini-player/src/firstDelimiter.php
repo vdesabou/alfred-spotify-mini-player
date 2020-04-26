@@ -242,22 +242,22 @@ function firstDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
     try {
         if (mb_strlen($artist) < 2) {
             if ($all_playlists == false) {
-                $getTracks = 'select artist_name,artist_artwork_path,artist_uri,uri from tracks where yourmusic=1 group by artist_name'.' limit '.$max_results;
+                $getArtists = 'select name,artist_artwork_path,uri from followed_artists group by name'.' limit '.$max_results;
             } else {
-                $getTracks = 'select artist_name,artist_artwork_path,artist_uri,uri from tracks  group by artist_name'.' limit '.$max_results;
+                $getArtists = 'select artist_name,artist_artwork_path,artist_uri from tracks  group by artist_name'.' limit '.$max_results;
             }
-            $stmt = $db->prepare($getTracks);
+            $stmt = $db->prepare($getArtists);
         } else {
             if ($all_playlists == false) {
-                $getTracks = 'select artist_name,artist_artwork_path,artist_uri,uri from tracks where yourmusic=1 and artist_name like :query limit '.$max_results;
+                $getArtists = 'select name,artist_artwork_path,uri from followed_artists where name like :query limit '.$max_results;
             } else {
-                $getTracks = 'select artist_name,artist_artwork_path,artist_uri,uri from tracks where artist_name like :query limit '.$max_results;
+                $getArtists = 'select artist_name,artist_artwork_path,artist_uri from tracks where artist_name like :query limit '.$max_results;
             }
-            $stmt = $db->prepare($getTracks);
+            $stmt = $db->prepare($getArtists);
             $stmt->bindValue(':query', '%'.$artist.'%');
         }
 
-        $tracks = $stmt->execute();
+        $artists = $stmt->execute();
     } catch (PDOException $e) {
         handleDbIssuePdoXml($db);
 
@@ -266,24 +266,24 @@ function firstDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
 
     // display all artists
     $noresult = true;
-    while ($track = $stmt->fetch()) {
+    while ($artists = $stmt->fetch()) {
         $noresult = false;
-        $nb_artist_tracks = getNumberOfTracksForArtist($db, $track[0]);
-        if (checkIfResultAlreadyThere($w->results(), '👤 '.$track[0].' ('.$nb_artist_tracks.' tracks)') == false) {
-            $uri = $track[2];
+        $nb_artist_tracks = getNumberOfTracksForArtist($db, $artists[0]);
+        if (checkIfResultAlreadyThere($w->results(), '👤 '.$artists[0].' ('.$nb_artist_tracks.' tracks)') == false) {
+            $uri = $artists[2];
             // in case of local track, pass track uri instead
             if ($uri == '') {
-                $uri = $track[3];
+                $uri = $artists[3];
             }
 
-            $w->result(null, '', '👤 '.$track[0].' ('.$nb_artist_tracks.' tracks)',array(
+            $w->result(null, '', '👤 '.$artists[0].' ('.$nb_artist_tracks.' tracks)',array(
                      'Browse this artist',
                     'alt' => 'Not Available',
                     'cmd' => 'Not Available',
                     'shift' => 'Not Available',
                     'fn' => 'Not Available',
                     'ctrl' => 'Not Available',
-                ), $track[1], 'no', null, 'Artist▹'.$uri.'∙'.$track[0].'▹');
+                ), $artists[1], 'no', null, 'Artist▹'.$uri.'∙'.$artists[0].'▹');
         }
     }
 
@@ -2251,30 +2251,30 @@ function firstDelimiterYourMusic($w, $query, $settings, $db, $update_in_progress
 
         // Search artists
 
-        $getTracks = 'select artist_name,artist_uri,artist_artwork_path from tracks where yourmusic=1 and artist_name like :artist_name limit '.$max_results;
+        $getArtists = 'select name,artist_artwork_path,uri from followed_artists where name like :name limit '.$max_results;
 
         try {
-            $stmt = $db->prepare($getTracks);
-            $stmt->bindValue(':artist_name', '%'.$thequery.'%');
+            $stmt = $db->prepare($getArtists);
+            $stmt->bindValue(':name', '%'.$thequery.'%');
 
-            $tracks = $stmt->execute();
+            $artists = $stmt->execute();
         } catch (PDOException $e) {
             handleDbIssuePdoXml($db);
 
             return;
         }
         $noresult = true;
-        while ($track = $stmt->fetch()) {
-            if (checkIfResultAlreadyThere($w->results(), '👤 '.$track[0]) == false) {
+        while ($artists = $stmt->fetch()) {
+            if (checkIfResultAlreadyThere($w->results(), '👤 '.$artists[0]) == false) {
                 $noresult = false;
-                $w->result(null, '', '👤 '.$track[0],array(
+                $w->result(null, '', '👤 '.$artists[0],array(
                      'Browse this artist',
                     'alt' => 'Not Available',
                     'cmd' => 'Not Available',
                     'shift' => 'Not Available',
                     'fn' => 'Not Available',
                     'ctrl' => 'Not Available',
-                ), $track[2], 'no', null, 'Artist▹'.$track[1].'∙'.$track[0].'▹');
+                ), $artists[1], 'no', null, 'Artist▹'.$artists[2].'∙'.$artists[0].'▹');
             }
         }
 

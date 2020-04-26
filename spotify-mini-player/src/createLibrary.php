@@ -378,6 +378,78 @@ function createLibrary($w)
         } while ($offsetGetMySavedEpisodes < $userMySavedEpisodes->total);
     }
 
+    // Handle followed artists
+    $savedMyFollowedArtists = array();
+    $cursorAfter = '';
+    $limitGetUserFollowedArtists = 50;
+    do {
+        $retry = true;
+        $nb_retry = 0;
+        while ($retry) {
+            try {
+                // refresh api
+                $api = getSpotifyWebAPI($w, $api);
+                if($cursorAfter != '') {
+                    $userFollowedArtists = $api->getUserFollowedArtists(array(
+                        'type' => 'artist',
+                        'limit' => $limitGetUserFollowedArtists,
+                        'after' => $cursorAfter,
+                    ));
+                } else {
+                    $userFollowedArtists = $api->getUserFollowedArtists(array(
+                        'type' => 'artist',
+                        'limit' => $limitGetUserFollowedArtists,
+                    ));
+                }
+
+                $retry = false;
+            } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+                logMsg('Error(getUserFollowedArtists): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
+
+                if ($e->getCode() == 429) { // 429 is Too Many Requests
+                    $lastResponse = $api->getRequest()->getLastResponse();
+                    $retryAfter = $lastResponse['headers']['Retry-After'];
+                    sleep($retryAfter);
+                } else if ($e->getCode() == 404) {
+                    // skip
+                    break;
+                } else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
+                    // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
+                    // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
+                    // retry any SSL error
+                    ++$nb_retry;
+                } else if ($e->getCode() == 500
+                    || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+                    // retry
+                    if ($nb_retry > 2) {
+                        handleSpotifyWebAPIException($w, $e);
+                        $retry = false;
+
+                        return false;
+                    }
+                    ++$nb_retry;
+                    sleep(5);
+                } else {
+                    handleSpotifyWebAPIException($w, $e);
+                    $retry = false;
+
+                    return false;
+                }
+            }
+        }
+
+        foreach ($userFollowedArtists->artists->items as $artist) {
+            $savedMyFollowedArtists[] = $artist;
+        }
+        if(isset($userFollowedArtists->cursors) &&
+            isset($userFollowedArtists->cursors->after) &&
+            $userFollowedArtists->cursors->after != '') {
+            $cursorAfter = $userFollowedArtists->cursors->after;
+        } else {
+            $cursorAfter = '';
+        }
+
+    } while ($cursorAfter != '');
 
     $savedMySavedAlbums = array();
     $offsetGetMySavedAlbums = 0;
@@ -519,12 +591,17 @@ function createLibrary($w)
         $db->exec('create table counters (all_tracks int, yourmusic_tracks int, all_artists int, yourmusic_artists int, all_albums int, yourmusic_albums int, playlists int, shows int, episodes int)');
         $db->exec('create table playlists (uri text PRIMARY KEY NOT NULL, name text, nb_tracks int, author text, username text, playlist_artwork_path text, ownedbyuser boolean, nb_playable_tracks int, duration_playlist text, nb_times_played int, collaborative boolean, public boolean)');
 
+        $db->exec('create table followed_artists (uri text PRIMARY KEY NOT NULL, name text, artist_artwork_path text)');
+
         $db->exec('create table shows (uri text PRIMARY KEY NOT NULL, name text, description text, media_type text, show_artwork_path text, explicit boolean, added_at text, languages text, nb_times_played int, is_externally_hosted boolean, nb_episodes int)');
 
         $db->exec('create table episodes (uri text PRIMARY KEY NOT NULL, name text, show_uri text, show_name text, description text, episode_artwork_path text, is_playable boolean, languages text, nb_times_played int, is_externally_hosted boolean, duration_ms int, explicit boolean, release_date text, release_date_precision text, audio_preview_url text, fully_played boolean, resume_position_ms int)');
 
         $insertPlaylist = 'insert into playlists values (:uri,:name,:nb_tracks,:owner,:username,:playlist_artwork_path,:ownedbyuser,:nb_playable_tracks,:duration_playlist,:nb_times_played,:collaborative,:public)';
         $stmtPlaylist = $db->prepare($insertPlaylist);
+
+        $insertFollowedArtists = 'insert into followed_artists values (:uri,:name,:artist_artwork_path)';
+        $stmtFollowedArtists = $db->prepare($insertFollowedArtists);
 
         $insertShow = 'insert into shows values (:uri,:name,:description,:media_type,:show_artwork_path,:explicit,:added_at,:languages,:nb_times_played,:is_externally_hosted, :nb_episodes)';
         $stmtInsertShow = $db->prepare($insertShow);
@@ -1066,6 +1143,48 @@ function createLibrary($w)
         }
     }
 
+    // Handle Followed Artists
+    foreach ($savedMyFollowedArtists as $artist) {
+
+        try {
+
+            // Download artworks in Fetch later mode
+            if ($use_artworks) {
+                list($already_present, $artist_artwork_path) = getArtistArtwork($w, $artist->uri, $artist->name, true, true, false, $use_artworks);
+                if ($already_present == false) {
+                    $artworksToDownload = true;
+                    $stmtArtistArtwork->bindValue(':artist_uri', $artist->uri);
+                    $stmtArtistArtwork->bindValue(':artist_name', $artist->name);
+                    $stmtArtistArtwork->bindValue(':already_fetched', 0);
+                    $stmtArtistArtwork->execute();
+                }
+            } else {
+                $artist_artwork_path = getArtistArtwork($w, $artist->uri, $artist->name, false, false, false, $use_artworks);
+            }
+        } catch (PDOException $e) {
+            logMsg('Error(createLibrary): (exception '.jTraceEx($e).')');
+            handleDbIssuePdoEcho($dbartworks, $w);
+            $dbartworks = null;
+            $db = null;
+
+            return false;
+        }
+
+        try {
+            $stmtFollowedArtists->bindValue(':uri', $artist->uri);
+            $stmtFollowedArtists->bindValue(':name', escapeQuery($artist->name));
+            $stmtFollowedArtists->bindValue(':artist_artwork_path', $artist_artwork_path);
+            $stmtFollowedArtists->execute();
+        } catch (PDOException $e) {
+            logMsg('Error(createLibrary): (exception '.jTraceEx($e).')');
+            handleDbIssuePdoEcho($db, $w);
+            $dbartworks = null;
+            $db = null;
+
+            return false;
+        }
+    }
+
     // update counters
     try {
         $getCount = 'select count(distinct uri) from tracks';
@@ -1083,7 +1202,7 @@ function createLibrary($w)
         $stmt->execute();
         $all_artists = $stmt->fetch();
 
-        $getCount = 'select count(distinct artist_name) from tracks where yourmusic=1';
+        $getCount = 'select count(distinct name) from followed_artists';
         $stmt = $db->prepare($getCount);
         $stmt->execute();
         $yourmusic_artists = $stmt->fetch();

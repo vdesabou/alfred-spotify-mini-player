@@ -130,6 +130,8 @@ function refreshLibrary($w)
     $nb_updated_shows = 0;
     $nb_added_albums = 0;
     $nb_removed_albums = 0;
+    $nb_removed_followed_artists = 0;
+    $nb_added_followed_artists = 0;
 
     try {
         $db = new PDO("sqlite:$dbfile", '', '', array(
@@ -160,6 +162,12 @@ function refreshLibrary($w)
 
         $getShows = 'select * from shows where uri=:uri';
         $stmtGetShows= $db->prepare($getShows);
+
+        $getFollowedArtists = 'select * from followed_artists where uri=:uri';
+        $stmtGetFollowedArtists= $db->prepare($getFollowedArtists);
+
+        $insertFollowedArtists = 'insert into followed_artists values (:uri,:name,:artist_artwork_path)';
+        $stmtFollowedArtists = $db->prepare($insertFollowedArtists);
 
         $insertShow = 'insert into shows values (:uri,:name,:description,:media_type,:show_artwork_path,:explicit,:added_at,:languages,:nb_times_played,:is_externally_hosted, :nb_episodes)';
         $stmtInsertShow = $db->prepare($insertShow);
@@ -254,6 +262,79 @@ function refreshLibrary($w)
 
         $offsetGetMySavedAlbums += $limitGetMySavedAlbums;
     } while ($offsetGetMySavedAlbums < $userMySavedAlbums->total);
+
+    // Handle followed artists
+    $savedMyFollowedArtists = array();
+    $cursorAfter = '';
+    $limitGetUserFollowedArtists = 50;
+    do {
+        $retry = true;
+        $nb_retry = 0;
+        while ($retry) {
+            try {
+                // refresh api
+                $api = getSpotifyWebAPI($w, $api);
+                if($cursorAfter != '') {
+                    $userFollowedArtists = $api->getUserFollowedArtists(array(
+                        'type' => 'artist',
+                        'limit' => $limitGetUserFollowedArtists,
+                        'after' => $cursorAfter,
+                    ));
+                } else {
+                    $userFollowedArtists = $api->getUserFollowedArtists(array(
+                        'type' => 'artist',
+                        'limit' => $limitGetUserFollowedArtists,
+                    ));
+                }
+
+                $retry = false;
+            } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+                logMsg('Error(getUserFollowedArtists): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
+
+                if ($e->getCode() == 429) { // 429 is Too Many Requests
+                    $lastResponse = $api->getRequest()->getLastResponse();
+                    $retryAfter = $lastResponse['headers']['Retry-After'];
+                    sleep($retryAfter);
+                } else if ($e->getCode() == 404) {
+                    // skip
+                    break;
+                } else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
+                    // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
+                    // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
+                    // retry any SSL error
+                    ++$nb_retry;
+                } else if ($e->getCode() == 500
+                    || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+                    // retry
+                    if ($nb_retry > 2) {
+                        handleSpotifyWebAPIException($w, $e);
+                        $retry = false;
+
+                        return false;
+                    }
+                    ++$nb_retry;
+                    sleep(5);
+                } else {
+                    handleSpotifyWebAPIException($w, $e);
+                    $retry = false;
+
+                    return false;
+                }
+            }
+        }
+
+        foreach ($userFollowedArtists->artists->items as $artist) {
+            $savedMyFollowedArtists[] = $artist;
+        }
+        if(isset($userFollowedArtists->cursors) &&
+            isset($userFollowedArtists->cursors->after) &&
+            $userFollowedArtists->cursors->after != '') {
+            $cursorAfter = $userFollowedArtists->cursors->after;
+        } else {
+            $cursorAfter = '';
+        }
+
+    } while ($cursorAfter != '');
 
     // Handle Shows
 
@@ -625,7 +706,9 @@ function refreshLibrary($w)
                 return;
             }
 
-            displayNotificationWithArtwork($w, 'Added playlist '.escapeQuery($playlist->name), $playlist_artwork_path, 'Refresh Library');
+            if(getenv('reduce_notifications') == 0) {
+                displayNotificationWithArtwork($w, 'Added playlist '.escapeQuery($playlist->name), $playlist_artwork_path, 'Refresh Library');
+            }
         } else {
 
             // check if this is a self-updated playlist (spotify and 30 tracks)
@@ -890,7 +973,9 @@ function refreshLibrary($w)
 
                     return;
                 }
-                displayNotificationWithArtwork($w, 'Updated playlist '.escapeQuery($playlist->name), getPlaylistArtwork($w, $playlist->uri, true, false, $use_artworks), 'Refresh Library');
+                if(getenv('reduce_notifications') == 0) {
+                    displayNotificationWithArtwork($w, 'Updated playlist '.escapeQuery($playlist->name), getPlaylistArtwork($w, $playlist->uri, true, false, $use_artworks), 'Refresh Library');
+                }
             } else {
                 continue;
             }
@@ -923,7 +1008,9 @@ function refreshLibrary($w)
                 $stmtDelete = $db->prepare($deleteFromTracks);
                 $stmtDelete->bindValue(':uri', $playlist_in_db[0]);
                 $stmtDelete->execute();
-                displayNotificationWithArtwork($w, 'Removed playlist '.$playlist_in_db[1], getPlaylistArtwork($w, $playlist_in_db[0], false, false, $use_artworks), 'Refresh Library');
+                if(getenv('reduce_notifications') == 0) {
+                    displayNotificationWithArtwork($w, 'Removed playlist '.$playlist_in_db[1], getPlaylistArtwork($w, $playlist_in_db[0], false, false, $use_artworks), 'Refresh Library');
+                }
             }
         }
     } catch (PDOException $e) {
@@ -1033,7 +1120,9 @@ function refreshLibrary($w)
                 $offsetGetMySavedAlbumTracks += $limitGetMySavedAlbumTracks;
             } while ($offsetGetMySavedAlbumTracks < $albumTracks->total);
 
-            displayNotificationWithArtwork($w, 'Added album '.escapeQuery($album->name), $album_artwork_path, 'Refresh Library');
+            if(getenv('reduce_notifications') == 0) {
+                displayNotificationWithArtwork($w, 'Added album '.escapeQuery($album->name), $album_artwork_path, 'Refresh Library');
+            }
         }
     }
 
@@ -1254,7 +1343,7 @@ function refreshLibrary($w)
                     $album_artwork_path = getTrackOrAlbumArtwork($w, $thealbumuri, false, false, false, $use_artworks);
                 }
             } catch (PDOException $e) {
-                logMsg('Error(createLibrary): (exception '.jTraceEx($e).')');
+                logMsg('Error(refreshLibrary): (exception '.jTraceEx($e).')');
                 handleDbIssuePdoEcho($dbartworks, $w);
                 $dbartworks = null;
                 $db = null;
@@ -1293,7 +1382,7 @@ function refreshLibrary($w)
                 }
                 $stmtTrack->execute();
             } catch (PDOException $e) {
-                logMsg('Error(createLibrary): (exception '.jTraceEx($e).')');
+                logMsg('Error(refreshLibrary): (exception '.jTraceEx($e).')');
                 handleDbIssuePdoEcho($db, $w);
                 $dbartworks = null;
                 $db = null;
@@ -1349,7 +1438,7 @@ function refreshLibrary($w)
                     $show_artwork_path = getShowArtwork($w, $show->uri, false, false, false, $use_artworks);
                 }
             } catch (PDOException $e) {
-                logMsg('Error(createLibrary): (exception '.jTraceEx($e).')');
+                logMsg('Error(refreshLibrary): (exception '.jTraceEx($e).')');
                 handleDbIssuePdoEcho($dbartworks, $w);
                 $dbartworks = null;
                 $db = null;
@@ -1378,7 +1467,7 @@ function refreshLibrary($w)
                 $stmtInsertShow->bindValue(':nb_episodes', $nb_episodes);
                 $stmtInsertShow->execute();
             } catch (PDOException $e) {
-                logMsg('Error(createLibrary): (exception '.jTraceEx($e).')');
+                logMsg('Error(refreshLibrary): (exception '.jTraceEx($e).')');
                 handleDbIssuePdoEcho($db, $w);
                 $dbartworks = null;
                 $db = null;
@@ -1464,7 +1553,7 @@ function refreshLibrary($w)
                         $episode_artwork_path = getEpisodeArtwork($w, $episode->uri, false, false, false, $use_artworks);
                     }
                 } catch (PDOException $e) {
-                    logMsg('Error(createLibrary): (exception '.jTraceEx($e).')');
+                    logMsg('Error(refreshLibrary): (exception '.jTraceEx($e).')');
                     handleDbIssuePdoEcho($dbartworks, $w);
                     $dbartworks = null;
                     $db = null;
@@ -1512,7 +1601,7 @@ function refreshLibrary($w)
                     }
                     $stmtInsertEpisode->execute();
                 } catch (PDOException $e) {
-                    logMsg('Error(createLibrary): (exception '.jTraceEx($e).')');
+                    logMsg('Error(refreshLibrary): (exception '.jTraceEx($e).')');
                     handleDbIssuePdoEcho($db, $w);
                     $dbartworks = null;
                     $db = null;
@@ -1520,8 +1609,9 @@ function refreshLibrary($w)
                     return false;
                 }
             }
-
-            displayNotificationWithArtwork($w, 'Added show '.escapeQuery($show->name), $show_artwork_path, 'Refresh Library');
+            if(getenv('reduce_notifications') == 0) {
+                displayNotificationWithArtwork($w, 'Added show '.escapeQuery($show->name), $show_artwork_path, 'Refresh Library');
+            }
         } else {
 
             // number of episodes has changed
@@ -1621,7 +1711,7 @@ function refreshLibrary($w)
                             $episode_artwork_path = getEpisodeArtwork($w, $episode->uri, false, false, false, $use_artworks);
                         }
                     } catch (PDOException $e) {
-                        logMsg('Error(createLibrary): (exception '.jTraceEx($e).')');
+                        logMsg('Error(refreshLibrary): (exception '.jTraceEx($e).')');
                         handleDbIssuePdoEcho($dbartworks, $w);
                         $dbartworks = null;
                         $db = null;
@@ -1690,7 +1780,9 @@ function refreshLibrary($w)
 
                     return;
                 }
-                displayNotificationWithArtwork($w, 'Updated show '.escapeQuery($show->name), getShowArtwork($w, $show->uri, true, false, $use_artworks), 'Refresh Library');
+                if(getenv('reduce_notifications') == 0) {
+                    displayNotificationWithArtwork($w, 'Updated show '.escapeQuery($show->name), getShowArtwork($w, $show->uri, true, false, $use_artworks), 'Refresh Library');
+                }
             } else {
                 continue;
             }
@@ -1726,7 +1818,9 @@ function refreshLibrary($w)
                 $stmtDelete = $db->prepare($deleteFromEpisodes);
                 $stmtDelete->bindValue(':uri', $shows_in_db[0]);
                 $stmtDelete->execute();
-                displayNotificationWithArtwork($w, 'Removed show '.$shows_in_db[1], getShowArtwork($w, $shows_in_db[0], false, false, $use_artworks), 'Refresh Library');
+                if(getenv('reduce_notifications') == 0) {
+                    displayNotificationWithArtwork($w, 'Removed show '.$shows_in_db[1], getShowArtwork($w, $shows_in_db[0], false, false, $use_artworks), 'Refresh Library');
+                }
             }
         }
     } catch (PDOException $e) {
@@ -1760,7 +1854,114 @@ function refreshLibrary($w)
                 $stmtDelete->bindValue(':album_uri', $album_in_db[0]);
                 $stmtDelete->execute();
 
-                displayNotificationWithArtwork($w, 'Removed album '.$album_in_db[1], getTrackOrAlbumArtwork($w, $album_in_db[0], false, false, false, $use_artworks), 'Refresh Library');
+                if(getenv('reduce_notifications') == 0) {
+                    displayNotificationWithArtwork($w, 'Removed album '.$album_in_db[1], getTrackOrAlbumArtwork($w, $album_in_db[0], false, false, false, $use_artworks), 'Refresh Library');
+                }
+            }
+        }
+    } catch (PDOException $e) {
+        logMsg('Error(refreshLibrary): (exception '.jTraceEx($e).')');
+        handleDbIssuePdoEcho($db, $w);
+        $dbartworks = null;
+        $db = null;
+
+        return;
+    }
+
+    foreach ($savedMyFollowedArtists as $artist) {
+
+        try {
+            // Loop on existing artists in library
+            $stmtGetFollowedArtists->bindValue(':uri', $artist->uri);
+            $stmtGetFollowedArtists->execute();
+
+            $noresult = true;
+            while ($artists = $stmtGetFollowedArtists->fetch()) {
+                $noresult = false;
+                break;
+            }
+        } catch (PDOException $e) {
+            logMsg('Error(refreshLibrary): (exception '.jTraceEx($e).')');
+            handleDbIssuePdoEcho($db, $w);
+            $dbartworks = null;
+            $db = null;
+
+            return;
+        }
+
+        // Artist does not exist, add it
+        if ($noresult == true) {
+            ++$nb_added_followed_artists;
+
+            try {
+
+                // Download artworks in Fetch later mode
+                if ($use_artworks) {
+                    list($already_present, $artist_artwork_path) = getArtistArtwork($w, $artist->uri, $artist->name, true, true, false, $use_artworks);
+                    if ($already_present == false) {
+                        $artworksToDownload = true;
+                        $stmtArtistArtwork->bindValue(':artist_uri', $artist->uri);
+                        $stmtArtistArtwork->bindValue(':artist_name', $artist->name);
+                        $stmtArtistArtwork->bindValue(':already_fetched', 0);
+                        $stmtArtistArtwork->execute();
+                    }
+                } else {
+                    $artist_artwork_path = getArtistArtwork($w, $artist->uri, $artist->name, false, false, false, $use_artworks);
+                }
+            } catch (PDOException $e) {
+                logMsg('Error(refreshLibrary): (exception '.jTraceEx($e).')');
+                handleDbIssuePdoEcho($dbartworks, $w);
+                $dbartworks = null;
+                $db = null;
+
+                return false;
+            }
+
+            try {
+                $stmtFollowedArtists->bindValue(':uri', $artist->uri);
+                $stmtFollowedArtists->bindValue(':name', escapeQuery($artist->name));
+                $stmtFollowedArtists->bindValue(':artist_artwork_path', $artist_artwork_path);
+                $stmtFollowedArtists->execute();
+            } catch (PDOException $e) {
+                logMsg('Error(refreshLibrary): (exception '.jTraceEx($e).')');
+                handleDbIssuePdoEcho($db, $w);
+                $dbartworks = null;
+                $db = null;
+
+                return false;
+            }
+
+            if(getenv('reduce_notifications') == 0) {
+                displayNotificationWithArtwork($w, 'Added followed artist '.escapeQuery($artist->name), $artist_artwork_path, 'Refresh Library');
+            }
+        }
+    }
+
+    try {
+        // check for unfollowed artists
+        $getFollowedArtists = 'select * from followed_artists';
+        $stmt = $db->prepare($getFollowedArtists);
+        $stmt->execute();
+
+        while ($followed_artist_in_db = $stmt->fetch()) {
+            $found = false;
+            foreach ($savedMyFollowedArtists as $artist) {
+                if ($artist->uri == $followed_artist_in_db[0]) {
+                    $found = true;
+                    break;
+                }
+            }
+            if ($found == false) {
+                ++$nb_removed_followed_artists;
+
+                $deleteFromFollowedArtists = 'delete from followed_artists where uri=:uri';
+                $stmtDelete = $db->prepare($deleteFromFollowedArtists);
+                $stmtDelete->bindValue(':uri', $followed_artist_in_db[0]);
+                $stmtDelete->execute();
+
+                if(getenv('reduce_notifications') == 0) {
+                    displayNotificationWithArtwork($w, 'Unfollowed artist '.$followed_artist_in_db[1], getArtistArtwork($w, $followed_artist_in_db[0], $followed_artist_in_db[1], false, false, false, $use_artworks), 'Refresh Library');
+                }
             }
         }
     } catch (PDOException $e) {
@@ -1789,7 +1990,7 @@ function refreshLibrary($w)
         $stmt->execute();
         $all_artists = $stmt->fetch();
 
-        $getCount = 'select count(distinct artist_name) from tracks where yourmusic=1';
+        $getCount = 'select count(distinct name) from followed_artists';
         $stmt = $db->prepare($getCount);
         $stmt->execute();
         $yourmusic_artists = $stmt->fetch();
@@ -1838,14 +2039,17 @@ function refreshLibrary($w)
     $elapsed_time = time() - $words[3];
     $changedPlaylists = false;
     $changedShows = false;
+    $changedFollowedArtists = false;
     $changedYourMusic = false;
     $addedMsg = '';
     $removedMsg = '';
     $updatedMsg = '';
     $addedShowMsg = '';
-    $removeShowdMsg = '';
+    $removeShowMsg = '';
     $updatedShowMsg = '';
     $yourMusicMsg = '';
+    $addedFollowedArtistsMsg = '';
+    $removeFollowedArtistsMsg = '';
     if ($nb_added_playlists > 0) {
         $addedMsg = $nb_added_playlists.' added';
         $changedPlaylists = true;
@@ -1874,13 +2078,14 @@ function refreshLibrary($w)
         $changedYourMusic = true;
     }
 
+
     if ($nb_added_shows > 0) {
         $addedShowMsg = $nb_added_shows.' added';
         $changedShows = true;
     }
 
     if ($nb_removed_shows > 0) {
-        $removeShowdMsg = $nb_removed_shows.' removed';
+        $removeShowMsg = $nb_removed_shows.' removed';
         $changedShows = true;
     }
 
@@ -1889,24 +2094,30 @@ function refreshLibrary($w)
         $changedShows = true;
     }
 
-    if ($changedPlaylists && $changedYourMusic && $changedShows) {
-        $message = 'Playlists: '.$addedMsg.' '.$removedMsg.' '.$updatedMsg.' '.$yourMusicMsg;
-        $message .= ' Shows: '.$addedShowMsg.' '.$removeShowdMsg.' '.$updatedShowMsg;
-    } elseif ($changedPlaylists && $changedYourMusic) {
-        $message = 'Playlists: '.$addedMsg.' '.$removedMsg.' '.$updatedMsg.' '.$yourMusicMsg;
-    } elseif ($changedPlaylists && $changedShows) {
-        $message = 'Playlists: '.$addedMsg.' '.$removedMsg.' '.$updatedMsg;
-        $message .= ' Shows: '.$addedShowMsg.' '.$removeShowdMsg.' '.$updatedShowMsg;
-    } elseif ($changedYourMusic && $changedShows) {
-        $message = $yourMusicMsg;
-        $message .= ' Shows: '.$addedShowMsg.' '.$removeShowdMsg.' '.$updatedShowMsg;
-    } elseif ($changedPlaylists) {
-        $message = 'Playlists: '.$addedMsg.' '.$removedMsg.' '.$updatedMsg;
-    } elseif ($changedShows) {
-        $message = 'Shows: '.$addedShowMsg.' '.$removeShowdMsg.' '.$updatedShowMsg;
-    } elseif ($changedYourMusic) {
-        $message = $yourMusicMsg;
-    } else {
+    if ($nb_added_followed_artists > 0) {
+        $addedFollowedArtistsMsg = $nb_added_followed_artists.' added';
+        $changedFollowedArtists = true;
+    }
+
+    if ($nb_removed_followed_artists > 0) {
+        $removeFollowedArtistsMsg = $nb_removed_followed_artists.' removed';
+        $changedFollowedArtists = true;
+    }
+
+    $message = '';
+    if ($changedPlaylists) {
+        $message .= 'Playlists: '.$addedMsg.' '.$removedMsg.' '.$updatedMsg;
+    }
+    if ($changedShows) {
+        $message .= 'Shows: '.$addedShowMsg.' '.$removeShowMsg.' '.$updatedShowMsg;
+    }
+    if ($changedYourMusic) {
+        $message .= $yourMusicMsg;
+    }
+    if ($changedFollowedArtists) {
+        $message .= 'Followed artists: '.$addedFollowedArtistsMsg.' '.$removeFollowedArtistsMsg;
+    }
+    if(!$changedPlaylists && !$changedYourMusic && !$changedShows && !$changedFollowedArtists) {
         $message = 'No change';
     }
 
