@@ -1352,7 +1352,11 @@ function refreshLibrary($w)
             }
 
             try {
-                $stmtTrack->bindValue(':yourmusic', 1);
+                if(isset($album->yourmusic_album)) {
+                    $stmtTrack->bindValue(':yourmusic', 0);
+                } else {
+                    $stmtTrack->bindValue(':yourmusic', 1);
+                }
                 if(isset($track->popularity)) {
                     $stmtTrack->bindValue(':popularity', $track->popularity);
                 } else {
