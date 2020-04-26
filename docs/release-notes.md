@@ -2,7 +2,7 @@
 layout: article
 permalink: /release-notes/
 title: "Release Notes"
-modified: 2020-04-04
+modified: 2020-04-26
 excerpt: "Release Notes."
 image:
   feature:
@@ -12,6 +12,27 @@ share: false
 toc: false
 noindex: false
 ---
+<a name="v9.0"></a>
+9.0:
+
+**IMPORTANT: This is only compatible with Alfred 4**
+
+**IMPORTANT: This is a major update which is not compatible with earlier version of the library: when refreshing the library, you will be asked to re-authenticate and also re-create your library**
+
+* <span class="badge info">ADDED</span> Add modifier to queue track[#100](https://github.com/vdesabou/alfred-spotify-mini-player/issues/100), see article [Modifier keys](https://alfred-spotify-mini-player.com/articles/modifier-keys/)
+* <span class="badge info">ADDED</span> Add support for podcasts[#336](https://github.com/vdesabou/alfred-spotify-mini-player/issues/336)
+* <span class="badge info">ADDED</span> Deprecate Mopidy[#340](https://github.com/vdesabou/alfred-spotify-mini-player/issues/340)
+* <span class="badge info">ADDED</span> Add a preview option for tracks and episodes[#342](https://github.com/vdesabou/alfred-spotify-mini-player/issues/342)
+* <span class="badge info">ADDED</span> Workflow only compatible with Alfred 4[#346](https://github.com/vdesabou/alfred-spotify-mini-player/issues/346)
+* <span class="badge info">ADDED</span> Handle Your Music as per Spotify desktop[#345](https://github.com/vdesabou/alfred-spotify-mini-player/issues/345)
+* <span class="badge info">ADDED</span> Add audio output selection [#344](https://github.com/vdesabou/alfred-spotify-mini-player/issues/344)
+* <span class="badge info">ADDED</span> Add ability to create a `Similar Playlist` from the playlist being played[#343](https://github.com/vdesabou/alfred-spotify-mini-player/issues/343)
+* <span class="badge danger">FIXED</span> Authentication is broken with Safari [#341](https://github.com/vdesabou/alfred-spotify-mini-player/issues/341)
+* <span class="badge danger">FIXED</span> Handle liked albums [#305](https://github.com/vdesabou/alfred-spotify-mini-player/issues/305)
+* <span class="badge danger">FIXED</span> Share Current Track not working [#320](https://github.com/vdesabou/alfred-spotify-mini-player/issues/320)
+* <span class="badge success">IMPROVED</span> Adding track to playlist triggers refresh of entire library [#328](https://github.com/vdesabou/alfred-spotify-mini-player/issues/328)
+* <span class="badge danger">FIXED</span> Notifications are broken on Catalina [#335](https://github.com/vdesabou/alfred-spotify-mini-player/issues/335)
+
 
 <a name="v8.5"></a>
 8.5:
