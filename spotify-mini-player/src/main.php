@@ -27,7 +27,7 @@ if (file_exists($w->data().'/update_library_in_progress')) {
     $update_in_progress = true;
     if (!file_exists($w->data().'/library_old.db')) {
         if (startsWith($update_library_in_progress_words[0], 'Init')) {
-            if ($elapsed_time < 1800) {
+            if ($elapsed_time < 5400) {
                 $w->result(null, $w->data().'/update_library_in_progress', 'Initialization phase since '.beautifyTime($elapsed_time, true).' : '.floatToSquares(0),array(
                     'Waiting for Spotify servers to return required data it may take time depending on your library',
                     'alt' => 'Not Available',
@@ -37,7 +37,7 @@ if (file_exists($w->data().'/update_library_in_progress')) {
                     'ctrl' => 'Not Available',
                 ), './images/update_in_progress.png', 'no', null, '');
             } else {
-                $w->result(null, '', 'There is a problem, the initialization phase took more than 30 minutes' ,array(
+                $w->result(null, '', 'There is a problem, the initialization phase took more than 90 minutes' ,array(
                     'Choose kill update library below and report to the author',
                     'alt' => 'Not Available',
                     'cmd' => 'Not Available',
