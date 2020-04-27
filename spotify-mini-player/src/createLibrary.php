@@ -618,6 +618,7 @@ function createLibrary($w) {
                                 else {
                                     $retryAfter = 1;
                                 }
+                                sleep($retryAfter);
                             }
                             else if ($e->getCode() == 404) {
                                 // skip
