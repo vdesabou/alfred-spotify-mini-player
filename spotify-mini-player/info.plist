@@ -9036,7 +9036,26 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 			<dict>
 				<key>applescript</key>
 				<string>on alfred_script(q)
-tell application "System Preferences"	reveal anchor "output" of pane id "com.apple.preference.sound"end telltell application "System Events" to tell process "System Preferences"	repeat with i from 1 to the count of rows of table 1 of scroll area 1 of tab group 1 of window 1		if exists (text field 1 of row i of table 1 of scroll area 1 of tab group 1 of window 1) then			set deviceselected to the value of text field 1 of row i of table 1 of scroll area 1 of tab group 1 of window 1			if deviceselected is equal to q then				set selected of row i of table 1 of scroll area 1 of tab group 1 of window 1 to true			end if		end if	end repeatend telltell application "System Preferences"	quitend tellset theMessage to q
+tell application "System Preferences"
+	reveal anchor "output" of pane id "com.apple.preference.sound"
+end tell
+
+tell application "System Events" to tell process "System Preferences"
+	repeat with i from 1 to the count of rows of table 1 of scroll area 1 of tab group 1 of window 1
+		if exists (text field 1 of row i of table 1 of scroll area 1 of tab group 1 of window 1) then
+			set deviceselected to the value of text field 1 of row i of table 1 of scroll area 1 of tab group 1 of window 1
+			if deviceselected is equal to q then
+				set selected of row i of table 1 of scroll area 1 of tab group 1 of window 1 to true
+			end if
+		end if
+	end repeat
+end tell
+
+tell application "System Preferences"
+	quit
+end tell
+
+set theMessage to q
 end alfred_script</string>
 				<key>cachescript</key>
 				<false/>
@@ -9076,9 +9095,32 @@ end alfred_script</string>
 				<key>runningsubtext</key>
 				<string>Getting output devices...</string>
 				<key>script</key>
-				<string>tell application "System Preferences"	reveal anchor "output" of pane id "com.apple.preference.sound"end tellset deviceselectedXML to ""tell application "System Events" to tell process "System Preferences"	repeat with i from 1 to the count of rows of table 1 of scroll area 1 of tab group 1 of window 1		if exists (text field 1 of row i of table 1 of scroll area 1 of tab group 1 of window 1) then						set deviceselected to the value of text field 1 of row i of table 1 of scroll area 1 of tab group 1 of window 1			set deviceselectedXML to deviceselectedXML &amp; "&lt;item uid='" &amp; deviceselected &amp; "' arg='" &amp; deviceselected &amp; "' valid='YES' autocomplete='" &amp; deviceselected &amp; "'&gt;&lt;title&gt;" &amp; deviceselected &amp; "&lt;/title&gt;"						if (selected of row i of table 1 of scroll area 1 of tab group 1 of window 1) then				set deviceselectedXML to deviceselectedXML &amp; "&lt;subtitle&gt; Currently selected &lt;/subtitle&gt;"			end if			set deviceselectedXML to deviceselectedXML &amp; "&lt;icon&gt;./images/speaker.png&lt;/icon&gt; &lt;/item&gt;"		end if			end repeatend tellset deviceselectedXML to "cat &lt;&lt; EOB 
-&lt;?xml version='1.0'?&gt; &lt;items&gt; " &amp; deviceselectedXML &amp; "&lt;/items&gt; 
-EOB"do shell script deviceselectedXML</string>
+				<string>tell application "System Preferences"
+	reveal anchor "output" of pane id "com.apple.preference.sound"
+end tell
+
+set deviceselectedXML to ""
+
+tell application "System Events" to tell process "System Preferences"
+	repeat with i from 1 to the count of rows of table 1 of scroll area 1 of tab group 1 of window 1
+		if exists (text field 1 of row i of table 1 of scroll area 1 of tab group 1 of window 1) then
+
+			set deviceselected to the value of text field 1 of row i of table 1 of scroll area 1 of tab group 1 of window 1
+			set deviceselectedXML to deviceselectedXML &amp; "&lt;item uid='" &amp; deviceselected &amp; "' arg='" &amp; deviceselected &amp; "' valid='YES' autocomplete='" &amp; deviceselected &amp; "'&gt;&lt;title&gt;" &amp; deviceselected &amp; "&lt;/title&gt;"
+
+			if (selected of row i of table 1 of scroll area 1 of tab group 1 of window 1) then
+				set deviceselectedXML to deviceselectedXML &amp; "&lt;subtitle&gt; Currently selected &lt;/subtitle&gt;"
+			end if
+			set deviceselectedXML to deviceselectedXML &amp; "&lt;icon&gt;./images/speaker.png&lt;/icon&gt; &lt;/item&gt;"
+		end if
+
+	end repeat
+end tell
+set deviceselectedXML to "cat &lt;&lt; EOB
+&lt;?xml version='1.0'?&gt; &lt;items&gt; " &amp; deviceselectedXML &amp; "&lt;/items&gt;
+EOB"
+
+do shell script deviceselectedXML</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -11314,8 +11356,8 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 		<string>♫</string>
 	</dict>
 	<key>version</key>
-	<string>9.0</string>
+	<string>9.1</string>
 	<key>webaddress</key>
-	<string>http://alfred-spotify-mini-player.com</string>
+	<string>https://alfred-spotify-mini-player.com</string>
 </dict>
 </plist>

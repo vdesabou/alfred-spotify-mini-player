@@ -2,7 +2,7 @@
 layout: article
 permalink: /release-notes/
 title: "Release Notes"
-modified: 2020-04-26
+modified: 2020-04-28
 excerpt: "Release Notes."
 image:
   feature:
@@ -12,6 +12,12 @@ share: false
 toc: false
 noindex: false
 ---
+
+<a name="v9.1"></a>
+9.1:
+
+* <span class="badge danger">FIXED</span> Create library issue with liked albums [#348](https://github.com/vdesabou/alfred-spotify-mini-player/issues/348)
+
 <a name="v9.0"></a>
 9.0:
 
