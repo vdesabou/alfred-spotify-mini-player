@@ -651,7 +651,7 @@ function createLibrary($w) {
                     }
                     $offsetGetMySavedTracks += $limitGetMySavedTracks;
                 }
-                while ($offsetGetMySavedTracks < $userMySavedTracks->total);
+                while ($offsetGetMySavedTracks < $albumTracks->total);
             }
         }
 
