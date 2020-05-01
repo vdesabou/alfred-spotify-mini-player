@@ -5364,7 +5364,7 @@ function getNumberOfTracksForAlbum($db, $album_uri, $yourmusiconly = false)
     if ($yourmusiconly == false) {
         $getNumberOfTracksForAlbum = 'select count(distinct track_name) from tracks where album_uri=:album_uri';
     } else {
-        $getNumberOfTracksForAlbum = 'select count(distinct track_name) from tracks where yourmusic=1 and album_uri=:album_uri';
+        $getNumberOfTracksForAlbum = 'select count(distinct track_name) from tracks where yourmusic_album=1 and album_uri=:album_uri';
     }
     try {
         $stmt = $db->prepare($getNumberOfTracksForAlbum);
