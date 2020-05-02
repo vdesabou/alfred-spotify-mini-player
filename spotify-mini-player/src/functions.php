@@ -20,20 +20,24 @@ function getAlfredName()
 }
 
 /**
- * getCurrentArtistAndTrackName function.
+ * getCurrentTrackinfo function.
  *
  * @param mixed $w
  * @param mixed $output_application
  */
-function getCurrentArtistAndTrackName($w, $output_application)
+function getCurrentTrackinfo($w, $output_application)
 {
+    $results = array();
     if ($output_application == 'MOPIDY') {
         $ret = getCurrentTrackInfoWithMopidy($w, false);
         $results = explode('▹', $ret);
     } else if($output_application == 'APPLESCRIPT') {
         // get info on current song
         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
-
+        if ($retVal != 0) {
+            displayNotificationWithArtwork($w, 'AppleScript execution failed!', './images/warning.png', 'Error!');
+            return;
+        }
         if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
             $results = explode('▹', $retArr[count($retArr) - 1]);
         }
@@ -41,6 +45,56 @@ function getCurrentArtistAndTrackName($w, $output_application)
         $ret = getCurrentTrackInfoWithSpotifyConnect($w, false);
         $results = explode('▹', $ret);
     }
+
+    $tmp = explode(':', $results[4]);
+    if ($tmp[1] != 'episode' && ($results[1] == '' || $results[2] == '')) {
+
+        if (isset($tmp[1]) && $tmp[1] == 'ad') {
+            displayNotificationWithArtwork($w, 'Current track is an Ad', './images/warning.png', 'Error!');
+            return;
+        }
+
+        if($results[1] == '' || $results[2] == '') {
+            $error = false;
+            // get info from track uri
+            //
+            // https://github.com/vdesabou/alfred-spotify-mini-player/issues/349
+            $track = getTheFullTrack($w, $results[4], $country_code);
+            if(isset($track->name)) {
+                $results[0] = $track->name;
+            } else {
+                $error = true;
+            }
+            if(isset($track->artists[0]->name)) {
+                $results[1] = $track->artists[0]->name;
+            } else {
+                $error = true;
+            }
+            if(isset($track->album->name)) {
+                $results[2] = $track->album->name;
+            } else {
+                $error = true;
+            }
+
+            if($error) {
+                displayNotificationWithArtwork($w, 'Current track is not valid: Artist or Album name is missing', './images/warning.png', 'Error!');
+                return;
+            }
+        }
+    }
+
+    return $results;
+}
+
+/**
+ * getCurrentArtistAndTrackName function.
+ *
+ * @param mixed $w
+ * @param mixed $output_application
+ */
+function getCurrentArtistAndTrackName($w, $output_application)
+{
+    $results = getCurrentTrackinfo($w, $output_application);
 
     if (!isset($results[0])) {
         displayNotificationWithArtwork($w, 'Cannot get current track', './images/warning.png', 'Error!');
@@ -67,27 +121,9 @@ function copyCurrentTrackUrlToClipboard($w)
 
     $output_application = $settings->output_application;
 
+    $results = getCurrentTrackinfo($w, $output_application);
 
-    if ($output_application == 'MOPIDY') {
-        $retArr = array(getCurrentTrackInfoWithMopidy($w));
-    } else if($output_application == 'APPLESCRIPT') {
-        // get info on current song
-        exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
-        if ($retVal != 0) {
-            displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-            exec("osascript -e 'tell application id \"".getAlfredName()."\" to search \"".getenv('c_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
-
-            return;
-        }
-    } else {
-        $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
-    }
-
-    if(count($retArr) == 0) {
-        return;
-    }
-    if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
-        $results = explode('▹', $retArr[count($retArr) - 1]);
+    if (count($results) > 0) {
 
         $tmp = explode(':', $results[4]);
         if ($tmp[1] != 'local') {
@@ -139,27 +175,9 @@ function showInSpotify($w)
 
     $output_application = $settings->output_application;
 
+    $results = getCurrentTrackinfo($w, $output_application);
 
-    if ($output_application == 'MOPIDY') {
-        $retArr = array(getCurrentTrackInfoWithMopidy($w));
-    } else if($output_application == 'APPLESCRIPT') {
-        // get info on current song
-        exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
-        if ($retVal != 0) {
-            displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-            exec("osascript -e 'tell application id \"".getAlfredName()."\" to search \"".getenv('c_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
-
-            return;
-        }
-    } else {
-        $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
-    }
-
-    if(count($retArr) == 0) {
-        return;
-    }
-    if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
-        $results = explode('▹', $retArr[count($retArr) - 1]);
+    if (count($results) > 0) {
         exec("osascript -e 'tell application \"Spotify\" to activate'");
         exec("osascript -e 'set uri to \"$results[4]\"' -e 'tell application \"Spotify\" to open location uri'");
     } else {
@@ -2903,27 +2921,9 @@ function updateCurrentTrackIndexFromPlayQueue($w)
 
     $output_application = $settings->output_application;
 
+    $results = getCurrentTrackinfo($w, $output_application);
 
-    if ($output_application == 'MOPIDY') {
-        $retArr = array(getCurrentTrackInfoWithMopidy($w));
-    } else if($output_application == 'APPLESCRIPT') {
-        // get info on current song
-        exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
-        if ($retVal != 0) {
-            displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-            exec("osascript -e 'tell application id \"".getAlfredName()."\" to search \"".getenv('c_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
-
-            return;
-        }
-    } else {
-        $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
-    }
-
-    if(count($retArr) == 0) {
-        return;
-    }
-    if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
-        $results = explode('▹', $retArr[count($retArr) - 1]);
+    if (count($results) > 0) {
         $found = false;
         $i = 0;
         $current_track_name = cleanupTrackName($results[0]);
@@ -3153,27 +3153,9 @@ function lookupCurrentArtist($w)
 
     $output_application = $settings->output_application;
 
+    $results = getCurrentTrackinfo($w, $output_application);
 
-    if ($output_application == 'MOPIDY') {
-        $retArr = array(getCurrentTrackInfoWithMopidy($w));
-    } else if($output_application == 'APPLESCRIPT') {
-        // get info on current song
-        exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
-        if ($retVal != 0) {
-            displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-            exec("osascript -e 'tell application id \"".getAlfredName()."\" to search \"".getenv('c_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
-
-            return;
-        }
-    } else {
-        $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
-    }
-
-    if(count($retArr) == 0) {
-        return;
-    }
-    if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
-        $results = explode('▹', $retArr[count($retArr) - 1]);
+    if (count($results) > 0) {
         $tmp = explode(':', $results[4]);
         if (isset($tmp[1]) && $tmp[1] == 'local') {
             $artist_uri = getArtistUriFromSearch($w, $results[1]);
@@ -3211,27 +3193,9 @@ function displayCurrentArtistBiography($w)
 
     $output_application = $settings->output_application;
 
+    $results = getCurrentTrackinfo($w, $output_application);
 
-    if ($output_application == 'MOPIDY') {
-        $retArr = array(getCurrentTrackInfoWithMopidy($w));
-    } else if($output_application == 'APPLESCRIPT') {
-        // get info on current song
-        exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
-        if ($retVal != 0) {
-            displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-            exec("osascript -e 'tell application id \"".getAlfredName()."\" to search \"".getenv('c_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
-
-            return;
-        }
-    } else {
-        $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
-    }
-
-    if(count($retArr) == 0) {
-        return;
-    }
-    if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
-        $results = explode('▹', $retArr[count($retArr) - 1]);
+    if (count($results) > 0) {
         $tmp = explode(':', $results[4]);
         if (isset($tmp[1]) && $tmp[1] == 'local') {
             $artist_uri = getArtistUriFromSearch($w, $results[1]);
@@ -3265,27 +3229,9 @@ function playCurrentArtist($w)
     $country_code = $settings->country_code;
     $use_artworks = $settings->use_artworks;
 
+    $results = getCurrentTrackinfo($w, $output_application);
 
-    if ($output_application == 'MOPIDY') {
-        $retArr = array(getCurrentTrackInfoWithMopidy($w));
-    } else if($output_application == 'APPLESCRIPT') {
-        // get info on current song
-        exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
-        if ($retVal != 0) {
-            displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-            exec("osascript -e 'tell application id \"".getAlfredName()."\" to search \"".getenv('c_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
-
-            return;
-        }
-    } else {
-        $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
-    }
-
-    if(count($retArr) == 0) {
-        return;
-    }
-    if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
-        $results = explode('▹', $retArr[count($retArr) - 1]);
+    if (count($results) > 0) {
         $tmp = explode(':', $results[4]);
         if (isset($tmp[1]) && $tmp[1] == 'local') {
             $artist_uri = getArtistUriFromSearch($w, $results[1]);
@@ -3332,27 +3278,9 @@ function playCurrentAlbum($w)
     $output_application = $settings->output_application;
     $use_artworks = $settings->use_artworks;
 
+    $results = getCurrentTrackinfo($w, $output_application);
 
-    if ($output_application == 'MOPIDY') {
-        $retArr = array(getCurrentTrackInfoWithMopidy($w));
-    } else if($output_application == 'APPLESCRIPT') {
-        // get info on current song
-        exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
-        if ($retVal != 0) {
-            displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-            exec("osascript -e 'tell application id \"".getAlfredName()."\" to search \"".getenv('c_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
-
-            return;
-        }
-    } else {
-        $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
-    }
-
-    if(count($retArr) == 0) {
-        return;
-    }
-    if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
-        $results = explode('▹', $retArr[count($retArr) - 1]);
+    if (count($results) > 0) {
         $tmp = explode(':', $results[4]);
         $album_uri = getAlbumUriFromTrack($w, $results[4]);
         if ($album_uri == false) {
@@ -3395,34 +3323,14 @@ function addCurrentTrackTo($w,$playlist_uri='')
 
     $output_application = $settings->output_application;
     $use_artworks = $settings->use_artworks;
+    $country_code = $settings->country_code;
 
-    if ($output_application == 'MOPIDY') {
-        $retArr = array(getCurrentTrackInfoWithMopidy($w));
-    } else if($output_application == 'APPLESCRIPT') {
-        // get info on current song
-        exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
-        if ($retVal != 0) {
-            displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-            exec("osascript -e 'tell application id \"".getAlfredName()."\" to search \"".getenv('c_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
+    $results = getCurrentTrackinfo($w, $output_application);
 
-            return;
-        }
-    } else {
-        $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
-    }
-
-    if(count($retArr) == 0) {
-        return;
-    }
-    if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
-        $results = explode('▹', $retArr[count($retArr) - 1]);
+    if (count($results) > 0) {
         $tmp = explode(':', $results[4]);
         if (isset($tmp[1]) && $tmp[1] == 'local') {
 
-            // Read settings from JSON
-
-            $settings = getSettings($w);
-            $country_code = $settings->country_code;
             // local track, look it up online
 
             $query = 'track:'.escapeQuery($results[0]).' artist:'.escapeQuery($results[1]);
@@ -3479,26 +3387,9 @@ function removeCurrentTrackFrom($w)
 
     $output_application = $settings->output_application;
 
-    if ($output_application == 'MOPIDY') {
-        $retArr = array(getCurrentTrackInfoWithMopidy($w));
-    } else if($output_application == 'APPLESCRIPT') {
-        // get info on current song
-        exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
-        if ($retVal != 0) {
-            displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-            exec("osascript -e 'tell application id \"".getAlfredName()."\" to search \"".getenv('c_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
+    $results = getCurrentTrackinfo($w, $output_application);
 
-            return;
-        }
-    } else {
-        $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
-    }
-
-    if(count($retArr) == 0) {
-        return;
-    }
-    if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
-        $results = explode('▹', $retArr[count($retArr) - 1]);
+    if (count($results) > 0) {
         exec("osascript -e 'tell application id \"".getAlfredName()."\" to search \"".getenv('c_spot_mini').' Remove▹'.$results[4].'∙'.escapeQuery($results[0]).'▹'."\"'");
     } else {
         displayNotificationWithArtwork($w, 'No track is playing', './images/warning.png');
@@ -3539,38 +3430,15 @@ function addCurrentTrackToAlfredPlaylist($w)
     $settings = getSettings($w);
 
     $output_application = $settings->output_application;
+    $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
+    $alfred_playlist_uri = $settings->alfred_playlist_uri;
+    $alfred_playlist_name = $settings->alfred_playlist_name;
+    $country_code = $settings->country_code;
+    $use_artworks = $settings->use_artworks;
 
+    $results = getCurrentTrackinfo($w, $output_application);
 
-    if ($output_application == 'MOPIDY') {
-        $retArr = array(getCurrentTrackInfoWithMopidy($w));
-    } else if($output_application == 'APPLESCRIPT') {
-        // get info on current song
-        exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
-        if ($retVal != 0) {
-            displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-            exec("osascript -e 'tell application id \"".getAlfredName()."\" to search \"".getenv('c_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
-
-            return;
-        }
-    } else {
-        $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
-    }
-
-    if(count($retArr) == 0) {
-        return;
-    }
-    if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
-        $results = explode('▹', $retArr[count($retArr) - 1]);
-
-        // Read settings from JSON
-
-        $settings = getSettings($w);
-
-        $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
-        $alfred_playlist_uri = $settings->alfred_playlist_uri;
-        $alfred_playlist_name = $settings->alfred_playlist_name;
-        $country_code = $settings->country_code;
-        $use_artworks = $settings->use_artworks;
+    if (count($results) > 0) {
 
         if ($alfred_playlist_uri == '' || $alfred_playlist_name == '') {
             displayNotificationWithArtwork($w, 'Alfred Playlist is not set', './images/warning.png');
@@ -3627,37 +3495,15 @@ function addCurrentTrackToYourMusic($w)
 
     $output_application = $settings->output_application;
     $use_artworks = $settings->use_artworks;
+    $country_code = $settings->country_code;
 
+    $results = getCurrentTrackinfo($w, $output_application);
 
-    if ($output_application == 'MOPIDY') {
-        $retArr = array(getCurrentTrackInfoWithMopidy($w));
-    } else if($output_application == 'APPLESCRIPT') {
-        // get info on current song
-        exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
-        if ($retVal != 0) {
-            displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-            exec("osascript -e 'tell application id \"".getAlfredName()."\" to search \"".getenv('c_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
-
-            return;
-        }
-    } else {
-        $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
-    }
-
-    if(count($retArr) == 0) {
-        return;
-    }
-    if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
-        $results = explode('▹', $retArr[count($retArr) - 1]);
+    if (count($results) > 0) {
         $tmp = explode(':', $results[4]);
         if (isset($tmp[1]) && $tmp[1] == 'local') {
 
-            // Read settings from JSON
-
-            $settings = getSettings($w);
-            $country_code = $settings->country_code;
             // local track, look it up online
-
             $query = 'track:'.escapeQuery($results[0]).' artist:'.escapeQuery($results[1]);
             $searchResults = searchWebApi($w, $country_code, $query, 'track', 1);
 
@@ -4214,27 +4060,9 @@ function createRadioArtistPlaylistForCurrentArtist($w)
 
     $output_application = $settings->output_application;
 
+    $results = getCurrentTrackinfo($w, $output_application);
 
-    if ($output_application == 'MOPIDY') {
-        $retArr = array(getCurrentTrackInfoWithMopidy($w));
-    } else if($output_application == 'APPLESCRIPT') {
-        // get info on current song
-        exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
-        if ($retVal != 0) {
-            displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-            exec("osascript -e 'tell application id \"".getAlfredName()."\" to search \"".getenv('c_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
-
-            return;
-        }
-    } else {
-        $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
-    }
-
-    if(count($retArr) == 0) {
-        return;
-    }
-    if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
-        $results = explode('▹', $retArr[count($retArr) - 1]);
+    if (count($results) > 0) {
         $tmp = explode(':', $results[4]);
         if (isset($tmp[1]) && $tmp[1] == 'local') {
             $artist_uri = getArtistUriFromSearch($w, $results[1]);
@@ -4578,27 +4406,9 @@ function createRadioSongPlaylistForCurrentTrack($w)
 
     $output_application = $settings->output_application;
 
+    $results = getCurrentTrackinfo($w, $output_application);
 
-    if ($output_application == 'MOPIDY') {
-        $retArr = array(getCurrentTrackInfoWithMopidy($w));
-    } else if($output_application == 'APPLESCRIPT') {
-        // get info on current song
-        exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
-        if ($retVal != 0) {
-            displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-            exec("osascript -e 'tell application id \"".getAlfredName()."\" to search \"".getenv('c_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
-
-            return;
-        }
-    } else {
-        $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
-    }
-
-    if(count($retArr) == 0) {
-        return;
-    }
-    if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
-        $results = explode('▹', $retArr[count($retArr) - 1]);
+    if (count($results) > 0) {
         createRadioSongPlaylist($w, $results[0], $results[4], $results[1]);
     } else {
         displayNotificationWithArtwork($w, 'There is not track currently playing', './images/warning.png', 'Error!');
@@ -5529,27 +5339,9 @@ function displayNotificationForCurrentTrack($w)
     $is_display_rating = $settings->is_display_rating;
     $use_artworks = $settings->use_artworks;
 
-    if ($output_application == 'MOPIDY') {
-        $retArr = array(getCurrentTrackInfoWithMopidy($w));
-    } else if($output_application == 'APPLESCRIPT') {
-        // get info on current song
-        exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
-        if ($retVal != 0) {
-            displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-            exec("osascript -e 'tell application id \"".getAlfredName()."\" to search \"".getenv('c_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
+    $results = getCurrentTrackinfo($w, $output_application);
 
-            return;
-        }
-    } else {
-        $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
-    }
-
-    if(count($retArr) == 0) {
-        return;
-    }
-    if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
-        $results = explode('▹', $retArr[count($retArr) - 1]);
-
+    if (count($results) > 0) {
         $tmp = explode(':', $results[4]);
 
         if (isset($tmp[1]) && $tmp[1] == 'ad') {
@@ -5600,27 +5392,9 @@ function displayLyricsForCurrentTrack($w)
     $output_application = $settings->output_application;
     $always_display_lyrics_in_browser = $settings->always_display_lyrics_in_browser;
 
+    $results = getCurrentTrackinfo($w, $output_application);
 
-    if ($output_application == 'MOPIDY') {
-        $retArr = array(getCurrentTrackInfoWithMopidy($w));
-    } else if($output_application == 'APPLESCRIPT') {
-        // get info on current song
-        exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
-        if ($retVal != 0) {
-            displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-            exec("osascript -e 'tell application id \"".getAlfredName()."\" to search \"".getenv('c_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
-
-            return;
-        }
-    } else {
-        $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
-    }
-
-    if(count($retArr) == 0) {
-        return;
-    }
-    if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
-        $results = explode('▹', $retArr[count($retArr) - 1]);
+    if (count($results) > 0) {
 
         if($always_display_lyrics_in_browser == false) {
             exec("osascript -e 'tell application id \"".getAlfredName()."\" to search \"".getenv('c_spot_mini').' Lyrics▹'.$results[4].'∙'.escapeQuery($results[1]).'∙'.escapeQuery($results[0])."\"'");

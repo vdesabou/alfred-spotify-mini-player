@@ -865,53 +865,9 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
     $use_artworks = $settings->use_artworks;
     $always_display_lyrics_in_browser = $settings->always_display_lyrics_in_browser;
 
-    if ($output_application == 'MOPIDY') {
-        $retArr = array(getCurrentTrackInfoWithMopidy($w));
-    }
-    else if ($output_application == 'APPLESCRIPT') {
-        // get info on current song
-        exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
-        if ($retVal != 0) {
-            $w->result(null, 'help', 'AppleScript execution failed!', array('Message: ' . htmlspecialchars($retArr[0]), 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/warning.png', 'no', null, '');
-            $w->result(null, serialize(array(''
-            /*track_uri*/, ''
-            /* album_uri */, ''
-            /* artist_uri */, ''
-            /* playlist_uri */, ''
-            /* spotify_command */, ''
-            /* query */, 'Open▹' . 'http://alfred-spotify-mini-player.com/blog/issue-with-latest-spotify-update/' /* other_settings*/, ''
-            /* other_action */, ''
-            /* artist_name */, ''
-            /* track_name */, ''
-            /* album_name */, ''
-            /* track_artwork_path */, ''
-            /* artist_artwork_path */, ''
-            /* album_artwork_path */, ''
-            /* playlist_name */, '', /* playlist_artwork_path */
-            )), 'Maybe you have an issue with a Broken Spotify version?', 'Go to the article to get more information', './images/website.png', 'yes', null, '');
+    $results = getCurrentTrackinfo($w, $output_application);
 
-            return;
-        }
-    }
-    else {
-        $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
-    }
-
-    if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
-        $results = explode('▹', $retArr[count($retArr) - 1]);
-        $tmp = explode(':', $results[4]);
-        if ($tmp[1] != 'episode' && ($results[1] == '' || $results[2] == '')) {
-
-            if (isset($tmp[1]) && $tmp[1] == 'ad') {
-                $w->result(null, 'help', 'Current track is an Ad', array('Wait for the end of the ad and try again', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/warning.png', 'no', null, '');
-                echo $w->tojson();
-                exit;
-            }
-
-            $w->result(null, 'help', 'Current track is not valid: Artist or Album name is missing', array('Fill missing information in Spotify and retry again', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/warning.png', 'no', null, '');
-            echo $w->tojson();
-            exit;
-        }
+    if (count($results) > 0) {
         $isEpisode = false;
         $href = explode(':', $results[4]);
         $added = '';

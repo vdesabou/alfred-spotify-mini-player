@@ -200,24 +200,8 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
                 stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
                 if ($other_action == '') {
-                    if ($output_application == 'MOPIDY') {
-                        $retArr = array(getCurrentTrackInfoWithMopidy($w));
-                    } else if($output_application == 'APPLESCRIPT') {
-                        // get info on current song
-                        exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
-                        if ($retVal != 0) {
-                            displayNotificationWithArtwork($w, 'AppleScript Exception: '.htmlspecialchars($retArr[0]).' use spot_mini_debug command', './images/warning.png', 'Error!');
-                            exec("osascript -e 'tell application id \"".getAlfredName()."\" to search \"".getenv('c_spot_mini_debug').' AppleScript Exception: '.htmlspecialchars($retArr[0])."\"'");
-
-                            return;
-                        }
-                    } else {
-                        $retArr = array(getCurrentTrackInfoWithSpotifyConnect($w));
-                    }
-                    if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
-                        $results = explode('▹', $retArr[count($retArr) - 1]);
-                        addTrackToPlayQueue($w, $track_uri, escapeQuery($results[0]), escapeQuery($results[1]), escapeQuery($results[2]), $results[5], $country_code);
-                    }
+                    $results = getCurrentTrackinfo($w, $output_application);
+                    addTrackToPlayQueue($w, $track_uri, escapeQuery($results[0]), escapeQuery($results[1]), escapeQuery($results[2]), $results[5], $country_code);
                 }
 
                 return;
@@ -1802,20 +1786,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
         return;
     } elseif ($other_action == 'share') {
-        if ($output_application == 'MOPIDY') {
-            $ret = getCurrentTrackInfoWithMopidy($w, false);
-            $results = explode('▹', $ret);
-        } else if($output_application == 'APPLESCRIPT') {
-            // get info on current song
-            exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
-
-            if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
-                $results = explode('▹', $retArr[count($retArr) - 1]);
-            }
-        } else {
-            $ret = getCurrentTrackInfoWithSpotifyConnect($w, false);
-            $results = explode('▹', $ret);
-        }
+        $results = getCurrentTrackinfo($w, $output_application);
 
         if (!isset($results[0])) {
             displayNotificationWithArtwork($w, 'Cannot get current track', './images/warning.png', 'Error!');
