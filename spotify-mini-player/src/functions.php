@@ -54,6 +54,57 @@ function getCurrentTrackinfo($w, $output_application)
             return;
         }
 
+        if (isset($tmp[1]) && $tmp[1] == 'local') {
+            // local track, look it up online
+            $settings = getSettings($w);
+            $country_code = $settings->country_code;
+
+            // spotify:local:The+D%c3%b8:On+My+Shoulders+-+Single:On+My+Shoulders:318
+            // spotify:local:Damien+Rice:B-Sides:Woman+Like+a+Man+%28Live%2c+Unplugged%29:284
+
+            $query = 'track:'.urldecode($tmp[4]).' artist:'.urldecode($tmp[2]);
+            $track_search_results = searchWebApi($w, $country_code, $query, 'track', 1);
+
+            if (count($track_search_results) > 0) {
+                $error = false;
+                // only one track returned
+                $track = $track_search_results[0];
+                $old_track = ''.$results[4].' / '.$results[0].' / '.$results[1];
+                if(isset($track->uri)) {
+                    $results[4] = $track->uri;
+                } else {
+                    $error = true;
+                }
+                if(isset($track->name)) {
+                    $results[0] = $track->name;
+                } else {
+                    $error = true;
+                }
+                if(isset($track->artists[0]->name)) {
+                    $results[1] = $track->artists[0]->name;
+                } else {
+                    $error = true;
+                }
+                if(isset($track->album->name)) {
+                    $results[2] = $track->album->name;
+                } else {
+                    $error = true;
+                }
+
+                if($error) {
+                    displayNotificationWithArtwork($w, 'Current track is not valid: Artist or Album name is missing', './images/warning.png', 'Error!');
+                    return;
+                } else {
+                    logMsg("INFO(getCurrentTrackinfo): Unknown track $old_track replaced by track: $results[4] / $results[0] / $results[1]");
+                }
+            } else {
+                logMsg("Error(getCurrentTrackinfo): Could not find track: $results[4] / $results[0] / $results[1]");
+                displayNotificationWithArtwork($w, 'Local track '.$results[0].' has no online match', './images/warning.png', 'Error!');
+
+                return;
+            }
+        }
+
         if($results[1] == '' || $results[2] == '') {
             $error = false;
             // get info from track uri
