@@ -11327,7 +11327,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 		<key>menu_display_lookup_current_artist_online</key>
 		<string>1</string>
 		<key>menu_display_play_queue</key>
-		<string>1</string>
+		<string>0</string>
 		<key>menu_display_search_online</key>
 		<string>1</string>
 		<key>menu_display_spotify_connect</key>
