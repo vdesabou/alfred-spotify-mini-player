@@ -2,7 +2,7 @@
 layout: article
 permalink: /release-notes/
 title: "Release Notes"
-modified: 2020-04-28
+modified: 2020-05-02
 excerpt: "Release Notes."
 image:
   feature:
@@ -12,6 +12,11 @@ share: false
 toc: false
 noindex: false
 ---
+
+<a name="v9.2"></a>
+9.2:
+
+* <span class="badge danger">FIXED</span> Error "Fill missing information in spotify and retry again" [#349](https://github.com/vdesabou/alfred-spotify-mini-player/issues/349)
 
 <a name="v9.1"></a>
 9.1:
