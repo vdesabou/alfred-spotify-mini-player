@@ -3938,7 +3938,11 @@ function getArtistUriFromTrack($w, $track_uri)
             }
         }
         $api = getSpotifyWebAPI($w);
-        $track = $api->getTrack($tmp[2]);
+        if(isset($tmp[2])) {
+            $track = $api->getTrack($tmp[2]);
+        } else {
+            return false;
+        }
         $artists = $track->artists;
         $artist = $artists[0];
 
