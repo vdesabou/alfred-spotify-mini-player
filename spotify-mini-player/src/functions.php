@@ -106,6 +106,8 @@ function getCurrentTrackinfo($w, $output_application)
         }
 
         if($results[1] == '' || $results[2] == '') {
+            $settings = getSettings($w);
+            $country_code = $settings->country_code;
             $error = false;
             // get info from track uri
             //
