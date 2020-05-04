@@ -1702,7 +1702,8 @@ function refreshLibrary($w) {
                         updateSetting($w, 'oauth_access_token', '');
                         updateSetting($w, 'oauth_refresh_token', '');
                         displayNotificationWithArtwork($w, 'Relaunch the workflow to re-authenticate', './images/settings.png', 'Info');
-                        exit;
+                        handleSpotifyPermissionException($w, 'Relaunch the workflow to re-authenticate');
+                        return false;
                     }
                     $stmtInsertEpisode->execute();
                 }
@@ -1875,7 +1876,8 @@ function refreshLibrary($w) {
                             updateSetting($w, 'oauth_access_token', '');
                             updateSetting($w, 'oauth_refresh_token', '');
                             displayNotificationWithArtwork($w, 'Relaunch the workflow to re-authenticate', './images/settings.png', 'Info');
-                            exit;
+                            handleSpotifyPermissionException($w, 'Relaunch the workflow to re-authenticate');
+                            return false;
                         }
                         $stmtInsertEpisode->execute();
                     }
