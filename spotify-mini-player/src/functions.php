@@ -46,7 +46,12 @@ function getCurrentTrackinfo($w, $output_application)
         $results = explode('▹', $ret);
     }
 
+    if(!isset($results[4])) {
+        displayNotificationWithArtwork($w, 'Cannot get current track', './images/warning.png', 'Error!');
+        return;
+    }
     $tmp = explode(':', $results[4]);
+
     if ($tmp[1] != 'episode' && ($results[1] == '' || $results[2] == '')) {
 
         if (isset($tmp[1]) && $tmp[1] == 'ad') {
