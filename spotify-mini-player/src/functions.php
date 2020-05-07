@@ -35,7 +35,7 @@ function getCurrentTrackinfo($w, $output_application)
         // get info on current song
         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
         if ($retVal != 0) {
-            displayNotificationWithArtwork($w, 'AppleScript execution failed!', './images/warning.png', 'Error!');
+            // displayNotificationWithArtwork($w, 'AppleScript execution failed!', './images/warning.png', 'Error!');
             return;
         }
         if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
@@ -47,7 +47,7 @@ function getCurrentTrackinfo($w, $output_application)
     }
 
     if(!isset($results[4])) {
-        displayNotificationWithArtwork($w, 'Cannot get current track', './images/warning.png', 'Error!');
+        // displayNotificationWithArtwork($w, 'Cannot get current track', './images/warning.png', 'Error!');
         return;
     }
     $tmp = explode(':', $results[4]);
@@ -55,7 +55,7 @@ function getCurrentTrackinfo($w, $output_application)
     if ($tmp[1] != 'episode' && ($results[1] == '' || $results[2] == '')) {
 
         if (isset($tmp[1]) && $tmp[1] == 'ad') {
-            displayNotificationWithArtwork($w, 'Current track is an Ad', './images/warning.png', 'Error!');
+            // displayNotificationWithArtwork($w, 'Current track is an Ad', './images/warning.png', 'Error!');
             return;
         }
 
@@ -97,14 +97,14 @@ function getCurrentTrackinfo($w, $output_application)
                 }
 
                 if($error) {
-                    displayNotificationWithArtwork($w, 'Current track is not valid: Artist or Album name is missing', './images/warning.png', 'Error!');
+                    // displayNotificationWithArtwork($w, 'Current track is not valid: Artist or Album name is missing', './images/warning.png', 'Error!');
                     return;
                 } else {
                     logMsg("INFO(getCurrentTrackinfo): Unknown track $old_track replaced by track: $results[4] / $results[0] / $results[1]");
                 }
             } else {
                 logMsg("Error(getCurrentTrackinfo): Could not find track: $results[4] / $results[0] / $results[1]");
-                displayNotificationWithArtwork($w, 'Local track '.$results[0].' has no online match', './images/warning.png', 'Error!');
+                // displayNotificationWithArtwork($w, 'Local track '.$results[0].' has no online match', './images/warning.png', 'Error!');
 
                 return;
             }
@@ -135,7 +135,7 @@ function getCurrentTrackinfo($w, $output_application)
             }
 
             if($error) {
-                displayNotificationWithArtwork($w, 'Current track is not valid: Artist or Album name is missing', './images/warning.png', 'Error!');
+                // displayNotificationWithArtwork($w, 'Current track is not valid: Artist or Album name is missing', './images/warning.png', 'Error!');
                 return;
             }
         }
