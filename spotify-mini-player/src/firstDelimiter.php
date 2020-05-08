@@ -867,7 +867,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
 
     $results = getCurrentTrackinfo($w, $output_application);
 
-    if (count($results) > 0) {
+    if (is_array($count) && count($results) > 0) {
         $isEpisode = false;
         $href = explode(':', $results[4]);
         $added = '';
