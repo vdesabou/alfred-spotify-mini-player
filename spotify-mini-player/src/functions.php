@@ -5336,6 +5336,23 @@ function checkIfDuplicate($track_ids, $id)
 }
 
 /**
+ * checkIfShowDuplicate function.
+ *
+ * @param mixed $my_show_array
+ * @param mixed $show
+ */
+function checkIfShowDuplicate($my_show_array, $show)
+{
+    foreach ($my_show_array as $my_show) {
+        if ($my_show->show->uri == $show->show->uri) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/**
  * displayNotificationWithArtwork function.
  *
  * @param mixed  $w

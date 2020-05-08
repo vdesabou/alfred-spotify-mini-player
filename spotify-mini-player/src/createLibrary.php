@@ -334,7 +334,11 @@ function createLibrary($w) {
         }
 
         foreach ($userMySavedShows->items as $show) {
-            $savedMySavedShows[] = $show;
+            if(isset($show->show->uri) && $show->show->uri != '') {
+                if (!checkIfShowDuplicate($savedMySavedShows, $show)) {
+                    $savedMySavedShows[] = $show;
+                }
+            }
             $nb_tracktotal += 1;
         }
 
@@ -686,7 +690,7 @@ function createLibrary($w) {
         $insertShow = 'insert into shows values (:uri,:name,:description,:media_type,:show_artwork_path,:explicit,:added_at,:languages,:nb_times_played,:is_externally_hosted, :nb_episodes)';
         $stmtInsertShow = $db->prepare($insertShow);
 
-        $insertEpisode = 'insert into episodes values (:uri,:name,:show_uri,:show_name,:description,:episode_artwork_path,:is_playable,:languages,:nb_times_played,:is_externally_hosted,:duration_ms,:explicit,:release_date,:release_date_precision,:audio_preview_url,:fully_played,:resume_position_ms)';
+        $insertEpisode = 'insert or ignore into episodes values (:uri,:name,:show_uri,:show_name,:description,:episode_artwork_path,:is_playable,:languages,:nb_times_played,:is_externally_hosted,:duration_ms,:explicit,:release_date,:release_date_precision,:audio_preview_url,:fully_played,:resume_position_ms)';
         $stmtInsertEpisode = $db->prepare($insertEpisode);
 
         $insertTrack = 'insert into tracks values (:yourmusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_type,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:added_at,:duration,:nb_times_played,:local_track,:yourmusic_album)';

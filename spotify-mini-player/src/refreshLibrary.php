@@ -167,7 +167,7 @@ function refreshLibrary($w) {
         $insertShow = 'insert into shows values (:uri,:name,:description,:media_type,:show_artwork_path,:explicit,:added_at,:languages,:nb_times_played,:is_externally_hosted, :nb_episodes)';
         $stmtInsertShow = $db->prepare($insertShow);
 
-        $insertEpisode = 'insert into episodes values (:uri,:name,:show_uri,:show_name,:description,:episode_artwork_path,:is_playable,:languages,:nb_times_played,:is_externally_hosted,:duration_ms,:explicit,:release_date,:release_date_precision,:audio_preview_url,:fully_played,:resume_position_ms)';
+        $insertEpisode = 'insert or ignore into episodes values (:uri,:name,:show_uri,:show_name,:description,:episode_artwork_path,:is_playable,:languages,:nb_times_played,:is_externally_hosted,:duration_ms,:explicit,:release_date,:release_date_precision,:audio_preview_url,:fully_played,:resume_position_ms)';
         $stmtInsertEpisode = $db->prepare($insertEpisode);
 
         $deleteFromEpisodes = 'delete from episodes where show_uri=:show_uri';
@@ -409,7 +409,11 @@ function refreshLibrary($w) {
         }
 
         foreach ($userMySavedShows->items as $show) {
-            $savedMySavedShows[] = $show;
+            if(isset($show->show->uri) && $show->show->uri != '') {
+                if (!checkIfShowDuplicate($savedMySavedShows, $show)) {
+                    $savedMySavedShows[] = $show;
+                }
+            }
         }
 
         $offsetGetMySavedShows += $limitGetMySavedShows;
