@@ -139,7 +139,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
                 $query = 'track:'.$track_name.' artist:'.$artist_name;
                 $results = searchWebApi($w, $country_code, $query, 'track', 1);
 
-                if (is_array($count) && count($results) > 0) {
+                if (is_array($results) && count($results) > 0) {
                     // only one track returned
                     $track = $results[0];
                     $artists = $track->artists;
@@ -518,7 +518,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
                     $query = 'track:'.$track_name.' artist:'.$artist_name;
                     $results = searchWebApi($w, $country_code, $query, 'track', 1);
 
-                    if (is_array($count) && count($results) > 0) {
+                    if (is_array($results) && count($results) > 0) {
                         // only one track returned
                         $track = $results[0];
                         $artists = $track->artists;
@@ -617,7 +617,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
                     $query = 'track:'.$track_name.' artist:'.$artist_name;
                     $results = searchWebApi($w, $country_code, $query, 'track', 1);
 
-                    if (is_array($count) && count($results) > 0) {
+                    if (is_array($results) && count($results) > 0) {
                         // only one track returned
                         $track = $results[0];
                         $artists = $track->artists;

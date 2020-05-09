@@ -181,7 +181,7 @@ function copyCurrentTrackUrlToClipboard($w)
 
     $results = getCurrentTrackinfo($w, $output_application);
 
-    if (is_array($count) && count($results) > 0) {
+    if (is_array($results) && count($results) > 0) {
 
         $tmp = explode(':', $results[4]);
         if ($tmp[1] != 'local') {
@@ -235,7 +235,7 @@ function showInSpotify($w)
 
     $results = getCurrentTrackinfo($w, $output_application);
 
-    if (is_array($count) && count($results) > 0) {
+    if (is_array($results) && count($results) > 0) {
         exec("osascript -e 'tell application \"Spotify\" to activate'");
         exec("osascript -e 'set uri to \"$results[4]\"' -e 'tell application \"Spotify\" to open location uri'");
     } else {
@@ -2981,7 +2981,7 @@ function updateCurrentTrackIndexFromPlayQueue($w)
 
     $results = getCurrentTrackinfo($w, $output_application);
 
-    if (is_array($count) && count($results) > 0) {
+    if (is_array($results) && count($results) > 0) {
         $found = false;
         $i = 0;
         $current_track_name = cleanupTrackName($results[0]);
@@ -3213,7 +3213,7 @@ function lookupCurrentArtist($w)
 
     $results = getCurrentTrackinfo($w, $output_application);
 
-    if (is_array($count) && count($results) > 0) {
+    if (is_array($results) && count($results) > 0) {
         $tmp = explode(':', $results[4]);
         if (isset($tmp[1]) && $tmp[1] == 'local') {
             $artist_uri = getArtistUriFromSearch($w, $results[1]);
@@ -3253,7 +3253,7 @@ function displayCurrentArtistBiography($w)
 
     $results = getCurrentTrackinfo($w, $output_application);
 
-    if (is_array($count) && count($results) > 0) {
+    if (is_array($results) && count($results) > 0) {
         $tmp = explode(':', $results[4]);
         if (isset($tmp[1]) && $tmp[1] == 'local') {
             $artist_uri = getArtistUriFromSearch($w, $results[1]);
@@ -3289,7 +3289,7 @@ function playCurrentArtist($w)
 
     $results = getCurrentTrackinfo($w, $output_application);
 
-    if (is_array($count) && count($results) > 0) {
+    if (is_array($results) && count($results) > 0) {
         $tmp = explode(':', $results[4]);
         if (isset($tmp[1]) && $tmp[1] == 'local') {
             $artist_uri = getArtistUriFromSearch($w, $results[1]);
@@ -3338,7 +3338,7 @@ function playCurrentAlbum($w)
 
     $results = getCurrentTrackinfo($w, $output_application);
 
-    if (is_array($count) && count($results) > 0) {
+    if (is_array($results) && count($results) > 0) {
         $tmp = explode(':', $results[4]);
         $album_uri = getAlbumUriFromTrack($w, $results[4]);
         if ($album_uri == false) {
@@ -3385,7 +3385,7 @@ function addCurrentTrackTo($w,$playlist_uri='')
 
     $results = getCurrentTrackinfo($w, $output_application);
 
-    if (is_array($count) && count($results) > 0) {
+    if (is_array($results) && count($results) > 0) {
         $tmp = explode(':', $results[4]);
         if (isset($tmp[1]) && $tmp[1] == 'local') {
 
@@ -3447,7 +3447,7 @@ function removeCurrentTrackFrom($w)
 
     $results = getCurrentTrackinfo($w, $output_application);
 
-    if (is_array($count) && count($results) > 0) {
+    if (is_array($results) && count($results) > 0) {
         exec("osascript -e 'tell application id \"".getAlfredName()."\" to search \"".getenv('c_spot_mini').' Remove▹'.$results[4].'∙'.escapeQuery($results[0]).'▹'."\"'");
     } else {
         displayNotificationWithArtwork($w, 'No track is playing', './images/warning.png');
@@ -3496,7 +3496,7 @@ function addCurrentTrackToAlfredPlaylist($w)
 
     $results = getCurrentTrackinfo($w, $output_application);
 
-    if (is_array($count) && count($results) > 0) {
+    if (is_array($results) && count($results) > 0) {
 
         if ($alfred_playlist_uri == '' || $alfred_playlist_name == '') {
             displayNotificationWithArtwork($w, 'Alfred Playlist is not set', './images/warning.png');
@@ -3557,7 +3557,7 @@ function addCurrentTrackToYourMusic($w)
 
     $results = getCurrentTrackinfo($w, $output_application);
 
-    if (is_array($count) && count($results) > 0) {
+    if (is_array($results) && count($results) > 0) {
         $tmp = explode(':', $results[4]);
         if (isset($tmp[1]) && $tmp[1] == 'local') {
 
@@ -3929,7 +3929,7 @@ function getArtistUriFromTrack($w, $track_uri)
             $query = 'track:'.urldecode($tmp[4]).' artist:'.urldecode($tmp[2]);
             $results = searchWebApi($w, $country_code, $query, 'track', 1);
 
-            if (is_array($count) && count($results) > 0) {
+            if (is_array($results) && count($results) > 0) {
                 // only one track returned
                 $track = $results[0];
                 $artists = $track->artists;
@@ -4015,7 +4015,7 @@ function getAlbumUriFromTrack($w, $track_uri)
             $query = 'track:'.urldecode($tmp[4]).' artist:'.urldecode($tmp[2]);
             $results = searchWebApi($w, $country_code, $query, 'track', 1);
 
-            if (is_array($count) && count($results) > 0) {
+            if (is_array($results) && count($results) > 0) {
                 // only one track returned
                 $track = $results[0];
                 $album = $track->album;
@@ -4124,7 +4124,7 @@ function createRadioArtistPlaylistForCurrentArtist($w)
 
     $results = getCurrentTrackinfo($w, $output_application);
 
-    if (is_array($count) && count($results) > 0) {
+    if (is_array($results) && count($results) > 0) {
         $tmp = explode(':', $results[4]);
         if (isset($tmp[1]) && $tmp[1] == 'local') {
             $artist_uri = getArtistUriFromSearch($w, $results[1]);
@@ -4470,7 +4470,7 @@ function createRadioSongPlaylistForCurrentTrack($w)
 
     $results = getCurrentTrackinfo($w, $output_application);
 
-    if (is_array($count) && count($results) > 0) {
+    if (is_array($results) && count($results) > 0) {
         createRadioSongPlaylist($w, $results[0], $results[4], $results[1]);
     } else {
         displayNotificationWithArtwork($w, 'There is not track currently playing', './images/warning.png', 'Error!');
@@ -4513,7 +4513,7 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name)
         $query = 'track:'.urldecode($tmp[4]).' artist:'.urldecode($tmp[2]);
         $results = searchWebApi($w, $country_code, $query, 'track', 1);
 
-        if (is_array($count) && count($results) > 0) {
+        if (is_array($results) && count($results) > 0) {
             // only one track returned
             $track = $results[0];
             $track_uri = $track->uri;
@@ -5037,7 +5037,7 @@ function getTheFullTrack($w, $track_uri, $country_code)
             $query = 'track:'.urldecode($tmp[4]).' artist:'.urldecode($tmp[2]);
             $results = searchWebApi($w, $country_code, $query, 'track', 1);
 
-            if (is_array($count) && count($results) > 0) {
+            if (is_array($results) && count($results) > 0) {
                 // only one track returned
                 $track = $results[0];
 
@@ -5420,7 +5420,7 @@ function displayNotificationForCurrentTrack($w)
 
     $results = getCurrentTrackinfo($w, $output_application);
 
-    if (is_array($count) && count($results) > 0) {
+    if (is_array($results) && count($results) > 0) {
         $tmp = explode(':', $results[4]);
 
         if (isset($tmp[1]) && $tmp[1] == 'ad') {
@@ -5473,7 +5473,7 @@ function displayLyricsForCurrentTrack($w)
 
     $results = getCurrentTrackinfo($w, $output_application);
 
-    if (is_array($count) && count($results) > 0) {
+    if (is_array($results) && count($results) > 0) {
 
         if($always_display_lyrics_in_browser == false) {
             exec("osascript -e 'tell application id \"".getAlfredName()."\" to search \"".getenv('c_spot_mini').' Lyrics▹'.$results[4].'∙'.escapeQuery($results[1]).'∙'.escapeQuery($results[0])."\"'");
