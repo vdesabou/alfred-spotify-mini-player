@@ -2277,10 +2277,8 @@ function createDebugFile($w)
     $output = $output."\n\n\n\n";
 
     $output = $output."----------------------------------------------\n";
-
-    $output = $output."\n\n\n";
-
-    $output = $output."-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+\n";
+    $output = $output."Debug info\n";
+    $output = $output."----------------------------------------------\n";
     $output = $output.'Generated: '.$date."\n";
 
     // check for library update in progress
@@ -2298,9 +2296,6 @@ function createDebugFile($w)
     $output = $output.'* display_name: '.$display_name."\n\n";
     $output = $output.'* oauth_client_secret: '.$oauth_client_secret."\n\n";
     $output = $output.'* oauth_access_token: '.$oauth_access_token."\n\n";
-    $output = $output.'* oauth_refresh_token: '.$oauth_refresh_token."\n\n";
-
-    $output = $output."****\n";
 
     copyDirectory($w->cache(), '/tmp/spot_mini_debug/cache');
 
@@ -2375,14 +2370,47 @@ function createDebugFile($w)
 
 
     exec('/usr/bin/xattr "'.'./App/'.$theme_color.'/Spotify Mini Player.app'.'"',$response);
-    $output = $output."xattr Spotify Mini Player.app returned: ";
+    $output = $output."xattr Spotify Mini Player.app returned: \n";
     foreach($response as $line) {
         $output = $output.$line;
         $output = $output."\n";
     }
     $output = $output."\n";
+    unset($response);
     exec('/usr/bin/xattr "'.'./terminal-notifier.app'.'"',$response);
-    $output = $output."xattr terminal-notifier returned: ";
+    $output = $output."xattr terminal-notifier returned: \n";
+    foreach($response as $line) {
+        $output = $output.$line;
+        $output = $output."\n";
+    }
+    $output = $output."\n";
+
+    $output = $output."----------------------------------------------\n";
+    $output = $output."File: settings.json\n";
+    $output = $output."----------------------------------------------\n";
+    unset($response);
+    exec('cat /tmp/spot_mini_debug/settings.json | /usr/local/bin/jq',$response);
+    foreach($response as $line) {
+        $output = $output.$line;
+        $output = $output."\n";
+    }
+
+    $output = $output."----------------------------------------------\n";
+    $output = $output."File: action.log\n";
+    $output = $output."----------------------------------------------\n";
+    unset($response);
+    exec('tail -300 /tmp/spot_mini_debug/cache/action.log',$response);
+    foreach($response as $line) {
+        $output = $output.$line;
+        $output = $output."\n";
+    }
+    $output = $output."\n";
+
+    $output = $output."----------------------------------------------\n";
+    $output = $output."File: spotify_mini_player_web_server.log\n";
+    $output = $output."----------------------------------------------\n";
+    unset($response);
+    exec('cat /tmp/spot_mini_debug/cache/spotify_mini_player_web_server.log',$response);
     foreach($response as $line) {
         $output = $output.$line;
         $output = $output."\n";
@@ -2391,9 +2419,9 @@ function createDebugFile($w)
 
     exec('cd /tmp;zip -r spot_mini_debug.zip spot_mini_debug');
 
-    $output = $output."****\n";
-
     $output = $output.exec("curl -s --upload-file /tmp/spot_mini_debug.zip https://transfer.sh/spot_mini_debug_$userid.zip");
+
+    $output = $output."\n";
 
     exec('cd /tmp;rm -rf spot_mini_debug.zip spot_mini_debug');
 
