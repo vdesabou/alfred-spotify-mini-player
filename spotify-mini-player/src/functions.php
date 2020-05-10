@@ -2389,7 +2389,7 @@ function createDebugFile($w)
     $output = $output."File: settings.json\n";
     $output = $output."----------------------------------------------\n";
     unset($response);
-    exec('cat /tmp/spot_mini_debug/settings.json | /usr/local/bin/jq',$response);
+    exec('cat /tmp/spot_mini_debug/settings.json',$response);
     foreach($response as $line) {
         $output = $output.$line;
         $output = $output."\n";
