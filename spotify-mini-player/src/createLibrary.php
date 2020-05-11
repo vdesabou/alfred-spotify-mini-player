@@ -171,7 +171,7 @@ function createLibrary($w) {
                     // retry any SSL error
                     ++$nb_retry;
                 }
-                else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+                else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 404) {
                     // retry
                     if ($nb_retry > 2) {
                         handleSpotifyWebAPIException($w, $e);
@@ -243,7 +243,7 @@ function createLibrary($w) {
                     // retry any SSL error
                     ++$nb_retry;
                 }
-                else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+                else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 404) {
                     // retry
                     if ($nb_retry > 2) {
                         handleSpotifyWebAPIException($w, $e);
@@ -313,7 +313,7 @@ function createLibrary($w) {
                     // retry any SSL error
                     ++$nb_retry;
                 }
-                else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+                else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 404) {
                     // retry
                     if ($nb_retry > 2) {
                         handleSpotifyWebAPIException($w, $e);
@@ -393,7 +393,7 @@ function createLibrary($w) {
                         // retry any SSL error
                         ++$nb_retry;
                     }
-                    else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+                    else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 404) {
                         // retry
                         if ($nb_retry > 2) {
                             handleSpotifyWebAPIException($w, $e);
@@ -475,7 +475,7 @@ function createLibrary($w) {
                     // retry any SSL error
                     ++$nb_retry;
                 }
-                else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+                else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 404) {
                     // retry
                     if ($nb_retry > 2) {
                         handleSpotifyWebAPIException($w, $e);
@@ -554,7 +554,7 @@ function createLibrary($w) {
                     // retry any SSL error
                     ++$nb_retry;
                 }
-                else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+                else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 404) {
                     // retry
                     if ($nb_retry > 2) {
                         handleSpotifyWebAPIException($w, $e);
@@ -634,7 +634,7 @@ function createLibrary($w) {
                                 // retry any SSL error
                                 ++$nb_retry;
                             }
-                            else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+                            else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 404) {
                                 // retry
                                 if ($nb_retry > 2) {
                                     handleSpotifyWebAPIException($w, $e);
@@ -806,7 +806,7 @@ function createLibrary($w) {
                         // retry any SSL error
                         ++$nb_retry;
                     }
-                    else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+                    else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 404) {
                         // retry
                         if ($nb_retry > 2) {
                             handleSpotifyWebAPIException($w, $e);

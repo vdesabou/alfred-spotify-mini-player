@@ -1566,7 +1566,7 @@ function firstDelimiterSpotifyConnect($w, $query, $settings, $db, $update_in_pro
                     echo $w->tojson();
                     exit;
                 }
-                else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+                else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 404) {
                     // retry
                     if ($nb_retry > 2) {
                         $retry = false;
