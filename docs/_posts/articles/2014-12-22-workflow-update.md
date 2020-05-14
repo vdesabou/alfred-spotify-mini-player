@@ -20,7 +20,7 @@ onhomepage : true
 
 ## Auto-Update
 
-The workflow checks for update once per week.
+The workflow checks for update once per day.
 If an update is available, it will download the new version in your Downloads folder.
 A notification would be sent to warn you that the new version is available.
 
