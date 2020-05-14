@@ -6956,7 +6956,6 @@ function handleDbIssuePdoXml($dbhandle)
 function handleDbIssuePdoEcho($dbhandle, $w)
 {
     $errorInfo = $dbhandle->errorInfo();
-    logMsg('Error(DB Exception): '.$errorInfo[0].' '.$errorInfo[1].' '.$errorInfo[2]);
 
     if (file_exists($w->data().'/update_library_in_progress')) {
         deleteTheFile($w->data().'/update_library_in_progress');
@@ -6975,7 +6974,7 @@ function handleDbIssuePdoEcho($dbhandle, $w)
 
     logMsg("ERROR: handleDbIssuePdoEcho: ".$errorInfo[0].' '.$errorInfo[1].' '.$errorInfo[2]);
 
-    exec("osascript -e 'tell application id \"".getAlfredName()."\" to search \"".getenv('c_spot_mini_debug').' DB Exception: '.escapeQuery($errorInfo[2])."\"'");
+    exec("osascript -e 'tell application id \"".getAlfredName()."\" to search \"".getenv('c_spot_mini_debug').' DB Exception: '.escapeQuery($errorInfo[0].' '.$errorInfo[1].' '.$errorInfo[2])."\"'");
 
     exit;
 }
