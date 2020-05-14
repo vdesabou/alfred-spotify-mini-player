@@ -188,22 +188,34 @@ function refreshLibrary($w) {
         return;
     }
 
+    try {
+        $api = getSpotifyWebAPI($w);
+    }
+    catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
+        logMsg('Error(refreshLibrary): (exception ' . jTraceEx($e) . ')');
+        handleSpotifyWebAPIException($w, $e);
+
+        return false;
+    }
+
+    // Check missing scope for podcasts
+    $episode = $api->getEpisode('4aFURijFNhCP3n1pfQtQaM');
+
+    if (! isset($episode->resume_point)) {
+        logMsg("ERROR: the worfkflow was missing scope user-read-playback-position");
+        updateSetting($w, 'oauth_access_token', '');
+        updateSetting($w, 'oauth_refresh_token', '');
+        displayNotificationWithArtwork($w, 'Relaunch the workflow to re-authenticate', './images/settings.png', 'Info');
+        handleSpotifyPermissionException($w, 'Relaunch the workflow to re-authenticate');
+        return false;
+    }
+
     $savedMySavedAlbums = array();
     $offsetGetMySavedAlbums = 0;
     $limitGetMySavedAlbums = 50;
     do {
         $retry = true;
         $nb_retry = 0;
-
-        try {
-            $api = getSpotifyWebAPI($w);
-        }
-        catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
-            logMsg('Error(refreshLibrary): (exception ' . jTraceEx($e) . ')');
-            handleSpotifyWebAPIException($w, $e);
-
-            return false;
-        }
 
         while ($retry) {
             try {
@@ -1703,11 +1715,8 @@ function refreshLibrary($w) {
                         $stmtInsertEpisode->bindValue(':resume_position_ms', $resume_point->resume_position_ms);
                     }
                     else {
-                        updateSetting($w, 'oauth_access_token', '');
-                        updateSetting($w, 'oauth_refresh_token', '');
-                        displayNotificationWithArtwork($w, 'Relaunch the workflow to re-authenticate', './images/settings.png', 'Info');
-                        handleSpotifyPermissionException($w, 'Relaunch the workflow to re-authenticate');
-                        return false;
+                        $stmtInsertEpisode->bindValue(':fully_played', 0);
+                        $stmtInsertEpisode->bindValue(':resume_position_ms', 0);
                     }
                     $stmtInsertEpisode->execute();
                 }
@@ -1877,11 +1886,8 @@ function refreshLibrary($w) {
                             $stmtInsertEpisode->bindValue(':resume_position_ms', $resume_point->resume_position_ms);
                         }
                         else {
-                            updateSetting($w, 'oauth_access_token', '');
-                            updateSetting($w, 'oauth_refresh_token', '');
-                            displayNotificationWithArtwork($w, 'Relaunch the workflow to re-authenticate', './images/settings.png', 'Info');
-                            handleSpotifyPermissionException($w, 'Relaunch the workflow to re-authenticate');
-                            return false;
+                            $stmtInsertEpisode->bindValue(':fully_played', 0);
+                            $stmtInsertEpisode->bindValue(':resume_position_ms', 0);
                         }
                         $stmtInsertEpisode->execute();
                     }

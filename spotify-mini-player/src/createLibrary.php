@@ -127,9 +127,21 @@ function createLibrary($w) {
         $api = getSpotifyWebAPI($w);
     }
     catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
-        logMsg('Error(getPlaylists): (exception ' . jTraceEx($e) . ')');
+        logMsg('Error(createLibrary): (exception ' . jTraceEx($e) . ')');
         handleSpotifyWebAPIException($w, $e);
 
+        return false;
+    }
+
+    // Check missing scope for podcasts
+    $episode = $api->getEpisode('4aFURijFNhCP3n1pfQtQaM');
+
+    if (! isset($episode->resume_point)) {
+        logMsg("ERROR: the worfkflow was missing scope user-read-playback-position");
+        updateSetting($w, 'oauth_access_token', '');
+        updateSetting($w, 'oauth_refresh_token', '');
+        displayNotificationWithArtwork($w, 'Relaunch the workflow to re-authenticate', './images/settings.png', 'Info');
+        handleSpotifyPermissionException($w, 'Relaunch the workflow to re-authenticate');
         return false;
     }
 
@@ -1263,11 +1275,8 @@ function createLibrary($w) {
                 $stmtInsertEpisode->bindValue(':resume_position_ms', $resume_point->resume_position_ms);
             }
             else {
-                updateSetting($w, 'oauth_access_token', '');
-                updateSetting($w, 'oauth_refresh_token', '');
-                displayNotificationWithArtwork($w, 'Relaunch the workflow to re-authenticate', './images/settings.png', 'Info');
-                handleSpotifyPermissionException($w, 'Relaunch the workflow to re-authenticate');
-                return false;
+                $stmtInsertEpisode->bindValue(':fully_played', 0);
+                $stmtInsertEpisode->bindValue(':resume_position_ms', 0);
             }
             $stmtInsertEpisode->execute();
         }
