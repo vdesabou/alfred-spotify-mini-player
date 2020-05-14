@@ -574,6 +574,7 @@ function createLibrary($w) {
             }
         }
 
+        $allMySavedAlbumsTracks = array();
         foreach ($userMySavedAlbums->items as $item) {
             $album = $item->album;
             $tracks = $album->tracks;
