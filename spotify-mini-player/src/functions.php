@@ -2388,34 +2388,20 @@ function createDebugFile($w)
     $output = $output."----------------------------------------------\n";
     $output = $output."File: settings.json\n";
     $output = $output."----------------------------------------------\n";
-    unset($response);
-    exec('cat /tmp/spot_mini_debug/settings.json',$response);
-    foreach($response as $line) {
-        $output = $output.$line;
-        $output = $output."\n";
-    }
+    $response = shell_exec('cat /tmp/spot_mini_debug/settings.json');
+    $output = $output.$response."\n";
 
     $output = $output."----------------------------------------------\n";
     $output = $output."File: action.log\n";
     $output = $output."----------------------------------------------\n";
-    unset($response);
-    exec('tail -300 /tmp/spot_mini_debug/cache/action.log',$response);
-    foreach($response as $line) {
-        $output = $output.$line;
-        $output = $output."\n";
-    }
-    $output = $output."\n";
+    $response = shell_exec('tail -300 /tmp/spot_mini_debug/cache/action.log');
+    $output = $output.$response."\n";
 
     $output = $output."----------------------------------------------\n";
     $output = $output."File: spotify_mini_player_web_server.log\n";
     $output = $output."----------------------------------------------\n";
-    unset($response);
-    exec('cat /tmp/spot_mini_debug/cache/spotify_mini_player_web_server.log',$response);
-    foreach($response as $line) {
-        $output = $output.$line;
-        $output = $output."\n";
-    }
-    $output = $output."\n";
+    $response = exec('cat /tmp/spot_mini_debug/cache/spotify_mini_player_web_server.log');
+    $output = $output.$response."\n";
 
     exec('cd /tmp;zip -r spot_mini_debug.zip spot_mini_debug');
 
