@@ -22,7 +22,7 @@ jobs:
         id: Changelog
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          OUTPUT_FOLDER: /tmp/
+          OUTPUT_FOLDER: tmp
       - name: Create Release
         id: create_release
         uses: jbolda/create-release@v1.1.0
@@ -31,7 +31,7 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
-          body_path: /tmp/release_file.md
+          body_path: tmp/release_file.md
           draft: true
           prerelease: false
       - name: Build project # This would actually build your project, using zip for an example artifact
