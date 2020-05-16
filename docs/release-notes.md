@@ -2,7 +2,7 @@
 layout: article
 permalink: /release-notes/
 title: "Release Notes"
-modified: 2020-05-14
+modified: 2020-05-16
 excerpt: "Release Notes."
 image:
   feature:
@@ -13,11 +13,16 @@ toc: false
 noindex: false
 ---
 
+<a name="v9.6"></a>
+9.6:
+
+* <span class="badge success">IMPROVED</span> Deprecate Packal and switch to Github releases [#354](https://github.com/vdesabou/alfred-spotify-mini-player/issues/354)
+
 <a name="v9.5"></a>
 9.5:
 
 * <span class="badge danger">FIXED</span> Another library creation issue [#353](https://github.com/vdesabou/alfred-spotify-mini-player/issues/353)
-*
+
 <a name="v9.4"></a>
 9.4:
 
