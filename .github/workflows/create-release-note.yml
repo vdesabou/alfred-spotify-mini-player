@@ -23,15 +23,20 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OUTPUT_FOLDER: temp_release_notes
+      - name: Read temp_release_notes/release_file.md
+        id: read_release_file
+        uses: juliangruber/read-file-action@v1
+        with:
+          path: ./temp_release_notes/release_file.md
       - name: Create Release
         id: create_release
-        uses: jbolda/create-release@v1.1.0
+        uses: actions/create-release@latest
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
           tag_name: v-${{ github.event.milestone.title }}
           release_name: Version ${{ github.event.milestone.title }}
-          body_path: temp_release_notes/release_file.md
+          body: echo ${{ steps.read_release_file.outputs.content }}
           draft: true
           prerelease: false
       - name: Build project # This would actually build your project, using zip for an example artifact
