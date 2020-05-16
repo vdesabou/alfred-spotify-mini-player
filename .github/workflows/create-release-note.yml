@@ -36,7 +36,8 @@ jobs:
         with:
           tag_name: v-${{ github.event.milestone.title }}
           release_name: Version ${{ github.event.milestone.title }}
-          body: echo ${{ steps.read_release_file.outputs.content }}
+          body: |
+            ${{ steps.read_release_file.outputs.content }}
           draft: true
           prerelease: false
       - name: Build project # This would actually build your project, using zip for an example artifact
