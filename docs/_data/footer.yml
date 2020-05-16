@@ -3,9 +3,6 @@
 - title: <i class="fa fa-home"></i> Home
   url: /
 
-- title: <i class="fa fa-list"></i> Release Notes
-  url: /release-notes/
-
 - title: <i class="fa fa-bar-chart"></i> Statistics
   url: /stats/
 
