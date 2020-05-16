@@ -36,3 +36,16 @@ jobs:
             ${{ steps.Changelog.outputs.changelog }}
           draft: true
           prerelease: false
+      - name: Build project # This would actually build your project, using zip for an example artifact
+        run: |
+          cd ./spotify-mini-player && zip -r ../spotifyminiplayer.alfredworkflow * -x \*.git\* -x \*.zip\* -x \*.idraw\* -x \composer.*\* -x vendor/jwilsson/spotify-web-api-php/tests/**\*
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./spotifyminiplayer.alfredworkflow
+          asset_name: spotifyminiplayer.alfredworkflow
+          asset_content_type: application/zip
