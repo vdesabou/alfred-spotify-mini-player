@@ -31,7 +31,7 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
-          body_path: tmp/release_file.md
+          body_path: /home/runner/work/alfred-spotify-mini-player/alfred-spotify-mini-player/tmp/release_file.md
           draft: true
           prerelease: false
       - name: Build project # This would actually build your project, using zip for an example artifact
