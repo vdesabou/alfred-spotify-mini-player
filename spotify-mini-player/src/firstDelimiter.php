@@ -2351,7 +2351,7 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
     /* playlist_name */, '', /* playlist_artwork_path */
     )), 'Change search order results', array('Choose order of search results between playlist, artist, track and album', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/search.png', 'yes', null, '');
 
-    $w->result(null, '', 'Check for workflow update', array('Last checked: ' . beautifyTime(time() - $last_check_update_time, true) . ' ago (note this is automatically done otherwise once per week)', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/check_update.png', 'no', null, 'Check for update...' . '▹');
+    $w->result(null, '', 'Check for workflow update', array('Last checked: ' . beautifyTime(time() - $last_check_update_time, true) . ' ago (note this is automatically done otherwise once per day)', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/check_update.png', 'no', null, 'Check for update...' . '▹');
 
     $w->result(null, serialize(array(''
     /*track_uri*/, ''
@@ -2404,37 +2404,15 @@ function firstDelimiterCheckForUpdate($w, $query, $settings, $db, $update_in_pro
 
     $check_results = checkForUpdate($w, 0);
     if ($check_results != null && is_array($check_results)) {
-        $w->result(null, '', 'New version ' . $check_results[0] . ' is available !', array($check_results[2], 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/info.png', 'no', null, '');
-        $w->result(null, serialize(array(''
-        /*track_uri*/, ''
-        /* album_uri */, ''
-        /* artist_uri */, ''
-        /* playlist_uri */, ''
-        /* spotify_command */, ''
-        /* query */, 'Open▹' . $check_results[1] /* other_settings*/, ''
-        /* other_action */, ''
-        /* artist_name */, ''
-        /* track_name */, ''
-        /* album_name */, ''
-        /* track_artwork_path */, ''
-        /* artist_artwork_path */, ''
-        /* album_artwork_path */, ''
-        /* playlist_name */, '', /* playlist_artwork_path */
-        )), 'Click to open and install the new version', 'This will open the new version of the Spotify Mini Player workflow', './images/alfred-workflow-icon.png', 'yes', null, '');
-    }
-    elseif ($check_results == null) {
-        $w->result(null, '', 'No update available', array('You are good to go!', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/info.png', 'no', null, '');
-    }
-    else {
-        $w->result(null, '', 'Error happened : ' . $check_results, array('The check for workflow update could not be done', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/warning.png', 'no', null, '');
-        if ($check_results == 'This release has not been downloaded from Packal') {
+        if($check_results[0] != '') {
+            $w->result(null, '', 'New version ' . $check_results[0] . ' is available !', array('', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/info.png', 'no', null, '');
             $w->result(null, serialize(array(''
             /*track_uri*/, ''
             /* album_uri */, ''
             /* artist_uri */, ''
             /* playlist_uri */, ''
             /* spotify_command */, ''
-            /* query */, 'Open▹' . 'http://www.packal.org/workflow/spotify-mini-player' /* other_settings*/, ''
+            /* query */, 'Open▹' . $check_results[1] /* other_settings*/, ''
             /* other_action */, ''
             /* artist_name */, ''
             /* track_name */, ''
@@ -2443,8 +2421,14 @@ function firstDelimiterCheckForUpdate($w, $query, $settings, $db, $update_in_pro
             /* artist_artwork_path */, ''
             /* album_artwork_path */, ''
             /* playlist_name */, '', /* playlist_artwork_path */
-            )), 'Download workflow from Packal', 'This will open the Spotify Mini Player Packal page with your default browser', './images/packal.png', 'yes', null, '');
+            )), 'Click to open and install the new version', 'This will open the new version of the Spotify Mini Player workflow', './images/alfred-workflow-icon.png', 'yes', null, '');
         }
+    }
+    elseif ($check_results == null) {
+        $w->result(null, '', 'No update available', array('You are good to go!', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/info.png', 'no', null, '');
+    }
+    else {
+        $w->result(null, '', 'Error happened : ' . $check_results, array('The check for workflow update could not be done', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/warning.png', 'no', null, '');
         echo $w->tojson();
         exit;
     }

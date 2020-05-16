@@ -2335,12 +2335,6 @@ function createDebugFile($w)
         copy($w->data().'/playqueue.json', '/tmp/spot_mini_debug/playqueue.json');
     }
 
-    if (!file_exists(exec('pwd').'/packal/package.xml')) {
-        $output = $output.'The file '.exec('pwd')."/packal/package.xml is not present\n";
-    } else {
-        copy(exec('pwd').'/packal/package.xml', '/tmp/spot_mini_debug/package.xml');
-    }
-
     if (!file_exists($w->data().'/users')) {
         $output = $output.'The directory '.$w->data()."/users is not present\n";
     }
@@ -7328,15 +7322,23 @@ function checkForUpdate($w, $last_check_update_time, $download = false)
         }
 
         // get local information
-        if (!file_exists('./packal/package.xml')) {
-            return 'This release has not been downloaded from Packal';
+        $local_version = shell_exec("/usr/libexec/PlistBuddy -c 'print version' info.plist");
+        $local_version = preg_replace("/\s+/", "", $local_version);
+        $remote_info_plist_url='https://raw.githubusercontent.com/vdesabou/alfred-spotify-mini-player/master/spotify-mini-player/info.plist';
+
+        // get remote information
+        $remote_info_plist_name = '/tmp/info.plist';
+        $fp = fopen($remote_info_plist_name, 'w+');
+        $options = array(
+            CURLOPT_FILE => $fp,
+        );
+        $w->request("$remote_info_plist_url", $options);
+
+        if (!file_exists($remote_info_plist_name)) {
+            return 'The remove info.plist file cannot be downloaded';
         }
-        $xml = $w->read('./packal/package.xml');
-        $workflow = new SimpleXMLElement($xml);
-        $local_version = $workflow->version;
-        $remote_json = 'https://raw.githubusercontent.com/vdesabou/alfred-spotify-mini-player/master/remote.json';
-
-
+        $remote_version = shell_exec("/usr/libexec/PlistBuddy -c 'print version' $remote_info_plist_name");
+        $remote_version = preg_replace("/\s+/", "", $remote_version);
         // Read settings from JSON
 
         $settings = getSettings($w);
@@ -7353,56 +7355,73 @@ function checkForUpdate($w, $last_check_update_time, $download = false)
             exec('open "'.'./App/'.$theme_color.'/Spotify Mini Player.app'.'"',$response);
         }
 
-        // get remote information
-        $jsonDataRemote = $w->request($remote_json);
 
-        if (empty($jsonDataRemote)) {
-            return 'The export.json '.$remote_json.' file cannot be found';
-        }
+        if ($local_version < $remote_version) {
 
-        $json = json_decode($jsonDataRemote, true);
-        if (json_last_error() === JSON_ERROR_NONE) {
-            $download_url = $json['download_url'];
-            $remote_version = $json['version'];
-            $description = $json['description'];
+            if ($download == true) {
 
-            if ($local_version < $remote_version) {
-                if ($download == true) {
-                    $workflow_file_name = exec('printf $HOME').'/Downloads/spotify-mini-player-'.$remote_version.'.alfredworkflow';
-                    $fp = fopen($workflow_file_name, 'w+');
-                    $options = array(
-                        CURLOPT_FILE => $fp,
-                    );
-                    $w->request("$download_url", $options);
+                $workflow_file_name = exec('printf $HOME').'/Downloads/spotify-mini-player-'.$remote_version.'.alfredworkflow';
 
-                    return array(
-                        $remote_version,
-                        $workflow_file_name,
-                        $description,
-                    );
-                } else {
-                    $w->result(null, serialize(array(
-                                '' /*track_uri*/,
-                                '' /* album_uri */,
-                                '' /* artist_uri */,
-                                '' /* playlist_uri */,
-                                '' /* spotify_command */,
-                                '' /* query */,
-                                '' /* other_settings*/,
-                                'download_update' /* other_action */,
-                                '' /* artist_name */,
-                                '' /* track_name */,
-                                '' /* album_name */,
-                                '' /* track_artwork_path */,
-                                '' /* artist_artwork_path */,
-                                '' /* album_artwork_path */,
-                                '' /* playlist_name */,
-                                '', /* playlist_artwork_path */
-                            )), 'An update is available, version '.$remote_version.'. Click to download', ''.$description, './images/check_update.png', 'yes', '');
+                // get remote information
+                $options = array(
+                    CURLOPT_USERAGENT => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.7; rv:7.0.1) Gecko/20100101 Firefox/7.0.1',
+                );
+                $jsonDataRemote = $w->request("https://api.github.com/repos/vdesabou/alfred-spotify-mini-player/releases/latest", $options);
+
+                if (empty($jsonDataRemote)) {
+                    logMsg ("ERROR: The github release page cannot be found");
+                    return 'The github release page cannot be found';
                 }
+                $json = json_decode($jsonDataRemote);
+                if (json_last_error() === JSON_ERROR_NONE) {
+
+                    if(isset($json->assets[0]->browser_download_url)) {
+                        $download_url = $json->assets[0]->browser_download_url;
+                    } else {
+                        logMsg ("ERROR: Cannot find URL");
+                        return 'Cannot find URL';
+                    }
+                } else {
+                    logMsg ("ERROR: The github release page cannot be decoded: ".json_last_error());
+                    return 'The github release page cannot be decoded';
+                }
+
+                $fp = fopen($workflow_file_name, 'w+');
+                $options = array(
+                    CURLOPT_FILE => $fp,
+                    CURLOPT_FOLLOWLOCATION => true,
+                );
+                $w->request("$download_url", $options);
+
+                return array(
+                    $remote_version,
+                    $workflow_file_name,
+                );
+            } else {
+                $w->result(null, serialize(array(
+                            '' /*track_uri*/,
+                            '' /* album_uri */,
+                            '' /* artist_uri */,
+                            '' /* playlist_uri */,
+                            '' /* spotify_command */,
+                            '' /* query */,
+                            '' /* other_settings*/,
+                            'download_update' /* other_action */,
+                            '' /* artist_name */,
+                            '' /* track_name */,
+                            '' /* album_name */,
+                            '' /* track_artwork_path */,
+                            '' /* artist_artwork_path */,
+                            '' /* album_artwork_path */,
+                            '' /* playlist_name */,
+                            '', /* playlist_artwork_path */
+                        )), 'An update is available, version '.$remote_version.'. Click to download', ''.'This will download the new release iin your Downloads folder', './images/check_update.png', 'yes', '');
+
+                return array(
+                    '',
+                    '',
+                );
             }
-        } else {
-            return 'Cannot read remote.json';
         }
     }
 }

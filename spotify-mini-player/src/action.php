@@ -1312,7 +1312,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
         $check_results = checkForUpdate($w, 0, true);
         if ($check_results != null && is_array($check_results)) {
             exec("open \"$check_results[1]\"");
-            displayNotificationWithArtwork($w, 'Please install the new version with Alfred', './images/check_update.png', 'Update available');
+            displayNotificationWithArtwork($w, 'Please install the new version in your Downloads folder', './images/check_update.png', 'Update available');
 
             return;
         }

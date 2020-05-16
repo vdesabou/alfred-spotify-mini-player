@@ -2,7 +2,7 @@
 layout: article
 title: "Workflow Update"
 date: 2014-12-22T11:39:03-04:00
-modified: 2017-01-17T11:39:03-04:00
+modified: 2020-05-17
 categories: articles
 excerpt: "Automatic check for workflow update."
 image:
@@ -32,7 +32,3 @@ In *Settings* section, you can check for workflow update:-
 	<img src="{{ site.url }}/images/workflow-update1.jpg"></a>
 	<figcaption>Check for a workflow update.</figcaption>
 </figure>
-
-## Packal Friendly
-
-The workflow is also [Packal](http://www.packal.org) friendly, so you can update using [Packal Updater workflow](http://www.packal.org/workflow/packal-updater)
