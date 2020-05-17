@@ -52,6 +52,12 @@ jobs:
             ${{ steps.read_release_file.outputs.content }}
           draft: true
           prerelease: false
+      - name: Close issues
+        id: close_issues
+        uses: lee-dohm/close-matching-issues@v2
+        with:
+          query: "milestone:${{ github.event.milestone.title }}"
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Build project # This would actually build your project, using zip for an example artifact
         run: |
           cd ./spotify-mini-player && zip -r ../spotifyminiplayer.alfredworkflow * -x \*.git\* -x \*.zip\* -x \*.idraw\* -x \temp_release_notes.*\* -x \composer.*\* -x vendor/jwilsson/spotify-web-api-php/tests/**\*
