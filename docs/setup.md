@@ -83,13 +83,11 @@ Setting up the workflow is easy, you just need to follow these steps:-
 
   * https://api.spotify.com (for interaction with Spotify)
 
-  * https://raw.githubusercontent.com (for downloading new release from Packal)
+  * https://raw.githubusercontent.com (for downloading new release from web site)
 
   * https://github.com/ (for downloading images when changing theme)
 
   * http://api.stathat.com (for statistics)
-
-  * https://transfer.sh (for DEBUG Zip file)
 
 * if you're using a proxy, don't forget to enable this option in Alfred preferences, ***except for the time of authentication, it must be disabled*** :-
 

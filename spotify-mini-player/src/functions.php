@@ -2399,8 +2399,6 @@ function createDebugFile($w)
 
     exec('cd /tmp;zip -r spot_mini_debug.zip spot_mini_debug');
 
-    $output = $output.exec("curl -s --upload-file /tmp/spot_mini_debug.zip https://transfer.sh/spot_mini_debug_$userid.zip");
-
     $output = $output."\n";
 
     exec('cd /tmp;rm -rf spot_mini_debug.zip spot_mini_debug');
