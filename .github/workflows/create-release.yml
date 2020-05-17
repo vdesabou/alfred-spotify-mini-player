@@ -11,7 +11,7 @@ on:
 jobs:
   build:
     name: Create Release
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -30,7 +30,8 @@ jobs:
           path: ./temp_release_notes/release_file.md
       - name: Update version in plist
         run: |
-          /usr/libexec/PlistBuddy -c "set version ${{ github.event.milestone.title }}" ./spotify-mini-player/info.plist
+          sed "/version/{n;s/[0-9]\.[0-9]/${{ github.event.milestone.title }}/g}" ./spotify-mini-player/info.plist > ./spotify-mini-player/info.plist.tmp
+          mv ./spotify-mini-player/info.plist.tmp ./spotify-mini-player/info.plist
       - name: push
         uses: github-actions-x/commit@v2.6
         with:
