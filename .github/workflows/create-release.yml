@@ -11,7 +11,7 @@ on:
 jobs:
   build:
     name: Create Release
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -28,6 +28,17 @@ jobs:
         uses: juliangruber/read-file-action@v1
         with:
           path: ./temp_release_notes/release_file.md
+      - name: Update version in plist
+        run: |
+          /usr/libexec/PlistBuddy -c "set version ${{ github.event.milestone.title }}" ./spotify-mini-player/info.plist
+      - name: push
+        uses: github-actions-x/commit@v2.6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          push-branch: 'master'
+          commit-message: 'updating version'
+          files: ./spotify-mini-player/info.plist
+          name: vdesabou
       - name: Create Release
         id: create_release
         uses: actions/create-release@latest
@@ -42,7 +53,7 @@ jobs:
           prerelease: false
       - name: Build project # This would actually build your project, using zip for an example artifact
         run: |
-          cd ./spotify-mini-player && zip -r ../spotifyminiplayer.alfredworkflow * -x \*.git\* -x \*.zip\* -x \*.idraw\* -x \composer.*\* -x vendor/jwilsson/spotify-web-api-php/tests/**\*
+          cd ./spotify-mini-player && zip -r ../spotifyminiplayer.alfredworkflow * -x \*.git\* -x \*.zip\* -x \*.idraw\* -x \temp_release_notes.*\* -x \composer.*\* -x vendor/jwilsson/spotify-web-api-php/tests/**\*
       - name: Upload Release Asset
         id: upload-release-asset
         uses: actions/upload-release-asset@v1
