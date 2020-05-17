@@ -2270,7 +2270,7 @@ function createDebugFile($w)
     date_default_timezone_set('UTC');
     $date = date('Y-m-d H:i:s', time());
 
-    $output = "Please take time to describe your problem in a few lines:\n";
+    $output = "ℹ️ Please take time to describe your problem in a few lines 👇\n";
 
     $output = $output."----------------------------------------------\n";
 
@@ -2279,11 +2279,11 @@ function createDebugFile($w)
     $output = $output."----------------------------------------------\n";
     $output = $output."Debug info\n";
     $output = $output."----------------------------------------------\n";
-    $output = $output.'Generated: '.$date."\n";
+    $output = $output.'🕐 Generated: '.$date."\n";
 
     // check for library update in progress
     if (file_exists($w->data().'/update_library_in_progress')) {
-        $output = $output.'Library update in progress: '.'the file'.$w->data()."/update_library_in_progress is present\n";
+        $output = $output.'🔄 Library update is in progress\n';
     }
 
     // settings.json
@@ -2300,46 +2300,24 @@ function createDebugFile($w)
     copyDirectory($w->cache(), '/tmp/spot_mini_debug/cache');
 
     if (!file_exists($w->data().'/fetch_artworks.db')) {
-        $output = $output.'The file '.$w->data()."/fetch_artworks.db is not present\n";
-    } else {
-        copy($w->data().'/fetch_artworks.db', '/tmp/spot_mini_debug/fetch_artworks.db');
+        $output = $output.'📁 fetch_artworks.db is not present\n';
     }
 
     if (!file_exists($w->data().'/library.db')) {
-        $output = $output.'The file '.$w->data()."/library.db is not present\n";
-    } else {
-        copy($w->data().'/library.db', '/tmp/spot_mini_debug/library.db');
+        $output = $output.'📁 library.db is not present\n';
     }
 
     if (!file_exists($w->data().'/library_new.db')) {
-        $output = $output.'The file '.$w->data()."/library_new.db is not present\n";
-    } else {
-        copy($w->data().'/library_new.db', '/tmp/spot_mini_debug/library_new.db');
+        $output = $output.'📁 library_new.db is not present\n';
     }
 
     if (!file_exists($w->data().'/library_old.db')) {
-        $output = $output.'The file '.$w->data()."/library_old.db is not present\n";
-    } else {
-        copy($w->data().'/library_old.db', '/tmp/spot_mini_debug/library_old.db');
-    }
-
-    if (!file_exists($w->data().'/history.json')) {
-        $output = $output.'The file '.$w->data()."/history.json is not present\n";
-    } else {
-        copy($w->data().'/history.json', '/tmp/spot_mini_debug/history.json');
-    }
-
-    if (!file_exists($w->data().'/playqueue.json')) {
-        $output = $output.'The file '.$w->data()."/playqueue.json is not present\n";
-    } else {
-        copy($w->data().'/playqueue.json', '/tmp/spot_mini_debug/playqueue.json');
+        $output = $output.'📁 library_old.db is not present\n';
     }
 
     if (!file_exists($w->data().'/users')) {
         $output = $output.'The directory '.$w->data()."/users is not present\n";
     }
-
-    copyDirectory($w->path().'/src', '/tmp/spot_mini_debug/src');
 
     $output = $output.exec('uname -a');
     $output = $output."\n";
