@@ -2277,40 +2277,43 @@ function createDebugFile($w)
     $output = $output."\n\n\n\n";
 
     $output = $output."----------------------------------------------\n";
-    $output = $output."Debug info\n";
-    $output = $output."----------------------------------------------\n";
     $output = $output.'🕐 Generated: '.$date."\n";
+    $output = $output."----------------------------------------------\n";
+    // settings.json
+    copy($w->data().'/settings.json', '/tmp/spot_mini_debug/settings.json');
+
+    $output = $output."🔐 Encrypted data: I'm the only one able to decrypt your oauth_client_secret and oauth_access_token\n";
+    $output = $output."I'll use it for troubleshooting, in order to be able to create and have same library as yours.\n";
+    $output = $output."After investigation is done, you can regenerate a client secret as explained here https://developer.spotify.com/my-applications.\n";
+    $output = $output."----------------------------------------------\n";
+    // Remove oAuth values from file that will be uploaded
+    updateSetting($w, 'oauth_client_secret', 'xxx', '/tmp/spot_mini_debug/settings.json');
+    updateSetting($w, 'oauth_access_token', 'xxx', '/tmp/spot_mini_debug/settings.json');
+    $output = $output.'* oauth_client_secret: '.encryptString($w, $oauth_client_secret)."\n\n";
+    $output = $output.'* oauth_access_token: '.encryptString($w, $oauth_access_token)."\n\n";
+    $output = $output."----------------------------------------------\n";
+
+    copyDirectory($w->cache(), '/tmp/spot_mini_debug/cache');
 
     // check for library update in progress
     if (file_exists($w->data().'/update_library_in_progress')) {
         $output = $output.'🔄 Library update is in progress\n';
     }
 
-    // settings.json
-
-    copy($w->data().'/settings.json', '/tmp/spot_mini_debug/settings.json');
-    // Remove oAuth values from file that will be uploaded
-    updateSetting($w, 'oauth_client_secret', 'xxx', '/tmp/spot_mini_debug/settings.json');
-    updateSetting($w, 'oauth_access_token', 'xxx', '/tmp/spot_mini_debug/settings.json');
-    $output = $output.'* oauth_client_secret: '.encryptString($w, $oauth_client_secret)."\n\n";
-    $output = $output.'* oauth_access_token: '.encryptString($w, $oauth_access_token)."\n\n";
-
-    copyDirectory($w->cache(), '/tmp/spot_mini_debug/cache');
-
     if (!file_exists($w->data().'/fetch_artworks.db')) {
-        $output = $output.'📁 fetch_artworks.db is not present\n';
+        $output = $output."📁 fetch_artworks.db is not present\n";
     }
 
     if (!file_exists($w->data().'/library.db')) {
-        $output = $output.'📁 library.db is not present\n';
+        $output = $output."📁 library.db is not present\n";
     }
 
     if (!file_exists($w->data().'/library_new.db')) {
-        $output = $output.'📁 library_new.db is not present\n';
+        $output = $output."📁 library_new.db is not present\n";
     }
 
     if (!file_exists($w->data().'/library_old.db')) {
-        $output = $output.'📁 library_old.db is not present\n';
+        $output = $output."📁 library_old.db is not present\n";
     }
 
     if (!file_exists($w->data().'/users')) {
@@ -2339,21 +2342,12 @@ function createDebugFile($w)
     $output = $output."\n";
 
 
-    exec('/usr/bin/xattr "'.'./App/'.$theme_color.'/Spotify Mini Player.app'.'"',$response);
+    $response = shell_exec('/usr/bin/xattr "'.'./App/'.$theme_color.'/Spotify Mini Player.app'.'"');
     $output = $output."xattr Spotify Mini Player.app returned: \n";
-    foreach($response as $line) {
-        $output = $output.$line;
-        $output = $output."\n";
-    }
-    $output = $output."\n";
-    unset($response);
-    exec('/usr/bin/xattr "'.'./terminal-notifier.app'.'"',$response);
+    $output = $output.$response."\n";
+    $response = shell_exec('/usr/bin/xattr "'.'./terminal-notifier.app'.'"');
     $output = $output."xattr terminal-notifier returned: \n";
-    foreach($response as $line) {
-        $output = $output.$line;
-        $output = $output."\n";
-    }
-    $output = $output."\n";
+    $output = $output.$response."\n";
 
     $output = $output."----------------------------------------------\n";
     $output = $output."File: settings.json\n";
@@ -2373,13 +2367,11 @@ function createDebugFile($w)
     $response = exec('cat /tmp/spot_mini_debug/cache/spotify_mini_player_web_server.log');
     $output = $output.$response."\n";
 
-    exec('cd /tmp;zip -r spot_mini_debug.zip spot_mini_debug');
-
-    $output = $output."\n";
-
-    exec('cd /tmp;rm -rf spot_mini_debug.zip spot_mini_debug');
+    exec('rm -rf /tmp/spot_mini_debug');
 
     copy2clipboard($output);
+
+    $output = str_replace('"', '\"', $output);
 
     exec("open \"mailto:alfred.spotify.mini.player@gmail.com?subject=Alfred Spotify Mini Player debug file&body=$output\"");
 }
