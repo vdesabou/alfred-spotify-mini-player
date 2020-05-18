@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 9.7//EN" "http://www.apple.com/DTDs/PropertyList-9.7.dtd">
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 9.6//EN" "http://www.apple.com/DTDs/PropertyList-9.6.dtd">
 <plist version="1.0">
 <dict>
 	<key>bundleid</key>
@@ -11430,7 +11430,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 		<string>♫</string>
 	</dict>
 	<key>version</key>
-	<string>9.7</string>
+	<string>9.6</string>
 	<key>webaddress</key>
 	<string>https://alfred-spotify-mini-player.com</string>
 </dict>
