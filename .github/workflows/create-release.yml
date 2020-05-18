@@ -39,7 +39,7 @@ jobs:
           push-branch: 'master'
           commit-message: 'updating version'
           files: ./spotify-mini-player/info.plist
-          name: vdesabou
+          name: Vincent de Saboulin
       - name: Create Release
         id: create_release
         uses: actions/create-release@latest
