@@ -2292,10 +2292,8 @@ function createDebugFile($w)
     // Remove oAuth values from file that will be uploaded
     updateSetting($w, 'oauth_client_secret', 'xxx', '/tmp/spot_mini_debug/settings.json');
     updateSetting($w, 'oauth_access_token', 'xxx', '/tmp/spot_mini_debug/settings.json');
-    updateSetting($w, 'display_name', 'xxx', '/tmp/spot_mini_debug/settings.json');
-    $output = $output.'* display_name: '.$display_name."\n\n";
-    $output = $output.'* oauth_client_secret: '.$oauth_client_secret."\n\n";
-    $output = $output.'* oauth_access_token: '.$oauth_access_token."\n\n";
+    $output = $output.'* oauth_client_secret: '.encryptString($w, $oauth_client_secret)."\n\n";
+    $output = $output.'* oauth_access_token: '.encryptString($w, $oauth_access_token)."\n\n";
 
     copyDirectory($w->cache(), '/tmp/spot_mini_debug/cache');
 
@@ -2385,6 +2383,45 @@ function createDebugFile($w)
 
     exec("open \"mailto:alfred.spotify.mini.player@gmail.com?subject=Alfred Spotify Mini Player debug file&body=$output\"");
 }
+
+/**
+ * encryptString  function.
+ *
+ * @param bool  $string
+ */
+function encryptString($w, $string)
+{
+   // $string = 'This is the text to encrypt';
+    $public_key = file_get_contents($w->path(). '/src/public.key');
+
+    // Encrypt using the public key
+    openssl_public_encrypt($string, $encrypted, $public_key);
+
+    $encrypted_hex = bin2hex($encrypted);
+
+    return $encrypted_hex;
+}
+
+function decryptString($w, $encrypted)
+{
+
+    // Get the private Key
+    if (!$private_key = file_get_contents($w->path(). '/../private.key'))
+    {
+        displayNotificationWithArtwork($w, 'Failed to find private key', './images/warning.png', 'Error!');
+        return false;
+    }
+
+    // Decrypt the data using the private key
+    $ret = openssl_private_decrypt(hex2bin($encrypted), $decrypted, $private_key);
+    if(!$ret) {
+        displayNotificationWithArtwork($w, 'Failed to decrypt string', './images/warning.png', 'Error!');
+        return false;
+    }
+
+    return $decrypted;
+}
+
 /**
  * getCurrentTrackInfoWithMopidy function.
  *

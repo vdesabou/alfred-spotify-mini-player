@@ -1177,6 +1177,12 @@ if ($type == 'TRACK' && $other_settings == '' &&
         showInSpotify($w);
 
         return;
+    } elseif ($other_action == 'decrypt') {
+
+        $decrypted = decryptString($w, shell_exec('pbpaste'));
+        exec("echo $decrypted | pbcopy ");
+
+        return;
     } elseif ($other_action == 'unfollow_playlist') {
         unfollowThePlaylist($w, $playlist_uri);
 

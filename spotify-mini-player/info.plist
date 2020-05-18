@@ -1310,6 +1310,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>779B4D29-1343-42DF-A62D-8B12F7CF55EC</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>F55B6C14-1B39-4D5D-92B9-551B7CBECFE6</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>78DAB9D1-72A3-4B44-AB3B-D1C71F13DF7A</key>
 		<array>
 			<dict>
@@ -9214,6 +9227,53 @@ do shell script deviceselectedXML</string>
 			<key>version</key>
 			<integer>2</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "decrypt" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
+
+
+php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>F55B6C14-1B39-4D5D-92B9-551B7CBECFE6</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>decrypt</string>
+				<key>subtext</key>
+				<string>INTERNAL USE ONLY</string>
+				<key>text</key>
+				<string>Decrypt string using private key</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>779B4D29-1343-42DF-A62D-8B12F7CF55EC</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string>Web Site:
@@ -10100,6 +10160,17 @@ https://github.com/vdesabou/alfred-spotify-mini-player</string>
 			<integer>660</integer>
 			<key>ypos</key>
 			<integer>7980</integer>
+		</dict>
+		<key>779B4D29-1343-42DF-A62D-8B12F7CF55EC</key>
+		<dict>
+			<key>colorindex</key>
+			<integer>12</integer>
+			<key>note</key>
+			<string>INTERNAL USE ONLY</string>
+			<key>xpos</key>
+			<integer>545</integer>
+			<key>ypos</key>
+			<integer>13735</integer>
 		</dict>
 		<key>77BC9498-F4E6-48BB-919D-D0B64DAFEF26</key>
 		<dict>
@@ -11176,6 +11247,13 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<integer>100</integer>
 			<key>ypos</key>
 			<real>7750</real>
+		</dict>
+		<key>F55B6C14-1B39-4D5D-92B9-551B7CBECFE6</key>
+		<dict>
+			<key>xpos</key>
+			<integer>705</integer>
+			<key>ypos</key>
+			<integer>13735</integer>
 		</dict>
 		<key>F71F1D16-0DF9-4590-9FE9-22D439FE12BB</key>
 		<dict>

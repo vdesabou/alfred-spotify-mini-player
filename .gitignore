@@ -9,3 +9,4 @@ spotify-mini-player/.idea
 _site
 .DS_Store
 *.txt
+private.key
