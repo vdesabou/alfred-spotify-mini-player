@@ -37,7 +37,7 @@ jobs:
           path: ./temp_release_notes/release_file.md
       - name: Update version in plist
         run: |
-          sed "/version/{n;s/<string>[0-9]\.[0-9]</string>/<string>${{ github.event.milestone.title }}/g}" ./spotify-mini-player/info.plist > ./spotify-mini-player/info.plist.tmp
+          sed "/version/{n;s/<string>[0-9]\.[0-9]<\/string>/<string>${{ github.event.milestone.title }}<\/string>/g}" ./spotify-mini-player/info.plist > ./spotify-mini-player/info.plist.tmp
           mv ./spotify-mini-player/info.plist.tmp ./spotify-mini-player/info.plist
       - name: push
         uses: github-actions-x/commit@v2.6
