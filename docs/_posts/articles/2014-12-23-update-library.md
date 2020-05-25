@@ -2,13 +2,13 @@
 layout: article
 title: "Library update"
 date: 2014-12-23T11:39:03-04:00
-modified: 2017-01-17T11:39:03-04:00
+modified: 2020-05-25
 categories: articles
 excerpt: "Fast and automatic library updates (with artworks downloaded in background)."
 image:
   teaser: bullet-library-update.png
   feature:
-  credit: 
+  credit:
   creditlink:
 noindex: false
 share: false
@@ -28,21 +28,29 @@ onhomepage : true
 	<figcaption>Notifications during a Refresh Library.</figcaption>
 </figure>
 
+Note: This can be disabled by setting `automatically_refresh_library` environment variable to `0`
 
 * In case you have modified a playlist or added tracks to Your Music using the Spotify application directly, then you can force a Refresh Library:-
 
-  * Use the `refresh_library` command:- 
+  * Use the `refresh_library` command:-
 
 <figure>
 	<img src="{{ site.url }}/images/refresh-library1.jpg">
 	<figcaption>refresh_library command.</figcaption>
 </figure>
 
-  * Use the `Refresh your library` in Settings menu:- 
+  * Use the `Refresh your library` in Settings menu:-
 
 <figure>
 	<img src="{{ site.url }}/images/refresh-library2.jpg">
 	<figcaption>Refresh your Library in Settings menu.</figcaption>
+</figure>
+
+* You can activate automatic refresh of your library every x minutes (enter 0 to de-activate) in Settings menu:-
+
+<figure>
+	<img src="{{ site.url }}/images/refresh-library5.jpg">
+	<figcaption>Automatic refresh of library.</figcaption>
 </figure>
 
 ## Background download of artworks
@@ -68,7 +76,7 @@ You get a notification when background download of artworks starts:-
 <figure>
 	<img src="{{ site.url }}/images/setup5.jpg">
 	<figcaption>Example of blank artworks until the end of background download is over.</figcaption>
-</figure> 
+</figure>
 
 ## Re-Create Library from scratch
 

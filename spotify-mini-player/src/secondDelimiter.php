@@ -1742,6 +1742,39 @@ function secondDelimiterSettings($w, $query, $settings, $db, $update_in_progress
                 $w->result(null, '', 'The Max Results value entered is not valid', array('Please fix it', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/warning.png', 'no', null, '');
             }
         }
+    } elseif ($setting_kind == 'AutomaticRefreshLibrary') {
+        if (mb_strlen($the_query) == 0) {
+            $w->result(null, '', 'Enter the frequency in minutes for automatic refresh of your library (0 to disable):', array('Set to 0 to disable', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/settings.png', 'no', null, '');
+        }
+        else {
+            // interval has been set
+            if (is_numeric($the_query) == true) {
+                if($the_query == 0) {
+                    $text = 'Automatic refresh of your library will be disabled';
+                } else {
+                    $text = 'Automatic refresh of your library will be done every <' . $the_query . ' minutes>';
+                }
+                $w->result(null, serialize(array(''
+                /*track_uri*/, ''
+                /* album_uri */, ''
+                /* artist_uri */, ''
+                /* playlist_uri */, ''
+                /* spotify_command */, ''
+                /* query */, 'AUTOMATICREFRESHLIBRARY▹' . $the_query /* other_settings*/, ''
+                /* other_action */, ''
+                /* artist_name */, ''
+                /* track_name */, ''
+                /* album_name */, ''
+                /* track_artwork_path */, ''
+                /* artist_artwork_path */, ''
+                /* album_artwork_path */, ''
+                /* playlist_name */, '', /* playlist_artwork_path */
+                )), $text, 'Type enter to validate', './images/settings.png', 'yes', null, '');
+            }
+            else {
+                $w->result(null, '', 'The interval in minutes entered is not valid', array('Please fix it', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/warning.png', 'no', null, '');
+            }
+        }
     }
     elseif ($setting_kind == 'Users') {
 

@@ -1957,7 +1957,7 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>CF46537F-6F59-40DB-A643-72A7BB952840</string>
+				<string>055BD79F-3287-4E38-82C2-C296816B3C9A</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -5961,6 +5961,32 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "refresh_library_external" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
+
+
+php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/action.log" 2&gt;&amp;1 &amp;</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>055BD79F-3287-4E38-82C2-C296816B3C9A</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>triggerid</key>
 				<string>refresh_library</string>
 			</dict>
@@ -9302,6 +9328,13 @@ https://github.com/vdesabou/alfred-spotify-mini-player</string>
 			<integer>170</integer>
 			<key>ypos</key>
 			<integer>13525</integer>
+		</dict>
+		<key>055BD79F-3287-4E38-82C2-C296816B3C9A</key>
+		<dict>
+			<key>xpos</key>
+			<integer>815</integer>
+			<key>ypos</key>
+			<integer>6135</integer>
 		</dict>
 		<key>05D01A85-8BDC-4FF6-BEBB-BAF26BB5870A</key>
 		<dict>

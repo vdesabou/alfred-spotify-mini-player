@@ -4870,24 +4870,62 @@ function getNumberOfEpisodesForShow($w, $show_uri, $country_code)
 {
     $episodes = array();
 
-    try {
-        $api = getSpotifyWebAPI($w);
-        $tmp = explode(':', $show_uri);
+    $retry = true;
+    $nb_retry = 0;
+    while ($retry) {
+        try {
+            $tmp = explode(':', $show_uri);
 
-        // refresh api
-        $api = getSpotifyWebAPI($w, $api);
-        $userShowEpisodes = $api->getShowEpisodes($tmp[2], array(
-                'market' => $country_code,
-                'limit' => 1,
-            ));
+            $api = getSpotifyWebAPI($w);
+            $userShowEpisodes = $api->getShowEpisodes($tmp[2], array(
+                    'market' => $country_code,
+                    'limit' => 1,
+                ));
+            $retry = false;
+            return $userShowEpisodes->total;
+        }
+        catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
+            logMsg('Error(getNumberOfEpisodesForShow): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
 
-        return $userShowEpisodes->total;
+            if ($e->getCode() == 429) { // 429 is Too Many Requests
+                $lastResponse = $api->getRequest()
+                    ->getLastResponse();
+                if (isset($lastResponse['headers']['Retry-After'])) {
+                    $retryAfter = $lastResponse['headers']['Retry-After'];
+                }
+                else {
+                    $retryAfter = 1;
+                }
+                sleep($retryAfter);
+            }
+            else if ($e->getCode() == 404) {
+                // skip
+                break;
+            }
+            else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
+                // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
+                // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
+                // retry any SSL error
+                ++$nb_retry;
+            }
+            else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 404) {
+                // retry
+                if ($nb_retry > 2) {
+                    handleSpotifyWebAPIException($w, $e);
+                    $retry = false;
 
-    } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        logMsg( 'Error(getNumberOfEpisodesForShow): (exception '.jTraceEx($e).')');
-        handleSpotifyWebAPIException($w, $e);
+                    return false;
+                }
+                ++$nb_retry;
+                sleep(5);
+            }
+            else {
+                handleSpotifyWebAPIException($w, $e);
+                $retry = false;
 
-        return false;
+                return false;
+            }
+        }
     }
 
     return false;
@@ -7931,6 +7969,7 @@ function getSettings($w)
             'search_order' => 'playlist▹artist▹track▹album▹show▹episode',
             'always_display_lyrics_in_browser' => 0,
             'workflow_version' => '',
+            'automatic_refresh_library_interval' => 0,
         );
 
         $ret = $w->write($default, 'settings.json');
@@ -8016,6 +8055,12 @@ function getSettings($w)
     // add workflow_version if needed
     if (!isset($settings->workflow_version)) {
         updateSetting($w, 'workflow_version', '');
+        $settings = $w->read('settings.json');
+    }
+
+    // add automatic_refresh_library_interval if needed
+    if (!isset($settings->automatic_refresh_library_interval)) {
+        updateSetting($w, 'automatic_refresh_library_interval', 0);
         $settings = $w->read('settings.json');
     }
 

@@ -426,6 +426,29 @@ if ($type == 'TRACK' && $other_settings == '' &&
         }
 
         return;
+    } elseif ($setting[0] == 'AUTOMATICREFRESHLIBRARY') {
+        $ret = updateSetting($w, 'automatic_refresh_library_interval', intval($setting[1]));
+        if ($ret == true) {
+            if(intval($setting[1]) == 0) {
+                exec('launchctl stop com.vdesabou.spotify.mini.player');
+                exec('launchctl unload -w  ~/Library/LaunchAgents/com.vdesabou.spotify.mini.player.plist');
+                exec('rm ~/Library/LaunchAgents/com.vdesabou.spotify.mini.player.plist');
+                displayNotificationWithArtwork($w, 'Refresh of library disabled', './images/settings.png', 'Settings');
+            } else {
+                $interval_in_seconds = intval($setting[1])*60;
+                exec('launchctl stop com.vdesabou.spotify.mini.player');
+                exec('launchctl unload -w  ~/Library/LaunchAgents/com.vdesabou.spotify.mini.player.plist');
+                exec('rm ~/Library/LaunchAgents/com.vdesabou.spotify.mini.player.plist');
+                exec('sed -e "s|:INTERVAL:|'.$interval_in_seconds.'|g" '.exec('pwd').'/src/com.vdesabou.spotify.mini.player-template.plist > ~/Library/LaunchAgents/com.vdesabou.spotify.mini.player.plist');
+                exec('launchctl load -w  ~/Library/LaunchAgents/com.vdesabou.spotify.mini.player.plist');
+                exec('launchctl start com.vdesabou.spotify.mini.player');
+                displayNotificationWithArtwork($w, 'Refresh of library every '.$setting[1].' minutes', './images/settings.png', 'Settings');
+            }
+        } else {
+            displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
+        }
+
+        return;
     } elseif ($setting[0] == 'RADIO_TRACKS') {
         $ret = updateSetting($w, 'radio_number_tracks', $setting[1]);
         if ($ret == true) {
@@ -1936,6 +1959,15 @@ if ($type == 'TRACK' && $other_settings == '' &&
         }
         refreshLibrary($w);
         stathat_ez_count('AlfredSpotifyMiniPlayer', 'update library', 1);
+
+        return;
+    } elseif ($other_action == 'refresh_library_external') {
+        if (file_exists($w->data().'/update_library_in_progress')) {
+            // discard silently
+
+            return;
+        }
+        refreshLibrary($w, true);
 
         return;
     }

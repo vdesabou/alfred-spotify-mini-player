@@ -1830,6 +1830,7 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
     $use_artworks = $settings->use_artworks;
     $use_facebook = $settings->use_facebook;
     $always_display_lyrics_in_browser = $settings->always_display_lyrics_in_browser;
+    $automatic_refresh_library_interval = $settings->automatic_refresh_library_interval;
 
     if ($update_in_progress == false) {
         $w->result(null, serialize(array(''
@@ -1932,6 +1933,12 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
     }
     $w->result(null, '', 'Configure Max Number of Results (currently ' . $max_results . ')', array('Number of results displayed (it does not apply to the list of your playlists)', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/results_numbers.png', 'no', null, 'Settings▹MaxResults▹');
     $w->result(null, '', 'Configure Number of Radio tracks (currently ' . $radio_number_tracks . ')', array('Number of tracks when creating a Radio Playlist.', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/radio_numbers.png', 'no', null, 'Settings▹RadioTracks▹');
+    if($automatic_refresh_library_interval == 0) {
+        $automatic_refresh_library_interval = 'disabled';
+    } else {
+        $automatic_refresh_library_interval = 'every '.$automatic_refresh_library_interval.' minutes';
+    }
+    $w->result(null, '', 'Configure Automatic Refresh of Library (currently ' . $automatic_refresh_library_interval . ')', array('Setup automatic refresh of your library in background)', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/update.png', 'no', null, 'Settings▹AutomaticRefreshLibrary▹');
     $w->result(null, '', 'Configure Volume Percent (currently ' . $volume_percent . '%)', array('The percentage of volume which is increased or decreased.', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/volume_up.png', 'no', null, 'Settings▹VolumePercentage▹');
 
     $w->result(null, '', 'Select the output: Spotify Connect or Spotify Desktop', array('Spotify Connect is for premium users only', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/speaker.png', 'no', null, 'Settings▹Output▹');
