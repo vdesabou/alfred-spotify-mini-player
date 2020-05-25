@@ -11463,7 +11463,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 		<string>♫</string>
 	</dict>
 	<key>version</key>
-	<string>9.7</string>
+	<string>9.8</string>
 	<key>webaddress</key>
 	<string>https://alfred-spotify-mini-player.com</string>
 </dict>
