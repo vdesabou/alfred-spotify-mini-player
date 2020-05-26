@@ -269,10 +269,12 @@ function refreshLibrary($w, $silent = false) {
             }
         }
 
-        foreach ($userMySavedAlbums->items as $item) {
-            $album = $item->album;
-            if ($album->name != '') {
-                $savedMySavedAlbums[] = $album;
+        if(isset($userMySavedAlbums->items)) {
+            foreach ($userMySavedAlbums->items as $item) {
+                $album = $item->album;
+                if ($album->name != '') {
+                    $savedMySavedAlbums[] = $album;
+                }
             }
         }
 
