@@ -286,10 +286,8 @@ if ($type == 'TRACK' && $other_settings == '' &&
         if ($output_application == 'CONNECT') {
             $device_id = getSpotifyConnectCurrentDeviceId($w);
             addToQueueSpotifyConnect($w, $track_uri, $device_id);
-            if(getenv('reduce_notifications') == 0) {
-                $track_artwork_path = getTrackOrAlbumArtwork($w, $track_uri, true, false, false, $use_artworks);
-                displayNotificationWithArtwork($w, ''.$track_name.' added to queue', $track_artwork_path, 'Add Track or Episode to Queue');
-            }
+            $track_artwork_path = getTrackOrAlbumArtwork($w, $track_uri, true, false, false, $use_artworks);
+            displayNotificationWithArtwork($w, ''.$track_name.' added to queue', $track_artwork_path, 'Add Track or Episode to Queue');
         } else {
 
             displayNotificationWithArtwork($w, 'Add to queue is only available with Spotify Connect', './images/warning.png', 'Error!');

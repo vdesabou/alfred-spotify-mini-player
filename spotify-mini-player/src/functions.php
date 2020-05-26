@@ -5411,9 +5411,13 @@ function checkIfShowDuplicate($my_show_array, $show)
  * @param mixed  $artwork
  * @param string $title    (default: 'Spotify Mini Player')
  */
-function displayNotificationWithArtwork($w, $subtitle, $artwork, $title = 'Spotify Mini Player')
+function displayNotificationWithArtwork($w, $subtitle, $artwork, $title = 'Spotify Mini Player', $force = false)
 {
 
+    if(getenv('reduce_notifications') == 1 && $title != "Error!" && $force == false) {
+        // skip any non error
+        return;
+    }
     // Read settings from JSON
 
     $settings = getSettings($w);
@@ -5482,7 +5486,7 @@ function displayNotificationForCurrentTrack($w)
             // download artwork for current track view
             $episode_artwork_path = getEpisodeArtwork($w, $results[4], true, false, false, $use_artworks);
             if (isset($results[0]) && $results[0] != '') {
-                displayNotificationWithArtwork($w, '🔈🎙 '.escapeQuery($results[2]).' in show '.escapeQuery($results[2]), $episode_artwork_path, 'Now Playing '.' ('.beautifyTime($results[5] / 1000).')');
+                displayNotificationWithArtwork($w, '🔈🎙 '.escapeQuery($results[2]).' in show '.escapeQuery($results[2]), $episode_artwork_path, 'Now Playing '.' ('.beautifyTime($results[5] / 1000).')', true);
             }
         } else {
             // download artwork for current track view
@@ -5496,7 +5500,7 @@ function displayNotificationForCurrentTrack($w)
                 if($is_display_rating) {
                     $popularity = floatToStars($results[6]/100);
                 }
-                displayNotificationWithArtwork($w, '🔈 '.escapeQuery($results[0]).' by '.escapeQuery($results[1]).' in album '.escapeQuery($results[2]), $album_artwork_path, 'Now Playing '.$popularity.' ('.beautifyTime($results[5] / 1000).')');
+                displayNotificationWithArtwork($w, '🔈 '.escapeQuery($results[0]).' by '.escapeQuery($results[1]).' in album '.escapeQuery($results[2]), $album_artwork_path, 'Now Playing '.$popularity.' ('.beautifyTime($results[5] / 1000).')', true);
             }
         }
     }
@@ -5622,10 +5626,8 @@ function downloadArtworks($w, $silent = false)
             $nb_artworks_total += intval($count[0]);
 
             if ($nb_artworks_total != 0) {
-                if(getenv('reduce_notifications') == 0) {
-                    if(!$silent)
-                        displayNotificationWithArtwork($w, 'Start downloading '.$nb_artworks_total.' artworks', './images/artworks.png', 'Artworks');
-                }
+                if(!$silent)
+                    displayNotificationWithArtwork($w, 'Start downloading '.$nb_artworks_total.' artworks', './images/artworks.png', 'Artworks');
 
                 // artists
                 $getArtists = 'select artist_uri,artist_name from artists where already_fetched=0';
@@ -5756,11 +5758,9 @@ function downloadArtworks($w, $silent = false)
     }
     deleteTheFile($w->data().'/download_artworks_in_progress');
     if ($nb_artworks_total != 0) {
-        if(getenv('reduce_notifications') == 0) {
-            $elapsed_time = time() - $words[3];
-            if(!$silent)
-                displayNotificationWithArtwork($w, 'All artworks have been downloaded ('.$nb_artworks_total.' artworks) - took '.beautifyTime($elapsed_time, true), './images/artworks.png', 'Artworks');
-        }
+        $elapsed_time = time() - $words[3];
+        if(!$silent)
+            displayNotificationWithArtwork($w, 'All artworks have been downloaded ('.$nb_artworks_total.' artworks) - took '.beautifyTime($elapsed_time, true), './images/artworks.png', 'Artworks');
         stathat_ez_count('AlfredSpotifyMiniPlayer', 'artworks', $nb_artworks_total);
     }
 

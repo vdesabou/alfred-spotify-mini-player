@@ -760,10 +760,8 @@ function refreshLibrary($w, $silent = false) {
                 return;
             }
 
-            if (getenv('reduce_notifications') == 0) {
-                if(!$silent)
-                    displayNotificationWithArtwork($w, 'Added playlist ' . escapeQuery($playlist->name), $playlist_artwork_path, 'Refresh Library');
-            }
+            if(!$silent)
+                displayNotificationWithArtwork($w, 'Added playlist ' . escapeQuery($playlist->name), $playlist_artwork_path, 'Refresh Library');
         }
         else {
 
@@ -1038,10 +1036,8 @@ function refreshLibrary($w, $silent = false) {
 
                     return;
                 }
-                if (getenv('reduce_notifications') == 0) {
-                    if(!$silent)
-                        displayNotificationWithArtwork($w, 'Updated playlist ' . escapeQuery($playlist->name), getPlaylistArtwork($w, $playlist->uri, true, false, $use_artworks), 'Refresh Library');
-                }
+                if(!$silent)
+                    displayNotificationWithArtwork($w, 'Updated playlist ' . escapeQuery($playlist->name), getPlaylistArtwork($w, $playlist->uri, true, false, $use_artworks), 'Refresh Library');
             }
             else {
                 continue;
@@ -1075,10 +1071,9 @@ function refreshLibrary($w, $silent = false) {
                 $stmtDelete = $db->prepare($deleteFromTracks);
                 $stmtDelete->bindValue(':uri', $playlist_in_db[0]);
                 $stmtDelete->execute();
-                if (getenv('reduce_notifications') == 0) {
-                    if(!$silent)
-                        displayNotificationWithArtwork($w, 'Removed playlist ' . $playlist_in_db[1], getPlaylistArtwork($w, $playlist_in_db[0], false, false, $use_artworks), 'Refresh Library');
-                }
+
+                if(!$silent)
+                    displayNotificationWithArtwork($w, 'Removed playlist ' . $playlist_in_db[1], getPlaylistArtwork($w, $playlist_in_db[0], false, false, $use_artworks), 'Refresh Library');
             }
         }
     }
@@ -1196,10 +1191,8 @@ function refreshLibrary($w, $silent = false) {
             }
             while ($offsetGetMySavedAlbumTracks < $albumTracks->total);
 
-            if (getenv('reduce_notifications') == 0) {
-                if(!$silent)
-                    displayNotificationWithArtwork($w, 'Added album ' . escapeQuery($album->name), $album_artwork_path, 'Refresh Library');
-            }
+            if(!$silent)
+                displayNotificationWithArtwork($w, 'Added album ' . escapeQuery($album->name), $album_artwork_path, 'Refresh Library');
         }
     }
 
@@ -1734,10 +1727,8 @@ function refreshLibrary($w, $silent = false) {
                     return false;
                 }
             }
-            if (getenv('reduce_notifications') == 0) {
-                if(!$silent)
-                    displayNotificationWithArtwork($w, 'Added show ' . escapeQuery($show->name), $show_artwork_path, 'Refresh Library');
-            }
+            if(!$silent)
+                displayNotificationWithArtwork($w, 'Added show ' . escapeQuery($show->name), $show_artwork_path, 'Refresh Library');
         }
         else {
 
@@ -1920,10 +1911,8 @@ function refreshLibrary($w, $silent = false) {
 
                     return;
                 }
-                if (getenv('reduce_notifications') == 0) {
-                    if(!$silent)
-                        displayNotificationWithArtwork($w, 'Updated show ' . escapeQuery($show->name), getShowArtwork($w, $show->uri, true, false, $use_artworks), 'Refresh Library');
-                }
+                if(!$silent)
+                    displayNotificationWithArtwork($w, 'Updated show ' . escapeQuery($show->name), getShowArtwork($w, $show->uri, true, false, $use_artworks), 'Refresh Library');
             }
             else {
                 continue;
@@ -1960,10 +1949,8 @@ function refreshLibrary($w, $silent = false) {
                 $stmtDelete = $db->prepare($deleteFromEpisodes);
                 $stmtDelete->bindValue(':uri', $shows_in_db[0]);
                 $stmtDelete->execute();
-                if (getenv('reduce_notifications') == 0) {
-                    if(!$silent)
-                        displayNotificationWithArtwork($w, 'Removed show ' . $shows_in_db[1], getShowArtwork($w, $shows_in_db[0], false, false, $use_artworks), 'Refresh Library');
-                }
+                if(!$silent)
+                    displayNotificationWithArtwork($w, 'Removed show ' . $shows_in_db[1], getShowArtwork($w, $shows_in_db[0], false, false, $use_artworks), 'Refresh Library');
             }
         }
     }
@@ -1998,10 +1985,8 @@ function refreshLibrary($w, $silent = false) {
                 $stmtDelete->bindValue(':album_uri', $album_in_db[0]);
                 $stmtDelete->execute();
 
-                if (getenv('reduce_notifications') == 0) {
-                    if(!$silent)
-                        displayNotificationWithArtwork($w, 'Removed album ' . $album_in_db[1], getTrackOrAlbumArtwork($w, $album_in_db[0], false, false, false, $use_artworks), 'Refresh Library');
-                }
+                if(!$silent)
+                    displayNotificationWithArtwork($w, 'Removed album ' . $album_in_db[1], getTrackOrAlbumArtwork($w, $album_in_db[0], false, false, false, $use_artworks), 'Refresh Library');
             }
         }
     }
@@ -2081,10 +2066,8 @@ function refreshLibrary($w, $silent = false) {
                 return false;
             }
 
-            if (getenv('reduce_notifications') == 0) {
-                if(!$silent)
-                    displayNotificationWithArtwork($w, 'Added followed artist ' . escapeQuery($artist->name), $artist_artwork_path, 'Refresh Library');
-            }
+            if(!$silent)
+                displayNotificationWithArtwork($w, 'Added followed artist ' . escapeQuery($artist->name), $artist_artwork_path, 'Refresh Library');
         }
     }
 
@@ -2110,10 +2093,8 @@ function refreshLibrary($w, $silent = false) {
                 $stmtDelete->bindValue(':uri', $followed_artist_in_db[0]);
                 $stmtDelete->execute();
 
-                if (getenv('reduce_notifications') == 0) {
-                    if(!$silent)
-                        displayNotificationWithArtwork($w, 'Unfollowed artist ' . $followed_artist_in_db[1], getArtistArtwork($w, $followed_artist_in_db[0], $followed_artist_in_db[1], false, false, false, $use_artworks), 'Refresh Library');
-                }
+                if(!$silent)
+                    displayNotificationWithArtwork($w, 'Unfollowed artist ' . $followed_artist_in_db[1], getArtistArtwork($w, $followed_artist_in_db[0], $followed_artist_in_db[1], false, false, false, $use_artworks), 'Refresh Library');
             }
         }
     }
@@ -2274,10 +2255,8 @@ function refreshLibrary($w, $silent = false) {
         $message = 'No change';
     }
 
-    if (getenv('reduce_notifications') == 0) {
-        if(!$silent)
-            displayNotificationWithArtwork($w, $message . ' - took ' . beautifyTime($elapsed_time, true), './images/update.png', 'Library refreshed');
-    }
+    if(!$silent)
+        displayNotificationWithArtwork($w, $message . ' - took ' . beautifyTime($elapsed_time, true), './images/update.png', 'Library refreshed');
 
     if (file_exists($w->data() . '/library_old.db')) {
         deleteTheFile($w->data() . '/library_old.db');
