@@ -5549,7 +5549,7 @@ function displayLyricsForCurrentTrack($w)
  *
  * @param mixed $w
  */
-function downloadArtworks($w)
+function downloadArtworks($w, $silent = false)
 {
 
     // Read settings from JSON
@@ -5562,7 +5562,8 @@ function downloadArtworks($w)
         return;
     }
     if (!$w->internet()) {
-        displayNotificationWithArtwork($w, 'Download Artworks,
+        if(!$silent)
+            displayNotificationWithArtwork($w, 'Download Artworks,
     No internet connection', './images/warning.png');
 
         return;
@@ -5622,7 +5623,8 @@ function downloadArtworks($w)
 
             if ($nb_artworks_total != 0) {
                 if(getenv('reduce_notifications') == 0) {
-                    displayNotificationWithArtwork($w, 'Start downloading '.$nb_artworks_total.' artworks', './images/artworks.png', 'Artworks');
+                    if(!$silent)
+                        displayNotificationWithArtwork($w, 'Start downloading '.$nb_artworks_total.' artworks', './images/artworks.png', 'Artworks');
                 }
 
                 // artists
@@ -5756,7 +5758,8 @@ function downloadArtworks($w)
     if ($nb_artworks_total != 0) {
         if(getenv('reduce_notifications') == 0) {
             $elapsed_time = time() - $words[3];
-            displayNotificationWithArtwork($w, 'All artworks have been downloaded ('.$nb_artworks_total.' artworks) - took '.beautifyTime($elapsed_time, true), './images/artworks.png', 'Artworks');
+            if(!$silent)
+                displayNotificationWithArtwork($w, 'All artworks have been downloaded ('.$nb_artworks_total.' artworks) - took '.beautifyTime($elapsed_time, true), './images/artworks.png', 'Artworks');
         }
         stathat_ez_count('AlfredSpotifyMiniPlayer', 'artworks', $nb_artworks_total);
     }

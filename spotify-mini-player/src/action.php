@@ -99,7 +99,7 @@ if($oauth_access_token != '' && $now_playing_notifications == true) {
 
 // make sure spotify is running
 if ($output_application == 'APPLESCRIPT') {
-    if($oauth_access_token != '' && $other_action != 'update_library' && $other_action != 'refresh_library' && $type != 'DOWNLOAD_ARTWORKS') {
+    if($oauth_access_token != '' && $other_action != 'update_library' && $other_action != 'refresh_library' && $type != 'DOWNLOAD_ARTWORKS' && $type != 'DOWNLOAD_ARTWORKS_SILENT') {
         exec('./src/is_spotify_running.ksh 2>&1', $retArr, $retVal);
         if ($retArr[0] != 0) {
             exec('open -a "Spotify"');
@@ -338,6 +338,14 @@ if ($type == 'TRACK' && $other_settings == '' &&
         if (downloadArtworks($w) == false) {
             displayNotificationWithArtwork($w, 'Error when downloading artworks', './images/warning.png', 'Error!');
 
+            return;
+        }
+    }
+
+    return;
+} elseif ($type == 'DOWNLOAD_ARTWORKS_SILENT') {
+    if ($use_artworks) {
+        if (downloadArtworks($w, true) == false) {
             return;
         }
     }
