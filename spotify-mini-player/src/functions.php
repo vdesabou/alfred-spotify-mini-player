@@ -2232,7 +2232,7 @@ function switchThemeColor($w,$theme_color)
         $hasError = true;
         logMsg('Error(switchThemeColor): (failed to load /tmp/SpotifyMiniPlayer.app.zip for '.$theme_color.')');
     }
-    $zip_command = 'unzip '  . $zip_file . ' -d ' . '\'./App/'.$theme_color.'/\'';
+    $zip_command = 'unzip -o '  . $zip_file . ' -d ' . '\'./App/'.$theme_color.'/\'';
     exec($zip_command);
 
     exec('open "'.'./App/'.$theme_color.'/Spotify Mini Player.app'.'"');
