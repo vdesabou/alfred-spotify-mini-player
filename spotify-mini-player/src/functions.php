@@ -1879,7 +1879,6 @@ function getSpotifyWebAPI($w, $old_api = null)
  * @param mixed $w
  * @param mixed $method
  * @param mixed $params
- * @param bool  $displayError (default: true)
  */
 function invokeMopidyMethod($w, $method, $params, $displayError = true)
 {
@@ -7579,6 +7578,7 @@ function deleteTheFile($filename)
 
     if (is_file($filename)) {
         logMsg('Error(deleteTheFile): file was locked (or permissions error) '.realpath($filename).' permissions: '.decoct(fileperms(realpath($filename)) & 0777));
+        $w = new Workflows('com.vdesabou.spotify.mini.player');
         displayNotificationWithArtwork($w, 'Problem deleting '.$filename, './images/warning.png', 'Delete File');
     }
 }
