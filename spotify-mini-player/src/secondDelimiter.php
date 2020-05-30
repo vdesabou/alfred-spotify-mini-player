@@ -93,10 +93,10 @@ function secondDelimiterShows($w, $query, $settings, $db, $update_in_progress) {
                 /* other_settings*/, 'play_episode'
                 /* other_action */, $episodes[7] /* artist_name */, $episodes[5] /* track_name */, $episodes[6] /* album_name */, $episodes[9] /* track_artwork_path */, $episodes[10] /* artist_artwork_path */, $episodes[11] /* album_artwork_path */, ''
                 /* playlist_name */, '', /* playlist_artwork_path */
-                )), $fully_played . $episodes[1], array($episode->episode_type . 'Progress: ' . floatToCircles(intval($episodes[17]) / intval($episodes[11])) . ' Duration ' . beautifyTime($episodes[11] / 1000) . ' ● Release date: ' . $episodes[13] . ' ● Languages: ' . $episodes[8], 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), $episodes[6], 'yes', null, '');
+                )), $fully_played . $episodes[1], array('Progress: ' . floatToCircles(intval($episodes[17]) / intval($episodes[11])) . ' Duration ' . beautifyTime($episodes[11] / 1000) . ' ● Release date: ' . $episodes[13] . ' ● Languages: ' . $episodes[8], 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), $episodes[6], 'yes', null, '');
             }
             else {
-                $w->result(null, '', '🚫 ' . $fully_played . $episodes[1], $episode->episode_type . 'Progress: ' . floatToCircles(intval($episodes[17]) / intval($episodes[11])) . ' Duration ' . beautifyTime($episodes[11] / 1000) . ' ● Release date: ' . $episodes[13] . ' ● Languages: ' . $episodes[8], $episodes[6], 'no', null, '');
+                $w->result(null, '', '🚫 ' . $fully_played . $episodes[1], 'Progress: ' . floatToCircles(intval($episodes[17]) / intval($episodes[11])) . ' Duration ' . beautifyTime($episodes[11] / 1000) . ' ● Release date: ' . $episodes[13] . ' ● Languages: ' . $episodes[8], $episodes[6], 'no', null, '');
             }
         }
     }
@@ -757,26 +757,10 @@ function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progres
  */
 function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
-    $kind = $words[0];
     $search = $words[2];
 
-    $all_playlists = $settings->all_playlists;
-    $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
     $radio_number_tracks = $settings->radio_number_tracks;
-    $now_playing_notifications = $settings->now_playing_notifications;
-    $max_results = $settings->max_results;
-    $alfred_playlist_uri = $settings->alfred_playlist_uri;
-    $alfred_playlist_name = $settings->alfred_playlist_name;
     $country_code = $settings->country_code;
-    $last_check_update_time = $settings->last_check_update_time;
-    $oauth_client_id = $settings->oauth_client_id;
-    $oauth_client_secret = $settings->oauth_client_secret;
-    $oauth_redirect_uri = $settings->oauth_redirect_uri;
-    $oauth_access_token = $settings->oauth_access_token;
-    $oauth_expires = $settings->oauth_expires;
-    $oauth_refresh_token = $settings->oauth_refresh_token;
-    $display_name = $settings->display_name;
-    $userid = $settings->userid;
     $use_artworks = $settings->use_artworks;
 
     if (substr_count($query, '@') == 1) {
@@ -825,7 +809,7 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress) 
                     $w->result(null, serialize(array(''
                     /*track_uri*/, ''
                     /* album_uri */, $artist_uri
-                    /* artist_uri */, ''
+                    /* artist_uris */, ''
                     /* playlist_uri */, ''
                     /* spotify_command */, ''
                     /* query */, ''
@@ -1020,7 +1004,7 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress) 
             $track_artwork = getTrackOrAlbumArtwork($w, $track->uri, false, false, false, $use_artworks);
             if (isset($track->is_playable) && $track->is_playable) {
                 $noresult = false;
-                if (mb_strlen($search) < 2 || strpos(strtolower($artist->name), strtolower($search)) !== false || strpos(strtolower($track->name), strtolower($search)) !== false || strpos(strtolower($album->name), strtolower($search)) !== false) {
+                if (mb_strlen($search) < 2 || strpos(strtolower($artist->name), strtolower($search)) !== false || strpos(strtolower($track->name), strtolower($search)) !== false) {
                     $w->result(null, serialize(array($track->uri
                     /*track_uri*/, $album_uri
                     /* album_uri */, $artist_uri
@@ -1041,7 +1025,7 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress) 
                 }
             }
             else {
-                if (mb_strlen($search) < 2 || strpos(strtolower($artist->name), strtolower($search)) !== false || strpos(strtolower($track->name), strtolower($search)) !== false || strpos(strtolower($album->name), strtolower($search)) !== false) {
+                if (mb_strlen($search) < 2 || strpos(strtolower($artist->name), strtolower($search)) !== false || strpos(strtolower($track->name), strtolower($search)) !== false) {
                     $w->result(null, '', '🚫 ' . escapeQuery($artist->name) . ' ● ' . escapeQuery($track->name), array(beautifyTime($track->duration_ms / 1000) . ' ● ' . $album_name, 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), $track_artwork, 'no', null, '');
                 }
             }
