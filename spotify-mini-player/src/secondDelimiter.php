@@ -727,9 +727,7 @@ function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progres
 
         if ($theplaylisturi == $alfred_playlist_uri) {
             if ($update_in_progress == false) {
-                if (strtolower($r[3]) != strtolower('Starred')) {
-                    $w->result(null, '', 'Clear your Alfred Playlist', array('This will remove all the tracks in your current Alfred Playlist', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/uncheck.png', 'no', null, 'Alfred Playlist▹Confirm Clear Alfred Playlist▹');
-                }
+                $w->result(null, '', 'Clear your Alfred Playlist', array('This will remove all the tracks in your current Alfred Playlist', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/uncheck.png', 'no', null, 'Alfred Playlist▹Confirm Clear Alfred Playlist▹');
             }
         }
 
@@ -1516,26 +1514,9 @@ function secondDelimiterYourTopArtists($w, $query, $settings, $db, $update_in_pr
  */
 function secondDelimiterYourTopTracks($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
-    $kind = $words[0];
     $time_range = $words[2];
 
-    $all_playlists = $settings->all_playlists;
-    $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
-    $radio_number_tracks = $settings->radio_number_tracks;
-    $now_playing_notifications = $settings->now_playing_notifications;
     $max_results = $settings->max_results;
-    $alfred_playlist_uri = $settings->alfred_playlist_uri;
-    $alfred_playlist_name = $settings->alfred_playlist_name;
-    $country_code = $settings->country_code;
-    $last_check_update_time = $settings->last_check_update_time;
-    $oauth_client_id = $settings->oauth_client_id;
-    $oauth_client_secret = $settings->oauth_client_secret;
-    $oauth_redirect_uri = $settings->oauth_redirect_uri;
-    $oauth_access_token = $settings->oauth_access_token;
-    $oauth_expires = $settings->oauth_expires;
-    $oauth_refresh_token = $settings->oauth_refresh_token;
-    $display_name = $settings->display_name;
-    $userid = $settings->userid;
     $use_artworks = $settings->use_artworks;
 
     try {
@@ -1556,7 +1537,7 @@ function secondDelimiterYourTopTracks($w, $query, $settings, $db, $update_in_pro
             $w->result(null, serialize(array($track->uri
             /*track_uri*/, $album->uri
             /* album_uri */, $artist->uri
-            /* artist_uri */, $theplaylisturi
+            /* artist_uri */, ''
             /* playlist_uri */, ''
             /* spotify_command */, ''
             /* query */, ''
@@ -1567,7 +1548,6 @@ function secondDelimiterYourTopTracks($w, $query, $settings, $db, $update_in_pro
             /* album_artwork_path */, ''
             /* playlist_name */, '', /* playlist_artwork_path */
             )), escapeQuery($artist->name) . ' ● ' . escapeQuery($track->name), array(beautifyTime($track->duration_ms / 1000) . ' ● ' . escapeQuery($album->name), 'alt' => 'Play album ' . escapeQuery($album->name) . ' in Spotify', 'cmd' => 'Play artist ' . escapeQuery($artist->name) . ' in Spotify', 'fn' => 'Add track ' . escapeQuery($track->name) . ' to ...', 'shift' => 'Add album ' . escapeQuery($album->name) . ' to ...', 'ctrl' => 'Search artist ' . escapeQuery($artist->name) . ' online',), $track_artwork_path, 'yes', null, '');
-            ++$nb_results;
         }
 
         if ($noresult) {
@@ -3132,25 +3112,8 @@ function secondDelimiterBrowse($w, $query, $settings, $db, $update_in_progress) 
  */
 function secondDelimiterPreview($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
-    $kind = $words[0];
 
-    $all_playlists = $settings->all_playlists;
-    $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
-    $radio_number_tracks = $settings->radio_number_tracks;
-    $now_playing_notifications = $settings->now_playing_notifications;
-    $max_results = $settings->max_results;
-    $alfred_playlist_uri = $settings->alfred_playlist_uri;
-    $alfred_playlist_name = $settings->alfred_playlist_name;
     $country_code = $settings->country_code;
-    $last_check_update_time = $settings->last_check_update_time;
-    $oauth_client_id = $settings->oauth_client_id;
-    $oauth_client_secret = $settings->oauth_client_secret;
-    $oauth_redirect_uri = $settings->oauth_redirect_uri;
-    $oauth_access_token = $settings->oauth_access_token;
-    $oauth_expires = $settings->oauth_expires;
-    $oauth_refresh_token = $settings->oauth_refresh_token;
-    $display_name = $settings->display_name;
-    $userid = $settings->userid;
     $use_artworks = $settings->use_artworks;
     $is_display_rating = $settings->is_display_rating;
     $output_application = $settings->output_application;
@@ -3191,7 +3154,7 @@ function secondDelimiterPreview($w, $query, $settings, $db, $update_in_progress)
             /* artist_artwork_path */, ''
             /* album_artwork_path */, ''
             /* playlist_name */, '', /* playlist_artwork_path */
-            )), '👁Previewing ' . $added . escapeQuery($track->name) . ' ● ' . escapeQuery($track->artists[0]
+            )), '👁Previewing ' . escapeQuery($track->name) . ' ● ' . escapeQuery($track->artists[0]
                 ->name) . ' ● ' . escapeQuery($track
                 ->album
                 ->name) . ' ● ' . $popularity . ' (' . beautifyTime($track->duration_ms / 1000) . ')', array($subtitle, 'alt' => 'Play album ' . escapeQuery($track
