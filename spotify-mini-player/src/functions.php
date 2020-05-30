@@ -141,7 +141,7 @@ function createAndPlayLikedSongsPlaylist($w)
             }
             addPlaylistToPlayQueue($w, $json->uri, $json->name);
             $playlist_artwork_path = getPlaylistArtwork($w, $json->uri, true, false, $use_artworks);
-            displayNotificationWithArtwork($w, '🔈 Liked Songs ', $playlist_artwork_path, 'Play Liked Songs');
+            displayNotificationWithArtwork($w, '🔈♥️ Liked Songs ', $playlist_artwork_path, 'Play Liked Songs');
 
             // do not add the playlist to the library
             unfollowThePlaylist($w, $json->uri);

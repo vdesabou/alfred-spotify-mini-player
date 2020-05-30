@@ -11645,7 +11645,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 		<key>previous_track_for_real</key>
 		<string>1</string>
 		<key>reduce_notifications</key>
-		<string>1</string>
+		<string>0</string>
 		<key>settings_volume_max</key>
 		<string>100</string>
 		<key>settings_volume_mid</key>
