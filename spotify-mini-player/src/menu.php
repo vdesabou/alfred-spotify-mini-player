@@ -1230,6 +1230,23 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
         /* playlist_name */, '', /* playlist_artwork_path */
         )), 'Do a web search for current track or artist on Youtube, Facebook, etc.. ', array('You will be prompted to choose the web service you want to use', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/youtube.png', 'yes', null, '');
 
+        $w->result(null, serialize(array(''
+        /*track_uri*/, ''
+        /* album_uri */, ''
+        /* artist_uri */, ''
+        /* playlist_uri */, ''
+        /* spotify_command */, ''
+        /* query */, ''
+        /* other_settings*/, 'play_liked_songs'
+        /* other_action */, ''
+        /* artist_name */, ''
+        /* track_name */, ''
+        /* album_name */, ''
+        /* track_artwork_path */, ''
+        /* artist_artwork_path */, ''
+        /* album_artwork_path */, '' /* playlist_name */, '', /* playlist_artwork_path */
+        )), '♥️ Play your Liked Songs', 'This will play your liked songs', './images/star.png', 'yes', null, '');
+
         if ($update_in_progress == false) {
             $w->result('SpotifyMiniPlayer_' . 'refresh_library', serialize(array(''
             /*track_uri*/, ''
@@ -1731,6 +1748,22 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
             /* album_artwork_path */, ''
             /* playlist_name */, '', /* playlist_artwork_path */
             )), 'Play current album', 'Play the current album', './images/albums.png', 'yes', null, '');
+            $w->result(null, serialize(array(''
+            /*track_uri*/, ''
+            /* album_uri */, ''
+            /* artist_uri */, ''
+            /* playlist_uri */, ''
+            /* spotify_command */, ''
+            /* query */, ''
+            /* other_settings*/, 'play_liked_songs'
+            /* other_action */, ''
+            /* artist_name */, ''
+            /* track_name */, ''
+            /* album_name */, ''
+            /* track_artwork_path */, ''
+            /* artist_artwork_path */, ''
+            /* album_artwork_path */, '' /* playlist_name */, '', /* playlist_artwork_path */
+            )), '♥️ Play your Liked Songs', 'This will play your liked songs', './images/star.png', 'yes', null, '');
         }
         if (strpos(strtolower('pause'), strtolower($query)) !== false) {
             $w->result(null, serialize(array(''
@@ -1886,6 +1919,24 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 /* playlist_name */, '', /* playlist_artwork_path */
                 )), 'Refresh your library', array('Do this when your library has changed (outside the scope of this workflow)', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/update.png', 'yes', null, '');
             }
+        }
+        if (strpos(strtolower('like'), strtolower($query)) !== false) {
+            $w->result(null, serialize(array(''
+            /*track_uri*/, ''
+            /* album_uri */, ''
+            /* artist_uri */, ''
+            /* playlist_uri */, ''
+            /* spotify_command */, ''
+            /* query */, ''
+            /* other_settings*/, 'play_liked_songs'
+            /* other_action */, ''
+            /* artist_name */, ''
+            /* track_name */, ''
+            /* album_name */, ''
+            /* track_artwork_path */, ''
+            /* artist_artwork_path */, ''
+            /* album_artwork_path */, '' /* playlist_name */, '', /* playlist_artwork_path */
+            )), '♥️ Play your Liked Songs', 'This will play your liked songs', './images/star.png', 'yes', null, '');
         }
         if (strpos(strtolower('update'), strtolower($query)) !== false) {
             if ($update_in_progress == false) {

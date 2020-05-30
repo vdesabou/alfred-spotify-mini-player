@@ -20,6 +20,148 @@ function getAlfredName()
 }
 
 /**
+ * createAndPlayLikedSongsPlaylist function.
+ *
+ * @param mixed $w
+ */
+function createAndPlayLikedSongsPlaylist($w)
+{
+
+    // Read settings from JSON
+
+    $settings = getSettings($w);
+    $country_code = $settings->country_code;
+    $use_artworks = $settings->use_artworks;
+    $output_application = $settings->output_application;
+
+    $savedMySavedTracks = array();
+    $offsetGetMySavedTracks = 0;
+    $limitGetMySavedTracks = 50;
+    do {
+        $retry = true;
+        $nb_retry = 0;
+        while ($retry) {
+            try {
+                // get api
+                $api = getSpotifyWebAPI($w);
+                $userMySavedTracks = $api->getMySavedTracks(array(
+                    'limit' => $limitGetMySavedTracks,
+                    'offset' => $offsetGetMySavedTracks,
+                    'market' => $country_code,
+                ));
+                $retry = false;
+            }
+            catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
+                logMsg('Error(createAndPlayLikedSongsPlaylist): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
+
+                if ($e->getCode() == 429) { // 429 is Too Many Requests
+                    $lastResponse = $api->getRequest()
+                        ->getLastResponse();
+                    if (isset($lastResponse['headers']['Retry-After'])) {
+                        $retryAfter = $lastResponse['headers']['Retry-After'];
+                    }
+                    else {
+                        $retryAfter = 1;
+                    }
+                    sleep($retryAfter);
+                }
+                else if ($e->getCode() == 404) {
+                    // skip
+                    break;
+                }
+                else if (strpos(strtolower($e->getMessage()) , 'ssl') !== false) {
+                    // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
+                    // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
+                    // retry any SSL error
+                    ++$nb_retry;
+                }
+                else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 404) {
+                    // retry
+                    if ($nb_retry > 2) {
+                        handleSpotifyWebAPIException($w, $e);
+                        $retry = false;
+
+                        return false;
+                    }
+                    ++$nb_retry;
+                    sleep(5);
+                }
+                else {
+                    handleSpotifyWebAPIException($w, $e);
+                    $retry = false;
+
+                    return false;
+                }
+            }
+        }
+
+        foreach ($userMySavedTracks->items as $track) {
+            $savedMySavedTracks[] = $track->track;
+        }
+
+        $offsetGetMySavedTracks += $limitGetMySavedTracks;
+    }
+    while ($offsetGetMySavedTracks < $userMySavedTracks->total);
+
+    if (count($savedMySavedTracks) > 0) {
+        try {
+            $api = getSpotifyWebAPI($w);
+            $json = $api->createPlaylist(array(
+                    'name' => 'Liked Songs',
+                    'public' => false,
+                ));
+        } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+            logMsg('Error(createAndPlayLikedSongsPlaylist): createPlaylist (exception '.jTraceEx($e).')');
+            handleSpotifyWebAPIException($w, $e);
+
+            return false;
+        }
+
+        $newplaylisttracks = array();
+        foreach ($savedMySavedTracks as $track) {
+            $newplaylisttracks[] = $track->id;
+        }
+
+        $ret = addTracksToPlaylist($w, $newplaylisttracks, $json->uri, $json->name, false, false);
+        if (is_numeric($ret) && $ret > 0) {
+            sleep(2);
+
+            if ($output_application == 'MOPIDY') {
+                playUriWithMopidy($w, $json->uri);
+            } else if($output_application == 'APPLESCRIPT') {
+                exec("osascript -e 'tell application \"Spotify\" to play track \"$json->uri\"'");
+            } else {
+                $device_id = getSpotifyConnectCurrentDeviceId($w);
+                if($device_id != '') {
+                    playTrackSpotifyConnect($w, $device_id, '', $json->uri);
+                } else {
+                    displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+                    return;
+                }
+            }
+            addPlaylistToPlayQueue($w, $json->uri, $json->name);
+            $playlist_artwork_path = getPlaylistArtwork($w, $json->uri, true, false, $use_artworks);
+            displayNotificationWithArtwork($w, '🔈 Liked Songs ', $playlist_artwork_path, 'Play Liked Songs');
+
+            // do not add the playlist to the library
+            unfollowThePlaylist($w, $json->uri);
+
+            return;
+        } elseif (is_numeric($ret) && $ret == 0) {
+            displayNotificationWithArtwork($w, 'Playlist '.$json->name.' cannot be added', './images/warning.png', 'Error!');
+
+            return;
+        }
+    } else {
+        displayNotificationWithArtwork($w, 'Liked Songs were not found using Spotify API', './images/warning.png', 'Error!');
+
+        return false;
+    }
+
+    return true;
+}
+
+/**
  * getCurrentTrackinfo function.
  *
  * @param mixed $w

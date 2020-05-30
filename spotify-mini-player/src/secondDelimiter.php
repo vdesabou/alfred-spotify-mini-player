@@ -1317,26 +1317,27 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
 function secondDelimiterYourMusicTracks($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
     $kind = $words[0];
+    $thetrack = $words[2];
 
-    $all_playlists = $settings->all_playlists;
-    $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
-    $radio_number_tracks = $settings->radio_number_tracks;
-    $now_playing_notifications = $settings->now_playing_notifications;
     $max_results = $settings->max_results;
-    $alfred_playlist_uri = $settings->alfred_playlist_uri;
-    $alfred_playlist_name = $settings->alfred_playlist_name;
-    $country_code = $settings->country_code;
-    $last_check_update_time = $settings->last_check_update_time;
-    $oauth_client_id = $settings->oauth_client_id;
-    $oauth_client_secret = $settings->oauth_client_secret;
-    $oauth_redirect_uri = $settings->oauth_redirect_uri;
-    $oauth_access_token = $settings->oauth_access_token;
-    $oauth_expires = $settings->oauth_expires;
-    $oauth_refresh_token = $settings->oauth_refresh_token;
-    $display_name = $settings->display_name;
-    $userid = $settings->userid;
-
     $output_application = $settings->output_application;
+
+    $w->result(null, serialize(array(''
+    /*track_uri*/, ''
+    /* album_uri */, ''
+    /* artist_uri */, ''
+    /* playlist_uri */, ''
+    /* spotify_command */, ''
+    /* query */, ''
+    /* other_settings*/, 'play_liked_songs'
+    /* other_action */, ''
+    /* artist_name */, ''
+    /* track_name */, ''
+    /* album_name */, ''
+    /* track_artwork_path */, ''
+    /* artist_artwork_path */, ''
+    /* album_artwork_path */, '' /* playlist_name */, '', /* playlist_artwork_path */
+    )), '♥️ Play your Liked Songs', 'This will play your liked songs', './images/star.png', 'yes', null, '');
 
     // display tracks for Your Music
     $search = $words[2];

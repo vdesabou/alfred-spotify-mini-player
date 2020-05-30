@@ -1924,6 +1924,10 @@ if ($type == 'TRACK' && $other_settings == '' &&
         stathat_ez_count('AlfredSpotifyMiniPlayer', 'radio', 1);
 
         return;
+    } elseif ($other_action == 'play_liked_songs') {
+        createAndPlayLikedSongsPlaylist($w);
+
+        return;
     } elseif ($other_action == 'complete_collection_artist') {
         if (file_exists($w->data().'/update_library_in_progress')) {
             displayNotificationWithArtwork($w, 'Cannot modify library while update is in progress', './images/warning.png', 'Error!');
