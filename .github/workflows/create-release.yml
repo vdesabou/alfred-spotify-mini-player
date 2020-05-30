@@ -57,7 +57,7 @@ jobs:
           release_name: Version ${{ github.event.milestone.title }}
           body: |
             ${{ steps.read_release_file.outputs.content }}
-          draft: true
+          draft: false
           prerelease: false
       - name: Build project # This would actually build your project, using zip for an example artifact
         run: |
