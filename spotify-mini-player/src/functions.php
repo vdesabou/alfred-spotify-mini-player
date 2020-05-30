@@ -2215,6 +2215,8 @@ function switchThemeColor($w,$theme_color)
             'FAA5FC99-7909-45B6-9BF0-7601DBAADC4F' => 'youtube',
             'C323BECC-0183-4562-B817-65624E13B3F3' => 'share',
             'B8D706BB-D6E9-4AE3-B36B-ED6D4B34AD5F' => 'connect',
+            'B8AE86A5-8C3B-47D5-8510-48538F51DE48' => 'star',
+            '6D563DD8-49CE-4AB0-9584-49E0E509FEA4' => 'star',
             'icon' => 'icon',
         );
 
@@ -2293,6 +2295,7 @@ function switchThemeColor($w,$theme_color)
             'C5B9A789-80F3-41BA-9A46-C34DD4CDE050' => 'share',
             '15D6EBE2-6D82-4F2C-A4B3-5949424B4EF9' => 'youtube',
             '28180F27-0728-414D-88F3-76E99A58FA7D' => 'connect',
+            'A224C252-AECF-4633-9B48-F54F5BE2E2B9' => 'star',
         );
 
     foreach ($uuid_imgs as $key => $value) {

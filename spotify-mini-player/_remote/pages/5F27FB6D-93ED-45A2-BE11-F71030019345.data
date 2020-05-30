@@ -252,7 +252,23 @@
 			<key>itemuid</key>
 			<string>7E845898-5F98-4828-9736-F92D144EBA6D</string>
 		</dict>
-		<dict/>
+		<dict>
+			<key>actionconfig</key>
+			<dict>
+				<key>autoworkflowuid</key>
+				<true/>
+				<key>triggerid</key>
+				<string>com.vdesabou.miniplayer.playlikedsongs</string>
+			</dict>
+			<key>actionuid</key>
+			<string>remote.alfred.runworkflow</string>
+			<key>buttoniconid</key>
+			<string>A224C252-AECF-4633-9B48-F54F5BE2E2B9</string>
+			<key>buttonlabel</key>
+			<string>Play Liked Songs</string>
+			<key>itemuid</key>
+			<string>75477C3E-DF1F-495D-9C76-D95DFB63F116</string>
+		</dict>
 		<dict>
 			<key>actionconfig</key>
 			<dict>
