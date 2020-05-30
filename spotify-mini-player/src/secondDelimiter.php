@@ -1099,23 +1099,10 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
     $words = explode('▹', $query);
     $kind = $words[0];
 
-    $all_playlists = $settings->all_playlists;
     $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
-    $radio_number_tracks = $settings->radio_number_tracks;
-    $now_playing_notifications = $settings->now_playing_notifications;
     $max_results = $settings->max_results;
-    $alfred_playlist_uri = $settings->alfred_playlist_uri;
     $alfred_playlist_name = $settings->alfred_playlist_name;
     $country_code = $settings->country_code;
-    $last_check_update_time = $settings->last_check_update_time;
-    $oauth_client_id = $settings->oauth_client_id;
-    $oauth_client_secret = $settings->oauth_client_secret;
-    $oauth_redirect_uri = $settings->oauth_redirect_uri;
-    $oauth_access_token = $settings->oauth_access_token;
-    $oauth_expires = $settings->oauth_expires;
-    $oauth_refresh_token = $settings->oauth_refresh_token;
-    $display_name = $settings->display_name;
-    $userid = $settings->userid;
     $is_public_playlists = $settings->is_public_playlists;
     $output_application = $settings->output_application;
     $use_artworks = $settings->use_artworks;
@@ -1187,7 +1174,7 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
         /* playlist_name */, $playlist_artwork_path
         /* playlist_artwork_path */, $alfred_playlist_name,
         /* alfred_playlist_name */
-        )), '🎵' . $theplaylistname . ' by ' . $owner_id . ' ● ' . $nb_tracks . ' tracks ● ' . beautifyTime($duration_playlist / 1000, true), array($subtitle, 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Add playlist ' . $theplaylistname . ' to your Alfred Playlist', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), $playlist_artwork_path, 'yes', null, '');
+        )), '🎵' . $theplaylistname . ' ● ' . $nb_tracks . ' tracks ● ' . beautifyTime($duration_playlist / 1000, true), array($subtitle, 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Add playlist ' . $theplaylistname . ' to your Alfred Playlist', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), $playlist_artwork_path, 'yes', null, '');
     }
 
     if ($output_application != 'MOPIDY') {
