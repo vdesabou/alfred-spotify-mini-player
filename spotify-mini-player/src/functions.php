@@ -5641,10 +5641,23 @@ function displayNotificationForCurrentTrack($w)
             }
             if (isset($results[0]) && $results[0] != '') {
                 $popularity = '';
-                if($is_display_rating) {
-                    $popularity = floatToStars($results[6]/100);
+                if ($is_display_rating) {
+                    $stars = floatToStars($results[6] / 100);
+                    $popularity = ' '.$stars;
                 }
-                displayNotificationWithArtwork($w, '🔈 '.escapeQuery($results[0]).' by '.escapeQuery($results[1]).' in album '.escapeQuery($results[2]), $album_artwork_path, 'Now Playing '.$popularity.' ('.beautifyTime($results[5] / 1000).')', true);
+
+                $title = escapeQuery($results[0]);
+                $artist = escapeQuery($results[1]);
+                $album = escapeQuery($results[2]);
+                $time = beautifyTime($results[5] / 1000);
+
+                displayNotificationWithArtwork(
+                    $w,
+                    $artist.' — '.$album,
+                    $album_artwork_path,
+                    $title.$popularity.' ('.$time.')',
+                    true
+                );
             }
         }
     }
