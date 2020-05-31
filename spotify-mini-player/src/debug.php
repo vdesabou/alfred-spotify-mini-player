@@ -164,15 +164,6 @@ $w->result(null, serialize(array(
                         '', /* playlist_artwork_path */
 )), 'Send an email to the author with a link to generated spot_mini_debug.zip file', 'This will open your default mail application, with all needed information for troubleshooting.', './images/mail.png', 'yes', null, '');
 
-$w->result(null, '', 'Quick access to workflow folders:',array(
-                     '',
-                    'alt' => 'Not Available',
-                    'cmd' => 'Not Available',
-                    'shift' => 'Not Available',
-                    'fn' => 'Not Available',
-                    'ctrl' => 'Not Available',
-                ), './images/info.png', 'no', null, '');
-
 $w->result(null, serialize(array(
     '' /*track_uri*/,
     '' /* album_uri */,
