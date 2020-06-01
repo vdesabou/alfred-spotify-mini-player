@@ -2356,7 +2356,7 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
     /* artist_artwork_path */, ''
     /* album_artwork_path */, ''
     /* playlist_name */, '', /* playlist_artwork_path */
-    )), 'Change search order results', array('Choose order of search results between playlist, artist, track and album', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/search.png', 'yes', null, '');
+    )), 'Change search order results', array('Choose order of search results between playlist, artist, track, album, show and episode', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/search.png', 'yes', null, '');
 
     $w->result(null, '', 'Check for workflow update', array('Last checked: ' . beautifyTime(time() - $last_check_update_time, true) . ' ago (note this is automatically done otherwise once per day)', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/check_update.png', 'no', null, 'Check for update...' . '▹');
 
