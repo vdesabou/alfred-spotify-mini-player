@@ -275,25 +275,7 @@ function firstDelimiterArtists($w, $query, $settings, $db, $update_in_progress) 
  */
 function firstDelimiterShows($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
-    $kind = $words[0];
-
-    $all_playlists = $settings->all_playlists;
-    $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
-    $radio_number_tracks = $settings->radio_number_tracks;
-    $now_playing_notifications = $settings->now_playing_notifications;
     $max_results = $settings->max_results;
-    $alfred_playlist_uri = $settings->alfred_playlist_uri;
-    $alfred_playlist_name = $settings->alfred_playlist_name;
-    $country_code = $settings->country_code;
-    $last_check_update_time = $settings->last_check_update_time;
-    $oauth_client_id = $settings->oauth_client_id;
-    $oauth_client_secret = $settings->oauth_client_secret;
-    $oauth_redirect_uri = $settings->oauth_redirect_uri;
-    $oauth_access_token = $settings->oauth_access_token;
-    $oauth_expires = $settings->oauth_expires;
-    $oauth_refresh_token = $settings->oauth_refresh_token;
-    $display_name = $settings->display_name;
-    $userid = $settings->userid;
     $output_application = $settings->output_application;
 
     // Search shows
@@ -307,7 +289,7 @@ function firstDelimiterShows($w, $query, $settings, $db, $update_in_progress) {
         else {
             $getShows = 'select * from shows where name like :query limit ' . $max_results;
             $stmt = $db->prepare($getShows);
-            $stmt->bindValue(':query', '%' . $artist . '%');
+            $stmt->bindValue(':query', '%' . $show . '%');
         }
 
         $tracks = $stmt->execute();
@@ -462,7 +444,6 @@ function firstDelimiterAlbums($w, $query, $settings, $db, $update_in_progress) {
  */
 function firstDelimiterFeaturedPlaylist($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
-    $kind = $words[0];
     $search = $words[1];
 
     $country_code = $settings->country_code;
@@ -500,24 +481,10 @@ function firstDelimiterFeaturedPlaylist($w, $query, $settings, $db, $update_in_p
 function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
     $kind = $words[0];
+    $search = $words[1];
 
-    $all_playlists = $settings->all_playlists;
-    $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
-    $radio_number_tracks = $settings->radio_number_tracks;
-    $now_playing_notifications = $settings->now_playing_notifications;
     $max_results = $settings->max_results;
-    $alfred_playlist_uri = $settings->alfred_playlist_uri;
-    $alfred_playlist_name = $settings->alfred_playlist_name;
     $country_code = $settings->country_code;
-    $last_check_update_time = $settings->last_check_update_time;
-    $oauth_client_id = $settings->oauth_client_id;
-    $oauth_client_secret = $settings->oauth_client_secret;
-    $oauth_redirect_uri = $settings->oauth_redirect_uri;
-    $oauth_access_token = $settings->oauth_access_token;
-    $oauth_expires = $settings->oauth_expires;
-    $oauth_refresh_token = $settings->oauth_refresh_token;
-    $display_name = $settings->display_name;
-    $userid = $settings->userid;
     $use_artworks = $settings->use_artworks;
     $search_order = $settings->search_order;
 
@@ -843,22 +810,9 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
     $input = $words[1];
 
     $all_playlists = $settings->all_playlists;
-    $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
     $radio_number_tracks = $settings->radio_number_tracks;
-    $now_playing_notifications = $settings->now_playing_notifications;
     $max_results = $settings->max_results;
-    $alfred_playlist_uri = $settings->alfred_playlist_uri;
-    $alfred_playlist_name = $settings->alfred_playlist_name;
     $country_code = $settings->country_code;
-    $last_check_update_time = $settings->last_check_update_time;
-    $oauth_client_id = $settings->oauth_client_id;
-    $oauth_client_secret = $settings->oauth_client_secret;
-    $oauth_redirect_uri = $settings->oauth_redirect_uri;
-    $oauth_access_token = $settings->oauth_access_token;
-    $oauth_expires = $settings->oauth_expires;
-    $oauth_refresh_token = $settings->oauth_refresh_token;
-    $display_name = $settings->display_name;
-    $userid = $settings->userid;
     $is_public_playlists = $settings->is_public_playlists;
     $output_application = $settings->output_application;
     $is_display_rating = $settings->is_display_rating;
@@ -903,7 +857,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                             $array_languages[] = $iso->languageByCode1($language);
                         }
                         $w->result(null, serialize(array($episode->uri
-                        /*track_uri*/, $show_uri
+                        /*track_uri*/, $episode->uri
                         /* album_uri */, ''
                         /* artist_uri */, ''
                         /* playlist_uri */, ''
@@ -911,7 +865,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                         /* query */, ''
                         /* other_settings*/, 'pause'
                         /* other_action */, ''
-                        /* artist_name */, escapeQuery($episode->name) /* track_name */, escapeQuery($show_name) /* album_name */, $show_artwork_path
+                        /* artist_name */, escapeQuery($episode->name) /* track_name */, '' /* album_name */, ''
                         /* track_artwork_path */, ''
                         /* artist_artwork_path */, ''
                         /* album_artwork_path */, ''
@@ -968,7 +922,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                             $array_languages[] = $iso->languageByCode1($language);
                         }
                         $w->result(null, serialize(array($episode->uri
-                        /*track_uri*/, $show_uri
+                        /*track_uri*/, $episode->uri
                         /* album_uri */, ''
                         /* artist_uri */, ''
                         /* playlist_uri */, ''
@@ -976,7 +930,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                         /* query */, ''
                         /* other_settings*/, 'play'
                         /* other_action */, ''
-                        /* artist_name */, escapeQuery($episode->name) /* track_name */, escapeQuery($show_name) /* album_name */, $show_artwork_path
+                        /* artist_name */, escapeQuery($episode->name) /* track_name */, '' /* album_name */, ''
                         /* track_artwork_path */, ''
                         /* artist_artwork_path */, ''
                         /* album_artwork_path */, ''
@@ -1028,41 +982,14 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                     $api = getSpotifyWebAPI($w);
 
                     $playback_info = $api->getMyCurrentPlaybackInfo(array('market' => $country_code, 'additional_types' => 'track,episode',));
-                    $track_name = $playback_info
-                        ->item->name;
-                    $artist_name = $playback_info
-                        ->item
-                        ->artists[0]->name;
-                    $album_name = $playback_info
-                        ->item
-                        ->album->name;
 
                     $currently_playing_type = $playback_info->currently_playing_type;
 
                     if ($currently_playing_type == 'episode') {
-                        // override
-                        $track_name = $current_track_info
-                            ->item->name;
-                        $artist_name = $current_track_info
-                            ->item
-                            ->show->publisher;
-                        $album_name = $current_track_info
-                            ->item
-                            ->show->name;
                         $isEpisode = true;
                     }
 
                     $is_playing = $playback_info->is_playing;
-                    if ($is_playing) {
-                        $state = 'playing';
-                    }
-                    else {
-                        $state = 'paused';
-                    }
-                    $track_uri = $playback_info
-                        ->item->uri;
-                    $length = ($playback_info
-                        ->item->duration_ms / 1000);
                     $popularity = $playback_info
                         ->item->popularity;
                     $progress_ms = $playback_info->progress_ms;
@@ -2389,25 +2316,6 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
  */
 function firstDelimiterCheckForUpdate($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
-    $kind = $words[0];
-
-    $all_playlists = $settings->all_playlists;
-    $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
-    $radio_number_tracks = $settings->radio_number_tracks;
-    $now_playing_notifications = $settings->now_playing_notifications;
-    $max_results = $settings->max_results;
-    $alfred_playlist_uri = $settings->alfred_playlist_uri;
-    $alfred_playlist_name = $settings->alfred_playlist_name;
-    $country_code = $settings->country_code;
-    $last_check_update_time = $settings->last_check_update_time;
-    $oauth_client_id = $settings->oauth_client_id;
-    $oauth_client_secret = $settings->oauth_client_secret;
-    $oauth_redirect_uri = $settings->oauth_redirect_uri;
-    $oauth_access_token = $settings->oauth_access_token;
-    $oauth_expires = $settings->oauth_expires;
-    $oauth_refresh_token = $settings->oauth_refresh_token;
-    $display_name = $settings->display_name;
-    $userid = $settings->userid;
 
     $check_results = checkForUpdate($w, 0);
     if ($check_results != null && is_array($check_results)) {
@@ -2454,26 +2362,8 @@ function firstDelimiterCheckForUpdate($w, $query, $settings, $db, $update_in_pro
  */
 function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
-    $kind = $words[0];
     $search = $words[1];
 
-    $all_playlists = $settings->all_playlists;
-    $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
-    $radio_number_tracks = $settings->radio_number_tracks;
-    $now_playing_notifications = $settings->now_playing_notifications;
-    $max_results = $settings->max_results;
-    $alfred_playlist_uri = $settings->alfred_playlist_uri;
-    $alfred_playlist_name = $settings->alfred_playlist_name;
-    $country_code = $settings->country_code;
-    $last_check_update_time = $settings->last_check_update_time;
-    $oauth_client_id = $settings->oauth_client_id;
-    $oauth_client_secret = $settings->oauth_client_secret;
-    $oauth_redirect_uri = $settings->oauth_redirect_uri;
-    $oauth_access_token = $settings->oauth_access_token;
-    $oauth_expires = $settings->oauth_expires;
-    $oauth_refresh_token = $settings->oauth_refresh_token;
-    $display_name = $settings->display_name;
-    $userid = $settings->userid;
     $output_application = $settings->output_application;
     $use_artworks = $settings->use_artworks;
 
@@ -2603,7 +2493,7 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
                     /* artist_artwork_path */, ''
                     /* album_artwork_path */, $playlist_name
                     /* playlist_name */, '', /* playlist_artwork_path */
-                    )), $added . escapeQuery($artist_name) . ' ● ' . escapeQuery($track_name), array($duration . ' ● ' . escapeQuery($album_name), 'alt' => 'Play album ' . escapeQuery($album_name) . ' in Spotify', 'cmd' => 'Play artist ' . escapeQuery($artist_name) . ' in Spotify', 'fn' => 'Add track ' . escapeQuery($track->name) . ' to ...', 'shift' => 'Add album ' . escapeQuery($album_name) . ' to ...', 'ctrl' => 'Search artist ' . escapeQuery($artist_name) . ' online',), $track_artwork, 'yes', null, '');
+                    )), $added . escapeQuery($artist_name) . ' ● ' . escapeQuery($track_name), array($duration . ' ● ' . escapeQuery($album_name), 'alt' => 'Play album ' . escapeQuery($album_name) . ' in Spotify', 'cmd' => 'Play artist ' . escapeQuery($artist_name) . ' in Spotify', 'fn' => 'Add track ' . escapeQuery($track_name) . ' to ...', 'shift' => 'Add album ' . escapeQuery($album_name) . ' to ...', 'ctrl' => 'Search artist ' . escapeQuery($artist_name) . ' online',), $track_artwork, 'yes', null, '');
                 }
             }
             $noresult = false;
@@ -2886,7 +2776,6 @@ function firstDelimiterYourRecentTracks($w, $query, $settings, $db, $update_in_p
                 /* album_artwork_path */, ''
                 /* playlist_name */, '', /* playlist_artwork_path */
                 )), escapeQuery($artist->name) . ' ● ' . escapeQuery($track->name), array(beautifyTime($track->duration_ms / 1000) . ' ● ' . time2str($item->played_at), 'alt' => 'Not Available', 'cmd' => 'Play artist ' . escapeQuery($artist->name) . ' in Spotify', 'fn' => 'Add track ' . escapeQuery($track->name) . ' to ...', 'shift' => 'Not Available', 'ctrl' => 'Search artist ' . escapeQuery($artist->name) . ' online',), $track_artwork_path, 'yes', null, '');
-                ++$nb_results;
             }
         }
 
