@@ -75,9 +75,9 @@ function createAndPlayLikedSongsPlaylist($w)
                     // retry any SSL error
                     ++$nb_retry;
                 }
-                else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 404) {
+                else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                     // retry
-                    if ($nb_retry > 2) {
+                    if ($nb_retry > 5) {
                         handleSpotifyWebAPIException($w, $e);
                         $retry = false;
 
@@ -743,10 +743,10 @@ function getEpisode($w, $episode_uri)
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
                 if(isset($lastResponse['headers']['Retry-After'])) {
-    $retryAfter = $lastResponse['headers']['Retry-After'];
-} else {
-    $retryAfter = 1;
-}
+                $retryAfter = $lastResponse['headers']['Retry-After'];
+                } else {
+                    $retryAfter = 1;
+                }
                 sleep($retryAfter);
             } else if ($e->getCode() == 404) {
                 // skip
@@ -756,10 +756,9 @@ function getEpisode($w, $episode_uri)
                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                 // retry any SSL error
                 ++$nb_retry;
-            } else if ($e->getCode() == 500
-                || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+            } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
-                if ($nb_retry > 2) {
+                if ($nb_retry > 5) {
                     handleSpotifyWebAPIException($w, $e);
                     $retry = false;
 
@@ -826,10 +825,9 @@ function getEpisode($w, $episode_uri)
                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                 // retry any SSL error
                 ++$nb_retry;
-            } else if ($e->getCode() == 500
-                || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+            } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
-                if ($nb_retry > 2) {
+                if ($nb_retry > 5) {
                     $retry = false;
 
                     return false;
@@ -881,10 +879,9 @@ function getEpisode($w, $episode_uri)
                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                 // retry any SSL error
                 ++$nb_retry;
-            } else if ($e->getCode() == 500
-                || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+            } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
-                if ($nb_retry > 2) {
+                if ($nb_retry > 5) {
                     handleSpotifyWebAPIException($w, $e);
                     $retry = false;
 
@@ -943,10 +940,9 @@ function getEpisode($w, $episode_uri)
                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                 // retry any SSL error
                 ++$nb_retry;
-            } else if ($e->getCode() == 500
-                || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+            } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
-                if ($nb_retry > 2) {
+                if ($nb_retry > 5) {
                     handleSpotifyWebAPIException($w, $e);
                     $retry = false;
 
@@ -998,10 +994,9 @@ function getEpisode($w, $episode_uri)
                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                 // retry any SSL error
                 ++$nb_retry;
-            } else if ($e->getCode() == 500
-                || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+            } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
-                if ($nb_retry > 2) {
+                if ($nb_retry > 5) {
                     handleSpotifyWebAPIException($w, $e);
                     $retry = false;
 
@@ -1075,10 +1070,9 @@ function getEpisode($w, $episode_uri)
                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                 // retry any SSL error
                 ++$nb_retry;
-            } else if ($e->getCode() == 500
-                || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+            } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
-                if ($nb_retry > 2) {
+                if ($nb_retry > 5) {
                     handleSpotifyWebAPIException($w, $e);
                     $retry = false;
 
@@ -1128,10 +1122,9 @@ function getEpisode($w, $episode_uri)
                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                 // retry any SSL error
                 ++$nb_retry;
-            } else if ($e->getCode() == 500
-                || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+            } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
-                if ($nb_retry > 2) {
+                if ($nb_retry > 5) {
                     handleSpotifyWebAPIException($w, $e);
                     $retry = false;
 
@@ -1181,10 +1174,9 @@ function addToQueueSpotifyConnect($w, $trackId, $device_id)
                // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                // retry any SSL error
                ++$nb_retry;
-           } else if ($e->getCode() == 500
-               || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+           } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                // retry
-               if ($nb_retry > 2) {
+               if ($nb_retry > 5) {
                    handleSpotifyWebAPIException($w, $e);
                    $retry = false;
 
@@ -1236,10 +1228,9 @@ function seekToBeginning($w)
                // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                // retry any SSL error
                ++$nb_retry;
-           } else if ($e->getCode() == 500
-               || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+           } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                // retry
-               if ($nb_retry > 2) {
+               if ($nb_retry > 5) {
                    handleSpotifyWebAPIException($w, $e);
                    $retry = false;
 
@@ -1289,10 +1280,9 @@ function seekToBeginning($w)
                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                 // retry any SSL error
                 ++$nb_retry;
-            } else if ($e->getCode() == 500
-                || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+            } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
-                if ($nb_retry > 2) {
+                if ($nb_retry > 5) {
                     handleSpotifyWebAPIException($w, $e);
                     $retry = false;
 
@@ -1357,10 +1347,9 @@ function seekToBeginning($w)
                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                 // retry any SSL error
                 ++$nb_retry;
-            } else if ($e->getCode() == 500
-                || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+            } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
-                if ($nb_retry > 2) {
+                if ($nb_retry > 5) {
                     handleSpotifyWebAPIException($w, $e);
                     $retry = false;
 
@@ -1410,10 +1399,9 @@ function seekToBeginning($w)
                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                 // retry any SSL error
                 ++$nb_retry;
-            } else if ($e->getCode() == 500
-                || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+            } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
-                if ($nb_retry > 2) {
+                if ($nb_retry > 5) {
                     handleSpotifyWebAPIException($w, $e);
                     $retry = false;
 
@@ -1463,10 +1451,9 @@ function seekToBeginning($w)
                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                 // retry any SSL error
                 ++$nb_retry;
-            } else if ($e->getCode() == 500
-                || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+            } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
-                if ($nb_retry > 2) {
+                if ($nb_retry > 5) {
                     handleSpotifyWebAPIException($w, $e);
                     $retry = false;
 
@@ -1564,10 +1551,9 @@ function seekToBeginning($w)
                     // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                     // retry any SSL error
                     ++$nb_retry;
-                } else if ($e->getCode() == 500
-                    || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+                } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                     // retry
-                    if ($nb_retry > 2) {
+                    if ($nb_retry > 5) {
                         handleSpotifyWebAPIException($w, $e);
                         $retry = false;
 
@@ -1624,10 +1610,9 @@ function seekToBeginning($w)
                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                 // retry any SSL error
                 ++$nb_retry;
-            } else if ($e->getCode() == 500
-                || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+            } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
-                if ($nb_retry > 2) {
+                if ($nb_retry > 5) {
                     handleSpotifyWebAPIException($w, $e);
                     $retry = false;
 
@@ -1722,10 +1707,9 @@ function isShuffleActive($print_output)
                 } else if ($e->getCode() == 404) {
                     // skip
                     break;
-                } else if ($e->getCode() == 500
-                    || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+                } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                     // retry
-                    if ($nb_retry > 2) {
+                    if ($nb_retry > 5) {
                         $retry = false;
 
                         return false;
@@ -2684,10 +2668,9 @@ function getCurrentTrackInfoWithMopidy($w, $displayError = true)
                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                 // retry any SSL error
                 ++$nb_retry;
-            } else if ($e->getCode() == 500
-                || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+            } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
-                if ($nb_retry > 2) {
+                if ($nb_retry > 5) {
                     $retry = false;
 
                     return 'connect_stopped';
@@ -5052,9 +5035,9 @@ function getNumberOfEpisodesForShow($w, $show_uri, $country_code)
                 // retry any SSL error
                 ++$nb_retry;
             }
-            else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 404) {
+            else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
-                if ($nb_retry > 2) {
+                if ($nb_retry > 5) {
                     handleSpotifyWebAPIException($w, $e);
                     $retry = false;
 
@@ -6611,10 +6594,9 @@ function getArtworkURL($w, $type, $id, $highRes = false)
                     // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                     // retry any SSL error
                     ++$nb_retry;
-                } else if ($e->getCode() == 500
-                    || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+                } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                     // retry
-                    if ($nb_retry > 2) {
+                    if ($nb_retry > 5) {
                         $retry = false;
 
                         return $url;
@@ -6684,10 +6666,9 @@ function getArtworkURL($w, $type, $id, $highRes = false)
                     // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                     // retry any SSL error
                     ++$nb_retry;
-                } else if ($e->getCode() == 500
-                    || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+                } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                     // retry
-                    if ($nb_retry > 2) {
+                    if ($nb_retry > 5) {
                         $retry = false;
 
                         return $url;
@@ -6779,10 +6760,9 @@ function getPlaylistArtworkURL($w, $playlist_uri)
                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                 // retry any SSL error
                 ++$nb_retry;
-            } else if ($e->getCode() == 500
-                || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+            } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
-                if ($nb_retry > 2) {
+                if ($nb_retry > 5) {
                     $retry = false;
 
                     return $url;
@@ -6859,10 +6839,9 @@ function getShowArtworkURL($w, $show_uri)
                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                 // retry any SSL error
                 ++$nb_retry;
-            } else if ($e->getCode() == 500
-                || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+            } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
-                if ($nb_retry > 2) {
+                if ($nb_retry > 5) {
                     $retry = false;
 
                     return $url;
@@ -6947,10 +6926,9 @@ function getEpisodeArtworkURL($w, $episode_uri)
                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                 // retry any SSL error
                 ++$nb_retry;
-            } else if ($e->getCode() == 500
-                || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+            } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
-                if ($nb_retry > 2) {
+                if ($nb_retry > 5) {
                     $retry = false;
 
                     return $url;
@@ -7027,10 +7005,9 @@ function getArtistArtworkURL($w, $artist_id)
                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                 // retry any SSL error
                 ++$nb_retry;
-            } else if ($e->getCode() == 500
-                || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202) {
+            } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
-                if ($nb_retry > 2) {
+                if ($nb_retry > 5) {
                     $retry = false;
 
                     return $url;
