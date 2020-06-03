@@ -7683,7 +7683,7 @@ function killUpdate($w)
         deleteTheFile($w->data().'/library_new.db');
     }
 
-    exec("kill -9 $(ps -efx | grep \"php\" | egrep \"update_|php -S localhost:15298|ADDTOPLAYLIST|UPDATE_|DOWNLOAD_ARTWORKS\" | grep -v grep | awk '{print $2}')");
+    exec("kill -9 $(ps -efx | grep \"php\" | egrep \"update_|refresh_library|php -S localhost:15298|ADDTOPLAYLIST|UPDATE_|DOWNLOAD_ARTWORKS\" | grep -v grep | awk '{print $2}')");
 
     displayNotificationWithArtwork($w, 'Update library was killed', './images/kill.png', 'Kill Update Library ');
 }
