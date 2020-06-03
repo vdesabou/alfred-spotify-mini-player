@@ -185,7 +185,7 @@ function createLibrary($w) {
                 }
                 else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                     // retry
-                    if ($nb_retry > 5) {
+                    if ($nb_retry > 3) {
                         handleSpotifyWebAPIException($w, $e);
                         $retry = false;
 
@@ -257,7 +257,7 @@ function createLibrary($w) {
                 }
                 else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                     // retry
-                    if ($nb_retry > 5) {
+                    if ($nb_retry > 3) {
                         handleSpotifyWebAPIException($w, $e);
                         $retry = false;
 
@@ -327,7 +327,7 @@ function createLibrary($w) {
                 }
                 else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                     // retry
-                    if ($nb_retry > 5) {
+                    if ($nb_retry > 3) {
                         handleSpotifyWebAPIException($w, $e);
                         $retry = false;
 
@@ -407,7 +407,7 @@ function createLibrary($w) {
                     }
                     else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                         // retry
-                        if ($nb_retry > 5) {
+                        if ($nb_retry > 3) {
                             handleSpotifyWebAPIException($w, $e);
                             $retry = false;
 
@@ -489,7 +489,7 @@ function createLibrary($w) {
                 }
                 else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                     // retry
-                    if ($nb_retry > 5) {
+                    if ($nb_retry > 3) {
                         handleSpotifyWebAPIException($w, $e);
                         $retry = false;
 
@@ -568,7 +568,7 @@ function createLibrary($w) {
                 }
                 else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                     // retry
-                    if ($nb_retry > 5) {
+                    if ($nb_retry > 3) {
                         handleSpotifyWebAPIException($w, $e);
                         $retry = false;
 
@@ -649,7 +649,7 @@ function createLibrary($w) {
                             }
                             else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                                 // retry
-                                if ($nb_retry > 5) {
+                                if ($nb_retry > 3) {
                                     handleSpotifyWebAPIException($w, $e);
                                     $retry = false;
 
@@ -747,6 +747,7 @@ function createLibrary($w) {
         $artworksToDownload = false;
     }
 
+    $skip_playlist = false;
     foreach ($savedListPlaylist as $playlist) {
         $duration_playlist = 0;
         $nb_track_playlist = 0;
@@ -762,17 +763,9 @@ function createLibrary($w) {
             $ownedbyuser = 0;
         }
 
-        try {
-            $api = getSpotifyWebAPI($w);
-        }
-        catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
-            logMsg('Error(getPlaylistTracks): playlist id ' . $playlist->id . ' (exception ' . jTraceEx($e) . ')');
-            handleSpotifyWebAPIException($w, $e);
-
-            return false;
-        }
         $offsetGetUserPlaylistTracks = 0;
         $limitGetUserPlaylistTracks = 100;
+
         do {
             $retry = true;
             $nb_retry = 0;
@@ -809,8 +802,10 @@ function createLibrary($w) {
                         }
                         sleep($retryAfter);
                     }
-                    else if ($e->getCode() == 404) {
+                    else if ($e->getCode() == 404 || $e->getCode() == 500) {
                         // skip
+                        logMsg('Error(getPlaylistTracks): skipping playlist '.$playlist->id.' due to error '.$e->getCode());
+                        $skip_playlist = true;
                         break;
                     }
                     else if (strpos(strtolower($e->getMessage()) , 'ssl') !== false) {
@@ -819,13 +814,13 @@ function createLibrary($w) {
                         // retry any SSL error
                         ++$nb_retry;
                     }
-                    else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
+                    else if ($e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                         // retry
-                        if ($nb_retry > 5) {
-                            handleSpotifyWebAPIException($w, $e);
-                            $retry = false;
-
-                            return false;
+                        if ($nb_retry > 3) {
+                            // skip
+                            logMsg('Error(getPlaylistTracks): skipping playlist '.$playlist->id.' due to error '.$e->getCode());
+                            $skip_playlist = true;
+                            break;
                         }
                         ++$nb_retry;
                         sleep(5);
@@ -837,6 +832,10 @@ function createLibrary($w) {
                         return false;
                     }
                 }
+            }
+
+            if($skip_playlist) {
+                break;
             }
 
             foreach ($userPlaylistTracks->items as $item) {
@@ -975,6 +974,11 @@ function createLibrary($w) {
             $offsetGetUserPlaylistTracks += $limitGetUserPlaylistTracks;
         }
         while ($offsetGetUserPlaylistTracks < $userPlaylistTracks->total);
+
+        if($skip_playlist) {
+            $skip_playlist = false;
+            break;
+        }
 
         try {
             $stmtPlaylist->bindValue(':uri', $playlist->uri);

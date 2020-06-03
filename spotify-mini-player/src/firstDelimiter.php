@@ -1495,7 +1495,7 @@ function firstDelimiterSpotifyConnect($w, $query, $settings, $db, $update_in_pro
                 }
                 else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                     // retry
-                    if ($nb_retry > 5) {
+                    if ($nb_retry > 3) {
                         $retry = false;
                         $w->result(null, 'help', 'Exception occurred', array('' . $e->getMessage(), 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/warning.png', 'no', null, '');
 

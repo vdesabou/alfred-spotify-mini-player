@@ -251,7 +251,7 @@ function refreshLibrary($w, $silent = false) {
                 }
                 else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                     // retry
-                    if ($nb_retry > 5) {
+                    if ($nb_retry > 3) {
                         handleSpotifyWebAPIException($w, $e);
                         $retry = false;
 
@@ -328,7 +328,7 @@ function refreshLibrary($w, $silent = false) {
                 }
                 else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                     // retry
-                    if ($nb_retry > 5) {
+                    if ($nb_retry > 3) {
                         handleSpotifyWebAPIException($w, $e);
                         $retry = false;
 
@@ -405,7 +405,7 @@ function refreshLibrary($w, $silent = false) {
                 }
                 else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                     // retry
-                    if ($nb_retry > 5) {
+                    if ($nb_retry > 3) {
                         handleSpotifyWebAPIException($w, $e);
                         $retry = false;
 
@@ -477,7 +477,7 @@ function refreshLibrary($w, $silent = false) {
                 }
                 else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                     // retry
-                    if ($nb_retry > 5) {
+                    if ($nb_retry > 3) {
                         handleSpotifyWebAPIException($w, $e);
                         $retry = false;
 
@@ -509,6 +509,7 @@ function refreshLibrary($w, $silent = false) {
     // consider Your Music as a playlist for progress bar
     ++$nb_playlist_total;
 
+    $skip_playlist = false;
     foreach ($savedListPlaylist as $playlist) {
         $tracks = $playlist->tracks;
         $owner = $playlist->owner;
@@ -576,8 +577,10 @@ function refreshLibrary($w, $silent = false) {
                             }
                             sleep($retryAfter);
                         }
-                        else if ($e->getCode() == 404) {
+                        else if ($e->getCode() == 404 || $e->getCode() == 500) {
                             // skip
+                            logMsg('Error(getPlaylistTracks): skipping playlist '.$playlist->id.' due to error '.$e->getCode());
+                            $skip_playlist = true;
                             break;
                         }
                         else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
@@ -586,13 +589,13 @@ function refreshLibrary($w, $silent = false) {
                             // retry any SSL error
                             ++$nb_retry;
                         }
-                        else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
+                        else if ($e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                             // retry
-                            if ($nb_retry > 5) {
-                                handleSpotifyWebAPIException($w, $e);
-                                $retry = false;
-
-                                return false;
+                            if ($nb_retry > 3) {
+                                // skip
+                                logMsg('Error(getPlaylistTracks): skipping playlist '.$playlist->id.' due to error '.$e->getCode());
+                                $skip_playlist = true;
+                                break;
                             }
                             ++$nb_retry;
                             sleep(5);
@@ -604,6 +607,9 @@ function refreshLibrary($w, $silent = false) {
                             return false;
                         }
                     }
+                }
+                if($skip_playlist) {
+                    break;
                 }
 
                 foreach ($userPlaylistTracks->items as $item) {
@@ -738,6 +744,11 @@ function refreshLibrary($w, $silent = false) {
             }
             while ($offsetGetUserPlaylistTracks < $userPlaylistTracks->total);
 
+            if($skip_playlist) {
+                $skip_playlist = false;
+                break;
+            }
+
             try {
                 $stmtPlaylist->bindValue(':uri', $playlist->uri);
                 $stmtPlaylist->bindValue(':name', escapeQuery($playlist->name));
@@ -859,8 +870,10 @@ function refreshLibrary($w, $silent = false) {
                                 }
                                 sleep($retryAfter);
                             }
-                            else if ($e->getCode() == 404) {
+                            else if ($e->getCode() == 404 || $e->getCode() == 500) {
                                 // skip
+                                logMsg('Error(getPlaylistTracks): skipping playlist '.$playlist->id.' due to error '.$e->getCode());
+                                $skip_playlist = true;
                                 break;
                             }
                             else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
@@ -869,13 +882,13 @@ function refreshLibrary($w, $silent = false) {
                                 // retry any SSL error
                                 ++$nb_retry;
                             }
-                            else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
+                            else if ($e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                                 // retry
-                                if ($nb_retry > 5) {
-                                    handleSpotifyWebAPIException($w, $e);
-                                    $retry = false;
-
-                                    return false;
+                                if ($nb_retry > 3) {
+                                    // skip
+                                    logMsg('Error(getPlaylistTracks): skipping playlist '.$playlist->id.' due to error '.$e->getCode());
+                                    $skip_playlist = true;
+                                    break;
                                 }
                                 ++$nb_retry;
                                 sleep(5);
@@ -887,6 +900,10 @@ function refreshLibrary($w, $silent = false) {
                                 return false;
                             }
                         }
+                    }
+
+                    if($skip_playlist) {
+                        break;
                     }
 
                     foreach ($userPlaylistTracks->items as $item) {
@@ -1022,6 +1039,10 @@ function refreshLibrary($w, $silent = false) {
                 }
                 while ($offsetGetUserPlaylistTracks < $userPlaylistTracks->total);
 
+                if($skip_playlist) {
+                    $skip_playlist = false;
+                    break;
+                }
                 try {
                     $stmtUpdatePlaylistsNbTracks->bindValue(':nb_tracks', $userPlaylistTracks->total);
                     $stmtUpdatePlaylistsNbTracks->bindValue(':nb_playable_tracks', $nb_track_playlist);
@@ -1172,7 +1193,7 @@ function refreshLibrary($w, $silent = false) {
                         }
                         else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                             // retry
-                            if ($nb_retry > 5) {
+                            if ($nb_retry > 3) {
                                 handleSpotifyWebAPIException($w, $e);
                                 $retry = false;
 
@@ -1236,7 +1257,7 @@ function refreshLibrary($w, $silent = false) {
             }
             else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
-                if ($nb_retry > 5) {
+                if ($nb_retry > 3) {
                     handleSpotifyWebAPIException($w, $e);
                     $retry = false;
 
@@ -1328,7 +1349,7 @@ function refreshLibrary($w, $silent = false) {
                     }
                     else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                         // retry
-                        if ($nb_retry > 5) {
+                        if ($nb_retry > 3) {
                             handleSpotifyWebAPIException($w, $e);
                             $retry = false;
 
@@ -1621,7 +1642,7 @@ function refreshLibrary($w, $silent = false) {
                         }
                         else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                             // retry
-                            if ($nb_retry > 5) {
+                            if ($nb_retry > 3) {
                                 handleSpotifyWebAPIException($w, $e);
                                 $retry = false;
 
@@ -1791,7 +1812,7 @@ function refreshLibrary($w, $silent = false) {
                             }
                             else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                                 // retry
-                                if ($nb_retry > 5) {
+                                if ($nb_retry > 3) {
                                     handleSpotifyWebAPIException($w, $e);
                                     $retry = false;
 

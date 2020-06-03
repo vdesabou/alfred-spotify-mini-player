@@ -77,7 +77,7 @@ function createAndPlayLikedSongsPlaylist($w)
                 }
                 else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                     // retry
-                    if ($nb_retry > 5) {
+                    if ($nb_retry > 3) {
                         handleSpotifyWebAPIException($w, $e);
                         $retry = false;
 
@@ -758,7 +758,7 @@ function getEpisode($w, $episode_uri)
                 ++$nb_retry;
             } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
-                if ($nb_retry > 5) {
+                if ($nb_retry > 3) {
                     handleSpotifyWebAPIException($w, $e);
                     $retry = false;
 
@@ -827,7 +827,7 @@ function getEpisode($w, $episode_uri)
                 ++$nb_retry;
             } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
-                if ($nb_retry > 5) {
+                if ($nb_retry > 3) {
                     $retry = false;
 
                     return false;
@@ -881,7 +881,7 @@ function getEpisode($w, $episode_uri)
                 ++$nb_retry;
             } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
-                if ($nb_retry > 5) {
+                if ($nb_retry > 3) {
                     handleSpotifyWebAPIException($w, $e);
                     $retry = false;
 
@@ -942,7 +942,7 @@ function getEpisode($w, $episode_uri)
                 ++$nb_retry;
             } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
-                if ($nb_retry > 5) {
+                if ($nb_retry > 3) {
                     handleSpotifyWebAPIException($w, $e);
                     $retry = false;
 
@@ -996,7 +996,7 @@ function getEpisode($w, $episode_uri)
                 ++$nb_retry;
             } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
-                if ($nb_retry > 5) {
+                if ($nb_retry > 3) {
                     handleSpotifyWebAPIException($w, $e);
                     $retry = false;
 
@@ -1072,7 +1072,7 @@ function getEpisode($w, $episode_uri)
                 ++$nb_retry;
             } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
-                if ($nb_retry > 5) {
+                if ($nb_retry > 3) {
                     handleSpotifyWebAPIException($w, $e);
                     $retry = false;
 
@@ -1124,7 +1124,7 @@ function getEpisode($w, $episode_uri)
                 ++$nb_retry;
             } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
-                if ($nb_retry > 5) {
+                if ($nb_retry > 3) {
                     handleSpotifyWebAPIException($w, $e);
                     $retry = false;
 
@@ -1176,7 +1176,7 @@ function addToQueueSpotifyConnect($w, $trackId, $device_id)
                ++$nb_retry;
            } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                // retry
-               if ($nb_retry > 5) {
+               if ($nb_retry > 3) {
                    handleSpotifyWebAPIException($w, $e);
                    $retry = false;
 
@@ -1230,7 +1230,7 @@ function seekToBeginning($w)
                ++$nb_retry;
            } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                // retry
-               if ($nb_retry > 5) {
+               if ($nb_retry > 3) {
                    handleSpotifyWebAPIException($w, $e);
                    $retry = false;
 
@@ -1282,7 +1282,7 @@ function seekToBeginning($w)
                 ++$nb_retry;
             } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
-                if ($nb_retry > 5) {
+                if ($nb_retry > 3) {
                     handleSpotifyWebAPIException($w, $e);
                     $retry = false;
 
@@ -1349,7 +1349,7 @@ function seekToBeginning($w)
                 ++$nb_retry;
             } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
-                if ($nb_retry > 5) {
+                if ($nb_retry > 3) {
                     handleSpotifyWebAPIException($w, $e);
                     $retry = false;
 
@@ -1401,7 +1401,7 @@ function seekToBeginning($w)
                 ++$nb_retry;
             } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
-                if ($nb_retry > 5) {
+                if ($nb_retry > 3) {
                     handleSpotifyWebAPIException($w, $e);
                     $retry = false;
 
@@ -1453,7 +1453,7 @@ function seekToBeginning($w)
                 ++$nb_retry;
             } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
-                if ($nb_retry > 5) {
+                if ($nb_retry > 3) {
                     handleSpotifyWebAPIException($w, $e);
                     $retry = false;
 
@@ -1553,7 +1553,7 @@ function seekToBeginning($w)
                     ++$nb_retry;
                 } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                     // retry
-                    if ($nb_retry > 5) {
+                    if ($nb_retry > 3) {
                         handleSpotifyWebAPIException($w, $e);
                         $retry = false;
 
@@ -1612,7 +1612,7 @@ function seekToBeginning($w)
                 ++$nb_retry;
             } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
-                if ($nb_retry > 5) {
+                if ($nb_retry > 3) {
                     handleSpotifyWebAPIException($w, $e);
                     $retry = false;
 
@@ -1709,7 +1709,7 @@ function isShuffleActive($print_output)
                     break;
                 } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                     // retry
-                    if ($nb_retry > 5) {
+                    if ($nb_retry > 3) {
                         $retry = false;
 
                         return false;
@@ -2670,7 +2670,7 @@ function getCurrentTrackInfoWithMopidy($w, $displayError = true)
                 ++$nb_retry;
             } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
-                if ($nb_retry > 5) {
+                if ($nb_retry > 3) {
                     $retry = false;
 
                     return 'connect_stopped';
@@ -5037,7 +5037,7 @@ function getNumberOfEpisodesForShow($w, $show_uri, $country_code)
             }
             else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
-                if ($nb_retry > 5) {
+                if ($nb_retry > 3) {
                     handleSpotifyWebAPIException($w, $e);
                     $retry = false;
 
@@ -6596,7 +6596,7 @@ function getArtworkURL($w, $type, $id, $highRes = false)
                     ++$nb_retry;
                 } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                     // retry
-                    if ($nb_retry > 5) {
+                    if ($nb_retry > 3) {
                         $retry = false;
 
                         return $url;
@@ -6668,7 +6668,7 @@ function getArtworkURL($w, $type, $id, $highRes = false)
                     ++$nb_retry;
                 } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                     // retry
-                    if ($nb_retry > 5) {
+                    if ($nb_retry > 3) {
                         $retry = false;
 
                         return $url;
@@ -6762,7 +6762,7 @@ function getPlaylistArtworkURL($w, $playlist_uri)
                 ++$nb_retry;
             } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
-                if ($nb_retry > 5) {
+                if ($nb_retry > 3) {
                     $retry = false;
 
                     return $url;
@@ -6841,7 +6841,7 @@ function getShowArtworkURL($w, $show_uri)
                 ++$nb_retry;
             } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
-                if ($nb_retry > 5) {
+                if ($nb_retry > 3) {
                     $retry = false;
 
                     return $url;
@@ -6928,7 +6928,7 @@ function getEpisodeArtworkURL($w, $episode_uri)
                 ++$nb_retry;
             } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
-                if ($nb_retry > 5) {
+                if ($nb_retry > 3) {
                     $retry = false;
 
                     return $url;
@@ -7007,7 +7007,7 @@ function getArtistArtworkURL($w, $artist_id)
                 ++$nb_retry;
             } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
-                if ($nb_retry > 5) {
+                if ($nb_retry > 3) {
                     $retry = false;
 
                     return $url;
