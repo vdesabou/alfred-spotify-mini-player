@@ -2,7 +2,7 @@
 layout: article
 title: "Customization"
 date: 2017-01-17T11:39:03-04:00
-modified: 2020-04-15
+modified: 2020-06-05
 categories: articles
 excerpt: "You can customize the workflow by changing settings or variables..."
 image:
@@ -89,3 +89,27 @@ But you can also use [Alfred variables](https://www.alfredapp.com/help/workflows
 
   * 1 for automatically refresh library
   * 0 for not automatically refresh library
+
+* You can customize Now Playing notifications for episodes (podcasts), by modifying variables `now_playing_episode_title` for title and `now_playing_episode_text` for text. You can use those variables:-
+
+  * `{episode_name}` for episode name
+  * `{show_name}` for show name
+  * `{duration}` for duration
+
+  Defaults are:
+
+    * `now_playing_episode_title`: `Now Playing ({duration})`
+    * `now_playing_episode_text`: `🔈🎙 {episode_name} in show {show_name}`
+
+* You can customize Now Playing notifications for tracks, by modifying variables `now_playing_track_title` for title and `now_playing_track_text` for text. You can use those variables:-
+
+  * `{track_name}` for track name
+  * `{album_name}` for album name
+  * `{artist_name}` for artist name
+  * `{duration}` for duration
+  * `{popularity}` for popularity ⭐
+
+  Defaults are:
+
+    * `now_playing_track_title`: `Now Playing {popularity} ({duration})`
+    * `now_playing_track_text`: `🔈 {track_name} by {artist_name} in album {album_name}`

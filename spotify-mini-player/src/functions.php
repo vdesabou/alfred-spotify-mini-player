@@ -5613,21 +5613,43 @@ function displayNotificationForCurrentTrack($w)
             // download artwork for current track view
             $episode_artwork_path = getEpisodeArtwork($w, $results[4], true, false, false, $use_artworks);
             if (isset($results[0]) && $results[0] != '') {
-                displayNotificationWithArtwork($w, '🔈🎙 '.escapeQuery($results[2]).' in show '.escapeQuery($results[2]), $episode_artwork_path, 'Now Playing '.' ('.beautifyTime($results[5] / 1000).')', true);
+
+                $now_playing_episode_title = getenv('now_playing_episode_title');
+                $now_playing_episode_title  = str_replace('{duration}', beautifyTime($results[5] / 1000), $now_playing_episode_title);
+                $now_playing_episode_title  = str_replace('{episode_name}', escapeQuery($results[0]), $now_playing_episode_title);
+                $now_playing_episode_title  = str_replace('{show_name}', escapeQuery($results[2]), $now_playing_episode_title);
+
+                $now_playing_episode_text = getenv('now_playing_episode_text');
+                $now_playing_episode_text  = str_replace('{duration}', beautifyTime($results[5] / 1000), $now_playing_episode_text);
+                $now_playing_episode_text  = str_replace('{episode_name}', escapeQuery($results[0]), $now_playing_episode_text);
+                $now_playing_episode_text  = str_replace('{show_name}', escapeQuery($results[2]), $now_playing_episode_text);
+
+                displayNotificationWithArtwork($w, $now_playing_episode_text, $episode_artwork_path, $now_playing_episode_title, true);
             }
         } else {
             // download artwork for current track view
             $album_artwork_path = getTrackOrAlbumArtwork($w, $results[4], true, false, false, $use_artworks);
-            $artist_uri = getArtistUriFromTrack($w, $results[4]);
-            if ($artist_uri != false) {
-                $artist_artwork_path = getArtistArtwork($w, $artist_uri, $results[1], true, false, false, $use_artworks);
-            }
             if (isset($results[0]) && $results[0] != '') {
                 $popularity = '';
                 if($is_display_rating) {
                     $popularity = floatToStars($results[6]/100);
                 }
-                displayNotificationWithArtwork($w, '🔈 '.escapeQuery($results[0]).' by '.escapeQuery($results[1]).' in album '.escapeQuery($results[2]), $album_artwork_path, 'Now Playing '.$popularity.' ('.beautifyTime($results[5] / 1000).')', true);
+
+                $now_playing_track_title = getenv('now_playing_track_title');
+                $now_playing_track_title  = str_replace('{duration}', beautifyTime($results[5] / 1000), $now_playing_track_title);
+                $now_playing_track_title  = str_replace('{track_name}', escapeQuery($results[0]), $now_playing_track_title);
+                $now_playing_track_title  = str_replace('{album_name}', escapeQuery($results[2]), $now_playing_track_title);
+                $now_playing_track_title  = str_replace('{artist_name}', escapeQuery($results[1]), $now_playing_track_title);
+                $now_playing_track_title  = str_replace('{popularity}', $popularity, $now_playing_track_title);
+
+                $now_playing_track_text = getenv('now_playing_track_text');
+                $now_playing_track_text  = str_replace('{duration}', beautifyTime($results[5] / 1000), $now_playing_track_text);
+                $now_playing_track_text  = str_replace('{track_name}', escapeQuery($results[0]), $now_playing_track_text);
+                $now_playing_track_text  = str_replace('{album_name}', escapeQuery($results[2]), $now_playing_track_text);
+                $now_playing_track_text  = str_replace('{artist_name}', escapeQuery($results[1]), $now_playing_track_text);
+                $now_playing_track_text  = str_replace('{popularity}', $popularity, $now_playing_track_text);
+
+                displayNotificationWithArtwork($w, $now_playing_track_text, $album_artwork_path, $now_playing_track_title, true);
             }
         }
     }

@@ -12172,6 +12172,14 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 		<string>1</string>
 		<key>menu_display_your_tops</key>
 		<string>1</string>
+		<key>now_playing_episode_text</key>
+		<string>🔈🎙 {episode_name} in show {show_name}</string>
+		<key>now_playing_episode_title</key>
+		<string>Now Playing ({duration})</string>
+		<key>now_playing_track_text</key>
+		<string>🔈 {track_name} by {artist_name} in album {album_name}</string>
+		<key>now_playing_track_title</key>
+		<string>Now Playing {popularity} ({duration})</string>
 		<key>previous_track_for_real</key>
 		<string>1</string>
 		<key>reduce_notifications</key>
