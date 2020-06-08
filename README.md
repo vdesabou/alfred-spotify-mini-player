@@ -6,6 +6,12 @@ Find all information and download the workflow [on the web site](http://alfred-s
 
 [![Screenshot](https://github.com/vdesabou/alfred-spotify-mini-player/raw/master/docs/images/readme_site.jpg)](http://alfred-spotify-mini-player.com)
 
+
+# Installation
+
+1. Download and install the [latest version of the workflow](https://github.com/vdesabou/alfred-spotify-mini-player/releases/latest/download/spotifyminiplayer.alfredworkflow).
+2. Follow the [setup documentation](https://alfred-spotify-mini-player.com/setup/).
+
 # Features
 
 [![Screenshot](https://github.com/vdesabou/alfred-spotify-mini-player/raw/master/docs/images/features.jpg)](http://alfred-spotify-mini-player.com/#features)
