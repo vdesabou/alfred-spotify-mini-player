@@ -23,20 +23,12 @@ This is the list of current known issues:
 
 * **Wappalyzer** browser extension interfere with authentication process: make sure to disable it during time of authentication.
 
-* Safari [does not work](https://github.com/vdesabou/alfred-spotify-mini-player/issues/341) with authentication, the workflow will try to launch Google Chrome or Firefox instead.
+* Safari [does not work](https://github.com/vdesabou/alfred-spotify-mini-player/issues/341) with authentication, the workflow will try to launch Google Chrome, Firefox, Brave or Chromium instead.
 
-## Spotify AppleScript bug
-
-* The local tracks [cannot be launched](https://github.com/vdesabou/alfred-spotify-mini-player/issues/82) due to a [bug](https://community.spotify.com/t5/Help-Desktop-Linux-Mac-Windows/AppleScript-play-track-not-working-with-local-tracks/m-p/1143252#M129641) with Spotify AppleScript.
 
 ## Spotify WEB API limitations
 
-* The *Starred* playlist is not returned by Web API. Spotify has [removed](https://support.spotify.com/us/learn-more/faq/#!/article/what-happened-to-starred-tracks) _starred tracks_ and replaced by _Your Music_.
-As a workaround, you can create a new playlist (called 'Starred' for example) and copy all your starred tracks in it.
-
 * You cannot have more than 10000 tracks in _Your Music_.
-
-* You cannot launch _Your Music_, there is no API available to do that.
 
 * The special playlists like _Daily Mix_ or _Discover Weekly_ are not supported by the workflow, there is no API available to do that.
 

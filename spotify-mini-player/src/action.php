@@ -1291,10 +1291,16 @@ if ($type == 'TRACK' && $other_settings == '' &&
         if($retVal != 0) {
             exec('open -a "Firefox" http://127.0.0.1:15298', $retArr, $retVal);
             if($retVal != 0) {
-                displayNotificationWithArtwork($w, 'Could not open either Google Chrome or Firefox for authentication', './images/warning.png', 'Error!');
-                exec('open http://alfred-spotify-mini-player.com/setup/');
+                exec('open -a "Brave Browser" http://127.0.0.1:15298', $retArr, $retVal);
+                if($retVal != 0) {
+                    exec('open -a "Chromium" http://127.0.0.1:15298', $retArr, $retVal);
+                    if($retVal != 0) {
+                        displayNotificationWithArtwork($w, 'Could not open either Google Chrome or Firefox for authentication', './images/warning.png', 'Error!');
+                        exec('open http://alfred-spotify-mini-player.com/setup/');
 
-                return;
+                        return;
+                    }
+                }
             }
         }
 
