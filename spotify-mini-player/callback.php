@@ -69,7 +69,16 @@ try {
 			 	echo "There was an error when updating settings";
 			 	exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk '{print $2}')");
 			 	return;
-		    }
+			}
+
+			if (isUserPremiumSubscriber($w)) {
+				$ret = updateSetting($w,'output_application','CONNECT');
+				if($ret == false) {
+					 echo "There was an error when updating settings";
+					 exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk '{print $2}')");
+					 return;
+				}
+			}
 
 			echo "Hello $user->display_name ! You are now successfully logged and you can close this window.";
 
