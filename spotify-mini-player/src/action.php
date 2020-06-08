@@ -1287,26 +1287,20 @@ if ($type == 'TRACK' && $other_settings == '' &&
         exec("php -S 127.0.0.1:15298 > \"$cache_log\" 2>&1 &");
         sleep(2);
         # https://github.com/vdesabou/alfred-spotify-mini-player/issues/341
-        exec('open -a "Google Chrome" http://127.0.0.1:15298', $retArr, $retVal);
-        if($retVal != 0) {
-            exec('open -a "Firefox" http://127.0.0.1:15298', $retArr, $retVal);
-            if($retVal != 0) {
-                exec('open -a "Brave Browser" http://127.0.0.1:15298', $retArr, $retVal);
-                if($retVal != 0) {
-                    exec('open -a "Google Chrome Canary" http://127.0.0.1:15298', $retArr, $retVal);
-                    if($retVal != 0) {
-                        exec('open -a "Chromium" http://127.0.0.1:15298', $retArr, $retVal);
-                        if($retVal != 0) {
-                            displayNotificationWithArtwork($w, 'Could not open either Google Chrome or Firefox for authentication', './images/warning.png', 'Error!');
-                            exec('open http://alfred-spotify-mini-player.com/setup/');
-
-                            return;
-                        }
-                    }
-                }
+        $isOk = false;
+        foreach(array('Google Chrome', 'Firefox', 'Brave Browser', 'Google Chrome Canary', 'Chromium') as $browser) {
+            exec("open -a \"$browser\" http://127.0.0.1:15298", $retArr, $retVal);
+            if($retVal == 0) {
+                $isOk = true;
+                break;
             }
         }
+        if(! $isOk) {
+            displayNotificationWithArtwork($w, 'Could not open any supported browsers for authentication', './images/warning.png', 'Error!');
+            exec('open http://alfred-spotify-mini-player.com/setup/');
 
+            return;
+        }
         return;
     } elseif ($other_action == 'current') {
         displayNotificationForCurrentTrack($w);
