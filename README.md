@@ -1,9 +1,9 @@
-# Alfred Spotify Mini Player [![Workflows](https://img.shields.io/badge/-more%20workflows-0a0a0a.svg?style=flat&colorA=0a0a0a)](https://github.com/learn-anything/alfred-workflows#readme)
+# <img src="https://www.freepnglogos.com/uploads/spotify-logo-png/image-gallery-spotify-logo-21.png" width="24"><img src="https://i.pinimg.com/originals/b8/26/ea/b826eaa3fa9a08fdd00ae98f33432e74.png" width="24"> Alfred Spotify Mini Player
 
 ![GitHub All Releases](https://img.shields.io/github/downloads/vdesabou/alfred-spotify-mini-player/total) ![GitHub Releases](https://img.shields.io/github/downloads/vdesabou/alfred-spotify-mini-player/latest/total)
 
 Find all information and download the workflow [on the web site](http://alfred-spotify-mini-player.com)
-
+ma
 [![Screenshot](https://github.com/vdesabou/alfred-spotify-mini-player/raw/master/docs/images/readme_site.jpg)](http://alfred-spotify-mini-player.com)
 
 
