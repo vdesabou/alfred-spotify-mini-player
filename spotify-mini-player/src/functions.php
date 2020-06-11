@@ -7520,6 +7520,7 @@ function checkForUpdate($w, $last_check_update_time, $download = false)
         $fp = fopen($remote_info_plist_name, 'w+');
         $options = array(
             CURLOPT_FILE => $fp,
+            CURLOPT_USERAGENT => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.7; rv:7.0.1) Gecko/20100101 Firefox/7.0.1',
         );
         $w->request("$remote_info_plist_url", $options);
 
