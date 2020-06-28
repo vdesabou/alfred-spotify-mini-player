@@ -1963,7 +1963,7 @@ function getSpotifyWebAPI($w, $old_api = null)
     // Check if refresh token necessary
     // if token validity < 20 minutes
     if (time() - $oauth_expires > 2400) {
-        if ($old_api != null) {
+        if ($old_api != null || $oauth_refresh_token == "") {
             // when refresh needed:
             // create a new api object (even if api not null)
             $session = new SpotifyWebAPI\Session($oauth_client_id, $oauth_client_secret, $oauth_redirect_uri);
