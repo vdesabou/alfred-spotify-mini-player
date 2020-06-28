@@ -3,7 +3,7 @@
 ![GitHub All Releases](https://img.shields.io/github/downloads/vdesabou/alfred-spotify-mini-player/total) ![GitHub Releases](https://img.shields.io/github/downloads/vdesabou/alfred-spotify-mini-player/latest/total)
 
 Find all information and download the workflow [on the web site](http://alfred-spotify-mini-player.com)
-ma
+
 [![Screenshot](https://github.com/vdesabou/alfred-spotify-mini-player/raw/master/docs/images/readme_site.jpg)](http://alfred-spotify-mini-player.com)
 
 
