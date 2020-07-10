@@ -1392,25 +1392,8 @@ function secondDelimiterYourMusicTracks($w, $query, $settings, $db, $update_in_p
  */
 function secondDelimiterYourMusicAlbums($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
-    $kind = $words[0];
 
-    $all_playlists = $settings->all_playlists;
-    $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
-    $radio_number_tracks = $settings->radio_number_tracks;
-    $now_playing_notifications = $settings->now_playing_notifications;
     $max_results = $settings->max_results;
-    $alfred_playlist_uri = $settings->alfred_playlist_uri;
-    $alfred_playlist_name = $settings->alfred_playlist_name;
-    $country_code = $settings->country_code;
-    $last_check_update_time = $settings->last_check_update_time;
-    $oauth_client_id = $settings->oauth_client_id;
-    $oauth_client_secret = $settings->oauth_client_secret;
-    $oauth_redirect_uri = $settings->oauth_redirect_uri;
-    $oauth_access_token = $settings->oauth_access_token;
-    $oauth_expires = $settings->oauth_expires;
-    $oauth_refresh_token = $settings->oauth_refresh_token;
-    $display_name = $settings->display_name;
-    $userid = $settings->userid;
 
     // Search albums
     $album = $words[2];
@@ -1420,7 +1403,7 @@ function secondDelimiterYourMusicAlbums($w, $query, $settings, $db, $update_in_p
             $stmt = $db->prepare($getTracks);
         }
         else {
-            $getTracks = 'select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where yourmusic_albums=1 and album_name like :query group by album_name order by max(added_at) desc limit ' . $max_results;
+            $getTracks = 'select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where yourmusic_album=1 and album_name like :query group by album_name order by max(added_at) desc limit ' . $max_results;
             $stmt = $db->prepare($getTracks);
             $stmt->bindValue(':query', '%' . $album . '%');
         }
