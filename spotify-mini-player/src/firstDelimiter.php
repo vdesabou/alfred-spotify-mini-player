@@ -38,9 +38,9 @@ function firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress
             $stmt = $db->prepare($getPlaylists);
         }
         else {
-            $getPlaylists = 'select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist,collaborative,public,nb_times_played from playlists where (name like :query or author like :query) order by nb_times_played desc';
+            $getPlaylists = 'select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist,collaborative,public,nb_times_played from playlists where (name_deburr like :query or author like :query) order by nb_times_played desc';
             $stmt = $db->prepare($getPlaylists);
-            $stmt->bindValue(':query', '%' . $theplaylist . '%');
+            $stmt->bindValue(':query', '%' . deburr($theplaylist) . '%');
         }
 
         $playlists = $stmt->execute();
@@ -209,10 +209,10 @@ function firstDelimiterArtists($w, $query, $settings, $db, $update_in_progress) 
                 $getArtists = 'select name,artist_artwork_path,uri from followed_artists where name like :query limit ' . $max_results;
             }
             else {
-                $getArtists = 'select artist_name,artist_artwork_path,artist_uri from tracks where artist_name like :query limit ' . $max_results;
+                $getArtists = 'select artist_name,artist_artwork_path,artist_uri from tracks where artist_name_deburr like :query limit ' . $max_results;
             }
             $stmt = $db->prepare($getArtists);
-            $stmt->bindValue(':query', '%' . $artist . '%');
+            $stmt->bindValue(':query', '%' . deburr($artist) . '%');
         }
 
         $artists = $stmt->execute();
@@ -287,9 +287,9 @@ function firstDelimiterShows($w, $query, $settings, $db, $update_in_progress) {
             $stmt = $db->prepare($getShows);
         }
         else {
-            $getShows = 'select * from shows where name like :query limit ' . $max_results;
+            $getShows = 'select * from shows where name_deburr like :query limit ' . $max_results;
             $stmt = $db->prepare($getShows);
-            $stmt->bindValue(':query', '%' . $show . '%');
+            $stmt->bindValue(':query', '%' . deburr($show) . '%');
         }
 
         $tracks = $stmt->execute();
@@ -383,13 +383,13 @@ function firstDelimiterAlbums($w, $query, $settings, $db, $update_in_progress) {
         }
         else {
             if ($all_playlists == false) {
-                $getTracks = 'select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where yourmusic_album=1 and album_name like :query group by album_name order by max(added_at) desc limit ' . $max_results;
+                $getTracks = 'select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where yourmusic_album=1 and album_name_deburr like :query group by album_name order by max(added_at) desc limit ' . $max_results;
             }
             else {
-                $getTracks = 'select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where album_name like :query group by album_name order by max(added_at) desc limit ' . $max_results;
+                $getTracks = 'select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where album_name_deburr like :query group by album_name order by max(added_at) desc limit ' . $max_results;
             }
             $stmt = $db->prepare($getTracks);
-            $stmt->bindValue(':query', '%' . $album . '%');
+            $stmt->bindValue(':query', '%' . deburr($album) . '%');
         }
 
         $tracks = $stmt->execute();
@@ -1077,11 +1077,11 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
             exit;
         }
 
-        $getTracks = 'select artist_name,artist_uri from tracks where artist_name=:artist_name limit ' . 1;
+        $getTracks = 'select artist_name,artist_uri from tracks where artist_name_deburr=:artist_name limit ' . 1;
 
         try {
             $stmt = $db->prepare($getTracks);
-            $stmt->bindValue(':artist_name', escapeQuery($results[1]));
+            $stmt->bindValue(':artist_name', deburr(escapeQuery($results[1])));
             $tracks = $stmt->execute();
         }
         catch(PDOException $e) {
@@ -1578,11 +1578,11 @@ function firstDelimiterYourMusic($w, $query, $settings, $db, $update_in_progress
     else {
 
         // Search artists
-        $getArtists = 'select name,artist_artwork_path,uri from followed_artists where name like :name limit ' . $max_results;
+        $getArtists = 'select name,artist_artwork_path,uri from followed_artists where name_deburr like :name limit ' . $max_results;
 
         try {
             $stmt = $db->prepare($getArtists);
-            $stmt->bindValue(':name', '%' . $thequery . '%');
+            $stmt->bindValue(':name', '%' . deburr($thequery) . '%');
 
             $artists = $stmt->execute();
         }
@@ -1600,11 +1600,11 @@ function firstDelimiterYourMusic($w, $query, $settings, $db, $update_in_progress
         }
 
         // Search everything
-        $getTracks = 'select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where yourmusic=1 and (artist_name like :query or album_name like :query or track_name like :query)' . ' limit ' . $max_results;
+        $getTracks = 'select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where yourmusic=1 and (artist_name_deburr like :query or album_name_deburr like :query or track_name_deburr like :query)' . ' limit ' . $max_results;
 
         try {
             $stmt = $db->prepare($getTracks);
-            $stmt->bindValue(':query', '%' . $thequery . '%');
+            $stmt->bindValue(':query', '%' . deburr($thequery) . '%');
 
             $tracks = $stmt->execute();
         }

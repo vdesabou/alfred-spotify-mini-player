@@ -141,10 +141,10 @@ function refreshLibrary($w, $silent = false) {
         $getPlaylists = 'select * from playlists where uri=:uri';
         $stmtGetPlaylists = $db->prepare($getPlaylists);
 
-        $insertPlaylist = 'insert into playlists values (:uri,:name,:nb_tracks,:owner,:username,:playlist_artwork_path,:ownedbyuser,:nb_playable_tracks,:duration_playlist,:nb_times_played,:collaborative,:public)';
+        $insertPlaylist = 'insert into playlists values (:uri,:name,:nb_tracks,:owner,:username,:playlist_artwork_path,:ownedbyuser,:nb_playable_tracks,:duration_playlist,:nb_times_played,:collaborative,:public,:name_deburr)';
         $stmtPlaylist = $db->prepare($insertPlaylist);
 
-        $insertTrack = 'insert into tracks values (:yourmusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_type,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:added_at,:duration,:nb_times_played,:local_track,:yourmusic_album)';
+        $insertTrack = 'insert into tracks values (:yourmusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_type,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:added_at,:duration,:nb_times_played,:local_track,:yourmusic_album,:track_name_deburr,:album_name_deburr,:artist_name_deburr)';
         $stmtTrack = $db->prepare($insertTrack);
 
         $deleteFromTracks = 'delete from tracks where playlist_uri=:playlist_uri';
@@ -162,13 +162,13 @@ function refreshLibrary($w, $silent = false) {
         $getFollowedArtists = 'select * from followed_artists where uri=:uri';
         $stmtGetFollowedArtists = $db->prepare($getFollowedArtists);
 
-        $insertFollowedArtists = 'insert into followed_artists values (:uri,:name,:artist_artwork_path)';
+        $insertFollowedArtists = 'insert into followed_artists values (:uri,:name,:artist_artwork_path,:name_deburr)';
         $stmtFollowedArtists = $db->prepare($insertFollowedArtists);
 
-        $insertShow = 'insert into shows values (:uri,:name,:description,:media_type,:show_artwork_path,:explicit,:added_at,:languages,:nb_times_played,:is_externally_hosted, :nb_episodes)';
+        $insertShow = 'insert into shows values (:uri,:name,:description,:media_type,:show_artwork_path,:explicit,:added_at,:languages,:nb_times_played,:is_externally_hosted, :nb_episodes,:name_deburr)';
         $stmtInsertShow = $db->prepare($insertShow);
 
-        $insertEpisode = 'insert or ignore into episodes values (:uri,:name,:show_uri,:show_name,:description,:episode_artwork_path,:is_playable,:languages,:nb_times_played,:is_externally_hosted,:duration_ms,:explicit,:release_date,:release_date_precision,:audio_preview_url,:fully_played,:resume_position_ms)';
+        $insertEpisode = 'insert or ignore into episodes values (:uri,:name,:show_uri,:show_name,:description,:episode_artwork_path,:is_playable,:languages,:nb_times_played,:is_externally_hosted,:duration_ms,:explicit,:release_date,:release_date_precision,:audio_preview_url,:fully_played,:resume_position_ms,:name_deburr,:show_name_deburr)';
         $stmtInsertEpisode = $db->prepare($insertEpisode);
 
         $deleteFromEpisodes = 'delete from episodes where show_uri=:show_uri';
@@ -727,6 +727,9 @@ function refreshLibrary($w, $silent = false) {
                         $stmtTrack->bindValue(':nb_times_played', 0);
                         $stmtTrack->bindValue(':local_track', $local_track);
                         $stmtTrack->bindValue(':yourmusic_album', 0);
+                        $stmtTrack->bindValue(':track_name_deburr', deburr(escapeQuery($track->name)));
+                        $stmtTrack->bindValue(':album_name_deburr', deburr(escapeQuery($album->name)));
+                        $stmtTrack->bindValue(':artist_name_deburr', deburr(escapeQuery($artist->name)));
                         $stmtTrack->execute();
                     }
                     catch(PDOException $e) {
@@ -762,6 +765,7 @@ function refreshLibrary($w, $silent = false) {
                 $stmtPlaylist->bindValue(':nb_times_played', 0);
                 $stmtPlaylist->bindValue(':collaborative', $playlist->collaborative);
                 $stmtPlaylist->bindValue(':public', $playlist->public);
+                $stmtPlaylist->bindValue(':name_deburr', deburr(escapeQuery($playlist->name)));
                 $stmtPlaylist->execute();
             }
             catch(PDOException $e) {
@@ -1022,6 +1026,9 @@ function refreshLibrary($w, $silent = false) {
                             $stmtTrack->bindValue(':nb_times_played', 0);
                             $stmtTrack->bindValue(':local_track', $local_track);
                             $stmtTrack->bindValue(':yourmusic_album', 0);
+                            $stmtTrack->bindValue(':track_name_deburr', deburr(escapeQuery($track->name)));
+                            $stmtTrack->bindValue(':album_name_deburr', deburr(escapeQuery($album->name)));
+                            $stmtTrack->bindValue(':artist_name_deburr', deburr(escapeQuery($artist->name)));
                             $stmtTrack->execute();
                         }
                         catch(PDOException $e) {
@@ -1503,6 +1510,9 @@ function refreshLibrary($w, $silent = false) {
                 else {
                     $stmtTrack->bindValue(':yourmusic_album', 0);
                 }
+                $stmtTrack->bindValue(':track_name_deburr', deburr(escapeQuery($track->name)));
+                $stmtTrack->bindValue(':album_name_deburr', deburr(escapeQuery($album->name)));
+                $stmtTrack->bindValue(':artist_name_deburr', deburr(escapeQuery($artist->name)));
                 $stmtTrack->execute();
             }
             catch(PDOException $e) {
@@ -1592,6 +1602,7 @@ function refreshLibrary($w, $silent = false) {
                 $stmtInsertShow->bindValue(':nb_times_played', 0);
                 $stmtInsertShow->bindValue(':added_at', $show->is_externally_hosted);
                 $stmtInsertShow->bindValue(':nb_episodes', $nb_episodes);
+                $stmtInsertShow->bindValue(':name', deburr(escapeQuery($show->name)));
                 $stmtInsertShow->execute();
             }
             catch(PDOException $e) {
@@ -1739,6 +1750,10 @@ function refreshLibrary($w, $silent = false) {
                         $stmtInsertEpisode->bindValue(':fully_played', 0);
                         $stmtInsertEpisode->bindValue(':resume_position_ms', 0);
                     }
+                    $stmtInsertEpisode->bindValue(':name_deburr', deburr(escapeQuery($episode->name)));
+                    $stmtInsertEpisode->bindValue(':show_name_deburr', deburr(escapeQuery($episode
+                        ->show
+                        ->name)));
                     $stmtInsertEpisode->execute();
                 }
                 catch(PDOException $e) {
@@ -1909,6 +1924,10 @@ function refreshLibrary($w, $silent = false) {
                             $stmtInsertEpisode->bindValue(':fully_played', 0);
                             $stmtInsertEpisode->bindValue(':resume_position_ms', 0);
                         }
+                        $stmtInsertEpisode->bindValue(':name_deburr', deburr(escapeQuery($episode->name)));
+                        $stmtInsertEpisode->bindValue(':show_name_deburr', deburr(escapeQuery($episode
+                            ->show
+                            ->name)));
                         $stmtInsertEpisode->execute();
                     }
                     catch(PDOException $e) {
@@ -2078,6 +2097,7 @@ function refreshLibrary($w, $silent = false) {
                 $stmtFollowedArtists->bindValue(':uri', $artist->uri);
                 $stmtFollowedArtists->bindValue(':name', escapeQuery($artist->name));
                 $stmtFollowedArtists->bindValue(':artist_artwork_path', $artist_artwork_path);
+                $stmtFollowedArtists->bindValue(':name', deburr(escapeQuery($artist->name)));
                 $stmtFollowedArtists->execute();
             }
             catch(PDOException $e) {

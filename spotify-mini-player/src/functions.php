@@ -5437,14 +5437,14 @@ function getNumberOfTracksForAlbum($db, $album_uri, $yourmusiconly = false)
 function getNumberOfTracksForArtist($db, $artist_name, $yourmusiconly = false)
 {
     if ($yourmusiconly == false) {
-        $getNumberOfTracksForArtist = 'select count(distinct track_name) from tracks where artist_name=:artist_name';
+        $getNumberOfTracksForArtist = 'select count(distinct track_name) from tracks where artist_name_deburr=:artist_name';
     } else {
         $getNumberOfTracksForArtist = 'select count(distinct track_name) from tracks where yourmusic=1 and artist_name=:artist_name';
     }
 
     try {
         $stmt = $db->prepare($getNumberOfTracksForArtist);
-        $stmt->bindValue(':artist_name', ''.$artist_name.'');
+        $stmt->bindValue(':artist_name', ''.deburr($artist_name).'');
         $stmt->execute();
         $nb = $stmt->fetch();
     } catch (PDOException $e) {

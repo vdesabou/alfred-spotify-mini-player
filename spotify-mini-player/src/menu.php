@@ -462,11 +462,11 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
         if ($search_category == 'playlist') {
 
             // Search in Playlists
-            $getPlaylists = 'select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist,collaborative,public from playlists where name like :query';
+            $getPlaylists = 'select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist,collaborative,public from playlists where name_deburr like :query';
 
             try {
                 $stmt = $db->prepare($getPlaylists);
-                $stmt->bindValue(':query', '%' . $query . '%');
+                $stmt->bindValue(':query', '%' . deburr($query) . '%');
                 $playlists = $stmt->execute();
             }
             catch(PDOException $e) {
@@ -536,15 +536,15 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
         if ($search_category == 'artist') {
             // Search artists
             if ($all_playlists == false) {
-                $getTracks = "select artist_name,artist_uri,artist_artwork_path from tracks where yourmusic=1 and artist_uri!='' and artist_name like :artist_name limit " . $max_results;
+                $getTracks = "select artist_name,artist_uri,artist_artwork_path from tracks where yourmusic=1 and artist_uri!='' and artist_name_deburr like :artist_name limit " . $max_results;
             }
             else {
-                $getTracks = "select artist_name,artist_uri,artist_artwork_path from tracks where artist_uri!='' and artist_name like :artist_name limit " . $max_results;
+                $getTracks = "select artist_name,artist_uri,artist_artwork_path from tracks where artist_uri!='' and artist_name_deburr like :artist_name limit " . $max_results;
             }
 
             try {
                 $stmt = $db->prepare($getTracks);
-                $stmt->bindValue(':artist_name', '%' . $query . '%');
+                $stmt->bindValue(':artist_name', '%' . deburr($query) . '%');
                 $tracks = $stmt->execute();
             }
             catch(PDOException $e) {
@@ -581,15 +581,15 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
         if ($search_category == 'track') {
             // Search tracks
             if ($all_playlists == false) {
-                $getTracks = 'select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where yourmusic=1 and (artist_name like :query or album_name like :query or track_name like :query)' . '  order by added_at desc limit ' . $max_results;
+                $getTracks = 'select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where yourmusic=1 and (artist_name_deburr like :query or album_name_deburr like :query or track_name_deburr like :query)' . '  order by added_at desc limit ' . $max_results;
             }
             else {
-                $getTracks = 'select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where (artist_name like :query or album_name like :query or track_name like :query)' . '  order by added_at desc limit ' . $max_results;
+                $getTracks = 'select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where (artist_name_deburr like :query or album_name_deburr like :query or track_name_deburr like :query)' . '  order by added_at desc limit ' . $max_results;
             }
 
             try {
                 $stmt = $db->prepare($getTracks);
-                $stmt->bindValue(':query', '%' . $query . '%');
+                $stmt->bindValue(':query', '%' . deburr($query) . '%');
                 $tracks = $stmt->execute();
             }
             catch(PDOException $e) {
@@ -642,12 +642,12 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
                 $getTracks = 'select album_name,album_uri,album_artwork_path,uri from tracks where yourmusic=1 and album_name like :album_name group by album_name order by max(added_at) desc limit ' . $max_results;
             }
             else {
-                $getTracks = 'select album_name,album_uri,album_artwork_path,uri from tracks where album_name like :album_name group by album_name order by max(added_at) desc limit ' . $max_results;
+                $getTracks = 'select album_name,album_uri,album_artwork_path,uri from tracks where album_name_deburr like :album_name group by album_name order by max(added_at) desc limit ' . $max_results;
             }
 
             try {
                 $stmt = $db->prepare($getTracks);
-                $stmt->bindValue(':album_name', '%' . $query . '%');
+                $stmt->bindValue(':album_name', '%' . deburr($query) . '%');
                 $tracks = $stmt->execute();
             }
             catch(PDOException $e) {
@@ -688,9 +688,9 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
         if ($search_category == 'show') {
             // Search show
             try {
-                $getShows = 'select * from shows where name like :query limit ' . $max_results;
+                $getShows = 'select * from shows where name_deburr like :query limit ' . $max_results;
                 $stmt = $db->prepare($getShows);
-                $stmt->bindValue(':query', '%' . $query . '%');
+                $stmt->bindValue(':query', '%' . deburr($query) . '%');
 
                 $shows = $stmt->execute();
             }
@@ -713,9 +713,9 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
         if ($search_category == 'episode') {
             // Search episodes
             try {
-                $getEpisodes = 'select uri, name, uri, show_uri, show_name, description, episode_artwork_path, is_playable, languages, nb_times_played, is_externally_hosted, duration_ms, explicit, release_date, release_date_precision, audio_preview_url, fully_played, resume_position_ms from episodes where name like :name order by release_date desc limit ' . $max_results;
+                $getEpisodes = 'select uri, name, uri, show_uri, show_name, description, episode_artwork_path, is_playable, languages, nb_times_played, is_externally_hosted, duration_ms, explicit, release_date, release_date_precision, audio_preview_url, fully_played, resume_position_ms from episodes where name_deburr like :name order by release_date desc limit ' . $max_results;
                 $stmt = $db->prepare($getEpisodes);
-                $stmt->bindValue(':name', '%' . $query . '%');
+                $stmt->bindValue(':name', '%' . deburr($query) . '%');
                 $episodes = $stmt->execute();
             }
             catch(PDOException $e) {
