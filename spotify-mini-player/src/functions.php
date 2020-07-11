@@ -5437,14 +5437,14 @@ function getNumberOfTracksForAlbum($db, $album_uri, $yourmusiconly = false)
 function getNumberOfTracksForArtist($db, $artist_name, $yourmusiconly = false)
 {
     if ($yourmusiconly == false) {
-        $getNumberOfTracksForArtist = 'select count(distinct track_name) from tracks where artist_name=:artist_name';
+        $getNumberOfTracksForArtist = 'select count(distinct track_name) from tracks where artist_name_deburr=:artist_name';
     } else {
         $getNumberOfTracksForArtist = 'select count(distinct track_name) from tracks where yourmusic=1 and artist_name=:artist_name';
     }
 
     try {
         $stmt = $db->prepare($getNumberOfTracksForArtist);
-        $stmt->bindValue(':artist_name', ''.$artist_name.'');
+        $stmt->bindValue(':artist_name', ''.deburr($artist_name).'');
         $stmt->execute();
         $nb = $stmt->fetch();
     } catch (PDOException $e) {
@@ -7084,14 +7084,14 @@ function handleDbIssuePdoXml($dbhandle)
                     'fn' => 'Not Available',
                     'ctrl' => 'Not Available',
                 ), './images/warning.png', 'no', null, '');
-    $w->result(null, '', 'There is a problem with the library, try to re-create it.',array(
-                     'Select Re-Create Library library below',
+    $w->result(null, '', '👇👇👇 You need to recreate your library by selecting option below 👇👇👇',array(
+                     'There was a breaking change and you need to telect Re-Create Library library below',
                     'alt' => 'Not Available',
                     'cmd' => 'Not Available',
                     'shift' => 'Not Available',
                     'fn' => 'Not Available',
                     'ctrl' => 'Not Available',
-                ), './images/warning.png', 'no', null, '');
+                ), './images/info.png', 'no', null, '');
     $w->result(null, serialize(array(
                 '' /*track_uri*/,
                 '' /* album_uri */,

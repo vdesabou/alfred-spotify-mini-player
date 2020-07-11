@@ -22,14 +22,14 @@ if (mb_strlen($query) > 1) {
                     'fn' => 'Not Available',
                     'ctrl' => 'Not Available',
                 ), './images/warning.png', 'no', null, '');
-        $w->result(uniqid(), '', 'There is a problem with the library, try to re-create it.',array(
-                     'Select Re-Create Library library below',
-                    'alt' => 'Not Available',
-                    'cmd' => 'Not Available',
-                    'shift' => 'Not Available',
-                    'fn' => 'Not Available',
-                    'ctrl' => 'Not Available',
-                ), './images/warning.png', 'no', null, '');
+        $w->result(null, '', '👇👇👇 You need to recreate your library by selecting option below 👇👇👇',array(
+            'There was a breaking change and you need to telect Re-Create Library library below',
+            'alt' => 'Not Available',
+            'cmd' => 'Not Available',
+            'shift' => 'Not Available',
+            'fn' => 'Not Available',
+            'ctrl' => 'Not Available',
+        ), './images/info.png', 'no', null, '');
         $w->result(uniqid(), serialize(array(
             '' /*track_uri*/,
             '' /* album_uri */,

@@ -68,10 +68,10 @@ function secondDelimiterShows($w, $query, $settings, $db, $update_in_progress) {
         $stmt->bindValue(':show_uri', $show_uri);
     }
     else {
-        $getEpisodes = 'select uri, name, uri, show_uri, show_name, description, episode_artwork_path, is_playable, languages, nb_times_played, is_externally_hosted, duration_ms, explicit, release_date, release_date_precision, audio_preview_url, fully_played, resume_position_ms from episodes where show_uri=:show_uri and name like :name order by release_date desc limit ' . $max_results;
+        $getEpisodes = 'select uri, name, uri, show_uri, show_name, description, episode_artwork_path, is_playable, languages, nb_times_played, is_externally_hosted, duration_ms, explicit, release_date, release_date_precision, audio_preview_url, fully_played, resume_position_ms from episodes where show_uri=:show_uri and name_deburr like :name order by release_date desc limit ' . $max_results;
         $stmt = $db->prepare($getEpisodes);
         $stmt->bindValue(':show_uri', $show_uri);
-        $stmt->bindValue(':name', '%' . $episode . '%');
+        $stmt->bindValue(':name', '%' . deburr($episode) . '%');
     }
     $episodes = $stmt->execute();
     $noresult = true;
@@ -281,23 +281,18 @@ function secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
             )), 'Create a Complete Collection Playlist for ' . $artist_name, 'This will create a ' . $privacy_status . ' playlist for the artist with all the albums and singles', './images/complete_collection.png', 'yes', null, '');
         }
 
-        // if ($all_playlists == false || count($tmp) == 3) {
-        //     $getTracks = 'select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where yourmusic=1 and artist_uri=:artist_uri limit '.$max_results;
-        // } else {
         $getTracks = 'select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where artist_uri=:artist_uri limit ' . $max_results;
-        // }
+
         $stmt = $db->prepare($getTracks);
         $stmt->bindValue(':artist_uri', $artist_uri);
     }
     else {
-        // if ($all_playlists == false || count($tmp) == 3) {
-        //     $getTracks = 'select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where yourmusic=1 and (artist_uri=:artist_uri and track_name like :track)'.' limit '.$max_results;
-        // } else {
-        $getTracks = 'select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where artist_uri=:artist_uri and track_name like :track limit ' . $max_results;
-        // }
+
+        $getTracks = 'select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where artist_uri=:artist_uri and track_name_deburr like :track limit ' . $max_results;
+
         $stmt = $db->prepare($getTracks);
         $stmt->bindValue(':artist_uri', $artist_uri);
-        $stmt->bindValue(':track', '%' . $track . '%');
+        $stmt->bindValue(':track', '%' . deburr($track) . '%');
     }
     $tracks = $stmt->execute();
     $noresult = true;
@@ -425,14 +420,14 @@ function secondDelimiterAlbums($w, $query, $settings, $db, $update_in_progress) 
         }
         else {
             if ($all_playlists == false) {
-                $getTracks = 'select yourmusic_album, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where yourmusic_album=1 and (album_uri=:album_uri and track_name like :track limit ' . $max_results;
+                $getTracks = 'select yourmusic_album, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where yourmusic_album=1 and (album_uri=:album_uri and track_name_deburr like :track limit ' . $max_results;
             }
             else {
-                $getTracks = 'select yourmusic_album, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where album_uri=:album_uri and track_name like :track limit ' . $max_results;
+                $getTracks = 'select yourmusic_album, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where album_uri=:album_uri and track_name_deburr like :track limit ' . $max_results;
             }
             $stmt = $db->prepare($getTracks);
             $stmt->bindValue(':album_uri', $album_uri);
-            $stmt->bindValue(':track', '%' . $track . '%');
+            $stmt->bindValue(':track', '%' . deburr($track) . '%');
         }
 
         $tracks = $stmt->execute();
@@ -679,10 +674,10 @@ function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progres
                 $stmt->bindValue(':theplaylisturi', $theplaylisturi);
             }
             else {
-                $getTracks = 'select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where playlist_uri=:theplaylisturi and (artist_name like :track or album_name like :track or track_name like :track)' . ' order by added_at desc limit ' . $max_results;
+                $getTracks = 'select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where playlist_uri=:theplaylisturi and (artist_name_deburr like :track or album_name_deburr like :track or track_name_deburr like :track)' . ' order by added_at desc limit ' . $max_results;
                 $stmt = $db->prepare($getTracks);
                 $stmt->bindValue(':theplaylisturi', $theplaylisturi);
-                $stmt->bindValue(':track', '%' . $thetrack . '%');
+                $stmt->bindValue(':track', '%' . deburr($thetrack) . '%');
             }
 
             if ($theplaylisturi == $alfred_playlist_uri) {
@@ -1316,9 +1311,9 @@ function secondDelimiterYourMusicTracks($w, $query, $settings, $db, $update_in_p
         $stmt = $db->prepare($getTracks);
     }
     else {
-        $getTracks = 'select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where yourmusic=1 and (artist_name like :track or album_name like :track or track_name like :track)' . ' order by added_at desc limit ' . $max_results;
+        $getTracks = 'select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where yourmusic=1 and (artist_name_deburr like :track or album_name_deburr like :track or track_name_deburr like :track)' . ' order by added_at desc limit ' . $max_results;
         $stmt = $db->prepare($getTracks);
-        $stmt->bindValue(':track', '%' . $thetrack . '%');
+        $stmt->bindValue(':track', '%' . deburr($thetrack) . '%');
     }
 
     $tracks = $stmt->execute();
@@ -1403,9 +1398,9 @@ function secondDelimiterYourMusicAlbums($w, $query, $settings, $db, $update_in_p
             $stmt = $db->prepare($getTracks);
         }
         else {
-            $getTracks = 'select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where yourmusic_album=1 and album_name like :query group by album_name order by max(added_at) desc limit ' . $max_results;
+            $getTracks = 'select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where yourmusic_album=1 and album_name like :query group by album_name_deburr order by max(added_at) desc limit ' . $max_results;
             $stmt = $db->prepare($getTracks);
-            $stmt->bindValue(':query', '%' . $album . '%');
+            $stmt->bindValue(':query', '%' . deburr($album) . '%');
         }
 
         $tracks = $stmt->execute();
@@ -1584,9 +1579,9 @@ function secondDelimiterYourMusicArtists($w, $query, $settings, $db, $update_in_
             $stmt = $db->prepare($getArtists);
         }
         else {
-            $getArtists = 'select name,artist_artwork_path,uri from followed_artists where name like :query limit ' . $max_results;
+            $getArtists = 'select name,artist_artwork_path,uri from followed_artists where name_deburr like :query limit ' . $max_results;
             $stmt = $db->prepare($getArtists);
-            $stmt->bindValue(':query', '%' . $artist . '%');
+            $stmt->bindValue(':query', '%' . deburr($artist) . '%');
         }
 
         $artists = $stmt->execute();
@@ -2313,9 +2308,9 @@ function secondDelimiterAdd($w, $query, $settings, $db, $update_in_progress) {
             )), 'Your Music', 'Select to add the ' . $message . ' to Your Music', './images/yourmusic.png', 'yes', null, '');
         }
         else {
-            $getPlaylists = 'select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist from playlists where ownedbyuser=1 and ( name like :playlist or author like :playlist)';
+            $getPlaylists = 'select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist from playlists where ownedbyuser=1 and ( name_deburr like :playlist or author like :playlist)';
             $stmt = $db->prepare($getPlaylists);
-            $stmt->bindValue(':playlist', '%' . $theplaylist . '%');
+            $stmt->bindValue(':playlist', '%' . deburr($theplaylist) . '%');
         }
 
         $playlists = $stmt->execute();
@@ -2447,10 +2442,10 @@ function secondDelimiterRemove($w, $query, $settings, $db, $update_in_progress) 
                     $stmtGetPlaylists->bindValue(':playlist_uri', $playlistsForTrack[0]);
                 }
                 else {
-                    $getPlaylists = 'select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist from playlists where ownedbyuser=1 and ( name like :playlist or author like :playlist) and uri=:playlist_uri';
+                    $getPlaylists = 'select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist from playlists where ownedbyuser=1 and ( name_deburr like :playlist or author like :playlist) and uri=:playlist_uri';
                     $stmtGetPlaylists = $db->prepare($getPlaylists);
                     $stmtGetPlaylists->bindValue(':playlist_uri', $playlistsForTrack[0]);
-                    $stmtGetPlaylists->bindValue(':playlist', '%' . $theplaylist . '%');
+                    $stmtGetPlaylists->bindValue(':playlist', '%' . deburr($theplaylist) . '%');
                 }
 
                 $playlists = $stmtGetPlaylists->execute();
@@ -2538,9 +2533,9 @@ function secondDelimiterAlfredPlaylist($w, $query, $settings, $db, $update_in_pr
                 $stmt = $db->prepare($getPlaylists);
             }
             else {
-                $getPlaylists = 'select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist from playlists where ownedbyuser=1 and ( name like :playlist or author like :playlist)';
+                $getPlaylists = 'select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist from playlists where ownedbyuser=1 and ( name_deburr like :playlist or author like :playlist)';
                 $stmt = $db->prepare($getPlaylists);
-                $stmt->bindValue(':playlist', '%' . $theplaylist . '%');
+                $stmt->bindValue(':playlist', '%' . deburr($theplaylist) . '%');
             }
 
             $playlists = $stmt->execute();
