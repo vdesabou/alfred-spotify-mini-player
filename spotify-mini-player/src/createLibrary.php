@@ -134,25 +134,33 @@ function createLibrary($w) {
     }
 
     // Check missing scope for podcasts
-    $episodes_list = array('4aFURijFNhCP3n1pfQtQaMzzzzz','33XyX3PQ9rb1vCaE9KpwcR','5ZSnoquOyu7fnGFym8dLzd','5Z2mynHqunrdJaaWKlXACo','6rOqOqj9vAKZBAYNQu9Imt');
+
+    // some coutries do not have podcasts
+    $ignorePodcasts = true;
+    $episodes_list = array('4aFURijFNhCP3n1pfQtQaM','33XyX3PQ9rb1vCaE9KpwcR','5ZSnoquOyu7fnGFym8dLzd','5Z2mynHqunrdJaaWKlXACo','6rOqOqj9vAKZBAYNQu9Imt');
     foreach ($episodes_list as $ep) {
         try {
             // refresh api
             $api = getSpotifyWebAPI($w, $api);
-            $episode = $api->getEpisode($ep);
+            $episode = $api->getEpisode($ep, array(
+                'market' => 'FR',
+            ));
+            $ignorePodcasts = false;
             break;
         }
         catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
-            logMsg('Error(Check missing scope for podcasts): (exception ' . jTraceEx($e) . ')');
+            logMsg('Error(Check missing scope for podcasts): episode '.$ep.' (exception ' . jTraceEx($e) . ')');
         }
     }
-    if (! isset($episode->resume_point)) {
-        logMsg("ERROR: the worfkflow was missing scope user-read-playback-position");
-        updateSetting($w, 'oauth_access_token', '');
-        updateSetting($w, 'oauth_refresh_token', '');
-        displayNotificationWithArtwork($w, 'Relaunch the workflow to re-authenticate', './images/settings.png', 'Info');
-        handleSpotifyPermissionException($w, 'Relaunch the workflow to re-authenticate');
-        return false;
+    if($ignorePodcasts == false) {
+        if (! isset($episode->resume_point)) {
+            logMsg("ERROR: the worfkflow was missing scope user-read-playback-position");
+            updateSetting($w, 'oauth_access_token', '');
+            updateSetting($w, 'oauth_refresh_token', '');
+            displayNotificationWithArtwork($w, 'Relaunch the workflow to re-authenticate', './images/settings.png', 'Info');
+            handleSpotifyPermissionException($w, 'Relaunch the workflow to re-authenticate');
+            return false;
+        }
     }
 
     $offsetGetUserPlaylists = 0;
