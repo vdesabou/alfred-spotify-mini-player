@@ -134,8 +134,18 @@ function createLibrary($w) {
     }
 
     // Check missing scope for podcasts
-    $episode = $api->getEpisode('4aFURijFNhCP3n1pfQtQaM');
-
+    $episodes_list = array('4aFURijFNhCP3n1pfQtQaMzzzzz','33XyX3PQ9rb1vCaE9KpwcR','5ZSnoquOyu7fnGFym8dLzd','5Z2mynHqunrdJaaWKlXACo','6rOqOqj9vAKZBAYNQu9Imt');
+    foreach ($episodes_list as $ep) {
+        try {
+            // refresh api
+            $api = getSpotifyWebAPI($w, $api);
+            $episode = $api->getEpisode($ep);
+            break;
+        }
+        catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
+            logMsg('Error(Check missing scope for podcasts): (exception ' . jTraceEx($e) . ')');
+        }
+    }
     if (! isset($episode->resume_point)) {
         logMsg("ERROR: the worfkflow was missing scope user-read-playback-position");
         updateSetting($w, 'oauth_access_token', '');
