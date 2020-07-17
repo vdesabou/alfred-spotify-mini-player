@@ -1161,10 +1161,10 @@ function addToQueueSpotifyConnect($w, $trackId, $device_id)
            if ($e->getCode() == 429) { // 429 is Too Many Requests
                $lastResponse = $api->getRequest()->getLastResponse();
                if(isset($lastResponse['headers']['Retry-After'])) {
-    $retryAfter = $lastResponse['headers']['Retry-After'];
-} else {
-    $retryAfter = 1;
-}
+                    $retryAfter = $lastResponse['headers']['Retry-After'];
+                } else {
+                    $retryAfter = 1;
+                }
                sleep($retryAfter);
            } else if ($e->getCode() == 404) {
                // skip
@@ -1174,6 +1174,9 @@ function addToQueueSpotifyConnect($w, $trackId, $device_id)
                // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                // retry any SSL error
                ++$nb_retry;
+           } else if (strpos(strtolower($e->getMessage()), 'violated') !== false) {
+                // ignore
+                return false;
            } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                // retry
                if ($nb_retry > 3) {
@@ -1215,10 +1218,10 @@ function seekToBeginning($w)
            if ($e->getCode() == 429) { // 429 is Too Many Requests
                $lastResponse = $api->getRequest()->getLastResponse();
                if(isset($lastResponse['headers']['Retry-After'])) {
-    $retryAfter = $lastResponse['headers']['Retry-After'];
-} else {
-    $retryAfter = 1;
-}
+                $retryAfter = $lastResponse['headers']['Retry-After'];
+                } else {
+                    $retryAfter = 1;
+                }
                sleep($retryAfter);
            } else if ($e->getCode() == 404) {
                // skip
@@ -1228,6 +1231,9 @@ function seekToBeginning($w)
                // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                // retry any SSL error
                ++$nb_retry;
+           } else if (strpos(strtolower($e->getMessage()), 'violated') !== false) {
+            // ignore
+            return false;
            } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                // retry
                if ($nb_retry > 3) {
@@ -1267,10 +1273,10 @@ function seekToBeginning($w)
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
                 if(isset($lastResponse['headers']['Retry-After'])) {
-    $retryAfter = $lastResponse['headers']['Retry-After'];
-} else {
-    $retryAfter = 1;
-}
+                    $retryAfter = $lastResponse['headers']['Retry-After'];
+                } else {
+                    $retryAfter = 1;
+                }
                 sleep($retryAfter);
             } else if ($e->getCode() == 404) {
                 // skip
@@ -1280,6 +1286,9 @@ function seekToBeginning($w)
                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                 // retry any SSL error
                 ++$nb_retry;
+            } else if (strpos(strtolower($e->getMessage()), 'violated') !== false) {
+                // ignore
+                return false;
             } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
                 if ($nb_retry > 3) {
@@ -1334,10 +1343,10 @@ function seekToBeginning($w)
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
                 if(isset($lastResponse['headers']['Retry-After'])) {
-    $retryAfter = $lastResponse['headers']['Retry-After'];
-} else {
-    $retryAfter = 1;
-}
+                    $retryAfter = $lastResponse['headers']['Retry-After'];
+                } else {
+                    $retryAfter = 1;
+                }
                 sleep($retryAfter);
             } else if ($e->getCode() == 404) {
                 // skip
@@ -1347,6 +1356,9 @@ function seekToBeginning($w)
                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                 // retry any SSL error
                 ++$nb_retry;
+            } else if (strpos(strtolower($e->getMessage()), 'violated') !== false) {
+                // ignore
+                return false;
             } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
                 if ($nb_retry > 3) {
@@ -1386,10 +1398,10 @@ function seekToBeginning($w)
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
                 if(isset($lastResponse['headers']['Retry-After'])) {
-    $retryAfter = $lastResponse['headers']['Retry-After'];
-} else {
-    $retryAfter = 1;
-}
+                    $retryAfter = $lastResponse['headers']['Retry-After'];
+                } else {
+                    $retryAfter = 1;
+                }
                 sleep($retryAfter);
             } else if ($e->getCode() == 404) {
                 // skip
@@ -1399,6 +1411,9 @@ function seekToBeginning($w)
                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                 // retry any SSL error
                 ++$nb_retry;
+            } else if (strpos(strtolower($e->getMessage()), 'violated') !== false) {
+                // ignore
+                return false;
             } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
                 if ($nb_retry > 3) {
@@ -1438,10 +1453,10 @@ function seekToBeginning($w)
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
                 if(isset($lastResponse['headers']['Retry-After'])) {
-    $retryAfter = $lastResponse['headers']['Retry-After'];
-} else {
-    $retryAfter = 1;
-}
+                $retryAfter = $lastResponse['headers']['Retry-After'];
+            } else {
+                $retryAfter = 1;
+            }
                 sleep($retryAfter);
             } else if ($e->getCode() == 404) {
                 // skip
@@ -1451,6 +1466,9 @@ function seekToBeginning($w)
                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                 // retry any SSL error
                 ++$nb_retry;
+            } else if (strpos(strtolower($e->getMessage()), 'violated') !== false) {
+                // ignore
+                return false;
             } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
                 if ($nb_retry > 3) {
@@ -1538,10 +1556,10 @@ function seekToBeginning($w)
                 if ($e->getCode() == 429) { // 429 is Too Many Requests
                     $lastResponse = $api->getRequest()->getLastResponse();
                     if(isset($lastResponse['headers']['Retry-After'])) {
-    $retryAfter = $lastResponse['headers']['Retry-After'];
-} else {
-    $retryAfter = 1;
-}
+                        $retryAfter = $lastResponse['headers']['Retry-After'];
+                    } else {
+                        $retryAfter = 1;
+                    }
                     sleep($retryAfter);
                 } else if ($e->getCode() == 404) {
                     // skip
