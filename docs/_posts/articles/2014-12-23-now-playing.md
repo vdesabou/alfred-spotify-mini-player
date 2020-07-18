@@ -1,6 +1,6 @@
 ---
 layout: article
-title: "Now Playing"
+title: "Notifications"
 date: 2014-12-23T11:39:03-04:00
 modified: 2018-01-26
 categories: articles
@@ -8,7 +8,7 @@ excerpt: "Display an OS X or Growl notification for listened tracks."
 image:
   teaser: bullet-now-playing.png
   feature:
-  credit: 
+  credit:
   creditlink:
 noindex: false
 share: false
@@ -27,7 +27,7 @@ OS X and [growl](http://growl.info) notifications are supported.
 	<figcaption>Examples of notifications.</figcaption>
 </figure>
 
-You get in the notification:- 
+You get in the notification:-
 
   * the name of the song
   * the artist and album name
