@@ -1517,6 +1517,12 @@ function seekToBeginning($w)
  */
  function getSpotifyConnectCurrentDeviceId($w)
  {
+    // Read settings from JSON
+
+    $settings = getSettings($w);
+
+    $preferred_spotify_connect_device = $settings->preferred_spotify_connect_device;
+
     $retry = true;
     $nb_retry = 0;
     while ($retry) {
@@ -1528,6 +1534,13 @@ function seekToBeginning($w)
                 foreach ($devices->devices as $device) {
                     if ($device->is_active) {
                         return $device->id;
+                    }
+                }
+                if($preferred_spotify_connect_device != "") {
+                    foreach ($devices->devices as $device) {
+                        if ($device->name == $preferred_spotify_connect_device) {
+                            return $device->id;
+                        }
                     }
                 }
                 // no active device, get first in the list
@@ -1636,10 +1649,10 @@ function seekToBeginning($w)
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
                 if(isset($lastResponse['headers']['Retry-After'])) {
-    $retryAfter = $lastResponse['headers']['Retry-After'];
-} else {
-    $retryAfter = 1;
-}
+                    $retryAfter = $lastResponse['headers']['Retry-After'];
+                } else {
+                    $retryAfter = 1;
+                }
                 sleep($retryAfter);
             } else if ($e->getCode() == 404) {
                 // skip
@@ -8157,6 +8170,7 @@ function getSettings($w)
             'always_display_lyrics_in_browser' => 0,
             'workflow_version' => '',
             'automatic_refresh_library_interval' => 0,
+            'preferred_spotify_connect_device' => '',
         );
 
         $ret = $w->write($default, 'settings.json');
@@ -8259,6 +8273,12 @@ function getSettings($w)
             updateSetting($w, 'output_application', 'APPLESCRIPT');
         }
         removeSetting($w,'use_mopidy');
+        $settings = $w->read('settings.json');
+    }
+
+    // add preferred_spotify_connect_device if needed
+    if (!isset($settings->preferred_spotify_connect_device)) {
+        updateSetting($w, 'preferred_spotify_connect_device', '');
         $settings = $w->read('settings.json');
     }
 

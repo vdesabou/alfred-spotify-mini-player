@@ -1331,31 +1331,12 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
  * @param mixed $update_in_progress
  */
 function firstDelimiterSpotifyConnect($w, $query, $settings, $db, $update_in_progress) {
-    $words = explode('▹', $query);
-    $kind = $words[0];
 
-    $all_playlists = $settings->all_playlists;
-    $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
-    $radio_number_tracks = $settings->radio_number_tracks;
-    $now_playing_notifications = $settings->now_playing_notifications;
-    $max_results = $settings->max_results;
-    $alfred_playlist_uri = $settings->alfred_playlist_uri;
-    $alfred_playlist_name = $settings->alfred_playlist_name;
-    $country_code = $settings->country_code;
-    $last_check_update_time = $settings->last_check_update_time;
-    $oauth_client_id = $settings->oauth_client_id;
-    $oauth_client_secret = $settings->oauth_client_secret;
-    $oauth_redirect_uri = $settings->oauth_redirect_uri;
-    $oauth_access_token = $settings->oauth_access_token;
-    $oauth_expires = $settings->oauth_expires;
-    $oauth_refresh_token = $settings->oauth_refresh_token;
-    $display_name = $settings->display_name;
-    $userid = $settings->userid;
-    $is_public_playlists = $settings->is_public_playlists;
-    $output_application = $settings->output_application;
-    $is_display_rating = $settings->is_display_rating;
-    $use_artworks = $settings->use_artworks;
-    $always_display_lyrics_in_browser = $settings->always_display_lyrics_in_browser;
+    // Read settings from JSON
+
+    $settings = getSettings($w);
+
+    $preferred_spotify_connect_device = $settings->preferred_spotify_connect_device;
 
     $retry = true;
     $nb_retry = 0;
@@ -1385,8 +1366,11 @@ function firstDelimiterSpotifyConnect($w, $query, $settings, $db, $update_in_pro
 
                 foreach ($savedDevices as $device) {
                     $added = '';
+                    if ($device->name == $preferred_spotify_connect_device) {
+                        $added .= '🌟';
+                    }
                     if ($device->is_active) {
-                        $added = '🔈';
+                        $added .= '🔈';
                     }
                     if ($device->type == 'Computer') {
                         $icon = './images/computer.png';
@@ -1426,6 +1410,171 @@ function firstDelimiterSpotifyConnect($w, $query, $settings, $db, $update_in_pro
                         else {
                             $w->result(null, 'help', $added . ' ' . $device->type . ' ' . $device->name . ' is currently active ' . $volume, array('This device is the currently active device', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), $icon, 'no', null, '');
                         }
+                    }
+                }
+                $w->result(null, '', 'Select your preferred Spotify Connect device', array('It will be used by default if there is no other active device', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/settings.png', 'no', null, 'Spotify Connect Preferred Device▹');
+            }
+            else {
+                $w->result(null, 'help', 'There was no Spotify Connect device found!', array('', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/warning.png', 'no', null, '');
+                if (isSpotifyAppInstalled()) {
+                    $w->result('SpotifyMiniPlayer_' . 'open_spotify_app', serialize(array(''
+                    /*track_uri*/, ''
+                    /* album_uri */, ''
+                    /* artist_uri */, ''
+                    /* playlist_uri */, ''
+                    /* spotify_command */, ''
+                    /* query */, ''
+                    /* other_settings*/, 'open_spotify_app'
+                    /* other_action */, ''
+                    /* artist_name */, ''
+                    /* track_name */, ''
+                    /* album_name */, ''
+                    /* track_artwork_path */, ''
+                    /* artist_artwork_path */, ''
+                    /* album_artwork_path */, ''
+                    /* playlist_name */, '', /* playlist_artwork_path */
+                    )), 'Open Spotify application', 'This will open Spotify', './images/spotify.png', 'yes', null, '');
+                }
+            }
+        }
+        catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
+            if ($e->getMessage() == 'Permissions missing') {
+                $w->result(null, serialize(array(''
+                /*track_uri*/, ''
+                /* album_uri */, ''
+                /* artist_uri */, ''
+                /* playlist_uri */, ''
+                /* spotify_command */, ''
+                /* query */, ''
+                /* other_settings*/, 'reset_oauth_settings'
+                /* other_action */, ''
+                /* artist_name */, ''
+                /* track_name */, ''
+                /* album_name */, ''
+                /* track_artwork_path */, ''
+                /* artist_artwork_path */, ''
+                /* album_artwork_path */, ''
+                /* playlist_name */, '', /* playlist_artwork_path */
+                )), 'The workflow needs more privilages to do this, click to restart authentication', array('Next time you invoke the workflow, you will have to re-authenticate', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/warning.png', 'yes', null, '');
+                echo $w->tojson();
+                exit;
+            }
+            else {
+                if ($e->getCode() == 429) { // 429 is Too Many Requests
+                    $lastResponse = $api->getRequest()
+                        ->getLastResponse();
+                    if (isset($lastResponse['headers']['Retry-After'])) {
+                        $retryAfter = $lastResponse['headers']['Retry-After'];
+                    }
+                    else {
+                        $retryAfter = 1;
+                    }
+                    sleep($retryAfter);
+                }
+                else if ($e->getCode() == 404) {
+                    $retry = false;
+                    $w->result(null, 'help', 'Exception occurred', array('' . $e->getMessage(), 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/warning.png', 'no', null, '');
+                    echo $w->tojson();
+                    exit;
+                }
+                else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
+                    // retry
+                    if ($nb_retry > 3) {
+                        $retry = false;
+                        $w->result(null, 'help', 'Exception occurred', array('' . $e->getMessage(), 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/warning.png', 'no', null, '');
+
+                        echo $w->tojson();
+                        exit;
+                    }
+                    ++$nb_retry;
+                    sleep(5);
+                }
+                else {
+                    $retry = false;
+                    $w->result(null, 'help', 'Exception occurred', array('' . $e->getMessage(), 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/warning.png', 'no', null, '');
+                    echo $w->tojson();
+                    exit;
+                }
+            }
+        }
+    }
+}
+
+
+/**
+ * firstDelimiterSpotifyConnectPreferredDevice function.
+ *
+ * @param mixed $w
+ * @param mixed $query
+ * @param mixed $settings
+ * @param mixed $db
+ * @param mixed $update_in_progress
+ */
+function firstDelimiterSpotifyConnectPreferredDevice($w, $query, $settings, $db, $update_in_progress) {
+    // Read settings from JSON
+
+    $settings = getSettings($w);
+
+    $preferred_spotify_connect_device = $settings->preferred_spotify_connect_device;
+
+    $retry = true;
+    $nb_retry = 0;
+    while ($retry) {
+        try {
+            $api = getSpotifyWebAPI($w);
+
+            $noresult = true;
+
+            $savedDevices = array();
+            $devices = $api->getMyDevices();
+            $retry = false;
+            if (isset($devices->devices)) {
+                foreach ($devices->devices as $device) {
+                    if ($device->is_active) {
+                        array_unshift($savedDevices, $device);
+                    }
+                    else {
+                        $savedDevices[] = $device;
+                    }
+                    $noresult = false;
+                }
+            }
+
+            if (!$noresult) {
+                $w->result(null, '', 'Select one of your Spotify Connect devices as preferred device', array('Select one of your Spotify Connect devices below as your preferred device', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/connect.png', 'no', null, '');
+
+                foreach ($savedDevices as $device) {
+                    if ($device->type == 'Computer') {
+                        $icon = './images/computer.png';
+                    }
+                    else if ($device->type == 'Smartphone') {
+                        $icon = './images/smartphone.png';
+                    }
+                    else {
+                        $icon = './images/speaker.png';
+                    }
+                    if ($device->is_restricted) {
+                        $w->result(null, 'help', $device->type . ' ' . $device->name . ' cannot be controlled', array('⚠ This device cannot be controlled by Spotify WEB API', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), $icon, 'no', null, '');
+                    } elseif ($device->name == $preferred_spotify_connect_device) {
+                        $w->result(null, 'help', $device->type . ' ' . $device->name . ' is already your preferred device 🌟', array('Choose another one in the list', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), $icon, 'no', null, '');
+                    }
+                    else {
+                        $w->result(null, serialize(array(''
+                        /*track_uri*/, ''
+                        /* album_uri */, ''
+                        /* artist_uri */, ''
+                        /* playlist_uri */, ''
+                        /* spotify_command */, ''
+                        /* query */, 'CHANGE_PREFERRED_DEVICE▹' . $device->name /* other_settings*/, ''
+                        /* other_action */, ''
+                        /* artist_name */, ''
+                        /* track_name */, ''
+                        /* album_name */, ''
+                        /* track_artwork_path */, ''
+                        /* artist_artwork_path */, ''
+                        /* album_artwork_path */, ''
+                        /* playlist_name */, '', /* playlist_artwork_path */
+                        )), $device->type . ' ' . $device->name, array('Type enter to validate', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), $icon, 'yes', null, '');
                     }
                 }
 

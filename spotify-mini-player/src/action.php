@@ -753,6 +753,15 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
         changeUserDevice($w, $setting[1]);
         return;
+    } elseif ($setting[0] == 'CHANGE_PREFERRED_DEVICE') {
+
+        $ret = updateSetting($w, 'preferred_spotify_connect_device', $setting[1]);
+        if ($ret == true) {
+            displayNotificationWithArtwork($w, 'Preferred Spotify Connect device set to ' . $setting[1], './images/connect.png', 'Settings');
+        } else {
+            displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
+        }
+        return;
     }
 } elseif ($other_action != '') {
     if ($other_action == 'disable_all_playlist') {
