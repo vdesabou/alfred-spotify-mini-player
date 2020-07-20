@@ -1522,6 +1522,7 @@ function seekToBeginning($w)
     $settings = getSettings($w);
 
     $preferred_spotify_connect_device = $settings->preferred_spotify_connect_device;
+    $preferred_spotify_connect_device_pushcut_webhook = $settings->preferred_spotify_connect_device_pushcut_webhook;
 
     $retry = true;
     $nb_retry = 0;
@@ -1539,6 +1540,15 @@ function seekToBeginning($w)
                 if($preferred_spotify_connect_device != "") {
                     foreach ($devices->devices as $device) {
                         if ($device->name == $preferred_spotify_connect_device) {
+                            if($preferred_spotify_connect_device_pushcut_webhook != "") {
+                                $options = array(
+                                    CURLOPT_FOLLOWLOCATION => 1,
+                                    CURLOPT_TIMEOUT => 10,
+                                    CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13',
+                                );
+                                logMsg("INFO: getSpotifyConnectCurrentDeviceId() calling Pushcut webhook");
+                                $w->request($preferred_spotify_connect_device_pushcut_webhook, $options);
+                            }
                             return $device->id;
                         }
                     }
@@ -8171,6 +8181,7 @@ function getSettings($w)
             'workflow_version' => '',
             'automatic_refresh_library_interval' => 0,
             'preferred_spotify_connect_device' => '',
+            'preferred_spotify_connect_device_pushcut_webhook' => '',
         );
 
         $ret = $w->write($default, 'settings.json');
@@ -8279,6 +8290,12 @@ function getSettings($w)
     // add preferred_spotify_connect_device if needed
     if (!isset($settings->preferred_spotify_connect_device)) {
         updateSetting($w, 'preferred_spotify_connect_device', '');
+        $settings = $w->read('settings.json');
+    }
+
+    // add preferred_spotify_connect_device_pushcut_webhook if needed
+    if (!isset($settings->preferred_spotify_connect_device_pushcut_webhook)) {
+        updateSetting($w, 'preferred_spotify_connect_device_pushcut_webhook', '');
         $settings = $w->read('settings.json');
     }
 
