@@ -3593,6 +3593,8 @@
 			<dict>
 				<key>argument</key>
 				<string>✧Settings▹</string>
+				<key>passthroughargument</key>
+				<false/>
 				<key>variables</key>
 				<dict/>
 			</dict>
@@ -3665,6 +3667,8 @@
 			<dict>
 				<key>argument</key>
 				<string>✧Playlist▹</string>
+				<key>passthroughargument</key>
+				<false/>
 				<key>variables</key>
 				<dict/>
 			</dict>
@@ -3750,6 +3754,8 @@
 			<dict>
 				<key>argument</key>
 				<string>✧Current Track▹</string>
+				<key>passthroughargument</key>
+				<false/>
 				<key>variables</key>
 				<dict/>
 			</dict>
@@ -3815,6 +3821,8 @@
 			<dict>
 				<key>argument</key>
 				<string>Recent Tracks▹</string>
+				<key>passthroughargument</key>
+				<false/>
 				<key>variables</key>
 				<dict/>
 			</dict>
@@ -3887,6 +3895,8 @@
 			<dict>
 				<key>argument</key>
 				<string>✧New Releases▹</string>
+				<key>passthroughargument</key>
+				<false/>
 				<key>variables</key>
 				<dict/>
 			</dict>
@@ -3959,6 +3969,8 @@
 			<dict>
 				<key>argument</key>
 				<string>✧Search Online▹</string>
+				<key>passthroughargument</key>
+				<false/>
 				<key>variables</key>
 				<dict/>
 			</dict>
@@ -4041,6 +4053,8 @@
 			<dict>
 				<key>argument</key>
 				<string>✧Play Queue▹</string>
+				<key>passthroughargument</key>
+				<false/>
 				<key>variables</key>
 				<dict/>
 			</dict>
@@ -4102,6 +4116,8 @@
 			<dict>
 				<key>argument</key>
 				<string>✧Browse▹</string>
+				<key>passthroughargument</key>
+				<false/>
 				<key>variables</key>
 				<dict/>
 			</dict>
@@ -4151,6 +4167,8 @@
 			<dict>
 				<key>argument</key>
 				<string>✧Spotify Connect▹</string>
+				<key>passthroughargument</key>
+				<false/>
 				<key>variables</key>
 				<dict/>
 			</dict>
@@ -4216,6 +4234,8 @@
 			<dict>
 				<key>argument</key>
 				<string>✧Show▹</string>
+				<key>passthroughargument</key>
+				<false/>
 				<key>variables</key>
 				<dict/>
 			</dict>
@@ -8674,6 +8694,8 @@ php -f ./src/action.php -- "$query" "TRACK" ""</string>
 			<dict>
 				<key>argument</key>
 				<string></string>
+				<key>passthroughargument</key>
+				<false/>
 				<key>variables</key>
 				<dict>
 					<key>web_search</key>
@@ -8979,6 +9001,8 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 			<dict>
 				<key>argument</key>
 				<string></string>
+				<key>passthroughargument</key>
+				<false/>
 				<key>variables</key>
 				<dict>
 					<key>chosen_color</key>
@@ -8997,6 +9021,8 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 			<dict>
 				<key>argument</key>
 				<string></string>
+				<key>passthroughargument</key>
+				<false/>
 				<key>variables</key>
 				<dict>
 					<key>theme_color</key>
@@ -9086,6 +9112,8 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 			<dict>
 				<key>argument</key>
 				<string></string>
+				<key>passthroughargument</key>
+				<false/>
 				<key>variables</key>
 				<dict>
 					<key>chosen_search_order</key>
@@ -9211,6 +9239,8 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 			<dict>
 				<key>argument</key>
 				<string>{query}</string>
+				<key>passthroughargument</key>
+				<false/>
 				<key>variables</key>
 				<dict/>
 			</dict>
@@ -9273,6 +9303,8 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 			<dict>
 				<key>argument</key>
 				<string>{query}</string>
+				<key>passthroughargument</key>
+				<false/>
 				<key>variables</key>
 				<dict/>
 			</dict>
@@ -9288,6 +9320,8 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 			<dict>
 				<key>argument</key>
 				<string>{query}</string>
+				<key>passthroughargument</key>
+				<false/>
 				<key>variables</key>
 				<dict/>
 			</dict>
@@ -9350,6 +9384,8 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 			<dict>
 				<key>argument</key>
 				<string>{query}</string>
+				<key>passthroughargument</key>
+				<false/>
 				<key>variables</key>
 				<dict/>
 			</dict>
@@ -9365,6 +9401,8 @@ php -f ./src/action.php -- "$query" "TRACK" "" &gt;&gt; "$alfred_workflow_cache/
 			<dict>
 				<key>argument</key>
 				<string>{query}</string>
+				<key>passthroughargument</key>
+				<false/>
 				<key>variables</key>
 				<dict/>
 			</dict>
@@ -12067,7 +12105,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 		<key>append_to_playlist_when_adding_tracks</key>
 		<string>0</string>
 		<key>automatically_open_spotify_app</key>
-		<string>1</string>
+		<string>0</string>
 		<key>automatically_refresh_library</key>
 		<string>0</string>
 		<key>c_add_current_track_to</key>
