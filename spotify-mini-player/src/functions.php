@@ -1523,6 +1523,7 @@ function seekToBeginning($w)
 
     $preferred_spotify_connect_device = $settings->preferred_spotify_connect_device;
     $preferred_spotify_connect_device_pushcut_webhook = $settings->preferred_spotify_connect_device_pushcut_webhook;
+    $preferred_spotify_connect_device_pushcut_webhook_json_body = $settings->preferred_spotify_connect_device_pushcut_webhook_json_body;
 
     $retry = true;
     $nb_retry = 0;
@@ -1558,13 +1559,9 @@ function seekToBeginning($w)
                 continue;
             }
             if($preferred_spotify_connect_device_pushcut_webhook != "") {
-                $options = array(
-                    CURLOPT_FOLLOWLOCATION => 1,
-                    CURLOPT_TIMEOUT => 10,
-                    CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13',
-                );
+
+                exec("curl -s -X POST -H Content-Type:application/json -d '$preferred_spotify_connect_device_pushcut_webhook_json_body' . $preferred_spotify_connect_device_pushcut_webhook", $retArr, $retVal);
                 logMsg("INFO: getSpotifyConnectCurrentDeviceId() calling Pushcut webhook");
-                $w->request($preferred_spotify_connect_device_pushcut_webhook, $options);
                 $retry = true;
                 sleep(5);
                 continue;
@@ -8302,6 +8299,11 @@ function getSettings($w)
         $settings = $w->read('settings.json');
     }
 
+    // add preferred_spotify_connect_device_pushcut_webhook_json_body if needed
+    if (!isset($settings->preferred_spotify_connect_device_pushcut_webhook_json_body)) {
+        updateSetting($w, 'preferred_spotify_connect_device_pushcut_webhook_json_body', '');
+        $settings = $w->read('settings.json');
+    }
     return $settings;
 }
 
