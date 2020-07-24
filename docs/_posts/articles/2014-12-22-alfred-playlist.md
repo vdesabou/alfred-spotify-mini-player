@@ -2,7 +2,7 @@
 layout: article
 title: "Control Alfred Playlist or Your Music"
 date: 2014-12-22T11:39:03-04:00
-modified: 2017-01-17T11:39:03-04:00
+modified: 2020-07-24T11:39:03-04:00
 categories: articles
 excerpt: "Control Your Music, or a favorite playlist."
 image:
@@ -41,11 +41,11 @@ The Alfred Playlist is simply one of your playlists that you can choose and for 
 
 * To add an album or another playlist to your Alfred Playlist, select a track with `shift` modifier key and press `enter`. You'll get a menu where you can choose your _Alfred Playlist_ (or any other playlist).
 
-* To add currently playing track to your Alfred Playlist, you can use `add_current_track` command:
+* To add currently playing track to your Alfred Playlist, you can use `add_current_track_to_alfred_playlist_or_your_music` command:
 
 <figure>
 	<a href="{{ site.url }}/images/alfred-playlist3.jpg"><img src="{{ site.url }}/images/alfred-playlist3.jpg"></a>
-	<figcaption>Use <i>add_current_track</i> command to add current playing track to your Alfred Playlist.</figcaption>
+	<figcaption>Use <i>add_current_track_to_alfred_playlist_or_your_music</i> command to add current playing track to your Alfred Playlist.</figcaption>
 </figure>
 
 
