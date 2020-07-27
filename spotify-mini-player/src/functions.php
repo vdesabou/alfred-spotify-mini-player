@@ -2601,6 +2601,11 @@ function decryptString($w, $encrypted)
         return false;
     }
 
+    if($decrypted == '') {
+        displayNotificationWithArtwork($w, 'Failed to decrypt string (empty string)', './images/warning.png', 'Error!');
+        return false;
+    }
+
     return $decrypted;
 }
 
