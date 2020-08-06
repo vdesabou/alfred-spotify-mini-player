@@ -2,7 +2,7 @@
 layout: article
 title: "Customization"
 date: 2017-01-17T11:39:03-04:00
-modified: 2020-06-05
+modified: 2020-08-06
 categories: articles
 excerpt: "You can customize the workflow by changing settings or variables..."
 image:
@@ -113,3 +113,8 @@ But you can also use [Alfred variables](https://www.alfredapp.com/help/workflows
 
     * `now_playing_track_title`: `Now Playing {popularity} ({duration})`
     * `now_playing_track_text`: `🔈 {track_name} by {artist_name} in album {album_name}`
+
+* You can decide to add all album tracks in your music when you add an album in Your Music (otherwise it just likes the album), by modifying variable `add_all_tracks_from_album_when_adding_to_yourmusic`:-
+
+  * 1 for adding all album tracks
+  * 0 for not not adding all album tracks

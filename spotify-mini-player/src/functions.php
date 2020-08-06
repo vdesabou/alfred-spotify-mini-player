@@ -3800,6 +3800,39 @@ function addCurrentTrackToYourMusic($w)
 }
 
 /**
+ * addAlbumToYourMusic function.
+ *
+ * @param mixed $w
+ * @param mixed $album_uri
+ */
+function addAlbumToYourMusic($w, $album_uri)
+{
+    try {
+        // refresh api
+        $api = getSpotifyWebAPI($w);
+        $response = $api->myAlbumsContains($album_uri);
+        if($response[0] == false) {
+            $api->addMyAlbums($album_uri);
+        } else {
+            return 0;
+        }
+
+    } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+        logMsg('Error(addAlbumToYourMusic): (exception '.jTraceEx($e).')');
+        handleSpotifyWebAPIException($w, $e);
+
+        return false;
+    }
+
+    // refresh library
+    if(getenv('automatically_refresh_library') == 1) {
+        refreshLibrary($w);
+    }
+
+    return 1;
+}
+
+/**
  * addTracksToYourMusic function.
  *
  * @param mixed $w

@@ -12100,6 +12100,8 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 	</dict>
 	<key>variables</key>
 	<dict>
+		<key>add_all_tracks_from_album_when_adding_to_yourmusic</key>
+		<string>0</string>
 		<key>add_created_radio_playlist_to_library</key>
 		<string>0</string>
 		<key>append_to_playlist_when_adding_tracks</key>

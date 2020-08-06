@@ -689,7 +689,11 @@ if ($type == 'TRACK' && $other_settings == '' &&
             } // add album to your music
             elseif ($album_uri != '') {
                 $album_artwork_path = getTrackOrAlbumArtwork($w, $album_uri, true, false, false, $use_artworks);
-                $ret = addTracksToYourMusic($w, getTheAlbumTracks($w, $album_uri), false);
+                if(getenv('add_all_tracks_from_album_when_adding_to_yourmusic') == 1) {
+                    $ret = addTracksToYourMusic($w, getTheAlbumTracks($w, $album_uri), false);
+                } else {
+                    $ret = addAlbumToYourMusic($w, $album_uri);
+                }
                 stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);
                 if (is_numeric($ret) && $ret > 0) {
                     displayNotificationWithArtwork($w, 'Album '.$album_name.' added to Your Music', $album_artwork_path, 'Add Album to Your Music');
