@@ -1381,6 +1381,24 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
             /* album_artwork_path */, ''
             /* playlist_name */, '', /* playlist_artwork_path */
             )), 'Remove current track from...', 'Current track will be removed from Your Music or a playlist of your choice', './images/remove_from.png', 'yes', '');
+
+            $w->result('SpotifyMiniPlayer_' . 'remove_current_track_from_alfred_playlist_or_your_music', serialize(array(''
+            /*track_uri*/, ''
+            /* album_uri */, ''
+            /* artist_uri */, ''
+            /* playlist_uri */, ''
+            /* spotify_command */, ''
+            /* query */, ''
+            /* other_settings*/, 'remove_current_track'
+            /* other_action */, ''
+            /* artist_name */, ''
+            /* track_name */, ''
+            /* album_name */, ''
+            /* track_artwork_path */, ''
+            /* artist_artwork_path */, ''
+            /* album_artwork_path */, ''
+            /* playlist_name */, '', /* playlist_artwork_path */
+            )), 'Remove current track from Alfred Playlist or Your Music', 'Current track will be removed from your Alfred Playlist or Your Music', './images/remove.png', 'yes', '');
         }
 
         $w->result('SpotifyMiniPlayer_' . 'mute', serialize(array(''
@@ -2045,6 +2063,25 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                 /* album_artwork_path */, ''
                 /* playlist_name */, '', /* playlist_artwork_path */
                 )), 'Remove current track from...', 'Current track will be removed from Your Music or a playlist of your choice', './images/remove_from.png', 'yes', '');
+
+                $w->result('SpotifyMiniPlayer_' . 'remove_current_track_from_alfred_playlist_or_your_music', serialize(array(''
+                /*track_uri*/, ''
+                /* album_uri */, ''
+                /* artist_uri */, ''
+                /* playlist_uri */, ''
+                /* spotify_command */, ''
+                /* query */, ''
+                /* other_settings*/, 'remove_current_track'
+                /* other_action */, ''
+                /* artist_name */, ''
+                /* track_name */, ''
+                /* album_name */, ''
+                /* track_artwork_path */, ''
+                /* artist_artwork_path */, ''
+                /* album_artwork_path */, ''
+                /* playlist_name */, '', /* playlist_artwork_path */
+                )), 'Remove current track from Alfred Playlist or Your Music', 'Current track will be removed from your Alfred Playlist or Your Music', './images/remove.png', 'yes', '');
+
             }
             if (strpos(strtolower('radio'), strtolower($query)) !== false) {
                 $w->result('SpotifyMiniPlayer_' . 'current_artist_radio', serialize(array(''

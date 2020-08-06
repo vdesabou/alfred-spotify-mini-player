@@ -1429,6 +1429,16 @@ if ($type == 'TRACK' && $other_settings == '' &&
         stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);
 
         return;
+    } elseif ($other_action == 'remove_current_track') {
+        if (file_exists($w->data().'/update_library_in_progress')) {
+            displayNotificationWithArtwork($w, 'Cannot modify library while update is in progress', './images/warning.png', 'Error!');
+
+            return;
+        }
+        removeCurrentTrackFromAlfredPlaylistOrYourMusic($w);
+        stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);
+
+        return;
     } elseif ($other_action == 'random') {
         list($track_uri, $track_name, $artist_name, $album_name, $duration) = getRandomTrack($w);
         if ($output_application == 'MOPIDY') {

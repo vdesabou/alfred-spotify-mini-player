@@ -2215,6 +2215,7 @@ function switchThemeColor($w,$theme_color)
             '8598A5C9-72B6-4CEF-A498-D6C2ED06DC88' => 'radio_song',
             '873EF61A-BD03-4946-87B0-C7AE5DFC5E5B' => 'debug',
             '89BC46B4-E178-4855-8863-393730814F6E' => 'shuffle',
+            '225A3B1E-A8C9-4BF3-8D40-7CBF3C8B0AED' => 'remove',
             'BD255BDB-07A5-4EE9-858F-A58C6207D191' => 'shuffle',
             '8C78472B-13EB-4512-B94D-4BF92867CD92' => 'random',
             '8E4347FE-0FC3-4FF1-AAAF-E0C6CD084BB5' => 'volume_down',
@@ -2226,6 +2227,7 @@ function switchThemeColor($w,$theme_color)
             'A0EAB8B1-F034-490F-9534-44ADF572AF4E' => 'uncheck',
             'A0F746BD-C7AF-490F-B4D9-8BAEDDDAEF90' => 'alfred_playlist',
             'E6CEF7D4-CFA9-4608-A188-65B33A602BAF' => 'alfred_playlist',
+            'E6FFCB35-C8D2-4744-AC93-972A1E9AC061' => 'remove',
             '11E4CA98-E51E-45E4-91ED-72B4A1A34283' => 'alfred_playlist',
             'A38DD404-DE03-42C2-B0CB-A37891B6F24D' => 'info',
             'A41190FA-4B23-4908-A4B7-16A14F338C11' => 'repeating',
@@ -3662,6 +3664,27 @@ function removeCurrentTrackFrom($w)
 }
 
 /**
+ * removeCurrentTrackFromAlfredPlaylistOrYourMusic function.
+ *
+ * @param mixed $w
+ */
+function removeCurrentTrackFromAlfredPlaylistOrYourMusic($w)
+{
+
+    // Read settings from JSON
+
+    $settings = getSettings($w);
+
+    $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
+
+    if ($is_alfred_playlist_active == true) {
+        removeCurrentTrackFromAlfredPlaylist($w);
+    } else {
+        removeCurrentTrackFromYourMusic($w);
+    }
+}
+
+/**
  * addCurrentTrackToAlfredPlaylistOrYourMusic function.
  *
  * @param mixed $w
@@ -3679,6 +3702,70 @@ function addCurrentTrackToAlfredPlaylistOrYourMusic($w)
         addCurrentTrackToAlfredPlaylist($w);
     } else {
         addCurrentTrackToYourMusic($w);
+    }
+}
+
+/**
+ * removeCurrentTrackFromAlfredPlaylist function.
+ *
+ * @param mixed $w
+ */
+function removeCurrentTrackFromAlfredPlaylist($w)
+{
+
+    // Read settings from JSON
+
+    $settings = getSettings($w);
+
+    $output_application = $settings->output_application;
+    $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
+    $alfred_playlist_uri = $settings->alfred_playlist_uri;
+    $alfred_playlist_name = $settings->alfred_playlist_name;
+    $country_code = $settings->country_code;
+    $use_artworks = $settings->use_artworks;
+
+    $results = getCurrentTrackinfo($w, $output_application);
+
+    if (is_array($results) && count($results) > 0) {
+
+        if ($alfred_playlist_uri == '' || $alfred_playlist_name == '') {
+            displayNotificationWithArtwork($w, 'Alfred Playlist is not set', './images/warning.png');
+
+            return;
+        }
+
+        $tmp = explode(':', $results[4]);
+        if (isset($tmp[1]) && $tmp[1] == 'local') {
+            // local track, look it up online
+
+            $query = 'track:'.escapeQuery($results[0]).' artist:'.escapeQuery($results[1]);
+            $searchResults = searchWebApi($w, $country_code, $query, 'track', 1);
+
+            if (count($searchResults) > 0) {
+                // only one track returned
+                $track = $searchResults[0];
+                $artists = $track->artists;
+                $artist = $artists[0];
+                $album = $track->album;
+                logMsg("Info(removeCurrentTrackFromAlfredPlaylist): Unknown track $results[4] / $results[0] / $results[1] replaced by track: $track->uri / $track->name / $artist->name / $album->uri");
+                $results[4] = $track->uri;
+            } else {
+                logMsg("Error(removeCurrentTrackFromAlfredPlaylist): Could not find track: $results[4] / $results[0] / $results[1] ");
+                displayNotificationWithArtwork($w, 'Local track '.escapeQuery($results[0]).' has not online match', './images/warning.png', 'Error!');
+
+                return;
+            }
+        }
+
+        $tmp = explode(':', $results[4]);
+        $ret = removeTrackFromPlaylist($w, $tmp[2], $alfred_playlist_uri, $alfred_playlist_name, false);
+        if ($ret) {
+            displayNotificationWithArtwork($w, ''.escapeQuery($results[0]).' by '.escapeQuery($results[1]).' removed from Alfred Playlist '.$alfred_playlist_name, getTrackOrAlbumArtwork($w, $results[4], true, false, false, $use_artworks), 'Remove Current Track from Alfred Playlist');
+        } else {
+            displayNotificationWithArtwork($w, 'Cannot remove current track', './images/warning.png', 'Error!');
+        }
+    } else {
+        displayNotificationWithArtwork($w, 'No track is playing', './images/warning.png', 'Error!');
     }
 }
 
@@ -3740,6 +3827,59 @@ function addCurrentTrackToAlfredPlaylist($w)
             displayNotificationWithArtwork($w, ''.escapeQuery($results[0]).' by '.escapeQuery($results[1]).' added to Alfred Playlist '.$alfred_playlist_name, getTrackOrAlbumArtwork($w, $results[4], true, false, false, $use_artworks), 'Add Current Track to Alfred Playlist');
         } elseif (is_numeric($ret) && $ret == 0) {
             displayNotificationWithArtwork($w, ''.escapeQuery($results[0]).' by '.escapeQuery($results[1]).' is already in Alfred Playlist '.$alfred_playlist_name, './images/warning.png', 'Error!');
+        }
+    } else {
+        displayNotificationWithArtwork($w, 'No track is playing', './images/warning.png', 'Error!');
+    }
+}
+
+/**
+ * removeCurrentTrackFromYourMusic function.
+ *
+ * @param mixed $w
+ */
+function removeCurrentTrackFromYourMusic($w)
+{
+
+    // Read settings from JSON
+
+    $settings = getSettings($w);
+
+    $output_application = $settings->output_application;
+    $use_artworks = $settings->use_artworks;
+    $country_code = $settings->country_code;
+
+    $results = getCurrentTrackinfo($w, $output_application);
+
+    if (is_array($results) && count($results) > 0) {
+        $tmp = explode(':', $results[4]);
+        if (isset($tmp[1]) && $tmp[1] == 'local') {
+
+            // local track, look it up online
+            $query = 'track:'.escapeQuery($results[0]).' artist:'.escapeQuery($results[1]);
+            $searchResults = searchWebApi($w, $country_code, $query, 'track', 1);
+
+            if (count($searchResults) > 0) {
+                // only one track returned
+                $track = $searchResults[0];
+                $artists = $track->artists;
+                $artist = $artists[0];
+                $album = $track->album;
+                logMsg("Info(removeCurrentTrackFromYourMusic): Unknown track $results[4] / $results[0] / $results[1] replaced by track: $track->uri / $track->name / $artist->name / $album->uri");
+                $results[4] = $track->uri;
+            } else {
+                logMsg("Error(removeCurrentTrackFromYourMusic): Could not find track: $results[4] / $results[0] / $results[1] ");
+                displayNotificationWithArtwork($w, 'Local track '.escapeQuery($results[0]).' has not online match', './images/warning.png', 'Error!');
+
+                return;
+            }
+        }
+        $tmp = explode(':', $results[4]);
+        $ret = removeTrackFromYourMusic($w, $tmp[2]);
+        if ($ret) {
+            displayNotificationWithArtwork($w, ''.escapeQuery($results[0]).' by '.escapeQuery($results[1]).' removed from Your Music', getTrackOrAlbumArtwork($w, $results[4], true, false, false, $use_artworks), 'Remove Current Track from Your Music');
+        } else {
+            displayNotificationWithArtwork($w, 'Cannot remove current track', './images/warning.png', 'Error!');
         }
     } else {
         displayNotificationWithArtwork($w, 'No track is playing', './images/warning.png', 'Error!');
