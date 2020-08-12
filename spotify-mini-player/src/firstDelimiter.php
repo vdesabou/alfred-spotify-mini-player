@@ -46,7 +46,7 @@ function firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress
         $playlists = $stmt->execute();
     }
     catch(PDOException $e) {
-        handleDbIssuePdoXml($db);
+        handleDbIssuePdoXml($e);
 
         exit;
     }
@@ -218,7 +218,7 @@ function firstDelimiterArtists($w, $query, $settings, $db, $update_in_progress) 
         $artists = $stmt->execute();
     }
     catch(PDOException $e) {
-        handleDbIssuePdoXml($db);
+        handleDbIssuePdoXml($e);
 
         exit;
     }
@@ -295,7 +295,7 @@ function firstDelimiterShows($w, $query, $settings, $db, $update_in_progress) {
         $tracks = $stmt->execute();
     }
     catch(PDOException $e) {
-        handleDbIssuePdoXml($db);
+        handleDbIssuePdoXml($e);
 
         exit;
     }
@@ -395,7 +395,7 @@ function firstDelimiterAlbums($w, $query, $settings, $db, $update_in_progress) {
         $tracks = $stmt->execute();
     }
     catch(PDOException $e) {
-        handleDbIssuePdoXml($db);
+        handleDbIssuePdoXml($e);
 
         exit;
     }
@@ -1085,7 +1085,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
             $tracks = $stmt->execute();
         }
         catch(PDOException $e) {
-            handleDbIssuePdoXml($db);
+            handleDbIssuePdoXml($e);
 
             return;
         }
@@ -1267,7 +1267,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                     $stmtgetTracks->execute();
                 }
                 catch(PDOException $e) {
-                    handleDbIssuePdoXml($db);
+                    handleDbIssuePdoXml($e);
 
                     return;
                 }
@@ -1286,7 +1286,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                             $playlists = $stmtGetPlaylists->execute();
                         }
                         catch(PDOException $e) {
-                            handleDbIssuePdoXml($db);
+                            handleDbIssuePdoXml($e);
 
                             return;
                         }
@@ -1707,7 +1707,7 @@ function firstDelimiterYourMusic($w, $query, $settings, $db, $update_in_progress
             $counter = $stmt->fetch();
         }
         catch(PDOException $e) {
-            handleDbIssuePdoXml($db);
+            handleDbIssuePdoXml($e);
 
             return;
         }
@@ -1736,7 +1736,7 @@ function firstDelimiterYourMusic($w, $query, $settings, $db, $update_in_progress
             $artists = $stmt->execute();
         }
         catch(PDOException $e) {
-            handleDbIssuePdoXml($db);
+            handleDbIssuePdoXml($e);
 
             return;
         }
@@ -1758,7 +1758,7 @@ function firstDelimiterYourMusic($w, $query, $settings, $db, $update_in_progress
             $tracks = $stmt->execute();
         }
         catch(PDOException $e) {
-            handleDbIssuePdoXml($db);
+            handleDbIssuePdoXml($e);
 
             return;
         }

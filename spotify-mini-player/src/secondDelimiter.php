@@ -433,7 +433,7 @@ function secondDelimiterAlbums($w, $query, $settings, $db, $update_in_progress) 
         $tracks = $stmt->execute();
     }
     catch(PDOException $e) {
-        handleDbIssuePdoXml($db);
+        handleDbIssuePdoXml($e);
 
         exit;
     }
@@ -467,7 +467,7 @@ function secondDelimiterAlbums($w, $query, $settings, $db, $update_in_progress) 
         $onetrack = $stmtGetArtist->fetch();
     }
     catch(PDOException $e) {
-        handleDbIssuePdoXml($db);
+        handleDbIssuePdoXml($e);
 
         exit;
     }
@@ -733,7 +733,7 @@ function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progres
         }
     }
     catch(PDOException $e) {
-        handleDbIssuePdoXml($db);
+        handleDbIssuePdoXml($e);
 
         exit;
     }
@@ -1406,7 +1406,7 @@ function secondDelimiterYourMusicAlbums($w, $query, $settings, $db, $update_in_p
         $tracks = $stmt->execute();
     }
     catch(PDOException $e) {
-        handleDbIssuePdoXml($db);
+        handleDbIssuePdoXml($e);
 
         exit;
     }
@@ -1587,7 +1587,7 @@ function secondDelimiterYourMusicArtists($w, $query, $settings, $db, $update_in_
         $artists = $stmt->execute();
     }
     catch(PDOException $e) {
-        handleDbIssuePdoXml($db);
+        handleDbIssuePdoXml($e);
 
         exit;
     }
@@ -2316,7 +2316,7 @@ function secondDelimiterAdd($w, $query, $settings, $db, $update_in_progress) {
         $playlists = $stmt->execute();
     }
     catch(PDOException $e) {
-        handleDbIssuePdoXml($db);
+        handleDbIssuePdoXml($e);
 
         exit;
     }
@@ -2480,7 +2480,7 @@ function secondDelimiterRemove($w, $query, $settings, $db, $update_in_progress) 
         }
     }
     catch(PDOException $e) {
-        handleDbIssuePdoXml($db);
+        handleDbIssuePdoXml($e);
 
         exit;
     }
@@ -2541,7 +2541,7 @@ function secondDelimiterAlfredPlaylist($w, $query, $settings, $db, $update_in_pr
             $playlists = $stmt->execute();
         }
         catch(PDOException $e) {
-            handleDbIssuePdoXml($db);
+            handleDbIssuePdoXml($e);
 
             return;
         }

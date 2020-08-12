@@ -6,6 +6,46 @@ require_once './src/refreshLibrary.php';
 require './vendor/autoload.php';
 
 /**
+ * getFuzzySearchResults function.
+ *
+ */
+function getFuzzySearchResults($w, $update_in_progress, $query, $table_name, $table_column)
+{
+    if (!file_exists('/usr/bin/sqlite3')) {
+        $w->result(null, '', 'sqlite3 is not installed, install using brew install sqlite', array('install using brew install sqlite', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/warning.png', 'no', null, '');
+        echo $w->tojson();
+        exit;
+    }
+
+    if (!file_exists('/usr/local/bin/fzf')) {
+        $w->result(null, '', 'fzf is not installed, install using brew install fzf', array('install using brew install fzf', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/warning.png', 'no', null, '');
+        echo $w->tojson();
+        exit;
+    }
+
+    // Check for library DB to use
+    $dbfile = '';
+    if ($update_in_progress == false && file_exists($w->data().'/library.db')) {
+        $dbfile = $w->data().'/library.db';
+    } elseif (file_exists($w->data().'/library_old.db')) {
+        // update in progress use the old library
+        if ($update_in_progress == true) {
+            $dbfile = $w->data().'/library_old.db';
+        } else {
+            unlink($w->data().'/library_old.db');
+        }
+    }
+
+    exec("/usr/bin/sqlite3 '$dbfile' 'select $table_column from $table_name;' | /usr/local/bin/fzf --filter \"$query\"", $retArr, $retVal);
+
+    // if ($retVal != 0) {
+    //     displayNotificationWithArtwork($w, 'Fuzzy search failed with error '.$retVal, './images/warning.png', 'Error!');
+    //     return;
+    // }
+    return $retArr;
+}
+
+/**
  * getAlfredName function.
  *
  */
@@ -7310,13 +7350,13 @@ function getArtistArtworkURL($w, $artist_id)
 /**
  * handleDbIssuePdoXml function.
  *
- * @param mixed $dbhandle
+ * @param mixed $e
  */
-function handleDbIssuePdoXml($dbhandle)
+function handleDbIssuePdoXml($e)
 {
-    $errorInfo = $dbhandle->errorInfo();
     $w = new Workflows('com.vdesabou.spotify.mini.player');
-    $w->result(null, '', 'Database Error: '.$errorInfo[0].' '.$errorInfo[1].' '.$errorInfo[2],array(
+    logMsg("ERROR: (handleDbIssuePdoXml)".$e->getCode().' '.$e->getMessage().' '.$e->getTraceAsString());
+    $w->result(null, '', 'Database Error: '.$e->getCode().' '.$e->getMessage(),array(
                      '',
                     'alt' => 'Not Available',
                     'cmd' => 'Not Available',
@@ -8360,6 +8400,7 @@ function getSettings($w)
             'automatic_refresh_library_interval' => 0,
             'preferred_spotify_connect_device' => '',
             'preferred_spotify_connect_device_pushcut_webhook' => '',
+            'fuzzy_search' => 0,
         );
 
         $ret = $w->write($default, 'settings.json');
@@ -8480,6 +8521,12 @@ function getSettings($w)
     // add preferred_spotify_connect_device_pushcut_webhook_json_body if needed
     if (!isset($settings->preferred_spotify_connect_device_pushcut_webhook_json_body)) {
         updateSetting($w, 'preferred_spotify_connect_device_pushcut_webhook_json_body', '');
+        $settings = $w->read('settings.json');
+    }
+
+    // add fuzzy_search if needed
+    if (!isset($settings->fuzzy_search)) {
+        updateSetting($w, 'fuzzy_search', 0);
         $settings = $w->read('settings.json');
     }
     return $settings;

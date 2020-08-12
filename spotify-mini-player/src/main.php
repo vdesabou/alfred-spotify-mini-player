@@ -245,7 +245,7 @@ try {
     // thanks to https://blog.amartynov.ru/php-sqlite-case-insensitive-like-utf8/
     $db->sqliteCreateFunction('like', "lexa_ci_utf8_like", 2);
 } catch (PDOException $e) {
-    handleDbIssuePdoXml($db);
+    handleDbIssuePdoXml($e);
 
     return;
 }
