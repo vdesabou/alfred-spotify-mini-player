@@ -446,7 +446,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
         if ($search_category == 'playlist') {
 
             if($fuzzy_search) {
-                $retArr = getFuzzySearchResults($w, $update_in_progress, $query, 'playlists', 'name');
+                $retArr = getFuzzySearchResults($w, $update_in_progress, $query, 'playlists', array('name'));
                 $getPlaylists = 'select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist,collaborative,public from playlists where name in ('.'"'.implode('","', $retArr).'"'.')';
                 $stmt = $db->prepare($getPlaylists);
             } else {
@@ -523,17 +523,30 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
         }
 
         if ($search_category == 'artist') {
-            // Search artists
-            if ($all_playlists == false) {
-                $getTracks = "select artist_name,artist_uri,artist_artwork_path from tracks where yourmusic=1 and artist_uri!='' and artist_name_deburr like :artist_name limit " . $max_results;
-            }
-            else {
-                $getTracks = "select artist_name,artist_uri,artist_artwork_path from tracks where artist_uri!='' and artist_name_deburr like :artist_name limit " . $max_results;
+
+            if($fuzzy_search) {
+                $retArr = getFuzzySearchResults($w, $update_in_progress, $query, 'tracks', array('artist_name'));
+                // Search artists
+                if ($all_playlists == false) {
+                    $getTracks = "select artist_name,artist_uri,artist_artwork_path from tracks where yourmusic=1 and artist_uri!='' and artist_name in (".'"'.implode('","', $retArr).'"'.')'." limit " . $max_results;
+                }
+                else {
+                    $getTracks = "select artist_name,artist_uri,artist_artwork_path from tracks where artist_uri!='' and artist_name in (".'"'.implode('","', $retArr).'"'.')'." limit " . $max_results;
+                }
+                $stmt = $db->prepare($getTracks);
+            } else {
+                // Search artists
+                if ($all_playlists == false) {
+                    $getTracks = "select artist_name,artist_uri,artist_artwork_path from tracks where yourmusic=1 and artist_uri!='' and artist_name_deburr like :artist_name limit " . $max_results;
+                }
+                else {
+                    $getTracks = "select artist_name,artist_uri,artist_artwork_path from tracks where artist_uri!='' and artist_name_deburr like :artist_name limit " . $max_results;
+                }
+                $stmt = $db->prepare($getTracks);
+                $stmt->bindValue(':artist_name', '%' . deburr($query) . '%');
             }
 
             try {
-                $stmt = $db->prepare($getTracks);
-                $stmt->bindValue(':artist_name', '%' . deburr($query) . '%');
                 $tracks = $stmt->execute();
             }
             catch(PDOException $e) {
@@ -568,17 +581,31 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
         }
 
         if ($search_category == 'track') {
-            // Search tracks
-            if ($all_playlists == false) {
-                $getTracks = 'select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where yourmusic=1 and (artist_name_deburr like :query or album_name_deburr like :query or track_name_deburr like :query)' . '  order by added_at desc limit ' . $max_results;
-            }
-            else {
-                $getTracks = 'select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where (artist_name_deburr like :query or album_name_deburr like :query or track_name_deburr like :query)' . '  order by added_at desc limit ' . $max_results;
+
+            if($fuzzy_search) {
+                $retArr = getFuzzySearchResults($w, $update_in_progress, $query, 'tracks', array('track_name','artist_name','album_name'));
+                // Search tracks
+                if ($all_playlists == false) {
+                    $getTracks = 'select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where yourmusic=1 and track_name in ('.'"'.implode('","', $retArr).'"'.')' . '  order by added_at desc limit ' . $max_results;
+                }
+                else {
+                    $getTracks = 'select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where track_name in ('.'"'.implode('","', $retArr).'"'.')' . '  order by added_at desc limit ' . $max_results;
+                }
+                $stmt = $db->prepare($getTracks);
+            } else {
+                // Search tracks
+                if ($all_playlists == false) {
+                    $getTracks = 'select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where yourmusic=1 and (artist_name_deburr like :query or album_name_deburr like :query or track_name_deburr like :query)' . '  order by added_at desc limit ' . $max_results;
+                }
+                else {
+                    $getTracks = 'select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where (artist_name_deburr like :query or album_name_deburr like :query or track_name_deburr like :query)' . '  order by added_at desc limit ' . $max_results;
+                }
+                $stmt = $db->prepare($getTracks);
+                $stmt->bindValue(':query', '%' . deburr($query) . '%');
             }
 
             try {
-                $stmt = $db->prepare($getTracks);
-                $stmt->bindValue(':query', '%' . deburr($query) . '%');
+
                 $tracks = $stmt->execute();
             }
             catch(PDOException $e) {
