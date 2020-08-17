@@ -613,7 +613,6 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
                 return;
             }
 
-            $noresult = true;
             $quick_mode_text = '';
             if ($quick_mode) {
                 $quick_mode_text = '⚡️';
@@ -645,10 +644,6 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
                     }
                 }
             }
-
-            if ($noresult) {
-                $w->result(null, 'help', 'There is no result for your search', array('', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/warning.png', 'no', null, '');
-            }
         }
 
         if ($search_category == 'album') {
@@ -657,19 +652,19 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
                 $retArr = getFuzzySearchResults($w, $update_in_progress, $query, 'tracks', array('album_name'));
                 // Search albums
                 if ($all_playlists == false) {
-                    $getTracks = 'select album_name,album_uri,album_artwork_path,uri from tracks where yourmusic=1 and album_name in ('.'"'.implode('","', $retArr).'"'.')' . ' limit ' . $max_results;
+                    $getTracks = 'select album_name,album_uri,album_artwork_path,uri from tracks where yourmusic=1 and album_name != "" and album_name in ('.'"'.implode('","', $retArr).'"'.')' . ' limit ' . $max_results;
                 }
                 else {
-                    $getTracks = 'select album_name,album_uri,album_artwork_path,uri from tracks where album_name in ('.'"'.implode('","', $retArr).'"'.')' . '   limit ' . $max_results;
+                    $getTracks = 'select album_name,album_uri,album_artwork_path,uri from tracks where album_name != "" and album_name in ('.'"'.implode('","', $retArr).'"'.')' . '   limit ' . $max_results;
                 }
                 $stmt = $db->prepare($getTracks);
             } else {
                 // Search albums
                 if ($all_playlists == false) {
-                    $getTracks = 'select album_name,album_uri,album_artwork_path,uri from tracks where yourmusic=1 and album_name_deburr like :album_name group by album_name order by max(added_at) desc limit ' . $max_results;
+                    $getTracks = 'select album_name,album_uri,album_artwork_path,uri from tracks where yourmusic=1 and album_name != "" and album_name_deburr like :album_name group by album_name order by max(added_at) desc limit ' . $max_results;
                 }
                 else {
-                    $getTracks = 'select album_name,album_uri,album_artwork_path,uri from tracks where album_name_deburr like :album_name group by album_name order by max(added_at) desc limit ' . $max_results;
+                    $getTracks = 'select album_name,album_uri,album_artwork_path,uri from tracks where album_name != "" and album_name_deburr like :album_name group by album_name order by max(added_at) desc limit ' . $max_results;
                 }
                 $stmt = $db->prepare($getTracks);
                 $stmt->bindValue(':album_name', '%' . deburr($query) . '%');
@@ -714,12 +709,19 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
         }
 
         if ($search_category == 'show') {
-            // Search show
-            try {
+
+            if($fuzzy_search) {
+                $retArr = getFuzzySearchResults($w, $update_in_progress, $query, 'shows', array('name'));
+                $getShows = 'select * from shows where name in ('.'"'.implode('","', $retArr).'"'.')' . ' limit ' . $max_results;
+                $stmt = $db->prepare($getShows);
+            } else {
                 $getShows = 'select * from shows where name_deburr like :query limit ' . $max_results;
                 $stmt = $db->prepare($getShows);
                 $stmt->bindValue(':query', '%' . deburr($query) . '%');
+            }
 
+            // Search show
+            try {
                 $shows = $stmt->execute();
             }
             catch(PDOException $e) {
@@ -740,10 +742,16 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
 
         if ($search_category == 'episode') {
             // Search episodes
-            try {
+            if($fuzzy_search) {
+                $retArr = getFuzzySearchResults($w, $update_in_progress, $query, 'episodes', array('name'));
+                $getEpisodes = 'select uri, name, uri, show_uri, show_name, description, episode_artwork_path, is_playable, languages, nb_times_played, is_externally_hosted, duration_ms, explicit, release_date, release_date_precision, audio_preview_url, fully_played, resume_position_ms from episodes where name in ('.'"'.implode('","', $retArr).'"'.')' . ' order by release_date desc limit ' . $max_results;
+                $stmt = $db->prepare($getEpisodes);
+            } else {
                 $getEpisodes = 'select uri, name, uri, show_uri, show_name, description, episode_artwork_path, is_playable, languages, nb_times_played, is_externally_hosted, duration_ms, explicit, release_date, release_date_precision, audio_preview_url, fully_played, resume_position_ms from episodes where name_deburr like :name order by release_date desc limit ' . $max_results;
                 $stmt = $db->prepare($getEpisodes);
                 $stmt->bindValue(':name', '%' . deburr($query) . '%');
+            }
+            try {
                 $episodes = $stmt->execute();
             }
             catch(PDOException $e) {
@@ -778,9 +786,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
                 }
             }
         }
-
     } // end foreach search_category
-
 
     if ($output_application != 'MOPIDY') {
         $w->result(null, serialize(array(''
