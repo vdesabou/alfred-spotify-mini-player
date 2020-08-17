@@ -10,25 +10,7 @@
  */
 function firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
-    $kind = $words[0];
-
-    $all_playlists = $settings->all_playlists;
-    $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
-    $radio_number_tracks = $settings->radio_number_tracks;
-    $now_playing_notifications = $settings->now_playing_notifications;
-    $max_results = $settings->max_results;
-    $alfred_playlist_uri = $settings->alfred_playlist_uri;
-    $alfred_playlist_name = $settings->alfred_playlist_name;
-    $country_code = $settings->country_code;
-    $last_check_update_time = $settings->last_check_update_time;
-    $oauth_client_id = $settings->oauth_client_id;
-    $oauth_client_secret = $settings->oauth_client_secret;
-    $oauth_redirect_uri = $settings->oauth_redirect_uri;
-    $oauth_access_token = $settings->oauth_access_token;
-    $oauth_expires = $settings->oauth_expires;
-    $oauth_refresh_token = $settings->oauth_refresh_token;
-    $display_name = $settings->display_name;
-    $userid = $settings->userid;
+    $fuzzy_search = $settings->fuzzy_search;
 
     // Search playlists
     $theplaylist = $words[1];
@@ -38,9 +20,15 @@ function firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress
             $stmt = $db->prepare($getPlaylists);
         }
         else {
-            $getPlaylists = 'select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist,collaborative,public,nb_times_played from playlists where (name_deburr like :query or author like :query) order by nb_times_played desc';
-            $stmt = $db->prepare($getPlaylists);
-            $stmt->bindValue(':query', '%' . deburr($theplaylist) . '%');
+            if($fuzzy_search) {
+                $retArr = getFuzzySearchResults($w, $update_in_progress, $theplaylist, 'playlists', array('name'));
+                $getPlaylists = 'select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist,collaborative,public,nb_times_played from playlists where name in ('.'"'.implode('","', $retArr).'"'.')';
+                $stmt = $db->prepare($getPlaylists);
+            } else {
+                $getPlaylists = 'select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist,collaborative,public,nb_times_played from playlists where (name_deburr like :query or author like :query) order by nb_times_played desc';
+                $stmt = $db->prepare($getPlaylists);
+                $stmt->bindValue(':query', '%' . deburr($theplaylist) . '%');
+            }
         }
 
         $playlists = $stmt->execute();
