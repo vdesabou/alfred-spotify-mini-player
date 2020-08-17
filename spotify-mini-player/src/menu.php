@@ -605,7 +605,6 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
             }
 
             try {
-
                 $tracks = $stmt->execute();
             }
             catch(PDOException $e) {
@@ -653,17 +652,30 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
         }
 
         if ($search_category == 'album') {
-            // Search albums
-            if ($all_playlists == false) {
-                $getTracks = 'select album_name,album_uri,album_artwork_path,uri from tracks where yourmusic=1 and album_name like :album_name group by album_name order by max(added_at) desc limit ' . $max_results;
-            }
-            else {
-                $getTracks = 'select album_name,album_uri,album_artwork_path,uri from tracks where album_name_deburr like :album_name group by album_name order by max(added_at) desc limit ' . $max_results;
+
+            if($fuzzy_search) {
+                $retArr = getFuzzySearchResults($w, $update_in_progress, $query, 'tracks', array('album_name'));
+                // Search albums
+                if ($all_playlists == false) {
+                    $getTracks = 'select album_name,album_uri,album_artwork_path,uri from tracks where yourmusic=1 and album_name in ('.'"'.implode('","', $retArr).'"'.')' . ' limit ' . $max_results;
+                }
+                else {
+                    $getTracks = 'select album_name,album_uri,album_artwork_path,uri from tracks where album_name in ('.'"'.implode('","', $retArr).'"'.')' . '   limit ' . $max_results;
+                }
+                $stmt = $db->prepare($getTracks);
+            } else {
+                // Search albums
+                if ($all_playlists == false) {
+                    $getTracks = 'select album_name,album_uri,album_artwork_path,uri from tracks where yourmusic=1 and album_name_deburr like :album_name group by album_name order by max(added_at) desc limit ' . $max_results;
+                }
+                else {
+                    $getTracks = 'select album_name,album_uri,album_artwork_path,uri from tracks where album_name_deburr like :album_name group by album_name order by max(added_at) desc limit ' . $max_results;
+                }
+                $stmt = $db->prepare($getTracks);
+                $stmt->bindValue(':album_name', '%' . deburr($query) . '%');
             }
 
             try {
-                $stmt = $db->prepare($getTracks);
-                $stmt->bindValue(':album_name', '%' . deburr($query) . '%');
                 $tracks = $stmt->execute();
             }
             catch(PDOException $e) {
