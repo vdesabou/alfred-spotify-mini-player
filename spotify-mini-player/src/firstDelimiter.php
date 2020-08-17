@@ -158,26 +158,11 @@ function firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress
  */
 function firstDelimiterArtists($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
-    $kind = $words[0];
 
     $all_playlists = $settings->all_playlists;
-    $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
-    $radio_number_tracks = $settings->radio_number_tracks;
-    $now_playing_notifications = $settings->now_playing_notifications;
     $max_results = $settings->max_results;
-    $alfred_playlist_uri = $settings->alfred_playlist_uri;
-    $alfred_playlist_name = $settings->alfred_playlist_name;
-    $country_code = $settings->country_code;
-    $last_check_update_time = $settings->last_check_update_time;
-    $oauth_client_id = $settings->oauth_client_id;
-    $oauth_client_secret = $settings->oauth_client_secret;
-    $oauth_redirect_uri = $settings->oauth_redirect_uri;
-    $oauth_access_token = $settings->oauth_access_token;
-    $oauth_expires = $settings->oauth_expires;
-    $oauth_refresh_token = $settings->oauth_refresh_token;
-    $display_name = $settings->display_name;
-    $userid = $settings->userid;
     $output_application = $settings->output_application;
+    $fuzzy_search = $settings->fuzzy_search;
 
     // Search artists
     $artist = $words[1];
@@ -193,14 +178,30 @@ function firstDelimiterArtists($w, $query, $settings, $db, $update_in_progress) 
             $stmt = $db->prepare($getArtists);
         }
         else {
-            if ($all_playlists == false) {
-                $getArtists = 'select name,artist_artwork_path,uri from followed_artists where name like :query limit ' . $max_results;
+            if($fuzzy_search) {
+                // Search artists
+                if ($all_playlists == false) {
+                    $retArr = getFuzzySearchResults($w, $update_in_progress, $artist, 'followed_artists', array('name'));
+
+                    $getArtists = "select name,artist_artwork_path,uri from followed_artists where name in (".'"'.implode('","', $retArr).'"'.')'." limit " . $max_results;
+                }
+                else {
+                    $retArr = getFuzzySearchResults($w, $update_in_progress, $artist, 'tracks', array('artist_name'));
+
+                    $getArtists = "select artist_name,artist_artwork_path,artist_uri from tracks where artist_name in (".'"'.implode('","', $retArr).'"'.')'." limit " . $max_results;
+                }
+                $stmt = $db->prepare($getArtists);
+            } else {
+                // Search artists
+                if ($all_playlists == false) {
+                    $getArtists = 'select name,artist_artwork_path,uri from followed_artists where name like :query limit ' . $max_results;
+                }
+                else {
+                    $getArtists = 'select artist_name,artist_artwork_path,artist_uri from tracks where artist_name_deburr like :query limit ' . $max_results;
+                }
+                $stmt = $db->prepare($getArtists);
+                $stmt->bindValue(':query', '%' . deburr($artist) . '%');
             }
-            else {
-                $getArtists = 'select artist_name,artist_artwork_path,artist_uri from tracks where artist_name_deburr like :query limit ' . $max_results;
-            }
-            $stmt = $db->prepare($getArtists);
-            $stmt->bindValue(':query', '%' . deburr($artist) . '%');
         }
 
         $artists = $stmt->execute();
