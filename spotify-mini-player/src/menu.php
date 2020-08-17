@@ -518,6 +518,31 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
                 $stmt->bindValue(':artist_name', '%' . deburr($query) . '%');
             }
 
+            if($fuzzy_search) {
+                // Search artists
+                if ($all_playlists == false) {
+                    $retArr = getFuzzySearchResults($w, $update_in_progress, $query, 'followed_artists', array('name'));
+
+                    $getArtists = "select name,uri,artist_artwork_path from followed_artists where name in (".'"'.implode('","', $retArr).'"'.')'." limit " . $max_results;
+                }
+                else {
+                    $retArr = getFuzzySearchResults($w, $update_in_progress, $query, 'tracks', array('artist_name'));
+
+                    $getArtists = "select artist_name,artist_uri,artist_artwork_path from tracks where artist_name in (".'"'.implode('","', $retArr).'"'.')'." limit " . $max_results;
+                }
+                $stmt = $db->prepare($getArtists);
+            } else {
+                // Search artists
+                if ($all_playlists == false) {
+                    $getArtists = 'select name,uri,artist_artwork_path from followed_artists where name_deburr like :query limit ' . $max_results;
+                }
+                else {
+                    $getArtists = 'select artist_name,artist_uri,artist_artwork_path from tracks where artist_name_deburr like :query limit ' . $max_results;
+                }
+                $stmt = $db->prepare($getArtists);
+                $stmt->bindValue(':query', '%' . deburr($query) . '%');
+            }
+
             try {
                 $tracks = $stmt->execute();
             }

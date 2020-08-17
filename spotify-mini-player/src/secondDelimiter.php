@@ -1264,43 +1264,59 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
  */
 function secondDelimiterYourMusicTracks($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
-    $kind = $words[0];
     $thetrack = $words[2];
 
     $max_results = $settings->max_results;
     $output_application = $settings->output_application;
-
-    $w->result(null, serialize(array(''
-    /*track_uri*/, ''
-    /* album_uri */, ''
-    /* artist_uri */, ''
-    /* playlist_uri */, ''
-    /* spotify_command */, ''
-    /* query */, ''
-    /* other_settings*/, 'play_liked_songs'
-    /* other_action */, ''
-    /* artist_name */, ''
-    /* track_name */, ''
-    /* album_name */, ''
-    /* track_artwork_path */, ''
-    /* artist_artwork_path */, ''
-    /* album_artwork_path */, '' /* playlist_name */, '', /* playlist_artwork_path */
-    )), '♥️ Play your Liked Songs', 'This will play your liked songs', './images/star.png', 'yes', null, '');
+    $fuzzy_search = $settings->fuzzy_search;
 
     // display tracks for Your Music
     $search = $words[2];
 
     if (mb_strlen($thetrack) < 2) {
+        $w->result(null, serialize(array(''
+        /*track_uri*/, ''
+        /* album_uri */, ''
+        /* artist_uri */, ''
+        /* playlist_uri */, ''
+        /* spotify_command */, ''
+        /* query */, ''
+        /* other_settings*/, 'play_liked_songs'
+        /* other_action */, ''
+        /* artist_name */, ''
+        /* track_name */, ''
+        /* album_name */, ''
+        /* track_artwork_path */, ''
+        /* artist_artwork_path */, ''
+        /* album_artwork_path */, '' /* playlist_name */, '', /* playlist_artwork_path */
+        )), '♥️ Play your Liked Songs', 'This will play your liked songs', './images/star.png', 'yes', null, '');
+
         $getTracks = 'select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where yourmusic=1 order by added_at desc limit ' . $max_results;
         $stmt = $db->prepare($getTracks);
     }
     else {
-        $getTracks = 'select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where yourmusic=1 and (artist_name_deburr like :track or album_name_deburr like :track or track_name_deburr like :track)' . ' order by added_at desc limit ' . $max_results;
-        $stmt = $db->prepare($getTracks);
-        $stmt->bindValue(':track', '%' . deburr($thetrack) . '%');
+
+        if($fuzzy_search) {
+            $retArr = getFuzzySearchResults($w, $update_in_progress, $thetrack, 'tracks', array('track_name','artist_name','album_name'));
+            // Search tracks
+            $getTracks = 'select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where yourmusic=1 and track_name in ('.'"'.implode('","', $retArr).'"'.')' . '  order by added_at desc limit ' . $max_results;
+            $stmt = $db->prepare($getTracks);
+        } else {
+            // Search tracks
+            $getTracks = 'select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where yourmusic=1 and (artist_name_deburr like :query or album_name_deburr like :query or track_name_deburr like :query)' . ' limit ' . $max_results;
+            $stmt = $db->prepare($getTracks);
+            $stmt->bindValue(':query', '%' . deburr($thetrack) . '%');
+        }
     }
 
-    $tracks = $stmt->execute();
+    try {
+        $tracks = $stmt->execute();
+    }
+    catch(PDOException $e) {
+        handleDbIssuePdoXml($e);
+
+        return;
+    }
 
     $noresult = true;
     while ($track = $stmt->fetch()) {
@@ -1371,6 +1387,7 @@ function secondDelimiterYourMusicTracks($w, $query, $settings, $db, $update_in_p
  */
 function secondDelimiterYourMusicAlbums($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
+    $fuzzy_search = $settings->fuzzy_search;
 
     $max_results = $settings->max_results;
 
@@ -1382,9 +1399,19 @@ function secondDelimiterYourMusicAlbums($w, $query, $settings, $db, $update_in_p
             $stmt = $db->prepare($getTracks);
         }
         else {
-            $getTracks = 'select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where yourmusic_album=1 and album_name like :query group by album_name_deburr order by max(added_at) desc limit ' . $max_results;
-            $stmt = $db->prepare($getTracks);
-            $stmt->bindValue(':query', '%' . deburr($album) . '%');
+            if($fuzzy_search) {
+                $retArr = getFuzzySearchResults($w, $update_in_progress, $album, 'tracks', array('album_name'));
+                // Search albums
+
+                $getTracks = 'select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where yourmusic=1 and album_name != "" and album_name in ('.'"'.implode('","', $retArr).'"'.')' . ' limit ' . $max_results;
+
+                $stmt = $db->prepare($getTracks);
+            } else {
+                // Search albums
+                $getTracks = 'select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where yourmusic=1 and album_name != "" and album_name_deburr like :album_name group by album_name order by max(added_at) desc limit ' . $max_results;
+                $stmt = $db->prepare($getTracks);
+                $stmt->bindValue(':album_name', '%' . deburr($album) . '%');
+            }
         }
 
         $tracks = $stmt->execute();
@@ -1421,26 +1448,9 @@ function secondDelimiterYourMusicAlbums($w, $query, $settings, $db, $update_in_p
  */
 function secondDelimiterYourTopArtists($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
-    $kind = $words[0];
     $time_range = $words[2];
 
-    $all_playlists = $settings->all_playlists;
-    $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
-    $radio_number_tracks = $settings->radio_number_tracks;
-    $now_playing_notifications = $settings->now_playing_notifications;
     $max_results = $settings->max_results;
-    $alfred_playlist_uri = $settings->alfred_playlist_uri;
-    $alfred_playlist_name = $settings->alfred_playlist_name;
-    $country_code = $settings->country_code;
-    $last_check_update_time = $settings->last_check_update_time;
-    $oauth_client_id = $settings->oauth_client_id;
-    $oauth_client_secret = $settings->oauth_client_secret;
-    $oauth_redirect_uri = $settings->oauth_redirect_uri;
-    $oauth_access_token = $settings->oauth_access_token;
-    $oauth_expires = $settings->oauth_expires;
-    $oauth_refresh_token = $settings->oauth_refresh_token;
-    $display_name = $settings->display_name;
-    $userid = $settings->userid;
     $use_artworks = $settings->use_artworks;
 
     try {
@@ -1534,25 +1544,8 @@ function secondDelimiterYourTopTracks($w, $query, $settings, $db, $update_in_pro
  */
 function secondDelimiterYourMusicArtists($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
-    $kind = $words[0];
-
-    $all_playlists = $settings->all_playlists;
-    $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
-    $radio_number_tracks = $settings->radio_number_tracks;
-    $now_playing_notifications = $settings->now_playing_notifications;
     $max_results = $settings->max_results;
-    $alfred_playlist_uri = $settings->alfred_playlist_uri;
-    $alfred_playlist_name = $settings->alfred_playlist_name;
-    $country_code = $settings->country_code;
-    $last_check_update_time = $settings->last_check_update_time;
-    $oauth_client_id = $settings->oauth_client_id;
-    $oauth_client_secret = $settings->oauth_client_secret;
-    $oauth_redirect_uri = $settings->oauth_redirect_uri;
-    $oauth_access_token = $settings->oauth_access_token;
-    $oauth_expires = $settings->oauth_expires;
-    $oauth_refresh_token = $settings->oauth_refresh_token;
-    $display_name = $settings->display_name;
-    $userid = $settings->userid;
+    $fuzzy_search = $settings->fuzzy_search;
 
     // Search artists
     $artist = $words[2];
@@ -1563,9 +1556,20 @@ function secondDelimiterYourMusicArtists($w, $query, $settings, $db, $update_in_
             $stmt = $db->prepare($getArtists);
         }
         else {
-            $getArtists = 'select name,artist_artwork_path,uri from followed_artists where name_deburr like :query limit ' . $max_results;
-            $stmt = $db->prepare($getArtists);
-            $stmt->bindValue(':query', '%' . deburr($artist) . '%');
+
+
+            if($fuzzy_search) {
+                // Search artists
+                $retArr = getFuzzySearchResults($w, $update_in_progress, $artist, 'followed_artists', array('name'));
+
+                $getArtists = "select name,artist_artwork_path,uri from followed_artists where name in (".'"'.implode('","', $retArr).'"'.')'." limit " . $max_results;
+                $stmt = $db->prepare($getArtists);
+            } else {
+                // Search artists
+                $getArtists = 'select name,artist_artwork_path,uri from followed_artists where name_deburr like :query limit ' . $max_results;
+                $stmt = $db->prepare($getArtists);
+                $stmt->bindValue(':query', '%' . deburr($artist) . '%');
+            }
         }
 
         $artists = $stmt->execute();
@@ -1604,25 +1608,6 @@ function secondDelimiterYourMusicArtists($w, $query, $settings, $db, $update_in_
  */
 function secondDelimiterSettings($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
-    $kind = $words[0];
-
-    $all_playlists = $settings->all_playlists;
-    $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
-    $radio_number_tracks = $settings->radio_number_tracks;
-    $now_playing_notifications = $settings->now_playing_notifications;
-    $max_results = $settings->max_results;
-    $alfred_playlist_uri = $settings->alfred_playlist_uri;
-    $alfred_playlist_name = $settings->alfred_playlist_name;
-    $country_code = $settings->country_code;
-    $last_check_update_time = $settings->last_check_update_time;
-    $oauth_client_id = $settings->oauth_client_id;
-    $oauth_client_secret = $settings->oauth_client_secret;
-    $oauth_redirect_uri = $settings->oauth_redirect_uri;
-    $oauth_access_token = $settings->oauth_access_token;
-    $oauth_expires = $settings->oauth_expires;
-    $oauth_refresh_token = $settings->oauth_refresh_token;
-    $display_name = $settings->display_name;
-    $userid = $settings->userid;
     $output_application = $settings->output_application;
 
     $setting_kind = $words[1];
@@ -1936,25 +1921,8 @@ function secondDelimiterSettings($w, $query, $settings, $db, $update_in_progress
  */
 function secondDelimiterFeaturedPlaylist($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
-    $kind = $words[0];
-
-    $all_playlists = $settings->all_playlists;
-    $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
-    $radio_number_tracks = $settings->radio_number_tracks;
-    $now_playing_notifications = $settings->now_playing_notifications;
     $max_results = $settings->max_results;
-    $alfred_playlist_uri = $settings->alfred_playlist_uri;
-    $alfred_playlist_name = $settings->alfred_playlist_name;
     $country_code = $settings->country_code;
-    $last_check_update_time = $settings->last_check_update_time;
-    $oauth_client_id = $settings->oauth_client_id;
-    $oauth_client_secret = $settings->oauth_client_secret;
-    $oauth_redirect_uri = $settings->oauth_redirect_uri;
-    $oauth_access_token = $settings->oauth_access_token;
-    $oauth_expires = $settings->oauth_expires;
-    $oauth_refresh_token = $settings->oauth_refresh_token;
-    $display_name = $settings->display_name;
-    $userid = $settings->userid;
     $use_artworks = $settings->use_artworks;
 
     $country = $words[1];
