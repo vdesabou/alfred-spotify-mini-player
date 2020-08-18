@@ -1836,24 +1836,13 @@ function firstDelimiterLyrics($w, $query, $settings, $db, $update_in_progress) {
  */
 function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
-    $kind = $words[0];
 
     $all_playlists = $settings->all_playlists;
     $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
     $radio_number_tracks = $settings->radio_number_tracks;
     $now_playing_notifications = $settings->now_playing_notifications;
     $max_results = $settings->max_results;
-    $alfred_playlist_uri = $settings->alfred_playlist_uri;
-    $alfred_playlist_name = $settings->alfred_playlist_name;
-    $country_code = $settings->country_code;
     $last_check_update_time = $settings->last_check_update_time;
-    $oauth_client_id = $settings->oauth_client_id;
-    $oauth_client_secret = $settings->oauth_client_secret;
-    $oauth_redirect_uri = $settings->oauth_redirect_uri;
-    $oauth_access_token = $settings->oauth_access_token;
-    $oauth_expires = $settings->oauth_expires;
-    $oauth_refresh_token = $settings->oauth_refresh_token;
-    $display_name = $settings->display_name;
     $userid = $settings->userid;
     $is_public_playlists = $settings->is_public_playlists;
     $quick_mode = $settings->quick_mode;
@@ -1868,6 +1857,7 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
     $use_facebook = $settings->use_facebook;
     $always_display_lyrics_in_browser = $settings->always_display_lyrics_in_browser;
     $automatic_refresh_library_interval = $settings->automatic_refresh_library_interval;
+    $fuzzy_search = $settings->fuzzy_search;
 
     if ($update_in_progress == false) {
         $w->result(null, serialize(array(''
@@ -1983,6 +1973,45 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
     if ($output_application == 'MOPIDY') {
         $w->result(null, '', 'Configure Mopidy server (currently ' . $mopidy_server . ')', array('Server name/ip where Mopidy server is running', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/mopidy_server.png', 'no', null, 'Settings▹MopidyServer▹');
         $w->result(null, '', 'Configure Mopidy port (currently ' . $mopidy_port . ')', array('TCP port where Mopidy server is running', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/mopidy_port.png', 'no', null, 'Settings▹MopidyPort▹');
+    }
+
+    if ($fuzzy_search == true) {
+        $w->result(null, serialize(array(''
+        /*track_uri*/, ''
+        /* album_uri */, ''
+        /* artist_uri */, ''
+        /* playlist_uri */, ''
+        /* spotify_command */, ''
+        /* query */, ''
+        /* other_settings*/, 'disable_fuzzy_search'
+        /* other_action */, ''
+        /* artist_name */, ''
+        /* track_name */, ''
+        /* album_name */, ''
+        /* track_artwork_path */, ''
+        /* artist_artwork_path */, ''
+        /* album_artwork_path */, ''
+        /* playlist_name */, '', /* playlist_artwork_path */
+        )), 'Disable Fuzzy Search', array('Use Regular Search', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/search.png', 'yes', null, '');
+    }
+    else {
+        $w->result(null, serialize(array(''
+        /*track_uri*/, ''
+        /* album_uri */, ''
+        /* artist_uri */, ''
+        /* playlist_uri */, ''
+        /* spotify_command */, ''
+        /* query */, ''
+        /* other_settings*/, 'enable_fuzzy_search'
+        /* other_action */, ''
+        /* artist_name */, ''
+        /* track_name */, ''
+        /* album_name */, ''
+        /* track_artwork_path */, ''
+        /* artist_artwork_path */, ''
+        /* album_artwork_path */, ''
+        /* playlist_name */, '', /* playlist_artwork_path */
+        )), 'Enable Fuzzy Search', array('Enable Fuzzy Search (fzf is required, you can install it using brew install fzf)', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/search.png', 'yes', null, '');
     }
 
     if ($now_playing_notifications == true) {
