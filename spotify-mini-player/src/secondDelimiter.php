@@ -10,28 +10,10 @@
  */
 function secondDelimiterShows($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
-    $kind = $words[0];
-
-    $all_playlists = $settings->all_playlists;
-    $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
-    $radio_number_tracks = $settings->radio_number_tracks;
-    $now_playing_notifications = $settings->now_playing_notifications;
     $max_results = $settings->max_results;
-    $alfred_playlist_uri = $settings->alfred_playlist_uri;
-    $alfred_playlist_name = $settings->alfred_playlist_name;
-    $country_code = $settings->country_code;
-    $last_check_update_time = $settings->last_check_update_time;
-    $oauth_client_id = $settings->oauth_client_id;
-    $oauth_client_secret = $settings->oauth_client_secret;
-    $oauth_redirect_uri = $settings->oauth_redirect_uri;
-    $oauth_access_token = $settings->oauth_access_token;
-    $oauth_expires = $settings->oauth_expires;
-    $oauth_refresh_token = $settings->oauth_refresh_token;
-    $display_name = $settings->display_name;
-    $userid = $settings->userid;
-    $is_public_playlists = $settings->is_public_playlists;
     $output_application = $settings->output_application;
     $use_artworks = $settings->use_artworks;
+    $fuzzy_search = $settings->fuzzy_search;
 
     // display episodes for selected show
     $tmp = explode('∙', $words[1]);
@@ -68,10 +50,16 @@ function secondDelimiterShows($w, $query, $settings, $db, $update_in_progress) {
         $stmt->bindValue(':show_uri', $show_uri);
     }
     else {
-        $getEpisodes = 'select uri, name, uri, show_uri, show_name, description, episode_artwork_path, is_playable, languages, nb_times_played, is_externally_hosted, duration_ms, explicit, release_date, release_date_precision, audio_preview_url, fully_played, resume_position_ms from episodes where show_uri=:show_uri and name_deburr like :name order by release_date desc limit ' . $max_results;
-        $stmt = $db->prepare($getEpisodes);
-        $stmt->bindValue(':show_uri', $show_uri);
-        $stmt->bindValue(':name', '%' . deburr($episode) . '%');
+        if($fuzzy_search) {
+            $retArr = getFuzzySearchResults($w, $update_in_progress, $episode, 'episodes', array('name'), "where show_uri=\"".$show_uri."\"");
+            $getEpisodes = 'select uri, name, uri, show_uri, show_name, description, episode_artwork_path, is_playable, languages, nb_times_played, is_externally_hosted, duration_ms, explicit, release_date, release_date_precision, audio_preview_url, fully_played, resume_position_ms from episodes where name in ('.'"'.implode('","', $retArr).'"'.')' . ' order by release_date desc limit ' . $max_results;
+            $stmt = $db->prepare($getEpisodes);
+        } else {
+            $getEpisodes = 'select uri, name, uri, show_uri, show_name, description, episode_artwork_path, is_playable, languages, nb_times_played, is_externally_hosted, duration_ms, explicit, release_date, release_date_precision, audio_preview_url, fully_played, resume_position_ms from episodes where show_uri=:show_uri and name_deburr like :name order by release_date desc limit ' . $max_results;
+            $stmt = $db->prepare($getEpisodes);
+            $stmt->bindValue(':show_uri', $show_uri);
+            $stmt->bindValue(':name', '%' . deburr($episode) . '%');
+        }
     }
     $episodes = $stmt->execute();
     $noresult = true;

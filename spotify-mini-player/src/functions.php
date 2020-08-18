@@ -9,7 +9,7 @@ require './vendor/autoload.php';
  * getFuzzySearchResults function.
  *
  */
-function getFuzzySearchResults($w, $update_in_progress, $query, $table_name, $table_columns)
+function getFuzzySearchResults($w, $update_in_progress, $query, $table_name, $table_columns, $where_clause = '')
 {
     if (!file_exists('/usr/bin/sqlite3')) {
         $w->result(null, '', 'sqlite3 is not installed, install using brew install sqlite', array('install using brew install sqlite', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/warning.png', 'no', null, '');
@@ -36,7 +36,7 @@ function getFuzzySearchResults($w, $update_in_progress, $query, $table_name, $ta
         }
     }
 
-    exec("/usr/bin/sqlite3 '$dbfile' 'select ".implode(",",$table_columns)." from ".$table_name.";' | /usr/local/bin/fzf --filter \"$query\"", $retArr, $retVal);
+    exec("/usr/bin/sqlite3 '$dbfile' 'select ".implode(",",$table_columns)." from ".$table_name." ".$where_clause.";' | /usr/local/bin/fzf --filter \"$query\"", $retArr, $retVal);
 
     $new_array = array();
     foreach ($retArr as $ret) {

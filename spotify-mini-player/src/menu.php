@@ -706,9 +706,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
             }
 
             // display all shows
-            $noresult = true;
             while ($show = $stmt->fetch()) {
-                $noresult = false;
                 if (checkIfResultAlreadyThere($w->results(), '🎙 ' . $show[1] . ' (' . $show[10] . ' episodes)') == false) {
                     $w->result(null, '', '🎙 ' . $show[1] . ' (' . $show[10] . ' episodes)', array('Browse this show', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), $show[4], 'no', null, 'Show▹' . $show[0] . '∙' . $show[1] . '▹');
                 }
@@ -736,7 +734,6 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
             }
 
             while ($episodes = $stmt->fetch()) {
-                $noresult = false;
                 $subtitle = $episodes[6];
 
                 $fully_played = '';
