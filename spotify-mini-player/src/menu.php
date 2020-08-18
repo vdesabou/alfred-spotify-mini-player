@@ -497,28 +497,6 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
         if ($search_category == 'artist') {
 
             if($fuzzy_search) {
-                $retArr = getFuzzySearchResults($w, $update_in_progress, $query, 'tracks', array('artist_name'));
-                // Search artists
-                if ($all_playlists == false) {
-                    $getTracks = "select artist_name,artist_uri,artist_artwork_path from tracks where yourmusic=1 and artist_uri!='' and artist_name in (".'"'.implode('","', $retArr).'"'.')'." limit " . $max_results;
-                }
-                else {
-                    $getTracks = "select artist_name,artist_uri,artist_artwork_path from tracks where artist_uri!='' and artist_name in (".'"'.implode('","', $retArr).'"'.')'." limit " . $max_results;
-                }
-                $stmt = $db->prepare($getTracks);
-            } else {
-                // Search artists
-                if ($all_playlists == false) {
-                    $getTracks = "select artist_name,artist_uri,artist_artwork_path from tracks where yourmusic=1 and artist_uri!='' and artist_name_deburr like :artist_name limit " . $max_results;
-                }
-                else {
-                    $getTracks = "select artist_name,artist_uri,artist_artwork_path from tracks where artist_uri!='' and artist_name_deburr like :artist_name limit " . $max_results;
-                }
-                $stmt = $db->prepare($getTracks);
-                $stmt->bindValue(':artist_name', '%' . deburr($query) . '%');
-            }
-
-            if($fuzzy_search) {
                 // Search artists
                 if ($all_playlists == false) {
                     $retArr = getFuzzySearchResults($w, $update_in_progress, $query, 'followed_artists', array('name'));
