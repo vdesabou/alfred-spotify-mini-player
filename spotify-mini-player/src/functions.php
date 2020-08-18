@@ -9,7 +9,7 @@ require './vendor/autoload.php';
  * getFuzzySearchResults function.
  *
  */
-function getFuzzySearchResults($w, $update_in_progress, $query, $table_name, $table_columns, $where_clause = '')
+function getFuzzySearchResults($w, $update_in_progress, $query, $table_name, $table_columns, $max_results, $where_clause = '')
 {
     if (!file_exists('/usr/bin/sqlite3')) {
         $w->result(null, '', 'sqlite3 is not installed, install using brew install sqlite', array('install using brew install sqlite', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/warning.png', 'no', null, '');
@@ -38,10 +38,17 @@ function getFuzzySearchResults($w, $update_in_progress, $query, $table_name, $ta
 
     exec("/usr/bin/sqlite3 '$dbfile' 'select ".implode(",",$table_columns)." from ".$table_name." ".$where_clause.";' | /usr/local/bin/fzf --filter \"$query\"", $retArr, $retVal);
 
+    $i = 0;
     $new_array = array();
     foreach ($retArr as $ret) {
         $r = explode('|', $ret);
-        $new_array[] = $r[0];
+        if(! checkIfDuplicate($new_array,$r[0])) {
+            $new_array[] = $r[0];
+            ++$i;
+            if($i >= $max_results) {
+                break;
+            }
+        }
     }
     return $new_array;
 }

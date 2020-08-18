@@ -418,7 +418,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
         if ($search_category == 'playlist') {
 
             if($fuzzy_search) {
-                $retArr = getFuzzySearchResults($w, $update_in_progress, $query, 'playlists', array('name'));
+                $retArr = getFuzzySearchResults($w, $update_in_progress, $query, 'playlists', array('name'), $max_results);
                 $getPlaylists = 'select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist,collaborative,public from playlists where name in ('.'"'.implode('","', $retArr).'"'.')';
                 $stmt = $db->prepare($getPlaylists);
             } else {
@@ -499,12 +499,12 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
             if($fuzzy_search) {
                 // Search artists
                 if ($all_playlists == false) {
-                    $retArr = getFuzzySearchResults($w, $update_in_progress, $query, 'followed_artists', array('name'));
+                    $retArr = getFuzzySearchResults($w, $update_in_progress, $query, 'followed_artists', array('name'), $max_results);
 
                     $getArtists = "select name,uri,artist_artwork_path from followed_artists where name in (".'"'.implode('","', $retArr).'"'.')'." limit " . $max_results;
                 }
                 else {
-                    $retArr = getFuzzySearchResults($w, $update_in_progress, $query, 'tracks', array('artist_name'));
+                    $retArr = getFuzzySearchResults($w, $update_in_progress, $query, 'tracks', array('artist_name'), $max_results);
 
                     $getArtists = "select artist_name,artist_uri,artist_artwork_path from tracks where artist_name in (".'"'.implode('","', $retArr).'"'.')'." limit " . $max_results;
                 }
@@ -558,7 +558,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
         if ($search_category == 'track') {
 
             if($fuzzy_search) {
-                $retArr = getFuzzySearchResults($w, $update_in_progress, $query, 'tracks', array('track_name','artist_name','album_name'));
+                $retArr = getFuzzySearchResults($w, $update_in_progress, $query, 'tracks', array('track_name','artist_name','album_name'), $max_results);
                 // Search tracks
                 if ($all_playlists == false) {
                     $getTracks = 'select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where yourmusic=1 and track_name in ('.'"'.implode('","', $retArr).'"'.')' . '  order by added_at desc limit ' . $max_results;
@@ -624,7 +624,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
         if ($search_category == 'album') {
 
             if($fuzzy_search) {
-                $retArr = getFuzzySearchResults($w, $update_in_progress, $query, 'tracks', array('album_name'));
+                $retArr = getFuzzySearchResults($w, $update_in_progress, $query, 'tracks', array('album_name'), $max_results);
                 // Search albums
                 if ($all_playlists == false) {
                     $getTracks = 'select album_name,album_uri,album_artwork_path,uri from tracks where yourmusic=1 and album_name != "" and album_name in ('.'"'.implode('","', $retArr).'"'.')' . ' limit ' . $max_results;
@@ -686,7 +686,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
         if ($search_category == 'show') {
 
             if($fuzzy_search) {
-                $retArr = getFuzzySearchResults($w, $update_in_progress, $query, 'shows', array('name'));
+                $retArr = getFuzzySearchResults($w, $update_in_progress, $query, 'shows', array('name'), $max_results);
                 $getShows = 'select * from shows where name in ('.'"'.implode('","', $retArr).'"'.')' . ' limit ' . $max_results;
                 $stmt = $db->prepare($getShows);
             } else {
@@ -716,7 +716,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
         if ($search_category == 'episode') {
             // Search episodes
             if($fuzzy_search) {
-                $retArr = getFuzzySearchResults($w, $update_in_progress, $query, 'episodes', array('name'));
+                $retArr = getFuzzySearchResults($w, $update_in_progress, $query, 'episodes', array('name'), $max_results);
                 $getEpisodes = 'select uri, name, uri, show_uri, show_name, description, episode_artwork_path, is_playable, languages, nb_times_played, is_externally_hosted, duration_ms, explicit, release_date, release_date_precision, audio_preview_url, fully_played, resume_position_ms from episodes where name in ('.'"'.implode('","', $retArr).'"'.')' . ' order by release_date desc limit ' . $max_results;
                 $stmt = $db->prepare($getEpisodes);
             } else {

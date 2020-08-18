@@ -11,6 +11,7 @@
 function firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
     $fuzzy_search = $settings->fuzzy_search;
+    $max_results = $settings->max_results;
 
     // Search playlists
     $theplaylist = $words[1];
@@ -21,7 +22,7 @@ function firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress
         }
         else {
             if($fuzzy_search) {
-                $retArr = getFuzzySearchResults($w, $update_in_progress, $theplaylist, 'playlists', array('name'));
+                $retArr = getFuzzySearchResults($w, $update_in_progress, $theplaylist, 'playlists', array('name'), $max_results);
                 $getPlaylists = 'select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist,collaborative,public,nb_times_played from playlists where name in ('.'"'.implode('","', $retArr).'"'.')';
                 $stmt = $db->prepare($getPlaylists);
             } else {
@@ -163,6 +164,7 @@ function firstDelimiterArtists($w, $query, $settings, $db, $update_in_progress) 
     $max_results = $settings->max_results;
     $output_application = $settings->output_application;
     $fuzzy_search = $settings->fuzzy_search;
+    $max_results = $settings->max_results;
 
     // Search artists
     $artist = $words[1];
@@ -181,12 +183,12 @@ function firstDelimiterArtists($w, $query, $settings, $db, $update_in_progress) 
             if($fuzzy_search) {
                 // Search artists
                 if ($all_playlists == false) {
-                    $retArr = getFuzzySearchResults($w, $update_in_progress, $artist, 'followed_artists', array('name'));
+                    $retArr = getFuzzySearchResults($w, $update_in_progress, $artist, 'followed_artists', array('name'), $max_results);
 
                     $getArtists = "select name,artist_artwork_path,uri from followed_artists where name in (".'"'.implode('","', $retArr).'"'.')'." limit " . $max_results;
                 }
                 else {
-                    $retArr = getFuzzySearchResults($w, $update_in_progress, $artist, 'tracks', array('artist_name'));
+                    $retArr = getFuzzySearchResults($w, $update_in_progress, $artist, 'tracks', array('artist_name'), $max_results);
 
                     $getArtists = "select artist_name,artist_artwork_path,artist_uri from tracks where artist_name in (".'"'.implode('","', $retArr).'"'.')'." limit " . $max_results;
                 }
@@ -278,7 +280,7 @@ function firstDelimiterShows($w, $query, $settings, $db, $update_in_progress) {
         }
         else {
             if($fuzzy_search) {
-                $retArr = getFuzzySearchResults($w, $update_in_progress, $show, 'shows', array('name'));
+                $retArr = getFuzzySearchResults($w, $update_in_progress, $show, 'shows', array('name'), $max_results);
                 $getShows = 'select * from shows where name in ('.'"'.implode('","', $retArr).'"'.')' . ' limit ' . $max_results;
                 $stmt = $db->prepare($getShows);
             } else {
@@ -1692,7 +1694,7 @@ function firstDelimiterYourMusic($w, $query, $settings, $db, $update_in_progress
         // Search artists
         if($fuzzy_search) {
             // Search artists
-            $retArr = getFuzzySearchResults($w, $update_in_progress, $thequery, 'followed_artists', array('name'));
+            $retArr = getFuzzySearchResults($w, $update_in_progress, $thequery, 'followed_artists', array('name'), $max_results);
 
             $getArtists = "select name,artist_artwork_path,uri from followed_artists where name in (".'"'.implode('","', $retArr).'"'.')'." limit " . $max_results;
             $stmt = $db->prepare($getArtists);
@@ -1722,7 +1724,7 @@ function firstDelimiterYourMusic($w, $query, $settings, $db, $update_in_progress
         // Search everything
 
         if($fuzzy_search) {
-            $retArr = getFuzzySearchResults($w, $update_in_progress, $thequery, 'tracks', array('track_name','artist_name','album_name'));
+            $retArr = getFuzzySearchResults($w, $update_in_progress, $thequery, 'tracks', array('track_name','artist_name','album_name'), $max_results);
             // Search tracks
             $getTracks = 'select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where yourmusic=1 and track_name in ('.'"'.implode('","', $retArr).'"'.')' . '  order by added_at desc limit ' . $max_results;
             $stmt = $db->prepare($getTracks);
