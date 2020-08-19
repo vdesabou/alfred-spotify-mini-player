@@ -1620,7 +1620,7 @@ function refreshLibrary($w, $silent = false) {
                 $stmtInsertShow->bindValue(':nb_times_played', 0);
                 $stmtInsertShow->bindValue(':added_at', $show->is_externally_hosted);
                 $stmtInsertShow->bindValue(':nb_episodes', $nb_episodes);
-                $stmtInsertShow->bindValue(':name', deburr(escapeQuery($show->name)));
+                $stmtInsertShow->bindValue(':name_deburr', deburr(escapeQuery($show->name)));
                 $stmtInsertShow->execute();
             }
             catch(PDOException $e) {
@@ -2115,7 +2115,7 @@ function refreshLibrary($w, $silent = false) {
                 $stmtFollowedArtists->bindValue(':uri', $artist->uri);
                 $stmtFollowedArtists->bindValue(':name', escapeQuery($artist->name));
                 $stmtFollowedArtists->bindValue(':artist_artwork_path', $artist_artwork_path);
-                $stmtFollowedArtists->bindValue(':name', deburr(escapeQuery($artist->name)));
+                $stmtFollowedArtists->bindValue(':name_deburr', deburr(escapeQuery($artist->name)));
                 $stmtFollowedArtists->execute();
             }
             catch(PDOException $e) {
