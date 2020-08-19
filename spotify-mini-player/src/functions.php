@@ -5,23 +5,30 @@ require_once './src/createLibrary.php';
 require_once './src/refreshLibrary.php';
 require './vendor/autoload.php';
 
+function verifyFuzzySearchRequirements($w)
+{
+    exec("type sqlite3" , $retArr, $retVal);
+    if ($retVal != 0) {
+        $w->result(null, '', 'sqlite3 is not installed, install using brew install sqlite', array('install using brew install sqlite', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/warning.png', 'no', null, '');
+        echo $w->tojson();
+        exit;
+    }
+    exec("type fzf" , $retArr, $retVal);
+    if ($retVal != 0) {
+        $w->result(null, '', 'fzf is not installed, install using brew install fzf', array('install using brew install fzf', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/warning.png', 'no', null, '');
+        echo $w->tojson();
+        exit;
+    }
+    return 0;
+}
+
 /**
  * getFuzzySearchResults function.
  *
  */
 function getFuzzySearchResults($w, $update_in_progress, $query, $table_name, $table_columns, $max_results, $nth = '..', $where_clause = '')
 {
-    if (!file_exists('/usr/bin/sqlite3')) {
-        $w->result(null, '', 'sqlite3 is not installed, install using brew install sqlite', array('install using brew install sqlite', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/warning.png', 'no', null, '');
-        echo $w->tojson();
-        exit;
-    }
-
-    if (!file_exists('/usr/local/bin/fzf')) {
-        $w->result(null, '', 'fzf is not installed, install using brew install fzf', array('install using brew install fzf', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/warning.png', 'no', null, '');
-        echo $w->tojson();
-        exit;
-    }
+    verifyFuzzySearchRequirements($w);
 
     // Check for library DB to use
     $dbfile = '';

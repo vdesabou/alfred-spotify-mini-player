@@ -940,15 +940,8 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
         return;
     } elseif ($other_action == 'enable_fuzzy_search') {
-        if (!file_exists('/usr/bin/sqlite3')) {
-            displayNotificationWithArtwork($w, 'sqlite3 is not installed, install using brew install sqlite', './images/settings.png', 'Error!');
-            exit;
-        }
+        verifyFuzzySearchRequirements($w);
 
-        if (!file_exists('/usr/local/bin/fzf')) {
-            displayNotificationWithArtwork($w, 'fzf is not installed, install using brew install fzf', './images/settings.png', 'Error!');
-            exit;
-        }
         $ret = updateSetting($w, 'fuzzy_search', 1);
         if ($ret == true) {
             displayNotificationWithArtwork($w, 'Fuzzy search is now enabled', './images/search.png', 'Settings');
@@ -958,15 +951,6 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
         return;
     }  elseif ($other_action == 'disable_fuzzy_search') {
-        if (!file_exists('/usr/bin/sqlite3')) {
-            displayNotificationWithArtwork($w, 'sqlite3 is not installed, install using brew install sqlite', './images/settings.png', 'Error!');
-            exit;
-        }
-
-        if (!file_exists('/usr/local/bin/fzf')) {
-            displayNotificationWithArtwork($w, 'fzf is not installed, install using brew install fzf', './images/settings.png', 'Error!');
-            exit;
-        }
         $ret = updateSetting($w, 'fuzzy_search', 0);
         if ($ret == true) {
             displayNotificationWithArtwork($w, 'Fuzzy search is now disabled', './images/search.png', 'Settings');
