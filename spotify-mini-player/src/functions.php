@@ -7,29 +7,22 @@ require './vendor/autoload.php';
 
 function verifyFuzzySearchRequirements($w)
 {
-    exec("type sqlite3" , $retArr, $retVal);
-    if ($retVal != 0) {
-        $w->result(null, '', 'sqlite3 is not installed, install using brew install sqlite', array('install using brew install sqlite', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/warning.png', 'no', null, '');
-        echo $w->tojson();
+    if (!file_exists('/usr/bin/sqlite3')) {
+        displayNotificationWithArtwork($w, 'sqlite3 is not installed, install using brew install sqlite', './images/settings.png', 'Error!');
         exit;
     }
-    exec("type fzf" , $retArr, $retVal);
-    if ($retVal != 0) {
-        $w->result(null, '', 'fzf is not installed, install using brew install fzf', array('install using brew install fzf', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/warning.png', 'no', null, '');
-        echo $w->tojson();
-        exit;
-    }
-    return 0;
-}
 
+    if (!file_exists('/usr/local/bin/fzf')) {
+        displayNotificationWithArtwork($w, 'fzf is not installed, install using brew install fzf', './images/settings.png', 'Error!');
+        exit;
+    }
+}
 /**
  * getFuzzySearchResults function.
  *
  */
 function getFuzzySearchResults($w, $update_in_progress, $query, $table_name, $table_columns, $max_results, $nth = '..', $where_clause = '')
 {
-    verifyFuzzySearchRequirements($w);
-
     // Check for library DB to use
     $dbfile = '';
     if ($update_in_progress == false && file_exists($w->data().'/library.db')) {
