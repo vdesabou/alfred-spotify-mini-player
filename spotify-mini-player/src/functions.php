@@ -9,7 +9,7 @@ require './vendor/autoload.php';
  * getFuzzySearchResults function.
  *
  */
-function getFuzzySearchResults($w, $update_in_progress, $query, $table_name, $table_columns, $max_results, $where_clause = '')
+function getFuzzySearchResults($w, $update_in_progress, $query, $table_name, $table_columns, $max_results, $nth = '..', $where_clause = '')
 {
     if (!file_exists('/usr/bin/sqlite3')) {
         $w->result(null, '', 'sqlite3 is not installed, install using brew install sqlite', array('install using brew install sqlite', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/warning.png', 'no', null, '');
@@ -36,21 +36,23 @@ function getFuzzySearchResults($w, $update_in_progress, $query, $table_name, $ta
         }
     }
 
-    exec("/usr/bin/sqlite3 '$dbfile' 'select ".implode(",",$table_columns)." from ".$table_name." ".$where_clause.";' | /usr/local/bin/fzf --filter \"$query\"", $retArr, $retVal);
+    $delimiter = '{::}';
+
+    exec("/usr/bin/sqlite3 -separator $delimiter '$dbfile' 'select ".implode(",",$table_columns)." from ".$table_name." ".$where_clause.";' | /usr/local/bin/fzf --filter \"$query\" --delimiter=\"$delimiter\" --nth=\"$nth\"" , $retArr, $retVal);
 
     $i = 0;
-    $new_array = array();
+    $results = array();
     foreach ($retArr as $ret) {
-        $r = explode('|', $ret);
-        if(! checkIfDuplicate($new_array,$r[0])) {
-            $new_array[] = $r[0];
+        $r = explode($delimiter, $ret);
+        if(! checkIfDuplicate($results,$r[0])) {
+            $results[] = $r;
             ++$i;
             if($i >= $max_results) {
                 break;
             }
         }
     }
-    return $new_array;
+    return $results;
 }
 
 /**
@@ -8479,8 +8481,8 @@ function getSettings($w)
 
     // add search_order if needed
     if (!isset($settings->search_order)
-        || strpos($settings->search_order, 'show') == false
-        || strpos($settings->search_order, 'episode') == false) {
+        || strpos($settings->search_order, 'show') === false
+        || strpos($settings->search_order, 'episode') === false) {
         updateSetting($w, 'search_order', 'playlist▹artist▹track▹album▹show▹episode');
         $settings = $w->read('settings.json');
     }

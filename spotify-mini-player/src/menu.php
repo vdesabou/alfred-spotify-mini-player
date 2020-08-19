@@ -418,25 +418,23 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
         if ($search_category == 'playlist') {
 
             if($fuzzy_search) {
-                $retArr = getFuzzySearchResults($w, $update_in_progress, $query, 'playlists', array('name'), $max_results);
-                $getPlaylists = 'select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist,collaborative,public from playlists where name in ('.'"'.implode('","', $retArr).'"'.')';
-                $stmt = $db->prepare($getPlaylists);
+                $results = getFuzzySearchResults($w, $update_in_progress, $query, 'playlists', array('uri','name','nb_tracks','author','username','playlist_artwork_path','ownedbyuser','nb_playable_tracks','duration_playlist','collaborative','public'), $max_results, '2,4', '');
             } else {
                 $getPlaylists = 'select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist,collaborative,public,nb_times_played from playlists where (name_deburr like :query or author like :query) order by nb_times_played desc';
                 $stmt = $db->prepare($getPlaylists);
                 $stmt->bindValue(':query', '%' . deburr($query) . '%');
+                try {
+                    $stmt->execute();
+                    $results = $stmt->fetchAll();
+                }
+                catch(PDOException $e) {
+                    handleDbIssuePdoXml($e);
+
+                    return;
+                }
             }
 
-            try {
-                $playlists = $stmt->execute();
-            }
-            catch(PDOException $e) {
-                handleDbIssuePdoXml($e);
-
-                return;
-            }
-
-            while ($playlist = $stmt->fetch()) {
+            foreach ($results as $playlist) {
                 $added = ' ';
                 $public_status = '';
                 if (startswith($playlist[1], 'Artist radio for')) {
@@ -497,18 +495,12 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
         if ($search_category == 'artist') {
 
             if($fuzzy_search) {
-                // Search artists
                 if ($all_playlists == false) {
-                    $retArr = getFuzzySearchResults($w, $update_in_progress, $query, 'followed_artists', array('name'), $max_results);
-
-                    $getArtists = "select name,uri,artist_artwork_path from followed_artists where name in (".'"'.implode('","', $retArr).'"'.')'." limit " . $max_results;
+                    $results = getFuzzySearchResults($w, $update_in_progress, $query, 'followed_artists', array('name','uri','artist_artwork_path'), $max_results, '1', '');
                 }
                 else {
-                    $retArr = getFuzzySearchResults($w, $update_in_progress, $query, 'tracks', array('artist_name'), $max_results);
-
-                    $getArtists = "select artist_name,artist_uri,artist_artwork_path from tracks where artist_name in (".'"'.implode('","', $retArr).'"'.')'." limit " . $max_results;
+                    $results = getFuzzySearchResults($w, $update_in_progress, $query, 'tracks', array('artist_name','artist_uri','artist_artwork_path'), $max_results, '1', '');
                 }
-                $stmt = $db->prepare($getArtists);
             } else {
                 // Search artists
                 if ($all_playlists == false) {
@@ -519,18 +511,18 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
                 }
                 $stmt = $db->prepare($getArtists);
                 $stmt->bindValue(':query', '%' . deburr($query) . '%');
+                try {
+                    $stmt->execute();
+                    $results = $stmt->fetchAll();
+                }
+                catch(PDOException $e) {
+                    handleDbIssuePdoXml($e);
+
+                    return;
+                }
             }
 
-            try {
-                $tracks = $stmt->execute();
-            }
-            catch(PDOException $e) {
-                handleDbIssuePdoXml($e);
-
-                return;
-            }
-
-            while ($track = $stmt->fetch()) {
+            foreach ($results as $track) {
                 if (checkIfResultAlreadyThere($w->results(), '👤 ' . $track[0]) == false) {
                     if ($quick_mode) {
                         $w->result(null, serialize(array(''
@@ -558,15 +550,13 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
         if ($search_category == 'track') {
 
             if($fuzzy_search) {
-                $retArr = getFuzzySearchResults($w, $update_in_progress, $query, 'tracks', array('track_name','artist_name','album_name'), $max_results);
-                // Search tracks
                 if ($all_playlists == false) {
-                    $getTracks = 'select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where yourmusic=1 and track_name in ('.'"'.implode('","', $retArr).'"'.')' . '  order by added_at desc limit ' . $max_results;
+                    $where_clause = 'where yourmusic=1';
                 }
                 else {
-                    $getTracks = 'select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where track_name in ('.'"'.implode('","', $retArr).'"'.')' . '  order by added_at desc limit ' . $max_results;
+                    $where_clause = '';
                 }
-                $stmt = $db->prepare($getTracks);
+                $results = getFuzzySearchResults($w, $update_in_progress, $query, 'tracks', array('yourmusic', 'popularity', 'uri', 'album_uri', 'artist_uri', 'track_name', 'album_name', 'artist_name', 'album_type', 'track_artwork_path', 'artist_artwork_path', 'album_artwork_path', 'playlist_name', 'playlist_uri', 'playable', 'added_at', 'duration', 'nb_times_played', 'local_track'), $max_results, '6..8', $where_clause);
             } else {
                 // Search tracks
                 if ($all_playlists == false) {
@@ -577,23 +567,22 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
                 }
                 $stmt = $db->prepare($getTracks);
                 $stmt->bindValue(':query', '%' . deburr($query) . '%');
-            }
+                try {
+                    $stmt->execute();
+                    $results = $stmt->fetchAll();
+                }
+                catch(PDOException $e) {
+                    handleDbIssuePdoXml($e);
 
-            try {
-                $tracks = $stmt->execute();
-            }
-            catch(PDOException $e) {
-                handleDbIssuePdoXml($e);
-
-                return;
+                    return;
+                }
             }
 
             $quick_mode_text = '';
             if ($quick_mode) {
                 $quick_mode_text = '⚡️';
             }
-            while ($track = $stmt->fetch()) {
-                $noresult = false;
+            foreach ($results as $track) {
                 $subtitle = $track[6];
                 $added = '';
                 if ($track[18] == true) {
@@ -624,15 +613,13 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
         if ($search_category == 'album') {
 
             if($fuzzy_search) {
-                $retArr = getFuzzySearchResults($w, $update_in_progress, $query, 'tracks', array('album_name'), $max_results);
-                // Search albums
                 if ($all_playlists == false) {
-                    $getTracks = 'select album_name,album_uri,album_artwork_path,uri from tracks where yourmusic=1 and album_name != "" and album_name in ('.'"'.implode('","', $retArr).'"'.')' . ' limit ' . $max_results;
+                    $where_clause = 'where yourmusic=1';
                 }
                 else {
-                    $getTracks = 'select album_name,album_uri,album_artwork_path,uri from tracks where album_name != "" and album_name in ('.'"'.implode('","', $retArr).'"'.')' . '   limit ' . $max_results;
+                    $where_clause = '';
                 }
-                $stmt = $db->prepare($getTracks);
+                $results = getFuzzySearchResults($w, $update_in_progress, $query, 'tracks', array('album_name','album_uri','album_artwork_path','uri'), $max_results, '1', '');
             } else {
                 // Search albums
                 if ($all_playlists == false) {
@@ -643,18 +630,18 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
                 }
                 $stmt = $db->prepare($getTracks);
                 $stmt->bindValue(':album_name', '%' . deburr($query) . '%');
+                try {
+                    $stmt->execute();
+                    $results = $stmt->fetchAll();
+                }
+                catch(PDOException $e) {
+                    handleDbIssuePdoXml($e);
+
+                    return;
+                }
             }
 
-            try {
-                $tracks = $stmt->execute();
-            }
-            catch(PDOException $e) {
-                handleDbIssuePdoXml($e);
-
-                return;
-            }
-
-            while ($track = $stmt->fetch()) {
+            foreach ($results as $track) {
                 if (checkIfResultAlreadyThere($w->results(), '💿 ' . $track[0]) == false) {
                     if ($track[1] == '') {
                         // can happen for local tracks
@@ -686,27 +673,23 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
         if ($search_category == 'show') {
 
             if($fuzzy_search) {
-                $retArr = getFuzzySearchResults($w, $update_in_progress, $query, 'shows', array('name'), $max_results);
-                $getShows = 'select * from shows where name in ('.'"'.implode('","', $retArr).'"'.')' . ' limit ' . $max_results;
-                $stmt = $db->prepare($getShows);
+                $results = getFuzzySearchResults($w, $update_in_progress, $query, 'shows', array('uri','name','description','media_type','show_artwork_path','explicit','added_at','languages','nb_times_played','is_externally_hosted', 'nb_episodes'), $max_results, '2', '');
             } else {
                 $getShows = 'select * from shows where name_deburr like :query limit ' . $max_results;
                 $stmt = $db->prepare($getShows);
                 $stmt->bindValue(':query', '%' . deburr($query) . '%');
+                try {
+                    $stmt->execute();
+                    $results = $stmt->fetchAll();
+                }
+                catch(PDOException $e) {
+                    handleDbIssuePdoXml($e);
+
+                    exit;
+                }
             }
 
-            // Search show
-            try {
-                $shows = $stmt->execute();
-            }
-            catch(PDOException $e) {
-                handleDbIssuePdoXml($e);
-
-                exit;
-            }
-
-            // display all shows
-            while ($show = $stmt->fetch()) {
+            foreach ($results as $show) {
                 if (checkIfResultAlreadyThere($w->results(), '🎙 ' . $show[1] . ' (' . $show[10] . ' episodes)') == false) {
                     $w->result(null, '', '🎙 ' . $show[1] . ' (' . $show[10] . ' episodes)', array('Browse this show', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), $show[4], 'no', null, 'Show▹' . $show[0] . '∙' . $show[1] . '▹');
                 }
@@ -716,24 +699,23 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
         if ($search_category == 'episode') {
             // Search episodes
             if($fuzzy_search) {
-                $retArr = getFuzzySearchResults($w, $update_in_progress, $query, 'episodes', array('name'), $max_results);
-                $getEpisodes = 'select uri, name, uri, show_uri, show_name, description, episode_artwork_path, is_playable, languages, nb_times_played, is_externally_hosted, duration_ms, explicit, release_date, release_date_precision, audio_preview_url, fully_played, resume_position_ms from episodes where name in ('.'"'.implode('","', $retArr).'"'.')' . ' order by release_date desc limit ' . $max_results;
-                $stmt = $db->prepare($getEpisodes);
+                $results = getFuzzySearchResults($w, $update_in_progress, $query, 'episodes', array('uri', 'name', 'uri', 'show_uri', 'show_name', 'description', 'episode_artwork_path', 'is_playable', 'languages', 'nb_times_played', 'is_externally_hosted', 'duration_ms', 'explicit', 'release_date', 'release_date_precision', 'audio_preview_url', 'fully_played', 'resume_position_ms'), $max_results, '2,4', '');
             } else {
                 $getEpisodes = 'select uri, name, uri, show_uri, show_name, description, episode_artwork_path, is_playable, languages, nb_times_played, is_externally_hosted, duration_ms, explicit, release_date, release_date_precision, audio_preview_url, fully_played, resume_position_ms from episodes where name_deburr like :name order by release_date desc limit ' . $max_results;
                 $stmt = $db->prepare($getEpisodes);
                 $stmt->bindValue(':name', '%' . deburr($query) . '%');
-            }
-            try {
-                $episodes = $stmt->execute();
-            }
-            catch(PDOException $e) {
-                handleDbIssuePdoXml($e);
+                try {
+                    $stmt->execute();
+                    $results = $stmt->fetchAll();
+                }
+                catch(PDOException $e) {
+                    handleDbIssuePdoXml($e);
 
-                exit;
+                    exit;
+                }
             }
 
-            while ($episodes = $stmt->fetch()) {
+            foreach ($results as $episodes) {
                 $subtitle = $episodes[6];
 
                 $fully_played = '';

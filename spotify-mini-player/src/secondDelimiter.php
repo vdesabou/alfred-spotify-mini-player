@@ -48,22 +48,24 @@ function secondDelimiterShows($w, $query, $settings, $db, $update_in_progress) {
         $getEpisodes = 'select uri, name, uri, show_uri, show_name, description, episode_artwork_path, is_playable, languages, nb_times_played, is_externally_hosted, duration_ms, explicit, release_date, release_date_precision, audio_preview_url, fully_played, resume_position_ms from episodes where show_uri=:show_uri order by release_date desc limit ' . $max_results;
         $stmt = $db->prepare($getEpisodes);
         $stmt->bindValue(':show_uri', $show_uri);
+        $stmt->execute();
+        $results = $stmt->fetchAll();
     }
     else {
         if($fuzzy_search) {
-            $retArr = getFuzzySearchResults($w, $update_in_progress, $episode, 'episodes', array('name'), $max_results, "where show_uri=\"".$show_uri."\"");
-            $getEpisodes = 'select uri, name, uri, show_uri, show_name, description, episode_artwork_path, is_playable, languages, nb_times_played, is_externally_hosted, duration_ms, explicit, release_date, release_date_precision, audio_preview_url, fully_played, resume_position_ms from episodes where name in ('.'"'.implode('","', $retArr).'"'.')' . ' order by release_date desc limit ' . $max_results;
-            $stmt = $db->prepare($getEpisodes);
+            $results = getFuzzySearchResults($w, $update_in_progress, $episode, 'episodes', array('uri', 'name', 'uri', 'show_uri', 'show_name', 'description', 'episode_artwork_path', 'is_playable', 'languages', 'nb_times_played', 'is_externally_hosted', 'duration_ms', 'explicit', 'release_date', 'release_date_precision', 'audio_preview_url', 'fully_played', 'resume_position_ms'), $max_results, '2,4', "where show_uri=\"".$show_uri."\"");
         } else {
             $getEpisodes = 'select uri, name, uri, show_uri, show_name, description, episode_artwork_path, is_playable, languages, nb_times_played, is_externally_hosted, duration_ms, explicit, release_date, release_date_precision, audio_preview_url, fully_played, resume_position_ms from episodes where show_uri=:show_uri and name_deburr like :name order by release_date desc limit ' . $max_results;
             $stmt = $db->prepare($getEpisodes);
             $stmt->bindValue(':show_uri', $show_uri);
             $stmt->bindValue(':name', '%' . deburr($episode) . '%');
+            $stmt->execute();
+            $results = $stmt->fetchAll();
         }
     }
-    $episodes = $stmt->execute();
+
     $noresult = true;
-    while ($episodes = $stmt->fetch()) {
+    foreach ($results as $episodes) {
         $noresult = false;
         $subtitle = $episodes[6];
 
@@ -1281,33 +1283,32 @@ function secondDelimiterYourMusicTracks($w, $query, $settings, $db, $update_in_p
 
         $getTracks = 'select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where yourmusic=1 order by added_at desc limit ' . $max_results;
         $stmt = $db->prepare($getTracks);
+        $stmt->execute();
+        $results = $stmt->fetchAll();
     }
     else {
 
         if($fuzzy_search) {
-            $retArr = getFuzzySearchResults($w, $update_in_progress, $thetrack, 'tracks', array('track_name','artist_name','album_name'), $max_results);
-            // Search tracks
-            $getTracks = 'select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where yourmusic=1 and track_name in ('.'"'.implode('","', $retArr).'"'.')' . '  order by added_at desc limit ' . $max_results;
-            $stmt = $db->prepare($getTracks);
+            $results = getFuzzySearchResults($w, $update_in_progress, $thetrack, 'tracks', array('yourmusic', 'popularity', 'uri', 'album_uri', 'artist_uri', 'track_name', 'album_name', 'artist_name', 'album_type', 'track_artwork_path', 'artist_artwork_path', 'album_artwork_path', 'playlist_name', 'playlist_uri', 'playable', 'added_at', 'duration', 'nb_times_played', 'local_track'), $max_results, '6..8', 'where yourmusic=1');
         } else {
             // Search tracks
             $getTracks = 'select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where yourmusic=1 and (artist_name_deburr like :query or album_name_deburr like :query or track_name_deburr like :query)' . ' limit ' . $max_results;
             $stmt = $db->prepare($getTracks);
             $stmt->bindValue(':query', '%' . deburr($thetrack) . '%');
+            try {
+                $stmt->execute();
+                $results = $stmt->fetchAll();
+            }
+            catch(PDOException $e) {
+                handleDbIssuePdoXml($e);
+
+                return;
+            }
         }
     }
 
-    try {
-        $tracks = $stmt->execute();
-    }
-    catch(PDOException $e) {
-        handleDbIssuePdoXml($e);
-
-        return;
-    }
-
     $noresult = true;
-    while ($track = $stmt->fetch()) {
+    foreach ($results as $track) {
         $noresult = false;
         $subtitle = $track[6];
 
@@ -1385,24 +1386,21 @@ function secondDelimiterYourMusicAlbums($w, $query, $settings, $db, $update_in_p
         if (mb_strlen($album) < 2) {
             $getTracks = 'select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where yourmusic_album=1 group by album_name order by max(added_at) desc limit ' . $max_results;
             $stmt = $db->prepare($getTracks);
+            $stmt->execute();
+            $results = $stmt->fetchAll();
         }
         else {
             if($fuzzy_search) {
-                $retArr = getFuzzySearchResults($w, $update_in_progress, $album, 'tracks', array('album_name'), $max_results);
-                // Search albums
-
-                $getTracks = 'select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where yourmusic=1 and album_name != "" and album_name in ('.'"'.implode('","', $retArr).'"'.')' . ' limit ' . $max_results;
-
-                $stmt = $db->prepare($getTracks);
+                $results = getFuzzySearchResults($w, $update_in_progress, $album, 'tracks', array('album_name','album_artwork_path','artist_name','album_uri','album_type'), $max_results, '1', 'where yourmusic=1');
             } else {
                 // Search albums
                 $getTracks = 'select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where yourmusic=1 and album_name != "" and album_name_deburr like :album_name group by album_name order by max(added_at) desc limit ' . $max_results;
                 $stmt = $db->prepare($getTracks);
                 $stmt->bindValue(':album_name', '%' . deburr($album) . '%');
+                $stmt->execute();
+                $results = $stmt->fetchAll();
             }
         }
-
-        $tracks = $stmt->execute();
     }
     catch(PDOException $e) {
         handleDbIssuePdoXml($e);
@@ -1412,7 +1410,7 @@ function secondDelimiterYourMusicAlbums($w, $query, $settings, $db, $update_in_p
 
     // display all albums
     $noresult = true;
-    while ($track = $stmt->fetch()) {
+    foreach ($results as $track) {
         $noresult = false;
         $nb_album_tracks = getNumberOfTracksForAlbum($db, $track[3], true);
         if (checkIfResultAlreadyThere($w->results(), $track[0] . ' (' . $nb_album_tracks . ' tracks)') == false) {
@@ -1542,25 +1540,21 @@ function secondDelimiterYourMusicArtists($w, $query, $settings, $db, $update_in_
         if (mb_strlen($artist) < 2) {
             $getArtists = 'select name,artist_artwork_path,uri from followed_artists group by name' . ' limit ' . $max_results;
             $stmt = $db->prepare($getArtists);
+            $stmt->execute();
+            $results = $stmt->fetchAll();
         }
         else {
-
-
             if($fuzzy_search) {
-                // Search artists
-                $retArr = getFuzzySearchResults($w, $update_in_progress, $artist, 'followed_artists', array('name'), $max_results);
-
-                $getArtists = "select name,artist_artwork_path,uri from followed_artists where name in (".'"'.implode('","', $retArr).'"'.')'." limit " . $max_results;
-                $stmt = $db->prepare($getArtists);
+                $results = getFuzzySearchResults($w, $update_in_progress, $artist, 'followed_artists', array('name','artist_artwork_path','uri'), $max_results, '1', '');
             } else {
                 // Search artists
                 $getArtists = 'select name,artist_artwork_path,uri from followed_artists where name_deburr like :query limit ' . $max_results;
                 $stmt = $db->prepare($getArtists);
                 $stmt->bindValue(':query', '%' . deburr($artist) . '%');
+                $stmt->execute();
+                $results = $stmt->fetchAll();
             }
         }
-
-        $artists = $stmt->execute();
     }
     catch(PDOException $e) {
         handleDbIssuePdoXml($e);
@@ -1570,7 +1564,7 @@ function secondDelimiterYourMusicArtists($w, $query, $settings, $db, $update_in_
 
     // display all artists
     $noresult = true;
-    while ($artists = $stmt->fetch()) {
+    foreach ($results as $artists) {
         $noresult = false;
         $nb_artist_tracks = getNumberOfTracksForArtist($db, $artists[0], false);
         if (checkIfResultAlreadyThere($w->results(), '👤 ' . $artists[0] . ' (' . $nb_artist_tracks . ' tracks)') == false) {
@@ -2182,6 +2176,8 @@ function secondDelimiterAdd($w, $query, $settings, $db, $update_in_progress) {
         if (mb_strlen($theplaylist) < 2) {
             $getPlaylists = 'select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist from playlists where ownedbyuser=1';
             $stmt = $db->prepare($getPlaylists);
+            $stmt->execute();
+            $results = $stmt->fetchAll();
 
             $w->result(null, '', 'Add ' . $type . ' ' . $value . ' to Your Music or one of your playlists below..', array('Select Your Music or one of your playlists below to add the ' . $message, 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/add.png', 'no', null, '');
 
@@ -2235,17 +2231,15 @@ function secondDelimiterAdd($w, $query, $settings, $db, $update_in_progress) {
         }
         else {
             if($fuzzy_search) {
-                $retArr = getFuzzySearchResults($w, $update_in_progress, $theplaylist, 'playlists', array('name'), $max_results);
-                $getPlaylists = 'select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist,collaborative,public,nb_times_played from playlists where name in ('.'"'.implode('","', $retArr).'"'.')';
-                $stmt = $db->prepare($getPlaylists);
+                $results = getFuzzySearchResults($w, $update_in_progress, $theplaylist, 'playlists', array('uri','name','nb_tracks','author','username','playlist_artwork_path','ownedbyuser','nb_playable_tracks','duration_playlist','collaborative','public','nb_times_played'), $max_results, '2,4', '');
             } else {
                 $getPlaylists = 'select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist,collaborative,public,nb_times_played from playlists where (name_deburr like :query or author like :query) order by nb_times_played desc';
                 $stmt = $db->prepare($getPlaylists);
                 $stmt->bindValue(':query', '%' . deburr($theplaylist) . '%');
+                $stmt->execute();
+                $results = $stmt->fetchAll();
             }
         }
-
-        $playlists = $stmt->execute();
     }
     catch(PDOException $e) {
         handleDbIssuePdoXml($e);
@@ -2253,8 +2247,8 @@ function secondDelimiterAdd($w, $query, $settings, $db, $update_in_progress) {
         exit;
     }
 
-    while ($playlist = $stmt->fetch()) {
-        if (($playlist[0] != $alfred_playlist_uri && (mb_strlen($theplaylist) < 2)) || (mb_strlen($theplaylist) >= 3)) {
+    foreach ($results as $playlist) {
+        if ($playlist[0] != $alfred_playlist_uri) {
             $added = ' ';
             if (startswith($playlist[1], 'Artist radio for')) {
                 $added = '📻 ';
