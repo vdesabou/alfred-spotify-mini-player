@@ -759,7 +759,6 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
  */
 function firstDelimiterNewReleases($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
-    $kind = $words[0];
     $search = $words[1];
 
     $country_code = $settings->country_code;
@@ -796,7 +795,6 @@ function firstDelimiterNewReleases($w, $query, $settings, $db, $update_in_progre
  */
 function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
-    $kind = $words[0];
     $input = $words[1];
 
     $all_playlists = $settings->all_playlists;
@@ -1323,8 +1321,6 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
  */
 function firstDelimiterSpotifyConnect($w, $query, $settings, $db, $update_in_progress) {
 
-    // Read settings from JSON
-
     $settings = getSettings($w);
 
     $preferred_spotify_connect_device = $settings->preferred_spotify_connect_device;
@@ -1502,7 +1498,6 @@ function firstDelimiterSpotifyConnect($w, $query, $settings, $db, $update_in_pro
  * @param mixed $update_in_progress
  */
 function firstDelimiterSpotifyConnectPreferredDevice($w, $query, $settings, $db, $update_in_progress) {
-    // Read settings from JSON
 
     $settings = getSettings($w);
 
@@ -1836,8 +1831,6 @@ function firstDelimiterLyrics($w, $query, $settings, $db, $update_in_progress) {
  * @param mixed $update_in_progress
  */
 function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress) {
-    $words = explode('▹', $query);
-
     $all_playlists = $settings->all_playlists;
     $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
     $radio_number_tracks = $settings->radio_number_tracks;
@@ -2455,8 +2448,6 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
  * @param mixed $update_in_progress
  */
 function firstDelimiterCheckForUpdate($w, $query, $settings, $db, $update_in_progress) {
-    $words = explode('▹', $query);
-
     $check_results = checkForUpdate($w, 0);
     if ($check_results != null && is_array($check_results)) {
         if($check_results[0] != '') {
@@ -2800,7 +2791,6 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
  */
 function firstDelimiterBrowse($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
-    $kind = $words[0];
     $search = $words[1];
 
     $country_code = $settings->country_code;
@@ -2835,9 +2825,6 @@ function firstDelimiterBrowse($w, $query, $settings, $db, $update_in_progress) {
  * @param mixed $update_in_progress
  */
 function firstDelimiterYourTops($w, $query, $settings, $db, $update_in_progress) {
-    $words = explode('▹', $query);
-    $kind = $words[0];
-
     $w->result(null, '', 'Get your top artists (last 4 weeks)', array('Get your top artists for last 4 weeks', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/your_tops_artists.png', 'no', null, 'Your Tops▹Artists▹short_term');
 
     $w->result(null, '', 'Get your top artists (last 6 months)', array('Get your top artists for last 6 months', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/your_tops_artists.png', 'no', null, 'Your Tops▹Artists▹medium_term');
@@ -2862,26 +2849,9 @@ function firstDelimiterYourTops($w, $query, $settings, $db, $update_in_progress)
  */
 function firstDelimiterYourRecentTracks($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
-    $kind = $words[0];
     $search = $words[1];
 
-    $all_playlists = $settings->all_playlists;
-    $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
-    $radio_number_tracks = $settings->radio_number_tracks;
-    $now_playing_notifications = $settings->now_playing_notifications;
     $max_results = $settings->max_results;
-    $alfred_playlist_uri = $settings->alfred_playlist_uri;
-    $alfred_playlist_name = $settings->alfred_playlist_name;
-    $country_code = $settings->country_code;
-    $last_check_update_time = $settings->last_check_update_time;
-    $oauth_client_id = $settings->oauth_client_id;
-    $oauth_client_secret = $settings->oauth_client_secret;
-    $oauth_redirect_uri = $settings->oauth_redirect_uri;
-    $oauth_access_token = $settings->oauth_access_token;
-    $oauth_expires = $settings->oauth_expires;
-    $oauth_refresh_token = $settings->oauth_refresh_token;
-    $display_name = $settings->display_name;
-    $userid = $settings->userid;
     $use_artworks = $settings->use_artworks;
 
     try {

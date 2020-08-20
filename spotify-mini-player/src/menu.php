@@ -196,8 +196,6 @@ function oAuthChecks($w, $query, $settings, $update_in_progress) {
  * @param mixed $update_in_progress
  */
 function mainMenu($w, $query, $settings, $db, $update_in_progress) {
-    $words = explode('▹', $query);
-
     $all_playlists = $settings->all_playlists;
     $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
     $radio_number_tracks = $settings->radio_number_tracks;
@@ -862,27 +860,8 @@ function searchCategoriesFastAccess($w, $query, $settings, $db, $update_in_progr
  * @param mixed $update_in_progress
  */
 function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progress) {
-    $all_playlists = $settings->all_playlists;
     $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
-    $radio_number_tracks = $settings->radio_number_tracks;
-    $now_playing_notifications = $settings->now_playing_notifications;
-    $max_results = $settings->max_results;
-    $alfred_playlist_uri = $settings->alfred_playlist_uri;
-    $alfred_playlist_name = $settings->alfred_playlist_name;
-    $country_code = $settings->country_code;
-    $last_check_update_time = $settings->last_check_update_time;
-    $oauth_client_id = $settings->oauth_client_id;
-    $oauth_client_secret = $settings->oauth_client_secret;
-    $oauth_redirect_uri = $settings->oauth_redirect_uri;
-    $oauth_access_token = $settings->oauth_access_token;
-    $oauth_expires = $settings->oauth_expires;
-    $oauth_refresh_token = $settings->oauth_refresh_token;
-    $display_name = $settings->display_name;
-    $userid = $settings->userid;
-
     $output_application = $settings->output_application;
-    $mopidy_server = $settings->mopidy_server;
-    $mopidy_port = $settings->mopidy_port;
 
     $cmd = 'Not Available';
     if ($output_application == 'CONNECT') {
