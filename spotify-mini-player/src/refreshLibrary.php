@@ -1098,8 +1098,9 @@ function refreshLibrary($w, $silent = false) {
         $getPlaylists = 'select * from playlists';
         $stmt = $db->prepare($getPlaylists);
         $stmt->execute();
+        $results = $stmt->fetchAll();
 
-        while ($playlist_in_db = $stmt->fetch()) {
+        foreach ($results as $playlist_in_db) {
             $found = false;
             foreach ($savedListPlaylist as $playlist) {
                 if ($playlist->uri == $playlist_in_db[0]) {
@@ -1987,8 +1988,9 @@ function refreshLibrary($w, $silent = false) {
         $getShows = 'select * from shows';
         $stmt = $db->prepare($getShows);
         $stmt->execute();
+        $results = $stmt->fetchAll();
 
-        while ($shows_in_db = $stmt->fetch()) {
+        foreach ($results as $shows_in_db) {
             $found = false;
             foreach ($savedMySavedShows as $item) {
                 $show = $item->show;
@@ -2028,8 +2030,9 @@ function refreshLibrary($w, $silent = false) {
         $getAllSavedAlbums = 'select album_uri from tracks where yourmusic_album=1 group by album_uri';
         $stmt = $db->prepare($getAllSavedAlbums);
         $stmt->execute();
+        $results = $stmt->fetchAll();
 
-        while ($album_in_db = $stmt->fetch()) {
+        foreach ($results as $album_in_db) {
             $found = false;
             foreach ($savedMySavedAlbums as $album) {
                 if ($album->uri == $album_in_db[0]) {
@@ -2137,8 +2140,9 @@ function refreshLibrary($w, $silent = false) {
         $getFollowedArtists = 'select * from followed_artists';
         $stmt = $db->prepare($getFollowedArtists);
         $stmt->execute();
+        $results = $stmt->fetchAll();
 
-        while ($followed_artist_in_db = $stmt->fetch()) {
+        foreach ($results as $followed_artist_in_db) {
             $found = false;
             foreach ($savedMyFollowedArtists as $artist) {
                 if ($artist->uri == $followed_artist_in_db[0]) {

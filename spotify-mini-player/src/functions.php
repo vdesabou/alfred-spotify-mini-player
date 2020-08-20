@@ -5668,9 +5668,10 @@ function getPlaylistsForTrack($db, $track_uri)
         $stmt = $db->prepare($getPlaylistsForTrack);
         $stmt->bindValue(':uri', ''.$track_uri.'');
         $stmt->execute();
+        $results = $stmt->fetchAll();
 
         $noresult = true;
-        while ($playlist = $stmt->fetch()) {
+        foreach ($results as $playlist) {
             if ($noresult == true) {
                 if ($playlist[0] == '') {
                     $playlistsfortrack = $playlistsfortrack.' ● ♫ : '.'Your Music';

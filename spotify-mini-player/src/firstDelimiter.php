@@ -184,10 +184,10 @@ function firstDelimiterArtists($w, $query, $settings, $db, $update_in_progress) 
         else {
             if($fuzzy_search) {
                 if ($all_playlists == false) {
-                    $results = getFuzzySearchResults($w, $update_in_progress, $query, 'followed_artists', array('name','artist_artwork_path','uri'), $max_results, '1', '');
+                    $results = getFuzzySearchResults($w, $update_in_progress, $artist, 'followed_artists', array('name','artist_artwork_path','uri'), $max_results, '1', '');
                 }
                 else {
-                    $results = getFuzzySearchResults($w, $update_in_progress, $query, 'tracks', array('artist_name','artist_artwork_path','artist_uri'), $max_results, '1', '');
+                    $results = getFuzzySearchResults($w, $update_in_progress, $artist, 'tracks', array('artist_name','artist_artwork_path','artist_uri'), $max_results, '1', '');
                 }
             } else {
                 // Search artists
@@ -342,6 +342,7 @@ function firstDelimiterAlbums($w, $query, $settings, $db, $update_in_progress) {
     $all_playlists = $settings->all_playlists;
     $max_results = $settings->max_results;
     $output_application = $settings->output_application;
+    $fuzzy_search = $settings->fuzzy_search;
 
     // New Releases menu
     $w->result(null, '', 'New Releases', array('Browse new album releases', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/new_releases.png', 'no', null, 'New Releases▹');
@@ -357,19 +358,31 @@ function firstDelimiterAlbums($w, $query, $settings, $db, $update_in_progress) {
                 $getTracks = 'select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks group by album_name order by max(added_at) desc limit ' . $max_results;
             }
             $stmt = $db->prepare($getTracks);
+            $stmt->execute();
+            $results = $stmt->fetchAll();
         }
         else {
-            if ($all_playlists == false) {
-                $getTracks = 'select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where yourmusic_album=1 and album_name_deburr like :query group by album_name order by max(added_at) desc limit ' . $max_results;
+            if($fuzzy_search) {
+                if ($all_playlists == false) {
+                    $where_clause = 'where yourmusic=1';
+                }
+                else {
+                    $where_clause = '';
+                }
+                $results = getFuzzySearchResults($w, $update_in_progress,  $album, 'tracks', array('album_name','album_artwork_path','artist_name','album_uri','album_type'), $max_results, '1,3', $where_clause);
+            } else {
+                if ($all_playlists == false) {
+                    $getTracks = 'select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where yourmusic_album=1 and album_name_deburr or artist_name_deburr like :query group by album_name order by max(added_at) desc limit ' . $max_results;
+                }
+                else {
+                    $getTracks = 'select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where album_name_deburr or artist_name_deburr like :query group by album_name order by max(added_at) desc limit ' . $max_results;
+                }
+                $stmt = $db->prepare($getTracks);
+                $stmt->bindValue(':query', '%' . deburr($album) . '%');
+                $stmt->execute();
+                $results = $stmt->fetchAll();
             }
-            else {
-                $getTracks = 'select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where album_name_deburr like :query group by album_name order by max(added_at) desc limit ' . $max_results;
-            }
-            $stmt = $db->prepare($getTracks);
-            $stmt->bindValue(':query', '%' . deburr($album) . '%');
         }
-
-        $tracks = $stmt->execute();
     }
     catch(PDOException $e) {
         handleDbIssuePdoXml($e);
@@ -379,7 +392,7 @@ function firstDelimiterAlbums($w, $query, $settings, $db, $update_in_progress) {
 
     // display all albums
     $noresult = true;
-    while ($track = $stmt->fetch()) {
+    foreach ($results as $track) {
         $noresult = false;
         $nb_album_tracks = getNumberOfTracksForAlbum($db, $track[3]);
         if (checkIfResultAlreadyThere($w->results(), $track[0] . ' (' . $nb_album_tracks . ' tracks)') == false) {
@@ -1059,7 +1072,8 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
         try {
             $stmt = $db->prepare($getTracks);
             $stmt->bindValue(':artist_name', deburr(escapeQuery($results[1])));
-            $tracks = $stmt->execute();
+            $stmt->execute();
+            $results = $stmt->fetchAll();
         }
         catch(PDOException $e) {
             handleDbIssuePdoXml($e);
@@ -1070,7 +1084,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
         if (mb_strlen($input) < 2 || strpos(strtolower('browse artist'), strtolower($input)) !== false) {
             // check if artist is in library
             $noresult = true;
-            while ($track = $stmt->fetch()) {
+            foreach ($results as $track) {
                 if ($track[1] != '') {
                     $artist_uri = $track[1];
                     $noresult = false;
@@ -1663,7 +1677,7 @@ function firstDelimiterYourMusic($w, $query, $settings, $db, $update_in_progress
         try {
             $stmt = $db->prepare($getCounters);
 
-            $counters = $stmt->execute();
+            $stmt->execute();
             $counter = $stmt->fetch();
         }
         catch(PDOException $e) {

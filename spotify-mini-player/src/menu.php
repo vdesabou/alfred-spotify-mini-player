@@ -619,7 +619,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
                 else {
                     $where_clause = '';
                 }
-                $results = getFuzzySearchResults($w, $update_in_progress, $query, 'tracks', array('album_name','album_uri','album_artwork_path','uri'), $max_results, '1', '');
+                $results = getFuzzySearchResults($w, $update_in_progress, $query, 'tracks', array('album_name','album_uri','album_artwork_path','uri'), $max_results, '1', $where_clause);
             } else {
                 // Search albums
                 if ($all_playlists == false) {
