@@ -372,7 +372,7 @@ function firstDelimiterAlbums($w, $query, $settings, $db, $update_in_progress) {
                 $results = getFuzzySearchResults($w, $update_in_progress,  $album, 'tracks', array('album_name','album_artwork_path','artist_name','album_uri','album_type'), $max_results, '1,3', $where_clause);
             } else {
                 if ($all_playlists == false) {
-                    $getTracks = 'select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where yourmusic_album=1 and (album_name_deburr like :album_name or artist_name_deburr like :album_name) group by album_name order by max(added_at) desc limit ' . $max_results;
+                    $getTracks = 'select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where yourmusic_album=1 and and album_name != "" and (album_name_deburr like :album_name or artist_name_deburr like :album_name) group by album_name order by max(added_at) desc limit ' . $max_results;
                 }
                 else {
                     $getTracks = 'select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where (album_name_deburr like :album_name or artist_name_deburr like :album_name) group by album_name order by max(added_at) desc limit ' . $max_results;

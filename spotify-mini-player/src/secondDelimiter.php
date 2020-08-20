@@ -1370,10 +1370,10 @@ function secondDelimiterYourMusicAlbums($w, $query, $settings, $db, $update_in_p
         }
         else {
             if($fuzzy_search) {
-                $results = getFuzzySearchResults($w, $update_in_progress, $album, 'tracks', array('album_name','album_artwork_path','artist_name','album_uri','album_type'), $max_results, '1', 'where yourmusic=1');
+                $results = getFuzzySearchResults($w, $update_in_progress, $album, 'tracks', array('album_name','album_artwork_path','artist_name','album_uri','album_type'), $max_results, '1,3', 'where yourmusic=1');
             } else {
                 // Search albums
-                $getTracks = 'select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where yourmusic=1 and album_name != "" and album_name_deburr like :album_name group by album_name order by max(added_at) desc limit ' . $max_results;
+                $getTracks = 'select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where yourmusic=1 and album_name != "" and (album_name_deburr like :album_name or artist_name_deburr like :album_name) group by album_name order by max(added_at) desc limit ' . $max_results;
                 $stmt = $db->prepare($getTracks);
                 $stmt->bindValue(':album_name', '%' . deburr($album) . '%');
                 $stmt->execute();
