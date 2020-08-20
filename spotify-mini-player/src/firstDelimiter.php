@@ -352,7 +352,7 @@ function firstDelimiterAlbums($w, $query, $settings, $db, $update_in_progress) {
     try {
         if (mb_strlen($album) < 2) {
             if ($all_playlists == false) {
-                $getTracks = 'select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where yourmusic_album=1' . '  group by album_name order by max(added_at) desc limit ' . $max_results;
+                $getTracks = 'select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where yourmusic_album=1' . ' group by album_name order by max(added_at) desc limit ' . $max_results;
             }
             else {
                 $getTracks = 'select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks group by album_name order by max(added_at) desc limit ' . $max_results;
@@ -372,13 +372,13 @@ function firstDelimiterAlbums($w, $query, $settings, $db, $update_in_progress) {
                 $results = getFuzzySearchResults($w, $update_in_progress,  $album, 'tracks', array('album_name','album_artwork_path','artist_name','album_uri','album_type'), $max_results, '1,3', $where_clause);
             } else {
                 if ($all_playlists == false) {
-                    $getTracks = 'select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where yourmusic_album=1 and album_name_deburr or artist_name_deburr like :query group by album_name order by max(added_at) desc limit ' . $max_results;
+                    $getTracks = 'select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where yourmusic_album=1 and (album_name_deburr like :album_name or artist_name_deburr like :album_name) group by album_name order by max(added_at) desc limit ' . $max_results;
                 }
                 else {
-                    $getTracks = 'select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where album_name_deburr or artist_name_deburr like :query group by album_name order by max(added_at) desc limit ' . $max_results;
+                    $getTracks = 'select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where (album_name_deburr like :album_name or artist_name_deburr like :album_name) group by album_name order by max(added_at) desc limit ' . $max_results;
                 }
                 $stmt = $db->prepare($getTracks);
-                $stmt->bindValue(':query', '%' . deburr($album) . '%');
+                $stmt->bindValue(':album_name', '%' . deburr($album) . '%');
                 $stmt->execute();
                 $results = $stmt->fetchAll();
             }
@@ -395,8 +395,8 @@ function firstDelimiterAlbums($w, $query, $settings, $db, $update_in_progress) {
     foreach ($results as $track) {
         $noresult = false;
         $nb_album_tracks = getNumberOfTracksForAlbum($db, $track[3]);
-        if (checkIfResultAlreadyThere($w->results(), $track[0] . ' (' . $nb_album_tracks . ' tracks)') == false) {
-            $w->result(null, '', $track[0] . ' (' . $nb_album_tracks . ' tracks)', array($track[4] . ' by ' . $track[2], 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), $track[1], 'no', null, 'Album▹' . $track[3] . '∙' . $track[0] . '▹');
+        if (checkIfResultAlreadyThere($w->results(), $track[0] . ' (' . $nb_album_tracks . ' tracks)'. ' by '.$track[2]) == false) {
+            $w->result(null, '',  $track[0] . ' (' . $nb_album_tracks . ' tracks)'. ' by '.$track[2], array($track[2] . ' by ' . $track[2], 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), $track[1], 'no', null, 'Album▹' . $track[3] . '∙' . $track[0] . '▹');
         }
     }
 
