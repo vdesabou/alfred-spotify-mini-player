@@ -619,14 +619,14 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
                 else {
                     $where_clause = '';
                 }
-                $results = getFuzzySearchResults($w, $update_in_progress, $query, 'tracks', array('album_name','album_uri','album_artwork_path','uri'), $max_results, '1', $where_clause);
+                $results = getFuzzySearchResults($w, $update_in_progress, $query, 'tracks', array('album_name','album_uri','album_artwork_path','uri','artist_name','track_name'), $max_results, '1,5,6', $where_clause);
             } else {
                 // Search albums
                 if ($all_playlists == false) {
-                    $getTracks = 'select album_name,album_uri,album_artwork_path,uri from tracks where yourmusic=1 and album_name != "" and album_name_deburr like :album_name group by album_name order by max(added_at) desc limit ' . $max_results;
+                    $getTracks = 'select album_name,album_uri,album_artwork_path,uri, artist_name from tracks where yourmusic=1 and album_name != "" and (album_name_deburr like :album_name or artist_name_deburr like :album_name or track_name_deburr like :album_name) group by album_name order by max(added_at) desc limit ' . $max_results;
                 }
                 else {
-                    $getTracks = 'select album_name,album_uri,album_artwork_path,uri from tracks where album_name != "" and album_name_deburr like :album_name group by album_name order by max(added_at) desc limit ' . $max_results;
+                    $getTracks = 'select album_name,album_uri,album_artwork_path,uri, artist_name from tracks where album_name != "" and (album_name_deburr like :album_name or artist_name_deburr like :album_name or track_name_deburr like :album_name) group by album_name order by max(added_at) desc limit ' . $max_results;
                 }
                 $stmt = $db->prepare($getTracks);
                 $stmt->bindValue(':album_name', '%' . deburr($query) . '%');
@@ -642,7 +642,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
             }
 
             foreach ($results as $track) {
-                if (checkIfResultAlreadyThere($w->results(), '💿 ' . $track[0]) == false) {
+                if (checkIfResultAlreadyThere($w->results(), '💿 ' . $track[0]. ' by '.$track[4]) == false) {
                     if ($track[1] == '') {
                         // can happen for local tracks
                         $track[1] = $track[3];
@@ -664,7 +664,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
                         )), '💿 ' . $track[0], '⚡️Play album', $track[2], 'yes', null, '');
                     }
                     else {
-                        $w->result(null, '', '💿 ' . $track[0], array('Browse this album', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), $track[2], 'no', null, 'Album▹' . $track[1] . '∙' . $track[0] . '▹');
+                        $w->result(null, '', '💿 ' . $track[0]. ' by '.$track[4], array('Browse this album', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), $track[2], 'no', null, 'Album▹' . $track[1] . '∙' . $track[0] . '▹');
                     }
                 }
             }
