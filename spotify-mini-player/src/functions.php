@@ -2618,7 +2618,8 @@ function createDebugFile($w)
 
     $output = str_replace('"', '\"', $output);
 
-    exec("open \"mailto:alfred.spotify.mini.player@gmail.com?subject=Alfred Spotify Mini Player debug file&body=$output\"");
+    exec("open \"mailto:alfred.spotify.mini.player@gmail.com?subject=Alfred Spotify Mini Player debug file (version ".getenv('alfred_workflow_version').")&body=$output\"");
+    print_r("open \"mailto:alfred.spotify.mini.player@gmail.com?subject=Alfred Spotify Mini Player debug file (version ".getenv('alfred_workflow_version').")&body=$output\"");
 }
 
 /**
