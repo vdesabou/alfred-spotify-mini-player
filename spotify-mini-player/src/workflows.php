@@ -183,67 +183,6 @@ class Workflows
         endif;
         $items = array();
 
-        // cat << EOB
-        // {"items": [
-        //	{
-        //		"uid": "desktop",
-        //		"type": "file",
-        //		"title": "Desktop",
-        //		"subtitle": "~/Desktop",
-        //		"arg": "~/Desktop",
-        //		"autocomplete": "Desktop",
-        //		"icon": {
-        //			"type": "fileicon",
-        //			"path": "~/Desktop"
-        //		}
-        //	},
-        //	{
-        //		"valid": false,
-        //		"uid": "flickr",
-        //		"title": "Flickr",
-        //		"icon": {
-        //			"path": "flickr.png"
-        //		}
-        //	},
-        //	{
-        //		"uid": "image",
-        //		"type": "file",
-        //		"title": "My holiday photo",
-        //		"subtitle": "~/Pictures/My holiday photo.jpg",
-        //		"autocomplete": "My holiday photo",
-        //		"icon": {
-        //			"type": "filetype",
-        //			"path": "public.jpeg"
-        //		}
-        //	},
-        //	{
-        //		"valid": false,
-        //		"uid": "alfredapp",
-        //		"title": "Alfred Website",
-        //		"subtitle": "https://www.alfredapp.com/",
-        //		"arg": "alfredapp.com",
-        //		"autocomplete": "Alfred Website",
-        //		"quicklookurl": "https://www.alfredapp.com/",
-        //		"mods": {
-        //			"alt": {
-        //				"valid": true,
-        //				"arg": "alfredapp.com/powerpack",
-        //				"subtitle": "https://www.alfredapp.com/powerpack/"
-        //			},
-        //			"cmd": {
-        //				"valid": true,
-        //				"arg": "alfredapp.com/powerpack/buy/",
-        //				"subtitle": "https://www.alfredapp.com/powerpack/buy/"
-        //			},
-        //		},
-        //		"text": {
-        //			"copy": "https://www.alfredapp.com/ (text here to copy)",
-        //			"largetype": "https://www.alfredapp.com/ (text here for large type)"
-        //		}
-        //	}
-        // ]}
-        // EOB
-
         foreach($a as $b):
             $c = new StdClass(); // Loop through each object in the array
             $c_keys = array_keys($b); // Grab all the keys for that item
@@ -620,7 +559,7 @@ class Workflows
                 $b = $this->data . '/' . $b;
             endif;
             if (is_array($a)):
-                $a = json_encode($a);
+                $a = json_encode($a,JSON_PRETTY_PRINT);
                 file_put_contents($b, $a);
                 return true;
             elseif (is_string($a)):
