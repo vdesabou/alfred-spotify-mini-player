@@ -2503,9 +2503,6 @@ function createDebugFile($w)
     $output_application = $settings->output_application;
     $oauth_client_secret = $settings->oauth_client_secret;
     $oauth_access_token = $settings->oauth_access_token;
-    $oauth_refresh_token = $settings->oauth_refresh_token;
-    $display_name = $settings->display_name;
-    $userid = $settings->userid;
     $theme_color = $settings->theme_color;
 
     exec('mkdir -p /tmp/spot_mini_debug');
@@ -2575,6 +2572,12 @@ function createDebugFile($w)
     $output = $output.'alfred_workflow_version:'.getenv('alfred_workflow_version');
     $output = $output."\n";
     $output = $output.'alfred_debug:'.getenv('alfred_debug');
+    $output = $output."\n";
+    $output = $output.'reduce_notifications:'.getenv('reduce_notifications');
+    $output = $output."\n";
+    $output = $output.'automatically_refresh_library:'.getenv('automatically_refresh_library');
+    $output = $output."\n";
+    $output = $output.'automatically_open_spotify_app:'.getenv('automatically_open_spotify_app');
     $output = $output."\n";
     if ($output_application != 'MOPIDY') {
         $output = $output.'Spotify desktop version:'.exec("osascript -e 'tell application \"Spotify\" to version'");
