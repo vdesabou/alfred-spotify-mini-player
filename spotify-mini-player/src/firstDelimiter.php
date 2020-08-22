@@ -364,7 +364,7 @@ function firstDelimiterAlbums($w, $query, $settings, $db, $update_in_progress) {
         else {
             if($fuzzy_search) {
                 if ($all_playlists == false) {
-                    $where_clause = 'where yourmusic=1';
+                    $where_clause = 'where yourmusic_album=1';
                 }
                 else {
                     $where_clause = '';
