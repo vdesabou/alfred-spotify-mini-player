@@ -1071,7 +1071,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
             $stmt = $db->prepare($getTracks);
             $stmt->bindValue(':artist_name', deburr(escapeQuery($results[1])));
             $stmt->execute();
-            $results = $stmt->fetchAll();
+            $dbresults = $stmt->fetchAll();
         }
         catch(PDOException $e) {
             handleDbIssuePdoXml($e);
@@ -1082,7 +1082,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
         if (mb_strlen($input) < 2 || strpos(strtolower('browse artist'), strtolower($input)) !== false) {
             // check if artist is in library
             $noresult = true;
-            foreach ($results as $track) {
+            foreach ($dbresults as $track) {
                 if ($track[1] != '') {
                     $artist_uri = $track[1];
                     $noresult = false;
