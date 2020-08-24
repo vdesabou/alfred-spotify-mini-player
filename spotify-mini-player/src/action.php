@@ -95,7 +95,7 @@ if($oauth_access_token != '' && $now_playing_notifications == true) {
     } else {
         $app_arg = 'CONNECT';
     }
-    exec('./src/spotify_mini_player_notifications.ksh -d "'.$w->data().'" -a start -m "'.$app_arg.'" -v "'.getAlfredName().'"  >> "'.$w->cache().'/action.log" 2>&1 & ');
+    exec('./src/spotify_mini_player_notifications.ksh -d "'.$w->data().'" -a start -m "'.$app_arg.'" -v "'.getAlfredName().'"  & ');
 }
 
 // make sure spotify is running
@@ -145,11 +145,11 @@ if ($type == 'TRACK' && $other_settings == '' &&
                     $track = $results[0];
                     $artists = $track->artists;
                     $artist = $artists[0];
-                    logMsg("Error(action): Unknown track $track_uri / $track_name / $artist_name replaced by track: $track->uri / $track->name / $artist->name");
+                    logMsg($w,"Error(action): Unknown track $track_uri / $track_name / $artist_name replaced by track: $track->uri / $track->name / $artist->name");
                     $track_uri = $track->uri;
                     $tmp = explode(':', $track_uri);
                 } else {
-                    logMsg("Error(action): Could not find track: $track_uri / $track_name / $artist_name");
+                    logMsg($w,"Error(action): Could not find track: $track_uri / $track_name / $artist_name");
                     displayNotificationWithArtwork($w, 'Local track '.$track_name.' has not online match', './images/warning.png', 'Error!');
 
                     return;
@@ -553,11 +553,11 @@ if ($type == 'TRACK' && $other_settings == '' &&
                         $track = $results[0];
                         $artists = $track->artists;
                         $artist = $artists[0];
-                        logMsg("Error(action): Unknown track $track_uri / $track_name / $artist_name replaced by track: $track->uri / $track->name / $artist->name");
+                        logMsg($w,"Error(action): Unknown track $track_uri / $track_name / $artist_name replaced by track: $track->uri / $track->name / $artist->name");
                         $track_uri = $track->uri;
                         $tmp = explode(':', $track_uri);
                     } else {
-                        logMsg("Error(action): Could not find track: $track_uri / $track_name / $artist_name");
+                        logMsg($w,"Error(action): Could not find track: $track_uri / $track_name / $artist_name");
                         displayNotificationWithArtwork($w, 'Local track '.$track_name.' has not online match', './images/warning.png', 'Error!');
 
                         return;
@@ -652,11 +652,11 @@ if ($type == 'TRACK' && $other_settings == '' &&
                         $track = $results[0];
                         $artists = $track->artists;
                         $artist = $artists[0];
-                        logMsg("Error(action): Unknown track $track_uri / $track_name / $artist_name replaced by track: $track->uri / $track->name / $artist->name");
+                        logMsg($w,"Error(action): Unknown track $track_uri / $track_name / $artist_name replaced by track: $track->uri / $track->name / $artist->name");
                         $track_uri = $track->uri;
                         $tmp = explode(':', $track_uri);
                     } else {
-                        logMsg("Error(action): Could not find track: $track_uri / $track_name / $artist_name");
+                        logMsg($w,"Error(action): Could not find track: $track_uri / $track_name / $artist_name");
                         displayNotificationWithArtwork($w, 'Local track '.$track_name.' has not online match', './images/warning.png', 'Error!');
 
                         return;
@@ -798,7 +798,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
         return;
     } elseif ($other_action == 'disable_now_playing_notifications') {
-        exec('./src/spotify_mini_player_notifications.ksh -d "'.$w->data().'" -a stop -v "'.getAlfredName().'" >> "'.$w->cache().'/action.log" 2>&1 & ');
+        exec('./src/spotify_mini_player_notifications.ksh -d "'.$w->data().'" -a stop -v "'.getAlfredName().'" & ');
         $ret = updateSetting($w, 'now_playing_notifications', 0);
         if ($ret == true) {
             displayNotificationWithArtwork($w, 'Now Playing notifications are now disabled', './images/disable_now_playing.png', 'Settings');
@@ -960,7 +960,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
         return;
     } elseif ($other_action == 'enable_mopidy') {
-        exec('./src/spotify_mini_player_notifications.ksh -d "'.$w->data().'" -a stop -v "'.getAlfredName().'" >> "'.$w->cache().'/action.log" 2>&1 & ');
+        exec('./src/spotify_mini_player_notifications.ksh -d "'.$w->data().'" -a stop -v "'.getAlfredName().'" & ');
         $ret = updateSetting($w, 'output_application', 'MOPIDY');
         if ($ret == true) {
             displayNotificationWithArtwork($w, 'Mopidy is now used', './images/mopidy.png', 'Settings');
@@ -970,7 +970,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
         return;
     } elseif ($other_action == 'enable_applescript') {
-        exec('./src/spotify_mini_player_notifications.ksh -d "'.$w->data().'" -a stop -v "'.getAlfredName().'" >> "'.$w->cache().'/action.log" 2>&1 & ');
+        exec('./src/spotify_mini_player_notifications.ksh -d "'.$w->data().'" -a stop -v "'.getAlfredName().'" & ');
         if ($output_application == 'MOPIDY') {
             invokeMopidyMethod($w, 'core.playback.pause', array());
         }
@@ -983,7 +983,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
         return;
     } elseif ($other_action == 'enable_connect') {
-        exec('./src/spotify_mini_player_notifications.ksh -d "'.$w->data().'" -a stop -v "'.getAlfredName().'" >> "'.$w->cache().'/action.log" 2>&1 & ');
+        exec('./src/spotify_mini_player_notifications.ksh -d "'.$w->data().'" -a stop -v "'.getAlfredName().'" & ');
         if ($output_application == 'MOPIDY') {
             invokeMopidyMethod($w, 'core.playback.pause', array());
         }
@@ -1501,7 +1501,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
         return;
     } elseif ($other_action == 'reset_settings') {
-        deleteTheFile($w->data().'/settings.json');
+        deleteTheFile($w,$w->data().'/settings.json');
 
         return;
     } elseif ($other_action == 'reset_oauth_settings') {

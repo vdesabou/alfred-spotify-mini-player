@@ -42,7 +42,7 @@ function createLibrary($w) {
     if (file_exists($w->data() . '/library.db')) {
         rename($w->data() . '/library.db', $w->data() . '/library_old.db');
     }
-    deleteTheFile($w->data() . '/library_new.db');
+    deleteTheFile($w,$w->data() . '/library_new.db');
     $dbfile = $w->data() . '/library_new.db';
     touch($dbfile);
 
@@ -64,7 +64,7 @@ function createLibrary($w) {
         $db->sqliteCreateFunction('like', "lexa_ci_utf8_like", 2);
     }
     catch(PDOException $e) {
-        logMsg('Error(createLibrary): (exception ' . jTraceEx($e) . ')');
+        logMsg($w,'Error(createLibrary): (exception ' . jTraceEx($e) . ')');
         handleDbIssuePdoEcho($db, $w);
         $db = null;
 
@@ -80,11 +80,11 @@ function createLibrary($w) {
         }
         $dbfile = $w->data() . '/fetch_artworks.db';
         if (file_exists($dbfile)) {
-            deleteTheFile($dbfile);
+            deleteTheFile($w,$dbfile);
             touch($dbfile);
         }
         if (file_exists($w->data() . '/download_artworks_in_progress')) {
-            deleteTheFile($w->data() . '/download_artworks_in_progress');
+            deleteTheFile($w,$w->data() . '/download_artworks_in_progress');
         }
         try {
             $dbartworks = new PDO("sqlite:$dbfile", '', '', array(
@@ -93,7 +93,7 @@ function createLibrary($w) {
             $dbartworks->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
         catch(PDOException $e) {
-            logMsg('Error(createLibrary): (exception ' . jTraceEx($e) . ')');
+            logMsg($w,'Error(createLibrary): (exception ' . jTraceEx($e) . ')');
             handleDbIssuePdoEcho($dbartworks, $w);
             $dbartworks = null;
             $db = null;
@@ -110,7 +110,7 @@ function createLibrary($w) {
             $dbartworks->exec('create table episodes (episode_uri text PRIMARY KEY NOT NULL, already_fetched boolean)');
         }
         catch(PDOException $e) {
-            logMsg('Error(createLibrary): (exception ' . jTraceEx($e) . ')');
+            logMsg($w,'Error(createLibrary): (exception ' . jTraceEx($e) . ')');
             handleDbIssuePdoEcho($dbartworks, $w);
             $dbartworks = null;
             $db = null;
@@ -127,7 +127,7 @@ function createLibrary($w) {
         $api = getSpotifyWebAPI($w);
     }
     catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
-        logMsg('Error(createLibrary): (exception ' . jTraceEx($e) . ')');
+        logMsg($w,'Error(createLibrary): (exception ' . jTraceEx($e) . ')');
         handleSpotifyWebAPIException($w, $e);
 
         return false;
@@ -149,12 +149,12 @@ function createLibrary($w) {
             break;
         }
         catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
-            logMsg('Error(Check missing scope for podcasts): episode '.$ep.' (exception ' . jTraceEx($e) . ')');
+            logMsg($w,'Error(Check missing scope for podcasts): episode '.$ep.' (exception ' . jTraceEx($e) . ')');
         }
     }
     if($ignorePodcasts == false) {
         if (! isset($episode->resume_point)) {
-            logMsg("ERROR: the worfkflow was missing scope user-read-playback-position");
+            logMsg($w,"ERROR: the worfkflow was missing scope user-read-playback-position");
             updateSetting($w, 'oauth_access_token', '');
             updateSetting($w, 'oauth_refresh_token', '');
             displayNotificationWithArtwork($w, 'Relaunch the workflow to re-authenticate', './images/settings.png', 'Info');
@@ -179,7 +179,7 @@ function createLibrary($w) {
                 $retry = false;
             }
             catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
-                logMsg('Error(getUserPlaylists): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
+                logMsg($w,'Error(getUserPlaylists): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
                 if ($e->getCode() == 429) { // 429 is Too Many Requests
                     $lastResponse = $api->getRequest()
                         ->getLastResponse();
@@ -250,7 +250,7 @@ function createLibrary($w) {
                 $retry = false;
             }
             catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
-                logMsg('Error(getMySavedTracks): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
+                logMsg($w,'Error(getMySavedTracks): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
 
                 if ($e->getCode() == 429) { // 429 is Too Many Requests
                     $lastResponse = $api->getRequest()
@@ -320,7 +320,7 @@ function createLibrary($w) {
                 $retry = false;
             }
             catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
-                logMsg('Error(getMySavedShows): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
+                logMsg($w,'Error(getMySavedShows): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
 
                 if ($e->getCode() == 429) { // 429 is Too Many Requests
                     $lastResponse = $api->getRequest()
@@ -400,7 +400,7 @@ function createLibrary($w) {
                     $retry = false;
                 }
                 catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
-                    logMsg('Error(getShowEpisodes): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
+                    logMsg($w,'Error(getShowEpisodes): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
 
                     if ($e->getCode() == 429) { // 429 is Too Many Requests
                         $lastResponse = $api->getRequest()
@@ -482,7 +482,7 @@ function createLibrary($w) {
                 $retry = false;
             }
             catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
-                logMsg('Error(getUserFollowedArtists): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
+                logMsg($w,'Error(getUserFollowedArtists): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
 
                 if ($e->getCode() == 429) { // 429 is Too Many Requests
                     $lastResponse = $api->getRequest()
@@ -561,7 +561,7 @@ function createLibrary($w) {
                 $retry = false;
             }
             catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
-                logMsg('Error(getMySavedAlbums): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
+                logMsg($w,'Error(getMySavedAlbums): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
 
                 if ($e->getCode() == 429) { // 429 is Too Many Requests
                     $lastResponse = $api->getRequest()
@@ -642,7 +642,7 @@ function createLibrary($w) {
                             $retry = false;
                         }
                         catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
-                            logMsg('Error(getAlbumTracks): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
+                            logMsg($w,'Error(getAlbumTracks): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
 
                             if ($e->getCode() == 429) { // 429 is Too Many Requests
                                 $lastResponse = $api->getRequest()
@@ -728,7 +728,7 @@ function createLibrary($w) {
         $stmtTrack = $db->prepare($insertTrack);
     }
     catch(PDOException $e) {
-        logMsg('Error(createLibrary): (exception ' . jTraceEx($e) . ')');
+        logMsg($w,'Error(createLibrary): (exception ' . jTraceEx($e) . ')');
         handleDbIssuePdoEcho($db, $w);
         $dbartworks = null;
         $db = null;
@@ -755,7 +755,7 @@ function createLibrary($w) {
             $stmtEpisodeArtwork = $dbartworks->prepare($insertEpisodeArtwork);
         }
         catch(PDOException $e) {
-            logMsg('Error(createLibrary): (exception ' . jTraceEx($e) . ')');
+            logMsg($w,'Error(createLibrary): (exception ' . jTraceEx($e) . ')');
             handleDbIssuePdoEcho($dbartworks, $w);
             $dbartworks = null;
             $db = null;
@@ -807,7 +807,7 @@ function createLibrary($w) {
                     $retry = false;
                 }
                 catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
-                    logMsg('Error(getUserPlaylists): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
+                    logMsg($w,'Error(getUserPlaylists): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
 
                     if ($e->getCode() == 429) { // 429 is Too Many Requests
                         $lastResponse = $api->getRequest()
@@ -822,7 +822,7 @@ function createLibrary($w) {
                     }
                     else if ($e->getCode() == 404 || $e->getCode() == 500) {
                         // skip
-                        logMsg('Error(getPlaylistTracks): skipping playlist '.$playlist->id.' due to error '.$e->getCode());
+                        logMsg($w,'Error(getPlaylistTracks): skipping playlist '.$playlist->id.' due to error '.$e->getCode());
                         $skip_playlist = true;
                         break;
                     }
@@ -836,7 +836,7 @@ function createLibrary($w) {
                         // retry
                         if ($nb_retry > 3) {
                             // skip
-                            logMsg('Error(getPlaylistTracks): skipping playlist '.$playlist->id.' due to error '.$e->getCode());
+                            logMsg($w,'Error(getPlaylistTracks): skipping playlist '.$playlist->id.' due to error '.$e->getCode());
                             $skip_playlist = true;
                             break;
                         }
@@ -941,7 +941,7 @@ function createLibrary($w) {
                     }
                 }
                 catch(PDOException $e) {
-                    logMsg('Error(createLibrary): (exception ' . jTraceEx($e) . ')');
+                    logMsg($w,'Error(createLibrary): (exception ' . jTraceEx($e) . ')');
                     handleDbIssuePdoEcho($dbartworks, $w);
                     $dbartworks = null;
                     $db = null;
@@ -978,7 +978,7 @@ function createLibrary($w) {
                     $stmtTrack->execute();
                 }
                 catch(PDOException $e) {
-                    logMsg('Error(createLibrary): (exception ' . jTraceEx($e) . ')');
+                    logMsg($w,'Error(createLibrary): (exception ' . jTraceEx($e) . ')');
                     handleDbIssuePdoEcho($db, $w);
                     $dbartworks = null;
                     $db = null;
@@ -1020,7 +1020,7 @@ function createLibrary($w) {
             $stmtPlaylist->execute();
         }
         catch(PDOException $e) {
-            logMsg('Error(createLibrary): (exception ' . jTraceEx($e) . ')');
+            logMsg($w,'Error(createLibrary): (exception ' . jTraceEx($e) . ')');
             handleDbIssuePdoEcho($db, $w);
             $dbartworks = null;
             $db = null;
@@ -1114,7 +1114,7 @@ function createLibrary($w) {
             }
         }
         catch(PDOException $e) {
-            logMsg('Error(createLibrary): (exception ' . jTraceEx($e) . ')');
+            logMsg($w,'Error(createLibrary): (exception ' . jTraceEx($e) . ')');
             handleDbIssuePdoEcho($dbartworks, $w);
             $dbartworks = null;
             $db = null;
@@ -1164,7 +1164,7 @@ function createLibrary($w) {
             $stmtTrack->execute();
         }
         catch(PDOException $e) {
-            logMsg('Error(createLibrary): (exception ' . jTraceEx($e) . ')');
+            logMsg($w,'Error(createLibrary): (exception ' . jTraceEx($e) . ')');
             handleDbIssuePdoEcho($db, $w);
             $dbartworks = null;
             $db = null;
@@ -1199,7 +1199,7 @@ function createLibrary($w) {
             }
         }
         catch(PDOException $e) {
-            logMsg('Error(createLibrary): (exception ' . jTraceEx($e) . ')');
+            logMsg($w,'Error(createLibrary): (exception ' . jTraceEx($e) . ')');
             handleDbIssuePdoEcho($dbartworks, $w);
             $dbartworks = null;
             $db = null;
@@ -1230,7 +1230,7 @@ function createLibrary($w) {
             $stmtInsertShow->execute();
         }
         catch(PDOException $e) {
-            logMsg('Error(createLibrary): (exception ' . jTraceEx($e) . ')');
+            logMsg($w,'Error(createLibrary): (exception ' . jTraceEx($e) . ')');
             handleDbIssuePdoEcho($db, $w);
             $dbartworks = null;
             $db = null;
@@ -1258,7 +1258,7 @@ function createLibrary($w) {
             }
         }
         catch(PDOException $e) {
-            logMsg('Error(createLibrary): (exception ' . jTraceEx($e) . ')');
+            logMsg($w,'Error(createLibrary): (exception ' . jTraceEx($e) . ')');
             handleDbIssuePdoEcho($dbartworks, $w);
             $dbartworks = null;
             $db = null;
@@ -1315,7 +1315,7 @@ function createLibrary($w) {
             $stmtInsertEpisode->execute();
         }
         catch(PDOException $e) {
-            logMsg('Error(createLibrary): (exception ' . jTraceEx($e) . ')');
+            logMsg($w,'Error(createLibrary): (exception ' . jTraceEx($e) . ')');
             handleDbIssuePdoEcho($db, $w);
             $dbartworks = null;
             $db = null;
@@ -1345,7 +1345,7 @@ function createLibrary($w) {
             }
         }
         catch(PDOException $e) {
-            logMsg('Error(createLibrary): (exception ' . jTraceEx($e) . ')');
+            logMsg($w,'Error(createLibrary): (exception ' . jTraceEx($e) . ')');
             handleDbIssuePdoEcho($dbartworks, $w);
             $dbartworks = null;
             $db = null;
@@ -1361,7 +1361,7 @@ function createLibrary($w) {
             $stmtFollowedArtists->execute();
         }
         catch(PDOException $e) {
-            logMsg('Error(createLibrary): (exception ' . jTraceEx($e) . ')');
+            logMsg($w,'Error(createLibrary): (exception ' . jTraceEx($e) . ')');
             handleDbIssuePdoEcho($db, $w);
             $dbartworks = null;
             $db = null;
@@ -1432,7 +1432,7 @@ function createLibrary($w) {
         $stmt->execute();
     }
     catch(PDOException $e) {
-        logMsg('Error(createLibrary): (exception ' . jTraceEx($e) . ')');
+        logMsg($w,'Error(createLibrary): (exception ' . jTraceEx($e) . ')');
         handleDbIssuePdoEcho($db, $w);
         $dbartworks = null;
         $db = null;
@@ -1449,7 +1449,7 @@ function createLibrary($w) {
     }
 
     if (file_exists($w->data() . '/library_old.db')) {
-        deleteTheFile($w->data() . '/library_old.db');
+        deleteTheFile($w,$w->data() . '/library_old.db');
     }
     rename($w->data() . '/library_new.db', $w->data() . '/library.db');
 
@@ -1459,16 +1459,16 @@ function createLibrary($w) {
     }
     // remove legacy settings.db if needed
     if (file_exists($w->data() . '/settings.db')) {
-        deleteTheFile($w->data() . '/settings.db');
+        deleteTheFile($w,$w->data() . '/settings.db');
     }
 
     // Download artworks in background
     if ($use_artworks) {
         if ($artworksToDownload == true) {
-            exec('php -f ./src/action.php -- "" "DOWNLOAD_ARTWORKS" "DOWNLOAD_ARTWORKS" >> "' . $w->cache() . '/action.log" 2>&1 & ');
+            exec('php -f ./src/action.php -- "" "DOWNLOAD_ARTWORKS" "DOWNLOAD_ARTWORKS" &');
         }
     }
-    deleteTheFile($w->data() . '/update_library_in_progress');
+    deleteTheFile($w,$w->data() . '/update_library_in_progress');
 
     // in case of new user, force creation of links and current_user.json
     getCurrentUser($w);
