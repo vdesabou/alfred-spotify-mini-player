@@ -1465,7 +1465,7 @@ function createLibrary($w) {
     // Download artworks in background
     if ($use_artworks) {
         if ($artworksToDownload == true) {
-            exec('php -f ./src/action.php -- "" "DOWNLOAD_ARTWORKS" "DOWNLOAD_ARTWORKS" &');
+            exec('php -f ./src/action.php -- "" "DOWNLOAD_ARTWORKS" "" &');
         }
     }
     deleteTheFile($w,$w->data() . '/update_library_in_progress');

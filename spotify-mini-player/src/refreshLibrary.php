@@ -2331,9 +2331,9 @@ function refreshLibrary($w, $silent = false) {
     if ($use_artworks) {
         // Download artworks in background
         if(!$silent) {
-            exec('php -f ./src/action.php -- "" "DOWNLOAD_ARTWORKS" "DOWNLOAD_ARTWORKS" & ');
+            exec('php -f ./src/action.php -- "" "DOWNLOAD_ARTWORKS" "" & ');
         } else {
-            exec('php -f ./src/action.php -- "" "DOWNLOAD_ARTWORKS_SILENT" "DOWNLOAD_ARTWORKS_SILENT" & ');
+            exec('php -f ./src/action.php -- "" "DOWNLOAD_ARTWORKS_SILENT" "" & ');
         }
     }
 
