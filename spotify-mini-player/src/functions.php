@@ -6111,10 +6111,11 @@ function downloadArtworks($w, $silent = false)
                 ////
                 // Artists
 
-                $artists = $stmtGetArtists->execute();
+                $stmtGetArtists->execute();
+                $resultsGetArtists = $stmtGetArtists->fetchAll();
 
-                while ($artist = $stmtGetArtists->fetch()) {
-                    $ret = getArtistArtwork($w, $artist[0], $artist[1], true, false, true, $use_artworks);
+                foreach ($resultsGetArtists as $artist) {
+                    getArtistArtwork($w, $artist[0], $artist[1], true, false, true, $use_artworks);
 
                     $stmtUpdateArtist->bindValue(':artist_uri', $artist[0]);
                     $stmtUpdateArtist->execute();
@@ -6128,10 +6129,12 @@ function downloadArtworks($w, $silent = false)
                 ////
                 // Tracks
 
-                $tracks = $stmtGetTracks->execute();
+                $stmtGetTracks->execute();
+                $resultsGetTracks = $stmtGetTracks->fetchAll();
 
-                while ($track = $stmtGetTracks->fetch()) {
-                    $ret = getTrackOrAlbumArtwork($w, $track[0], true, false, true, $use_artworks);
+                foreach ($resultsGetTracks as $track) {
+
+                    getTrackOrAlbumArtwork($w, $track[0], true, false, true, $use_artworks);
 
                     $stmtUpdateTrack->bindValue(':track_uri', $track[0]);
                     $stmtUpdateTrack->execute();
@@ -6145,10 +6148,11 @@ function downloadArtworks($w, $silent = false)
                 ////
                 // Albums
 
-                $albums = $stmtGetAlbums->execute();
+                $stmtGetAlbums->execute();
+                $resultsGetAlbum = $stmtGetAlbums->fetchAll();
 
-                while ($album = $stmtGetAlbums->fetch()) {
-                    $ret = getTrackOrAlbumArtwork($w, $album[0], true, false, true, $use_artworks);
+                foreach ($resultsGetAlbum as $album) {
+                    getTrackOrAlbumArtwork($w, $album[0], true, false, true, $use_artworks);
 
                     $stmtUpdateAlbum->bindValue(':album_uri', $album[0]);
                     $stmtUpdateAlbum->execute();
@@ -6162,10 +6166,11 @@ function downloadArtworks($w, $silent = false)
                 ////
                 // Shows
 
-                $shows = $stmtGetShows->execute();
+                $stmtGetShows->execute();
+                $resultsGetShows = $stmtGetShows->fetchAll();
 
-                while ($show = $stmtGetShows->fetch()) {
-                    $ret = getShowArtwork($w, $show[0], true, false, true, $use_artworks);
+                foreach ($resultsGetShows as $show) {
+                    getShowArtwork($w, $show[0], true, false, true, $use_artworks);
 
                     $stmtUpdateShow->bindValue(':show_uri', $show[0]);
                     $stmtUpdateShow->execute();
@@ -6179,10 +6184,11 @@ function downloadArtworks($w, $silent = false)
                 ////
                 // Episodes
 
-                $episodes = $stmtGetEpisodes->execute();
+                $stmtGetEpisodes->execute();
+                $resultsGetEpisodes = $stmtGetEpisodes->fetchAll();
 
-                while ($episode = $stmtGetEpisodes->fetch()) {
-                    $ret = getEpisodeArtwork($w, $episode[0], true, false, true, $use_artworks);
+                foreach ($resultsGetEpisodes as $episode) {
+                    getEpisodeArtwork($w, $episode[0], true, false, true, $use_artworks);
 
                     $stmtUpdateEpisode->bindValue(':episode_uri', $episode[0]);
                     $stmtUpdateEpisode->execute();
