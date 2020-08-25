@@ -206,6 +206,7 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress) {
     $use_artworks = $settings->use_artworks;
     $output_application = $settings->output_application;
     $quick_mode = $settings->quick_mode;
+    $fuzzy_search = $settings->fuzzy_search;
 
     ////////
     // MAIN MENU
@@ -258,15 +259,19 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress) {
             }
         }
     }
+    $fuzzy_search_text = '';
+    if ($fuzzy_search) {
+        $fuzzy_search_text = '🌪 Fuzzy ';
+    }
     $quick_mode_text = '';
     if ($quick_mode) {
         $quick_mode_text = ' ● ⚡ Quick Mode is active';
     }
     if ($all_playlists == true) {
-        $w->result(null, '', 'Search for music in "Your Music" and your ' . $nb_playlists . ' playlists', array('Begin typing at least 3 characters to start search in your ' . $all_tracks . ' tracks' . $quick_mode_text, 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/search.png', 'no', null, '');
+        $w->result(null, '', $fuzzy_search_text . 'Search for music in "Your Music" and your ' . $nb_playlists . ' playlists', array('Begin typing at least 3 characters to start search in your ' . $all_tracks . ' tracks' . $quick_mode_text, 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/search.png', 'no', null, '');
     }
     else {
-        $w->result(null, '', 'Search for music in "Your Music" only', array('Begin typing at least 3 characters to start search in your ' . $yourmusic_tracks . ' tracks' . $quick_mode_text, 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/search_scope_yourmusic_only.png', 'no', null, '');
+        $w->result(null, '', $fuzzy_search_text . 'Search for music in "Your Music" only', array('Begin typing at least 3 characters to start search in your ' . $yourmusic_tracks . ' tracks' . $quick_mode_text, 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/search_scope_yourmusic_only.png', 'no', null, '');
     }
 
     if (getenv('menu_display_current_track') == 1) {
