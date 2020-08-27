@@ -95,7 +95,7 @@ if($oauth_access_token != '' && $now_playing_notifications == true) {
     } else {
         $app_arg = 'CONNECT';
     }
-    exec('./src/spotify_mini_player_notifications.ksh -d "'.$w->data().'" -a start -m "'.$app_arg.'" -v "'.getAlfredName().'"  & ');
+    exec('./src/spotify_mini_player_notifications.ksh -d "'.$w->data().'" -a start -m "'.$app_arg.'" -v "'.getAlfredName().'"  >> "'.$w->cache().'/action.log" 2>&1 & ');
 }
 
 // make sure spotify is running
