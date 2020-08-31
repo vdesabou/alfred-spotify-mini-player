@@ -1609,10 +1609,15 @@ function seekToBeginning($w)
                 continue;
             }
             if($preferred_spotify_connect_device_pushcut_webhook != "") {
-
+                if ($nb_retry > 3) {
+                    displayNotificationWithArtwork($w, 'Too many Pushcut webhook invoked', './images/warning.png', 'Error!');
+                    $retry = false;
+                    return false;
+                }
                 exec("curl -s -X POST -H Content-Type:application/json -d '$preferred_spotify_connect_device_pushcut_webhook_json_body' . $preferred_spotify_connect_device_pushcut_webhook", $retArr, $retVal);
                 logMsg($w,"INFO: getSpotifyConnectCurrentDeviceId() calling Pushcut webhook");
                 $retry = true;
+                ++$nb_retry;
                 sleep(5);
                 continue;
             }
