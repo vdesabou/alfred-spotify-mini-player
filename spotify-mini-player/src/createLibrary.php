@@ -18,6 +18,7 @@ function createLibrary($w) {
     $country_code = $settings->country_code;
     $userid = $settings->userid;
     $use_artworks = $settings->use_artworks;
+    $debug = $settings->debug;
 
     $words = explode('▹', $in_progress_data);
 
@@ -176,6 +177,9 @@ function createLibrary($w) {
                     'limit' => $limitGetUserPlaylists,
                     'offset' => $offsetGetUserPlaylists,
                 ));
+                if($debug) {
+                    logMsg($w,"DEBUG: getUserPlaylists (offset ".$offsetGetUserPlaylists.")");
+                }
                 $retry = false;
             }
             catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
@@ -247,6 +251,9 @@ function createLibrary($w) {
                     'offset' => $offsetGetMySavedTracks,
                     'market' => $country_code,
                 ));
+                if($debug) {
+                    logMsg($w,"DEBUG: getMySavedTracks (offset ".$offsetGetMySavedTracks.")");
+                }
                 $retry = false;
             }
             catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
@@ -317,6 +324,9 @@ function createLibrary($w) {
                     'offset' => $offsetGetMySavedShows,
                     'market' => $country_code,
                 ));
+                if($debug) {
+                    logMsg($w,"DEBUG: getMySavedShows (offset ".$offsetGetMySavedShows.")");
+                }
                 $retry = false;
             }
             catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
@@ -397,6 +407,9 @@ function createLibrary($w) {
                         'offset' => $offsetGetMySavedEpisodes,
                         'market' => $country_code,
                     ));
+                    if($debug) {
+                        logMsg($w,"DEBUG: getShowEpisodes for show uri ".$show->uri." (offset ".$offsetGetMySavedEpisodes.")");
+                    }
                     $retry = false;
                 }
                 catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
@@ -471,12 +484,18 @@ function createLibrary($w) {
                         'limit' => $limitGetUserFollowedArtists,
                         'after' => $cursorAfter,
                     ));
+                    if($debug) {
+                        logMsg($w,"DEBUG: getUserFollowedArtists (after ".$cursorAfter.")");
+                    }
                 }
                 else {
                     $userFollowedArtists = $api->getUserFollowedArtists(array(
                         'type' => 'artist',
                         'limit' => $limitGetUserFollowedArtists,
                     ));
+                    if($debug) {
+                        logMsg($w,"DEBUG: getUserFollowedArtists");
+                    }
                 }
 
                 $retry = false;
@@ -558,6 +577,9 @@ function createLibrary($w) {
                     'offset' => $offsetGetMySavedAlbums,
                     'market' => $country_code,
                 ));
+                if($debug) {
+                    logMsg($w,"DEBUG: getMySavedAlbums (offset ".$offsetGetMySavedAlbums.")");
+                }
                 $retry = false;
             }
             catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
@@ -627,7 +649,9 @@ function createLibrary($w) {
                                 'offset' => $offsetGetMySavedTracks,
                                 'market' => $country_code,
                             ));
-
+                            if($debug) {
+                                logMsg($w,"DEBUG: getAlbumTracks for album uri ".$tmp[2]." (offset ".$offsetGetMySavedTracks.")");
+                            }
                             foreach ($albumTracks->items as $track) {
                                 // add album details as it is a simplified track
                                 $myalbum = new stdClass();
@@ -804,6 +828,9 @@ function createLibrary($w) {
                         'offset' => $offsetGetUserPlaylistTracks,
                         'market' => $country_code,
                     ));
+                    if($debug) {
+                        logMsg($w,"DEBUG: getPlaylistTracks for playlist uri ".$playlist->id." (offset ".$offsetGetUserPlaylistTracks.")");
+                    }
                     $retry = false;
                 }
                 catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
@@ -1032,7 +1059,9 @@ function createLibrary($w) {
     // Handle Your Music
     // merge allMySavedAlbumsTracks and savedMySavedTracks to handle all Your Music tracks
     $mergedMySavedTracks = array_merge($allMySavedAlbumsTracks, $savedMySavedTracks);
-
+    if($debug) {
+        logMsg($w,"DEBUG: Handle Your Music");
+    }
     foreach ($mergedMySavedTracks as $track) {
         $artists = $track->artists;
         $artist = $artists[0];
@@ -1179,6 +1208,9 @@ function createLibrary($w) {
     }
 
     // Handle Shows
+    if($debug) {
+        logMsg($w,"DEBUG: Handle Shows");
+    }
     foreach ($savedMySavedShows as $item) {
 
         $show = $item->show;
@@ -1240,6 +1272,9 @@ function createLibrary($w) {
     }
 
     // Handle Show Episodes
+    if($debug) {
+        logMsg($w,"DEBUG: Handle Show Episodes");
+    }
     foreach ($savedMySavedEpisodes as $episode) {
 
         try {
@@ -1325,6 +1360,9 @@ function createLibrary($w) {
     }
 
     // Handle Followed Artists
+    if($debug) {
+        logMsg($w,"DEBUG: Handle Followed Artists");
+    }
     foreach ($savedMyFollowedArtists as $artist) {
 
         try {
@@ -1465,7 +1503,7 @@ function createLibrary($w) {
     // Download artworks in background
     if ($use_artworks) {
         if ($artworksToDownload == true) {
-            exec('php -f ./src/action.php -- "" "DOWNLOAD_ARTWORKS" "" &');
+            exec('php -f ./src/action.php -- "" "DOWNLOAD_ARTWORKS" "DOWNLOAD_ARTWORKS" >> "' . $w->cache() . '/action.log" 2>&1 & ');
         }
     }
     deleteTheFile($w,$w->data() . '/update_library_in_progress');

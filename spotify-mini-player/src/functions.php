@@ -8426,9 +8426,10 @@ function getSettings($w)
             'preferred_spotify_connect_device' => '',
             'preferred_spotify_connect_device_pushcut_webhook' => '',
             'fuzzy_search' => 0,
+            'debug' => 0,
         );
 
-        $ret = $w->write($default, 'settings.json');
+        $w->write($default, 'settings.json');
         displayNotificationWithArtwork($w, 'Settings have been set to default', './images/info.png', 'Settings reset');
 
         $settings = $w->read('settings.json');
@@ -8552,6 +8553,12 @@ function getSettings($w)
     // add fuzzy_search if needed
     if (!isset($settings->fuzzy_search)) {
         updateSetting($w, 'fuzzy_search', 0);
+        $settings = $w->read('settings.json');
+    }
+
+    // add debug if needed
+    if (!isset($settings->debug)) {
+        updateSetting($w, 'debug', 0);
         $settings = $w->read('settings.json');
     }
     return $settings;
