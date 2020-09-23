@@ -12385,6 +12385,34 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 		<string>volume_up</string>
 		<key>c_web_search</key>
 		<string>web_search</string>
+		<key>emoji_album</key>
+		<string>💽</string>
+		<key>emoji_artist</key>
+		<string>👨‍🎤</string>
+		<key>emoji_fully_played</key>
+		<string>✔️</string>
+		<key>emoji_fuzzy</key>
+		<string>🌪</string>
+		<key>emoji_local_track</key>
+		<string>📌</string>
+		<key>emoji_not_playable</key>
+		<string>🚫</string>
+		<key>emoji_online</key>
+		<string>☁️</string>
+		<key>emoji_playing</key>
+		<string>🔈</string>
+		<key>emoji_quickmode</key>
+		<string>⚡</string>
+		<key>emoji_radio</key>
+		<string>📻</string>
+		<key>emoji_separator</key>
+		<string>●</string>
+		<key>emoji_separator2</key>
+		<string>○</string>
+		<key>emoji_show</key>
+		<string>🎙</string>
+		<key>emoji_yourmusic</key>
+		<string>♫</string>
 		<key>menu_display_alfred_playlist</key>
 		<string>1</string>
 		<key>menu_display_browse_by_album</key>

@@ -2,7 +2,7 @@
 layout: article
 title: "Customization"
 date: 2017-01-17T11:39:03-04:00
-modified: 2020-08-06
+modified: 2020-09-23
 categories: articles
 excerpt: "You can customize the workflow by changing settings or variables..."
 image:
@@ -118,3 +118,10 @@ But you can also use [Alfred variables](https://www.alfredapp.com/help/workflows
 
   * 1 for adding all album tracks
   * 0 for not not adding all album tracks
+
+* You can change default emojis used in the workflow by modifying those variables:-
+
+<figure>
+	<img src="{{ site.url }}/images/customization10.jpg">
+	<figcaption>Change default emojis used in workflow.</figcaption>
+</figure>

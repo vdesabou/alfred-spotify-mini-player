@@ -3462,7 +3462,7 @@ function playAlfredPlaylist($w)
     }
     addPlaylistToPlayQueue($w, $alfred_playlist_uri, $alfred_playlist_name);
     $playlist_artwork_path = getPlaylistArtwork($w, $alfred_playlist_uri, true, true, $use_artworks);
-    displayNotificationWithArtwork($w, '🔈 Alfred Playlist '.$alfred_playlist_name, $playlist_artwork_path, 'Play Alfred Playlist');
+    displayNotificationWithArtwork($w, getenv('emoji_playing').' '.'Alfred Playlist '.$alfred_playlist_name, $playlist_artwork_path, 'Play Alfred Playlist');
 }
 
 /**
@@ -3583,7 +3583,7 @@ function playCurrentArtist($w)
             }
         }
         addArtistToPlayQueue($w, $artist_uri, escapeQuery($results[1]), $country_code);
-        displayNotificationWithArtwork($w, '🔈 Artist '.escapeQuery($results[1]), getArtistArtwork($w, $artist_uri, $results[1], true, false, false, $use_artworks), 'Play Current Artist');
+        displayNotificationWithArtwork($w, getenv('emoji_playing').' '.'Artist '.escapeQuery($results[1]), getArtistArtwork($w, $artist_uri, $results[1], true, false, false, $use_artworks), 'Play Current Artist');
     } else {
         displayNotificationWithArtwork($w, 'No artist is playing', './images/warning.png');
     }
@@ -3629,7 +3629,7 @@ function playCurrentAlbum($w)
             }
         }
         addAlbumToPlayQueue($w, $album_uri, escapeQuery($results[2]));
-        displayNotificationWithArtwork($w, '🔈 Album '.escapeQuery($results[2]), getTrackOrAlbumArtwork($w, $results[4], true, false, false, $use_artworks), 'Play Current Album', $use_artworks);
+        displayNotificationWithArtwork($w, getenv('emoji_playing').' '.'Album '.escapeQuery($results[2]), getTrackOrAlbumArtwork($w, $results[4], true, false, false, $use_artworks), 'Play Current Album', $use_artworks);
     } else {
         displayNotificationWithArtwork($w, 'No track is playing', './images/warning.png');
     }
@@ -4661,7 +4661,7 @@ function createRadioArtistPlaylist($w, $artist_name, $artist_uri)
                 }
                 addPlaylistToPlayQueue($w, $json->uri, $json->name);
                 $playlist_artwork_path = getPlaylistArtwork($w, $json->uri, true, false, $use_artworks);
-                displayNotificationWithArtwork($w, '🔈 Playlist '.$json->name, $playlist_artwork_path, 'Launch Artist Radio Playlist');
+                displayNotificationWithArtwork($w, getenv('emoji_playing').' '.'Playlist '.$json->name, $playlist_artwork_path, 'Launch Artist Radio Playlist');
             }
             if(getenv('add_created_radio_playlist_to_library') == 0) {
                 // do not add the playlist to the library
@@ -4779,7 +4779,7 @@ function createSimilarPlaylist($w, $playlist_name, $playlist_uri)
                 }
                 addPlaylistToPlayQueue($w, $json->uri, $json->name);
                 $playlist_artwork_path = getPlaylistArtwork($w, $json->uri, true, false, $use_artworks);
-                displayNotificationWithArtwork($w, '🔈 Playlist '.$json->name, $playlist_artwork_path, 'Similar Playlist');
+                displayNotificationWithArtwork($w, getenv('emoji_playing').' '.'Playlist '.$json->name, $playlist_artwork_path, 'Similar Playlist');
             }
             if(getenv('automatically_refresh_library') == 1) {
                 refreshLibrary($w);
@@ -4872,7 +4872,7 @@ function createCompleteCollectionArtistPlaylist($w, $artist_name, $artist_uri)
                 }
                 addPlaylistToPlayQueue($w, $json->uri, $json->name);
                 $playlist_artwork_path = getPlaylistArtwork($w, $json->uri, true, false, $use_artworks);
-                displayNotificationWithArtwork($w, '🔈 Playlist '.$json->name, $playlist_artwork_path, 'Launch Complete Collection Playlist');
+                displayNotificationWithArtwork($w, getenv('emoji_playing').' '.'Playlist '.$json->name, $playlist_artwork_path, 'Launch Complete Collection Playlist');
             }
             if(getenv('automatically_refresh_library') == 1) {
                 refreshLibrary($w);
@@ -5016,7 +5016,7 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name)
                 }
                 addPlaylistToPlayQueue($w, $json->uri, $json->name);
                 $playlist_artwork_path = getPlaylistArtwork($w, $json->uri, true, false, $use_artworks);
-                displayNotificationWithArtwork($w, '🔈 Playlist '.$json->name, $playlist_artwork_path, 'Launch Radio Playlist');
+                displayNotificationWithArtwork($w, getenv('emoji_playing').' '.'Playlist '.$json->name, $playlist_artwork_path, 'Launch Radio Playlist');
             }
             if(getenv('add_created_radio_playlist_to_library') == 0) {
                 // do not add the playlist to the library
@@ -5683,15 +5683,15 @@ function getPlaylistsForTrack($db, $track_uri)
         foreach ($results as $playlist) {
             if ($noresult == true) {
                 if ($playlist[0] == '') {
-                    $playlistsfortrack = $playlistsfortrack.' ● ♫ : '.'Your Music';
+                    $playlistsfortrack = $playlistsfortrack.' '.getenv('emoji_separator').' '.getenv('emoji_yourmusic').' : '.'Your Music';
                 } else {
-                    $playlistsfortrack = $playlistsfortrack.' ● ♫ : '.truncateStr($playlist[0], 30);
+                    $playlistsfortrack = $playlistsfortrack.' '.getenv('emoji_separator').' '.getenv('emoji_yourmusic').' : '.truncateStr($playlist[0], 30);
                 }
             } else {
                 if ($playlist[0] == '') {
-                    $playlistsfortrack = $playlistsfortrack.' ○ '.'Your Music';
+                    $playlistsfortrack = $playlistsfortrack.' '.getenv('emoji_separator2').' '.'Your Music';
                 } else {
-                    $playlistsfortrack = $playlistsfortrack.' ○ '.truncateStr($playlist[0], 30);
+                    $playlistsfortrack = $playlistsfortrack.' '.getenv('emoji_separator2').' '.truncateStr($playlist[0], 30);
                 }
             }
             $noresult = false;
@@ -7523,7 +7523,7 @@ function handleSpotifyPermissionException($w, $message)
  {
      $squares = ($decimal < 1) ? floor($decimal * 10) : 10;
 
-     return str_repeat('●', $squares).str_repeat('○︎', 10 - $squares);
+     return str_repeat(getenv('emoji_separator'), $squares).str_repeat('○︎', 10 - $squares);
  }
 
 /**
