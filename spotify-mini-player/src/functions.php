@@ -7911,7 +7911,7 @@ function checkForUpdate($w, $last_check_update_time, $download = false)
                             '' /* album_artwork_path */,
                             '' /* playlist_name */,
                             '', /* playlist_artwork_path */
-                        )), 'An update is available, version '.$remote_version.'. Click to download', ''.'This will download the new release iin your Downloads folder', './images/check_update.png', 'yes', '');
+                        )), 'An update is available, version '.$remote_version.'. Click to download', ''.'This will download the new release in your Downloads folder', './images/check_update.png', 'yes', '');
 
                 return array(
                     '',
