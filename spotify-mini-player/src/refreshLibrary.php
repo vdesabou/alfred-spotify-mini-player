@@ -29,6 +29,7 @@ function refreshLibrary($w, $silent = false) {
     $country_code = $settings->country_code;
     $userid = $settings->userid;
     $use_artworks = $settings->use_artworks;
+    $debug = $settings->debug;
 
     $words = explode('▹', $in_progress_data);
 
@@ -241,6 +242,9 @@ function refreshLibrary($w, $silent = false) {
                 // refresh api
                 $api = getSpotifyWebAPI($w, $api);
                 $userMySavedAlbums = $api->getMySavedAlbums(array('limit' => $limitGetMySavedAlbums, 'offset' => $offsetGetMySavedAlbums, 'market' => $country_code,));
+                if($debug) {
+                    logMsg($w,"DEBUG: getMySavedAlbums (offset ".$offsetGetMySavedAlbums.")");
+                }
                 $retry = false;
             }
             catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
@@ -313,9 +317,15 @@ function refreshLibrary($w, $silent = false) {
                 $api = getSpotifyWebAPI($w, $api);
                 if ($cursorAfter != '') {
                     $userFollowedArtists = $api->getUserFollowedArtists(array('type' => 'artist', 'limit' => $limitGetUserFollowedArtists, 'after' => $cursorAfter,));
+                    if($debug) {
+                        logMsg($w,"DEBUG: getUserFollowedArtists (after ".$cursorAfter.")");
+                    }
                 }
                 else {
                     $userFollowedArtists = $api->getUserFollowedArtists(array('type' => 'artist', 'limit' => $limitGetUserFollowedArtists,));
+                    if($debug) {
+                        logMsg($w,"DEBUG: getUserFollowedArtists");
+                    }
                 }
 
                 $retry = false;
@@ -395,6 +405,9 @@ function refreshLibrary($w, $silent = false) {
                 // refresh api
                 $api = getSpotifyWebAPI($w, $api);
                 $userMySavedShows = $api->getMySavedShows(array('limit' => $limitGetMySavedShows, 'offset' => $offsetGetMySavedShows, 'market' => $country_code,));
+                if($debug) {
+                    logMsg($w,"DEBUG: getMySavedShows (offset ".$offsetGetMySavedShows.")");
+                }
                 $retry = false;
             }
             catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
@@ -467,6 +480,9 @@ function refreshLibrary($w, $silent = false) {
                 // refresh api
                 $api = getSpotifyWebAPI($w, $api);
                 $userPlaylists = $api->getUserPlaylists(urlencode($userid), array('limit' => $limitGetUserPlaylists, 'offset' => $offsetGetUserPlaylists,));
+                if($debug) {
+                    logMsg($w,"DEBUG: getUserPlaylists (offset ".$offsetGetUserPlaylists.")");
+                }
                 $retry = false;
             }
             catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
@@ -579,6 +595,9 @@ function refreshLibrary($w, $silent = false) {
                         // refresh api
                         $api = getSpotifyWebAPI($w, $api);
                         $userPlaylistTracks = $api->getPlaylistTracks($playlist->id, array('fields' => array('total', 'items(added_at)', 'items(is_local)', 'items.track(is_playable,duration_ms,uri,popularity,name,linked_from)', 'items.track.album(album_type,images,uri,name)', 'items.track.artists(name,uri)',), 'limit' => $limitGetUserPlaylistTracks, 'offset' => $offsetGetUserPlaylistTracks, 'market' => $country_code,));
+                        if($debug) {
+                            logMsg($w,"DEBUG: getPlaylistTracks for playlist uri ".$playlist->id." (offset ".$offsetGetUserPlaylistTracks.")");
+                        }
                         $retry = false;
                     }
                     catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
@@ -876,6 +895,9 @@ function refreshLibrary($w, $silent = false) {
                             // refresh api
                             $api = getSpotifyWebAPI($w, $api);
                             $userPlaylistTracks = $api->getPlaylistTracks($playlist->id, array('fields' => array('total', 'items(added_at)', 'items(is_local)', 'items.track(is_playable,duration_ms,uri,popularity,name,linked_from)', 'items.track.album(album_type,images,uri,name)', 'items.track.artists(name,uri)',), 'limit' => $limitGetUserPlaylistTracks, 'offset' => $offsetGetUserPlaylistTracks, 'market' => $country_code,));
+                            if($debug) {
+                                logMsg($w,"DEBUG: getPlaylistTracks for playlist uri ".$playlist->id." (offset ".$offsetGetUserPlaylistTracks.")");
+                            }
                             $retry = false;
                         }
                         catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
@@ -1180,7 +1202,9 @@ function refreshLibrary($w, $silent = false) {
                         $api = getSpotifyWebAPI($w, $api);
                         $tmp = explode(':', $album->uri);
                         $albumTracks = $api->getAlbumTracks($tmp[2], array('limit' => $limitGetMySavedAlbumTracks, 'offset' => $offsetGetMySavedAlbumTracks, 'market' => $country_code,));
-
+                        if($debug) {
+                            logMsg($w,"DEBUG: getAlbumTracks for album uri ".$album->uri." (offset ".$offsetGetMySavedAlbumTracks.")");
+                        }
                         foreach ($albumTracks->items as $track) {
                             // add album details as it is a simplified track
                             $myalbum = new stdClass();
@@ -1347,6 +1371,9 @@ function refreshLibrary($w, $silent = false) {
                     // refresh api
                     $api = getSpotifyWebAPI($w, $api);
                     $userMySavedTracks = $api->getMySavedTracks(array('limit' => $limitGetMySavedTracks, 'offset' => $offsetGetMySavedTracks, 'market' => $country_code,));
+                    if($debug) {
+                        logMsg($w,"DEBUG: getMySavedTracks (offset ".$offsetGetMySavedTracks.")");
+                    }
                     $retry = false;
                 }
                 catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
@@ -1644,6 +1671,9 @@ function refreshLibrary($w, $silent = false) {
                         // refresh api
                         $api = getSpotifyWebAPI($w, $api);
                         $userMySavedEpisodes = $api->getShowEpisodes($show->uri, array('limit' => $limitGetMySavedEpisodes, 'offset' => $offsetGetMySavedEpisodes, 'market' => $country_code,));
+                        if($debug) {
+                            logMsg($w,"DEBUG: getShowEpisodes for show uri ".$show->uri." (offset ".$offsetGetMySavedEpisodes.")");
+                        }
                         $retry = false;
                     }
                     catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
@@ -1818,6 +1848,9 @@ function refreshLibrary($w, $silent = false) {
                             // refresh api
                             $api = getSpotifyWebAPI($w, $api);
                             $userMySavedEpisodes = $api->getShowEpisodes($show->uri, array('limit' => $limitGetMySavedEpisodes, 'offset' => $offsetGetMySavedEpisodes, 'market' => $country_code,));
+                            if($debug) {
+                                logMsg($w,"DEBUG: getShowEpisodes for show uri ".$show->uri." (offset ".$offsetGetMySavedEpisodes.")");
+                            }
                             $retry = false;
                         }
                         catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
