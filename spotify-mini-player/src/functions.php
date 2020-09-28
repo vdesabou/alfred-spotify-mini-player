@@ -2078,8 +2078,8 @@ function getSpotifyWebAPI($w, $old_api = null)
     }
 
     // Check if refresh token necessary
-    // if token validity < 20 minutes
-    if (time() - $oauth_expires > 2400) {
+    // if token validity < 10 minutes
+    if (time() - $oauth_expires > 600) {
         if ($old_api != null || $oauth_refresh_token == "") {
             // when refresh needed:
             // create a new api object (even if api not null)
