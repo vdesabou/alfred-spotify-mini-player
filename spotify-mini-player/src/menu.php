@@ -238,24 +238,70 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress) {
         $update_library_in_progress_words = explode('▹', $in_progress_data);
         $elapsed_time = time() - $update_library_in_progress_words[3];
         if (startsWith($update_library_in_progress_words[0], 'Init')) {
-            $w->result(null, $w->data() . '/update_library_in_progress', 'Initialization phase since ' . beautifyTime($elapsed_time, true) . ' : ' . floatToSquares(0), array('Waiting for Spotify servers to return required data', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/update_in_progress.png', 'no', null, '');
+            if ($elapsed_time < 5400) {
+                $w->result(null, $w->data().'/update_library_in_progress', 'Initialization phase since '.beautifyTime($elapsed_time, true).' : '.floatToSquares(0).'Currently processing <'.$update_library_in_progress_words[4].'>',array(
+                    'Waiting for Spotify servers to return required data it may take time depending on your library',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/update_in_progress.png', 'no', null, '');
+            } else {
+                $w->result(null, '', 'There is a problem, the initialization phase took more than 90 minutes' ,array(
+                    'Choose kill update library below and report to the author',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/warning.png', 'no', null, '');
+                $w->result(null, serialize(array(
+                    '' /*track_uri*/,
+                    '' /* album_uri */,
+                    '' /* artist_uri */,
+                    '' /* playlist_uri */,
+                    '' /* spotify_command */,
+                    '' /* query */,
+                    '' /* other_settings*/,
+                    'kill_update' /* other_action */,
+                    '' /* alfred_playlist_uri */,
+                    '' /* artist_name */,
+                    '' /* track_name */,
+                    '' /* album_name */,
+                    '' /* track_artwork_path */,
+                    '' /* artist_artwork_path */,
+                    '' /* album_artwork_path */,
+                    '' /* playlist_name */,
+                    '' /* playlist_artwork_path */,
+                    '' /* $alfred_playlist_name */,
+                    '' /* now_playing_notifications */,
+                    '' /* is_alfred_playlist_active */,
+                    '' /* country_code*/,
+                    '',
+                    /* userid*/
+                )), 'Kill update library', 'This will stop the library update', './images/kill.png', 'yes', '');
+            }
         }
         else {
-            if ($update_library_in_progress_words[0] == 'Refresh Library') {
-                $type = 'playlists';
-            }
-            elseif ($update_library_in_progress_words[0] == 'Artists') {
-                $type = 'artists';
-            }
-            else {
-                $type = 'tracks';
-            }
-
             if ($update_library_in_progress_words[2] != 0) {
-                $w->result(null, $w->data() . '/update_library_in_progress', $update_library_in_progress_words[0] . ' update in progress since ' . beautifyTime($elapsed_time, true) . ' : ' . floatToSquares(intval($update_library_in_progress_words[1]) / intval($update_library_in_progress_words[2])), array($update_library_in_progress_words[1] . '/' . $update_library_in_progress_words[2] . ' ' . $type . ' processed so far. Currently processing <' . $update_library_in_progress_words[4] . '>', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/update_in_progress.png', 'no', null, '');
-            }
-            else {
-                $w->result(null, $w->data() . '/update_library_in_progress', $update_library_in_progress_words[0] . ' update in progress since ' . beautifyTime($elapsed_time, true) . ' : ' . floatToSquares(0), array('No ' . $type . ' processed so far', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/update_in_progress.png', 'no', null, '');
+                $w->result(null, $w->data().'/update_library_in_progress', $update_library_in_progress_words[0].' in progress since '.beautifyTime($elapsed_time, true).' : '.floatToSquares(intval($update_library_in_progress_words[1]) / intval($update_library_in_progress_words[2])),array(
+                    $update_library_in_progress_words[1].'/'.$update_library_in_progress_words[2].' playlists/shows processed so far. Currently processing <'.$update_library_in_progress_words[4].'>',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/update_in_progress.png', 'no', null, '');
+            } else {
+                $w->result(null, $w->data().'/update_library_in_progress', $update_library_in_progress_words[0].' in progress since '.beautifyTime($elapsed_time, true).' : '.floatToSquares(0),array(
+                    'Nothing processed so far',
+                    'alt' => 'Not Available',
+                    'cmd' => 'Not Available',
+                    'shift' => 'Not Available',
+                    'fn' => 'Not Available',
+                    'ctrl' => 'Not Available',
+                ), './images/update_in_progress.png', 'no', null, '');
             }
         }
     }

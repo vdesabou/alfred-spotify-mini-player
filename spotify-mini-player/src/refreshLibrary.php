@@ -16,10 +16,16 @@ function refreshLibrary($w, $silent = false) {
         return;
     }
 
+    $update_type = 'Refresh Library';
+    if (file_exists($w->data() . '/create_library')) {
+        $update_type = 'Create Library';
+        deleteTheFile($w,$w->data() . '/create_library');
+    }
+
     $iso = new Matriphe\ISO639\ISO639;
 
     touch($w->data() . '/update_library_in_progress');
-    $w->write('InitRefreshLibrary▹' . 0 . '▹' . 0 . '▹' . time() . '▹' . 'starting', 'update_library_in_progress');
+    $w->write('InitCreateOrRefreshLibrary▹' . 0 . '▹' . 0 . '▹' . time() . '▹' . 'starting', 'update_library_in_progress');
 
     $in_progress_data = $w->read('update_library_in_progress');
 
@@ -31,7 +37,8 @@ function refreshLibrary($w, $silent = false) {
     $use_artworks = $settings->use_artworks;
     $debug = $settings->debug;
 
-    $words = explode('▹', $in_progress_data);
+    $tmp = explode('▹', $in_progress_data);
+    $initial_time = $tmp[3];
 
     putenv('LANG=fr_FR.UTF-8');
 
@@ -51,7 +58,7 @@ function refreshLibrary($w, $silent = false) {
         // kill previous process if running
         $pid = exec("ps -efx | grep \"php\" | egrep \"DOWNLOAD_ARTWORKS\" | grep -v grep | awk '{print $2}'");
         if ($pid != '') {
-            $ret = exec("kill -9 \"$pid\"");
+            exec("kill -9 \"$pid\"");
         }
         if (file_exists($w->data() . '/download_artworks_in_progress')) {
             deleteTheFile($w,$w->data() . '/download_artworks_in_progress');
@@ -245,6 +252,7 @@ function refreshLibrary($w, $silent = false) {
                 if($debug) {
                     logMsg($w,"DEBUG: getMySavedAlbums (offset ".$offsetGetMySavedAlbums.")");
                 }
+                $w->write('InitCreateOrRefreshLibrary▹' . 0 . '▹' . 0 . '▹' . $initial_time . '▹' . 'getting saved albums', 'update_library_in_progress');
                 $retry = false;
             }
             catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
@@ -320,6 +328,7 @@ function refreshLibrary($w, $silent = false) {
                     if($debug) {
                         logMsg($w,"DEBUG: getUserFollowedArtists (after ".$cursorAfter.")");
                     }
+                    $w->write('InitCreateOrRefreshLibrary▹' . 0 . '▹' . 0 . '▹' . $initial_time . '▹' . 'getting followed artists', 'update_library_in_progress');
                 }
                 else {
                     $userFollowedArtists = $api->getUserFollowedArtists(array('type' => 'artist', 'limit' => $limitGetUserFollowedArtists,));
@@ -408,6 +417,7 @@ function refreshLibrary($w, $silent = false) {
                 if($debug) {
                     logMsg($w,"DEBUG: getMySavedShows (offset ".$offsetGetMySavedShows.")");
                 }
+                $w->write('InitCreateOrRefreshLibrary▹' . 0 . '▹' . 0 . '▹' . $initial_time . '▹' . 'getting shows', 'update_library_in_progress');
                 $retry = false;
             }
             catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
@@ -483,6 +493,7 @@ function refreshLibrary($w, $silent = false) {
                 if($debug) {
                     logMsg($w,"DEBUG: getUserPlaylists (offset ".$offsetGetUserPlaylists.")");
                 }
+                $w->write('InitCreateOrRefreshLibrary▹' . 0 . '▹' . 0 . '▹' . $initial_time . '▹' . 'getting playlists', 'update_library_in_progress');
                 $retry = false;
             }
             catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
@@ -542,6 +553,8 @@ function refreshLibrary($w, $silent = false) {
 
     // consider Your Music as a playlist for progress bar
     ++$nb_playlist_total;
+    // consider shows as a playlist for progress bar
+    $nb_playlist_total += sizeof($savedMySavedShows);
 
     $skip_playlist = false;
     foreach ($savedListPlaylist as $playlist) {
@@ -549,7 +562,7 @@ function refreshLibrary($w, $silent = false) {
         $owner = $playlist->owner;
 
         ++$nb_playlist;
-        $w->write('Refresh Library▹' . $nb_playlist . '▹' . $nb_playlist_total . '▹' . $words[3] . '▹' . escapeQuery($playlist->name), 'update_library_in_progress');
+        $w->write($update_type.'▹' . $nb_playlist . '▹' . $nb_playlist_total . '▹' . $initial_time . '▹playlist ' . escapeQuery($playlist->name), 'update_library_in_progress');
 
         try {
             // Loop on existing playlists in library
@@ -1161,7 +1174,7 @@ function refreshLibrary($w, $silent = false) {
     // check for update to Your Music - albums
     foreach ($savedMySavedAlbums as $album) {
         ++$nb_playlist;
-        $w->write('Refresh Library▹' . $nb_playlist . '▹' . $nb_playlist_total . '▹' . $words[3] . '▹' . escapeQuery($album->name), 'update_library_in_progress');
+        $w->write($update_type.'▹' . $nb_playlist . '▹' . $nb_playlist_total . '▹' . $initial_time . '▹album ' . escapeQuery($album->name), 'update_library_in_progress');
         try {
             // Loop on existing albums in library
             $stmtYourMusicAlbums->bindValue(':album_uri', $album->uri);
@@ -1345,7 +1358,7 @@ function refreshLibrary($w, $silent = false) {
         $your_music_updated = true;
         // Your Music has changed, update it
         ++$nb_playlist;
-        $w->write('Refresh Library▹' . $nb_playlist . '▹' . $nb_playlist_total . '▹' . $words[3] . '▹' . 'Your Music', 'update_library_in_progress');
+        $w->write($update_type.'▹' . $nb_playlist . '▹' . $nb_playlist_total . '▹' . $initial_time . '▹' . 'your music ', 'update_library_in_progress');
 
         // delete tracks
         try {
@@ -1576,7 +1589,7 @@ function refreshLibrary($w, $silent = false) {
         $show = $item->show;
 
         ++$nb_playlist;
-        $w->write('Refresh Library▹' . $nb_playlist . '▹' . $nb_playlist_total . '▹' . $words[3] . '▹' . escapeQuery($show->name), 'update_library_in_progress');
+        $w->write($update_type.'▹' . $nb_playlist . '▹' . $nb_playlist_total . '▹' . $initial_time . '▹show ' . escapeQuery($show->name), 'update_library_in_progress');
 
         try {
             // Loop on existing shows in library
@@ -2014,7 +2027,7 @@ function refreshLibrary($w, $silent = false) {
         }
     }
 
-    $w->write('Refresh Library▹' . $nb_playlist . '▹' . $nb_playlist_total . '▹' . $words[3] . '▹' . escapeQuery($show->name), 'update_library_in_progress');
+    $w->write($update_type.'▹' . $nb_playlist . '▹' . $nb_playlist_total . '▹' . $initial_time . '▹' . escapeQuery($show->name), 'update_library_in_progress');
 
     try {
         // check for deleted shows
@@ -2269,7 +2282,7 @@ function refreshLibrary($w, $silent = false) {
         return false;
     }
 
-    $elapsed_time = time() - $words[3];
+    $elapsed_time = time() - $initial_time;
     $changedPlaylists = false;
     $changedShows = false;
     $changedFollowedArtists = false;
