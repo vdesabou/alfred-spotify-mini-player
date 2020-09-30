@@ -252,7 +252,7 @@ function refreshLibrary($w, $silent = false) {
                 if($debug) {
                     logMsg($w,"DEBUG: getMySavedAlbums (offset ".$offsetGetMySavedAlbums.")");
                 }
-                $w->write('InitCreateOrRefreshLibrary▹' . 0 . '▹' . 0 . '▹' . $initial_time . '▹' . 'getting saved albums', 'update_library_in_progress');
+                $w->write('InitCreateOrRefreshLibrary▹' . 0 . '▹' . 0 . '▹' . $initial_time . '▹' . getenv('emoji_album') . 'saved albums', 'update_library_in_progress');
                 $retry = false;
             }
             catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
@@ -328,7 +328,7 @@ function refreshLibrary($w, $silent = false) {
                     if($debug) {
                         logMsg($w,"DEBUG: getUserFollowedArtists (after ".$cursorAfter.")");
                     }
-                    $w->write('InitCreateOrRefreshLibrary▹' . 0 . '▹' . 0 . '▹' . $initial_time . '▹' . 'getting followed artists', 'update_library_in_progress');
+                    $w->write('InitCreateOrRefreshLibrary▹' . 0 . '▹' . 0 . '▹' . $initial_time . '▹' . getenv('emoji_artist'). 'followed artists', 'update_library_in_progress');
                 }
                 else {
                     $userFollowedArtists = $api->getUserFollowedArtists(array('type' => 'artist', 'limit' => $limitGetUserFollowedArtists,));
@@ -417,7 +417,7 @@ function refreshLibrary($w, $silent = false) {
                 if($debug) {
                     logMsg($w,"DEBUG: getMySavedShows (offset ".$offsetGetMySavedShows.")");
                 }
-                $w->write('InitCreateOrRefreshLibrary▹' . 0 . '▹' . 0 . '▹' . $initial_time . '▹' . 'getting shows', 'update_library_in_progress');
+                $w->write('InitCreateOrRefreshLibrary▹' . 0 . '▹' . 0 . '▹' . $initial_time . '▹' . getenv('emoji_show') . 'shows', 'update_library_in_progress');
                 $retry = false;
             }
             catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
@@ -493,7 +493,7 @@ function refreshLibrary($w, $silent = false) {
                 if($debug) {
                     logMsg($w,"DEBUG: getUserPlaylists (offset ".$offsetGetUserPlaylists.")");
                 }
-                $w->write('InitCreateOrRefreshLibrary▹' . 0 . '▹' . 0 . '▹' . $initial_time . '▹' . 'getting playlists', 'update_library_in_progress');
+                $w->write('InitCreateOrRefreshLibrary▹' . 0 . '▹' . 0 . '▹' . $initial_time . '▹' . getenv('emoji_playlist') . 'playlists', 'update_library_in_progress');
                 $retry = false;
             }
             catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
@@ -562,7 +562,7 @@ function refreshLibrary($w, $silent = false) {
         $owner = $playlist->owner;
 
         ++$nb_playlist;
-        $w->write($update_type.'▹' . $nb_playlist . '▹' . $nb_playlist_total . '▹' . $initial_time . '▹playlist ' . escapeQuery($playlist->name), 'update_library_in_progress');
+        $w->write($update_type.'▹' . $nb_playlist . '▹' . $nb_playlist_total . '▹' . $initial_time . '▹' . getenv('emoji_playlist') . 'playlist ' . escapeQuery($playlist->name), 'update_library_in_progress');
 
         try {
             // Loop on existing playlists in library
@@ -1589,7 +1589,7 @@ function refreshLibrary($w, $silent = false) {
         $show = $item->show;
 
         ++$nb_playlist;
-        $w->write($update_type.'▹' . $nb_playlist . '▹' . $nb_playlist_total . '▹' . $initial_time . '▹show ' . escapeQuery($show->name), 'update_library_in_progress');
+        $w->write($update_type.'▹' . $nb_playlist . '▹' . $nb_playlist_total . '▹' . $initial_time . '▹' . getenv('emoji_show') .'show ' . escapeQuery($show->name), 'update_library_in_progress');
 
         try {
             // Loop on existing shows in library
@@ -2027,7 +2027,7 @@ function refreshLibrary($w, $silent = false) {
         }
     }
 
-    $w->write($update_type.'▹' . $nb_playlist . '▹' . $nb_playlist_total . '▹' . $initial_time . '▹' . escapeQuery($show->name), 'update_library_in_progress');
+    $w->write($update_type.'▹' . $nb_playlist . '▹' . $nb_playlist_total . '▹' . $initial_time . '▹' . getenv('emoji_show') . 'show ' . escapeQuery($show->name), 'update_library_in_progress');
 
     try {
         // check for deleted shows

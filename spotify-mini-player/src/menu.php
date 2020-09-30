@@ -239,7 +239,7 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress) {
         $elapsed_time = time() - $update_library_in_progress_words[3];
         if (startsWith($update_library_in_progress_words[0], 'Init')) {
             if ($elapsed_time < 5400) {
-                $w->result(null, $w->data().'/update_library_in_progress', 'Initialization phase since '.beautifyTime($elapsed_time, true).' : '.floatToSquares(0).'Currently processing <'.$update_library_in_progress_words[4].'>',array(
+                $w->result(null, $w->data().'/update_library_in_progress', 'Initialization phase since '.beautifyTime($elapsed_time, true).' : '.floatToSquares(0).'Currently processing '.$update_library_in_progress_words[4],array(
                     'Waiting for Spotify servers to return required data it may take time depending on your library',
                     'alt' => 'Not Available',
                     'cmd' => 'Not Available',
@@ -286,7 +286,7 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress) {
         else {
             if ($update_library_in_progress_words[2] != 0) {
                 $w->result(null, $w->data().'/update_library_in_progress', $update_library_in_progress_words[0].' in progress since '.beautifyTime($elapsed_time, true).' : '.floatToSquares(intval($update_library_in_progress_words[1]) / intval($update_library_in_progress_words[2])),array(
-                    $update_library_in_progress_words[1].'/'.$update_library_in_progress_words[2].' playlists/shows processed so far. Currently processing <'.$update_library_in_progress_words[4].'>',
+                    $update_library_in_progress_words[1].'/'.$update_library_in_progress_words[2].' playlists/shows processed so far. Currently processing '.$update_library_in_progress_words[4],
                     'alt' => 'Not Available',
                     'cmd' => 'Not Available',
                     'shift' => 'Not Available',

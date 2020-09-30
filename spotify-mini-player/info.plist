@@ -12401,6 +12401,8 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 		<string>☁️</string>
 		<key>emoji_playing</key>
 		<string>🔈</string>
+		<key>emoji_playlist</key>
+		<string>🎶</string>
 		<key>emoji_quickmode</key>
 		<string>⚡</string>
 		<key>emoji_radio</key>
