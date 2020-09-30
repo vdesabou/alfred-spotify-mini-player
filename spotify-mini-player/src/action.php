@@ -940,8 +940,6 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
         return;
     } elseif ($other_action == 'enable_fuzzy_search') {
-        verifyFuzzySearchRequirements($w);
-
         $ret = updateSetting($w, 'fuzzy_search', 1);
         if ($ret == true) {
             displayNotificationWithArtwork($w, 'Fuzzy search is now enabled', './images/search.png', 'Settings');

@@ -5,18 +5,6 @@ require_once './src/createLibrary.php';
 require_once './src/refreshLibrary.php';
 require './vendor/autoload.php';
 
-function verifyFuzzySearchRequirements($w)
-{
-    if (!file_exists('/usr/bin/sqlite3')) {
-        displayNotificationWithArtwork($w, 'sqlite3 is not installed, install using brew install sqlite', './images/settings.png', 'Error!');
-        exit;
-    }
-
-    if (!file_exists('/usr/local/bin/fzf')) {
-        displayNotificationWithArtwork($w, 'fzf is not installed, install using brew install fzf', './images/settings.png', 'Error!');
-        exit;
-    }
-}
 /**
  * getFuzzySearchResults function.
  *
@@ -38,7 +26,7 @@ function getFuzzySearchResults($w, $update_in_progress, $query, $table_name, $ta
 
     $delimiter = '{::}';
 
-    exec("/usr/bin/sqlite3 -separator $delimiter '$dbfile' 'select ".implode(",",$table_columns)." from ".$table_name." ".$where_clause.";' | /usr/local/bin/fzf --filter \"$query\" --delimiter=\"$delimiter\" --nth=\"$nth\"" , $retArr, $retVal);
+    exec("/usr/bin/sqlite3 -separator $delimiter '$dbfile' 'select ".implode(",",$table_columns)." from ".$table_name." ".$where_clause.";' | ./fzf --filter \"$query\" --delimiter=\"$delimiter\" --nth=\"$nth\"" , $retArr, $retVal);
 
     $i = 0;
     $results = array();

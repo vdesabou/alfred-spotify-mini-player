@@ -2005,7 +2005,7 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
         /* artist_artwork_path */, ''
         /* album_artwork_path */, ''
         /* playlist_name */, '', /* playlist_artwork_path */
-        )), 'Enable Fuzzy Search '.getenv('emoji_fuzzy'), array('Enable Fuzzy Search (fzf is required, you can install it using brew install fzf)', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/search.png', 'yes', null, '');
+        )), 'Enable Fuzzy Search '.getenv('emoji_fuzzy'), array('Enable Fuzzy Search', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/search.png', 'yes', null, '');
     }
 
     if ($now_playing_notifications == true) {
