@@ -314,10 +314,10 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress) {
         $quick_mode_text = ' '.getenv('emoji_separator').' '.getenv('emoji_quickmode').' Quick Mode is active';
     }
     if ($all_playlists == true) {
-        $w->result(null, '', $fuzzy_search_text . 'Search for music in "Your Music" and your ' . $nb_playlists . ' playlists', array('Begin typing at least 3 characters to start search in your ' . $all_tracks . ' tracks' . $quick_mode_text, 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/search.png', 'no', null, '');
+        $w->result(null, '', $fuzzy_search_text . 'Search for music in "Your Music" and your ' . $nb_playlists . ' playlists', array('Begin typing at least 3 characters to start search in your ' . $all_tracks . ' tracks, ' . $nb_playlists . ' playlists and ' . $nb_shows . ' shows' . $quick_mode_text, 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/search.png', 'no', null, '');
     }
     else {
-        $w->result(null, '', $fuzzy_search_text . 'Search for music in "Your Music" only', array('Begin typing at least 3 characters to start search in your ' . $yourmusic_tracks . ' tracks' . $quick_mode_text, 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/search_scope_yourmusic_only.png', 'no', null, '');
+        $w->result(null, '', $fuzzy_search_text . 'Search for music in "Your Music" only', array('Begin typing at least 3 characters to start search in your ' . $yourmusic_tracks . ' tracks, ' . $nb_playlists . ' playlists and ' . $nb_shows . ' shows' . $quick_mode_text, 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/search_scope_yourmusic_only.png', 'no', null, '');
     }
 
     if (getenv('menu_display_current_track') == 1) {
