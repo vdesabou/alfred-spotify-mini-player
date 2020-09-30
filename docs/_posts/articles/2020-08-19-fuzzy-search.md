@@ -17,8 +17,6 @@ comments: true
 onhomepage : true
 ---
 
-* In order to use Fuzzy Search, you need to have [fzf](https://github.com/junegunn/fzf) installed. You can install it using [brew](https://brew.sh): `brew install fzf`
-
 * You can enable Fuzzy Search in *Settings*:-
 
 <figure>
