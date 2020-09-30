@@ -15,12 +15,12 @@ function getFuzzySearchResults($w, $update_in_progress, $query, $table_name, $ta
     $dbfile = '';
     if ($update_in_progress == false && file_exists($w->data().'/library.db')) {
         $dbfile = $w->data().'/library.db';
-    } elseif (file_exists($w->data().'/library_new.db')) {
+    } elseif (file_exists($w->data().'/library_old.db')) {
         // update in progress use the old library
         if ($update_in_progress == true) {
-            $dbfile = $w->data().'/library_new.db';
+            $dbfile = $w->data().'/library_old.db';
         } else {
-            unlink($w->data().'/library_new.db');
+            unlink($w->data().'/library_old.db');
         }
     }
 
