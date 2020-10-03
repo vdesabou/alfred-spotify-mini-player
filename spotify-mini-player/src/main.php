@@ -127,7 +127,7 @@ function main($argv) {
             $country_code /* country_code*/,
             $userid,
             /* userid*/
-        )), 'Create library', "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', null, '');
+        )), 'Create library', "you can check progress by invoking the workflow again and use it while it's creating the library", './images/update.png', 'yes', null, '');
         echo $w->tojson();
 
         return;

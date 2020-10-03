@@ -7502,7 +7502,7 @@ function handleDbIssuePdoXml($e)
                 '' /* playlist_artwork_path */,
                 '',
                 /* $alfred_playlist_name */
-            )), 'Re-Create Library', "when done you'll receive a notification. you can check progress by invoking the workflow again", './images/update.png', 'yes', null, '');
+            )), 'Re-Create Library', "you can check progress by invoking the workflow again and use it while it's creating the library", './images/update.png', 'yes', null, '');
     echo $w->tojson();
 }
 
