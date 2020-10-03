@@ -55,7 +55,7 @@ Note: This can be disabled by setting `automatically_refresh_library` environmen
 
 ## Background download of artworks
 
-Since version 6, the workflow downloads artworks in background, which means that the Create/Refresh Library is very fast.
+The workflow downloads artworks in background, which means that the Create/Refresh Library is very fast.
 
 You get a notification when background download of artworks starts:-
 
@@ -80,7 +80,7 @@ You get a notification when background download of artworks starts:-
 
 ## Re-Create Library from scratch
 
-If for some reasons you want to delete and re-create your entire library, you can select ```Re-Create your library from scratch``` in Settings menu:-
+If for some reason you want to delete and re-create your entire library, you can select ```Re-Create your library from scratch``` in Settings menu:-
 
 <figure>
 	<img src="{{ site.url }}/images/refresh-library3.jpg">

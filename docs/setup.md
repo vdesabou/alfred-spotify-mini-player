@@ -3,7 +3,7 @@ layout: article
 permalink: /setup/
 title: "Setup"
 date: 2015-01-01
-modified: 2020-04-19
+modified: 2020-10-05
 toc: true
 share: false
 noindex: false
@@ -118,22 +118,16 @@ Setting up the workflow is easy, you just need to follow these steps:-
 
 * Invoke the workflow again and Create the library.
 
-* You can check progress by invoking the workflow again:-
+* You can then start using the workflow:-
 
 <figure>
 	<img src="{{ site.url }}/images/setup2.jpg">
 	<figcaption>See progress by invoking workflow.</figcaption>
 </figure>
 
+It will create your library in the background, but you'll be able to access use the workflow during that time (except for actions where library has to be modified).
 
-* After some time, you should get a notification saying that library has been created.
-
-<figure>
-	<img src="{{ site.url }}/images/setup3.jpg">
-	<figcaption>Library created (43 seconds for 2500 tracks).</figcaption>
-</figure>
-
-* Then you can use and enjoy the workflow. The artworks are downloaded in the background, you should get a notification when background download starts:-
+* The artworks are downloaded in the background, you should get a notification when background download starts:-
 
 <figure>
 	<img src="{{ site.url }}/images/setup4.jpg">
