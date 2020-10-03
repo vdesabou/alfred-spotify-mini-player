@@ -143,7 +143,7 @@ function refreshLibrary($w, $silent = false) {
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         $db->exec('drop table counters');
-        $db->exec('create table counters (all_tracks int, yourmusic_tracks int, all_artists int, yourmusic_artists int, all_albums int, yourmusic_albums int, playlists int, shows int)');
+        $db->exec('create table counters (id int PRIMARY KEY, all_tracks int, yourmusic_tracks int, all_artists int, yourmusic_artists int, all_albums int, yourmusic_albums int, playlists int, shows int, episodes int)');
 
         $getPlaylists = 'select * from playlists where uri=:uri';
         $stmtGetPlaylists = $db->prepare($getPlaylists);
@@ -1125,6 +1125,7 @@ function refreshLibrary($w, $silent = false) {
                 continue;
             }
         }
+        updateCounters($w, $db);
     }
 
     try {
@@ -1279,6 +1280,7 @@ function refreshLibrary($w, $silent = false) {
             if(!$silent)
                 displayNotificationWithArtwork($w, 'Added album ' . escapeQuery($album->name), $album_artwork_path, 'Refresh Library');
         }
+        updateCounters($w, $db);
     }
 
     // check for update to Your Music - tracks
@@ -1583,6 +1585,7 @@ function refreshLibrary($w, $silent = false) {
             }
         }
     }
+    updateCounters($w, $db);
 
     foreach ($savedMySavedShows as $item) {
         $show = $item->show;
@@ -2024,6 +2027,7 @@ function refreshLibrary($w, $silent = false) {
                 continue;
             }
         }
+        updateCounters($w, $db);
     }
 
     $w->write($update_type.'▹' . $nb_playlist . '▹' . $nb_playlist_total . '▹' . $initial_time . '▹' . getenv('emoji_show') . 'show ' . escapeQuery($show->name), 'update_library_in_progress');
@@ -2069,6 +2073,7 @@ function refreshLibrary($w, $silent = false) {
 
         return;
     }
+    updateCounters($w, $db);
 
     try {
         // check for deleted albums
@@ -2178,6 +2183,7 @@ function refreshLibrary($w, $silent = false) {
             if(!$silent)
                 displayNotificationWithArtwork($w, 'Added followed artist ' . escapeQuery($artist->name), $artist_artwork_path, 'Refresh Library');
         }
+        updateCounters($w, $db);
     }
 
     try {
@@ -2217,69 +2223,7 @@ function refreshLibrary($w, $silent = false) {
         return;
     }
 
-    // update counters
-    try {
-        $getCount = 'select count(distinct uri) from tracks';
-        $stmt = $db->prepare($getCount);
-        $stmt->execute();
-        $all_tracks = $stmt->fetch();
-
-        $getCount = 'select count(distinct uri) from tracks where yourmusic=1 and yourmusic_album=0';
-        $stmt = $db->prepare($getCount);
-        $stmt->execute();
-        $yourmusic_tracks = $stmt->fetch();
-
-        $getCount = 'select count(distinct artist_name) from tracks';
-        $stmt = $db->prepare($getCount);
-        $stmt->execute();
-        $all_artists = $stmt->fetch();
-
-        $getCount = 'select count(distinct name) from followed_artists';
-        $stmt = $db->prepare($getCount);
-        $stmt->execute();
-        $yourmusic_artists = $stmt->fetch();
-
-        $getCount = 'select count(distinct album_name) from tracks';
-        $stmt = $db->prepare($getCount);
-        $stmt->execute();
-        $all_albums = $stmt->fetch();
-
-        $getCount = 'select count(distinct album_name) from tracks where yourmusic_album=1';
-        $stmt = $db->prepare($getCount);
-        $stmt->execute();
-        $yourmusic_albums = $stmt->fetch();
-
-        $getCount = 'select count(*) from playlists';
-        $stmt = $db->prepare($getCount);
-        $stmt->execute();
-        $playlists_count = $stmt->fetch();
-
-        $getCount = 'select count(*) from shows';
-        $stmt = $db->prepare($getCount);
-        $stmt->execute();
-        $shows_count = $stmt->fetch();
-
-        $insertCounter = 'insert into counters values (:all_tracks,:yourmusic_tracks,:all_artists,:yourmusic_artists,:all_albums,:yourmusic_albums,:playlists, :shows)';
-        $stmt = $db->prepare($insertCounter);
-
-        $stmt->bindValue(':all_tracks', $all_tracks[0]);
-        $stmt->bindValue(':yourmusic_tracks', $yourmusic_tracks[0]);
-        $stmt->bindValue(':all_artists', $all_artists[0]);
-        $stmt->bindValue(':yourmusic_artists', $yourmusic_artists[0]);
-        $stmt->bindValue(':all_albums', $all_albums[0]);
-        $stmt->bindValue(':yourmusic_albums', $yourmusic_albums[0]);
-        $stmt->bindValue(':playlists', $playlists_count[0]);
-        $stmt->bindValue(':shows', $shows_count[0]);
-        $stmt->execute();
-    }
-    catch(PDOException $e) {
-        logMsg($w,'Error(refreshLibrary): (exception ' . jTraceEx($e) . ')');
-        handleDbIssuePdoEcho($db, $w);
-        $dbartworks = null;
-        $db = null;
-
-        return false;
-    }
+    updateCounters($w, $db);
 
     $elapsed_time = time() - $initial_time;
     $changedPlaylists = false;

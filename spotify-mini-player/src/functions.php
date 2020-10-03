@@ -5,6 +5,77 @@ require_once './src/createLibrary.php';
 require_once './src/refreshLibrary.php';
 require './vendor/autoload.php';
 
+function updateCounters($w, $db) {
+    try {
+        $getCount = 'select count(distinct uri) from tracks';
+        $stmt = $db->prepare($getCount);
+        $stmt->execute();
+        $all_tracks = $stmt->fetch();
+
+        $getCount = 'select count(distinct uri) from tracks where yourmusic=1 and yourmusic_album=0';
+        $stmt = $db->prepare($getCount);
+        $stmt->execute();
+        $yourmusic_tracks = $stmt->fetch();
+
+        $getCount = 'select count(distinct artist_name) from tracks';
+        $stmt = $db->prepare($getCount);
+        $stmt->execute();
+        $all_artists = $stmt->fetch();
+
+        $getCount = 'select count(distinct name) from followed_artists';
+        $stmt = $db->prepare($getCount);
+        $stmt->execute();
+        $yourmusic_artists = $stmt->fetch();
+
+        $getCount = 'select count(distinct album_name) from tracks';
+        $stmt = $db->prepare($getCount);
+        $stmt->execute();
+        $all_albums = $stmt->fetch();
+
+        $getCount = 'select count(distinct album_name) from tracks where yourmusic_album=1';
+        $stmt = $db->prepare($getCount);
+        $stmt->execute();
+        $yourmusic_albums = $stmt->fetch();
+
+        $getCount = 'select count(*) from playlists';
+        $stmt = $db->prepare($getCount);
+        $stmt->execute();
+        $playlists_count = $stmt->fetch();
+
+        $getCount = 'select count(*) from shows';
+        $stmt = $db->prepare($getCount);
+        $stmt->execute();
+        $shows_count = $stmt->fetch();
+
+        $getCount = 'select count(*) from episodes';
+        $stmt = $db->prepare($getCount);
+        $stmt->execute();
+        $episodes_count = $stmt->fetch();
+
+        $insertCounter = 'insert or replace into counters values (:id,:all_tracks,:yourmusic_tracks,:all_artists,:yourmusic_artists,:all_albums,:yourmusic_albums,:playlists, :shows,:episodes)';
+        $stmt = $db->prepare($insertCounter);
+
+        $stmt->bindValue(':id', 0);
+        $stmt->bindValue(':all_tracks', $all_tracks[0]);
+        $stmt->bindValue(':yourmusic_tracks', $yourmusic_tracks[0]);
+        $stmt->bindValue(':all_artists', $all_artists[0]);
+        $stmt->bindValue(':yourmusic_artists', $yourmusic_artists[0]);
+        $stmt->bindValue(':all_albums', $all_albums[0]);
+        $stmt->bindValue(':yourmusic_albums', $yourmusic_albums[0]);
+        $stmt->bindValue(':playlists', $playlists_count[0]);
+        $stmt->bindValue(':shows', $shows_count[0]);
+        $stmt->bindValue(':episodes', $episodes_count[0]);
+        $stmt->execute();
+    }
+    catch(PDOException $e) {
+        logMsg($w,'Error(updateCounters): (exception ' . jTraceEx($e) . ')');
+        handleDbIssuePdoEcho($db, $w);
+        $db = null;
+
+        return false;
+    }
+    return true;
+}
 /**
  * getExternalResults function.
  *
@@ -8014,17 +8085,28 @@ function doJsonRequest($w, $url, $actionMode = true)
  */
 function killUpdate($w)
 {
+    if (file_exists($w->data().'/create_library')) {
+        // create library
+        if (file_exists($w->data().'/library_new.db')) {
+            rename($w->data().'/library_new.db', $w->data().'/library.db');
+        }
+
+        if (file_exists($w->data().'/library_old.db')) {
+            deleteTheFile($w,$w->data().'/library_old.db');
+        }
+    } else {
+        // refresh library
+        if (file_exists($w->data().'/library_old.db')) {
+            rename($w->data().'/library_old.db', $w->data().'/library.db');
+        }
+
+        if (file_exists($w->data().'/library_new.db')) {
+            deleteTheFile($w,$w->data().'/library_new.db');
+        }
+    }
     deleteTheFile($w,$w->data().'/update_library_in_progress');
     deleteTheFile($w,$w->data().'/create_library');
     deleteTheFile($w,$w->data().'/download_artworks_in_progress');
-
-    if (file_exists($w->data().'/library_old.db')) {
-        rename($w->data().'/library_old.db', $w->data().'/library.db');
-    }
-
-    if (file_exists($w->data().'/library_new.db')) {
-        deleteTheFile($w,$w->data().'/library_new.db');
-    }
 
     exec("kill -9 $(ps -efx | grep \"php\" | egrep \"update_|refresh_library|php -S localhost:15298|ADDTOPLAYLIST|UPDATE_|DOWNLOAD_ARTWORKS\" | grep -v grep | awk '{print $2}')");
 

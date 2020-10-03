@@ -1694,22 +1694,27 @@ function firstDelimiterYourMusic($w, $query, $settings, $db, $update_in_progress
     $thequery = $words[1];
 
     if (mb_strlen($thequery) < 2) {
-        $getCounters = 'select * from counters';
-        try {
-            $stmt = $db->prepare($getCounters);
+        if($update_in_progress && file_exists($w->data() . '/create_library')) {
+            $results = getExternalResults($w, 'counters', array('all_tracks','yourmusic_tracks','all_artists','yourmusic_artists','all_albums','yourmusic_albums','playlists','shows','episodes'), '', 'where id=0');
+        } else {
+            $getCounters = 'select all_tracks,yourmusic_tracks,all_artists,yourmusic_artists,all_albums,yourmusic_albums,playlists,shows,episodes from counters where id=0';
+            try {
+                $stmt = $db->prepare($getCounters);
 
-            $stmt->execute();
-            $counter = $stmt->fetch();
+                $stmt->execute();
+                $results = $stmt->fetchAll();
+            }
+            catch(PDOException $e) {
+                handleDbIssuePdoXml($e);
+
+                exit;
+            }
         }
-        catch(PDOException $e) {
-            handleDbIssuePdoXml($e);
+        $counters = $results[0];
 
-            return;
-        }
-
-        $yourmusic_tracks = $counter[1];
-        $yourmusic_artists = $counter[3];
-        $yourmusic_albums = $counter[5];
+        $yourmusic_tracks = $counters[1];
+        $yourmusic_artists = $counters[3];
+        $yourmusic_albums = $counters[5];
 
         $w->result(null, '', 'Liked songs', array('Browse your ' . $yourmusic_tracks . ' tracks in Your Music', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/tracks.png', 'no', null, 'Your Music▹Tracks▹');
         $w->result(null, '', 'Albums', array('Browse your ' . $yourmusic_albums . ' albums in Your Music', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/albums.png', 'no', null, 'Your Music▹Albums▹');

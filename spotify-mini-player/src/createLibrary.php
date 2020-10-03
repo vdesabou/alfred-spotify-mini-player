@@ -57,7 +57,7 @@ function createLibrary($w) {
         $db->exec('CREATE INDEX IndexPlaylistUri ON tracks (playlist_uri)');
         $db->exec('CREATE INDEX IndexArtistName ON tracks (artist_name)');
         $db->exec('CREATE INDEX IndexAlbumName ON tracks (album_name)');
-        $db->exec('create table counters (all_tracks int, yourmusic_tracks int, all_artists int, yourmusic_artists int, all_albums int, yourmusic_albums int, playlists int, shows int, episodes int)');
+        $db->exec('create table counters (id int PRIMARY KEY, all_tracks int, yourmusic_tracks int, all_artists int, yourmusic_artists int, all_albums int, yourmusic_albums int, playlists int, shows int, episodes int)');
         $db->exec('create table playlists (uri text PRIMARY KEY NOT NULL, name text, nb_tracks int, author text, username text, playlist_artwork_path text, ownedbyuser boolean, nb_playable_tracks int, duration_playlist text, nb_times_played int, collaborative boolean, public boolean, name_deburr text)');
 
         $db->exec('create table followed_artists (uri text PRIMARY KEY NOT NULL, name text, artist_artwork_path text, name_deburr text)');
@@ -74,29 +74,7 @@ function createLibrary($w) {
         return false;
     }
 
-    // update counters
-    try {
-        $insertCounter = 'insert into counters values (:all_tracks,:yourmusic_tracks,:all_artists,:yourmusic_artists,:all_albums,:yourmusic_albums,:playlists,:shows,:episodes)';
-        $stmt = $db->prepare($insertCounter);
-
-        $stmt->bindValue(':all_tracks', 0);
-        $stmt->bindValue(':yourmusic_tracks', 0);
-        $stmt->bindValue(':all_artists', 0);
-        $stmt->bindValue(':yourmusic_artists', 0);
-        $stmt->bindValue(':all_albums', 0);
-        $stmt->bindValue(':yourmusic_albums', 0);
-        $stmt->bindValue(':playlists', 0);
-        $stmt->bindValue(':shows', 0);
-        $stmt->bindValue(':episodes', 0);
-        $stmt->execute();
-    }
-    catch(PDOException $e) {
-        logMsg($w,'Error(createLibrary): (exception ' . jTraceEx($e) . ')');
-        handleDbIssuePdoEcho($db, $w);
-        $db = null;
-
-        return false;
-    }
+    updateCounters($w, $db);
 
     deleteTheFile($w,$w->data() . '/update_library_in_progress');
     touch($w->data() . '/create_library');
