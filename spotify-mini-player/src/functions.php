@@ -6,6 +6,29 @@ require_once './src/refreshLibrary.php';
 require './vendor/autoload.php';
 
 /**
+ * getExternalResults function.
+ *
+ */
+function getExternalResults($w, $table_name, $table_columns, $end_of_statement, $where_clause = '')
+{
+    // Use library being created
+    $dbfile = $w->data().'/library_new.db';
+
+    $delimiter = '{::}';
+
+    exec("/usr/bin/sqlite3 -separator $delimiter '$dbfile' 'select ".implode(",",$table_columns)." from ".$table_name." ".$where_clause." ".$end_of_statement.";'" , $retArr, $retVal);
+
+    $results = array();
+    foreach ($retArr as $ret) {
+        $r = explode($delimiter, $ret);
+        if(! checkIfDuplicate($results,$r[0])) {
+            $results[] = $r;
+        }
+    }
+    return $results;
+}
+
+/**
  * getFuzzySearchResults function.
  *
  */
@@ -15,6 +38,8 @@ function getFuzzySearchResults($w, $update_in_progress, $query, $table_name, $ta
     $dbfile = '';
     if ($update_in_progress == false && file_exists($w->data().'/library.db')) {
         $dbfile = $w->data().'/library.db';
+    } elseif($update_in_progress && file_exists($w->data() . '/create_library')) {
+        $dbfile = $w->data().'/library_new.db';
     } elseif (file_exists($w->data().'/library_old.db')) {
         // update in progress use the old library
         if ($update_in_progress == true) {
@@ -7990,6 +8015,7 @@ function doJsonRequest($w, $url, $actionMode = true)
 function killUpdate($w)
 {
     deleteTheFile($w,$w->data().'/update_library_in_progress');
+    deleteTheFile($w,$w->data().'/create_library');
     deleteTheFile($w,$w->data().'/download_artworks_in_progress');
 
     if (file_exists($w->data().'/library_old.db')) {

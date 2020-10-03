@@ -17,13 +17,17 @@ function firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress
     $theplaylist = $words[1];
     try {
         if (mb_strlen($theplaylist) < 2) {
-            $getPlaylists = 'select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist,collaborative,public,nb_times_played from playlists order by nb_times_played desc';
-            $stmt = $db->prepare($getPlaylists);
-            $stmt->execute();
-            $results = $stmt->fetchAll();
+            if($update_in_progress && file_exists($w->data() . '/create_library')) {
+                $results = getExternalResults($w, 'playlists', array('uri','name','nb_tracks','author','username','playlist_artwork_path','ownedbyuser','nb_playable_tracks','duration_playlist','collaborative','public','nb_times_played'), 'order by nb_times_played desc');
+            } else {
+                $getPlaylists = 'select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist,collaborative,public,nb_times_played from playlists order by nb_times_played desc';
+                $stmt = $db->prepare($getPlaylists);
+                $stmt->execute();
+                $results = $stmt->fetchAll();
+            }
         }
         else {
-            if($fuzzy_search) {
+            if($fuzzy_search || ($update_in_progress && file_exists($w->data() . '/create_library'))) {
                 $results = getFuzzySearchResults($w, $update_in_progress, $theplaylist, 'playlists', array('uri','name','nb_tracks','author','username','playlist_artwork_path','ownedbyuser','nb_playable_tracks','duration_playlist','collaborative','public','nb_times_played'), $max_results, '2,4', '');
             } else {
                 $getPlaylists = 'select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist,collaborative,public,nb_times_played from playlists where (name_deburr like :query or author like :query) order by nb_times_played desc';
@@ -171,18 +175,27 @@ function firstDelimiterArtists($w, $query, $settings, $db, $update_in_progress) 
 
     try {
         if (mb_strlen($artist) < 2) {
-            if ($all_playlists == false) {
-                $getArtists = 'select name,artist_artwork_path,uri from followed_artists group by name' . ' limit ' . $max_results;
+            if($update_in_progress && file_exists($w->data() . '/create_library')) {
+                if ($all_playlists == false) {
+                    $results = getExternalResults($w, 'followed_artists', array('name','artist_artwork_path','uri'), 'group by name' . ' limit ' . $max_results);
+                }
+                else {
+                    $results = getExternalResults($w, 'tracks', array('artist_name','artist_artwork_path','artist_uri'), 'group by artist_name' . ' limit ' . $max_results);
+                }
+            } else {
+                if ($all_playlists == false) {
+                    $getArtists = 'select name,artist_artwork_path,uri from followed_artists group by name' . ' limit ' . $max_results;
+                }
+                else {
+                    $getArtists = 'select artist_name,artist_artwork_path,artist_uri from tracks group by artist_name' . ' limit ' . $max_results;
+                }
+                $stmt = $db->prepare($getArtists);
+                $stmt->execute();
+                $results = $stmt->fetchAll();
             }
-            else {
-                $getArtists = 'select artist_name,artist_artwork_path,artist_uri from tracks group by artist_name' . ' limit ' . $max_results;
-            }
-            $stmt = $db->prepare($getArtists);
-            $stmt->execute();
-            $results = $stmt->fetchAll();
         }
         else {
-            if($fuzzy_search) {
+            if($fuzzy_search || ($update_in_progress && file_exists($w->data() . '/create_library'))) {
                 if ($all_playlists == false) {
                     $results = getFuzzySearchResults($w, $update_in_progress, $artist, 'followed_artists', array('name','artist_artwork_path','uri'), $max_results, '1', '');
                 }
@@ -270,13 +283,17 @@ function firstDelimiterShows($w, $query, $settings, $db, $update_in_progress) {
 
     try {
         if (mb_strlen($show) < 2) {
-            $getShows = 'select * from shows group by name' . ' limit ' . $max_results;
-            $stmt = $db->prepare($getShows);
-            $stmt->execute();
-            $results = $stmt->fetchAll();
+            if($update_in_progress && file_exists($w->data() . '/create_library')) {
+                $results = getExternalResults($w, 'shows', array('uri','name','description','media_type','show_artwork_path','explicit','added_at','languages','nb_times_played','is_externally_hosted', 'nb_episodes'), 'group by name' . ' limit ' . $max_results);
+            } else {
+                $getShows = 'select * from shows group by name' . ' limit ' . $max_results;
+                $stmt = $db->prepare($getShows);
+                $stmt->execute();
+                $results = $stmt->fetchAll();
+            }
         }
         else {
-            if($fuzzy_search) {
+            if($fuzzy_search || ($update_in_progress && file_exists($w->data() . '/create_library'))) {
                 $results = getFuzzySearchResults($w, $update_in_progress, $show, 'shows', array('uri','name','description','media_type','show_artwork_path','explicit','added_at','languages','nb_times_played','is_externally_hosted', 'nb_episodes'), $max_results, '2', '');
             } else {
                 $getShows = 'select * from shows where name_deburr like :query limit ' . $max_results;
@@ -351,18 +368,27 @@ function firstDelimiterAlbums($w, $query, $settings, $db, $update_in_progress) {
     $album = $words[1];
     try {
         if (mb_strlen($album) < 2) {
-            if ($all_playlists == false) {
-                $getTracks = 'select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where yourmusic_album=1' . ' group by album_name order by max(added_at) desc limit ' . $max_results;
+            if($update_in_progress && file_exists($w->data() . '/create_library')) {
+                if ($all_playlists == false) {
+                    $results = getExternalResults($w, 'tracks', array('album_name','album_artwork_path','artist_name','album_uri','album_type'), 'group by album_name order by max(added_at) desc limit ' . $max_results, 'where yourmusic_album=1');
+                }
+                else {
+                    $results = getExternalResults($w, 'tracks', array('album_name','album_artwork_path','artist_name','album_uri','album_type'), 'group by album_name order by max(added_at) desc limit ' . $max_results);
+                }
+            } else {
+                if ($all_playlists == false) {
+                    $getTracks = 'select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks where yourmusic_album=1' . ' group by album_name order by max(added_at) desc limit ' . $max_results;
+                }
+                else {
+                    $getTracks = 'select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks group by album_name order by max(added_at) desc limit ' . $max_results;
+                }
+                $stmt = $db->prepare($getTracks);
+                $stmt->execute();
+                $results = $stmt->fetchAll();
             }
-            else {
-                $getTracks = 'select album_name,album_artwork_path,artist_name,album_uri,album_type from tracks group by album_name order by max(added_at) desc limit ' . $max_results;
-            }
-            $stmt = $db->prepare($getTracks);
-            $stmt->execute();
-            $results = $stmt->fetchAll();
         }
         else {
-            if($fuzzy_search) {
+            if($fuzzy_search || ($update_in_progress && file_exists($w->data() . '/create_library'))) {
                 if ($all_playlists == false) {
                     $where_clause = 'where yourmusic_album=1';
                 }
@@ -1692,7 +1718,7 @@ function firstDelimiterYourMusic($w, $query, $settings, $db, $update_in_progress
     else {
 
         // Search artists
-        if($fuzzy_search) {
+        if($fuzzy_search || ($update_in_progress && file_exists($w->data() . '/create_library'))) {
             $results = getFuzzySearchResults($w, $update_in_progress, $query, 'followed_artists', array('name','artist_artwork_path','uri'), $max_results, '1', '');
         } else {
             // Search artists
@@ -1710,7 +1736,6 @@ function firstDelimiterYourMusic($w, $query, $settings, $db, $update_in_progress
             }
         }
 
-
         $noresult = true;
         foreach ($results as $artists) {
             if (checkIfResultAlreadyThere($w->results(), getenv('emoji_artist').' ' . $artists[0]) == false) {
@@ -1720,8 +1745,7 @@ function firstDelimiterYourMusic($w, $query, $settings, $db, $update_in_progress
         }
 
         // Search everything
-
-        if($fuzzy_search) {
+        if($fuzzy_search || ($update_in_progress && file_exists($w->data() . '/create_library'))) {
             $results = getFuzzySearchResults($w, $update_in_progress, $thequery, 'tracks', array('yourmusic', 'popularity', 'uri', 'album_uri', 'artist_uri', 'track_name', 'album_name', 'artist_name', 'album_type', 'track_artwork_path', 'artist_artwork_path', 'album_artwork_path', 'playlist_name', 'playlist_uri', 'playable', 'added_at', 'duration', 'nb_times_played', 'local_track'), $max_results, '6..8', 'where yourmusic=1');
         } else {
             $getTracks = 'select yourmusic, popularity, uri, album_uri, artist_uri, track_name, album_name, artist_name, album_type, track_artwork_path, artist_artwork_path, album_artwork_path, playlist_name, playlist_uri, playable, added_at, duration, nb_times_played, local_track from tracks where yourmusic=1 and (artist_name_deburr like :query or album_name_deburr like :query or track_name_deburr like :query)' . ' limit ' . $max_results;

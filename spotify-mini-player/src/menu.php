@@ -466,7 +466,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
 
         if ($search_category == 'playlist') {
 
-            if($fuzzy_search) {
+            if($fuzzy_search || ($update_in_progress && file_exists($w->data() . '/create_library'))) {
                 $results = getFuzzySearchResults($w, $update_in_progress, $query, 'playlists', array('uri','name','nb_tracks','author','username','playlist_artwork_path','ownedbyuser','nb_playable_tracks','duration_playlist','collaborative','public'), $max_results, '2,4', '');
             } else {
                 $getPlaylists = 'select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist,collaborative,public,nb_times_played from playlists where (name_deburr like :query or author like :query) order by nb_times_played desc';
@@ -543,7 +543,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
 
         if ($search_category == 'artist') {
 
-            if($fuzzy_search) {
+            if($fuzzy_search || ($update_in_progress && file_exists($w->data() . '/create_library'))) {
                 if ($all_playlists == false) {
                     $results = getFuzzySearchResults($w, $update_in_progress, $query, 'followed_artists', array('name','uri','artist_artwork_path'), $max_results, '1', '');
                 }
@@ -598,7 +598,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
 
         if ($search_category == 'track') {
 
-            if($fuzzy_search) {
+            if($fuzzy_search || ($update_in_progress && file_exists($w->data() . '/create_library'))) {
                 if ($all_playlists == false) {
                     $where_clause = 'where yourmusic=1';
                 }
@@ -661,7 +661,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
 
         if ($search_category == 'album') {
 
-            if($fuzzy_search) {
+            if($fuzzy_search || ($update_in_progress && file_exists($w->data() . '/create_library'))) {
                 if ($all_playlists == false) {
                     $where_clause = 'where yourmusic_album=1';
                 }
@@ -722,7 +722,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
 
         if ($search_category == 'show') {
 
-            if($fuzzy_search) {
+            if($fuzzy_search || ($update_in_progress && file_exists($w->data() . '/create_library'))) {
                 $results = getFuzzySearchResults($w, $update_in_progress, $query, 'shows', array('uri','name','description','media_type','show_artwork_path','explicit','added_at','languages','nb_times_played','is_externally_hosted', 'nb_episodes'), $max_results, '2', '');
             } else {
                 $getShows = 'select * from shows where name_deburr like :query limit ' . $max_results;
@@ -748,7 +748,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
 
         if ($search_category == 'episode') {
             // Search episodes
-            if($fuzzy_search) {
+            if($fuzzy_search || ($update_in_progress && file_exists($w->data() . '/create_library'))) {
                 $results = getFuzzySearchResults($w, $update_in_progress, $query, 'episodes', array('uri', 'name', 'uri', 'show_uri', 'show_name', 'description', 'episode_artwork_path', 'is_playable', 'languages', 'nb_times_played', 'is_externally_hosted', 'duration_ms', 'explicit', 'release_date', 'release_date_precision', 'audio_preview_url', 'fully_played', 'resume_position_ms'), $max_results, '2,4', '');
             } else {
                 $getEpisodes = 'select uri, name, uri, show_uri, show_name, description, episode_artwork_path, is_playable, languages, nb_times_played, is_externally_hosted, duration_ms, explicit, release_date, release_date_precision, audio_preview_url, fully_played, resume_position_ms from episodes where name_deburr like :name order by release_date desc limit ' . $max_results;
