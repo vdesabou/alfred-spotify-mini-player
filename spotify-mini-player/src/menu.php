@@ -211,20 +211,23 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress) {
     ////////
     // MAIN MENU
     //////////////
+    $retry = true;
     if($update_in_progress && file_exists($w->data() . '/create_library')) {
         $results = getExternalResults($w, 'counters', array('all_tracks','yourmusic_tracks','all_artists','yourmusic_artists','all_albums','yourmusic_albums','playlists','shows','episodes'), '', 'where id=0');
     } else {
-        $getCounters = 'select all_tracks,yourmusic_tracks,all_artists,yourmusic_artists,all_albums,yourmusic_albums,playlists,shows,episodes from counters where id=0';
-        try {
-            $stmt = $db->prepare($getCounters);
-
-            $stmt->execute();
-            $results = $stmt->fetchAll();
-        }
-        catch(PDOException $e) {
-            handleDbIssuePdoXml($e);
-
-            exit;
+        while ($retry) {
+            $getCounters = 'select all_tracks,yourmusic_tracks,all_artists,yourmusic_artists,all_albums,yourmusic_albums,playlists,shows,episodes from counters where id=0';
+            try {
+                $stmt = $db->prepare($getCounters);
+                $stmt->execute();
+                $results = $stmt->fetchAll();
+                $retry = false;
+            }
+            catch(PDOException $e) {
+                $db->exec('drop table counters');
+                $db->exec('create table counters (id int PRIMARY KEY, all_tracks int, yourmusic_tracks int, all_artists int, yourmusic_artists int, all_albums int, yourmusic_albums int, playlists int, shows int, episodes int)');
+                updateCounters($w, $db);
+            }
         }
     }
     $counters = $results[0];
