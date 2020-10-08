@@ -69,7 +69,9 @@ class Request
 
         $parsedHeaders = [];
         foreach ($headers as $header) {
-            list($key, $value) = explode(':', $header, 2);
+            [$key, $value] = explode(':', $header, 2);
+
+             $key = ucwords($key, '-');
 
             $parsedHeaders[$key] = trim($value);
         }
