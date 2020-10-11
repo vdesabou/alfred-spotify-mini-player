@@ -5752,24 +5752,36 @@ function getNumberOfTracksForAlbum($update_in_progress, $w, $db, $album_uri, $yo
  * @param mixed $db
  * @param mixed $artist_name
  */
-function getNumberOfTracksForArtist($db, $artist_name, $yourmusiconly = false)
+function getNumberOfTracksForArtist($update_in_progress, $w, $db, $artist_name, $yourmusiconly = false)
 {
-    if ($yourmusiconly == false) {
-        $getNumberOfTracksForArtist = 'select count(distinct track_name) from tracks where artist_name_deburr=:artist_name';
+    $nb = 0;
+    if($update_in_progress && file_exists($w->data() . '/create_library')) {
+        if ($yourmusiconly == false) {
+            $results = getExternalResults($w, 'tracks', array('count(distinct track_name)'), '', "where artist_name=\"".$artist_name."\"");
+        } else {
+            $results = getExternalResults($w, 'tracks', array('count(distinct track_name)'), '', "where yourmusic_album=1 and artist_name=\"".$artist_name."\"");
+        }
+        $tmp = $results[0];
+        $nb = $tmp[0];
     } else {
-        $getNumberOfTracksForArtist = 'select count(distinct track_name) from tracks where yourmusic=1 and artist_name=:artist_name';
+        if ($yourmusiconly == false) {
+            $getNumberOfTracksForArtist = 'select count(distinct track_name) from tracks where artist_name=:artist_name';
+        } else {
+            $getNumberOfTracksForArtist = 'select count(distinct track_name) from tracks where yourmusic=1 and artist_name=:artist_name';
+        }
+
+        try {
+            $stmt = $db->prepare($getNumberOfTracksForArtist);
+            $stmt->bindValue(':artist_name', ''.deburr($artist_name).'');
+            $stmt->execute();
+            $results = $stmt->fetchAll();
+            $nb = $results[0];
+        } catch (PDOException $e) {
+            return 0;
+        }
     }
 
-    try {
-        $stmt = $db->prepare($getNumberOfTracksForArtist);
-        $stmt->bindValue(':artist_name', ''.deburr($artist_name).'');
-        $stmt->execute();
-        $nb = $stmt->fetch();
-    } catch (PDOException $e) {
-        return 0;
-    }
-
-    return $nb[0];
+    return $nb;
 }
 
 /**

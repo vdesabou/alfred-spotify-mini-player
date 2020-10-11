@@ -698,7 +698,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
             }
 
             foreach ($results as $track) {
-                $nb_album_tracks = getNumberOfTracksForAlbum($db, $track[1]);
+                $nb_album_tracks = getNumberOfTracksForAlbum($update_in_progress, $w, $db, $track[1]);
                 if (checkIfResultAlreadyThere($w->results(), getenv('emoji_album').' ' . $track[0]. ' (' . $nb_album_tracks . ' tracks)'. ' by '.$track[4]) == false) {
                     if ($track[1] == '') {
                         // can happen for local tracks

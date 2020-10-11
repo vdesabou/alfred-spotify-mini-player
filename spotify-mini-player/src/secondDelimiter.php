@@ -1427,7 +1427,7 @@ function secondDelimiterYourMusicAlbums($w, $query, $settings, $db, $update_in_p
     $noresult = true;
     foreach ($results as $track) {
         $noresult = false;
-        $nb_album_tracks = getNumberOfTracksForAlbum($db, $track[3], true);
+        $nb_album_tracks = getNumberOfTracksForAlbum($update_in_progress, $w, $db, $track[3], true);
         if (checkIfResultAlreadyThere($w->results(), $track[0] . ' (' . $nb_album_tracks . ' tracks)') == false) {
             $w->result(null, '', $track[0] . ' (' . $nb_album_tracks . ' tracks)', array($track[4] . ' by ' . $track[2], 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), $track[1], 'no', null, 'Album▹' . $track[3] . '∙' . $track[0] . '▹');
         }
@@ -1585,7 +1585,7 @@ function secondDelimiterYourMusicArtists($w, $query, $settings, $db, $update_in_
     $noresult = true;
     foreach ($results as $artists) {
         $noresult = false;
-        $nb_artist_tracks = getNumberOfTracksForArtist($db, $artists[0], false);
+        $nb_artist_tracks = getNumberOfTracksForArtist($update_in_progress, $w, $db, $artists[0], false);
         if (checkIfResultAlreadyThere($w->results(), getenv('emoji_artist').' ' . $artists[0] . ' (' . $nb_artist_tracks . ' tracks)') == false) {
             $uri = $artists[2];
 

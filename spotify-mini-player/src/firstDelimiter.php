@@ -226,7 +226,7 @@ function firstDelimiterArtists($w, $query, $settings, $db, $update_in_progress) 
     $noresult = true;
     foreach ($results as $artists) {
         $noresult = false;
-        $nb_artist_tracks = getNumberOfTracksForArtist($db, $artists[0]);
+        $nb_artist_tracks = getNumberOfTracksForArtist($update_in_progress, $w, $db, $artists[0]);
         if (checkIfResultAlreadyThere($w->results(), getenv('emoji_artist').' ' . $artists[0] . ' (' . $nb_artist_tracks . ' tracks)') == false) {
             $uri = $artists[2];
             // in case of local track, pass track uri instead
@@ -1635,8 +1635,8 @@ function firstDelimiterSpotifyConnectPreferredDevice($w, $query, $settings, $db,
                 if ($e->getCode() == 429) { // 429 is Too Many Requests
                     $lastResponse = $api->getRequest()
                         ->getLastResponse();
-                        $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
-                        sleep((int) $retryAfter);
+                    $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
+                    sleep((int) $retryAfter);
                 }
                 else if ($e->getCode() == 404) {
                     $retry = false;
