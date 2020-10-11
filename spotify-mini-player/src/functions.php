@@ -88,7 +88,7 @@ function getExternalResults($w, $table_name, $table_columns, $end_of_statement, 
     $delimiter = '{::}';
 
     exec("/usr/bin/sqlite3 -separator $delimiter '$dbfile' 'select ".implode(",",$table_columns)." from ".$table_name." ".$where_clause." ".$end_of_statement.";'" , $retArr, $retVal);
-
+    // logMsg($w,"/usr/bin/sqlite3 -separator $delimiter '$dbfile' 'select ".implode(",",$table_columns)." from ".$table_name." ".$where_clause." ".$end_of_statement.";'" );
     $results = array();
     foreach ($retArr as $ret) {
         $r = explode($delimiter, $ret);
@@ -191,13 +191,8 @@ function createAndPlayLikedSongsPlaylist($w)
                 if ($e->getCode() == 429) { // 429 is Too Many Requests
                     $lastResponse = $api->getRequest()
                         ->getLastResponse();
-                    if (isset($lastResponse['headers']['Retry-After'])) {
-                        $retryAfter = $lastResponse['headers']['Retry-After'];
-                    }
-                    else {
-                        $retryAfter = 1;
-                    }
-                    sleep($retryAfter);
+                    $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
+                    sleep((int) $retryAfter);
                 }
                 else if ($e->getCode() == 404) {
                     // skip
@@ -876,12 +871,8 @@ function getEpisode($w, $episode_uri)
             logMsg($w,'Error(setRepeatStateSpotifyConnect): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
-                if(isset($lastResponse['headers']['Retry-After'])) {
-                $retryAfter = $lastResponse['headers']['Retry-After'];
-                } else {
-                    $retryAfter = 1;
-                }
-                sleep($retryAfter);
+                $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
+                sleep((int) $retryAfter);
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
@@ -948,12 +939,8 @@ function getEpisode($w, $episode_uri)
             logMsg($w,'Error(isRepeatStateSpotifyConnectActive): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
-                if(isset($lastResponse['headers']['Retry-After'])) {
-                    $retryAfter = $lastResponse['headers']['Retry-After'];
-                } else {
-                    $retryAfter = 1;
-                }
-                sleep($retryAfter);
+                $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
+                sleep((int) $retryAfter);
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
@@ -1005,12 +992,8 @@ function getEpisode($w, $episode_uri)
             logMsg($w,'Error(setShuffleStateSpotifyConnect): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
-                if(isset($lastResponse['headers']['Retry-After'])) {
-                    $retryAfter = $lastResponse['headers']['Retry-After'];
-                } else {
-                    $retryAfter = 1;
-                }
-                sleep($retryAfter);
+                $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
+                sleep((int) $retryAfter);
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
@@ -1069,12 +1052,8 @@ function getEpisode($w, $episode_uri)
             logMsg($w,'Error(getVolumeSpotifyConnect): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
-                if(isset($lastResponse['headers']['Retry-After'])) {
-                    $retryAfter = $lastResponse['headers']['Retry-After'];
-                } else {
-                    $retryAfter = 1;
-                }
-                sleep($retryAfter);
+                $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
+                sleep((int) $retryAfter);
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
@@ -1126,12 +1105,8 @@ function getEpisode($w, $episode_uri)
             logMsg($w,'Error(changeVolumeSpotifyConnect): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
-                if(isset($lastResponse['headers']['Retry-After'])) {
-                    $retryAfter = $lastResponse['headers']['Retry-After'];
-                } else {
-                    $retryAfter = 1;
-                }
-                sleep($retryAfter);
+                $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
+                sleep((int) $retryAfter);
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
@@ -1205,12 +1180,8 @@ function getEpisode($w, $episode_uri)
             logMsg($w,'Error(playTrackSpotifyConnect): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
-                if(isset($lastResponse['headers']['Retry-After'])) {
-                    $retryAfter = $lastResponse['headers']['Retry-After'];
-                } else {
-                    $retryAfter = 1;
-                }
-                sleep($retryAfter);
+                $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
+                sleep((int) $retryAfter);
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
@@ -1260,12 +1231,8 @@ function getEpisode($w, $episode_uri)
             logMsg($w,'Error(nextTrackSpotifyConnect): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
-                if(isset($lastResponse['headers']['Retry-After'])) {
-                    $retryAfter = $lastResponse['headers']['Retry-After'];
-                } else {
-                    $retryAfter = 1;
-                }
-                sleep($retryAfter);
+                $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
+                sleep((int) $retryAfter);
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
@@ -1315,12 +1282,8 @@ function addToQueueSpotifyConnect($w, $trackId, $device_id)
            logMsg($w,'Error(addToQueueSpotifyConnect): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
            if ($e->getCode() == 429) { // 429 is Too Many Requests
                $lastResponse = $api->getRequest()->getLastResponse();
-               if(isset($lastResponse['headers']['Retry-After'])) {
-                    $retryAfter = $lastResponse['headers']['Retry-After'];
-                } else {
-                    $retryAfter = 1;
-                }
-               sleep($retryAfter);
+                $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
+                sleep((int) $retryAfter);
            } else if ($e->getCode() == 404) {
                // skip
                break;
@@ -1372,12 +1335,8 @@ function seekToBeginning($w)
            logMsg($w,'Error(seekToBeginning): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
            if ($e->getCode() == 429) { // 429 is Too Many Requests
                $lastResponse = $api->getRequest()->getLastResponse();
-               if(isset($lastResponse['headers']['Retry-After'])) {
-                $retryAfter = $lastResponse['headers']['Retry-After'];
-                } else {
-                    $retryAfter = 1;
-                }
-               sleep($retryAfter);
+               $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
+               sleep((int) $retryAfter);
            } else if ($e->getCode() == 404) {
                // skip
                break;
@@ -1427,12 +1386,8 @@ function seekToBeginning($w)
             logMsg($w,'Error(previousTrackSpotifyConnect): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
-                if(isset($lastResponse['headers']['Retry-After'])) {
-                    $retryAfter = $lastResponse['headers']['Retry-After'];
-                } else {
-                    $retryAfter = 1;
-                }
-                sleep($retryAfter);
+                    $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
+                    sleep((int) $retryAfter);
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
@@ -1497,12 +1452,8 @@ function seekToBeginning($w)
             logMsg($w,'Error(playpauseSpotifyConnect): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
-                if(isset($lastResponse['headers']['Retry-After'])) {
-                    $retryAfter = $lastResponse['headers']['Retry-After'];
-                } else {
-                    $retryAfter = 1;
-                }
-                sleep($retryAfter);
+                    $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
+                    sleep((int) $retryAfter);
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
@@ -1552,12 +1503,8 @@ function seekToBeginning($w)
             logMsg($w,'Error(playSpotifyConnect): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
-                if(isset($lastResponse['headers']['Retry-After'])) {
-                    $retryAfter = $lastResponse['headers']['Retry-After'];
-                } else {
-                    $retryAfter = 1;
-                }
-                sleep($retryAfter);
+                    $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
+                    sleep((int) $retryAfter);
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
@@ -1607,12 +1554,8 @@ function seekToBeginning($w)
             logMsg($w,'Error(pauseSpotifyConnect): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
-                if(isset($lastResponse['headers']['Retry-After'])) {
-                $retryAfter = $lastResponse['headers']['Retry-After'];
-            } else {
-                $retryAfter = 1;
-            }
-                sleep($retryAfter);
+                $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
+                sleep((int) $retryAfter);
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
@@ -1738,12 +1681,8 @@ function seekToBeginning($w)
                 logMsg($w,'Error(getSpotifyConnectCurrentDeviceId): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
                 if ($e->getCode() == 429) { // 429 is Too Many Requests
                     $lastResponse = $api->getRequest()->getLastResponse();
-                    if(isset($lastResponse['headers']['Retry-After'])) {
-                        $retryAfter = $lastResponse['headers']['Retry-After'];
-                    } else {
-                        $retryAfter = 1;
-                    }
-                    sleep($retryAfter);
+                    $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
+                    sleep((int) $retryAfter);
                 } else if ($e->getCode() == 404) {
                     // skip
                     break;
@@ -1797,12 +1736,8 @@ function seekToBeginning($w)
             logMsg($w,'Error(changeUserDevice): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
-                if(isset($lastResponse['headers']['Retry-After'])) {
-                    $retryAfter = $lastResponse['headers']['Retry-After'];
-                } else {
-                    $retryAfter = 1;
-                }
-                sleep($retryAfter);
+                    $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
+                    sleep((int) $retryAfter);
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
@@ -1899,16 +1834,12 @@ function isShuffleActive($print_output)
                 logMsg($w,'Error(isShuffleActive): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
                 if ($e->getCode() == 429) { // 429 is Too Many Requests
                     $lastResponse = $api->getRequest()->getLastResponse();
-                    if(isset($lastResponse['headers']['Retry-After'])) {
-    $retryAfter = $lastResponse['headers']['Retry-After'];
-} else {
-    $retryAfter = 1;
-}
-                    sleep($retryAfter);
-                } else if ($e->getCode() == 404) {
-                    // skip
-                    break;
-                } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
+                    $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
+                    sleep((int) $retryAfter);
+                    } else if ($e->getCode() == 404) {
+                        // skip
+                        break;
+                    } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                     // retry
                     if ($nb_retry > 3) {
                         $retry = false;
@@ -2866,12 +2797,8 @@ function getCurrentTrackInfoWithMopidy($w, $displayError = true)
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
-                if(isset($lastResponse['headers']['Retry-After'])) {
-                    $retryAfter = $lastResponse['headers']['Retry-After'];
-                } else {
-                    $retryAfter = 1;
-                }
-                sleep($retryAfter);
+                    $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
+                    sleep((int) $retryAfter);
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
@@ -5400,13 +5327,8 @@ function getNumberOfEpisodesForShow($w, $show_uri, $country_code)
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()
                     ->getLastResponse();
-                if (isset($lastResponse['headers']['Retry-After'])) {
-                    $retryAfter = $lastResponse['headers']['Retry-After'];
-                }
-                else {
-                    $retryAfter = 1;
-                }
-                sleep($retryAfter);
+                $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
+                sleep((int) $retryAfter);
             }
             else if ($e->getCode() == 404) {
                 // skip
@@ -5793,23 +5715,35 @@ function getPlaylistsForTrack($db, $track_uri)
  * @param mixed $db
  * @param mixed $album_uri
  */
-function getNumberOfTracksForAlbum($db, $album_uri, $yourmusiconly = false)
+function getNumberOfTracksForAlbum($update_in_progress, $w, $db, $album_uri, $yourmusiconly = false)
 {
-    if ($yourmusiconly == false) {
-        $getNumberOfTracksForAlbum = 'select count(distinct track_name) from tracks where album_uri=:album_uri';
+    $nb = 0;
+    if($update_in_progress && file_exists($w->data() . '/create_library')) {
+        if ($yourmusiconly == false) {
+            $results = getExternalResults($w, 'tracks', array('count(distinct track_name)'), '', "where album_uri=\"".$album_uri."\"");
+        } else {
+            $results = getExternalResults($w, 'tracks', array('count(distinct track_name)'), '', "where yourmusic_album=1 and album_uri=\"".$album_uri."\"");
+        }
+        $tmp = $results[0];
+        $nb = $tmp[0];
     } else {
-        $getNumberOfTracksForAlbum = 'select count(distinct track_name) from tracks where yourmusic_album=1 and album_uri=:album_uri';
-    }
-    try {
-        $stmt = $db->prepare($getNumberOfTracksForAlbum);
-        $stmt->bindValue(':album_uri', ''.$album_uri.'');
-        $stmt->execute();
-        $nb = $stmt->fetch();
-    } catch (PDOException $e) {
-        return 0;
+        if ($yourmusiconly == false) {
+            $getNumberOfTracksForAlbum = 'select count(distinct track_name) from tracks where album_uri=:album_uri';
+        } else {
+            $getNumberOfTracksForAlbum = 'select count(distinct track_name) from tracks where yourmusic_album=1 and album_uri=:album_uri';
+        }
+        try {
+            $stmt = $db->prepare($getNumberOfTracksForAlbum);
+            $stmt->bindValue(':album_uri', ''.$album_uri.'');
+            $stmt->execute();
+            $results = $stmt->fetchAll();
+            $nb = $results[0];
+        } catch (PDOException $e) {
+            return 0;
+        }
     }
 
-    return $nb[0];
+    return $nb;
 }
 
 /**
@@ -6992,12 +6926,7 @@ function getArtworkURL($w, $type, $id, $highRes = false)
 
                 if ($e->getCode() == 429) { // 429 is Too Many Requests
                     $lastResponse = $api->getRequest()->getLastResponse();
-                    if(isset($lastResponse['headers']['Retry-After'])) {
-    $retryAfter = $lastResponse['headers']['Retry-After'];
-} else {
-    $retryAfter = 1;
-}
-                    sleep($retryAfter);
+                    $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
                 } else if ($e->getCode() == 404) {
                     // skip
                     break;
@@ -7064,12 +6993,7 @@ function getArtworkURL($w, $type, $id, $highRes = false)
 
                 if ($e->getCode() == 429) { // 429 is Too Many Requests
                     $lastResponse = $api->getRequest()->getLastResponse();
-                    if(isset($lastResponse['headers']['Retry-After'])) {
-    $retryAfter = $lastResponse['headers']['Retry-After'];
-} else {
-    $retryAfter = 1;
-}
-                    sleep($retryAfter);
+                    sleep((int) $retryAfter);
                 } else if ($e->getCode() == 404) {
                     // skip
                     break;
@@ -7158,12 +7082,8 @@ function getPlaylistArtworkURL($w, $playlist_uri)
 
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
-                if(isset($lastResponse['headers']['Retry-After'])) {
-    $retryAfter = $lastResponse['headers']['Retry-After'];
-} else {
-    $retryAfter = 1;
-}
-                sleep($retryAfter);
+                $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
+                sleep((int) $retryAfter);
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
@@ -7237,12 +7157,8 @@ function getShowArtworkURL($w, $show_uri)
 
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
-                if(isset($lastResponse['headers']['Retry-After'])) {
-    $retryAfter = $lastResponse['headers']['Retry-After'];
-} else {
-    $retryAfter = 1;
-}
-                sleep($retryAfter);
+                $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
+                sleep((int) $retryAfter);
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
@@ -7324,12 +7240,8 @@ function getEpisodeArtworkURL($w, $episode_uri)
 
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
-                if(isset($lastResponse['headers']['Retry-After'])) {
-    $retryAfter = $lastResponse['headers']['Retry-After'];
-} else {
-    $retryAfter = 1;
-}
-                sleep($retryAfter);
+                $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
+                sleep((int) $retryAfter);
             } else if ($e->getCode() == 404) {
                 // skip
                 break;
@@ -7403,12 +7315,8 @@ function getArtistArtworkURL($w, $artist_id)
 
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()->getLastResponse();
-                if(isset($lastResponse['headers']['Retry-After'])) {
-    $retryAfter = $lastResponse['headers']['Retry-After'];
-} else {
-    $retryAfter = 1;
-}
-                sleep($retryAfter);
+                $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
+                sleep((int) $retryAfter);
             } else if ($e->getCode() == 404) {
                 // skip
                 break;

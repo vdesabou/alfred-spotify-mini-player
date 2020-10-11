@@ -260,13 +260,8 @@ function refreshLibrary($w, $silent = false) {
                 if ($e->getCode() == 429) { // 429 is Too Many Requests
                     $lastResponse = $api->getRequest()
                         ->getLastResponse();
-                    if (isset($lastResponse['headers']['Retry-After'])) {
-                        $retryAfter = $lastResponse['headers']['Retry-After'];
-                    }
-                    else {
-                        $retryAfter = 1;
-                    }
-                    sleep($retryAfter);
+                    $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
+                    sleep((int) $retryAfter);
                 }
                 else if ($e->getCode() == 404) {
                     // skip
@@ -344,13 +339,8 @@ function refreshLibrary($w, $silent = false) {
                 if ($e->getCode() == 429) { // 429 is Too Many Requests
                     $lastResponse = $api->getRequest()
                         ->getLastResponse();
-                    if (isset($lastResponse['headers']['Retry-After'])) {
-                        $retryAfter = $lastResponse['headers']['Retry-After'];
-                    }
-                    else {
-                        $retryAfter = 1;
-                    }
-                    sleep($retryAfter);
+                    $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
+                    sleep((int) $retryAfter);
                 }
                 else if ($e->getCode() == 404) {
                     // skip
@@ -425,13 +415,8 @@ function refreshLibrary($w, $silent = false) {
                 if ($e->getCode() == 429) { // 429 is Too Many Requests
                     $lastResponse = $api->getRequest()
                         ->getLastResponse();
-                    if (isset($lastResponse['headers']['Retry-After'])) {
-                        $retryAfter = $lastResponse['headers']['Retry-After'];
-                    }
-                    else {
-                        $retryAfter = 1;
-                    }
-                    sleep($retryAfter);
+                    $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
+                    sleep((int) $retryAfter);
                 }
                 else if ($e->getCode() == 404) {
                     // skip
@@ -501,13 +486,8 @@ function refreshLibrary($w, $silent = false) {
                 if ($e->getCode() == 429) { // 429 is Too Many Requests
                     $lastResponse = $api->getRequest()
                         ->getLastResponse();
-                    if (isset($lastResponse['headers']['Retry-After'])) {
-                        $retryAfter = $lastResponse['headers']['Retry-After'];
-                    }
-                    else {
-                        $retryAfter = 1;
-                    }
-                    sleep($retryAfter);
+                    $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
+                    sleep((int) $retryAfter);
                 }
                 else if ($e->getCode() == 404) {
                     // skip
@@ -618,13 +598,8 @@ function refreshLibrary($w, $silent = false) {
                         if ($e->getCode() == 429) { // 429 is Too Many Requests
                             $lastResponse = $api->getRequest()
                                 ->getLastResponse();
-                            if (isset($lastResponse['headers']['Retry-After'])) {
-                                $retryAfter = $lastResponse['headers']['Retry-After'];
-                            }
-                            else {
-                                $retryAfter = 1;
-                            }
-                            sleep($retryAfter);
+                    $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
+                    sleep((int) $retryAfter);
                         }
                         else if ($e->getCode() == 404 || $e->getCode() == 500) {
                             // skip
@@ -918,13 +893,7 @@ function refreshLibrary($w, $silent = false) {
                             if ($e->getCode() == 429) { // 429 is Too Many Requests
                                 $lastResponse = $api->getRequest()
                                     ->getLastResponse();
-                                if (isset($lastResponse['headers']['Retry-After'])) {
-                                    $retryAfter = $lastResponse['headers']['Retry-After'];
-                                }
-                                else {
-                                    $retryAfter = 1;
-                                }
-                                sleep($retryAfter);
+                    $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
                             }
                             else if ($e->getCode() == 404 || $e->getCode() == 500) {
                                 // skip
@@ -1236,13 +1205,8 @@ function refreshLibrary($w, $silent = false) {
                         if ($e->getCode() == 429) { // 429 is Too Many Requests
                             $lastResponse = $api->getRequest()
                                 ->getLastResponse();
-                            if (isset($lastResponse['headers']['Retry-After'])) {
-                                $retryAfter = $lastResponse['headers']['Retry-After'];
-                            }
-                            else {
-                                $retryAfter = 1;
-                            }
-                            sleep($retryAfter);
+                    $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
+                    sleep((int) $retryAfter);
                         }
                         else if ($e->getCode() == 404) {
                             // skip
@@ -1301,13 +1265,8 @@ function refreshLibrary($w, $silent = false) {
             if ($e->getCode() == 429) { // 429 is Too Many Requests
                 $lastResponse = $api->getRequest()
                     ->getLastResponse();
-                if (isset($lastResponse['headers']['Retry-After'])) {
-                    $retryAfter = $lastResponse['headers']['Retry-After'];
-                }
-                else {
-                    $retryAfter = 1;
-                }
-                sleep($retryAfter);
+                    $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
+                    sleep((int) $retryAfter);
             }
             else if ($e->getCode() == 404) {
                 // skip
@@ -1396,13 +1355,8 @@ function refreshLibrary($w, $silent = false) {
                     if ($e->getCode() == 429) { // 429 is Too Many Requests
                         $lastResponse = $api->getRequest()
                             ->getLastResponse();
-                        if (isset($lastResponse['headers']['Retry-After'])) {
-                            $retryAfter = $lastResponse['headers']['Retry-After'];
-                        }
-                        else {
-                            $retryAfter = 1;
-                        }
-                        sleep($retryAfter);
+                            $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
+                            sleep((int) $retryAfter);
                     }
                     else if ($e->getCode() == 404) {
                         // skip
@@ -1697,13 +1651,8 @@ function refreshLibrary($w, $silent = false) {
                         if ($e->getCode() == 429) { // 429 is Too Many Requests
                             $lastResponse = $api->getRequest()
                                 ->getLastResponse();
-                            if (isset($lastResponse['headers']['Retry-After'])) {
-                                $retryAfter = $lastResponse['headers']['Retry-After'];
-                            }
-                            else {
-                                $retryAfter = 1;
-                            }
-                            sleep($retryAfter);
+                            $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
+                            sleep((int) $retryAfter);
                         }
                         else if ($e->getCode() == 404) {
                             // skip
@@ -1874,13 +1823,7 @@ function refreshLibrary($w, $silent = false) {
                             if ($e->getCode() == 429) { // 429 is Too Many Requests
                                 $lastResponse = $api->getRequest()
                                     ->getLastResponse();
-                                if (isset($lastResponse['headers']['Retry-After'])) {
-                                    $retryAfter = $lastResponse['headers']['Retry-After'];
-                                }
-                                else {
-                                    $retryAfter = 1;
-                                }
-                                sleep($retryAfter);
+                    sleep((int) $retryAfter);
                             }
                             else if ($e->getCode() == 404) {
                                 // skip

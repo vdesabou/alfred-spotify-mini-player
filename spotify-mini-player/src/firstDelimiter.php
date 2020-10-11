@@ -420,7 +420,7 @@ function firstDelimiterAlbums($w, $query, $settings, $db, $update_in_progress) {
     $noresult = true;
     foreach ($results as $track) {
         $noresult = false;
-        $nb_album_tracks = getNumberOfTracksForAlbum($db, $track[3]);
+        $nb_album_tracks = getNumberOfTracksForAlbum($update_in_progress, $w, $db, $track[3]);
         if (checkIfResultAlreadyThere($w->results(), $track[0] . ' (' . $nb_album_tracks . ' tracks)'. ' by '.$track[2]) == false) {
             $w->result(null, '',  $track[0] . ' (' . $nb_album_tracks . ' tracks)'. ' by '.$track[2], array($track[2] . ' by ' . $track[2], 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), $track[1], 'no', null, 'Album▹' . $track[3] . '∙' . $track[0] . '▹');
         }
@@ -1476,13 +1476,8 @@ function firstDelimiterSpotifyConnect($w, $query, $settings, $db, $update_in_pro
                 if ($e->getCode() == 429) { // 429 is Too Many Requests
                     $lastResponse = $api->getRequest()
                         ->getLastResponse();
-                    if (isset($lastResponse['headers']['Retry-After'])) {
-                        $retryAfter = $lastResponse['headers']['Retry-After'];
-                    }
-                    else {
-                        $retryAfter = 1;
-                    }
-                    sleep($retryAfter);
+                    $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
+                    sleep((int) $retryAfter);
                 }
                 else if ($e->getCode() == 404) {
                     $retry = false;
@@ -1640,13 +1635,8 @@ function firstDelimiterSpotifyConnectPreferredDevice($w, $query, $settings, $db,
                 if ($e->getCode() == 429) { // 429 is Too Many Requests
                     $lastResponse = $api->getRequest()
                         ->getLastResponse();
-                    if (isset($lastResponse['headers']['Retry-After'])) {
-                        $retryAfter = $lastResponse['headers']['Retry-After'];
-                    }
-                    else {
-                        $retryAfter = 1;
-                    }
-                    sleep($retryAfter);
+                        $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
+                        sleep((int) $retryAfter);
                 }
                 else if ($e->getCode() == 404) {
                     $retry = false;
