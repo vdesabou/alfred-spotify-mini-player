@@ -5,6 +5,31 @@ require_once './src/createLibrary.php';
 require_once './src/refreshLibrary.php';
 require './vendor/autoload.php';
 
+/**
+ * isTrackInYourMusic function.
+ *
+ * @param mixed $w
+ */
+function isTrackInYourMusic($w, $track_uri)
+{
+    $tracks = [
+        $track_uri,
+    ];
+    try {
+        $api = getSpotifyWebAPI($w);
+        $response = $api->myTracksContains($tracks);
+        return $response[0];
+    } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+        return false;
+    }
+}
+
+/**
+ * isUserPremiumSubscriber function.
+ *
+ * @param mixed $w
+ * @param mixed $db
+ */
 function updateCounters($w, $db) {
     try {
         $getCount = 'select count(distinct uri) from tracks';
@@ -5964,6 +5989,10 @@ function displayNotificationForCurrentTrack($w)
                 if($is_display_rating) {
                     $popularity = floatToStars($results[6]/100);
                 }
+                $liked = 'emoji_not_liked';
+                if(isTrackInYourMusic($w,$results[4])) {
+                    $liked = 'emoji_liked';
+                }
 
                 $now_playing_track_title = getenv('now_playing_track_title');
                 $now_playing_track_title  = str_replace('{duration}', beautifyTime($results[5] / 1000), $now_playing_track_title);
@@ -5971,6 +6000,7 @@ function displayNotificationForCurrentTrack($w)
                 $now_playing_track_title  = str_replace('{album_name}', escapeQuery($results[2]), $now_playing_track_title);
                 $now_playing_track_title  = str_replace('{artist_name}', escapeQuery($results[1]), $now_playing_track_title);
                 $now_playing_track_title  = str_replace('{popularity}', $popularity, $now_playing_track_title);
+                $now_playing_track_title  = str_replace('{liked}', $liked, $now_playing_track_title);
 
                 $now_playing_track_text = getenv('now_playing_track_text');
                 $now_playing_track_text  = str_replace('{duration}', beautifyTime($results[5] / 1000), $now_playing_track_text);
@@ -5978,6 +6008,7 @@ function displayNotificationForCurrentTrack($w)
                 $now_playing_track_text  = str_replace('{album_name}', escapeQuery($results[2]), $now_playing_track_text);
                 $now_playing_track_text  = str_replace('{artist_name}', escapeQuery($results[1]), $now_playing_track_text);
                 $now_playing_track_text  = str_replace('{popularity}', $popularity, $now_playing_track_text);
+                $now_playing_track_text  = str_replace('{liked}', getenv($liked), $now_playing_track_text);
 
                 displayNotificationWithArtwork($w, $now_playing_track_text, $album_artwork_path, $now_playing_track_title, true);
             }

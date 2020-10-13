@@ -12393,8 +12393,12 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 		<string>✔️</string>
 		<key>emoji_fuzzy</key>
 		<string>🌪</string>
+		<key>emoji_liked</key>
+		<string>♥</string>
 		<key>emoji_local_track</key>
 		<string>📌</string>
+		<key>emoji_not_liked</key>
+		<string>♡</string>
 		<key>emoji_not_playable</key>
 		<string>🚫</string>
 		<key>emoji_online</key>
@@ -12448,7 +12452,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 		<key>now_playing_episode_title</key>
 		<string>Now Playing ({duration})</string>
 		<key>now_playing_track_text</key>
-		<string>🔈 {track_name} by {artist_name} in album {album_name}</string>
+		<string>🔈 {liked}{track_name} by {artist_name} in album {album_name}</string>
 		<key>now_playing_track_title</key>
 		<string>Now Playing {popularity} ({duration})</string>
 		<key>previous_track_for_real</key>

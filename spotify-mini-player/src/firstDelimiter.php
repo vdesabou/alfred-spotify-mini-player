@@ -907,6 +907,10 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                     }
                 }
                 else {
+                    $liked = 'emoji_not_liked';
+                    if(isTrackInYourMusic($w,$results[4])) {
+                        $liked = 'emoji_liked';
+                    }
                     $w->result(null, serialize(array($results[4] /*track_uri*/, ''
                     /* album_uri */, ''
                     /* artist_uri */, ''
@@ -919,7 +923,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                     /* artist_artwork_path */, ''
                     /* album_artwork_path */, ''
                     /* playlist_name */, '', /* playlist_artwork_path */
-                    )), $added . escapeQuery($results[0]) . ' '.getenv('emoji_separator').' ' . escapeQuery($results[1]) . ' '.getenv('emoji_separator').' ' . escapeQuery($results[2]) . ' '.getenv('emoji_separator').' ' . $popularity . ' (' . beautifyTime($results[5] / 1000) . ')', array($subtitle, 'alt' => 'Play album ' . escapeQuery($results[2]) . ' in Spotify', 'cmd' => 'Play artist ' . escapeQuery($results[1]) . ' in Spotify', 'fn' => 'Add track ' . escapeQuery($results[0]) . ' to ...', 'shift' => 'Add album ' . escapeQuery($results[2]) . ' to ...', 'ctrl' => 'Search artist ' . escapeQuery($results[1]) . ' online',), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', array('copy' => '#NowPlaying ' . escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]) . $shared_url, 'largetype' => escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]),), '');
+                    )), $added . escapeQuery(getenv($liked).' ' . $results[0]) . ' '.getenv('emoji_separator').' ' . escapeQuery($results[1]) . ' '.getenv('emoji_separator').' ' . escapeQuery($results[2]) . ' '.getenv('emoji_separator').' ' . $popularity . ' (' . beautifyTime($results[5] / 1000) . ')', array($subtitle, 'alt' => 'Play album ' . escapeQuery($results[2]) . ' in Spotify', 'cmd' => 'Play artist ' . escapeQuery($results[1]) . ' in Spotify', 'fn' => 'Add track ' . escapeQuery($results[0]) . ' to ...', 'shift' => 'Add album ' . escapeQuery($results[2]) . ' to ...', 'ctrl' => 'Search artist ' . escapeQuery($results[1]) . ' online',), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', array('copy' => '#NowPlaying ' . escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]) . $shared_url, 'largetype' => escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]),), '');
                 }
             }
             else {
@@ -972,6 +976,10 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                     }
                 }
                 else {
+                    $liked = 'emoji_not_liked';
+                    if(isTrackInYourMusic($w,$results[4])) {
+                        $liked = 'emoji_liked';
+                    }
                     $w->result(null, serialize(array($results[4] /*track_uri*/, ''
                     /* album_uri */, ''
                     /* artist_uri */, ''
@@ -984,7 +992,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                     /* artist_artwork_path */, ''
                     /* album_artwork_path */, ''
                     /* playlist_name */, '', /* playlist_artwork_path */
-                    )), $added . escapeQuery($results[0]) . ' '.getenv('emoji_separator').' ' . escapeQuery($results[1]) . ' '.getenv('emoji_separator').' ' . escapeQuery($results[2]) . ' '.getenv('emoji_separator').' ' . $popularity . ' (' . beautifyTime($results[5] / 1000) . ')', array($subtitle, 'alt' => 'Play album ' . escapeQuery($results[2]) . ' in Spotify', 'cmd' => 'Play artist ' . escapeQuery($results[1]) . ' in Spotify', 'fn' => 'Add track ' . escapeQuery($results[0]) . ' to ...', 'shift' => 'Add album ' . escapeQuery($results[2]) . ' to ...', 'ctrl' => 'Search artist ' . escapeQuery($results[1]) . ' online',), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', array('copy' => '#NowPlaying ' . escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]) . $shared_url, 'largetype' => escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]),), '');
+                    )), $added . escapeQuery(getenv($liked).' ' . $results[0]) . ' '.getenv('emoji_separator').' ' . escapeQuery($results[1]) . ' '.getenv('emoji_separator').' ' . escapeQuery($results[2]) . ' '.getenv('emoji_separator').' ' . $popularity . ' (' . beautifyTime($results[5] / 1000) . ')', array($subtitle, 'alt' => 'Play album ' . escapeQuery($results[2]) . ' in Spotify', 'cmd' => 'Play artist ' . escapeQuery($results[1]) . ' in Spotify', 'fn' => 'Add track ' . escapeQuery($results[0]) . ' to ...', 'shift' => 'Add album ' . escapeQuery($results[2]) . ' to ...', 'ctrl' => 'Search artist ' . escapeQuery($results[1]) . ' online',), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', array('copy' => '#NowPlaying ' . escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]) . $shared_url, 'largetype' => escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]),), '');
                 }
             }
         }

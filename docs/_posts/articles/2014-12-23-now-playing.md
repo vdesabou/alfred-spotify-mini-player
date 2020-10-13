@@ -17,7 +17,7 @@ comments: true
 onhomepage : true
 ---
 
-OS X and [growl](http://growl.info) notifications are supported.
+MacOS and [growl](http://growl.info) notifications are supported.
 
 * You can enable "Now Playing" notifications (enabled by default), to get a notification every time a song changes:-
 
@@ -34,6 +34,7 @@ You get in the notification:-
   * track length
   * track popularity
   * a beautiful artwork. (only with os x notification)
+  * ♥ if track is liked, ♡ otherwise
 
 * You can disable this option at any time in Settings menu:-
 

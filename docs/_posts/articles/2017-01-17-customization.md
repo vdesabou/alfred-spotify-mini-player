@@ -90,6 +90,11 @@ But you can also use [Alfred variables](https://www.alfredapp.com/help/workflows
   * 1 for automatically refresh library
   * 0 for not automatically refresh library
 
+* You can decide to add all album tracks in your music when you add an album in Your Music (otherwise it just likes the album), by modifying variable `add_all_tracks_from_album_when_adding_to_yourmusic`:-
+
+  * 1 for adding all album tracks
+  * 0 for not not adding all album tracks
+
 * You can customize Now Playing notifications for episodes (podcasts), by modifying variables `now_playing_episode_title` for title and `now_playing_episode_text` for text. You can use those variables:-
 
   * `{episode_name}` for episode name
@@ -107,17 +112,13 @@ But you can also use [Alfred variables](https://www.alfredapp.com/help/workflows
   * `{album_name}` for album name
   * `{artist_name}` for artist name
   * `{duration}` for duration
-  * `{popularity}` for popularity ⭐
+  * `{popularity}` for popularity ⭐ (emoji can be customized, see below)
+  * `{liked}` ♥ if track is liked, ♡ otherwise (emoji can be customized, see below)
 
   Defaults are:
 
     * `now_playing_track_title`: `Now Playing {popularity} ({duration})`
     * `now_playing_track_text`: `🔈 {track_name} by {artist_name} in album {album_name}`
-
-* You can decide to add all album tracks in your music when you add an album in Your Music (otherwise it just likes the album), by modifying variable `add_all_tracks_from_album_when_adding_to_yourmusic`:-
-
-  * 1 for adding all album tracks
-  * 0 for not not adding all album tracks
 
 * You can change default emojis used in the workflow by modifying those variables:-
 
