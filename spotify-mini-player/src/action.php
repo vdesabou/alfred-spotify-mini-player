@@ -1292,6 +1292,19 @@ if ($type == 'TRACK' && $other_settings == '' &&
         stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
 
         return;
+    } elseif ($other_action == 'play_current_artist') {
+        playCurrentArtist($w);
+        stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
+
+        return;
+    } elseif ($other_action == 'follow_current_artist') {
+        followCurrentArtist($w);
+
+        return;
+    } elseif ($other_action == 'unfollow_current_artist') {
+        unfollowCurrentArtist($w);
+
+        return;
     } elseif ($other_action == 'create_similar_playlist') {
         createSimilarPlaylist($w, $playlist_name, $playlist_uri);
 

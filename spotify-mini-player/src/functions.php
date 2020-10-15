@@ -3576,6 +3576,127 @@ function displayCurrentArtistBiography($w)
 }
 
 /**
+ * followCurrentArtist function.
+ *
+ * @param mixed $w
+ */
+function followCurrentArtist($w)
+{
+
+    // Read settings from JSON
+
+    $settings = getSettings($w);
+
+    $output_application = $settings->output_application;
+    $use_artworks = $settings->use_artworks;
+
+    $results = getCurrentTrackinfo($w, $output_application);
+
+    if (is_array($results) && count($results) > 0) {
+        $tmp = explode(':', $results[4]);
+        if (isset($tmp[1]) && $tmp[1] == 'local') {
+            $artist_uri = getArtistUriFromSearch($w, $results[1]);
+        } else {
+            $artist_uri = getArtistUriFromTrack($w, $results[4]);
+        }
+        if ($artist_uri == false) {
+            displayNotificationWithArtwork($w, 'Cannot get current artist', './images/warning.png', 'Error!');
+
+            return;
+        }
+        try {
+            $api = getSpotifyWebAPI($w);
+
+            $isArtistFollowed = $api->currentUserFollows('artist', $artist_uri);
+
+
+            if (!$isArtistFollowed[0]) {
+                $ret = $api->followArtistsOrUsers('artist', $artist_uri);
+
+                if ($ret) {
+                    $artist_artwork_path = getArtistArtwork($w, $artist_uri, $results[1], false, false, false, $use_artworks);
+                    displayNotificationWithArtwork($w, 'You are now following the artist ' . $results[1], $artist_artwork_path, 'Follow');
+                }
+                else {
+                    $w->result(null, '', 'Error!', array('An error happened! try again or report to the author', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/warning.png', 'no', null, '');
+                }
+            }
+            else {
+                displayNotificationWithArtwork($w, 'You are already following artist '. $results[1], './images/warning.png', 'Error!');
+            }
+        }
+        catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
+            logMsg($w,'Error(followCurrentArtist): (exception '.jTraceEx($e).')');
+            handleSpotifyWebAPIException($w, $e);
+
+            return false;
+        }
+    } else {
+        displayNotificationWithArtwork($w, 'No artist is playing', './images/warning.png');
+    }
+}
+
+/**
+ * unfollowCurrentArtist function.
+ *
+ * @param mixed $w
+ */
+function unfollowCurrentArtist($w)
+{
+
+    // Read settings from JSON
+
+    $settings = getSettings($w);
+
+    $output_application = $settings->output_application;
+    $use_artworks = $settings->use_artworks;
+
+    $results = getCurrentTrackinfo($w, $output_application);
+
+    if (is_array($results) && count($results) > 0) {
+        $tmp = explode(':', $results[4]);
+        if (isset($tmp[1]) && $tmp[1] == 'local') {
+            $artist_uri = getArtistUriFromSearch($w, $results[1]);
+        } else {
+            $artist_uri = getArtistUriFromTrack($w, $results[4]);
+        }
+        if ($artist_uri == false) {
+            displayNotificationWithArtwork($w, 'Cannot get current artist', './images/warning.png', 'Error!');
+
+            return;
+        }
+        try {
+            $api = getSpotifyWebAPI($w);
+
+            $isArtistFollowed = $api->currentUserFollows('artist', $artist_uri);
+
+            if (!$isArtistFollowed[0]) {
+                displayNotificationWithArtwork($w, 'You are not following artist '. $results[1], './images/warning.png', 'Error!');
+            }
+            else {
+                $ret = $api->unfollowArtistsOrUsers('artist', $artist_uri);
+
+                if ($ret) {
+                    $artist_artwork_path = getArtistArtwork($w, $artist_uri, $results[1], false, false, false, $use_artworks);
+                    displayNotificationWithArtwork($w, 'You are no more following the artist ' . $results[1], $artist_artwork_path, 'Unfollow');
+                }
+                else {
+                    $w->result(null, '', 'Error!', array('An error happened! try again or report to the author', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/warning.png', 'no', null, '');
+                }
+            }
+        }
+        catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
+            logMsg($w,'Error(unfollowCurrentArtist): (exception '.jTraceEx($e).')');
+            handleSpotifyWebAPIException($w, $e);
+
+            return false;
+        }
+    } else {
+        displayNotificationWithArtwork($w, 'No artist is playing', './images/warning.png');
+    }
+}
+
+/**
  * playCurrentArtist function.
  *
  * @param mixed $w

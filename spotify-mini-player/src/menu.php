@@ -1055,6 +1055,43 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
         /* album_artwork_path */, ''
         /* playlist_name */, '', /* playlist_artwork_path */
         )), 'Play current artist', 'Play the current artist', './images/artists.png', 'yes', null, '');
+
+        $w->result('SpotifyMiniPlayer_' . 'follow_current_artist', serialize(array(''
+        /*track_uri*/, ''
+        /* album_uri */, ''
+        /* artist_uri */, ''
+        /* playlist_uri */, ''
+        /* spotify_command */, ''
+        /* query */, ''
+        /* other_settings*/, 'follow_current_artist'
+        /* other_action */, ''
+        /* artist_name */, ''
+        /* track_name */, ''
+        /* album_name */, ''
+        /* track_artwork_path */, ''
+        /* artist_artwork_path */, ''
+        /* album_artwork_path */, ''
+        /* playlist_name */, '', /* playlist_artwork_path */
+        )), 'Follow current artist', 'Follow the current artist', './images/follow.png', 'yes', null, '');
+
+        $w->result('SpotifyMiniPlayer_' . 'unfollow_current_artist', serialize(array(''
+        /*track_uri*/, ''
+        /* album_uri */, ''
+        /* artist_uri */, ''
+        /* playlist_uri */, ''
+        /* spotify_command */, ''
+        /* query */, ''
+        /* other_settings*/, 'unfollow_current_artist'
+        /* other_action */, ''
+        /* artist_name */, ''
+        /* track_name */, ''
+        /* album_name */, ''
+        /* track_artwork_path */, ''
+        /* artist_artwork_path */, ''
+        /* album_artwork_path */, ''
+        /* playlist_name */, '', /* playlist_artwork_path */
+        )), 'Unfollow current artist', 'Unfollow the current artist', './images/follow.png', 'yes', null, '');
+
         $w->result('SpotifyMiniPlayer_' . 'play_current_album', serialize(array(''
         /*track_uri*/, ''
         /* album_uri */, ''
@@ -1775,6 +1812,43 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
             /* album_artwork_path */, ''
             /* playlist_name */, '', /* playlist_artwork_path */
             )), 'Play current artist', 'Play the current artist', './images/artists.png', 'yes', null, '');
+
+            $w->result('SpotifyMiniPlayer_' . 'follow_current_artist', serialize(array(''
+            /*track_uri*/, ''
+            /* album_uri */, ''
+            /* artist_uri */, ''
+            /* playlist_uri */, ''
+            /* spotify_command */, ''
+            /* query */, ''
+            /* other_settings*/, 'follow_current_artist'
+            /* other_action */, ''
+            /* artist_name */, ''
+            /* track_name */, ''
+            /* album_name */, ''
+            /* track_artwork_path */, ''
+            /* artist_artwork_path */, ''
+            /* album_artwork_path */, ''
+            /* playlist_name */, '', /* playlist_artwork_path */
+            )), 'Follow current artist', 'Follow the current artist', './images/follow.png', 'yes', null, '');
+
+            $w->result('SpotifyMiniPlayer_' . 'unfollow_current_artist', serialize(array(''
+            /*track_uri*/, ''
+            /* album_uri */, ''
+            /* artist_uri */, ''
+            /* playlist_uri */, ''
+            /* spotify_command */, ''
+            /* query */, ''
+            /* other_settings*/, 'unfollow_current_artist'
+            /* other_action */, ''
+            /* artist_name */, ''
+            /* track_name */, ''
+            /* album_name */, ''
+            /* track_artwork_path */, ''
+            /* artist_artwork_path */, ''
+            /* album_artwork_path */, ''
+            /* playlist_name */, '', /* playlist_artwork_path */
+            )), 'Unfollow current artist', 'Unfollow the current artist', './images/follow.png', 'yes', null, '');
+
             $w->result(null, serialize(array(''
             /*track_uri*/, ''
             /* album_uri */, ''
