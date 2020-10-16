@@ -6158,7 +6158,7 @@ function displayNotificationForCurrentTrack($w)
                 $now_playing_track_title  = str_replace('{album_name}', escapeQuery($results[2]), $now_playing_track_title);
                 $now_playing_track_title  = str_replace('{artist_name}', escapeQuery($results[1]), $now_playing_track_title);
                 $now_playing_track_title  = str_replace('{popularity}', $popularity, $now_playing_track_title);
-                $now_playing_track_title  = str_replace('{liked}', $liked, $now_playing_track_title);
+                $now_playing_track_title  = str_replace('{liked}', getenv($liked), $now_playing_track_title);
 
                 $now_playing_track_text = getenv('now_playing_track_text');
                 $now_playing_track_text  = str_replace('{duration}', beautifyTime($results[5] / 1000), $now_playing_track_text);
