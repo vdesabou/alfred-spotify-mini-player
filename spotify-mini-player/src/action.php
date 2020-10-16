@@ -433,6 +433,11 @@ if ($type == 'TRACK' && $other_settings == '' &&
         }
 
         return;
+    } elseif ($setting[0] == 'SET_VOLUME') {
+        $volume = $setting[1];
+        setVolume($w, $volume);
+
+        return;
     } elseif ($setting[0] == 'AUTOMATICREFRESHLIBRARY') {
         $ret = updateSetting($w, 'automatic_refresh_library_interval', intval($setting[1]));
         if ($ret == true) {
@@ -1016,6 +1021,15 @@ if ($type == 'TRACK' && $other_settings == '' &&
             displayNotificationWithArtwork($w, 'Controlling Alfred Playlist', './images/alfred_playlist.png', 'Settings');
         } else {
             displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
+        }
+
+        return;
+    } elseif ($other_action == 'set_volume') {
+        if($type != "") {
+            // called for external trigger
+            setVolume($w, $type);
+        } else {
+            exec("osascript -e 'tell application id \"".getAlfredName()."\" to search \"".getenv('c_spot_mini').' Settings▹SetVolume▹'."\"'");
         }
 
         return;

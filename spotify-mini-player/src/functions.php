@@ -6,6 +6,43 @@ require_once './src/refreshLibrary.php';
 require './vendor/autoload.php';
 
 /**
+ * setVolume function.
+ *
+ * @param mixed $w
+ */
+function setVolume($w, $volume)
+{
+    // Read settings from JSON
+
+    $settings = getSettings($w);
+    $output_application = $settings->output_application;
+
+    if ($output_application == 'MOPIDY') {
+        invokeMopidyMethod($w, 'core.mixer.set_volume', array('volume' => $volume));
+        displayNotificationWithArtwork($w, 'Spotify volume has been set to '.$volume.'%', './images/volume_up.png', 'Set Volume');
+    } else if($output_application == 'APPLESCRIPT') {
+
+        $command_output = exec("osascript -e 'tell application \"Spotify\"
+            if it is running then
+                set theVolume to $volume
+                set sound volume to theVolume
+                return \"Spotify volume has been increased to \" & theVolume & \"%.\"
+            end if
+        end tell'");
+        displayNotificationWithArtwork($w, $command_output, './images/volume_up.png', 'Volume Up');
+    } else {
+        $device_id = getSpotifyConnectCurrentDeviceId($w);
+        if($device_id != '') {
+            changeVolumeSpotifyConnect($w, $device_id, $volume);
+            displayNotificationWithArtwork($w, 'Spotify volume has been set to '.$volume.'%', './images/volume_up.png', 'Set Volume');
+        } else {
+            displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+        }
+    }
+}
+
+
+/**
  * isTrackInYourMusic function.
  *
  * @param mixed $w

@@ -1500,6 +1500,8 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
         /* playlist_name */, '', /* playlist_artwork_path */
         )), 'Volume Down', 'Decrease Spotify Volume', './images/volume_down.png', 'yes', '');
 
+        $w->result(null, '', 'Set the volume', array('Set the volume level from 0 to 100%', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/volume_up.png', 'no', null, 'Settings▹SetVolume▹');
+
         $w->result('SpotifyMiniPlayer_' . 'volume_up', serialize(array(''
         /*track_uri*/, ''
         /* album_uri */, ''
@@ -2258,6 +2260,9 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
             /* album_artwork_path */, ''
             /* playlist_name */, '', /* playlist_artwork_path */
             )), 'Volume Down', 'Decrease Spotify Volume', './images/volume_down.png', 'yes', '');
+        }
+        if (strpos(strtolower('volume_set'), strtolower($query)) !== false) {
+            $w->result(null, '', 'Set the volume', array('Set the volume level from 0 to 100%', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/volume_up.png', 'no', null, 'Settings▹SetVolume▹');
         }
         if (strpos(strtolower('volume_up'), strtolower($query)) !== false) {
             $w->result(null, serialize(array(''
