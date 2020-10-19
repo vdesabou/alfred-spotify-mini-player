@@ -520,7 +520,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
         if ($ret == true) {
             $ret = updateSetting($w, 'alfred_playlist_name', $setting[2]);
             if ($ret == true) {
-                displayNotificationWithArtwork($w, 'Alfred Playlist set to '.$setting[2], getPlaylistArtwork($w, $setting[1], true, false, $use_artworks), 'Settings');
+                displayNotificationWithArtwork($w, getenv('emoji_alfred') . 'Alfred Playlist set to '.$setting[2], getPlaylistArtwork($w, $setting[1], true, false, $use_artworks), 'Settings');
             } else {
                 displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
             }
@@ -740,12 +740,12 @@ if ($type == 'TRACK' && $other_settings == '' &&
         return;
     } elseif ($setting[0] == 'CLEAR_ALFRED_PLAYLIST') {
         if ($setting[1] == '' || $setting[2] == '') {
-            displayNotificationWithArtwork($w, 'Alfred Playlist is not set', './images/warning.png', 'Error!');
+            displayNotificationWithArtwork($w, getenv('emoji_alfred') . 'Alfred Playlist is not set', './images/warning.png', 'Error!');
 
             return;
         }
         if (clearPlaylist($w, $setting[1], $setting[2])) {
-            displayNotificationWithArtwork($w, 'Alfred Playlist '.$setting[2].' was cleared', getPlaylistArtwork($w, $setting[1], true, false, $use_artworks), 'Clear Alfred Playlist');
+            displayNotificationWithArtwork($w, getenv('emoji_alfred') . 'Alfred Playlist '.$setting[2].' was cleared', getPlaylistArtwork($w, $setting[1], true, false, $use_artworks), 'Clear Alfred Playlist');
         }
 
         return;
@@ -2014,7 +2014,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
         if($alfred_playlist_uri != '' ) {
             exec("osascript -e 'tell application id \"".getAlfredName()."\" to search \"".getenv('c_spot_mini').' Playlist▹'.$alfred_playlist_uri.'▹'."\"'");
         } else {
-            displayNotificationWithArtwork($w, 'Alfred Playlist is not set', './images/warning.png', 'Error!');
+            displayNotificationWithArtwork($w, getenv('emoji_alfred') . 'Alfred Playlist is not set', './images/warning.png', 'Error!');
         }
 
         return;

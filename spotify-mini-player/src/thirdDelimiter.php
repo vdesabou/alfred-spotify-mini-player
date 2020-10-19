@@ -162,7 +162,7 @@ function thirdDelimiterBrowse($w, $query, $settings, $db, $update_in_progress) {
             $items = $playlists->items;
             foreach ($items as $playlist) {
                 if (mb_strlen($search) < 2 || strpos(strtolower($playlist->name), strtolower($search)) !== false) {
-                    $w->result(null, '', '🎵' . escapeQuery($playlist->name), 'by ' . $playlist
+                    $w->result(null, '', getenv('emoji_playlist') . escapeQuery($playlist->name), 'by ' . $playlist
                         ->owner->id . ' '.getenv('emoji_separator').' ' . $playlist
                         ->tracks->total . ' tracks', getPlaylistArtwork($w, $playlist->uri, false, false, $use_artworks), 'no', null, 'Online Playlist▹' . $playlist->uri . '∙' . base64_encode($playlist->name) . '▹');
                 }

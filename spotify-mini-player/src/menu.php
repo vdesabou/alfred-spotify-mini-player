@@ -392,7 +392,7 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress) {
                 $w->result(null, '', 'Browse your Alfred playlist (' . $alfred_playlist_name . ')', array('You can change the Alfred Playlist during next step', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), getPlaylistArtwork($w, $alfred_playlist_uri, false, false, $use_artworks), 'no', null, 'Playlist▹' . $alfred_playlist_uri . '▹');
             }
             else {
-                $title = 'Alfred Playlist '.getenv('emoji_separator').' not set';
+                $title = getenv('emoji_alfred') . 'Alfred Playlist '.getenv('emoji_separator').' not set';
                 $w->result(null, '', $title, array('Choose one of your playlists and add tracks, album, playlist to it directly from the workflow', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/alfred_playlist.png', 'no', null, 'Alfred Playlist▹Set Alfred Playlist▹');
             }
         }
@@ -436,7 +436,7 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress) {
     }
 
     if ($is_alfred_playlist_active == true) {
-        $alfred_playlist_state = 'Alfred Playlist';
+        $alfred_playlist_state = getenv('emoji_alfred') . 'Alfred Playlist';
     }
     else {
         $alfred_playlist_state = 'Your Music';
@@ -540,10 +540,10 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
                     /* track_artwork_path */, ''
                     /* artist_artwork_path */, ''
                     /* album_artwork_path */, $playlist[1] /* playlist_name */, $playlist[5], /* playlist_artwork_path */
-                    )), '🎵' . $added . $playlist[1] . ' by ' . $playlist[3] . ' '.getenv('emoji_separator').' ' . $playlist[7] . ' tracks '.getenv('emoji_separator').' ' . $playlist[8], array($subtitle, 'alt' => 'Not Available', 'cmd' => $cmdMsg, 'shift' => 'Add playlist ' . $playlist[1] . ' to ...', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), $playlist[5], 'yes', null, '');
+                    )), getenv('emoji_playlist') . $added . $playlist[1] . ' by ' . $playlist[3] . ' '.getenv('emoji_separator').' ' . $playlist[7] . ' tracks '.getenv('emoji_separator').' ' . $playlist[8], array($subtitle, 'alt' => 'Not Available', 'cmd' => $cmdMsg, 'shift' => 'Add playlist ' . $playlist[1] . ' to ...', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), $playlist[5], 'yes', null, '');
                 }
                 else {
-                    $w->result(null, '', '🎵' . $added . $playlist[1], array('Browse ' . $public_status . ' playlist by ' . $playlist[3] . ' '.getenv('emoji_separator').' ' . $playlist[7] . ' tracks '.getenv('emoji_separator').' ' . $playlist[8], 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), $playlist[5], 'no', null, 'Playlist▹' . $playlist[0] . '▹');
+                    $w->result(null, '', getenv('emoji_playlist') . $added . $playlist[1], array('Browse ' . $public_status . ' playlist by ' . $playlist[3] . ' '.getenv('emoji_separator').' ' . $playlist[7] . ' tracks '.getenv('emoji_separator').' ' . $playlist[8], 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), $playlist[5], 'no', null, 'Playlist▹' . $playlist[0] . '▹');
                 }
             }
         }
@@ -889,7 +889,7 @@ function searchCategoriesFastAccess($w, $query, $settings, $db, $update_in_progr
         }
     }
     if (strpos(strtolower('alfred'), strtolower($query)) !== false) {
-        $w->result(null, '', 'Alfred Playlist (currently set to <' . $alfred_playlist_name . '>)', array('Choose one of your playlists and add tracks, album, playlist to it directly from the workflow', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/alfred_playlist.png', 'no', null, 'Alfred Playlist▹Set Alfred Playlist▹');
+        $w->result(null, '', getenv('emoji_alfred') . 'Alfred Playlist (currently set to <' . $alfred_playlist_name . '>)', array('Choose one of your playlists and add tracks, album, playlist to it directly from the workflow', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/alfred_playlist.png', 'no', null, 'Alfred Playlist▹Set Alfred Playlist▹');
     }
     if (strpos(strtolower('settings'), strtolower($query)) !== false) {
         $w->result(null, '', 'Settings', array('Go to settings', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/settings.png', 'no', null, 'Settings▹');

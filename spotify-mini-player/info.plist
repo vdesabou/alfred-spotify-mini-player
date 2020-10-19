@@ -12982,6 +12982,8 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 		<string>web_search</string>
 		<key>emoji_album</key>
 		<string>💿</string>
+		<key>emoji_alfred</key>
+		<string>🎩</string>
 		<key>emoji_artist</key>
 		<string>👨‍🎤</string>
 		<key>emoji_fully_played</key>

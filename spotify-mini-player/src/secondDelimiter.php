@@ -609,7 +609,7 @@ function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progres
                 /* track_artwork_path */, ''
                 /* artist_artwork_path */, ''
                 /* album_artwork_path */, $playlist[1] /* playlist_name */, $playlist[5], /* playlist_artwork_path */
-                )), '🎵' . $added . $playlist[1] . ' by ' . $playlist[3] . ' '.getenv('emoji_separator').' ' . $playlist[7] . ' tracks '.getenv('emoji_separator').' ' . $playlist[8], array($subtitle, 'alt' => 'Not Available', 'cmd' => $cmdMsg, 'shift' => 'Add playlist ' . $playlist[1] . ' to ...', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), $playlist[5], 'yes', null, '');
+                )), getenv('emoji_playlist') . $added . $playlist[1] . ' by ' . $playlist[3] . ' '.getenv('emoji_separator').' ' . $playlist[7] . ' tracks '.getenv('emoji_separator').' ' . $playlist[8], array($subtitle, 'alt' => 'Not Available', 'cmd' => $cmdMsg, 'shift' => 'Add playlist ' . $playlist[1] . ' to ...', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), $playlist[5], 'yes', null, '');
                 if ($output_application != 'MOPIDY') {
                     $w->result(null, serialize(array(''
                     /*track_uri*/, ''
@@ -683,7 +683,7 @@ function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progres
 
             if ($theplaylisturi == $alfred_playlist_uri) {
                 if ($update_in_progress == false) {
-                    $w->result(null, '', 'Change your Alfred playlist', array('Select one of your playlists as your Alfred playlist', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/settings.png', 'no', null, 'Alfred Playlist▹Set Alfred Playlist▹');
+                    $w->result(null, '', getenv('emoji_alfred') . 'Change your Alfred playlist', array('Select one of your playlists as your Alfred playlist', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/settings.png', 'no', null, 'Alfred Playlist▹Set Alfred Playlist▹');
                 }
             }
 
@@ -722,14 +722,14 @@ function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progres
 
         if ($theplaylisturi == $alfred_playlist_uri) {
             if ($update_in_progress == false) {
-                $w->result(null, '', 'Clear your Alfred Playlist', array('This will remove all the tracks in your current Alfred Playlist', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/uncheck.png', 'no', null, 'Alfred Playlist▹Confirm Clear Alfred Playlist▹');
+                $w->result(null, '', getenv('emoji_alfred') . 'Clear your Alfred Playlist', array('This will remove all the tracks in your current Alfred Playlist', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/uncheck.png', 'no', null, 'Alfred Playlist▹Confirm Clear Alfred Playlist▹');
             }
         }
 
         // can happen only with Alfred Playlist deleted
         if ($noresultplaylist) {
             $w->result(null, 'help', 'It seems your Alfred Playlist was deleted', array('Choose option below to change it', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/warning.png', 'no', null, '');
-            $w->result(null, '', 'Change your Alfred playlist', array('Select one of your playlists below as your Alfred playlist', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/settings.png', 'no', null, 'Alfred Playlist▹Set Alfred Playlist▹');
+            $w->result(null, '', getenv('emoji_alfred') . 'Change your Alfred playlist', array('Select one of your playlists below as your Alfred playlist', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/settings.png', 'no', null, 'Alfred Playlist▹Set Alfred Playlist▹');
         }
     }
     catch(PDOException $e) {
@@ -1148,7 +1148,7 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
         /* playlist_name */, $playlist_artwork_path
         /* playlist_artwork_path */, $alfred_playlist_name,
         /* alfred_playlist_name */
-        )), '🎵' . $theplaylistname . ' '.getenv('emoji_separator').' ' . $nb_tracks . ' tracks '.getenv('emoji_separator').' ' . beautifyTime($duration_playlist / 1000, true), array($subtitle, 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Add playlist ' . $theplaylistname . ' to your Alfred Playlist', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), $playlist_artwork_path, 'yes', null, '');
+        )), getenv('emoji_playlist') . $theplaylistname . ' '.getenv('emoji_separator').' ' . $nb_tracks . ' tracks '.getenv('emoji_separator').' ' . beautifyTime($duration_playlist / 1000, true), array($subtitle, 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Add playlist ' . $theplaylistname . ' to your Alfred Playlist', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), $playlist_artwork_path, 'yes', null, '');
     }
 
     if ($output_application != 'MOPIDY') {
@@ -1981,7 +1981,7 @@ function secondDelimiterFeaturedPlaylist($w, $query, $settings, $db, $update_in_
             $w->result(null, '', $featuredPlaylists->message, array('' . $playlists->total . ' playlists available', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/info.png', 'no', null, '');
             $items = $playlists->items;
             foreach ($items as $playlist) {
-                $w->result(null, '', '🎵' . escapeQuery($playlist->name), 'by ' . $playlist
+                $w->result(null, '', getenv('emoji_playlist') . escapeQuery($playlist->name), 'by ' . $playlist
                     ->owner->id . ' '.getenv('emoji_separator').' ' . $playlist
                     ->tracks->total . ' tracks', getPlaylistArtwork($w, $playlist->uri, false, false, $use_artworks), 'no', null, 'Online Playlist▹' . $playlist->uri . '∙' . base64_encode($playlist->name) . '▹');
             }
@@ -2241,7 +2241,7 @@ function secondDelimiterAdd($w, $query, $settings, $db, $update_in_progress) {
                     /* artist_artwork_path */, ''
                     /* album_artwork_path */, $playlist_name
                     /* playlist_name */, '', /* playlist_artwork_path */
-                    )), '🎵 Alfred Playlist ' . ' '.getenv('emoji_separator').' ' . $alfred_playlist_name, 'Select the playlist to add the ' . $message, './images/alfred_playlist.png', 'yes', null, '');
+                    )), getenv('emoji_alfred') . ' Alfred Playlist ' . ' '.getenv('emoji_separator').' ' . $alfred_playlist_name, 'Select the playlist to add the ' . $message, './images/alfred_playlist.png', 'yes', null, '');
                 }
             }
 
@@ -2302,7 +2302,7 @@ function secondDelimiterAdd($w, $query, $settings, $db, $update_in_progress) {
             /* artist_artwork_path */, ''
             /* album_artwork_path */, $playlist_name
             /* playlist_name */, '', /* playlist_artwork_path */
-            )), '🎵' . $added . $playlist[1], $playlist[7] . ' tracks '.getenv('emoji_separator').' ' . $playlist[8] . ' '.getenv('emoji_separator').' Select the playlist to add the ' . $message, $playlist[5], 'yes', null, '');
+            )), getenv('emoji_playlist') . $added . $playlist[1], $playlist[7] . ' tracks '.getenv('emoji_separator').' ' . $playlist[8] . ' '.getenv('emoji_separator').' Select the playlist to add the ' . $message, $playlist[5], 'yes', null, '');
         }
     }
 }
@@ -2415,7 +2415,7 @@ function secondDelimiterRemove($w, $query, $settings, $db, $update_in_progress) 
                     /* artist_artwork_path */, ''
                     /* album_artwork_path */, ''
                     /* playlist_name */, '', /* playlist_artwork_path */
-                    )), '🎵' . $added . $playlist[1], $playlist[7] . ' tracks '.getenv('emoji_separator').' ' . $playlist[8] . ' '.getenv('emoji_separator').' Select the playlist to remove the ' . $message, $playlist[5], 'yes', null, '');
+                    )), getenv('emoji_playlist') . $added . $playlist[1], $playlist[7] . ' tracks '.getenv('emoji_separator').' ' . $playlist[8] . ' '.getenv('emoji_separator').' Select the playlist to remove the ' . $message, $playlist[5], 'yes', null, '');
                     $noresult = false;
                 }
             }
@@ -2492,7 +2492,7 @@ function secondDelimiterAlfredPlaylist($w, $query, $settings, $db, $update_in_pr
             /* artist_artwork_path */, ''
             /* album_artwork_path */, ''
             /* playlist_name */, '', /* playlist_artwork_path */
-            )), '🎵' . $added . $playlist[1], $playlist[7] . ' tracks '.getenv('emoji_separator').' ' . $playlist[8] . ' '.getenv('emoji_separator').' Select the playlist to set it as your Alfred Playlist', $playlist[5], 'yes', null, '');
+            )), getenv('emoji_playlist') . $added . $playlist[1], $playlist[7] . ' tracks '.getenv('emoji_separator').' ' . $playlist[8] . ' '.getenv('emoji_separator').' Select the playlist to set it as your Alfred Playlist', $playlist[5], 'yes', null, '');
         }
     }
     elseif ($setting_kind == 'Confirm Clear Alfred Playlist') {

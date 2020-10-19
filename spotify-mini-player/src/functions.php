@@ -3516,7 +3516,7 @@ function playAlfredPlaylist($w)
     $use_artworks = $settings->use_artworks;
 
     if ($alfred_playlist_uri == '' || $alfred_playlist_name == '') {
-        displayNotificationWithArtwork($w, 'Alfred Playlist is not set', './images/warning.png');
+        displayNotificationWithArtwork($w, getenv('emoji_alfred') . 'Alfred Playlist is not set', './images/warning.png');
 
         return;
     }
@@ -3535,7 +3535,7 @@ function playAlfredPlaylist($w)
     }
     addPlaylistToPlayQueue($w, $alfred_playlist_uri, $alfred_playlist_name);
     $playlist_artwork_path = getPlaylistArtwork($w, $alfred_playlist_uri, true, true, $use_artworks);
-    displayNotificationWithArtwork($w, getenv('emoji_playing').' '.'Alfred Playlist '.$alfred_playlist_name, $playlist_artwork_path, 'Play Alfred Playlist');
+    displayNotificationWithArtwork($w, getenv('emoji_playing').' '.getenv('emoji_alfred').'Alfred Playlist '.$alfred_playlist_name, $playlist_artwork_path, 'Play Alfred Playlist');
 }
 
 /**
@@ -3982,7 +3982,7 @@ function removeCurrentTrackFromAlfredPlaylist($w)
     if (is_array($results) && count($results) > 0) {
 
         if ($alfred_playlist_uri == '' || $alfred_playlist_name == '') {
-            displayNotificationWithArtwork($w, 'Alfred Playlist is not set', './images/warning.png');
+            displayNotificationWithArtwork($w, getenv('emoji_alfred') . 'Alfred Playlist is not set', './images/warning.png');
 
             return;
         }
@@ -4046,7 +4046,7 @@ function addCurrentTrackToAlfredPlaylist($w)
     if (is_array($results) && count($results) > 0) {
 
         if ($alfred_playlist_uri == '' || $alfred_playlist_name == '') {
-            displayNotificationWithArtwork($w, 'Alfred Playlist is not set', './images/warning.png');
+            displayNotificationWithArtwork($w, getenv('emoji_alfred') . 'Alfred Playlist is not set', './images/warning.png');
 
             return;
         }

@@ -60,7 +60,7 @@ function firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress
                 }
             }
             if (startswith($playlist[1], 'Artist radio for')) {
-                $w->result(null, '', '🎵 ' . $playlist[1], array($public_status . ' playlist by ' . $playlist[3] . ' '.getenv('emoji_separator').' ' . $playlist[7] . ' tracks '.getenv('emoji_separator').' ' . $playlist[8] . ' '.getenv('emoji_separator').' ' . $playlist[11] . ' times played', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), $playlist[5], 'no', null, 'Playlist▹' . $playlist[0] . '▹');
+                $w->result(null, '', getenv('emoji_playlist') . ' ' . $playlist[1], array($public_status . ' playlist by ' . $playlist[3] . ' '.getenv('emoji_separator').' ' . $playlist[7] . ' tracks '.getenv('emoji_separator').' ' . $playlist[8] . ' '.getenv('emoji_separator').' ' . $playlist[11] . ' times played', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), $playlist[5], 'no', null, 'Playlist▹' . $playlist[0] . '▹');
             }
         }
     }
@@ -79,7 +79,7 @@ function firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress
                 }
             }
             if (startswith($playlist[1], 'Song radio for')) {
-                $w->result(null, '', '🎵 ' . $playlist[1], array($public_status . ' playlist by ' . $playlist[3] . ' '.getenv('emoji_separator').' ' . $playlist[7] . ' tracks '.getenv('emoji_separator').' ' . $playlist[8] . ' '.getenv('emoji_separator').' ' . $playlist[11] . ' times played', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), $playlist[5], 'no', null, 'Playlist▹' . $playlist[0] . '▹');
+                $w->result(null, '', getenv('emoji_playlist') . ' ' . $playlist[1], array($public_status . ' playlist by ' . $playlist[3] . ' '.getenv('emoji_separator').' ' . $playlist[7] . ' tracks '.getenv('emoji_separator').' ' . $playlist[8] . ' '.getenv('emoji_separator').' ' . $playlist[11] . ' times played', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), $playlist[5], 'no', null, 'Playlist▹' . $playlist[0] . '▹');
             }
         }
     }
@@ -125,7 +125,7 @@ function firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress
                     $public_status = 'private';
                 }
             }
-            $w->result(null, '', '🎵' . $added . $playlist[1], array($public_status . ' playlist by ' . $playlist[3] . ' '.getenv('emoji_separator').' ' . $playlist[7] . ' tracks '.getenv('emoji_separator').' ' . $playlist[8] . ' '.getenv('emoji_separator').' ' . $playlist[11] . ' times played', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), $playlist[5], 'no', null, 'Playlist▹' . $playlist[0] . '▹');
+            $w->result(null, '', getenv('emoji_playlist') . $added . $playlist[1], array($public_status . ' playlist by ' . $playlist[3] . ' '.getenv('emoji_separator').' ' . $playlist[7] . ' tracks '.getenv('emoji_separator').' ' . $playlist[8] . ' '.getenv('emoji_separator').' ' . $playlist[11] . ' times played', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), $playlist[5], 'no', null, 'Playlist▹' . $playlist[0] . '▹');
         }
     }
 
@@ -726,7 +726,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
 
                     foreach ($results as $playlist) {
                         $noresult = false;
-                        $w->result(null, '', '🎵' . escapeQuery($playlist->name), 'by ' . $playlist
+                        $w->result(null, '', getenv('emoji_playlist') . escapeQuery($playlist->name), 'by ' . $playlist
                             ->owner->id . ' '.getenv('emoji_separator').' ' . $playlist
                             ->tracks->total . ' tracks', getPlaylistArtwork($w, $playlist->uri, false, false, $use_artworks), 'no', null, 'Online Playlist▹' . $playlist->uri . '∙' . base64_encode($playlist->name) . '▹');
                     }
@@ -1319,7 +1319,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                             if (startswith($playlist[1], 'Artist radio for')) {
                                 $added = getenv('emoji_radio').' ';
                             }
-                            if (checkIfResultAlreadyThere($w->results(), '🎵' . $added . 'In playlist ' . $playlist[1]) == false) {
+                            if (checkIfResultAlreadyThere($w->results(), getenv('emoji_playlist') . $added . 'In playlist ' . $playlist[1]) == false) {
                                 if ($playlist[9]) {
                                     $public_status = 'collaborative';
                                 }
@@ -1331,7 +1331,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                                         $public_status = 'private';
                                     }
                                 }
-                                $w->result(null, '', '🎵' . $added . 'In playlist ' . $playlist[1], array($public_status . ' playlist by ' . $playlist[3] . ' '.getenv('emoji_separator').' ' . $playlist[7] . ' tracks '.getenv('emoji_separator').' ' . $playlist[8], 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), $playlist[5], 'no', null, 'Playlist▹' . $playlist[0] . '▹');
+                                $w->result(null, '', getenv('emoji_playlist') . $added . 'In playlist ' . $playlist[1], array($public_status . ' playlist by ' . $playlist[3] . ' '.getenv('emoji_separator').' ' . $playlist[7] . ' tracks '.getenv('emoji_separator').' ' . $playlist[8], 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), $playlist[5], 'no', null, 'Playlist▹' . $playlist[0] . '▹');
                             }
                         }
                     }
