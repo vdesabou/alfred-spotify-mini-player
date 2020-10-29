@@ -733,14 +733,13 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
                 }
             }
 
-            if ($search_category == 'artist') {
+            if ($search_category == 'track') {
                 if ($search_tracks == true) {
                     // Search Tracks
                     // call to web api, if it fails,
                     // it displays an error in main window
                     $query = 'track:' . $the_query;
                     $results = searchWebApi($w, $country_code, $query, 'track', $search_tracks_limit, false);
-                    $first = true;
                     foreach ($results as $track) {
                         $noresult = false;
                         $track_artwork = getTrackOrAlbumArtwork($w, $track->uri, false, false, false, $use_artworks);
