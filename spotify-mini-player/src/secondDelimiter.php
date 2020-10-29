@@ -2496,7 +2496,7 @@ function secondDelimiterAlfredPlaylist($w, $query, $settings, $db, $update_in_pr
         }
     }
     elseif ($setting_kind == 'Confirm Clear Alfred Playlist') {
-        $w->result(null, '', 'Are you sure?', array('This will remove all the tracks in your current Alfred Playlist.', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/warning.png', 'no', null, '');
+        $w->result(null, '', '⚠️ Are you sure? ⚠️', array('❗❗This will remove all the tracks in your current Alfred Playlist, this is NOT undoable❗❗', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/warning.png', 'no', null, '');
 
         $w->result(null, '', 'No, cancel', array('Return to Alfred Playlist', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/uncheck.png', 'no', null, 'Alfred Playlist▹');
 
@@ -2515,7 +2515,7 @@ function secondDelimiterAlfredPlaylist($w, $query, $settings, $db, $update_in_pr
         /* artist_artwork_path */, ''
         /* album_artwork_path */, ''
         /* playlist_name */, '', /* playlist_artwork_path */
-        )), 'Yes, go ahead', 'This is undoable', './images/check.png', 'yes', null, '');
+        )), 'Yes, go ahead', '❗❗This is NOT undoable❗❗', './images/check.png', 'yes', null, '');
     }
 }
 
