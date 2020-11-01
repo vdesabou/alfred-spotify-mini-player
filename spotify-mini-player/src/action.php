@@ -945,6 +945,14 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
         return;
     } elseif ($other_action == 'enable_fuzzy_search') {
+        // check for quarantine and remove it if required
+        exec('/usr/bin/xattr ./fzf',$response);
+        foreach($response as $line) {
+            if (strpos($line, 'com.apple.quarantine') !== false) {
+                exec('/usr/bin/xattr -d com.apple.quarantine ./fzf',$response);
+                exit;
+            }
+        }
         $ret = updateSetting($w, 'fuzzy_search', 1);
         if ($ret == true) {
             displayNotificationWithArtwork($w, 'Fuzzy search is now enabled', './images/search.png', 'Settings');
