@@ -216,7 +216,7 @@ function refreshLibrary($w, $silent = false) {
             // refresh api
             $api = getSpotifyWebAPI($w, $api);
             $episode = $api->getEpisode($ep, array(
-                'market' => 'FR',
+                'market' => $country_code,
             ));
             $ignorePodcasts = false;
             break;
