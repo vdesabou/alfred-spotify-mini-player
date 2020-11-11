@@ -843,11 +843,12 @@ if ($type == 'TRACK' && $other_settings == '' &&
     } elseif ($other_action == 'disable_artworks') {
         $ret = updateSetting($w, 'use_artworks', 0);
         if ($ret == true) {
-            if (file_exists($w->data().'/artwork')):
-                    exec("rm -rf '".$w->data()."/artwork'");
+            killUpdate($w);
+            if (file_exists($w->data().'/artwork')) {
+                exec("rm -rf '".$w->data()."/artwork'");
+            }
             displayNotificationWithArtwork($w, 'All artworks have been erased', './images/warning.png', 'Warning!');
             createLibrary($w);
-            endif;
             displayNotificationWithArtwork($w, 'Artworks are now disabled', './images/disable_artworks.png', 'Settings');
         } else {
             displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
