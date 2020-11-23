@@ -1364,6 +1364,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
             }
         }
         if(! $isOk) {
+            logMsg($w,"Error(action): Could not open any supported browsers for authentication");
             displayNotificationWithArtwork($w, 'Could not open any supported browsers for authentication', './images/warning.png', 'Error!');
             exec('open http://alfred-spotify-mini-player.com/setup/');
 
