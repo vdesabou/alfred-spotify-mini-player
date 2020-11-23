@@ -1356,7 +1356,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
         sleep(2);
         # https://github.com/vdesabou/alfred-spotify-mini-player/issues/341
         $isOk = false;
-        foreach(array('Google Chrome', 'Firefox', 'Brave Browser', 'Google Chrome Canary', 'Chromium', 'Microsoft Edge') as $browser) {
+        foreach(array('Google Chrome', 'Firefox', 'Brave Browser', 'Google Chrome Canary', 'Chromium', 'Microsoft Edge', 'Vivaldi') as $browser) {
             exec("open -a \"$browser\" http://127.0.0.1:15298", $retArr, $retVal);
             if($retVal == 0) {
                 $isOk = true;
