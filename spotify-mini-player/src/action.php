@@ -1158,19 +1158,19 @@ if ($type == 'TRACK' && $other_settings == '' &&
             //spotify:track:7agPIlFzTpgKnqyxUVt7aM
             //https://open.spotify.com/track/7agPIlFzTpgKnqyxUVt7aM?si=Jd3E3TCERuuU6gGS5QWkFg
             $tmp = explode(':', $type);
-            if ($tmp[1] == 'track' || $tmp[1] == 'playlist' || $tmp[1] == 'artist' || $tmp[1] == 'album') {
+            if ($tmp[1] == 'track' || $tmp[1] == 'playlist' || $tmp[1] == 'artist' || $tmp[1] == 'album' || $tmp[1] == 'episode') {
                 $track_uri = $type;
             } else {
                 $tmp = explode('/', $type);
 
-                if ($tmp[3] == 'track' || $tmp[3] == 'playlist' || $tmp[3] == 'artist' || $tmp[3] == 'album') {
+                if ($tmp[3] == 'track' || $tmp[3] == 'playlist' || $tmp[3] == 'artist' || $tmp[3] == 'album' || $tmp[3] == 'episode') {
                     $tmp2 = explode('?', $tmp[4]);
                     $track_uri = "spotify:" . $tmp[3] . ":" . $tmp2[0];
                 }
             }
 
             if($track_uri == "") {
-                displayNotificationWithArtwork($w, 'Could not retrieve track/artist/playlist/album with argument <'.$type.'>', './images/warning.png', 'Error!');
+                displayNotificationWithArtwork($w, 'Could not retrieve track/artist/playlist/album/episode with argument <'.$type.'>', './images/warning.png', 'Error!');
                 return;
             }
 
