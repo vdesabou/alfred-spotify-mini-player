@@ -46,7 +46,9 @@ function createLibrary($w) {
         return false;
     }
 
-
+    if (file_exists($w->data() . '/fetch_artworks.db')) {
+        deleteTheFile($w,$w->data() . '/fetch_artworks.db');
+    }
     if (file_exists($w->data() . '/library_old.db')) {
         deleteTheFile($w,$w->data() . '/library_old.db');
     }
