@@ -33,7 +33,7 @@ You get in the notification:-
   * the artist and album name
   * track length
   * track popularity
-  * a beautiful artwork. (only with os x notification)
+  * a beautiful artwork. (only with Mac OS notifications and before Big Sur)
   * ♥ if track is liked, ♡ otherwise
 
 * You can disable this option at any time in Settings menu:-
