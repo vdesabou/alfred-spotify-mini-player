@@ -15,8 +15,6 @@ function main($argv) {
     $w = new Workflows('com.vdesabou.spotify.mini.player');
 
     $query = escapeQuery($argv[1]);
-    // thanks to http://www.alfredforum.com/topic/1788-prevent-flash-of-no-result
-    $query = iconv('UTF-8-MAC', 'UTF-8', $query);
 
     // check for library update in progress
     $update_in_progress = false;
@@ -176,7 +174,7 @@ function main($argv) {
         $query = ltrim($query, '✧');
     }
 
-    if (mb_strlen($query) < 2) {
+    if (countCharacters($query) < 2) {
         // empty history
         $w->write(array(), 'history.json');
 

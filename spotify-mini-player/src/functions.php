@@ -6,6 +6,16 @@ require_once './src/refreshLibrary.php';
 require './vendor/autoload.php';
 
 /**
+ * countCharacters function.
+ *
+ * @param mixed $str
+ */
+function countCharacters($str) {
+    // https://gist.github.com/msjyoo/7fb60026372b5bf0735ab66f484f6c17
+    return strlen(mb_convert_encoding($str, "UTF-16", "UTF-8"))/2;
+}
+
+/**
  * setVolume function.
  *
  * @param mixed $w

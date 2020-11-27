@@ -16,7 +16,7 @@ function oAuthChecks($w, $query, $settings, $update_in_progress) {
     // OAUTH checks
     // Check oauth config : Client ID and Client Secret
     if ($oauth_client_id == '' && substr_count($query, '▹') == 0) {
-        if (mb_strlen($query) == 0) {
+        if (countCharacters($query) == 0) {
             $w->result(null, '', 'Your Application Client ID is missing', array('Get it from your Spotify Application and copy/paste it here', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/settings.png', 'no', null, '');
             $w->result(null, serialize(array(''
             /*track_uri*/, ''
@@ -53,7 +53,7 @@ function oAuthChecks($w, $query, $settings, $update_in_progress) {
 
             listUsers($w);
         }
-        elseif (mb_strlen($query) != 32) {
+        elseif (countCharacters($query) != 32) {
             $w->result(null, '', 'The Application Client ID does not seem valid!', array('The length is not 32. Make sure to copy the Client ID from https://developer.spotify.com/my-applications', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/warning.png', 'no', null, '');
         }
         else {
@@ -79,7 +79,7 @@ function oAuthChecks($w, $query, $settings, $update_in_progress) {
     }
 
     if ($oauth_client_secret == '' && substr_count($query, '▹') == 0) {
-        if (mb_strlen($query) == 0) {
+        if (countCharacters($query) == 0) {
             $w->result(null, '', 'Your Application Client Secret is missing!', array('Get it from your Spotify Application and enter it here', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/settings.png', 'no', null, '');
             $w->result(null, serialize(array(''
             /*track_uri*/, ''
@@ -116,7 +116,7 @@ function oAuthChecks($w, $query, $settings, $update_in_progress) {
 
             listUsers($w);
         }
-        elseif (mb_strlen($query) != 32) {
+        elseif (countCharacters($query) != 32) {
             $w->result(null, '', 'The Application Client Secret does not seem valid!', array('The length is not 32. Make sure to copy the Client Secret from https://developer.spotify.com/my-applications', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/warning.png', 'no', null, '');
         }
         elseif ($query == $oauth_client_id) {
@@ -926,7 +926,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
         $cmd = 'Activate/Deactivate repeating in Spotify for current track';
     }
 
-    if (mb_strlen($query) < 2) {
+    if (countCharacters($query) < 2) {
         ////////
         // Fast Access to commands
         //////////////

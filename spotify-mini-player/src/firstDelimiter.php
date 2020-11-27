@@ -16,7 +16,7 @@ function firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress
     // Search playlists
     $theplaylist = $words[1];
     try {
-        if (mb_strlen($theplaylist) < 2) {
+        if (countCharacters($theplaylist) < 2) {
             if($update_in_progress && file_exists($w->data() . '/create_library')) {
                 $results = getExternalResults($w, 'playlists', array('uri','name','nb_tracks','author','username','playlist_artwork_path','ownedbyuser','nb_playable_tracks','duration_playlist','collaborative','public','nb_times_played'), 'order by nb_times_played desc');
             } else {
@@ -101,7 +101,7 @@ function firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress
             $savedPlaylists[] = $playlist;
         }
 
-        if (mb_strlen($theplaylist) < 2) {
+        if (countCharacters($theplaylist) < 2) {
             if ($nb_artist_radio_playlist > 0) {
                 $w->result(null, '', 'Browse your artist radio playlists (' . $nb_artist_radio_playlist . ' playlists)', array('Display all your artist radio playlists', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/radio_artist.png', 'no', null, 'Playlist▹Artist radio');
             }
@@ -174,7 +174,7 @@ function firstDelimiterArtists($w, $query, $settings, $db, $update_in_progress) 
     $artist = $words[1];
 
     try {
-        if (mb_strlen($artist) < 2) {
+        if (countCharacters($artist) < 2) {
             if($update_in_progress && file_exists($w->data() . '/create_library')) {
                 if ($all_playlists == false) {
                     $results = getExternalResults($w, 'followed_artists', array('name','artist_artwork_path','uri'), 'group by name' . ' limit ' . $max_results);
@@ -282,7 +282,7 @@ function firstDelimiterShows($w, $query, $settings, $db, $update_in_progress) {
     $show = $words[1];
 
     try {
-        if (mb_strlen($show) < 2) {
+        if (countCharacters($show) < 2) {
             if($update_in_progress && file_exists($w->data() . '/create_library')) {
                 $results = getExternalResults($w, 'shows', array('uri','name','description','media_type','show_artwork_path','explicit','added_at','languages','nb_times_played','is_externally_hosted', 'nb_episodes'), 'group by name' . ' limit ' . $max_results);
             } else {
@@ -367,7 +367,7 @@ function firstDelimiterAlbums($w, $query, $settings, $db, $update_in_progress) {
     // Search albums
     $album = $words[1];
     try {
-        if (mb_strlen($album) < 2) {
+        if (countCharacters($album) < 2) {
             if($update_in_progress && file_exists($w->data() . '/create_library')) {
                 if ($all_playlists == false) {
                     $results = getExternalResults($w, 'tracks', array('album_name','album_artwork_path','artist_name','album_uri','album_type'), 'group by album_name order by max(added_at) desc limit ' . $max_results, 'where yourmusic_album=1');
@@ -464,23 +464,23 @@ function firstDelimiterFeaturedPlaylist($w, $query, $settings, $db, $update_in_p
 
     $country_code = $settings->country_code;
 
-    if (mb_strlen($search) < 2 || strpos(strtolower(getCountryName($country_code)), strtolower($search)) !== false) {
+    if (countCharacters($search) < 2 || strpos(strtolower(getCountryName($country_code)), strtolower($search)) !== false) {
         $w->result(null, '', getCountryName($country_code), array('Browse the current featured playlists in ' . getCountryName($country_code), 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/star.png', 'no', null, 'Featured Playlist▹' . $country_code . '▹');
     }
 
-    if (mb_strlen($search) < 2 || strpos(strtolower(getCountryName('US')), strtolower($search)) !== false) {
+    if (countCharacters($search) < 2 || strpos(strtolower(getCountryName('US')), strtolower($search)) !== false) {
         if ($country_code != 'US') {
             $w->result(null, '', getCountryName('US'), array('Browse the current featured playlists in ' . getCountryName('US'), 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/star.png', 'no', null, 'Featured Playlist▹US▹');
         }
     }
 
-    if (mb_strlen($search) < 2 || strpos(strtolower(getCountryName('GB')), strtolower($search)) !== false) {
+    if (countCharacters($search) < 2 || strpos(strtolower(getCountryName('GB')), strtolower($search)) !== false) {
         if ($country_code != 'GB') {
             $w->result(null, '', getCountryName('GB'), array('Browse the current featured playlists in ' . getCountryName('GB'), 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/star.png', 'no', null, 'Featured Playlist▹GB▹');
         }
     }
 
-    if (mb_strlen($search) < 2 || strpos(strtolower('Choose Another country'), strtolower($search)) !== false) {
+    if (countCharacters($search) < 2 || strpos(strtolower('Choose Another country'), strtolower($search)) !== false) {
         $w->result(null, '', 'Choose Another country', array('Browse the current featured playlists in another country of your choice', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/star.png', 'no', null, 'Featured Playlist▹Choose a Country▹');
     }
 }
@@ -507,7 +507,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
     // Search online
     $the_query = $words[1] . '*';
 
-    if (mb_strlen($the_query) < 2) {
+    if (countCharacters($the_query) < 2) {
         if ($kind == 'Search Online') {
             $w->result(null, 'help', 'Search for playlists, artists, albums, shows, episodes or tracks online, i.e not in your library', array('Begin typing at least 3 characters to start search online. This is using slow Spotify API be patient.', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/info.png', 'no', null, '');
 
@@ -642,7 +642,7 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
                     foreach ($results as $episode) {
                         if (checkIfResultAlreadyThere($w->results(), $episode->name) == false) {
                             $noresult = false;
-                            if (mb_strlen($search) < 2 || strpos(strtolower($episode->name), strtolower($search)) !== false) {
+                            if (countCharacters($search) < 2 || strpos(strtolower($episode->name), strtolower($search)) !== false) {
                                 $episode_artwork_path = getEpisodeArtwork($w, $episode->uri, false, false, false, $use_artworks);
 
                                 $array_languages = array();
@@ -788,23 +788,23 @@ function firstDelimiterNewReleases($w, $query, $settings, $db, $update_in_progre
 
     $country_code = $settings->country_code;
 
-    if (mb_strlen($search) < 2 || strpos(strtolower(getCountryName($country_code)), strtolower($search)) !== false) {
+    if (countCharacters($search) < 2 || strpos(strtolower(getCountryName($country_code)), strtolower($search)) !== false) {
         $w->result(null, '', getCountryName($country_code), array('Browse the new album releases in ' . getCountryName($country_code), 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/new_releases.png', 'no', null, 'New Releases▹' . $country_code . '▹');
     }
 
-    if (mb_strlen($search) < 2 || strpos(strtolower(getCountryName('US')), strtolower($search)) !== false) {
+    if (countCharacters($search) < 2 || strpos(strtolower(getCountryName('US')), strtolower($search)) !== false) {
         if ($country_code != 'US') {
             $w->result(null, '', getCountryName('US'), array('Browse the new album releases in ' . getCountryName('US'), 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/new_releases.png', 'no', null, 'New Releases▹US▹');
         }
     }
 
-    if (mb_strlen($search) < 2 || strpos(strtolower(getCountryName('GB')), strtolower($search)) !== false) {
+    if (countCharacters($search) < 2 || strpos(strtolower(getCountryName('GB')), strtolower($search)) !== false) {
         if ($country_code != 'GB') {
             $w->result(null, '', getCountryName('GB'), array('Browse the new album releases in ' . getCountryName('GB'), 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/new_releases.png', 'no', null, 'New Releases▹GB▹');
         }
     }
 
-    if (mb_strlen($search) < 2 || strpos(strtolower('Choose Another country'), strtolower($search)) !== false) {
+    if (countCharacters($search) < 2 || strpos(strtolower('Choose Another country'), strtolower($search)) !== false) {
         $w->result(null, '', 'Choose Another country', array('Browse the new album releases in another country of your choice', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/new_releases.png', 'no', null, 'New Releases▹Choose a Country▹');
     }
 }
@@ -852,7 +852,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
         }
         $subtitle = '⌥ (play album) ⌘ (play artist) ctrl (lookup online)';
         $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
-        if (mb_strlen($input) < 2) {
+        if (countCharacters($input) < 2) {
             $popularity = '';
             if ($is_display_rating) {
                 $popularity = floatToStars($results[6] / 100);
@@ -998,7 +998,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
 
         if ($output_application == 'CONNECT') {
             $context_type = '';
-            if (mb_strlen($input) < 2) {
+            if (countCharacters($input) < 2) {
                 try {
                     $api = getSpotifyWebAPI($w);
 
@@ -1112,7 +1112,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
             return;
         }
 
-        if (mb_strlen($input) < 2 || strpos(strtolower('browse artist'), strtolower($input)) !== false) {
+        if (countCharacters($input) < 2 || strpos(strtolower('browse artist'), strtolower($input)) !== false) {
             // check if artist is in library
             $noresult = true;
             foreach ($dbresults as $track) {
@@ -1142,7 +1142,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
             }
         }
 
-        if (mb_strlen($input) < 2 || strpos(strtolower('play album'), strtolower($input)) !== false) {
+        if (countCharacters($input) < 2 || strpos(strtolower('play album'), strtolower($input)) !== false) {
 
             $album_uri = getAlbumUriFromTrack($w, $results[4]);
 
@@ -1173,11 +1173,11 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
         }
 
         // use track uri here
-        if (mb_strlen($input) < 2 || strpos(strtolower('query lookup online'), strtolower($input)) !== false) {
+        if (countCharacters($input) < 2 || strpos(strtolower('query lookup online'), strtolower($input)) !== false) {
             $w->result(null, '', getenv('emoji_album').' ' . escapeQuery($results[2]), array(getenv('emoji_online').' Query all tracks from this album online..', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/online_album.png', 'no', null, 'Online▹' . $results[4] . '@' . escapeQuery($results[1]) . '@' . $results[4] . '@' . escapeQuery($results[2]) . '▹');
         }
 
-        if (mb_strlen($input) < 2 || strpos(strtolower('get lyrics'), strtolower($input)) !== false) {
+        if (countCharacters($input) < 2 || strpos(strtolower('get lyrics'), strtolower($input)) !== false) {
             if ($always_display_lyrics_in_browser == false) {
                 $w->result(null, '', 'Get Lyrics for track ' . escapeQuery($results[0]), array('This will fetch lyrics online and display them in Alfred', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/lyrics.png', 'no', null, 'Lyrics▹' . $results[4] . '∙' . escapeQuery($results[1]) . '∙' . escapeQuery($results[0]));
             }
@@ -1203,11 +1203,11 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
         }
 
         if ($update_in_progress == false) {
-            if (mb_strlen($input) < 2 || strpos(strtolower('add'), strtolower($input)) !== false) {
+            if (countCharacters($input) < 2 || strpos(strtolower('add'), strtolower($input)) !== false) {
                 $w->result(null, '', 'Add track ' . escapeQuery($results[0]) . ' to...', array('This will add current track to Your Music or a playlist you will choose in next step', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/add.png', 'no', null, 'Add▹' . $results[4] . '∙' . escapeQuery($results[0]) . '▹');
             }
 
-            if (mb_strlen($input) < 2 || strpos(strtolower('remove'), strtolower($input)) !== false) {
+            if (countCharacters($input) < 2 || strpos(strtolower('remove'), strtolower($input)) !== false) {
                 $w->result(null, '', 'Remove track ' . escapeQuery($results[0]) . ' from...', array('This will remove current track from Your Music or a playlist you will choose in next step', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/remove.png', 'no', null, 'Remove▹' . $results[4] . '∙' . escapeQuery($results[0]) . '▹');
             }
 
@@ -1215,7 +1215,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
             if ($is_public_playlists) {
                 $privacy_status = 'public';
             }
-            if (mb_strlen($input) < 2 || strpos(strtolower('song radio'), strtolower($input)) !== false) {
+            if (countCharacters($input) < 2 || strpos(strtolower('song radio'), strtolower($input)) !== false) {
                 $w->result(null, serialize(array(''
                 /*track_uri*/, ''
                 /* album_uri */, ''
@@ -1236,7 +1236,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
             }
         }
 
-        if (mb_strlen($input) < 2 || strpos(strtolower('share'), strtolower($input)) !== false) {
+        if (countCharacters($input) < 2 || strpos(strtolower('share'), strtolower($input)) !== false) {
 
             $osx_version = exec('sw_vers -productVersion');
             if (version_compare($osx_version, '10,14', '<')) {
@@ -1260,7 +1260,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
             }
         }
 
-        if (mb_strlen($input) < 2 || strpos(strtolower('web search'), strtolower($input)) !== false) {
+        if (countCharacters($input) < 2 || strpos(strtolower('web search'), strtolower($input)) !== false) {
             $w->result(null, serialize(array(''
             /*track_uri*/, ''
             /* album_uri */, ''
@@ -1280,7 +1280,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
             )), 'Do a web search for current track or artist on Youtube, Facebook, etc.. ', array('You will be prompted to choose the web service you want to use', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/youtube.png', 'yes', null, '');
         }
 
-        if (mb_strlen($input) < 2) {
+        if (countCharacters($input) < 2) {
             if ($all_playlists == true) {
                 $getTracks = 'select playlist_uri from tracks where uri=:uri limit ' . $max_results;
                 try {
@@ -1690,7 +1690,7 @@ function firstDelimiterYourMusic($w, $query, $settings, $db, $update_in_progress
 
     $thequery = $words[1];
 
-    if (mb_strlen($thequery) < 2) {
+    if (countCharacters($thequery) < 2) {
         if($update_in_progress && file_exists($w->data() . '/create_library')) {
             $results = getExternalResults($w, 'counters', array('all_tracks','yourmusic_tracks','all_artists','yourmusic_artists','all_albums','yourmusic_albums','playlists','shows','episodes'), '', 'where id=0');
         } else {
@@ -2581,14 +2581,14 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
                 elseif ($playqueue->type == 'track') {
                     $track_name = $playqueue->name;
                 }
-                if (mb_strlen($search) < 2) {
+                if (countCharacters($search) < 2) {
                     $w->result(null, 'help', 'Playing from: ' . $playqueue->type . ' ' . $playqueue->name, array('Track ' . $current_track_index . ' on ' . count($tl_tracks) . ' tracks queued', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/play_queue.png', 'no', null, '');
                 }
             }
             $firstTime = false;
             $max_tracks_displayed = 150;
             if ($nb_tracks >= $max_tracks_displayed) {
-                if (mb_strlen($search) < 2) {
+                if (countCharacters($search) < 2) {
                     $w->result(null, 'help', '[...] ' . (count($tl_tracks) - $max_tracks_displayed) . ' additional tracks are in the queue', array('A maximum of ' . $max_tracks_displayed . ' tracks is displayed.', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/info.png', 'no', null, '');
                 }
                 break;
@@ -2630,12 +2630,12 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
 
             if (strpos($track_name, '[unplayable]') !== false) {
                 $track_name = str_replace('[unplayable]', '', $track_name);
-                if (mb_strlen($search) < 2 || strpos(strtolower($artist_name), strtolower($search)) !== false || strpos(strtolower($track_name), strtolower($search)) !== false || strpos(strtolower($album_name), strtolower($search)) !== false) {
+                if (countCharacters($search) < 2 || strpos(strtolower($artist_name), strtolower($search)) !== false || strpos(strtolower($track_name), strtolower($search)) !== false || strpos(strtolower($album_name), strtolower($search)) !== false) {
                     $w->result(null, '', getenv('emoji_not_playable').' ' . escapeQuery($artist_name) . ' '.getenv('emoji_separator').' ' . escapeQuery($track_name), array($duration . ' '.getenv('emoji_separator').' ' . $album_name, 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), $track_artwork, 'no', null, '');
                 }
             }
             else {
-                if (mb_strlen($search) < 2 || strpos(strtolower($artist_name), strtolower($search)) !== false || strpos(strtolower($track_name), strtolower($search)) !== false || strpos(strtolower($album_name), strtolower($search)) !== false) {
+                if (countCharacters($search) < 2 || strpos(strtolower($artist_name), strtolower($search)) !== false || strpos(strtolower($track_name), strtolower($search)) !== false || strpos(strtolower($album_name), strtolower($search)) !== false) {
                     $w->result(null, serialize(array($tl_track
                         ->track->uri
                     /*track_uri*/, ''
@@ -2704,7 +2704,7 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
             exit;
         }
         if (isShuffleActive(false) == 'true') {
-            if (mb_strlen($search) < 2) {
+            if (countCharacters($search) < 2) {
                 $w->result(null, 'help', 'Shuffle is enabled', array('The order of tracks presented below is not relevant', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/warning.png', 'no', null, '');
             }
         }
@@ -2726,13 +2726,13 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
                 elseif ($playqueue->type == 'track') {
                     $track_name = $playqueue->name;
                 }
-                if (mb_strlen($search) < 2) {
+                if (countCharacters($search) < 2) {
                     $w->result(null, 'help', 'Playing from: ' . $playqueue->type . ' ' . $playqueue->name, array('Track ' . ($playqueue->current_track_index + 1) . ' on ' . count($playqueue->tracks) . ' tracks queued', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/play_queue.png', 'no', null, '');
                 }
             }
             $max_tracks_displayed = 150;
             if ($nb_tracks >= $max_tracks_displayed) {
-                if (mb_strlen($search) < 2) {
+                if (countCharacters($search) < 2) {
                     $w->result(null, 'help', '[...] ' . (count($playqueue->tracks) - $max_tracks_displayed) . ' additional tracks are in the queue', array('A maximum of ' . $max_tracks_displayed . ' tracks is displayed.', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/info.png', 'no', null, '');
                 }
                 break;
@@ -2761,7 +2761,7 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
                 $duration = $track->duration;
             }
             $track_artwork = getTrackOrAlbumArtwork($w, $track->uri, false, false, false, $use_artworks);
-            if (mb_strlen($search) < 2 || strpos(strtolower($artist_name), strtolower($search)) !== false || strpos(strtolower($track_name), strtolower($search)) !== false || strpos(strtolower($album_name), strtolower($search)) !== false) {
+            if (countCharacters($search) < 2 || strpos(strtolower($artist_name), strtolower($search)) !== false || strpos(strtolower($track_name), strtolower($search)) !== false || strpos(strtolower($album_name), strtolower($search)) !== false) {
                 $w->result(null, serialize(array($track->uri
                 /*track_uri*/, ''
                 /* album_uri */, ''
@@ -2821,22 +2821,22 @@ function firstDelimiterBrowse($w, $query, $settings, $db, $update_in_progress) {
 
     $country_code = $settings->country_code;
 
-    if (mb_strlen($search) < 2 || strpos(strtolower(getCountryName($country_code)), strtolower($search)) !== false) {
+    if (countCharacters($search) < 2 || strpos(strtolower(getCountryName($country_code)), strtolower($search)) !== false) {
         $w->result(null, '', getCountryName($country_code), array('Browse the Spotify categories in ' . getCountryName($country_code), 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/browse.png', 'no', null, 'Browse▹' . $country_code . '▹');
     }
 
-    if (mb_strlen($search) < 2 || strpos(strtolower(getCountryName('US')), strtolower($search)) !== false) {
+    if (countCharacters($search) < 2 || strpos(strtolower(getCountryName('US')), strtolower($search)) !== false) {
         if ($country_code != 'US') {
             $w->result(null, '', getCountryName('US'), array('Browse the Spotify categories in ' . getCountryName('US'), 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/browse.png', 'no', null, 'Browse▹US▹');
         }
     }
 
-    if (mb_strlen($search) < 2 || strpos(strtolower(getCountryName('GB')), strtolower($search)) !== false) {
+    if (countCharacters($search) < 2 || strpos(strtolower(getCountryName('GB')), strtolower($search)) !== false) {
         if ($country_code != 'GB') {
             $w->result(null, '', getCountryName('GB'), array('Browse the Spotify categories in ' . getCountryName('GB'), 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/browse.png', 'no', null, 'Browse▹GB▹');
         }
     }
-    if (mb_strlen($search) < 2 || strpos(strtolower('Choose Another country'), strtolower($search)) !== false) {
+    if (countCharacters($search) < 2 || strpos(strtolower('Choose Another country'), strtolower($search)) !== false) {
         $w->result(null, '', 'Choose Another country', array('Browse the Spotify categories in another country of your choice', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/browse.png', 'no', null, 'Browse▹Choose a Country▹');
     }
 }
@@ -2895,7 +2895,7 @@ function firstDelimiterYourRecentTracks($w, $query, $settings, $db, $update_in_p
             $artists = $track->artists;
             $artist = $artists[0];
 
-            if (mb_strlen($search) < 2 || strpos(strtolower($track->name), strtolower($search)) !== false || strpos(strtolower($artist->name), strtolower($search)) !== false) {
+            if (countCharacters($search) < 2 || strpos(strtolower($track->name), strtolower($search)) !== false || strpos(strtolower($artist->name), strtolower($search)) !== false) {
                 $track_artwork_path = getTrackOrAlbumArtwork($w, $track->uri, false, false, false, $use_artworks);
                 $w->result(null, serialize(array($track->uri
                 /*track_uri*/, ''

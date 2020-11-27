@@ -15,7 +15,7 @@ function debug($argv) {
 
     $query = $argv[1];
 
-    if (mb_strlen($query) > 1) {
+    if (countCharacters($query) > 1) {
         if (startsWith($query, 'DB Exception')) {
             $w->result(null, '', 'DB Exception occurred: '.$query,array(
                         'Try to re-create library as explained below.',
