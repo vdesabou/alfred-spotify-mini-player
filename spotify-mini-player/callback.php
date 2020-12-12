@@ -16,83 +16,108 @@ $oauth_client_id = $settings->oauth_client_id;
 $oauth_client_secret = $settings->oauth_client_secret;
 $oauth_redirect_uri = $settings->oauth_redirect_uri;
 
-try {
-	$session = new SpotifyWebAPI\Session($oauth_client_id, $oauth_client_secret, $oauth_redirect_uri);
+$retry = true;
+$nb_retry = 0;
+while ($retry) {
+	try {
+		$session = new SpotifyWebAPI\Session($oauth_client_id, $oauth_client_secret, $oauth_redirect_uri);
 
-	if (!empty($_GET['code'])) {
+		if (!empty($_GET['code'])) {
 
-		// Request a access token using the code from Spotify
-		$ret = $session->requestAccessToken($_GET['code']);
+			// Request a access token using the code from Spotify
+			$ret = $session->requestAccessToken($_GET['code']);
 
-		if ($ret == true) {
-			$api = new SpotifyWebAPI\SpotifyWebAPI();
-			// Set the code on the API wrapper
-			$api->setAccessToken($session->getAccessToken());
-			$user = $api->me();
+			if ($ret == true) {
+				$api = new SpotifyWebAPI\SpotifyWebAPI();
+				// Set the code on the API wrapper
+				$api->setAccessToken($session->getAccessToken());
+				$user = $api->me();
 
-		    $ret = updateSetting($w,'oauth_access_token',$session->getAccessToken());
-		    if($ret == false) {
-			 	$message = "There was an error when updating settings";
-			 	exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk '{print $2}')");
-			 	return;
-		    }
-
-		    $ret = updateSetting($w,'oauth_expires',time());
-		    if($ret == false) {
-			 	$message = "There was an error when updating settings";
-			 	exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk '{print $2}')");
-			 	return;
-		    }
-
-		    $ret = updateSetting($w,'oauth_refresh_token',$session->getRefreshToken());
-		    if($ret == false) {
-			 	$message = "There was an error when updating settings";
-			 	exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk '{print $2}')");
-			 	return;
-		    }
-
-		    $ret = updateSetting($w,'country_code',$user->country);
-		    if($ret == false) {
-			 	$message = "There was an error when updating settings";
-			 	exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk '{print $2}')");
-			 	return;
-		    }
-
-		    $ret = updateSetting($w,'display_name',$user->display_name);
-		    if($ret == false) {
-			 	$message = "There was an error when updating settings";
-			 	exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk '{print $2}')");
-			 	return;
-		    }
-
-		    $ret = updateSetting($w,'userid',$user->id);
-		    if($ret == false) {
-			 	$message = "There was an error when updating settings";
-			 	exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk '{print $2}')");
-			 	return;
-			}
-
-			if (isUserPremiumSubscriber($w)) {
-				$ret = updateSetting($w,'output_application','CONNECT');
+				$ret = updateSetting($w,'oauth_access_token',$session->getAccessToken());
 				if($ret == false) {
-					 $message = "There was an error when updating settings";
-					 exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk '{print $2}')");
-					 return;
+					$retry = false;
+					$message = "There was an error when updating settings";
+					exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk '{print $2}')");
 				}
+
+				$ret = updateSetting($w,'oauth_expires',time());
+				if($ret == false) {
+					$retry = false;
+					$message = "There was an error when updating settings";
+					exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk '{print $2}')");
+				}
+
+				$ret = updateSetting($w,'oauth_refresh_token',$session->getRefreshToken());
+				if($ret == false) {
+					$retry = false;
+					$message = "There was an error when updating settings";
+					exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk '{print $2}')");
+				}
+
+				$ret = updateSetting($w,'country_code',$user->country);
+				if($ret == false) {
+					$retry = false;
+					$message = "There was an error when updating settings";
+					exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk '{print $2}')");
+				}
+
+				$ret = updateSetting($w,'display_name',$user->display_name);
+				if($ret == false) {
+					$retry = false;
+					$message = "There was an error when updating settings";
+					exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk '{print $2}')");
+				}
+
+				$ret = updateSetting($w,'userid',$user->id);
+				if($ret == false) {
+					$retry = false;
+					$message = "There was an error when updating settings";
+					exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk '{print $2}')");
+				}
+
+				if (isUserPremiumSubscriber($w)) {
+					$ret = updateSetting($w,'output_application','CONNECT');
+					if($ret == false) {
+						$retry = false;
+						$message = "There was an error when updating settings";
+						exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk '{print $2}')");
+					}
+				}
+
+				$success = true;
+
+			} else {
+				$message = "There was an error during the authentication (could not get token)";
 			}
-
-			$success = true;
-
 		} else {
-			$message = "There was an error during the authentication (could not get token)";
+			$message = "There was an error during the authentication (could not get code)";
 		}
-	} else {
-		$message = "There was an error during the authentication (could not get code)";
-	}
 
-}
-catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-	$message = "There was an error during the authentication (exception " . jTraceEx($e) . ")";
+	}
+	catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+		logMsg($w,'Error(callback.php): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
+		if ($e->getCode() == 429) { // 429 is Too Many Requests
+			$lastResponse = $api->getRequest()->getLastResponse();
+			$retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
+			sleep((int) $retryAfter);
+		} else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
+			// cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
+			// https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
+			// retry any SSL error
+			++$nb_retry;
+		} else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
+			// retry
+			if ($nb_retry > 3) {
+				$message = "There was an error during the authentication (exception " . jTraceEx($e) . ")";
+				$retry = false;
+			}
+			++$nb_retry;
+			sleep(5);
+		} else {
+			$message = "There was an error during the authentication (exception " . jTraceEx($e) . ")";
+			$retry = false;
+		}
+	}
 }
 
 exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk '{print $2}')");
