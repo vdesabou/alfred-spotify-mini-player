@@ -165,7 +165,7 @@ function debug($argv) {
                             '' /* album_artwork_path */,
                             '' /* playlist_name */,
                             '', /* playlist_artwork_path */
-    )), 'Send an email to the author with a link to generated spot_mini_debug.zip file', 'This will open your default mail application, with all needed information for troubleshooting.', './images/mail.png', 'yes', null, '');
+    )), 'Send a debug email to the author with all required information for troubleshooting', 'This will open your default mail application (and copy content into clipboard)', './images/mail.png', 'yes', null, '');
 
     $w->result(null, serialize(array(
         '' /*track_uri*/,
