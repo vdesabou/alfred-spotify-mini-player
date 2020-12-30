@@ -2615,7 +2615,7 @@ function createDebugFile($w)
 
     $output = $output."🔐 Encrypted data: I'm the only one able to decrypt your oauth_client_secret and oauth_access_token\n";
     $output = $output."I'll use it for troubleshooting, in order to be able to create and have same library as yours.\n";
-    $output = $output."After investigation is done, you can regenerate a client secret as explained here https://developer.spotify.com/my-applications.\n";
+    $output = $output."After investigation is done, you can regenerate a client secret as explained here https://developer.spotify.com/dashboard/applications.\n";
     $output = $output."----------------------------------------------\n";
     // Remove oAuth values from file that will be uploaded
     updateSetting($w, 'oauth_client_secret', 'xxx', '/tmp/spot_mini_debug/settings.json');
