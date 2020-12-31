@@ -5930,7 +5930,8 @@ function getNumberOfTracksForAlbum($update_in_progress, $w, $db, $album_uri, $yo
             $stmt->bindValue(':album_uri', ''.$album_uri.'');
             $stmt->execute();
             $results = $stmt->fetchAll();
-            $nb = $results[0];
+            $tmp = $results[0];
+            $nb = $tmp[0];
         } catch (PDOException $e) {
             return 0;
         }
@@ -5968,7 +5969,8 @@ function getNumberOfTracksForArtist($update_in_progress, $w, $db, $artist_name, 
             $stmt->bindValue(':artist_name', ''.deburr($artist_name).'');
             $stmt->execute();
             $results = $stmt->fetchAll();
-            $nb = $results[0];
+            $tmp = $results[0];
+            $nb = $tmp[0];
         } catch (PDOException $e) {
             return 0;
         }
