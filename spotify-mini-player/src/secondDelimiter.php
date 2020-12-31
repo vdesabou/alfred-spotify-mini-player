@@ -553,7 +553,7 @@ function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progres
 
     try {
         // display tracks for selected playlist
-        if($fuzzy_search || ($update_in_progress && file_exists($w->data() . '/create_library'))) {
+        if($update_in_progress && file_exists($w->data() . '/create_library')) {
             $results_playlist = getExternalResults($w, 'playlists', array('uri','name','nb_tracks','author','username','playlist_artwork_path','ownedbyuser','nb_playable_tracks','duration_playlist','collaborative','public'), '', "where uri=\"".$theplaylisturi."\"");
         } else {
             $getPlaylists = 'select uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist,collaborative,public from playlists where uri=:uri';
