@@ -21,35 +21,13 @@ Setting up the workflow is easy, you just need to follow these steps:-
 
 ## Create a Spotify Application
 
-* Create an [application on Spotify](https://developer.spotify.com/my-applications) (this is for both free and premium users)
+* Create an [application on Spotify](https://developer.spotify.com/dashboard/applications) (this is for both free and premium users)
 
-   * Click on *Create an App* :-
+   * Click on *Create an App* and set an app name and description:-
 
 <figure>
 	<a href="{{ site.url }}/images/setup1.jpg"><img src="{{ site.url }}/images/setup1.jpg"></a>
 	<figcaption>Create an app.</figcaption>
-</figure>
-
-
-  * Step 1: Set *App or Hardware Name* and *App or Hardware Description* as following, and select *Desktop App* :-
-
-<figure>
-	<a href="{{ site.url }}/images/setup7.jpg"><img src="{{ site.url }}/images/setup7.jpg"></a>
-	<figcaption>Step 1.</figcaption>
-</figure>
-
-  * Step 2: Respond with **No** :-
-
-<figure>
-	<a href="{{ site.url }}/images/setup8.jpg"><img src="{{ site.url }}/images/setup8.jpg"></a>
-	<figcaption>Step 2.</figcaption>
-</figure>
-
-  * Step 3: Tick all the boxes and click on *Submit* :-
-
-<figure>
-	<a href="{{ site.url }}/images/setup9.jpg"><img src="{{ site.url }}/images/setup9.jpg"></a>
-	<figcaption>Step 3.</figcaption>
 </figure>
 
   * On the application page, click on *Edit Settings* :-
