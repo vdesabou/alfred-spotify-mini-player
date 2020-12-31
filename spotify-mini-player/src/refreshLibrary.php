@@ -227,7 +227,7 @@ function refreshLibrary($w, $silent = false) {
     }
     if($ignorePodcasts == false) {
         if (! isset($episode->resume_point)) {
-            logMsg($w,"ERROR: the worfkflow was missing scope user-read-playback-position");
+            logMsg($w,"ERROR: the workflow was missing scope user-read-playback-position");
             updateSetting($w, 'oauth_access_token', '');
             updateSetting($w, 'oauth_refresh_token', '');
             displayNotificationWithArtwork($w, 'Relaunch the workflow to re-authenticate', './images/settings.png', 'Info');

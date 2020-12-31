@@ -70,7 +70,7 @@ function debug($argv) {
                 '' /* playlist_uri */,
                 '' /* spotify_command */,
                 '' /* query */,
-                'Open▹'.'http://alfred-spotify-mini-player.com/blog/issue-with-latest-spotify-update/' /* other_settings*/,
+                'Open▹'.'https://alfred-spotify-mini-player.com/known-issues/' /* other_settings*/,
                 '' /* other_action */,
                 '' /* artist_name */,
                 '' /* track_name */,
@@ -80,7 +80,7 @@ function debug($argv) {
                 '' /* album_artwork_path */,
                 '' /* playlist_name */,
                 '', /* playlist_artwork_path */
-            )), 'Maybe you have an issue with a Broken Spotify version?', 'Go to the article to get more information', './images/website.png', 'yes', null, '');
+            )), 'Maybe you have an issue with a broken Spotify version?', 'Go to the article to get more information', './images/website.png', 'yes', null, '');
         } elseif (startsWith($query, 'Mopidy Exception')) {
             $w->result(null, 'help', 'Mopidy execution failed!',array(
                         'Message: '.$query,
@@ -97,7 +97,7 @@ function debug($argv) {
                 '' /* playlist_uri */,
                 '' /* spotify_command */,
                 '' /* query */,
-                'Open▹'.'http://alfred-spotify-mini-player.com/articles/mopidy/' /* other_settings*/,
+                'Open▹'.'https://alfred-spotify-mini-player.com/known-issues/#mopidy/' /* other_settings*/,
                 '' /* other_action */,
                 '' /* artist_name */,
                 '' /* track_name */,
@@ -240,7 +240,7 @@ function debug($argv) {
         '' /* is_alfred_playlist_active */,
         '' /* country_code*/,
         '', /* userid*/
-    )), 'Browse to Alfred workflow folder', 'This will open the folder in Finder', 'fileicon:'.exec('pwd'), 'yes', null, '');
+    )), 'Browse to Alfred Workflow folder', 'This will open the folder in Finder', 'fileicon:'.exec('pwd'), 'yes', null, '');
 
     $w->result(null, serialize(array(
         '' /*track_uri*/,
@@ -365,7 +365,7 @@ function debug($argv) {
         '' /* is_alfred_playlist_active */,
         '' /* country_code*/,
         '', /* userid*/
-    )), 'Re-authenticate', 'This will force re-authentication, your data and settings will be kept', './images/settings.png', 'yes', null, '');
+    )), 'Re-authenticate', 'This will force re-authentication; your data and settings will be kept', './images/settings.png', 'yes', null, '');
 
     $w->result(null, serialize(array(
         '' /*track_uri*/,
@@ -390,7 +390,7 @@ function debug($argv) {
         '' /* is_alfred_playlist_active */,
         '' /* country_code*/,
         '', /* userid*/
-    )), 'Delete artwork folder', 'This will erase all existing artworks and re-download them', './images/warning.png', 'yes', null, '');
+    )), 'Delete artwork folder', 'This will erase existing album artwork and re-download them', './images/warning.png', 'yes', null, '');
 
     echo $w->tojson();
 }
