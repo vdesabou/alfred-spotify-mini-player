@@ -38,20 +38,16 @@
             <nav class="toc">
             <ul id="markdown-toc">
             <li><a href="#create-a-spotify-application" id="markdown-toc-create-a-spotify-application">Create a Spotify Application</a></li>
+            <li><a href="#save-client-id-and-secret" id="markdown-toc-save-client-id-and-secret">Save your <em>Client ID</em> and <em>Client Secret</em></a></li>
             <li><a href="#create-the-library" id="markdown-toc-create-the-library">Create the library</a></li>
             <li><a href="#notes" id="markdown-toc-notes">Notes</a></li>
-            <li><a href="#create-the-library" id="markdown-toc-create-the-library">Create the library</a></li>
+            <li><a href="#privacy" id="markdown-toc-privacy">Privacy</a></li>
             </ul>
 
             </nav>
             <p>
                 Setting up the workflow is easy, you just need to follow these steps
             </p>
-            <p>
-                If you're worried about privacy, check <a href="#privacy">this</a>.
-            </p>
-            <p class="notice-info"><strong>Note:</strong> If you already have your Spotify app set up, you can enter the
-            <em>Client ID</em> and <em>Client Secret</em> <a href="#ajax">here</a>.</p>
 <h2 id="create-a-spotify-application">Create a Spotify Application</h2>
 
 <ul>
@@ -97,6 +93,8 @@
     <a href="https://alfred-spotify-mini-player.com/images/setup12.jpg"><img src="https://alfred-spotify-mini-player.com/images/setup12.jpg" /></a>
     <figcaption>Access Client ID and Client Secret.</figcaption>
 </figure>
+
+<h2 id="save-client-id-and-secret">Save your <em>Client ID</em> and <em>Client Secret</em></h2>
 
 <div id="wrapper" class="wrapper">
 
@@ -204,7 +202,7 @@
 
 <h2 id="privacy">Privacy</h2>
             <p>
-                Alfred Spotify Mini Player writes your <em>Client ID</em> and <em>Client Secret</em> in a local settings.json file. They are never used in a way that could compromise
+                Alfred Spotify Mini Player writes your <em>Client ID</em> and <em>Client Secret</em> in a local <em>settings.json</em> file. They are never used in a way that could compromise
                 their integrity other than in the Spotify query, as required by
                 the Spotify Web API. Alfred Spotify Mini Player itself <strong>never</strong> sends the data
                 anywhere else, for any reason, at any time.

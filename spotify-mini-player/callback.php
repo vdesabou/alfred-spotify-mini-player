@@ -85,7 +85,7 @@ while ($retry) {
                 }
 
                 $success = true;
-
+                $retry = false;
             } else {
                 $message = "There was an error during the authentication (could not get token)";
             }

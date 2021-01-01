@@ -32,7 +32,8 @@ function oAuthChecks($w, $query, $settings, $update_in_progress) {
         /* artist_artwork_path */, ''
         /* album_artwork_path */, ''
         /* playlist_name */, '', /* playlist_artwork_path */
-        )), 'Setup is required', array('This will start the authentication process', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/settings.png', 'yes', null, '');
+        )), 'Launch Spotify application setup', array('Your browser will open, follow instructions there', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/settings.png', 'yes', null, '');
+        listUsers($w);
         echo $w->tojson();
         exit;
     }
