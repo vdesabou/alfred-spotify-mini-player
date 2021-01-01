@@ -105,6 +105,9 @@
                     <form id="ajax" action="client_callback.php">
                         <table>
                             <tr>
+                                <td colspan="2" id="response" class="response">Response here</td>
+                            </tr>
+                            <tr>
                                 <td align="right"><label for="ClientID">Client ID:</label></td>
                                 <td><input type="text" name="ClientID" id="ClientID" placeholder="8bba5265e1e6199op53216e03bt6aeff" required /></td>
                             </tr>
@@ -119,7 +122,7 @@
                     <div class="clear"></div>
 
         </section>
-        <p class="notice-danger"><strong>Warning:</strong> Make sure you’ve clicked <em>Save</em> button before going to next step</p>
+        <p class="notice-danger"><strong>Warning:</strong> Make sure you’ve successfully done this step ☝ before going to next step</p>
         </div>
         <ul>
         <li>

@@ -1,22 +1,3 @@
-* {
-	box-sizing: border-box;
-}
-
-*:focus {
-	-webkit-animation: bounce 0.25s 0s;
-	-moz-animation: bounce 0.25s 0s;
-	-o-animation: bounce 0.25s 0s;
-	animation: bounce 0.25s 0s;
-}
-
-*:target {
-	background: #93FF74;
-	-webkit-animation: bounce 0.25s 0s;
-	-moz-animation: bounce 0.25s 0s;
-	-o-animation: bounce 0.25s 0s;
-	animation: bounce 0.25s 0s;
-}
-
 a,
 input[type=submit] {
 	position: relative;
@@ -51,24 +32,6 @@ code, kbd {
 
 	border: .1em solid #999;
 	border-radius: .5em;
-}
-
-figure {
-	margin: 1em 0;
-	padding: 0;
-}
-
-figcaption {
-	text-align: center;
-	padding: .5em;
-
-	background: #333;
-	color: #fff;
-}
-
-img {
-	max-width: 100%;
-	border: .5em solid #333;
 }
 
 table {

@@ -61,6 +61,6 @@ updateSetting($w,'oauth_client_id',$_GET["id"]);
 updateSetting($w,'oauth_client_secret',$_GET["secret"]);
 
 $response["status"] = "success";
-$response["message"] = "Saved your information! Make sure to do step 8 :)";
+$response["message"] = "Your Client ID and Client Secret are correct! Make sure to do next step now !";
 echo json_encode($response);
 exit();
