@@ -127,8 +127,9 @@ exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk 
 <head>
 	<title>Alfred Spotify Mini Player Setup</title>
 
-	<link rel="stylesheet" href="include/setup/style/normalize.css" />
-	<link rel="stylesheet" href="include/setup/style/style.css">
+	<!-- <link rel="stylesheet" href="include/setup/style/normalize.css" />
+	<link rel="stylesheet" href="include/setup/style/style.css"> -->
+	<link rel="stylesheet" href="https://alfred-spotify-mini-player.com/css/main.css">
 </head>
 
 <body>
