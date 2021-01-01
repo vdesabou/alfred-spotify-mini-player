@@ -60,7 +60,7 @@ if ($other_action != 'reset_settings' && $other_action != 'spot_mini_debug' && $
             return;
         }
 
-        if ($other_action != '' && $other_action != 'Oauth_Login' &&
+        if ($other_action != '' && $other_action != 'app_setup' && $other_action != 'oauth_login' &&
             !startsWith($other_action, 'current')) {
             exec("osascript -e 'tell application id \"".getAlfredName()."\" to search \"".getenv('c_spot_mini')." \"'");
 
@@ -492,24 +492,6 @@ if ($type == 'TRACK' && $other_settings == '' &&
         $ret = updateSetting($w, 'mopidy_port', $setting[1]);
         if ($ret == true) {
             displayNotificationWithArtwork($w, 'Mopidy TCP port set to '.$setting[1], './images/settings.png', 'Settings');
-        } else {
-            displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
-        }
-
-        return;
-    } elseif ($setting[0] == 'Oauth_Client_ID') {
-        $ret = updateSetting($w, 'oauth_client_id', $setting[1]);
-        if ($ret == true) {
-            displayNotificationWithArtwork($w, "Client ID set to $setting[1]", './images/settings.png', 'Settings');
-        } else {
-            displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
-        }
-
-        return;
-    } elseif ($setting[0] == 'Oauth_Client_SECRET') {
-        $ret = updateSetting($w, 'oauth_client_secret', $setting[1]);
-        if ($ret == true) {
-            displayNotificationWithArtwork($w, "Client Secret set to $setting[1]", './images/settings.png', 'Settings');
         } else {
             displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
         }
@@ -1340,7 +1322,38 @@ if ($type == 'TRACK' && $other_settings == '' &&
         endif;
 
         return;
-    } elseif ($other_action == 'Oauth_Login') {
+    } elseif ($other_action == 'app_setup') {
+        // check PHP version
+        $version = explode('.', phpversion());
+        if ($version[0] < 5 && $version[1] < 4) {
+            displayNotificationWithArtwork($w, 'PHP 5.4.0 or later is required for authentication', './images/warning.png', 'Error!');
+            exec('open http://alfred-spotify-mini-player.com/known-issues/#php_requirement');
+
+            return;
+        }
+        exec("kill -9 $(ps -efx | grep \"php\" | egrep \"php -S 127.0.0.1:15298\" | grep -v grep | awk '{print $2}')");
+        sleep(1);
+        $cache_log = $w->cache().'/spotify_mini_player_web_server.log';
+        exec("php -S 127.0.0.1:15298 > \"$cache_log\" 2>&1 &");
+        sleep(2);
+        # https://github.com/vdesabou/alfred-spotify-mini-player/issues/341
+        $isOk = false;
+        foreach(array('Google Chrome', 'Firefox', 'Brave Browser', 'Google Chrome Canary', 'Chromium', 'Microsoft Edge', 'Vivaldi') as $browser) {
+            exec("open -a \"$browser\" http://127.0.0.1:15298/setup.php", $retArr, $retVal);
+            if($retVal == 0) {
+                $isOk = true;
+                break;
+            }
+        }
+        if(! $isOk) {
+            logMsg($w,"Error(app_setup): Could not open any supported browsers for authentication");
+            displayNotificationWithArtwork($w, 'Could not open any supported browsers for authentication', './images/warning.png', 'Error!');
+            exec('open http://alfred-spotify-mini-player.com/setup/');
+
+            return;
+        }
+        return;
+    } elseif ($other_action == 'oauth_login') {
         // check PHP version
         $version = explode('.', phpversion());
         if ($version[0] < 5 && $version[1] < 4) {

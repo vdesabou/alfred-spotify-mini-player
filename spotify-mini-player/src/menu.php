@@ -15,131 +15,25 @@ function oAuthChecks($w, $query, $settings, $update_in_progress) {
     ////
     // OAUTH checks
     // Check oauth config : Client ID and Client Secret
-    if ($oauth_client_id == '' && substr_count($query, '▹') == 0) {
-        if (countCharacters($query) == 0) {
-            $w->result(null, '', 'Your Application Client ID is missing', array('Get it from your Spotify Application and copy/paste it here', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/settings.png', 'no', null, '');
-            $w->result(null, serialize(array(''
-            /*track_uri*/, ''
-            /* album_uri */, ''
-            /* artist_uri */, ''
-            /* playlist_uri */, ''
-            /* spotify_command */, ''
-            /* query */, 'Open▹' . 'https://developer.spotify.com/my-applications/#!/applications' /* other_settings*/, ''
-            /* other_action */, ''
-            /* artist_name */, ''
-            /* track_name */, ''
-            /* album_name */, ''
-            /* track_artwork_path */, ''
-            /* artist_artwork_path */, ''
-            /* album_artwork_path */, ''
-            /* playlist_name */, '', /* playlist_artwork_path */
-            )), 'Open Spotify Application page to get required information', 'This will open the Application page with your default browser', './images/spotify.png', 'yes', null, '');
-            $w->result(null, serialize(array(''
-            /*track_uri*/, ''
-            /* album_uri */, ''
-            /* artist_uri */, ''
-            /* playlist_uri */, ''
-            /* spotify_command */, ''
-            /* query */, 'Open▹' . 'http://alfred-spotify-mini-player.com/setup/' /* other_settings*/, ''
-            /* other_action */, ''
-            /* artist_name */, ''
-            /* track_name */, ''
-            /* album_name */, ''
-            /* track_artwork_path */, ''
-            /* artist_artwork_path */, ''
-            /* album_artwork_path */, ''
-            /* playlist_name */, '', /* playlist_artwork_path */
-            )), 'Go to the website alfred-spotify-mini-player.com to see setup tutorial', 'This will open the Application page with your default browser', './images/website.png', 'yes', null, '');
-
-            listUsers($w);
-        }
-        elseif (countCharacters($query) != 32) {
-            $w->result(null, '', 'The Application Client ID does not seem valid!', array('The length is not 32. Make sure to copy the Client ID from https://developer.spotify.com/my-applications', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/warning.png', 'no', null, '');
-        }
-        else {
-            $w->result(null, serialize(array(''
-            /*track_uri*/, ''
-            /* album_uri */, ''
-            /* artist_uri */, ''
-            /* playlist_uri */, ''
-            /* spotify_command */, ''
-            /* query */, 'Oauth_Client_ID▹' . rtrim(ltrim($query)) /* other_settings*/, ''
-            /* other_action */, ''
-            /* artist_name */, ''
-            /* track_name */, ''
-            /* album_name */, ''
-            /* track_artwork_path */, ''
-            /* artist_artwork_path */, ''
-            /* album_artwork_path */, ''
-            /* playlist_name */, '', /* playlist_artwork_path */
-            )), 'Application Client ID will be set to <' . rtrim(ltrim($query)) . '>', 'Type enter to validate the Application Client ID', './images/settings.png', 'yes', null, '');
-        }
-        echo $w->tojson();
-        exit;
-    }
-
-    if ($oauth_client_secret == '' && substr_count($query, '▹') == 0) {
-        if (countCharacters($query) == 0) {
-            $w->result(null, '', 'Your Application Client Secret is missing!', array('Get it from your Spotify Application and enter it here', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/settings.png', 'no', null, '');
-            $w->result(null, serialize(array(''
-            /*track_uri*/, ''
-            /* album_uri */, ''
-            /* artist_uri */, ''
-            /* playlist_uri */, ''
-            /* spotify_command */, ''
-            /* query */, 'Open▹' . 'https://developer.spotify.com/my-applications/#!/applications' /* other_settings*/, ''
-            /* other_action */, ''
-            /* artist_name */, ''
-            /* track_name */, ''
-            /* album_name */, ''
-            /* track_artwork_path */, ''
-            /* artist_artwork_path */, ''
-            /* album_artwork_path */, ''
-            /* playlist_name */, '', /* playlist_artwork_path */
-            )), 'Open Spotify Application page to get required information', 'This will open the Application page with your default browser', './images/spotify.png', 'yes', null, '');
-            $w->result(null, serialize(array(''
-            /*track_uri*/, ''
-            /* album_uri */, ''
-            /* artist_uri */, ''
-            /* playlist_uri */, ''
-            /* spotify_command */, ''
-            /* query */, 'Open▹' . 'http://alfred-spotify-mini-player.com/setup/' /* other_settings*/, ''
-            /* other_action */, ''
-            /* artist_name */, ''
-            /* track_name */, ''
-            /* album_name */, ''
-            /* track_artwork_path */, ''
-            /* artist_artwork_path */, ''
-            /* album_artwork_path */, ''
-            /* playlist_name */, '', /* playlist_artwork_path */
-            )), 'Go to the website alfred-spotify-mini-player.com to see setup tutorial', 'This will open the Application page with your default browser', './images/website.png', 'yes', null, '');
-
-            listUsers($w);
-        }
-        elseif (countCharacters($query) != 32) {
-            $w->result(null, '', 'The Application Client Secret does not seem valid!', array('The length is not 32. Make sure to copy the Client Secret from https://developer.spotify.com/my-applications', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/warning.png', 'no', null, '');
-        }
-        elseif ($query == $oauth_client_id) {
-            $w->result(null, '', 'The Application Client Secret entered is the same as Application Client ID, this is wrong!', array('Make sure to copy the Client Secret from https://developer.spotify.com/my-applications', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/warning.png', 'no', null, '');
-        }
-        else {
-            $w->result(null, serialize(array(''
-            /*track_uri*/, ''
-            /* album_uri */, ''
-            /* artist_uri */, ''
-            /* playlist_uri */, ''
-            /* spotify_command */, ''
-            /* query */, 'Oauth_Client_SECRET▹' . rtrim(ltrim($query)) /* other_settings*/, ''
-            /* other_action */, ''
-            /* artist_name */, ''
-            /* track_name */, ''
-            /* album_name */, ''
-            /* track_artwork_path */, ''
-            /* artist_artwork_path */, ''
-            /* album_artwork_path */, ''
-            /* playlist_name */, '', /* playlist_artwork_path */
-            )), 'Application Client Secret will be set to <' . rtrim(ltrim($query)) . '>', 'Type enter to validate the Application Client Secret', './images/settings.png', 'yes', null, '');
-        }
+    if (($oauth_client_id == '' || $oauth_client_secret == '') && substr_count($query, '▹') == 0) {
+        $w->result(null, serialize(array(''
+        /*track_uri*/, ''
+        /* album_uri */, ''
+        /* artist_uri */, ''
+        /* playlist_uri */, ''
+        /* spotify_command */, ''
+        /* query */, ''
+        /* other_settings*/, 'app_setup'
+        /* other_action */, ''
+        /* artist_name */, ''
+        /* track_name */, ''
+        /* album_name */, ''
+        /* track_artwork_path */, ''
+        /* artist_artwork_path */, ''
+        /* album_artwork_path */, ''
+        /* playlist_name */, '', /* playlist_artwork_path */
+        )), 'Launch Spotify application setup', array('Your browser will open, follow instructions there', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/settings.png', 'yes', null, '');
+        listUsers($w);
         echo $w->tojson();
         exit;
     }
@@ -152,7 +46,7 @@ function oAuthChecks($w, $query, $settings, $update_in_progress) {
         /* playlist_uri */, ''
         /* spotify_command */, ''
         /* query */, ''
-        /* other_settings*/, 'Oauth_Login'
+        /* other_settings*/, 'oauth_login'
         /* other_action */, ''
         /* artist_name */, ''
         /* track_name */, ''
