@@ -1336,21 +1336,28 @@ if ($type == 'TRACK' && $other_settings == '' &&
         $cache_log = $w->cache().'/spotify_mini_player_web_server.log';
         exec("php -S 127.0.0.1:15298 > \"$cache_log\" 2>&1 &");
         sleep(2);
-        # https://github.com/vdesabou/alfred-spotify-mini-player/issues/341
-        $isOk = false;
-        foreach(array('Google Chrome', 'Firefox', 'Brave Browser', 'Google Chrome Canary', 'Chromium', 'Microsoft Edge', 'Vivaldi') as $browser) {
-            exec("open -a \"$browser\" http://127.0.0.1:15298/setup.php", $retArr, $retVal);
-            if($retVal == 0) {
-                $isOk = true;
-                break;
+        // https://github.com/vdesabou/alfred-spotify-mini-player/issues/447
+        exec('./src/is_safari_default_browser.ksh 2>&1', $retArr, $retVal);
+        if ($retArr[0] != 0) {
+            // https://github.com/vdesabou/alfred-spotify-mini-player/issues/341
+            $isOk = false;
+            foreach(array('Google Chrome', 'Firefox', 'Brave Browser', 'Google Chrome Canary', 'Chromium', 'Microsoft Edge', 'Vivaldi') as $browser) {
+                exec("open -a \"$browser\" http://127.0.0.1:15298/setup.php", $retArr, $retVal);
+                if($retVal == 0) {
+                    $isOk = true;
+                    break;
+                }
             }
-        }
-        if(! $isOk) {
-            logMsg($w,"Error(app_setup): Could not open any supported browsers for authentication");
-            displayNotificationWithArtwork($w, 'Could not open any supported browsers for authentication', './images/warning.png', 'Error!');
-            exec('open http://alfred-spotify-mini-player.com/setup/');
+            if(! $isOk) {
+                logMsg($w,"Error(app_setup): Could not open any supported browsers for authentication");
+                displayNotificationWithArtwork($w, 'Could not open any supported browsers for authentication', './images/warning.png', 'Error!');
+                exec('open http://alfred-spotify-mini-player.com/setup/');
 
-            return;
+                return;
+            }
+        } else {
+            // open default browser
+            exec("open http://127.0.0.1:15298/setup.php");
         }
         return;
     } elseif ($other_action == 'oauth_login') {
@@ -1367,21 +1374,28 @@ if ($type == 'TRACK' && $other_settings == '' &&
         $cache_log = $w->cache().'/spotify_mini_player_web_server.log';
         exec("php -S 127.0.0.1:15298 > \"$cache_log\" 2>&1 &");
         sleep(2);
-        # https://github.com/vdesabou/alfred-spotify-mini-player/issues/341
-        $isOk = false;
-        foreach(array('Google Chrome', 'Firefox', 'Brave Browser', 'Google Chrome Canary', 'Chromium', 'Microsoft Edge', 'Vivaldi') as $browser) {
-            exec("open -a \"$browser\" http://127.0.0.1:15298", $retArr, $retVal);
-            if($retVal == 0) {
-                $isOk = true;
-                break;
+        // https://github.com/vdesabou/alfred-spotify-mini-player/issues/447
+        exec('./src/is_safari_default_browser.ksh 2>&1', $retArr, $retVal);
+        if ($retArr[0] != 0) {
+            // https://github.com/vdesabou/alfred-spotify-mini-player/issues/341
+            $isOk = false;
+            foreach(array('Google Chrome', 'Firefox', 'Brave Browser', 'Google Chrome Canary', 'Chromium', 'Microsoft Edge', 'Vivaldi') as $browser) {
+                exec("open -a \"$browser\" http://127.0.0.1:15298", $retArr, $retVal);
+                if($retVal == 0) {
+                    $isOk = true;
+                    break;
+                }
             }
-        }
-        if(! $isOk) {
-            logMsg($w,"Error(action): Could not open any supported browsers for authentication");
-            displayNotificationWithArtwork($w, 'Could not open any supported browsers for authentication', './images/warning.png', 'Error!');
-            exec('open http://alfred-spotify-mini-player.com/setup/');
+            if(! $isOk) {
+                logMsg($w,"Error(action): Could not open any supported browsers for authentication");
+                displayNotificationWithArtwork($w, 'Could not open any supported browsers for authentication', './images/warning.png', 'Error!');
+                exec('open https://github.com/vdesabou/alfred-spotify-mini-player/issues/447');
 
-            return;
+                return;
+            }
+        } else {
+            // open default browser
+            exec("open http://127.0.0.1:15298");
         }
         return;
     } elseif ($other_action == 'current') {

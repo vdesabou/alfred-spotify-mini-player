@@ -23,7 +23,7 @@ This is the list of current known issues:
 
 * **Wappalyzer** browser extension interfere with authentication process: make sure to disable it during time of authentication.
 
-* Safari [does not work](https://github.com/vdesabou/alfred-spotify-mini-player/issues/341) with authentication, the workflow will try to launch Google Chrome, Firefox, Brave or Chromium instead.
+* Safari [does not work](https://github.com/vdesabou/alfred-spotify-mini-player/issues/341) with authentication, if it is default on your system, the workflow will try to launch (in this order) Google Chrome, Firefox, Brave, Chromium, Microsoft Edge or Vivaldi instead.
 
 
 ## Spotify WEB API limitations
