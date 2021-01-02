@@ -126,3 +126,22 @@ But you can also use [Alfred variables](https://www.alfredapp.com/help/workflows
 	<img src="{{ site.url }}/images/customization10.jpg">
 	<figcaption>Change default emojis used in workflow.</figcaption>
 </figure>
+
+* You can customize text copied in clipboard in current track section for episodes (podcasts), by modifying variable `clipboard_current_track_episode_text`. You can use those variables:-
+
+  * `{episode_name}` for episode name
+  * `{url}` for spotify url
+
+  Defaults are:
+
+    * `clipboard_current_track_episode_text`: `#NowPlaying {episode_name} {url}`
+
+* You can customize text copied in clipboard in current track section for tracks, by modifying variable `clipboard_current_track_track_text`. You can use those variables:-
+
+  * `{track_name}` for track name
+  * `{artist_name}` for artist name
+  * `{url}` for spotify url
+
+  Defaults are:
+
+    * `clipboard_current_track_track_text`: `#NowPlaying {track_name} by {artist_name} {url}`

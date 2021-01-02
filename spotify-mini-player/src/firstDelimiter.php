@@ -869,6 +869,9 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                             }
                             $array_languages[] = $iso->languageByCode1($language);
                         }
+                        $clipboard_current_track_episode_text = getenv('clipboard_current_track_episode_text');
+                        $clipboard_current_track_episode_text  = str_replace('{episode_name}', escapeQuery($episode->name), $clipboard_current_track_episode_text);
+                        $clipboard_current_track_episode_text  = str_replace('{url}', $shared_url, $clipboard_current_track_episode_text);
                         $w->result(null, serialize(array($episode->uri
                         /*track_uri*/, $episode->uri
                         /* album_uri */, ''
@@ -885,10 +888,13 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                         /* playlist_name */, '', /* playlist_artwork_path */
                         )), $episode->name, array($episode->episode_type . 'Progress: ' . floatToCircles(intval($episode
                             ->resume_point
-                            ->resume_position_ms) / intval($episode->duration_ms)) . ' Duration ' . beautifyTime($episode->duration_ms / 1000) . ' '.getenv('emoji_separator').' Release date: ' . $episode->release_date . ' '.getenv('emoji_separator').' Languages: ' . implode(',', $array_languages), 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', 'yes', null, '');
+                            ->resume_position_ms) / intval($episode->duration_ms)) . ' Duration ' . beautifyTime($episode->duration_ms / 1000) . ' '.getenv('emoji_separator').' Release date: ' . $episode->release_date . ' '.getenv('emoji_separator').' Languages: ' . implode(',', $array_languages), 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', array('copy' => $clipboard_current_track_episode_text, 'largetype' => escapeQuery($episode->name)), '');
 
                     }
                     else {
+                        $clipboard_current_track_episode_text = getenv('clipboard_current_track_episode_text');
+                        $clipboard_current_track_episode_text  = str_replace('{episode_name}', escapeQuery($results[0]), $clipboard_current_track_episode_text);
+                        $clipboard_current_track_episode_text  = str_replace('{url}', $shared_url, $clipboard_current_track_episode_text);
                         $isEpisode = true;
                         $w->result(null, serialize(array($results[4] /*track_uri*/, ''
                         /* album_uri */, ''
@@ -902,10 +908,14 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                         /* artist_artwork_path */, ''
                         /* album_artwork_path */, ''
                         /* playlist_name */, '', /* playlist_artwork_path */
-                        )), $added . escapeQuery($results[0]), array(escapeQuery($results[1]) . ' '.getenv('emoji_separator').' ' . escapeQuery($results[2]) . ' '.getenv('emoji_separator').' ' . ' (' . beautifyTime($results[5] / 1000) . ')', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', array('copy' => '#NowPlaying ' . escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]) . $shared_url, 'largetype' => escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]),), '');
+                        )), $added . escapeQuery($results[0]), array(escapeQuery($results[1]) . ' '.getenv('emoji_separator').' ' . escapeQuery($results[2]) . ' '.getenv('emoji_separator').' ' . ' (' . beautifyTime($results[5] / 1000) . ')', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', array('copy' => $clipboard_current_track_episode_text, 'largetype' => escapeQuery($results[0])), '');
                     }
                 }
                 else {
+                    $clipboard_current_track_track_text = getenv('clipboard_current_track_track_text');
+                    $clipboard_current_track_track_text  = str_replace('{track_name}', escapeQuery($results[0]), $clipboard_current_track_track_text);
+                    $clipboard_current_track_track_text  = str_replace('{artist_name}', escapeQuery($results[1]), $clipboard_current_track_track_text);
+                    $clipboard_current_track_track_text  = str_replace('{url}', $shared_url, $clipboard_current_track_track_text);
                     $liked = 'emoji_not_liked';
                     if(isTrackInYourMusic($w,$results[4])) {
                         $liked = 'emoji_liked';
@@ -922,7 +932,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                     /* artist_artwork_path */, ''
                     /* album_artwork_path */, ''
                     /* playlist_name */, '', /* playlist_artwork_path */
-                    )), $added . escapeQuery(getenv($liked).' ' . $results[0]) . ' '.getenv('emoji_separator').' ' . escapeQuery($results[1]) . ' '.getenv('emoji_separator').' ' . escapeQuery($results[2]) . ' '.getenv('emoji_separator').' ' . $popularity . ' (' . beautifyTime($results[5] / 1000) . ')', array($subtitle, 'alt' => 'Play album ' . escapeQuery($results[2]) . ' in Spotify', 'cmd' => 'Play artist ' . escapeQuery($results[1]) . ' in Spotify', 'fn' => 'Add track ' . escapeQuery($results[0]) . ' to ...', 'shift' => 'Add album ' . escapeQuery($results[2]) . ' to ...', 'ctrl' => 'Search artist ' . escapeQuery($results[1]) . ' online',), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', array('copy' => '#NowPlaying ' . escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]) . $shared_url, 'largetype' => escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]),), '');
+                    )), $added . escapeQuery(getenv($liked).' ' . $results[0]) . ' '.getenv('emoji_separator').' ' . escapeQuery($results[1]) . ' '.getenv('emoji_separator').' ' . escapeQuery($results[2]) . ' '.getenv('emoji_separator').' ' . $popularity . ' (' . beautifyTime($results[5] / 1000) . ')', array($subtitle, 'alt' => 'Play album ' . escapeQuery($results[2]) . ' in Spotify', 'cmd' => 'Play artist ' . escapeQuery($results[1]) . ' in Spotify', 'fn' => 'Add track ' . escapeQuery($results[0]) . ' to ...', 'shift' => 'Add album ' . escapeQuery($results[2]) . ' to ...', 'ctrl' => 'Search artist ' . escapeQuery($results[1]) . ' online',), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', array('copy' => $clipboard_current_track_track_text . $shared_url, 'largetype' => escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]),), '');
                 }
             }
             else {
@@ -938,6 +948,9 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                             }
                             $array_languages[] = $iso->languageByCode1($language);
                         }
+                        $clipboard_current_track_episode_text = getenv('clipboard_current_track_episode_text');
+                        $clipboard_current_track_episode_text  = str_replace('{episode_name}', escapeQuery($episode->name), $clipboard_current_track_episode_text);
+                        $clipboard_current_track_episode_text  = str_replace('{url}', $shared_url, $clipboard_current_track_episode_text);
                         $w->result(null, serialize(array($episode->uri
                         /*track_uri*/, $episode->uri
                         /* album_uri */, ''
@@ -954,10 +967,13 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                         /* playlist_name */, '', /* playlist_artwork_path */
                         )), $episode->name, array($episode->episode_type . 'Progress: ' . floatToCircles(intval($episode
                             ->resume_point
-                            ->resume_position_ms) / intval($episode->duration_ms)) . ' Duration ' . beautifyTime($episode->duration_ms / 1000) . ' '.getenv('emoji_separator').' Release date: ' . $episode->release_date . ' '.getenv('emoji_separator').' Languages: ' . implode(',', $array_languages), 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', 'yes', null, '');
+                            ->resume_position_ms) / intval($episode->duration_ms)) . ' Duration ' . beautifyTime($episode->duration_ms / 1000) . ' '.getenv('emoji_separator').' Release date: ' . $episode->release_date . ' '.getenv('emoji_separator').' Languages: ' . implode(',', $array_languages), 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', array('copy' => $clipboard_current_track_episode_text, 'largetype' => escapeQuery($episode->name)), '');
 
                     }
                     else {
+                        $clipboard_current_track_episode_text = getenv('clipboard_current_track_episode_text');
+                        $clipboard_current_track_episode_text  = str_replace('{episode_name}', escapeQuery($results[0]), $clipboard_current_track_episode_text);
+                        $clipboard_current_track_episode_text  = str_replace('{url}', $shared_url, $clipboard_current_track_episode_text);
                         $isEpisode = true;
                         $w->result(null, serialize(array($results[4] /*track_uri*/, ''
                         /* album_uri */, ''
@@ -971,10 +987,14 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                         /* artist_artwork_path */, ''
                         /* album_artwork_path */, ''
                         /* playlist_name */, '', /* playlist_artwork_path */
-                        )), $added . escapeQuery($results[0]), array(escapeQuery($results[1]) . ' '.getenv('emoji_separator').' ' . escapeQuery($results[2]) . ' '.getenv('emoji_separator').' ' . ' (' . beautifyTime($results[5] / 1000) . ')', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', array('copy' => '#NowPlaying ' . escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]) . $shared_url, 'largetype' => escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]),), '');
+                        )), $added . escapeQuery($results[0]), array(escapeQuery($results[1]) . ' '.getenv('emoji_separator').' ' . escapeQuery($results[2]) . ' '.getenv('emoji_separator').' ' . ' (' . beautifyTime($results[5] / 1000) . ')', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', array('copy' => $clipboard_current_track_episode_text, 'largetype' => escapeQuery($results[0])), '');
                     }
                 }
                 else {
+                    $clipboard_current_track_track_text = getenv('clipboard_current_track_track_text');
+                    $clipboard_current_track_track_text  = str_replace('{track_name}', escapeQuery($results[0]), $clipboard_current_track_track_text);
+                    $clipboard_current_track_track_text  = str_replace('{artist_name}', escapeQuery($results[1]), $clipboard_current_track_track_text);
+                    $clipboard_current_track_track_text  = str_replace('{url}', $shared_url, $clipboard_current_track_track_text);
                     $liked = 'emoji_not_liked';
                     if(isTrackInYourMusic($w,$results[4])) {
                         $liked = 'emoji_liked';
@@ -991,7 +1011,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                     /* artist_artwork_path */, ''
                     /* album_artwork_path */, ''
                     /* playlist_name */, '', /* playlist_artwork_path */
-                    )), $added . escapeQuery(getenv($liked).' ' . $results[0]) . ' '.getenv('emoji_separator').' ' . escapeQuery($results[1]) . ' '.getenv('emoji_separator').' ' . escapeQuery($results[2]) . ' '.getenv('emoji_separator').' ' . $popularity . ' (' . beautifyTime($results[5] / 1000) . ')', array($subtitle, 'alt' => 'Play album ' . escapeQuery($results[2]) . ' in Spotify', 'cmd' => 'Play artist ' . escapeQuery($results[1]) . ' in Spotify', 'fn' => 'Add track ' . escapeQuery($results[0]) . ' to ...', 'shift' => 'Add album ' . escapeQuery($results[2]) . ' to ...', 'ctrl' => 'Search artist ' . escapeQuery($results[1]) . ' online',), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', array('copy' => '#NowPlaying ' . escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]) . $shared_url, 'largetype' => escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]),), '');
+                    )), $added . escapeQuery(getenv($liked).' ' . $results[0]) . ' '.getenv('emoji_separator').' ' . escapeQuery($results[1]) . ' '.getenv('emoji_separator').' ' . escapeQuery($results[2]) . ' '.getenv('emoji_separator').' ' . $popularity . ' (' . beautifyTime($results[5] / 1000) . ')', array($subtitle, 'alt' => 'Play album ' . escapeQuery($results[2]) . ' in Spotify', 'cmd' => 'Play artist ' . escapeQuery($results[1]) . ' in Spotify', 'fn' => 'Add track ' . escapeQuery($results[0]) . ' to ...', 'shift' => 'Add album ' . escapeQuery($results[2]) . ' to ...', 'ctrl' => 'Search artist ' . escapeQuery($results[1]) . ' online',), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', array('copy' => $clipboard_current_track_track_text, 'largetype' => escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]),), '');
                 }
             }
         }

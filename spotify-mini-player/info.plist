@@ -12980,6 +12980,12 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 		<string>volume_up</string>
 		<key>c_web_search</key>
 		<string>web_search</string>
+		<key>clipboard_current_track_episode_text</key>
+		<string>#NowPlaying {episode_name} {url}</string>
+		<key>clipboard_current_track_track_text</key>
+		<string>#NowPlaying {track_name} by {artist_name} {url}</string>
+		<key>clipboard_text2</key>
+		<string></string>
 		<key>emoji_album</key>
 		<string>💿</string>
 		<key>emoji_alfred</key>
