@@ -41,7 +41,7 @@ For more hotkeys, check this [page](https://alfred-spotify-mini-player.com/artic
 	<figcaption>Application setup.</figcaption>
 </figure>
 
-  * Your browser (except Safari) will open and you will be guided though the configuration.
+  * Your browser (except Safari) will open and you will be guided through the configuration.
 
   * Enjoy 🍻 !
 
