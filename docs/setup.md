@@ -3,7 +3,7 @@ layout: article
 permalink: /setup/
 title: "Setup"
 date: 2015-01-01
-modified: 2020-10-05
+modified: 2021-01-02
 toc: true
 share: false
 noindex: false
@@ -17,107 +17,31 @@ Setting up the workflow is easy, you just need to follow these steps:-
 
 * [Download](https://github.com/vdesabou/alfred-spotify-mini-player/releases/latest/download/spotifyminiplayer.alfredworkflow) the workflow
 
-* Open spotifyminiplayer.alfredworkflow by double-clicking it or dragging it into Alfred.
+* Open `spotifyminiplayer.alfredworkflow` by double-clicking it or dragging it into Alfred.
 
-## Create a Spotify Application
+## Setup an hotkey (optional)
 
-* Create an [application on Spotify](https://developer.spotify.com/dashboard/applications) (this is for both free and premium users)
+It is highly recommended to use hotkeys to invoke the workflow rather than the [default](https://alfred-spotify-mini-player.com/articles/customization/) keyword `spot_mini`.
 
-   * Click on *Create an App* and set an app name and description:-
-
-<figure>
-	<a href="{{ site.url }}/images/setup1.jpg"><img src="{{ site.url }}/images/setup1.jpg"></a>
-	<figcaption>Create an app.</figcaption>
-</figure>
-
-  * On the application page, click on *Edit Settings* :-
+To setup main hotkey, see example below (click to see in fullscreen):-
 
 <figure>
-	<a href="{{ site.url }}/images/setup10.jpg"><img src="{{ site.url }}/images/setup10.jpg"></a>
-	<figcaption>Edit Settings.</figcaption>
+	<a href="{{ site.url }}/images/setup_hotkeys1.gif"><img src="{{ site.url }}/images/setup_hotkeys1.gif"></a>
+	<figcaption>Setup main hotkey.</figcaption>
 </figure>
 
-  * Redirect URI must be set to `http://localhost:15298/callback.php`, then click *Add*, and then click *Save* :-
+For more hotkeys, check this [page](https://alfred-spotify-mini-player.com/articles/hotkeys/)
+
+## Follow setup process
+
+   * Invoke the workflow by using the keyword `spot_mini`, or better, the hotkey you set up in previous step, and type enter:
 
 <figure>
-	<a href="{{ site.url }}/images/setup11.jpg"><img src="{{ site.url }}/images/setup11.jpg"></a>
-	<figcaption>Settings.</figcaption>
+	<a href="{{ site.url }}/images/setup13.jpg"><img src="{{ site.url }}/images/setup13.jpg"></a>
+	<figcaption>Application setup.</figcaption>
 </figure>
 
+  * Your browser (except Safari) will open and you will be guided though the configuration.
 
-**Warning:** Make sure you've clicked *Save* button once you set the Redirect URI
-{: .notice-danger}
-
-  * The *Client ID* and *Client Secret* (needed in next steps) are then available :-
-
-<figure>
-	<a href="{{ site.url }}/images/setup12.jpg"><img src="{{ site.url }}/images/setup12.jpg"></a>
-	<figcaption>Access Client ID and Client Secret.</figcaption>
-</figure>
-
-## Notes
-
-* if you're using a firewall or a software that blocks communications, note that you'll have to unblock the following domains to use the workflow:-
-
-  * https://api.spotify.com (for interaction with Spotify)
-
-  * https://raw.githubusercontent.com (for downloading new release from web site)
-
-  * https://github.com/ (for downloading images when changing theme)
-
-  * http://api.stathat.com (for statistics)
-
-* if you're using a proxy, don't forget to enable this option in Alfred preferences, ***except for the time of authentication, it must be disabled*** :-
-
-<figure>
-	<a href="{{ site.url }}/images/setup6.jpg"><img src="{{ site.url }}/images/setup6.jpg"></a>
-	<figcaption>Use Mac OS http proxy settings for scripts option (except for authentication).</figcaption>
-</figure>
-
-* **Wappalyzer** browser extension interfere with authentication process: make sure to disable it during time of authentication.
-
-
-## Create the library
-
-
-* Invoke the workflow (with keyword `spot_mini`, or **highly recommended** with an [hotkey]({{ site.url }}/articles/hotkeys) )
-
-* Follow the steps as below by copy/pasting the *Client ID* and *Client Secret* into Alfred window when asked:
-
-<figure>
-	<a href="{{ site.url }}/images/setup.gif"><img src="{{ site.url }}/images/setup.gif"></a>
-	<figcaption>Paste Client ID and Client Secret (click to enlarge).</figcaption>
-</figure>
-
-
-* Invoke the workflow again and select Authenticate with Spotify, Google Chrome or Firefox ([Safari is not working for authentication](https://github.com/vdesabou/alfred-spotify-mini-player/issues/341)) will open and you'll be prompted to login with Spotify and allow access to your application. At the end you should see a message like this:-
-
-    *Hello xxx ! You are now successfully logged and you can close this window.*
-
-* Invoke the workflow again and Create the library.
-
-* You can then start using the workflow:-
-
-<figure>
-	<img src="{{ site.url }}/images/setup2.jpg">
-	<figcaption>See progress by invoking workflow.</figcaption>
-</figure>
-
-It will create your library in the background, but you'll be able to access use the workflow during that time (except for actions where library has to be modified).
-
-* The artworks are downloaded in the background, you should get a notification when background download starts:-
-
-<figure>
-	<img src="{{ site.url }}/images/setup4.jpg">
-	<figcaption>Notification for the start of background download of artworks.</figcaption>
-</figure>
-
-* During that time, you can use the workflow (you'll see the progress at the top of main menu), and you can see some blank artworks:-
-
-<figure>
-	<img src="{{ site.url }}/images/setup5.jpg">
-	<figcaption>Example of blank artworks until the end of background download is over.</figcaption>
-</figure>
-
-
+  * Enjoy 🍻 !
 
