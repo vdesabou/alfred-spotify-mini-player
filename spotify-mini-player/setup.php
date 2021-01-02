@@ -65,7 +65,7 @@
                                             Spotify</a> (this is for both free and premium users)</p>
 
                                     <ul>
-                                        <li>Click on <em>Create an App</em> and set an app name and description:-</li>
+                                        <li>Click on <em>Create an App</em> and set an app name and description:</li>
                                     </ul>
                                 </li>
                             </ul>
@@ -77,7 +77,7 @@
                             </figure>
 
                             <ul>
-                                <li>On the application page, click on <em>Edit Settings</em> :-</li>
+                                <li>On the application page, click on <em>Edit Settings</em> :</li>
                             </ul>
 
                             <figure>
@@ -89,7 +89,7 @@
                             <ul>
                                 <li>Redirect URI must be set to <code
                                         class="language-plaintext highlighter-rouge">http://localhost:15298/callback.php</code>,
-                                    then click <em>Add</em>, and then click <em>Save</em> :-</li>
+                                    then click <em>Add</em>, and then click <em>Save</em> :</li>
                             </ul>
 
                             <p class="notice-danger"><strong>Warning:</strong> Make sure you’ve clicked <em>Save</em>
@@ -103,7 +103,7 @@
 
                             <ul>
                                 <li>The <em>Client ID</em> and <em>Client Secret</em> (needed in next steps) are then
-                                    available :-</li>
+                                    available :</li>
                             </ul>
 
                             <figure>
@@ -154,7 +154,7 @@
                                             href="https://github.com/vdesabou/alfred-spotify-mini-player/issues/341">Safari
                                             is not working for authentication</a>) will open and you’ll be prompted to
                                         login with Spotify and allow access to your application. At the end you should
-                                        see a message like this:-</p>
+                                        see a message like this:</p>
 
                                     <p><em>Hello xxx ! You are now successfully logged and you can close this
                                             window.</em></p>
@@ -167,7 +167,7 @@
                                     <p>Invoke the workflow again and Create the library.</p>
                                 </li>
                                 <li>
-                                    <p>You can then start using the workflow:-</p>
+                                    <p>You can then start using the workflow:</p>
                                 </li>
                             </ul>
 
@@ -180,8 +180,7 @@
                                 workflow during that time (except for actions where library has to be modified).</p>
 
                             <ul>
-                                <li>The artworks are downloaded in the background, you should get a notification when
-                                    background download starts:-</li>
+                                <li>The artworks are downloaded locally in the background. It can take a while (several hours or even days) depending on how big is your library. You should get a notification when background download starts and ends</li>
                             </ul>
 
                             <figure>
@@ -191,12 +190,22 @@
 
                             <ul>
                                 <li>During that time, you can use the workflow (you’ll see the progress at the top of
-                                    main menu), and you can see some blank artworks:-</li>
+                                    main menu), and you can see some blank artworks:</li>
                             </ul>
 
                             <figure>
                                 <img src="https://alfred-spotify-mini-player.com/images/setup5.jpg" />
                                 <figcaption>Example of blank artworks until the end of background download is over.
+                                </figcaption>
+                            </figure>
+
+                            <ul>
+                                <li>If you don't want to use artworks, it can be disabled in settings:</li>
+                            </ul>
+
+                            <figure>
+                                <img src="https://alfred-spotify-mini-player.com/images/setup14.jpg" />
+                                <figcaption>Disable artworks.
                                 </figcaption>
                             </figure>
 
@@ -206,7 +215,7 @@
                             <ul>
                                 <li>
                                     <p>if you’re using a firewall or a software that blocks communications, note that
-                                        you’ll have to unblock the following domains to use the workflow:-</p>
+                                        you’ll have to unblock the following domains to use the workflow:</p>
 
                                     <ul>
                                         <li>
@@ -227,7 +236,7 @@
                                 <li>
                                     <p>if you’re using a proxy, don’t forget to enable this option in Alfred
                                         preferences, <strong><em>except for the time of authentication, it must be
-                                                disabled</em></strong> :-</p>
+                                                disabled</em></strong> :</p>
                                 </li>
                             </ul>
 
