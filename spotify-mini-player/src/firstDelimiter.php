@@ -2377,7 +2377,7 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
         /* playlist_uri */, ''
         /* spotify_command */, ''
         /* query */, ''
-        /* other_settings*/, 'update_library'
+        /* other_settings*/, 'create_library'
         /* other_action */, ''
         /* artist_name */, ''
         /* track_name */, ''

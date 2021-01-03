@@ -41,7 +41,7 @@ function debug($argv) {
                 '' /* spotify_command */,
                 '' /* query */,
                 '' /* other_settings*/,
-                'update_library' /* other_action */,
+                'create_library' /* other_action */,
                 '' /* alfred_playlist_uri */,
                 '' /* artist_name */,
                 '' /* track_name */,
