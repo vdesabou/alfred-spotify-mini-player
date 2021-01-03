@@ -815,7 +815,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
     } elseif ($other_action == 'enable_artworks') {
         $ret = updateSetting($w, 'use_artworks', 1);
         if ($ret == true) {
-            displayNotificationWithArtwork($w, 'Artworks are now enabled, library update is started', './images/enable_artworks.png', 'Settings');
+            displayNotificationWithArtwork($w, 'Artworks are now enabled, library creation is started', './images/enable_artworks.png', 'Settings');
             createLibrary($w);
         } else {
             displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
@@ -829,9 +829,8 @@ if ($type == 'TRACK' && $other_settings == '' &&
             if (file_exists($w->data().'/artwork')) {
                 exec("rm -rf '".$w->data()."/artwork'");
             }
-            displayNotificationWithArtwork($w, 'All artworks have been erased', './images/warning.png', 'Warning!');
             createLibrary($w);
-            displayNotificationWithArtwork($w, 'Artworks are now disabled', './images/disable_artworks.png', 'Settings');
+            displayNotificationWithArtwork($w, 'Artworks are now disabled, library creation is started', './images/disable_artworks.png', 'Settings');
         } else {
             displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
         }
@@ -2060,7 +2059,11 @@ if ($type == 'TRACK' && $other_settings == '' &&
         stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
 
         return;
-    } elseif ($other_action == 'create_library') {
+    } elseif ($other_action == 'download_artworks_verification') {
+
+        exec("osascript -e 'tell application id \"".getAlfredName()."\" to run trigger \"download_artworks_verification\" in workflow \"com.vdesabou.spotify.mini.player\" with argument \"\"'");
+        return;
+    }  elseif ($other_action == 'create_library') {
         if (file_exists($w->data().'/update_library_in_progress')) {
             displayNotificationWithArtwork($w, 'Cannot modify library while update is in progress', './images/warning.png', 'Error!');
 

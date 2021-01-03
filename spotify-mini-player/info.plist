@@ -255,6 +255,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>16AF4DC1-EF43-41E6-9CCB-69400DCDADE8</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>7D5F0CBF-9E6A-4FD3-B47D-F79B79A2FCA5</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>16F5C3BF-01EE-493C-9E7B-CC54D482B7A6</key>
 		<array>
 			<dict>
@@ -1564,6 +1577,44 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>CB11FDA4-17C4-4684-A145-C0D8FD6F6FDE</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>7D5F0CBF-9E6A-4FD3-B47D-F79B79A2FCA5</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>7D8BE94B-8085-41B5-AF2F-2E6D3EE8EDE8</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>7D8BE94B-8085-41B5-AF2F-2E6D3EE8EDE8</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>E37E8C74-91C3-48DB-991E-633D23C6A144</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>sourceoutputuid</key>
+				<string>75B49E0C-4157-4562-93F9-5A6D67248CC1</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>B7B17484-96E0-4A60-B97E-7C726304D67C</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -10608,6 +10659,124 @@ php -f ./src/action.php -- "$query" "{query}" ""</string>
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "enable_artworks" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
+php -f ./src/action.php -- "$query" "{query}" ""</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>E37E8C74-91C3-48DB-991E-633D23C6A144</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>fixedorder</key>
+				<true/>
+				<key>items</key>
+				<string>[{"title":"Download artwoks ? (highly recommended)","subtitle":"This process may take several hours to complete (it is done in background and can be cancelled in settings)"},{"imagefile":"c9bfba56ebdb29294659fad3f0c404fd21a4a351.png","title":"Sure, Continue","arg":"yes"},{"imagefile":"8463286a72f3370db63cf3cfae416c88d22c7ae3.png","title":"Use without artworks","arg":"no"}]</string>
+				<key>runningsubtext</key>
+				<string></string>
+				<key>subtext</key>
+				<string></string>
+				<key>title</key>
+				<string></string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.listfilter</string>
+			<key>uid</key>
+			<string>7D5F0CBF-9E6A-4FD3-B47D-F79B79A2FCA5</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>triggerid</key>
+				<string>download_artworks_verification</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.external</string>
+			<key>uid</key>
+			<string>16AF4DC1-EF43-41E6-9CCB-69400DCDADE8</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>conditions</key>
+				<array>
+					<dict>
+						<key>inputstring</key>
+						<string></string>
+						<key>matchcasesensitive</key>
+						<true/>
+						<key>matchmode</key>
+						<integer>0</integer>
+						<key>matchstring</key>
+						<string>yes</string>
+						<key>outputlabel</key>
+						<string>yes</string>
+						<key>uid</key>
+						<string>75B49E0C-4157-4562-93F9-5A6D67248CC1</string>
+					</dict>
+				</array>
+				<key>elselabel</key>
+				<string>no</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.utility.conditional</string>
+			<key>uid</key>
+			<string>7D8BE94B-8085-41B5-AF2F-2E6D3EE8EDE8</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "disable_artworks" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
+php -f ./src/action.php -- "$query" "{query}" ""</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>B7B17484-96E0-4A60-B97E-7C726304D67C</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string>Web Site:
@@ -10811,6 +10980,13 @@ https://github.com/vdesabou/alfred-spotify-mini-player</string>
 			<integer>55</integer>
 			<key>ypos</key>
 			<integer>6735</integer>
+		</dict>
+		<key>16AF4DC1-EF43-41E6-9CCB-69400DCDADE8</key>
+		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
+			<key>ypos</key>
+			<integer>14805</integer>
 		</dict>
 		<key>16F5C3BF-01EE-493C-9E7B-CC54D482B7A6</key>
 		<dict>
@@ -11695,6 +11871,20 @@ https://github.com/vdesabou/alfred-spotify-mini-player</string>
 			<key>ypos</key>
 			<integer>9280</integer>
 		</dict>
+		<key>7D5F0CBF-9E6A-4FD3-B47D-F79B79A2FCA5</key>
+		<dict>
+			<key>xpos</key>
+			<integer>325</integer>
+			<key>ypos</key>
+			<integer>14805</integer>
+		</dict>
+		<key>7D8BE94B-8085-41B5-AF2F-2E6D3EE8EDE8</key>
+		<dict>
+			<key>xpos</key>
+			<integer>505</integer>
+			<key>ypos</key>
+			<integer>14825</integer>
+		</dict>
 		<key>7E4C3B84-D930-490A-BF7E-FA5C57328897</key>
 		<dict>
 			<key>xpos</key>
@@ -12253,6 +12443,13 @@ https://github.com/vdesabou/alfred-spotify-mini-player</string>
 			<key>ypos</key>
 			<integer>7000</integer>
 		</dict>
+		<key>B7B17484-96E0-4A60-B97E-7C726304D67C</key>
+		<dict>
+			<key>xpos</key>
+			<integer>795</integer>
+			<key>ypos</key>
+			<integer>14855</integer>
+		</dict>
 		<key>B8AE86A5-8C3B-47D5-8510-48538F51DE48</key>
 		<dict>
 			<key>xpos</key>
@@ -12644,6 +12841,13 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<integer>830</integer>
 			<key>ypos</key>
 			<integer>5650</integer>
+		</dict>
+		<key>E37E8C74-91C3-48DB-991E-633D23C6A144</key>
+		<dict>
+			<key>xpos</key>
+			<integer>795</integer>
+			<key>ypos</key>
+			<integer>14735</integer>
 		</dict>
 		<key>E3BCC85B-A326-41C9-BAC9-623BE1865375</key>
 		<dict>
