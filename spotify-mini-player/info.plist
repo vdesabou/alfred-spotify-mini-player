@@ -10693,7 +10693,7 @@ php -f ./src/action.php -- "$query" "{query}" ""</string>
 				<key>fixedorder</key>
 				<true/>
 				<key>items</key>
-				<string>[{"title":"Download artwoks ? (highly recommended)","subtitle":"This process may take several hours to complete (it is done in background and can be cancelled in settings)"},{"imagefile":"c9bfba56ebdb29294659fad3f0c404fd21a4a351.png","title":"Sure, Continue","arg":"yes"},{"imagefile":"8463286a72f3370db63cf3cfae416c88d22c7ae3.png","title":"Use without artworks","arg":"no"}]</string>
+				<string>[{"title":"Download artworks ? (highly recommended)","subtitle":"This process may take several hours to complete (it is done in background and can be cancelled in settings)"},{"imagefile":"c9bfba56ebdb29294659fad3f0c404fd21a4a351.png","title":"Sure, Continue","arg":"yes"},{"imagefile":"8463286a72f3370db63cf3cfae416c88d22c7ae3.png","title":"Use without artworks","arg":"no"}]</string>
 				<key>runningsubtext</key>
 				<string></string>
 				<key>subtext</key>
