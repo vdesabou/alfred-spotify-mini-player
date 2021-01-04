@@ -1563,6 +1563,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
         return;
     } elseif ($other_action == 'reset_settings') {
         deleteTheFile($w,$w->data().'/settings.json');
+        logMsg($w,"Settings are reset");
 
         return;
     } elseif ($other_action == 'reset_oauth_settings') {
