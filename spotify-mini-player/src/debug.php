@@ -12,6 +12,7 @@ function debug($argv) {
     $settings = getSettings($w);
 
     $theme_color = $settings->theme_color;
+    $artwork_folder_size = $settings->artwork_folder_size;
 
     $query = $argv[1];
 
@@ -390,7 +391,7 @@ function debug($argv) {
         '' /* is_alfred_playlist_active */,
         '' /* country_code*/,
         '', /* userid*/
-    )), 'Delete artwork folder', 'This will erase existing album artwork and re-download them', './images/warning.png', 'yes', null, '');
+    )), 'Delete artwork folder ' . '(current cached folder size is ' . $artwork_folder_size . ')' , 'This will erase existing album artwork and re-download them', './images/warning.png', 'yes', null, '');
 
     echo $w->tojson();
 }

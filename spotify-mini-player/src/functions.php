@@ -6450,6 +6450,14 @@ function downloadArtworks($w, $silent = false)
         stathat_ez_count('AlfredSpotifyMiniPlayer', 'artworks', $nb_artworks_total);
     }
 
+    // Get size of artwork directory
+    exec("/usr/bin/du -sh '".$w->data()."/artwork'", $retArr, $retVal);
+    if ($retVal == 0) {
+        $size = $retArr[0];
+        $size = substr ( $size, 0, strpos ( $size, "\t" ) );
+        updateSetting($w, 'artwork_folder_size', rtrim(ltrim($size)));
+    }
+
     return true;
 }
 
@@ -8644,6 +8652,7 @@ function getSettings($w)
             'preferred_spotify_connect_device_pushcut_webhook' => '',
             'fuzzy_search' => 0,
             'debug' => 0,
+            'artwork_folder_size' => "",
         );
 
         $w->write($default, 'settings.json');
@@ -8776,6 +8785,12 @@ function getSettings($w)
     // add debug if needed
     if (!isset($settings->debug)) {
         updateSetting($w, 'debug', 0);
+        $settings = $w->read('settings.json');
+    }
+
+    // add artwork_folder_size if needed
+    if (!isset($settings->artwork_folder_size)) {
+        updateSetting($w, 'artwork_folder_size', "");
         $settings = $w->read('settings.json');
     }
     return $settings;

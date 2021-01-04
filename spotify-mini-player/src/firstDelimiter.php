@@ -1898,6 +1898,7 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
     $always_display_lyrics_in_browser = $settings->always_display_lyrics_in_browser;
     $automatic_refresh_library_interval = $settings->automatic_refresh_library_interval;
     $fuzzy_search = $settings->fuzzy_search;
+    $artwork_folder_size = $settings->artwork_folder_size;
 
     if ($update_in_progress == false) {
         $w->result(null, serialize(array(''
@@ -2149,7 +2150,7 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
         /* artist_artwork_path */, ''
         /* album_artwork_path */, ''
         /* playlist_name */, '', /* playlist_artwork_path */
-        )), 'Disable Artworks', array('All existing artworks will be deleted and workflow will only show default artworks (library will be re-created)', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/disable_artworks.png', 'yes', null, '');
+        )), 'Disable Artworks (current cached folder size is ' . $artwork_folder_size . ')', array('All existing artworks will be deleted and workflow will only show default artworks (library will be re-created)', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/disable_artworks.png', 'yes', null, '');
     }
     else {
         $w->result(null, serialize(array(''
