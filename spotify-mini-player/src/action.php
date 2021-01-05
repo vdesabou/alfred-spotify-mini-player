@@ -988,10 +988,6 @@ if ($type == 'TRACK' && $other_settings == '' &&
         }
 
         return;
-    } elseif ($other_action == 'change_theme_color') {
-
-        exec("osascript -e 'tell application id \"".getAlfredName()."\" to run trigger \"change_theme_color\" in workflow \"com.vdesabou.spotify.mini.player\" with argument \"\"'");
-        return;
     } elseif ($other_action == 'change_search_order') {
         exec("osascript -e 'tell application id \"".getAlfredName()."\" to run trigger \"change_search_order\" in workflow \"com.vdesabou.spotify.mini.player\" with argument \"\"'");
         return;
