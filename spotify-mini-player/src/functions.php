@@ -7148,6 +7148,7 @@ function getArtworkURL($w, $type, $id, $highRes = false)
                 if ($e->getCode() == 429) { // 429 is Too Many Requests
                     $lastResponse = $api->getRequest()->getLastResponse();
                     $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
+                    sleep((int) $retryAfter);
                 } else if ($e->getCode() == 404) {
                     // skip
                     break;
@@ -7214,6 +7215,7 @@ function getArtworkURL($w, $type, $id, $highRes = false)
 
                 if ($e->getCode() == 429) { // 429 is Too Many Requests
                     $lastResponse = $api->getRequest()->getLastResponse();
+                    $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
                     sleep((int) $retryAfter);
                 } else if ($e->getCode() == 404) {
                     // skip
