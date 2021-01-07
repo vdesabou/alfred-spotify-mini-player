@@ -108,13 +108,13 @@ while ($retry) {
 		} else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
 			// retry
 			if ($nb_retry > 3) {
-				$message = "There was an error during the authentication (exception " . jTraceEx($e) . ")";
+				$message = "There was an error during authentication (exception " . jTraceEx($e) . ")";
 				$retry = false;
 			}
 			++$nb_retry;
 			sleep(5);
 		} else {
-			$message = "There was an error during the authentication (exception " . jTraceEx($e) . ")";
+			$message = "There was an error during authentication (exception " . jTraceEx($e) . ")";
 			$retry = false;
 		}
 	}
@@ -135,25 +135,25 @@ exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk 
 	<div id="wrapper" class="wrapper">
 	<?php if($success): ?>
 		<section>
-			<h1>🎉 Alfred Spotify Mini Player should be setup now 🎉</h1>
+			<h1>🎉 Alfred Spotify Mini Player is set up! 🎉</h1>
 			<p>
 				You should be able to start using Alfred Spotify Mini Player now!
 			</p>
 			<img src="https://media4.giphy.com/media/lTZvj21tbQSTC/giphy.gif?cid=e1bb72ffuu13xl14uo27hi6zoxx060wif2j88l6r5vd3odme&rid=giphy.gif" alt="gif">
 			<p>
-				You can now close this window
+				You can now close this window.
 			</p>
 		</section>
 	<?php else: ?>
 		<section>
-			<h1>⚠️ Alfred Spotify Mini Player could not be setup correctly ⚠️</h1>
+			<h1>⚠️ Alfred Spotify Mini Player could not be set up correctly ⚠️</h1>
 			<p>
 				Error message: <code><?php print $_GET['error']; print $message; ?></code>
 			</p>
 
 			<img src="https://media.giphy.com/media/Qvm2704d1Dqus/giphy.gif" alt="gif">
 
-			<p>👉 You'll need to try logging in again, if this still doesn't work follow this <a href="https://alfred-spotify-mini-player.com/articles/support/">link</a> to get some help</p>
+			<p>👉 You'll need to try logging in again. If you're still unable to proceed, follow this <a href="https://alfred-spotify-mini-player.com/articles/support/">link</a> to get some help.</p>
 		</section>
 	<?php endif; ?>
 	</div>
