@@ -878,7 +878,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
         /* playlist_name */, '', /* playlist_artwork_path */
         )), 'Lookup Current Artist online', array(getenv('emoji_online').' Query all albums/tracks from current artist online..', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/online_artist.png', 'yes', '');
 
-        $w->result(null, serialize(array(''
+        $w->result('SpotifyMiniPlayer_' . 'show_in_spotify', serialize(array(''
         /*track_uri*/, ''
         /* album_uri */, ''
         /* artist_uri */, ''
@@ -1132,7 +1132,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
 
         $osx_version = exec('sw_vers -productVersion');
         if (version_compare($osx_version, '10,14', '<')) {
-            $w->result(null, serialize(array(''
+            $w->result('SpotifyMiniPlayer_' . 'share', serialize(array(''
             /*track_uri*/, ''
             /* album_uri */, ''
             /* artist_uri */, ''
@@ -1169,7 +1169,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
         /* playlist_name */, '', /* playlist_artwork_path */
         )), 'Reset number of times played for playlists', 'This will reset playlists all times played counters to 0', './images/settings.png', 'yes', '');
 
-        $w->result(null, serialize(array(''
+        $w->result('SpotifyMiniPlayer_' . 'web_search', serialize(array(''
         /*track_uri*/, ''
         /* album_uri */, ''
         /* artist_uri */, ''
@@ -1187,7 +1187,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
         /* playlist_name */, '', /* playlist_artwork_path */
         )), 'Do a web search for current track or artist on Youtube, Facebook, etc.. ', array('You will be prompted to choose the web service you want to use', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/youtube.png', 'yes', null, '');
 
-        $w->result(null, serialize(array(''
+        $w->result('SpotifyMiniPlayer_' . 'play_liked_songs', serialize(array(''
         /*track_uri*/, ''
         /* album_uri */, ''
         /* artist_uri */, ''
@@ -1394,7 +1394,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
         /* playlist_name */, '', /* playlist_artwork_path */
         )), 'Volume Down', 'Decrease Spotify Volume', './images/volume_down.png', 'yes', '');
 
-        $w->result(null, '', 'Set the volume', array('Set the volume level from 0 to 100%', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/volume_up.png', 'no', null, 'Settings▹SetVolume▹');
+        $w->result('SpotifyMiniPlayer_' . 'set_volume', '', 'Set the volume', array('Set the volume level from 0 to 100%', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/volume_up.png', 'no', null, 'Settings▹SetVolume▹');
 
         $w->result('SpotifyMiniPlayer_' . 'volume_up', serialize(array(''
         /*track_uri*/, ''
@@ -1474,7 +1474,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
         if (strpos(strtolower('share'), strtolower($query)) !== false) {
             $osx_version = exec('sw_vers -productVersion');
             if (version_compare($osx_version, '10,14', '<')) {
-                $w->result(null, serialize(array(''
+                $w->result('SpotifyMiniPlayer_' . 'share', serialize(array(''
                 /*track_uri*/, ''
                 /* album_uri */, ''
                 /* artist_uri */, ''
@@ -1494,7 +1494,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
             }
         }
         if (strpos(strtolower('web search'), strtolower($query)) !== false) {
-            $w->result(null, serialize(array(''
+            $w->result('SpotifyMiniPlayer_' . 'web_search', serialize(array(''
             /*track_uri*/, ''
             /* album_uri */, ''
             /* artist_uri */, ''
@@ -1513,7 +1513,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
             )), 'Do a web search for current track or artist on Youtube, Facebook, etc.. ', array('You will be prompted to choose the web service you want to use', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/youtube.png', 'yes', null, '');
         }
         if (strpos(strtolower('output'), strtolower($query)) !== false) {
-            $w->result(null, serialize(array(''
+            $w->result('SpotifyMiniPlayer_' . 'output_audio', serialize(array(''
             /*track_uri*/, ''
             /* album_uri */, ''
             /* artist_uri */, ''
@@ -1532,7 +1532,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
             )), 'Choose audio output device', 'Output audio devices', './images/speaker.png', 'yes', '');
         }
         if (strpos(strtolower('next'), strtolower($query)) !== false) {
-            $w->result(null, serialize(array(''
+            $w->result('SpotifyMiniPlayer_' . 'next', serialize(array(''
             /*track_uri*/, ''
             /* album_uri */, ''
             /* artist_uri */, ''
@@ -1551,7 +1551,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
             )), 'Next Track', 'Play the next track in Spotify', './images/next.png', 'yes', '');
         }
         if (strpos(strtolower('previous'), strtolower($query)) !== false) {
-            $w->result(null, serialize(array(''
+            $w->result('SpotifyMiniPlayer_' . 'previous', serialize(array(''
             /*track_uri*/, ''
             /* album_uri */, ''
             /* artist_uri */, ''
@@ -1570,7 +1570,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
             )), 'Previous Track', 'Play the previous track in Spotify', './images/previous.png', 'yes', '');
         }
         if (strpos(strtolower('reset'), strtolower($query)) !== false) {
-            $w->result(null, serialize(array(''
+            $w->result('SpotifyMiniPlayer_' . 'reset_playlist_number_times_played', serialize(array(''
             /*track_uri*/, ''
             /* album_uri */, ''
             /* artist_uri */, ''
@@ -1589,7 +1589,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
             )), 'Reset number of times played for playlists', 'This will reset playlists all times played counters to 0', './images/settings.png', 'yes', '');
         }
         if (strpos(strtolower('lyrics'), strtolower($query)) !== false) {
-            $w->result(null, serialize(array(''
+            $w->result('SpotifyMiniPlayer_' . 'lyrics', serialize(array(''
             /*track_uri*/, ''
             /* album_uri */, ''
             /* artist_uri */, ''
@@ -1608,35 +1608,8 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
             )), 'Get Lyrics for current track', array('Get current track lyrics', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/lyrics.png', 'yes', '');
         }
 
-        //		if (strpos(strtolower('biography'), strtolower($query)) !== false) {
-        //			$w->result('SpotifyMiniPlayer_' . 'biography', serialize(array(
-        //						'' /*track_uri*/ ,
-        //						'' /* album_uri */ ,
-        //						'' /* artist_uri */ ,
-        //						'' /* playlist_uri */ ,
-        //						'' /* spotify_command */ ,
-        //						'' /* query */ ,
-        //						'' /* other_settings*/ ,
-        //						'biography' /* other_action */ ,
-        //						'' /* artist_name */ ,
-        //						'' /* track_name */ ,
-        //						'' /* album_name */ ,
-        //						'' /* track_artwork_path */ ,
-        //						'' /* artist_artwork_path */ ,
-        //						'' /* album_artwork_path */ ,
-        //						'' /* playlist_name */ ,
-        //						'' /* playlist_artwork_path */
-        //					)), 'Display biography', array(
-        //					"This will display the artist biography, twitter and official website",
-        //					'alt' => 'Not Available',
-        //					'cmd' => 'Not Available',
-        //					'shift' => 'Not Available',
-        //					'fn' => 'Not Available',
-        //					'ctrl' => 'Not Available'
-        //				), './images/biography.png', 'yes', '');
-        //		}
         if (strpos(strtolower('query'), strtolower($query)) !== false) {
-            $w->result(null, serialize(array(''
+            $w->result('SpotifyMiniPlayer_' . 'lookup_current_artist', serialize(array(''
             /*track_uri*/, ''
             /* album_uri */, ''
             /* artist_uri */, ''
@@ -1655,7 +1628,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
             )), 'Lookup Current Artist online', array(getenv('emoji_online').' Query all albums/tracks from current artist online..', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/online_artist.png', 'yes', '');
         }
         if (strpos(strtolower('play'), strtolower($query)) !== false) {
-            $w->result(null, serialize(array(''
+            $w->result('SpotifyMiniPlayer_' . 'play', serialize(array(''
             /*track_uri*/, ''
             /* album_uri */, ''
             /* artist_uri */, ''
@@ -1673,7 +1646,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
             /* playlist_name */, '', /* playlist_artwork_path */
             )), 'Play', 'Play the current Spotify track', './images/play.png', 'yes', '');
 
-            $w->result(null, serialize(array(''
+            $w->result('SpotifyMiniPlayer_' . 'playpause', serialize(array(''
             /*track_uri*/, ''
             /* album_uri */, ''
             /* artist_uri */, ''
@@ -1691,7 +1664,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
             /* playlist_name */, '', /* playlist_artwork_path */
             )), 'Play / Pause', 'Play or Pause the current Spotify track', './images/playpause.png', 'yes', '');
 
-            $w->result(null, serialize(array(''
+            $w->result('SpotifyMiniPlayer_' . 'play_current_artist', serialize(array(''
             /*track_uri*/, ''
             /* album_uri */, ''
             /* artist_uri */, ''
@@ -1745,7 +1718,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
             /* playlist_name */, '', /* playlist_artwork_path */
             )), 'Unfollow current artist', 'Unfollow the current artist', './images/follow.png', 'yes', null, '');
 
-            $w->result(null, serialize(array(''
+            $w->result('SpotifyMiniPlayer_' . 'play_current_album', serialize(array(''
             /*track_uri*/, ''
             /* album_uri */, ''
             /* artist_uri */, ''
@@ -1762,7 +1735,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
             /* album_artwork_path */, ''
             /* playlist_name */, '', /* playlist_artwork_path */
             )), 'Play current album', 'Play the current album', './images/albums.png', 'yes', null, '');
-            $w->result(null, serialize(array(''
+            $w->result('SpotifyMiniPlayer_' . 'play_liked_songs', serialize(array(''
             /*track_uri*/, ''
             /* album_uri */, ''
             /* artist_uri */, ''
@@ -1780,7 +1753,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
             )), '♥️ Play your Liked Songs', 'This will play your liked songs', './images/star.png', 'yes', null, '');
         }
         if (strpos(strtolower('pause'), strtolower($query)) !== false) {
-            $w->result(null, serialize(array(''
+            $w->result('SpotifyMiniPlayer_' . 'pause', serialize(array(''
             /*track_uri*/, ''
             /* album_uri */, ''
             /* artist_uri */, ''
@@ -1798,7 +1771,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
             /* playlist_name */, '', /* playlist_artwork_path */
             )), 'Pause', 'Pause the current Spotify track', './images/pause.png', 'yes', '');
 
-            $w->result(null, serialize(array(''
+            $w->result('SpotifyMiniPlayer_' . 'playpause', serialize(array(''
             /*track_uri*/, ''
             /* album_uri */, ''
             /* artist_uri */, ''
@@ -1818,7 +1791,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
         }
 
         if (strpos(strtolower('current'), strtolower($query)) !== false) {
-            $w->result(null, serialize(array(''
+            $w->result('SpotifyMiniPlayer_' . 'current', serialize(array(''
             /*track_uri*/, ''
             /* album_uri */, ''
             /* artist_uri */, ''
@@ -1837,7 +1810,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
             )), 'Get Current Track info', 'Get current track information', './images/info.png', 'yes', '');
         }
         if (strpos(strtolower('random'), strtolower($query)) !== false) {
-            $w->result(null, serialize(array(''
+            $w->result('SpotifyMiniPlayer_' . 'random', serialize(array(''
             /*track_uri*/, ''
             /* album_uri */, ''
             /* artist_uri */, ''
@@ -1855,7 +1828,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
             /* playlist_name */, '', /* playlist_artwork_path */
             )), 'Random Track', 'Play random track', './images/random.png', 'yes', '');
 
-            $w->result(null, serialize(array(''
+            $w->result('SpotifyMiniPlayer_' . 'random_album', serialize(array(''
             /*track_uri*/, ''
             /* album_uri */, ''
             /* artist_uri */, ''
@@ -1874,7 +1847,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
             )), 'Random Album', 'Play random album', './images/random_album.png', 'yes', '');
         }
         if (strpos(strtolower('shuffle'), strtolower($query)) !== false) {
-            $w->result(null, serialize(array(''
+            $w->result('SpotifyMiniPlayer_' . 'shuffle', serialize(array(''
             /*track_uri*/, ''
             /* album_uri */, ''
             /* artist_uri */, ''
@@ -1893,7 +1866,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
             )), 'Shuffle', 'Activate/Deactivate shuffling in Spotify', './images/shuffle.png', 'yes', '');
         }
         if (strpos(strtolower('repeating'), strtolower($query)) !== false) {
-            $w->result(null, serialize(array(''
+            $w->result('SpotifyMiniPlayer_' . 'repeating', serialize(array(''
             /*track_uri*/, ''
             /* album_uri */, ''
             /* artist_uri */, ''
@@ -1913,7 +1886,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
         }
         if (strpos(strtolower('refresh'), strtolower($query)) !== false) {
             if ($update_in_progress == false) {
-                $w->result(null, serialize(array(''
+                $w->result('SpotifyMiniPlayer_' . 'refresh_library', serialize(array(''
                 /*track_uri*/, ''
                 /* album_uri */, ''
                 /* artist_uri */, ''
@@ -1935,7 +1908,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
             }
         }
         if (strpos(strtolower('like'), strtolower($query)) !== false) {
-            $w->result(null, serialize(array(''
+            $w->result('SpotifyMiniPlayer_' . 'play_liked_songs', serialize(array(''
             /*track_uri*/, ''
             /* album_uri */, ''
             /* artist_uri */, ''
@@ -1954,7 +1927,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
         }
         if (strpos(strtolower('update'), strtolower($query)) !== false) {
             if ($update_in_progress == false) {
-                $w->result(null, serialize(array(''
+                $w->result('SpotifyMiniPlayer_' . 'refresh_library', serialize(array(''
                 /*track_uri*/, ''
                 /* album_uri */, ''
                 /* artist_uri */, ''
@@ -1978,7 +1951,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
         if ($update_in_progress == false) {
             if (strpos(strtolower('add'), strtolower($query)) !== false) {
                 if ($is_alfred_playlist_active == true) {
-                    $w->result(null, serialize(array(''
+                    $w->result('SpotifyMiniPlayer_' . 'add_current_track', serialize(array(''
                     /*track_uri*/, ''
                     /* album_uri */, ''
                     /* artist_uri */, ''
@@ -1999,7 +1972,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                     )), 'Add current track to Alfred Playlist', 'Current track will be added to Alfred Playlist', './images/add_to_ap_yourmusic.png', 'yes', '');
                 }
                 else {
-                    $w->result(null, serialize(array(''
+                    $w->result('SpotifyMiniPlayer_' . 'add_current_track', serialize(array(''
                     /*track_uri*/, ''
                     /* album_uri */, ''
                     /* artist_uri */, ''
@@ -2019,7 +1992,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
                     /* playlist_name */, '', /* playlist_artwork_path */
                     )), 'Add current track to Your Music', 'Current track will be added to Your Music', './images/add_to_ap_yourmusic.png', 'yes', '');
                 }
-                $w->result(null, serialize(array(''
+                $w->result('SpotifyMiniPlayer_' . 'add_current_track_to', serialize(array(''
                 /*track_uri*/, ''
                 /* album_uri */, ''
                 /* artist_uri */, ''
@@ -2118,7 +2091,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
             }
         }
         if (strpos(strtolower('mute'), strtolower($query)) !== false) {
-            $w->result(null, serialize(array(''
+            $w->result('SpotifyMiniPlayer_' . 'mute', serialize(array(''
             /*track_uri*/, ''
             /* album_uri */, ''
             /* artist_uri */, ''
@@ -2137,7 +2110,7 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
             )), 'Mute/Unmute Spotify Volume', 'Mute/Unmute Volume', './images/mute.png', 'yes', '');
         }
         if (strpos(strtolower('volume_down'), strtolower($query)) !== false) {
-            $w->result(null, serialize(array(''
+            $w->result('SpotifyMiniPlayer_' . 'volume_down', serialize(array(''
             /*track_uri*/, ''
             /* album_uri */, ''
             /* artist_uri */, ''
@@ -2156,10 +2129,10 @@ function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progres
             )), 'Volume Down', 'Decrease Spotify Volume', './images/volume_down.png', 'yes', '');
         }
         if (strpos(strtolower('volume_set'), strtolower($query)) !== false) {
-            $w->result(null, '', 'Set the volume', array('Set the volume level from 0 to 100%', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/volume_up.png', 'no', null, 'Settings▹SetVolume▹');
+            $w->result('SpotifyMiniPlayer_' . 'set_volume', '', 'Set the volume', array('Set the volume level from 0 to 100%', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/volume_up.png', 'no', null, 'Settings▹SetVolume▹');
         }
         if (strpos(strtolower('volume_up'), strtolower($query)) !== false) {
-            $w->result(null, serialize(array(''
+            $w->result('SpotifyMiniPlayer_' . 'volume_up', serialize(array(''
             /*track_uri*/, ''
             /* album_uri */, ''
             /* artist_uri */, ''
