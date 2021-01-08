@@ -932,7 +932,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                     /* artist_artwork_path */, ''
                     /* album_artwork_path */, ''
                     /* playlist_name */, '', /* playlist_artwork_path */
-                    )), $added . escapeQuery(getenv($liked).' ' . $results[0]) . ' '.getenv('emoji_separator').' ' . escapeQuery($results[1]) . ' '.getenv('emoji_separator').' ' . escapeQuery($results[2]) . ' '.getenv('emoji_separator').' ' . $popularity . ' (' . beautifyTime($results[5] / 1000) . ')', array($subtitle, 'alt' => 'Play album ' . escapeQuery($results[2]) . ' in Spotify', 'cmd' => 'Play artist ' . escapeQuery($results[1]) . ' in Spotify', 'fn' => 'Add track ' . escapeQuery($results[0]) . ' to ...', 'shift' => 'Add album ' . escapeQuery($results[2]) . ' to ...', 'ctrl' => 'Search artist ' . escapeQuery($results[1]) . ' online',), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', array('copy' => $clipboard_current_track_track_text . $shared_url, 'largetype' => escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]),), '');
+                    )), $added . escapeQuery(getenv($liked).' ' . $results[0]) . ' '.getenv('emoji_separator').' ' . escapeQuery($results[1]) . ' '.getenv('emoji_separator').' ' . escapeQuery($results[2]) . ' '.getenv('emoji_separator').' ' . $popularity . ' (' . beautifyTime($results[5] / 1000) . ')', array($subtitle, 'alt' => 'Play album ' . escapeQuery($results[2]) . ' in Spotify', 'cmd' => 'Play artist ' . escapeQuery($results[1]) . ' in Spotify', 'fn' => 'Add track ' . escapeQuery($results[0]) . ' to ...', 'shift' => 'Add album ' . escapeQuery($results[2]) . ' to ...', 'ctrl' => 'Search artist ' . escapeQuery($results[1]) . ' online',), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', array('copy' => $clipboard_current_track_track_text, 'largetype' => escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]),), '');
                 }
             }
             else {
@@ -1100,7 +1100,7 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
                         /* artist_artwork_path */, ''
                         /* album_artwork_path */, ''
                         /* playlist_name */, '', /* playlist_artwork_path */
-                        )), 'The workflow needs more privilages to do this, click to restart authentication', array('Next time you invoke the workflow, you will have to re-authenticate', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/warning.png', 'yes', null, '');
+                        )), 'The workflow needs more priviledges to do this, click to restart authentication', array('Next time you invoke the workflow, you will have to re-authenticate', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/warning.png', 'yes', null, '');
                     }
                     else {
                         $w->result(null, 'help', 'Exception occurred', array('' . $e->getMessage(), 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/warning.png', 'no', null, '');
