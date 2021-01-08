@@ -351,6 +351,31 @@ function debug($argv) {
         '' /* spotify_command */,
         '' /* query */,
         '' /* other_settings*/,
+        'reset_client_secret' /* other_action */,
+        '' /* alfred_playlist_uri */,
+        '' /* artist_name */,
+        '' /* track_name */,
+        '' /* album_name */,
+        '' /* track_artwork_path */,
+        '' /* artist_artwork_path */,
+        '' /* album_artwork_path */,
+        '' /* playlist_name */,
+        '' /* playlist_artwork_path */,
+        '' /* $alfred_playlist_name */,
+        '' /* now_playing_notifications */,
+        '' /* is_alfred_playlist_active */,
+        '' /* country_code*/,
+        '', /* userid*/
+    )), 'Reset your Client Secret', 'Use this if you reset your Client Secret; your data and settings will be kept', './images/settings.png', 'yes', null, '');
+
+    $w->result(null, serialize(array(
+        '' /*track_uri*/,
+        '' /* album_uri */,
+        '' /* artist_uri */,
+        '' /* playlist_uri */,
+        '' /* spotify_command */,
+        '' /* query */,
+        '' /* other_settings*/,
         'reset_oauth_settings' /* other_action */,
         '' /* alfred_playlist_uri */,
         '' /* artist_name */,
@@ -366,7 +391,7 @@ function debug($argv) {
         '' /* is_alfred_playlist_active */,
         '' /* country_code*/,
         '', /* userid*/
-    )), 'Re-authenticate', 'This will force re-authentication; your data and settings will be kept', './images/settings.png', 'yes', null, '');
+    )), 'Re-authenticate to Spotify', 'This will force re-authentication to Spotify; your data and settings will be kept', './images/settings.png', 'yes', null, '');
 
     $w->result(null, serialize(array(
         '' /*track_uri*/,

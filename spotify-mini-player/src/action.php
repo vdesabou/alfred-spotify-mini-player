@@ -1568,6 +1568,11 @@ if ($type == 'TRACK' && $other_settings == '' &&
         displayNotificationWithArtwork($w, 'Oauth settings have been correctly reset', './images/settings.png', 'Info');
 
         return;
+    } elseif ($other_action == 'reset_client_secret') {
+        updateSetting($w,'oauth_client_secret','');
+        displayNotificationWithArtwork($w, 'Client Secret settings have been correctly reset', './images/settings.png', 'Info');
+
+        return;
     } elseif ($other_action == 'biography') {
         displayCurrentArtistBiography($w);
         return;
