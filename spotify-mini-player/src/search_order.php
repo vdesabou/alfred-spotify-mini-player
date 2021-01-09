@@ -24,11 +24,11 @@ foreach ($categories as $category) {
         }
         $w->result(null, $output, $category,array(
             'Select as result #'.$nb,
-            'alt' => 'Not Available',
-            'cmd' => 'Not Available',
-            'shift' => 'Not Available',
-            'fn' => 'Not Available',
-            'ctrl' => 'Not Available',
+            'alt' => '',
+            'cmd' => '',
+            'shift' => '',
+            'fn' => '',
+            'ctrl' => '',
         ), './images/'.$category.'s.png', 'yes', null, '');
     }
 }

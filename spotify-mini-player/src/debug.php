@@ -20,19 +20,19 @@ function debug($argv) {
         if (startsWith($query, 'DB Exception')) {
             $w->result(null, '', 'DB Exception occurred: '.$query,array(
                         'Try to re-create library as explained below.',
-                        'alt' => 'Not Available',
-                        'cmd' => 'Not Available',
-                        'shift' => 'Not Available',
-                        'fn' => 'Not Available',
-                        'ctrl' => 'Not Available',
+                        'alt' => '',
+                        'cmd' => '',
+                        'shift' => '',
+                        'fn' => '',
+                        'ctrl' => '',
                     ), './images/warning.png', 'no', null, '');
             $w->result(null, '', '👇👇👇 You need to recreate your library by selecting option below 👇👇👇',array(
                 'There was a breaking change and you need to telect Re-Create Library library below',
-                'alt' => 'Not Available',
-                'cmd' => 'Not Available',
-                'shift' => 'Not Available',
-                'fn' => 'Not Available',
-                'ctrl' => 'Not Available',
+                'alt' => '',
+                'cmd' => '',
+                'shift' => '',
+                'fn' => '',
+                'ctrl' => '',
             ), './images/info.png', 'no', null, '');
             $w->result(uniqid(), serialize(array(
                 '' /*track_uri*/,
@@ -58,11 +58,11 @@ function debug($argv) {
         } elseif (startsWith($query, 'AppleScript Exception')) {
             $w->result(null, 'help', 'AppleScript execution failed!',array(
                         'Message: '.$query,
-                        'alt' => 'Not Available',
-                        'cmd' => 'Not Available',
-                        'shift' => 'Not Available',
-                        'fn' => 'Not Available',
-                        'ctrl' => 'Not Available',
+                        'alt' => '',
+                        'cmd' => '',
+                        'shift' => '',
+                        'fn' => '',
+                        'ctrl' => '',
                     ), './images/warning.png', 'no', null, '');
             $w->result(null, serialize(array(
                 '' /*track_uri*/,
@@ -85,11 +85,11 @@ function debug($argv) {
         } elseif (startsWith($query, 'Mopidy Exception')) {
             $w->result(null, 'help', 'Mopidy execution failed!',array(
                         'Message: '.$query,
-                        'alt' => 'Not Available',
-                        'cmd' => 'Not Available',
-                        'shift' => 'Not Available',
-                        'fn' => 'Not Available',
-                        'ctrl' => 'Not Available',
+                        'alt' => '',
+                        'cmd' => '',
+                        'shift' => '',
+                        'fn' => '',
+                        'ctrl' => '',
                     ), './images/warning.png', 'no', null, '');
             $w->result(null, serialize(array(
                 '' /*track_uri*/,
@@ -129,22 +129,22 @@ function debug($argv) {
                 '', /* playlist_artwork_path */
                 )), 'The workflow needs to re-authenticate, click to restart authentication', array(
                 'Next time you invoke the workflow, you will have to re-authenticate',
-                'alt' => 'Not Available',
-                'cmd' => 'Not Available',
-                'shift' => 'Not Available',
-                'fn' => 'Not Available',
-                'ctrl' => 'Not Available',
+                'alt' => '',
+                'cmd' => '',
+                'shift' => '',
+                'fn' => '',
+                'ctrl' => '',
             ), './images/warning.png', 'yes', null, '');
             echo $w->tojson();
             return;
         } else {
             $w->result(null, '', 'Exception occurred: '.$query,array(
                         'Use the Send an email to the author option below to send generated spot_mini_debug.zip',
-                        'alt' => 'Not Available',
-                        'cmd' => 'Not Available',
-                        'shift' => 'Not Available',
-                        'fn' => 'Not Available',
-                        'ctrl' => 'Not Available',
+                        'alt' => '',
+                        'cmd' => '',
+                        'shift' => '',
+                        'fn' => '',
+                        'ctrl' => '',
                     ), './images/warning.png', 'no', null, '');
         }
     }

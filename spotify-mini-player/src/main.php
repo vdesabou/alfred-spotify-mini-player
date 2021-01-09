@@ -30,20 +30,20 @@ function main($argv) {
         if ($download_artworks_in_progress_words[2] != 0) {
             $w->result(null, $w->data().'/download_artworks_in_progress', $download_artworks_in_progress_words[0].' in progress since '.beautifyTime($elapsed_time, true).' : '.floatToSquares(intval($download_artworks_in_progress_words[1]) / intval($download_artworks_in_progress_words[2])),array(
                         $download_artworks_in_progress_words[1].'/'.$download_artworks_in_progress_words[2].' artworks processed so far (empty artworks can be seen until full download is complete)',
-                        'alt' => 'Not Available',
-                        'cmd' => 'Not Available',
-                        'shift' => 'Not Available',
-                        'fn' => 'Not Available',
-                        'ctrl' => 'Not Available',
+                        'alt' => '',
+                        'cmd' => '',
+                        'shift' => '',
+                        'fn' => '',
+                        'ctrl' => '',
                     ), './images/artworks.png', 'no', null, '');
         } else {
             $w->result(null, $w->data().'/download_artworks_in_progress', $download_artworks_in_progress_words[0].' in progress since '.beautifyTime($elapsed_time, true).' : '.floatToSquares(0),array(
                         'No artwork processed so far (empty artworks can be seen until full download is complete)',
-                        'alt' => 'Not Available',
-                        'cmd' => 'Not Available',
-                        'shift' => 'Not Available',
-                        'fn' => 'Not Available',
-                        'ctrl' => 'Not Available',
+                        'alt' => '',
+                        'cmd' => '',
+                        'shift' => '',
+                        'fn' => '',
+                        'ctrl' => '',
                     ), './images/artworks.png', 'no', null, '');
         }
     }
@@ -56,20 +56,20 @@ function main($argv) {
         if ($change_theme_color_in_progress_words[2] != 0) {
             $w->result(null, $w->data().'/change_theme_color_in_progress', $change_theme_color_in_progress_words[0].' in progress since '.beautifyTime($elapsed_time, true).' : '.floatToSquares(intval($change_theme_color_in_progress_words[1]) / intval($change_theme_color_in_progress_words[2])),array(
                         $change_theme_color_in_progress_words[1].'/'.$change_theme_color_in_progress_words[2].' icons processed so far (old icons can be seen until full download is complete)',
-                        'alt' => 'Not Available',
-                        'cmd' => 'Not Available',
-                        'shift' => 'Not Available',
-                        'fn' => 'Not Available',
-                        'ctrl' => 'Not Available',
+                        'alt' => '',
+                        'cmd' => '',
+                        'shift' => '',
+                        'fn' => '',
+                        'ctrl' => '',
                     ), './images/update_in_progress.png', 'no', null, '');
         } else {
             $w->result(null, $w->data().'/change_theme_color_in_progress', $change_theme_color_in_progress_words[0].' in progress since '.beautifyTime($elapsed_time, true).' : '.floatToSquares(0),array(
                         'No icons processed so far (old icons can be seen until full download is complete)',
-                        'alt' => 'Not Available',
-                        'cmd' => 'Not Available',
-                        'shift' => 'Not Available',
-                        'fn' => 'Not Available',
-                        'ctrl' => 'Not Available',
+                        'alt' => '',
+                        'cmd' => '',
+                        'shift' => '',
+                        'fn' => '',
+                        'ctrl' => '',
                     ), './images/update_in_progress.png', 'no', null, '');
         }
     }

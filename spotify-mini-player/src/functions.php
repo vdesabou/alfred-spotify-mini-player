@@ -613,11 +613,11 @@ function getPlaylistOwner($w, $playlist_uri)
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
        $w->result(null, '', 'Error: Spotify WEB API returned error '.$e->getMessage(),array(
            'function getPlaylistOwner playlist_uri=' . $playlist_uri,
-                   'alt' => 'Not Available',
-                   'cmd' => 'Not Available',
-                   'shift' => 'Not Available',
-                   'fn' => 'Not Available',
-                   'ctrl' => 'Not Available',
+                   'alt' => '',
+                   'cmd' => '',
+                   'shift' => '',
+                   'fn' => '',
+                   'ctrl' => '',
                ), './images/warning.png', 'no', null, '');
 
         return '';
@@ -738,11 +738,11 @@ function getShowFromEpisode($w, $episode_uri)
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
         $w->result(null, '', 'Error: Spotify WEB API returned error '.$e->getMessage(),array(
            'function getShowFromEpisode episode_uri=' . $episode_uri,
-                   'alt' => 'Not Available',
-                   'cmd' => 'Not Available',
-                   'shift' => 'Not Available',
-                   'fn' => 'Not Available',
-                   'ctrl' => 'Not Available',
+                   'alt' => '',
+                   'cmd' => '',
+                   'shift' => '',
+                   'fn' => '',
+                   'ctrl' => '',
                ), './images/warning.png', 'no', null, '');
 
         return '';
@@ -770,11 +770,11 @@ function getShowFromEpisode($w, $episode_uri)
      } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
          $w->result(null, '', 'Error: Spotify WEB API returned error '.$e->getMessage(),array(
             'function getArtistName artist_uri=' . $artist_uri,
-                    'alt' => 'Not Available',
-                    'cmd' => 'Not Available',
-                    'shift' => 'Not Available',
-                    'fn' => 'Not Available',
-                    'ctrl' => 'Not Available',
+                    'alt' => '',
+                    'cmd' => '',
+                    'shift' => '',
+                    'fn' => '',
+                    'ctrl' => '',
                 ), './images/warning.png', 'no', null, '');
 
          return '';
@@ -803,11 +803,11 @@ function getShowFromEpisode($w, $episode_uri)
      } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
          $w->result(null, '', 'Error: Spotify WEB API returned error '.$e->getMessage(),array(
             'function getAlbumName album_uri=' . $album_uri,
-                    'alt' => 'Not Available',
-                    'cmd' => 'Not Available',
-                    'shift' => 'Not Available',
-                    'fn' => 'Not Available',
-                    'ctrl' => 'Not Available',
+                    'alt' => '',
+                    'cmd' => '',
+                    'shift' => '',
+                    'fn' => '',
+                    'ctrl' => '',
                 ), './images/warning.png', 'no', null, '');
 
          return '';
@@ -837,11 +837,11 @@ function getEpisodeName($w, $episode_uri)
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
         $w->result(null, '', 'Error: Spotify WEB API returned error '.$e->getMessage(),array(
            'function getEpisodeName episode_uri=' . $episode_uri,
-                   'alt' => 'Not Available',
-                   'cmd' => 'Not Available',
-                   'shift' => 'Not Available',
-                   'fn' => 'Not Available',
-                   'ctrl' => 'Not Available',
+                   'alt' => '',
+                   'cmd' => '',
+                   'shift' => '',
+                   'fn' => '',
+                   'ctrl' => '',
                ), './images/warning.png', 'no', null, '');
 
         return '';
@@ -871,11 +871,11 @@ function getEpisode($w, $episode_uri)
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
         $w->result(null, '', 'Error: Spotify WEB API returned error '.$e->getMessage(),array(
            'function getEpisode episode_uri=' . $episode_uri,
-                   'alt' => 'Not Available',
-                   'cmd' => 'Not Available',
-                   'shift' => 'Not Available',
-                   'fn' => 'Not Available',
-                   'ctrl' => 'Not Available',
+                   'alt' => '',
+                   'cmd' => '',
+                   'shift' => '',
+                   'fn' => '',
+                   'ctrl' => '',
                ), './images/warning.png', 'no', null, '');
 
         return '';
@@ -911,11 +911,11 @@ function getEpisode($w, $episode_uri)
      } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
         $w->result(null, '', 'Error: Spotify WEB API returned error '.$e->getMessage(),array(
             'function getPlaylistName playlist_uri=' . $playlist_uri,
-                    'alt' => 'Not Available',
-                    'cmd' => 'Not Available',
-                    'shift' => 'Not Available',
-                    'fn' => 'Not Available',
-                    'ctrl' => 'Not Available',
+                    'alt' => '',
+                    'cmd' => '',
+                    'shift' => '',
+                    'fn' => '',
+                    'ctrl' => '',
                 ), './images/warning.png', 'no', null, '');
 
          return '';
@@ -1743,11 +1743,11 @@ function seekToBeginning($w)
                             '', /* playlist_artwork_path */
                         )), 'The workflow needs more privilages to do this, click to restart authentication', array(
                         'Next time you invoke the workflow, you will have to re-authenticate',
-                        'alt' => 'Not Available',
-                        'cmd' => 'Not Available',
-                        'shift' => 'Not Available',
-                        'fn' => 'Not Available',
-                        'ctrl' => 'Not Available',
+                        'alt' => '',
+                        'cmd' => '',
+                        'shift' => '',
+                        'fn' => '',
+                        'ctrl' => '',
                     ), './images/warning.png', 'yes', null, '');
             } else {
                 logMsg($w,'Error(getSpotifyConnectCurrentDeviceId): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
@@ -3665,7 +3665,7 @@ function followCurrentArtist($w)
                     displayNotificationWithArtwork($w, 'You are now following the artist ' . $results[1], $artist_artwork_path, 'Follow');
                 }
                 else {
-                    $w->result(null, '', 'Error!', array('An error happened! try again or report to the author', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/warning.png', 'no', null, '');
+                    $w->result(null, '', 'Error!', array('An error happened! try again or report to the author', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/warning.png', 'no', null, '');
                 }
             }
             else {
@@ -3728,7 +3728,7 @@ function unfollowCurrentArtist($w)
                     displayNotificationWithArtwork($w, 'You are no more following the artist ' . $results[1], $artist_artwork_path, 'Unfollow');
                 }
                 else {
-                    $w->result(null, '', 'Error!', array('An error happened! try again or report to the author', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/warning.png', 'no', null, '');
+                    $w->result(null, '', 'Error!', array('An error happened! try again or report to the author', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/warning.png', 'no', null, '');
                 }
             }
         }
@@ -7599,19 +7599,19 @@ function handleDbIssuePdoXml($e)
     logMsg($w,"ERROR: (handleDbIssuePdoXml)".$e->getCode().' '.$e->getMessage().' '.$e->getTraceAsString());
     $w->result(null, '', 'Database Error: '.$e->getCode().' '.$e->getMessage(),array(
                      '',
-                    'alt' => 'Not Available',
-                    'cmd' => 'Not Available',
-                    'shift' => 'Not Available',
-                    'fn' => 'Not Available',
-                    'ctrl' => 'Not Available',
+                    'alt' => '',
+                    'cmd' => '',
+                    'shift' => '',
+                    'fn' => '',
+                    'ctrl' => '',
                 ), './images/warning.png', 'no', null, '');
     $w->result(null, '', '👇👇👇 You need to recreate your library by selecting option below 👇👇👇',array(
                      'There was a breaking change and you need to telect Re-Create Library library below',
-                    'alt' => 'Not Available',
-                    'cmd' => 'Not Available',
-                    'shift' => 'Not Available',
-                    'fn' => 'Not Available',
-                    'ctrl' => 'Not Available',
+                    'alt' => '',
+                    'cmd' => '',
+                    'shift' => '',
+                    'fn' => '',
+                    'ctrl' => '',
                 ), './images/info.png', 'no', null, '');
     $w->result(null, serialize(array(
                 '' /*track_uri*/,
@@ -8154,11 +8154,11 @@ function doJsonRequest($w, $url, $actionMode = true)
         } else {
             $w->result(null, '', 'Error: No internet connection',array(
                      $url,
-                    'alt' => 'Not Available',
-                    'cmd' => 'Not Available',
-                    'shift' => 'Not Available',
-                    'fn' => 'Not Available',
-                    'ctrl' => 'Not Available',
+                    'alt' => '',
+                    'cmd' => '',
+                    'shift' => '',
+                    'fn' => '',
+                    'ctrl' => '',
                 ), './images/warning.png', 'no', null, '');
             echo $w->tojson();
             exit;
@@ -8174,11 +8174,11 @@ function doJsonRequest($w, $url, $actionMode = true)
         } else {
             $w->result(null, '', 'Error: JSON request returned empty result',array(
                      $url,
-                    'alt' => 'Not Available',
-                    'cmd' => 'Not Available',
-                    'shift' => 'Not Available',
-                    'fn' => 'Not Available',
-                    'ctrl' => 'Not Available',
+                    'alt' => '',
+                    'cmd' => '',
+                    'shift' => '',
+                    'fn' => '',
+                    'ctrl' => '',
                 ), './images/warning.png', 'no', null, '');
             echo $w->tojson();
             exit;
@@ -8197,11 +8197,11 @@ function doJsonRequest($w, $url, $actionMode = true)
         } else {
             $w->result(null, '', 'Error: JSON request returned error '.json_last_error().' ('.json_last_error_msg().')',array(
                      'Try again or report to author',
-                    'alt' => 'Not Available',
-                    'cmd' => 'Not Available',
-                    'shift' => 'Not Available',
-                    'fn' => 'Not Available',
-                    'ctrl' => 'Not Available',
+                    'alt' => '',
+                    'cmd' => '',
+                    'shift' => '',
+                    'fn' => '',
+                    'ctrl' => '',
                 ), './images/warning.png', 'no', null, '');
             echo $w->tojson();
             exit;
