@@ -43,9 +43,10 @@
                                     <li><a href="#create-a-spotify-application"
                                             id="markdown-toc-create-a-spotify-application">Create a Spotify
                                             Application</a></li>
-                                    <li><a href="#save-client-id-and-secret"
-                                            id="markdown-toc-save-client-id-and-secret">Save your <em>Client ID</em> and
+                                    <li><a href="#enter-client-id-and-secret"
+                                            id="markdown-toc-enter-client-id-and-secret">Enter your <em>Client ID</em> and
                                             <em>Client Secret</em></a></li>
+                                    <li><a href="#authenticate-with-spotify" id="markdown-toc-authenticate-with-spotify">Authenticate your application with Spotify</a></li>
                                     <li><a href="#create-the-library" id="markdown-toc-create-the-library">Create the
                                             library</a></li>
                                     <li><a href="#troubleshooting" id="markdown-toc-troubleshooting">Troubleshooting</a></li>
@@ -112,7 +113,7 @@
                                 <figcaption>Access Client ID and Client Secret.</figcaption>
                             </figure>
 
-                            <h2 id="save-client-id-and-secret">Save your <em>Client ID</em> and <em>Client Secret</em>
+                            <h2 id="enter-client-id-and-secret">Enter your <em>Client ID</em> and <em>Client Secret in the form below</em>
                             </h2>
 
                             <div id="wrapper" class="wrapper">
@@ -127,12 +128,12 @@
                                             <tr>
                                                 <td align="right"><label for="ClientID">Client ID:</label></td>
                                                 <td><input type="text" name="ClientID" id="ClientID"
-                                                        placeholder="8bba5265e1e6199op53216e03bt6aeff" required /></td>
+                                                        placeholder="👉 enter your client id here" required /></td>
                                             </tr>
                                             <tr>
                                                 <td align="right"><label for="ClientSecret">Client Secret:</label></td>
                                                 <td><input type="text" name="ClientSecret" id="ClientSecret"
-                                                        placeholder="3b3z7eg0evol510ebb32f94667135e40" required /></td>
+                                                        placeholder="👉 enter your client secret here" required /></td>
                                             </tr>
                                         </table>
 
@@ -141,9 +142,14 @@
                                     <div class="clear"></div>
 
                                 </section>
-                                <p class="notice-danger"><strong>Warning:</strong> Make sure you’ve successfully done
-                                    this step ☝ before going to next step</p>
                             </div>
+
+                            <h2 id="authenticate-with-spotify">Authenticate your application with Spotify</em>
+                            </h2>
+
+                            <p class="notice-danger"><strong>Warning:</strong> Make sure you’ve successfully done
+                                    previous step, i.e enter and save client id and secret in the form.</p>
+
                             <ul>
                                 <li>
                                     <p>Invoke the workflow (with keyword <code
