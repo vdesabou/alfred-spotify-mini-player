@@ -2483,6 +2483,24 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
     /* album_artwork_path */, ''
     /* playlist_name */, '', /* playlist_artwork_path */
     )), 'Missing a setting ? There are others described on the website', 'Find out all possible additional settings on the website', './images/website.png', 'yes', null, '');
+
+    $w->result(null, serialize(array(''
+    /*track_uri*/, ''
+    /* album_uri */, ''
+    /* artist_uri */, ''
+    /* playlist_uri */, ''
+    /* spotify_command */, ''
+    /* query */, ''
+    /* other_settings*/, 'open_debug_tools'
+    /* other_action */, ''
+    /* artist_name */, ''
+    /* track_name */, ''
+    /* album_name */, ''
+    /* track_artwork_path */, ''
+    /* artist_artwork_path */, ''
+    /* album_artwork_path */, ''
+    /* playlist_name */, '', /* playlist_artwork_path */
+    )), 'Open debug tools', array('This is how you can access information required for further troubleshooting', 'alt' => 'Not Available', 'cmd' => 'Not Available', 'shift' => 'Not Available', 'fn' => 'Not Available', 'ctrl' => 'Not Available',), './images/debug.png', 'yes', null, '');
 }
 
 /**

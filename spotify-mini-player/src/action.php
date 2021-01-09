@@ -2065,6 +2065,10 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
         exec("osascript -e 'tell application id \"".getAlfredName()."\" to run trigger \"download_artworks_verification\" in workflow \"com.vdesabou.spotify.mini.player\" with argument \"\"'");
         return;
+    } elseif ($other_action == 'open_debug_tools') {
+
+        exec("osascript -e 'tell application id \"".getAlfredName()."\" to run trigger \"spot_mini_debug\" in workflow \"com.vdesabou.spotify.mini.player\" with argument \"\"'");
+        return;
     }  elseif ($other_action == 'create_library') {
         if (file_exists($w->data().'/update_library_in_progress')) {
             displayNotificationWithArtwork($w, 'Cannot modify library while update is in progress', './images/warning.png', 'Error!');
