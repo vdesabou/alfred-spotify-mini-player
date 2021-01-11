@@ -460,8 +460,6 @@ function refreshLibrary($w, $silent = false) {
     }
     while ($offsetGetMySavedShows < $userMySavedShows->total);
 
-    $nb_playlist_total += $userMySavedShows->total;
-
     $savedListPlaylist = array();
     $offsetGetUserPlaylists = 0;
     $limitGetUserPlaylists = 50;
@@ -528,12 +526,13 @@ function refreshLibrary($w, $silent = false) {
     }
     while ($offsetGetUserPlaylists < $userPlaylists->total);
 
-    $nb_playlist_total += $userPlaylists->total;
-
+    $nb_playlist_total += sizeof($savedListPlaylist);
     // consider Your Music as a playlist for progress bar
     ++$nb_playlist_total;
     // consider shows as a playlist for progress bar
     $nb_playlist_total += sizeof($savedMySavedShows);
+    // saved albums
+    $nb_playlist_total += sizeof($savedMySavedAlbums);
 
     $skip_playlist = false;
     foreach ($savedListPlaylist as $playlist) {
