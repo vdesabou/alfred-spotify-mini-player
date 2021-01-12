@@ -40,13 +40,6 @@ while ($retry) {
                     exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk '{print $2}')");
                 }
 
-                $ret = updateSetting($w,'oauth_expires',time());
-                if($ret == false) {
-                    $retry = false;
-                    $message = "There was an error when updating settings";
-                    exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk '{print $2}')");
-                }
-
                 $ret = updateSetting($w,'oauth_refresh_token',$session->getRefreshToken());
                 if($ret == false) {
                     $retry = false;

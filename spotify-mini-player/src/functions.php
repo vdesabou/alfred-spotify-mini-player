@@ -8488,7 +8488,6 @@ function getSettings($w)
             'oauth_client_secret' => '',
             'oauth_redirect_uri' => 'http://localhost:15298/callback.php',
             'oauth_access_token' => '',
-            'oauth_expires' => 0,
             'oauth_refresh_token' => '',
             'display_name' => '',
             'userid' => '',
