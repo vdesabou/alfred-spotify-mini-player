@@ -96,11 +96,7 @@ while ($retry) {
     }
     catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
         logMsg($w,'Error(callback.php): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
-        if ($e->getCode() == 429) { // 429 is Too Many Requests
-            $lastResponse = $api->getRequest()->getLastResponse();
-            $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
-            sleep((int) $retryAfter);
-        } else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
+        if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
             // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
             // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
             // retry any SSL error

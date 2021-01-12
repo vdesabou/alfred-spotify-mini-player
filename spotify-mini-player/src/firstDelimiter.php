@@ -1500,13 +1500,7 @@ function firstDelimiterSpotifyConnect($w, $query, $settings, $db, $update_in_pro
                 exit;
             }
             else {
-                if ($e->getCode() == 429) { // 429 is Too Many Requests
-                    $lastResponse = $api->getRequest()
-                        ->getLastResponse();
-                    $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
-                    sleep((int) $retryAfter);
-                }
-                else if ($e->getCode() == 404) {
+                if ($e->getCode() == 404) {
                     $retry = false;
                     $w->result(null, 'help', 'Exception occurred', array('' . $e->getMessage(), 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/warning.png', 'no', null, '');
                     echo $w->tojson();
@@ -1659,13 +1653,7 @@ function firstDelimiterSpotifyConnectPreferredDevice($w, $query, $settings, $db,
                 exit;
             }
             else {
-                if ($e->getCode() == 429) { // 429 is Too Many Requests
-                    $lastResponse = $api->getRequest()
-                        ->getLastResponse();
-                    $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
-                    sleep((int) $retryAfter);
-                }
-                else if ($e->getCode() == 404) {
+                if ($e->getCode() == 404) {
                     $retry = false;
                     $w->result(null, 'help', 'Exception occurred', array('' . $e->getMessage(), 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/warning.png', 'no', null, '');
                     echo $w->tojson();

@@ -1,10 +1,11 @@
 <?php
+
 namespace SpotifyWebAPI;
 
 class SpotifyWebAPIException extends \Exception
 {
-    const TOKEN_EXPIRED = 'The access token expired';
-    const RATE_LIMIT_STATUS = 429;
+    public const TOKEN_EXPIRED = 'The access token expired';
+    public const RATE_LIMIT_STATUS = 429;
 
     /**
      * The reason string from the request's error object.
