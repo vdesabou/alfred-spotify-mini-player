@@ -40,13 +40,6 @@ while ($retry) {
                     exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk '{print $2}')");
                 }
 
-                $ret = updateSetting($w,'oauth_expires',time());
-                if($ret == false) {
-                    $retry = false;
-                    $message = "There was an error when updating settings";
-                    exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk '{print $2}')");
-                }
-
                 $ret = updateSetting($w,'oauth_refresh_token',$session->getRefreshToken());
                 if($ret == false) {
                     $retry = false;
@@ -96,11 +89,7 @@ while ($retry) {
     }
     catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
         logMsg($w,'Error(callback.php): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
-        if ($e->getCode() == 429) { // 429 is Too Many Requests
-            $lastResponse = $api->getRequest()->getLastResponse();
-            $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
-            sleep((int) $retryAfter);
-        } else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
+        if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
             // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
             // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
             // retry any SSL error

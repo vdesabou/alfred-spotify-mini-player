@@ -153,8 +153,6 @@ function thirdDelimiterBrowse($w, $query, $settings, $db, $update_in_progress) {
         $limitCategoryPlaylists = 50;
         $api = getSpotifyWebAPI($w);
         do {
-            // refresh api
-            $api = getSpotifyWebAPI($w, $api);
             $listPlaylists = $api->getCategoryPlaylists($category, array('country' => $country, 'limit' => $limitCategoryPlaylists, 'offset' => $offsetCategoryPlaylists,));
 
             $subtitle = 'Launch Playlist';

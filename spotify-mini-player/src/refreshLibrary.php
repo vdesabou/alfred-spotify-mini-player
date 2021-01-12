@@ -213,8 +213,6 @@ function refreshLibrary($w, $silent = false) {
     $episodes_list = array('4aFURijFNhCP3n1pfQtQaM','33XyX3PQ9rb1vCaE9KpwcR','5ZSnoquOyu7fnGFym8dLzd','5Z2mynHqunrdJaaWKlXACo','6rOqOqj9vAKZBAYNQu9Imt');
     foreach ($episodes_list as $ep) {
         try {
-            // refresh api
-            $api = getSpotifyWebAPI($w, $api);
             $episode = $api->getEpisode($ep, array(
                 'market' => $country_code,
             ));
@@ -245,8 +243,6 @@ function refreshLibrary($w, $silent = false) {
 
         while ($retry) {
             try {
-                // refresh api
-                $api = getSpotifyWebAPI($w, $api);
                 $userMySavedAlbums = $api->getMySavedAlbums(array('limit' => $limitGetMySavedAlbums, 'offset' => $offsetGetMySavedAlbums, 'market' => $country_code,));
                 if($debug) {
                     logMsg($w,"DEBUG: getMySavedAlbums (offset ".$offsetGetMySavedAlbums.")");
@@ -257,13 +253,7 @@ function refreshLibrary($w, $silent = false) {
             catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
                 logMsg($w,'Error(getMySavedAlbums): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
 
-                if ($e->getCode() == 429) { // 429 is Too Many Requests
-                    $lastResponse = $api->getRequest()
-                        ->getLastResponse();
-                    $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
-                    sleep((int) $retryAfter);
-                }
-                else if ($e->getCode() == 404) {
+                if ($e->getCode() == 404) {
                     // skip
                     break;
                 }
@@ -315,8 +305,6 @@ function refreshLibrary($w, $silent = false) {
         $nb_retry = 0;
         while ($retry) {
             try {
-                // refresh api
-                $api = getSpotifyWebAPI($w, $api);
                 if ($cursorAfter != '') {
                     $userFollowedArtists = $api->getUserFollowedArtists(array('type' => 'artist', 'limit' => $limitGetUserFollowedArtists, 'after' => $cursorAfter,));
                     if($debug) {
@@ -336,13 +324,7 @@ function refreshLibrary($w, $silent = false) {
             catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
                 logMsg($w,'Error(getUserFollowedArtists): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
 
-                if ($e->getCode() == 429) { // 429 is Too Many Requests
-                    $lastResponse = $api->getRequest()
-                        ->getLastResponse();
-                    $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
-                    sleep((int) $retryAfter);
-                }
-                else if ($e->getCode() == 404) {
+                if ($e->getCode() == 404) {
                     // skip
                     break;
                 }
@@ -400,8 +382,6 @@ function refreshLibrary($w, $silent = false) {
 
         while ($retry) {
             try {
-                // refresh api
-                $api = getSpotifyWebAPI($w, $api);
                 $userMySavedShows = $api->getMySavedShows(array('limit' => $limitGetMySavedShows, 'offset' => $offsetGetMySavedShows, 'market' => $country_code,));
                 if($debug) {
                     logMsg($w,"DEBUG: getMySavedShows (offset ".$offsetGetMySavedShows.")");
@@ -412,13 +392,7 @@ function refreshLibrary($w, $silent = false) {
             catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
                 logMsg($w,'Error(getMySavedShows): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
 
-                if ($e->getCode() == 429) { // 429 is Too Many Requests
-                    $lastResponse = $api->getRequest()
-                        ->getLastResponse();
-                    $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
-                    sleep((int) $retryAfter);
-                }
-                else if ($e->getCode() == 404) {
+                if ($e->getCode() == 404) {
                     // skip
                     break;
                 }
@@ -460,8 +434,6 @@ function refreshLibrary($w, $silent = false) {
     }
     while ($offsetGetMySavedShows < $userMySavedShows->total);
 
-    $nb_playlist_total += $userMySavedShows->total;
-
     $savedListPlaylist = array();
     $offsetGetUserPlaylists = 0;
     $limitGetUserPlaylists = 50;
@@ -471,8 +443,6 @@ function refreshLibrary($w, $silent = false) {
 
         while ($retry) {
             try {
-                // refresh api
-                $api = getSpotifyWebAPI($w, $api);
                 $userPlaylists = $api->getUserPlaylists(urlencode($userid), array('limit' => $limitGetUserPlaylists, 'offset' => $offsetGetUserPlaylists,));
                 if($debug) {
                     logMsg($w,"DEBUG: getUserPlaylists (offset ".$offsetGetUserPlaylists.")");
@@ -483,13 +453,7 @@ function refreshLibrary($w, $silent = false) {
             catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
                 logMsg($w,'Error(getUserPlaylists): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
 
-                if ($e->getCode() == 429) { // 429 is Too Many Requests
-                    $lastResponse = $api->getRequest()
-                        ->getLastResponse();
-                    $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
-                    sleep((int) $retryAfter);
-                }
-                else if ($e->getCode() == 404) {
+                if ($e->getCode() == 404) {
                     // skip
                     break;
                 }
@@ -528,12 +492,13 @@ function refreshLibrary($w, $silent = false) {
     }
     while ($offsetGetUserPlaylists < $userPlaylists->total);
 
-    $nb_playlist_total += $userPlaylists->total;
-
+    $nb_playlist_total += sizeof($savedListPlaylist);
     // consider Your Music as a playlist for progress bar
     ++$nb_playlist_total;
     // consider shows as a playlist for progress bar
     $nb_playlist_total += sizeof($savedMySavedShows);
+    // saved albums
+    $nb_playlist_total += sizeof($savedMySavedAlbums);
 
     $skip_playlist = false;
     foreach ($savedListPlaylist as $playlist) {
@@ -584,8 +549,6 @@ function refreshLibrary($w, $silent = false) {
                 $nb_retry = 0;
                 while ($retry) {
                     try {
-                        // refresh api
-                        $api = getSpotifyWebAPI($w, $api);
                         $userPlaylistTracks = $api->getPlaylistTracks($playlist->id, array('fields' => array('total', 'items(added_at)', 'items(is_local)', 'items.track(is_playable,duration_ms,uri,popularity,name,linked_from)', 'items.track.album(album_type,images,uri,name)', 'items.track.artists(name,uri)',), 'limit' => $limitGetUserPlaylistTracks, 'offset' => $offsetGetUserPlaylistTracks, 'market' => $country_code,));
                         if($debug) {
                             logMsg($w,"DEBUG: getPlaylistTracks for playlist uri ".$playlist->id." (offset ".$offsetGetUserPlaylistTracks.")");
@@ -595,13 +558,7 @@ function refreshLibrary($w, $silent = false) {
                     catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
                         logMsg($w,'Error(getPlaylistTracks): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
 
-                        if ($e->getCode() == 429) { // 429 is Too Many Requests
-                            $lastResponse = $api->getRequest()
-                                ->getLastResponse();
-                    $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
-                    sleep((int) $retryAfter);
-                        }
-                        else if ($e->getCode() == 404 || $e->getCode() == 500) {
+                        if ($e->getCode() == 404 || $e->getCode() == 500) {
                             // skip
                             logMsg($w,'Error(getPlaylistTracks): skipping playlist '.$playlist->id.' due to error '.$e->getCode());
                             $skip_playlist = true;
@@ -879,8 +836,6 @@ function refreshLibrary($w, $silent = false) {
                     $nb_retry = 0;
                     while ($retry) {
                         try {
-                            // refresh api
-                            $api = getSpotifyWebAPI($w, $api);
                             $userPlaylistTracks = $api->getPlaylistTracks($playlist->id, array('fields' => array('total', 'items(added_at)', 'items(is_local)', 'items.track(is_playable,duration_ms,uri,popularity,name,linked_from)', 'items.track.album(album_type,images,uri,name)', 'items.track.artists(name,uri)',), 'limit' => $limitGetUserPlaylistTracks, 'offset' => $offsetGetUserPlaylistTracks, 'market' => $country_code,));
                             if($debug) {
                                 logMsg($w,"DEBUG: getPlaylistTracks for playlist uri ".$playlist->id." (offset ".$offsetGetUserPlaylistTracks.")");
@@ -890,12 +845,7 @@ function refreshLibrary($w, $silent = false) {
                         catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
                             logMsg($w,'Error(getPlaylistTracks): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
 
-                            if ($e->getCode() == 429) { // 429 is Too Many Requests
-                                $lastResponse = $api->getRequest()
-                                    ->getLastResponse();
-                    $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
-                            }
-                            else if ($e->getCode() == 404 || $e->getCode() == 500) {
+                            if ($e->getCode() == 404 || $e->getCode() == 500) {
                                 // skip
                                 logMsg($w,'Error(getPlaylistTracks): skipping playlist '.$playlist->id.' due to error '.$e->getCode());
                                 $skip_playlist = true;
@@ -1180,8 +1130,6 @@ function refreshLibrary($w, $silent = false) {
                 $nb_retry = 0;
                 while ($retry) {
                     try {
-                        // refresh api
-                        $api = getSpotifyWebAPI($w, $api);
                         $tmp = explode(':', $album->uri);
                         $albumTracks = $api->getAlbumTracks($tmp[2], array('limit' => $limitGetMySavedAlbumTracks, 'offset' => $offsetGetMySavedAlbumTracks, 'market' => $country_code,));
                         if($debug) {
@@ -1202,13 +1150,7 @@ function refreshLibrary($w, $silent = false) {
                     catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
                         logMsg($w,'Error(getAlbumTracks): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
 
-                        if ($e->getCode() == 429) { // 429 is Too Many Requests
-                            $lastResponse = $api->getRequest()
-                                ->getLastResponse();
-                    $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
-                    sleep((int) $retryAfter);
-                        }
-                        else if ($e->getCode() == 404) {
+                        if ($e->getCode() == 404) {
                             // skip
                             break;
                         }
@@ -1252,9 +1194,6 @@ function refreshLibrary($w, $silent = false) {
     $nb_retry = 0;
     while ($retry) {
         try {
-            // refresh api
-            $api = getSpotifyWebAPI($w, $api);
-
             // get only one, we just want to check total for now
             $userMySavedTracks = $api->getMySavedTracks(array('limit' => 1, 'offset' => 0,));
             $retry = false;
@@ -1262,13 +1201,7 @@ function refreshLibrary($w, $silent = false) {
         catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
             logMsg($w,'Error(getMySavedTracks): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
 
-            if ($e->getCode() == 429) { // 429 is Too Many Requests
-                $lastResponse = $api->getRequest()
-                    ->getLastResponse();
-                    $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
-                    sleep((int) $retryAfter);
-            }
-            else if ($e->getCode() == 404) {
+            if ($e->getCode() == 404) {
                 // skip
                 break;
             }
@@ -1341,8 +1274,6 @@ function refreshLibrary($w, $silent = false) {
             $nb_retry = 0;
             while ($retry) {
                 try {
-                    // refresh api
-                    $api = getSpotifyWebAPI($w, $api);
                     $userMySavedTracks = $api->getMySavedTracks(array('limit' => $limitGetMySavedTracks, 'offset' => $offsetGetMySavedTracks, 'market' => $country_code,));
                     if($debug) {
                         logMsg($w,"DEBUG: getMySavedTracks (offset ".$offsetGetMySavedTracks.")");
@@ -1352,13 +1283,7 @@ function refreshLibrary($w, $silent = false) {
                 catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
                     logMsg($w,'Error(getMySavedTracks): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
 
-                    if ($e->getCode() == 429) { // 429 is Too Many Requests
-                        $lastResponse = $api->getRequest()
-                            ->getLastResponse();
-                            $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
-                            sleep((int) $retryAfter);
-                    }
-                    else if ($e->getCode() == 404) {
+                    if ($e->getCode() == 404) {
                         // skip
                         break;
                     }
@@ -1637,8 +1562,6 @@ function refreshLibrary($w, $silent = false) {
                 $nb_retry = 0;
                 while ($retry) {
                     try {
-                        // refresh api
-                        $api = getSpotifyWebAPI($w, $api);
                         $userMySavedEpisodes = $api->getShowEpisodes($show->uri, array('limit' => $limitGetMySavedEpisodes, 'offset' => $offsetGetMySavedEpisodes, 'market' => $country_code,));
                         if($debug) {
                             logMsg($w,"DEBUG: getShowEpisodes for show uri ".$show->uri." (offset ".$offsetGetMySavedEpisodes.")");
@@ -1648,13 +1571,7 @@ function refreshLibrary($w, $silent = false) {
                     catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
                         logMsg($w,'Error(getShowEpisodes): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
 
-                        if ($e->getCode() == 429) { // 429 is Too Many Requests
-                            $lastResponse = $api->getRequest()
-                                ->getLastResponse();
-                            $retryAfter = $lastResponse['headers']['Retry-After'] ?? $lastResponse['headers']['retry-after'];
-                            sleep((int) $retryAfter);
-                        }
-                        else if ($e->getCode() == 404) {
+                        if ($e->getCode() == 404) {
                             // skip
                             break;
                         }
@@ -1809,8 +1726,6 @@ function refreshLibrary($w, $silent = false) {
                     $nb_retry = 0;
                     while ($retry) {
                         try {
-                            // refresh api
-                            $api = getSpotifyWebAPI($w, $api);
                             $userMySavedEpisodes = $api->getShowEpisodes($show->uri, array('limit' => $limitGetMySavedEpisodes, 'offset' => $offsetGetMySavedEpisodes, 'market' => $country_code,));
                             if($debug) {
                                 logMsg($w,"DEBUG: getShowEpisodes for show uri ".$show->uri." (offset ".$offsetGetMySavedEpisodes.")");
