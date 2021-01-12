@@ -1465,10 +1465,13 @@ function seekToBeginning($w)
 
             if(isset($playback_info->is_playing)) {
                 $is_playing = $playback_info->is_playing;
+                $options = [
+                    'position_ms' => $playback_info->progress_ms,
+                ];
                 if ($is_playing) {
                     $api->pause($device_id);
                 } else {
-                    $api->play($device_id);
+                    $api->play($device_id,$options);
                 }
                 $retry = false;
             } else {
