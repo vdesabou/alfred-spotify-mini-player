@@ -2076,7 +2076,7 @@ function listUsers($w)
  *
  * @param mixed $w
  */
-function getSpotifyWebAPI($w, $old_api = null)
+function getSpotifyWebAPI($w)
 {
     // Read settings from JSON
 
@@ -2086,40 +2086,36 @@ function getSpotifyWebAPI($w, $old_api = null)
     $oauth_access_token = $settings->oauth_access_token;
     $oauth_refresh_token = $settings->oauth_refresh_token;
 
-    if ($old_api == null) {
-        // create a new api object
-        $session = new SpotifyWebAPI\Session($oauth_client_id, $oauth_client_secret);
-        // Use previously requested tokens
-        if ($oauth_access_token != '') {
-            $session->setAccessToken($oauth_access_token);
-            $session->setRefreshToken($oauth_refresh_token);
-        } else {
-            // Or request a new access token
-            $session->refreshAccessToken($oauth_refresh_token);
-        }
-        $options = [
-            'auto_refresh' => true,
-        ];
-        $api = new SpotifyWebAPI\SpotifyWebAPI($options, $session);
-        $api->setSession($session);
-
-        $oauth_access_token = $session->getAccessToken();
-        // Set new token to settings
-        $ret = updateSetting($w, 'oauth_access_token', $oauth_access_token);
-        if ($ret == false) {
-            throw new SpotifyWebAPI\SpotifyWebAPIException('Cannot set oauth_access_token', 100);
-        }
-
-        $oauth_refresh_token = $session->getRefreshToken();
-        // Set new token to settings
-        $ret = updateSetting($w, 'oauth_refresh_token', $oauth_refresh_token);
-        if ($ret == false) {
-            throw new SpotifyWebAPI\SpotifyWebAPIException('Cannot set oauth_refresh_token', 100);
-        }
+    // create a new api object
+    $session = new SpotifyWebAPI\Session($oauth_client_id, $oauth_client_secret);
+    // Use previously requested tokens
+    if ($oauth_access_token != '') {
+        $session->setAccessToken($oauth_access_token);
+        $session->setRefreshToken($oauth_refresh_token);
     } else {
-        $api = $old_api;
+        // Or request a new access token
+        $session->refreshAccessToken($oauth_refresh_token);
+    }
+    $options = [
+        'auto_refresh' => true,
+        'auto_retry' => true,
+    ];
+    $api = new SpotifyWebAPI\SpotifyWebAPI($options, $session);
+    $api->setSession($session);
+
+    $oauth_access_token = $session->getAccessToken();
+    // Set new token to settings
+    $ret = updateSetting($w, 'oauth_access_token', $oauth_access_token);
+    if ($ret == false) {
+        throw new SpotifyWebAPI\SpotifyWebAPIException('Cannot set oauth_access_token', 100);
     }
 
+    $oauth_refresh_token = $session->getRefreshToken();
+    // Set new token to settings
+    $ret = updateSetting($w, 'oauth_refresh_token', $oauth_refresh_token);
+    if ($ret == false) {
+        throw new SpotifyWebAPI\SpotifyWebAPIException('Cannot set oauth_refresh_token', 100);
+    }
     return $api;
 }
 
@@ -4173,8 +4169,6 @@ function addTracksToYourMusic($w, $tracks, $allow_duplicate = true)
                 $offset += 50;
 
                 if (count($output)) {
-                    // refresh api
-                    $api = getSpotifyWebAPI($w, $api);
                     $tracks_contain = $api->myTracksContains($output);
                     for ($i = 0; $i < count($output); ++$i) {
                         if (!$tracks_contain[$i]) {
@@ -4202,8 +4196,6 @@ function addTracksToYourMusic($w, $tracks, $allow_duplicate = true)
                 $offset += 50;
 
                 if (count($output)) {
-                    // refresh api
-                    $api = getSpotifyWebAPI($w, $api);
                     $api->addMyTracks($output);
                 }
             } while (count($output) > 0);
@@ -4265,9 +4257,6 @@ function addTracksToPlaylist($w, $tracks, $playlist_uri, $playlist_name, $allow_
                 $offset += 100;
 
                 if (count($output)) {
-                    // refresh api
-                    $api = getSpotifyWebAPI($w, $api);
-
                     if(getenv('append_to_playlist_when_adding_tracks') == 0) {
                         $api->addPlaylistTracks($playlist_id, $output, array(
                                 'position' => 0,
@@ -5188,8 +5177,6 @@ function getThePlaylistTracks($w, $playlist_uri)
         $offsetGetUserPlaylistTracks = 0;
         $limitGetUserPlaylistTracks = 100;
         do {
-            // refresh api
-            $api = getSpotifyWebAPI($w, $api);
             $userPlaylistTracks = $api->getPlaylistTracks($playlist_id, array(
                     'fields' => array(
                         'total',
@@ -5244,8 +5231,6 @@ function getTheAlbumTracks($w, $album_uri)
         $offsetGetAlbumTracks = 0;
         $limitGetAlbumTracks = 50;
         do {
-            // refresh api
-            $api = getSpotifyWebAPI($w, $api);
             $albumTracks = $api->getAlbumTracks($tmp[2], array(
                     'limit' => $limitGetAlbumTracks,
                     'offset' => $offsetGetAlbumTracks,
@@ -5298,8 +5283,6 @@ function getTheArtistAlbums($w, $artist_uri, $country_code, $actionMode = false,
                     );
         }
         do {
-            // refresh api
-            $api = getSpotifyWebAPI($w, $api);
             $userArtistAlbums = $api->getArtistAlbums($tmp[2], array(
                     'album_type' => $album_type,
                     'market' => $country_code,
@@ -5337,8 +5320,6 @@ function getTheArtistAlbums($w, $artist_uri, $country_code, $actionMode = false,
             $offset += 20;
 
             if (count($output)) {
-                // refresh api
-                $api = getSpotifyWebAPI($w, $api);
                 $resultGetAlbums = $api->getAlbums($output);
                 foreach ($resultGetAlbums->albums as $album) {
                     $albums[] = $album;
@@ -5374,8 +5355,6 @@ function getTheShowEpisodes($w, $show_uri, $country_code, $actionMode = false)
         $limitGetShowEpisodes = 20;
 
         do {
-            // refresh api
-            $api = getSpotifyWebAPI($w, $api);
             $userShowEpisodes = $api->getShowEpisodes($tmp[2], array(
                     'market' => $country_code,
                     'limit' => $limitGetShowEpisodes,
@@ -5488,8 +5467,6 @@ function getTheAlbumFullTracks($w, $album_uri, $actionMode = false)
         $offsetGetAlbumTracks = 0;
         $limitGetAlbumTracks = 50;
         do {
-            // refresh api
-            $api = getSpotifyWebAPI($w, $api);
             $albumTracks = $api->getAlbumTracks($tmp[2], array(
                     'limit' => $limitGetAlbumTracks,
                     'offset' => $offsetGetAlbumTracks,
@@ -5539,8 +5516,6 @@ function getThePlaylistFullTracks($w, $playlist_uri)
         $offsetGetUserPlaylistTracks = 0;
         $limitGetUserPlaylistTracks = 100;
         do {
-            // refresh api
-            $api = getSpotifyWebAPI($w, $api);
             $userPlaylistTracks = $api->getPlaylistTracks($playlist_id, array(
                     'fields' => array(
                         'total',
@@ -5691,8 +5666,6 @@ function getTheNewReleases($w, $country_code, $max_results = 50)
         $offsetGetNewReleases = 0;
         $limitGetNewReleases = 50;
         do {
-            // refresh api
-            $api = getSpotifyWebAPI($w, $api);
             $newReleasesAlbums = $api->getNewReleases(array(
                     'country' => $country_code,
                     'limit' => $limitGetNewReleases,
@@ -5722,8 +5695,6 @@ function getTheNewReleases($w, $country_code, $max_results = 50)
             $offset += 20;
 
             if (count($output)) {
-                // refresh api
-                $api = getSpotifyWebAPI($w, $api);
                 $resultGetAlbums = $api->getAlbums($output);
                 foreach ($resultGetAlbums->albums as $album) {
                     $albums[] = $album;

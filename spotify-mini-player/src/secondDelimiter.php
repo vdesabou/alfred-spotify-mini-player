@@ -1103,8 +1103,6 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
         $offsetGetUserPlaylistTracks = 0;
         $limitGetUserPlaylistTracks = 100;
         do {
-            // refresh api
-            $api = getSpotifyWebAPI($w, false, $api);
             $userPlaylistTracks = $api->getPlaylistTracks($playlist_id, array('fields' => array('total', 'items(added_at)', 'items(is_local)', 'items.track(is_playable,duration_ms,uri,popularity,name)', 'items.track.album(album_type,images,uri,name)', 'items.track.artists(name,uri)',), 'limit' => $limitGetUserPlaylistTracks, 'offset' => $offsetGetUserPlaylistTracks, 'market' => $country_code,));
 
             foreach ($userPlaylistTracks->items as $item) {
@@ -2888,8 +2886,6 @@ function secondDelimiterBrowse($w, $query, $settings, $db, $update_in_progress) 
             $offsetListCategories = 0;
             $limitListCategories = 50;
             do {
-                // refresh api
-                $api = getSpotifyWebAPI($w, $api);
                 $listCategories = $api->getCategoriesList(array('country' => $country, 'limit' => $limitListCategories, 'locale' => '', 'offset' => $offsetListCategories,));
                 $offsetListCategories += $limitListCategories;
             } while ($offsetListCategories < $listCategories

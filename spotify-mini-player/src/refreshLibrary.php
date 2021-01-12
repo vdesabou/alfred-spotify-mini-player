@@ -213,8 +213,6 @@ function refreshLibrary($w, $silent = false) {
     $episodes_list = array('4aFURijFNhCP3n1pfQtQaM','33XyX3PQ9rb1vCaE9KpwcR','5ZSnoquOyu7fnGFym8dLzd','5Z2mynHqunrdJaaWKlXACo','6rOqOqj9vAKZBAYNQu9Imt');
     foreach ($episodes_list as $ep) {
         try {
-            // refresh api
-            $api = getSpotifyWebAPI($w, $api);
             $episode = $api->getEpisode($ep, array(
                 'market' => $country_code,
             ));
@@ -245,8 +243,6 @@ function refreshLibrary($w, $silent = false) {
 
         while ($retry) {
             try {
-                // refresh api
-                $api = getSpotifyWebAPI($w, $api);
                 $userMySavedAlbums = $api->getMySavedAlbums(array('limit' => $limitGetMySavedAlbums, 'offset' => $offsetGetMySavedAlbums, 'market' => $country_code,));
                 if($debug) {
                     logMsg($w,"DEBUG: getMySavedAlbums (offset ".$offsetGetMySavedAlbums.")");
@@ -309,8 +305,6 @@ function refreshLibrary($w, $silent = false) {
         $nb_retry = 0;
         while ($retry) {
             try {
-                // refresh api
-                $api = getSpotifyWebAPI($w, $api);
                 if ($cursorAfter != '') {
                     $userFollowedArtists = $api->getUserFollowedArtists(array('type' => 'artist', 'limit' => $limitGetUserFollowedArtists, 'after' => $cursorAfter,));
                     if($debug) {
@@ -388,8 +382,6 @@ function refreshLibrary($w, $silent = false) {
 
         while ($retry) {
             try {
-                // refresh api
-                $api = getSpotifyWebAPI($w, $api);
                 $userMySavedShows = $api->getMySavedShows(array('limit' => $limitGetMySavedShows, 'offset' => $offsetGetMySavedShows, 'market' => $country_code,));
                 if($debug) {
                     logMsg($w,"DEBUG: getMySavedShows (offset ".$offsetGetMySavedShows.")");
@@ -451,8 +443,6 @@ function refreshLibrary($w, $silent = false) {
 
         while ($retry) {
             try {
-                // refresh api
-                $api = getSpotifyWebAPI($w, $api);
                 $userPlaylists = $api->getUserPlaylists(urlencode($userid), array('limit' => $limitGetUserPlaylists, 'offset' => $offsetGetUserPlaylists,));
                 if($debug) {
                     logMsg($w,"DEBUG: getUserPlaylists (offset ".$offsetGetUserPlaylists.")");
@@ -559,8 +549,6 @@ function refreshLibrary($w, $silent = false) {
                 $nb_retry = 0;
                 while ($retry) {
                     try {
-                        // refresh api
-                        $api = getSpotifyWebAPI($w, $api);
                         $userPlaylistTracks = $api->getPlaylistTracks($playlist->id, array('fields' => array('total', 'items(added_at)', 'items(is_local)', 'items.track(is_playable,duration_ms,uri,popularity,name,linked_from)', 'items.track.album(album_type,images,uri,name)', 'items.track.artists(name,uri)',), 'limit' => $limitGetUserPlaylistTracks, 'offset' => $offsetGetUserPlaylistTracks, 'market' => $country_code,));
                         if($debug) {
                             logMsg($w,"DEBUG: getPlaylistTracks for playlist uri ".$playlist->id." (offset ".$offsetGetUserPlaylistTracks.")");
@@ -848,8 +836,6 @@ function refreshLibrary($w, $silent = false) {
                     $nb_retry = 0;
                     while ($retry) {
                         try {
-                            // refresh api
-                            $api = getSpotifyWebAPI($w, $api);
                             $userPlaylistTracks = $api->getPlaylistTracks($playlist->id, array('fields' => array('total', 'items(added_at)', 'items(is_local)', 'items.track(is_playable,duration_ms,uri,popularity,name,linked_from)', 'items.track.album(album_type,images,uri,name)', 'items.track.artists(name,uri)',), 'limit' => $limitGetUserPlaylistTracks, 'offset' => $offsetGetUserPlaylistTracks, 'market' => $country_code,));
                             if($debug) {
                                 logMsg($w,"DEBUG: getPlaylistTracks for playlist uri ".$playlist->id." (offset ".$offsetGetUserPlaylistTracks.")");
@@ -1144,8 +1130,6 @@ function refreshLibrary($w, $silent = false) {
                 $nb_retry = 0;
                 while ($retry) {
                     try {
-                        // refresh api
-                        $api = getSpotifyWebAPI($w, $api);
                         $tmp = explode(':', $album->uri);
                         $albumTracks = $api->getAlbumTracks($tmp[2], array('limit' => $limitGetMySavedAlbumTracks, 'offset' => $offsetGetMySavedAlbumTracks, 'market' => $country_code,));
                         if($debug) {
@@ -1210,9 +1194,6 @@ function refreshLibrary($w, $silent = false) {
     $nb_retry = 0;
     while ($retry) {
         try {
-            // refresh api
-            $api = getSpotifyWebAPI($w, $api);
-
             // get only one, we just want to check total for now
             $userMySavedTracks = $api->getMySavedTracks(array('limit' => 1, 'offset' => 0,));
             $retry = false;
@@ -1293,8 +1274,6 @@ function refreshLibrary($w, $silent = false) {
             $nb_retry = 0;
             while ($retry) {
                 try {
-                    // refresh api
-                    $api = getSpotifyWebAPI($w, $api);
                     $userMySavedTracks = $api->getMySavedTracks(array('limit' => $limitGetMySavedTracks, 'offset' => $offsetGetMySavedTracks, 'market' => $country_code,));
                     if($debug) {
                         logMsg($w,"DEBUG: getMySavedTracks (offset ".$offsetGetMySavedTracks.")");
@@ -1583,8 +1562,6 @@ function refreshLibrary($w, $silent = false) {
                 $nb_retry = 0;
                 while ($retry) {
                     try {
-                        // refresh api
-                        $api = getSpotifyWebAPI($w, $api);
                         $userMySavedEpisodes = $api->getShowEpisodes($show->uri, array('limit' => $limitGetMySavedEpisodes, 'offset' => $offsetGetMySavedEpisodes, 'market' => $country_code,));
                         if($debug) {
                             logMsg($w,"DEBUG: getShowEpisodes for show uri ".$show->uri." (offset ".$offsetGetMySavedEpisodes.")");
@@ -1749,8 +1726,6 @@ function refreshLibrary($w, $silent = false) {
                     $nb_retry = 0;
                     while ($retry) {
                         try {
-                            // refresh api
-                            $api = getSpotifyWebAPI($w, $api);
                             $userMySavedEpisodes = $api->getShowEpisodes($show->uri, array('limit' => $limitGetMySavedEpisodes, 'offset' => $offsetGetMySavedEpisodes, 'market' => $country_code,));
                             if($debug) {
                                 logMsg($w,"DEBUG: getShowEpisodes for show uri ".$show->uri." (offset ".$offsetGetMySavedEpisodes.")");
