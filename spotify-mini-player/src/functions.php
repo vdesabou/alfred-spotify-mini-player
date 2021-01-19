@@ -2627,10 +2627,10 @@ function createDebugFile($w)
 
     copy2clipboard($output);
 
-    $output = str_replace('"', '\"', $output);
+    $output = urlencode($output);
+    $command = "open \"mailto:alfred.spotify.mini.player@gmail.com?subject=Alfred%20Spotify%20Mini%20Player%20debug%20file%20version%20".getenv('alfred_workflow_version')."&body=$output\"";
 
-    exec("open \"mailto:alfred.spotify.mini.player@gmail.com?subject=Alfred Spotify Mini Player debug file (version ".getenv('alfred_workflow_version').")&body=$output\"");
-    print_r("open \"mailto:alfred.spotify.mini.player@gmail.com?subject=Alfred Spotify Mini Player debug file (version ".getenv('alfred_workflow_version').")&body=$output\"");
+    exec($command);
 }
 
 /**
@@ -4313,11 +4313,12 @@ function removeTrackFromPlaylist($w, $track_uri, $playlist_uri, $playlist_name, 
         } else {
             $playlist_id = $tmp[2];
         }
-        $api->deletePlaylistTracks($playlist_id, array(
-                array(
-                    'id' => $track_uri,
-                ),
-            ));
+        $tracks = [
+            'tracks' => [
+                ['uri' => $track_uri],
+            ],
+        ];
+        $api->deletePlaylistTracks($playlist_id, $tracks);
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
         logMsg($w,'Error(removeTrackFromPlaylist): (exception '.jTraceEx($e).')');
         handleSpotifyWebAPIException($w, $e);
