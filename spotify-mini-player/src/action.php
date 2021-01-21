@@ -1123,7 +1123,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
             } else {
                 $device_id = getSpotifyConnectCurrentDeviceId($w);
                 if($device_id != '') {
-                    playSpotifyConnect($w, $device_id);
+                    playSpotifyConnect($w, $device_id, $country_code);
                 } else {
                     displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
                     return;

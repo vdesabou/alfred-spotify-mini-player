@@ -1515,15 +1515,34 @@ function seekToBeginning($w)
  *
  * @param mixed $w
  */
- function playSpotifyConnect($w, $device_id)
+ function playSpotifyConnect($w, $device_id, $country_code)
  {
     $retry = true;
     $nb_retry = 0;
     while ($retry) {
         try {
+
             $api = getSpotifyWebAPI($w);
-            $api->play($device_id);
-            $retry = false;
+
+            $playback_info = $api->getMyCurrentPlaybackInfo(array(
+            'market' => $country_code,
+            'additional_types' => 'track,episode',
+            ));
+
+            if(isset($playback_info->is_playing)) {
+                $is_playing = $playback_info->is_playing;
+                $options = [
+                    'position_ms' => $playback_info->progress_ms,
+                ];
+                if ($is_playing) {
+                    // ignore
+                } else {
+                    $api->play($device_id,$options);
+                }
+                $retry = false;
+            } else {
+                logMsg($w,'Error(playSpotifyConnect): is_playing not set '.$device_id);
+            }
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
             logMsg($w,'Error(playSpotifyConnect): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
             if ($e->getCode() == 404) {
