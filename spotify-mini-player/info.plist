@@ -13280,6 +13280,8 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 		<string></string>
 		<key>sharing_text2</key>
 		<string>♫</string>
+		<key>connect_switch_string</key>
+		<string>Switch playback to {device_type} {device_name} {volume}</string>
 	</dict>
 	<key>version</key>
 	<string>10.6</string>

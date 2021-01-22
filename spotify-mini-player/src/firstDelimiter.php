@@ -1430,6 +1430,10 @@ function firstDelimiterSpotifyConnect($w, $query, $settings, $db, $update_in_pro
                     }
                     else {
                         if (!$device->is_active) {
+                            $connect_switch_string = getenv('connect_switch_string');
+                            $connect_switch_string  = str_replace('{device_type}', $device->type, $connect_switch_string);
+                            $connect_switch_string  = str_replace('{device_name}', $device->name, $connect_switch_string);
+                            $connect_switch_string  = str_replace('{volume}', $volume, $connect_switch_string);
                             $w->result(null, serialize(array(''
                             /*track_uri*/, ''
                             /* album_uri */, ''
@@ -1445,7 +1449,7 @@ function firstDelimiterSpotifyConnect($w, $query, $settings, $db, $update_in_pro
                             /* artist_artwork_path */, ''
                             /* album_artwork_path */, ''
                             /* playlist_name */, '', /* playlist_artwork_path */
-                            )), $added . 'Switch playback to ' . $device->type . ' ' . $device->name . ' ' . $volume, array('Type enter to validate', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), $icon, 'yes', null, '');
+                            )), $added . $connect_switch_string, array('Type enter to validate', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), $icon, 'yes', null, '');
                         }
                         else {
                             $w->result(null, 'help', $added . ' ' . $device->type . ' ' . $device->name . ' is currently active ' . $volume, array('This device is the currently active device', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), $icon, 'no', null, '');
@@ -2973,4 +2977,3 @@ function firstDelimiterYourRecentTracks($w, $query, $settings, $db, $update_in_p
         exit;
     }
 }
-
