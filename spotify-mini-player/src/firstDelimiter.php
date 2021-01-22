@@ -1445,7 +1445,7 @@ function firstDelimiterSpotifyConnect($w, $query, $settings, $db, $update_in_pro
                             /* artist_artwork_path */, ''
                             /* album_artwork_path */, ''
                             /* playlist_name */, '', /* playlist_artwork_path */
-                            )), $added . 'Switch playback to ' . $device->type . ' ' . $device->name . ' ' . $volume, array('Type enter to validate', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), $icon, 'yes', null, '');
+                            )), $added . 'Switch to ' . $device->type . ' ' . $device->name . ' ' . $volume, array('Type enter to validate', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), $icon, 'yes', null, '');
                         }
                         else {
                             $w->result(null, 'help', $added . ' ' . $device->type . ' ' . $device->name . ' is currently active ' . $volume, array('This device is the currently active device', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), $icon, 'no', null, '');
@@ -2973,4 +2973,3 @@ function firstDelimiterYourRecentTracks($w, $query, $settings, $db, $update_in_p
         exit;
     }
 }
-
