@@ -1314,7 +1314,7 @@ function addToQueueSpotifyConnect($w, $trackId, $device_id)
    while ($retry) {
        try {
            $api = getSpotifyWebAPI($w);
-           $api->addToQueue($trackId, $device_id);
+           $api->queue($trackId, $device_id);
            $retry = false;
        } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
            logMsg($w,'Error(addToQueueSpotifyConnect): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
