@@ -8537,6 +8537,7 @@ function getSettings($w)
         );
 
         $w->write($default, 'settings.json');
+        logMsg($w,"getSettings: Settings have been set to default");
         displayNotificationWithArtwork($w, 'Settings have been set to default', './images/info.png', 'Settings reset');
 
         $settings = $w->read('settings.json');
