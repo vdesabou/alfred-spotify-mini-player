@@ -1581,10 +1581,11 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
         if ($history == false) {
             displayNotificationWithArtwork($w, 'No history yet', './images/warning.png', 'Error!');
+            return;
         }
         $query = array_pop($history);
-            // pop twice
-            $query = array_pop($history);
+        // pop twice
+        $query = array_pop($history);
         $w->write($history, 'history.json');
         exec("osascript -e 'tell application id \"".getAlfredName()."\" to search \"".getenv('c_spot_mini')." $query\"'");
 
