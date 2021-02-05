@@ -585,6 +585,7 @@ class Workflows
 
         function read($a, $array = false)
         {
+            clearstatcache();
             if (file_exists($a)):
                 if (file_exists($this->path . '/' . $a)):
                     $a = $this->path . '/' . $a;
@@ -602,6 +603,7 @@ class Workflows
             elseif (!is_null(json_decode($out)) && !$array):
                 $out = json_decode($out, true);
             endif;
+            clearstatcache();
             return $out;
         }
 
