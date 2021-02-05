@@ -1088,7 +1088,6 @@ if ($type == 'TRACK' && $other_settings == '' &&
         }
 
         stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
-        //addAlbumToPlayQueue($w, $album_uri, $album_name);
 
         return;
     } elseif ($other_action == 'play_episode_simplified') {
@@ -1110,7 +1109,6 @@ if ($type == 'TRACK' && $other_settings == '' &&
         }
 
         stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
-        //addAlbumToPlayQueue($w, $album_uri, $album_name);
 
         return;
     } elseif ($other_action == 'play') {
