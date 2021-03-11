@@ -261,7 +261,7 @@
                             <h2 id="privacy">Privacy</h2>
                             <p>
                                 Alfred Spotify Mini Player writes your <em>Client ID</em> and <em>Client Secret</em> in
-                                a local <em>settings.json</em> file. They are never used in a way that could compromise
+                                a local <em>settings.db</em> database file. They are never used in a way that could compromise
                                 their integrity other than in the Spotify query, as required by
                                 the Spotify Web API. Alfred Spotify Mini Player itself <strong>never</strong> sends the
                                 data

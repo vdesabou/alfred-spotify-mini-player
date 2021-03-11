@@ -1556,7 +1556,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
         return;
     } elseif ($other_action == 'reset_settings') {
-        deleteTheFile($w,$w->data().'/settings.json');
+        deleteTheFile($w,$w->data().'/settings.db');
         logMsg($w,"Settings are reset");
 
         return;

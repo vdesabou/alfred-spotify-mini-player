@@ -275,7 +275,7 @@ function debug($argv) {
         '' /* playlist_uri */,
         '' /* spotify_command */,
         '' /* query */,
-        'Open▹'.$w->data().'/settings.json'/* other_settings*/,
+        'Open▹'.$w->data().'/settings.db'/* other_settings*/,
         '' /* other_action */,
         '' /* alfred_playlist_uri */,
         '' /* artist_name */,
@@ -291,7 +291,7 @@ function debug($argv) {
         '' /* is_alfred_playlist_active */,
         '' /* country_code*/,
         '', /* userid*/
-    )), 'Open settings file', 'This will open the json settings file', 'fileicon:'.$w->data().'/settings.json', 'yes', null, '');
+    )), 'Open settings database file', 'This will open the db settings file', 'fileicon:'.$w->data().'/settings.db', 'yes', null, '');
 
     $w->result(null, serialize(array(
         '' /*track_uri*/,

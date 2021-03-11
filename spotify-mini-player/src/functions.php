@@ -5,6 +5,51 @@ require_once './src/createLibrary.php';
 require_once './src/refreshLibrary.php';
 require './vendor/autoload.php';
 
+
+/**
+ * getExternalSettings function.
+ *
+ */
+function getExternalSettings($w)
+{
+    $dbfile = $w->data().'/settings.db';
+
+    $delimiter = '{::}';
+
+    exec("/usr/bin/sqlite3 -header -separator $delimiter '$dbfile' 'select * from settings where id=0;'" , $retArr, $retVal);
+    $headers = explode($delimiter, $retArr[0]);
+    $values = explode($delimiter, $retArr[1]);
+    $settings = new stdClass();
+    $i=0;
+    foreach ($headers as $header) {
+        $settings->$header = $values[$i];
+        ++$i;
+    }
+    return $settings;
+}
+
+/**
+ * displayExternalSettings function.
+ *
+ */
+function displayExternalSettings()
+{
+    $dbfile = '/tmp/spot_mini_debug/settings.db';
+
+    $delimiter = '{::}';
+
+    exec("/usr/bin/sqlite3 -header -separator $delimiter '$dbfile' 'select * from settings where id=0;'" , $retArr, $retVal);
+    $headers = explode($delimiter, $retArr[0]);
+    $values = explode($delimiter, $retArr[1]);
+    $i=0;
+    $str = "";
+    foreach ($headers as $header) {
+        $str .= "$header=$values[$i]\n";
+        ++$i;
+    }
+    return $str;
+}
+
 /**
  * countCharacters function.
  *
@@ -1975,9 +2020,9 @@ function getCurrentUser($w)
                     rename($w->data().'/library.db', $user_folder.'/library.db');
                     link($user_folder.'/library.db',$w->data().'/library.db');
                 }
-                if (file_exists($w->data().'/settings.json')) {
-                    rename($w->data().'/settings.json', $user_folder.'/settings.json');
-                    link($user_folder.'/settings.json',$w->data().'/settings.json');
+                if (file_exists($w->data().'/settings.db')) {
+                    rename($w->data().'/settings.db', $user_folder.'/settings.db');
+                    link($user_folder.'/settings.db',$w->data().'/settings.db');
                 }
                 if (file_exists($w->data().'/history.json')) {
                     rename($w->data().'/history.json', $user_folder.'/history.json');
@@ -2007,11 +2052,11 @@ function switchUser($w, $new_user)
         link($new_user_folder.'/library.db',$w->data().'/library.db');
     }
 
-    if (file_exists($w->data().'/settings.json')) {
-        deleteTheFile($w,$w->data().'/settings.json');
+    if (file_exists($w->data().'/settings.db')) {
+        deleteTheFile($w,$w->data().'/settings.db');
     }
-    if (file_exists($new_user_folder.'/settings.json')) {
-        link($new_user_folder.'/settings.json',$w->data().'/settings.json');
+    if (file_exists($new_user_folder.'/settings.db')) {
+        link($new_user_folder.'/settings.db',$w->data().'/settings.db');
     }
 
     if (file_exists($w->data().'/history.json')) {
@@ -2038,8 +2083,8 @@ function newUser($w)
     if (file_exists($w->data().'/library.db')) {
         deleteTheFile($w,$w->data().'/library.db');
     }
-    if (file_exists($w->data().'/settings.json')) {
-        deleteTheFile($w,$w->data().'/settings.json');
+    if (file_exists($w->data().'/settings.db')) {
+        deleteTheFile($w,$w->data().'/settings.db');
     }
     if (file_exists($w->data().'/history.json')) {
         deleteTheFile($w,$w->data().'/history.json');
@@ -2543,16 +2588,16 @@ function createDebugFile($w)
     $output = $output."----------------------------------------------\n";
     $output = $output.'🕐 Generated: '.$date."\n";
     $output = $output."----------------------------------------------\n";
-    // settings.json
-    copy($w->data().'/settings.json', '/tmp/spot_mini_debug/settings.json');
+    // settings.db
+    copy($w->data().'/settings.db', '/tmp/spot_mini_debug/settings.db');
 
     $output = $output."🔐 Encrypted data: I'm the only one able to decrypt your oauth_client_secret and oauth_access_token\n";
     $output = $output."I'll use it for troubleshooting, in order to be able to create and have same library as yours.\n";
     $output = $output."After investigation is done, you can regenerate a client secret as explained here https://developer.spotify.com/dashboard/applications.\n";
     $output = $output."----------------------------------------------\n";
     // Remove oAuth values from file that will be uploaded
-    updateSetting($w, 'oauth_client_secret', 'xxx', '/tmp/spot_mini_debug/settings.json');
-    updateSetting($w, 'oauth_access_token', 'xxx', '/tmp/spot_mini_debug/settings.json');
+    updateSetting($w, 'oauth_client_secret', 'xxx', '/tmp/spot_mini_debug/settings.db');
+    updateSetting($w, 'oauth_access_token', 'xxx', '/tmp/spot_mini_debug/settings.db');
     $output = $output.'* oauth_client_secret: '.encryptString($w, $oauth_client_secret)."\n\n";
     $output = $output.'* oauth_access_token: '.encryptString($w, $oauth_access_token)."\n\n";
     $output = $output."----------------------------------------------\n";
@@ -2620,10 +2665,9 @@ function createDebugFile($w)
     $output = $output.$response."\n";
 
     $output = $output."----------------------------------------------\n";
-    $output = $output."File: settings.json\n";
+    $output = $output."File: settings.db\n";
     $output = $output."----------------------------------------------\n";
-    $response = shell_exec('cat /tmp/spot_mini_debug/settings.json');
-    $output = $output.$response."\n";
+    $output = $output.displayExternalSettings()."\n";
 
     $output = $output."----------------------------------------------\n";
     $output = $output."File: action.log\n";
@@ -8481,113 +8525,200 @@ function startswith($haystack, $needle)
  */
 function getSettings($w)
 {
-    $settings = $w->read('settings.json');
-
-    if ($settings == false) {
-        $default = array(
-            'all_playlists' => 1,
-            'is_alfred_playlist_active' => 1,
-            'radio_number_tracks' => 30,
-            'now_playing_notifications' => 1,
-            'max_results' => 50,
-            'alfred_playlist_uri' => '',
-            'alfred_playlist_name' => '',
-            'country_code' => '',
-            'last_check_update_time' => 0,
-            'oauth_client_id' => '',
-            'oauth_client_secret' => '',
-            'oauth_redirect_uri' => 'http://localhost:15298/callback.php',
-            'oauth_access_token' => '',
-            'oauth_refresh_token' => '',
-            'display_name' => '',
-            'userid' => '',
-            'is_public_playlists' => 0,
-            'quick_mode' => 0,
-            'output_application' => 'APPLESCRIPT',
-            'mopidy_server' => '127.0.0.1',
-            'mopidy_port' => '6680',
-            'volume_percent' => 20,
-            'is_display_rating' => 1,
-            'is_autoplay_playlist' => 1,
-            'use_growl' => 0,
-            'use_facebook' => 0,
-            'theme_color' => 'green',
-            'search_order' => 'playlist▹artist▹track▹album▹show▹episode',
-            'always_display_lyrics_in_browser' => 0,
-            'workflow_version' => '',
-            'automatic_refresh_library_interval' => 0,
-            'preferred_spotify_connect_device' => '',
-            'preferred_spotify_connect_device_pushcut_webhook' => '',
-            'fuzzy_search' => 0,
-            'debug' => 0,
-            'artwork_folder_size' => "",
-        );
-
-        $w->write($default, 'settings.json');
-        logMsg($w,"getSettings: Settings have been set to default");
-        displayNotificationWithArtwork($w, 'Settings have been set to default', './images/info.png', 'Settings reset');
-
-        $settings = $w->read('settings.json');
+    $dbfile = $w->data() . '/settings.db';
+    $new_db = false;
+    if (!file_exists($w->data() . '/settings.db')) {
+        touch($dbfile);
+        $new_db = true;
     }
 
+    try {
+        $db = new PDO("sqlite:$dbfile", '', '', array(
+            PDO::ATTR_PERSISTENT => true,
+        ));
+        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $db->query('PRAGMA synchronous = OFF');
+        $db->query('PRAGMA journal_mode = OFF');
+        $db->query('PRAGMA temp_store = MEMORY');
+        $db->query('PRAGMA count_changes = OFF');
+        $db->query('PRAGMA PAGE_SIZE = 4096');
+        $db->query('PRAGMA default_cache_size=700000');
+        $db->query('PRAGMA cache_size=700000');
+        $db->query('PRAGMA compile_options');
+        // Problems with search on russian language #210
+        // thanks to https://blog.amartynov.ru/php-sqlite-case-insensitive-like-utf8/
+        $db->sqliteCreateFunction('like', "lexa_ci_utf8_like", 2);
+    }
+    catch(PDOException $e) {
+        logMsg($w,'Error(getSettings): (exception ' . jTraceEx($e) . ')');
+        handleDbIssuePdoEcho($db, $w);
+        $db = null;
+
+        return false;
+    }
+
+    if ($new_db) {
+        try {
+            $db->exec('create table settings (
+                id int PRIMARY KEY default 0,
+                all_playlists boolean default true,
+                is_alfred_playlist_active boolean default true,
+                radio_number_tracks int default 30,
+                now_playing_notifications boolean default true,
+                max_results int default 50,
+                alfred_playlist_uri text,
+                alfred_playlist_name text,
+                country_code text,
+                last_check_update_time int default 0,
+                oauth_client_id text,
+                oauth_client_secret text,
+                oauth_redirect_uri text default "http://localhost:15298/callback.php",
+                oauth_access_token text,
+                oauth_refresh_token text,
+                display_name text,
+                userid text,
+                is_public_playlists boolean default false,
+                quick_mode boolean default false,
+                output_application text,
+                mopidy_server text default "127.0.0.1",
+                mopidy_port text default "6680",
+                volume_percent int default 20,
+                is_display_rating boolean default true,
+                is_autoplay_playlist boolean default true,
+                use_growl boolean default false,
+                use_facebook boolean default false,
+                theme_color text default "green",
+                search_order text default "playlist▹artist▹track▹album▹show▹episode",
+                always_display_lyrics_in_browser boolean default false,
+                workflow_version text,
+                automatic_refresh_library_interval int default false,
+                preferred_spotify_connect_device text,
+                preferred_spotify_connect_device_pushcut_webhook text,
+                preferred_spotify_connect_device_pushcut_webhook_json_body text,
+                fuzzy_search boolean default false,
+                debug boolean default false,
+                artwork_folder_size text,
+                use_artworks boolean default true)');
+            $db->exec('CREATE INDEX IndexPlaylistUri ON settings (id)');
+
+
+            $insertSettings = 'insert into settings(id) values (:id)';
+            $stmt = $db->prepare($insertSettings);
+            $stmt->bindValue(':id', 0);
+            $stmt->execute();
+
+            if (file_exists($w->data() . '/settings.json')) {
+                // Migrate old settings to new db
+                $settings = $w->read('settings.json');
+
+                $insertSettings = 'insert or replace into settings values (:id, :all_playlists, :is_alfred_playlist_active, :radio_number_tracks, :now_playing_notifications, :max_results, :alfred_playlist_uri, :alfred_playlist_name, :country_code, :last_check_update_time, :oauth_client_id, :oauth_client_secret, :oauth_redirect_uri, :oauth_access_token, :oauth_refresh_token, :display_name, :userid, :is_public_playlists, :quick_mode, :output_application, :mopidy_server, :mopidy_port, :volume_percent, :is_display_rating, :is_autoplay_playlist, :use_growl, :use_facebook, :theme_color, :search_order, :always_display_lyrics_in_browser, :workflow_version, :automatic_refresh_library_interval, :preferred_spotify_connect_device, :preferred_spotify_connect_device_pushcut_webhook, :preferred_spotify_connect_device_pushcut_webhook_json_body, :fuzzy_search, :debug, :artwork_folder_size, :use_artworks)';
+                $stmt = $db->prepare($insertSettings);
+
+                $stmt->bindValue(':id', 0);
+                $stmt->bindValue(':all_playlists', $settings->all_playlists);
+                $stmt->bindValue(':is_alfred_playlist_active', $settings->is_alfred_playlist_active);
+                $stmt->bindValue(':radio_number_tracks', $settings->radio_number_tracks);
+                $stmt->bindValue(':now_playing_notifications', $settings->now_playing_notifications);
+                $stmt->bindValue(':max_results', $settings->max_results);
+                $stmt->bindValue(':alfred_playlist_uri', $settings->alfred_playlist_uri);
+                $stmt->bindValue(':alfred_playlist_name', $settings->alfred_playlist_name);
+                $stmt->bindValue(':country_code', $settings->country_code);
+                $stmt->bindValue(':last_check_update_time', $settings->last_check_update_time);
+                $stmt->bindValue(':oauth_client_id', $settings->oauth_client_id);
+                $stmt->bindValue(':oauth_client_secret', $settings->oauth_client_secret);
+                $stmt->bindValue(':oauth_redirect_uri', $settings->oauth_redirect_uri);
+                $stmt->bindValue(':oauth_access_token', $settings->oauth_access_token);
+                $stmt->bindValue(':oauth_refresh_token', $settings->oauth_refresh_token);
+                $stmt->bindValue(':display_name', $settings->display_name);
+                $stmt->bindValue(':userid', $settings->userid);
+                $stmt->bindValue(':is_public_playlists', $settings->is_public_playlists);
+                $stmt->bindValue(':quick_mode', $settings->quick_mode);
+                $stmt->bindValue(':output_application', $settings->output_application);
+                $stmt->bindValue(':mopidy_server', $settings->mopidy_server);
+                $stmt->bindValue(':mopidy_port', $settings->mopidy_port);
+                $stmt->bindValue(':volume_percent', $settings->volume_percent);
+                $stmt->bindValue(':is_display_rating', $settings->is_display_rating);
+                $stmt->bindValue(':is_autoplay_playlist', $settings->is_autoplay_playlist);
+                $stmt->bindValue(':use_growl', $settings->use_growl);
+                $stmt->bindValue(':use_facebook', $settings->use_facebook);
+                $stmt->bindValue(':theme_color', $settings->theme_color);
+                $stmt->bindValue(':search_order', $settings->search_order);
+                $stmt->bindValue(':always_display_lyrics_in_browser', $settings->always_display_lyrics_in_browser);
+                $stmt->bindValue(':workflow_version', $settings->workflow_version);
+                $stmt->bindValue(':automatic_refresh_library_interval', $settings->automatic_refresh_library);
+                $stmt->bindValue(':preferred_spotify_connect_device', $settings->preferred_spotify_connect_device);
+                $stmt->bindValue(':preferred_spotify_connect_device_pushcut_webhook', $settings->preferred_spotify_connect_device_pushcut_webhook);
+                $stmt->bindValue(':preferred_spotify_connect_device_pushcut_webhook_json_body', $settings->preferred_spotify_connect_device_pushcut_webhook_json_body);
+                $stmt->bindValue(':fuzzy_search', $settings->fuzzy_search);
+                $stmt->bindValue(':debug', $settings->debug);
+                $stmt->bindValue(':artwork_folder_size', $settings->artwork_folder_size);
+                $stmt->bindValue(':artwork_folder_size', $settings->use_artworks);
+                $stmt->execute();
+
+                deleteTheFile($w,$w->data().'/settings.json');
+            }
+        }
+        catch(PDOException $e) {
+            logMsg($w,'Error(getSettings): (exception ' . jTraceEx($e) . ')');
+            handleDbIssuePdoEcho($db, $w);
+            $db = null;
+
+            return false;
+        }
+
+        logMsg($w,"getSettings: Settings have been set to default");
+        displayNotificationWithArtwork($w, 'Settings have been set to default', './images/info.png', 'Settings reset');
+    }
+
+    $settings = getExternalSettings($w);
     // add quick_mode if needed
     if (!isset($settings->quick_mode)) {
         updateSetting($w, 'quick_mode', 0);
-        $settings = $w->read('settings.json');
     }
 
     // add mopidy_server if needed
     if (!isset($settings->mopidy_server)) {
         updateSetting($w, 'mopidy_server', '127.0.0.1');
-        $settings = $w->read('settings.json');
     }
 
     // add mopidy_port if needed
     if (!isset($settings->mopidy_port)) {
         updateSetting($w, 'mopidy_port', '6680');
-        $settings = $w->read('settings.json');
     }
 
     // add volume_percent if needed
     if (!isset($settings->volume_percent)) {
         updateSetting($w, 'volume_percent', 20);
-        $settings = $w->read('settings.json');
     }
 
     // add is_display_rating if needed
     if (!isset($settings->is_display_rating)) {
         updateSetting($w, 'is_display_rating', 1);
-        $settings = $w->read('settings.json');
     }
 
     // add is_autoplay_playlist if needed
     if (!isset($settings->is_autoplay_playlist)) {
         updateSetting($w, 'is_autoplay_playlist', 1);
-        $settings = $w->read('settings.json');
     }
 
     // add use_growl if needed
     if (!isset($settings->use_growl)) {
         updateSetting($w, 'use_growl', 0);
-        $settings = $w->read('settings.json');
     }
 
     // add use_artworks if needed
     if (!isset($settings->use_artworks)) {
         updateSetting($w, 'use_artworks', 1);
-        $settings = $w->read('settings.json');
     }
 
     // add use_facebook if needed
     if (!isset($settings->use_facebook)) {
         updateSetting($w, 'use_facebook', 0);
-        $settings = $w->read('settings.json');
     }
 
     // add theme_color if needed
     if (!isset($settings->theme_color)) {
         updateSetting($w, 'theme_color', 'green');
-        $settings = $w->read('settings.json');
     }
 
     // add search_order if needed
@@ -8595,25 +8726,21 @@ function getSettings($w)
         || strpos($settings->search_order, 'show') === false
         || strpos($settings->search_order, 'episode') === false) {
         updateSetting($w, 'search_order', 'playlist▹artist▹track▹album▹show▹episode');
-        $settings = $w->read('settings.json');
     }
 
     // add always_display_lyrics_in_browser if needed
     if (!isset($settings->always_display_lyrics_in_browser)) {
         updateSetting($w, 'always_display_lyrics_in_browser', 0);
-        $settings = $w->read('settings.json');
     }
 
     // add workflow_version if needed
     if (!isset($settings->workflow_version)) {
         updateSetting($w, 'workflow_version', '');
-        $settings = $w->read('settings.json');
     }
 
     // add automatic_refresh_library_interval if needed
     if (!isset($settings->automatic_refresh_library_interval)) {
         updateSetting($w, 'automatic_refresh_library_interval', 0);
-        $settings = $w->read('settings.json');
     }
 
     // migrate use_mopidy
@@ -8623,46 +8750,39 @@ function getSettings($w)
         } else {
             updateSetting($w, 'output_application', 'APPLESCRIPT');
         }
-        removeSetting($w,'use_mopidy');
-        $settings = $w->read('settings.json');
     }
 
     // add preferred_spotify_connect_device if needed
     if (!isset($settings->preferred_spotify_connect_device)) {
         updateSetting($w, 'preferred_spotify_connect_device', '');
-        $settings = $w->read('settings.json');
     }
 
     // add preferred_spotify_connect_device_pushcut_webhook if needed
     if (!isset($settings->preferred_spotify_connect_device_pushcut_webhook)) {
         updateSetting($w, 'preferred_spotify_connect_device_pushcut_webhook', '');
-        $settings = $w->read('settings.json');
     }
 
     // add preferred_spotify_connect_device_pushcut_webhook_json_body if needed
     if (!isset($settings->preferred_spotify_connect_device_pushcut_webhook_json_body)) {
         updateSetting($w, 'preferred_spotify_connect_device_pushcut_webhook_json_body', '');
-        $settings = $w->read('settings.json');
     }
 
     // add fuzzy_search if needed
     if (!isset($settings->fuzzy_search)) {
         updateSetting($w, 'fuzzy_search', 0);
-        $settings = $w->read('settings.json');
     }
 
     // add debug if needed
     if (!isset($settings->debug)) {
         updateSetting($w, 'debug', 0);
-        $settings = $w->read('settings.json');
     }
 
     // add artwork_folder_size if needed
     if (!isset($settings->artwork_folder_size)) {
         updateSetting($w, 'artwork_folder_size', "");
-        $settings = $w->read('settings.json');
     }
-    return $settings;
+
+    return getExternalSettings($w);
 }
 
 /**
@@ -8671,65 +8791,55 @@ function getSettings($w)
  * @param mixed  $w
  * @param mixed  $setting_name
  * @param mixed  $setting_new_value
- * @param string $settings_file     (default: 'settings.json')
+ * @param string $settings_file     (default: '')
  */
-function updateSetting($w, $setting_name, $setting_new_value, $settings_file = 'settings.json')
+function updateSetting($w, $setting_name, $setting_new_value, $settings_file = '')
 {
-    $settings = $w->read($settings_file);
+    if($settings_file == '') {
+        $dbfile = $w->data() . '/settings.db';
+    } else {
+        $dbfile = $settings_file;
+    }
 
-    if ($settings == false) {
-        logMsg($w,'Error(updateSetting) failed while reading JSON file');
+    if (!file_exists($dbfile)) {
+        logMsg($w,"Error(updateSetting) failed while reading DB file $dbfile");
 
         return false;
     }
-    $new_settings = array();
-    $found = false;
 
-    foreach ($settings as $key => $value) {
-        if ($key == $setting_name) {
-            $new_settings[$key] = $setting_new_value;
-            $found = true;
-        } else {
-            $new_settings[$key] = $value;
-        }
-    }
-    if ($found == false) {
-        $new_settings[$setting_name] = $setting_new_value;
-    }
-    $ret = $w->write($new_settings, $settings_file);
+    try {
+        $db = new PDO("sqlite:$dbfile", '', '', array(
+            PDO::ATTR_PERSISTENT => true,
+        ));
+        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $db->query('PRAGMA synchronous = OFF');
+        $db->query('PRAGMA journal_mode = OFF');
+        $db->query('PRAGMA temp_store = MEMORY');
+        $db->query('PRAGMA count_changes = OFF');
+        $db->query('PRAGMA PAGE_SIZE = 4096');
+        $db->query('PRAGMA default_cache_size=700000');
+        $db->query('PRAGMA cache_size=700000');
+        $db->query('PRAGMA compile_options');
+        // Problems with search on russian language #210
+        // thanks to https://blog.amartynov.ru/php-sqlite-case-insensitive-like-utf8/
+        $db->sqliteCreateFunction('like', "lexa_ci_utf8_like", 2);
 
-    return $ret;
+        $updateSetting = "update settings set $setting_name = :setting_new_value where id=0;";
+        $stmt = $db->prepare($updateSetting);
+
+        $stmt->bindValue(':setting_new_value', $setting_new_value);
+        $stmt->execute();
+    }
+    catch(PDOException $e) {
+        logMsg($w,'Error(updateSetting): (exception ' . jTraceEx($e) . ')');
+        handleDbIssuePdoEcho($db, $w);
+        $db = null;
+
+        return false;
+    }
+
+    return true;
 }
-
-/**
- * removeSetting function.
- *
- * @param mixed  $w
- * @param mixed  $setting_name
- * @param string $settings_file     (default: 'settings.json')
- */
- function removeSetting($w, $setting_name, $settings_file = 'settings.json')
- {
-     $settings = $w->read($settings_file);
-
-     if ($settings == false) {
-         logMsg($w,'Error(removeSetting) failed while reading JSON file');
-
-         return false;
-     }
-     $new_settings = array();
-
-     foreach ($settings as $key => $value) {
-         if ($key == $setting_name) {
-             // do nothing
-         } else {
-             $new_settings[$key] = $value;
-         }
-     }
-     $ret = $w->write($new_settings, $settings_file);
-
-     return $ret;
- }
 
 /**
  * logMsg function.
