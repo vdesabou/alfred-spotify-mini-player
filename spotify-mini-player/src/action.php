@@ -815,7 +815,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
     } elseif ($other_action == 'enable_artworks') {
         $ret = updateSetting($w, 'use_artworks', 1);
         if ($ret == true) {
-            displayNotificationWithArtwork($w, 'Artworks are now enabled, library creation is started', './images/enable_artworks.png', 'Settings');
+            displayNotificationWithArtwork($w, 'Artworks are now enabled, library creation has started', './images/enable_artworks.png', 'Settings');
             createLibrary($w);
         } else {
             displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
@@ -830,11 +830,38 @@ if ($type == 'TRACK' && $other_settings == '' &&
                 exec("rm -rf '".$w->data()."/artwork'");
             }
             createLibrary($w);
-            displayNotificationWithArtwork($w, 'Artworks are now disabled, library creation is started', './images/disable_artworks.png', 'Settings');
+            displayNotificationWithArtwork($w, 'Artworks are now disabled, library creation has started', './images/disable_artworks.png', 'Settings');
         } else {
             displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
         }
 
+        return;
+    } elseif ($other_action == 'enable_podcasts') {
+        $ret = updateSetting($w, 'podcasts_enabled', 1);
+        if ($ret == true) {
+            displayNotificationWithArtwork($w, 'Shows/Podcasts are now enabled, library refresh is started', './images/shows.png', 'Settings');
+            refreshLibrary($w);
+        } else {
+            displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
+        }
+
+        return;
+    } elseif ($other_action == 'disable_podcasts') {
+        $ret = updateSetting($w, 'podcasts_enabled', 0);
+        if ($ret == true) {
+            killUpdate($w);
+            refreshLibrary($w);
+            displayNotificationWithArtwork($w, 'Shows/Podcasts are now disabled, library refresh is started', './images/shows.png', 'Settings');
+        } else {
+            displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
+        }
+
+        return;
+    } elseif ($other_action == 'enable_podcasts_settings') {
+        $ret = updateSetting($w, 'podcasts_enabled', 1);
+        return;
+    } elseif ($other_action == 'disable_podcasts_settingss') {
+        $ret = updateSetting($w, 'podcasts_enabled', 0);
         return;
     } elseif ($other_action == 'enable_display_rating') {
         $ret = updateSetting($w, 'is_display_rating', 1);
@@ -2060,9 +2087,9 @@ if ($type == 'TRACK' && $other_settings == '' &&
         stathat_ez_count('AlfredSpotifyMiniPlayer', 'play', 1);
 
         return;
-    } elseif ($other_action == 'download_artworks_verification') {
+    } elseif ($other_action == 'guided_setup') {
 
-        exec("osascript -e 'tell application id \"".getAlfredName()."\" to run trigger \"download_artworks_verification\" in workflow \"com.vdesabou.spotify.mini.player\" with argument \"\"'");
+        exec("osascript -e 'tell application id \"".getAlfredName()."\" to run trigger \"guided_setup\" in workflow \"com.vdesabou.spotify.mini.player\" with argument \"\"'");
         return;
     } elseif ($other_action == 'open_debug_tools') {
 

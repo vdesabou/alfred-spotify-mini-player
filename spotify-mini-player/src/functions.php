@@ -8598,7 +8598,8 @@ function getSettings($w)
                 fuzzy_search boolean default false,
                 debug boolean default false,
                 artwork_folder_size text,
-                use_artworks boolean default true)');
+                use_artworks boolean default true,
+                podcasts_enabled boolean default true)');
             $db->exec('CREATE INDEX IndexPlaylistUri ON settings (id)');
 
 
@@ -8611,7 +8612,7 @@ function getSettings($w)
                 // Migrate old settings to new db
                 $settings = $w->read('settings.json');
 
-                $insertSettings = 'insert or replace into settings values (:id, :all_playlists, :is_alfred_playlist_active, :radio_number_tracks, :now_playing_notifications, :max_results, :alfred_playlist_uri, :alfred_playlist_name, :country_code, :last_check_update_time, :oauth_client_id, :oauth_client_secret, :oauth_redirect_uri, :oauth_access_token, :oauth_refresh_token, :display_name, :userid, :is_public_playlists, :quick_mode, :output_application, :mopidy_server, :mopidy_port, :volume_percent, :is_display_rating, :is_autoplay_playlist, :use_growl, :use_facebook, :theme_color, :search_order, :always_display_lyrics_in_browser, :workflow_version, :automatic_refresh_library_interval, :preferred_spotify_connect_device, :preferred_spotify_connect_device_pushcut_webhook, :preferred_spotify_connect_device_pushcut_webhook_json_body, :fuzzy_search, :debug, :artwork_folder_size, :use_artworks)';
+                $insertSettings = 'insert or replace into settings values (:id, :all_playlists, :is_alfred_playlist_active, :radio_number_tracks, :now_playing_notifications, :max_results, :alfred_playlist_uri, :alfred_playlist_name, :country_code, :last_check_update_time, :oauth_client_id, :oauth_client_secret, :oauth_redirect_uri, :oauth_access_token, :oauth_refresh_token, :display_name, :userid, :is_public_playlists, :quick_mode, :output_application, :mopidy_server, :mopidy_port, :volume_percent, :is_display_rating, :is_autoplay_playlist, :use_growl, :use_facebook, :theme_color, :search_order, :always_display_lyrics_in_browser, :workflow_version, :automatic_refresh_library_interval, :preferred_spotify_connect_device, :preferred_spotify_connect_device_pushcut_webhook, :preferred_spotify_connect_device_pushcut_webhook_json_body, :fuzzy_search, :debug, :artwork_folder_size, :use_artworks, :podcasts_enabled)';
                 $stmt = $db->prepare($insertSettings);
 
                 $stmt->bindValue(':id', 0);
@@ -8652,7 +8653,8 @@ function getSettings($w)
                 $stmt->bindValue(':fuzzy_search', $settings->fuzzy_search);
                 $stmt->bindValue(':debug', $settings->debug);
                 $stmt->bindValue(':artwork_folder_size', $settings->artwork_folder_size);
-                $stmt->bindValue(':artwork_folder_size', $settings->use_artworks);
+                $stmt->bindValue(':use_artworks', $settings->use_artworks);
+                $stmt->bindValue(':podcasts_enabled', true);
                 $stmt->execute();
 
                 deleteTheFile($w,$w->data().'/settings.json');
@@ -8673,51 +8675,61 @@ function getSettings($w)
     $settings = getExternalSettings($w);
     // add quick_mode if needed
     if (!isset($settings->quick_mode)) {
+        addSetting($w, 'quick_mode', 'boolean');
         updateSetting($w, 'quick_mode', 0);
     }
 
     // add mopidy_server if needed
     if (!isset($settings->mopidy_server)) {
+        addSetting($w, 'mopidy_server', 'varchar');
         updateSetting($w, 'mopidy_server', '127.0.0.1');
     }
 
     // add mopidy_port if needed
     if (!isset($settings->mopidy_port)) {
+        addSetting($w, 'mopidy_port', 'varchar');
         updateSetting($w, 'mopidy_port', '6680');
     }
 
     // add volume_percent if needed
     if (!isset($settings->volume_percent)) {
+        addSetting($w, 'volume_percent', 'int');
         updateSetting($w, 'volume_percent', 20);
     }
 
     // add is_display_rating if needed
     if (!isset($settings->is_display_rating)) {
+        addSetting($w, 'is_display_rating', 'boolean');
         updateSetting($w, 'is_display_rating', 1);
     }
 
     // add is_autoplay_playlist if needed
     if (!isset($settings->is_autoplay_playlist)) {
+        addSetting($w, 'is_autoplay_playlist', 'boolean');
         updateSetting($w, 'is_autoplay_playlist', 1);
     }
 
     // add use_growl if needed
     if (!isset($settings->use_growl)) {
+        addSetting($w, 'use_growl', 'boolean');
         updateSetting($w, 'use_growl', 0);
     }
 
     // add use_artworks if needed
     if (!isset($settings->use_artworks)) {
+        addSetting($w, 'use_artworks', 'boolean');
         updateSetting($w, 'use_artworks', 1);
     }
 
     // add use_facebook if needed
     if (!isset($settings->use_facebook)) {
+        addSetting($w, 'use_facebook', 'boolean');
         updateSetting($w, 'use_facebook', 0);
     }
 
     // add theme_color if needed
     if (!isset($settings->theme_color)) {
+        addSetting($w, 'theme_color', 'varchar');
         updateSetting($w, 'theme_color', 'green');
     }
 
@@ -8725,21 +8737,25 @@ function getSettings($w)
     if (!isset($settings->search_order)
         || strpos($settings->search_order, 'show') === false
         || strpos($settings->search_order, 'episode') === false) {
+        addSetting($w, 'search_order', 'varchar');
         updateSetting($w, 'search_order', 'playlist▹artist▹track▹album▹show▹episode');
     }
 
     // add always_display_lyrics_in_browser if needed
     if (!isset($settings->always_display_lyrics_in_browser)) {
+        addSetting($w, 'always_display_lyrics_in_browser', 'boolean');
         updateSetting($w, 'always_display_lyrics_in_browser', 0);
     }
 
     // add workflow_version if needed
     if (!isset($settings->workflow_version)) {
+        addSetting($w, 'workflow_version', 'varchar');
         updateSetting($w, 'workflow_version', '');
     }
 
     // add automatic_refresh_library_interval if needed
     if (!isset($settings->automatic_refresh_library_interval)) {
+        addSetting($w, 'automatic_refresh_library_interval', 'int');
         updateSetting($w, 'automatic_refresh_library_interval', 0);
     }
 
@@ -8754,32 +8770,44 @@ function getSettings($w)
 
     // add preferred_spotify_connect_device if needed
     if (!isset($settings->preferred_spotify_connect_device)) {
+        addSetting($w, 'preferred_spotify_connect_device', 'varchar');
         updateSetting($w, 'preferred_spotify_connect_device', '');
     }
 
     // add preferred_spotify_connect_device_pushcut_webhook if needed
     if (!isset($settings->preferred_spotify_connect_device_pushcut_webhook)) {
+        addSetting($w, 'preferred_spotify_connect_device_pushcut_webhook', 'varchar');
         updateSetting($w, 'preferred_spotify_connect_device_pushcut_webhook', '');
     }
 
     // add preferred_spotify_connect_device_pushcut_webhook_json_body if needed
     if (!isset($settings->preferred_spotify_connect_device_pushcut_webhook_json_body)) {
+        addSetting($w, 'preferred_spotify_connect_device_pushcut_webhook_json_body', 'varchar');
         updateSetting($w, 'preferred_spotify_connect_device_pushcut_webhook_json_body', '');
     }
 
     // add fuzzy_search if needed
     if (!isset($settings->fuzzy_search)) {
+        addSetting($w, 'fuzzy_search', 'boolean');
         updateSetting($w, 'fuzzy_search', 0);
     }
 
     // add debug if needed
     if (!isset($settings->debug)) {
+        addSetting($w, 'debug', 'boolean');
         updateSetting($w, 'debug', 0);
     }
 
     // add artwork_folder_size if needed
     if (!isset($settings->artwork_folder_size)) {
+        addSetting($w, 'artwork_folder_size', 'varchar');
         updateSetting($w, 'artwork_folder_size', "");
+    }
+
+    // add podcasts_enabled if needed
+    if (!isset($settings->podcasts_enabled)) {
+        addSetting($w, 'podcasts_enabled', 'boolean');
+        updateSetting($w, 'podcasts_enabled', 1);
     }
 
     return getExternalSettings($w);
@@ -8832,6 +8860,60 @@ function updateSetting($w, $setting_name, $setting_new_value, $settings_file = '
     }
     catch(PDOException $e) {
         logMsg($w,'Error(updateSetting): (exception ' . jTraceEx($e) . ')');
+        handleDbIssuePdoEcho($db, $w);
+        $db = null;
+
+        return false;
+    }
+
+    return true;
+}
+
+/**
+ * addSetting function.
+ *
+ * @param mixed  $w
+ * @param mixed  $setting_name
+ * @param mixed  $setting_type
+ * @param string $settings_file     (default: '')
+ */
+function addSetting($w, $setting_name, $setting_type, $settings_file = '')
+{
+    if($settings_file == '') {
+        $dbfile = $w->data() . '/settings.db';
+    } else {
+        $dbfile = $settings_file;
+    }
+
+    if (!file_exists($dbfile)) {
+        logMsg($w,"Error(addSetting) failed while reading DB file $dbfile");
+
+        return false;
+    }
+
+    try {
+        $db = new PDO("sqlite:$dbfile", '', '', array(
+            PDO::ATTR_PERSISTENT => true,
+        ));
+        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $db->query('PRAGMA synchronous = OFF');
+        $db->query('PRAGMA journal_mode = OFF');
+        $db->query('PRAGMA temp_store = MEMORY');
+        $db->query('PRAGMA count_changes = OFF');
+        $db->query('PRAGMA PAGE_SIZE = 4096');
+        $db->query('PRAGMA default_cache_size=700000');
+        $db->query('PRAGMA cache_size=700000');
+        $db->query('PRAGMA compile_options');
+        // Problems with search on russian language #210
+        // thanks to https://blog.amartynov.ru/php-sqlite-case-insensitive-like-utf8/
+        $db->sqliteCreateFunction('like', "lexa_ci_utf8_like", 2);
+
+        $addSetting = "alter table settings add $setting_name $setting_type;";
+        $stmt = $db->prepare($addSetting);
+        $stmt->execute();
+    }
+    catch(PDOException $e) {
+        logMsg($w,'Error(addSetting): (exception ' . jTraceEx($e) . ')');
         handleDbIssuePdoEcho($db, $w);
         $db = null;
 
