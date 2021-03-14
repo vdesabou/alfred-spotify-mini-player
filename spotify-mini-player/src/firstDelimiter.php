@@ -1891,6 +1891,7 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
     $automatic_refresh_library_interval = $settings->automatic_refresh_library_interval;
     $fuzzy_search = $settings->fuzzy_search;
     $artwork_folder_size = $settings->artwork_folder_size;
+    $podcasts_enabled = $settings->podcasts_enabled;
 
     if ($update_in_progress == false) {
         $w->result(null, serialize(array(''
@@ -2162,6 +2163,45 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
         /* album_artwork_path */, ''
         /* playlist_name */, '', /* playlist_artwork_path */
         )), 'Enable Artworks', array('Use Artworks for playlists, tracks, etc..(library will be re-created)', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/enable_artworks.png', 'yes', null, '');
+    }
+
+    if ($podcasts_enabled == true) {
+        $w->result(null, serialize(array(''
+        /*track_uri*/, ''
+        /* album_uri */, ''
+        /* artist_uri */, ''
+        /* playlist_uri */, ''
+        /* spotify_command */, ''
+        /* query */, ''
+        /* other_settings*/, 'disable_podcasts'
+        /* other_action */, ''
+        /* artist_name */, ''
+        /* track_name */, ''
+        /* album_name */, ''
+        /* track_artwork_path */, ''
+        /* artist_artwork_path */, ''
+        /* album_artwork_path */, ''
+        /* playlist_name */, '', /* playlist_artwork_path */
+        )), 'Disable Shows (podcasts)', array('Do not display shows', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/shows.png', 'yes', null, '');
+    }
+    else {
+        $w->result(null, serialize(array(''
+        /*track_uri*/, ''
+        /* album_uri */, ''
+        /* artist_uri */, ''
+        /* playlist_uri */, ''
+        /* spotify_command */, ''
+        /* query */, ''
+        /* other_settings*/, 'enable_podcasts'
+        /* other_action */, ''
+        /* artist_name */, ''
+        /* track_name */, ''
+        /* album_name */, ''
+        /* track_artwork_path */, ''
+        /* artist_artwork_path */, ''
+        /* album_artwork_path */, ''
+        /* playlist_name */, '', /* playlist_artwork_path */
+        )), 'Enable Shows (podcasts)', array('Display shows', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/shows.png', 'yes', null, '');
     }
 
     if ($is_display_rating == true) {

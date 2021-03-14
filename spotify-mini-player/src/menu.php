@@ -319,7 +319,7 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress) {
         }
     }
 
-    if (getenv('menu_display_browse_by_show') == 1) {
+    if (getenv('menu_display_browse_by_show') == 1 && $podcasts_enabled) {
         $w->result(null, '', 'Shows', array('Browse by show' . ' (' . $nb_shows . ' shows)', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/shows.png', 'no', null, 'Show▹');
     }
 
@@ -731,6 +731,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
 function searchCategoriesFastAccess($w, $query, $settings, $db, $update_in_progress) {
     $alfred_playlist_name = $settings->alfred_playlist_name;
     $now_playing_notifications = $settings->now_playing_notifications;
+    $podcasts_enabled = $settings->podcasts_enabled;
 
     // Search categories for fast access
     if (strpos(strtolower('playlists'), strtolower($query)) !== false) {
@@ -777,7 +778,9 @@ function searchCategoriesFastAccess($w, $query, $settings, $db, $update_in_progr
         $w->result(null, '', 'Artists', array('Browse by artist', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/artists.png', 'no', null, 'Artist▹');
     }
     if (strpos(strtolower('show'), strtolower($query)) !== false || strpos(strtolower('pod'), strtolower($query)) !== false) {
-        $w->result(null, '', 'Shows', array('Browse by show', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/shows.png', 'no', null, 'Show▹');
+        if ($podcasts_enabled) {
+            $w->result(null, '', 'Shows', array('Browse by show', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/shows.png', 'no', null, 'Show▹');
+        }
     }
     if (strpos(strtolower('play queue'), strtolower($query)) !== false) {
         if ($now_playing_notifications == true) {
