@@ -101,6 +101,7 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress) {
     $output_application = $settings->output_application;
     $quick_mode = $settings->quick_mode;
     $fuzzy_search = $settings->fuzzy_search;
+    $podcasts_enabled = $settings->podcasts_enabled;
 
     ////////
     // MAIN MENU
@@ -255,7 +256,7 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress) {
         )), 'Lookup Current Artist online', array(getenv('emoji_online').' Query all albums/tracks from current artist online..', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/online_artist.png', 'yes', '');
     }
 
-    if (getenv('menu_display_show_in_spotify') == 1) {
+    if (getenv('menu_display_show_in_spotify') == 1 && $podcasts_enabled) {
         $w->result(null, serialize(array(''
         /*track_uri*/, ''
         /* album_uri */, ''
@@ -360,6 +361,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
     $output_application = $settings->output_application;
     $search_order = $settings->search_order;
     $fuzzy_search = $settings->fuzzy_search;
+    $podcasts_enabled = $settings->podcasts_enabled;
 
     $search_categories = explode('▹', $search_order);
 
@@ -621,7 +623,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
             }
         }
 
-        if ($search_category == 'show') {
+        if ($search_category == 'show' && $podcasts_enabled) {
 
             if($fuzzy_search || ($update_in_progress && file_exists($w->data() . '/create_library'))) {
                 $results = getFuzzySearchResults($w, $update_in_progress, $query, 'shows', array('uri','name','description','media_type','show_artwork_path','explicit','added_at','languages','nb_times_played','is_externally_hosted', 'nb_episodes'), $max_results, '2', '');
@@ -647,7 +649,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
             }
         }
 
-        if ($search_category == 'episode') {
+        if ($search_category == 'episode' && $podcasts_enabled) {
             // Search episodes
             if($fuzzy_search || ($update_in_progress && file_exists($w->data() . '/create_library'))) {
                 $results = getFuzzySearchResults($w, $update_in_progress, $query, 'episodes', array('uri', 'name', 'uri', 'show_uri', 'show_name', 'description', 'episode_artwork_path', 'is_playable', 'languages', 'nb_times_played', 'is_externally_hosted', 'duration_ms', 'explicit', 'release_date', 'release_date_precision', 'audio_preview_url', 'fully_played', 'resume_position_ms'), $max_results, '2,4', '');
