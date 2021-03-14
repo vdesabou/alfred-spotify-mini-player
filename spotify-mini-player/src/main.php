@@ -109,7 +109,7 @@ function main($argv) {
             '' /* spotify_command */,
             '' /* query */,
             '' /* other_settings*/,
-            'download_artworks_verification' /* other_action */,
+            'guided_setup' /* other_action */,
             $alfred_playlist_uri /* alfred_playlist_uri */,
             '' /* artist_name */,
             '' /* track_name */,

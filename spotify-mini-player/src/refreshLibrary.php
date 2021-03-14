@@ -35,6 +35,7 @@ function refreshLibrary($w, $silent = false) {
     $userid = $settings->userid;
     $use_artworks = $settings->use_artworks;
     $debug = $settings->debug;
+    $podcasts_enabled = $settings->podcasts_enabled;
 
     $tmp = explode('▹', $in_progress_data);
     $initial_time = $tmp[3];
@@ -206,32 +207,36 @@ function refreshLibrary($w, $silent = false) {
         return false;
     }
 
-    // Check missing scope for podcasts
+    if($podcasts_enabled) {
+        // Check missing scope for podcasts
 
-    // some coutries do not have podcasts
-    $ignorePodcasts = true;
-    $episodes_list = array('4aFURijFNhCP3n1pfQtQaM','33XyX3PQ9rb1vCaE9KpwcR','5ZSnoquOyu7fnGFym8dLzd','5Z2mynHqunrdJaaWKlXACo','6rOqOqj9vAKZBAYNQu9Imt');
-    foreach ($episodes_list as $ep) {
-        try {
-            $episode = $api->getEpisode($ep, array(
-                'market' => $country_code,
-            ));
-            $ignorePodcasts = false;
-            break;
+        // some coutries do not have podcasts
+        $ignorePodcasts = true;
+        $episodes_list = array('4aFURijFNhCP3n1pfQtQaM','33XyX3PQ9rb1vCaE9KpwcR','5ZSnoquOyu7fnGFym8dLzd','5Z2mynHqunrdJaaWKlXACo','6rOqOqj9vAKZBAYNQu9Imt');
+        foreach ($episodes_list as $ep) {
+            try {
+                $episode = $api->getEpisode($ep, array(
+                    'market' => $country_code,
+                ));
+                $ignorePodcasts = false;
+                break;
+            }
+            catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
+                logMsg($w,'Error(Check missing scope for podcasts): episode '.$ep.' (exception ' . jTraceEx($e) . ')');
+            }
         }
-        catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
-            logMsg($w,'Error(Check missing scope for podcasts): episode '.$ep.' (exception ' . jTraceEx($e) . ')');
+        if($ignorePodcasts == false) {
+            if (! isset($episode->resume_point)) {
+                logMsg($w,"ERROR: the workflow was missing scope user-read-playback-position");
+                updateSetting($w, 'oauth_access_token', '');
+                updateSetting($w, 'oauth_refresh_token', '');
+                displayNotificationWithArtwork($w, 'Relaunch the workflow to re-authenticate', './images/settings.png', 'Info');
+                handleSpotifyPermissionException($w, 'Relaunch the workflow to re-authenticate');
+                return false;
+            }
         }
-    }
-    if($ignorePodcasts == false) {
-        if (! isset($episode->resume_point)) {
-            logMsg($w,"ERROR: the workflow was missing scope user-read-playback-position");
-            updateSetting($w, 'oauth_access_token', '');
-            updateSetting($w, 'oauth_refresh_token', '');
-            displayNotificationWithArtwork($w, 'Relaunch the workflow to re-authenticate', './images/settings.png', 'Info');
-            handleSpotifyPermissionException($w, 'Relaunch the workflow to re-authenticate');
-            return false;
-        }
+    } else {
+        $ignorePodcasts = true;
     }
 
     $savedMySavedAlbums = array();
