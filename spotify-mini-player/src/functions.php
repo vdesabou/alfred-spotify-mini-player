@@ -16,7 +16,7 @@ function getExternalSettings($w)
 
     $delimiter = '{::}';
 
-    exec("/usr/bin/sqlite3 -header -separator $delimiter '$dbfile' 'select * from settings where id=0;'" , $retArr, $retVal);
+    exec("/usr/bin/sqlite3 -header -readonly -separator $delimiter '$dbfile' 'select * from settings where id=0;'" , $retArr, $retVal);
     $headers = explode($delimiter, $retArr[0]);
     $values = explode($delimiter, $retArr[1]);
     $settings = new stdClass();
@@ -8537,17 +8537,9 @@ function getSettings($w)
             PDO::ATTR_PERSISTENT => true,
         ));
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $db->query('PRAGMA synchronous = OFF');
-        $db->query('PRAGMA journal_mode = OFF');
-        $db->query('PRAGMA temp_store = MEMORY');
-        $db->query('PRAGMA count_changes = OFF');
-        $db->query('PRAGMA PAGE_SIZE = 4096');
-        $db->query('PRAGMA default_cache_size=700000');
-        $db->query('PRAGMA cache_size=700000');
-        $db->query('PRAGMA compile_options');
-        // Problems with search on russian language #210
-        // thanks to https://blog.amartynov.ru/php-sqlite-case-insensitive-like-utf8/
-        $db->sqliteCreateFunction('like', "lexa_ci_utf8_like", 2);
+        // WAL mode has better control over concurrency.
+        // Source: https://www.sqlite.org/wal.html
+        $db->exec('PRAGMA journal_mode = wal;');
     }
     catch(PDOException $e) {
         logMsg($w,'Error(getSettings): (exception ' . jTraceEx($e) . ')');
@@ -8840,17 +8832,9 @@ function updateSetting($w, $setting_name, $setting_new_value, $settings_file = '
             PDO::ATTR_PERSISTENT => true,
         ));
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $db->query('PRAGMA synchronous = OFF');
-        $db->query('PRAGMA journal_mode = OFF');
-        $db->query('PRAGMA temp_store = MEMORY');
-        $db->query('PRAGMA count_changes = OFF');
-        $db->query('PRAGMA PAGE_SIZE = 4096');
-        $db->query('PRAGMA default_cache_size=700000');
-        $db->query('PRAGMA cache_size=700000');
-        $db->query('PRAGMA compile_options');
-        // Problems with search on russian language #210
-        // thanks to https://blog.amartynov.ru/php-sqlite-case-insensitive-like-utf8/
-        $db->sqliteCreateFunction('like', "lexa_ci_utf8_like", 2);
+        // WAL mode has better control over concurrency.
+        // Source: https://www.sqlite.org/wal.html
+        $db->exec('PRAGMA journal_mode = wal;');
 
         $updateSetting = "update settings set $setting_name = :setting_new_value where id=0;";
         $stmt = $db->prepare($updateSetting);
@@ -8896,17 +8880,9 @@ function addSetting($w, $setting_name, $setting_type, $settings_file = '')
             PDO::ATTR_PERSISTENT => true,
         ));
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $db->query('PRAGMA synchronous = OFF');
-        $db->query('PRAGMA journal_mode = OFF');
-        $db->query('PRAGMA temp_store = MEMORY');
-        $db->query('PRAGMA count_changes = OFF');
-        $db->query('PRAGMA PAGE_SIZE = 4096');
-        $db->query('PRAGMA default_cache_size=700000');
-        $db->query('PRAGMA cache_size=700000');
-        $db->query('PRAGMA compile_options');
-        // Problems with search on russian language #210
-        // thanks to https://blog.amartynov.ru/php-sqlite-case-insensitive-like-utf8/
-        $db->sqliteCreateFunction('like', "lexa_ci_utf8_like", 2);
+        // WAL mode has better control over concurrency.
+        // Source: https://www.sqlite.org/wal.html
+        $db->exec('PRAGMA journal_mode = wal;');
 
         $addSetting = "alter table settings add $setting_name $setting_type;";
         $stmt = $db->prepare($addSetting);
