@@ -7924,6 +7924,10 @@ function strip_string($string)
     return preg_replace('/[^a-zA-Z0-9-\s]/', '', $string);
 }
 
+function startsWithNumber($str) {
+    return preg_match('/^\d/', $str) === 1;
+}
+
 /**
  * checkForUpdate function.
  *
@@ -7959,10 +7963,14 @@ function checkForUpdate($w, $last_check_update_time, $download = false)
         $w->request("$remote_info_plist_url", $options);
 
         if (!file_exists($remote_info_plist_name)) {
-            return 'The remove info.plist file cannot be downloaded';
+            return 'The remote info.plist file cannot be downloaded';
         }
         $remote_version = shell_exec("/usr/libexec/PlistBuddy -c 'print version' $remote_info_plist_name");
         $remote_version = preg_replace("/\s+/", "", $remote_version);
+        if (!startsWithNumber($remote_version)) {
+            return 'The remote version does not start with a number';
+        }
+
         // Read settings from DB
 
         $settings = getSettings($w);
