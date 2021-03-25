@@ -31,7 +31,7 @@ $album_artwork_path = $arg[13];
 $playlist_name = $arg[14];
 $playlist_artwork_path = $arg[15];
 
-// Read settings from JSON
+// Read settings from DB
 
 $settings = getSettings($w);
 $is_alfred_playlist_active = $settings->is_alfred_playlist_active;

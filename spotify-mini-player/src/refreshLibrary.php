@@ -28,7 +28,7 @@ function refreshLibrary($w, $silent = false) {
 
     $in_progress_data = $w->read('update_library_in_progress');
 
-    // Read settings from JSON
+    // Read settings from DB
     $settings = getSettings($w);
 
     $country_code = $settings->country_code;

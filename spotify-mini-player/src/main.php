@@ -74,7 +74,7 @@ function main($argv) {
         }
     }
 
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
     $is_alfred_playlist_active = $settings->is_alfred_playlist_active;

@@ -5,7 +5,7 @@ require './src/functions.php';
 require_once './src/workflows.php';
 $w = new Workflows('com.vdesabou.spotify.mini.player');
 
-// Read settings from JSON
+// Read settings from DB
 
 $settings = getSettings($w);
 

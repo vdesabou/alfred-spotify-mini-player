@@ -69,7 +69,7 @@ function countCharacters($str) {
  */
 function setVolume($w, $volume)
 {
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
     $output_application = $settings->output_application;
@@ -280,7 +280,7 @@ function getAlfredName()
 function createAndPlayLikedSongsPlaylist($w)
 {
 
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
     $country_code = $settings->country_code;
@@ -557,7 +557,7 @@ function getCurrentArtistAndTrackName($w, $output_application)
 function copyCurrentTrackUrlToClipboard($w)
 {
 
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
 
@@ -609,7 +609,7 @@ function copy2clipboard($string) {
 function showInSpotify($w)
 {
 
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
 
@@ -761,7 +761,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
  */
 function getShowFromEpisode($w, $episode_uri)
 {
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
 
@@ -860,7 +860,7 @@ function getShowFromEpisode($w, $episode_uri)
  */
 function getEpisodeName($w, $episode_uri)
 {
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
 
@@ -894,7 +894,7 @@ function getEpisodeName($w, $episode_uri)
  */
 function getEpisode($w, $episode_uri)
 {
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
 
@@ -1016,7 +1016,7 @@ function getEpisode($w, $episode_uri)
  */
  function isRepeatStateSpotifyConnectActive($w)
  {
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
 
@@ -1673,7 +1673,7 @@ function seekToBeginning($w)
  */
  function getSpotifyConnectCurrentDeviceId($w)
  {
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
 
@@ -1855,7 +1855,7 @@ function isShuffleActive($print_output)
 {
     $w = new Workflows('com.vdesabou.spotify.mini.player');
 
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
 
@@ -2143,7 +2143,7 @@ function listUsers($w)
  */
 function getSpotifyWebAPI($w)
 {
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
     $oauth_client_id = $settings->oauth_client_id;
@@ -2194,7 +2194,7 @@ function getSpotifyWebAPI($w)
 function invokeMopidyMethod($w, $method, $params, $displayError = true)
 {
 
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
     $mopidy_server = $settings->mopidy_server;
@@ -2251,7 +2251,7 @@ function switchThemeColor($w,$theme_color)
     $in_progress_data = $w->read('change_theme_color_in_progress');
     $words = explode('▹', $in_progress_data);
 
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
 
@@ -2569,7 +2569,7 @@ function switchThemeColor($w,$theme_color)
 function createDebugFile($w)
 {
 
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
     $output_application = $settings->output_application;
@@ -2789,7 +2789,7 @@ function getCurrentTrackInfoWithMopidy($w, $displayError = true)
  */
  function getCurrentTrackInfoWithSpotifyConnect($w, $displayError = true)
  {
-    // Read settings from JSON
+    // Read settings from DB
     $settings = getSettings($w);
     $country_code = $settings->country_code;
     $track_name = '';
@@ -2971,7 +2971,7 @@ function setThePlaylistPrivacy($w, $playlist_uri, $playlist_name, $public)
 function followThePlaylist($w, $playlist_uri)
 {
 
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
     $is_public_playlists = $settings->is_public_playlists;
@@ -3097,7 +3097,7 @@ function addPlaylistToPlayQueue($w, $playlist_uri, $playlist_name)
         return false;
     }
 
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
     $output_application = $settings->output_application;
@@ -3135,7 +3135,7 @@ function addAlbumToPlayQueue($w, $album_uri, $album_name)
         return false;
     }
 
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
     $output_application = $settings->output_application;
@@ -3175,7 +3175,7 @@ function addArtistToPlayQueue($w, $artist_uri, $artist_name, $country_code)
         return false;
     }
 
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
     $output_application = $settings->output_application;
@@ -3219,7 +3219,7 @@ function addTrackToPlayQueue($w, $track_uri, $track_name, $artist_name, $album_n
         return false;
     }
 
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
     $output_application = $settings->output_application;
@@ -3299,7 +3299,7 @@ function updateCurrentTrackIndexFromPlayQueue($w)
         displayNotificationWithArtwork($w, 'No play queue yet', './images/warning.png', 'Error!');
     }
 
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
 
@@ -3357,7 +3357,7 @@ function updateCurrentTrackIndexFromPlayQueue($w)
 function getBiography($w, $artist_uri, $artist_name)
 {
 
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
     $echonest_api_key = $settings->echonest_api_key;
@@ -3490,7 +3490,7 @@ function searchWebApi($w, $country_code, $query, $type, $limit = 50, $actionMode
 function playAlfredPlaylist($w)
 {
 
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
 
@@ -3531,7 +3531,7 @@ function playAlfredPlaylist($w)
 function lookupCurrentArtist($w)
 {
 
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
 
@@ -3571,7 +3571,7 @@ function displayCurrentArtistBiography($w)
         return;
     }
 
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
 
@@ -3605,7 +3605,7 @@ function displayCurrentArtistBiography($w)
 function followCurrentArtist($w)
 {
 
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
 
@@ -3666,7 +3666,7 @@ function followCurrentArtist($w)
 function unfollowCurrentArtist($w)
 {
 
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
 
@@ -3726,7 +3726,7 @@ function unfollowCurrentArtist($w)
 function playCurrentArtist($w)
 {
 
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
 
@@ -3776,7 +3776,7 @@ function playCurrentArtist($w)
 function playCurrentAlbum($w)
 {
 
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
 
@@ -3822,7 +3822,7 @@ function playCurrentAlbum($w)
 function addCurrentTrackTo($w,$playlist_uri='')
 {
 
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
 
@@ -3886,7 +3886,7 @@ function addCurrentTrackTo($w,$playlist_uri='')
 function removeCurrentTrackFrom($w)
 {
 
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
 
@@ -3909,7 +3909,7 @@ function removeCurrentTrackFrom($w)
 function removeCurrentTrackFromAlfredPlaylistOrYourMusic($w)
 {
 
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
 
@@ -3930,7 +3930,7 @@ function removeCurrentTrackFromAlfredPlaylistOrYourMusic($w)
 function addCurrentTrackToAlfredPlaylistOrYourMusic($w)
 {
 
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
 
@@ -3951,7 +3951,7 @@ function addCurrentTrackToAlfredPlaylistOrYourMusic($w)
 function removeCurrentTrackFromAlfredPlaylist($w)
 {
 
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
 
@@ -4015,7 +4015,7 @@ function removeCurrentTrackFromAlfredPlaylist($w)
 function addCurrentTrackToAlfredPlaylist($w)
 {
 
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
 
@@ -4079,7 +4079,7 @@ function addCurrentTrackToAlfredPlaylist($w)
 function removeCurrentTrackFromYourMusic($w)
 {
 
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
 
@@ -4132,7 +4132,7 @@ function removeCurrentTrackFromYourMusic($w)
 function addCurrentTrackToYourMusic($w)
 {
 
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
 
@@ -4405,7 +4405,7 @@ function removeTrackFromPlaylist($w, $track_uri, $playlist_uri, $playlist_name, 
 function removeTrackFromYourMusic($w, $track_uri, $refreshLibrary = true)
 {
 
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
     $userid = $settings->userid;
@@ -4521,7 +4521,7 @@ function getRandomAlbum($w)
  */
 function getArtistUriFromTrack($w, $track_uri)
 {
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
     $country_code = $settings->country_code;
@@ -4585,7 +4585,7 @@ function getArtistUriFromSearch($w, $artist_name, $country_code = '')
     }
     if ($country_code == '') {
 
-        // Read settings from JSON
+        // Read settings from DB
 
         $settings = getSettings($w);
 
@@ -4616,7 +4616,7 @@ function getAlbumUriFromTrack($w, $track_uri)
 
         if (isset($tmp[1]) && $tmp[1] == 'local') {
 
-            // Read settings from JSON
+            // Read settings from DB
 
             $settings = getSettings($w);
             $country_code = $settings->country_code;
@@ -4695,7 +4695,7 @@ function clearPlaylist($w, $playlist_uri, $playlist_name)
 function createTheUserPlaylist($w, $playlist_name)
 {
 
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
     $is_public_playlists = $settings->is_public_playlists;
@@ -4728,7 +4728,7 @@ function createTheUserPlaylist($w, $playlist_name)
 function createRadioArtistPlaylistForCurrentArtist($w)
 {
 
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
 
@@ -4765,7 +4765,7 @@ function createRadioArtistPlaylistForCurrentArtist($w)
 function createRadioArtistPlaylist($w, $artist_name, $artist_uri)
 {
 
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
     $radio_number_tracks = $settings->radio_number_tracks;
@@ -4870,7 +4870,7 @@ function createRadioArtistPlaylist($w, $artist_name, $artist_uri)
 function createSimilarPlaylist($w, $playlist_name, $playlist_uri)
 {
 
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
     $radio_number_tracks = $settings->radio_number_tracks;
@@ -4982,7 +4982,7 @@ function createSimilarPlaylist($w, $playlist_name, $playlist_uri)
 function createCompleteCollectionArtistPlaylist($w, $artist_name, $artist_uri)
 {
 
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
     $userid = $settings->userid;
@@ -5074,7 +5074,7 @@ function createCompleteCollectionArtistPlaylist($w, $artist_name, $artist_uri)
 function createRadioSongPlaylistForCurrentTrack($w)
 {
 
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
 
@@ -5100,7 +5100,7 @@ function createRadioSongPlaylistForCurrentTrack($w)
 function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name)
 {
 
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
     $radio_number_tracks = $settings->radio_number_tracks;
@@ -5225,7 +5225,7 @@ function getThePlaylistTracks($w, $playlist_uri)
 {
     $tracks = array();
 
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
 
@@ -5520,7 +5520,7 @@ function getTheAlbumFullTracks($w, $album_uri, $actionMode = false)
 {
     $tracks = array();
 
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
     $country_code = $settings->country_code;
@@ -6015,7 +6015,7 @@ function displayNotificationWithArtwork($w, $subtitle, $artwork, $title = 'Spoti
         // skip any non error
         return;
     }
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
     $use_growl = $settings->use_growl;
@@ -6062,7 +6062,7 @@ function displayNotificationWithArtwork($w, $subtitle, $artwork, $title = 'Spoti
 function displayNotificationForCurrentTrack($w)
 {
 
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
 
@@ -6144,7 +6144,7 @@ function displayLyricsForCurrentTrack($w)
         return;
     }
 
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
 
@@ -6181,7 +6181,7 @@ function displayLyricsForCurrentTrack($w)
 function downloadArtworks($w, $silent = false)
 {
 
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
     $userid = $settings->userid;
@@ -7358,7 +7358,7 @@ function getShowArtworkURL($w, $show_uri)
  */
 function getEpisodeArtworkURL($w, $episode_uri)
 {
-    // Read settings from JSON
+    // Read settings from DB
 
     $settings = getSettings($w);
 
@@ -7963,7 +7963,7 @@ function checkForUpdate($w, $last_check_update_time, $download = false)
         }
         $remote_version = shell_exec("/usr/libexec/PlistBuddy -c 'print version' $remote_info_plist_name");
         $remote_version = preg_replace("/\s+/", "", $remote_version);
-        // Read settings from JSON
+        // Read settings from DB
 
         $settings = getSettings($w);
 
