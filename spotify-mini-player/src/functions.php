@@ -17,6 +17,9 @@ function getExternalSettings($w)
     $delimiter = '{::}';
 
     exec("/usr/bin/sqlite3 -header -readonly -separator $delimiter '$dbfile' 'select * from settings where id=0;'" , $retArr, $retVal);
+    if($retVal != 0) {
+        return false;
+    }
     $headers = explode($delimiter, $retArr[0]);
     $values = explode($delimiter, $retArr[1]);
     $settings = new stdClass();
@@ -8665,6 +8668,12 @@ function getSettings($w)
     }
 
     $settings = getExternalSettings($w);
+    if ($settings == false) {
+        logMsg($w,'Error(getSettings): cannot get settings with getExternalSettings');
+        $db = null;
+
+        return false;
+    }
     // add quick_mode if needed
     if (!isset($settings->quick_mode)) {
         addSetting($w, 'quick_mode', 'boolean');
