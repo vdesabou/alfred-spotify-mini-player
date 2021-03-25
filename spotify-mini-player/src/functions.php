@@ -15,8 +15,7 @@ function getExternalSettings($w)
     $dbfile = $w->data().'/settings.db';
 
     $delimiter = '{::}';
-
-    exec("/usr/bin/sqlite3 -header -readonly -separator $delimiter '$dbfile' 'select * from settings where id=0;'" , $retArr, $retVal);
+    exec("/usr/bin/sqlite3 -header -separator $delimiter '$dbfile' 'select * from settings where id=0;'" , $retArr, $retVal);
     if($retVal != 0) {
         return false;
     }
