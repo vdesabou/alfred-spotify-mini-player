@@ -8535,25 +8535,15 @@ function getSettings($w)
         $new_db = true;
     }
 
-    try {
-        $db = new PDO("sqlite:$dbfile", '', '', array(
-            PDO::ATTR_PERSISTENT => true,
-        ));
-        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        // WAL mode has better control over concurrency.
-        // Source: https://www.sqlite.org/wal.html
-        $db->exec('PRAGMA journal_mode = wal;');
-    }
-    catch(PDOException $e) {
-        logMsg($w,'Error(getSettings): (exception ' . jTraceEx($e) . ')');
-        handleDbIssuePdoEcho($db, $w);
-        $db = null;
-
-        return false;
-    }
-
     if ($new_db) {
         try {
+            $db = new PDO("sqlite:$dbfile", '', '', array(
+                PDO::ATTR_PERSISTENT => true,
+            ));
+            $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            // WAL mode has better control over concurrency.
+            // Source: https://www.sqlite.org/wal.html
+            $db->exec('PRAGMA journal_mode = wal;');
             $db->exec('create table settings (
                 id int PRIMARY KEY default 0,
                 all_playlists boolean default true,
