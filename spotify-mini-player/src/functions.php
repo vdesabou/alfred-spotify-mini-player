@@ -8590,7 +8590,9 @@ function updateSetting($w, $setting_name, $setting_new_value, $exportable = fals
         $is_exportable = ' with exportable';
     }
     exec("osascript -e 'tell application id \"".getAlfredName()."\" to set configuration \"".$setting_name."\" to value \"".$setting_new_value."\" in workflow \"com.vdesabou.spotify.mini.player\"".$is_exportable."'");
-    logMsg($w,'updateSetting: '.$setting_name.'='.$setting_new_value.' exportable='.$exportable);
+    if($setting_name != '__oauth_client_secret' && $setting_name != '__oauth_access_token') {
+        logMsg($w,'updateSetting: '.$setting_name.'='.$setting_new_value.' exportable='.$exportable);
+    }
     return true;
 }
 
