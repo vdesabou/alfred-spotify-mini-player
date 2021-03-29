@@ -10,8 +10,8 @@
  */
 function firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
-    $fuzzy_search = $settings->fuzzy_search;
-    $max_results = $settings->max_results;
+    $fuzzy_search = getSetting($w,'fuzzy_search');
+    $max_results = getSetting($w,'max_results');
 
     // Search playlists
     $theplaylist = $words[1];
@@ -164,11 +164,11 @@ function firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress
 function firstDelimiterArtists($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
 
-    $all_playlists = $settings->all_playlists;
-    $max_results = $settings->max_results;
-    $output_application = $settings->output_application;
-    $fuzzy_search = $settings->fuzzy_search;
-    $max_results = $settings->max_results;
+    $all_playlists = getSetting($w,'all_playlists');
+    $max_results = getSetting($w,'max_results');
+    $output_application = getSetting($w,'output_application');
+    $fuzzy_search = getSetting($w,'fuzzy_search');
+    $max_results = getSetting($w,'max_results');
 
     // Search artists
     $artist = $words[1];
@@ -274,9 +274,9 @@ function firstDelimiterArtists($w, $query, $settings, $db, $update_in_progress) 
  */
 function firstDelimiterShows($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
-    $max_results = $settings->max_results;
-    $output_application = $settings->output_application;
-    $fuzzy_search = $settings->fuzzy_search;
+    $max_results = getSetting($w,'max_results');
+    $output_application = getSetting($w,'output_application');
+    $fuzzy_search = getSetting($w,'fuzzy_search');
 
     // Search shows
     $show = $words[1];
@@ -356,10 +356,10 @@ function firstDelimiterShows($w, $query, $settings, $db, $update_in_progress) {
 function firstDelimiterAlbums($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
 
-    $all_playlists = $settings->all_playlists;
-    $max_results = $settings->max_results;
-    $output_application = $settings->output_application;
-    $fuzzy_search = $settings->fuzzy_search;
+    $all_playlists = getSetting($w,'all_playlists');
+    $max_results = getSetting($w,'max_results');
+    $output_application = getSetting($w,'output_application');
+    $fuzzy_search = getSetting($w,'fuzzy_search');
 
     // New Releases menu
     $w->result(null, '', 'New Releases', array('Browse new album releases', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/new_releases.png', 'no', null, 'New Releases▹');
@@ -462,7 +462,7 @@ function firstDelimiterFeaturedPlaylist($w, $query, $settings, $db, $update_in_p
     $words = explode('▹', $query);
     $search = $words[1];
 
-    $country_code = $settings->country_code;
+    $country_code = getSetting($w,'country_code');
 
     if (countCharacters($search) < 2 || strpos(strtolower(getCountryName($country_code)), strtolower($search)) !== false) {
         $w->result(null, '', getCountryName($country_code), array('Browse the current featured playlists in ' . getCountryName($country_code), 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/star.png', 'no', null, 'Featured Playlist▹' . $country_code . '▹');
@@ -499,10 +499,10 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
     $kind = $words[0];
     $search = $words[1];
 
-    $max_results = $settings->max_results;
-    $country_code = $settings->country_code;
-    $use_artworks = $settings->use_artworks;
-    $search_order = $settings->search_order;
+    $max_results = getSetting($w,'max_results');
+    $country_code = getSetting($w,'country_code');
+    $use_artworks = getSetting($w,'use_artworks');
+    $search_order = getSetting($w,'search_order');
 
     // Search online
     $the_query = $words[1] . '*';
@@ -786,7 +786,7 @@ function firstDelimiterNewReleases($w, $query, $settings, $db, $update_in_progre
     $words = explode('▹', $query);
     $search = $words[1];
 
-    $country_code = $settings->country_code;
+    $country_code = getSetting($w,'country_code');
 
     if (countCharacters($search) < 2 || strpos(strtolower(getCountryName($country_code)), strtolower($search)) !== false) {
         $w->result(null, '', getCountryName($country_code), array('Browse the new album releases in ' . getCountryName($country_code), 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/new_releases.png', 'no', null, 'New Releases▹' . $country_code . '▹');
@@ -822,15 +822,15 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
     $words = explode('▹', $query);
     $input = $words[1];
 
-    $all_playlists = $settings->all_playlists;
-    $radio_number_tracks = $settings->radio_number_tracks;
-    $max_results = $settings->max_results;
-    $country_code = $settings->country_code;
-    $is_public_playlists = $settings->is_public_playlists;
-    $output_application = $settings->output_application;
-    $is_display_rating = $settings->is_display_rating;
-    $use_artworks = $settings->use_artworks;
-    $always_display_lyrics_in_browser = $settings->always_display_lyrics_in_browser;
+    $all_playlists = getSetting($w,'all_playlists');
+    $radio_number_tracks = getSetting($w,'radio_number_tracks');
+    $max_results = getSetting($w,'max_results');
+    $country_code = getSetting($w,'country_code');
+    $is_public_playlists = getSetting($w,'is_public_playlists');
+    $output_application = getSetting($w,'output_application');
+    $is_display_rating = getSetting($w,'is_display_rating');
+    $use_artworks = getSetting($w,'use_artworks');
+    $always_display_lyrics_in_browser = getSetting($w,'always_display_lyrics_in_browser');
 
     $results = getCurrentTrackinfo($w, $output_application);
 
@@ -1374,9 +1374,9 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
  */
 function firstDelimiterSpotifyConnect($w, $query, $settings, $db, $update_in_progress) {
 
-    $settings = getSettings($w);
 
-    $preferred_spotify_connect_device = $settings->preferred_spotify_connect_device;
+
+    $preferred_spotify_connect_device = getSetting($w,'preferred_spotify_connect_device');
 
     $retry = true;
     $nb_retry = 0;
@@ -1545,9 +1545,9 @@ function firstDelimiterSpotifyConnect($w, $query, $settings, $db, $update_in_pro
  */
 function firstDelimiterSpotifyConnectPreferredDevice($w, $query, $settings, $db, $update_in_progress) {
 
-    $settings = getSettings($w);
 
-    $preferred_spotify_connect_device = $settings->preferred_spotify_connect_device;
+
+    $preferred_spotify_connect_device = getSetting($w,'preferred_spotify_connect_device');
 
     $retry = true;
     $nb_retry = 0;
@@ -1697,8 +1697,8 @@ function firstDelimiterSpotifyConnectPreferredDevice($w, $query, $settings, $db,
  */
 function firstDelimiterYourMusic($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
-    $max_results = $settings->max_results;
-    $fuzzy_search = $settings->fuzzy_search;
+    $max_results = getSetting($w,'max_results');
+    $fuzzy_search = getSetting($w,'fuzzy_search');
 
     $thequery = $words[1];
 
@@ -1810,7 +1810,7 @@ function firstDelimiterYourMusic($w, $query, $settings, $db, $update_in_progress
 function firstDelimiterLyrics($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
 
-    $use_artworks = $settings->use_artworks;
+    $use_artworks = getSetting($w,'use_artworks');
 
     if (substr_count($query, '∙') == 2) {
 
@@ -1869,29 +1869,29 @@ function firstDelimiterLyrics($w, $query, $settings, $db, $update_in_progress) {
  * @param mixed $update_in_progress
  */
 function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress) {
-    $all_playlists = $settings->all_playlists;
-    $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
-    $radio_number_tracks = $settings->radio_number_tracks;
-    $now_playing_notifications = $settings->now_playing_notifications;
-    $max_results = $settings->max_results;
-    $last_check_update_time = $settings->last_check_update_time;
-    $userid = $settings->userid;
-    $is_public_playlists = $settings->is_public_playlists;
-    $quick_mode = $settings->quick_mode;
-    $output_application = $settings->output_application;
-    $mopidy_server = $settings->mopidy_server;
-    $mopidy_port = $settings->mopidy_port;
-    $is_display_rating = $settings->is_display_rating;
-    $volume_percent = $settings->volume_percent;
-    $is_autoplay_playlist = $settings->is_autoplay_playlist;
-    $use_growl = $settings->use_growl;
-    $use_artworks = $settings->use_artworks;
-    $use_facebook = $settings->use_facebook;
-    $always_display_lyrics_in_browser = $settings->always_display_lyrics_in_browser;
-    $automatic_refresh_library_interval = $settings->automatic_refresh_library_interval;
-    $fuzzy_search = $settings->fuzzy_search;
-    $artwork_folder_size = $settings->artwork_folder_size;
-    $podcasts_enabled = $settings->podcasts_enabled;
+    $all_playlists = getSetting($w,'all_playlists');
+    $is_alfred_playlist_active = getSetting($w,'is_alfred_playlist_active');
+    $radio_number_tracks = getSetting($w,'radio_number_tracks');
+    $now_playing_notifications = getSetting($w,'now_playing_notifications');
+    $max_results = getSetting($w,'max_results');
+    $last_check_update_time = getSetting($w,'last_check_update_time');
+    $userid = getSetting($w,'userid');
+    $is_public_playlists = getSetting($w,'is_public_playlists');
+    $quick_mode = getSetting($w,'quick_mode');
+    $output_application = getSetting($w,'output_application');
+    $mopidy_server = getSetting($w,'mopidy_server');
+    $mopidy_port = getSetting($w,'mopidy_port');
+    $is_display_rating = getSetting($w,'is_display_rating');
+    $volume_percent = getSetting($w,'volume_percent');
+    $is_autoplay_playlist = getSetting($w,'is_autoplay_playlist');
+    $use_growl = getSetting($w,'use_growl');
+    $use_artworks = getSetting($w,'use_artworks');
+    $use_facebook = getSetting($w,'use_facebook');
+    $always_display_lyrics_in_browser = getSetting($w,'always_display_lyrics_in_browser');
+    $automatic_refresh_library_interval = getSetting($w,'automatic_refresh_library_interval');
+    $fuzzy_search = getSetting($w,'fuzzy_search');
+    $artwork_folder_size = getSetting($w,'artwork_folder_size');
+    $podcasts_enabled = getSetting($w,'podcasts_enabled');
 
     if ($update_in_progress == false) {
         $w->result(null, serialize(array(''
@@ -2592,8 +2592,8 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
     $words = explode('▹', $query);
     $search = $words[1];
 
-    $output_application = $settings->output_application;
-    $use_artworks = $settings->use_artworks;
+    $output_application = getSetting($w,'output_application');
+    $use_artworks = getSetting($w,'use_artworks');
 
     if ($output_application == 'MOPIDY') {
         $playqueue = $w->read('playqueue.json');
@@ -2890,7 +2890,7 @@ function firstDelimiterBrowse($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
     $search = $words[1];
 
-    $country_code = $settings->country_code;
+    $country_code = getSetting($w,'country_code');
 
     if (countCharacters($search) < 2 || strpos(strtolower(getCountryName($country_code)), strtolower($search)) !== false) {
         $w->result(null, '', getCountryName($country_code), array('Browse the Spotify categories in ' . getCountryName($country_code), 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/browse.png', 'no', null, 'Browse▹' . $country_code . '▹');
@@ -2948,8 +2948,8 @@ function firstDelimiterYourRecentTracks($w, $query, $settings, $db, $update_in_p
     $words = explode('▹', $query);
     $search = $words[1];
 
-    $max_results = $settings->max_results;
-    $use_artworks = $settings->use_artworks;
+    $max_results = getSetting($w,'max_results');
+    $use_artworks = getSetting($w,'use_artworks');
 
     try {
         $api = getSpotifyWebAPI($w);

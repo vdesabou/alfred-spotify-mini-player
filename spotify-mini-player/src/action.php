@@ -31,26 +31,26 @@ $album_artwork_path = $arg[13];
 $playlist_name = $arg[14];
 $playlist_artwork_path = $arg[15];
 
-// Read settings from DB
 
-$settings = getSettings($w);
-$is_alfred_playlist_active = $settings->is_alfred_playlist_active;
-$now_playing_notifications = $settings->now_playing_notifications;
-$alfred_playlist_uri = $settings->alfred_playlist_uri;
-$alfred_playlist_name = $settings->alfred_playlist_name;
-$country_code = $settings->country_code;
-$userid = $settings->userid;
-$oauth_client_id = $settings->oauth_client_id;
-$oauth_client_secret = $settings->oauth_client_secret;
-$oauth_redirect_uri = $settings->oauth_redirect_uri;
-$oauth_access_token = $settings->oauth_access_token;
-$volume_percent = $settings->volume_percent;
-$use_artworks = $settings->use_artworks;
-$use_facebook = $settings->use_facebook;
-$always_display_lyrics_in_browser = $settings->always_display_lyrics_in_browser;
-$output_application = $settings->output_application;
-$theme_color = $settings->theme_color;
-$fuzzy_search = $settings->fuzzy_search;
+
+
+$is_alfred_playlist_active = getSetting($w,'is_alfred_playlist_active');
+$now_playing_notifications = getSetting($w,'now_playing_notifications');
+$alfred_playlist_uri = getSetting($w,'alfred_playlist_uri');
+$alfred_playlist_name = getSetting($w,'alfred_playlist_name');
+$country_code = getSetting($w,'country_code');
+$userid = getSetting($w,'userid');
+$oauth_client_id = getSetting($w,'oauth_client_id');
+$oauth_client_secret = getSetting($w,'oauth_client_secret');
+$oauth_redirect_uri = getSetting($w,'oauth_redirect_uri');
+$oauth_access_token = getSetting($w,'oauth_access_token');
+$volume_percent = getSetting($w,'volume_percent');
+$use_artworks = getSetting($w,'use_artworks');
+$use_facebook = getSetting($w,'use_facebook');
+$always_display_lyrics_in_browser = getSetting($w,'always_display_lyrics_in_browser');
+$output_application = getSetting($w,'output_application');
+$theme_color = getSetting($w,'theme_color');
+$fuzzy_search = getSetting($w,'fuzzy_search');
 
 if ($other_action != 'reset_settings' && $other_action != 'spot_mini_debug' && $other_action != 'kill_update' && !startswith($other_settings,'SWITCH_USER▹')) {
     if ($oauth_client_id == '' || $oauth_client_secret == '' || $oauth_access_token == '') {
@@ -1583,7 +1583,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
         return;
     } elseif ($other_action == 'reset_settings') {
-        deleteTheFile($w,$w->data().'/settings.db');
+        resetSettings($w);
         logMsg($w,"Settings are reset");
 
         return;

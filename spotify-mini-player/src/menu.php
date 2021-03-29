@@ -8,9 +8,9 @@
  * @param mixed $update_in_progress
  */
 function oAuthChecks($w, $query, $settings, $update_in_progress) {
-    $oauth_client_id = $settings->oauth_client_id;
-    $oauth_client_secret = $settings->oauth_client_secret;
-    $oauth_access_token = $settings->oauth_access_token;
+    $oauth_client_id = getSetting($w,'oauth_client_id');
+    $oauth_client_secret = getSetting($w,'oauth_client_secret');
+    $oauth_access_token = getSetting($w,'oauth_access_token');
 
     ////
     // OAUTH checks
@@ -90,18 +90,18 @@ function oAuthChecks($w, $query, $settings, $update_in_progress) {
  * @param mixed $update_in_progress
  */
 function mainMenu($w, $query, $settings, $db, $update_in_progress) {
-    $all_playlists = $settings->all_playlists;
-    $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
-    $radio_number_tracks = $settings->radio_number_tracks;
-    $max_results = $settings->max_results;
-    $alfred_playlist_uri = $settings->alfred_playlist_uri;
-    $alfred_playlist_name = $settings->alfred_playlist_name;
-    $userid = $settings->userid;
-    $use_artworks = $settings->use_artworks;
-    $output_application = $settings->output_application;
-    $quick_mode = $settings->quick_mode;
-    $fuzzy_search = $settings->fuzzy_search;
-    $podcasts_enabled = $settings->podcasts_enabled;
+    $all_playlists = getSetting($w,'all_playlists');
+    $is_alfred_playlist_active = getSetting($w,'is_alfred_playlist_active');
+    $radio_number_tracks = getSetting($w,'radio_number_tracks');
+    $max_results = getSetting($w,'max_results');
+    $alfred_playlist_uri = getSetting($w,'alfred_playlist_uri');
+    $alfred_playlist_name = getSetting($w,'alfred_playlist_name');
+    $userid = getSetting($w,'userid');
+    $use_artworks = getSetting($w,'use_artworks');
+    $output_application = getSetting($w,'output_application');
+    $quick_mode = getSetting($w,'quick_mode');
+    $fuzzy_search = getSetting($w,'fuzzy_search');
+    $podcasts_enabled = getSetting($w,'podcasts_enabled');
 
     ////////
     // MAIN MENU
@@ -354,14 +354,14 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress) {
  * @param mixed $update_in_progress
  */
 function mainSearch($w, $query, $settings, $db, $update_in_progress) {
-    $all_playlists = $settings->all_playlists;
-    $max_results = $settings->max_results;
-    $userid = $settings->userid;
-    $quick_mode = $settings->quick_mode;
-    $output_application = $settings->output_application;
-    $search_order = $settings->search_order;
-    $fuzzy_search = $settings->fuzzy_search;
-    $podcasts_enabled = $settings->podcasts_enabled;
+    $all_playlists = getSetting($w,'all_playlists');
+    $max_results = getSetting($w,'max_results');
+    $userid = getSetting($w,'userid');
+    $quick_mode = getSetting($w,'quick_mode');
+    $output_application = getSetting($w,'output_application');
+    $search_order = getSetting($w,'search_order');
+    $fuzzy_search = getSetting($w,'fuzzy_search');
+    $podcasts_enabled = getSetting($w,'podcasts_enabled');
 
     $search_categories = explode('▹', $search_order);
 
@@ -729,9 +729,9 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
  * @param mixed $update_in_progress
  */
 function searchCategoriesFastAccess($w, $query, $settings, $db, $update_in_progress) {
-    $alfred_playlist_name = $settings->alfred_playlist_name;
-    $now_playing_notifications = $settings->now_playing_notifications;
-    $podcasts_enabled = $settings->podcasts_enabled;
+    $alfred_playlist_name = getSetting($w,'alfred_playlist_name');
+    $now_playing_notifications = getSetting($w,'now_playing_notifications');
+    $podcasts_enabled = getSetting($w,'podcasts_enabled');
 
     // Search categories for fast access
     if (strpos(strtolower('playlists'), strtolower($query)) !== false) {
@@ -817,8 +817,8 @@ function searchCategoriesFastAccess($w, $query, $settings, $db, $update_in_progr
  * @param mixed $update_in_progress
  */
 function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progress) {
-    $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
-    $output_application = $settings->output_application;
+    $is_alfred_playlist_active = getSetting($w,'is_alfred_playlist_active');
+    $output_application = getSetting($w,'output_application');
 
     $cmd = '';
     if ($output_application == 'CONNECT') {

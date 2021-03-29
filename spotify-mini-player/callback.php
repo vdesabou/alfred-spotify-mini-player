@@ -5,16 +5,11 @@ require './src/functions.php';
 require_once './src/workflows.php';
 $w = new Workflows('com.vdesabou.spotify.mini.player');
 
-//
-// Read settings from DB
-//
-
 $success = false;
-$settings = getSettings($w);
 
-$oauth_client_id = $settings->oauth_client_id;
-$oauth_client_secret = $settings->oauth_client_secret;
-$oauth_redirect_uri = $settings->oauth_redirect_uri;
+$oauth_client_id = getSetting($w,'oauth_client_id');
+$oauth_client_secret = getSetting($w,'oauth_client_secret');
+$oauth_redirect_uri = getSetting($w,'oauth_redirect_uri');
 
 $retry = true;
 $nb_retry = 0;

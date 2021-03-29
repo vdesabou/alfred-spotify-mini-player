@@ -74,16 +74,16 @@ function main($argv) {
         }
     }
 
-    // Read settings from DB
 
-    $settings = getSettings($w);
-    $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
-    $now_playing_notifications = $settings->now_playing_notifications;
-    $alfred_playlist_uri = $settings->alfred_playlist_uri;
-    $alfred_playlist_name = $settings->alfred_playlist_name;
-    $country_code = $settings->country_code;
-    $last_check_update_time = $settings->last_check_update_time;
-    $userid = $settings->userid;
+
+
+    $is_alfred_playlist_active = getSetting($w,'is_alfred_playlist_active');
+    $now_playing_notifications = getSetting($w,'now_playing_notifications');
+    $alfred_playlist_uri = getSetting($w,'alfred_playlist_uri');
+    $alfred_playlist_name = getSetting($w,'alfred_playlist_name');
+    $country_code = getSetting($w,'country_code');
+    $last_check_update_time = getSetting($w,'last_check_update_time');
+    $userid = getSetting($w,'userid');
 
     // Check that user is logged
     oAuthChecks($w, $query, $settings, $update_in_progress);

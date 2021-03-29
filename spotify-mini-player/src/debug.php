@@ -7,12 +7,8 @@ require_once './src/workflows.php';
 function debug($argv) {
     $w = new Workflows('com.vdesabou.spotify.mini.player');
 
-    // Read settings from DB
-
-    $settings = getSettings($w);
-
-    $theme_color = $settings->theme_color;
-    $artwork_folder_size = $settings->artwork_folder_size;
+    $theme_color = getSetting($w,'theme_color');
+    $artwork_folder_size = getSetting($w,'artwork_folder_size');
 
     $query = $argv[1];
 
