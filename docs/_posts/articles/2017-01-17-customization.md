@@ -31,6 +31,8 @@ onhomepage : true
 
 But you can also use [Alfred variables](https://www.alfredapp.com/help/workflows/advanced/variables/) to customize the workflow:-
 
+**IMPORTANT**: variables starting with '__' are handled by the workflow. They can be changed bu at your own risk.
+
 * You can change any workflow command name by modifying variables starting with `c_`, for example replace *spot_mini* by *s*:-
 
 <figure>

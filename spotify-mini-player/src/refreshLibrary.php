@@ -28,14 +28,11 @@ function refreshLibrary($w, $silent = false) {
 
     $in_progress_data = $w->read('update_library_in_progress');
 
-    // Read settings from DB
-    $settings = getSettings($w);
-
-    $country_code = $settings->country_code;
-    $userid = $settings->userid;
-    $use_artworks = $settings->use_artworks;
-    $debug = $settings->debug;
-    $podcasts_enabled = $settings->podcasts_enabled;
+    $country_code = getSetting($w,'country_code');
+    $userid = getSetting($w,'userid');
+    $use_artworks = getSetting($w,'use_artworks');
+    $debug = getSetting($w,'debug');
+    $podcasts_enabled = getSetting($w,'podcasts_enabled');
 
     $tmp = explode('▹', $in_progress_data);
     $initial_time = $tmp[3];

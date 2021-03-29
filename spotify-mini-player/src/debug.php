@@ -7,12 +7,8 @@ require_once './src/workflows.php';
 function debug($argv) {
     $w = new Workflows('com.vdesabou.spotify.mini.player');
 
-    // Read settings from DB
-
-    $settings = getSettings($w);
-
-    $theme_color = $settings->theme_color;
-    $artwork_folder_size = $settings->artwork_folder_size;
+    $theme_color = getSetting($w,'theme_color');
+    $artwork_folder_size = getSetting($w,'artwork_folder_size');
 
     $query = $argv[1];
 
@@ -267,31 +263,6 @@ function debug($argv) {
         '' /* country_code*/,
         '', /* userid*/
     )), 'Open log file', 'This will open the log file', 'fileicon:'.$w->cache().'/action.log', 'yes', null, '');
-
-    $w->result(null, serialize(array(
-        '' /*track_uri*/,
-        '' /* album_uri */,
-        '' /* artist_uri */,
-        '' /* playlist_uri */,
-        '' /* spotify_command */,
-        '' /* query */,
-        'Open▹'.$w->data().'/settings.db'/* other_settings*/,
-        '' /* other_action */,
-        '' /* alfred_playlist_uri */,
-        '' /* artist_name */,
-        '' /* track_name */,
-        '' /* album_name */,
-        '' /* track_artwork_path */,
-        '' /* artist_artwork_path */,
-        '' /* album_artwork_path */,
-        '' /* playlist_name */,
-        '' /* playlist_artwork_path */,
-        '' /* $alfred_playlist_name */,
-        '' /* now_playing_notifications */,
-        '' /* is_alfred_playlist_active */,
-        '' /* country_code*/,
-        '', /* userid*/
-    )), 'Open settings database file', 'This will open the db settings file', 'fileicon:'.$w->data().'/settings.db', 'yes', null, '');
 
     $w->result(null, serialize(array(
         '' /*track_uri*/,

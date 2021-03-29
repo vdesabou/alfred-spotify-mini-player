@@ -10,10 +10,10 @@
  */
 function secondDelimiterShows($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
-    $max_results = $settings->max_results;
-    $output_application = $settings->output_application;
-    $use_artworks = $settings->use_artworks;
-    $fuzzy_search = $settings->fuzzy_search;
+    $max_results = getSetting($w,'max_results');
+    $output_application = getSetting($w,'output_application');
+    $use_artworks = getSetting($w,'use_artworks');
+    $fuzzy_search = getSetting($w,'fuzzy_search');
 
     // display episodes for selected show
     $tmp = explode('∙', $words[1]);
@@ -137,13 +137,13 @@ function secondDelimiterShows($w, $query, $settings, $db, $update_in_progress) {
  */
 function secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
-    $radio_number_tracks = $settings->radio_number_tracks;
-    $max_results = $settings->max_results;
-    $country_code = $settings->country_code;
-    $is_public_playlists = $settings->is_public_playlists;
-    $output_application = $settings->output_application;
-    $use_artworks = $settings->use_artworks;
-    $fuzzy_search = $settings->fuzzy_search;
+    $radio_number_tracks = getSetting($w,'radio_number_tracks');
+    $max_results = getSetting($w,'max_results');
+    $country_code = getSetting($w,'country_code');
+    $is_public_playlists = getSetting($w,'is_public_playlists');
+    $output_application = getSetting($w,'output_application');
+    $use_artworks = getSetting($w,'use_artworks');
+    $fuzzy_search = getSetting($w,'fuzzy_search');
 
     // display tracks for selected artists
     $tmp = explode('∙', $words[1]);
@@ -358,11 +358,11 @@ function secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
 function secondDelimiterAlbums($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
 
-    $all_playlists = $settings->all_playlists;
-    $max_results = $settings->max_results;
-    $output_application = $settings->output_application;
-    $use_artworks = $settings->use_artworks;
-    $fuzzy_search = $settings->fuzzy_search;
+    $all_playlists = getSetting($w,'all_playlists');
+    $max_results = getSetting($w,'max_results');
+    $output_application = getSetting($w,'output_application');
+    $use_artworks = getSetting($w,'use_artworks');
+    $fuzzy_search = getSetting($w,'fuzzy_search');
 
     // display tracks for selected album
     $tmp = explode('∙', $words[1]);
@@ -542,11 +542,11 @@ function secondDelimiterAlbums($w, $query, $settings, $db, $update_in_progress) 
  */
 function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
-    $max_results = $settings->max_results;
-    $alfred_playlist_uri = $settings->alfred_playlist_uri;
-    $userid = $settings->userid;
-    $fuzzy_search = $settings->fuzzy_search;
-    $output_application = $settings->output_application;
+    $max_results = getSetting($w,'max_results');
+    $alfred_playlist_uri = getSetting($w,'alfred_playlist_uri');
+    $userid = getSetting($w,'userid');
+    $fuzzy_search = getSetting($w,'fuzzy_search');
+    $output_application = getSetting($w,'output_application');
 
     $theplaylisturi = $words[1];
     $thetrack = $words[2];
@@ -752,9 +752,9 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress) 
     $words = explode('▹', $query);
     $search = $words[2];
 
-    $radio_number_tracks = $settings->radio_number_tracks;
-    $country_code = $settings->country_code;
-    $use_artworks = $settings->use_artworks;
+    $radio_number_tracks = getSetting($w,'radio_number_tracks');
+    $country_code = getSetting($w,'country_code');
+    $use_artworks = getSetting($w,'use_artworks');
 
     if (substr_count($query, '@') == 1) {
 
@@ -1039,7 +1039,7 @@ function secondDelimiterOnlineRelated($w, $query, $settings, $db, $update_in_pro
     $words = explode('▹', $query);
     $search = $words[2];
 
-    $use_artworks = $settings->use_artworks;
+    $use_artworks = getSetting($w,'use_artworks');
 
     if (substr_count($query, '@') == 1) {
 
@@ -1073,13 +1073,13 @@ function secondDelimiterOnlineRelated($w, $query, $settings, $db, $update_in_pro
 function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
 
-    $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
-    $max_results = $settings->max_results;
-    $alfred_playlist_name = $settings->alfred_playlist_name;
-    $country_code = $settings->country_code;
-    $is_public_playlists = $settings->is_public_playlists;
-    $output_application = $settings->output_application;
-    $use_artworks = $settings->use_artworks;
+    $is_alfred_playlist_active = getSetting($w,'is_alfred_playlist_active');
+    $max_results = getSetting($w,'max_results');
+    $alfred_playlist_name = getSetting($w,'alfred_playlist_name');
+    $country_code = getSetting($w,'country_code');
+    $is_public_playlists = getSetting($w,'is_public_playlists');
+    $output_application = getSetting($w,'output_application');
+    $use_artworks = getSetting($w,'use_artworks');
 
     // display tracks for selected online playlist
     $tmp = explode('∙', $words[1]);
@@ -1261,9 +1261,9 @@ function secondDelimiterYourMusicTracks($w, $query, $settings, $db, $update_in_p
     $words = explode('▹', $query);
     $thetrack = $words[2];
 
-    $max_results = $settings->max_results;
-    $output_application = $settings->output_application;
-    $fuzzy_search = $settings->fuzzy_search;
+    $max_results = getSetting($w,'max_results');
+    $output_application = getSetting($w,'output_application');
+    $fuzzy_search = getSetting($w,'fuzzy_search');
 
     // display tracks for Your Music
     $search = $words[2];
@@ -1385,9 +1385,9 @@ function secondDelimiterYourMusicTracks($w, $query, $settings, $db, $update_in_p
  */
 function secondDelimiterYourMusicAlbums($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
-    $fuzzy_search = $settings->fuzzy_search;
+    $fuzzy_search = getSetting($w,'fuzzy_search');
 
-    $max_results = $settings->max_results;
+    $max_results = getSetting($w,'max_results');
 
     // Search albums
     $album = $words[2];
@@ -1449,8 +1449,8 @@ function secondDelimiterYourTopArtists($w, $query, $settings, $db, $update_in_pr
     $words = explode('▹', $query);
     $time_range = $words[2];
 
-    $max_results = $settings->max_results;
-    $use_artworks = $settings->use_artworks;
+    $max_results = getSetting($w,'max_results');
+    $use_artworks = getSetting($w,'use_artworks');
 
     try {
         $api = getSpotifyWebAPI($w);
@@ -1487,8 +1487,8 @@ function secondDelimiterYourTopTracks($w, $query, $settings, $db, $update_in_pro
     $words = explode('▹', $query);
     $time_range = $words[2];
 
-    $max_results = $settings->max_results;
-    $use_artworks = $settings->use_artworks;
+    $max_results = getSetting($w,'max_results');
+    $use_artworks = getSetting($w,'use_artworks');
 
     try {
         $api = getSpotifyWebAPI($w);
@@ -1543,8 +1543,8 @@ function secondDelimiterYourTopTracks($w, $query, $settings, $db, $update_in_pro
  */
 function secondDelimiterYourMusicArtists($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
-    $max_results = $settings->max_results;
-    $fuzzy_search = $settings->fuzzy_search;
+    $max_results = getSetting($w,'max_results');
+    $fuzzy_search = getSetting($w,'fuzzy_search');
 
     // Search artists
     $artist = $words[2];
@@ -1607,7 +1607,7 @@ function secondDelimiterYourMusicArtists($w, $query, $settings, $db, $update_in_
  */
 function secondDelimiterSettings($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
-    $output_application = $settings->output_application;
+    $output_application = getSetting($w,'output_application');
 
     $setting_kind = $words[1];
     $the_query = $words[2];
@@ -1948,9 +1948,9 @@ function secondDelimiterSettings($w, $query, $settings, $db, $update_in_progress
  */
 function secondDelimiterFeaturedPlaylist($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
-    $max_results = $settings->max_results;
-    $country_code = $settings->country_code;
-    $use_artworks = $settings->use_artworks;
+    $max_results = getSetting($w,'max_results');
+    $country_code = getSetting($w,'country_code');
+    $use_artworks = getSetting($w,'use_artworks');
 
     $country = $words[1];
     $search = $words[2];
@@ -2003,9 +2003,9 @@ function secondDelimiterFeaturedPlaylist($w, $query, $settings, $db, $update_in_
  */
 function secondDelimiterNewReleases($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
-    $max_results = $settings->max_results;
-    $country_code = $settings->country_code;
-    $use_artworks = $settings->use_artworks;
+    $max_results = getSetting($w,'max_results');
+    $country_code = getSetting($w,'country_code');
+    $use_artworks = getSetting($w,'use_artworks');
 
     $country = $words[1];
     $search = $words[2];
@@ -2142,12 +2142,12 @@ function secondDelimiterAdd($w, $query, $settings, $db, $update_in_progress) {
 
     $words = explode('▹', $query);
 
-    $is_alfred_playlist_active = $settings->is_alfred_playlist_active;
-    $alfred_playlist_uri = $settings->alfred_playlist_uri;
-    $alfred_playlist_name = $settings->alfred_playlist_name;
-    $is_public_playlists = $settings->is_public_playlists;
-    $fuzzy_search = $settings->fuzzy_search;
-    $max_results = $settings->max_results;
+    $is_alfred_playlist_active = getSetting($w,'is_alfred_playlist_active');
+    $alfred_playlist_uri = getSetting($w,'alfred_playlist_uri');
+    $alfred_playlist_name = getSetting($w,'alfred_playlist_name');
+    $is_public_playlists = getSetting($w,'is_public_playlists');
+    $fuzzy_search = getSetting($w,'fuzzy_search');
+    $max_results = getSetting($w,'max_results');
 
     if ($update_in_progress == true) {
         $w->result(null, '', 'Cannot add tracks/albums/playlists while update is in progress', array('Please retry when update is finished', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/warning.png', 'no', null, '');
@@ -2441,8 +2441,8 @@ function secondDelimiterRemove($w, $query, $settings, $db, $update_in_progress) 
  */
 function secondDelimiterAlfredPlaylist($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
-    $alfred_playlist_uri = $settings->alfred_playlist_uri;
-    $alfred_playlist_name = $settings->alfred_playlist_name;
+    $alfred_playlist_uri = getSetting($w,'alfred_playlist_uri');
+    $alfred_playlist_name = getSetting($w,'alfred_playlist_name');
 
     $setting_kind = $words[1];
     $theplaylist = $words[2];
@@ -2529,7 +2529,7 @@ function secondDelimiterAlfredPlaylist($w, $query, $settings, $db, $update_in_pr
 function secondDelimiterFollowUnfollow($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
 
-    $use_artworks = $settings->use_artworks;
+    $use_artworks = getSetting($w,'use_artworks');
 
     if (substr_count($query, '@') == 1) {
 
@@ -2693,7 +2693,7 @@ function secondDelimiterFollowOrUnfollow($w, $query, $settings, $db, $update_in_
  */
 function secondDelimiterDisplayBiography($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
-    $use_artworks = $settings->use_artworks;
+    $use_artworks = getSetting($w,'use_artworks');
 
     if (substr_count($query, '∙') == 1) {
 
@@ -2861,8 +2861,8 @@ function secondDelimiterDisplayConfirmRemovePlaylist($w, $query, $settings, $db,
 function secondDelimiterBrowse($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
 
-    $country_code = $settings->country_code;
-    $use_artworks = $settings->use_artworks;
+    $country_code = getSetting($w,'country_code');
+    $use_artworks = getSetting($w,'use_artworks');
 
     $country = $words[1];
     $search = $words[2];
@@ -2921,10 +2921,10 @@ function secondDelimiterBrowse($w, $query, $settings, $db, $update_in_progress) 
 function secondDelimiterPreview($w, $query, $settings, $db, $update_in_progress) {
     $words = explode('▹', $query);
 
-    $country_code = $settings->country_code;
-    $use_artworks = $settings->use_artworks;
-    $is_display_rating = $settings->is_display_rating;
-    $output_application = $settings->output_application;
+    $country_code = getSetting($w,'country_code');
+    $use_artworks = getSetting($w,'use_artworks');
+    $is_display_rating = getSetting($w,'is_display_rating');
+    $output_application = getSetting($w,'output_application');
 
     if (!file_exists('/usr/local/bin/mpg123')) {
         $w->result(null, '', 'mpg123 is not installed, install using brew install mpg123', array('install using brew install mpg123', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/warning.png', 'no', null, '');

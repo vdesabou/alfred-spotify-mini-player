@@ -13307,6 +13307,84 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 	</dict>
 	<key>variables</key>
 	<dict>
+		<key>__alfred_playlist_name</key>
+		<string></string>
+		<key>__alfred_playlist_uri</key>
+		<string></string>
+		<key>__all_playlists</key>
+		<string>1</string>
+		<key>__always_display_lyrics_in_browser</key>
+		<string>0</string>
+		<key>__artwork_folder_size</key>
+		<string></string>
+		<key>__automatic_refresh_library_interval</key>
+		<string>0</string>
+		<key>__country_code</key>
+		<string></string>
+		<key>__debug</key>
+		<string>0</string>
+		<key>__display_name</key>
+		<string></string>
+		<key>__fuzzy_search</key>
+		<string>0</string>
+		<key>__is_alfred_playlist_active</key>
+		<string>1</string>
+		<key>__is_autoplay_playlist</key>
+		<string>1</string>
+		<key>__is_display_rating</key>
+		<string>1</string>
+		<key>__is_public_playlists</key>
+		<string>0</string>
+		<key>__last_check_update_time</key>
+		<string>0</string>
+		<key>__max_results</key>
+		<string>50</string>
+		<key>__mopidy_port</key>
+		<string>6680</string>
+		<key>__mopidy_server</key>
+		<string>127.0.0.1</string>
+		<key>__now_playing_notifications</key>
+		<string>1</string>
+		<key>__oauth_access_token</key>
+		<string></string>
+		<key>__oauth_client_id</key>
+		<string></string>
+		<key>__oauth_client_secret</key>
+		<string></string>
+		<key>__oauth_redirect_uri</key>
+		<string>http://localhost:15298/callback.php</string>
+		<key>__oauth_refresh_token</key>
+		<string></string>
+		<key>__output_application</key>
+		<string>CONNECT</string>
+		<key>__podcasts_enabled</key>
+		<string>1</string>
+		<key>__preferred_spotify_connect_device</key>
+		<string></string>
+		<key>__preferred_spotify_connect_device_pushcut_webhook</key>
+		<string></string>
+		<key>__preferred_spotify_connect_device_pushcut_webhook_json_body</key>
+		<string></string>
+		<key>__quick_mode</key>
+		<string>0</string>
+		<key>__radio_number_tracks</key>
+		<string>30</string>
+		<key>__search_order</key>
+		<string>playlist▹artist▹track▹album▹show▹episode</string>
+		<key>__theme_color</key>
+		<string>green</string>
+		<key>__use_artworks</key>
+		<string>1</string>
+		<key>__use_facebook</key>
+		<string>0</string>
+		<key>__use_growl</key>
+		<string>0</string>
+		<key>__userid</key>
+		<string></string>
+		<key>__volume_percent</key>
+		<string>20</string>
+		<key>__workflow_version</key>
+		<string></string>
 		<key>add_all_tracks_from_album_when_adding_to_yourmusic</key>
 		<string>0</string>
 		<key>add_created_radio_playlist_to_library</key>
@@ -13498,6 +13576,48 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 		<key>sharing_text2</key>
 		<string>♫</string>
 	</dict>
+	<key>variablesdontexport</key>
+	<array>
+		<string>__display_name</string>
+		<string>__radio_number_tracks</string>
+		<string>__is_public_playlists</string>
+		<string>__alfred_playlist_name</string>
+		<string>__always_display_lyrics_in_browser</string>
+		<string>__all_playlists</string>
+		<string>__preferred_spotify_connect_device</string>
+		<string>__oauth_access_token</string>
+		<string>__mopidy_port</string>
+		<string>__last_check_update_time</string>
+		<string>__country_code</string>
+		<string>__now_playing_notifications</string>
+		<string>__theme_color</string>
+		<string>__debug</string>
+		<string>__use_artworks</string>
+		<string>__is_alfred_playlist_active</string>
+		<string>__use_growl</string>
+		<string>__oauth_refresh_token</string>
+		<string>__alfred_playlist_uri</string>
+		<string>__output_application</string>
+		<string>__mopidy_server</string>
+		<string>__volume_percent</string>
+		<string>__max_results</string>
+		<string>__is_display_rating</string>
+		<string>__oauth_redirect_uri</string>
+		<string>__automatic_refresh_library_interval</string>
+		<string>__workflow_version</string>
+		<string>__quick_mode</string>
+		<string>__preferred_spotify_connect_device_pushcut_webhook_json_body</string>
+		<string>__userid</string>
+		<string>__artwork_folder_size</string>
+		<string>__podcasts_enabled</string>
+		<string>__is_autoplay_playlist</string>
+		<string>__search_order</string>
+		<string>__use_facebook</string>
+		<string>__oauth_client_secret</string>
+		<string>__preferred_spotify_connect_device_pushcut_webhook</string>
+		<string>__oauth_client_id</string>
+		<string>__fuzzy_search</string>
+	</array>
 	<key>version</key>
 	<string>10.11</string>
 	<key>webaddress</key>
