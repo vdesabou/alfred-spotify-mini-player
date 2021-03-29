@@ -5,10 +5,6 @@ require './src/functions.php';
 require_once './src/workflows.php';
 $w = new Workflows('com.vdesabou.spotify.mini.player');
 
-
-
-
-
 $oauth_client_id = getSetting($w,'oauth_client_id');
 $oauth_client_secret = getSetting($w,'oauth_client_secret');
 $oauth_redirect_uri = getSetting($w,'oauth_redirect_uri');
