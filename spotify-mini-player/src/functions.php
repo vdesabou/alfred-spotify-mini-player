@@ -8822,75 +8822,15 @@ function stathat_value($stat_key, $user_key, $value)
  */
 function stathat_ez_count($email, $stat_name, $count)
 {
+    if(getenv('disable_anonymous_metrics') == 1)
+    {
+        return;
+    }
     do_async_post_request('http://api.stathat.com/ez', array(
             'email' => $email,
             'stat' => $stat_name,
             'count' => $count,
         ));
-}
-
-/**
- * stathat_ez_value function.
- *
- * @param mixed $email
- * @param mixed $stat_name
- * @param mixed $value
- */
-function stathat_ez_value($email, $stat_name, $value)
-{
-    do_async_post_request('http://api.stathat.com/ez', array(
-            'email' => $email,
-            'stat' => $stat_name,
-            'value' => $value,
-        ));
-}
-
-/**
- * stathat_count_sync function.
- *
- * @param mixed $stat_key
- * @param mixed $user_key
- * @param mixed $count
- */
-function stathat_count_sync($stat_key, $user_key, $count)
-{
-    return do_post_request('http://api.stathat.com/c', "key=$stat_key&ukey=$user_key&count=$count");
-}
-
-/**
- * stathat_value_sync function.
- *
- * @param mixed $stat_key
- * @param mixed $user_key
- * @param mixed $value
- */
-function stathat_value_sync($stat_key, $user_key, $value)
-{
-    return do_post_request('http://api.stathat.com/v', "key=$stat_key&ukey=$user_key&value=$value");
-}
-
-/**
- * stathat_ez_count_sync function.
- *
- * @param mixed $email
- * @param mixed $stat_name
- * @param mixed $count
- */
-function stathat_ez_count_sync($email, $stat_name, $count)
-{
-    return do_post_request('http://api.stathat.com/ez', "email=$email&stat=$stat_name&count=$count");
-}
-
-/**
- * stathat_ez_value_sync function.
- *
- * @param mixed $email
- * @param mixed $stat_name
- * @param mixed $value
- */
-function stathat_ez_value_sync($email, $stat_name, $value)
-{
-    return do_post_request('http://api.stathat.com/ez', "email=$email&stat=$stat_name&value=$value");
 }
 
 /**
