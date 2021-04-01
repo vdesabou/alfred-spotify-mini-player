@@ -147,3 +147,5 @@ But you can also use [Alfred variables](https://www.alfredapp.com/help/workflows
   Defaults are:
 
     * `clipboard_current_track_track_text`: `#NowPlaying {track_name} by {artist_name} {url}`
+
+* You can ignore *unplayable* tracks (which are represented by default with symbol 🚫) by setting variable `ignore_unplayable_tracks`to 1. An example is if you have disabled explicit lyrics in Spotify desktop, but you still want to be able to play those tracks with the workflow.
