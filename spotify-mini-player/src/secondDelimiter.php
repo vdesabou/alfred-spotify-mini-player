@@ -79,7 +79,7 @@ function secondDelimiterShows($w, $query, $settings, $db, $update_in_progress) {
             $fully_played = '✔️';
         }
         if (checkIfResultAlreadyThere($w->results(), $fully_played . $episodes[1]) == false) {
-            if ($episodes[7] == true) {
+            if ($episodes[7] == true || getenv('ignore_unplayable_tracks') == 1) {
                 $w->result(null, serialize(array($episodes[2] /*track_uri*/, $episodes[3] /* album_uri */, $episodes[4] /* artist_uri */, ''
                 /* playlist_uri */, ''
                 /* spotify_command */, ''
@@ -299,7 +299,7 @@ function secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
             $added = getenv('emoji_local_track').' ';
         }
         if (checkIfResultAlreadyThere($w->results(), $added . $track[7] . ' '.getenv('emoji_separator').' ' . $track[5]) == false) {
-            if ($track[14] == true) {
+            if ($track[14] == true || getenv('ignore_unplayable_tracks') == 1) {
                 $w->result(null, serialize(array($track[2] /*track_uri*/, $track[3] /* album_uri */, $track[4] /* artist_uri */, ''
                 /* playlist_uri */, ''
                 /* spotify_command */, ''
@@ -491,7 +491,7 @@ function secondDelimiterAlbums($w, $query, $settings, $db, $update_in_progress) 
             $added = getenv('emoji_local_track').' ';
         }
         if (checkIfResultAlreadyThere($w->results(), $added . $track[7] . ' '.getenv('emoji_separator').' ' . $track[5]) == false) {
-            if ($track[14] == true) {
+            if ($track[14] == true || getenv('ignore_unplayable_tracks') == 1) {
                 $w->result(null, serialize(array($track[2] /*track_uri*/, $track[3] /* album_uri */, $track[4] /* artist_uri */, ''
                 /* playlist_uri */, ''
                 /* spotify_command */, ''
@@ -700,7 +700,7 @@ function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progres
                     $added = getenv('emoji_local_track').' ';
                 }
                 if (checkIfResultAlreadyThere($w->results(), $added . $track[7] . ' '.getenv('emoji_separator').' ' . $track[5]) == false) {
-                    if ($track[14] == true) {
+                    if ($track[14] == true || getenv('ignore_unplayable_tracks') == 1) {
                         $w->result(null, serialize(array($track[2] /*track_uri*/, $track[3] /* album_uri */, $track[4] /* artist_uri */, $theplaylisturi
                         /* playlist_uri */, ''
                         /* spotify_command */, ''
@@ -995,7 +995,7 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress) 
             $artist = $artists[0];
 
             $track_artwork = getTrackOrAlbumArtwork($w, $track->uri, false, false, false, $use_artworks);
-            if (isset($track->is_playable) && $track->is_playable) {
+            if ((isset($track->is_playable) && $track->is_playable) || getenv('ignore_unplayable_tracks') == 1) {
                 $noresult = false;
                 if (countCharacters($search) < 2 || strpos(strtolower($artist->name), strtolower($search)) !== false || strpos(strtolower($track->name), strtolower($search)) !== false) {
                     $w->result(null, serialize(array($track->uri
@@ -1212,7 +1212,7 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
         $album = $track->album;
 
         $track_artwork_path = getTrackOrAlbumArtwork($w, $track->uri, false, false, false, $use_artworks);
-        if (isset($track->is_playable) && $track->is_playable) {
+        if ((isset($track->is_playable) && $track->is_playable) || getenv('ignore_unplayable_tracks') == 1) {
 
             if (countCharacters($search) < 2 || strpos(strtolower($artist->name), strtolower($search)) !== false || strpos(strtolower($track->name), strtolower($search)) !== false || strpos(strtolower($album->name), strtolower($search)) !== false) {
                 $w->result(null, serialize(array($track->uri
@@ -1330,7 +1330,7 @@ function secondDelimiterYourMusicTracks($w, $query, $settings, $db, $update_in_p
             $added = getenv('emoji_local_track').' ';
         }
         if (checkIfResultAlreadyThere($w->results(), $added . $track[7] . ' '.getenv('emoji_separator').' ' . $track[5]) == false) {
-            if ($track[14] == true) {
+            if ($track[14] == true || getenv('ignore_unplayable_tracks') == 1) {
                 $w->result(null, serialize(array($track[2] /*track_uri*/, $track[3] /* album_uri */, $track[4] /* artist_uri */, ''
                 /* playlist_uri */, ''
                 /* spotify_command */, ''

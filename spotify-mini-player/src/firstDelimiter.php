@@ -2699,7 +2699,7 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
             $track_artwork = getTrackOrAlbumArtwork($w, $tl_track
                 ->track->uri, false, false, false, $use_artworks);
 
-            if (strpos($track_name, '[unplayable]') !== false) {
+            if (strpos($track_name, '[unplayable]') !== false && getenv('ignore_unplayable_tracks') == 0) {
                 $track_name = str_replace('[unplayable]', '', $track_name);
                 if (countCharacters($search) < 2 || strpos(strtolower($artist_name), strtolower($search)) !== false || strpos(strtolower($track_name), strtolower($search)) !== false || strpos(strtolower($album_name), strtolower($search)) !== false) {
                     $w->result(null, '', getenv('emoji_not_playable').' ' . escapeQuery($artist_name) . ' '.getenv('emoji_separator').' ' . escapeQuery($track_name), array($duration . ' '.getenv('emoji_separator').' ' . $album_name, 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), $track_artwork, 'no', null, '');

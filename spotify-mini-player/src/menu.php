@@ -545,7 +545,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
                     $added = getenv('emoji_local_track').' ';
                 }
                 if (checkIfResultAlreadyThere($w->results(), $added . $track[7] . ' '.getenv('emoji_separator').' ' . $track[5]) == false) {
-                    if ($track[14] == true) {
+                    if ($track[14] == true || getenv('ignore_unplayable_tracks') == 1) {
                         $w->result(null, serialize(array($track[2] /*track_uri*/, $track[3] /* album_uri */, $track[4] /* artist_uri */, ''
                         /* playlist_uri */, ''
                         /* spotify_command */, ''
@@ -677,7 +677,7 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
                     $fully_played = '✔️';
                 }
                 if (checkIfResultAlreadyThere($w->results(), getenv('emoji_show').' ' . $fully_played . $episodes[1]) == false) {
-                    if ($episodes[7] == true) {
+                    if ($episodes[7] == true || getenv('ignore_unplayable_tracks') == 1) {
                         $w->result(null, serialize(array($episodes[2] /*track_uri*/, $episodes[3] /* album_uri */, $episodes[4] /* artist_uri */, ''
                         /* playlist_uri */, ''
                         /* spotify_command */, ''
