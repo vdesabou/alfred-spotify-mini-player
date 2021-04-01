@@ -13521,6 +13521,8 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 		<string>🎙</string>
 		<key>emoji_yourmusic</key>
 		<string>♫</string>
+		<key>ignore_unplayable_tracks</key>
+		<string>0</string>
 		<key>menu_display_alfred_playlist</key>
 		<string>1</string>
 		<key>menu_display_browse_by_album</key>
@@ -13579,20 +13581,20 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 	<key>variablesdontexport</key>
 	<array>
 		<string>__display_name</string>
-		<string>__radio_number_tracks</string>
+		<string>__debug</string>
 		<string>__is_public_playlists</string>
 		<string>__alfred_playlist_name</string>
+		<string>__use_artworks</string>
 		<string>__always_display_lyrics_in_browser</string>
 		<string>__all_playlists</string>
 		<string>__preferred_spotify_connect_device</string>
 		<string>__oauth_access_token</string>
-		<string>__mopidy_port</string>
 		<string>__last_check_update_time</string>
-		<string>__country_code</string>
+		<string>__mopidy_port</string>
 		<string>__now_playing_notifications</string>
+		<string>__radio_number_tracks</string>
+		<string>__country_code</string>
 		<string>__theme_color</string>
-		<string>__debug</string>
-		<string>__use_artworks</string>
 		<string>__is_alfred_playlist_active</string>
 		<string>__use_growl</string>
 		<string>__oauth_refresh_token</string>
@@ -13601,15 +13603,15 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 		<string>__mopidy_server</string>
 		<string>__volume_percent</string>
 		<string>__max_results</string>
+		<string>__preferred_spotify_connect_device_pushcut_webhook_json_body</string>
 		<string>__is_display_rating</string>
 		<string>__oauth_redirect_uri</string>
 		<string>__automatic_refresh_library_interval</string>
-		<string>__workflow_version</string>
 		<string>__quick_mode</string>
-		<string>__preferred_spotify_connect_device_pushcut_webhook_json_body</string>
-		<string>__userid</string>
-		<string>__artwork_folder_size</string>
+		<string>__workflow_version</string>
 		<string>__podcasts_enabled</string>
+		<string>__artwork_folder_size</string>
+		<string>__userid</string>
 		<string>__is_autoplay_playlist</string>
 		<string>__search_order</string>
 		<string>__use_facebook</string>
