@@ -13485,6 +13485,8 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 		<string></string>
 		<key>connect_switch_string</key>
 		<string>Switch playback to {device_type} {device_name} {volume}</string>
+		<key>disable_anonymous_metrics</key>
+		<string>0</string>
 		<key>emoji_album</key>
 		<string>💿</string>
 		<key>emoji_alfred</key>
