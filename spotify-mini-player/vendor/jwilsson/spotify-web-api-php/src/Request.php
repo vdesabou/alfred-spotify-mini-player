@@ -194,23 +194,22 @@ class Request
 
         // Sometimes a stringified JSON object is passed
         if (is_array($parameters) || is_object($parameters)) {
-            $parameters = http_build_query($parameters, null, '&');
-        }
-
-        $mergedHeaders = [];
-        foreach ($headers as $key => $val) {
-            $mergedHeaders[] = "$key: $val";
+            $parameters = http_build_query($parameters, '', '&');
         }
 
         $options = [
             CURLOPT_CAINFO => __DIR__ . '/cacert.pem',
             CURLOPT_ENCODING => '',
             CURLOPT_HEADER => true,
-            CURLOPT_HTTPHEADER => $mergedHeaders,
+            CURLOPT_HTTPHEADER => [],
             CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_URL => rtrim($url, '/'),
         ];
 
-        $url = rtrim($url, '/');
+        foreach ($headers as $key => $val) {
+            $options[CURLOPT_HTTPHEADER][] = "$key: $val";
+        }
+
         $method = strtoupper($method);
 
         switch ($method) {
@@ -229,13 +228,11 @@ class Request
                 $options[CURLOPT_CUSTOMREQUEST] = $method;
 
                 if ($parameters) {
-                    $url .= '/?' . $parameters;
+                    $options[CURLOPT_URL] .= '/?' . $parameters;
                 }
 
                 break;
         }
-
-        $options[CURLOPT_URL] = $url;
 
         $ch = curl_init();
 
@@ -251,16 +248,8 @@ class Request
             throw new SpotifyWebAPIException('cURL transport error: ' . curl_errno($ch) . ' ' .  curl_error($ch));
         }
 
-        list($headers, $body) = explode("\r\n\r\n", $response, 2);
+        [$headers, $body] = $this->splitResponse($response);
 
-        // Skip the first set of headers for proxied requests
-        if (preg_match('/^HTTP\/1\.\d 200 Connection established$/', $headers) === 1) {
-            list($headers, $body) = explode("\r\n\r\n", $body, 2);
-        }
-        // Skip the first set of headers for the informal Continue header
-        if (preg_match('/^HTTP\/1\.\d 100 Continue$/', $headers) === 1) {
-            list($headers, $body) = explode("\r\n\r\n", $body, 2);
-        }
         $status = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $headers = $this->parseHeaders($headers);
 
@@ -327,5 +316,34 @@ class Request
         );
 
         $this->returnType = $returnType;
+    }
+
+    /**
+     * Split response into headers and body, taking proxy response headers etc. into account.
+     *
+     * @param string $response The complete response.
+     *
+     * @return array An array consisting of two elements, headers and body.
+     */
+    protected function splitResponse($response)
+    {
+        $parts = explode("\r\n\r\n", $response, 3);
+
+        // Skip first set of headers for proxied requests etc.
+        if (
+            preg_match('/^HTTP\/1.\d 100 Continue/', $parts[0]) ||
+            preg_match('/^HTTP\/1.\d 200 Connection established/', $parts[0]) ||
+            preg_match('/^HTTP\/1.\d 200 Tunnel established/', $parts[0])
+        ) {
+            return [
+                $parts[1],
+                $parts[2],
+            ];
+        }
+
+        return [
+            $parts[0],
+            $parts[1],
+        ];
     }
 }
