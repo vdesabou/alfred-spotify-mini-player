@@ -4,11 +4,11 @@
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function thirdDelimiterAdd($w, $query, $settings, $db, $update_in_progress) {
+function thirdDelimiterAdd($w, $query, $db, $update_in_progress) {
     $words = explode('▹', $query);
 
     $is_public_playlists = getSetting($w,'is_public_playlists');
@@ -135,11 +135,11 @@ function thirdDelimiterAdd($w, $query, $settings, $db, $update_in_progress) {
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function thirdDelimiterBrowse($w, $query, $settings, $db, $update_in_progress) {
+function thirdDelimiterBrowse($w, $query, $db, $update_in_progress) {
     $words = explode('▹', $query);
 
     $use_artworks = getSetting($w,'use_artworks');

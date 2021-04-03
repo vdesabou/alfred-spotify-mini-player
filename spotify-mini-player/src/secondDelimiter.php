@@ -4,11 +4,11 @@
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function secondDelimiterShows($w, $query, $settings, $db, $update_in_progress) {
+function secondDelimiterShows($w, $query, $db, $update_in_progress) {
     $words = explode('▹', $query);
     $max_results = getSetting($w,'max_results');
     $output_application = getSetting($w,'output_application');
@@ -131,11 +131,11 @@ function secondDelimiterShows($w, $query, $settings, $db, $update_in_progress) {
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress) {
+function secondDelimiterArtists($w, $query, $db, $update_in_progress) {
     $words = explode('▹', $query);
     $radio_number_tracks = getSetting($w,'radio_number_tracks');
     $max_results = getSetting($w,'max_results');
@@ -351,11 +351,11 @@ function secondDelimiterArtists($w, $query, $settings, $db, $update_in_progress)
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function secondDelimiterAlbums($w, $query, $settings, $db, $update_in_progress) {
+function secondDelimiterAlbums($w, $query, $db, $update_in_progress) {
     $words = explode('▹', $query);
 
     $all_playlists = getSetting($w,'all_playlists');
@@ -536,11 +536,11 @@ function secondDelimiterAlbums($w, $query, $settings, $db, $update_in_progress) 
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress) {
+function secondDelimiterPlaylists($w, $query, $db, $update_in_progress) {
     $words = explode('▹', $query);
     $max_results = getSetting($w,'max_results');
     $alfred_playlist_uri = getSetting($w,'alfred_playlist_uri');
@@ -744,11 +744,11 @@ function secondDelimiterPlaylists($w, $query, $settings, $db, $update_in_progres
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress) {
+function secondDelimiterOnline($w, $query, $db, $update_in_progress) {
     $words = explode('▹', $query);
     $search = $words[2];
 
@@ -1031,11 +1031,11 @@ function secondDelimiterOnline($w, $query, $settings, $db, $update_in_progress) 
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function secondDelimiterOnlineRelated($w, $query, $settings, $db, $update_in_progress) {
+function secondDelimiterOnlineRelated($w, $query, $db, $update_in_progress) {
     $words = explode('▹', $query);
     $search = $words[2];
 
@@ -1066,11 +1066,11 @@ function secondDelimiterOnlineRelated($w, $query, $settings, $db, $update_in_pro
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_progress) {
+function secondDelimiterOnlinePlaylist($w, $query, $db, $update_in_progress) {
     $words = explode('▹', $query);
 
     $is_alfred_playlist_active = getSetting($w,'is_alfred_playlist_active');
@@ -1253,11 +1253,11 @@ function secondDelimiterOnlinePlaylist($w, $query, $settings, $db, $update_in_pr
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function secondDelimiterYourMusicTracks($w, $query, $settings, $db, $update_in_progress) {
+function secondDelimiterYourMusicTracks($w, $query, $db, $update_in_progress) {
     $words = explode('▹', $query);
     $thetrack = $words[2];
 
@@ -1379,11 +1379,11 @@ function secondDelimiterYourMusicTracks($w, $query, $settings, $db, $update_in_p
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function secondDelimiterYourMusicAlbums($w, $query, $settings, $db, $update_in_progress) {
+function secondDelimiterYourMusicAlbums($w, $query, $db, $update_in_progress) {
     $words = explode('▹', $query);
     $fuzzy_search = getSetting($w,'fuzzy_search');
 
@@ -1441,11 +1441,11 @@ function secondDelimiterYourMusicAlbums($w, $query, $settings, $db, $update_in_p
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function secondDelimiterYourTopArtists($w, $query, $settings, $db, $update_in_progress) {
+function secondDelimiterYourTopArtists($w, $query, $db, $update_in_progress) {
     $words = explode('▹', $query);
     $time_range = $words[2];
 
@@ -1479,11 +1479,11 @@ function secondDelimiterYourTopArtists($w, $query, $settings, $db, $update_in_pr
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function secondDelimiterYourTopTracks($w, $query, $settings, $db, $update_in_progress) {
+function secondDelimiterYourTopTracks($w, $query, $db, $update_in_progress) {
     $words = explode('▹', $query);
     $time_range = $words[2];
 
@@ -1537,11 +1537,11 @@ function secondDelimiterYourTopTracks($w, $query, $settings, $db, $update_in_pro
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function secondDelimiterYourMusicArtists($w, $query, $settings, $db, $update_in_progress) {
+function secondDelimiterYourMusicArtists($w, $query, $db, $update_in_progress) {
     $words = explode('▹', $query);
     $max_results = getSetting($w,'max_results');
     $fuzzy_search = getSetting($w,'fuzzy_search');
@@ -1601,11 +1601,11 @@ function secondDelimiterYourMusicArtists($w, $query, $settings, $db, $update_in_
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function secondDelimiterSettings($w, $query, $settings, $db, $update_in_progress) {
+function secondDelimiterSettings($w, $query, $db, $update_in_progress) {
     $words = explode('▹', $query);
     $output_application = getSetting($w,'output_application');
 
@@ -1942,11 +1942,11 @@ function secondDelimiterSettings($w, $query, $settings, $db, $update_in_progress
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function secondDelimiterFeaturedPlaylist($w, $query, $settings, $db, $update_in_progress) {
+function secondDelimiterFeaturedPlaylist($w, $query, $db, $update_in_progress) {
     $words = explode('▹', $query);
     $max_results = getSetting($w,'max_results');
     $country_code = getSetting($w,'country_code');
@@ -2004,11 +2004,11 @@ function secondDelimiterFeaturedPlaylist($w, $query, $settings, $db, $update_in_
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function secondDelimiterNewReleases($w, $query, $settings, $db, $update_in_progress) {
+function secondDelimiterNewReleases($w, $query, $db, $update_in_progress) {
     $words = explode('▹', $query);
     $max_results = getSetting($w,'max_results');
     $country_code = getSetting($w,'country_code');
@@ -2147,11 +2147,11 @@ function secondDelimiterNewReleases($w, $query, $settings, $db, $update_in_progr
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function secondDelimiterAdd($w, $query, $settings, $db, $update_in_progress) {
+function secondDelimiterAdd($w, $query, $db, $update_in_progress) {
 
     $words = explode('▹', $query);
 
@@ -2323,11 +2323,11 @@ function secondDelimiterAdd($w, $query, $settings, $db, $update_in_progress) {
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function secondDelimiterRemove($w, $query, $settings, $db, $update_in_progress) {
+function secondDelimiterRemove($w, $query, $db, $update_in_progress) {
     $words = explode('▹', $query);
 
     if ($update_in_progress == true) {
@@ -2448,11 +2448,11 @@ function secondDelimiterRemove($w, $query, $settings, $db, $update_in_progress) 
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function secondDelimiterAlfredPlaylist($w, $query, $settings, $db, $update_in_progress) {
+function secondDelimiterAlfredPlaylist($w, $query, $db, $update_in_progress) {
     $words = explode('▹', $query);
     $alfred_playlist_uri = getSetting($w,'alfred_playlist_uri');
     $alfred_playlist_name = getSetting($w,'alfred_playlist_name');
@@ -2535,11 +2535,11 @@ function secondDelimiterAlfredPlaylist($w, $query, $settings, $db, $update_in_pr
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function secondDelimiterFollowUnfollow($w, $query, $settings, $db, $update_in_progress) {
+function secondDelimiterFollowUnfollow($w, $query, $db, $update_in_progress) {
     $words = explode('▹', $query);
 
     $use_artworks = getSetting($w,'use_artworks');
@@ -2638,11 +2638,11 @@ function secondDelimiterFollowUnfollow($w, $query, $settings, $db, $update_in_pr
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function secondDelimiterFollowOrUnfollow($w, $query, $settings, $db, $update_in_progress) {
+function secondDelimiterFollowOrUnfollow($w, $query, $db, $update_in_progress) {
     $words = explode('▹', $query);
     $kind = $words[0];
 
@@ -2700,11 +2700,11 @@ function secondDelimiterFollowOrUnfollow($w, $query, $settings, $db, $update_in_
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function secondDelimiterDisplayBiography($w, $query, $settings, $db, $update_in_progress) {
+function secondDelimiterDisplayBiography($w, $query, $db, $update_in_progress) {
     $words = explode('▹', $query);
     $use_artworks = getSetting($w,'use_artworks');
 
@@ -2809,11 +2809,11 @@ function secondDelimiterDisplayBiography($w, $query, $settings, $db, $update_in_
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function secondDelimiterDisplayConfirmRemovePlaylist($w, $query, $settings, $db, $update_in_progress) {
+function secondDelimiterDisplayConfirmRemovePlaylist($w, $query, $db, $update_in_progress) {
     $words = explode('▹', $query);
 
     if (substr_count($query, '∙') == 1) {
@@ -2867,11 +2867,11 @@ function secondDelimiterDisplayConfirmRemovePlaylist($w, $query, $settings, $db,
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function secondDelimiterBrowse($w, $query, $settings, $db, $update_in_progress) {
+function secondDelimiterBrowse($w, $query, $db, $update_in_progress) {
     $words = explode('▹', $query);
 
     $country_code = getSetting($w,'country_code');
@@ -2934,11 +2934,11 @@ function secondDelimiterBrowse($w, $query, $settings, $db, $update_in_progress) 
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function secondDelimiterPreview($w, $query, $settings, $db, $update_in_progress) {
+function secondDelimiterPreview($w, $query, $db, $update_in_progress) {
     $words = explode('▹', $query);
 
     $country_code = getSetting($w,'country_code');

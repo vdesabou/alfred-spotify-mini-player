@@ -4,11 +4,11 @@
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress) {
+function firstDelimiterPlaylists($w, $query, $db, $update_in_progress) {
     $words = explode('▹', $query);
     $fuzzy_search = getSetting($w,'fuzzy_search');
     $max_results = getSetting($w,'max_results');
@@ -157,11 +157,11 @@ function firstDelimiterPlaylists($w, $query, $settings, $db, $update_in_progress
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function firstDelimiterArtists($w, $query, $settings, $db, $update_in_progress) {
+function firstDelimiterArtists($w, $query, $db, $update_in_progress) {
     $words = explode('▹', $query);
 
     $all_playlists = getSetting($w,'all_playlists');
@@ -268,11 +268,11 @@ function firstDelimiterArtists($w, $query, $settings, $db, $update_in_progress) 
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function firstDelimiterShows($w, $query, $settings, $db, $update_in_progress) {
+function firstDelimiterShows($w, $query, $db, $update_in_progress) {
     $words = explode('▹', $query);
     $max_results = getSetting($w,'max_results');
     $output_application = getSetting($w,'output_application');
@@ -349,11 +349,11 @@ function firstDelimiterShows($w, $query, $settings, $db, $update_in_progress) {
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function firstDelimiterAlbums($w, $query, $settings, $db, $update_in_progress) {
+function firstDelimiterAlbums($w, $query, $db, $update_in_progress) {
     $words = explode('▹', $query);
 
     $all_playlists = getSetting($w,'all_playlists');
@@ -454,11 +454,11 @@ function firstDelimiterAlbums($w, $query, $settings, $db, $update_in_progress) {
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function firstDelimiterFeaturedPlaylist($w, $query, $settings, $db, $update_in_progress) {
+function firstDelimiterFeaturedPlaylist($w, $query, $db, $update_in_progress) {
     $words = explode('▹', $query);
     $search = $words[1];
 
@@ -490,11 +490,11 @@ function firstDelimiterFeaturedPlaylist($w, $query, $settings, $db, $update_in_p
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progress) {
+function firstDelimiterSearchOnline($w, $query, $db, $update_in_progress) {
     $words = explode('▹', $query);
     $kind = $words[0];
     $search = $words[1];
@@ -778,11 +778,11 @@ function firstDelimiterSearchOnline($w, $query, $settings, $db, $update_in_progr
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function firstDelimiterNewReleases($w, $query, $settings, $db, $update_in_progress) {
+function firstDelimiterNewReleases($w, $query, $db, $update_in_progress) {
     $words = explode('▹', $query);
     $search = $words[1];
 
@@ -814,11 +814,11 @@ function firstDelimiterNewReleases($w, $query, $settings, $db, $update_in_progre
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progress) {
+function firstDelimiterCurrentTrack($w, $query, $db, $update_in_progress) {
     $words = explode('▹', $query);
     $input = $words[1];
 
@@ -1368,11 +1368,11 @@ function firstDelimiterCurrentTrack($w, $query, $settings, $db, $update_in_progr
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function firstDelimiterSpotifyConnect($w, $query, $settings, $db, $update_in_progress) {
+function firstDelimiterSpotifyConnect($w, $query, $db, $update_in_progress) {
 
 
 
@@ -1539,11 +1539,11 @@ function firstDelimiterSpotifyConnect($w, $query, $settings, $db, $update_in_pro
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function firstDelimiterSpotifyConnectPreferredDevice($w, $query, $settings, $db, $update_in_progress) {
+function firstDelimiterSpotifyConnectPreferredDevice($w, $query, $db, $update_in_progress) {
 
 
 
@@ -1691,11 +1691,11 @@ function firstDelimiterSpotifyConnectPreferredDevice($w, $query, $settings, $db,
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function firstDelimiterYourMusic($w, $query, $settings, $db, $update_in_progress) {
+function firstDelimiterYourMusic($w, $query, $db, $update_in_progress) {
     $words = explode('▹', $query);
     $max_results = getSetting($w,'max_results');
     $fuzzy_search = getSetting($w,'fuzzy_search');
@@ -1803,11 +1803,11 @@ function firstDelimiterYourMusic($w, $query, $settings, $db, $update_in_progress
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function firstDelimiterLyrics($w, $query, $settings, $db, $update_in_progress) {
+function firstDelimiterLyrics($w, $query, $db, $update_in_progress) {
     $words = explode('▹', $query);
 
     $use_artworks = getSetting($w,'use_artworks');
@@ -1864,11 +1864,11 @@ function firstDelimiterLyrics($w, $query, $settings, $db, $update_in_progress) {
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress) {
+function firstDelimiterSettings($w, $query, $db, $update_in_progress) {
     $all_playlists = getSetting($w,'all_playlists');
     $is_alfred_playlist_active = getSetting($w,'is_alfred_playlist_active');
     $radio_number_tracks = getSetting($w,'radio_number_tracks');
@@ -2540,11 +2540,11 @@ function firstDelimiterSettings($w, $query, $settings, $db, $update_in_progress)
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function firstDelimiterCheckForUpdate($w, $query, $settings, $db, $update_in_progress) {
+function firstDelimiterCheckForUpdate($w, $query, $db, $update_in_progress) {
     $check_results = checkForUpdate($w, 0);
     if ($check_results != null && is_array($check_results)) {
         if($check_results[0] != '') {
@@ -2584,11 +2584,11 @@ function firstDelimiterCheckForUpdate($w, $query, $settings, $db, $update_in_pro
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress) {
+function firstDelimiterPlayQueue($w, $query, $db, $update_in_progress) {
     $words = explode('▹', $query);
     $search = $words[1];
 
@@ -2882,11 +2882,11 @@ function firstDelimiterPlayQueue($w, $query, $settings, $db, $update_in_progress
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function firstDelimiterBrowse($w, $query, $settings, $db, $update_in_progress) {
+function firstDelimiterBrowse($w, $query, $db, $update_in_progress) {
     $words = explode('▹', $query);
     $search = $words[1];
 
@@ -2917,11 +2917,11 @@ function firstDelimiterBrowse($w, $query, $settings, $db, $update_in_progress) {
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function firstDelimiterYourTops($w, $query, $settings, $db, $update_in_progress) {
+function firstDelimiterYourTops($w, $query, $db, $update_in_progress) {
     $w->result(null, '', 'Get your top artists (last 4 weeks)', array('Get your top artists for last 4 weeks', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/your_tops_artists.png', 'no', null, 'Your Tops▹Artists▹short_term');
 
     $w->result(null, '', 'Get your top artists (last 6 months)', array('Get your top artists for last 6 months', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/your_tops_artists.png', 'no', null, 'Your Tops▹Artists▹medium_term');
@@ -2940,11 +2940,11 @@ function firstDelimiterYourTops($w, $query, $settings, $db, $update_in_progress)
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function firstDelimiterYourRecentTracks($w, $query, $settings, $db, $update_in_progress) {
+function firstDelimiterYourRecentTracks($w, $query, $db, $update_in_progress) {
     $words = explode('▹', $query);
     $search = $words[1];
 

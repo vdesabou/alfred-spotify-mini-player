@@ -4,10 +4,10 @@
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $update_in_progress
  */
-function oAuthChecks($w, $query, $settings, $update_in_progress) {
+function oAuthChecks($w, $query, $update_in_progress) {
     $oauth_client_id = getSetting($w,'oauth_client_id');
     $oauth_client_secret = getSetting($w,'oauth_client_secret');
     $oauth_access_token = getSetting($w,'oauth_access_token');
@@ -85,11 +85,11 @@ function oAuthChecks($w, $query, $settings, $update_in_progress) {
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function mainMenu($w, $query, $settings, $db, $update_in_progress) {
+function mainMenu($w, $query, $db, $update_in_progress) {
     $all_playlists = getSetting($w,'all_playlists');
     $is_alfred_playlist_active = getSetting($w,'is_alfred_playlist_active');
     $radio_number_tracks = getSetting($w,'radio_number_tracks');
@@ -349,11 +349,11 @@ function mainMenu($w, $query, $settings, $db, $update_in_progress) {
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function mainSearch($w, $query, $settings, $db, $update_in_progress) {
+function mainSearch($w, $query, $db, $update_in_progress) {
     $all_playlists = getSetting($w,'all_playlists');
     $max_results = getSetting($w,'max_results');
     $userid = getSetting($w,'userid');
@@ -724,11 +724,11 @@ function mainSearch($w, $query, $settings, $db, $update_in_progress) {
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function searchCategoriesFastAccess($w, $query, $settings, $db, $update_in_progress) {
+function searchCategoriesFastAccess($w, $query, $db, $update_in_progress) {
     $alfred_playlist_name = getSetting($w,'alfred_playlist_name');
     $now_playing_notifications = getSetting($w,'now_playing_notifications');
     $podcasts_enabled = getSetting($w,'podcasts_enabled');
@@ -812,11 +812,11 @@ function searchCategoriesFastAccess($w, $query, $settings, $db, $update_in_progr
  *
  * @param mixed $w
  * @param mixed $query
- * @param mixed $settings
+
  * @param mixed $db
  * @param mixed $update_in_progress
  */
-function searchCommandsFastAccess($w, $query, $settings, $db, $update_in_progress) {
+function searchCommandsFastAccess($w, $query, $db, $update_in_progress) {
     $is_alfred_playlist_active = getSetting($w,'is_alfred_playlist_active');
     $output_application = getSetting($w,'output_application');
 
