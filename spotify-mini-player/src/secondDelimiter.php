@@ -1957,16 +1957,23 @@ function secondDelimiterFeaturedPlaylist($w, $query, $settings, $db, $update_in_
 
     if ($country == 'Choose a Country') {
 
-        $spotify_country_codes = getSpotifyCountryCodesList();
+        try {
+            $api = getSpotifyWebAPI($w);
+            $spotify_country_codes = $api->getMarkets();
+            foreach ($spotify_country_codes->markets as $spotify_country_code) {
+                if (strtoupper($spotify_country_code) != 'US' && strtoupper($spotify_country_code) != 'GB' && strtoupper($spotify_country_code) != strtoupper($country_code)) {
 
-        foreach ($spotify_country_codes as $spotify_country_code) {
-            if (strtoupper($spotify_country_code) != 'US' && strtoupper($spotify_country_code) != 'GB' && strtoupper($spotify_country_code) != strtoupper($country_code)) {
+                    if (countCharacters($search) < 1 || strpos(strtolower($spotify_country_code), strtolower($search)) !== false || strpos(strtolower(getCountryName(strtoupper($spotify_country_code))), strtolower($search)) !== false) {
 
-                if (countCharacters($search) < 1 || strpos(strtolower($spotify_country_code), strtolower($search)) !== false || strpos(strtolower(getCountryName(strtoupper($spotify_country_code))), strtolower($search)) !== false) {
-
-                    $w->result(null, '', getCountryName(strtoupper($spotify_country_code)), array('Browse the current featured playlists in ' . getCountryName(strtoupper($spotify_country_code)), 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/star.png', 'no', null, 'Featured Playlist▹' . strtoupper($spotify_country_code) . '▹');
+                        $w->result(null, '', getCountryName(strtoupper($spotify_country_code)), array('Browse the current featured playlists in ' . getCountryName(strtoupper($spotify_country_code)), 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/star.png', 'no', null, 'Featured Playlist▹' . strtoupper($spotify_country_code) . '▹');
+                    }
                 }
             }
+        }
+        catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
+            $w->result(null, 'help', 'Exception occurred', array('' . $e->getMessage(), 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/warning.png', 'no', null, '');
+            echo $w->tojson();
+            exit;
         }
     }
     else {
@@ -2011,16 +2018,22 @@ function secondDelimiterNewReleases($w, $query, $settings, $db, $update_in_progr
     $search = $words[2];
 
     if ($country == 'Choose a Country') {
+        try {
+            $api = getSpotifyWebAPI($w);
+            $spotify_country_codes = $api->getMarkets();
+            foreach ($spotify_country_codes->markets as $spotify_country_code) {
+                if (strtoupper($spotify_country_code) != 'US' && strtoupper($spotify_country_code) != 'GB' && strtoupper($spotify_country_code) != strtoupper($country_code)) {
 
-        $spotify_country_codes = getSpotifyCountryCodesList();
-
-        foreach ($spotify_country_codes as $spotify_country_code) {
-            if (strtoupper($spotify_country_code) != 'US' && strtoupper($spotify_country_code) != 'GB' && strtoupper($spotify_country_code) != strtoupper($country_code)) {
-
-                if (countCharacters($search) < 1 || strpos(strtolower($spotify_country_code), strtolower($search)) !== false || strpos(strtolower(getCountryName(strtoupper($spotify_country_code))), strtolower($search)) !== false) {
-                    $w->result(null, '', getCountryName(strtoupper($spotify_country_code)), array('Browse the new album releases in ' . getCountryName(strtoupper($spotify_country_code)), 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/new_releases.png', 'no', null, 'New Releases▹' . strtoupper($spotify_country_code) . '▹');
+                    if (countCharacters($search) < 1 || strpos(strtolower($spotify_country_code), strtolower($search)) !== false || strpos(strtolower(getCountryName(strtoupper($spotify_country_code))), strtolower($search)) !== false) {
+                        $w->result(null, '', getCountryName(strtoupper($spotify_country_code)), array('Browse the new album releases in ' . getCountryName(strtoupper($spotify_country_code)), 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/new_releases.png', 'no', null, 'New Releases▹' . strtoupper($spotify_country_code) . '▹');
+                    }
                 }
             }
+        }
+        catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
+            $w->result(null, 'help', 'Exception occurred', array('' . $e->getMessage(), 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/warning.png', 'no', null, '');
+            echo $w->tojson();
+            exit;
         }
     }
     else {
@@ -2869,15 +2882,22 @@ function secondDelimiterBrowse($w, $query, $settings, $db, $update_in_progress) 
 
     if ($country == 'Choose a Country') {
 
-        $spotify_country_codes = getSpotifyCountryCodesList();
+        try {
+            $api = getSpotifyWebAPI($w);
+            $spotify_country_codes = $api->getMarkets();
+            foreach ($spotify_country_codes->markets as $spotify_country_code) {
+                if (strtoupper($spotify_country_code) != 'US' && strtoupper($spotify_country_code) != 'GB' && strtoupper($spotify_country_code) != strtoupper($country_code)) {
 
-        foreach ($spotify_country_codes as $spotify_country_code) {
-            if (strtoupper($spotify_country_code) != 'US' && strtoupper($spotify_country_code) != 'GB' && strtoupper($spotify_country_code) != strtoupper($country_code)) {
-
-                if (countCharacters($search) < 1 || strpos(strtolower($spotify_country_code), strtolower($search)) !== false || strpos(strtolower(getCountryName(strtoupper($spotify_country_code))), strtolower($search)) !== false) {
-                    $w->result(null, '', getCountryName(strtoupper($spotify_country_code)), array('Browse the Spotify categories in ' . getCountryName(strtoupper($spotify_country_code)), 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/browse.png', 'no', null, 'Browse▹' . strtoupper($spotify_country_code) . '▹');
+                    if (countCharacters($search) < 1 || strpos(strtolower($spotify_country_code), strtolower($search)) !== false || strpos(strtolower(getCountryName(strtoupper($spotify_country_code))), strtolower($search)) !== false) {
+                        $w->result(null, '', getCountryName(strtoupper($spotify_country_code)), array('Browse the Spotify categories in ' . getCountryName(strtoupper($spotify_country_code)), 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/browse.png', 'no', null, 'Browse▹' . strtoupper($spotify_country_code) . '▹');
+                    }
                 }
             }
+        }
+        catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
+            $w->result(null, 'help', 'Exception occurred', array('' . $e->getMessage(), 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/warning.png', 'no', null, '');
+            echo $w->tojson();
+            exit;
         }
     }
     else {
