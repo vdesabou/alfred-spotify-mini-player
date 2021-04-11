@@ -235,7 +235,7 @@
                                             <p>https://github.com/ (for downloading images when changing theme)</p>
                                         </li>
                                         <li>
-                                            <p>http://api.stathat.com (for statistics)</p>
+                                            <p>http://api.stathat.com (for statistics, this can be disabled by setting variable disable_anonymous_metrics to 1)</p>
                                         </li>
                                     </ul>
                                 </li>
