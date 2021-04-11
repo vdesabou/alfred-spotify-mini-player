@@ -271,7 +271,7 @@ function debug($argv) {
         '' /* playlist_uri */,
         '' /* spotify_command */,
         '' /* query */,
-        'Open▹'.exec('pwd').'/App/'.$theme_color.'/Spotify Mini Player.app' /* other_settings*/,
+        'OpenInFinder▹'.exec('pwd').'/App/'.$theme_color.'/Spotify Mini Player.app' /* other_settings*/,
         '' /* other_action */,
         '' /* alfred_playlist_uri */,
         '' /* artist_name */,
@@ -287,7 +287,7 @@ function debug($argv) {
         '' /* is_alfred_playlist_active */,
         '' /* country_code*/,
         '', /* userid*/
-    )), 'Open Spotify Mini Player app', 'This will open the app (troubleshooting notifications issues)', 'fileicon:'.exec('pwd').'/App/'.$theme_color.'/Spotify Mini Player.app', 'yes', null, '');
+    )), 'Open Spotify Mini Player app in Finder', 'If you have permissions issue, right click on app in Finder and select open', 'fileicon:'.exec('pwd').'/App/'.$theme_color.'/Spotify Mini Player.app', 'yes', null, '');
 
     $w->result(null, serialize(array(
         '' /*track_uri*/,
@@ -296,7 +296,7 @@ function debug($argv) {
         '' /* playlist_uri */,
         '' /* spotify_command */,
         '' /* query */,
-        'Open▹'.exec('pwd').'/terminal-notifier.app' /* other_settings*/,
+        'OpenInFinder▹'.exec('pwd').'/terminal-notifier.app' /* other_settings*/,
         '' /* other_action */,
         '' /* alfred_playlist_uri */,
         '' /* artist_name */,
@@ -312,7 +312,7 @@ function debug($argv) {
         '' /* is_alfred_playlist_active */,
         '' /* country_code*/,
         '', /* userid*/
-    )), 'Open terminal-notifier app', 'This will open the app (troubleshooting notifications issues)', 'fileicon:'.exec('pwd').'/terminal-notifier.app', 'yes', null, '');
+    )), 'Open terminal-notifier app in Finder', 'If you have permissions issue, right click on app in Finder and select open', 'fileicon:'.exec('pwd').'/terminal-notifier.app', 'yes', null, '');
 
     $w->result(null, serialize(array(
         '' /*track_uri*/,

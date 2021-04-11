@@ -713,6 +713,10 @@ if ($type == 'TRACK' && $other_settings == '' &&
         exec("open \"$setting[1]\"");
 
         return;
+    } elseif ($setting[0] == 'OpenInFinder') {
+        exec("open -R \"$setting[1]\"");
+
+        return;
     } elseif ($setting[0] == 'Reveal') {
         exec("open -R \"$setting[1]\"");
 
