@@ -8232,9 +8232,6 @@ function updateSetting($w, $setting_name, $setting_new_value, $exportable = fals
         $is_exportable = ' with exportable';
     }
     exec("osascript -e 'tell application id \"".getAlfredName()."\" to set configuration \"".$setting_name."\" to value \"".$setting_new_value."\" in workflow \"com.vdesabou.spotify.mini.player\"".$is_exportable."'");
-    if($setting_name != '__oauth_client_secret' && $setting_name != '__oauth_access_token' && $setting_name != '__oauth_refresh_token') {
-        logMsg($w,'updateSetting: '.$setting_name.'='.$setting_new_value.' exportable='.$exportable);
-    }
     return true;
 }
 
@@ -8263,7 +8260,7 @@ function resetSettings($w)
     updateSetting($w, 'userid', '');
     updateSetting($w, 'is_public_playlists', '0');
     updateSetting($w, 'quick_mode', '0');
-    updateSetting($w, 'output_application', 'CONNECT');
+    updateSetting($w, 'output_application', 'APPLESCRIPT');
     updateSetting($w, 'mopidy_server', '127.0.0.1');
     updateSetting($w, 'mopidy_port', '6680');
     updateSetting($w, 'volume_percent', '20');
