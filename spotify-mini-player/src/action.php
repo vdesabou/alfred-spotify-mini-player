@@ -31,9 +31,6 @@ $album_artwork_path = $arg[13];
 $playlist_name = $arg[14];
 $playlist_artwork_path = $arg[15];
 
-
-
-
 $is_alfred_playlist_active = getSetting($w,'is_alfred_playlist_active');
 $now_playing_notifications = getSetting($w,'now_playing_notifications');
 $alfred_playlist_uri = getSetting($w,'alfred_playlist_uri');
@@ -140,7 +137,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
                 $query = 'track:'.$track_name.' artist:'.$artist_name;
                 $results = searchWebApi($w, $country_code, $query, 'track', 1);
 
-                if (is_array($results) && count($results) > 0) {
+                if (is_array($results) && !empty($results)) {
                     // only one track returned
                     $track = $results[0];
                     $artists = $track->artists;
@@ -535,7 +532,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
                     $query = 'track:'.$track_name.' artist:'.$artist_name;
                     $results = searchWebApi($w, $country_code, $query, 'track', 1);
 
-                    if (is_array($results) && count($results) > 0) {
+                    if (is_array($results) && !empty($results)) {
                         // only one track returned
                         $track = $results[0];
                         $artists = $track->artists;
@@ -634,7 +631,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
                     $query = 'track:'.$track_name.' artist:'.$artist_name;
                     $results = searchWebApi($w, $country_code, $query, 'track', 1);
 
-                    if (is_array($results) && count($results) > 0) {
+                    if (is_array($results) && !empty($results)) {
                         // only one track returned
                         $track = $results[0];
                         $artists = $track->artists;
@@ -1435,7 +1432,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
         return;
     } elseif ($other_action == 'current_connect') {
-        $ret = getCurrentTrackInfoWithSpotifyConnect($w, false);
+        $ret = getCurrentTrackInfoWithSpotifyConnect($w);
         echo "$ret";
 
         return;
@@ -1714,7 +1711,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
         } else {
             $device_id = getSpotifyConnectCurrentDeviceId($w);
             if($device_id != '') {
-                $theVolume = getVolumeSpotifyConnect($w,$device_id);
+                $theVolume = getVolumeSpotifyConnect($w);
                 if(!$theVolume) {
                     displayNotificationWithArtwork($w, 'Cannot control volume on this Spotify Connect device', './images/warning.png', 'Error!');
                     return;
@@ -1727,7 +1724,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
                     $theVolume = $theVolume + $volume_percent;
                     displayNotificationWithArtwork($w, 'Spotify volume has been increased to '.$theVolume.'%', './images/volume_up.png', 'Volume Up');
                 }
-                changeVolumeSpotifyConnect($w, $device_id, $theVolume);
+                changeVolumeSpotifyConnect($w, $theVolume);
             } else {
                 displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
                 return;
@@ -1766,7 +1763,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
         } else {
             $device_id = getSpotifyConnectCurrentDeviceId($w);
             if($device_id != '') {
-                $theVolume = getVolumeSpotifyConnect($w,$device_id);
+                $theVolume = getVolumeSpotifyConnect($w);
                 if(!$theVolume) {
                     displayNotificationWithArtwork($w, 'Cannot control volume on this Spotify Connect device', './images/warning.png', 'Error!');
                     return;
@@ -1778,7 +1775,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
                     $theVolume = $theVolume - $volume_percent;
                     displayNotificationWithArtwork($w, 'Spotify volume has been decreased to '.$theVolume.'%', './images/volume_down.png', 'Volume Down');
                 }
-                changeVolumeSpotifyConnect($w, $device_id, $theVolume);
+                changeVolumeSpotifyConnect($w, $theVolume);
             } else {
                 displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
                 return;
@@ -1799,13 +1796,13 @@ if ($type == 'TRACK' && $other_settings == '' &&
         } else {
             $device_id = getSpotifyConnectCurrentDeviceId($w);
             if($device_id != '') {
-                $theVolume = getVolumeSpotifyConnect($w,$device_id);
+                $theVolume = getVolumeSpotifyConnect($w);
                 if(!$theVolume) {
                     displayNotificationWithArtwork($w, 'Cannot control volume on this Spotify Connect device', './images/warning.png', 'Error!');
                     return;
                 }
                 $volume_max = getenv('settings_volume_max');
-                changeVolumeSpotifyConnect($w, $device_id, $volume_max);
+                changeVolumeSpotifyConnect($w, $volume_max);
             } else {
                 displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
                 return;
@@ -1827,13 +1824,13 @@ if ($type == 'TRACK' && $other_settings == '' &&
         } else {
             $device_id = getSpotifyConnectCurrentDeviceId($w);
             if($device_id != '') {
-                $theVolume = getVolumeSpotifyConnect($w,$device_id);
+                $theVolume = getVolumeSpotifyConnect($w);
                 if(!$theVolume) {
                     displayNotificationWithArtwork($w, 'Cannot control volume on this Spotify Connect device', './images/warning.png', 'Error!');
                     return;
                 }
                 $volume_mid = getenv('settings_volume_mid');
-                changeVolumeSpotifyConnect($w, $device_id, $volume_mid);
+                changeVolumeSpotifyConnect($w, $volume_mid);
             } else {
                 displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
                 return;
@@ -1867,13 +1864,13 @@ if ($type == 'TRACK' && $other_settings == '' &&
         } else {
             $device_id = getSpotifyConnectCurrentDeviceId($w);
             if($device_id != '') {
-                $theVolume = getVolumeSpotifyConnect($w,$device_id);
+                $theVolume = getVolumeSpotifyConnect($w);
                 if(!$theVolume) {
                     displayNotificationWithArtwork($w, 'Cannot control volume on this Spotify Connect device', './images/warning.png', 'Error!');
                     return;
                 }
                 if ($theVolume <= 0) {
-                    changeVolumeSpotifyConnect($w, $device_id, $volume_max);
+                    changeVolumeSpotifyConnect($w, $volume_max);
                     $command_output = 'Spotify volume is unmuted.';
                 } else {
                     if($volume_min == 0) {
@@ -1881,7 +1878,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
                         // control is no more possible
                         $volume_min = 5;
                     }
-                    changeVolumeSpotifyConnect($w, $device_id, $volume_min);
+                    changeVolumeSpotifyConnect($w, $volume_min);
                     $command_output = 'Spotify volume is muted.';
                 }
             } else {

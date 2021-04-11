@@ -66,7 +66,7 @@ function setVolume($w, $volume)
     } else {
         $device_id = getSpotifyConnectCurrentDeviceId($w);
         if($device_id != '') {
-            changeVolumeSpotifyConnect($w, $device_id, $volume);
+            changeVolumeSpotifyConnect($w, $volume);
             displayNotificationWithArtwork($w, 'Spotify volume has been set to '.$volume.'%', './images/volume_up.png', 'Set Volume');
         } else {
             displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
@@ -402,7 +402,7 @@ function getCurrentTrackinfo($w, $output_application)
             $results = explode('▹', $retArr[count($retArr) - 1]);
         }
     } else {
-        $ret = getCurrentTrackInfoWithSpotifyConnect($w, false);
+        $ret = getCurrentTrackInfoWithSpotifyConnect($w);
         $results = explode('▹', $ret);
     }
 
@@ -1098,7 +1098,7 @@ function getEpisode($w, $episode_uri)
  *
  * @param mixed $w
  */
- function getVolumeSpotifyConnect($w, $device_id)
+ function getVolumeSpotifyConnect($w)
  {
     $retry = true;
     $nb_retry = 0;
@@ -1154,7 +1154,7 @@ function getEpisode($w, $episode_uri)
  *
  * @param mixed $w
  */
- function changeVolumeSpotifyConnect($w, $device_id, $volume_percent)
+ function changeVolumeSpotifyConnect($w, $volume_percent)
  {
     $retry = true;
     $nb_retry = 0;
@@ -2114,9 +2114,6 @@ function listUsers($w)
  */
 function getSpotifyWebAPI($w)
 {
-
-
-
     $oauth_client_id = getSetting($w,'oauth_client_id');
     $oauth_client_secret = getSetting($w,'oauth_client_secret');
     $oauth_access_token = getSetting($w,'oauth_access_token');
@@ -2760,10 +2757,8 @@ function getCurrentTrackInfoWithMopidy($w, $displayError = true)
  * @param mixed $w
  * @param bool  $displayError (default: true)
  */
- function getCurrentTrackInfoWithSpotifyConnect($w, $displayError = true)
+ function getCurrentTrackInfoWithSpotifyConnect($w)
  {
-
-
     $country_code = getSetting($w,'country_code');
     $track_name = '';
     $artist_name = '';
@@ -3318,74 +3313,6 @@ function updateCurrentTrackIndexFromPlayQueue($w)
         }
         $w->write($newplayqueue, 'playqueue.json');
     }
-}
-
-/**
- * getBiography function.
- *
- * @param mixed $w
- * @param mixed $artist_uri
- * @param mixed $artist_name
- */
-function getBiography($w, $artist_uri, $artist_name)
-{
-
-
-
-
-    $echonest_api_key = getSetting($w,'echonest_api_key');
-
-    // THIS IS BROKEN, see http://developer.echonest.com
-    // SPOTIFY WEB API DOES NO SUPPORT IT YET https://github.com/spotify/web-api/issues/207
-
-    $json = doJsonRequest($w, 'http://developer.echonest.com/api/v4/artist/biographies?api_key='.$echonest_api_key.'&id='.$artist_uri);
-    $response = $json->response;
-
-    foreach ($response->biographies as $biography) {
-        if ($biography->site == 'wikipedia') {
-            $wikipedia = $biography->text;
-            $wikipedia_url = $biography->url;
-        }
-        if ($biography->site == 'last.fm') {
-            $lastfm = $biography->text;
-            $lastfm_url = $biography->url;
-        }
-        $default = 'Source: '.$biography->site.'\n'.$biography->text;
-        $default_url = $biography->url;
-    }
-
-    if ($lastfm) {
-        $text = $lastfm;
-        $source = 'Last FM';
-        $url = $lastfm_url;
-    } elseif ($wikipedia) {
-        $text = $wikipedia;
-        $source = 'Wikipedia';
-        $url = $wikipedia_url;
-    } else {
-        $text = $default;
-        $source = $biography->site;
-        $url = $default_url;
-    }
-    if ($text == '') {
-        return array(false, '', '', '');
-    }
-    $output = strip_tags($text);
-
-    // Get URLs of artist, if available
-    $json = doJsonRequest($w, 'http://developer.echonest.com/api/v4/artist/urls?api_key='.$echonest_api_key.'&id='.$artist_uri);
-
-    $twitter_url = '';
-    if (isset($json->response->urls->twitter_url)) {
-        $twitter_url = $json->response->urls->twitter_url;
-    }
-
-    $official_url = '';
-    if (isset($json->response->urls->official_url)) {
-        $official_url = $json->response->urls->official_url;
-    }
-
-    return array($url, $source, $output, $twitter_url, $official_url);
 }
 
 /**
@@ -8305,7 +8232,7 @@ function updateSetting($w, $setting_name, $setting_new_value, $exportable = fals
         $is_exportable = ' with exportable';
     }
     exec("osascript -e 'tell application id \"".getAlfredName()."\" to set configuration \"".$setting_name."\" to value \"".$setting_new_value."\" in workflow \"com.vdesabou.spotify.mini.player\"".$is_exportable."'");
-    if($setting_name != '__oauth_client_secret' && $setting_name != '__oauth_access_token') {
+    if($setting_name != '__oauth_client_secret' && $setting_name != '__oauth_access_token' && $setting_name != '__oauth_refresh_token') {
         logMsg($w,'updateSetting: '.$setting_name.'='.$setting_new_value.' exportable='.$exportable);
     }
     return true;

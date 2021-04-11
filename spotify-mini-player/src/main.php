@@ -325,8 +325,6 @@ function main($argv) {
                     secondDelimiterFollowUnfollow($w, $query, $db, $update_in_progress);
                 } elseif ($kind == 'Follow' || $kind == 'Unfollow') {
                     secondDelimiterFollowOrUnfollow($w, $query, $db, $update_in_progress);
-                } elseif ($kind == 'Biography') {
-                    secondDelimiterDisplayBiography($w, $query, $db, $update_in_progress);
                 } elseif ($kind == 'Confirm Remove Playlist') {
                     secondDelimiterDisplayConfirmRemovePlaylist($w, $query, $db, $update_in_progress);
                 } elseif ($kind == 'Browse') {

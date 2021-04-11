@@ -22,26 +22,7 @@ function secondDelimiterShows($w, $query, $db, $update_in_progress) {
     $episode = $words[2];
 
     if (countCharacters($episode) < 2) {
-        $show_artwork_path = getShowArtwork($w, $show_uri, false, false, false, $use_artworks);
-        // $w->result(null, serialize(array(
-        //             $show_uri /*track_uri*/,
-        //             '' /* album_uri */,
-        //             '' /* artist_uri */,
-        //             '' /* playlist_uri */,
-        //             '' /* spotify_command */,
-        //             '' /* query */,
-        //             '' /* other_settings*/,
-        //             'playshow' /* other_action */,
-        //             '' /* artist_name */,
-        //             $show_name /* track_name */,
-        //             '' /* album_name */,
-        //             '' /* track_artwork_path */,
-        //             $show_artwork_path /* artist_artwork_path */,
-        //             '' /* album_artwork_path */,
-        //             '' /* playlist_name */,
-        //             '', /* playlist_artwork_path */
-        //         )), getenv('emoji_show').' '.$show_name, 'Play show', $show_artwork_path, 'yes', null, '');
-
+        getShowArtwork($w, $show_uri, false, false, false, $use_artworks);
 
         $w->result(null, '', 'Follow/Unfollow Show', array('Display options to follow/unfollow the show', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/follow.png', 'no', null, 'Follow/Unfollow▹' . $show_uri . '@' . $show_name . '▹');
 
@@ -71,7 +52,6 @@ function secondDelimiterShows($w, $query, $db, $update_in_progress) {
     $noresult = true;
     foreach ($results as $episodes) {
         $noresult = false;
-        $subtitle = $episodes[6];
 
         $fully_played = '';
         if ($episodes[16] == 1) {
@@ -834,7 +814,6 @@ function secondDelimiterOnline($w, $query, $db, $update_in_progress) {
                     ->items) . ' tracks)') == false) {
                     $noresult = false;
                     $genre = (count($album->genres) > 0) ? ' '.getenv('emoji_separator').' Genre: ' . implode('|', $album->genres) : '';
-                    $tracks = $album->tracks;
                     if (countCharacters($search) < 2 || strpos(strtolower($artist_name), strtolower($search)) !== false || strpos(strtolower($album->name), strtolower($search)) !== false) {
                         $w->result(null, '', $album->name . ' (' . count($album
                             ->tracks
@@ -935,7 +914,6 @@ function secondDelimiterOnline($w, $query, $db, $update_in_progress) {
         $tmp = $words[1];
         $words = explode('@', $tmp);
         $artist_uri = $words[0];
-        $artist_name = $words[1];
         $album_uri = $words[2];
         $album_name = $words[3];
 
@@ -1047,7 +1025,6 @@ function secondDelimiterOnlineRelated($w, $query, $db, $update_in_progress) {
         $tmp = $words[1];
         $words = explode('@', $tmp);
         $artist_uri = $words[0];
-        $artist_name = $words[1];
 
         // call to web api, if it fails,
         // it displays an error in main window
@@ -1199,14 +1176,12 @@ function secondDelimiterOnlinePlaylist($w, $query, $db, $update_in_progress) {
         }
     }
 
-    $noresult = true;
     $nb_results = 0;
     foreach ($savedPlaylistTracks as $item) {
         if ($nb_results > $max_results) {
             break;
         }
         $track = $item->track;
-        $noresult = false;
         $artists = $track->artists;
         $artist = $artists[0];
         $album = $track->album;
@@ -1266,7 +1241,6 @@ function secondDelimiterYourMusicTracks($w, $query, $db, $update_in_progress) {
     $fuzzy_search = getSetting($w,'fuzzy_search');
 
     // display tracks for Your Music
-    $search = $words[2];
 
     if (countCharacters($thetrack) < 2) {
         $w->result(null, serialize(array(''
@@ -1981,7 +1955,6 @@ function secondDelimiterFeaturedPlaylist($w, $query, $db, $update_in_progress) {
             $api = getSpotifyWebAPI($w);
             $featuredPlaylists = $api->getFeaturedPlaylists(array('country' => $country, 'limit' => ($max_results <= 50) ? $max_results : 50, 'offset' => 0,));
 
-            $subtitle = 'Launch Playlist';
             $playlists = $featuredPlaylists->playlists;
             $w->result(null, '', $featuredPlaylists->message, array('' . $playlists->total . ' playlists available', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/info.png', 'no', null, '');
             $items = $playlists->items;
@@ -2401,7 +2374,7 @@ function secondDelimiterRemove($w, $query, $db, $update_in_progress) {
                     $stmtGetPlaylists->bindValue(':playlist', '%' . deburr($theplaylist) . '%');
                 }
 
-                $playlists = $stmtGetPlaylists->execute();
+                $stmtGetPlaylists->execute();
 
                 while ($playlist = $stmtGetPlaylists->fetch()) {
                     if ($noresult == true) {
@@ -2696,115 +2669,6 @@ function secondDelimiterFollowOrUnfollow($w, $query, $db, $update_in_progress) {
 }
 
 /**
- * secondDelimiterDisplayBiography function.
- *
- * @param mixed $w
- * @param mixed $query
-
- * @param mixed $db
- * @param mixed $update_in_progress
- */
-function secondDelimiterDisplayBiography($w, $query, $db, $update_in_progress) {
-    $words = explode('▹', $query);
-    $use_artworks = getSetting($w,'use_artworks');
-
-    if (substr_count($query, '∙') == 1) {
-
-        // Search Biography
-        $tmp = $words[1];
-        $words = explode('∙', $tmp);
-        $artist_uri = $words[0];
-        $artist_name = $words[1];
-
-        list($biography_url, $source, $biography, $twitter_url, $official_url) = getBiography($w, $artist_uri, $artist_name);
-
-        if ($biography_url != false) {
-            if ($source == 'Last FM') {
-                $image = './images/lastfm.png';
-            }
-            elseif ($source == 'Wikipedia') {
-                $image = './images/wikipedia.png';
-            }
-            else {
-                $image = './images/biography.png';
-            }
-
-            if ($twitter_url != '') {
-                $twitter_account = end((explode('/', rtrim($twitter_url, '/'))));
-                $w->result(null, serialize(array(''
-                /*track_uri*/, ''
-                /* album_uri */, ''
-                /* artist_uri */, ''
-                /* playlist_uri */, ''
-                /* spotify_command */, ''
-                /* query */, 'Open▹' . $twitter_url /* other_settings*/, ''
-                /* other_action */,
-
-                ''
-                /* artist_name */, ''
-                /* track_name */, ''
-                /* album_name */, ''
-                /* track_artwork_path */, ''
-                /* artist_artwork_path */, ''
-                /* album_artwork_path */, ''
-                /* playlist_name */, '', /* playlist_artwork_path */
-                )), 'See twitter account @' . $twitter_account, 'This will open your default browser with the twitter of the artist', './images/twitter.png', 'yes', null, '');
-            }
-
-            if ($official_url != '') {
-                $w->result(null, serialize(array(''
-                /*track_uri*/, ''
-                /* album_uri */, ''
-                /* artist_uri */, ''
-                /* playlist_uri */, ''
-                /* spotify_command */, ''
-                /* query */, 'Open▹' . $official_url /* other_settings*/, ''
-                /* other_action */,
-
-                ''
-                /* artist_name */, ''
-                /* track_name */, ''
-                /* album_name */, ''
-                /* track_artwork_path */, ''
-                /* artist_artwork_path */, ''
-                /* album_artwork_path */, ''
-                /* playlist_name */, '', /* playlist_artwork_path */
-                )), 'See official website for the artist (' . $official_url . ')', 'This will open your default browser with the official website of the artist', './images/artists.png', 'yes', null, '');
-            }
-
-            $w->result(null, serialize(array(''
-            /*track_uri*/, ''
-            /* album_uri */, ''
-            /* artist_uri */, ''
-            /* playlist_uri */, ''
-            /* spotify_command */, ''
-            /* query */, 'Open▹' . $biography_url /* other_settings*/, ''
-            /* other_action */, ''
-            /* artist_name */, ''
-            /* track_name */, ''
-            /* album_name */, ''
-            /* track_artwork_path */, ''
-            /* artist_artwork_path */, ''
-            /* album_artwork_path */, ''
-            /* playlist_name */, '', /* playlist_artwork_path */
-            )), 'See biography for ' . $artist_name . ' on ' . $source, 'This will open your default browser', $image, 'yes', null, '');
-
-            $wrapped = wordwrap($biography, 70, "\n", false);
-            $biography_sentances = explode("\n", $wrapped);
-            $artist_artwork_path = getArtistArtwork($w, $artist_uri, $artist_name, false, false, false, $use_artworks);
-            for ($i = 0;$i < count($biography_sentances);++$i) {
-                $w->result(null, '', $biography_sentances[$i], array('', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), $artist_artwork_path, 'no', null, '');
-            }
-        }
-        else {
-            $w->result(null, 'help', 'No biography found!', array('', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/warning.png', 'no', null, '');
-            echo $w->tojson();
-            exit;
-        }
-    }
-}
-
-/**
  * secondDelimiterDisplayConfirmRemovePlaylist function.
  *
  * @param mixed $w
@@ -2953,7 +2817,6 @@ function secondDelimiterPreview($w, $query, $db, $update_in_progress) {
     }
 
     $track_uri = $words[1];
-    $search = $words[2];
 
     $tmp = explode(':', $track_uri);
     if ($tmp[1] == 'track') {
