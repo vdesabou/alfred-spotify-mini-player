@@ -13356,7 +13356,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 		<key>__oauth_refresh_token</key>
 		<string></string>
 		<key>__output_application</key>
-		<string>CONNECT</string>
+		<string>APPLESCRIPT</string>
 		<key>__podcasts_enabled</key>
 		<string>1</string>
 		<key>__preferred_spotify_connect_device</key>
