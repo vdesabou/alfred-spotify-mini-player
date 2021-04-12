@@ -1644,10 +1644,6 @@ function seekToBeginning($w)
  */
  function getSpotifyConnectCurrentDeviceId($w)
  {
-
-
-
-
     $preferred_spotify_connect_device = getSetting($w,'preferred_spotify_connect_device');
     $preferred_spotify_connect_device_pushcut_webhook = getSetting($w,'preferred_spotify_connect_device_pushcut_webhook');
     $preferred_spotify_connect_device_pushcut_webhook_json_body = getSetting($w,'preferred_spotify_connect_device_pushcut_webhook_json_body');
@@ -1788,6 +1784,9 @@ function seekToBeginning($w)
                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                 // retry any SSL error
                 ++$nb_retry;
+            } else if (strpos(strtolower($e->getMessage()), 'violated') !== false) {
+                // ignore
+                return false;
             } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
                 if ($nb_retry > 3) {
