@@ -13623,7 +13623,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 		<string>__fuzzy_search</string>
 	</array>
 	<key>version</key>
-	<string>10.13</string>
+	<string>10.14</string>
 	<key>webaddress</key>
 	<string>https://alfred-spotify-mini-player.com</string>
 </dict>
