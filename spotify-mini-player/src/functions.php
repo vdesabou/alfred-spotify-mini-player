@@ -1237,7 +1237,7 @@ function getEpisode($w, $episode_uri)
                 $retry = false;
             }
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-            logMsg($w,'Error(playTrackSpotifyConnect): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
+            logMsg($w,'Error(playTrackSpotifyConnect): track_uri '.$track_uri.' retry '.$nb_retry.' (exception '.jTraceEx($e).')');
             if ($e->getCode() == 404) {
                 // skip
                 break;
