@@ -1,6 +1,7 @@
 # <img src="https://www.freepnglogos.com/uploads/spotify-logo-png/image-gallery-spotify-logo-21.png" width="24"><img src="https://i.pinimg.com/originals/b8/26/ea/b826eaa3fa9a08fdd00ae98f33432e74.png" width="24"> Alfred Spotify Mini Player
 
-![GitHub All Releases](https://img.shields.io/github/downloads/vdesabou/alfred-spotify-mini-player/total) ![GitHub Releases](https://img.shields.io/github/downloads/vdesabou/alfred-spotify-mini-player/latest/total)
+![GitHub All Releases](https://img.shields.io/github/downloads/vdesabou/alfred-spotify-mini-player/total) ![GitHub Releases](https://img.shields.io/github/downloads/vdesabou/alfred-spotify-mini-player/latest/total)![GitHub Release Date](https://img.shields.io/github/release-date/vdesabou/alfred-spotify-mini-player)![GitHub commits since latest release (by date)](https://img.shields.io/github/commits-since/vdesabou/alfred-spotify-mini-player/latest)
+![GitHub issues](https://img.shields.io/github/issues/vdesabou/alfred-spotify-mini-player)![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/vdesabou/alfred-spotify-mini-player)
 
 Find all information and download the workflow on [alfred-spotify-mini-player.com](http://alfred-spotify-mini-player.com)
 
