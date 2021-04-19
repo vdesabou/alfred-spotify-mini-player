@@ -1533,6 +1533,26 @@ if ($type == 'TRACK' && $other_settings == '' &&
         stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);
 
         return;
+    } elseif ($other_action == 'add_current_track_to_alfred_playlist') {
+        if (file_exists($w->data().'/update_library_in_progress')) {
+            displayNotificationWithArtwork($w, 'Cannot modify library while update is in progress', './images/warning.png', 'Error!');
+
+            return;
+        }
+        addCurrentTrackToAlfredPlaylist($w);
+        stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);
+
+        return;
+    } elseif ($other_action == 'add_current_track_to_your_music') {
+        if (file_exists($w->data().'/update_library_in_progress')) {
+            displayNotificationWithArtwork($w, 'Cannot modify library while update is in progress', './images/warning.png', 'Error!');
+
+            return;
+        }
+        addCurrentTrackToYourMusic($w);
+        stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);
+
+        return;
     } elseif ($other_action == 'remove_current_track') {
         if (file_exists($w->data().'/update_library_in_progress')) {
             displayNotificationWithArtwork($w, 'Cannot modify library while update is in progress', './images/warning.png', 'Error!');
@@ -1540,6 +1560,26 @@ if ($type == 'TRACK' && $other_settings == '' &&
             return;
         }
         removeCurrentTrackFromAlfredPlaylistOrYourMusic($w);
+        stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);
+
+        return;
+    }  elseif ($other_action == 'remove_current_track_from_alfred_playlist') {
+        if (file_exists($w->data().'/update_library_in_progress')) {
+            displayNotificationWithArtwork($w, 'Cannot modify library while update is in progress', './images/warning.png', 'Error!');
+
+            return;
+        }
+        removeCurrentTrackFromAlfredPlaylist($w);
+        stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);
+
+        return;
+    } elseif ($other_action == 'remove_current_track_from_your_music') {
+        if (file_exists($w->data().'/update_library_in_progress')) {
+            displayNotificationWithArtwork($w, 'Cannot modify library while update is in progress', './images/warning.png', 'Error!');
+
+            return;
+        }
+        removeCurrentTrackFromYourMusic($w);
         stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);
 
         return;

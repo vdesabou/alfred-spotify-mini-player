@@ -8,6 +8,19 @@
 	<string>Tools</string>
 	<key>connections</key>
 	<dict>
+		<key>016C8130-4E47-4710-9E65-0CB8510A72A8</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>D60CB014-7E71-407C-AFA4-7B4E9A8F8EB1</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>024D6172-912E-4EAE-92AA-776626D52FFB</key>
 		<array>
 			<dict>
@@ -39,6 +52,19 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>3DCE41C0-2C4B-425E-8364-FE1E2D60E78F</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>05BF1E15-BD60-47D9-8439-9E257FBF5DC0</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>D60CB014-7E71-407C-AFA4-7B4E9A8F8EB1</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -511,6 +537,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>231F40B2-0D82-4626-90E3-048839BE6B69</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>5A5F8E26-B370-4477-9C48-A5BE30859FC9</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>2A349C40-E727-4733-8792-2F49BDEE3ADD</key>
 		<array>
 			<dict>
@@ -758,6 +797,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>34B09F50-AE23-4681-8727-06E17B6B3A1F</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>5A5F8E26-B370-4477-9C48-A5BE30859FC9</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>3617F927-558D-4F30-B8D1-B7789F863AB0</key>
 		<array>
 			<dict>
@@ -880,6 +932,19 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>FD282800-1267-4ACF-BF0D-C42758D49623</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>426A99EF-E404-49D0-9C21-6DF70721C780</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>4FADED10-B453-4F47-BA62-2784D891D867</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -1018,6 +1083,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>50C0756A-D316-43CA-8879-64C30DC03134</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>5B9411EE-FDEE-4B06-8471-78AE3B68FA7E</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>528C59BE-0DAD-4C1D-876E-09EEE2B889FA</key>
 		<array>
 			<dict>
@@ -1140,6 +1218,19 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>98123379-ADC9-4377-9F28-DF79E01715D1</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>5C87D7DB-2D56-43D8-88F0-150991BB979B</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>4FADED10-B453-4F47-BA62-2784D891D867</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -1805,6 +1896,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>83C866F4-799B-4E6B-B430-6E4AC26CA209</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>4FADED10-B453-4F47-BA62-2784D891D867</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>83FDAFA8-0D15-43B2-9CA9-E9B3459ACE5E</key>
 		<array>
 			<dict>
@@ -2041,6 +2145,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>909CE4AE-9334-443A-ABB1-F0834048C5CD</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>4FADED10-B453-4F47-BA62-2784D891D867</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>93DE48B5-E0D6-4B64-B972-D01EB36E71C7</key>
 		<array>
 			<dict>
@@ -2115,6 +2232,19 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>1A2C6EE5-E029-45EE-89D0-4C6182C7E5E0</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>9A0A3DB0-BDCD-4F09-96BF-BC45F065EFE0</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>5A5F8E26-B370-4477-9C48-A5BE30859FC9</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -2435,6 +2565,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>AD0BC8EF-1870-41E9-85D0-D2C6B142873F</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>5B9411EE-FDEE-4B06-8471-78AE3B68FA7E</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>AD51D057-762E-41B1-BDC6-D89411E01468</key>
 		<array>
 			<dict>
@@ -2539,11 +2682,37 @@
 				<false/>
 			</dict>
 		</array>
+		<key>B2D79344-1842-4E52-A989-5661929AB0DB</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>5B9411EE-FDEE-4B06-8471-78AE3B68FA7E</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>B2FA8E8E-16D5-4BD2-8A44-86FA0DFB6897</key>
 		<array>
 			<dict>
 				<key>destinationuid</key>
 				<string>0DFD4F08-73E4-4D6A-B96C-7766AC2E4F3E</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>B3E02150-DF7B-4942-A313-B9B8C81B8B2B</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>5B9411EE-FDEE-4B06-8471-78AE3B68FA7E</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -2609,6 +2778,19 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>E049B90B-F4AC-475E-A20A-82083E709F11</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>BA0D4035-3F09-422F-8627-0A2321219CC2</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>D60CB014-7E71-407C-AFA4-7B4E9A8F8EB1</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -3386,6 +3568,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>EEA1C290-C83E-4041-A8AF-01C70F958173</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>5A5F8E26-B370-4477-9C48-A5BE30859FC9</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>F03CE78E-021A-417F-A0EB-AB18FA45707F</key>
 		<array>
 			<dict>
@@ -3495,6 +3690,19 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>A2C8ACBA-F98F-457A-90E8-11BA2112342C</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>F830EC2B-034D-47C0-B988-550ABA78B97F</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>D60CB014-7E71-407C-AFA4-7B4E9A8F8EB1</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -10957,6 +11165,454 @@ php -f ./src/action.php -- "$query" "{query}" ""</string>
 			<key>version</key>
 			<integer>2</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>{var:c_add_current_track_to_alfred_playlist}</string>
+				<key>subtext</key>
+				<string>Current track will be added to Alfred Playlist</string>
+				<key>text</key>
+				<string>Add current track to Alfred Playlist</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>B2D79344-1842-4E52-A989-5661929AB0DB</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "add_current_track_to_alfred_playlist" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
+
+
+php -f ./src/action.php -- "$query" "TRACK" ""</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>5B9411EE-FDEE-4B06-8471-78AE3B68FA7E</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string></string>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>triggerid</key>
+				<string>com.vdesabou.miniplayer.addcurrenttrackalfredplaylist</string>
+				<key>triggername</key>
+				<string>Add track to AP</string>
+				<key>workflowonly</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.remote</string>
+			<key>uid</key>
+			<string>AD0BC8EF-1870-41E9-85D0-D2C6B142873F</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>triggerid</key>
+				<string>add_current_track_to_alfred_playlist</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.external</string>
+			<key>uid</key>
+			<string>50C0756A-D316-43CA-8879-64C30DC03134</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>0</integer>
+				<key>focusedappvariable</key>
+				<false/>
+				<key>focusedappvariablename</key>
+				<string></string>
+				<key>hotkey</key>
+				<integer>0</integer>
+				<key>hotmod</key>
+				<integer>0</integer>
+				<key>hotstring</key>
+				<string></string>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>0</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>B3E02150-DF7B-4942-A313-B9B8C81B8B2B</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>{var:c_add_current_track_to_your_music}</string>
+				<key>subtext</key>
+				<string>Current track will be added to Your Music</string>
+				<key>text</key>
+				<string>Add current track to Your Music</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>34B09F50-AE23-4681-8727-06E17B6B3A1F</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "add_current_track_to_your_music" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
+
+
+php -f ./src/action.php -- "$query" "TRACK" ""</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>5A5F8E26-B370-4477-9C48-A5BE30859FC9</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string></string>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>triggerid</key>
+				<string>com.vdesabou.miniplayer.addcurrenttracktoyourmusic</string>
+				<key>triggername</key>
+				<string>Add track to Your Music</string>
+				<key>workflowonly</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.remote</string>
+			<key>uid</key>
+			<string>EEA1C290-C83E-4041-A8AF-01C70F958173</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>triggerid</key>
+				<string>add_current_track_to_your_music</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.external</string>
+			<key>uid</key>
+			<string>9A0A3DB0-BDCD-4F09-96BF-BC45F065EFE0</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>0</integer>
+				<key>focusedappvariable</key>
+				<false/>
+				<key>focusedappvariablename</key>
+				<string></string>
+				<key>hotkey</key>
+				<integer>0</integer>
+				<key>hotmod</key>
+				<integer>0</integer>
+				<key>hotstring</key>
+				<string></string>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>0</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>231F40B2-0D82-4626-90E3-048839BE6B69</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>{var:c_remove_current_track_from_alfred_playlist}</string>
+				<key>subtext</key>
+				<string>Current track will be removed from Alfred Playlist</string>
+				<key>text</key>
+				<string>Remove current track from Alfred Playlist</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>05BF1E15-BD60-47D9-8439-9E257FBF5DC0</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "remove_current_track_from_alfred_playlist" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
+
+
+php -f ./src/action.php -- "$query" "TRACK" ""</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>D60CB014-7E71-407C-AFA4-7B4E9A8F8EB1</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string></string>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>triggerid</key>
+				<string>com.vdesabou.miniplayer.removecurrenttrackfromalfredplaylist</string>
+				<key>triggername</key>
+				<string>Remove track from AP</string>
+				<key>workflowonly</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.remote</string>
+			<key>uid</key>
+			<string>F830EC2B-034D-47C0-B988-550ABA78B97F</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>triggerid</key>
+				<string>remove_current_track_from_alfred_playlist</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.external</string>
+			<key>uid</key>
+			<string>016C8130-4E47-4710-9E65-0CB8510A72A8</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>0</integer>
+				<key>focusedappvariable</key>
+				<false/>
+				<key>focusedappvariablename</key>
+				<string></string>
+				<key>hotkey</key>
+				<integer>0</integer>
+				<key>hotmod</key>
+				<integer>0</integer>
+				<key>hotstring</key>
+				<string></string>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>0</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>BA0D4035-3F09-422F-8627-0A2321219CC2</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>{var:c_remove_current_track_from_your_music}</string>
+				<key>subtext</key>
+				<string>Current track will be removed from Your Music</string>
+				<key>text</key>
+				<string>Remove current track from Your Music</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>909CE4AE-9334-443A-ABB1-F0834048C5CD</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "remove_current_track_from_your_music" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
+
+
+php -f ./src/action.php -- "$query" "TRACK" ""</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>4FADED10-B453-4F47-BA62-2784D891D867</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string></string>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>triggerid</key>
+				<string>com.vdesabou.miniplayer.removecurrenttrackfromyourmusic</string>
+				<key>triggername</key>
+				<string>Remove track from Your Music</string>
+				<key>workflowonly</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.remote</string>
+			<key>uid</key>
+			<string>83C866F4-799B-4E6B-B430-6E4AC26CA209</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>triggerid</key>
+				<string>remove_current_track_from_your_music</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.external</string>
+			<key>uid</key>
+			<string>5C87D7DB-2D56-43D8-88F0-150991BB979B</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>0</integer>
+				<key>focusedappvariable</key>
+				<false/>
+				<key>focusedappvariablename</key>
+				<string></string>
+				<key>hotkey</key>
+				<integer>0</integer>
+				<key>hotmod</key>
+				<integer>0</integer>
+				<key>hotstring</key>
+				<string></string>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>0</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>426A99EF-E404-49D0-9C21-6DF70721C780</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string>Web Site:
@@ -10972,6 +11628,13 @@ Github page:
 https://github.com/vdesabou/alfred-spotify-mini-player</string>
 	<key>uidata</key>
 	<dict>
+		<key>016C8130-4E47-4710-9E65-0CB8510A72A8</key>
+		<dict>
+			<key>xpos</key>
+			<integer>725</integer>
+			<key>ypos</key>
+			<integer>15855</integer>
+		</dict>
 		<key>024D6172-912E-4EAE-92AA-776626D52FFB</key>
 		<dict>
 			<key>xpos</key>
@@ -10999,6 +11662,13 @@ https://github.com/vdesabou/alfred-spotify-mini-player</string>
 			<integer>280</integer>
 			<key>ypos</key>
 			<integer>14645</integer>
+		</dict>
+		<key>05BF1E15-BD60-47D9-8439-9E257FBF5DC0</key>
+		<dict>
+			<key>xpos</key>
+			<integer>335</integer>
+			<key>ypos</key>
+			<integer>15705</integer>
 		</dict>
 		<key>05D01A85-8BDC-4FF6-BEBB-BAF26BB5870A</key>
 		<dict>
@@ -11303,6 +11973,13 @@ https://github.com/vdesabou/alfred-spotify-mini-player</string>
 			<key>ypos</key>
 			<integer>14245</integer>
 		</dict>
+		<key>231F40B2-0D82-4626-90E3-048839BE6B69</key>
+		<dict>
+			<key>xpos</key>
+			<integer>145</integer>
+			<key>ypos</key>
+			<integer>15565</integer>
+		</dict>
 		<key>23412027-872A-4639-A9D9-DCFD8D8FF36D</key>
 		<dict>
 			<key>xpos</key>
@@ -11468,6 +12145,13 @@ https://github.com/vdesabou/alfred-spotify-mini-player</string>
 			<key>ypos</key>
 			<integer>11020</integer>
 		</dict>
+		<key>34B09F50-AE23-4681-8727-06E17B6B3A1F</key>
+		<dict>
+			<key>xpos</key>
+			<integer>345</integer>
+			<key>ypos</key>
+			<integer>15355</integer>
+		</dict>
 		<key>3617F927-558D-4F30-B8D1-B7789F863AB0</key>
 		<dict>
 			<key>xpos</key>
@@ -11559,6 +12243,13 @@ https://github.com/vdesabou/alfred-spotify-mini-player</string>
 			<key>ypos</key>
 			<integer>440</integer>
 		</dict>
+		<key>426A99EF-E404-49D0-9C21-6DF70721C780</key>
+		<dict>
+			<key>xpos</key>
+			<integer>115</integer>
+			<key>ypos</key>
+			<integer>16295</integer>
+		</dict>
 		<key>445041F9-DFB4-4944-AA65-77DEB4A796B7</key>
 		<dict>
 			<key>xpos</key>
@@ -11626,12 +12317,26 @@ https://github.com/vdesabou/alfred-spotify-mini-player</string>
 			<key>ypos</key>
 			<real>4260</real>
 		</dict>
+		<key>4FADED10-B453-4F47-BA62-2784D891D867</key>
+		<dict>
+			<key>xpos</key>
+			<integer>895</integer>
+			<key>ypos</key>
+			<integer>16125</integer>
+		</dict>
 		<key>4FB4D3A4-9DA1-4369-99D1-664AE2685C27</key>
 		<dict>
 			<key>xpos</key>
 			<integer>460</integer>
 			<key>ypos</key>
 			<integer>710</integer>
+		</dict>
+		<key>50C0756A-D316-43CA-8879-64C30DC03134</key>
+		<dict>
+			<key>xpos</key>
+			<integer>740</integer>
+			<key>ypos</key>
+			<integer>15180</integer>
 		</dict>
 		<key>51401C92-A6F8-4E2A-AA02-D140984EE916</key>
 		<dict>
@@ -11689,6 +12394,13 @@ https://github.com/vdesabou/alfred-spotify-mini-player</string>
 			<key>ypos</key>
 			<integer>11360</integer>
 		</dict>
+		<key>5A5F8E26-B370-4477-9C48-A5BE30859FC9</key>
+		<dict>
+			<key>xpos</key>
+			<integer>925</integer>
+			<key>ypos</key>
+			<integer>15395</integer>
+		</dict>
 		<key>5AF7EEEC-2E55-482C-8750-4CE6AD752683</key>
 		<dict>
 			<key>xpos</key>
@@ -11702,6 +12414,13 @@ https://github.com/vdesabou/alfred-spotify-mini-player</string>
 			<integer>800</integer>
 			<key>ypos</key>
 			<integer>11130</integer>
+		</dict>
+		<key>5B9411EE-FDEE-4B06-8471-78AE3B68FA7E</key>
+		<dict>
+			<key>xpos</key>
+			<integer>930</integer>
+			<key>ypos</key>
+			<integer>15070</integer>
 		</dict>
 		<key>5BB099A1-224D-4702-BBBC-52919BDCCF62</key>
 		<dict>
@@ -11730,6 +12449,13 @@ https://github.com/vdesabou/alfred-spotify-mini-player</string>
 			<integer>1265</integer>
 			<key>ypos</key>
 			<integer>12805</integer>
+		</dict>
+		<key>5C87D7DB-2D56-43D8-88F0-150991BB979B</key>
+		<dict>
+			<key>xpos</key>
+			<integer>705</integer>
+			<key>ypos</key>
+			<integer>16235</integer>
 		</dict>
 		<key>5EB4A672-01BC-4DBB-AD39-60EBB0F79A67</key>
 		<dict>
@@ -12165,6 +12891,13 @@ https://github.com/vdesabou/alfred-spotify-mini-player</string>
 			<key>ypos</key>
 			<integer>12110</integer>
 		</dict>
+		<key>83C866F4-799B-4E6B-B430-6E4AC26CA209</key>
+		<dict>
+			<key>xpos</key>
+			<integer>115</integer>
+			<key>ypos</key>
+			<integer>16165</integer>
+		</dict>
 		<key>83FDAFA8-0D15-43B2-9CA9-E9B3459ACE5E</key>
 		<dict>
 			<key>note</key>
@@ -12327,6 +13060,13 @@ https://github.com/vdesabou/alfred-spotify-mini-player</string>
 			<key>ypos</key>
 			<integer>9800</integer>
 		</dict>
+		<key>909CE4AE-9334-443A-ABB1-F0834048C5CD</key>
+		<dict>
+			<key>xpos</key>
+			<integer>315</integer>
+			<key>ypos</key>
+			<integer>16085</integer>
+		</dict>
 		<key>93DE48B5-E0D6-4B64-B972-D01EB36E71C7</key>
 		<dict>
 			<key>xpos</key>
@@ -12389,6 +13129,13 @@ https://github.com/vdesabou/alfred-spotify-mini-player</string>
 			<integer>1120</integer>
 			<key>ypos</key>
 			<integer>12590</integer>
+		</dict>
+		<key>9A0A3DB0-BDCD-4F09-96BF-BC45F065EFE0</key>
+		<dict>
+			<key>xpos</key>
+			<integer>735</integer>
+			<key>ypos</key>
+			<integer>15505</integer>
 		</dict>
 		<key>9AD5CF1B-939A-4180-8BA0-192367A6C69C</key>
 		<dict>
@@ -12574,6 +13321,13 @@ https://github.com/vdesabou/alfred-spotify-mini-player</string>
 			<key>ypos</key>
 			<real>5050</real>
 		</dict>
+		<key>AD0BC8EF-1870-41E9-85D0-D2C6B142873F</key>
+		<dict>
+			<key>xpos</key>
+			<integer>150</integer>
+			<key>ypos</key>
+			<integer>15110</integer>
+		</dict>
 		<key>AD51D057-762E-41B1-BDC6-D89411E01468</key>
 		<dict>
 			<key>xpos</key>
@@ -12630,12 +13384,26 @@ https://github.com/vdesabou/alfred-spotify-mini-player</string>
 			<key>ypos</key>
 			<integer>830</integer>
 		</dict>
+		<key>B2D79344-1842-4E52-A989-5661929AB0DB</key>
+		<dict>
+			<key>xpos</key>
+			<integer>350</integer>
+			<key>ypos</key>
+			<integer>15030</integer>
+		</dict>
 		<key>B2FA8E8E-16D5-4BD2-8A44-86FA0DFB6897</key>
 		<dict>
 			<key>xpos</key>
 			<integer>305</integer>
 			<key>ypos</key>
 			<integer>6785</integer>
+		</dict>
+		<key>B3E02150-DF7B-4942-A313-B9B8C81B8B2B</key>
+		<dict>
+			<key>xpos</key>
+			<integer>150</integer>
+			<key>ypos</key>
+			<integer>15240</integer>
 		</dict>
 		<key>B5D85A55-8E85-4B14-81EF-0656DC5E7594</key>
 		<dict>
@@ -12685,6 +13453,13 @@ https://github.com/vdesabou/alfred-spotify-mini-player</string>
 			<integer>420</integer>
 			<key>ypos</key>
 			<integer>8960</integer>
+		</dict>
+		<key>BA0D4035-3F09-422F-8627-0A2321219CC2</key>
+		<dict>
+			<key>xpos</key>
+			<integer>135</integer>
+			<key>ypos</key>
+			<integer>15915</integer>
 		</dict>
 		<key>BA289B3E-779E-482F-AFEA-8E1395513365</key>
 		<dict>
@@ -12950,6 +13725,13 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>ypos</key>
 			<real>3120</real>
 		</dict>
+		<key>D60CB014-7E71-407C-AFA4-7B4E9A8F8EB1</key>
+		<dict>
+			<key>xpos</key>
+			<integer>915</integer>
+			<key>ypos</key>
+			<integer>15745</integer>
+		</dict>
 		<key>D781BC43-654A-4261-A7E4-648287517182</key>
 		<dict>
 			<key>xpos</key>
@@ -13183,6 +13965,13 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>ypos</key>
 			<integer>12970</integer>
 		</dict>
+		<key>EEA1C290-C83E-4041-A8AF-01C70F958173</key>
+		<dict>
+			<key>xpos</key>
+			<integer>145</integer>
+			<key>ypos</key>
+			<integer>15435</integer>
+		</dict>
 		<key>F03CE78E-021A-417F-A0EB-AB18FA45707F</key>
 		<dict>
 			<key>xpos</key>
@@ -13259,6 +14048,13 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<integer>100</integer>
 			<key>ypos</key>
 			<real>10320</real>
+		</dict>
+		<key>F830EC2B-034D-47C0-B988-550ABA78B97F</key>
+		<dict>
+			<key>xpos</key>
+			<integer>135</integer>
+			<key>ypos</key>
+			<integer>15785</integer>
 		</dict>
 		<key>F89879E2-9D98-43EC-802B-76AA64EF0050</key>
 		<dict>
@@ -13397,8 +14193,12 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 		<string>0</string>
 		<key>c_add_current_track_to</key>
 		<string>add_current_track_to</string>
+		<key>c_add_current_track_to_alfred_playlist</key>
+		<string>add_current_track_to_alfred_playlist</string>
 		<key>c_add_current_track_to_alfred_playlist_or_your_music</key>
 		<string>add_current_track_to_alfred_playlist_or_your_music</string>
+		<key>c_add_current_track_to_your_music</key>
+		<string>add_current_track_to_your_music</string>
 		<key>c_artist_radio</key>
 		<string>artist_radio</string>
 		<key>c_current</key>
@@ -13437,8 +14237,12 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 		<string>refresh_library</string>
 		<key>c_remove_current_track_from</key>
 		<string>remove_current_track_from</string>
+		<key>c_remove_current_track_from_alfred_playlist</key>
+		<string>remove_current_track_from_alfred_playlist</string>
 		<key>c_remove_current_track_from_alfred_playlist_or_your_music</key>
 		<string>remove_current_track_from_alfred_playlist_or_your_music</string>
+		<key>c_remove_current_track_from_your_music</key>
+		<string>remove_current_track_from_your_music</string>
 		<key>c_repeating</key>
 		<string>repeating</string>
 		<key>c_repeating_current_track</key>

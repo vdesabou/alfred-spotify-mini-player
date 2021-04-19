@@ -3807,11 +3807,6 @@ function removeCurrentTrackFrom($w)
  */
 function removeCurrentTrackFromAlfredPlaylistOrYourMusic($w)
 {
-
-
-
-
-
     $is_alfred_playlist_active = getSetting($w,'is_alfred_playlist_active');
 
     if ($is_alfred_playlist_active == true) {
@@ -3828,11 +3823,6 @@ function removeCurrentTrackFromAlfredPlaylistOrYourMusic($w)
  */
 function addCurrentTrackToAlfredPlaylistOrYourMusic($w)
 {
-
-
-
-
-
     $is_alfred_playlist_active = getSetting($w,'is_alfred_playlist_active');
 
     if ($is_alfred_playlist_active == true) {
@@ -3849,11 +3839,6 @@ function addCurrentTrackToAlfredPlaylistOrYourMusic($w)
  */
 function removeCurrentTrackFromAlfredPlaylist($w)
 {
-
-
-
-
-
     $output_application = getSetting($w,'output_application');
     $is_alfred_playlist_active = getSetting($w,'is_alfred_playlist_active');
     $alfred_playlist_uri = getSetting($w,'alfred_playlist_uri');
@@ -3913,11 +3898,6 @@ function removeCurrentTrackFromAlfredPlaylist($w)
  */
 function addCurrentTrackToAlfredPlaylist($w)
 {
-
-
-
-
-
     $output_application = getSetting($w,'output_application');
     $is_alfred_playlist_active = getSetting($w,'is_alfred_playlist_active');
     $alfred_playlist_uri = getSetting($w,'alfred_playlist_uri');
