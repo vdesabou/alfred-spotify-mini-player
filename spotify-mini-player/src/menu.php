@@ -1284,6 +1284,26 @@ function searchCommandsFastAccess($w, $query, $db, $update_in_progress) {
             /* playlist_name */, '', /* playlist_artwork_path */
             )), 'Create song radio playlist for current track', 'Create song radio playlist', './images/radio_song.png', 'yes', '');
 
+            $w->result('SpotifyMiniPlayer_' . 'add_current_track_to_alfred_playlist', serialize(array(''
+            /*track_uri*/, ''
+            /* album_uri */, ''
+            /* artist_uri */, ''
+            /* playlist_uri */, ''
+            /* spotify_command */, ''
+            /* query */, ''
+            /* other_settings*/, 'add_current_track_to_alfred_playlist'
+            /* other_action */,
+
+            ''
+            /* artist_name */, ''
+            /* track_name */, ''
+            /* album_name */, ''
+            /* track_artwork_path */, ''
+            /* artist_artwork_path */, ''
+            /* album_artwork_path */, ''
+            /* playlist_name */, '', /* playlist_artwork_path */
+            )), 'Add current track to Alfred Playlist', 'Current track will be added to Alfred Playlist', './images/add.png', 'yes', '');
+
             if ($is_alfred_playlist_active == true) {
                 $w->result('SpotifyMiniPlayer_' . 'add_current_track', serialize(array(''
                 /*track_uri*/, ''
@@ -1326,6 +1346,25 @@ function searchCommandsFastAccess($w, $query, $db, $update_in_progress) {
                 /* playlist_name */, '', /* playlist_artwork_path */
                 )), 'Add current track to Your Music', 'Current track will be added to Your Music', './images/add_to_ap_yourmusic.png', 'yes', '');
             }
+            $w->result('SpotifyMiniPlayer_' . 'add_current_track_to_your_music', serialize(array(''
+            /*track_uri*/, ''
+            /* album_uri */, ''
+            /* artist_uri */, ''
+            /* playlist_uri */, ''
+            /* spotify_command */, ''
+            /* query */, ''
+            /* other_settings*/, 'add_current_track_to_your_music'
+            /* other_action */,
+
+            ''
+            /* artist_name */, ''
+            /* track_name */, ''
+            /* album_name */, ''
+            /* track_artwork_path */, ''
+            /* artist_artwork_path */, ''
+            /* album_artwork_path */, ''
+            /* playlist_name */, '', /* playlist_artwork_path */
+            )), 'Add current track to Your Music', 'Current track will be added to Your Music', './images/add.png', 'yes', '');
             $w->result('SpotifyMiniPlayer_' . 'add_current_track_to', serialize(array(''
             /*track_uri*/, ''
             /* album_uri */, ''
@@ -1992,48 +2031,44 @@ function searchCommandsFastAccess($w, $query, $db, $update_in_progress) {
         }
         if ($update_in_progress == false) {
             if (strpos(strtolower('add'), strtolower($query)) !== false) {
-                if ($is_alfred_playlist_active == true) {
-                    $w->result('SpotifyMiniPlayer_' . 'add_current_track', serialize(array(''
-                    /*track_uri*/, ''
-                    /* album_uri */, ''
-                    /* artist_uri */, ''
-                    /* playlist_uri */, ''
-                    /* spotify_command */, ''
-                    /* query */, ''
-                    /* other_settings*/, 'add_current_track'
-                    /* other_action */,
+                $w->result('SpotifyMiniPlayer_' . 'add_current_track_to_your_music', serialize(array(''
+                /*track_uri*/, ''
+                /* album_uri */, ''
+                /* artist_uri */, ''
+                /* playlist_uri */, ''
+                /* spotify_command */, ''
+                /* query */, ''
+                /* other_settings*/, 'add_current_track_to_your_music'
+                /* other_action */,
 
-                    ''
-                    /* artist_name */, ''
-                    /* track_name */, ''
-                    /* album_name */, ''
-                    /* track_artwork_path */, ''
-                    /* artist_artwork_path */, ''
-                    /* album_artwork_path */, ''
-                    /* playlist_name */, '', /* playlist_artwork_path */
-                    )), 'Add current track to Alfred Playlist', 'Current track will be added to Alfred Playlist', './images/add_to_ap_yourmusic.png', 'yes', '');
-                }
-                else {
-                    $w->result('SpotifyMiniPlayer_' . 'add_current_track', serialize(array(''
-                    /*track_uri*/, ''
-                    /* album_uri */, ''
-                    /* artist_uri */, ''
-                    /* playlist_uri */, ''
-                    /* spotify_command */, ''
-                    /* query */, ''
-                    /* other_settings*/, 'add_current_track'
-                    /* other_action */,
+                ''
+                /* artist_name */, ''
+                /* track_name */, ''
+                /* album_name */, ''
+                /* track_artwork_path */, ''
+                /* artist_artwork_path */, ''
+                /* album_artwork_path */, ''
+                /* playlist_name */, '', /* playlist_artwork_path */
+                )), 'Add current track to Your Music', 'Current track will be added to Your Music', './images/add.png', 'yes', '');
+                $w->result('SpotifyMiniPlayer_' . 'add_current_track_to_alfred_playlist', serialize(array(''
+                /*track_uri*/, ''
+                /* album_uri */, ''
+                /* artist_uri */, ''
+                /* playlist_uri */, ''
+                /* spotify_command */, ''
+                /* query */, ''
+                /* other_settings*/, 'add_current_track_to_alfred_playlist'
+                /* other_action */,
 
-                    ''
-                    /* artist_name */, ''
-                    /* track_name */, ''
-                    /* album_name */, ''
-                    /* track_artwork_path */, ''
-                    /* artist_artwork_path */, ''
-                    /* album_artwork_path */, ''
-                    /* playlist_name */, '', /* playlist_artwork_path */
-                    )), 'Add current track to Your Music', 'Current track will be added to Your Music', './images/add_to_ap_yourmusic.png', 'yes', '');
-                }
+                ''
+                /* artist_name */, ''
+                /* track_name */, ''
+                /* album_name */, ''
+                /* track_artwork_path */, ''
+                /* artist_artwork_path */, ''
+                /* album_artwork_path */, ''
+                /* playlist_name */, '', /* playlist_artwork_path */
+                )), 'Add current track to Alfred Playlist', 'Current track will be added to Alfred Playlist', './images/add.png', 'yes', '');
                 $w->result('SpotifyMiniPlayer_' . 'add_current_track_to', serialize(array(''
                 /*track_uri*/, ''
                 /* album_uri */, ''
