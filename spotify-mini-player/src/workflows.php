@@ -271,9 +271,9 @@ class Workflows
             endforeach;
             array_push($items, $c);
         endforeach;
-        $results = new StdClass();
-        $results->items = $items;
-        return json_encode($results);
+        $r = new StdClass();
+        $r->items = $items;
+        return json_encode($r);
     }
 
     /**
