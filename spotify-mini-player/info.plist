@@ -2224,6 +2224,16 @@
 				<key>vitoclose</key>
 				<false/>
 			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>1C1853C2-5C6A-4EC4-88D4-B7DF700A92E0</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
 		</array>
 		<key>9845C770-A2CC-4752-A542-D71BE1081691</key>
 		<array/>
@@ -11941,9 +11951,9 @@ https://github.com/vdesabou/alfred-spotify-mini-player</string>
 		<key>1C1853C2-5C6A-4EC4-88D4-B7DF700A92E0</key>
 		<dict>
 			<key>xpos</key>
-			<integer>465</integer>
+			<integer>480</integer>
 			<key>ypos</key>
-			<integer>14870</integer>
+			<integer>14890</integer>
 		</dict>
 		<key>1D4F4588-B2AC-4E96-9F87-467BCC69915A</key>
 		<dict>
