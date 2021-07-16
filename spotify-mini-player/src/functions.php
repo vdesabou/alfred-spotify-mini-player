@@ -293,7 +293,7 @@ function createAndPlayLikedSongsPlaylist($w)
                     // retry any SSL error
                     ++$nb_retry;
                 }
-                else if ($e->getCode() == 500 || $e->getCode() == 403 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
+                else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                     // retry
                     if ($nb_retry > 3) {
                         handleSpotifyWebAPIException($w, $e);
@@ -960,7 +960,7 @@ function getEpisode($w, $episode_uri)
             } else if (strpos(strtolower($e->getMessage()), 'violated') !== false) {
                 // ignore
                 return false;
-            } else if ($e->getCode() == 500 || $e->getCode() == 403 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
+            } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
                 if ($nb_retry > 3) {
                     handleSpotifyWebAPIException($w, $e);
@@ -1024,7 +1024,7 @@ function getEpisode($w, $episode_uri)
             } else if (strpos(strtolower($e->getMessage()), 'violated') !== false) {
                 // ignore
                 return false;
-            } else if ($e->getCode() == 500 || $e->getCode() == 403 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
+            } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
                 if ($nb_retry > 3) {
                     $retry = false;
@@ -1073,7 +1073,7 @@ function getEpisode($w, $episode_uri)
             } else if (strpos(strtolower($e->getMessage()), 'violated') !== false) {
                 // ignore
                 return false;
-            } else if ($e->getCode() == 500 || $e->getCode() == 403 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
+            } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
                 if ($nb_retry > 3) {
                     handleSpotifyWebAPIException($w, $e);
@@ -1129,7 +1129,7 @@ function getEpisode($w, $episode_uri)
             } else if (strpos(strtolower($e->getMessage()), 'violated') !== false) {
                 // ignore
                 return false;
-            } else if ($e->getCode() == 500 || $e->getCode() == 403 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
+            } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
                 if ($nb_retry > 3) {
                     handleSpotifyWebAPIException($w, $e);
@@ -1178,7 +1178,7 @@ function getEpisode($w, $episode_uri)
             } else if (strpos(strtolower($e->getMessage()), 'violated') !== false) {
                 // ignore
                 return false;
-            } else if ($e->getCode() == 500 || $e->getCode() == 403 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
+            } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
                 if ($nb_retry > 3) {
                     handleSpotifyWebAPIException($w, $e);
@@ -1249,7 +1249,7 @@ function getEpisode($w, $episode_uri)
             } else if (strpos(strtolower($e->getMessage()), 'violated') !== false) {
                 // ignore
                 return false;
-            } else if ($e->getCode() == 500 || $e->getCode() == 403 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
+            } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
                 if ($nb_retry > 3) {
                     handleSpotifyWebAPIException($w, $e);
@@ -1296,7 +1296,7 @@ function getEpisode($w, $episode_uri)
             }  else if (strpos(strtolower($e->getMessage()), 'violated') !== false) {
                 // ignore
                 return false;
-            } else if ($e->getCode() == 500 || $e->getCode() == 403 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
+            } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
                 if ($nb_retry > 3) {
                     handleSpotifyWebAPIException($w, $e);
@@ -1343,7 +1343,7 @@ function addToQueueSpotifyConnect($w, $trackId, $device_id)
            } else if (strpos(strtolower($e->getMessage()), 'violated') !== false) {
                 // ignore
                 return false;
-           } else if ($e->getCode() == 500 || $e->getCode() == 403 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
+           } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                // retry
                if ($nb_retry > 3) {
                    handleSpotifyWebAPIException($w, $e);
@@ -1392,7 +1392,7 @@ function seekToBeginning($w)
            } else if (strpos(strtolower($e->getMessage()), 'violated') !== false) {
             // ignore
             return false;
-           } else if ($e->getCode() == 500 || $e->getCode() == 403 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
+           } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                // retry
                if ($nb_retry > 3) {
                    handleSpotifyWebAPIException($w, $e);
@@ -1439,7 +1439,7 @@ function seekToBeginning($w)
             } else if (strpos(strtolower($e->getMessage()), 'violated') !== false) {
                 // ignore
                 return false;
-            } else if ($e->getCode() == 500 || $e->getCode() == 403 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
+            } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
                 if ($nb_retry > 3) {
                     handleSpotifyWebAPIException($w, $e);
@@ -1504,7 +1504,7 @@ function seekToBeginning($w)
             } else if (strpos(strtolower($e->getMessage()), 'violated') !== false) {
                 // ignore
                 return false;
-            } else if ($e->getCode() == 500 || $e->getCode() == 403 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
+            } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
                 if ($nb_retry > 3) {
                     handleSpotifyWebAPIException($w, $e);
@@ -1570,7 +1570,7 @@ function seekToBeginning($w)
             } else if (strpos(strtolower($e->getMessage()), 'violated') !== false) {
                 // ignore
                 return false;
-            } else if ($e->getCode() == 500 || $e->getCode() == 403 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
+            } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
                 if ($nb_retry > 3) {
                     handleSpotifyWebAPIException($w, $e);
@@ -1617,7 +1617,7 @@ function seekToBeginning($w)
             } else if (strpos(strtolower($e->getMessage()), 'violated') !== false) {
                 // ignore
                 return false;
-            } else if ($e->getCode() == 500 || $e->getCode() == 403 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
+            } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
                 if ($nb_retry > 3) {
                     handleSpotifyWebAPIException($w, $e);
@@ -1733,7 +1733,7 @@ function seekToBeginning($w)
                     // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                     // retry any SSL error
                     ++$nb_retry;
-                } else if ($e->getCode() == 500 || $e->getCode() == 403 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
+                } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                     // retry
                     if ($nb_retry > 3) {
                         handleSpotifyWebAPIException($w, $e);
@@ -1787,7 +1787,7 @@ function seekToBeginning($w)
             } else if (strpos(strtolower($e->getMessage()), 'violated') !== false) {
                 // ignore
                 return false;
-            } else if ($e->getCode() == 500 || $e->getCode() == 403 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
+            } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
                 if ($nb_retry > 3) {
                     handleSpotifyWebAPIException($w, $e);
@@ -1876,7 +1876,7 @@ function isShuffleActive($print_output)
                 if ($e->getCode() == 404) {
                         // skip
                         break;
-                    } else if ($e->getCode() == 500 || $e->getCode() == 403 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
+                    } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                     // retry
                     if ($nb_retry > 3) {
                         $retry = false;
@@ -2821,7 +2821,7 @@ function getCurrentTrackInfoWithMopidy($w, $displayError = true)
                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                 // retry any SSL error
                 ++$nb_retry;
-            } else if ($e->getCode() == 500 || $e->getCode() == 403 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
+            } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
                 if ($nb_retry > 3) {
                     $retry = false;
@@ -5365,7 +5365,7 @@ function getNumberOfEpisodesForShow($w, $show_uri, $country_code)
                 // retry any SSL error
                 ++$nb_retry;
             }
-            else if ($e->getCode() == 500 || $e->getCode() == 403 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
+            else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
                 if ($nb_retry > 3) {
                     handleSpotifyWebAPIException($w, $e);
@@ -6969,7 +6969,7 @@ function getArtworkURL($w, $type, $id, $highRes = false)
                     // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                     // retry any SSL error
                     ++$nb_retry;
-                } else if ($e->getCode() == 500 || $e->getCode() == 403 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
+                } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                     // retry
                     if ($nb_retry > 3) {
                         $retry = false;
@@ -7033,7 +7033,7 @@ function getArtworkURL($w, $type, $id, $highRes = false)
                     // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                     // retry any SSL error
                     ++$nb_retry;
-                } else if ($e->getCode() == 500 || $e->getCode() == 403 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
+                } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                     // retry
                     if ($nb_retry > 3) {
                         $retry = false;
@@ -7119,7 +7119,7 @@ function getPlaylistArtworkURL($w, $playlist_uri)
                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                 // retry any SSL error
                 ++$nb_retry;
-            } else if ($e->getCode() == 500 || $e->getCode() == 403 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
+            } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
                 if ($nb_retry > 3) {
                     $retry = false;
@@ -7190,7 +7190,7 @@ function getShowArtworkURL($w, $show_uri)
                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                 // retry any SSL error
                 ++$nb_retry;
-            } else if ($e->getCode() == 500 || $e->getCode() == 403 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
+            } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
                 if ($nb_retry > 3) {
                     $retry = false;
@@ -7269,7 +7269,7 @@ function getEpisodeArtworkURL($w, $episode_uri)
                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                 // retry any SSL error
                 ++$nb_retry;
-            } else if ($e->getCode() == 500 || $e->getCode() == 403 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
+            } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
                 if ($nb_retry > 3) {
                     $retry = false;
@@ -7340,7 +7340,7 @@ function getArtistArtworkURL($w, $artist_id)
                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
                 // retry any SSL error
                 ++$nb_retry;
-            } else if ($e->getCode() == 500 || $e->getCode() == 403 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
+            } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                 // retry
                 if ($nb_retry > 3) {
                     $retry = false;

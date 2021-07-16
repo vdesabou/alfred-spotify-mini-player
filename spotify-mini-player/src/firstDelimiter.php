@@ -1510,7 +1510,7 @@ function firstDelimiterSpotifyConnect($w, $query, $db, $update_in_progress) {
                     echo $w->tojson();
                     exit;
                 }
-                else if ($e->getCode() == 500 || $e->getCode() == 403 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
+                else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                     // retry
                     if ($nb_retry > 3) {
                         $retry = false;
@@ -1663,7 +1663,7 @@ function firstDelimiterSpotifyConnectPreferredDevice($w, $query, $db, $update_in
                     echo $w->tojson();
                     exit;
                 }
-                else if ($e->getCode() == 500 || $e->getCode() == 403 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
+                else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                     // retry
                     if ($nb_retry > 3) {
                         $retry = false;
