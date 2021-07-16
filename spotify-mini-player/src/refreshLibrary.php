@@ -255,7 +255,7 @@ function refreshLibrary($w, $silent = false) {
             catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
                 logMsg($w,'Error(getMySavedAlbums): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
 
-                if ($e->getCode() == 404) {
+                if ($e->getCode() == 404 || $e->getCode() == 403) {
                     // skip
                     break;
                 }
@@ -326,7 +326,7 @@ function refreshLibrary($w, $silent = false) {
             catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
                 logMsg($w,'Error(getUserFollowedArtists): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
 
-                if ($e->getCode() == 404) {
+                if ($e->getCode() == 404 || $e->getCode() == 403) {
                     // skip
                     break;
                 }
@@ -394,7 +394,7 @@ function refreshLibrary($w, $silent = false) {
             catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
                 logMsg($w,'Error(getMySavedShows): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
 
-                if ($e->getCode() == 404) {
+                if ($e->getCode() == 404 || $e->getCode() == 403) {
                     // skip
                     break;
                 }
@@ -455,7 +455,7 @@ function refreshLibrary($w, $silent = false) {
             catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
                 logMsg($w,'Error(getUserPlaylists): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
 
-                if ($e->getCode() == 404) {
+                if ($e->getCode() == 404 || $e->getCode() == 403) {
                     // skip
                     break;
                 }
@@ -1152,7 +1152,7 @@ function refreshLibrary($w, $silent = false) {
                     catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
                         logMsg($w,'Error(getAlbumTracks): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
 
-                        if ($e->getCode() == 404) {
+                        if ($e->getCode() == 404 || $e->getCode() == 403) {
                             // skip
                             break;
                         }
@@ -1203,7 +1203,7 @@ function refreshLibrary($w, $silent = false) {
         catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
             logMsg($w,'Error(getMySavedTracks): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
 
-            if ($e->getCode() == 404) {
+            if ($e->getCode() == 404 || $e->getCode() == 403) {
                 // skip
                 break;
             }
@@ -1285,7 +1285,7 @@ function refreshLibrary($w, $silent = false) {
                 catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
                     logMsg($w,'Error(getMySavedTracks): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
 
-                    if ($e->getCode() == 404) {
+                    if ($e->getCode() == 404 || $e->getCode() == 403) {
                         // skip
                         break;
                     }
@@ -1573,7 +1573,7 @@ function refreshLibrary($w, $silent = false) {
                     catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
                         logMsg($w,'Error(getShowEpisodes): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
 
-                        if ($e->getCode() == 404) {
+                        if ($e->getCode() == 404 || $e->getCode() == 403) {
                             // skip
                             break;
                         }
@@ -1742,7 +1742,7 @@ function refreshLibrary($w, $silent = false) {
                                     ->getLastResponse();
                     sleep((int) $retryAfter);
                             }
-                            else if ($e->getCode() == 404) {
+                            else if ($e->getCode() == 404 || $e->getCode() == 403) {
                                 // skip
                                 break;
                             }

@@ -1504,7 +1504,7 @@ function firstDelimiterSpotifyConnect($w, $query, $db, $update_in_progress) {
                 exit;
             }
             else {
-                if ($e->getCode() == 404) {
+                if ($e->getCode() == 404 || $e->getCode() == 403) {
                     $retry = false;
                     $w->result(null, 'help', 'Exception occurred', array('' . $e->getMessage(), 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/warning.png', 'no', null, '');
                     echo $w->tojson();
@@ -1657,7 +1657,7 @@ function firstDelimiterSpotifyConnectPreferredDevice($w, $query, $db, $update_in
                 exit;
             }
             else {
-                if ($e->getCode() == 404) {
+                if ($e->getCode() == 404 || $e->getCode() == 403) {
                     $retry = false;
                     $w->result(null, 'help', 'Exception occurred', array('' . $e->getMessage(), 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/warning.png', 'no', null, '');
                     echo $w->tojson();
