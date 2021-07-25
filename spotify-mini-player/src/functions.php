@@ -5336,8 +5336,6 @@ function getTheShowEpisodes($w, $show_uri, $country_code, $actionMode = false)
  */
 function getNumberOfEpisodesForShow($w, $show_uri, $country_code)
 {
-    $episodes = array();
-
     $retry = true;
     $nb_retry = 0;
     while ($retry) {
