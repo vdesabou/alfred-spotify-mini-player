@@ -374,67 +374,64 @@ function refreshLibrary($w, $silent = false) {
     }
     while ($cursorAfter != '');
 
-    // Handle Shows
-    $savedMySavedShows = array();
-    $offsetGetMySavedShows = 0;
-    $limitGetMySavedShows = 50;
-    do {
-        $retry = true;
-        $nb_retry = 0;
+    if (! $ignorePodcasts) {
+        // Handle Shows
+        $savedMySavedShows = array();
+        $offsetGetMySavedShows = 0;
+        $limitGetMySavedShows = 50;
+        do {
+            $retry = true;
+            $nb_retry = 0;
 
-        while ($retry) {
-            try {
-                $userMySavedShows = $api->getMySavedShows(array('limit' => $limitGetMySavedShows, 'offset' => $offsetGetMySavedShows, 'market' => $country_code,));
-                if($debug) {
-                    logMsg($w,"DEBUG: getMySavedShows (offset ".$offsetGetMySavedShows.")");
-                }
-                $w->write('InitCreateOrRefreshLibrary▹' . 0 . '▹' . 0 . '▹' . $initial_time . '▹' . getenv('emoji_show') . 'shows', 'update_library_in_progress');
-                $retry = false;
-            }
-            catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
-                logMsg($w,'Error(getMySavedShows): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
+            while ($retry) {
+                try {
+                    $userMySavedShows = $api->getMySavedShows(array('limit' => $limitGetMySavedShows, 'offset' => $offsetGetMySavedShows, 'market' => $country_code,));
+                    if ($debug) {
+                        logMsg($w, "DEBUG: getMySavedShows (offset " . $offsetGetMySavedShows . ")");
+                    }
+                    $w->write('InitCreateOrRefreshLibrary▹' . 0 . '▹' . 0 . '▹' . $initial_time . '▹' . getenv('emoji_show') . 'shows', 'update_library_in_progress');
+                    $retry = false;
+                } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+                    logMsg($w, 'Error(getMySavedShows): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
 
-                if ($e->getCode() == 404 || $e->getCode() == 403) {
-                    // skip
-                    break;
-                }
-                else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
-                    // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
-                    // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
-                    // retry any SSL error
-                    ++$nb_retry;
-                }
-                else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
-                    // retry
-                    if ($nb_retry > 3) {
+                    if ($e->getCode() == 404 || $e->getCode() == 403) {
+                        // skip
+                        break;
+                    } else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
+                        // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
+                        // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
+                        // retry any SSL error
+                        ++$nb_retry;
+                    } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
+                        // retry
+                        if ($nb_retry > 3) {
+                            handleSpotifyWebAPIException($w, $e);
+                            $retry = false;
+
+                            return false;
+                        }
+                        ++$nb_retry;
+                        sleep(5);
+                    } else {
                         handleSpotifyWebAPIException($w, $e);
                         $retry = false;
 
                         return false;
                     }
-                    ++$nb_retry;
-                    sleep(5);
-                }
-                else {
-                    handleSpotifyWebAPIException($w, $e);
-                    $retry = false;
-
-                    return false;
                 }
             }
-        }
 
-        foreach ($userMySavedShows->items as $show) {
-            if(isset($show->show->uri) && $show->show->uri != '') {
-                if (!checkIfShowDuplicate($savedMySavedShows, $show)) {
-                    $savedMySavedShows[] = $show;
+            foreach ($userMySavedShows->items as $show) {
+                if (isset($show->show->uri) && $show->show->uri != '') {
+                    if (!checkIfShowDuplicate($savedMySavedShows, $show)) {
+                        $savedMySavedShows[] = $show;
+                    }
                 }
             }
-        }
 
-        $offsetGetMySavedShows += $limitGetMySavedShows;
+            $offsetGetMySavedShows += $limitGetMySavedShows;
+        } while ($offsetGetMySavedShows < $userMySavedShows->total);
     }
-    while ($offsetGetMySavedShows < $userMySavedShows->total);
 
     $savedListPlaylist = array();
     $offsetGetUserPlaylists = 0;

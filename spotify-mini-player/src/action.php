@@ -861,7 +861,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
     } elseif ($other_action == 'enable_podcasts_settings') {
         $ret = updateSetting($w, 'podcasts_enabled', 1);
         return;
-    } elseif ($other_action == 'disable_podcasts_settingss') {
+    } elseif ($other_action == 'disable_podcasts_settings') {
         $ret = updateSetting($w, 'podcasts_enabled', 0);
         return;
     } elseif ($other_action == 'enable_display_rating') {
