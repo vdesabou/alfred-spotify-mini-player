@@ -1734,12 +1734,7 @@ function refreshLibrary($w, $silent = false) {
                         catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
                             logMsg($w,'Error(getShowEpisodes): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
 
-                            if ($e->getCode() == 429) { // 429 is Too Many Requests
-                                $lastResponse = $api->getRequest()
-                                    ->getLastResponse();
-                    sleep((int) $retryAfter);
-                            }
-                            else if ($e->getCode() == 404 || $e->getCode() == 403) {
+                            if ($e->getCode() == 404 || $e->getCode() == 403) {
                                 // skip
                                 break;
                             }
