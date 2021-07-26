@@ -7468,17 +7468,9 @@ function handleDbIssuePdoEcho($dbhandle, $w)
 function handleSpotifyWebAPIException($w, $e)
 {
     if (file_exists($w->data().'/update_library_in_progress')) {
-        deleteTheFile($w,$w->data().'/update_library_in_progress');
-    }
-
-    // remove the new library (it failed)
-    if (file_exists($w->data().'/library_new.db')) {
-        deleteTheFile($w,$w->data().'/library_new.db');
-    }
-
-    // set back old library
-    if (file_exists($w->data().'/library_old.db')) {
-        rename($w->data().'/library_old.db', $w->data().'/library.db');
+        // ignore during refreshLibrary
+        // see https://github.com/vdesabou/alfred-spotify-mini-player/issues/515
+        return;
     }
 
     displayNotificationWithArtwork($w, 'Web API Exception: '.$e->getCode().' - '.$e->getMessage().' use spot_mini_debug command', './images/warning.png', 'Error!');
