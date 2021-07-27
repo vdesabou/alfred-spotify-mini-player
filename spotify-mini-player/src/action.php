@@ -954,6 +954,38 @@ if ($type == 'TRACK' && $other_settings == '' &&
         }
 
         return;
+    } elseif ($other_action == 'fix_permissions') {
+        logMsg($w, "Info(fix_permissions) is called");
+        // check for quarantine and remove it if required
+        exec('/usr/bin/xattr ./fzf', $response);
+        foreach ($response as $line) {
+            if (strpos($line, 'com.apple.quarantine') !== false) {
+                logMsg($w, "Info(fix_permissions) for fzf");
+                exec('/usr/bin/xattr -d com.apple.quarantine ./fzf', $response);
+                break;
+            }
+        }
+
+        // check for quarantine and remove it if required
+        exec('/usr/bin/xattr ./terminal-notifier.app', $response);
+        foreach ($response as $line) {
+            if (strpos($line, 'com.apple.quarantine') !== false) {
+                logMsg($w, "Info(fix_permissions) for terminal-notifier");
+                exec('/usr/bin/xattr -d com.apple.quarantine ./terminal-notifier.app', $response);
+                break;
+            }
+        }
+
+        exec('/usr/bin/xattr "' . './App/' . $theme_color . '/Spotify Mini Player.app' . '"', $response);
+        foreach ($response as $line) {
+            if (strpos($line, 'com.apple.quarantine') !== false) {
+                logMsg($w, "Info(fix_permissions) for Spotify Mini Player");
+                exec('/usr/bin/xattr -d com.apple.quarantine "' . './App/' . $theme_color . '/Spotify Mini Player.app' . '"', $response);
+                break;
+            }
+        }
+        displayNotificationWithArtwork($w, 'Done', './images/debug.png', 'Fix permissions');
+        return;
     } elseif ($other_action == 'enable_fuzzy_search') {
         // check for quarantine and remove it if required
         exec('/usr/bin/xattr ./fzf',$response);

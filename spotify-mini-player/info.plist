@@ -1295,6 +1295,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>614AF93D-7DC9-4B4C-BD07-E3887CB6BB3B</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>715E30A7-032C-43B9-8D23-8245DC7B3668</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>620CF52F-BCFD-4957-BC4F-1E9853125AF5</key>
 		<array>
 			<dict>
@@ -11623,6 +11636,53 @@ php -f ./src/action.php -- "$query" "TRACK" ""</string>
 			<key>version</key>
 			<integer>2</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>{var:c_fix_permissions}</string>
+				<key>subtext</key>
+				<string>Use this if you get issues with notifications or fzf</string>
+				<key>text</key>
+				<string>Fix Permissions</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>614AF93D-7DC9-4B4C-BD07-E3887CB6BB3B</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "fix_permissions" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
+
+
+php -f ./src/action.php -- "$query" "TRACK" ""</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>715E30A7-032C-43B9-8D23-8245DC7B3668</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string>Web Site:
@@ -12509,6 +12569,13 @@ https://github.com/vdesabou/alfred-spotify-mini-player</string>
 			<key>ypos</key>
 			<integer>3820</integer>
 		</dict>
+		<key>614AF93D-7DC9-4B4C-BD07-E3887CB6BB3B</key>
+		<dict>
+			<key>xpos</key>
+			<integer>650</integer>
+			<key>ypos</key>
+			<integer>16370</integer>
+		</dict>
 		<key>620CF52F-BCFD-4957-BC4F-1E9853125AF5</key>
 		<dict>
 			<key>xpos</key>
@@ -12689,6 +12756,13 @@ https://github.com/vdesabou/alfred-spotify-mini-player</string>
 			<integer>670</integer>
 			<key>ypos</key>
 			<integer>6345</integer>
+		</dict>
+		<key>715E30A7-032C-43B9-8D23-8245DC7B3668</key>
+		<dict>
+			<key>xpos</key>
+			<integer>910</integer>
+			<key>ypos</key>
+			<integer>16375</integer>
 		</dict>
 		<key>71AACE30-7E8D-4D3C-8BD1-F98FEE578AEC</key>
 		<dict>
@@ -14213,6 +14287,8 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 		<string>artist_radio</string>
 		<key>c_current</key>
 		<string>current</string>
+		<key>c_fix_permissions</key>
+		<string>fix_permissions</string>
 		<key>c_follow_artist</key>
 		<string>follow_artist</string>
 		<key>c_lookup_artist_online</key>

@@ -171,6 +171,25 @@ function debug($argv) {
         '' /* playlist_uri */,
         '' /* spotify_command */,
         '' /* query */,
+        '' /* other_settings*/,
+        'fix_permissions' /* other_action */,
+        '' /* artist_name */,
+        '' /* track_name */,
+        '' /* album_name */,
+        '' /* track_artwork_path */,
+        '' /* artist_artwork_path */,
+        '' /* album_artwork_path */,
+        '' /* playlist_name */,
+        '', /* playlist_artwork_path */
+    )), 'Fix permissions', 'Use this if you get issues with notifications or fzf', './images/debug.png', 'yes', null, '');
+
+    $w->result(null, serialize(array(
+        '' /*track_uri*/,
+        '' /* album_uri */,
+        '' /* artist_uri */,
+        '' /* playlist_uri */,
+        '' /* spotify_command */,
+        '' /* query */,
         'Open▹'.$w->data() /* other_settings*/,
         '' /* other_action */,
         '' /* alfred_playlist_uri */,
