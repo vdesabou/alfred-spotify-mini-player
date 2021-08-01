@@ -2,7 +2,7 @@
 layout: article
 title: "Modifier keys"
 date: 2014-12-23
-modified: 2020-04-26
+modified: 2021-08-01
 categories: articles
 excerpt: "Support of modifier keys, shortcuts for common actions."
 image:
@@ -26,6 +26,8 @@ Alfred modifiers are specific actions you can trigger when pressing special keys
 * Select a track with `^` (ctrl key) to lookup the corresponding artist 'online'
 
 * Select a track with `fn` (function key) to add the track to either _Your Music_, or any of your playlists (you can even create a new one)
+
+* Select a track with `⌘+fn` (cmd + function key) to remove the track from either _Your Music_, or any of your playlists
 
 * Select a track with `⌘+⌥` (cmd+alt key) to add track to queue ([Spotify Connect](https://alfred-spotify-mini-player.com/articles/spotify-connect/) users only)
 

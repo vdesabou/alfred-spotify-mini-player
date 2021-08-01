@@ -374,6 +374,16 @@
 			</dict>
 			<dict>
 				<key>destinationuid</key>
+				<string>2EE3E9B0-C1AD-4B1B-830B-DBB6B6D90C0C</string>
+				<key>modifiers</key>
+				<integer>9437184</integer>
+				<key>modifiersubtext</key>
+				<string>Remove from playlist...</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
 				<string>5F5E8A6D-8707-41FC-B5D1-660CD11685F0</string>
 				<key>modifiers</key>
 				<integer>262144</integer>
@@ -4266,6 +4276,29 @@
 			<string>alfred.workflow.trigger.hotkey</string>
 			<key>uid</key>
 			<string>BE8BE3CE-9515-4294-9F4B-CA2F079A0A90</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<true/>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>php -f ./src/action.php -- "{query}" "TRACK" "REMOVEFROMPLAYLIST"</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>2EE3E9B0-C1AD-4B1B-830B-DBB6B6D90C0C</string>
 			<key>version</key>
 			<integer>2</integer>
 		</dict>
@@ -12127,6 +12160,15 @@ https://github.com/vdesabou/alfred-spotify-mini-player</string>
 			<key>ypos</key>
 			<integer>1200</integer>
 		</dict>
+		<key>2EE3E9B0-C1AD-4B1B-830B-DBB6B6D90C0C</key>
+		<dict>
+			<key>note</key>
+			<string>remove from playlist</string>
+			<key>xpos</key>
+			<integer>895</integer>
+			<key>ypos</key>
+			<integer>645</integer>
+		</dict>
 		<key>2F1F6369-46C0-483B-816F-3796168AE060</key>
 		<dict>
 			<key>xpos</key>
@@ -12849,6 +12891,8 @@ https://github.com/vdesabou/alfred-spotify-mini-player</string>
 		</dict>
 		<key>7918E8F7-20AE-445E-9AEA-E2E54CDE967D</key>
 		<dict>
+			<key>note</key>
+			<string>add to playlist</string>
 			<key>xpos</key>
 			<integer>630</integer>
 			<key>ypos</key>

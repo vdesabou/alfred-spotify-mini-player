@@ -130,7 +130,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
     if ($track_uri != '') {
 
-        if ($add_to_option != '') {
+        if ($add_to_option == 'ADDTOPLAYLIST') {
             $tmp = explode(':', $track_uri);
             if ($tmp[1] == 'local') {
                 // local track, look it up online
@@ -153,6 +153,31 @@ if ($type == 'TRACK' && $other_settings == '' &&
                 }
             }
             exec("osascript -e 'tell application id \"".getAlfredName()."\" to search \"".getenv('c_spot_mini').' Add▹'.$track_uri.'∙'.escapeQuery($track_name).'▹'."\"'");
+
+            return;
+        } elseif ($add_to_option == 'REMOVEFROMPLAYLIST') {
+            $tmp = explode(':', $track_uri);
+            if ($tmp[1] == 'local') {
+                // local track, look it up online
+                $query = 'track:' . $track_name . ' artist:' . $artist_name;
+                $results = searchWebApi($w, $country_code, $query, 'track', 1);
+
+                if (is_array($results) && !empty($results)) {
+                    // only one track returned
+                    $track = $results[0];
+                    $artists = $track->artists;
+                    $artist = $artists[0];
+                    logMsg($w, "Error(action): Unknown track $track_uri / $track_name / $artist_name replaced by track: $track->uri / $track->name / $artist->name");
+                    $track_uri = $track->uri;
+                    $tmp = explode(':', $track_uri);
+                } else {
+                    logMsg($w, "Error(action): Could not find track: $track_uri / $track_name / $artist_name");
+                    displayNotificationWithArtwork($w, 'Local track ' . $track_name . ' has not online match', './images/warning.png', 'Error!');
+
+                    return;
+                }
+            }
+            exec("osascript -e 'tell application id \"" . getAlfredName() . "\" to search \"" . getenv('c_spot_mini') . ' Remove▹' . $track_uri . '∙' . escapeQuery($track_name) . '▹' . "\"'");
 
             return;
         } elseif ($playlist_uri != '') {
