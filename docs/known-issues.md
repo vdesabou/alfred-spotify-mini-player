@@ -50,3 +50,7 @@ This is the list of current known issues:
 ## MacOS Monterey
 
 There is no support for MacOS Monterey, see [bug](https://github.com/vdesabou/alfred-spotify-mini-player/issues/508)
+
+## MacOS Permission errors
+
+If you get issues with permissions (for fzf, terminal-notifier and Spotify Mini Player app) or issues with notifications not appearing, try to use command `Fix Permissions`, see [bug](https://github.com/vdesabou/alfred-spotify-mini-player/issues/506)
