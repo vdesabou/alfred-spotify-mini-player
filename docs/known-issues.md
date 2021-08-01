@@ -47,4 +47,6 @@ This is the list of current known issues:
 
 * Sonos speakers are not appearing in the workflow due to a Spotify issue, see [bug](https://github.com/vdesabou/alfred-spotify-mini-player/issues/207)
 
+## MacOS Monterey
 
+There is no support for MacOS Monterey, see [bug](https://github.com/vdesabou/alfred-spotify-mini-player/issues/508)
