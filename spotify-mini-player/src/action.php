@@ -48,6 +48,7 @@ $always_display_lyrics_in_browser = getSetting($w,'always_display_lyrics_in_brow
 $output_application = getSetting($w,'output_application');
 $theme_color = getSetting($w,'theme_color');
 $fuzzy_search = getSetting($w,'fuzzy_search');
+$preferred_spotify_connect_device = getSetting($w, 'preferred_spotify_connect_device');
 
 if ($other_action != 'reset_settings' && $other_action != 'spot_mini_debug' && $other_action != 'kill_update' && !startswith($other_settings,'SWITCH_USER▹')) {
     if ($oauth_client_id == '' || $oauth_client_secret == '' || $oauth_access_token == '') {
@@ -96,7 +97,7 @@ if($oauth_access_token != '' && $now_playing_notifications == true) {
 }
 
 // make sure spotify is running
-if ($output_application == 'APPLESCRIPT') {
+if ($output_application == 'APPLESCRIPT' || ($output_application == 'CONNECT' && $preferred_spotify_connect_device == '')) {
     if($oauth_access_token != '' && $other_action != 'create_library' && $other_action != 'refresh_library' && $type != 'DOWNLOAD_ARTWORKS' && $type != 'DOWNLOAD_ARTWORKS_SILENT') {
         exec('./src/is_spotify_running.ksh 2>&1', $retArr, $retVal);
         if ($retArr[0] != 0) {
