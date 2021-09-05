@@ -101,6 +101,7 @@ if ($output_application == 'APPLESCRIPT' || ($output_application == 'CONNECT' &&
     if($oauth_access_token != '' && $other_action != 'create_library' && $other_action != 'refresh_library' && $type != 'DOWNLOAD_ARTWORKS' && $type != 'DOWNLOAD_ARTWORKS_SILENT') {
         exec('./src/is_spotify_running.ksh 2>&1', $retArr, $retVal);
         if ($retArr[0] != 0) {
+            logMsg($w, "Starting Spotify desktop...");
             exec('open -a "Spotify"');
             // wait for Spotify to start
             sleep(6);

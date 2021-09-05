@@ -395,7 +395,7 @@ function getCurrentTrackinfo($w, $output_application)
         // get info on current song
         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
         if ($retVal != 0) {
-            logMsg($w, "Error(getCurrentTrackinfo): AppleScript execution failed! retVal=". $retVal);
+            logMsg($w, "Error(getCurrentTrackinfo): AppleScript execution failed!");
             return;
         }
         if (substr_count($retArr[count($retArr) - 1], '▹') > 0) {
@@ -407,7 +407,7 @@ function getCurrentTrackinfo($w, $output_application)
     }
 
     if(!isset($results[4])) {
-        logMsg($w, "Error(getCurrentTrackinfo): Cannot get current track! results=" . print_r($results));
+        logMsg($w, "Error(getCurrentTrackinfo): Cannot get current track!");
         return;
     }
     $tmp = explode(':', $results[4]);
