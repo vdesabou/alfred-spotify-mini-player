@@ -635,6 +635,21 @@ if ($type == 'TRACK' && $other_settings == '' &&
 
                 stathat_ez_count('AlfredSpotifyMiniPlayer', 'add_or_remove', 1);
 
+                // https://github.com/vdesabou/alfred-spotify-mini-player/issues/522
+                // Automatically play next track when removing track from playlist
+                if ($output_application == 'MOPIDY') {
+                    invokeMopidyMethod($w, 'core.playback.next', array());
+                } else if ($output_application == 'APPLESCRIPT') {
+                    exec("osascript -e 'tell application \"Spotify\" to next track'");
+                } else {
+                    $device_id = getSpotifyConnectCurrentDeviceId($w);
+                    if ($device_id != '') {
+                        nextTrackSpotifyConnect($w, $device_id);
+                    } else {
+                        displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+                    }
+                }
+
                 if ($ret == true) {
                     displayNotificationWithArtwork($w, ''.$track_name.' removed from '.$setting[2].' playlist', $track_artwork_path, 'Remove Track from Playlist');
 
