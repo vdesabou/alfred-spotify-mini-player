@@ -1429,7 +1429,7 @@ if ($type == 'TRACK' && $other_settings == '' &&
         exec("kill -9 $(ps -efx | grep \"php\" | egrep \"php -S 127.0.0.1:15298\" | grep -v grep | awk '{print $2}')");
         sleep(1);
         $cache_log = $w->cache().'/spotify_mini_player_web_server.log';
-        exec("$(which php) -S 127.0.0.1:15298 > \"$cache_log\" 2>&1 &");
+        exec("php -S 127.0.0.1:15298 > \"$cache_log\" 2>&1 &");
         sleep(2);
         // https://github.com/vdesabou/alfred-spotify-mini-player/issues/447
         exec('./src/is_safari_default_browser.ksh 2>&1', $retArr, $retVal);
