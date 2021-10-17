@@ -3849,7 +3849,7 @@
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f ./src/action.php -- "{query}" "TRACK" ""</string>
+				<string>$(which php) -f ./src/action.php -- "{query}" "TRACK" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -3953,7 +3953,7 @@
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f ./src/action.php -- "{query}" "ALBUM" ""</string>
+				<string>$(which php) -f ./src/action.php -- "{query}" "ALBUM" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -4017,7 +4017,7 @@
 				<key>runningsubtext</key>
 				<string>Wait for it...</string>
 				<key>script</key>
-				<string>php -n -f ./src/main.php -- "{query}"</string>
+				<string>$(which php) -n -f ./src/main.php -- "{query}"</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -4046,7 +4046,7 @@
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f ./src/action.php -- "{query}" "ARTIST_OR_PLAYLIST_PRIVACY" ""</string>
+				<string>$(which php) -f ./src/action.php -- "{query}" "ARTIST_OR_PLAYLIST_PRIVACY" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -4106,7 +4106,7 @@
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f ./src/action.php -- "{query}" "ALBUM_OR_PLAYLIST" "ADDTOPLAYLIST"</string>
+				<string>$(which php) -f ./src/action.php -- "{query}" "ALBUM_OR_PLAYLIST" "ADDTOPLAYLIST"</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -4201,7 +4201,7 @@
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f ./src/action.php -- "{query}" "TRACK" "ADDTOPLAYLIST"</string>
+				<string>$(which php) -f ./src/action.php -- "{query}" "TRACK" "ADDTOPLAYLIST"</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -4287,7 +4287,7 @@
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f ./src/action.php -- "{query}" "TRACK" "REMOVEFROMPLAYLIST"</string>
+				<string>$(which php) -f ./src/action.php -- "{query}" "TRACK" "REMOVEFROMPLAYLIST"</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -4323,7 +4323,7 @@
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f ./src/action.php -- "{query}" "ONLINE" ""
+				<string>$(which php) -f ./src/action.php -- "{query}" "ONLINE" ""
 </string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
@@ -4431,7 +4431,7 @@
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f ./src/action.php -- "{query}" "ADDTOQUEUE" ""</string>
+				<string>$(which php) -f ./src/action.php -- "{query}" "ADDTOQUEUE" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -4526,7 +4526,7 @@
 				<key>escaping</key>
 				<integer>38</integer>
 				<key>script</key>
-				<string>php -f ./src/action.php -- "{query}" "PREVIEW" ""</string>
+				<string>$(which php) -f ./src/action.php -- "{query}" "PREVIEW" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -4976,7 +4976,7 @@
 				<key>runningsubtext</key>
 				<string>Wait for it...</string>
 				<key>script</key>
-				<string>php -f ./src/debug.php -- "{query}"</string>
+				<string>$(which php) -f ./src/debug.php -- "{query}"</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -5170,7 +5170,7 @@
 				<integer>38</integer>
 				<key>script</key>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "volume_up" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-php -f ./src/action.php -- "$query" "TRACK" ""</string>
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -5244,7 +5244,7 @@ php -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<integer>38</integer>
 				<key>script</key>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "volume_down" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-php -f ./src/action.php -- "$query" "TRACK" ""</string>
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -5346,7 +5346,7 @@ php -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "random" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
 
 
-php -f ./src/action.php -- "$query" "TRACK" ""
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""
 </string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
@@ -5457,7 +5457,7 @@ php -f ./src/action.php -- "$query" "TRACK" ""
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "add_current_track" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
 
 
-php -f ./src/action.php -- "$query" "TRACK" ""</string>
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -5609,7 +5609,7 @@ php -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<integer>38</integer>
 				<key>script</key>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "pause" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-php -f ./src/action.php -- "$query" "TRACK" ""</string>
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -5688,7 +5688,7 @@ php -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<integer>38</integer>
 				<key>script</key>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "play" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-php -f ./src/action.php -- "$query" "{query}" ""
+$(which php) -f ./src/action.php -- "$query" "{query}" ""
 </string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
@@ -5886,7 +5886,7 @@ echo -n $query</string>
 				<integer>38</integer>
 				<key>script</key>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "shuffle" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-php -f ./src/action.php -- "$query" "TRACK" ""</string>
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -6004,7 +6004,7 @@ php -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<integer>38</integer>
 				<key>script</key>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "previous" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-php -f ./src/action.php -- "$query" "TRACK" ""</string>
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -6114,7 +6114,7 @@ php -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<integer>38</integer>
 				<key>script</key>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "next" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-php -f ./src/action.php -- "$query" "TRACK" ""</string>
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -6193,7 +6193,7 @@ php -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<integer>38</integer>
 				<key>script</key>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "current" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-php -f ./src/action.php -- "$query" "{query}" ""</string>
+$(which php) -f ./src/action.php -- "$query" "{query}" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -6324,7 +6324,7 @@ php -f ./src/action.php -- "$query" "{query}" ""</string>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "lyrics" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
 
 
-php -f ./src/action.php -- "$query" "TRACK" ""</string>
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -6434,7 +6434,7 @@ php -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "current_artist_radio" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
 
 
-php -f ./src/action.php -- "$query" "TRACK" ""</string>
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -6544,7 +6544,7 @@ php -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "current_track_radio" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
 
 
-php -f ./src/action.php -- "$query" "TRACK" ""</string>
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -6633,7 +6633,7 @@ php -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "reset_settings" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
 
 
-php -f ./src/action.php -- "$query" "TRACK" ""</string>
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -6714,7 +6714,7 @@ php -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "kill_update" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
 
 
-php -f ./src/action.php -- "$query" "TRACK" ""</string>
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -6761,7 +6761,7 @@ php -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "refresh_library_external" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
 
 
-php -f ./src/action.php -- "$query" "TRACK" ""</string>
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -6800,7 +6800,7 @@ php -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "refresh_library" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
 
 
-php -f ./src/action.php -- "$query" "TRACK" ""</string>
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -6881,7 +6881,7 @@ php -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "play_current_artist" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
 
 
-php -f ./src/action.php -- "$query" "TRACK" ""</string>
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -7025,7 +7025,7 @@ php -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "follow_current_artist" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
 
 
-php -f ./src/action.php -- "$query" "TRACK" ""</string>
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -7101,7 +7101,7 @@ php -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "unfollow_current_artist" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
 
 
-php -f ./src/action.php -- "$query" "TRACK" ""</string>
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -7232,7 +7232,7 @@ php -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "play_current_album" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
 
 
-php -f ./src/action.php -- "$query" "TRACK" ""</string>
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -7342,7 +7342,7 @@ php -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "play_alfred_playlist" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
 
 
-php -f ./src/action.php -- "$query" "TRACK" ""</string>
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -7505,7 +7505,7 @@ php -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "add_current_track_to" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
 
 
-php -f ./src/action.php -- "$query" "{query}" ""</string>
+$(which php) -f ./src/action.php -- "$query" "{query}" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -7615,7 +7615,7 @@ php -f ./src/action.php -- "$query" "{query}" ""</string>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "lookup_current_artist" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
 
 
-php -f ./src/action.php -- "$query" "TRACK" ""</string>
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -7909,7 +7909,7 @@ end tell</string>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "show_alfred_playlist" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
 
 
-php -f ./src/action.php -- "$query" "TRACK" ""</string>
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -8040,7 +8040,7 @@ php -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "remove_current_track_from" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
 
 
-php -f ./src/action.php -- "$query" "TRACK" ""</string>
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -8108,7 +8108,7 @@ php -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "random_album" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
 
 
-php -f ./src/action.php -- "$query" "TRACK" ""
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""
 </string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
@@ -8238,7 +8238,7 @@ php -f ./src/action.php -- "$query" "TRACK" ""
 				<integer>38</integer>
 				<key>script</key>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "mute" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-php -f ./src/action.php -- "$query" "TRACK" ""</string>
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -8367,7 +8367,7 @@ php -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<integer>38</integer>
 				<key>script</key>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "playpause" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-php -f ./src/action.php -- "$query" "TRACK" ""
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""
 </string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
@@ -8457,7 +8457,7 @@ php -f ./src/action.php -- "$query" "TRACK" ""
 				<integer>38</integer>
 				<key>script</key>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "volmax" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-php -f ./src/action.php -- "$query" "TRACK" ""</string>
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -8586,7 +8586,7 @@ php -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<integer>38</integer>
 				<key>script</key>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "volmid" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-php -f ./src/action.php -- "$query" "TRACK" ""</string>
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -8694,7 +8694,7 @@ php -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<integer>38</integer>
 				<key>script</key>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "repeating" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-php -f ./src/action.php -- "$query" "TRACK" ""</string>
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -8781,7 +8781,7 @@ php -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<integer>38</integer>
 				<key>script</key>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "repeating" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-php -f ./src/action.php -- "$query" "ARTIST_OR_PLAYLIST_PRIVACY" ""</string>
+$(which php) -f ./src/action.php -- "$query" "ARTIST_OR_PLAYLIST_PRIVACY" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -8889,7 +8889,7 @@ php -f ./src/action.php -- "$query" "ARTIST_OR_PLAYLIST_PRIVACY" ""</string>
 				<integer>38</integer>
 				<key>script</key>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "share" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-php -f ./src/action.php -- "$query" "TRACK" ""</string>
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -8947,7 +8947,7 @@ php -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<integer>38</integer>
 				<key>script</key>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "web_search" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-php -f ./src/action.php -- "$query" "TRACK" ""</string>
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -9034,7 +9034,7 @@ php -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<integer>38</integer>
 				<key>script</key>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "web_search_artist_track" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-php -f ./src/action.php -- "$query" "TRACK" ""</string>
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -9161,7 +9161,7 @@ echo "$tmp[1] $tmp[0]";
 				<integer>38</integer>
 				<key>script</key>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "web_search_artist_track" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-php -f ./src/action.php -- "$query" "TRACK" ""</string>
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -9314,7 +9314,7 @@ echo "$tmp[1] $tmp[0]";
 				<integer>38</integer>
 				<key>script</key>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "web_search_artist_track" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-php -f ./src/action.php -- "$query" "TRACK" ""</string>
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -9443,7 +9443,7 @@ echo "$tmp[1]";
 				<integer>38</integer>
 				<key>script</key>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "web_search_artist" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-php -f ./src/action.php -- "$query" "TRACK" ""</string>
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -9560,7 +9560,7 @@ php -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<integer>38</integer>
 				<key>script</key>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "web_search_artist" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-php -f ./src/action.php -- "$query" "TRACK" ""</string>
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -9662,7 +9662,7 @@ echo "$tmp[1]";
 				<integer>38</integer>
 				<key>script</key>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "web_search_artist" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-php -f ./src/action.php -- "$query" "TRACK" ""</string>
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -9778,7 +9778,7 @@ echo "$tmp[1]";
 				<integer>38</integer>
 				<key>script</key>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "change_theme_color_for_real" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-php -f ./src/action.php -- "$query" "TRACK" ""</string>
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -9855,7 +9855,7 @@ php -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<integer>38</integer>
 				<key>script</key>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "change_search_order_for_real" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-php -f ./src/action.php -- "$query" "TRACK" ""</string>
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -9896,7 +9896,7 @@ php -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>runningsubtext</key>
 				<string>Wait for it...</string>
 				<key>script</key>
-				<string>php -f ./src/search_order.php -- "{query}"</string>
+				<string>$(which php) -f ./src/search_order.php -- "{query}"</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -9963,7 +9963,7 @@ php -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>runningsubtext</key>
 				<string>Wait for it...</string>
 				<key>script</key>
-				<string>php -f ./src/search_order.php -- "{query}"</string>
+				<string>$(which php) -f ./src/search_order.php -- "{query}"</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -10010,7 +10010,7 @@ php -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>runningsubtext</key>
 				<string></string>
 				<key>script</key>
-				<string>php -f ./src/search_order.php -- "{query}"</string>
+				<string>$(which php) -f ./src/search_order.php -- "{query}"</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -10087,7 +10087,7 @@ php -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>runningsubtext</key>
 				<string>Wait for it...</string>
 				<key>script</key>
-				<string>php -f ./src/search_order.php -- "{query}"</string>
+				<string>$(which php) -f ./src/search_order.php -- "{query}"</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -10168,7 +10168,7 @@ php -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>runningsubtext</key>
 				<string>Wait for it...</string>
 				<key>script</key>
-				<string>php -f ./src/search_order.php -- "{query}"</string>
+				<string>$(which php) -f ./src/search_order.php -- "{query}"</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -10245,7 +10245,7 @@ php -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<integer>38</integer>
 				<key>script</key>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "copy_current_track_url_to_clipboard" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-php -f ./src/action.php -- "$query" "{query}" ""</string>
+$(which php) -f ./src/action.php -- "$query" "{query}" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -10286,7 +10286,7 @@ php -f ./src/action.php -- "$query" "{query}" ""</string>
 				<key>runningsubtext</key>
 				<string>Wait for it...</string>
 				<key>script</key>
-				<string>php -f ./src/search_order.php -- "{query}"</string>
+				<string>$(which php) -f ./src/search_order.php -- "{query}"</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -10352,7 +10352,7 @@ php -f ./src/action.php -- "$query" "{query}" ""</string>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "show_in_spotify" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
 
 
-php -f ./src/action.php -- "$query" "TRACK" ""</string>
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -10624,7 +10624,7 @@ do shell script deviceselectedXML</string>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "decrypt" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
 
 
-php -f ./src/action.php -- "$query" "TRACK" ""</string>
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -10726,7 +10726,7 @@ php -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "play_liked_songs" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
 
 
-php -f ./src/action.php -- "$query" "TRACK" ""</string>
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -10802,7 +10802,7 @@ php -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "remove_current_track" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
 
 
-php -f ./src/action.php -- "$query" "TRACK" ""</string>
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -10954,7 +10954,7 @@ php -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<integer>38</integer>
 				<key>script</key>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "set_volume" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-php -f ./src/action.php -- "$query" "{query}" ""</string>
+$(which php) -f ./src/action.php -- "$query" "{query}" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -10999,7 +10999,7 @@ php -f ./src/action.php -- "$query" "{query}" ""</string>
 				<integer>38</integer>
 				<key>script</key>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "enable_podcasts_settings" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-php -f ./src/action.php -- "$query" "{query}" ""</string>
+$(which php) -f ./src/action.php -- "$query" "{query}" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -11023,7 +11023,7 @@ php -f ./src/action.php -- "$query" "{query}" ""</string>
 				<integer>38</integer>
 				<key>script</key>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "enable_artworks" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-php -f ./src/action.php -- "$query" "{query}" ""</string>
+$(which php) -f ./src/action.php -- "$query" "{query}" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -11182,7 +11182,7 @@ php -f ./src/action.php -- "$query" "{query}" ""</string>
 				<integer>38</integer>
 				<key>script</key>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "disable_artworks" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-php -f ./src/action.php -- "$query" "{query}" ""</string>
+$(which php) -f ./src/action.php -- "$query" "{query}" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -11206,7 +11206,7 @@ php -f ./src/action.php -- "$query" "{query}" ""</string>
 				<integer>38</integer>
 				<key>script</key>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "disable_podcasts_settings" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
-php -f ./src/action.php -- "$query" "{query}" ""</string>
+$(which php) -f ./src/action.php -- "$query" "{query}" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -11253,7 +11253,7 @@ php -f ./src/action.php -- "$query" "{query}" ""</string>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "add_current_track_to_alfred_playlist" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
 
 
-php -f ./src/action.php -- "$query" "TRACK" ""</string>
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -11365,7 +11365,7 @@ php -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "add_current_track_to_your_music" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
 
 
-php -f ./src/action.php -- "$query" "TRACK" ""</string>
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -11477,7 +11477,7 @@ php -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "remove_current_track_from_alfred_playlist" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
 
 
-php -f ./src/action.php -- "$query" "TRACK" ""</string>
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -11589,7 +11589,7 @@ php -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "remove_current_track_from_your_music" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
 
 
-php -f ./src/action.php -- "$query" "TRACK" ""</string>
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -11701,7 +11701,7 @@ php -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<string>query=$(php -r '$foo = serialize(array("", "", "", "", "", "", "", "fix_permissions" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));echo $foo;')
 
 
-php -f ./src/action.php -- "$query" "TRACK" ""</string>
+$(which php) -f ./src/action.php -- "$query" "TRACK" ""</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>

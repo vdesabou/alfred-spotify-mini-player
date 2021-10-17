@@ -91,7 +91,7 @@ function StartMopidy
 
 	until [ "${result}" == "mopidy_stopped" ]
 	do
-		result=$(php -f ./src/action.php -- "$query" "TRACK" "")
+		result=$($(which php) -f ./src/action.php -- "$query" "TRACK" "")
 
 		track_url=$(echo "${result}" | awk -F '▹' '{print $5}')
 		player_state=$(echo "${result}" | awk -F '▹' '{print $4}')
@@ -139,7 +139,7 @@ function StartSpotifyConnect
 
 	until [ "${result}" == "connect_stopped" ]
 	do
-		result=$(php -f ./src/action.php -- "$query" "TRACK" "")
+		result=$($(which php) -f ./src/action.php -- "$query" "TRACK" "")
 
 		track_url=$(echo "${result}" | awk -F '▹' '{print $5}')
 		player_state=$(echo "${result}" | awk -F '▹' '{print $4}')
