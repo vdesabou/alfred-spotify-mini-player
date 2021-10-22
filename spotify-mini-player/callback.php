@@ -32,35 +32,35 @@ while ($retry) {
                 if($ret == false) {
                     $retry = false;
                     $message = "There was an error when updating settings";
-                    exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk '{print $2}')");
+                    exec("kill -9 $(ps -efx | grep \"start_php_server.ksh\"  | grep -v grep | awk '{print $2}')");
                 }
 
                 $ret = updateSetting($w,'oauth_refresh_token',$session->getRefreshToken());
                 if($ret == false) {
                     $retry = false;
                     $message = "There was an error when updating settings";
-                    exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk '{print $2}')");
+                    exec("kill -9 $(ps -efx | grep \"start_php_server.ksh\"  | grep -v grep | awk '{print $2}')");
                 }
 
                 $ret = updateSetting($w,'country_code',$user->country);
                 if($ret == false) {
                     $retry = false;
                     $message = "There was an error when updating settings";
-                    exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk '{print $2}')");
+                    exec("kill -9 $(ps -efx | grep \"start_php_server.ksh\"  | grep -v grep | awk '{print $2}')");
                 }
 
                 $ret = updateSetting($w,'display_name',$user->display_name);
                 if($ret == false) {
                     $retry = false;
                     $message = "There was an error when updating settings";
-                    exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk '{print $2}')");
+                    exec("kill -9 $(ps -efx | grep \"start_php_server.ksh\"  | grep -v grep | awk '{print $2}')");
                 }
 
                 $ret = updateSetting($w,'userid',$user->id);
                 if($ret == false) {
                     $retry = false;
                     $message = "There was an error when updating settings";
-                    exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk '{print $2}')");
+                    exec("kill -9 $(ps -efx | grep \"start_php_server.ksh\"  | grep -v grep | awk '{print $2}')");
                 }
 
                 if (isUserPremiumSubscriber($w)) {
@@ -68,7 +68,7 @@ while ($retry) {
                     if($ret == false) {
                         $retry = false;
                         $message = "There was an error when updating settings";
-                        exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk '{print $2}')");
+                        exec("kill -9 $(ps -efx | grep \"start_php_server.ksh\"  | grep -v grep | awk '{print $2}')");
                     }
                 }
 
@@ -104,7 +104,7 @@ while ($retry) {
     }
 }
 
-exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk '{print $2}')");
+exec("kill -9 $(ps -efx | grep \"start_php_server.ksh\"  | grep -v grep | awk '{print $2}')");
 ?>
 
 <html>

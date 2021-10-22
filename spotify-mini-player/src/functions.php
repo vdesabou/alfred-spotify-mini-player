@@ -8029,7 +8029,7 @@ function killUpdate($w)
     deleteTheFile($w,$w->data().'/create_library');
     deleteTheFile($w,$w->data().'/download_artworks_in_progress');
 
-    exec("kill -9 $(ps -efx | grep \"php\" | egrep \"update_|refresh_library|php -S localhost:15298|ADDTOPLAYLIST|REMOVEFROMPLAYLIST|UPDATE_|DOWNLOAD_ARTWORKS\" | grep -v grep | awk '{print $2}')");
+    exec("kill -9 $(ps -efx | grep \"php\" | egrep \"update_|refresh_library|php -S 127.0.0.1:15298|ADDTOPLAYLIST|REMOVEFROMPLAYLIST|UPDATE_|DOWNLOAD_ARTWORKS\" | grep -v grep | awk '{print $2}')");
 
     displayNotificationWithArtwork($w, 'Update library was killed', './images/kill.png', 'Kill Update Library ');
 }
