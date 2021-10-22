@@ -4,7 +4,7 @@ require './src/functions.php';
 require_once './src/workflows.php';
 
 
-function debug($argv) {
+function main($argv) {
     $w = new Workflows('com.vdesabou.spotify.mini.player');
 
     $theme_color = getSetting($w,'theme_color');
@@ -410,5 +410,3 @@ function debug($argv) {
 
     echo $w->tojson();
 }
-
-debug($argv);

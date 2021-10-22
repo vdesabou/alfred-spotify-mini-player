@@ -358,6 +358,3 @@ function main($argv) {
 
     echo $w->tojson();
 }
-
-main($argv);
-

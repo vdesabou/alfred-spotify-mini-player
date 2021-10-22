@@ -2210,9 +2210,9 @@ function refreshLibrary($w, $silent = false) {
     if ($use_artworks) {
         // Download artworks in background
         if(!$silent) {
-            exec('php -f ./src/action.php -- "" "DOWNLOAD_ARTWORKS" "DOWNLOAD_ARTWORKS" >> "' . $w->cache() . '/action.log" 2>&1 & ');
+            exec('./src/download_artworks.ksh false >> "' . $w->cache() . '/action.log" 2>&1 & ');
         } else {
-            exec('php -f ./src/action.php -- "" "DOWNLOAD_ARTWORKS_SILENT" "DOWNLOAD_ARTWORKS_SILENT" >> "' . $w->cache() . '/action.log" 2>&1 & ');
+            exec('./src/download_artworks.ksh true >> "' . $w->cache() . '/action.log" 2>&1 & ');
         }
     }
 
