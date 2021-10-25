@@ -20,6 +20,8 @@ PHP is no more installed by default starting from MacOS Monterey, so you need to
 * Install brew: `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
 
 * Install PHP: `brew install php`
+
+
 ## Download and install the workflow
 
 * [Download](https://github.com/vdesabou/alfred-spotify-mini-player/releases/latest/download/spotifyminiplayer.alfredworkflow) the workflow
