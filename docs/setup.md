@@ -3,7 +3,7 @@ layout: article
 permalink: /setup/
 title: "Setup"
 date: 2015-01-01
-modified: 2021-01-02
+modified: 2021-10-25
 toc: true
 share: false
 noindex: false
@@ -12,6 +12,10 @@ noindex: false
 {% include toc.html %}
 
 Setting up the workflow is easy, you just need to follow these steps:-
+
+## Install PHP (MacOS Monterey and above)
+
+PHP is no more installed by default starting from MacOS Monterey, so you need to install `php` from [brew](https://brew.sh) (`brew install php`) before using the workflow.
 
 ## Download and install the workflow
 

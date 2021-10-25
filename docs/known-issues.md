@@ -2,7 +2,7 @@
 layout: article
 permalink: /known-issues/
 title: "Known Issues"
-modified: 2020-04-18
+modified: 2021-10-25
 excerpt: "List of Known Issues."
 image:
   feature:
@@ -47,9 +47,14 @@ This is the list of current known issues:
 
 * Sonos speakers are not appearing in the workflow due to a Spotify issue, see [bug](https://github.com/vdesabou/alfred-spotify-mini-player/issues/207)
 
-## MacOS Monterey
+## Install PHP (MacOS Monterey and above)
 
-There is no support for MacOS Monterey, see [bug](https://github.com/vdesabou/alfred-spotify-mini-player/issues/508)
+PHP is no more installed by default starting from MacOS Monterey, so you need to install `php` from [brew](https://brew.sh) before using the workflow:
+
+* Install brew: `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
+
+* Install PHP: `brew install php`
+
 
 ## MacOS Permission errors
 
