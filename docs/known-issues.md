@@ -32,13 +32,6 @@ This is the list of current known issues:
 
 * The special playlists like _Daily Mix_ or _Discover Weekly_ are not supported by the workflow, there is no API available to do that.
 
-<a name="php_requirement"></a>
-
-## PHP Requirement
-
-* PHP 5.5.0 or later is required for authentication. This is because I am using the PHP CLI [built-in web server](http://php.net/manual/en/features.commandline.webserver.php) for Oauth process. If you use an older version, there is a [workround](https://github.com/vdesabou/alfred-spotify-mini-player/issues/44#issuecomment-72003149). Ask for more details if required.
-
-
 ## Mopidy
 
 * Mopidy support in the workflow is deprecated, see reasons [here](https://github.com/vdesabou/alfred-spotify-mini-player/issues/340).
@@ -55,6 +48,10 @@ PHP is no more installed by default starting from MacOS Monterey, so you need to
 
 * Install PHP: `brew install php`
 
+
+Note:
+
+PHP 5.5.0 or later is required for authentication. This is because I am using the PHP CLI [built-in web server](http://php.net/manual/en/features.commandline.webserver.php) for Oauth process. If you use an older version, install php from brew as explained above.
 
 ## MacOS Permission errors
 

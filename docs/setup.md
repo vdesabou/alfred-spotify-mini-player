@@ -15,8 +15,11 @@ Setting up the workflow is easy, you just need to follow these steps:-
 
 ## Install PHP (MacOS Monterey and above)
 
-PHP is no more installed by default starting from MacOS Monterey, so you need to install `php` from [brew](https://brew.sh) (`brew install php`) before using the workflow.
+PHP is no more installed by default starting from MacOS Monterey, so you need to install `php` from [brew](https://brew.sh) before using the workflow:
 
+* Install brew: `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
+
+* Install PHP: `brew install php`
 ## Download and install the workflow
 
 * [Download](https://github.com/vdesabou/alfred-spotify-mini-player/releases/latest/download/spotifyminiplayer.alfredworkflow) the workflow
