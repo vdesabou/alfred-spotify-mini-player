@@ -1424,9 +1424,9 @@ function main($query, $type, $add_to_option)
 
                 return;
             }
-            exec("kill -9 $(ps -efx | grep \"start_php_server.ksh\"  | grep -v grep | awk '{print $2}')");
+            exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk '{print $2}')");
             sleep(1);
-            exec('./src/start_php_server.ksh >> "' . $w->cache() . '/spotify_mini_player_web_server.log" 2>&1 & ');
+            exec("osascript -e 'tell application id \"" . getAlfredName() . "\" to run trigger \"start_php_server\" in workflow \"com.vdesabou.spotify.mini.player\" with argument \"\"'");
             sleep(2);
             // https://github.com/vdesabou/alfred-spotify-mini-player/issues/447
             exec('./src/is_safari_default_browser.ksh 2>&1', $retArr, $retVal);
@@ -1461,9 +1461,9 @@ function main($query, $type, $add_to_option)
 
                 return;
             }
-            exec("kill -9 $(ps -efx | grep \"start_php_server.ksh\"  | grep -v grep | awk '{print $2}')");
+            exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk '{print $2}')");
             sleep(1);
-            exec('./src/start_php_server.ksh >> "' . $w->cache() . '/spotify_mini_player_web_server.log" 2>&1 & ');
+            exec("osascript -e 'tell application id \"" . getAlfredName() . "\" to run trigger \"start_php_server\" in workflow \"com.vdesabou.spotify.mini.player\" with argument \"\"'");
             sleep(2);
             // https://github.com/vdesabou/alfred-spotify-mini-player/issues/447
             exec('./src/is_safari_default_browser.ksh 2>&1', $retArr, $retVal);
