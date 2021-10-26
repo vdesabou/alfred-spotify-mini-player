@@ -1305,6 +1305,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>612F1361-C29D-4AB8-A3BF-D0920BD7846E</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>29902759-070E-471F-950B-26489BC9DBA5</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>614AF93D-7DC9-4B4C-BD07-E3887CB6BB3B</key>
 		<array>
 			<dict>
@@ -4641,6 +4654,44 @@ main($query,"PREVIEW","");
 			<string>8A63B1A6-0F0E-481A-9312-C75557A9DA71</string>
 			<key>version</key>
 			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>PATH=$PATH:/opt/homebrew/bin/php:/usr/local/bin/
+
+php -S 127.0.0.1:15298</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>29902759-070E-471F-950B-26489BC9DBA5</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>triggerid</key>
+				<string>start_php_server</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.external</string>
+			<key>uid</key>
+			<string>612F1361-C29D-4AB8-A3BF-D0920BD7846E</string>
+			<key>version</key>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -12284,6 +12335,17 @@ https://github.com/vdesabou/alfred-spotify-mini-player</string>
 			<key>ypos</key>
 			<integer>5350</integer>
 		</dict>
+		<key>29902759-070E-471F-950B-26489BC9DBA5</key>
+		<dict>
+			<key>colorindex</key>
+			<integer>12</integer>
+			<key>note</key>
+			<string>PHP SERVER</string>
+			<key>xpos</key>
+			<integer>855</integer>
+			<key>ypos</key>
+			<integer>1125</integer>
+		</dict>
 		<key>2A349C40-E727-4733-8792-2F49BDEE3ADD</key>
 		<dict>
 			<key>xpos</key>
@@ -12783,6 +12845,13 @@ https://github.com/vdesabou/alfred-spotify-mini-player</string>
 			<integer>670</integer>
 			<key>ypos</key>
 			<integer>3820</integer>
+		</dict>
+		<key>612F1361-C29D-4AB8-A3BF-D0920BD7846E</key>
+		<dict>
+			<key>xpos</key>
+			<integer>660</integer>
+			<key>ypos</key>
+			<integer>1125</integer>
 		</dict>
 		<key>614AF93D-7DC9-4B4C-BD07-E3887CB6BB3B</key>
 		<dict>
