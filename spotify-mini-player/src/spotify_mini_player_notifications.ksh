@@ -5,7 +5,7 @@ ACTION=""
 APP=""
 ALFRED_NAME=""
 
-PATH=$PATH:/opt/homebrew/bin/php:/usr/local/bin/
+PATH=$PATH:/opt/homebrew/bin/:/usr/local/bin/
 
 while getopts 'v:d:a:m:' arguments
 	do

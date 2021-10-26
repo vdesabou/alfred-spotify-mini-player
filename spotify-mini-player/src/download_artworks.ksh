@@ -1,7 +1,7 @@
 #!/bin/ksh
 
 SILENT="$1"
-PATH=$PATH:/opt/homebrew/bin/php:/usr/local/bin/
+PATH=$PATH:/opt/homebrew/bin/:/usr/local/bin/
 
 if [ "$SILENT" = "false" ]
 then
