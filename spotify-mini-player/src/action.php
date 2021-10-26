@@ -1424,7 +1424,7 @@ function main($query, $type, $add_to_option)
 
                 return;
             }
-            exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk '{print $2}')");
+            exec("kill -9 $(ps -efx | grep \"php -S 127.0.0.1:15298\"  | grep -v grep | awk '{print $2}')");
             sleep(1);
             exec("osascript -e 'tell application id \"" . getAlfredName() . "\" to run trigger \"start_php_server\" in workflow \"com.vdesabou.spotify.mini.player\" with argument \"\"'");
             sleep(2);
@@ -1461,7 +1461,7 @@ function main($query, $type, $add_to_option)
 
                 return;
             }
-            exec("kill -9 $(ps -efx | grep \"php -S localhost:15298\"  | grep -v grep | awk '{print $2}')");
+            exec("kill -9 $(ps -efx | grep \"php -S 127.0.0.1:15298\"  | grep -v grep | awk '{print $2}')");
             sleep(1);
             exec("osascript -e 'tell application id \"" . getAlfredName() . "\" to run trigger \"start_php_server\" in workflow \"com.vdesabou.spotify.mini.player\" with argument \"\"'");
             sleep(2);
