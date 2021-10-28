@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace SpotifyWebAPI;
 
 // Extends from SpotifyWebApiException for backwards compatibility

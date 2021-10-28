@@ -1,12 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace SpotifyWebAPI;
 
 class SpotifyWebAPI
 {
-    const RETURN_ASSOC = 'assoc';
-    const RETURN_OBJECT = 'object';
-
     protected $accessToken = '';
     protected $lastResponse = [];
     protected $options = [
@@ -27,17 +26,7 @@ class SpotifyWebAPI
      */
     public function __construct($options = [], $session = null, $request = null)
     {
-        if ($options instanceof Request) {
-            trigger_error(
-                'Passing a Request instance as the first argument to new SpotifyWebAPI() is deprecated.',
-                E_USER_DEPRECATED
-            );
-
-            $request = $options;
-        } else {
             $this->setOptions($options);
-        }
-
         $this->setSession($session);
 
         $this->request = $request ?: new Request();
@@ -61,6 +50,26 @@ class SpotifyWebAPI
         }
 
         return $headers;
+    }
+
+    /**
+     * Try to fetch a snapshot ID from a response.
+     *
+     * @param string object|array The parsed response body.
+     *
+     * @return string|bool A snapshot ID or false if none exists.
+     */
+    protected function getSnapshotId($body)
+    {
+        if (isset($body->snapshot_id)) {
+            return $body->snapshot_id;
+        }
+
+        if (isset($body['snapshot_id'])) {
+            return $body['snapshot_id'];
+        }
+
+        return false;
     }
 
     /**
@@ -124,16 +133,31 @@ class SpotifyWebAPI
                 return $this->sendRequest($method, $uri, $parameters, $headers);
             } elseif ($this->options['auto_retry'] && $e->isRateLimited()) {
                 $lastResponse = $this->request->getLastResponse();
-                // TODO: Remove check in 4.0 when header normalization is in place
-                $retryAfter = isset($lastResponse['headers']['Retry-After']) ? $lastResponse['headers']['Retry-After'] : $lastResponse['headers']['retry-after'];
+                $retryAfter = (int) $lastResponse['headers']['retry-after'];
 
-                sleep((int) $retryAfter);
+                sleep($retryAfter);
 
                 return $this->sendRequest($method, $uri, $parameters, $headers);
             }
 
             throw $e;
         }
+    }
+
+    /**
+     * Convert an array to a comma-separated string. If it's already a string, do nothing.
+     *
+     * @param array|string The value to convert.
+     *
+     * @return string A comma-separated string.
+     */
+    protected function toCommaString($value)
+    {
+        if (is_array($value)) {
+            return implode(',', $value);
+        }
+
+        return $value;
     }
 
     /**
@@ -153,22 +177,6 @@ class SpotifyWebAPI
         }, (array) $uriIds);
 
         return count($uriIds) == 1 ? $uriIds[0] : $uriIds;
-    }
-
-    /**
-     * Convert an array to a comma-separated string. If it's already a string, do nothing.
-     *
-     * @param array|string The value to convert.
-     *
-     * @return string A comma-separated string.
-     */
-    protected function toCommaString($value)
-    {
-        if (is_array($value)) {
-            return implode(',', $value);
-        }
-
-        return $value;
     }
 
     /**
@@ -276,7 +284,7 @@ class SpotifyWebAPI
      * @param array|object $options Optional. Options for the new tracks.
      * - int position Optional. Zero-based track position in playlist. Tracks will be appened if omitted or false.
      *
-     * @return bool Whether the tracks was successfully added.
+     * @return string|bool A new snapshot ID or false if the tracks weren't successfully added.
      */
     public function addPlaylistTracks($playlistId, $tracks, $options = [])
     {
@@ -296,7 +304,7 @@ class SpotifyWebAPI
 
         $this->lastResponse = $this->sendRequest('POST', $uri, $options, $headers);
 
-        return $this->lastResponse['status'] == 201;
+        return $this->getSnapshotId($this->lastResponse['body']);
     }
 
     /**
@@ -530,17 +538,6 @@ class SpotifyWebAPI
                     $track['positions'] = (array) $track['positions'];
                 }
 
-                if (isset($track['id'])) {
-                    trigger_error(
-                        'Using `id` in SpotifyWebAPI::deletePlaylistTracks() is deprecated. Use `uri` instead.',
-                        E_USER_DEPRECATED
-                    );
-
-                    $track['uri'] = $track['id'];
-
-                    unset($track['id']);
-                }
-
                 $track['uri'] = $this->idToUri($track['uri'], 'track');
 
                 return $track;
@@ -559,15 +556,7 @@ class SpotifyWebAPI
 
         $this->lastResponse = $this->sendRequest('DELETE', $uri, $options, $headers);
 
-        $body = $this->lastResponse['body'];
-
-        if (isset($body->snapshot_id)) {
-            return $body->snapshot_id;
-        } elseif (isset($body['snapshot_id'])) {
-            return $body['snapshot_id'];
-        }
-
-        return false;
+        return $this->getSnapshotId($this->lastResponse['body']);
     }
 
     /**
@@ -623,28 +612,6 @@ class SpotifyWebAPI
         $this->lastResponse = $this->sendRequest('PUT', $uri, $options, $headers);
 
         return $this->lastResponse['status'] == 200;
-    }
-
-    /**
-     * Add the current user as a follower of a playlist.
-     * https://developer.spotify.com/documentation/web-api/reference/#endpoint-follow-playlist
-     *
-     * @deprecated Use SpotifyWebAPI::followPlaylist() instead.
-     *
-     * @param string $playlistId ID or URI of the playlist to follow.
-     * @param array|object $options Optional. Options for the followed playlist.
-     * - bool public Optional. Whether the playlist should be followed publicly or not.
-     *
-     * @return bool Whether the playlist was successfully followed.
-     */
-    public function followPlaylistForCurrentUser($playlistId, $options = [])
-    {
-        trigger_error(
-            'SpotifyWebAPI::followPlaylistForCurrentUser() is deprecated. Use followPlaylist() instead.',
-            E_USER_DEPRECATED
-        );
-
-        return $this->followPlaylist($playlistId, $options);
     }
 
     /**
@@ -790,19 +757,8 @@ class SpotifyWebAPI
     {
         $options = (array) $options;
 
-        if (isset($options['album_type']) || isset($options['include_groups'])) {
-            if (isset($options['album_type'])) {
-                $msg = 'The "album_type" option passed to SpotifyWebAPI::getArtistAlbums() is deprecated';
-                $msg .= ', use "include_groups" instead.';
-
-                trigger_error($msg, E_USER_DEPRECATED);
-            }
-
-            $values = $options['album_type'] ?? $options['include_groups'];
-
-            $options['include_groups'] = $this->toCommaString($values);
-
-            unset($options['album_type']);
+        if (isset($options['include_groups'])) {
+            $options['include_groups'] = $this->toCommaString($options['include_groups']);
         }
 
         $artistId = $this->uriToId($artistId, 'artist');
@@ -1404,23 +1360,6 @@ class SpotifyWebAPI
     }
 
     /**
-     * Get a value indicating the response body type.
-     *
-     * @deprecated Use the `return_assoc` option instead.
-     *
-     * @return string A value indicating if the response body is an object or associative array.
-     */
-    public function getReturnType()
-    {
-        trigger_error(
-            'SpotifyWebAPI::getReturnType() is deprecated. Use the `return_assoc` option instead.',
-            E_USER_DEPRECATED
-        );
-
-        return $this->request->getReturnType();
-    }
-
-    /**
      * Get the Request object in use.
      *
      * @return Request The Request object in use.
@@ -1863,15 +1802,8 @@ class SpotifyWebAPI
         $uri = '/v1/playlists/' . $playlistId . '/tracks';
 
         $this->lastResponse = $this->sendRequest('PUT', $uri, $options, $headers);
-        $body = $this->lastResponse['body'];
 
-        if (isset($body->snapshot_id)) {
-            return $body->snapshot_id;
-        } elseif (isset($body['snapshot_id'])) {
-            return $body['snapshot_id'];
-        }
-
-        return false;
+        return $this->getSnapshotId($this->lastResponse['body']);
     }
 
     /**
@@ -1999,25 +1931,6 @@ class SpotifyWebAPI
     }
 
     /**
-     * Set the return type for the response body.
-     *
-     * @deprecated Use the `return_assoc` option instead.
-     *
-     * @param string $returnType One of the `SpotifyWebAPI::RETURN_*` constants.
-     *
-     * @return void
-     */
-    public function setReturnType($returnType)
-    {
-        trigger_error(
-            'SpotifyWebAPI::setReturnType() is deprecated. Use the `return_assoc` option instead.',
-            E_USER_DEPRECATED
-        );
-
-        $this->request->setReturnType($returnType);
-    }
-
-    /**
      * Set the Session object to use.
      *
      * @param Session $session The Session object.
@@ -2099,26 +2012,6 @@ class SpotifyWebAPI
         $this->lastResponse = $this->sendRequest('DELETE', $uri);
 
         return $this->lastResponse['status'] == 200;
-    }
-
-    /**
-     * Remove the current user as a follower of a playlist.
-     * https://developer.spotify.com/documentation/web-api/reference/#endpoint-unfollow-playlist
-     *
-     * @deprecated Use SpotifyWebAPI::unfollowPlaylist() instead.
-     *
-     * @param string $playlistId ID or URI of the playlist to unfollow.
-     *
-     * @return bool Whether the playlist was successfully unfollowed.
-     */
-    public function unfollowPlaylistForCurrentUser($playlistId)
-    {
-        trigger_error(
-            'SpotifyWebAPI::unfollowPlaylistForCurrentUser() is deprecated. Use unfollowPlaylist() instead.',
-            E_USER_DEPRECATED
-        );
-
-        return $this->unfollowPlaylist($playlistId);
     }
 
     /**
