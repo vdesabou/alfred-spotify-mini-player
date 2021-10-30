@@ -284,54 +284,23 @@ function main($argv) {
     )), 'Open log file', 'This will open the log file', 'fileicon:'.$w->cache().'/action.log', 'yes', null, '');
 
     $w->result(null, serialize(array(
-        '' /*track_uri*/,
-        '' /* album_uri */,
-        '' /* artist_uri */,
-        '' /* playlist_uri */,
-        '' /* spotify_command */,
-        '' /* query */,
-        'OpenInFinder▹'.exec('pwd').'/App/'.$theme_color.'/Spotify Mini Player.app' /* other_settings*/,
-        '' /* other_action */,
-        '' /* alfred_playlist_uri */,
-        '' /* artist_name */,
-        '' /* track_name */,
-        '' /* album_name */,
-        '' /* track_artwork_path */,
-        '' /* artist_artwork_path */,
-        '' /* album_artwork_path */,
-        '' /* playlist_name */,
-        '' /* playlist_artwork_path */,
-        '' /* $alfred_playlist_name */,
-        '' /* now_playing_notifications */,
-        '' /* is_alfred_playlist_active */,
-        '' /* country_code*/,
-        '', /* userid*/
-    )), 'Open Spotify Mini Player app in Finder', 'If you have permissions issue, right click on app in Finder and select open', 'fileicon:'.exec('pwd').'/App/'.$theme_color.'/Spotify Mini Player.app', 'yes', null, '');
-
-    $w->result(null, serialize(array(
-        '' /*track_uri*/,
-        '' /* album_uri */,
-        '' /* artist_uri */,
-        '' /* playlist_uri */,
-        '' /* spotify_command */,
-        '' /* query */,
-        'OpenInFinder▹'.exec('pwd').'/terminal-notifier.app' /* other_settings*/,
-        '' /* other_action */,
-        '' /* alfred_playlist_uri */,
-        '' /* artist_name */,
-        '' /* track_name */,
-        '' /* album_name */,
-        '' /* track_artwork_path */,
-        '' /* artist_artwork_path */,
-        '' /* album_artwork_path */,
-        '' /* playlist_name */,
-        '' /* playlist_artwork_path */,
-        '' /* $alfred_playlist_name */,
-        '' /* now_playing_notifications */,
-        '' /* is_alfred_playlist_active */,
-        '' /* country_code*/,
-        '', /* userid*/
-    )), 'Open terminal-notifier app in Finder', 'If you have permissions issue, right click on app in Finder and select open', 'fileicon:'.exec('pwd').'/terminal-notifier.app', 'yes', null, '');
+        ''
+        /*track_uri*/, ''
+        /* album_uri */, ''
+        /* artist_uri */, ''
+        /* playlist_uri */, ''
+        /* spotify_command */, ''
+        /* query */, ''
+        /* other_settings*/, 'app_setup'
+        /* other_action */, ''
+        /* artist_name */, ''
+        /* track_name */, ''
+        /* album_name */, ''
+        /* track_artwork_path */, ''
+        /* artist_artwork_path */, ''
+        /* album_artwork_path */, ''
+        /* playlist_name */, '', /* playlist_artwork_path */
+    )), 'Launch Spotify application setup', array('Your browser will open, follow instructions there', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/settings.png', 'yes', null, '');
 
     $w->result(null, serialize(array(
         '' /*track_uri*/,
@@ -407,6 +376,56 @@ function main($argv) {
         '' /* country_code*/,
         '', /* userid*/
     )), 'Delete artwork folder ' . '(current cached folder size is ' . $artwork_folder_size . ')' , 'This will erase existing album artwork and re-download them', './images/warning.png', 'yes', null, '');
+
+    $w->result(null, serialize(array(
+        '' /*track_uri*/,
+        '' /* album_uri */,
+        '' /* artist_uri */,
+        '' /* playlist_uri */,
+        '' /* spotify_command */,
+        '' /* query */,
+        'OpenInFinder▹' . exec('pwd') . '/App/' . $theme_color . '/Spotify Mini Player.app' /* other_settings*/,
+        '' /* other_action */,
+        '' /* alfred_playlist_uri */,
+        '' /* artist_name */,
+        '' /* track_name */,
+        '' /* album_name */,
+        '' /* track_artwork_path */,
+        '' /* artist_artwork_path */,
+        '' /* album_artwork_path */,
+        '' /* playlist_name */,
+        '' /* playlist_artwork_path */,
+        '' /* $alfred_playlist_name */,
+        '' /* now_playing_notifications */,
+        '' /* is_alfred_playlist_active */,
+        '' /* country_code*/,
+        '', /* userid*/
+    )), 'Open Spotify Mini Player app in Finder', 'If you have permissions issue, right click on app in Finder and select open', 'fileicon:' . exec('pwd') . '/App/' . $theme_color . '/Spotify Mini Player.app', 'yes', null, '');
+
+    $w->result(null, serialize(array(
+        '' /*track_uri*/,
+        '' /* album_uri */,
+        '' /* artist_uri */,
+        '' /* playlist_uri */,
+        '' /* spotify_command */,
+        '' /* query */,
+        'OpenInFinder▹' . exec('pwd') . '/terminal-notifier.app' /* other_settings*/,
+        '' /* other_action */,
+        '' /* alfred_playlist_uri */,
+        '' /* artist_name */,
+        '' /* track_name */,
+        '' /* album_name */,
+        '' /* track_artwork_path */,
+        '' /* artist_artwork_path */,
+        '' /* album_artwork_path */,
+        '' /* playlist_name */,
+        '' /* playlist_artwork_path */,
+        '' /* $alfred_playlist_name */,
+        '' /* now_playing_notifications */,
+        '' /* is_alfred_playlist_active */,
+        '' /* country_code*/,
+        '', /* userid*/
+    )), 'Open terminal-notifier app in Finder', 'If you have permissions issue, right click on app in Finder and select open', 'fileicon:' . exec('pwd') . '/terminal-notifier.app', 'yes', null, '');
 
     echo $w->tojson();
 }
