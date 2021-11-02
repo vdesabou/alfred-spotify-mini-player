@@ -16,7 +16,6 @@ try {
     header('Location: '.$session->getAuthorizeUrl(array(
                 'scope' => array(
                     'user-library-read',
-                    'user-read-email',
                     'user-read-private',
                     'user-library-modify',
                     'user-follow-modify',

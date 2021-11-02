@@ -22,7 +22,6 @@ $session = new SpotifyWebAPI\Session($_GET["id"], $_GET["secret"], 'http://local
 
 $scopes = array(
     'user-library-read',
-    'user-read-email',
     'user-read-private',
     'user-library-modify',
     'user-follow-modify',
