@@ -4243,7 +4243,8 @@ function addTracksToPlaylist($w, $tracks, $playlist_uri, $playlist_name, $allow_
  */
 function removeTrackFromPlaylist($w, $track_uri, $playlist_uri, $playlist_name, $refreshLibrary = true)
 {
-
+    $output_application = getSetting($w, 'output_application');
+    
     try {
         $api = getSpotifyWebAPI($w);
         $tmp = explode(':', $playlist_uri);
@@ -4265,6 +4266,21 @@ function removeTrackFromPlaylist($w, $track_uri, $playlist_uri, $playlist_name, 
         return false;
     }
 
+    // https://github.com/vdesabou/alfred-spotify-mini-player/issues/522
+    // Automatically play next track when removing track from playlist
+    if ($output_application == 'MOPIDY') {
+        invokeMopidyMethod($w, 'core.playback.next', array());
+    } else if ($output_application == 'APPLESCRIPT') {
+        exec("osascript -e 'tell application \"Spotify\" to next track'");
+    } else {
+        $device_id = getSpotifyConnectCurrentDeviceId($w);
+        if ($device_id != '') {
+            nextTrackSpotifyConnect($w, $device_id);
+        } else {
+            displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+        }
+    }
+
     if ($refreshLibrary) {
         if(getenv('automatically_refresh_library') == 1) {
             refreshLibrary($w);
@@ -4283,11 +4299,7 @@ function removeTrackFromPlaylist($w, $track_uri, $playlist_uri, $playlist_name, 
  */
 function removeTrackFromYourMusic($w, $track_uri, $refreshLibrary = true)
 {
-
-
-
-
-    $userid = getSetting($w,'userid');
+    $output_application = getSetting($w, 'output_application');
 
     try {
         $api = getSpotifyWebAPI($w);
@@ -4305,6 +4317,21 @@ function removeTrackFromYourMusic($w, $track_uri, $refreshLibrary = true)
         }
     }
 
+    // https://github.com/vdesabou/alfred-spotify-mini-player/issues/522
+    // Automatically play next track when removing track from playlist
+    if ($output_application == 'MOPIDY') {
+        invokeMopidyMethod($w, 'core.playback.next', array());
+    } else if ($output_application == 'APPLESCRIPT') {
+        exec("osascript -e 'tell application \"Spotify\" to next track'");
+    } else {
+        $device_id = getSpotifyConnectCurrentDeviceId($w);
+        if ($device_id != '') {
+            nextTrackSpotifyConnect($w, $device_id);
+        } else {
+            displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+        }
+    }
+    
     return true;
 }
 
