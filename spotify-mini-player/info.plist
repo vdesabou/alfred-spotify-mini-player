@@ -14801,7 +14801,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 		<string>__fuzzy_search</string>
 	</array>
 	<key>version</key>
-	<string>11.4</string>
+	<string>11.5</string>
 	<key>webaddress</key>
 	<string>https://alfred-spotify-mini-player.com</string>
 </dict>
