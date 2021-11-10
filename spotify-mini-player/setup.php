@@ -162,8 +162,7 @@
                                         login with Spotify and allow access to your application. At the end you should
                                         see a message like this:</p>
 
-                                    <p><em>Hello xxx ! You are now successfully logged and you can close this
-                                            window.</em></p>
+                                    <p><em>🎉 Alfred Spotify Mini Player is setup 🎉</em></p>
                                 </li>
                             </ul>
 
@@ -332,3 +331,4 @@
 </body>
 
 </html>
+
