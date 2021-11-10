@@ -15,6 +15,8 @@ function refreshLibrary($w, $silent = false) {
         return;
     }
 
+    fixPermissions($w);
+    
     $update_type = 'Refresh Library';
     if (file_exists($w->data() . '/create_library')) {
         $update_type = 'Create Library';

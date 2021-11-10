@@ -5,6 +5,43 @@ require_once './src/createLibrary.php';
 require_once './src/refreshLibrary.php';
 require './vendor/autoload.php';
 
+/**
+ * fixPermissions function.
+ *
+ */
+function fixPermissions($w)
+{
+    $theme_color = getSetting($w, 'theme_color');
+
+    // check for quarantine and remove it if required
+    exec('/usr/bin/xattr ./fzf', $response);
+    foreach ($response as $line) {
+        if (strpos($line, 'com.apple.quarantine') !== false) {
+            logMsg($w, "Info(fix_permissions) for fzf");
+            exec('/usr/bin/xattr -d com.apple.quarantine ./fzf', $response);
+            break;
+        }
+    }
+
+    // check for quarantine and remove it if required
+    exec('/usr/bin/xattr ./terminal-notifier.app', $response);
+    foreach ($response as $line) {
+        if (strpos($line, 'com.apple.quarantine') !== false) {
+            logMsg($w, "Info(fix_permissions) for terminal-notifier");
+            exec('/usr/bin/xattr -d com.apple.quarantine ./terminal-notifier.app', $response);
+            break;
+        }
+    }
+
+    exec('/usr/bin/xattr "' . './App/' . $theme_color . '/Spotify Mini Player.app' . '"', $response);
+    foreach ($response as $line) {
+        if (strpos($line, 'com.apple.quarantine') !== false) {
+            logMsg($w, "Info(fix_permissions) for Spotify Mini Player");
+            exec('/usr/bin/xattr -d com.apple.quarantine "' . './App/' . $theme_color . '/Spotify Mini Player.app' . '"', $response);
+            break;
+        }
+    }
+}
 
 /**
  * getExternalSettings function.
@@ -7878,7 +7915,7 @@ function checkForUpdate($w, $last_check_update_time, $download = false)
             // update workflow_version
             updateSetting($w, 'workflow_version', ''.$local_version);
             stathat_ez_count('AlfredSpotifyMiniPlayer', 'workflow_installations', 1);
-
+            fixPermissions($w);
             // open SpotifyMiniPlayer.app for notifications
             exec('open "'.'./App/'.$theme_color.'/Spotify Mini Player.app'.'"',$response);
         }
