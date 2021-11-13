@@ -2150,6 +2150,11 @@ function listUsers($w)
  */
 function getSpotifyWebAPI($w)
 {
+    $api = $w->getApi();
+    if(!is_null($api))
+    {
+        return $api;
+    }
     $oauth_client_id = getSetting($w,'oauth_client_id');
     $oauth_client_secret = getSetting($w,'oauth_client_secret');
     $oauth_access_token = getSetting($w,'oauth_access_token');
@@ -2185,6 +2190,7 @@ function getSpotifyWebAPI($w)
     if ($ret == false) {
         throw new SpotifyWebAPI\SpotifyWebAPIException('Cannot set oauth_refresh_token', 100);
     }
+    $w->setApi($api);
     return $api;
 }
 

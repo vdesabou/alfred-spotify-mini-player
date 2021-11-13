@@ -16,6 +16,7 @@ class Workflows
     private $path;
     private $home;
     private $results;
+    private $api;
     /**
      * Description:
      * Class constructor function. Intializes all class variables. Accepts one optional parameter
@@ -50,6 +51,16 @@ class Workflows
             exec("mkdir -p '" . $this->data . "'");
         endif;
         $this->results = array();
+    }
+
+    function getApi()
+    {
+        return $this->api;
+    }
+
+    function setApi($api)
+    {
+        $this->api = $api;
     }
 
     /**
