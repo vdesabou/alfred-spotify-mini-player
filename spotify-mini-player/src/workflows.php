@@ -36,7 +36,6 @@ class Workflows
             $this->bundle = $bundleid;
         else:
             if (file_exists('info.plist')):
-                $this->path();
                 $this->bundle = $this->get('bundleid', 'info.plist');
             endif;
         endif;
@@ -145,7 +144,7 @@ class Workflows
     function path()
     {
         if (is_null($this->path)):
-            $this->path = getenv('PWD');
+            $this->path = exec('pwd');
         endif;
         return $this->path;
     }
