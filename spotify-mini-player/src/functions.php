@@ -2741,9 +2741,7 @@ function encryptString($w, $string)
     // Encrypt using the public key
     openssl_public_encrypt($string, $encrypted, $public_key);
 
-    $encrypted_hex = bin2hex($encrypted);
-
-    return $encrypted_hex;
+    return bin2hex($encrypted);
 }
 
 function decryptString($w, $encrypted)
