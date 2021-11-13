@@ -819,6 +819,7 @@ function firstDelimiterNewReleases($w, $query, $db, $update_in_progress) {
  * @param mixed $update_in_progress
  */
 function firstDelimiterCurrentTrack($w, $query, $db, $update_in_progress) {
+    $begin_time = computeTime();
     $words = explode('▹', $query);
     $input = $words[1];
 
@@ -833,7 +834,6 @@ function firstDelimiterCurrentTrack($w, $query, $db, $update_in_progress) {
     $always_display_lyrics_in_browser = getSetting($w,'always_display_lyrics_in_browser');
 
     $results = getCurrentTrackinfo($w, $output_application);
-
     if (is_array($results) && count($results) > 0) {
         $isEpisode = false;
         $href = explode(':', $results[4]);
@@ -917,7 +917,7 @@ function firstDelimiterCurrentTrack($w, $query, $db, $update_in_progress) {
                     $clipboard_current_track_track_text  = str_replace('{artist_name}', escapeQuery($results[1]), $clipboard_current_track_track_text);
                     $clipboard_current_track_track_text  = str_replace('{url}', $shared_url, $clipboard_current_track_track_text);
                     $liked = 'emoji_not_liked';
-                    if(isTrackInYourMusic($w,$results[4])) {
+                    if(isTrackInYourMusic($w,$results[4],$db)) {
                         $liked = 'emoji_liked';
                     }
                     $w->result(null, serialize(array($results[4] /*track_uri*/, ''
@@ -996,7 +996,7 @@ function firstDelimiterCurrentTrack($w, $query, $db, $update_in_progress) {
                     $clipboard_current_track_track_text  = str_replace('{artist_name}', escapeQuery($results[1]), $clipboard_current_track_track_text);
                     $clipboard_current_track_track_text  = str_replace('{url}', $shared_url, $clipboard_current_track_track_text);
                     $liked = 'emoji_not_liked';
-                    if(isTrackInYourMusic($w,$results[4])) {
+                    if(isTrackInYourMusic($w,$results[4],$db)) {
                         $liked = 'emoji_liked';
                     }
                     $w->result(null, serialize(array($results[4] /*track_uri*/, ''
@@ -1361,6 +1361,10 @@ function firstDelimiterCurrentTrack($w, $query, $db, $update_in_progress) {
     else {
         $w->result(null, 'help', 'There is no track currently playing', array('Launch a track and come back here', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/warning.png', 'no', null, '');
     }
+
+    $end_time = computeTime();
+    $total_temp = ($end_time-$begin_time);
+    $w->result(null, 'debug', "Processed in " . $total_temp*1000 . ' ms', '', './images/info.png', 'no', null, '');
 }
 
 /**

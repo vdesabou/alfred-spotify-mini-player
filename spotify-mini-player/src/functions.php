@@ -117,18 +117,41 @@ function setVolume($w, $volume)
  *
  * @param mixed $w
  */
-function isTrackInYourMusic($w, $track_uri)
+function isTrackInYourMusic($w, $track_uri, $db)
 {
-    $tracks = [
-        $track_uri,
-    ];
-    try {
-        $api = getSpotifyWebAPI($w);
-        $response = $api->myTracksContains($tracks);
-        return $response[0];
-    } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        return false;
+    if($db != null) {
+        $nb = 0;
+        $isTrackInYourMusic = 'select count(distinct uri) from tracks where yourmusic=1 and uri=:track_uri';
+        try {
+            $stmt = $db->prepare($isTrackInYourMusic);
+            $stmt->bindValue(':track_uri', ''. $track_uri.'');
+            $stmt->execute();
+            $results = $stmt->fetchAll();
+            $tmp = $results[0];
+            $nb = $tmp[0];
+        } catch (PDOException $e) {
+            handleDbIssuePdoXml($e);
+            return false;
+        }
+
+        if ($nb > 0) {
+            return true;
+        }
+    } else {
+        $tracks = [
+            $track_uri,
+        ];
+        try {
+            $api = getSpotifyWebAPI($w);
+            $response = $api->myTracksContains($tracks);
+            return $response[0];
+        } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+            return false;
+        }
     }
+    
+
+    return false;
 }
 
 /**
@@ -6052,7 +6075,7 @@ function displayNotificationForCurrentTrack($w)
                     $popularity = floatToStars($results[6]/100);
                 }
                 $liked = 'emoji_not_liked';
-                if(isTrackInYourMusic($w,$results[4])) {
+                if(isTrackInYourMusic($w,$results[4],null)) {
                     $liked = 'emoji_liked';
                 }
 
