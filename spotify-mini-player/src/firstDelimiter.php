@@ -1163,8 +1163,13 @@ function firstDelimiterCurrentTrack($w, $query, $db, $update_in_progress) {
         }
 
         if (countCharacters($input) < 2 || strpos(strtolower('play album'), strtolower($input)) !== false) {
-
-            $album_uri = getAlbumUriFromTrack($w, $results[4]);
+            
+            if($results[7] != '') {
+                // with CONNECT, we have it already
+                $album_uri = $results[7];
+            } else {
+                $album_uri = getAlbumUriFromTrack($w, $results[4]);
+            }
 
             $shared_url = '';
             if ($album_uri != false) {
