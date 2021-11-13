@@ -423,9 +423,9 @@ function refreshLibrary($w, $silent = false) {
     }
     while ($cursorAfter != '');
 
+    $savedMySavedShows = array();
     if (! $ignorePodcasts) {
         // Handle Shows
-        $savedMySavedShows = array();
         $offsetGetMySavedShows = 0;
         $limitGetMySavedShows = 50;
         do {
