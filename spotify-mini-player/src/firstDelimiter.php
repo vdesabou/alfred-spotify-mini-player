@@ -1052,12 +1052,14 @@ function firstDelimiterCurrentTrack($w, $query, $db, $update_in_progress) {
                         if ($context_type == 'playlist') {
                             $playlist_uri = $playback_info
                                 ->context->uri;
-                            $context = 'playlist ' . getPlaylistName($w, $playlist_uri) . ' ';
+                            $playlist_name = getPlaylistName($w, $playlist_uri);
+                            $context = 'playlist ' . $playlist_name . ' ';
                         }
                         else if ($context_type == 'album') {
                             $album_uri = $playback_info
                                 ->context->uri;
-                            $context = 'album ' . getAlbumName($w, $album_uri) . ' ';
+                            $album_name = getAlbumName($w, $album_uri);
+                            $context = 'album ' . $album_name . ' ';
                         }
                         else if ($context_type == 'episode') {
                             $episode_uri = $playback_info
@@ -1080,6 +1082,36 @@ function firstDelimiterCurrentTrack($w, $query, $db, $update_in_progress) {
 
                     if ($device_name != '') {
                         $w->result(null, 'help', 'Playing ' . $context . 'on ' . $device_type . ' ' . $device_name, array('Progress: ' . floatToCircles($progress_ms / $results[5]) . ' Shuffle is <' . $shuffle_state . '> ' . $repeat_state, 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/connect.png', 'no', null, '');
+                        if ($context_type == 'playlist') {
+                            $added = 'privately';
+                            $privacy_status = 'private';
+                            if ($is_public_playlists) {
+                                $added = 'publicly';
+                                $privacy_status = 'public';
+                            }
+                            $w->result(null, serialize(array(
+                                ''
+                                /*track_uri*/, ''
+                                /* album_uri */, ''
+                                /* artist_uri */, $playlist_uri
+                                /* playlist_uri */, ''
+                                /* spotify_command */, ''
+                                /* query */, ''
+                                /* other_settings*/, 'follow_playlist'
+                                /* other_action */, ''
+                                /* artist_name */, ''
+                                /* track_name */, ''
+                                /* album_name */, ''
+                                /* track_artwork_path */, ''
+                                /* artist_artwork_path */, ''
+                                /* album_artwork_path */, $playlist_name
+                                /* playlist_name */, '', /* playlist_artwork_path */
+                            )), 'Follow ' . $added . ' playlist ' . $playlist_name, 'This will add the playlist (marked as ' . $privacy_status . ') to your library', './images/follow.png', 'yes', null, '');
+                            $w->result(null, '', 'Add playlist ' . $playlist_name . ' to...', array('This will add the playlist to Your Music or a playlist you will choose in next step', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/add.png', 'no', null, 'Add▹' . $playlist_uri . '∙' . base64_encode($playlist_name) . '▹');
+                        }
+                        if ($context_type == 'album') {
+                            $w->result(null, '', 'Add album ' . escapeQuery($album_name) . ' to...', array('This will add the album to Your Music or a playlist you will choose in next step', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/add.png', 'no', null, 'Add▹' . $album_uri . '∙' . escapeQuery($album_name) . '▹');
+                        }
                     }
                 }
                 catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
