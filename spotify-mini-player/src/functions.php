@@ -155,7 +155,7 @@ function isTrackInYourMusic($w, $track_uri, $db)
 }
 
 /**
- * isUserPremiumSubscriber function.
+ * updateCounters function.
  *
  * @param mixed $w
  * @param mixed $db
@@ -2681,7 +2681,13 @@ function createDebugFile($w)
         $output = $output.'Mopidy version:'.invokeMopidyMethod($w, 'core.get_version', array(), false);
     }
     $output = $output."\n";
-
+    if (isUserPremiumSubscriber($w)) {
+        $output = $output . 'PREMIUM';
+        $output = $output . "\n";
+    } else {
+        $output = $output . 'NOT PREMIUM';
+        $output = $output . "\n";
+    }
 
     $response = shell_exec('/usr/bin/xattr "'.'./App/'.$theme_color.'/Spotify Mini Player.app'.'"');
     $output = $output."xattr Spotify Mini Player.app returned: \n";
