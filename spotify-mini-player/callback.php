@@ -124,7 +124,7 @@ while ($retry) {
                 <img src="https://media4.giphy.com/media/lTZvj21tbQSTC/giphy.gif?cid=e1bb72ffuu13xl14uo27hi6zoxx060wif2j88l6r5vd3odme&rid=giphy.gif" alt="gif">
                 <p>
                     You can now close this window.
-                    <?php exec("kill -9 $(ps -efx | grep \"php -S 127.0.0.1:15298\"  | grep -v grep | awk '{print $2}')"); ?>
+                    <?php exec('./src/kill_php_server.ksh > /dev/null 2>&1 &'); ?>
                 </p>
             </section>
         <?php else : ?>
@@ -138,7 +138,7 @@ while ($retry) {
                 <img src="https://media.giphy.com/media/Qvm2704d1Dqus/giphy.gif" alt="gif">
 
                 <p>👉 You'll need to try logging in again. If you're still unable to proceed, follow this <a href="https://alfred-spotify-mini-player.com/articles/support/">link</a> to get some help</p>
-                <?php exec("kill -9 $(ps -efx | grep \"php -S 127.0.0.1:15298\"  | grep -v grep | awk '{print $2}')"); ?>
+                <?php exec('./src/kill_php_server.ksh > /dev/null 2>&1 &'); ?>
             </section>
         <?php endif; ?>
     </div>
