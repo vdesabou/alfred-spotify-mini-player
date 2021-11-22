@@ -8483,9 +8483,6 @@ function do_async_post_request($url, $params)
 
         fwrite($fp, $out);
         fclose($fp);
-    } else {
-        $w = new Workflows('com.vdesabou.spotify.mini.player');
-        logMsg($w,'Error(do_async_post_request): Problem when updating stat with stathat');
     }
 }
 
