@@ -5,7 +5,7 @@ PATH=$PATH:/opt/homebrew/bin/:/usr/local/bin/
 
 if [ "$SILENT" = "false" ]
 then
-	php -f ./src/action.php -- "" "DOWNLOAD_ARTWORKS" "DOWNLOAD_ARTWORKS"
+	php -f ./src/download_artworks.php -- "DOWNLOAD_ARTWORKS"
 else
-	php -f ./src/action.php -- "" "DOWNLOAD_ARTWORKS_SILENT" "DOWNLOAD_ARTWORKS_SILENT"
+	php -f ./src/download_artworks.php -- "DOWNLOAD_ARTWORKS_SILENT"
 fi
