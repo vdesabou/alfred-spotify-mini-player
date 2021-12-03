@@ -48,7 +48,7 @@ function main($query, $type, $add_to_option)
     $fuzzy_search = getSetting($w,'fuzzy_search');
     $preferred_spotify_connect_device = getSetting($w, 'preferred_spotify_connect_device');
 
-    if ($other_action != 'reset_settings' && $other_action != 'spot_mini_debug' && $other_action != 'kill_update' && !startswith($other_settings,'SWITCH_USER▹')) {
+    if ($other_action != 'reset_settings' && $other_action != 'spot_mini_debug' && $other_action != 'kill_update'&& $other_action != 'decrypt' && !startswith($other_settings,'SWITCH_USER▹')) {
         if ($oauth_client_id == '' || $oauth_client_secret == '' || $oauth_access_token == '') {
             if ($other_settings != '' && (startsWith($other_settings, 'Oauth_Client') === false && startsWith($other_settings, 'Open') === false)) {
                 exec("osascript -e 'tell application id \"".getAlfredName()."\" to search \"".getenv('c_spot_mini')." \"'");
