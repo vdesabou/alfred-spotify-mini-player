@@ -6922,7 +6922,7 @@ function getArtistArtwork($w, $artist_uri, $artist_name, $fetchIfNotPresent = fa
     if (!$useArtworks) {
         return './images/artists.png';
     }
-    $parsedArtist = urlencode(escapeQuery($artist_name));
+    $parsedArtist = truncateStr(urlencode(escapeQuery($artist_name)),250);
 
     if (!file_exists($w->data().'/artwork')):
         exec("mkdir '".$w->data()."/artwork'");
