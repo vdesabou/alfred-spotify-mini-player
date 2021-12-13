@@ -298,7 +298,7 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>EB1ED46F-71D7-49D1-B7BB-DA1ECF2F665F</string>
+				<string>06E3A89C-5DF9-468B-8682-A233B381ABFA</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -1558,7 +1558,7 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>EB1ED46F-71D7-49D1-B7BB-DA1ECF2F665F</string>
+				<string>06E3A89C-5DF9-468B-8682-A233B381ABFA</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -2500,7 +2500,7 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>EB1ED46F-71D7-49D1-B7BB-DA1ECF2F665F</string>
+				<string>06E3A89C-5DF9-468B-8682-A233B381ABFA</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -2604,7 +2604,7 @@
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>EB1ED46F-71D7-49D1-B7BB-DA1ECF2F665F</string>
+				<string>06E3A89C-5DF9-468B-8682-A233B381ABFA</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -6413,6 +6413,33 @@ main($query,"TRACK","");
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>&lt;?php
+require './src/action.php';
+$query = serialize(array("", "", "", "", "", "", "", "lyrics" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));
+main($query,"TRACK","");
+?&gt;</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>1</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>06E3A89C-5DF9-468B-8682-A233B381ABFA</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
@@ -6430,33 +6457,6 @@ main($query,"TRACK","");
 			<string>AC236315-8CDE-41E3-A9BA-BB59D292FE14</string>
 			<key>version</key>
 			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>concurrently</key>
-				<false/>
-				<key>escaping</key>
-				<integer>38</integer>
-				<key>script</key>
-				<string>&lt;?php
-require './src/action.php';
-$query = serialize(array("", "", "", "", "", "", "", "lyrics" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));
-main($query,"TRACK","");
-?&gt;</string>
-				<key>scriptargtype</key>
-				<integer>0</integer>
-				<key>scriptfile</key>
-				<string></string>
-				<key>type</key>
-				<integer>1</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>EB1ED46F-71D7-49D1-B7BB-DA1ECF2F665F</string>
-			<key>version</key>
-			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -6556,7 +6556,7 @@ $query = serialize(array("", "", "", "", "", "", "", "current_artist_radio" /* o
 main($query,"TRACK","");
 ?&gt;</string>
 				<key>scriptargtype</key>
-				<integer>0</integer>
+				<integer>1</integer>
 				<key>scriptfile</key>
 				<string></string>
 				<key>type</key>
@@ -12027,6 +12027,13 @@ https://github.com/vdesabou/alfred-spotify-mini-player</string>
 			<key>ypos</key>
 			<integer>800</integer>
 		</dict>
+		<key>06E3A89C-5DF9-468B-8682-A233B381ABFA</key>
+		<dict>
+			<key>xpos</key>
+			<integer>820</integer>
+			<key>ypos</key>
+			<integer>5020</integer>
+		</dict>
 		<key>0749257A-D830-483B-9EF5-580E33C10BB8</key>
 		<dict>
 			<key>xpos</key>
@@ -14287,13 +14294,6 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<integer>1205</integer>
 			<key>ypos</key>
 			<integer>6805</integer>
-		</dict>
-		<key>EB1ED46F-71D7-49D1-B7BB-DA1ECF2F665F</key>
-		<dict>
-			<key>xpos</key>
-			<integer>840</integer>
-			<key>ypos</key>
-			<integer>5060</integer>
 		</dict>
 		<key>EBD3FE58-A201-4C3D-A2DD-7CD9A6D50A2E</key>
 		<dict>
