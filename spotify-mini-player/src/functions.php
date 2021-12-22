@@ -4478,7 +4478,7 @@ function getRandomAlbum($w)
                 PDO::ATTR_PERSISTENT => true,
             ));
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $getTracks = 'select album_uri,album_name,artist_name from tracks where yourmusic=1 order by random() limit 1';
+        $getTracks = 'select album_uri,album_name,artist_name from tracks where yourmusic_album=1 order by random() limit 1';
         $stmt = $db->prepare($getTracks);
         $stmt->execute();
         $track = $stmt->fetch();
