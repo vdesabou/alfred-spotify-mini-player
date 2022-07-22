@@ -118,7 +118,7 @@ GEM
       faraday (> 0.8, < 2.0)
     thread_safe (0.3.6)
     titlecase (0.1.1)
-    tzinfo (1.2.3)
+    tzinfo (1.2.10)
       thread_safe (~> 0.1)
 
 PLATFORMS
