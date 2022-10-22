@@ -3,6 +3,7 @@ spotify-mini-player/packal/com.vdesabou.spotify.mini.player.pub
 spotify-mini-player/composer.lock
 spotify-mini-player/composer.phar
 spotify-mini-player/.idea
+spotify-mini-player/prefs.plist
 *.sublime-workspace
 .sass-cache
 *.sublime-project

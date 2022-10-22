@@ -11,16 +11,7 @@ noindex: false
 
 {% include toc.html %}
 
-Setting up the workflow is easy, you just need to follow these steps:-
-
-## Install PHP (MacOS Monterey and above)
-
-PHP is no more installed by default starting from MacOS Monterey, so you need to install `php` from [brew](https://brew.sh) before using the workflow:
-
-* Install brew: `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
-
-* Install PHP: `brew install php`
-
+If you're still using Alfred 4, then click [here](https://alfred-spotify-mini-player.com/setup-pre-alfred5) for how to setup.
 
 ## Download and install the workflow
 
@@ -28,29 +19,9 @@ PHP is no more installed by default starting from MacOS Monterey, so you need to
 
 * Open `spotifyminiplayer.alfredworkflow` by double-clicking it or dragging it into Alfred.
 
-## Setup an hotkey (optional)
-
-It is highly recommended to use hotkeys to invoke the workflow rather than the [default](https://alfred-spotify-mini-player.com/articles/customization/) keyword `spot_mini`.
-
-To setup main hotkey, see example below (click to see in fullscreen):-
+* Follow setup process directly in Alfred !
 
 <figure>
-	<a href="{{ site.url }}/images/setup_hotkeys1.gif"><img src="{{ site.url }}/images/setup_hotkeys1.gif"></a>
-	<figcaption>Setup main hotkey.</figcaption>
+	<a href="{{ site.url }}/images/setup15.jpg"><img src="{{ site.url }}/images/setup15.jpg"></a>
+	<figcaption>Alfred Setup.</figcaption>
 </figure>
-
-For more hotkeys, check this [page](https://alfred-spotify-mini-player.com/articles/hotkeys/)
-
-## Follow setup process
-
-   * Invoke the workflow by using the keyword `spot_mini`, or better, the hotkey you set up in previous step, and type enter:
-
-<figure>
-	<a href="{{ site.url }}/images/setup13.jpg"><img src="{{ site.url }}/images/setup13.jpg"></a>
-	<figcaption>Application setup.</figcaption>
-</figure>
-
-  * Your browser (except Safari) will open and you will be guided through the configuration.
-
-  * Enjoy 🍻 !
-
