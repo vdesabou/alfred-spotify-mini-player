@@ -14813,10 +14813,6 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 		<string>1</string>
 		<key>__oauth_access_token</key>
 		<string></string>
-		<key>__oauth_client_id</key>
-		<string></string>
-		<key>__oauth_client_secret</key>
-		<string></string>
 		<key>__oauth_redirect_uri</key>
 		<string>http://localhost:15298/callback.php</string>
 		<key>__oauth_refresh_token</key>
