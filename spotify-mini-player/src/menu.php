@@ -614,7 +614,7 @@ function mainSearch($w, $query, $db, $update_in_progress) {
                         /* track_artwork_path */, ''
                         /* artist_artwork_path */, $track[2] /* album_artwork_path */, ''
                         /* playlist_name */, '', /* playlist_artwork_path */
-                        )), getenv('emoji_album').' ' . $track[0], getenv('emoji_quickmode').'Play album', $track[2], 'yes', null, '');
+                        )), getenv('emoji_album') . ' ' . $track[0] . ' (' . $nb_album_tracks . ' tracks)' . ' by ' . $track[4], getenv('emoji_quickmode').'Play album', $track[2], 'yes', null, '');
                     }
                     else {
                         $w->result(null, '', getenv('emoji_album').' ' . $track[0]. ' (' . $nb_album_tracks . ' tracks)'. ' by '.$track[4], array('Browse this album', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), $track[2], 'no', null, 'Album▹' . $track[1] . '∙' . $track[0] . '▹');
