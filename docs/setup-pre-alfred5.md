@@ -1,6 +1,6 @@
 ---
 layout: article
-permalink: /setup/
+permalink: /setup-pre-alfred5/
 title: "Setup"
 date: 2015-01-01
 modified: 2021-10-25
