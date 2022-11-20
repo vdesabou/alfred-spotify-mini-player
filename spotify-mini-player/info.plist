@@ -15230,9 +15230,9 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 				<string></string>
 			</dict>
 			<key>description</key>
-			<string></string>
+			<string>Alfred playlist</string>
 			<key>label</key>
-			<string>Menu display alfred playlist</string>
+			<string>Display in Menu</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
@@ -15249,9 +15249,9 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 				<string></string>
 			</dict>
 			<key>description</key>
-			<string></string>
+			<string>Browse by album</string>
 			<key>label</key>
-			<string>Menu display browse by album</string>
+			<string>Display in Menu</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
@@ -15268,9 +15268,9 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 				<string></string>
 			</dict>
 			<key>description</key>
-			<string></string>
+			<string>Browse by artist</string>
 			<key>label</key>
-			<string>Menu display browse by artist</string>
+			<string>Display in Menu</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
@@ -15287,9 +15287,9 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 				<string></string>
 			</dict>
 			<key>description</key>
-			<string></string>
+			<string>Browse by playlist</string>
 			<key>label</key>
-			<string>Menu display browse by playlist</string>
+			<string>Display in Menu</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
@@ -15306,9 +15306,9 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 				<string></string>
 			</dict>
 			<key>description</key>
-			<string></string>
+			<string>Browse by show</string>
 			<key>label</key>
-			<string>Menu display browse by show</string>
+			<string>Display in Menu</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
@@ -15325,9 +15325,9 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 				<string></string>
 			</dict>
 			<key>description</key>
-			<string></string>
+			<string>Browse categories</string>
 			<key>label</key>
-			<string>Menu display browse categories</string>
+			<string>Display in Menu</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
@@ -15344,9 +15344,9 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 				<string></string>
 			</dict>
 			<key>description</key>
-			<string></string>
+			<string>Browse your music</string>
 			<key>label</key>
-			<string>Menu display browse your music</string>
+			<string>Display in Menu</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
@@ -15363,9 +15363,9 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 				<string></string>
 			</dict>
 			<key>description</key>
-			<string></string>
+			<string>Current track</string>
 			<key>label</key>
-			<string>Menu display current track</string>
+			<string>Display in Menu</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
@@ -15382,9 +15382,9 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 				<string></string>
 			</dict>
 			<key>description</key>
-			<string></string>
+			<string>Lookup current artist online</string>
 			<key>label</key>
-			<string>Menu display lookup current artist online</string>
+			<string>Display in Menu</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
@@ -15401,9 +15401,9 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 				<string></string>
 			</dict>
 			<key>description</key>
-			<string></string>
+			<string>Play queue</string>
 			<key>label</key>
-			<string>Menu display play queue</string>
+			<string>Display in Menu</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
@@ -15420,9 +15420,9 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 				<string></string>
 			</dict>
 			<key>description</key>
-			<string></string>
+			<string>Search online</string>
 			<key>label</key>
-			<string>Menu display search online</string>
+			<string>Display in Menu</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
@@ -15439,9 +15439,9 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 				<string></string>
 			</dict>
 			<key>description</key>
-			<string></string>
+			<string>Spotify connect</string>
 			<key>label</key>
-			<string>Menu display spotify connect</string>
+			<string>Display in Menu</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
@@ -15458,9 +15458,9 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 				<string></string>
 			</dict>
 			<key>description</key>
-			<string></string>
+			<string>Your recent tracks</string>
 			<key>label</key>
-			<string>Menu display your recent tracks</string>
+			<string>Display in Menu</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
@@ -15477,9 +15477,9 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 				<string></string>
 			</dict>
 			<key>description</key>
-			<string></string>
+			<string>Your tops</string>
 			<key>label</key>
-			<string>Menu display your tops</string>
+			<string>Display in Menu</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
