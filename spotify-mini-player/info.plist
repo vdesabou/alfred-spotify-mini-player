@@ -12129,7 +12129,7 @@ PHP is no more installed by default starting from MacOS Monterey, so you need to
 
 ### ⚡ Setup an hotkey (optional)
 
-It is highly recommended to use hotkeys to invoke the workflow rather than the [default](https://alfred-spotify-mini-player.com/articles/customization/) keyword `spot_mini`.
+It is highly recommended to use hotkeys to invoke the workflow rather than the default keyword `spot_mini`.
 
 To setup main hotkey, see example below (click to see in fullscreen):
 
@@ -15105,12 +15105,12 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 				<key>required</key>
 				<false/>
 				<key>text</key>
-				<string></string>
+				<string>Select to go to previous track</string>
 			</dict>
 			<key>description</key>
-			<string></string>
+			<string>Go to previous track or back to beginning of the track</string>
 			<key>label</key>
-			<string>Previous track for real</string>
+			<string>Previous track behaviour</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
@@ -15489,27 +15489,6 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>config</key>
 			<dict>
 				<key>default</key>
-				<string>🔈🎙 {episode_name} in show {show_name}</string>
-				<key>required</key>
-				<false/>
-				<key>trim</key>
-				<true/>
-				<key>verticalsize</key>
-				<integer>3</integer>
-			</dict>
-			<key>description</key>
-			<string></string>
-			<key>label</key>
-			<string>Now Playing episode text</string>
-			<key>type</key>
-			<string>textarea</string>
-			<key>variable</key>
-			<string>now_playing_episode_text</string>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>default</key>
 				<string>Now Playing ({duration})</string>
 				<key>required</key>
 				<false/>
@@ -15519,7 +15498,11 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 				<integer>3</integer>
 			</dict>
 			<key>description</key>
-			<string></string>
+			<string>You can use those variables:
+
+{episode_name} for episode name
+{show_name} for show name
+{duration} for duration</string>
 			<key>label</key>
 			<string>Now Playing episode title</string>
 			<key>type</key>
@@ -15531,7 +15514,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>config</key>
 			<dict>
 				<key>default</key>
-				<string>🔈 {liked}{track_name} by {artist_name} in album {album_name}</string>
+				<string>🔈🎙 {episode_name} in show {show_name}</string>
 				<key>required</key>
 				<false/>
 				<key>trim</key>
@@ -15540,13 +15523,13 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 				<integer>3</integer>
 			</dict>
 			<key>description</key>
-			<string></string>
+			<string>Variable now_playing_episode_text that can be used in Now Playing episode title</string>
 			<key>label</key>
-			<string>Now Playing track text</string>
+			<string>Now Playing episode text</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
-			<string>now_playing_track_text</string>
+			<string>now_playing_episode_text</string>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -15561,13 +15544,41 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 				<integer>3</integer>
 			</dict>
 			<key>description</key>
-			<string></string>
+			<string>You can use those variables:
+
+{track_name} for track name
+{album_name} for album name
+{artist_name} for artist name
+{duration} for duration
+{popularity} for popularity ⭐ (emoji can be customized, see below)
+{liked} ♥ if track is liked, ♡ otherwise (emoji can be customized, see below)</string>
 			<key>label</key>
 			<string>Now Playing track title</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
 			<string>now_playing_track_title</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>🔈 {liked}{track_name} by {artist_name} in album {album_name}</string>
+				<key>required</key>
+				<false/>
+				<key>trim</key>
+				<true/>
+				<key>verticalsize</key>
+				<integer>3</integer>
+			</dict>
+			<key>description</key>
+			<string>Variable now_playing_track_text that can be used in Now Playing track title</string>
+			<key>label</key>
+			<string>Now Playing track text</string>
+			<key>type</key>
+			<string>textarea</string>
+			<key>variable</key>
+			<string>now_playing_track_text</string>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -15666,7 +15677,11 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 				<integer>3</integer>
 			</dict>
 			<key>description</key>
-			<string></string>
+			<string>You can use those variables:
+
+{track_name} for track name
+{artist_name} for artist name
+{url} for spotify url</string>
 			<key>label</key>
 			<string>Clipboard current track text</string>
 			<key>type</key>
@@ -17113,7 +17128,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 				<string></string>
 			</dict>
 			<key>description</key>
-			<string></string>
+			<string>the workflow is collecting completely anonymous metrics to better understand how users are using it. Graphs are available on the website.</string>
 			<key>label</key>
 			<string>Disable anonymous metrics</string>
 			<key>type</key>

@@ -30,7 +30,7 @@ PHP is no more installed by default starting from MacOS Monterey, so you need to
 
 ## Setup an hotkey (optional)
 
-It is highly recommended to use hotkeys to invoke the workflow rather than the [default](https://alfred-spotify-mini-player.com/articles/customization/) keyword `spot_mini`.
+It is highly recommended to use hotkeys to invoke the workflow rather than the default keyword `spot_mini`.
 
 To setup main hotkey, see example below (click to see in fullscreen):-
 

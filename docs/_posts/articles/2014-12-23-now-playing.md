@@ -52,9 +52,4 @@ You get in the notification:-
 </figure>
 
 
-* Also, as explained in [Customization]( {{ site.url }}/articles/customization), you can reduce the number of notifications, by modifying variable `reduce_notifications`:-
-
-<figure>
-	<img src="{{ site.url }}/images/customization8.jpg">
-	<figcaption>Reduce notifications. 1 for reducing, 0 otherwise.</figcaption>
-</figure>
+* Also, you can reduce the number of notifications, by modifying config `Reduce notifications`:
