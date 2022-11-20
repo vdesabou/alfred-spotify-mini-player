@@ -1586,35 +1586,7 @@ function secondDelimiterSettings($w, $query, $db, $update_in_progress) {
     $setting_kind = $words[1];
     $the_query = $words[2];
 
-    if ($setting_kind == 'MaxResults') {
-        if (countCharacters($the_query) == 0) {
-            $w->result(null, '', 'Enter the Max Results number (must be greater than 0):', array('Recommendation is between 10 to 100', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/settings.png', 'no', null, '');
-        }
-        else {
-            // max results has been set
-            if (is_numeric($the_query) == true && $the_query > 0) {
-                $w->result(null, serialize(array(''
-                /*track_uri*/, ''
-                /* album_uri */, ''
-                /* artist_uri */, ''
-                /* playlist_uri */, ''
-                /* spotify_command */, ''
-                /* query */, 'MAX_RESULTS▹' . $the_query /* other_settings*/, ''
-                /* other_action */, ''
-                /* artist_name */, ''
-                /* track_name */, ''
-                /* album_name */, ''
-                /* track_artwork_path */, ''
-                /* artist_artwork_path */, ''
-                /* album_artwork_path */, ''
-                /* playlist_name */, '', /* playlist_artwork_path */
-                )), 'Max Results will be set to <' . $the_query . '>', 'Type enter to validate the Max Results', './images/settings.png', 'yes', null, '');
-            }
-            else {
-                $w->result(null, '', 'The Max Results value entered is not valid', array('Please fix it', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/warning.png', 'no', null, '');
-            }
-        }
-    } elseif ($setting_kind == 'SetVolume') {
+    if ($setting_kind == 'SetVolume') {
         if (countCharacters($the_query) == 0) {
             $w->result(null, '', 'Enter the Volume number (must be between 0 and 100 %):', array('', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/volume_up.png', 'no', null, '');
         }
@@ -1727,66 +1699,6 @@ function secondDelimiterSettings($w, $query, $db, $update_in_progress) {
         )), 'Add a new user', 'Type enter to validate', './images/artists.png', 'yes', null, '');
 
     }
-    elseif ($setting_kind == 'RadioTracks') {
-        if (countCharacters($the_query) == 0) {
-            $w->result(null, '', 'Enter the number of tracks to get when creating a radio Playlist:', array('Must be between 1 and 100', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/settings.png', 'no', null, '');
-        }
-        else {
-            // number radio tracks has been set
-            if (is_numeric($the_query) == true && $the_query > 0 && $the_query <= 100) {
-                $w->result(null, serialize(array(''
-                /*track_uri*/, ''
-                /* album_uri */, ''
-                /* artist_uri */, ''
-                /* playlist_uri */, ''
-                /* spotify_command */, ''
-                /* query */, 'RADIO_TRACKS▹' . $the_query /* other_settings*/, ''
-                /* other_action */, ''
-                /* artist_name */, ''
-                /* track_name */, ''
-                /* album_name */, ''
-                /* track_artwork_path */, ''
-                /* artist_artwork_path */, ''
-                /* album_artwork_path */, ''
-                /* playlist_name */, ''
-                /* playlist_artwork_path */, '', /* $alfred_playlist_name */
-                )), 'Number of Radio Tracks will be set to <' . $the_query . '>', 'Type enter to validate the Radio Tracks number', './images/settings.png', 'yes', null, '');
-            }
-            else {
-                $w->result(null, '', 'The number of tracks value entered is not valid', array('Please fix it: it must be a number between 1 and 100', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/warning.png', 'no', null, '');
-            }
-        }
-    }
-    elseif ($setting_kind == 'VolumePercentage') {
-        if (countCharacters($the_query) == 0) {
-            $w->result(null, '', 'Enter the percentage of volume:', array('Must be between 1 and 50', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/settings.png', 'no', null, '');
-        }
-        else {
-            // volume percent
-            if (is_numeric($the_query) == true && $the_query > 0 && $the_query <= 50) {
-                $w->result(null, serialize(array(''
-                /*track_uri*/, ''
-                /* album_uri */, ''
-                /* artist_uri */, ''
-                /* playlist_uri */, ''
-                /* spotify_command */, ''
-                /* query */, 'VOLUME_PERCENT▹' . $the_query /* other_settings*/, ''
-                /* other_action */, ''
-                /* artist_name */, ''
-                /* track_name */, ''
-                /* album_name */, ''
-                /* track_artwork_path */, ''
-                /* artist_artwork_path */, ''
-                /* album_artwork_path */, ''
-                /* playlist_name */, ''
-                /* playlist_artwork_path */, '', /* $alfred_playlist_name */
-                )), 'Volume Percentage will be set to <' . $the_query . '>', 'Type enter to validate the Volume Percentage number', './images/settings.png', 'yes', null, '');
-            }
-            else {
-                $w->result(null, '', 'The number of volume percentage entered is not valid', array('Please fix it: it must be a number between 1 and 50', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/warning.png', 'no', null, '');
-            }
-        }
-    }
     elseif ($setting_kind == 'Output') {
         if ($output_application != 'APPLESCRIPT') {
             $w->result(null, serialize(array(''
@@ -1854,60 +1766,6 @@ function secondDelimiterSettings($w, $query, $db, $update_in_progress) {
             $w->result(null, 'help', 'Only premium users can use Spotify Connect', array('This is a Spotify limitation', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/warning.png', 'no', null, '');
         }
 
-    }
-    elseif ($setting_kind == 'MopidyServer') {
-        if (countCharacters($the_query) == 0) {
-            $w->result(null, '', 'Enter the server name or IP where Mopidy server is running:', array('Example: 192.168.0.5 or myserver.mydomain.mydomainextension', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/settings.png', 'no', null, '');
-        }
-        else {
-            $w->result(null, serialize(array(''
-            /*track_uri*/, ''
-            /* album_uri */, ''
-            /* artist_uri */, ''
-            /* playlist_uri */, ''
-            /* spotify_command */, ''
-            /* query */, 'MOPIDY_SERVER▹' . $the_query /* other_settings*/, ''
-            /* other_action */, ''
-            /* artist_name */, ''
-            /* track_name */, ''
-            /* album_name */, ''
-            /* track_artwork_path */, ''
-            /* artist_artwork_path */, ''
-            /* album_artwork_path */, ''
-            /* playlist_name */, ''
-            /* playlist_artwork_path */, '', /* $alfred_playlist_name */
-            )), 'Mopidy server will be set to <' . $the_query . '>', 'Type enter to validate the Mopidy server name or IP', './images/settings.png', 'yes', null, '');
-        }
-    }
-    elseif ($setting_kind == 'MopidyPort') {
-        if (countCharacters($the_query) == 0) {
-            $w->result(null, '', 'Enter the TCP port number where Mopidy server is running:', array('Must be a numeric value', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/settings.png', 'no', null, '');
-        }
-        else {
-            // tcp port has been set
-            if (is_numeric($the_query) == true) {
-                $w->result(null, serialize(array(''
-                /*track_uri*/, ''
-                /* album_uri */, ''
-                /* artist_uri */, ''
-                /* playlist_uri */, ''
-                /* spotify_command */, ''
-                /* query */, 'MOPIDY_PORT▹' . $the_query /* other_settings*/, ''
-                /* other_action */, ''
-                /* artist_name */, ''
-                /* track_name */, ''
-                /* album_name */, ''
-                /* track_artwork_path */, ''
-                /* artist_artwork_path */, ''
-                /* album_artwork_path */, ''
-                /* playlist_name */, ''
-                /* playlist_artwork_path */, '', /* $alfred_playlist_name */
-                )), 'Mopidy TCP port will be set to <' . $the_query . '>', 'Type enter to validate the Mopidy TCP port number', './images/settings.png', 'yes', null, '');
-            }
-            else {
-                $w->result(null, '', 'The TCP port value entered is not valid', array('Please fix it: it must be a numeric value', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/warning.png', 'no', null, '');
-            }
-        }
     }
 }
 

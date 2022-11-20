@@ -2217,58 +2217,6 @@ function getSpotifyWebAPI($w)
     return $api;
 }
 
-/**
- * invokeMopidyMethod function.
- *
- * @param mixed $w
- * @param mixed $method
- * @param mixed $params
- */
-function invokeMopidyMethod($w, $method, $params, $displayError = true)
-{
-
-
-
-
-    $mopidy_server = getSetting($w,'mopidy_server');
-    $mopidy_port = getSetting($w,'mopidy_port');
-
-    exec("curl -s -X POST -H Content-Type:application/json -d '{
-  \"method\": \"" .$method.'",
-  "jsonrpc": "2.0",
-  "params": ' .json_encode($params, JSON_HEX_APOS).",
-  \"id\": 1
-}' http://" .$mopidy_server.':'.$mopidy_port.'/mopidy/rpc', $retArr, $retVal);
-
-    if ($retVal != 0) {
-        if ($displayError) {
-            displayNotificationWithArtwork($w, 'Mopidy Exception: returned error '.$retVal, './images/warning.png', 'Error!');
-            exec("osascript -e 'tell application id \"".getAlfredName()."\" to search \"".getenv('c_spot_mini_debug').' Mopidy Exception: returned error '.$retVal."\"'");
-        }
-
-        return false;
-    }
-
-    if (isset($retArr[0])) {
-        $result = json_decode($retArr[0]);
-        if (isset($result->result)) {
-            return $result->result;
-        }
-        if (isset($result->error)) {
-            logMsg($w,'Error(invokeMopidyMethod): '.$method.' params: '.json_encode($params, JSON_HEX_APOS).' exception:'.print_r($result));
-
-            if ($displayError) {
-                displayNotificationWithArtwork($w, 'Mopidy Exception: '.htmlspecialchars($result->error->message), './images/warning.png', 'Error!');
-                exec("osascript -e 'tell application id \"".getAlfredName()."\" to search \"".getenv('c_spot_mini_debug').' Mopidy Exception: '.htmlspecialchars($result->error->message)."\"'");
-            }
-
-            return false;
-        }
-    } else {
-        logMsg($w,'Error(invokeMopidyMethod): empty response from Mopidy method: '.$method.' params: '.json_encode($params, JSON_HEX_APOS));
-        displayNotificationWithArtwork($w, 'ERROR: empty response from Mopidy method: '.$method.' params: '.json_encode($params, JSON_HEX_APOS), './images/warning.png');
-    }
-}
 
 /**
  * switchThemeColor function.
@@ -2675,11 +2623,7 @@ function createDebugFile($w)
     $output = $output."\n";
     $output = $output.'automatically_open_spotify_app:'.getenv('automatically_open_spotify_app');
     $output = $output."\n";
-    if ($output_application != 'MOPIDY') {
-        $output = $output.'Spotify desktop version:'.exec("osascript -e 'tell application \"Spotify\" to version'");
-    } else {
-        $output = $output.'Mopidy version:'.invokeMopidyMethod($w, 'core.get_version', array(), false);
-    }
+    $output = $output.'Spotify desktop version:'.exec("osascript -e 'tell application \"Spotify\" to version'");
     $output = $output."\n";
     if (isUserPremiumSubscriber($w)) {
         $output = $output . 'PREMIUM';
@@ -2776,51 +2720,6 @@ function decryptString($w, $encrypted)
 }
 
 /**
- * getCurrentTrackInfoWithMopidy function.
- *
- * @param mixed $w
- * @param bool  $displayError (default: true)
- */
-function getCurrentTrackInfoWithMopidy($w, $displayError = true)
-{
-    $tl_track = invokeMopidyMethod($w, 'core.playback.get_current_track', array(), $displayError);
-    if ($tl_track == false) {
-        return 'mopidy_stopped';
-    }
-    $state = invokeMopidyMethod($w, 'core.playback.get_state', array(), $displayError);
-
-    $track_name = '';
-    $artist_name = '';
-    $album_name = '';
-    $track_uri = '';
-    $length = 0;
-
-    if (isset($tl_track->name)) {
-        $track_name = $tl_track->name;
-    }
-
-    if (isset($tl_track->artists) &&
-        isset($tl_track->artists[0]) &&
-        isset($tl_track->artists[0])) {
-        $artist_name = $tl_track->artists[0]->name;
-    }
-
-    if (isset($tl_track->album) && isset($tl_track->album->name)) {
-        $album_name = $tl_track->album->name;
-    }
-
-    if (isset($tl_track->uri)) {
-        $track_uri = $tl_track->uri;
-    }
-
-    if (isset($tl_track->length)) {
-        $length = $tl_track->length;
-    }
-
-    return ''.$track_name.'▹'.$artist_name.'▹'.$album_name.'▹'.$state.'▹'.$track_uri.'▹'.$length.'▹'.'0';
-}
-
-/**
  * getCurrentTrackInfoWithSpotifyConnect function.
  *
  * @param mixed $w
@@ -2913,60 +2812,6 @@ function getCurrentTrackInfoWithMopidy($w, $displayError = true)
     }
  }
 
-/**
- * playUriWithMopidyWithoutClearing function.
- *
- * @param mixed $w
- * @param mixed $uri
- */
-function playUriWithMopidyWithoutClearing($w, $uri)
-{
-    $tl_tracks = invokeMopidyMethod($w, 'core.tracklist.add', array('uris' => array($uri), 'at_position' => 0));
-    if (isset($tl_tracks[0])) {
-        invokeMopidyMethod($w, 'core.playback.play', array('tl_track' => $tl_tracks[0]));
-    } else {
-        displayNotificationWithArtwork($w, 'Cannot play track with uri '.$uri, './images/warning.png', 'Error!');
-    }
-}
-
-/**
- * playUriWithMopidy function.
- *
- * @param mixed $w
- * @param mixed $uri
- */
-function playUriWithMopidy($w, $uri)
-{
-    invokeMopidyMethod($w, 'core.tracklist.clear', array());
-    playUriWithMopidyWithoutClearing($w, $uri);
-}
-
-/**
- * playTrackInContextWithMopidy function.
- *
- * @param mixed $w
- * @param mixed $track_uri
- * @param mixed $context_uri
- */
-function playTrackInContextWithMopidy($w, $track_uri, $context_uri)
-{
-    invokeMopidyMethod($w, 'core.tracklist.clear', array());
-    invokeMopidyMethod($w, 'core.tracklist.add', array('uri' => $context_uri, 'at_position' => 0));
-    $tl_tracks = invokeMopidyMethod($w, 'core.tracklist.get_tl_tracks', array());
-
-    // loop to find track_uri
-    $i = 0;
-    foreach ($tl_tracks as $tl_track) {
-        if ($tl_track->track->uri == $track_uri) {
-            // found the track move it to position 0
-            invokeMopidyMethod($w, 'core.tracklist.move', array('start' => $i, 'end' => $i, 'to_position' => 0));
-        }
-        ++$i;
-    }
-
-    $tl_tracks = invokeMopidyMethod($w, 'core.tracklist.get_tl_tracks', array());
-    invokeMopidyMethod($w, 'core.playback.play', array('tl_track' => $tl_tracks[0]));
-}
 
 /**
  * setThePlaylistPrivacy function.
@@ -8254,8 +8099,6 @@ function getSetting($w, $setting_name)
         updateSetting($w, 'is_public_playlists', $settings->is_public_playlists);
         updateSetting($w, 'quick_mode', $settings->quick_mode);
         updateSetting($w, 'output_application', $settings->output_application);
-        updateSetting($w, 'mopidy_server', $settings->mopidy_server);
-        updateSetting($w, 'mopidy_port', $settings->mopidy_port);
         updateSetting($w, 'volume_percent', $settings->volume_percent);
         updateSetting($w, 'is_display_rating', $settings->is_display_rating);
         updateSetting($w, 'is_autoplay_playlist', $settings->is_autoplay_playlist);
@@ -8330,8 +8173,6 @@ function resetSettings($w)
     updateSetting($w, 'is_public_playlists', '0');
     updateSetting($w, 'quick_mode', '0');
     updateSetting($w, 'output_application', 'APPLESCRIPT');
-    updateSetting($w, 'mopidy_server', '127.0.0.1');
-    updateSetting($w, 'mopidy_port', '6680');
     updateSetting($w, 'volume_percent', '20');
     updateSetting($w, 'is_display_rating', '1');
     updateSetting($w, 'is_autoplay_playlist', '1');

@@ -446,16 +446,7 @@ function main($query, $type, $add_to_option)
 
     } elseif ($other_settings != '') {
         $setting = explode('▹', $other_settings);
-        if ($setting[0] == 'MAX_RESULTS') {
-            $ret = updateSetting($w, 'max_results', $setting[1]);
-            if ($ret == true) {
-                displayNotificationWithArtwork($w, 'Max results set to '.$setting[1], './images/settings.png', 'Settings');
-            } else {
-                displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
-            }
-
-            return;
-        } elseif ($setting[0] == 'SET_VOLUME') {
+        if ($setting[0] == 'SET_VOLUME') {
             $volume = $setting[1];
             setVolume($w, $volume);
 
@@ -478,42 +469,6 @@ function main($query, $type, $add_to_option)
                     exec('launchctl start com.vdesabou.spotify.mini.player');
                     displayNotificationWithArtwork($w, 'Refresh of library every '.$setting[1].' minutes', './images/settings.png', 'Settings');
                 }
-            } else {
-                displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
-            }
-
-            return;
-        } elseif ($setting[0] == 'RADIO_TRACKS') {
-            $ret = updateSetting($w, 'radio_number_tracks', $setting[1]);
-            if ($ret == true) {
-                displayNotificationWithArtwork($w, 'Radio track number set to '.$setting[1], './images/settings.png', 'Settings');
-            } else {
-                displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
-            }
-
-            return;
-        } elseif ($setting[0] == 'VOLUME_PERCENT') {
-            $ret = updateSetting($w, 'volume_percent', $setting[1]);
-            if ($ret == true) {
-                displayNotificationWithArtwork($w, 'Volume Percentage set to '.$setting[1], './images/settings.png', 'Settings');
-            } else {
-                displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
-            }
-
-            return;
-        } elseif ($setting[0] == 'MOPIDY_SERVER') {
-            $ret = updateSetting($w, 'mopidy_server', $setting[1]);
-            if ($ret == true) {
-                displayNotificationWithArtwork($w, 'Mopidy server set to '.$setting[1], './images/settings.png', 'Settings');
-            } else {
-                displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
-            }
-
-            return;
-        } elseif ($setting[0] == 'MOPIDY_PORT') {
-            $ret = updateSetting($w, 'mopidy_port', $setting[1]);
-            if ($ret == true) {
-                displayNotificationWithArtwork($w, 'Mopidy TCP port set to '.$setting[1], './images/settings.png', 'Settings');
             } else {
                 displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
             }
@@ -782,25 +737,7 @@ function main($query, $type, $add_to_option)
             return;
         }
     } elseif ($other_action != '') {
-        if ($other_action == 'disable_all_playlist') {
-            $ret = updateSetting($w, 'all_playlists', 0);
-            if ($ret == true) {
-                displayNotificationWithArtwork($w, 'Search scope set to Your Music only', './images/search_scope_yourmusic_only.png', 'Settings');
-            } else {
-                displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
-            }
-
-            return;
-        } elseif ($other_action == 'enable_all_playlist') {
-            $ret = updateSetting($w, 'all_playlists', 1);
-            if ($ret == true) {
-                displayNotificationWithArtwork($w, 'Search scope set to your complete library', './images/search.png', 'Settings');
-            } else {
-                displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
-            }
-
-            return;
-        } elseif ($other_action == 'enable_now_playing_notifications') {
+        if ($other_action == 'enable_now_playing_notifications') {
             $ret = updateSetting($w, 'now_playing_notifications', 1);
             exec('open "'.'./App/'.$theme_color.'/Spotify Mini Player.app'.'"');
             if ($ret == true) {
@@ -815,24 +752,6 @@ function main($query, $type, $add_to_option)
             $ret = updateSetting($w, 'now_playing_notifications', 0);
             if ($ret == true) {
                 displayNotificationWithArtwork($w, 'Now Playing notifications are now disabled', './images/disable_now_playing.png', 'Settings');
-            } else {
-                displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
-            }
-
-            return;
-        } elseif ($other_action == 'enable_quick_mode') {
-            $ret = updateSetting($w, 'quick_mode', 1);
-            if ($ret == true) {
-                displayNotificationWithArtwork($w, 'Quick Mode is now enabled', './images/enable_quick_mode.png', 'Settings');
-            } else {
-                displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
-            }
-
-            return;
-        } elseif ($other_action == 'disable_quick_mode') {
-            $ret = updateSetting($w, 'quick_mode', 0);
-            if ($ret == true) {
-                displayNotificationWithArtwork($w, 'Quick Mode is now disabled', './images/disable_quick_mode.png', 'Settings');
             } else {
                 displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
             }
@@ -898,64 +817,10 @@ function main($query, $type, $add_to_option)
             }
 
             return;
-        } elseif ($other_action == 'disable_display_rating') {
-            $ret = updateSetting($w, 'is_display_rating', 0);
-            if ($ret == true) {
-                displayNotificationWithArtwork($w, 'Track Rating is now disabled', './images/disable_display_rating.png', 'Settings');
-            } else {
-                displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
-            }
-
-            return;
         } elseif ($other_action == 'enable_autoplay') {
             $ret = updateSetting($w, 'is_autoplay_playlist', 1);
             if ($ret == true) {
                 displayNotificationWithArtwork($w, 'Playlist Autoplay is now enabled', './images/enable_autoplay.png', 'Settings');
-            } else {
-                displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
-            }
-
-            return;
-        } elseif ($other_action == 'disable_autoplay') {
-            $ret = updateSetting($w, 'is_autoplay_playlist', 0);
-            if ($ret == true) {
-                displayNotificationWithArtwork($w, 'Playlist Autoplay is now disabled', './images/disable_autoplay.png', 'Settings');
-            } else {
-                displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
-            }
-
-            return;
-        } elseif ($other_action == 'enable_use_growl') {
-            $ret = updateSetting($w, 'use_growl', 1);
-            if ($ret == true) {
-                displayNotificationWithArtwork($w, 'Growl is now enabled', './images/enable_use_growl.png', 'Settings');
-            } else {
-                displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
-            }
-
-            return;
-        } elseif ($other_action == 'disable_use_growl') {
-            $ret = updateSetting($w, 'use_growl', 0);
-            if ($ret == true) {
-                displayNotificationWithArtwork($w, 'Growl is now disabled', './images/disable_use_growl.png', 'Settings');
-            } else {
-                displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
-            }
-
-            return;
-        }elseif ($other_action == 'enable_always_display_lyrics_in_browser') {
-            $ret = updateSetting($w, 'always_display_lyrics_in_browser', 1);
-            if ($ret == true) {
-                displayNotificationWithArtwork($w, 'Lyrics will be displayed in browser', './images/lyrics.png', 'Settings');
-            } else {
-                displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
-            }
-
-            return;
-        } elseif ($other_action == 'disable_always_display_lyrics_in_browser') {
-            $ret = updateSetting($w, 'always_display_lyrics_in_browser', 0);
-            if ($ret == true) {
-                displayNotificationWithArtwork($w, 'Lyrics will be displayed in Alfred', './images/lyrics.png', 'Settings');
             } else {
                 displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
             }
@@ -982,25 +847,6 @@ function main($query, $type, $add_to_option)
         } elseif ($other_action == 'fix_permissions') {
             fixPermissions($w);
             displayNotificationWithArtwork($w, 'Done', './images/debug.png', 'Fix permissions');
-            return;
-        } elseif ($other_action == 'enable_fuzzy_search') {
-            fixPermissions($w);
-            $ret = updateSetting($w, 'fuzzy_search', 1);
-            if ($ret == true) {
-                displayNotificationWithArtwork($w, 'Fuzzy search is now enabled', './images/search.png', 'Settings');
-            } else {
-                displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
-            }
-
-            return;
-        }  elseif ($other_action == 'disable_fuzzy_search') {
-            $ret = updateSetting($w, 'fuzzy_search', 0);
-            if ($ret == true) {
-                displayNotificationWithArtwork($w, 'Fuzzy search is now disabled', './images/search.png', 'Settings');
-            } else {
-                displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
-            }
-
             return;
         } elseif ($other_action == 'enable_mopidy') {
             exec('./src/spotify_mini_player_notifications.ksh -d "'.$w->data().'" -a stop -v "'.getAlfredName().'" & ');
@@ -1069,28 +915,10 @@ function main($query, $type, $add_to_option)
             }
 
             return;
-        } elseif ($other_action == 'disable_alfred_playlist') {
-            $ret = updateSetting($w, 'is_alfred_playlist_active', 0);
-            if ($ret == true) {
-                displayNotificationWithArtwork($w, 'Controlling Your Music', './images/yourmusic.png', 'Settings');
-            } else {
-                displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
-            }
-
-            return;
         } elseif ($other_action == 'enable_public_playlists') {
             $ret = updateSetting($w, 'is_public_playlists', 1);
             if ($ret == true) {
                 displayNotificationWithArtwork($w, 'New playlists will be now public', './images/enable_public_playlists.png', 'Settings');
-            } else {
-                displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
-            }
-
-            return;
-        } elseif ($other_action == 'disable_public_playlists') {
-            $ret = updateSetting($w, 'is_public_playlists', 0);
-            if ($ret == true) {
-                displayNotificationWithArtwork($w, 'New playlists will be now private', './images/disable_public_playlists.png', 'Settings');
             } else {
                 displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
             }
