@@ -14743,7 +14743,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>Spotify Application Client ID (see explanations 👉)</string>
 			<key>label</key>
-			<string>Client ID</string>
+			<string>🔐Client ID</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -14764,7 +14764,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>Spotify Application Client Secret (see explanations 👉)</string>
 			<key>label</key>
-			<string>Client Secret</string>
+			<string>🔐Client Secret</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -14785,7 +14785,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>Max number of results to display</string>
 			<key>label</key>
-			<string>Max number of results</string>
+			<string>🔢Max number of results</string>
 			<key>type</key>
 			<string>textfield</string>
 			<key>variable</key>
@@ -14806,7 +14806,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>Number of tracks when a radio is launched</string>
 			<key>label</key>
-			<string>Number of Radio tracks</string>
+			<string>📻Number of Radio tracks</string>
 			<key>type</key>
 			<string>textfield</string>
 			<key>variable</key>
@@ -14820,12 +14820,12 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 				<key>required</key>
 				<false/>
 				<key>text</key>
-				<string></string>
+				<string>if disabled, you control Alfred Playlist</string>
 			</dict>
 			<key>description</key>
-			<string>You will control Your Music (if disabled, you control Alfred Playlist)</string>
+			<string>Control Your Music or Alfred Playlist</string>
 			<key>label</key>
-			<string>Control Your Music</string>
+			<string>🎛️Control Your Music</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
@@ -14839,12 +14839,12 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 				<key>required</key>
 				<false/>
 				<key>text</key>
-				<string></string>
+				<string>if disabled, search in all your library</string>
 			</dict>
 			<key>description</key>
 			<string>Select to search only in Your Music</string>
 			<key>label</key>
-			<string>Set Search Scope to Your Music only</string>
+			<string>🎯Set Search Scope to Your Music only</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
@@ -14863,7 +14863,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>Enable fuzzy search</string>
 			<key>label</key>
-			<string>Enable Fuzzy Search</string>
+			<string>🌪️Enable Fuzzy Search</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
@@ -14882,7 +14882,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>Launch directly tracks/album/artists/playlists in main search</string>
 			<key>label</key>
-			<string>Enable Quick Mode</string>
+			<string>⚡Enable Quick Mode</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
@@ -14901,7 +14901,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>Display track rating with stars in Current Track menu and notifications</string>
 			<key>label</key>
-			<string>Display track rating</string>
+			<string>⭐Display track rating</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
@@ -14920,7 +14920,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>Autoplay playlists (radios, similar playlists and complete collection) when they are created</string>
 			<key>label</key>
-			<string>Autoplay playlist</string>
+			<string>▶️Autoplay playlist</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
@@ -14939,7 +14939,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>Lyrics will be displayed in default browser</string>
 			<key>label</key>
-			<string>Display lyrics in browser</string>
+			<string>🎤Display lyrics in browser</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
@@ -14953,12 +14953,12 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 				<key>required</key>
 				<false/>
 				<key>text</key>
-				<string></string>
+				<string>if disabled, playlists will be private</string>
 			</dict>
 			<key>description</key>
 			<string>Automatically make new playlists public</string>
 			<key>label</key>
-			<string>Make new playlists public</string>
+			<string>📢Make new playlists public</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
@@ -14972,12 +14972,12 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 				<key>required</key>
 				<false/>
 				<key>text</key>
-				<string></string>
+				<string>if disabled, Notification Center is used</string>
 			</dict>
 			<key>description</key>
 			<string>Use Growl instead of Notification Center</string>
 			<key>label</key>
-			<string>Enable Growl</string>
+			<string>🦉Enable Growl</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
@@ -14991,12 +14991,12 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 				<key>required</key>
 				<false/>
 				<key>text</key>
-				<string></string>
+				<string>if disabled, only add selected track</string>
 			</dict>
 			<key>description</key>
 			<string>Add all tracks from album when adding to Your Music</string>
 			<key>label</key>
-			<string>Add all album tracks for Your Music</string>
+			<string>➕Add all album tracks for Your Music</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
@@ -15015,7 +15015,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>Add created Radio Playlist to your library</string>
 			<key>label</key>
-			<string>Add created Radio Playlist to library</string>
+			<string>➕Add created Radio Playlist to library</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
@@ -15029,12 +15029,12 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 				<key>required</key>
 				<false/>
 				<key>text</key>
-				<string></string>
+				<string>If disabled, tracks wil be put at beginning</string>
 			</dict>
 			<key>description</key>
 			<string>Put added tracks at the end of playlist</string>
 			<key>label</key>
-			<string>Append to playlist when adding tracks</string>
+			<string>🔚 Append to playlist when adding tracks</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
@@ -15053,7 +15053,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>Workflow will open Spotify Desktop</string>
 			<key>label</key>
-			<string>Automatically open spotify app</string>
+			<string>🤖Automatically open spotify app</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
@@ -15072,7 +15072,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>Refresh library automatically when you add/remove things</string>
 			<key>label</key>
-			<string>Automatically refresh library</string>
+			<string>♻️Automatically refresh library</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
@@ -15086,12 +15086,12 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 				<key>required</key>
 				<false/>
 				<key>text</key>
-				<string></string>
+				<string>if disabled, unplayable tracks will be shown</string>
 			</dict>
 			<key>description</key>
 			<string></string>
 			<key>label</key>
-			<string>Ignore unplayable tracks</string>
+			<string>❌Ignore unplayable tracks</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
@@ -15110,7 +15110,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>Go to previous track or back to beginning of the track</string>
 			<key>label</key>
-			<string>Previous track behaviour</string>
+			<string>⬅️Previous track behaviour</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
@@ -15129,7 +15129,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string></string>
 			<key>label</key>
-			<string>Reduce notifications</string>
+			<string>📵Reduce notifications</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
@@ -15150,7 +15150,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>The percentage of volume which is increased or decreased</string>
 			<key>label</key>
-			<string>Volume Percent</string>
+			<string>🔈Volume Percent</string>
 			<key>type</key>
 			<string>textfield</string>
 			<key>variable</key>
@@ -15171,7 +15171,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string></string>
 			<key>label</key>
-			<string>Volume max</string>
+			<string>🔈Volume max</string>
 			<key>type</key>
 			<string>textfield</string>
 			<key>variable</key>
@@ -15192,7 +15192,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string></string>
 			<key>label</key>
-			<string>Volume mid</string>
+			<string>🔈Volume mid</string>
 			<key>type</key>
 			<string>textfield</string>
 			<key>variable</key>
@@ -15213,7 +15213,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string></string>
 			<key>label</key>
-			<string>Volume min</string>
+			<string>🔈Volume min</string>
 			<key>type</key>
 			<string>textfield</string>
 			<key>variable</key>
@@ -15232,7 +15232,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>Alfred playlist</string>
 			<key>label</key>
-			<string>Display in Menu</string>
+			<string>👀Display in Menu</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
@@ -15251,7 +15251,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>Browse by album</string>
 			<key>label</key>
-			<string>Display in Menu</string>
+			<string>👀Display in Menu</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
@@ -15270,7 +15270,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>Browse by artist</string>
 			<key>label</key>
-			<string>Display in Menu</string>
+			<string>👀Display in Menu</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
@@ -15289,7 +15289,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>Browse by playlist</string>
 			<key>label</key>
-			<string>Display in Menu</string>
+			<string>👀Display in Menu</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
@@ -15308,7 +15308,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>Browse by show</string>
 			<key>label</key>
-			<string>Display in Menu</string>
+			<string>👀Display in Menu</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
@@ -15327,7 +15327,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>Browse categories</string>
 			<key>label</key>
-			<string>Display in Menu</string>
+			<string>👀Display in Menu</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
@@ -15346,7 +15346,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>Browse your music</string>
 			<key>label</key>
-			<string>Display in Menu</string>
+			<string>👀Display in Menu</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
@@ -15365,7 +15365,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>Current track</string>
 			<key>label</key>
-			<string>Display in Menu</string>
+			<string>👀Display in Menu</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
@@ -15384,7 +15384,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>Lookup current artist online</string>
 			<key>label</key>
-			<string>Display in Menu</string>
+			<string>👀Display in Menu</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
@@ -15403,7 +15403,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>Play queue</string>
 			<key>label</key>
-			<string>Display in Menu</string>
+			<string>👀Display in Menu</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
@@ -15422,7 +15422,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>Search online</string>
 			<key>label</key>
-			<string>Display in Menu</string>
+			<string>👀Display in Menu</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
@@ -15441,7 +15441,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>Spotify connect</string>
 			<key>label</key>
-			<string>Display in Menu</string>
+			<string>👀Display in Menu</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
@@ -15460,7 +15460,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>Your recent tracks</string>
 			<key>label</key>
-			<string>Display in Menu</string>
+			<string>👀Display in Menu</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
@@ -15479,7 +15479,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>Your tops</string>
 			<key>label</key>
-			<string>Display in Menu</string>
+			<string>👀Display in Menu</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
@@ -15504,7 +15504,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 {show_name} for show name
 {duration} for duration</string>
 			<key>label</key>
-			<string>Now Playing episode title</string>
+			<string>✏️Now Playing episode title</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -15525,7 +15525,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>Variable now_playing_episode_text that can be used in Now Playing episode title</string>
 			<key>label</key>
-			<string>Now Playing episode text</string>
+			<string>✏️Now Playing episode text</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -15553,7 +15553,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 {popularity} for popularity ⭐ (emoji can be customized, see below)
 {liked} ♥ if track is liked, ♡ otherwise (emoji can be customized, see below)</string>
 			<key>label</key>
-			<string>Now Playing track title</string>
+			<string>✏️Now Playing track title</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -15574,7 +15574,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>Variable now_playing_track_text that can be used in Now Playing track title</string>
 			<key>label</key>
-			<string>Now Playing track text</string>
+			<string>✏️Now Playing track text</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -15595,7 +15595,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string></string>
 			<key>label</key>
-			<string>Sharing hashtag1</string>
+			<string>📮Sharing hashtag1</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -15616,7 +15616,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string></string>
 			<key>label</key>
-			<string>Sharing hashtag2</string>
+			<string>📮Sharing hashtag2</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -15637,7 +15637,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string></string>
 			<key>label</key>
-			<string>Sharing text1</string>
+			<string>📮Sharing text1</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -15658,7 +15658,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string></string>
 			<key>label</key>
-			<string>Clipboard current track episode text</string>
+			<string>📋Clipboard current track episode text</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -15683,7 +15683,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 {artist_name} for artist name
 {url} for spotify url</string>
 			<key>label</key>
-			<string>Clipboard current track text</string>
+			<string>📋Clipboard current track text</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -15704,7 +15704,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string></string>
 			<key>label</key>
-			<string>Clipboard text2</string>
+			<string>📋Clipboard text2</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -15725,7 +15725,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string></string>
 			<key>label</key>
-			<string>Connect switch string</string>
+			<string>🔈Connect switch string</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -15746,7 +15746,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string></string>
 			<key>label</key>
-			<string>emoji album</string>
+			<string>😀emoji album</string>
 			<key>type</key>
 			<string>textfield</string>
 			<key>variable</key>
@@ -15767,7 +15767,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string></string>
 			<key>label</key>
-			<string>emoji alfred</string>
+			<string>😀emoji alfred</string>
 			<key>type</key>
 			<string>textfield</string>
 			<key>variable</key>
@@ -15788,7 +15788,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string></string>
 			<key>label</key>
-			<string>emoji artist</string>
+			<string>😀emoji artist</string>
 			<key>type</key>
 			<string>textfield</string>
 			<key>variable</key>
@@ -15809,7 +15809,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string></string>
 			<key>label</key>
-			<string>emoji fully played</string>
+			<string>😀emoji fully played</string>
 			<key>type</key>
 			<string>textfield</string>
 			<key>variable</key>
@@ -15830,7 +15830,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string></string>
 			<key>label</key>
-			<string>emoji fuzzy</string>
+			<string>😀emoji fuzzy</string>
 			<key>type</key>
 			<string>textfield</string>
 			<key>variable</key>
@@ -15851,7 +15851,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string></string>
 			<key>label</key>
-			<string>emoji liked</string>
+			<string>😀emoji liked</string>
 			<key>type</key>
 			<string>textfield</string>
 			<key>variable</key>
@@ -15872,7 +15872,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string></string>
 			<key>label</key>
-			<string>emoji local track</string>
+			<string>😀emoji local track</string>
 			<key>type</key>
 			<string>textfield</string>
 			<key>variable</key>
@@ -15893,7 +15893,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string></string>
 			<key>label</key>
-			<string>emoji not liked</string>
+			<string>😀emoji not liked</string>
 			<key>type</key>
 			<string>textfield</string>
 			<key>variable</key>
@@ -15914,7 +15914,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string></string>
 			<key>label</key>
-			<string>emoji not playable</string>
+			<string>😀emoji not playable</string>
 			<key>type</key>
 			<string>textfield</string>
 			<key>variable</key>
@@ -15935,7 +15935,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string></string>
 			<key>label</key>
-			<string>emoji online</string>
+			<string>😀emoji online</string>
 			<key>type</key>
 			<string>textfield</string>
 			<key>variable</key>
@@ -15956,7 +15956,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string></string>
 			<key>label</key>
-			<string>emoji playing</string>
+			<string>😀emoji playing</string>
 			<key>type</key>
 			<string>textfield</string>
 			<key>variable</key>
@@ -15977,7 +15977,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string></string>
 			<key>label</key>
-			<string>emoji playlist</string>
+			<string>😀emoji playlist</string>
 			<key>type</key>
 			<string>textfield</string>
 			<key>variable</key>
@@ -15998,7 +15998,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string></string>
 			<key>label</key>
-			<string>emoji quickmode</string>
+			<string>😀emoji quickmode</string>
 			<key>type</key>
 			<string>textfield</string>
 			<key>variable</key>
@@ -16019,7 +16019,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string></string>
 			<key>label</key>
-			<string>emoji radio</string>
+			<string>😀emoji radio</string>
 			<key>type</key>
 			<string>textfield</string>
 			<key>variable</key>
@@ -16040,7 +16040,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string></string>
 			<key>label</key>
-			<string>emoji separator</string>
+			<string>😀emoji separator</string>
 			<key>type</key>
 			<string>textfield</string>
 			<key>variable</key>
@@ -16061,7 +16061,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string></string>
 			<key>label</key>
-			<string>emoji separator2</string>
+			<string>😀emoji separator2</string>
 			<key>type</key>
 			<string>textfield</string>
 			<key>variable</key>
@@ -16082,7 +16082,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string></string>
 			<key>label</key>
-			<string>emoji show</string>
+			<string>😀emoji show</string>
 			<key>type</key>
 			<string>textfield</string>
 			<key>variable</key>
@@ -16103,7 +16103,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string></string>
 			<key>label</key>
-			<string>emoji yourmusic</string>
+			<string>😀emoji yourmusic</string>
 			<key>type</key>
 			<string>textfield</string>
 			<key>variable</key>
@@ -16124,7 +16124,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>spot_mini</string>
 			<key>label</key>
-			<string>Command to rename</string>
+			<string>⌨️Command to rename</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -16145,7 +16145,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>add_current_track_to</string>
 			<key>label</key>
-			<string>Command to rename</string>
+			<string>⌨️Command to rename</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -16166,7 +16166,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>add_current_track_to_alfred_playlist</string>
 			<key>label</key>
-			<string>Command to rename</string>
+			<string>⌨️Command to rename</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -16187,7 +16187,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>add_current_track_to_alfred_playlist_or_your_music</string>
 			<key>label</key>
-			<string>Command to rename</string>
+			<string>⌨️Command to rename</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -16208,7 +16208,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>add_current_track_to_your_music</string>
 			<key>label</key>
-			<string>Command to rename</string>
+			<string>⌨️Command to rename</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -16229,7 +16229,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>artist_radio</string>
 			<key>label</key>
-			<string>Command to rename</string>
+			<string>⌨️Command to rename</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -16250,7 +16250,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>current</string>
 			<key>label</key>
-			<string>Command to rename</string>
+			<string>⌨️Command to rename</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -16271,7 +16271,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>fix_permissions</string>
 			<key>label</key>
-			<string>Command to rename</string>
+			<string>⌨️Command to rename</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -16292,7 +16292,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>follow_artist</string>
 			<key>label</key>
-			<string>Command to rename</string>
+			<string>⌨️Command to rename</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -16313,7 +16313,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>lookup_artist_online</string>
 			<key>label</key>
-			<string>Command to rename</string>
+			<string>⌨️Command to rename</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -16334,7 +16334,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>lyrics</string>
 			<key>label</key>
-			<string>Command to rename</string>
+			<string>⌨️Command to rename</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -16355,7 +16355,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>mute</string>
 			<key>label</key>
-			<string>Command to rename</string>
+			<string>⌨️Command to rename</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -16376,7 +16376,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>next</string>
 			<key>label</key>
-			<string>Command to rename</string>
+			<string>⌨️Command to rename</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -16397,7 +16397,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>pause</string>
 			<key>label</key>
-			<string>Command to rename</string>
+			<string>⌨️Command to rename</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -16418,7 +16418,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>play</string>
 			<key>label</key>
-			<string>Command to rename</string>
+			<string>⌨️Command to rename</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -16439,7 +16439,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>play_album</string>
 			<key>label</key>
-			<string>Command to rename</string>
+			<string>⌨️Command to rename</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -16460,7 +16460,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>play_alfred_playlist</string>
 			<key>label</key>
-			<string>Command to rename</string>
+			<string>⌨️Command to rename</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -16481,7 +16481,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>play_artist</string>
 			<key>label</key>
-			<string>Command to rename</string>
+			<string>⌨️Command to rename</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -16502,7 +16502,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>play_liked_songs</string>
 			<key>label</key>
-			<string>Command to rename</string>
+			<string>⌨️Command to rename</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -16523,7 +16523,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>playpause</string>
 			<key>label</key>
-			<string>Command to rename</string>
+			<string>⌨️Command to rename</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -16544,7 +16544,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>previous</string>
 			<key>label</key>
-			<string>Command to rename</string>
+			<string>⌨️Command to rename</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -16565,7 +16565,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>random</string>
 			<key>label</key>
-			<string>Command to rename</string>
+			<string>⌨️Command to rename</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -16586,7 +16586,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>random_album</string>
 			<key>label</key>
-			<string>Command to rename</string>
+			<string>⌨️Command to rename</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -16607,7 +16607,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>refresh_library</string>
 			<key>label</key>
-			<string>Command to rename</string>
+			<string>⌨️Command to rename</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -16628,7 +16628,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>remove_current_track_from</string>
 			<key>label</key>
-			<string>Command to rename</string>
+			<string>⌨️Command to rename</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -16649,7 +16649,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>remove_current_track_from_alfred_playlist</string>
 			<key>label</key>
-			<string>Command to rename</string>
+			<string>⌨️Command to rename</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -16670,7 +16670,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>remove_current_track_from_alfred_playlist_or_your_music</string>
 			<key>label</key>
-			<string>Command to rename</string>
+			<string>⌨️Command to rename</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -16691,7 +16691,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>remove_current_track_from_your_music</string>
 			<key>label</key>
-			<string>Command to rename</string>
+			<string>⌨️Command to rename</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -16712,7 +16712,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>repeating</string>
 			<key>label</key>
-			<string>Command to rename</string>
+			<string>⌨️Command to rename</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -16733,7 +16733,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>repeating_current_track</string>
 			<key>label</key>
-			<string>Command to rename</string>
+			<string>⌨️Command to rename</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -16754,7 +16754,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>set_volume</string>
 			<key>label</key>
-			<string>Command to rename</string>
+			<string>⌨️Command to rename</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -16775,7 +16775,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>share</string>
 			<key>label</key>
-			<string>Command to rename</string>
+			<string>⌨️Command to rename</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -16796,7 +16796,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>show_alfred_playlist</string>
 			<key>label</key>
-			<string>Command to rename</string>
+			<string>⌨️Command to rename</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -16817,7 +16817,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>show_in_spotify</string>
 			<key>label</key>
-			<string>Command to rename</string>
+			<string>⌨️Command to rename</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -16838,7 +16838,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>shuffle</string>
 			<key>label</key>
-			<string>Command to rename</string>
+			<string>⌨️Command to rename</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -16859,7 +16859,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>song_radio</string>
 			<key>label</key>
-			<string>Command to rename</string>
+			<string>⌨️Command to rename</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -16880,7 +16880,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>spot_mini_debug</string>
 			<key>label</key>
-			<string>Command to rename</string>
+			<string>⌨️Command to rename</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -16901,7 +16901,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>spot_mini_issue</string>
 			<key>label</key>
-			<string>Command to rename</string>
+			<string>⌨️Command to rename</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -16922,7 +16922,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>spot_mini_kill</string>
 			<key>label</key>
-			<string>Command to rename</string>
+			<string>⌨️Command to rename</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -16943,7 +16943,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>spot_mini_reset_settings</string>
 			<key>label</key>
-			<string>Command to rename</string>
+			<string>⌨️Command to rename</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -16964,7 +16964,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>unfollow_artist</string>
 			<key>label</key>
-			<string>Command to rename</string>
+			<string>⌨️Command to rename</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -16985,7 +16985,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>volmax</string>
 			<key>label</key>
-			<string>Command to rename</string>
+			<string>⌨️Command to rename</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -17006,7 +17006,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>volmid</string>
 			<key>label</key>
-			<string>Command to rename</string>
+			<string>⌨️Command to rename</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -17027,7 +17027,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>volume_down</string>
 			<key>label</key>
-			<string>Command to rename</string>
+			<string>⌨️Command to rename</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -17048,7 +17048,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>volume_up</string>
 			<key>label</key>
-			<string>Command to rename</string>
+			<string>⌨️Command to rename</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -17069,7 +17069,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>web_search</string>
 			<key>label</key>
-			<string>Command to rename</string>
+			<string>⌨️Command to rename</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -17090,7 +17090,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>Automatically set, do not modify !</string>
 			<key>label</key>
-			<string>Oauth access token</string>
+			<string>🚫Oauth access token</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -17111,7 +17111,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>Automatically set, do not modify !</string>
 			<key>label</key>
-			<string>Oauth refresh token</string>
+			<string>🚫Oauth refresh token</string>
 			<key>type</key>
 			<string>textarea</string>
 			<key>variable</key>
@@ -17128,9 +17128,9 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 				<string></string>
 			</dict>
 			<key>description</key>
-			<string>the workflow is collecting completely anonymous metrics to better understand how users are using it. Graphs are available on the website.</string>
+			<string>The workflow is collecting completely anonymous metrics to better understand how users are using it. Graphs are available on the website.</string>
 			<key>label</key>
-			<string>Disable anonymous metrics</string>
+			<string>📊Disable anonymous metrics</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
@@ -17149,7 +17149,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>Only use when you have a library issue before reporting to author</string>
 			<key>label</key>
-			<string>Debug mode</string>
+			<string>🐛Debug mode</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
