@@ -2196,6 +2196,24 @@ function firstDelimiterSettings($w, $query, $db, $update_in_progress) {
     /* album_artwork_path */, ''
     /* playlist_name */, '', /* playlist_artwork_path */
     )), 'Open debug tools', array('This is how you can access information required for further troubleshooting', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/debug.png', 'yes', null, '');
+
+    $w->result(null, serialize(array(
+        ''
+        /*track_uri*/, ''
+        /* album_uri */, ''
+        /* artist_uri */, ''
+        /* playlist_uri */, ''
+        /* spotify_command */, ''
+        /* query */, '' /* other_settings*/, ''
+        /* other_action */, ''
+        /* artist_name */, ''
+        /* track_name */, ''
+        /* album_name */, ''
+        /* track_artwork_path */, ''
+        /* artist_artwork_path */, ''
+        /* album_artwork_path */, ''
+        /* playlist_name */, '', /* playlist_artwork_path */
+    )), 'Check also "Configure Workflow..." in workflow window in Alfred Preferences', '', './images/settings.png', 'no', null, '');
 }
 
 /**
