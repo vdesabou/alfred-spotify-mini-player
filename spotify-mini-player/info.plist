@@ -17079,48 +17079,6 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>config</key>
 			<dict>
 				<key>default</key>
-				<string></string>
-				<key>required</key>
-				<false/>
-				<key>trim</key>
-				<true/>
-				<key>verticalsize</key>
-				<integer>5</integer>
-			</dict>
-			<key>description</key>
-			<string>Automatically set, do not modify !</string>
-			<key>label</key>
-			<string>🚫Oauth access token</string>
-			<key>type</key>
-			<string>textarea</string>
-			<key>variable</key>
-			<string>__oauth_access_token</string>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>default</key>
-				<string></string>
-				<key>required</key>
-				<false/>
-				<key>trim</key>
-				<true/>
-				<key>verticalsize</key>
-				<integer>5</integer>
-			</dict>
-			<key>description</key>
-			<string>Automatically set, do not modify !</string>
-			<key>label</key>
-			<string>🚫Oauth refresh token</string>
-			<key>type</key>
-			<string>textarea</string>
-			<key>variable</key>
-			<string>__oauth_refresh_token</string>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>default</key>
 				<false/>
 				<key>required</key>
 				<false/>
@@ -17155,75 +17113,421 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>variable</key>
 			<string>__debug</string>
 		</dict>
-	</array>
-	<key>variables</key>
-	<dict>
-		<key>__alfred_playlist_name</key>
-		<string></string>
-		<key>__alfred_playlist_uri</key>
-		<string></string>
-		<key>__artwork_folder_size</key>
-		<string></string>
-		<key>__automatic_refresh_library_interval</key>
-		<string>0</string>
-		<key>__country_code</key>
-		<string></string>
-		<key>__display_name</key>
-		<string></string>
-		<key>__last_check_update_time</key>
-		<string>1668965778</string>
-		<key>__now_playing_notifications</key>
-		<string>1</string>
-		<key>__oauth_redirect_uri</key>
-		<string>http://localhost:15298/callback.php</string>
-		<key>__output_application</key>
-		<string>APPLESCRIPT</string>
-		<key>__podcasts_enabled</key>
-		<string>1</string>
-		<key>__preferred_spotify_connect_device</key>
-		<string></string>
-		<key>__preferred_spotify_connect_device_pushcut_webhook</key>
-		<string></string>
-		<key>__preferred_spotify_connect_device_pushcut_webhook_json_body</key>
-		<string></string>
-		<key>__search_order</key>
-		<string>playlist▹artist▹track▹album▹show▹episode</string>
-		<key>__theme_color</key>
-		<string>green</string>
-		<key>__use_artworks</key>
-		<string>1</string>
-		<key>__use_facebook</key>
-		<string>0</string>
-		<key>__userid</key>
-		<string></string>
-		<key>__workflow_version</key>
-		<string></string>
-	</dict>
-	<key>variablesdontexport</key>
-	<array>
-		<string>__use_facebook</string>
-		<string>__output_application</string>
-		<string>__alfred_playlist_name</string>
-		<string>__country_code</string>
-		<string>__preferred_spotify_connect_device</string>
-		<string>__preferred_spotify_connect_device_pushcut_webhook_json_body</string>
-		<string>__podcasts_enabled</string>
-		<string>__oauth_redirect_uri</string>
-		<string>__automatic_refresh_library_interval</string>
-		<string>__last_check_update_time</string>
-		<string>__alfred_playlist_uri</string>
-		<string>__use_artworks</string>
-		<string>__preferred_spotify_connect_device_pushcut_webhook</string>
-		<string>__display_name</string>
-		<string>__now_playing_notifications</string>
-		<string>__search_order</string>
-		<string>__artwork_folder_size</string>
-		<string>__userid</string>
-		<string>__workflow_version</string>
-		<string>__theme_color</string>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string></string>
+				<key>required</key>
+				<false/>
+				<key>trim</key>
+				<true/>
+				<key>verticalsize</key>
+				<integer>5</integer>
+			</dict>
+			<key>description</key>
+			<string>🚫Automatically set, do not modify !</string>
+			<key>label</key>
+			<string>🔏OAuth access token</string>
+			<key>type</key>
+			<string>textarea</string>
+			<key>variable</key>
+			<string>__oauth_access_token</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string></string>
+				<key>required</key>
+				<false/>
+				<key>trim</key>
+				<true/>
+				<key>verticalsize</key>
+				<integer>5</integer>
+			</dict>
+			<key>description</key>
+			<string>🚫Automatically set, do not modify !</string>
+			<key>label</key>
+			<string>🔏OAuth refresh token</string>
+			<key>type</key>
+			<string>textarea</string>
+			<key>variable</key>
+			<string>__oauth_refresh_token</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>http://localhost:15298/callback.php</string>
+				<key>placeholder</key>
+				<string></string>
+				<key>required</key>
+				<false/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>🚫Automatically set, do not modify !</string>
+			<key>label</key>
+			<string>🔏OAuth Redirect URI</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>__oauth_redirect_uri</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string></string>
+				<key>placeholder</key>
+				<string></string>
+				<key>required</key>
+				<false/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>🚫Automatically set, do not modify !</string>
+			<key>label</key>
+			<string>🎩Alfred Playlist Name</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>__alfred_playlist_name</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string></string>
+				<key>placeholder</key>
+				<string></string>
+				<key>required</key>
+				<false/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>🚫Automatically set, do not modify !</string>
+			<key>label</key>
+			<string>🎩Alfred Playlist URI</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>__alfred_playlist_uri</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string></string>
+				<key>placeholder</key>
+				<string></string>
+				<key>required</key>
+				<false/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>🚫Automatically set, do not modify !</string>
+			<key>label</key>
+			<string>📁Artwork Folder Size</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>__artwork_folder_size</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>0</string>
+				<key>placeholder</key>
+				<string></string>
+				<key>required</key>
+				<false/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>🚫Automatically set, do not modify !</string>
+			<key>label</key>
+			<string>🕰️Automatic Refresh interval</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>__automatic_refresh_library_interval</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string></string>
+				<key>placeholder</key>
+				<string></string>
+				<key>required</key>
+				<false/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>🚫Automatically set, do not modify !</string>
+			<key>label</key>
+			<string>🇫🇷Country Code</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>__country_code</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>0</string>
+				<key>placeholder</key>
+				<string></string>
+				<key>required</key>
+				<false/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>🚫Automatically set, do not modify !</string>
+			<key>label</key>
+			<string>👤Spotify name</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>__display_name</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string></string>
+				<key>placeholder</key>
+				<string></string>
+				<key>required</key>
+				<false/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>🚫Automatically set, do not modify !</string>
+			<key>label</key>
+			<string>🕛Last workflow update check</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>__last_check_update_time</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<true/>
+				<key>required</key>
+				<false/>
+				<key>text</key>
+				<string></string>
+			</dict>
+			<key>description</key>
+			<string>🚫Automatically set, do not modify !</string>
+			<key>label</key>
+			<string>🎶Now Playing notifications</string>
+			<key>type</key>
+			<string>checkbox</string>
+			<key>variable</key>
+			<string>__now_playing_notifications</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>APPLESCRIPT</string>
+				<key>placeholder</key>
+				<string></string>
+				<key>required</key>
+				<false/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>🚫Automatically set, do not modify !</string>
+			<key>label</key>
+			<string>🔊Output Application</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>__output_application</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<true/>
+				<key>required</key>
+				<false/>
+				<key>text</key>
+				<string></string>
+			</dict>
+			<key>description</key>
+			<string>🚫Automatically set, do not modify !</string>
+			<key>label</key>
+			<string>📻Podcasts enabled</string>
+			<key>type</key>
+			<string>checkbox</string>
+			<key>variable</key>
+			<string>__podcasts_enabled</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string></string>
+				<key>placeholder</key>
+				<string></string>
+				<key>required</key>
+				<false/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>🚫Automatically set, do not modify !</string>
+			<key>label</key>
+			<string>🔊Preferred Spotify Connect device</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>__preferred_spotify_connect_device</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>playlist▹artist▹track▹album▹show▹episode</string>
+				<key>placeholder</key>
+				<string></string>
+				<key>required</key>
+				<false/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>🚫Automatically set, do not modify !</string>
+			<key>label</key>
+			<string>🔍Search Order</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>__search_order</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>green</string>
+				<key>placeholder</key>
+				<string></string>
+				<key>required</key>
+				<false/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>🚫Automatically set, do not modify !</string>
+			<key>label</key>
+			<string>💚Theme color</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>__theme_color</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<true/>
+				<key>required</key>
+				<false/>
+				<key>text</key>
+				<string></string>
+			</dict>
+			<key>description</key>
+			<string>🚫Automatically set, do not modify !</string>
+			<key>label</key>
+			<string>🖼️Use Artworks</string>
+			<key>type</key>
+			<string>checkbox</string>
+			<key>variable</key>
+			<string>__use_artworks</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string></string>
+				<key>placeholder</key>
+				<string></string>
+				<key>required</key>
+				<false/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>🚫Automatically set, do not modify !</string>
+			<key>label</key>
+			<string>👤Spotify user</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>__userid</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<false/>
+				<key>required</key>
+				<false/>
+				<key>text</key>
+				<string></string>
+			</dict>
+			<key>description</key>
+			<string>🚫Automatically set, do not modify !</string>
+			<key>label</key>
+			<string>💩Use Facebook for sharing</string>
+			<key>type</key>
+			<string>checkbox</string>
+			<key>variable</key>
+			<string>__use_facebook</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string></string>
+				<key>placeholder</key>
+				<string></string>
+				<key>required</key>
+				<false/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>🚫Automatically set, do not modify !</string>
+			<key>label</key>
+			<string>🔢Workflow version</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>__workflow_version</string>
+		</dict>
 	</array>
 	<key>version</key>
-	<string>12.0</string>
+	<string>12.1</string>
 	<key>webaddress</key>
 	<string>https://alfred-spotify-mini-player.com</string>
 </dict>
