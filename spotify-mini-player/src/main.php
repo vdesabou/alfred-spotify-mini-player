@@ -9,10 +9,22 @@ require_once './src/workflows.php';
 
 function main($argv) {
     // $begin_time = computeTime();
-    // Report all PHP errors
-    //error_reporting(E_ALL);
-    error_reporting(0);
     $w = new Workflows('com.vdesabou.spotify.mini.player');
+
+    $is_alfred_playlist_active = getSetting($w, 'is_alfred_playlist_active');
+    $now_playing_notifications = getSetting($w, 'now_playing_notifications');
+    $alfred_playlist_uri = getSetting($w, 'alfred_playlist_uri');
+    $alfred_playlist_name = getSetting($w, 'alfred_playlist_name');
+    $country_code = getSetting($w, 'country_code');
+    $last_check_update_time = getSetting($w, 'last_check_update_time');
+    $userid = getSetting($w, 'userid');
+    $debug = getSetting($w, 'debug');
+    if($debug) {
+        // Report all PHP errors
+        error_reporting(E_ALL);
+    } else {
+        error_reporting(0);
+    }
 
     $query = escapeQuery($argv[1]);
 
@@ -73,17 +85,6 @@ function main($argv) {
                     ), './images/update_in_progress.png', 'no', null, '');
         }
     }
-
-
-
-
-    $is_alfred_playlist_active = getSetting($w,'is_alfred_playlist_active');
-    $now_playing_notifications = getSetting($w,'now_playing_notifications');
-    $alfred_playlist_uri = getSetting($w,'alfred_playlist_uri');
-    $alfred_playlist_name = getSetting($w,'alfred_playlist_name');
-    $country_code = getSetting($w,'country_code');
-    $last_check_update_time = getSetting($w,'last_check_update_time');
-    $userid = getSetting($w,'userid');
 
     // Check that user is logged
     oAuthChecks($w, $query, $update_in_progress);
