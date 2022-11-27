@@ -7751,6 +7751,9 @@ function startsWithNumber($str) {
  */
 function checkForUpdate($w, $last_check_update_time, $download = false)
 {
+    if ($last_check_update_time == '') {
+        $last_check_update_time = 0;
+    }
     if (time() - $last_check_update_time > 172800 || $download == true) {
         // update last_check_update_time
         $ret = updateSetting($w, 'last_check_update_time', time());
