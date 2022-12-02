@@ -1340,7 +1340,7 @@ function main($query, $type, $add_to_option)
                     if(getenv('previous_track_for_real') == 1) {
                         previousTrackSpotifyConnect($w, $device_id);
                     } else {
-                        seekToBeginning($w);
+                        seekTo($w, 0);
                     }
                 } else {
                     displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');

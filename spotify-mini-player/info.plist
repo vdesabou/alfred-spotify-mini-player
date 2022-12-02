@@ -15101,6 +15101,27 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>config</key>
 			<dict>
 				<key>default</key>
+				<string>0</string>
+				<key>placeholder</key>
+				<string></string>
+				<key>required</key>
+				<false/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>Number of seconds to skip when playing a show (❗only works when Spotify Connect is used)</string>
+			<key>label</key>
+			<string>⏩ Skip first seconds of show</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>skip_first_seconds_of_podcast</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
 				<true/>
 				<key>required</key>
 				<false/>

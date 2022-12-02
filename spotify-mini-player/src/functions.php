@@ -1267,10 +1267,16 @@ function getEpisode($w, $episode_uri)
  {
     $retry = true;
     $nb_retry = 0;
+    $should_skip_first_seconds_of_podcast = false;
     while ($retry) {
         try {
             $api = getSpotifyWebAPI($w);
-
+            if ($track_uri != '') {
+                $tmp = explode(':', $track_uri);
+                if ($tmp[1] == 'episode' && getenv('skip_first_seconds_of_podcast') > 0) {
+                    $should_skip_first_seconds_of_podcast = true;
+                }
+            }
             if ($context_uri != '') {
                 if ($track_uri != '') {
                     $offset = [
@@ -1286,6 +1292,9 @@ function getEpisode($w, $episode_uri)
                     ];
                 }
                 $api->play($device_id, $options);
+                if($should_skip_first_seconds_of_podcast) {
+                    seekTo($w, (getenv('skip_first_seconds_of_podcast')*1000));
+                }
                 $retry = false;
             } else {
                 $uris = array();
@@ -1294,6 +1303,9 @@ function getEpisode($w, $episode_uri)
                     'uris' => $uris
                 ];
                 $api->play($device_id, $options);
+                if ($should_skip_first_seconds_of_podcast) {
+                    seekTo($w, (getenv('skip_first_seconds_of_podcast') * 1000));
+                }
                 $retry = false;
             }
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
@@ -1424,11 +1436,11 @@ function addToQueueSpotifyConnect($w, $trackId, $device_id)
 }
 
  /**
- * seekToBeginning function.
+ * seekTo function.
  *
  * @param mixed $w
  */
-function seekToBeginning($w)
+function seekTo($w,$position_ms)
 {
    $retry = true;
    $nb_retry = 0;
@@ -1436,11 +1448,11 @@ function seekToBeginning($w)
        try {
            $api = getSpotifyWebAPI($w);
            $api->seek([
-            'position_ms' => 0,
+            'position_ms' => $position_ms,
             ]);
            $retry = false;
        } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-           logMsg($w,'Error(seekToBeginning): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
+           logMsg($w,'Error(seekTo): retry '.$nb_retry.' (exception '.jTraceEx($e).')');
            if ($e->getCode() == 404 || $e->getCode() == 403) {
                // skip
                break;
