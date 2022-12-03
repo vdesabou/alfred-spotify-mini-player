@@ -642,9 +642,14 @@ function mainSearch($w, $query, $db, $update_in_progress) {
                 }
             }
 
+            $max_number_of_episode_per_show = getenv('max_number_of_episode_per_show');
+            $text_limit_episodes = '';
+            if ($max_number_of_episode_per_show > 0) {
+                $text_limit_episodes = ', limited to ' . $max_number_of_episode_per_show;
+            }
             foreach ($results as $show) {
-                if (checkIfResultAlreadyThere($w->results(), getenv('emoji_show').' ' . $show[1] . ' (' . $show[10] . ' episodes)') == false) {
-                    $w->result(null, '', getenv('emoji_show').' ' . $show[1] . ' (' . $show[10] . ' episodes)', array('Browse this show', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), $show[4], 'no', null, 'Show▹' . $show[0] . '∙' . $show[1] . '▹');
+                if (checkIfResultAlreadyThere($w->results(), getenv('emoji_show').' ' . $show[1] . ' (' . $show[10] . ' episodes' . $text_limit_episodes . ')') == false) {
+                    $w->result(null, '', getenv('emoji_show').' ' . $show[1] . ' (' . $show[10] . ' episodes' . $text_limit_episodes . ')', array('Browse this show', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), $show[4], 'no', null, 'Show▹' . $show[0] . '∙' . $show[1] . '▹');
                 }
             }
         }
