@@ -1267,14 +1267,14 @@ function getEpisode($w, $episode_uri)
  {
     $retry = true;
     $nb_retry = 0;
-    $should_skip_first_seconds_of_podcast = false;
+    $should_skip_first_seconds_of_episode = false;
     while ($retry) {
         try {
             $api = getSpotifyWebAPI($w);
             if ($track_uri != '') {
                 $tmp = explode(':', $track_uri);
-                if ($tmp[1] == 'episode' && getenv('skip_first_seconds_of_podcast') > 0) {
-                    $should_skip_first_seconds_of_podcast = true;
+                if ($tmp[1] == 'episode' && getenv('skip_first_seconds_of_episode') > 0) {
+                    $should_skip_first_seconds_of_episode = true;
                 }
             }
             if ($context_uri != '') {
@@ -1292,8 +1292,8 @@ function getEpisode($w, $episode_uri)
                     ];
                 }
                 $api->play($device_id, $options);
-                if($should_skip_first_seconds_of_podcast) {
-                    seekTo($w, (getenv('skip_first_seconds_of_podcast')*1000));
+                if($should_skip_first_seconds_of_episode) {
+                    seekTo($w, (getenv('skip_first_seconds_of_episode')*1000));
                 }
                 $retry = false;
             } else {
@@ -1303,8 +1303,8 @@ function getEpisode($w, $episode_uri)
                     'uris' => $uris
                 ];
                 $api->play($device_id, $options);
-                if ($should_skip_first_seconds_of_podcast) {
-                    seekTo($w, (getenv('skip_first_seconds_of_podcast') * 1000));
+                if ($should_skip_first_seconds_of_episode) {
+                    seekTo($w, (getenv('skip_first_seconds_of_episode') * 1000));
                 }
                 $retry = false;
             }

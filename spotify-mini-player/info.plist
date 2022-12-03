@@ -15137,7 +15137,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>type</key>
 			<string>textfield</string>
 			<key>variable</key>
-			<string>skip_first_seconds_of_podcast</string>
+			<string>skip_first_seconds_of_episode</string>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -17418,7 +17418,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>🚫Automatically set, do not modify !</string>
 			<key>label</key>
-			<string>📻Podcasts enabled</string>
+			<string>🎙️Shows enabled</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>
