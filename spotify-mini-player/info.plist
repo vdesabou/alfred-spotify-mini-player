@@ -15137,7 +15137,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>type</key>
 			<string>textfield</string>
 			<key>variable</key>
-			<string>skip_first_seconds_of_episode</string>
+			<string>skip_first_seconds_of_podcast</string>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -15162,6 +15162,25 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>config</key>
 			<dict>
 				<key>default</key>
+				<true/>
+				<key>required</key>
+				<false/>
+				<key>text</key>
+				<string></string>
+			</dict>
+			<key>description</key>
+			<string>When removing current track from library, skip to next track. Keep playing it otherwise</string>
+			<key>label</key>
+			<string>⏭️ Skip current track when removed</string>
+			<key>type</key>
+			<string>checkbox</string>
+			<key>variable</key>
+			<string>skip_current_track_when_removed</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
 				<false/>
 				<key>required</key>
 				<false/>
@@ -15169,7 +15188,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 				<string></string>
 			</dict>
 			<key>description</key>
-			<string></string>
+			<string>This will reduce a bit notifications</string>
 			<key>label</key>
 			<string>📵Reduce notifications</string>
 			<key>type</key>
@@ -17418,7 +17437,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>description</key>
 			<string>🚫Automatically set, do not modify !</string>
 			<key>label</key>
-			<string>🎙️Shows enabled</string>
+			<string>📻Podcasts enabled</string>
 			<key>type</key>
 			<string>checkbox</string>
 			<key>variable</key>

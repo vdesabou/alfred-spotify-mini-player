@@ -4198,19 +4198,20 @@ function removeTrackFromPlaylist($w, $track_uri, $playlist_uri, $playlist_name, 
 
     // https://github.com/vdesabou/alfred-spotify-mini-player/issues/522
     // Automatically play next track when removing track from playlist
-    if ($output_application == 'MOPIDY') {
-        invokeMopidyMethod($w, 'core.playback.next', array());
-    } else if ($output_application == 'APPLESCRIPT') {
-        exec("osascript -e 'tell application \"Spotify\" to next track'");
-    } else {
-        $device_id = getSpotifyConnectCurrentDeviceId($w);
-        if ($device_id != '') {
-            nextTrackSpotifyConnect($w, $device_id);
+    if(getenv('skip_current_track_when_removed')) {
+        if ($output_application == 'MOPIDY') {
+            invokeMopidyMethod($w, 'core.playback.next', array());
+        } else if ($output_application == 'APPLESCRIPT') {
+            exec("osascript -e 'tell application \"Spotify\" to next track'");
         } else {
-            displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+            $device_id = getSpotifyConnectCurrentDeviceId($w);
+            if ($device_id != '') {
+                nextTrackSpotifyConnect($w, $device_id);
+            } else {
+                displayNotificationWithArtwork($w, 'No Spotify Connect device is available', './images/warning.png', 'Error!');
+            }
         }
     }
-
     if ($refreshLibrary) {
         if(getenv('automatically_refresh_library') == 1) {
             refreshLibrary($w);
