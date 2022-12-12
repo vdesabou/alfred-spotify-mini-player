@@ -24,7 +24,9 @@ PHP is no more installed by default starting from MacOS Monterey, so you need to
 
 ## Download and install the workflow
 
-* [Download](https://github.com/vdesabou/alfred-spotify-mini-player/releases/latest/download/spotifyminiplayer.alfredworkflow) the workflow
+* [Download v11.8 (this is the latest Alfred 4 compatible version)](https://github.com/vdesabou/alfred-spotify-mini-player/releases/download/v-11.8/spotifyminiplayer.alfredworkflow) the workflow
+
+* See [here](https://github.com/vdesabou/alfred-spotify-mini-player/releases/tag/v-11.8) to disable auto-update.
 
 * Open `spotifyminiplayer.alfredworkflow` by double-clicking it or dragging it into Alfred.
 
