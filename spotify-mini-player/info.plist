@@ -34,6 +34,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>048300BE-08F7-4E93-9AC5-B3CE8365DAF9</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>F54DD2A9-12CA-4E9D-9F03-6D5C18444155</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>0554A7C3-1357-4E84-B414-BEA7A183AEE3</key>
 		<array>
 			<dict>
@@ -1973,6 +1986,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>84CCC97C-8B2B-48BF-B706-86386C40223B</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>F54DD2A9-12CA-4E9D-9F03-6D5C18444155</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>85966031-0B63-4629-BF2A-CAE7C92FCDD6</key>
 		<array>
 			<dict>
@@ -2423,6 +2449,19 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>8B88B440-38F7-4EBA-9A2E-46779141C889</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>A27C8F05-4766-429E-A19D-7025B55FDC14</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>F54DD2A9-12CA-4E9D-9F03-6D5C18444155</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -3660,6 +3699,19 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>0E45EEB7-EA6D-4E6F-8655-98731989AEE0</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>F1DC5D37-62C5-4644-9EE8-06624A5B8B1B</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>F54DD2A9-12CA-4E9D-9F03-6D5C18444155</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -12096,6 +12148,119 @@ main($query,"TRACK","");
 			<key>version</key>
 			<integer>2</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>availableviaurlhandler</key>
+				<false/>
+				<key>triggerid</key>
+				<string>switch_to_preferred_spotify_connect_device</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.external</string>
+			<key>uid</key>
+			<string>048300BE-08F7-4E93-9AC5-B3CE8365DAF9</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string></string>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>triggerid</key>
+				<string>com.vdesabou.miniplayer.prefferedspotifyconnectdevice</string>
+				<key>triggername</key>
+				<string>Preferred Spotify Connet</string>
+				<key>workflowonly</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.remote</string>
+			<key>uid</key>
+			<string>84CCC97C-8B2B-48BF-B706-86386C40223B</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>38</integer>
+				<key>script</key>
+				<string>&lt;?php
+require './src/action.php';
+$query = serialize(array("", "", "", "", "", "", "", "switch_to_preferred_spotify_connect_device" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));
+main($query,"TRACK","");
+?&gt;</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>1</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>F54DD2A9-12CA-4E9D-9F03-6D5C18444155</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>2</integer>
+				<key>keyword</key>
+				<string>{var:c_switch_to_preferred_spotify_connect_device}</string>
+				<key>subtext</key>
+				<string>Preferred Spotify Connect device should be set</string>
+				<key>text</key>
+				<string>Switch to preferred Spotify Connect device</string>
+				<key>withspace</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>F1DC5D37-62C5-4644-9EE8-06624A5B8B1B</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>0</integer>
+				<key>focusedappvariable</key>
+				<false/>
+				<key>focusedappvariablename</key>
+				<string></string>
+				<key>hotkey</key>
+				<integer>0</integer>
+				<key>hotmod</key>
+				<integer>0</integer>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>0</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>A27C8F05-4766-429E-A19D-7025B55FDC14</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string># 🎩 Alfred Spotify Mini Player
@@ -12223,6 +12388,13 @@ During that time, you can use the workflow (you'll see the progress at the top o
 			<real>650</real>
 			<key>ypos</key>
 			<real>5530</real>
+		</dict>
+		<key>048300BE-08F7-4E93-9AC5-B3CE8365DAF9</key>
+		<dict>
+			<key>xpos</key>
+			<real>335</real>
+			<key>ypos</key>
+			<real>16465</real>
 		</dict>
 		<key>0554A7C3-1357-4E84-B414-BEA7A183AEE3</key>
 		<dict>
@@ -13546,6 +13718,13 @@ During that time, you can use the workflow (you'll see the progress at the top o
 			<key>ypos</key>
 			<real>6895</real>
 		</dict>
+		<key>84CCC97C-8B2B-48BF-B706-86386C40223B</key>
+		<dict>
+			<key>xpos</key>
+			<real>80</real>
+			<key>ypos</key>
+			<real>16565</real>
+		</dict>
 		<key>85966031-0B63-4629-BF2A-CAE7C92FCDD6</key>
 		<dict>
 			<key>xpos</key>
@@ -13845,6 +14024,13 @@ During that time, you can use the workflow (you'll see the progress at the top o
 			<real>100</real>
 			<key>ypos</key>
 			<real>7220</real>
+		</dict>
+		<key>A27C8F05-4766-429E-A19D-7025B55FDC14</key>
+		<dict>
+			<key>xpos</key>
+			<real>285</real>
+			<key>ypos</key>
+			<real>16770</real>
 		</dict>
 		<key>A2C8ACBA-F98F-457A-90E8-11BA2112342C</key>
 		<dict>
@@ -14618,6 +14804,13 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>ypos</key>
 			<real>12270</real>
 		</dict>
+		<key>F1DC5D37-62C5-4644-9EE8-06624A5B8B1B</key>
+		<dict>
+			<key>xpos</key>
+			<real>35</real>
+			<key>ypos</key>
+			<real>16720</real>
+		</dict>
 		<key>F23EB343-6D1D-4D17-9CCC-465756A5F513</key>
 		<dict>
 			<key>xpos</key>
@@ -14652,6 +14845,13 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<real>100</real>
 			<key>ypos</key>
 			<real>7750</real>
+		</dict>
+		<key>F54DD2A9-12CA-4E9D-9F03-6D5C18444155</key>
+		<dict>
+			<key>xpos</key>
+			<real>465</real>
+			<key>ypos</key>
+			<real>16680</real>
 		</dict>
 		<key>F55B6C14-1B39-4D5D-92B9-551B7CBECFE6</key>
 		<dict>
@@ -16237,6 +16437,27 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>config</key>
 			<dict>
 				<key>default</key>
+				<string>switch_to_preferred_spotify_connect_device</string>
+				<key>required</key>
+				<false/>
+				<key>trim</key>
+				<true/>
+				<key>verticalsize</key>
+				<integer>3</integer>
+			</dict>
+			<key>description</key>
+			<string>switch_to_preferred_spotify_connect_device</string>
+			<key>label</key>
+			<string>⌨️Command to rename</string>
+			<key>type</key>
+			<string>textarea</string>
+			<key>variable</key>
+			<string>c_switch_to_preferred_spotify_connect_device</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
 				<string>add_current_track_to_alfred_playlist_or_your_music</string>
 				<key>required</key>
 				<false/>
@@ -17588,7 +17809,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 		</dict>
 	</array>
 	<key>version</key>
-	<string>12.4</string>
+	<string>12.5</string>
 	<key>webaddress</key>
 	<string>https://alfred-spotify-mini-player.com</string>
 </dict>

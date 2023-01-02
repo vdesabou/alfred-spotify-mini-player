@@ -1710,6 +1710,91 @@ function seekTo($w,$position_ms)
  }
 
 /**
+ * getSpotifyConnectPreferredDevice function.
+ *
+ * @param mixed $w
+ */
+function getSpotifyConnectPreferredDevice($w)
+{
+    $preferred_spotify_connect_device = getSetting($w, 'preferred_spotify_connect_device');
+
+    $retry = true;
+    $nb_retry = 0;
+    while ($retry) {
+        try {
+            $api = getSpotifyWebAPI($w);
+            $devices = $api->getMyDevices();
+            $retry = false;
+            if (isset($devices->devices)) {
+                if ($preferred_spotify_connect_device != "") {
+                    foreach ($devices->devices as $device) {
+                        if ($device->name == $preferred_spotify_connect_device) {
+                            return $device->id;
+                        }
+                    }
+                }
+            }
+            return '';
+        } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+            if ($e->getMessage() == 'Permissions missing') {
+                $retry = false;
+                $w->result(null, serialize(array(
+                    '' /*track_uri*/,
+                    '' /* album_uri */,
+                    '' /* artist_uri */,
+                    '' /* playlist_uri */,
+                    '' /* spotify_command */,
+                    '' /* query */,
+                    '' /* other_settings*/,
+                    'reset_oauth_settings' /* other_action */,
+                    '' /* artist_name */,
+                    '' /* track_name */,
+                    '' /* album_name */,
+                    '' /* track_artwork_path */,
+                    '' /* artist_artwork_path */,
+                    '' /* album_artwork_path */,
+                    '' /* playlist_name */,
+                    '', /* playlist_artwork_path */
+                )), 'The workflow needs more privilages to do this, click to restart authentication', array(
+                    'Next time you invoke the workflow, you will have to re-authenticate',
+                    'alt' => '',
+                    'cmd' => '',
+                    'shift' => '',
+                    'fn' => '',
+                    'ctrl' => '',
+                ), './images/warning.png', 'yes', null, '');
+            } else {
+                logMsg($w, 'Error(getSpotifyConnectPreferredDevice): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
+                if ($e->getCode() == 404 || $e->getCode() == 403) {
+                    // skip
+                    break;
+                } else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
+                    // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
+                    // https://github.com/vdesabou/alfred-spotify-mini-player/issues/251
+                    // retry any SSL error
+                    ++$nb_retry;
+                } else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
+                    // retry
+                    if ($nb_retry > 3) {
+                        handleSpotifyWebAPIException($w, $e);
+                        $retry = false;
+
+                        return false;
+                    }
+                    ++$nb_retry;
+                    sleep(5);
+                } else {
+                    handleSpotifyWebAPIException($w, $e);
+                    $retry = false;
+
+                    return false;
+                }
+            }
+        }
+    }
+}
+
+/**
  * getSpotifyConnectCurrentDeviceId function.
  *
  * @param mixed $w

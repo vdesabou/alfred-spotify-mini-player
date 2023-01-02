@@ -1124,6 +1124,21 @@ function main($query, $type, $add_to_option)
             unfollowThePlaylist($w, $playlist_uri);
 
             return;
+        } elseif ($other_action == 'switch_to_preferred_spotify_connect_device') {
+            if ($preferred_spotify_connect_device != '') {
+                $device_id = getSpotifyConnectPreferredDevice($w);
+
+                if ($device_id != '') {
+                    changeUserDevice($w, $device_id);
+                } else {
+                    displayNotificationWithArtwork($w, 'Preferred Spotify Connect device id could not be found', './images/warning.png', 'Error!');
+                    return;
+                }
+            } else {
+                displayNotificationWithArtwork($w, 'No preferred Spotify Connect device configured', './images/warning.png', 'Error!');
+                return;
+            }
+            return;
         } elseif ($other_action == 'follow_playlist') {
             followThePlaylist($w, $playlist_uri);
 
