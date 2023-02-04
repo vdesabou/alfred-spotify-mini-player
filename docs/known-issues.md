@@ -28,8 +28,6 @@ This is the list of current known issues:
 
 ## Spotify WEB API limitations
 
-* You cannot have more than 10000 tracks in _Your Music_.
-
 * The special playlists like _Daily Mix_ or _Discover Weekly_ are not supported by the workflow, there is no API available to do that.
 
 ## Mopidy
