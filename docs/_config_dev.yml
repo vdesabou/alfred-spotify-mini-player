@@ -52,7 +52,6 @@ ghfr:
 owner:
   name: "Vincent"
   email: alfred.spotify.mini.player@gmail.com
-  twitter: "TheMiniPlayer"
   github: https://github.com/vdesabou/alfred-spotify-mini-player
   google:
     ad-client:
