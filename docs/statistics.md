@@ -13,7 +13,7 @@ toc: false
 noindex: false
 ---
 
-<script src="//www.stathat.com/javascripts/embed.js"></script>
+<script src="//www.stathat.com/js/embed.js"></script>
 
 * Workflow being used (any action)
 
