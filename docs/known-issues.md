@@ -51,6 +51,3 @@ Note:
 
 PHP 5.5.0 or later is required for authentication. This is because I am using the PHP CLI [built-in web server](http://php.net/manual/en/features.commandline.webserver.php) for Oauth process. If you use an older version, install php from brew as explained above.
 
-## MacOS Permission errors
-
-If you get issues with permissions (for fzf, terminal-notifier and Spotify Mini Player app) or issues with notifications not appearing, try to use command `Fix Permissions`, see [bug](https://github.com/vdesabou/alfred-spotify-mini-player/issues/506)

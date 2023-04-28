@@ -2,7 +2,7 @@
 layout: article
 title: "Notifications"
 date: 2014-12-23T11:39:03-04:00
-modified: 2018-01-26
+modified: 2023-04-28
 categories: articles
 excerpt: "Display an OS X or Growl notification for listened tracks."
 image:
@@ -21,9 +21,8 @@ MacOS and [growl](http://growl.info) notifications are supported.
 
 * You can enable "Now Playing" notifications (enabled by default), to get a notification every time a song changes:-
 
-<figure class="half">
+<figure>
 	<img src="{{ site.url }}/images/now-playing.jpg">
-	<img src="{{ site.url }}/images/now-playing3.jpg">
 	<figcaption>Examples of notifications.</figcaption>
 </figure>
 
@@ -33,7 +32,6 @@ You get in the notification:-
   * the artist and album name
   * track length
   * track popularity
-  * a beautiful artwork. (only with Mac OS notifications and before Big Sur)
   * ♥ if track is liked, ♡ otherwise
 
 * You can disable this option at any time in Settings menu:-
@@ -44,7 +42,7 @@ You get in the notification:-
 </figure>
 
 
-* To disable completely all notifications, disable notifications using the standard OS X way for Spotify Mini Player application:-
+* To disable completely all notifications, disable notifications using the standard OS X way for "Notificator for Spotify Mini Player" application:-
 
 <figure>
 	<img src="{{ site.url }}/images/now-playing4.jpg">

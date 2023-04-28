@@ -14,8 +14,6 @@ function refreshLibrary($w, $silent = false) {
             displayNotificationWithArtwork($w, 'Refresh library called while library does not exist', './images/warning.png');
         return;
     }
-
-    fixPermissions($w);
     
     $update_type = 'Refresh Library';
     if (file_exists($w->data() . '/create_library')) {

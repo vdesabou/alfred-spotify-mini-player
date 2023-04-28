@@ -5,43 +5,6 @@ require_once './src/createLibrary.php';
 require_once './src/refreshLibrary.php';
 require './vendor/autoload.php';
 
-/**
- * fixPermissions function.
- *
- */
-function fixPermissions($w)
-{
-    $theme_color = getSetting($w, 'theme_color');
-
-    // check for quarantine and remove it if required
-    exec('/usr/bin/xattr ./fzf', $response);
-    foreach ($response as $line) {
-        if (strpos($line, 'com.apple.quarantine') !== false) {
-            logMsg($w, "Info(fix_permissions) for fzf");
-            exec('/usr/bin/xattr -d com.apple.quarantine ./fzf', $response);
-            break;
-        }
-    }
-
-    // check for quarantine and remove it if required
-    exec('/usr/bin/xattr ./terminal-notifier.app', $response);
-    foreach ($response as $line) {
-        if (strpos($line, 'com.apple.quarantine') !== false) {
-            logMsg($w, "Info(fix_permissions) for terminal-notifier");
-            exec('/usr/bin/xattr -d com.apple.quarantine ./terminal-notifier.app', $response);
-            break;
-        }
-    }
-
-    exec('/usr/bin/xattr "' . './App/' . $theme_color . '/Spotify Mini Player.app' . '"', $response);
-    foreach ($response as $line) {
-        if (strpos($line, 'com.apple.quarantine') !== false) {
-            logMsg($w, "Info(fix_permissions) for Spotify Mini Player");
-            exec('/usr/bin/xattr -d com.apple.quarantine "' . './App/' . $theme_color . '/Spotify Mini Player.app' . '"', $response);
-            break;
-        }
-    }
-}
 
 /**
  * getExternalSettings function.
@@ -277,7 +240,7 @@ function getFuzzySearchResults($w, $update_in_progress, $query, $table_name, $ta
 
     $delimiter = '{::}';
 
-    exec("/usr/bin/sqlite3 -separator $delimiter '$dbfile' 'select ".implode(",",$table_columns)." from ".$table_name." ".$where_clause.";' | ./fzf --filter \"$query\" --delimiter=\"$delimiter\" --nth=\"$nth\"" , $retArr, $retVal);
+    exec("/usr/bin/sqlite3 -separator $delimiter '$dbfile' 'select ".implode(",",$table_columns)." from ".$table_name." ".$where_clause.";' | /usr/local/bin/fzf --filter \"$query\" --delimiter=\"$delimiter\" --nth=\"$nth\"" , $retArr, $retVal);
 
     $i = 0;
     $results = array();
@@ -2605,29 +2568,9 @@ function switchThemeColor($w,$theme_color)
         }
     }
 
-    // Get APP
-    $app_url = 'https://github.com/vdesabou/alfred-spotify-mini-player/raw/master/resources/images_' . $theme_color . '/' . rawurlencode('Spotify Mini Player.app.zip');
-
-    $zip_file = '/tmp/SpotifyMiniPlayer.app.zip';
-    $fp = fopen($zip_file, 'w+');
-    $options = array(
-        CURLOPT_FILE => $fp,
-        CURLOPT_FOLLOWLOCATION => 1,
-        CURLOPT_TIMEOUT => 5,
-    );
-
-    $w->request("$app_url", $options);
     ++$nb_images_downloaded;
     $w->write('Change Theme Color to ' . $theme_color . '▹'.$nb_images_downloaded.'▹'.$nb_images_total.'▹'.$words[3].'▹'.'Icons UUID remote page', 'change_theme_color_in_progress');
 
-    if (!is_file($zip_file) || (is_file($zip_file) && filesize($zip_file) == 0)) {
-        $hasError = true;
-        logMsg($w,'Error(switchThemeColor): (failed to load /tmp/SpotifyMiniPlayer.app.zip for '.$theme_color.')');
-    }
-    $zip_command = 'unzip -o '  . $zip_file . ' -d ' . '\'./App/'.$theme_color.'/\'';
-    exec($zip_command);
-
-    exec('open "'.'./App/'.$theme_color.'/Spotify Mini Player.app'.'"');
     //update settings
     updateSetting($w, 'theme_color', $theme_color);
 
@@ -2729,13 +2672,6 @@ function createDebugFile($w)
         $output = $output . 'NOT PREMIUM';
         $output = $output . "\n";
     }
-
-    $response = shell_exec('/usr/bin/xattr "'.'./App/'.$theme_color.'/Spotify Mini Player.app'.'"');
-    $output = $output."xattr Spotify Mini Player.app returned: \n";
-    $output = $output.$response."\n";
-    $response = shell_exec('/usr/bin/xattr "'.'./terminal-notifier.app'.'"');
-    $output = $output."xattr terminal-notifier returned: \n";
-    $output = $output.$response."\n";
 
     $output = $output."----------------------------------------------\n";
     $output = $output."Settings\n";
@@ -5930,45 +5866,15 @@ function checkIfShowDuplicate($my_show_array, $show)
  */
 function displayNotificationWithArtwork($w, $subtitle, $artwork, $title = 'Spotify Mini Player', $force = false)
 {
-
     if(getenv('reduce_notifications') == 1 && $title != "Error!" && $force == false) {
         // skip any non error
         return;
     }
 
-
-
     $use_growl = getSetting($w,'use_growl');
 
     if (!$use_growl) {
-        $theme_color = getSetting($w,'theme_color');
-        if (!is_dir('./App/'.$theme_color.'/Spotify Mini Player.app') || (is_dir('./App/'.$theme_color.'/Spotify Mini Player.app') && filesize('./App/'.$theme_color.'/Spotify Mini Player.app') == 0)) {
-            // reset to default
-            updateSetting($w, 'theme_color', 'green');
-            $theme_color = getSetting($w,'theme_color');
-        }
-        if ($artwork != '' && file_exists($artwork)) {
-            copy($artwork, '/tmp/tmp_' . exec("whoami") );
-        }
-
-        // check for quarantine and remove it if required
-        exec('/usr/bin/xattr ./terminal-notifier.app',$response);
-        foreach($response as $line) {
-            if (strpos($line, 'com.apple.quarantine') !== false) {
-                exec('/usr/bin/xattr -d com.apple.quarantine ./terminal-notifier.app',$response);
-                exit;
-            }
-        }
-
-        exec('/usr/bin/xattr "'.'./App/'.$theme_color.'/Spotify Mini Player.app'.'"',$response);
-        foreach($response as $line) {
-            if (strpos($line, 'com.apple.quarantine') !== false) {
-                exec('/usr/bin/xattr -d com.apple.quarantine "'.'./App/'.$theme_color.'/Spotify Mini Player.app'.'"',$response);
-                exit;
-            }
-        }
-
-        exec("./terminal-notifier.app/Contents/MacOS/terminal-notifier -title '".$title."' -sender 'com.spotify.miniplayer.".$theme_color."' -appIcon '/tmp/tmp_".exec("whoami")."' -message '".$subtitle."'");
+        exec("./src/notificator --title '".$title. "' --message '".$subtitle."'");
     } else {
         exec('./src/growl_notification.ksh -t "'.$title.'" -s "'.$subtitle.'" >> "'.$w->cache().'/action.log" 2>&1 & ');
     }
@@ -5981,11 +5887,6 @@ function displayNotificationWithArtwork($w, $subtitle, $artwork, $title = 'Spoti
  */
 function displayNotificationForCurrentTrack($w)
 {
-
-
-
-
-
     $output_application = getSetting($w,'output_application');
     $is_display_rating = getSetting($w,'is_display_rating');
     $use_artworks = getSetting($w,'use_artworks');
@@ -7897,9 +7798,6 @@ function checkForUpdate($w, $last_check_update_time, $download = false)
             // update workflow_version
             updateSetting($w, 'workflow_version', ''.$local_version);
             stathat_ez_count('AlfredSpotifyMiniPlayer', 'workflow_installations', 1);
-            fixPermissions($w);
-            // open SpotifyMiniPlayer.app for notifications
-            exec('open "'.'./App/'.$theme_color.'/Spotify Mini Player.app'.'"',$response);
         }
 
 

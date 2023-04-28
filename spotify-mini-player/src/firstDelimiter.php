@@ -1298,30 +1298,6 @@ function firstDelimiterCurrentTrack($w, $query, $db, $update_in_progress) {
             }
         }
 
-        if (countCharacters($input) < 2 || strpos(strtolower('share'), strtolower($input)) !== false) {
-
-            $osx_version = exec('sw_vers -productVersion');
-            if (version_compare($osx_version, '10,14', '<')) {
-                $w->result(null, serialize(array(''
-                /*track_uri*/, ''
-                /* album_uri */, ''
-                /* artist_uri */, ''
-                /* playlist_uri */, ''
-                /* spotify_command */, ''
-                /* query */, ''
-                /* other_settings*/, 'share'
-                /* other_action */, ''
-                /* artist_name */, ''
-                /* track_name */, ''
-                /* album_name */, ''
-                /* track_artwork_path */, ''
-                /* artist_artwork_path */, ''
-                /* album_artwork_path */, ''
-                /* playlist_name */, '', /* playlist_artwork_path */
-                )), 'Share current track using Mac OS X Sharing ', array('This will open the Mac OS X Sharing for the current track', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/share.png', 'yes', null, '');
-            }
-        }
-
         if (countCharacters($input) < 2 || strpos(strtolower('web search'), strtolower($input)) !== false) {
             $w->result(null, serialize(array(''
             /*track_uri*/, ''

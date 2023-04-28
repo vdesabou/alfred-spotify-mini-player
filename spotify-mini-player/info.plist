@@ -229,19 +229,6 @@
 				<false/>
 			</dict>
 		</array>
-		<key>0EBF4C61-5630-4629-8B4F-AD91D3470760</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>58B9E278-8EF7-46DC-96DC-D8D127D5EEBB</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-		</array>
 		<key>1059D963-473F-44F8-8D60-94CFCE56BFF2</key>
 		<array>
 			<dict>
@@ -487,19 +474,6 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>1D4F4588-B2AC-4E96-9F87-467BCC69915A</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-		</array>
-		<key>1BA8D519-4B49-4BD9-B329-D004A22AE84C</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>58B9E278-8EF7-46DC-96DC-D8D127D5EEBB</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -1325,19 +1299,6 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>29902759-070E-471F-950B-26489BC9DBA5</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-		</array>
-		<key>614AF93D-7DC9-4B4C-BD07-E3887CB6BB3B</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>715E30A7-032C-43B9-8D23-8245DC7B3668</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -2227,19 +2188,6 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>528C59BE-0DAD-4C1D-876E-09EEE2B889FA</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-		</array>
-		<key>9653C27F-400A-4C3F-BB97-FC0C803DFEC7</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>58B9E278-8EF7-46DC-96DC-D8D127D5EEBB</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -3515,19 +3463,6 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>18496AC4-EA42-444C-A906-642E38259C96</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-		</array>
-		<key>E5BAF801-726E-49C0-ABF2-7AD9F9ECD22A</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>58B9E278-8EF7-46DC-96DC-D8D127D5EEBB</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -9149,90 +9084,6 @@ main($query,"ARTIST_OR_PLAYLIST_PRIVACY","");
 				<key>availableviaurlhandler</key>
 				<false/>
 				<key>triggerid</key>
-				<string>share</string>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.trigger.external</string>
-			<key>uid</key>
-			<string>1BA8D519-4B49-4BD9-B329-D004A22AE84C</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>2</integer>
-				<key>keyword</key>
-				<string>{var:c_share}</string>
-				<key>subtext</key>
-				<string>Share current track using Mac OS X Sharing (up to Mac Os 10.13)</string>
-				<key>text</key>
-				<string>Share current track</string>
-				<key>withspace</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>0EBF4C61-5630-4629-8B4F-AD91D3470760</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>concurrently</key>
-				<false/>
-				<key>escaping</key>
-				<integer>38</integer>
-				<key>script</key>
-				<string>&lt;?php
-require './src/action.php';
-$query = serialize(array("", "", "", "", "", "", "", "share" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));
-main($query,"TRACK","");
-?&gt;</string>
-				<key>scriptargtype</key>
-				<integer>1</integer>
-				<key>scriptfile</key>
-				<string></string>
-				<key>type</key>
-				<integer>1</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>58B9E278-8EF7-46DC-96DC-D8D127D5EEBB</string>
-			<key>version</key>
-			<integer>2</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argument</key>
-				<string></string>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>triggerid</key>
-				<string>com.vdesabou.miniplayer.share</string>
-				<key>triggername</key>
-				<string>Share</string>
-				<key>workflowonly</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.trigger.remote</string>
-			<key>uid</key>
-			<string>E5BAF801-726E-49C0-ABF2-7AD9F9ECD22A</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>availableviaurlhandler</key>
-				<false/>
-				<key>triggerid</key>
 				<string>web_search_current_track</string>
 			</dict>
 			<key>type</key>
@@ -9266,35 +9117,6 @@ main($query,"TRACK","");
 			<string>alfred.workflow.action.script</string>
 			<key>uid</key>
 			<string>6FEAFE02-DF77-4F58-9305-651E6D627144</string>
-			<key>version</key>
-			<integer>2</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>action</key>
-				<integer>0</integer>
-				<key>argument</key>
-				<integer>0</integer>
-				<key>focusedappvariable</key>
-				<false/>
-				<key>focusedappvariablename</key>
-				<string></string>
-				<key>hotkey</key>
-				<integer>0</integer>
-				<key>hotmod</key>
-				<integer>0</integer>
-				<key>leftcursor</key>
-				<false/>
-				<key>modsmode</key>
-				<integer>0</integer>
-				<key>relatedAppsMode</key>
-				<integer>0</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.trigger.hotkey</string>
-			<key>uid</key>
-			<string>9653C27F-400A-4C3F-BB97-FC0C803DFEC7</string>
 			<key>version</key>
 			<integer>2</integer>
 		</dict>
@@ -12103,54 +11925,6 @@ main($query,"TRACK","");
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>argumenttype</key>
-				<integer>2</integer>
-				<key>keyword</key>
-				<string>{var:c_fix_permissions}</string>
-				<key>subtext</key>
-				<string>Use this if you get issues with notifications or fzf</string>
-				<key>text</key>
-				<string>Fix Permissions</string>
-				<key>withspace</key>
-				<false/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>614AF93D-7DC9-4B4C-BD07-E3887CB6BB3B</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>concurrently</key>
-				<false/>
-				<key>escaping</key>
-				<integer>38</integer>
-				<key>script</key>
-				<string>&lt;?php
-require './src/action.php';
-$query = serialize(array("", "", "", "", "", "", "", "fix_permissions" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));
-main($query,"TRACK","");
-?&gt;</string>
-				<key>scriptargtype</key>
-				<integer>1</integer>
-				<key>scriptfile</key>
-				<string></string>
-				<key>type</key>
-				<integer>1</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>715E30A7-032C-43B9-8D23-8245DC7B3668</string>
-			<key>version</key>
-			<integer>2</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>availableviaurlhandler</key>
 				<false/>
 				<key>triggerid</key>
@@ -12538,13 +12312,6 @@ During that time, you can use the workflow (you'll see the progress at the top o
 			<key>ypos</key>
 			<real>12270</real>
 		</dict>
-		<key>0EBF4C61-5630-4629-8B4F-AD91D3470760</key>
-		<dict>
-			<key>xpos</key>
-			<real>300</real>
-			<key>ypos</key>
-			<real>11330</real>
-		</dict>
 		<key>0ED2ADE7-F998-4BE2-99F5-70CE4B287555</key>
 		<dict>
 			<key>xpos</key>
@@ -12693,13 +12460,6 @@ During that time, you can use the workflow (you'll see the progress at the top o
 			<real>300</real>
 			<key>ypos</key>
 			<real>2160</real>
-		</dict>
-		<key>1BA8D519-4B49-4BD9-B329-D004A22AE84C</key>
-		<dict>
-			<key>xpos</key>
-			<real>600</real>
-			<key>ypos</key>
-			<real>11290</real>
 		</dict>
 		<key>1C1853C2-5C6A-4EC4-88D4-B7DF700A92E0</key>
 		<dict>
@@ -13170,13 +12930,6 @@ During that time, you can use the workflow (you'll see the progress at the top o
 			<key>ypos</key>
 			<real>10580</real>
 		</dict>
-		<key>58B9E278-8EF7-46DC-96DC-D8D127D5EEBB</key>
-		<dict>
-			<key>xpos</key>
-			<real>800</real>
-			<key>ypos</key>
-			<real>11360</real>
-		</dict>
 		<key>5A5F8E26-B370-4477-9C48-A5BE30859FC9</key>
 		<dict>
 			<key>xpos</key>
@@ -13288,13 +13041,6 @@ During that time, you can use the workflow (you'll see the progress at the top o
 			<real>660</real>
 			<key>ypos</key>
 			<real>1125</real>
-		</dict>
-		<key>614AF93D-7DC9-4B4C-BD07-E3887CB6BB3B</key>
-		<dict>
-			<key>xpos</key>
-			<real>650</real>
-			<key>ypos</key>
-			<real>16370</real>
 		</dict>
 		<key>620CF52F-BCFD-4957-BC4F-1E9853125AF5</key>
 		<dict>
@@ -13476,13 +13222,6 @@ During that time, you can use the workflow (you'll see the progress at the top o
 			<real>670</real>
 			<key>ypos</key>
 			<real>6345</real>
-		</dict>
-		<key>715E30A7-032C-43B9-8D23-8245DC7B3668</key>
-		<dict>
-			<key>xpos</key>
-			<real>910</real>
-			<key>ypos</key>
-			<real>16375</real>
 		</dict>
 		<key>71AACE30-7E8D-4D3C-8BD1-F98FEE578AEC</key>
 		<dict>
@@ -13886,13 +13625,6 @@ During that time, you can use the workflow (you'll see the progress at the top o
 			<real>940</real>
 			<key>ypos</key>
 			<real>11930</real>
-		</dict>
-		<key>9653C27F-400A-4C3F-BB97-FC0C803DFEC7</key>
-		<dict>
-			<key>xpos</key>
-			<real>100</real>
-			<key>ypos</key>
-			<real>11540</real>
 		</dict>
 		<key>9661EF24-91C3-44A1-9066-8E9B9817841D</key>
 		<dict>
@@ -14686,13 +14418,6 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<real>500</real>
 			<key>ypos</key>
 			<real>8470</real>
-		</dict>
-		<key>E5BAF801-726E-49C0-ABF2-7AD9F9ECD22A</key>
-		<dict>
-			<key>xpos</key>
-			<real>100</real>
-			<key>ypos</key>
-			<real>11420</real>
 		</dict>
 		<key>E63EB492-FCE2-42A1-BD38-7EFE4EA77473</key>
 		<dict>
@@ -16544,27 +16269,6 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>config</key>
 			<dict>
 				<key>default</key>
-				<string>fix_permissions</string>
-				<key>required</key>
-				<false/>
-				<key>trim</key>
-				<true/>
-				<key>verticalsize</key>
-				<integer>3</integer>
-			</dict>
-			<key>description</key>
-			<string>fix_permissions</string>
-			<key>label</key>
-			<string>⌨️Command to rename</string>
-			<key>type</key>
-			<string>textarea</string>
-			<key>variable</key>
-			<string>c_fix_permissions</string>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>default</key>
 				<string>follow_artist</string>
 				<key>required</key>
 				<false/>
@@ -17811,7 +17515,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 		</dict>
 	</array>
 	<key>version</key>
-	<string>12.6</string>
+	<string>13.0</string>
 	<key>webaddress</key>
 	<string>https://alfred-spotify-mini-player.com</string>
 </dict>

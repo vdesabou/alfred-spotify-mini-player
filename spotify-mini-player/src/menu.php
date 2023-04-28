@@ -1158,27 +1158,6 @@ function searchCommandsFastAccess($w, $query, $db, $update_in_progress) {
         /* playlist_name */, '', /* playlist_artwork_path */
         )), 'Repeating', array('Activate/Deactivate repeating in Spotify', 'alt' => '', 'cmd' => $cmd, 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/repeating.png', 'yes', '');
 
-        $osx_version = exec('sw_vers -productVersion');
-        if (version_compare($osx_version, '10,14', '<')) {
-            $w->result('SpotifyMiniPlayer_' . 'share', serialize(array(''
-            /*track_uri*/, ''
-            /* album_uri */, ''
-            /* artist_uri */, ''
-            /* playlist_uri */, ''
-            /* spotify_command */, ''
-            /* query */, ''
-            /* other_settings*/, 'share'
-            /* other_action */, ''
-            /* artist_name */, ''
-            /* track_name */, ''
-            /* album_name */, ''
-            /* track_artwork_path */, ''
-            /* artist_artwork_path */, ''
-            /* album_artwork_path */, ''
-            /* playlist_name */, '', /* playlist_artwork_path */
-            )), 'Share current track using Mac OS X Sharing ', array('This will open the Mac OS X Sharing for the current track', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/share.png', 'yes', null, '');
-        }
-
         $w->result('SpotifyMiniPlayer_' . 'reset_playlist_number_times_played', serialize(array(''
         /*track_uri*/, ''
         /* album_uri */, ''
@@ -1536,30 +1515,6 @@ function searchCommandsFastAccess($w, $query, $db, $update_in_progress) {
         )), 'Choose audio output device', 'Output audio devices', './images/speaker.png', 'yes', '');
     }
     else {
-
-        // Search commands for fast access
-        if (strpos(strtolower('share'), strtolower($query)) !== false) {
-            $osx_version = exec('sw_vers -productVersion');
-            if (version_compare($osx_version, '10,14', '<')) {
-                $w->result('SpotifyMiniPlayer_' . 'share', serialize(array(''
-                /*track_uri*/, ''
-                /* album_uri */, ''
-                /* artist_uri */, ''
-                /* playlist_uri */, ''
-                /* spotify_command */, ''
-                /* query */, ''
-                /* other_settings*/, 'share'
-                /* other_action */, ''
-                /* artist_name */, ''
-                /* track_name */, ''
-                /* album_name */, ''
-                /* track_artwork_path */, ''
-                /* artist_artwork_path */, ''
-                /* album_artwork_path */, ''
-                /* playlist_name */, '', /* playlist_artwork_path */
-                )), 'Share current track using Mac OS X Sharing ', array('This will open the Mac OS X Sharing for the current track', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/share.png', 'yes', null, '');
-            }
-        }
         if (strpos(strtolower('web search'), strtolower($query)) !== false) {
             $w->result('SpotifyMiniPlayer_' . 'web_search', serialize(array(''
             /*track_uri*/, ''

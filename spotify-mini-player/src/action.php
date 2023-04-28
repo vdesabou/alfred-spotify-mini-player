@@ -739,7 +739,6 @@ function main($query, $type, $add_to_option)
     } elseif ($other_action != '') {
         if ($other_action == 'enable_now_playing_notifications') {
             $ret = updateSetting($w, 'now_playing_notifications', 1);
-            exec('open "'.'./App/'.$theme_color.'/Spotify Mini Player.app'.'"');
             if ($ret == true) {
                 displayNotificationWithArtwork($w, 'Now Playing notifications are now enabled', './images/enable_now_playing.png', 'Settings');
             } else {
@@ -843,10 +842,6 @@ function main($query, $type, $add_to_option)
                 displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
             }
 
-            return;
-        } elseif ($other_action == 'fix_permissions') {
-            fixPermissions($w);
-            displayNotificationWithArtwork($w, 'Done', './images/debug.png', 'Fix permissions');
             return;
         } elseif ($other_action == 'enable_mopidy') {
             exec('./src/spotify_mini_player_notifications.ksh -d "'.$w->data().'" -a stop -v "'.getAlfredName().'" & ');
@@ -1858,53 +1853,6 @@ function main($query, $type, $add_to_option)
             $tmp = explode('▹',$search_text);
 
             echo "$tmp[1]";
-
-            return;
-        } elseif ($other_action == 'share') {
-            $results = getCurrentTrackinfo($w, $output_application);
-
-            if (!isset($results[0])) {
-                displayNotificationWithArtwork($w, 'Cannot get current track', './images/warning.png', 'Error!');
-                return;
-            }
-
-            if($use_facebook) {
-            $service = 'facebook';
-            } else {
-            $service = 'twitter';
-            }
-
-            $osx_version = exec('sw_vers -productVersion');
-            if(version_compare($osx_version, '10,14', '>=')) {
-                displayNotificationWithArtwork($w, 'Sharing using '.$service.' is no more supported by Mac Os', './images/warning.png', 'Error!');
-                return;
-            }
-
-            $text = getenv('sharing_hashtag1');
-            $text .= ' ';
-            $text .= escapeQuery($results[0]);
-            $text .= ' by ';
-            $text .= escapeQuery($results[1]);
-            $text .= ' ';
-            if(getenv('sharing_text1') != '') {
-                $text .= getenv('sharing_text1');
-                $text .= ' ';
-            }
-            if(getenv('sharing_text2') != '') {
-                $text .= getenv('sharing_text2');
-                $text .= ' ';
-            }
-            if(getenv('sharing_hashtag2') != '') {
-                $text .= getenv('sharing_hashtag2');
-                $text .= ' ';
-            }
-
-            $tmp = explode(':', $results[4]);
-            if ($tmp[1] != 'local') {
-                $text .= ' https://open.spotify.com/track/';
-                $text .= $tmp[2];
-            }
-            exec("./terminal-share.app/Contents/MacOS/terminal-share -service '".$service."' -text '".$text."'");
 
             return;
         } elseif ($other_action == 'repeating') {
