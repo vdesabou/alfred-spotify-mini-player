@@ -153,9 +153,6 @@ function main($argv) {
         return;
     }
 
-    // Check for workflow update
-    checkForUpdate($w, $last_check_update_time, false);
-
     // thanks to http://www.alfredforum.com/topic/1788-prevent-flash-of-no-result
     mb_internal_encoding('UTF-8');
 
@@ -268,8 +265,6 @@ function main($argv) {
                     firstDelimiterLyrics($w, $query, $db, $update_in_progress);
                 } elseif ($kind == 'Settings') {
                     firstDelimiterSettings($w, $query, $db, $update_in_progress);
-                } elseif ($kind == 'Check for update...') {
-                    firstDelimiterCheckForUpdate($w, $query, $db, $update_in_progress);
                 } elseif ($kind == 'Play Queue') {
                     firstDelimiterPlayQueue($w, $query, $db, $update_in_progress);
                 } elseif ($kind == 'Browse') {

@@ -17294,27 +17294,6 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>config</key>
 			<dict>
 				<key>default</key>
-				<string>0</string>
-				<key>placeholder</key>
-				<string></string>
-				<key>required</key>
-				<false/>
-				<key>trim</key>
-				<true/>
-			</dict>
-			<key>description</key>
-			<string>🚫Automatically set, do not modify !</string>
-			<key>label</key>
-			<string>🕛Last workflow update check</string>
-			<key>type</key>
-			<string>textfield</string>
-			<key>variable</key>
-			<string>__last_check_update_time</string>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>default</key>
 				<true/>
 				<key>required</key>
 				<false/>
