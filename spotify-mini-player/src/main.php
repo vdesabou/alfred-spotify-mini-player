@@ -16,7 +16,6 @@ function main($argv) {
     $alfred_playlist_uri = getSetting($w, 'alfred_playlist_uri');
     $alfred_playlist_name = getSetting($w, 'alfred_playlist_name');
     $country_code = getSetting($w, 'country_code');
-    $last_check_update_time = getSetting($w, 'last_check_update_time');
     $userid = getSetting($w, 'userid');
     $debug = getSetting($w, 'debug');
     if($debug) {

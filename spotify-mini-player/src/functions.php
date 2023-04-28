@@ -7957,7 +7957,6 @@ function getSetting($w, $setting_name)
         updateSetting($w, 'alfred_playlist_uri', $settings->alfred_playlist_uri);
         updateSetting($w, 'alfred_playlist_name', $settings->alfred_playlist_name);
         updateSetting($w, 'country_code', $settings->country_code);
-        updateSetting($w, 'last_check_update_time', $settings->last_check_update_time);
         updateSetting($w, 'oauth_client_id', $settings->oauth_client_id);
         updateSetting($w, 'oauth_client_secret', $settings->oauth_client_secret);
         updateSetting($w, 'oauth_redirect_uri', $settings->oauth_redirect_uri);
@@ -8031,7 +8030,6 @@ function resetSettings($w)
     updateSetting($w, 'alfred_playlist_uri', '');
     updateSetting($w, 'alfred_playlist_name', '');
     updateSetting($w, 'country_code', '');
-    updateSetting($w, 'last_check_update_time', '0');
     updateSetting($w, 'oauth_client_id', '');
     updateSetting($w, 'oauth_client_secret', '');
     updateSetting($w, 'oauth_redirect_uri', 'http://localhost:15298/callback.php');

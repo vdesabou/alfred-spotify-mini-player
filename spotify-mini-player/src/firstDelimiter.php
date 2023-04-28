@@ -1896,7 +1896,6 @@ function firstDelimiterSettings($w, $query, $db, $update_in_progress) {
     $radio_number_tracks = getSetting($w,'radio_number_tracks');
     $now_playing_notifications = getSetting($w,'now_playing_notifications');
     $max_results = getSetting($w,'max_results');
-    $last_check_update_time = getSetting($w,'last_check_update_time');
     $userid = getSetting($w,'userid');
     $is_public_playlists = getSetting($w,'is_public_playlists');
     $quick_mode = getSetting($w,'quick_mode');
