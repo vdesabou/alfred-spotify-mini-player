@@ -72,11 +72,3 @@ jobs:
           asset_path: ./spotifyminiplayer.alfredworkflow
           asset_name: spotifyminiplayer.alfredworkflow
           asset_content_type: application/zip
-      - name: Make a tweet
-        uses: ethomson/send-tweet-action@v1
-        with:
-          status: "Version ${{ github.event.milestone.title }} is available! https://github.com/vdesabou/alfred-spotify-mini-player/releases"
-          consumer-key: ${{ secrets.TWITTER_CONSUMER_API_KEY }}
-          consumer-secret: ${{ secrets.TWITTER_CONSUMER_API_SECRET }}
-          access-token: ${{ secrets.TWITTER_ACCESS_TOKEN }}
-          access-token-secret: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
