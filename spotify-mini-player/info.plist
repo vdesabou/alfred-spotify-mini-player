@@ -4666,7 +4666,7 @@ main($query,"PREVIEW","");
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>PATH=$PATH:/opt/homebrew/bin/:/usr/local/bin/
+				<string>
 
 php -S 127.0.0.1:15298</string>
 				<key>scriptargtype</key>

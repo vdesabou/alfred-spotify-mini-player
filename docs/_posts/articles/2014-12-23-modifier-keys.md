@@ -31,7 +31,7 @@ Alfred modifiers are specific actions you can trigger when pressing special keys
 
 * Select a track with `⌘+⌥` (cmd+alt key) to add track to queue ([Spotify Connect](https://alfred-spotify-mini-player.com/articles/spotify-connect/) users only)
 
-* Select a track or an episode with `fn+⇧` (function key + shift) to preview the track or the episode for 30 seconds (require mpg123 to be installed with [brew](https://brew.sh))
+* Select a track or an episode with `fn+⇧` (function key + shift) to preview the track or the episode for 30 seconds
 
 * Select a track with  `⇧` (shift key) to add the album to either _Your Music_, or any of your playlists (you can even create a new one)
 

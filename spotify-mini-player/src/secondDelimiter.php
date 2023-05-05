@@ -2668,7 +2668,7 @@ function secondDelimiterPreview($w, $query, $db, $update_in_progress) {
     $is_display_rating = getSetting($w,'is_display_rating');
     $output_application = getSetting($w,'output_application');
 
-    if (!file_exists('/usr/local/bin/mpg123')) {
+    if (!file_exists('mpg123')) {
         $w->result(null, '', 'mpg123 is not installed, install using brew install mpg123', array('install using brew install mpg123', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/warning.png', 'no', null, '');
         echo $w->tojson();
         exit;
@@ -2749,7 +2749,7 @@ function secondDelimiterPreview($w, $query, $db, $update_in_progress) {
                     return;
                 }
             }
-            exec('curl -s ' . $track->preview_url . ' | /usr/local/bin/mpg123 - > /dev/null 2>&1 &');
+            exec('curl -s ' . $track->preview_url . ' | mpg123 - > /dev/null 2>&1 &');
         }
         else {
             $w->result(null, '', 'The track . ' . $track->name . ' does not have a preview', array('uri=' . $track_uri, 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/warning.png', 'no', null, '');
@@ -2827,7 +2827,7 @@ function secondDelimiterPreview($w, $query, $db, $update_in_progress) {
                 }
             }
 
-            exec('curl -s ' . $episode->audio_preview_url . ' | /usr/local/bin/mpg123 - > /dev/null 2>&1 &');
+            exec('curl -s ' . $episode->audio_preview_url . ' | mpg123 - > /dev/null 2>&1 &');
         }
         else {
             $w->result(null, '', 'The episode . ' . $episode->name . ' does not have a preview', array('uri=' . $episode->uri, 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/warning.png', 'no', null, '');

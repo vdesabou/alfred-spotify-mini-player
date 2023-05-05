@@ -5,8 +5,6 @@ ACTION=""
 APP=""
 ALFRED_NAME=""
 
-PATH=$PATH:/opt/homebrew/bin/:/usr/local/bin/
-
 while getopts 'v:d:a:m:' arguments
 	do
 	  case ${arguments} in
