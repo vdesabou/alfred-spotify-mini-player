@@ -12107,11 +12107,7 @@ If you're using a firewall or a software that blocks communications, note that y
 
 * https://api.spotify.com (for interaction with Spotify)
 
-* https://raw.githubusercontent.com (for downloading new release from web site)
-
 * https://github.com/ (for downloading images when changing theme)
-
-* http://api.stathat.com (for statistics)
 
 If you're using a proxy, don't forget to enable this option in Alfred preferences, ***except for the time of authentication, it must be disabled*** :
 
@@ -17062,25 +17058,6 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<string>textarea</string>
 			<key>variable</key>
 			<string>c_web_search</string>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>default</key>
-				<false/>
-				<key>required</key>
-				<false/>
-				<key>text</key>
-				<string></string>
-			</dict>
-			<key>description</key>
-			<string>The workflow is collecting completely anonymous metrics to better understand how users are using it. Graphs are available on the website.</string>
-			<key>label</key>
-			<string>📊Disable anonymous metrics</string>
-			<key>type</key>
-			<string>checkbox</string>
-			<key>variable</key>
-			<string>disable_anonymous_metrics</string>
 		</dict>
 		<dict>
 			<key>config</key>

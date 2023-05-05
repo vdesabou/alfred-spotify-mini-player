@@ -227,14 +227,7 @@
                                             <p>https://api.spotify.com (for interaction with Spotify)</p>
                                         </li>
                                         <li>
-                                            <p>https://raw.githubusercontent.com (for downloading new release from web
-                                                site)</p>
-                                        </li>
-                                        <li>
                                             <p>https://github.com/ (for downloading images when changing theme)</p>
-                                        </li>
-                                        <li>
-                                            <p>http://api.stathat.com (for statistics, this can be disabled by setting variable disable_anonymous_metrics to 1)</p>
                                         </li>
                                     </ul>
                                 </li>

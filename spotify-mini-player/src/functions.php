@@ -6213,7 +6213,7 @@ function downloadArtworks($w, $silent = false)
         $elapsed_time = time() - $words[3];
         if(!$silent)
             displayNotificationWithArtwork($w, 'All artworks have been downloaded ('.$nb_artworks_total.' artworks) - took '.beautifyTime($elapsed_time, true), './images/artworks.png', 'Artworks');
-        stathat_ez_count('AlfredSpotifyMiniPlayer', 'artworks', $nb_artworks_total);
+        
     }
 
     // Get size of artwork directory
@@ -6298,7 +6298,7 @@ function getTrackOrAlbumArtwork($w, $spotifyURL, $fetchIfNotPresent, $fetchLater
                 if ($isLaterFetch == true) {
                     return true;
                 } else {
-                    stathat_ez_count('AlfredSpotifyMiniPlayer', 'artworks', 1);
+                    
                 }
             } else {
                 if ($isLaterFetch == true) {
@@ -6437,7 +6437,7 @@ function getPlaylistArtwork($w, $playlist_uri, $fetchIfNotPresent, $forceFetch =
                 );
 
                 $w->request("$artwork", $options);
-                stathat_ez_count('AlfredSpotifyMiniPlayer', 'artworks', 1);
+                
             } else {
                 return './images/playlists.png';
             }
@@ -6491,7 +6491,7 @@ function getCategoryArtwork($w, $categoryId, $categoryURI, $fetchIfNotPresent, $
                 CURLOPT_TIMEOUT => 5,
             );
             $w->request("$categoryURI", $options);
-            stathat_ez_count('AlfredSpotifyMiniPlayer', 'artworks', 1);
+            
         } else {
             return './images/browse.png';
         }
@@ -6568,7 +6568,7 @@ function getShowArtwork($w, $show_uri, $fetchIfNotPresent = false, $fetchLater =
                     CURLOPT_TIMEOUT => 5,
                 );
                 $w->request("$artwork", $options);
-                stathat_ez_count('AlfredSpotifyMiniPlayer', 'artworks', 1);
+                
                 if ($isLaterFetch == true) {
                     return true;
                 }
@@ -6691,7 +6691,7 @@ function getEpisodeArtwork($w, $episode_uri, $fetchIfNotPresent = false, $fetchL
                     CURLOPT_TIMEOUT => 5,
                 );
                 $w->request("$artwork", $options);
-                stathat_ez_count('AlfredSpotifyMiniPlayer', 'artworks', 1);
+                
                 if ($isLaterFetch == true) {
                     return true;
                 }
@@ -6813,7 +6813,7 @@ function getArtistArtwork($w, $artist_uri, $artist_name, $fetchIfNotPresent = fa
                     CURLOPT_TIMEOUT => 5,
                 );
                 $w->request("$artwork", $options);
-                stathat_ez_count('AlfredSpotifyMiniPlayer', 'artworks', 1);
+                
                 if ($isLaterFetch == true) {
                     return true;
                 }
@@ -8122,128 +8122,6 @@ function removeDirectory($path)
     }
 
     return false;
-}
-
-///////////////
-
-// StatHat integration
-
-/**
- * do_post_request function.
- *
- * @param mixed $url
- * @param mixed $data
- * @param mixed $optional_headers (default: null)
- */
-function do_post_request($url, $data, $optional_headers = null)
-{
-    $params = array(
-        'http' => array(
-            'method' => 'POST',
-            'content' => $data,
-        ),
-    );
-    if ($optional_headers !== null) {
-        $params['http']['header'] = $optional_headers;
-    }
-    $ctx = stream_context_create($params);
-    $fp = @fopen($url, 'rb', false, $ctx);
-    if (!$fp) {
-        throw new Exception("Problem with $url, $php_errormsg");
-    }
-    $response = @stream_get_contents($fp);
-    if ($response === false) {
-        throw new Exception("Problem reading data from $url, $php_errormsg");
-    }
-
-    return $response;
-}
-
-/**
- * do_async_post_request function.
- *
- * @param mixed $url
- * @param mixed $params
- */
-function do_async_post_request($url, $params)
-{
-    foreach ($params as $key => &$val) {
-        if (is_array($val)) {
-            $val = implode(',', $val);
-        }
-        $post_params[] = $key.'='.urlencode($val);
-    }
-    $post_string = implode('&', $post_params);
-
-    $parts = parse_url($url);
-
-    $fp = @fsockopen($parts['host'], isset($parts['port']) ? $parts['port'] : 80, $errno, $errstr, 30);
-
-    if ($fp) {
-        $out = 'POST '.$parts['path']." HTTP/1.1\r\n";
-        $out .= 'Host: '.$parts['host']."\r\n";
-        $out .= "Content-Type: application/x-www-form-urlencoded\r\n";
-        $out .= 'Content-Length: '.strlen($post_string)."\r\n";
-        $out .= "Connection: Close\r\n\r\n";
-        if (isset($post_string)) {
-            $out .= $post_string;
-        }
-
-        fwrite($fp, $out);
-        fclose($fp);
-    }
-}
-
-/**
- * stathat_count function.
- *
- * @param mixed $stat_key
- * @param mixed $user_key
- * @param mixed $count
- */
-function stathat_count($stat_key, $user_key, $count)
-{
-    return do_async_post_request('http://api.stathat.com/c', array(
-            'key' => $stat_key,
-            'ukey' => $user_key,
-            'count' => $count,
-        ));
-}
-
-/**
- * stathat_value function.
- *
- * @param mixed $stat_key
- * @param mixed $user_key
- * @param mixed $value
- */
-function stathat_value($stat_key, $user_key, $value)
-{
-    do_async_post_request('http://api.stathat.com/v', array(
-            'key' => $stat_key,
-            'ukey' => $user_key,
-            'value' => $value,
-        ));
-}
-
-/**
- * stathat_ez_count function.
- *
- * @param mixed $email
- * @param mixed $stat_name
- * @param mixed $count
- */
-function stathat_ez_count($email, $stat_name, $count)
-{
-    if(getenv('disable_anonymous_metrics') == 1)
-    {
-        return;
-    }
-    do_async_post_request('http://api.stathat.com/ez', array(
-            'email' => $email,
-            'stat' => $stat_name,
-            'count' => $count,
-        ));
 }
 
 /**
