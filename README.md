@@ -29,3 +29,7 @@ Follow [@TheMiniPlayer](https://twitter.com/TheMiniPlayer) to get all the news.
 Made with ❤ by [@vdesabou](https://github.com/vdesabou).
 
 Love it? Give it a ⭐️ or a tweet to help spread the word!
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=vdesabou/alfred-spotify-mini-player&type=Date)](https://star-history.com/#vdesabou/alfred-spotify-mini-player&Date)
