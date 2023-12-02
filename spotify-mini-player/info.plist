@@ -5814,12 +5814,12 @@ main($query,"TRACK","");
 				<key>concurrently</key>
 				<false/>
 				<key>escaping</key>
-				<integer>38</integer>
+				<integer>100</integer>
 				<key>script</key>
 				<string>&lt;?php
 require './src/action.php';
 $query = serialize(array("", "", "", "", "", "", "", "play" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));
-main($query,"TRACK","");
+main($query,$argv[1],"");
 ?&gt;</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
