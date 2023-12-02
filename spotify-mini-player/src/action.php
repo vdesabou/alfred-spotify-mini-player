@@ -457,7 +457,7 @@ function main($query, $type, $add_to_option)
                     exec('launchctl stop com.vdesabou.spotify.mini.player');
                     exec('launchctl unload -w  ~/Library/LaunchAgents/com.vdesabou.spotify.mini.player.plist');
                     exec('rm ~/Library/LaunchAgents/com.vdesabou.spotify.mini.player.plist');
-                    exec('sed -e "s|:INTERVAL:|'.$interval_in_seconds.'|g" "'.exec('pwd').'/src/com.vdesabou.spotify.mini.player-template.plist'.'". > ~/Library/LaunchAgents/com.vdesabou.spotify.mini.player.plist');
+                    exec('sed -e "s|:INTERVAL:|' . $interval_in_seconds . '|g" \'' . exec('pwd') . '/src/com.vdesabou.spotify.mini.player-template.plist\' > ~/Library/LaunchAgents/com.vdesabou.spotify.mini.player.plist');
                     exec('launchctl load -w  ~/Library/LaunchAgents/com.vdesabou.spotify.mini.player.plist');
                     exec('launchctl start com.vdesabou.spotify.mini.player');
                     displayNotificationWithArtwork($w, 'Refresh of library every '.$setting[1].' minutes', './images/settings.png', 'Settings');
