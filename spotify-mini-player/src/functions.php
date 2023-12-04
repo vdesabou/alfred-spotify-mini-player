@@ -5985,7 +5985,7 @@ function displayLyricsForCurrentTrack($w)
             if ($lyrics_url != false) {
                 exec('open '.$lyrics_url);
             } else {
-                displayNotificationWithArtwork($w, 'No lyrics found!', './images/warning.png', 'Error!');
+                exec('open ' .'https://www.musixmatch.com/search/' . urlencode($results[1]) . '%20' . urlencode($results[0]));
             }
         }
 

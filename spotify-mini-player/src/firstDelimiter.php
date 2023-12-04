@@ -1873,9 +1873,23 @@ function firstDelimiterLyrics($w, $query, $db, $update_in_progress) {
             }
         }
         else {
-            $w->result(null, 'help', 'No lyrics found!', array('', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/warning.png', 'no', null, '');
-            echo $w->tojson();
-            exit;
+            $w->result(null, serialize(array(
+                ''
+                /*track_uri*/, ''
+                /* album_uri */, ''
+                /* artist_uri */, ''
+                /* playlist_uri */, ''
+                /* spotify_command */, ''
+                /* query */, 'Open▹' . 'https://www.musixmatch.com/search/' . urlencode($track_name) . '%20' . urlencode($artist_name) /* other_settings*/, ''
+                /* other_action */, ''
+                /* artist_name */, ''
+                /* track_name */, ''
+                /* album_name */, ''
+                /* track_artwork_path */, ''
+                /* artist_artwork_path */, ''
+                /* album_artwork_path */, ''
+                /* playlist_name */, '', /* playlist_artwork_path */
+            )), 'Search lyrics for ' . $track_name . ' by ' . $artist_name . ' online', 'This will open your default browser', './images/lyrics.png', 'yes', null, '');
         }
     }
 }
