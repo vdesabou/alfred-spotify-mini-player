@@ -2627,15 +2627,20 @@ function secondDelimiterBrowse($w, $query, $db, $update_in_progress) {
             $api = getSpotifyWebAPI($w);
             $offsetListCategories = 0;
             $limitListCategories = 50;
+            $categories= array();
             do {
                 $listCategories = $api->getCategoriesList(array('country' => $country, 'limit' => $limitListCategories, 'locale' => '', 'offset' => $offsetListCategories,));
                 $offsetListCategories += $limitListCategories;
+
+                foreach ($listCategories
+                ->categories->items as $category) {
+                    $categories[] = $category;
+                }
             } while ($offsetListCategories < $listCategories
                 ->categories
                 ->total);
 
-            foreach ($listCategories
-                ->categories->items as $category) {
+            foreach ($categories as $category) {
 
                 if (countCharacters($search) < 2 || strpos(strtolower($category->name), strtolower($search)) !== false) {
                     $w->result(null, '', escapeQuery($category->name), 'Browse this category', getCategoryArtwork($w, $category->id, $category->icons[0]->url, true, false, $use_artworks), 'no', null, 'Browse▹' . $country . '▹' . $category->id . '▹');
