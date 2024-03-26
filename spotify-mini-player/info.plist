@@ -7696,7 +7696,7 @@ main($query,"TRACK","");
 				<string>&lt;?php
 require './src/action.php';
 $query = serialize(array("", "", "", "", "", "", "", "add_current_track_to" /* other_action */, "", "", "", "", "", "", "", "" , "", "", "", "", "", ""));
-main($query,"TRACK","");
+main($query,$argv[1],"");
 ?&gt;</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
