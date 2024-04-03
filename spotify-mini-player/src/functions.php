@@ -5270,6 +5270,8 @@ function getTheShowEpisodes($w, $show_uri, $country_code, $actionMode = false)
 {
     $episodes = array();
 
+    $max_results = getSetting($w, 'max_results');
+
     try {
         $api = getSpotifyWebAPI($w);
         $tmp = explode(':', $show_uri);
@@ -5288,7 +5290,7 @@ function getTheShowEpisodes($w, $show_uri, $country_code, $actionMode = false)
             }
 
             $offsetGetShowEpisodes += $limitGetShowEpisodes;
-        } while ($offsetGetShowEpisodes < $userShowEpisodes->total);
+        } while ($offsetGetShowEpisodes < $max_results);
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
         if ($actionMode == false) {
             $w2 = new Workflows('com.vdesabou.spotify.mini.player');

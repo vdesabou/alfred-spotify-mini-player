@@ -672,7 +672,7 @@ function firstDelimiterSearchOnline($w, $query, $db, $update_in_progress) {
                                 /* artist_artwork_path */, ''
                                 /* album_artwork_path */, ''
                                 /* playlist_name */, '', /* playlist_artwork_path */
-                                )), $episode->name, array($episode->episode_type . 'Progress: ' . floatToCircles(intval($episode
+                                )), $episode->name, array($episode->type . 'Progress: ' . floatToCircles(intval($episode
                                     ->resume_point
                                     ->resume_position_ms) / intval($episode->duration_ms)) . ' Duration ' . beautifyTime($episode->duration_ms / 1000) . ' '.getenv('emoji_separator').' Release date: ' . $episode->release_date . ' '.getenv('emoji_separator').' Languages: ' . implode(',', $array_languages), 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), $episode_artwork_path, 'yes', null, '');
                             }
@@ -891,7 +891,7 @@ function firstDelimiterCurrentTrack($w, $query, $db, $update_in_progress) {
                         /* artist_artwork_path */, ''
                         /* album_artwork_path */, ''
                         /* playlist_name */, '', /* playlist_artwork_path */
-                        )), $episode->name, array($episode->episode_type . 'Progress: ' . floatToCircles(intval($episode
+                        )), $episode->name, array($episode->type . 'Progress: ' . floatToCircles(intval($episode
                             ->resume_point
                             ->resume_position_ms) / intval($episode->duration_ms)) . ' Duration ' . beautifyTime($episode->duration_ms / 1000) . ' '.getenv('emoji_separator').' Release date: ' . $episode->release_date . ' '.getenv('emoji_separator').' Languages: ' . implode(',', $array_languages), 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', array('copy' => $clipboard_current_track_episode_text, 'largetype' => escapeQuery($episode->name)), '');
 
@@ -970,7 +970,7 @@ function firstDelimiterCurrentTrack($w, $query, $db, $update_in_progress) {
                         /* artist_artwork_path */, ''
                         /* album_artwork_path */, ''
                         /* playlist_name */, '', /* playlist_artwork_path */
-                        )), $episode->name, array($episode->episode_type . 'Progress: ' . floatToCircles(intval($episode
+                        )), $episode->name, array($episode->type . 'Progress: ' . floatToCircles(intval($episode
                             ->resume_point
                             ->resume_position_ms) / intval($episode->duration_ms)) . ' Duration ' . beautifyTime($episode->duration_ms / 1000) . ' '.getenv('emoji_separator').' Release date: ' . $episode->release_date . ' '.getenv('emoji_separator').' Languages: ' . implode(',', $array_languages), 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', array('copy' => $clipboard_current_track_episode_text, 'largetype' => escapeQuery($episode->name)), '');
 

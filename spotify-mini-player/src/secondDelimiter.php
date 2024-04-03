@@ -870,7 +870,12 @@ function secondDelimiterOnline($w, $query, $db, $update_in_progress) {
             $iso = new Matriphe\ISO639\ISO639;
 
             $noresult = true;
+
             foreach ($episodes as $episode) {
+
+                
+                                  //print_r($episode);
+
                 if (checkIfResultAlreadyThere($w->results(), $episode->name) == false) {
                     $noresult = false;
                     if (countCharacters($search) < 2 || strpos(strtolower($episode->name), strtolower($search)) !== false) {
@@ -896,9 +901,9 @@ function secondDelimiterOnline($w, $query, $db, $update_in_progress) {
                         /* artist_artwork_path */, ''
                         /* album_artwork_path */, ''
                         /* playlist_name */, '', /* playlist_artwork_path */
-                        )), $episode->name, array($episode->episode_type . 'Progress: ' . floatToCircles(intval($episode
+                        )), $episode->name, array($episode->type . 'Progress: ' . floatToCircles(intval($episode
                             ->resume_point
-                            ->resume_position_ms) / intval($episode->duration_ms)) . ' Duration ' . beautifyTime($episode->duration_ms / 1000) . ' '.getenv('emoji_separator').' Release date: ' . $episode->release_date . ' '.getenv('emoji_separator').' Languages: ' . implode(',', $array_languages), 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), $show_artwork_path, 'yes', null, '');
+                            ->resume_position_ms) / intval($episode->duration_ms)) . ' Duration ' . beautifyTime((int)($episode->duration_ms / 1000)) . ' '.getenv('emoji_separator').' Release date: ' . $episode->release_date . ' '.getenv('emoji_separator').' Languages: ' . implode(',', $array_languages), 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), $show_artwork_path, 'yes', null, '');
                     }
                 }
             }
@@ -2792,7 +2797,7 @@ function secondDelimiterPreview($w, $query, $db, $update_in_progress) {
             /* artist_artwork_path */, ''
             /* album_artwork_path */, ''
             /* playlist_name */, '', /* playlist_artwork_path */
-            )), '👁Previewing ' . $episode->name, array($episode->episode_type . 'Progress: ' . floatToCircles(intval($episode
+            )), '👁Previewing ' . $episode->name, array($episode->type . 'Progress: ' . floatToCircles(intval($episode
                 ->resume_point
                 ->resume_position_ms) / intval($episode->duration_ms)) . ' Duration ' . beautifyTime($episode->duration_ms / 1000) . ' '.getenv('emoji_separator').' Release date: ' . $episode->release_date . ' '.getenv('emoji_separator').' Languages: ' . implode(',', $array_languages), 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), $episode_artwork_path, 'yes', null, '');
 
