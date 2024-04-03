@@ -125,15 +125,17 @@ function mainMenu($w, $query, $db, $update_in_progress) {
             }
         }
     }
-    $counters = $results[0];
-    $all_tracks = $counters[0];
-    $yourmusic_tracks = $counters[1];
-    $all_artists = $counters[2];
-    $yourmusic_artists = $counters[3];
-    $all_albums = $counters[4];
-    $yourmusic_albums = $counters[5];
-    $nb_playlists = $counters[6];
-    $nb_shows = $counters[7];
+    if (isset($results[0])) {
+        $counters = $results[0];
+        $all_tracks = $counters[0];
+        $yourmusic_tracks = $counters[1];
+        $all_artists = $counters[2];
+        $yourmusic_artists = $counters[3];
+        $all_albums = $counters[4];
+        $yourmusic_albums = $counters[5];
+        $nb_playlists = $counters[6];
+        $nb_shows = $counters[7];
+    }
 
     if ($update_in_progress == true) {
         $in_progress_data = $w->read('update_library_in_progress');
