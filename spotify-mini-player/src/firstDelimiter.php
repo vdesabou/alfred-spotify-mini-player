@@ -674,7 +674,7 @@ function firstDelimiterSearchOnline($w, $query, $db, $update_in_progress) {
                                 /* playlist_name */, '', /* playlist_artwork_path */
                                 )), $episode->name, array($episode->type . 'Progress: ' . floatToCircles(intval($episode
                                     ->resume_point
-                                    ->resume_position_ms) / intval($episode->duration_ms)) . ' Duration ' . beautifyTime($episode->duration_ms / 1000) . ' '.getenv('emoji_separator').' Release date: ' . $episode->release_date . ' '.getenv('emoji_separator').' Languages: ' . implode(',', $array_languages), 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), $episode_artwork_path, 'yes', null, '');
+                                    ->resume_position_ms) / intval($episode->duration_ms)) . ' Duration ' . beautifyTime((int)($episode->duration_ms / 1000)) . ' '.getenv('emoji_separator').' Release date: ' . $episode->release_date . ' '.getenv('emoji_separator').' Languages: ' . implode(',', $array_languages), 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), $episode_artwork_path, 'yes', null, '');
                             }
                         }
                     }
@@ -766,7 +766,7 @@ function firstDelimiterSearchOnline($w, $query, $db, $update_in_progress) {
                         /* artist_artwork_path */, ''
                         /* album_artwork_path */, ''
                         /* playlist_name */, '', /* playlist_artwork_path */
-                        )), escapeQuery($artist->name) . ' '.getenv('emoji_separator').' ' . escapeQuery($track->name), array(beautifyTime($track->duration_ms / 1000) . ' '.getenv('emoji_separator').' ' . escapeQuery($album->name), 'alt' => 'Play album ' . escapeQuery($album->name) . ' in Spotify', 'cmd' => 'Play artist ' . escapeQuery($artist->name) . ' in Spotify', 'fn' => 'Add track ' . escapeQuery($track->name) . ' to ...', 'shift' => 'Add album ' . escapeQuery($album->name) . ' to ...', 'ctrl' => 'Search artist ' . escapeQuery($artist->name) . ' online',), $track_artwork, 'yes', null, '');
+                        )), escapeQuery($artist->name) . ' '.getenv('emoji_separator').' ' . escapeQuery($track->name), array(beautifyTime((int)($track->duration_ms / 1000)) . ' '.getenv('emoji_separator').' ' . escapeQuery($album->name), 'alt' => 'Play album ' . escapeQuery($album->name) . ' in Spotify', 'cmd' => 'Play artist ' . escapeQuery($artist->name) . ' in Spotify', 'fn' => 'Add track ' . escapeQuery($track->name) . ' to ...', 'shift' => 'Add album ' . escapeQuery($album->name) . ' to ...', 'ctrl' => 'Search artist ' . escapeQuery($artist->name) . ' online',), $track_artwork, 'yes', null, '');
                     }
                 }
             }
@@ -893,7 +893,7 @@ function firstDelimiterCurrentTrack($w, $query, $db, $update_in_progress) {
                         /* playlist_name */, '', /* playlist_artwork_path */
                         )), $episode->name, array($episode->type . 'Progress: ' . floatToCircles(intval($episode
                             ->resume_point
-                            ->resume_position_ms) / intval($episode->duration_ms)) . ' Duration ' . beautifyTime($episode->duration_ms / 1000) . ' '.getenv('emoji_separator').' Release date: ' . $episode->release_date . ' '.getenv('emoji_separator').' Languages: ' . implode(',', $array_languages), 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', array('copy' => $clipboard_current_track_episode_text, 'largetype' => escapeQuery($episode->name)), '');
+                            ->resume_position_ms) / intval($episode->duration_ms)) . ' Duration ' . beautifyTime((int)($episode->duration_ms / 1000)) . ' '.getenv('emoji_separator').' Release date: ' . $episode->release_date . ' '.getenv('emoji_separator').' Languages: ' . implode(',', $array_languages), 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', array('copy' => $clipboard_current_track_episode_text, 'largetype' => escapeQuery($episode->name)), '');
 
                     }
                     else {
@@ -913,7 +913,7 @@ function firstDelimiterCurrentTrack($w, $query, $db, $update_in_progress) {
                         /* artist_artwork_path */, ''
                         /* album_artwork_path */, ''
                         /* playlist_name */, '', /* playlist_artwork_path */
-                        )), $added . escapeQuery($results[0]), array(escapeQuery($results[1]) . ' '.getenv('emoji_separator').' ' . escapeQuery($results[2]) . ' '.getenv('emoji_separator').' ' . ' (' . beautifyTime($results[5] / 1000) . ')', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', array('copy' => $clipboard_current_track_episode_text, 'largetype' => escapeQuery($results[0])), '');
+                        )), $added . escapeQuery($results[0]), array(escapeQuery($results[1]) . ' '.getenv('emoji_separator').' ' . escapeQuery($results[2]) . ' '.getenv('emoji_separator').' ' . ' (' . beautifyTime((int)($results[5] / 1000)) . ')', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', array('copy' => $clipboard_current_track_episode_text, 'largetype' => escapeQuery($results[0])), '');
                     }
                 }
                 else {
@@ -937,7 +937,7 @@ function firstDelimiterCurrentTrack($w, $query, $db, $update_in_progress) {
                     /* artist_artwork_path */, ''
                     /* album_artwork_path */, ''
                     /* playlist_name */, '', /* playlist_artwork_path */
-                    )), $added . escapeQuery(getenv($liked).' ' . $results[0]) . ' '.getenv('emoji_separator').' ' . escapeQuery($results[1]) . ' '.getenv('emoji_separator').' ' . escapeQuery($results[2]) . ' '.getenv('emoji_separator').' ' . $popularity . ' (' . beautifyTime($results[5] / 1000) . ')', array($subtitle, 'alt' => 'Play album ' . escapeQuery($results[2]) . ' in Spotify', 'cmd' => 'Play artist ' . escapeQuery($results[1]) . ' in Spotify', 'fn' => 'Add track ' . escapeQuery($results[0]) . ' to ...', 'shift' => 'Add album ' . escapeQuery($results[2]) . ' to ...', 'ctrl' => 'Search artist ' . escapeQuery($results[1]) . ' online',), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', array('copy' => $clipboard_current_track_track_text, 'largetype' => escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]),), '');
+                    )), $added . escapeQuery(getenv($liked).' ' . $results[0]) . ' '.getenv('emoji_separator').' ' . escapeQuery($results[1]) . ' '.getenv('emoji_separator').' ' . escapeQuery($results[2]) . ' '.getenv('emoji_separator').' ' . $popularity . ' (' . beautifyTime((int)($results[5] / 1000)) . ')', array($subtitle, 'alt' => 'Play album ' . escapeQuery($results[2]) . ' in Spotify', 'cmd' => 'Play artist ' . escapeQuery($results[1]) . ' in Spotify', 'fn' => 'Add track ' . escapeQuery($results[0]) . ' to ...', 'shift' => 'Add album ' . escapeQuery($results[2]) . ' to ...', 'ctrl' => 'Search artist ' . escapeQuery($results[1]) . ' online',), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', array('copy' => $clipboard_current_track_track_text, 'largetype' => escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]),), '');
                 }
             }
             else {
@@ -972,7 +972,7 @@ function firstDelimiterCurrentTrack($w, $query, $db, $update_in_progress) {
                         /* playlist_name */, '', /* playlist_artwork_path */
                         )), $episode->name, array($episode->type . 'Progress: ' . floatToCircles(intval($episode
                             ->resume_point
-                            ->resume_position_ms) / intval($episode->duration_ms)) . ' Duration ' . beautifyTime($episode->duration_ms / 1000) . ' '.getenv('emoji_separator').' Release date: ' . $episode->release_date . ' '.getenv('emoji_separator').' Languages: ' . implode(',', $array_languages), 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', array('copy' => $clipboard_current_track_episode_text, 'largetype' => escapeQuery($episode->name)), '');
+                            ->resume_position_ms) / intval($episode->duration_ms)) . ' Duration ' . beautifyTime((int)($episode->duration_ms / 1000)) . ' '.getenv('emoji_separator').' Release date: ' . $episode->release_date . ' '.getenv('emoji_separator').' Languages: ' . implode(',', $array_languages), 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', array('copy' => $clipboard_current_track_episode_text, 'largetype' => escapeQuery($episode->name)), '');
 
                     }
                     else {
@@ -992,7 +992,7 @@ function firstDelimiterCurrentTrack($w, $query, $db, $update_in_progress) {
                         /* artist_artwork_path */, ''
                         /* album_artwork_path */, ''
                         /* playlist_name */, '', /* playlist_artwork_path */
-                        )), $added . escapeQuery($results[0]), array(escapeQuery($results[1]) . ' '.getenv('emoji_separator').' ' . escapeQuery($results[2]) . ' '.getenv('emoji_separator').' ' . ' (' . beautifyTime($results[5] / 1000) . ')', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', array('copy' => $clipboard_current_track_episode_text, 'largetype' => escapeQuery($results[0])), '');
+                        )), $added . escapeQuery($results[0]), array(escapeQuery($results[1]) . ' '.getenv('emoji_separator').' ' . escapeQuery($results[2]) . ' '.getenv('emoji_separator').' ' . ' (' . beautifyTime((int)($results[5] / 1000)) . ')', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', array('copy' => $clipboard_current_track_episode_text, 'largetype' => escapeQuery($results[0])), '');
                     }
                 }
                 else {
@@ -1016,7 +1016,7 @@ function firstDelimiterCurrentTrack($w, $query, $db, $update_in_progress) {
                     /* artist_artwork_path */, ''
                     /* album_artwork_path */, ''
                     /* playlist_name */, '', /* playlist_artwork_path */
-                    )), $added . escapeQuery(getenv($liked).' ' . $results[0]) . ' '.getenv('emoji_separator').' ' . escapeQuery($results[1]) . ' '.getenv('emoji_separator').' ' . escapeQuery($results[2]) . ' '.getenv('emoji_separator').' ' . $popularity . ' (' . beautifyTime($results[5] / 1000) . ')', array($subtitle, 'alt' => 'Play album ' . escapeQuery($results[2]) . ' in Spotify', 'cmd' => 'Play artist ' . escapeQuery($results[1]) . ' in Spotify', 'fn' => 'Add track ' . escapeQuery($results[0]) . ' to ...', 'shift' => 'Add album ' . escapeQuery($results[2]) . ' to ...', 'ctrl' => 'Search artist ' . escapeQuery($results[1]) . ' online',), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', array('copy' => $clipboard_current_track_track_text, 'largetype' => escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]),), '');
+                    )), $added . escapeQuery(getenv($liked).' ' . $results[0]) . ' '.getenv('emoji_separator').' ' . escapeQuery($results[1]) . ' '.getenv('emoji_separator').' ' . escapeQuery($results[2]) . ' '.getenv('emoji_separator').' ' . $popularity . ' (' . beautifyTime((int)($results[5] / 1000)) . ')', array($subtitle, 'alt' => 'Play album ' . escapeQuery($results[2]) . ' in Spotify', 'cmd' => 'Play artist ' . escapeQuery($results[1]) . ' in Spotify', 'fn' => 'Add track ' . escapeQuery($results[0]) . ' to ...', 'shift' => 'Add album ' . escapeQuery($results[2]) . ' to ...', 'ctrl' => 'Search artist ' . escapeQuery($results[1]) . ' online',), ($results[3] == 'playing') ? './images/pause.png' : './images/play.png', 'yes', array('copy' => $clipboard_current_track_track_text, 'largetype' => escapeQuery($results[0]) . ' by ' . escapeQuery($results[1]),), '');
                 }
             }
         }
@@ -2454,7 +2454,7 @@ function firstDelimiterPlayQueue($w, $query, $db, $update_in_progress) {
             }
             $duration = 'na';
             if (isset($track->duration_ms)) {
-                $duration = beautifyTime($track->duration_ms / 1000);
+                $duration = beautifyTime((int)($track->duration_ms / 1000));
             }
             if (isset($track->duration)) {
                 $duration = $track->duration;
@@ -2610,7 +2610,7 @@ function firstDelimiterYourRecentTracks($w, $query, $db, $update_in_progress) {
                 /* artist_artwork_path */, ''
                 /* album_artwork_path */, ''
                 /* playlist_name */, '', /* playlist_artwork_path */
-                )), escapeQuery($artist->name) . ' '.getenv('emoji_separator').' ' . escapeQuery($track->name), array(beautifyTime($track->duration_ms / 1000) . ' '.getenv('emoji_separator').' ' . time2str($item->played_at), 'alt' => '', 'cmd' => 'Play artist ' . escapeQuery($artist->name) . ' in Spotify', 'fn' => 'Add track ' . escapeQuery($track->name) . ' to ...', 'shift' => '', 'ctrl' => 'Search artist ' . escapeQuery($artist->name) . ' online',), $track_artwork_path, 'yes', null, '');
+                )), escapeQuery($artist->name) . ' '.getenv('emoji_separator').' ' . escapeQuery($track->name), array(beautifyTime((int)($track->duration_ms / 1000)) . ' '.getenv('emoji_separator').' ' . time2str($item->played_at), 'alt' => '', 'cmd' => 'Play artist ' . escapeQuery($artist->name) . ' in Spotify', 'fn' => 'Add track ' . escapeQuery($track->name) . ' to ...', 'shift' => '', 'ctrl' => 'Search artist ' . escapeQuery($artist->name) . ' online',), $track_artwork_path, 'yes', null, '');
             }
         }
 

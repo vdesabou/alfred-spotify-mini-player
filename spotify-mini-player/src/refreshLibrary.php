@@ -747,7 +747,7 @@ function refreshLibrary($w, $silent = false) {
                         $stmtTrack->bindValue(':playlist_uri', $playlist->uri);
                         $stmtTrack->bindValue(':playable', $playable);
                         $stmtTrack->bindValue(':added_at', $item->added_at);
-                        $stmtTrack->bindValue(':duration', beautifyTime($track->duration_ms / 1000));
+                        $stmtTrack->bindValue(':duration', beautifyTime((int)($track->duration_ms / 1000)));
                         $stmtTrack->bindValue(':nb_times_played', 0);
                         $stmtTrack->bindValue(':local_track', $local_track);
                         $stmtTrack->bindValue(':yourmusic_album', 0);
@@ -785,7 +785,7 @@ function refreshLibrary($w, $silent = false) {
                 $stmtPlaylist->bindValue(':playlist_artwork_path', $playlist_artwork_path);
                 $stmtPlaylist->bindValue(':ownedbyuser', $ownedbyuser);
                 $stmtPlaylist->bindValue(':nb_playable_tracks', $nb_track_playlist);
-                $stmtPlaylist->bindValue(':duration_playlist', beautifyTime($duration_playlist / 1000, true));
+                $stmtPlaylist->bindValue(':duration_playlist', beautifyTime((int)($duration_playlist / 1000), true));
                 $stmtPlaylist->bindValue(':nb_times_played', 0);
                 $stmtPlaylist->bindValue(':collaborative', $playlist->collaborative);
                 $stmtPlaylist->bindValue(':public', $playlist->public);
@@ -1035,7 +1035,7 @@ function refreshLibrary($w, $silent = false) {
                             $stmtTrack->bindValue(':playlist_uri', $playlist->uri);
                             $stmtTrack->bindValue(':playable', $playable);
                             $stmtTrack->bindValue(':added_at', $item->added_at);
-                            $stmtTrack->bindValue(':duration', beautifyTime($track->duration_ms / 1000));
+                            $stmtTrack->bindValue(':duration', beautifyTime((int)($track->duration_ms / 1000)));
                             $stmtTrack->bindValue(':nb_times_played', 0);
                             $stmtTrack->bindValue(':local_track', $local_track);
                             $stmtTrack->bindValue(':yourmusic_album', 0);
@@ -1066,7 +1066,7 @@ function refreshLibrary($w, $silent = false) {
                 try {
                     $stmtUpdatePlaylistsNbTracks->bindValue(':nb_tracks', $userPlaylistTracks->total);
                     $stmtUpdatePlaylistsNbTracks->bindValue(':nb_playable_tracks', $nb_track_playlist);
-                    $stmtUpdatePlaylistsNbTracks->bindValue(':duration_playlist', beautifyTime($duration_playlist / 1000, true));
+                    $stmtUpdatePlaylistsNbTracks->bindValue(':duration_playlist', beautifyTime((int)($duration_playlist / 1000), true));
                     $stmtUpdatePlaylistsNbTracks->bindValue(':uri', $playlist->uri);
                     $stmtUpdatePlaylistsNbTracks->bindValue(':public', $playlist->public);
                     $stmtUpdatePlaylistsNbTracks->execute();
@@ -1480,7 +1480,7 @@ function refreshLibrary($w, $silent = false) {
                 $stmtTrack->bindValue(':playlist_uri', '');
                 $stmtTrack->bindValue(':playable', $playable);
                 $stmtTrack->bindValue(':added_at', $item->added_at);
-                $stmtTrack->bindValue(':duration', beautifyTime($track->duration_ms / 1000));
+                $stmtTrack->bindValue(':duration', beautifyTime((int)($track->duration_ms / 1000)));
                 $stmtTrack->bindValue(':nb_times_played', 0);
                 $stmtTrack->bindValue(':local_track', $local_track);
                 if (isset($album->yourmusic_album)) {
