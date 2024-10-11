@@ -9,8 +9,8 @@ class Request
     public const ACCOUNT_URL = 'https://accounts.spotify.com';
     public const API_URL = 'https://api.spotify.com';
 
-    protected $lastResponse = [];
-    protected $options = [
+    protected array $lastResponse = [];
+    protected array $options = [
         'curl_options' => [],
         'return_assoc' => false,
     ];
@@ -21,7 +21,7 @@ class Request
      *
      * @param array|object $options Optional. Options to set.
      */
-    public function __construct($options = [])
+    public function __construct(array|object $options = [])
     {
         $this->setOptions($options);
     }
@@ -37,7 +37,7 @@ class Request
      *
      * @return void
      */
-    protected function handleResponseError($body, $status)
+    protected function handleResponseError(string $body, int $status): void
     {
         $parsedBody = json_decode($body);
         $error = $parsedBody->error ?? null;
@@ -64,15 +64,22 @@ class Request
     }
 
     /**
+     * Parse HTTP response body, taking the "return_assoc" option into account.
+     */
+    protected function parseBody(string $body): mixed
+    {
+        return json_decode($body, $this->options['return_assoc']);
+    }
+
+    /**
      * Parse HTTP response headers and normalize names.
      *
      * @param string $headers The raw, unparsed response headers.
      *
      * @return array Headers as key–value pairs.
      */
-    protected function parseHeaders($headers)
+    protected function parseHeaders(string $headers): array
     {
-        $headers = str_replace("\r\n", "\n", $headers);
         $headers = explode("\n", $headers);
 
         array_shift($headers);
@@ -93,7 +100,7 @@ class Request
      *
      * @param string $method The HTTP method to use.
      * @param string $uri The URI to request.
-     * @param array $parameters Optional. Query string parameters or HTTP body, depending on $method.
+     * @param string|array $parameters Optional. Query string parameters or HTTP body, depending on $method.
      * @param array $headers Optional. HTTP headers.
      *
      * @throws SpotifyWebAPIException
@@ -105,7 +112,7 @@ class Request
      * - int status HTTP status code.
      * - string url The requested URL.
      */
-    public function account($method, $uri, $parameters = [], $headers = [])
+    public function account(string $method, string $uri, string|array $parameters = [], array $headers = []): array
     {
         return $this->send($method, self::ACCOUNT_URL . $uri, $parameters, $headers);
     }
@@ -115,7 +122,7 @@ class Request
      *
      * @param string $method The HTTP method to use.
      * @param string $uri The URI to request.
-     * @param array $parameters Optional. Query string parameters or HTTP body, depending on $method.
+     * @param string|array $parameters Optional. Query string parameters or HTTP body, depending on $method.
      * @param array $headers Optional. HTTP headers.
      *
      * @throws SpotifyWebAPIException
@@ -127,7 +134,7 @@ class Request
      * - int status HTTP status code.
      * - string url The requested URL.
      */
-    public function api($method, $uri, $parameters = [], $headers = [])
+    public function api(string $method, string $uri, string|array $parameters = [], array $headers = []): array
     {
         return $this->send($method, self::API_URL . $uri, $parameters, $headers);
     }
@@ -141,7 +148,7 @@ class Request
      * - int status HTTP status code.
      * - string url The requested URL.
      */
-    public function getLastResponse()
+    public function getLastResponse(): array
     {
         return $this->lastResponse;
     }
@@ -152,7 +159,7 @@ class Request
      *
      * @param string $method The HTTP method to use.
      * @param string $url The URL to request.
-     * @param array $parameters Optional. Query string parameters or HTTP body, depending on $method.
+     * @param string|array|object $parameters Optional. Query string parameters or HTTP body, depending on $method.
      * @param array $headers Optional. HTTP headers.
      *
      * @throws SpotifyWebAPIException
@@ -164,7 +171,7 @@ class Request
      * - int status HTTP status code.
      * - string url The requested URL.
      */
-    public function send($method, $url, $parameters = [], $headers = [])
+    public function send(string $method, string $url, string|array|object $parameters = [], array $headers = []): array
     {
         // Reset any old responses
         $this->lastResponse = [];
@@ -213,21 +220,23 @@ class Request
 
         $ch = curl_init();
 
-            curl_setopt_array($ch, array_replace($options, $this->options['curl_options']));
+        curl_setopt_array($ch, array_replace($options, $this->options['curl_options']));
 
         $response = curl_exec($ch);
 
         if (curl_error($ch)) {
+            $error = curl_error($ch);
+            $errno = curl_errno($ch);
             curl_close($ch);
 
-            throw new SpotifyWebAPIException('cURL transport error: ' . curl_errno($ch) . ' ' .  curl_error($ch));
+            throw new SpotifyWebAPIException('cURL transport error: ' . $errno . ' ' . $error);
         }
 
         [$headers, $body] = $this->splitResponse($response);
 
-        $parsedBody = json_decode($body, $this->options['return_assoc']);
-        $status = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $parsedBody = $this->parseBody($body);
         $parsedHeaders = $this->parseHeaders($headers);
+        $status = (int) curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
 
         $this->lastResponse = [
             'body' => $parsedBody,
@@ -240,7 +249,7 @@ class Request
 
         if ($status >= 400) {
             $this->handleResponseError($body, $status);
-    }
+        }
 
         return $this->lastResponse;
     }
@@ -250,11 +259,13 @@ class Request
      *
      * @param array|object $options Options to set.
      *
-     * @return void
+     * @return self
      */
-    public function setOptions($options)
+    public function setOptions(array|object $options): self
     {
         $this->options = array_merge($this->options, (array) $options);
+
+        return $this;
     }
 
     /**
@@ -264,9 +275,10 @@ class Request
      *
      * @return array An array consisting of two elements, headers and body.
      */
-    protected function splitResponse($response)
+    protected function splitResponse(string $response): array
     {
-        $parts = explode("\r\n\r\n", $response, 3);
+        $response = str_replace("\r\n", "\n", $response);
+        $parts = explode("\n\n", $response, 3);
 
         // Skip first set of headers for proxied requests etc.
         if (
