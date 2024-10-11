@@ -1050,7 +1050,7 @@ function firstDelimiterCurrentTrack($w, $query, $db, $update_in_progress) {
                     if ($playback_info->shuffle_state) {
                         $shuffle_state = "active";
                     }
-
+                    $context = '';
                     if ($playback_info->context != null) {
                         $context_type = $playback_info
                             ->context->type;
