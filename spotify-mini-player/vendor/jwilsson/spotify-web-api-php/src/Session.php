@@ -6,14 +6,14 @@ namespace SpotifyWebAPI;
 
 class Session
 {
-    protected $accessToken = '';
-    protected $clientId = '';
-    protected $clientSecret = '';
-    protected $expirationTime = 0;
-    protected $redirectUri = '';
-    protected $refreshToken = '';
-    protected $scope = '';
-    protected $request = null;
+    protected string $accessToken = '';
+    protected string $clientId = '';
+    protected string $clientSecret = '';
+    protected int $expirationTime = 0;
+    protected string $redirectUri = '';
+    protected string $refreshToken = '';
+    protected string $scope = '';
+    protected ?Request $request = null;
 
     /**
      * Constructor
@@ -24,13 +24,17 @@ class Session
      * @param string $redirectUri Optional. The redirect URI.
      * @param Request $request Optional. The Request object to use.
      */
-    public function __construct($clientId, $clientSecret = '', $redirectUri = '', $request = null)
-    {
+    public function __construct(
+        string $clientId,
+        string $clientSecret = '',
+        string $redirectUri = '',
+        ?Request $request = null
+    ) {
         $this->setClientId($clientId);
         $this->setClientSecret($clientSecret);
         $this->setRedirectUri($redirectUri);
 
-        $this->request = $request ?: new Request();
+        $this->request = $request ?? new Request();
     }
 
     /**
@@ -41,7 +45,7 @@ class Session
      *
      * @return string The code challenge.
      */
-    public function generateCodeChallenge($codeVerifier, $hashAlgo = 'sha256')
+    public function generateCodeChallenge(string $codeVerifier, string $hashAlgo = 'sha256'): string
     {
         $challenge = hash($hashAlgo, $codeVerifier, true);
         $challenge = base64_encode($challenge);
@@ -58,7 +62,7 @@ class Session
      *
      * @return string A code verifier string.
      */
-    public function generateCodeVerifier($length = 128)
+    public function generateCodeVerifier(int $length = 128): string
     {
         return $this->generateState($length);
     }
@@ -70,7 +74,7 @@ class Session
      *
      * @return string A random state value.
      */
-    public function generateState($length = 16)
+    public function generateState(int $length = 16): string
     {
         // Length will be doubled when converting to hex
         return bin2hex(
@@ -89,7 +93,7 @@ class Session
      *
      * @return string The authorization URL.
      */
-    public function getAuthorizeUrl($options = [])
+    public function getAuthorizeUrl(array|object $options = []): string
     {
         $options = (array) $options;
 
@@ -99,15 +103,13 @@ class Session
             'response_type' => 'code',
             'scope' => isset($options['scope']) ? implode(' ', $options['scope']) : null,
             'show_dialog' => !empty($options['show_dialog']) ? 'true' : null,
-            'state' => isset($options['state']) ? $options['state'] : null,
+            'state' => $options['state'] ?? null,
         ];
 
         // Set some extra parameters for PKCE flows
         if (isset($options['code_challenge'])) {
-            $challengeMethod = isset($options['code_challenge_method']) ? $options['code_challenge_method'] : 'S256';
-
             $parameters['code_challenge'] = $options['code_challenge'];
-            $parameters['code_challenge_method'] = $challengeMethod;
+            $parameters['code_challenge_method'] = $options['code_challenge_method'] ?? 'S256';
         }
 
         return Request::ACCOUNT_URL . '/authorize?' . http_build_query($parameters, '', '&');
@@ -118,7 +120,7 @@ class Session
      *
      * @return string The access token.
      */
-    public function getAccessToken()
+    public function getAccessToken(): string
     {
         return $this->accessToken;
     }
@@ -128,7 +130,7 @@ class Session
      *
      * @return string The client ID.
      */
-    public function getClientId()
+    public function getClientId(): string
     {
         return $this->clientId;
     }
@@ -138,7 +140,7 @@ class Session
      *
      * @return string The client secret.
      */
-    public function getClientSecret()
+    public function getClientSecret(): string
     {
         return $this->clientSecret;
     }
@@ -148,7 +150,7 @@ class Session
      *
      * @return int A Unix timestamp indicating the token expiration time.
      */
-    public function getTokenExpiration()
+    public function getTokenExpiration(): int
     {
         return $this->expirationTime;
     }
@@ -158,7 +160,7 @@ class Session
      *
      * @return string The redirect URI.
      */
-    public function getRedirectUri()
+    public function getRedirectUri(): string
     {
         return $this->redirectUri;
     }
@@ -168,7 +170,7 @@ class Session
      *
      * @return string The refresh token.
      */
-    public function getRefreshToken()
+    public function getRefreshToken(): string
     {
         return $this->refreshToken;
     }
@@ -178,7 +180,7 @@ class Session
      *
      * @return array The scope for the current access token
      */
-    public function getScope()
+    public function getScope(): array
     {
         return explode(' ', $this->scope);
     }
@@ -190,26 +192,28 @@ class Session
      *
      * @return bool Whether the access token was successfully refreshed.
      */
-    public function refreshAccessToken($refreshToken = '')
+    public function refreshAccessToken(?string $refreshToken = null): bool
     {
-        $payload = base64_encode($this->getClientId() . ':' . $this->getClientSecret());
-
         $parameters = [
             'grant_type' => 'refresh_token',
-            'refresh_token' => $refreshToken ?: $this->refreshToken,
+            'refresh_token' => $refreshToken ?? $this->refreshToken,
         ];
 
-        $headers = [
-            'Authorization' => 'Basic ' . $payload,
-        ];
+        $headers = [];
+        if ($this->getClientSecret()) {
+            $payload = base64_encode($this->getClientId() . ':' . $this->getClientSecret());
 
-        $response = $this->request->account('POST', '/api/token', $parameters, $headers);
-        $response = $response['body'];
+            $headers = [
+                'Authorization' => 'Basic ' . $payload,
+            ];
+        }
+
+        ['body' => $response] = $this->request->account('POST', '/api/token', $parameters, $headers);
 
         if (isset($response->access_token)) {
             $this->accessToken = $response->access_token;
             $this->expirationTime = time() + $response->expires_in;
-            $this->scope = isset($response->scope) ? $response->scope : $this->scope;
+            $this->scope = $response->scope ?? $this->scope;
 
             if (isset($response->refresh_token)) {
                 $this->refreshToken = $response->refresh_token;
@@ -231,7 +235,7 @@ class Session
      *
      * @return bool True when the access token was successfully granted, false otherwise.
      */
-    public function requestAccessToken($authorizationCode, $codeVerifier = '')
+    public function requestAccessToken(string $authorizationCode, string $codeVerifier = ''): bool
     {
         $parameters = [
             'client_id' => $this->getClientId(),
@@ -247,14 +251,13 @@ class Session
             $parameters['client_secret'] = $this->getClientSecret();
         }
 
-        $response = $this->request->account('POST', '/api/token', $parameters, []);
-        $response = $response['body'];
+        ['body' => $response] = $this->request->account('POST', '/api/token', $parameters, []);
 
         if (isset($response->refresh_token) && isset($response->access_token)) {
             $this->refreshToken = $response->refresh_token;
             $this->accessToken = $response->access_token;
             $this->expirationTime = time() + $response->expires_in;
-            $this->scope = isset($response->scope) ? $response->scope : $this->scope;
+            $this->scope = $response->scope ?? $this->scope;
 
             return true;
         }
@@ -267,7 +270,7 @@ class Session
      *
      * @return bool True when an access token was successfully granted, false otherwise.
      */
-    public function requestCredentialsToken()
+    public function requestCredentialsToken(): bool
     {
         $payload = base64_encode($this->getClientId() . ':' . $this->getClientSecret());
 
@@ -279,13 +282,12 @@ class Session
             'Authorization' => 'Basic ' . $payload,
         ];
 
-        $response = $this->request->account('POST', '/api/token', $parameters, $headers);
-        $response = $response['body'];
+        ['body' => $response] = $this->request->account('POST', '/api/token', $parameters, $headers);
 
         if (isset($response->access_token)) {
             $this->accessToken = $response->access_token;
             $this->expirationTime = time() + $response->expires_in;
-            $this->scope = isset($response->scope) ? $response->scope : $this->scope;
+            $this->scope = $response->scope ?? $this->scope;
 
             return true;
         }
@@ -298,11 +300,13 @@ class Session
      *
      * @param string $accessToken The access token
      *
-     * @return void
+     * @return self
      */
-    public function setAccessToken($accessToken)
+    public function setAccessToken(string $accessToken): self
     {
         $this->accessToken = $accessToken;
+
+        return $this;
     }
 
     /**
@@ -310,11 +314,13 @@ class Session
      *
      * @param string $clientId The client ID.
      *
-     * @return void
+     * @return self
      */
-    public function setClientId($clientId)
+    public function setClientId(string $clientId): self
     {
         $this->clientId = $clientId;
+
+        return $this;
     }
 
     /**
@@ -322,11 +328,13 @@ class Session
      *
      * @param string $clientSecret The client secret.
      *
-     * @return void
+     * @return self
      */
-    public function setClientSecret($clientSecret)
+    public function setClientSecret(string $clientSecret): self
     {
         $this->clientSecret = $clientSecret;
+
+        return $this;
     }
 
     /**
@@ -334,11 +342,13 @@ class Session
      *
      * @param string $redirectUri The redirect URI.
      *
-     * @return void
+     * @return self
      */
-    public function setRedirectUri($redirectUri)
+    public function setRedirectUri(string $redirectUri): self
     {
         $this->redirectUri = $redirectUri;
+
+        return $this;
     }
 
     /**
@@ -346,10 +356,12 @@ class Session
      *
      * @param string $refreshToken The refresh token.
      *
-     * @return void
+     * @return self
      */
-    public function setRefreshToken($refreshToken)
+    public function setRefreshToken(string $refreshToken): self
     {
         $this->refreshToken = $refreshToken;
+
+        return $this;
     }
 }
