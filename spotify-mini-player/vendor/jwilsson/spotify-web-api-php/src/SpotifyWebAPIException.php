@@ -1,27 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace SpotifyWebAPI;
 
 class SpotifyWebAPIException extends \Exception
 {
-    const TOKEN_EXPIRED = 'The access token expired';
-    const RATE_LIMIT_STATUS = 429;
+    public const TOKEN_EXPIRED = 'The access token expired';
+    public const RATE_LIMIT_STATUS = 429;
 
     /**
-     * The reason string from the request's error object.
+     * The reason string from a player request's error object.
      *
      * @var string
      */
-    private $reason;
+    private string $reason = '';
 
     /**
-     * Returns the reason string from the request's error object.
-     *
-     * @see https://developer.spotify.com/documentation/web-api/reference/object-model/#player-error-reasons
+     * Returns the reason string from a player request's error object.
      *
      * @return string
      */
-    public function getReason()
+    public function getReason(): string
     {
         return $this->reason;
     }
@@ -31,7 +31,7 @@ class SpotifyWebAPIException extends \Exception
      *
      * @return bool
      */
-    public function hasExpiredToken()
+    public function hasExpiredToken(): bool
     {
         return $this->getMessage() === self::TOKEN_EXPIRED;
     }
@@ -41,7 +41,7 @@ class SpotifyWebAPIException extends \Exception
      *
      * @return bool
      */
-    public function isRateLimited()
+    public function isRateLimited(): bool
     {
         return $this->getCode() === self::RATE_LIMIT_STATUS;
     }
@@ -53,7 +53,7 @@ class SpotifyWebAPIException extends \Exception
      *
      * @return void
      */
-    public function setReason($reason)
+    public function setReason(string $reason): void
     {
         $this->reason = $reason;
     }
