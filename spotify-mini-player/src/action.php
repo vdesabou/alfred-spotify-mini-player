@@ -184,6 +184,7 @@ function main($query, $type, $add_to_option)
                     playTrackInContextWithMopidy($w, $track_uri, $playlist_uri);
                 } else if($output_application == 'APPLESCRIPT') {
                     exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\" in context \"$playlist_uri\"'");
+                    exec("osascript -e 'tell application id \"com.apple.systemevents\" to tell process \"Spotify\" to tell its windows to click value of attribute \"AXCloseButton\"'");
                 } else {
                     $device_id = getSpotifyConnectCurrentDeviceId($w);
                     if($device_id != '') {
@@ -207,6 +208,7 @@ function main($query, $type, $add_to_option)
                         playUriWithMopidyWithoutClearing($w, $track_uri);
                     } else if($output_application == 'APPLESCRIPT') {
                         exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
+                        exec("osascript -e 'tell application id \"com.apple.systemevents\" to tell process \"Spotify\" to tell its windows to click value of attribute \"AXCloseButton\"'");
                     } else {
                         $device_id = getSpotifyConnectCurrentDeviceId($w);
                         if($device_id != '') {
@@ -232,6 +234,7 @@ function main($query, $type, $add_to_option)
                 playUriWithMopidy($w, $playlist_uri);
             } else if($output_application == 'APPLESCRIPT') {
                 exec("osascript -e 'tell application \"Spotify\" to play track \"$playlist_uri\"'");
+                exec("osascript -e 'tell application id \"com.apple.systemevents\" to tell process \"Spotify\" to tell its windows to click value of attribute \"AXCloseButton\"'");
             } else {
                 $device_id = getSpotifyConnectCurrentDeviceId($w);
                 if($device_id != '') {
@@ -271,6 +274,7 @@ function main($query, $type, $add_to_option)
             playUriWithMopidy($w, $album_uri);
         } else if($output_application == 'APPLESCRIPT') {
             exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
+            exec("osascript -e 'tell application id \"com.apple.systemevents\" to tell process \"Spotify\" to tell its windows to click value of attribute \"AXCloseButton\"'");
         } else {
             $device_id = getSpotifyConnectCurrentDeviceId($w);
             if($device_id != '') {
@@ -383,6 +387,7 @@ function main($query, $type, $add_to_option)
                 playUriWithMopidy($w, $artist_uri);
             } else if($output_application == 'APPLESCRIPT') {
                 exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
+                exec("osascript -e 'tell application id \"com.apple.systemevents\" to tell process \"Spotify\" to tell its windows to click value of attribute \"AXCloseButton\"'");
             } else {
                 $device_id = getSpotifyConnectCurrentDeviceId($w);
                 if($device_id != '') {
@@ -909,6 +914,7 @@ function main($query, $type, $add_to_option)
                 playTrackInContextWithMopidy($w, $track_uri, $album_uri);
             } else if($output_application == 'APPLESCRIPT') {
                 exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\" in context \"$album_uri\"'");
+                exec("osascript -e 'tell application id \"com.apple.systemevents\" to tell process \"Spotify\" to tell its windows to click value of attribute \"AXCloseButton\"'");
             } else {
                 $device_id = getSpotifyConnectCurrentDeviceId($w);
                 if($device_id != '') {
@@ -931,6 +937,7 @@ function main($query, $type, $add_to_option)
                 playTrackInContextWithMopidy($w, $track_uri, $album_uri);
             } else if($output_application == 'APPLESCRIPT') {
                 exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
+                exec("osascript -e 'tell application id \"com.apple.systemevents\" to tell process \"Spotify\" to tell its windows to click value of attribute \"AXCloseButton\"'");
             } else {
                 $device_id = getSpotifyConnectCurrentDeviceId($w);
                 if($device_id != '') {
@@ -951,6 +958,7 @@ function main($query, $type, $add_to_option)
                 playUriWithMopidy($w, $track_uri);
             } else if($output_application == 'APPLESCRIPT') {
                 exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"");
+                exec("osascript -e 'tell application id \"com.apple.systemevents\" to tell process \"Spotify\" to tell its windows to click value of attribute \"AXCloseButton\"'");
             } else {
                 $device_id = getSpotifyConnectCurrentDeviceId($w);
                 if($device_id != '') {
@@ -1008,6 +1016,7 @@ function main($query, $type, $add_to_option)
                     playUriWithMopidyWithoutClearing($w, $track_uri);
                 } else if($output_application == 'APPLESCRIPT') {
                     exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
+                    exec("osascript -e 'tell application id \"com.apple.systemevents\" to tell process \"Spotify\" to tell its windows to click value of attribute \"AXCloseButton\"'");
                 } else {
                     $device_id = getSpotifyConnectCurrentDeviceId($w);
                     if($device_id != '') {
@@ -1408,6 +1417,7 @@ function main($query, $type, $add_to_option)
                 playUriWithMopidyWithoutClearing($w, $track_uri);
             } else if($output_application == 'APPLESCRIPT') {
                 exec("osascript -e 'tell application \"Spotify\" to play track \"$track_uri\"'");
+                exec("osascript -e 'tell application id \"com.apple.systemevents\" to tell process \"Spotify\" to tell its windows to click value of attribute \"AXCloseButton\"'");
             } else {
                 $device_id = getSpotifyConnectCurrentDeviceId($w);
                 if($device_id != '') {
@@ -1426,6 +1436,7 @@ function main($query, $type, $add_to_option)
                 playUriWithMopidy($w, $album_uri);
             } else if($output_application == 'APPLESCRIPT') {
                 exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
+                exec("osascript -e 'tell application id \"com.apple.systemevents\" to tell process \"Spotify\" to tell its windows to click value of attribute \"AXCloseButton\"'");
             } else {
                 $device_id = getSpotifyConnectCurrentDeviceId($w);
                 if($device_id != '') {
@@ -1491,6 +1502,7 @@ function main($query, $type, $add_to_option)
                 playUriWithMopidy($w, $artist_uri);
             } else if($output_application == 'APPLESCRIPT') {
                 exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
+                exec("osascript -e 'tell application id \"com.apple.systemevents\" to tell process \"Spotify\" to tell its windows to click value of attribute \"AXCloseButton\"'");
             } else {
                 $device_id = getSpotifyConnectCurrentDeviceId($w);
                 if($device_id != '') {
@@ -1524,6 +1536,7 @@ function main($query, $type, $add_to_option)
                 playUriWithMopidy($w, $album_uri);
             } else if($output_application == 'APPLESCRIPT') {
                 exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
+                exec("osascript -e 'tell application id \"com.apple.systemevents\" to tell process \"Spotify\" to tell its windows to click value of attribute \"AXCloseButton\"'");
             } else {
                 $device_id = getSpotifyConnectCurrentDeviceId($w);
                 if($device_id != '') {
