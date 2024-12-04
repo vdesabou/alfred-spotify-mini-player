@@ -371,6 +371,7 @@ function createAndPlayLikedSongsPlaylist($w)
                 playUriWithMopidy($w, $json->uri);
             } else if($output_application == 'APPLESCRIPT') {
                 exec("osascript -e 'tell application \"Spotify\" to play track \"$json->uri\"'");
+                exec("osascript -e 'tell application id \"com.apple.systemevents\" to tell process \"Spotify\" to tell its windows to click value of attribute \"AXCloseButton\"'");
             } else {
                 $device_id = getSpotifyConnectCurrentDeviceId($w);
                 if($device_id != '') {
@@ -3359,6 +3360,7 @@ function playAlfredPlaylist($w)
         playUriWithMopidy($w, $alfred_playlist_uri);
     } else if($output_application == 'APPLESCRIPT') {
         exec("osascript -e 'tell application \"Spotify\" to play track \"$alfred_playlist_uri\"'");
+        exec("osascript -e 'tell application id \"com.apple.systemevents\" to tell process \"Spotify\" to tell its windows to click value of attribute \"AXCloseButton\"'");
     } else {
         $device_id = getSpotifyConnectCurrentDeviceId($w);
         if($device_id != '') {
@@ -3602,6 +3604,7 @@ function playCurrentArtist($w)
             playUriWithMopidy($w, $artist_uri);
         } else if($output_application == 'APPLESCRIPT') {
             exec("osascript -e 'tell application \"Spotify\" to play track \"$artist_uri\"'");
+            exec("osascript -e 'tell application id \"com.apple.systemevents\" to tell process \"Spotify\" to tell its windows to click value of attribute \"AXCloseButton\"'");
         } else {
             $device_id = getSpotifyConnectCurrentDeviceId($w);
             if($device_id != '') {
@@ -3648,6 +3651,7 @@ function playCurrentAlbum($w)
             playUriWithMopidy($w, $album_uri);
         } else if($output_application == 'APPLESCRIPT') {
             exec("osascript -e 'tell application \"Spotify\" to play track \"$album_uri\"'");
+            exec("osascript -e 'tell application id \"com.apple.systemevents\" to tell process \"Spotify\" to tell its windows to click value of attribute \"AXCloseButton\"'");
         } else {
             $device_id = getSpotifyConnectCurrentDeviceId($w);
             if($device_id != '') {
@@ -4681,6 +4685,7 @@ function createRadioArtistPlaylist($w, $artist_name, $artist_uri)
                     playUriWithMopidy($w, $json->uri);
                 } else if($output_application == 'APPLESCRIPT') {
                     exec("osascript -e 'tell application \"Spotify\" to play track \"$json->uri\"'");
+                    exec("osascript -e 'tell application id \"com.apple.systemevents\" to tell process \"Spotify\" to tell its windows to click value of attribute \"AXCloseButton\"'");
                 } else {
                     $device_id = getSpotifyConnectCurrentDeviceId($w);
                     if($device_id != '') {
@@ -4799,6 +4804,7 @@ function createSimilarPlaylist($w, $playlist_name, $playlist_uri)
                     playUriWithMopidy($w, $json->uri);
                 } else if($output_application == 'APPLESCRIPT') {
                     exec("osascript -e 'tell application \"Spotify\" to play track \"$json->uri\"'");
+                    exec("osascript -e 'tell application id \"com.apple.systemevents\" to tell process \"Spotify\" to tell its windows to click value of attribute \"AXCloseButton\"'");
                 } else {
                     $device_id = getSpotifyConnectCurrentDeviceId($w);
                     if($device_id != '') {
@@ -4892,6 +4898,7 @@ function createCompleteCollectionArtistPlaylist($w, $artist_name, $artist_uri)
                     playUriWithMopidy($w, $json->uri);
                 } else if($output_application == 'APPLESCRIPT') {
                     exec("osascript -e 'tell application \"Spotify\" to play track \"$json->uri\"'");
+                    exec("osascript -e 'tell application id \"com.apple.systemevents\" to tell process \"Spotify\" to tell its windows to click value of attribute \"AXCloseButton\"'");
                 } else {
                     $device_id = getSpotifyConnectCurrentDeviceId($w);
                     if($device_id != '') {
@@ -5036,6 +5043,7 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name)
                     playUriWithMopidy($w, $json->uri);
                 } else if($output_application == 'APPLESCRIPT') {
                     exec("osascript -e 'tell application \"Spotify\" to play track \"$json->uri\"'");
+                    exec("osascript -e 'tell application id \"com.apple.systemevents\" to tell process \"Spotify\" to tell its windows to click value of attribute \"AXCloseButton\"'");
                 } else {
                     $device_id = getSpotifyConnectCurrentDeviceId($w);
                     if($device_id != '') {
