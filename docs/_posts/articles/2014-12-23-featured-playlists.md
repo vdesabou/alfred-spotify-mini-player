@@ -14,7 +14,7 @@ noindex: false
 share: false
 toc: false
 comments: true
-onhomepage : true
+onhomepage : false
 ---
 
 * You can browse the featured playlists from Spotify in the *playlists* menu:-
