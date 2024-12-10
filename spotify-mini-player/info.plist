@@ -402,16 +402,6 @@
 				<key>vitoclose</key>
 				<false/>
 			</dict>
-			<dict>
-				<key>destinationuid</key>
-				<string>3D692753-4ADE-4CAF-82ED-759B7C742A90</string>
-				<key>modifiers</key>
-				<integer>8519680</integer>
-				<key>modifiersubtext</key>
-				<string>Preview track or episode</string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
 		</array>
 		<key>18FD162D-F478-491C-9754-2418C37FD485</key>
 		<array>
