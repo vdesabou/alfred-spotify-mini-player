@@ -14,7 +14,7 @@ noindex: false
 share: false
 toc: false
 comments: true
-onhomepage : true
+onhomepage : false
 ---
 
 * You can browse the related artists in the *artist* menu:-
