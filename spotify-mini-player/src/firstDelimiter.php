@@ -108,7 +108,9 @@ function firstDelimiterPlaylists($w, $query, $db, $update_in_progress) {
             if ($nb_song_radio_playlist > 0) {
                 $w->result(null, '', 'Browse your song radio playlists (' . $nb_song_radio_playlist . ' playlists)', array('Display all your song radio playlists', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/radio_song.png', 'no', null, 'Playlist▹Song radio');
             }
-            $w->result(null, '', 'Featured Playlists', array('Browse the current featured playlists', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/star.png', 'no', null, 'Featured Playlist▹');
+            // https://github.com/vdesabou/alfred-spotify-mini-player/issues/633
+            // Impacts of Spotify's new API terms / List of broken features #633
+            // $w->result(null, '', 'Featured Playlists', array('Browse the current featured playlists', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/star.png', 'no', null, 'Featured Playlist▹');
         }
 
         foreach ($savedPlaylists as $playlist) {
