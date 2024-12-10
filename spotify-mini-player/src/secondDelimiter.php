@@ -190,31 +190,35 @@ function secondDelimiterArtists($w, $query, $db, $update_in_progress) {
 
         $w->result(null, '', 'Follow/Unfollow Artist', array('Display options to follow/unfollow the artist', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/follow.png', 'no', null, 'Follow/Unfollow▹' . $artist_uri . '@' . $artist_name . '▹');
 
-        $w->result(null, '', 'Related Artists', array('Browse related artists', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/related.png', 'no', null, 'OnlineRelated▹' . $artist_uri . '@' . $artist_name . '▹');
+        // https://github.com/vdesabou/alfred-spotify-mini-player/issues/633
+        // Impacts of Spotify's new API terms / List of broken features #633
+        // $w->result(null, '', 'Related Artists', array('Browse related artists', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/related.png', 'no', null, 'OnlineRelated▹' . $artist_uri . '@' . $artist_name . '▹');
 
-        if ($update_in_progress == false) {
-            $privacy_status = 'private';
-            if ($is_public_playlists) {
-                $privacy_status = 'public';
-            }
-            $w->result(null, serialize(array(''
-            /*track_uri*/, ''
-            /* album_uri */, $artist_uri
-            /* artist_uri */, ''
-            /* playlist_uri */, ''
-            /* spotify_command */, ''
-            /* query */, ''
-            /* other_settings*/, 'radio_artist'
-            /* other_action */, $artist_name
-            /* artist_name */, ''
-            /* track_name */, ''
-            /* album_name */, ''
-            /* track_artwork_path */, ''
-            /* artist_artwork_path */, ''
-            /* album_artwork_path */, ''
-            /* playlist_name */, '', /* playlist_artwork_path */
-            )), 'Create a Radio Playlist for ' . $artist_name, 'This will create a ' . $privacy_status . ' radio playlist with ' . $radio_number_tracks . ' tracks for the artist', './images/radio_artist.png', 'yes', null, '');
-        }
+        // https://github.com/vdesabou/alfred-spotify-mini-player/issues/633
+        // Impacts of Spotify's new API terms / List of broken features #633
+        // if ($update_in_progress == false) {
+        //     $privacy_status = 'private';
+        //     if ($is_public_playlists) {
+        //         $privacy_status = 'public';
+        //     }
+        //     $w->result(null, serialize(array(''
+        //     /*track_uri*/, ''
+        //     /* album_uri */, $artist_uri
+        //     /* artist_uri */, ''
+        //     /* playlist_uri */, ''
+        //     /* spotify_command */, ''
+        //     /* query */, ''
+        //     /* other_settings*/, 'radio_artist'
+        //     /* other_action */, $artist_name
+        //     /* artist_name */, ''
+        //     /* track_name */, ''
+        //     /* album_name */, ''
+        //     /* track_artwork_path */, ''
+        //     /* artist_artwork_path */, ''
+        //     /* album_artwork_path */, ''
+        //     /* playlist_name */, '', /* playlist_artwork_path */
+        //     )), 'Create a Radio Playlist for ' . $artist_name, 'This will create a ' . $privacy_status . ' radio playlist with ' . $radio_number_tracks . ' tracks for the artist', './images/radio_artist.png', 'yes', null, '');
+        // }
 
         if ($update_in_progress == false) {
             $privacy_status = 'private';
@@ -618,26 +622,28 @@ function secondDelimiterPlaylists($w, $query, $db, $update_in_progress) {
                 if ($update_in_progress == false) {
                     $w->result(null, '', 'Remove playlist ' . escapeQuery($playlist[1]), array('A confirmation will be asked in next step', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/uncheck.png', 'no', null, 'Confirm Remove Playlist▹' . $playlist[0] . '∙' . base64_encode($playlist[1]) . '▹');
                 }
-                if ($update_in_progress == false) {
-                    $w->result(null, serialize(array(''
-                    /*track_uri*/, ''
-                    /* album_uri */, ''
-                    /* artist_uri */, $theplaylisturi
-                    /* playlist_uri */, ''
-                    /* spotify_command */, ''
-                    /* query */, ''
-                    /* other_settings*/, 'create_similar_playlist'
-                    /* other_action */,
+                // https://github.com/vdesabou/alfred-spotify-mini-player/issues/633
+                // Impacts of Spotify's new API terms / List of broken features #633
+                // if ($update_in_progress == false) {
+                //     $w->result(null, serialize(array(''
+                //     /*track_uri*/, ''
+                //     /* album_uri */, ''
+                //     /* artist_uri */, $theplaylisturi
+                //     /* playlist_uri */, ''
+                //     /* spotify_command */, ''
+                //     /* query */, ''
+                //     /* other_settings*/, 'create_similar_playlist'
+                //     /* other_action */,
 
-                    ''
-                    /* artist_name */, ''
-                    /* track_name */, ''
-                    /* album_name */, ''
-                    /* track_artwork_path */, ''
-                    /* artist_artwork_path */, ''
-                    /* album_artwork_path */, escapeQuery($playlist[1]) /* playlist_name */, '', /* playlist_artwork_path */
-                    )), 'Create a similar playlist for ' . escapeQuery($playlist[1]), 'This will create a similar playlist', './images/playlists.png', 'yes', null, '');
-                }
+                //     ''
+                //     /* artist_name */, ''
+                //     /* track_name */, ''
+                //     /* album_name */, ''
+                //     /* track_artwork_path */, ''
+                //     /* artist_artwork_path */, ''
+                //     /* album_artwork_path */, escapeQuery($playlist[1]) /* playlist_name */, '', /* playlist_artwork_path */
+                //     )), 'Create a similar playlist for ' . escapeQuery($playlist[1]), 'This will create a similar playlist', './images/playlists.png', 'yes', null, '');
+                // }
                 if($update_in_progress && file_exists($w->data() . '/create_library')) {
                     $results = getExternalResults($w, 'tracks', array('yourmusic', 'popularity', 'uri', 'album_uri', 'artist_uri', 'track_name', 'album_name', 'artist_name', 'album_type', 'track_artwork_path', 'artist_artwork_path', 'album_artwork_path', 'playlist_name', 'playlist_uri', 'playable', 'added_at', 'duration', 'nb_times_played', 'local_track'), 'order by added_at desc limit ' . $max_results, "where playlist_uri=\"".$theplaylisturi."\"");
                 } else {
@@ -774,30 +780,34 @@ function secondDelimiterOnline($w, $query, $db, $update_in_progress) {
             if (countCharacters($search) < 2) {
                 $w->result(null, '', 'Follow/Unfollow Artist', array('Display options to follow/unfollow the artist', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/follow.png', 'no', null, 'Follow/Unfollow▹' . $artist_uri . '@' . $artist_name . '▹');
 
-                $w->result(null, '', 'Related Artists', array('Browse related artists', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/related.png', 'no', null, 'OnlineRelated▹' . $artist_uri . '@' . $artist_name . '▹');
+                // https://github.com/vdesabou/alfred-spotify-mini-player/issues/633
+                // Impacts of Spotify's new API terms / List of broken features #633
+                // $w->result(null, '', 'Related Artists', array('Browse related artists', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/related.png', 'no', null, 'OnlineRelated▹' . $artist_uri . '@' . $artist_name . '▹');
             }
 
-            if ($update_in_progress == false) {
-                if (countCharacters($search) < 2) {
-                    $w->result(null, serialize(array(''
-                    /*track_uri*/, ''
-                    /* album_uri */, $artist_uri
-                    /* artist_uris */, ''
-                    /* playlist_uri */, ''
-                    /* spotify_command */, ''
-                    /* query */, ''
-                    /* other_settings*/, 'radio_artist'
-                    /* other_action */, $artist_name
-                    /* artist_name */, ''
-                    /* track_name */, ''
-                    /* album_name */, ''
-                    /* track_artwork_path */, ''
-                    /* artist_artwork_path */, ''
-                    /* album_artwork_path */, ''
-                    /* playlist_name */, '', /* playlist_artwork_path */
-                    )), 'Create a Radio Playlist for ' . $artist_name, 'This will create a radio playlist with ' . $radio_number_tracks . ' tracks for the artist', './images/radio_artist.png', 'yes', null, '');
-                }
-            }
+            // https://github.com/vdesabou/alfred-spotify-mini-player/issues/633
+            // Impacts of Spotify's new API terms / List of broken features #633
+            // if ($update_in_progress == false) {
+            //     if (countCharacters($search) < 2) {
+            //         $w->result(null, serialize(array(''
+            //         /*track_uri*/, ''
+            //         /* album_uri */, $artist_uri
+            //         /* artist_uris */, ''
+            //         /* playlist_uri */, ''
+            //         /* spotify_command */, ''
+            //         /* query */, ''
+            //         /* other_settings*/, 'radio_artist'
+            //         /* other_action */, $artist_name
+            //         /* artist_name */, ''
+            //         /* track_name */, ''
+            //         /* album_name */, ''
+            //         /* track_artwork_path */, ''
+            //         /* artist_artwork_path */, ''
+            //         /* album_artwork_path */, ''
+            //         /* playlist_name */, '', /* playlist_artwork_path */
+            //         )), 'Create a Radio Playlist for ' . $artist_name, 'This will create a radio playlist with ' . $radio_number_tracks . ' tracks for the artist', './images/radio_artist.png', 'yes', null, '');
+            //     }
+            // }
 
             // call to web api, if it fails,
             // it displays an error in main window
