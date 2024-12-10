@@ -14,7 +14,7 @@ noindex: false
 share: false
 toc: false
 comments: true
-onhomepage : true
+onhomepage : false
 ---
 
 * You can create an "artist radio" playlist for an artist in the *artist* menu:-
