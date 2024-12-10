@@ -325,9 +325,11 @@ function mainMenu($w, $query, $db, $update_in_progress) {
         $w->result(null, '', 'Shows', array('Browse by show' . ' (' . $nb_shows . ' shows)', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/shows.png', 'no', null, 'Show▹');
     }
 
-    if (getenv('menu_display_browse_categories') == 1) {
-        $w->result(null, '', 'Browse', array('Browse Spotify by categories as in the Spotify player’s “Browse” tab', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/browse.png', 'no', null, 'Browse▹');
-    }
+    // https://github.com/vdesabou/alfred-spotify-mini-player/issues/633
+    // Impacts of Spotify's new API terms / List of broken features #633
+    // if (getenv('menu_display_browse_categories') == 1) {
+    //     $w->result(null, '', 'Browse', array('Browse Spotify by categories as in the Spotify player’s “Browse” tab', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/browse.png', 'no', null, 'Browse▹');
+    // }
     if (getenv('menu_display_your_tops') == 1) {
         $w->result(null, '', 'Your Tops', array('Browse your top artists and top tracks', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/star.png', 'no', null, 'Your Tops▹');
     }
@@ -747,9 +749,11 @@ function searchCategoriesFastAccess($w, $query, $db, $update_in_progress) {
     if (strpos(strtolower('albums'), strtolower($query)) !== false) {
         $w->result(null, '', 'Albums', array('Browse by album', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/albums.png', 'no', null, 'Album▹');
     }
-    if (strpos(strtolower('browse'), strtolower($query)) !== false) {
-        $w->result(null, '', 'Browse', array('Browse Spotify by categories as in the Spotify player’s “Browse” tab', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/browse.png', 'no', null, 'Browse▹');
-    }
+    // https://github.com/vdesabou/alfred-spotify-mini-player/issues/633
+    // Impacts of Spotify's new API terms / List of broken features #633
+    // if (strpos(strtolower('browse'), strtolower($query)) !== false) {
+    //     $w->result(null, '', 'Browse', array('Browse Spotify by categories as in the Spotify player’s “Browse” tab', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/browse.png', 'no', null, 'Browse▹');
+    // }
     if (strpos(strtolower('your top'), strtolower($query)) !== false) {
         $w->result(null, '', 'Your Tops', array('Browse your top artists and top tracks', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/star.png', 'no', null, 'Your Tops▹');
     }
@@ -800,9 +804,11 @@ function searchCategoriesFastAccess($w, $query, $db, $update_in_progress) {
     if (strpos(strtolower('settings'), strtolower($query)) !== false) {
         $w->result(null, '', 'Settings', array('Go to settings', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/settings.png', 'no', null, 'Settings▹');
     }
-    if (strpos(strtolower('featured playlist'), strtolower($query)) !== false) {
-        $w->result(null, '', 'Featured Playlist', array('Browse the current featured playlists', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/star.png', 'no', null, 'Featured Playlist▹');
-    }
+    // https://github.com/vdesabou/alfred-spotify-mini-player/issues/633
+    // Impacts of Spotify's new API terms / List of broken features #633
+    // if (strpos(strtolower('featured playlist'), strtolower($query)) !== false) {
+    //     $w->result(null, '', 'Featured Playlist', array('Browse the current featured playlists', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/star.png', 'no', null, 'Featured Playlist▹');
+    // }
     if (strpos(strtolower('your music'), strtolower($query)) !== false) {
         $w->result(null, '', 'Your Music', array('Browse Your Music', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/tracks.png', 'no', null, 'Your Music▹');
     }
