@@ -18,7 +18,7 @@ if(!array_key_exists('id', $_GET) || !array_key_exists('secret', $_GET)) {
 }
 
 // Test connection
-$session = new SpotifyWebAPI\Session($_GET["id"], $_GET["secret"], 'http://localhost:15298/callback.php');
+$session = new SpotifyWebAPI\Session($_GET["id"], $_GET["secret"], 'http://127.0.0.1:15298/callback.php');
 
 $scopes = array(
     'user-library-read',
