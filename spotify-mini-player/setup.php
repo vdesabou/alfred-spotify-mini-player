@@ -89,7 +89,7 @@
 
                             <ul>
                                 <li>Redirect URI must be set to <code
-                                        class="language-plaintext highlighter-rouge">http://localhost:15298/callback.php</code>,
+                                        class="language-plaintext highlighter-rouge">http://127.0.0.1:15298/callback.php</code>,
                                     then click <em>Add</em>, and then click <em>Save</em> :</li>
                             </ul>
 
