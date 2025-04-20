@@ -8043,7 +8043,7 @@ function resetSettings($w)
     updateSetting($w, 'country_code', '');
     updateSetting($w, 'oauth_client_id', '');
     updateSetting($w, 'oauth_client_secret', '');
-    updateSetting($w, 'oauth_redirect_uri', 'http://localhost:15298/callback.php');
+    updateSetting($w, 'oauth_redirect_uri', 'http://127.0.0.1:15298/callback.php');
     updateSetting($w, 'oauth_access_token', '');
     updateSetting($w, 'oauth_refresh_token', '');
     updateSetting($w, 'display_name', '');
