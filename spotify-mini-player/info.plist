@@ -12079,7 +12079,7 @@ On the application page, click on `Edit Settings`:
 
 ![Edit Settings](./images/setup10.jpg)
 
-Redirect URI **must be set** to `http://127.0.01:15298/callback.php`, then click `Add` and then click `Save`:
+Redirect URI **must be set** to `http://127.0.0.1:15298/callback.php`, then click `Add` and then click `Save`:
 
 ![Settings](./images/setup11.jpg)
 
