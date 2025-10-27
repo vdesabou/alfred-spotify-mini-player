@@ -1653,7 +1653,7 @@ function refreshLibrary($w, $silent = false) {
                     }
 
                     foreach ($userMySavedEpisodes->items as $show_episode) {
-                        $episode = getEpisode($w, $show_episode->uri);
+                        if (isset($show_episode->uri) && $show_episode->uri != '') $episode = getEpisode($w, $show_episode->uri);
                         if (isset($episode->uri) && $episode->uri != '') $savedMySavedEpisodes[] = $episode;
                     }
 
@@ -1832,7 +1832,7 @@ function refreshLibrary($w, $silent = false) {
                         }
 
                         foreach ($userMySavedEpisodes->items as $show_episode) {
-                            $episode = getEpisode($w, $show_episode->uri);
+                            if (isset($show_episode->uri) && $show_episode->uri != '') $episode = getEpisode($w, $show_episode->uri);
                             if (isset($episode->uri) && $episode->uri != '') $savedMySavedEpisodes[] = $episode;
                         }
 
@@ -1842,6 +1842,7 @@ function refreshLibrary($w, $silent = false) {
 
                     // Handle Show Episodes
                     $counter_episodes = 0;
+                    $max_number_of_episode_per_show = getenv('max_number_of_episode_per_show');
                     foreach ($savedMySavedEpisodes as $episode) {
                         if ($max_number_of_episode_per_show > 0) {
                             if ($counter_episodes > $max_number_of_episode_per_show) {
