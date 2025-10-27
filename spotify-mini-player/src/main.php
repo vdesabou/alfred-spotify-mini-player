@@ -36,8 +36,8 @@ function main($argv) {
     // check for download artworks in progress
     if (file_exists($w->data().'/download_artworks_in_progress')) {
         // Verify if DOWNLOAD_ARTWORKS process is actually running
-        $pid = exec("ps -efx | grep \"php\" | egrep \"DOWNLOAD_ARTWORKS\" | grep -v grep | awk '{print $2}'");
-        if ($pid == '') {
+        $pid = exec("ps -efx | grep \"php\" | egrep \"DOWNLOAD_ARTWORKS\" | grep -v grep | awk '{print \$2}'");
+        if (empty(trim($pid))) {
             // Process is not running, clean up stale file
             deleteTheFile($w, $w->data().'/download_artworks_in_progress');
         } else {
