@@ -35,27 +35,34 @@ function main($argv) {
 
     // check for download artworks in progress
     if (file_exists($w->data().'/download_artworks_in_progress')) {
-        $in_progress_data = $w->read('download_artworks_in_progress');
-        $download_artworks_in_progress_words = explode('▹', $in_progress_data);
-        $elapsed_time = time() - $download_artworks_in_progress_words[3];
-        if ($download_artworks_in_progress_words[2] != 0) {
-            $w->result(null, $w->data().'/download_artworks_in_progress', $download_artworks_in_progress_words[0].' in progress since '.beautifyTime($elapsed_time, true).' : '.floatToSquares(intval($download_artworks_in_progress_words[1]) / intval($download_artworks_in_progress_words[2])),array(
-                        $download_artworks_in_progress_words[1].'/'.$download_artworks_in_progress_words[2].' artworks processed so far (empty artworks can be seen until full download is complete)',
-                        'alt' => '',
-                        'cmd' => '',
-                        'shift' => '',
-                        'fn' => '',
-                        'ctrl' => '',
-                    ), './images/artworks.png', 'no', null, '');
+        // Verify if DOWNLOAD_ARTWORKS process is actually running
+        $pid = exec("ps -efx | grep \"php\" | egrep \"DOWNLOAD_ARTWORKS\" | grep -v grep | awk '{print \$2}'");
+        if (empty(trim($pid))) {
+            // Process is not running, clean up stale file
+            deleteTheFile($w, $w->data().'/download_artworks_in_progress');
         } else {
-            $w->result(null, $w->data().'/download_artworks_in_progress', $download_artworks_in_progress_words[0].' in progress since '.beautifyTime($elapsed_time, true).' : '.floatToSquares(0),array(
-                        'No artwork processed so far (empty artworks can be seen until full download is complete)',
-                        'alt' => '',
-                        'cmd' => '',
-                        'shift' => '',
-                        'fn' => '',
-                        'ctrl' => '',
-                    ), './images/artworks.png', 'no', null, '');
+            $in_progress_data = $w->read('download_artworks_in_progress');
+            $download_artworks_in_progress_words = explode('▹', $in_progress_data);
+            $elapsed_time = time() - $download_artworks_in_progress_words[3];
+            if ($download_artworks_in_progress_words[2] != 0) {
+                $w->result(null, $w->data().'/download_artworks_in_progress', $download_artworks_in_progress_words[0].' in progress since '.beautifyTime($elapsed_time, true).' : '.floatToSquares(intval($download_artworks_in_progress_words[1]) / intval($download_artworks_in_progress_words[2])),array(
+                            $download_artworks_in_progress_words[1].'/'.$download_artworks_in_progress_words[2].' artworks processed so far (empty artworks can be seen until full download is complete)',
+                            'alt' => '',
+                            'cmd' => '',
+                            'shift' => '',
+                            'fn' => '',
+                            'ctrl' => '',
+                        ), './images/artworks.png', 'no', null, '');
+            } else {
+                $w->result(null, $w->data().'/download_artworks_in_progress', $download_artworks_in_progress_words[0].' in progress since '.beautifyTime($elapsed_time, true).' : '.floatToSquares(0),array(
+                            'No artwork processed so far (empty artworks can be seen until full download is complete)',
+                            'alt' => '',
+                            'cmd' => '',
+                            'shift' => '',
+                            'fn' => '',
+                            'ctrl' => '',
+                        ), './images/artworks.png', 'no', null, '');
+            }
         }
     }
 
