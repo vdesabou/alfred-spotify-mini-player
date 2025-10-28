@@ -17461,7 +17461,7 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 		</dict>
 	</array>
 	<key>version</key>
-	<string>13.9</string>
+	<string>13.10</string>
 	<key>webaddress</key>
 	<string>https://alfred-spotify-mini-player.com</string>
 </dict>
