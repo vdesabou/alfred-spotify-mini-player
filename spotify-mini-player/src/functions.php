@@ -5995,7 +5995,7 @@ function displayLyricsForCurrentTrack($w)
             if ($lyrics_url != false) {
                 exec('open '.$lyrics_url);
             } else {
-                exec('open ' .'https://www.musixmatch.com/search/' . urlencode($results[1]) . '%20' . urlencode($results[0]));
+                exec('open ' . 'https://www.musixmatch.com/search?query=' . urlencode($results[1]) . '%20' . urlencode($results[0]));
             }
         }
 
