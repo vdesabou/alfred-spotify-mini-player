@@ -1882,7 +1882,7 @@ function firstDelimiterLyrics($w, $query, $db, $update_in_progress) {
                 /* artist_uri */, ''
                 /* playlist_uri */, ''
                 /* spotify_command */, ''
-                /* query */, 'Open▹' . 'https://www.musixmatch.com/search/' . urlencode($track_name) . '%20' . urlencode($artist_name) /* other_settings*/, ''
+                /* query */, 'Open▹' . 'https://www.musixmatch.com/search?query=' . urlencode($track_name) . '%20' . urlencode($artist_name) /* other_settings*/, ''
                 /* other_action */, ''
                 /* artist_name */, ''
                 /* track_name */, ''
