@@ -2404,7 +2404,7 @@ function secondDelimiterFollowUnfollow($w, $query, $db, $update_in_progress) {
 
             try {
                 $api = getSpotifyWebAPI($w);
-                $isArtistFollowed = $api->currentUserFollows('artist', $tmp_uri[2]);
+                $isArtistFollowed = $api->myLibraryContains('spotify:artist:' . $tmp_uri[2]);
 
                 $artist_artwork_path = getArtistArtwork($w, $artist_uri, $artist_name, false, false, false, $use_artworks);
                 if (!$isArtistFollowed[0]) {
