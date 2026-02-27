@@ -7,6 +7,9 @@ modified: 2020-04-26
 noindex: false
 ---
 
+**Important:** You now need to have a Spotify Premium account to use the workflow. You can find more information about this in the [blog post](https://developer.spotify.com/blog/2026-02-06-update-on-developer-access-and-platform-security).
+{: .notice-danger}
+
 <sectionleft>
   <leftside>
 
