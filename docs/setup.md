@@ -11,6 +11,9 @@ noindex: false
 
 {% include toc.html %}
 
+**Important:** You now need to have a Spotify Premium account to use the workflow. You can find more information about this in the [blog post](https://developer.spotify.com/blog/2026-02-06-update-on-developer-access-and-platform-security).
+{: .notice-danger}
+
 If you're still using Alfred 4, then click [here](https://alfred-spotify-mini-player.com/setup-pre-alfred5) for how to setup.
 
 ## Download and install the workflow
