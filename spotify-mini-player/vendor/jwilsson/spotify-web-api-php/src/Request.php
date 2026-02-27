@@ -6,12 +6,13 @@ namespace SpotifyWebAPI;
 
 class Request
 {
-    public const ACCOUNT_URL = 'https://accounts.spotify.com';
-    public const API_URL = 'https://api.spotify.com';
+    public const string ACCOUNT_URL = 'https://accounts.spotify.com';
+    public const string API_URL = 'https://api.spotify.com';
 
     protected array $lastResponse = [];
     protected array $options = [
         'curl_options' => [],
+        'default_headers' => [],
         'return_assoc' => false,
     ];
 
@@ -24,6 +25,25 @@ class Request
     public function __construct(array|object $options = [])
     {
         $this->setOptions($options);
+    }
+
+    /**
+     * Format request headers to be used with cURL.
+     *
+     * @param array|object $headers The headers to format.
+     *
+     * @return array The formatted headers.
+     */
+    protected function formatHeaders(array|object $headers): array
+    {
+        $headers = array_merge((array) $this->options['default_headers'], $headers);
+
+        $formattedHeaders = [];
+        foreach ($headers as $key => $val) {
+            $formattedHeaders[] = "$key: $val";
+        }
+
+        return $formattedHeaders;
     }
 
     /**
@@ -114,7 +134,7 @@ class Request
      */
     public function account(string $method, string $uri, string|array $parameters = [], array $headers = []): array
     {
-        return $this->send($method, self::ACCOUNT_URL . $uri, $parameters, $headers);
+        return $this->send($method, static::ACCOUNT_URL . $uri, $parameters, $headers);
     }
 
     /**
@@ -136,7 +156,7 @@ class Request
      */
     public function api(string $method, string $uri, string|array $parameters = [], array $headers = []): array
     {
-        return $this->send($method, self::API_URL . $uri, $parameters, $headers);
+        return $this->send($method, static::API_URL . $uri, $parameters, $headers);
     }
 
     /**
@@ -181,23 +201,19 @@ class Request
             $parameters = http_build_query($parameters, '', '&');
         }
 
+        $method = strtoupper($method);
         $options = [
             CURLOPT_CAINFO => __DIR__ . '/cacert.pem',
             CURLOPT_ENCODING => '',
             CURLOPT_HEADER => true,
-            CURLOPT_HTTPHEADER => [],
+            CURLOPT_HTTPHEADER => $this->formatHeaders($headers),
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_URL => rtrim($url, '/'),
         ];
 
-        foreach ($headers as $key => $val) {
-            $options[CURLOPT_HTTPHEADER][] = "$key: $val";
-        }
-
-        $method = strtoupper($method);
-
         switch ($method) {
-            case 'DELETE': // No break
+            // No break
+            case 'DELETE':
             case 'PUT':
                 $options[CURLOPT_CUSTOMREQUEST] = $method;
                 $options[CURLOPT_POSTFIELDS] = $parameters;
@@ -227,7 +243,6 @@ class Request
         if (curl_error($ch)) {
             $error = curl_error($ch);
             $errno = curl_errno($ch);
-            curl_close($ch);
 
             throw new SpotifyWebAPIException('cURL transport error: ' . $errno . ' ' . $error);
         }
@@ -244,8 +259,6 @@ class Request
             'status' => $status,
             'url' => $url,
         ];
-
-        curl_close($ch);
 
         if ($status >= 400) {
             $this->handleResponseError($body, $status);
@@ -281,11 +294,7 @@ class Request
         $parts = explode("\n\n", $response, 3);
 
         // Skip first set of headers for proxied requests etc.
-        if (
-            preg_match('/^HTTP\/1.\d 100 Continue/', $parts[0]) ||
-            preg_match('/^HTTP\/1.\d 200 Connection established/', $parts[0]) ||
-            preg_match('/^HTTP\/1.\d 200 Tunnel established/', $parts[0])
-        ) {
+        if (preg_match('/^HTTP\/1\.\d (100 Continue|200 (Connection established|Tunnel established))/', $parts[0])) {
             return [
                 $parts[1],
                 $parts[2],
