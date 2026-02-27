@@ -3,6 +3,11 @@
 ![GitHub All Releases](https://img.shields.io/github/downloads/vdesabou/alfred-spotify-mini-player/total) ![GitHub Releases](https://img.shields.io/github/downloads/vdesabou/alfred-spotify-mini-player/latest/total)![GitHub Release Date](https://img.shields.io/github/release-date/vdesabou/alfred-spotify-mini-player)![GitHub commits since latest release (by date)](https://img.shields.io/github/commits-since/vdesabou/alfred-spotify-mini-player/latest)
 ![GitHub issues](https://img.shields.io/github/issues/vdesabou/alfred-spotify-mini-player)![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/vdesabou/alfred-spotify-mini-player)
 
+
+🚨🚨 You now need to have a **Spotify Premium account** to use the workflow. You can find more information about this in the [blog post](https://developer.spotify.com/blog/2026-02-06-update-on-developer-access-and-platform-security) 🚨🚨
+
+
+
 Find all information and download the workflow on [alfred-spotify-mini-player.com](http://alfred-spotify-mini-player.com)
 
 [![Screenshot](https://github.com/vdesabou/alfred-spotify-mini-player/raw/master/docs/images/readme_site.jpg)](http://alfred-spotify-mini-player.com)
