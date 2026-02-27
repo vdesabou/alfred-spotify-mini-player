@@ -11,6 +11,7 @@ class SpotifyWebAPI
     protected array $options = [
         'auto_refresh' => false,
         'auto_retry' => false,
+        'default_headers' => [],
         'return_assoc' => false,
     ];
     protected ?Request $request = null;
@@ -110,9 +111,10 @@ class SpotifyWebAPI
         string $method,
         string $uri,
         string|array $parameters = [],
-        array $headers = []
+        array $headers = [],
     ): array {
         $this->request->setOptions([
+            'default_headers' => $this->options['default_headers'],
             'return_assoc' => $this->options['return_assoc'],
         ]);
 
@@ -178,7 +180,9 @@ class SpotifyWebAPI
 
     /**
      * Add albums to the current user's Spotify library.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/save-albums-user
+     * https://developer.spotify.com/documentation/web-api/reference/save-albums-user
+     *
+     * @deprecated Use SpotifyWebAPI::addMyLibrary() instead.
      *
      * @param string|array $albums Album IDs or URIs to add.
      *
@@ -186,25 +190,33 @@ class SpotifyWebAPI
      */
     public function addMyAlbums(string|array $albums): bool
     {
-        $albums = $this->uriToId($albums, 'album');
-        $albums = json_encode([
-            'ids' => (array) $albums,
-        ]);
+        $albums = $this->idToUri($albums, 'album');
 
-        $headers = [
-            'Content-Type' => 'application/json',
-        ];
+        return $this->addMyLibrary($albums);
+    }
 
-        $uri = '/v1/me/albums';
+    /**
+     * Add audiobooks to the current user's Spotify library.
+     * https://developer.spotify.com/documentation/web-api/reference/save-audiobooks-user
+     *
+     * @deprecated Use SpotifyWebAPI::addMyLibrary() instead.
+     *
+     * @param string|array $audiobooks Audiobook IDs or URIs to add.
+     *
+     * @return bool Whether the audiobooks was successfully added.
+     */
+    public function addMyAudiobooks(string|array $audiobooks): bool
+    {
+        $audiobooks = $this->idToUri($audiobooks, 'show');
 
-        $this->lastResponse = $this->sendRequest('PUT', $uri, $albums, $headers);
-
-        return $this->lastResponse['status'] == 200;
+        return $this->addMyLibrary($audiobooks);
     }
 
     /**
      * Add episodes to the current user's Spotify library.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/save-episodes-user
+     * https://developer.spotify.com/documentation/web-api/reference/save-episodes-user
+     *
+     * @deprecated Use SpotifyWebAPI::addMyLibrary() instead.
      *
      * @param string|array $episodes Episode IDs or URIs to add.
      *
@@ -212,25 +224,36 @@ class SpotifyWebAPI
      */
     public function addMyEpisodes(string|array $episodes): bool
     {
-        $episodes = $this->uriToId($episodes, 'episode');
-        $episodes = json_encode([
-            'ids' => (array) $episodes,
-        ]);
+        $episodes = $this->idToUri($episodes, 'episode');
 
-        $headers = [
-            'Content-Type' => 'application/json',
-        ];
+        return $this->addMyLibrary($episodes);
+    }
 
-        $uri = '/v1/me/episodes';
+    /**
+     * Add items to the current user's Spotify library.
+     * https://developer.spotify.com/documentation/web-api/reference/save-library-items
+     *
+     * @param string|array $uris Spotify URIs to add.
+     *
+     * @return bool Whether the items was successfully added.
+     */
+    public function addMyLibrary(string|array $uris): bool
+    {
+        $uris = $this->toCommaString($uris);
 
-        $this->lastResponse = $this->sendRequest('PUT', $uri, $episodes, $headers);
+        // We need to manually append data to the URI since it's a PUT request
+        $uri = '/v1/me/library?uris=' . $uris;
+
+        $this->lastResponse = $this->sendRequest('PUT', $uri);
 
         return $this->lastResponse['status'] == 200;
     }
 
     /**
      * Add shows to the current user's Spotify library.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/save-shows-user
+     * https://developer.spotify.com/documentation/web-api/reference/save-shows-user
+     *
+     * @deprecated Use SpotifyWebAPI::addMyLibrary() instead.
      *
      * @param string|array $shows Show IDs or URIs to add.
      *
@@ -238,36 +261,42 @@ class SpotifyWebAPI
      */
     public function addMyShows(string|array $shows): bool
     {
-        $shows = $this->uriToId($shows, 'show');
-        $shows = json_encode([
-            'ids' => (array) $shows,
-        ]);
+        $shows = $this->idToUri($shows, 'show');
 
-        $headers = [
-            'Content-Type' => 'application/json',
-        ];
-
-        $uri = '/v1/me/shows';
-
-        $this->lastResponse = $this->sendRequest('PUT', $uri, $shows, $headers);
-
-        return $this->lastResponse['status'] == 200;
+        return $this->addMyLibrary($shows);
     }
 
     /**
      * Add tracks to the current user's Spotify library.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/save-tracks-user
+     * https://developer.spotify.com/documentation/web-api/reference/save-tracks-user
      *
-     * @param string|array $tracks Track IDs or URIs to add.
+     * @deprecated Use SpotifyWebAPI::addMyLibrary() instead.
+     *
+     * @param array|object $tracks Track IDs or URIs to add. One of "ids" or "timestamped_ids" key must be present.
+     * - array ids Optional. An array of track IDs or URIs.
+     * - array timestamped_ids Optional. An array of objects containing track IDs or URIs and added_at timestamp.
      *
      * @return bool Whether the tracks was successfully added.
      */
-    public function addMyTracks(string|array $tracks): bool
+    public function addMyTracks(array|object $tracks): bool
     {
-        $tracks = $this->uriToId($tracks, 'track');
-        $tracks = json_encode([
-            'ids' => (array) $tracks,
-        ]);
+        $tracks = (array) $tracks;
+
+        if (isset($tracks['ids'])) {
+            $tracks = $this->idToUri($tracks['ids'], 'track');
+
+            return $this->addMyLibrary($tracks);
+        } elseif (isset($tracks['timestamped_ids'])) {
+            $tracks = array_map(function ($item) {
+                $item['id'] = $this->uriToId($item['id'], 'track');
+
+                return $item;
+            }, $tracks['timestamped_ids']);
+
+            $options = json_encode([
+                'timestamped_ids' => $tracks,
+            ]);
+        }
 
         $headers = [
             'Content-Type' => 'application/json',
@@ -275,14 +304,48 @@ class SpotifyWebAPI
 
         $uri = '/v1/me/tracks';
 
-        $this->lastResponse = $this->sendRequest('PUT', $uri, $tracks, $headers);
+        $this->lastResponse = $this->sendRequest('PUT', $uri, $options, $headers);
 
         return $this->lastResponse['status'] == 200;
     }
 
     /**
+     * Add items to a playlist.
+     * https://developer.spotify.com/documentation/web-api/reference/add-items-to-playlist
+     *
+     * @param string $playlistId ID of the playlist to add items to.
+     * @param string|array $items Track and episode URIs to add.
+     * @param array|object $options Optional. Options for the new items.
+     * - int position Optional. Zero-based track position in playlist. Items will be appended if omitted or false.
+     *
+     * @return string|bool A new snapshot ID or false if the items weren't successfully added.
+     */
+    public function addPlaylistItems(string $playlistId, string|array $items, array|object $options = []): string|bool
+    {
+        $options = array_merge((array) $options, [
+            'uris' => (array) $items,
+        ]);
+
+        $options = json_encode($options);
+
+        $headers = [
+            'Content-Type' => 'application/json',
+        ];
+
+        $playlistId = $this->uriToId($playlistId, 'playlist');
+
+        $uri = '/v1/playlists/' . $playlistId . '/items';
+
+        $this->lastResponse = $this->sendRequest('POST', $uri, $options, $headers);
+
+        return $this->getSnapshotId($this->lastResponse['body']);
+    }
+
+    /**
      * Add tracks to a playlist.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/add-tracks-to-playlist
+     * https://developer.spotify.com/documentation/web-api/reference/add-tracks-to-playlist
+     *
+     * @deprecated Use SpotifyWebAPI::addPlaylistItems() instead.
      *
      * @param string $playlistId ID of the playlist to add tracks to.
      * @param string|array $tracks Track IDs, track URIs, and episode URIs to add.
@@ -294,10 +357,10 @@ class SpotifyWebAPI
     public function addPlaylistTracks(
         string $playlistId,
         string|array $tracks,
-        array|object $options = []
+        array|object $options = [],
     ): string|bool {
         $options = array_merge((array) $options, [
-            'uris' => (array) $this->idToUri($tracks, 'track')
+            'uris' => (array) $this->idToUri($tracks, 'track'),
         ]);
 
         $options = json_encode($options);
@@ -317,7 +380,7 @@ class SpotifyWebAPI
 
     /**
      * Change the current user's playback device.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/transfer-a-users-playback
+     * https://developer.spotify.com/documentation/web-api/reference/transfer-a-users-playback
      *
      * @param array|object $options Options for the playback transfer.
      * - string|array device_ids Required. ID of the device to switch to.
@@ -346,7 +409,7 @@ class SpotifyWebAPI
 
     /**
      * Change playback volume for the current user.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/set-volume-for-users-playback
+     * https://developer.spotify.com/documentation/web-api/reference/set-volume-for-users-playback
      *
      * @param array|object $options Optional. Options for the playback volume.
      * - int volume_percent Required. The volume to set.
@@ -367,10 +430,10 @@ class SpotifyWebAPI
     }
 
     /**
-     * Create a new playlist.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/create-playlist
+     * Create a new playlist for the current user.
+     * https://developer.spotify.com/documentation/web-api/reference/create-playlist
      *
-     * @param string $userId ID or URI of the user to create the playlist for.
+     * @param string $userId Deprecated. The current user will always be used.
      * @param array|object $options Options for the new playlist.
      * - string name Required. Name of the playlist.
      * - bool collaborative Optional. Whether the playlist should be collaborative or not.
@@ -381,18 +444,7 @@ class SpotifyWebAPI
      */
     public function createPlaylist(string|array|object $userId, array|object $options = []): array|object
     {
-        if (is_array($userId) || is_object($userId)) {
-            trigger_error(
-                'Calling SpotifyWebAPI::createPlaylist() without a user ID is deprecated.',
-                E_USER_DEPRECATED
-            );
-
-            $options = $userId;
-            $uri = '/v1/me/playlists';
-        } else {
-            $userId = $this->uriToId($userId, 'user');
-            $uri = '/v1/users/' . $userId . '/playlists';
-        }
+        $uri = '/v1/me/playlists';
 
         $options = json_encode($options);
 
@@ -407,7 +459,9 @@ class SpotifyWebAPI
 
     /**
      * Check to see if the current user is following one or more artists or other Spotify users.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/check-current-user-follows
+     * https://developer.spotify.com/documentation/web-api/reference/check-current-user-follows
+     *
+     * @deprecated Use SpotifyWebAPI::myLibraryContains() instead.
      *
      * @param string $type The type to check: either 'artist' or 'user'.
      * @param string|array $ids IDs or URIs of the users or artists to check for.
@@ -416,24 +470,33 @@ class SpotifyWebAPI
      */
     public function currentUserFollows(string $type, string|array $ids): array
     {
-        $ids = $this->uriToId($ids, $type);
-        $ids = $this->toCommaString($ids);
+        $uris = $this->idToUri($ids, $type);
 
-        $options = [
-            'ids' => $ids,
-            'type' => $type,
-        ];
+        return $this->myLibraryContains($uris);
+    }
 
-        $uri = '/v1/me/following/contains';
+    /**
+     * Check if the current user is following a playlist.
+     * https://developer.spotify.com/documentation/web-api/reference/check-if-user-follows-playlist
+     *
+     * @deprecated Use SpotifyWebAPI::myLibraryContains() instead.
+     *
+     * @param string $playlistId ID or URI of the playlist to check.
+     *
+     * @return array Array containing one boolean describing whether the playlist is followed.
+     */
+    public function currentUserFollowsPlaylist(string $playlistId): array
+    {
+        $playlistUri = $this->idToUri($playlistId, 'playlist');
 
-        $this->lastResponse = $this->sendRequest('GET', $uri, $options);
-
-        return $this->lastResponse['body'];
+        return $this->myLibraryContains($playlistUri);
     }
 
     /**
      * Delete albums from the current user's Spotify library.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/remove-albums-user
+     * https://developer.spotify.com/documentation/web-api/reference/remove-albums-user
+     *
+     * @deprecated Use SpotifyWebAPI::deleteMyLibrary() instead.
      *
      * @param string|array $albums Album IDs or URIs to delete.
      *
@@ -441,25 +504,33 @@ class SpotifyWebAPI
      */
     public function deleteMyAlbums(string|array $albums): bool
     {
-        $albums = $this->uriToId($albums, 'album');
-        $albums = json_encode([
-            'ids' => (array) $albums,
-        ]);
+        $albums = $this->idToUri($albums, 'album');
 
-        $headers = [
-            'Content-Type' => 'application/json',
-        ];
+        return $this->deleteMyLibrary($albums);
+    }
 
-        $uri = '/v1/me/albums';
+    /**
+     * Delete audiobooks from the current user's Spotify library.
+     * https://developer.spotify.com/documentation/web-api/reference/remove-audiobooks-user
+     *
+     * @deprecated Use SpotifyWebAPI::deleteMyLibrary() instead.
+     *
+     * @param string|array $audiobooks Audiobook IDs or URIs to delete.
+     *
+     * @return bool Whether the audiobooks was successfully deleted.
+     */
+    public function deleteMyAudiobooks(string|array $audiobooks): bool
+    {
+        $audiobooks = $this->idToUri($audiobooks, 'show');
 
-        $this->lastResponse = $this->sendRequest('DELETE', $uri, $albums, $headers);
-
-        return $this->lastResponse['status'] == 200;
+        return $this->deleteMyLibrary($audiobooks);
     }
 
     /**
      * Delete episodes from the current user's Spotify library.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/remove-episodes-user
+     * https://developer.spotify.com/documentation/web-api/reference/remove-episodes-user
+     *
+     * @deprecated Use SpotifyWebAPI::deleteMyLibrary() instead.
      *
      * @param string|array $episodes Episode IDs or URIs to delete.
      *
@@ -467,25 +538,36 @@ class SpotifyWebAPI
      */
     public function deleteMyEpisodes(string|array $episodes): bool
     {
-        $episodes = $this->uriToId($episodes, 'episode');
-        $episodes = json_encode([
-            'ids' => (array) $episodes,
-        ]);
+        $episodes = $this->idToUri($episodes, 'episode');
 
-        $headers = [
-            'Content-Type' => 'application/json',
-        ];
+        return $this->deleteMyLibrary($episodes);
+    }
 
-        $uri = '/v1/me/episodes';
+    /**
+     * Delete items from the current user's Spotify library.
+     * https://developer.spotify.com/documentation/web-api/reference/remove-library-items
+     *
+     * @param string|array $items Spotify URIs to delete.
+     *
+     * @return bool Whether the items were successfully deleted.
+     */
+    public function deleteMyLibrary(string|array $uris): bool
+    {
+        $uris = $this->toCommaString($uris);
 
-        $this->lastResponse = $this->sendRequest('DELETE', $uri, $episodes, $headers);
+        // We need to manually append data to the URI since it's a DELETE request
+        $uri = '/v1/me/library?uris=' . $uris;
+
+        $this->lastResponse = $this->sendRequest('DELETE', $uri);
 
         return $this->lastResponse['status'] == 200;
     }
 
     /**
      * Delete shows from the current user's Spotify library.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/remove-shows-user
+     * https://developer.spotify.com/documentation/web-api/reference/remove-shows-user
+     *
+     * @deprecated Use SpotifyWebAPI::deleteMyLibrary() instead.
      *
      * @param string|array $shows Show IDs or URIs to delete.
      *
@@ -493,25 +575,16 @@ class SpotifyWebAPI
      */
     public function deleteMyShows(string|array $shows): bool
     {
-        $shows = $this->uriToId($shows, 'show');
-        $shows = json_encode([
-            'ids' => (array) $shows,
-        ]);
+        $shows = $this->idToUri($shows, 'show');
 
-        $headers = [
-            'Content-Type' => 'application/json',
-        ];
-
-        $uri = '/v1/me/shows';
-
-        $this->lastResponse = $this->sendRequest('DELETE', $uri, $shows, $headers);
-
-        return $this->lastResponse['status'] == 200;
+        return $this->deleteMyLibrary($shows);
     }
 
     /**
      * Delete tracks from the current user's Spotify library.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/remove-tracks-user
+     * https://developer.spotify.com/documentation/web-api/reference/remove-tracks-user
+     *
+     * @deprecated Use SpotifyWebAPI::deleteMyLibrary() instead.
      *
      * @param string|array $tracks Track IDs or URIs to delete.
      *
@@ -519,25 +592,51 @@ class SpotifyWebAPI
      */
     public function deleteMyTracks(string|array $tracks): bool
     {
-        $tracks = $this->uriToId($tracks, 'track');
-        $tracks = json_encode([
-            'ids' => (array) $tracks,
-        ]);
+        $tracks = $this->idToUri($tracks, 'track');
+
+        return $this->deleteMyLibrary($tracks);
+    }
+
+    /**
+     * Delete items from a playlist and retrieve a new snapshot ID.
+     * https://developer.spotify.com/documentation/web-api/reference/remove-items-playlist
+     *
+     * @param string $playlistId ID or URI of the playlist to delete tracks from.
+     * @param array $items An array of objects containing track or episode URIs.
+     * @param string $snapshotId Optional. The playlist's snapshot ID.
+     *
+     * @return string|bool A new snapshot ID or false if the items weren't successfully deleted.
+     */
+    public function deletePlaylistItems(string $playlistId, array $items, string $snapshotId = ''): string|bool
+    {
+        $options = [
+            'items' => $items,
+        ];
+
+        if ($snapshotId) {
+            $options['snapshot_id'] = $snapshotId;
+        }
+
+        $options = json_encode($options);
 
         $headers = [
             'Content-Type' => 'application/json',
         ];
 
-        $uri = '/v1/me/tracks';
+        $playlistId = $this->uriToId($playlistId, 'playlist');
 
-        $this->lastResponse = $this->sendRequest('DELETE', $uri, $tracks, $headers);
+        $uri = '/v1/playlists/' . $playlistId . '/items';
 
-        return $this->lastResponse['status'] == 200;
+        $this->lastResponse = $this->sendRequest('DELETE', $uri, $options, $headers);
+
+        return $this->getSnapshotId($this->lastResponse['body']);
     }
 
     /**
      * Delete tracks from a playlist and retrieve a new snapshot ID.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/remove-tracks-playlist
+     * https://developer.spotify.com/documentation/web-api/reference/remove-tracks-playlist
+     *
+     * @deprecated Use SpotifyWebAPI::deletePlaylistItems() instead.
      *
      * @param string $playlistId ID or URI of the playlist to delete tracks from.
      * @param array $tracks An array with the key "tracks" containing arrays or objects with tracks to delete.
@@ -591,7 +690,9 @@ class SpotifyWebAPI
 
     /**
      * Add the current user as a follower of one or more artists or other Spotify users.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/follow-artists-users
+     * https://developer.spotify.com/documentation/web-api/reference/follow-artists-users
+     *
+     * @deprecated Use SpotifyWebAPI::addMyLibrary() instead.
      *
      * @param string $type The type of ID to follow: either 'artist' or 'user'.
      * @param string|array $ids IDs or URIs of the users or artists to follow.
@@ -600,53 +701,32 @@ class SpotifyWebAPI
      */
     public function followArtistsOrUsers(string $type, string|array $ids): bool
     {
-        $ids = $this->uriToId($ids, $type);
-        $ids = json_encode([
-            'ids' => (array) $ids,
-        ]);
+        $uris = $this->idToUri($ids, $type);
 
-        $headers = [
-            'Content-Type' => 'application/json',
-        ];
-
-        // We need to manually append data to the URI since it's a PUT request
-        $uri = '/v1/me/following?type=' . $type;
-
-        $this->lastResponse = $this->sendRequest('PUT', $uri, $ids, $headers);
-
-        return $this->lastResponse['status'] == 204;
+        return $this->addMyLibrary($uris);
     }
 
     /**
      * Add the current user as a follower of a playlist.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/follow-playlist
+     * https://developer.spotify.com/documentation/web-api/reference/follow-playlist
+     *
+     * @deprecated Use SpotifyWebAPI::addMyLibrary() instead.
      *
      * @param string $playlistId ID or URI of the playlist to follow.
-     * @param array|object $options Optional. Options for the followed playlist.
-     * - bool public Optional. Whether the playlist should be followed publicly or not.
+     * @param array|object $options Unused. Use SpotifyWebAPI::updatePlaylist() instead.
      *
      * @return bool Whether the playlist was successfully followed.
      */
     public function followPlaylist(string $playlistId, array|object $options = []): bool
     {
-        $options = $options ? json_encode($options) : '';
+        $playlistUri = $this->idToUri($playlistId, 'playlist');
 
-        $headers = [
-            'Content-Type' => 'application/json',
-        ];
-
-        $playlistId = $this->uriToId($playlistId, 'playlist');
-
-        $uri = '/v1/playlists/' . $playlistId . '/followers';
-
-        $this->lastResponse = $this->sendRequest('PUT', $uri, $options, $headers);
-
-        return $this->lastResponse['status'] == 200;
+        return $this->addMyLibrary($playlistUri);
     }
 
     /**
      * Get an album.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-an-album
+     * https://developer.spotify.com/documentation/web-api/reference/get-an-album
      *
      * @param string $albumId ID or URI of the album.
      * @param array|object $options Optional. Options for the album.
@@ -666,7 +746,9 @@ class SpotifyWebAPI
 
     /**
      * Get multiple albums.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-multiple-albums
+     * https://developer.spotify.com/documentation/web-api/reference/get-multiple-albums
+     *
+     * @deprecated See https://developer.spotify.com/blog/2026-02-06-update-on-developer-access-and-platform-security
      *
      * @param array $albumIds IDs or URIs of the albums.
      * @param array|object $options Optional. Options for the albums.
@@ -690,7 +772,7 @@ class SpotifyWebAPI
 
     /**
      * Get an album's tracks.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-an-albums-tracks
+     * https://developer.spotify.com/documentation/web-api/reference/get-an-albums-tracks
      *
      * @param string $albumId ID or URI of the album.
      * @param array|object $options Optional. Options for the tracks.
@@ -712,7 +794,7 @@ class SpotifyWebAPI
 
     /**
      * Get an artist.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-an-artist
+     * https://developer.spotify.com/documentation/web-api/reference/get-an-artist
      *
      * @param string $artistId ID or URI of the artist.
      *
@@ -730,7 +812,9 @@ class SpotifyWebAPI
 
     /**
      * Get multiple artists.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-multiple-artists
+     * https://developer.spotify.com/documentation/web-api/reference/get-multiple-artists
+     *
+     * @deprecated See https://developer.spotify.com/blog/2026-02-06-update-on-developer-access-and-platform-security
      *
      * @param array $artistIds IDs or URIs of the artists.
      *
@@ -754,7 +838,9 @@ class SpotifyWebAPI
 
     /**
      * Get an artist's related artists.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-an-artists-related-artists
+     * https://developer.spotify.com/documentation/web-api/reference/get-an-artists-related-artists
+     *
+     * @deprecated See https://developer.spotify.com/blog/2024-11-27-changes-to-the-web-api
      *
      * @param string $artistId ID or URI of the artist.
      *
@@ -772,7 +858,7 @@ class SpotifyWebAPI
 
     /**
      * Get an artist's albums.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-an-artists-albums
+     * https://developer.spotify.com/documentation/web-api/reference/get-an-artists-albums
      *
      * @param string $artistId ID or URI of the artist.
      * @param array|object $options Optional. Options for the albums.
@@ -801,7 +887,9 @@ class SpotifyWebAPI
 
     /**
      * Get an artist's top tracks in a country.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-an-artists-top-tracks
+     * https://developer.spotify.com/documentation/web-api/reference/get-an-artists-top-tracks
+     *
+     * @deprecated See https://developer.spotify.com/blog/2026-02-06-update-on-developer-access-and-platform-security
      *
      * @param string $artistId ID or URI of the artist.
      * @param array|object $options Options for the tracks.
@@ -821,7 +909,9 @@ class SpotifyWebAPI
 
     /**
      * Get audio analysis for track.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-audio-analysis
+     * https://developer.spotify.com/documentation/web-api/reference/get-audio-analysis
+     *
+     * @deprecated See https://developer.spotify.com/blog/2024-11-27-changes-to-the-web-api
      *
      * @param string $trackId ID or URI of the track.
      *
@@ -839,7 +929,7 @@ class SpotifyWebAPI
 
     /**
      * Get an audiobook.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-an-audiobook
+     * https://developer.spotify.com/documentation/web-api/reference/get-an-audiobook
      *
      * @param string $audiobookId ID or URI of the audiobook.
      * @param array|object $options Optional. Options for the audiobook.
@@ -859,7 +949,9 @@ class SpotifyWebAPI
 
     /**
      * Get multiple audiobooks.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-multiple-audiobooks
+     * https://developer.spotify.com/documentation/web-api/reference/get-multiple-audiobooks
+     *
+     * @deprecated See https://developer.spotify.com/blog/2026-02-06-update-on-developer-access-and-platform-security
      *
      * @param array $audiobookIds IDs or URIs of the audiobooks.
      * @param array|object $options Optional. Options for the audiobooks.
@@ -885,7 +977,9 @@ class SpotifyWebAPI
 
     /**
      * Get audio features of a single track.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-audio-features
+     * https://developer.spotify.com/documentation/web-api/reference/get-audio-features
+     *
+     * @deprecated See https://developer.spotify.com/blog/2024-11-27-changes-to-the-web-api
      *
      * @param string $trackId ID or URI of the track.
      *
@@ -903,7 +997,9 @@ class SpotifyWebAPI
 
     /**
      * Get a list of categories used to tag items in Spotify (on, for example, the Spotify player’s "Discover" tab).
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-categories
+     * https://developer.spotify.com/documentation/web-api/reference/get-categories
+     *
+     * @deprecated See https://developer.spotify.com/blog/2026-02-06-update-on-developer-access-and-platform-security
      *
      * @param array|object $options Optional. Options for the categories.
      * - string locale Optional. Language to show categories in, for example 'sv_SE'.
@@ -924,10 +1020,11 @@ class SpotifyWebAPI
 
     /**
      * Get a single category used to tag items in Spotify (on, for example, the Spotify player’s "Discover" tab).
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-a-category
+     * https://developer.spotify.com/documentation/web-api/reference/get-a-category
+     *
+     * @deprecated See https://developer.spotify.com/blog/2026-02-06-update-on-developer-access-and-platform-security
      *
      * @param string $categoryId ID of the category.
-     *
      * @param array|object $options Optional. Options for the category.
      * - string locale Optional. Language to show category in, for example 'sv_SE'.
      * - string country Optional. ISO 3166-1 alpha-2 country code. Show category from this country.
@@ -945,7 +1042,7 @@ class SpotifyWebAPI
 
     /**
      * Get a list of Spotify playlists tagged with a particular category.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-a-categories-playlists
+     * https://developer.spotify.com/documentation/web-api/reference/get-a-categories-playlists
      *
      * @param string $categoryId ID of the category.
      *
@@ -967,7 +1064,7 @@ class SpotifyWebAPI
 
     /**
      * Get a chapter.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-chapter
+     * https://developer.spotify.com/documentation/web-api/reference/get-chapter
      *
      * @param string $chapterId ID or URI of the chapter.
      * @param array|object $options Optional. Options for the chapter.
@@ -987,7 +1084,9 @@ class SpotifyWebAPI
 
     /**
      * Get multiple chapters.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-several-chapters
+     * https://developer.spotify.com/documentation/web-api/reference/get-several-chapters
+     *
+     * @deprecated See https://developer.spotify.com/blog/2026-02-06-update-on-developer-access-and-platform-security
      *
      * @param array $chapterIds IDs or URIs of the chapters.
      * @param array|object $options Optional. Options for the chapters.
@@ -1011,7 +1110,7 @@ class SpotifyWebAPI
 
     /**
      * Get an episode.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-an-episode
+     * https://developer.spotify.com/documentation/web-api/reference/get-an-episode
      *
      * @param string $episodeId ID or URI of the episode.
      * @param array|object $options Optional. Options for the episode.
@@ -1031,7 +1130,9 @@ class SpotifyWebAPI
 
     /**
      * Get multiple episodes.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-multiple-episodes
+     * https://developer.spotify.com/documentation/web-api/reference/get-multiple-episodes
+     *
+     * @deprecated See https://developer.spotify.com/blog/2026-02-06-update-on-developer-access-and-platform-security
      *
      * @param string|array $episodeIds IDs or URIs of the episodes.
      * @param array|object $options Optional. Options for the episodes.
@@ -1055,7 +1156,9 @@ class SpotifyWebAPI
 
     /**
      * Get Spotify featured playlists.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-featured-playlists
+     * https://developer.spotify.com/documentation/web-api/reference/get-featured-playlists
+     *
+     * @deprecated See https://developer.spotify.com/blog/2024-11-27-changes-to-the-web-api
      *
      * @param array|object $options Optional. Options for the playlists.
      * - string locale Optional. Language to show playlists in, for example 'sv_SE'.
@@ -1077,7 +1180,9 @@ class SpotifyWebAPI
 
     /**
      * Get a list of possible seed genres.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-recommendation-genres
+     * https://developer.spotify.com/documentation/web-api/reference/get-recommendation-genres
+     *
+     * @deprecated See https://developer.spotify.com/blog/2024-11-27-changes-to-the-web-api
      *
      * @return array|object All possible seed genres. Type is controlled by the `return_assoc` option.
      */
@@ -1106,7 +1211,9 @@ class SpotifyWebAPI
 
     /**
      * Get all markets where Spotify is available.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-available-markets
+     * https://developer.spotify.com/documentation/web-api/reference/get-available-markets
+     *
+     * @deprecated See https://developer.spotify.com/blog/2026-02-06-update-on-developer-access-and-platform-security
      *
      * @return array|object All markets where Spotify is available. Type is controlled by the `return_assoc` option.
      */
@@ -1121,7 +1228,9 @@ class SpotifyWebAPI
 
     /**
      * Get audio features of multiple tracks.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-several-audio-features
+     * https://developer.spotify.com/documentation/web-api/reference/get-several-audio-features
+     *
+     * @deprecated See https://developer.spotify.com/blog/2024-11-27-changes-to-the-web-api
      *
      * @param string|array $trackIds IDs or URIs of the tracks.
      *
@@ -1143,7 +1252,7 @@ class SpotifyWebAPI
 
     /**
      * Get the current user’s currently playing track.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-the-users-currently-playing-track
+     * https://developer.spotify.com/documentation/web-api/reference/get-the-users-currently-playing-track
      *
      * @param array|object $options Optional. Options for the track.
      * - string market Optional. ISO 3166-1 alpha-2 country code, provide this if you wish to apply Track Relinking.
@@ -1168,7 +1277,7 @@ class SpotifyWebAPI
 
     /**
      * Get the current user’s devices.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-a-users-available-devices
+     * https://developer.spotify.com/documentation/web-api/reference/get-a-users-available-devices
      *
      * @return array|object The user's devices. Type is controlled by the `return_assoc` option.
      */
@@ -1183,7 +1292,7 @@ class SpotifyWebAPI
 
     /**
      * Get the current user’s current playback information.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-information-about-the-users-current-playback
+     * https://developer.spotify.com/documentation/web-api/reference/get-information-about-the-users-current-playback
      *
      * @param array|object $options Optional. Options for the info.
      * - string market Optional. ISO 3166-1 alpha-2 country code, provide this if you wish to apply Track Relinking.
@@ -1209,7 +1318,7 @@ class SpotifyWebAPI
 
     /**
      * Get the current user’s playlists.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-a-list-of-current-users-playlists
+     * https://developer.spotify.com/documentation/web-api/reference/get-a-list-of-current-users-playlists
      *
      * @param array|object $options Optional. Options for the playlists.
      * - int limit Optional. Limit the number of playlists.
@@ -1229,7 +1338,7 @@ class SpotifyWebAPI
     /**
      * Get the current user’s queue.
      *
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-queue
+     * https://developer.spotify.com/documentation/web-api/reference/get-queue
      *
      * @return array|object The currently playing song and queue. Type is controlled by the `return_assoc` option.
      */
@@ -1244,7 +1353,7 @@ class SpotifyWebAPI
 
     /**
      * Get the current user’s recently played tracks.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-recently-played
+     * https://developer.spotify.com/documentation/web-api/reference/get-recently-played
      *
      * @param array|object $options Optional. Options for the tracks.
      * - int limit Optional. Number of tracks to return.
@@ -1264,7 +1373,7 @@ class SpotifyWebAPI
 
     /**
      * Get the current user’s saved albums.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-users-saved-albums
+     * https://developer.spotify.com/documentation/web-api/reference/get-users-saved-albums
      *
      * @param array|object $options Optional. Options for the albums.
      * - int limit Optional. Number of albums to return.
@@ -1283,8 +1392,27 @@ class SpotifyWebAPI
     }
 
     /**
+     * Get the current user’s saved audiobooks.
+     * https://developer.spotify.com/documentation/web-api/reference/get-users-saved-audiobooks
+     *
+     * @param array|object $options Optional. Options for the audiobooks.
+     * - int limit Optional. Number of audiobooks to return.
+     * - int offset Optional. Number of audiobooks to skip.
+     *
+     * @return array|object The user's saved audiobooks. Type is controlled by the `return_assoc` option.
+     */
+    public function getMySavedAudiobooks(array|object $options = []): array|object
+    {
+        $uri = '/v1/me/audiobooks';
+
+        $this->lastResponse = $this->sendRequest('GET', $uri, $options);
+
+        return $this->lastResponse['body'];
+    }
+
+    /**
      * Get the current user’s saved episodes.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-users-saved-episodes
+     * https://developer.spotify.com/documentation/web-api/reference/get-users-saved-episodes
      *
      * @param array|object $options Optional. Options for the episodes.
      * - int limit Optional. Number of episodes to return.
@@ -1304,7 +1432,7 @@ class SpotifyWebAPI
 
     /**
      * Get the current user’s saved tracks.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-users-saved-tracks
+     * https://developer.spotify.com/documentation/web-api/reference/get-users-saved-tracks
      *
      * @param array|object $options Optional. Options for the tracks.
      * - int limit Optional. Limit the number of tracks.
@@ -1324,7 +1452,7 @@ class SpotifyWebAPI
 
     /**
      * Get the current user’s saved shows.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-users-saved-shows
+     * https://developer.spotify.com/documentation/web-api/reference/get-users-saved-shows
      *
      * @param array|object $options Optional. Options for the shows.
      * - int limit Optional. Limit the number of shows.
@@ -1343,7 +1471,7 @@ class SpotifyWebAPI
 
     /**
      * Get the current user's top tracks or artists.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-users-top-artists-and-tracks
+     * https://developer.spotify.com/documentation/web-api/reference/get-users-top-artists-and-tracks
      *
      * @param string $type The type to fetch, either 'artists' or 'tracks'.
      * @param array $options Optional. Options for the results.
@@ -1364,7 +1492,9 @@ class SpotifyWebAPI
 
     /**
      * Get new releases.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-new-releases
+     * https://developer.spotify.com/documentation/web-api/reference/get-new-releases
+     *
+     * @deprecated See https://developer.spotify.com/blog/2026-02-06-update-on-developer-access-and-platform-security
      *
      * @param array|object $options Optional. Options for the items.
      * - string country Optional. ISO 3166-1 alpha-2 country code. Show items relevant to this country.
@@ -1384,7 +1514,7 @@ class SpotifyWebAPI
 
     /**
      * Get a specific playlist.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-playlist
+     * https://developer.spotify.com/documentation/web-api/reference/get-playlist
      *
      * @param string $playlistId ID or URI of the playlist.
      * @param array|object $options Optional. Options for the playlist.
@@ -1417,7 +1547,7 @@ class SpotifyWebAPI
 
     /**
      * Get a playlist's cover image.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-playlist-cover
+     * https://developer.spotify.com/documentation/web-api/reference/get-playlist-cover
      *
      * @param string $playlistId ID or URI of the playlist.
      *
@@ -1435,8 +1565,45 @@ class SpotifyWebAPI
     }
 
     /**
+     * Get the items in a playlist.
+     * https://developer.spotify.com/documentation/web-api/reference/get-playlists-items
+     *
+     * @param string $playlistId ID or URI of the playlist.
+     * @param array|object $options Optional. Options for the items.
+     * - string|array fields Optional. A list of fields to return. See Spotify docs for more info.
+     * - int limit Optional. Limit the number of items.
+     * - int offset Optional. Number of items to skip.
+     * - string market Optional. ISO 3166-1 alpha-2 country code, provide this if you wish to apply Track Relinking.
+     * - string|array additional_types Optional. Types of media to return info about.
+     *
+     * @return array|object The items in the playlist. Type is controlled by the `return_assoc` option.
+     */
+    public function getPlaylistItems(string $playlistId, array|object $options = []): array|object
+    {
+        $options = (array) $options;
+
+        if (isset($options['fields'])) {
+            $options['fields'] = $this->toCommaString($options['fields']);
+        }
+
+        if (isset($options['additional_types'])) {
+            $options['additional_types'] = $this->toCommaString($options['additional_types']);
+        }
+
+        $playlistId = $this->uriToId($playlistId, 'playlist');
+
+        $uri = '/v1/playlists/' . $playlistId . '/items';
+
+        $this->lastResponse = $this->sendRequest('GET', $uri, $options);
+
+        return $this->lastResponse['body'];
+    }
+
+    /**
      * Get the tracks in a playlist.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-playlists-tracks
+     * https://developer.spotify.com/documentation/web-api/reference/get-playlists-tracks
+     *
+     * @deprecated Use SpotifyWebAPI::getPlaylistItems() instead.
      *
      * @param string $playlistId ID or URI of the playlist.
      * @param array|object $options Optional. Options for the tracks.
@@ -1471,7 +1638,9 @@ class SpotifyWebAPI
 
     /**
      * Get recommendations based on artists, tracks, or genres.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-recommendations
+     * https://developer.spotify.com/documentation/web-api/reference/get-recommendations
+     *
+     * @deprecated See https://developer.spotify.com/blog/2024-11-27-changes-to-the-web-api
      *
      * @param array|object $options Optional. Options for the recommendations.
      * - int limit Optional. Limit the number of recommendations.
@@ -1514,7 +1683,7 @@ class SpotifyWebAPI
 
     /**
      * Get a show.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-a-show
+     * https://developer.spotify.com/documentation/web-api/reference/get-a-show
      *
      * @param string $showId ID or URI of the show.
      * @param array|object $options Optional. Options for the show.
@@ -1534,7 +1703,7 @@ class SpotifyWebAPI
 
     /**
      * Get a show's episodes.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-a-shows-episodes
+     * https://developer.spotify.com/documentation/web-api/reference/get-a-shows-episodes
      *
      * @param string $showId ID or URI of the album.
      * @param array|object $options Optional. Options for the episodes.
@@ -1556,7 +1725,9 @@ class SpotifyWebAPI
 
     /**
      * Get multiple shows.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-multiple-shows
+     * https://developer.spotify.com/documentation/web-api/reference/get-multiple-shows
+     *
+     * @deprecated See https://developer.spotify.com/blog/2026-02-06-update-on-developer-access-and-platform-security
      *
      * @param string|array $showIds IDs or URIs of the shows.
      * @param array|object $options Optional. Options for the shows.
@@ -1580,7 +1751,7 @@ class SpotifyWebAPI
 
     /**
      * Get a track.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-track
+     * https://developer.spotify.com/documentation/web-api/reference/get-track
      *
      * @param string $trackId ID or URI of the track.
      * @param array|object $options Optional. Options for the track.
@@ -1600,7 +1771,9 @@ class SpotifyWebAPI
 
     /**
      * Get multiple tracks.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-several-tracks
+     * https://developer.spotify.com/documentation/web-api/reference/get-several-tracks
+     *
+     * @deprecated See https://developer.spotify.com/blog/2026-02-06-update-on-developer-access-and-platform-security
      *
      * @param array $trackIds IDs or URIs of the tracks.
      * @param array|object $options Optional. Options for the tracks.
@@ -1624,7 +1797,9 @@ class SpotifyWebAPI
 
     /**
      * Get a user.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-users-profile
+     * https://developer.spotify.com/documentation/web-api/reference/get-users-profile
+     *
+     * @deprecated See https://developer.spotify.com/blog/2026-02-06-update-on-developer-access-and-platform-security
      *
      * @param string $userId ID or URI of the user.
      *
@@ -1642,7 +1817,7 @@ class SpotifyWebAPI
 
     /**
      * Get the artists followed by the current user.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-followed
+     * https://developer.spotify.com/documentation/web-api/reference/get-followed
      *
      * @param array|object $options Optional. Options for the artists.
      * - int limit Optional. Limit the number of artists returned.
@@ -1667,7 +1842,9 @@ class SpotifyWebAPI
 
     /**
      * Get a user's playlists.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-list-users-playlists
+     * https://developer.spotify.com/documentation/web-api/reference/get-list-users-playlists
+     *
+     * @deprecated See https://developer.spotify.com/blog/2026-02-06-update-on-developer-access-and-platform-security
      *
      * @param string $userId ID or URI of the user.
      * @param array|object $options Optional. Options for the tracks.
@@ -1688,7 +1865,7 @@ class SpotifyWebAPI
 
     /**
      * Get the currently authenticated user.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/get-current-users-profile
+     * https://developer.spotify.com/documentation/web-api/reference/get-current-users-profile
      *
      * @return array|object The currently authenticated user. Type is controlled by the `return_assoc` option.
      */
@@ -1703,7 +1880,9 @@ class SpotifyWebAPI
 
     /**
      * Check if albums are saved in the current user's Spotify library.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/check-users-saved-albums
+     * https://developer.spotify.com/documentation/web-api/reference/check-users-saved-albums
+     *
+     * @deprecated Use SpotifyWebAPI::myLibraryContains() instead.
      *
      * @param string|array $albums Album IDs or URIs to check for.
      *
@@ -1711,23 +1890,33 @@ class SpotifyWebAPI
      */
     public function myAlbumsContains(string|array $albums): array
     {
-        $albums = $this->uriToId($albums, 'album');
-        $albums = $this->toCommaString($albums);
+        $albums = $this->idToUri($albums, 'album');
 
-        $options = [
-            'ids' => $albums,
-        ];
+        return $this->myLibraryContains($albums);
+    }
 
-        $uri = '/v1/me/albums/contains';
+    /**
+     * Check if audiobooks are saved in the current user's Spotify library.
+     * https://developer.spotify.com/documentation/web-api/reference/check-users-saved-audiobooks
+     *
+     * @deprecated Use SpotifyWebAPI::myLibraryContains() instead.
+     *
+     * @param string|array $audiobooks Audiobook IDs or URIs to check for.
+     *
+     * @return array Whether each audiobook is saved.
+     */
+    public function myAudiobooksContains(string|array $audiobooks): array
+    {
+        $audiobooks = $this->idToUri($audiobooks, 'show');
 
-        $this->lastResponse = $this->sendRequest('GET', $uri, $options);
-
-        return $this->lastResponse['body'];
+        return $this->myLibraryContains($audiobooks);
     }
 
     /**
      * Check if episodes are saved in the current user's Spotify library.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/check-users-saved-episodes
+     * https://developer.spotify.com/documentation/web-api/reference/check-users-saved-episodes
+     *
+     * @deprecated Use SpotifyWebAPI::myLibraryContains() instead.
      *
      * @param string|array $episodes Episode IDs or URIs to check for.
      *
@@ -1735,14 +1924,28 @@ class SpotifyWebAPI
      */
     public function myEpisodesContains(string|array $episodes): array
     {
-        $episodes = $this->uriToId($episodes, 'episode');
-        $episodes = $this->toCommaString($episodes);
+        $episodes = $this->idToUri($episodes, 'episode');
+
+        return $this->myLibraryContains($episodes);
+    }
+
+    /**
+     * Check if items are saved in the current user's Spotify library.
+     * https://developer.spotify.com/documentation/web-api/reference/check-library-contains
+     *
+     * @param string|array $uris Spotify URIs to check for.
+     *
+     * @return array Whether each item is saved.
+     */
+    public function myLibraryContains(string|array $uris): array
+    {
+        $uris = $this->toCommaString($uris);
 
         $options = [
-            'ids' => $episodes,
+            'uris' => $uris,
         ];
 
-        $uri = '/v1/me/episodes/contains';
+        $uri = '/v1/me/library/contains';
 
         $this->lastResponse = $this->sendRequest('GET', $uri, $options);
 
@@ -1751,7 +1954,9 @@ class SpotifyWebAPI
 
     /**
      * Check if shows are saved in the current user's Spotify library.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/check-users-saved-shows
+     * https://developer.spotify.com/documentation/web-api/reference/check-users-saved-shows
+     *
+     * @deprecated Use SpotifyWebAPI::myLibraryContains() instead.
      *
      * @param string|array $shows Show IDs or URIs to check for.
      *
@@ -1759,23 +1964,16 @@ class SpotifyWebAPI
      */
     public function myShowsContains(string|array $shows): array
     {
-        $shows = $this->uriToId($shows, 'show');
-        $shows = $this->toCommaString($shows);
+        $shows = $this->idToUri($shows, 'show');
 
-        $options = [
-            'ids' => $shows,
-        ];
-
-        $uri = '/v1/me/shows/contains';
-
-        $this->lastResponse = $this->sendRequest('GET', $uri, $options);
-
-        return $this->lastResponse['body'];
+        return $this->myLibraryContains($shows);
     }
 
     /**
      * Check if tracks are saved in the current user's Spotify library.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/check-users-saved-tracks
+     * https://developer.spotify.com/documentation/web-api/reference/check-users-saved-tracks
+     *
+     * @deprecated Use SpotifyWebAPI::myLibraryContains() instead.
      *
      * @param string|array $tracks Track IDs or URIs to check for.
      *
@@ -1783,23 +1981,14 @@ class SpotifyWebAPI
      */
     public function myTracksContains(string|array $tracks): array
     {
-        $tracks = $this->uriToId($tracks, 'track');
-        $tracks = $this->toCommaString($tracks);
+        $tracks = $this->idToUri($tracks, 'track');
 
-        $options = [
-            'ids' => $tracks,
-        ];
-
-        $uri = '/v1/me/tracks/contains';
-
-        $this->lastResponse = $this->sendRequest('GET', $uri, $options);
-
-        return $this->lastResponse['body'];
+        return $this->myLibraryContains($tracks);
     }
 
     /**
      * Play the next track in the current users's queue.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/skip-users-playback-to-next-track
+     * https://developer.spotify.com/documentation/web-api/reference/skip-users-playback-to-next-track
      *
      * @param string $deviceId Optional. ID of the device to target.
      *
@@ -1821,7 +2010,7 @@ class SpotifyWebAPI
 
     /**
      * Pause playback for the current user.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/pause-a-users-playback
+     * https://developer.spotify.com/documentation/web-api/reference/pause-a-users-playback
      *
      * @param string $deviceId Optional. ID of the device to pause on.
      *
@@ -1843,7 +2032,7 @@ class SpotifyWebAPI
 
     /**
      * Start playback for the current user.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/start-a-users-playback
+     * https://developer.spotify.com/documentation/web-api/reference/start-a-users-playback
      *
      * @param string $deviceId Optional. ID of the device to play on.
      * @param array|object $options Optional. Options for the playback.
@@ -1876,7 +2065,7 @@ class SpotifyWebAPI
 
     /**
      * Play the previous track in the current users's queue.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/skip-users-playback-to-previous-track
+     * https://developer.spotify.com/documentation/web-api/reference/skip-users-playback-to-previous-track
      *
      * @param string $deviceId Optional. ID of the device to target.
      *
@@ -1898,7 +2087,7 @@ class SpotifyWebAPI
 
     /**
      * Add an item to the queue.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/add-to-queue
+     * https://developer.spotify.com/documentation/web-api/reference/add-to-queue
      *
      * @param string $trackUri Required. Track ID, track URI or episode URI to queue.
      * @param string $deviceId Optional. ID of the device to target.
@@ -1921,7 +2110,9 @@ class SpotifyWebAPI
 
     /**
      * Reorder the tracks in a playlist.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/reorder-or-replace-playlists-tracks
+     * https://developer.spotify.com/documentation/web-api/reference/reorder-or-replace-playlists-tracks
+     *
+     * @deprecated Use SpotifyWebAPI::updatePlaylistItems() instead.
      *
      * @param string $playlistId ID or URI of the playlist.
      * @param array|object $options Options for the new tracks.
@@ -1951,7 +2142,7 @@ class SpotifyWebAPI
 
     /**
      * Set repeat mode for the current user’s playback.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/set-repeat-mode-on-users-playback
+     * https://developer.spotify.com/documentation/web-api/reference/set-repeat-mode-on-users-playback
      *
      * @param array|object $options Optional. Options for the playback repeat mode.
      * - string state Required. The repeat mode. See Spotify docs for possible values.
@@ -1973,7 +2164,9 @@ class SpotifyWebAPI
 
     /**
      * Replace all tracks in a playlist with new ones.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/reorder-or-replace-playlists-tracks
+     * https://developer.spotify.com/documentation/web-api/reference/reorder-or-replace-playlists-tracks
+     *
+     * @deprecated Use SpotifyWebAPI::updatePlaylistItems() instead.
      *
      * @param string $playlistId ID or URI of the playlist.
      * @param string|array $tracks IDs, track URIs, or episode URIs to replace with.
@@ -2002,7 +2195,7 @@ class SpotifyWebAPI
 
     /**
      * Search for an item.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/search
+     * https://developer.spotify.com/documentation/web-api/reference/search
      *
      * @param string $query The term to search for.
      * @param string|array $type The type of item to search for.
@@ -2030,7 +2223,7 @@ class SpotifyWebAPI
 
     /**
      * Change playback position for the current user.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/seek-to-position-in-currently-playing-track
+     * https://developer.spotify.com/documentation/web-api/reference/seek-to-position-in-currently-playing-track
      *
      * @param array|object $options Optional. Options for the playback seeking.
      * - string position_ms Required. The position in milliseconds to seek to.
@@ -2094,7 +2287,7 @@ class SpotifyWebAPI
 
     /**
      * Set shuffle mode for the current user’s playback.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/toggle-shuffle-for-users-playback
+     * https://developer.spotify.com/documentation/web-api/reference/toggle-shuffle-for-users-playback
      *
      * @param array|object $options Optional. Options for the playback shuffle mode.
      * - bool state Required. The shuffle mode. See Spotify docs for possible values.
@@ -2120,7 +2313,9 @@ class SpotifyWebAPI
 
     /**
      * Remove the current user as a follower of one or more artists or other Spotify users.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/unfollow-artists-users
+     * https://developer.spotify.com/documentation/web-api/reference/unfollow-artists-users
+     *
+     * @deprecated Use SpotifyWebAPI::deleteMyLibrary() instead.
      *
      * @param string $type The type to check: either 'artist' or 'user'.
      * @param string|array $ids IDs or URIs of the users or artists to unfollow.
@@ -2129,26 +2324,16 @@ class SpotifyWebAPI
      */
     public function unfollowArtistsOrUsers(string $type, string|array $ids): bool
     {
-        $ids = $this->uriToId($ids, $type);
-        $ids = json_encode([
-            'ids' => (array) $ids,
-        ]);
+        $uris = $this->idToUri($ids, $type);
 
-        $headers = [
-            'Content-Type' => 'application/json',
-        ];
-
-        // We need to manually append data to the URI since it's a DELETE request
-        $uri = '/v1/me/following?type=' . $type;
-
-        $this->lastResponse = $this->sendRequest('DELETE', $uri, $ids, $headers);
-
-        return $this->lastResponse['status'] == 204;
+        return $this->deleteMyLibrary($uris);
     }
 
     /**
      * Remove the current user as a follower of a playlist.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/unfollow-playlist
+     * https://developer.spotify.com/documentation/web-api/reference/unfollow-playlist
+     *
+     * @deprecated Use SpotifyWebAPI::deleteMyLibrary() instead.
      *
      * @param string $playlistId ID or URI of the playlist to unfollow.
      *
@@ -2156,17 +2341,14 @@ class SpotifyWebAPI
      */
     public function unfollowPlaylist(string $playlistId): bool
     {
-        $playlistId = $this->uriToId($playlistId, 'playlist');
-        $uri = '/v1/playlists/' . $playlistId . '/followers';
+        $playlistUri = $this->idToUri($playlistId, 'playlist');
 
-        $this->lastResponse = $this->sendRequest('DELETE', $uri);
-
-        return $this->lastResponse['status'] == 200;
+        return $this->deleteMyLibrary($playlistUri);
     }
 
     /**
      * Update the details of a playlist.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/change-playlist-details
+     * https://developer.spotify.com/documentation/web-api/reference/change-playlist-details
      *
      * @param string $playlistId ID or URI of the playlist to update.
      * @param array|object $options Options for the playlist.
@@ -2196,7 +2378,7 @@ class SpotifyWebAPI
 
     /**
      * Update the image of a playlist.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/upload-custom-playlist-cover
+     * https://developer.spotify.com/documentation/web-api/reference/upload-custom-playlist-cover
      *
      * @param string $playlistId ID or URI of the playlist to update.
      * @param string $imageData Base64 encoded JPEG image data, maximum 256 KB in size.
@@ -2215,30 +2397,33 @@ class SpotifyWebAPI
     }
 
     /**
-     * Check if a set of users are following a playlist.
-     * https://developer.spotify.com/documentation/web-api/reference/#/operations/check-if-user-follows-playlist
+     * Update the items in a playlist.
+     * https://developer.spotify.com/documentation/web-api/reference/reorder-or-replace-playlists-items
      *
      * @param string $playlistId ID or URI of the playlist.
-     * @param array|object $options Options for the check.
-     * - ids string|array Required. IDs or URIs of the users to check for.
+     * @param array|object $options Options for the new items.
+     * - array uris Optional. Array of item or episode URIs to set in the playlist.
+     * - int range_start Optional. Position of the first item to be reordered.
+     * - int range_length Optional. The amount of items to be reordered.
+     * - int insert_before Optional. Position where the items should be inserted.
+     * - string snapshot_id Optional. The playlist's snapshot ID.
      *
-     * @return array Whether each user is following the playlist.
+     * @return string|bool A new snapshot ID or false if the items weren't successfully updated.
      */
-    public function usersFollowPlaylist(string $playlistId, array|object $options): array
+    public function updatePlaylistItems(string $playlistId, array|object $options): string|bool
     {
-        $options = (array) $options;
+        $options = json_encode($options);
 
-        if (isset($options['ids'])) {
-            $options['ids'] = $this->uriToId($options['ids'], 'user');
-            $options['ids'] = $this->toCommaString($options['ids']);
-        }
+        $headers = [
+            'Content-Type' => 'application/json',
+        ];
 
         $playlistId = $this->uriToId($playlistId, 'playlist');
 
-        $uri = '/v1/playlists/' . $playlistId . '/followers/contains';
+        $uri = '/v1/playlists/' . $playlistId . '/items';
 
-        $this->lastResponse = $this->sendRequest('GET', $uri, $options);
+        $this->lastResponse = $this->sendRequest('PUT', $uri, $options, $headers);
 
-        return $this->lastResponse['body'];
+        return $this->getSnapshotId($this->lastResponse['body']);
     }
 }
