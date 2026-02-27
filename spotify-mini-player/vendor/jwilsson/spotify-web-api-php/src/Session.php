@@ -28,7 +28,7 @@ class Session
         string $clientId,
         string $clientSecret = '',
         string $redirectUri = '',
-        ?Request $request = null
+        ?Request $request = null,
     ) {
         $this->setClientId($clientId);
         $this->setClientSecret($clientSecret);
@@ -78,7 +78,7 @@ class Session
     {
         // Length will be doubled when converting to hex
         return bin2hex(
-            random_bytes($length / 2)
+            random_bytes($length / 2),
         );
     }
 
