@@ -63,7 +63,7 @@
                                 <li>
                                     <p>Create an <a
                                             href="https://developer.spotify.com/dashboard/applications">application on
-                                            Spotify</a> (this is for both free and premium users)</p>
+                                            Spotify</a> (🚨 this is now only for premium users, see https://developer.spotify.com/blog/2026-02-06-update-on-developer-access-and-platform-security)</p>
 
                                     <ul>
                                         <li>Click on <em>Create an App</em> and set an app name and description:</li>
