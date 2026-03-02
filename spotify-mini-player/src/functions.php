@@ -107,7 +107,7 @@ function isTrackInYourMusic($w, $track_uri, $db)
         ];
         try {
             $api = getSpotifyWebAPI($w);
-            $response = $api->myLibraryContains($tracks);
+            $response = $api->myTracksContains($tracks);
             return $response[0];
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
             return false;
@@ -3482,7 +3482,7 @@ function followCurrentArtist($w)
         try {
             $api = getSpotifyWebAPI($w);
 
-            $isArtistFollowed = $api->myLibraryContains($artist_uri);
+            $isArtistFollowed = $api->currentUserFollows('artist', $artist_uri);
 
 
             if (!$isArtistFollowed[0]) {
@@ -3540,7 +3540,7 @@ function unfollowCurrentArtist($w)
         try {
             $api = getSpotifyWebAPI($w);
 
-            $isArtistFollowed = $api->myLibraryContains($artist_uri);
+            $isArtistFollowed = $api->currentUserFollows('artist', $artist_uri);
 
             if (!$isArtistFollowed[0]) {
                 displayNotificationWithArtwork($w, 'You are not following artist ' . $results[1], './images/warning.png', 'Error!');
@@ -4060,7 +4060,7 @@ function addTracksToYourMusic($w, $tracks, $allow_duplicate = true)
                 $offset += 50;
 
                 if (count($output)) {
-                    $tracks_contain = $api->myLibraryContains($output);
+                    $tracks_contain = $api->myTracksContains($output);
                     for ($i = 0; $i < count($output); ++$i) {
                         if (!$tracks_contain[$i]) {
                             $tracks_with_no_dup[] = $output[$i];
@@ -4087,7 +4087,7 @@ function addTracksToYourMusic($w, $tracks, $allow_duplicate = true)
                 $offset += 50;
 
                 if (count($output)) {
-                    $api->addMyLibrary($output);
+                    $api->addMyTracks($output);
                 }
             } while (count($output) > 0);
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
@@ -4253,7 +4253,7 @@ function removeTrackFromYourMusic($w, $track_uri, $refreshLibrary = true)
 
     try {
         $api = getSpotifyWebAPI($w);
-        $api->deleteMyLibrary($track_uri);
+        $api->deleteMyTracks($track_uri);
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
         logMsg($w, 'Error(removeTrackFromYourMusic): (exception ' . jTraceEx($e) . ')');
         handleSpotifyWebAPIException($w, $e);
