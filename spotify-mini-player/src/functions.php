@@ -1,6 +1,20 @@
 <?php
 
 require_once './src/workflows.php';
+
+function openSqliteDatabase($dbfile)
+{
+    $dsn = "sqlite:$dbfile";
+    $options = array(
+        PDO::ATTR_PERSISTENT => true,
+    );
+
+    if (class_exists('Pdo\\Sqlite')) {
+        return new Pdo\Sqlite($dsn, '', '', $options);
+    }
+
+    return new PDO($dsn, '', '', $options);
+}
 require_once './src/createLibrary.php';
 require_once './src/refreshLibrary.php';
 require './vendor/autoload.php';
@@ -665,9 +679,7 @@ function resetPlaylistNumberTimesPlayed($w)
     $dbfile = $w->data() . '/library.db';
 
     try {
-        $db = new PDO("sqlite:$dbfile", '', '', array(
-            PDO::ATTR_PERSISTENT => true,
-        ));
+        $db = openSqliteDatabase($dbfile);
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         $resetPlaylistNumberTimesPlayed = 'update playlists set nb_times_played=0';
@@ -700,9 +712,7 @@ function updatePlaylistNumberTimesPlayed($w, $playlist_uri)
     }
 
     try {
-        $db = new PDO("sqlite:$dbfile", '', '', array(
-            PDO::ATTR_PERSISTENT => true,
-        ));
+        $db = openSqliteDatabase($dbfile);
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         $updatePlaylistNumberTimesPlayed = 'update playlists set nb_times_played=nb_times_played+1 where uri=:uri';
@@ -741,6 +751,17 @@ function isUserPremiumSubscriber($w)
     }
 
     return false;
+}
+
+function isRefreshTokenRevoked($e)
+{
+    return $e->getCode() == 400 && strpos(strtolower($e->getMessage()), 'refresh token revoked') !== false;
+}
+
+function resetOAuthSettings($w)
+{
+    updateSetting($w, 'oauth_access_token', '');
+    updateSetting($w, 'oauth_refresh_token', '');
 }
 
 /**
@@ -4307,9 +4328,7 @@ function getRandomTrack($w)
     // Get random track from DB
 
     try {
-        $db = new PDO("sqlite:$dbfile", '', '', array(
-            PDO::ATTR_PERSISTENT => true,
-        ));
+        $db = openSqliteDatabase($dbfile);
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $getTracks = 'select uri,track_name,artist_name,album_name,duration from tracks order by random() limit 1';
         $stmt = $db->prepare($getTracks);
@@ -4350,9 +4369,7 @@ function getRandomAlbum($w)
     // Get random album from DB
 
     try {
-        $db = new PDO("sqlite:$dbfile", '', '', array(
-            PDO::ATTR_PERSISTENT => true,
-        ));
+        $db = openSqliteDatabase($dbfile);
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $getTracks = 'select album_uri,album_name,artist_name from tracks where yourmusic_album=1 order by random() limit 1';
         $stmt = $db->prepare($getTracks);
@@ -6034,9 +6051,7 @@ function downloadArtworks($w, $silent = false)
     $dbfile = $w->data() . '/fetch_artworks.db';
     if (file_exists($dbfile)) {
         try {
-            $dbartworks = new PDO("sqlite:$dbfile", '', '', array(
-                PDO::ATTR_PERSISTENT => true,
-            ));
+            $dbartworks = openSqliteDatabase($dbfile);
             $dbartworks->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             $getCount = 'select count(artist_name) from artists where already_fetched=0';
@@ -6214,11 +6229,15 @@ function downloadArtworks($w, $silent = false)
     }
 
     // Get size of artwork directory
-    exec("/usr/bin/du -sh '" . $w->data() . "/artwork'", $retArr, $retVal);
-    if ($retVal == 0) {
-        $size = $retArr[0];
-        $size = substr($size, 0, strpos($size, "\t"));
-        updateSetting($w, 'artwork_folder_size', rtrim(ltrim($size)));
+    if (file_exists($w->data() . '/artwork')) {
+        exec("/usr/bin/du -sh '" . $w->data() . "/artwork'", $retArr, $retVal);
+        if ($retVal == 0) {
+            $size = $retArr[0];
+            $size = substr($size, 0, strpos($size, "\t"));
+            updateSetting($w, 'artwork_folder_size', rtrim(ltrim($size)));
+        }
+    } else {
+        updateSetting($w, 'artwork_folder_size', '0');
     }
 
     return true;
@@ -8160,6 +8179,17 @@ function time2str($ts)
         if (date('n', $ts) == date('n') + 1) return 'next month';
         return date('F Y', $ts);
     }
+}
+
+function registerSqliteLikeFunction($db)
+{
+    if (method_exists($db, 'createFunction')) {
+        $db->createFunction('like', 'lexa_ci_utf8_like', 2);
+
+        return;
+    }
+
+    $db->sqliteCreateFunction('like', 'lexa_ci_utf8_like', 2);
 }
 
 // Problems with search on russian language #210
