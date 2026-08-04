@@ -1457,8 +1457,7 @@ function main($query, $type, $add_to_option)
 
             return;
         } elseif ($other_action == 'reset_oauth_settings') {
-            updateSetting($w,'oauth_access_token','');
-            updateSetting($w,'oauth_refresh_token','');
+            resetOAuthSettings($w);
             displayNotificationWithArtwork($w, 'Oauth settings have been correctly reset', './images/settings.png', 'Info');
 
             return;
