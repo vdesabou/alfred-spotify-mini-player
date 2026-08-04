@@ -522,7 +522,6 @@ class Workflows
             curl_setopt_array($ch, $defaults); // Set curl options
             $out = curl_exec($ch); // Request remote data
             $err = curl_error($ch);
-            curl_close($ch); // End curl request
             if ($err):
                 return $err;
             else:
