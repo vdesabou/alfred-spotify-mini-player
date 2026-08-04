@@ -948,6 +948,28 @@ class SpotifyWebAPI
     }
 
     /**
+     * Get an audiobook's chapters.
+     * https://developer.spotify.com/documentation/web-api/reference/get-audiobook-chapters
+     *
+     * @param string $audiobookId ID or URI of the audiobook.
+     * @param array|object $options Optional. Options for the chapters.
+     * - int limit Optional. Limit the number of chapters.
+     * - int offset Optional. Number of chapters to skip.
+     * - string market Optional. ISO 3166-1 alpha-2 country code, limit results to chapters available in that market.
+     *
+     * @return array|object The requested audiobook chapters. Type is controlled by the `return_assoc` option.
+     */
+    public function getAudiobookChapters(string $audiobookId, array|object $options = []): array|object
+    {
+        $audiobookId = $this->uriToId($audiobookId, 'episode');
+        $uri = '/v1/audiobooks/' . $audiobookId . '/chapters';
+
+        $this->lastResponse = $this->sendRequest('GET', $uri, $options);
+
+        return $this->lastResponse['body'];
+    }
+
+    /**
      * Get multiple audiobooks.
      * https://developer.spotify.com/documentation/web-api/reference/get-multiple-audiobooks
      *
@@ -1044,6 +1066,8 @@ class SpotifyWebAPI
      * Get a list of Spotify playlists tagged with a particular category.
      * https://developer.spotify.com/documentation/web-api/reference/get-a-categories-playlists
      *
+     * @deprecated See https://developer.spotify.com/blog/2026-02-06-update-on-developer-access-and-platform-security
+     *
      * @param string $categoryId ID of the category.
      *
      * @param array|object $options Optional. Options for the category's playlists.
@@ -1086,7 +1110,7 @@ class SpotifyWebAPI
      * Get multiple chapters.
      * https://developer.spotify.com/documentation/web-api/reference/get-several-chapters
      *
-     * @deprecated See https://developer.spotify.com/blog/2026-02-06-update-on-developer-access-and-platform-security
+     * @deprecated Use SpotifyWebAPI::getAudiobookChapters() instead.
      *
      * @param array $chapterIds IDs or URIs of the chapters.
      * @param array|object $options Optional. Options for the chapters.
