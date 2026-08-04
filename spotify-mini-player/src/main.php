@@ -138,9 +138,7 @@ function main($argv) {
         return;
     }
     try {
-        $db = new PDO("sqlite:$dbfile", '', '', array(
-            PDO::ATTR_PERSISTENT => true,
-        ));
+        $db = openSqliteDatabase($dbfile);
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $db->query('PRAGMA synchronous = OFF');
         $db->query('PRAGMA journal_mode = OFF');
@@ -152,7 +150,7 @@ function main($argv) {
         $db->query('PRAGMA compile_options');
         // Problems with search on russian language #210
         // thanks to https://blog.amartynov.ru/php-sqlite-case-insensitive-like-utf8/
-        $db->sqliteCreateFunction('like', "lexa_ci_utf8_like", 2);
+        registerSqliteLikeFunction($db);
     } catch (PDOException $e) {
         handleDbIssuePdoXml($e);
 
