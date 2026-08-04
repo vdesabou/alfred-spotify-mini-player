@@ -49,7 +49,7 @@ function refreshLibrary($w, $silent = false) {
         $dbfile = $w->data() . '/fetch_artworks.db';
         if (!file_exists($dbfile)) {
             touch($dbfile);
-            $fetch_artworks_existed = false;
+                $dbartworks = openSqliteDatabase($dbfile);
         }
         // kill previous process if running
         $pid = exec("ps -efx | grep \"php\" | egrep \"DOWNLOAD_ARTWORKS\" | grep -v grep | awk '{print $2}'");
@@ -61,7 +61,7 @@ function refreshLibrary($w, $silent = false) {
         }
 
         try {
-            $dbartworks = new PDO("sqlite:$dbfile", '', '', array(PDO::ATTR_PERSISTENT => true,));
+            $dbartworks = openSqliteDatabase($dbfile);
             $dbartworks->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
         catch(PDOException $e) {
@@ -136,7 +136,7 @@ function refreshLibrary($w, $silent = false) {
     $nb_added_followed_artists = 0;
 
     try {
-        $db = new PDO("sqlite:$dbfile", '', '', array(PDO::ATTR_PERSISTENT => true,));
+        $db = openSqliteDatabase($dbfile);
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         $db->exec('drop table counters');
@@ -199,9 +199,27 @@ function refreshLibrary($w, $silent = false) {
     while ($retry) {
         try {
             $api = getSpotifyWebAPI($w);
+            $api->me();
             $retry = false;
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
             logMsg($w, 'Error(getSpotifyWebAPI): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
+
+            if (isRefreshTokenRevoked($e)) {
+                if (file_exists($w->data() . '/update_library_in_progress')) {
+                    deleteTheFile($w, $w->data() . '/update_library_in_progress');
+                }
+                if (file_exists($w->data() . '/library_new.db')) {
+                    deleteTheFile($w, $w->data() . '/library_new.db');
+                }
+                if (file_exists($w->data() . '/library_old.db')) {
+                    rename($w->data() . '/library_old.db', $w->data() . '/library.db');
+                }
+
+                resetOAuthSettings($w);
+                displayNotificationWithArtwork($w, 'Refresh token revoked, please authenticate again', './images/warning.png', 'Error!');
+
+                return false;
+            }
 
             if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
                 // cURL transport error: 35 LibreSSL SSL_connect: SSL_ERROR_SYSCALL error #251
