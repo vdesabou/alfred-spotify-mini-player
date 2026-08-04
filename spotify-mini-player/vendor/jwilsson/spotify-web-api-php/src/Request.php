@@ -228,7 +228,7 @@ class Request
                 $options[CURLOPT_CUSTOMREQUEST] = $method;
 
                 if ($parameters) {
-                    $options[CURLOPT_URL] .= '/?' . $parameters;
+                    $options[CURLOPT_URL] .= '?' . $parameters;
                 }
 
                 break;
