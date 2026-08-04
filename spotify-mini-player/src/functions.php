@@ -4202,12 +4202,11 @@ function removeTrackFromPlaylist($w, $track_uri, $playlist_uri, $playlist_name, 
         } else {
             $playlist_id = $tmp[2];
         }
+
         $tracks = [
-            'tracks' => [
-                ['uri' => $track_uri],
-            ],
+            ['uri' => 'spotify:track:' . $track_uri],
         ];
-        $api->deletePlaylistTracks($playlist_id, $tracks);
+        $api->deletePlaylistItems($playlist_id, $tracks);
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
         logMsg($w, 'Error(removeTrackFromPlaylist): (exception ' . jTraceEx($e) . ')');
         handleSpotifyWebAPIException($w, $e);
