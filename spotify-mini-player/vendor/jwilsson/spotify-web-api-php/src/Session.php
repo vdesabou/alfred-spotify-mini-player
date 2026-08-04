@@ -77,9 +77,11 @@ class Session
     public function generateState(int $length = 16): string
     {
         // Length will be doubled when converting to hex
-        return bin2hex(
-            random_bytes($length / 2),
+        $state = bin2hex(
+            random_bytes((int) ceil($length / 2)),
         );
+
+        return substr($state, 0, $length);
     }
 
     /**
