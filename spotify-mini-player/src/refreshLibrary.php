@@ -45,11 +45,9 @@ function refreshLibrary($w, $silent = false) {
 
     if ($use_artworks) {
         // db for fetch artworks
-        $fetch_artworks_existed = true;
         $dbfile = $w->data() . '/fetch_artworks.db';
         if (!file_exists($dbfile)) {
             touch($dbfile);
-                $dbartworks = openSqliteDatabase($dbfile);
         }
         // kill previous process if running
         $pid = exec("ps -efx | grep \"php\" | egrep \"DOWNLOAD_ARTWORKS\" | grep -v grep | awk '{print $2}'");
@@ -73,23 +71,21 @@ function refreshLibrary($w, $silent = false) {
             return false;
         }
 
-        // DB artowrks
-        if ($fetch_artworks_existed == false) {
-            try {
-                $dbartworks->exec('create table artists (artist_uri text PRIMARY KEY NOT NULL, artist_name text, already_fetched boolean)');
-                $dbartworks->exec('create table tracks (track_uri text PRIMARY KEY NOT NULL, already_fetched boolean)');
-                $dbartworks->exec('create table albums (album_uri text PRIMARY KEY NOT NULL, already_fetched boolean)');
-                $dbartworks->exec('create table shows (show_uri text PRIMARY KEY NOT NULL, already_fetched boolean)');
-                $dbartworks->exec('create table episodes (episode_uri text PRIMARY KEY NOT NULL, already_fetched boolean)');
-            }
-            catch(PDOException $e) {
-                logMsg($w,'Error(refreshLibrary): (exception ' . jTraceEx($e) . ')');
-                handleDbIssuePdoEcho($dbartworks, $w);
-                $dbartworks = null;
-                $db = null;
+        // Ensure artworks schema exists even if fetch_artworks.db already exists.
+        try {
+            $dbartworks->exec('create table if not exists artists (artist_uri text PRIMARY KEY NOT NULL, artist_name text, already_fetched boolean)');
+            $dbartworks->exec('create table if not exists tracks (track_uri text PRIMARY KEY NOT NULL, already_fetched boolean)');
+            $dbartworks->exec('create table if not exists albums (album_uri text PRIMARY KEY NOT NULL, already_fetched boolean)');
+            $dbartworks->exec('create table if not exists shows (show_uri text PRIMARY KEY NOT NULL, already_fetched boolean)');
+            $dbartworks->exec('create table if not exists episodes (episode_uri text PRIMARY KEY NOT NULL, already_fetched boolean)');
+        }
+        catch(PDOException $e) {
+            logMsg($w,'Error(refreshLibrary): (exception ' . jTraceEx($e) . ')');
+            handleDbIssuePdoEcho($dbartworks, $w);
+            $dbartworks = null;
+            $db = null;
 
-                return false;
-            }
+            return false;
         }
 
         try {
@@ -139,13 +135,20 @@ function refreshLibrary($w, $silent = false) {
         $db = openSqliteDatabase($dbfile);
         $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+        try {
+            $db->exec('alter table playlists add column snapshot_id text');
+        }
+        catch(PDOException $e) {
+            // Column already exists on newer libraries.
+        }
+
         $db->exec('drop table counters');
         $db->exec('create table counters (id int PRIMARY KEY, all_tracks int, yourmusic_tracks int, all_artists int, yourmusic_artists int, all_albums int, yourmusic_albums int, playlists int, shows int, episodes int)');
 
         $getPlaylists = 'select * from playlists where uri=:uri';
         $stmtGetPlaylists = $db->prepare($getPlaylists);
 
-        $insertPlaylist = 'insert into playlists values (:uri,:name,:nb_tracks,:owner,:username,:playlist_artwork_path,:ownedbyuser,:nb_playable_tracks,:duration_playlist,:nb_times_played,:collaborative,:public,:name_deburr)';
+        $insertPlaylist = 'insert into playlists (uri,name,nb_tracks,author,username,playlist_artwork_path,ownedbyuser,nb_playable_tracks,duration_playlist,nb_times_played,collaborative,public,name_deburr,snapshot_id) values (:uri,:name,:nb_tracks,:owner,:username,:playlist_artwork_path,:ownedbyuser,:nb_playable_tracks,:duration_playlist,:nb_times_played,:collaborative,:public,:name_deburr,:snapshot_id)';
         $stmtPlaylist = $db->prepare($insertPlaylist);
 
         $insertTrack = 'insert into tracks values (:yourmusic,:popularity,:uri,:album_uri,:artist_uri,:track_name,:album_name,:artist_name,:album_type,:track_artwork_path,:artist_artwork_path,:album_artwork_path,:playlist_name,:playlist_uri,:playable,:added_at,:duration,:nb_times_played,:local_track,:yourmusic_album,:track_name_deburr,:album_name_deburr,:artist_name_deburr)';
@@ -154,8 +157,11 @@ function refreshLibrary($w, $silent = false) {
         $deleteFromTracks = 'delete from tracks where playlist_uri=:playlist_uri';
         $stmtDeleteFromTracks = $db->prepare($deleteFromTracks);
 
-        $updatePlaylistsNbTracks = 'update playlists set nb_tracks=:nb_tracks,nb_playable_tracks=:nb_playable_tracks,duration_playlist=:duration_playlist,public=:public where uri=:uri';
+        $updatePlaylistsNbTracks = 'update playlists set nb_tracks=:nb_tracks,nb_playable_tracks=:nb_playable_tracks,duration_playlist=:duration_playlist,public=:public,snapshot_id=:snapshot_id where uri=:uri';
         $stmtUpdatePlaylistsNbTracks = $db->prepare($updatePlaylistsNbTracks);
+
+        $updatePlaylistsMetadata = 'update playlists set name=:name,public=:public,snapshot_id=:snapshot_id where uri=:uri';
+        $stmtUpdatePlaylistsMetadata = $db->prepare($updatePlaylistsMetadata);
 
         $deleteFromTracksYourMusic = 'delete from tracks where yourmusic=:yourmusic and yourmusic_album=0';
         $stmtDeleteFromTracksYourMusic = $db->prepare($deleteFromTracksYourMusic);
@@ -795,6 +801,11 @@ function refreshLibrary($w, $silent = false) {
             }
 
             try {
+                $playlist_snapshot_id = '';
+                if (isset($playlist->snapshot_id)) {
+                    $playlist_snapshot_id = $playlist->snapshot_id;
+                }
+
                 $stmtPlaylist->bindValue(':uri', $playlist->uri);
                 $stmtPlaylist->bindValue(':name', escapeQuery($playlist->name));
                 $stmtPlaylist->bindValue(':nb_tracks', $tracks->total);
@@ -808,6 +819,7 @@ function refreshLibrary($w, $silent = false) {
                 $stmtPlaylist->bindValue(':collaborative', $playlist->collaborative);
                 $stmtPlaylist->bindValue(':public', $playlist->public);
                 $stmtPlaylist->bindValue(':name_deburr', deburr(escapeQuery($playlist->name)));
+                $stmtPlaylist->bindValue(':snapshot_id', $playlist_snapshot_id);
                 $stmtPlaylist->execute();
             }
             catch(PDOException $e) {
@@ -857,16 +869,54 @@ function refreshLibrary($w, $silent = false) {
                 }
             }
 
-            // number of tracks has changed or playlist name has changed or the privacy has changed, or spotify playlist (Release Radar, Discover Weekly)
-            // update the playlist
-            if ($selfUpdatedPlaylistUpdated || $playlists[2] != $tracks->total || $playlists[1] != escapeQuery($playlist->name) || (($playlists[11] == '' && $playlist->public == true) || ($playlists[11] == true && $playlist->public == ''))) {
+            $playlist_snapshot_id = '';
+            if (isset($playlist->snapshot_id)) {
+                $playlist_snapshot_id = $playlist->snapshot_id;
+            }
+
+            $stored_snapshot_id = '';
+            if (isset($playlists[13])) {
+                $stored_snapshot_id = $playlists[13];
+            }
+
+            $name_changed = $playlists[1] != escapeQuery($playlist->name);
+            $public_changed = (($playlists[11] == '' && $playlist->public == true) || ($playlists[11] == true && $playlist->public == ''));
+            $snapshot_changed = $stored_snapshot_id == '' || $playlist_snapshot_id == '' || $stored_snapshot_id != $playlist_snapshot_id;
+
+            // Refresh tracks only when the playlist snapshot changed.
+            $needs_tracks_refresh = $selfUpdatedPlaylistUpdated || $snapshot_changed;
+            $needs_metadata_refresh = $name_changed || $public_changed;
+
+            if ($needs_tracks_refresh || $needs_metadata_refresh) {
                 ++$nb_updated_playlists;
+
+                if (! $needs_tracks_refresh) {
+                    try {
+                        $stmtUpdatePlaylistsMetadata->bindValue(':name', escapeQuery($playlist->name));
+                        $stmtUpdatePlaylistsMetadata->bindValue(':uri', $playlist->uri);
+                        $stmtUpdatePlaylistsMetadata->bindValue(':public', $playlist->public);
+                        $stmtUpdatePlaylistsMetadata->bindValue(':snapshot_id', $playlist_snapshot_id);
+                        $stmtUpdatePlaylistsMetadata->execute();
+                    }
+                    catch(PDOException $e) {
+                        logMsg($w,'Error(refreshLibrary): (exception ' . jTraceEx($e) . ')');
+                        handleDbIssuePdoEcho($db, $w);
+                        $dbartworks = null;
+                        $db = null;
+
+                        return;
+                    }
+
+                    if(!$silent)
+                        displayNotificationWithArtwork($w, 'Updated playlist ' . escapeQuery($playlist->name), getPlaylistArtwork($w, $playlist->uri, true, false, $use_artworks), 'Refresh Library');
+                    continue;
+                }
 
                 // force refresh of playlist artwork
                 getPlaylistArtwork($w, $playlist->uri, true, true, $use_artworks);
 
                 try {
-                    if ($playlists[1] != escapeQuery($playlist->name)) {
+                    if ($name_changed) {
                         $updatePlaylistsName = 'update playlists set name=:name where uri=:uri';
                         $stmtUpdatePlaylistsName = $db->prepare($updatePlaylistsName);
 
@@ -1087,6 +1137,7 @@ function refreshLibrary($w, $silent = false) {
                     $stmtUpdatePlaylistsNbTracks->bindValue(':duration_playlist', beautifyTime((int)($duration_playlist / 1000), true));
                     $stmtUpdatePlaylistsNbTracks->bindValue(':uri', $playlist->uri);
                     $stmtUpdatePlaylistsNbTracks->bindValue(':public', $playlist->public);
+                    $stmtUpdatePlaylistsNbTracks->bindValue(':snapshot_id', $playlist_snapshot_id);
                     $stmtUpdatePlaylistsNbTracks->execute();
                 }
                 catch(PDOException $e) {
