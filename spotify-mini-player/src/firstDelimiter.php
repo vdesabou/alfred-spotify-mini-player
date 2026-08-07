@@ -1279,25 +1279,25 @@ function firstDelimiterCurrentTrack($w, $query, $db, $update_in_progress) {
             if ($is_public_playlists) {
                 $privacy_status = 'public';
             }
-            if (countCharacters($input) < 2 || strpos(strtolower('song radio'), strtolower($input)) !== false) {
-                $w->result(null, serialize(array(''
-                /*track_uri*/, ''
-                /* album_uri */, ''
-                /* artist_uri */, ''
-                /* playlist_uri */, ''
-                /* spotify_command */, ''
-                /* query */, ''
-                /* other_settings*/, 'current_track_radio'
-                /* other_action */, ''
-                /* artist_name */, ''
-                /* track_name */, ''
-                /* album_name */, ''
-                /* track_artwork_path */, ''
-                /* artist_artwork_path */, ''
-                /* album_artwork_path */, ''
-                /* playlist_name */, '', /* playlist_artwork_path */
-                )), 'Create a Song Radio Playlist based on ' . escapeQuery($results[0]), array('This will create a ' . $privacy_status . ' song radio playlist with ' . $radio_number_tracks . ' tracks for the current track', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/radio_song.png', 'yes', null, '');
-            }
+            // if (countCharacters($input) < 2 || strpos(strtolower('song radio'), strtolower($input)) !== false) {
+            //     $w->result(null, serialize(array(''
+            //     /*track_uri*/, ''
+            //     /* album_uri */, ''
+            //     /* artist_uri */, ''
+            //     /* playlist_uri */, ''
+            //     /* spotify_command */, ''
+            //     /* query */, ''
+            //     /* other_settings*/, 'current_track_radio'
+            //     /* other_action */, ''
+            //     /* artist_name */, ''
+            //     /* track_name */, ''
+            //     /* album_name */, ''
+            //     /* track_artwork_path */, ''
+            //     /* artist_artwork_path */, ''
+            //     /* album_artwork_path */, ''
+            //     /* playlist_name */, '', /* playlist_artwork_path */
+            //     )), 'Create a Song Radio Playlist based on ' . escapeQuery($results[0]), array('This will create a ' . $privacy_status . ' song radio playlist with ' . $radio_number_tracks . ' tracks for the current track', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/radio_song.png', 'yes', null, '');
+            // }
         }
 
         if (countCharacters($input) < 2 || strpos(strtolower('web search'), strtolower($input)) !== false) {
