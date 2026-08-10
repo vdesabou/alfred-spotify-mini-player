@@ -37,4 +37,4 @@ Love it? Give it a ⭐️ or a tweet to help spread the word!
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=vdesabou/alfred-spotify-mini-player&type=Date)](https://star-history.com/#vdesabou/alfred-spotify-mini-player&Date)
+[![Star History Chart](https://star-history.dera.page/svg?repos=vdesabou/alfred-spotify-mini-player&type=Date)](https://star-history.dera.page/#vdesabou/alfred-spotify-mini-player&Date)
