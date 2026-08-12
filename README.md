@@ -26,10 +26,6 @@ Find all information and download the workflow on [alfred-spotify-mini-player.co
 
 ![Screenshot](http://alfred-spotify-mini-player.com/images/index1.gif)
 
-# Twitter
-
-Follow [@TheMiniPlayer](https://twitter.com/TheMiniPlayer) to get all the news.
-
 
 Made with ❤ by [@vdesabou](https://github.com/vdesabou).
 
