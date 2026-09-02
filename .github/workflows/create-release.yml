@@ -61,7 +61,7 @@ jobs:
           prerelease: false
       - name: Build project # This would actually build your project, using zip for an example artifact
         run: |
-          cd ./spotify-mini-player && zip -r ../spotifyminiplayer.alfredworkflow * -x \*.git\* -x \*.zip\* -x \*.idraw\* -x \temp_release_notes.*\* -x \composer.*\* -x vendor/jwilsson/spotify-web-api-php/tests/**\*
+          cd ./spotify-mini-player && zip -r ../spotifyminiplayer.alfredworkflow * -x \*.git\* -x \*.zip\* -x \*.idraw\* -x \temp_release_notes.*\* -x \composer.*\* -x vendor/jwilsson/spotify-web-api-[...]
       - name: Upload Release Asset
         id: upload-release-asset
         uses: actions/upload-release-asset@v1
@@ -72,3 +72,26 @@ jobs:
           asset_path: ./spotifyminiplayer.alfredworkflow
           asset_name: spotifyminiplayer.alfredworkflow
           asset_content_type: application/zip
+      - name: Create Gallery update issue
+        env:
+          GH_TOKEN: ${{ secrets.GALLERY_EDITS_TOKEN }}
+        run: |
+          cat > gallery-issue.md <<EOF
+          ### Gallery URL
+          https://alfred.app/workflows/vdesabou/spotify-mini-player/
+
+          ### New Version
+          ${{ github.event.milestone.title }}
+
+          ### Changelog
+          ${{ steps.read_release_file.outputs.content }}
+
+          ### Notes
+          Automated update from release workflow.
+          Release: https://github.com/vdesabou/alfred-spotify-mini-player/releases/tag/v-${{ github.event.milestone.title }}
+          EOF
+
+          gh issue create \
+            --repo alfredapp/gallery-edits \
+            --title "Update Workflow: vdesabou/spotify-mini-player" \
+            --body-file gallery-issue.md
