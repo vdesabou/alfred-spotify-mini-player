@@ -76,6 +76,16 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_GALLERY_TOKEN }}
         run: |
+          gallery_changelog=$(sed -E \
+            -e '/^[[:space:]]*[-*][[:space:]]/!d' \
+            -e 's/^[[:space:]]*-[[:space:]]/* /' \
+            -e 's/[[:space:]]+\[[^]]+\]\([^)]*\)//g' \
+            -e 's/[[:space:]]+\(#[0-9]+\)//g' \
+            -e 's/[[:space:]]+following[[:space:]]+#[0-9]+//g' \
+            -e 's/[[:space:]]+#([0-9]+)//g' \
+            ./temp_release_notes/release_file.md | \
+            perl -CSD -pe 's/[\p{So}\p{Emoji_Modifier}\x{FE0F}\x{200D}]//g' | \
+            sed -E 's/^\* +/* /')
           cat > gallery-issue.md <<EOF
           ### Gallery URL
           https://alfred.app/workflows/vdesabou/spotify-mini-player/
@@ -84,7 +94,7 @@ jobs:
           ${{ github.event.milestone.title }}
 
           ### Changelog
-          ${{ steps.read_release_file.outputs.content }}
+          ${gallery_changelog}
 
           ### Notes
           Automated update from release workflow.
