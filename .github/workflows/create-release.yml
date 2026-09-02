@@ -74,7 +74,7 @@ jobs:
           asset_content_type: application/zip
       - name: Create Gallery update issue
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_GALLERY_TOKEN }}
         run: |
           cat > gallery-issue.md <<EOF
           ### Gallery URL
