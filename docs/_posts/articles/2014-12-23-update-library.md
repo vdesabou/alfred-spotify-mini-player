@@ -53,6 +53,21 @@ Note: This can be disabled by setting `automatically_refresh_library` environmen
 	<figcaption>Automatic refresh of library.</figcaption>
 </figure>
 
+## Refresh only selected playlists
+
+If you have a large library where only a handful of playlists actually change, you can restrict the Refresh Library to those playlists. The others are left completely alone: no track fetch at all, and they keep the tracks they already have in the library.
+
+* Select `Refresh only selected playlists` in Settings menu to turn it on (`Refresh all playlists` turns it back off).
+
+* Then, in the menu of each playlist you want to keep up to date, select `Add playlist ... to the refresh list` (and `Remove playlist ... from the refresh list` to take it out again).
+
+Notes:
+
+* Playlists that are not in the refresh list still get their name and privacy updated, since that costs no additional Spotify API call. Only their tracks are frozen.
+* Playlists you follow or create after turning the option on are still added to the library, so that you can put them in the refresh list.
+* Playlists you remove from Spotify are still removed from the library.
+* The list is stored in the `__refresh_playlists` workflow configuration variable, so you can also paste playlist uris or ids there directly, one per line.
+
 ## Background download of artworks
 
 The workflow downloads artworks in background, which means that the Create/Refresh Library is very fast.
