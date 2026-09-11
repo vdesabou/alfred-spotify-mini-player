@@ -1926,6 +1926,8 @@ function firstDelimiterSettings($w, $query, $db, $update_in_progress) {
     $fuzzy_search = getSetting($w,'fuzzy_search');
     $artwork_folder_size = getSetting($w,'artwork_folder_size');
     $podcasts_enabled = getSetting($w,'podcasts_enabled');
+    $only_refresh_selected_playlists = getSetting($w,'only_refresh_selected_playlists');
+    $refresh_playlists = getRefreshPlaylists($w);
 
     if ($update_in_progress == false) {
         $w->result(null, serialize(array(''
@@ -2072,6 +2074,45 @@ function firstDelimiterSettings($w, $query, $db, $update_in_progress) {
         /* album_artwork_path */, ''
         /* playlist_name */, '', /* playlist_artwork_path */
         )), 'Enable Shows (podcasts)', array('Display shows', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/shows.png', 'yes', null, '');
+    }
+
+    if ($only_refresh_selected_playlists == true) {
+        $w->result(null, serialize(array(''
+        /*track_uri*/, ''
+        /* album_uri */, ''
+        /* artist_uri */, ''
+        /* playlist_uri */, ''
+        /* spotify_command */, ''
+        /* query */, ''
+        /* other_settings*/, 'disable_only_refresh_selected_playlists'
+        /* other_action */, ''
+        /* artist_name */, ''
+        /* track_name */, ''
+        /* album_name */, ''
+        /* track_artwork_path */, ''
+        /* artist_artwork_path */, ''
+        /* album_artwork_path */, ''
+        /* playlist_name */, '', /* playlist_artwork_path */
+        )), 'Refresh all playlists (currently only ' . count($refresh_playlists) . ' selected playlist(s) are refreshed)', array('Every playlist will be looked at again on each library refresh', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/playlists.png', 'yes', null, '');
+    }
+    else {
+        $w->result(null, serialize(array(''
+        /*track_uri*/, ''
+        /* album_uri */, ''
+        /* artist_uri */, ''
+        /* playlist_uri */, ''
+        /* spotify_command */, ''
+        /* query */, ''
+        /* other_settings*/, 'enable_only_refresh_selected_playlists'
+        /* other_action */, ''
+        /* artist_name */, ''
+        /* track_name */, ''
+        /* album_name */, ''
+        /* track_artwork_path */, ''
+        /* artist_artwork_path */, ''
+        /* album_artwork_path */, ''
+        /* playlist_name */, '', /* playlist_artwork_path */
+        )), 'Refresh only selected playlists (' . count($refresh_playlists) . ' selected so far)', array('Other playlists keep the tracks they already have, use the playlist menu to select the ones to refresh', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/playlists.png', 'yes', null, '');
     }
 
     $osx_version = exec('sw_vers -productVersion');
