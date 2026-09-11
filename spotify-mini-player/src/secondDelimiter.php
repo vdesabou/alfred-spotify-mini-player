@@ -622,6 +622,35 @@ function secondDelimiterPlaylists($w, $query, $db, $update_in_progress) {
                 if ($update_in_progress == false) {
                     $w->result(null, '', 'Remove playlist ' . escapeQuery($playlist[1]), array('A confirmation will be asked in next step', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/uncheck.png', 'no', null, 'Confirm Remove Playlist▹' . $playlist[0] . '∙' . base64_encode($playlist[1]) . '▹');
                 }
+
+                if ($update_in_progress == false) {
+                    if (isPlaylistInRefreshList($w, $playlist[0])) {
+                        $refresh_list_action = 'remove_playlist_from_refresh_list';
+                        $refresh_list_title = 'Remove playlist ' . escapeQuery($playlist[1]) . ' from the refresh list';
+                        $refresh_list_subtitle = 'Its tracks will no longer be refreshed when only selected playlists are refreshed';
+                        $refresh_list_icon = './images/uncheck.png';
+                    }
+                    else {
+                        $refresh_list_action = 'add_playlist_to_refresh_list';
+                        $refresh_list_title = 'Add playlist ' . escapeQuery($playlist[1]) . ' to the refresh list';
+                        $refresh_list_subtitle = 'Its tracks will keep being refreshed when only selected playlists are refreshed';
+                        $refresh_list_icon = './images/check.png';
+                    }
+                    $w->result(null, serialize(array(''
+                    /*track_uri*/, ''
+                    /* album_uri */, ''
+                    /* artist_uri */, $playlist[0] /* playlist_uri */, ''
+                    /* spotify_command */, ''
+                    /* query */, ''
+                    /* other_settings*/, $refresh_list_action /* other_action */, ''
+                    /* artist_name */, ''
+                    /* track_name */, ''
+                    /* album_name */, ''
+                    /* track_artwork_path */, ''
+                    /* artist_artwork_path */, ''
+                    /* album_artwork_path */, $playlist[1] /* playlist_name */, $playlist[5], /* playlist_artwork_path */
+                    )), $refresh_list_title, array($refresh_list_subtitle, 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), $refresh_list_icon, 'yes', null, '');
+                }
                 // https://github.com/vdesabou/alfred-spotify-mini-player/issues/633
                 // Impacts of Spotify's new API terms / List of broken features #633
                 // if ($update_in_progress == false) {
