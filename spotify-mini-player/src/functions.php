@@ -8072,6 +8072,98 @@ function resetSettings($w)
     updateSetting($w, 'artwork_folder_size', '');
     updateSetting($w, 'use_artworks', '1');
     updateSetting($w, 'podcasts_enabled', '1');
+    updateSetting($w, 'only_refresh_selected_playlists', '0');
+    updateSetting($w, 'refresh_playlists', '');
+}
+
+/**
+ * getPlaylistIdFromUri function.
+ *
+ * Handles both spotify:playlist:ID and the legacy spotify:user:USER:playlist:ID
+ *
+ * @param mixed $playlist_uri
+ */
+function getPlaylistIdFromUri($playlist_uri)
+{
+    $tmp = explode(':', $playlist_uri);
+    if (isset($tmp[4])) {
+        return $tmp[4];
+    } elseif (isset($tmp[2])) {
+        return $tmp[2];
+    }
+
+    return $playlist_uri;
+}
+
+/**
+ * getRefreshPlaylists function.
+ *
+ * Returns the playlists selected for refresh when only_refresh_selected_playlists is set.
+ * Entries are playlist uris when added from the workflow, but bare playlist ids are also
+ * accepted so that the setting can be edited by hand in the workflow configuration.
+ *
+ * @param mixed $w
+ */
+function getRefreshPlaylists($w)
+{
+    $refresh_playlists = getSetting($w, 'refresh_playlists');
+    if ($refresh_playlists === false || trim($refresh_playlists) == '') {
+        return array();
+    }
+
+    return array_values(array_unique(preg_split('/[\s▹,;]+/u', $refresh_playlists, -1, PREG_SPLIT_NO_EMPTY)));
+}
+
+/**
+ * isPlaylistInRefreshList function.
+ *
+ * @param mixed $w
+ * @param mixed $playlist_uri
+ * @param mixed $refresh_playlists (default: null) pass it to avoid reading the setting in a loop
+ */
+function isPlaylistInRefreshList($w, $playlist_uri, $refresh_playlists = null)
+{
+    if ($refresh_playlists === null) {
+        $refresh_playlists = getRefreshPlaylists($w);
+    }
+
+    return in_array($playlist_uri, $refresh_playlists) || in_array(getPlaylistIdFromUri($playlist_uri), $refresh_playlists);
+}
+
+/**
+ * addPlaylistToRefreshList function.
+ *
+ * @param mixed $w
+ * @param mixed $playlist_uri
+ */
+function addPlaylistToRefreshList($w, $playlist_uri)
+{
+    $refresh_playlists = getRefreshPlaylists($w);
+    if (isPlaylistInRefreshList($w, $playlist_uri, $refresh_playlists)) {
+        return true;
+    }
+    $refresh_playlists[] = $playlist_uri;
+
+    return updateSetting($w, 'refresh_playlists', implode('▹', $refresh_playlists));
+}
+
+/**
+ * removePlaylistFromRefreshList function.
+ *
+ * @param mixed $w
+ * @param mixed $playlist_uri
+ */
+function removePlaylistFromRefreshList($w, $playlist_uri)
+{
+    $playlist_id = getPlaylistIdFromUri($playlist_uri);
+    $refresh_playlists = array();
+    foreach (getRefreshPlaylists($w) as $entry) {
+        if ($entry != $playlist_uri && $entry != $playlist_id) {
+            $refresh_playlists[] = $entry;
+        }
+    }
+
+    return updateSetting($w, 'refresh_playlists', implode('▹', $refresh_playlists));
 }
 
 /**
