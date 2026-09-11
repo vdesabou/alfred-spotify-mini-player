@@ -32,6 +32,8 @@ function refreshLibrary($w, $silent = false) {
     $use_artworks = getSetting($w,'use_artworks');
     $debug = getSetting($w,'debug');
     $podcasts_enabled = getSetting($w,'podcasts_enabled');
+    $only_refresh_selected_playlists = getSetting($w,'only_refresh_selected_playlists');
+    $refresh_playlists = getRefreshPlaylists($w);
 
     $tmp = explode('▹', $in_progress_data);
     $initial_time = $tmp[3];
@@ -162,6 +164,11 @@ function refreshLibrary($w, $silent = false) {
 
         $updatePlaylistsMetadata = 'update playlists set name=:name,public=:public,snapshot_id=:snapshot_id where uri=:uri';
         $stmtUpdatePlaylistsMetadata = $db->prepare($updatePlaylistsMetadata);
+
+        // same as above, but leaves snapshot_id alone: used for playlists whose tracks are
+        // not refreshed, so that they are still refreshed in full once they are back in scope
+        $updatePlaylistsMetadataOnly = 'update playlists set name=:name,public=:public where uri=:uri';
+        $stmtUpdatePlaylistsMetadataOnly = $db->prepare($updatePlaylistsMetadataOnly);
 
         $deleteFromTracksYourMusic = 'delete from tracks where yourmusic=:yourmusic and yourmusic_album=0';
         $stmtDeleteFromTracksYourMusic = $db->prepare($deleteFromTracksYourMusic);
@@ -836,10 +843,23 @@ function refreshLibrary($w, $silent = false) {
         }
         else {
 
+            // when the refresh is restricted to a list of playlists, the ones left out keep
+            // the tracks they already have in the library: skip the track fetch, and the
+            // owner lookup below, as both are Web API calls
+            $skip_tracks_refresh = ($only_refresh_selected_playlists == true && !isPlaylistInRefreshList($w, $playlist->uri, $refresh_playlists));
+
+            if ($skip_tracks_refresh && $debug) {
+                logMsg($w,'DEBUG: skipping tracks refresh for playlist '.$playlist->id.', not in the refresh list');
+            }
+
             // check if this is a self-updated playlist (spotify and 30 tracks)
             $selfUpdatedPlaylistUpdated = false;
 
-            $owner = getPlaylistOwner($w, $playlists[0]);
+            if (!$skip_tracks_refresh) {
+                $owner = getPlaylistOwner($w, $playlists[0]);
+            } else {
+                $owner = '';
+            }
 
             if ($owner == 'spotify' && $tracks->total == 30) {
 
@@ -884,7 +904,7 @@ function refreshLibrary($w, $silent = false) {
             $snapshot_changed = $stored_snapshot_id == '' || $playlist_snapshot_id == '' || $stored_snapshot_id != $playlist_snapshot_id;
 
             // Refresh tracks only when the playlist snapshot changed.
-            $needs_tracks_refresh = $selfUpdatedPlaylistUpdated || $snapshot_changed;
+            $needs_tracks_refresh = !$skip_tracks_refresh && ($selfUpdatedPlaylistUpdated || $snapshot_changed);
             $needs_metadata_refresh = $name_changed || $public_changed;
 
             if ($needs_tracks_refresh || $needs_metadata_refresh) {
@@ -892,11 +912,18 @@ function refreshLibrary($w, $silent = false) {
 
                 if (! $needs_tracks_refresh) {
                     try {
-                        $stmtUpdatePlaylistsMetadata->bindValue(':name', escapeQuery($playlist->name));
-                        $stmtUpdatePlaylistsMetadata->bindValue(':uri', $playlist->uri);
-                        $stmtUpdatePlaylistsMetadata->bindValue(':public', $playlist->public);
-                        $stmtUpdatePlaylistsMetadata->bindValue(':snapshot_id', $playlist_snapshot_id);
-                        $stmtUpdatePlaylistsMetadata->execute();
+                        if ($skip_tracks_refresh) {
+                            $stmtUpdatePlaylistsMetadataOnly->bindValue(':name', escapeQuery($playlist->name));
+                            $stmtUpdatePlaylistsMetadataOnly->bindValue(':uri', $playlist->uri);
+                            $stmtUpdatePlaylistsMetadataOnly->bindValue(':public', $playlist->public);
+                            $stmtUpdatePlaylistsMetadataOnly->execute();
+                        } else {
+                            $stmtUpdatePlaylistsMetadata->bindValue(':name', escapeQuery($playlist->name));
+                            $stmtUpdatePlaylistsMetadata->bindValue(':uri', $playlist->uri);
+                            $stmtUpdatePlaylistsMetadata->bindValue(':public', $playlist->public);
+                            $stmtUpdatePlaylistsMetadata->bindValue(':snapshot_id', $playlist_snapshot_id);
+                            $stmtUpdatePlaylistsMetadata->execute();
+                        }
                     }
                     catch(PDOException $e) {
                         logMsg($w,'Error(refreshLibrary): (exception ' . jTraceEx($e) . ')');
