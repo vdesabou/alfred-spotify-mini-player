@@ -791,6 +791,49 @@ function main($query, $type, $add_to_option)
             }
 
             return;
+        } elseif ($other_action == 'enable_only_refresh_selected_playlists') {
+            $ret = updateSetting($w, 'only_refresh_selected_playlists', 1);
+            if ($ret == true) {
+                $nb_refresh_playlists = count(getRefreshPlaylists($w));
+                displayNotificationWithArtwork($w, 'Library refresh is now restricted to ' . $nb_refresh_playlists . ' selected playlist(s)', './images/playlists.png', 'Settings');
+            } else {
+                displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
+            }
+
+            return;
+        } elseif ($other_action == 'disable_only_refresh_selected_playlists') {
+            $ret = updateSetting($w, 'only_refresh_selected_playlists', 0);
+            if ($ret == true) {
+                displayNotificationWithArtwork($w, 'All playlists will be refreshed again', './images/playlists.png', 'Settings');
+            } else {
+                displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
+            }
+
+            return;
+        } elseif ($other_action == 'add_playlist_to_refresh_list') {
+            $ret = addPlaylistToRefreshList($w, $playlist_uri);
+            if ($ret == true) {
+                if ($playlist_artwork_path == '') {
+                    $playlist_artwork_path = getPlaylistArtwork($w, $playlist_uri, true, false, $use_artworks);
+                }
+                displayNotificationWithArtwork($w, 'Playlist ' . $playlist_name . ' added to the refresh list', $playlist_artwork_path, 'Settings');
+            } else {
+                displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
+            }
+
+            return;
+        } elseif ($other_action == 'remove_playlist_from_refresh_list') {
+            $ret = removePlaylistFromRefreshList($w, $playlist_uri);
+            if ($ret == true) {
+                if ($playlist_artwork_path == '') {
+                    $playlist_artwork_path = getPlaylistArtwork($w, $playlist_uri, true, false, $use_artworks);
+                }
+                displayNotificationWithArtwork($w, 'Playlist ' . $playlist_name . ' removed from the refresh list', $playlist_artwork_path, 'Settings');
+            } else {
+                displayNotificationWithArtwork($w, 'Error while updating settings', './images/settings.png', 'Error!');
+            }
+
+            return;
         } elseif ($other_action == 'enable_podcasts_settings') {
             $ret = updateSetting($w, 'podcasts_enabled', 1);
             return;
