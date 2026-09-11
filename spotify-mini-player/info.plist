@@ -17320,6 +17320,46 @@ Example: https://open.spotify.com/track/6hxgHNJjadmCHAJPXw6AYL</string>
 			<key>config</key>
 			<dict>
 				<key>default</key>
+				<false/>
+				<key>required</key>
+				<false/>
+				<key>text</key>
+				<string></string>
+			</dict>
+			<key>description</key>
+			<string>Only the playlists listed below are refreshed, the others keep the tracks they already have</string>
+			<key>label</key>
+			<string>🔄Refresh only selected playlists</string>
+			<key>type</key>
+			<string>checkbox</string>
+			<key>variable</key>
+			<string>__only_refresh_selected_playlists</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string></string>
+				<key>required</key>
+				<false/>
+				<key>trim</key>
+				<true/>
+				<key>verticalsize</key>
+				<integer>3</integer>
+			</dict>
+			<key>description</key>
+			<string>Playlists to refresh, one uri or id per line. Use the playlist menu to add or remove them.</string>
+			<key>label</key>
+			<string>🔄Playlists to refresh</string>
+			<key>type</key>
+			<string>textarea</string>
+			<key>variable</key>
+			<string>__refresh_playlists</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
 				<string></string>
 				<key>placeholder</key>
 				<string></string>
