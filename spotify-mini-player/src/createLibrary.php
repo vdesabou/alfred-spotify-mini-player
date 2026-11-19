@@ -44,6 +44,12 @@ function createLibrary($w) {
         return false;
     }
 
+    // artwork downloader state belongs to the artwork queue being recreated
+    foreach (array('artwork_url_seed.json', 'artwork_retry_after.json') as $artwork_state_file) {
+        if (file_exists($w->data() . '/' . $artwork_state_file)) {
+            deleteTheFile($w, $w->data() . '/' . $artwork_state_file);
+        }
+    }
     if (file_exists($w->data() . '/fetch_artworks.db')) {
         deleteTheFile($w,$w->data() . '/fetch_artworks.db');
     }
