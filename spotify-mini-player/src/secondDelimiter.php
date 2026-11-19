@@ -848,15 +848,13 @@ function secondDelimiterOnline($w, $query, $db, $update_in_progress) {
 
             $noresult = true;
             foreach ($albums as $album) {
-                if (checkIfResultAlreadyThere($w->results(), $album->name . ' (' . count($album
-                    ->tracks
-                    ->items) . ' tracks)') == false) {
+                // simplified album objects (February 2026: GET /albums batch endpoint removed)
+                $nb_album_tracks = isset($album->total_tracks) ? $album->total_tracks : (isset($album->tracks) ? count($album->tracks->items) : 0);
+                if (checkIfResultAlreadyThere($w->results(), $album->name . ' (' . $nb_album_tracks . ' tracks)') == false) {
                     $noresult = false;
-                    $genre = (count($album->genres) > 0) ? ' '.getenv('emoji_separator').' Genre: ' . implode('|', $album->genres) : '';
+                    $genre = (isset($album->genres) && count($album->genres) > 0) ? ' '.getenv('emoji_separator').' Genre: ' . implode('|', $album->genres) : '';
                     if (countCharacters($search) < 2 || strpos(strtolower($artist_name), strtolower($search)) !== false || strpos(strtolower($album->name), strtolower($search)) !== false) {
-                        $w->result(null, '', $album->name . ' (' . count($album
-                            ->tracks
-                            ->items) . ' tracks)', $album->album_type . ' by ' . $artist_name . ' '.getenv('emoji_separator').' Release date: ' . $album->release_date . $genre, getTrackOrAlbumArtwork($w, $album->uri, false, false, false, $use_artworks), 'no', null, 'Online▹' . $artist_uri . '@' . $artist_name . '@' . $album->uri . '@' . $album->name . '▹');
+                        $w->result(null, '', $album->name . ' (' . $nb_album_tracks . ' tracks)', $album->album_type . ' by ' . $artist_name . ' '.getenv('emoji_separator').' Release date: ' . $album->release_date . $genre, getTrackOrAlbumArtwork($w, $album->uri, false, false, false, $use_artworks), 'no', null, 'Online▹' . $artist_uri . '@' . $artist_name . '@' . $album->uri . '@' . $album->name . '▹');
                     }
                 }
             }
@@ -1124,10 +1122,14 @@ function secondDelimiterOnlinePlaylist($w, $query, $db, $update_in_progress) {
         $offsetGetUserPlaylistTracks = 0;
         $limitGetUserPlaylistTracks = 100;
         do {
-            $userPlaylistTracks = $api->getPlaylistTracks($playlist_id, array('fields' => array('total', 'items(added_at)', 'items(is_local)', 'items.track(is_playable,duration_ms,uri,popularity,name)', 'items.track.album(album_type,images,uri,name)', 'items.track.artists(name,uri)',), 'limit' => $limitGetUserPlaylistTracks, 'offset' => $offsetGetUserPlaylistTracks, 'market' => $country_code,));
+            $userPlaylistTracks = $api->getPlaylistItems($playlist_id, array('fields' => getPlaylistItemsFields(), 'limit' => $limitGetUserPlaylistTracks, 'offset' => $offsetGetUserPlaylistTracks, 'market' => getMarket($country_code),));
 
             foreach ($userPlaylistTracks->items as $item) {
-                $track = $item->track;
+                $track = getPlaylistItemEntry($item);
+                if ($track === null) {
+                    continue;
+                }
+                $item->track = $track;
                 $savedPlaylistTracks[] = $item;
                 $nb_tracks += 1;
                 $duration_playlist += $track->duration_ms;
@@ -1136,7 +1138,12 @@ function secondDelimiterOnlinePlaylist($w, $query, $db, $update_in_progress) {
         } while ($offsetGetUserPlaylistTracks < $userPlaylistTracks->total);
     }
     catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
-        $w->result(null, 'help', 'Exception occurred', array('' . $e->getMessage(), 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/warning.png', 'no', null, '');
+        if ($e->getCode() == 403) {
+            // February 2026: playlist items are only returned for playlists the user owns or collaborates on
+            $w->result(null, 'help', 'Spotify does not return the tracks of this playlist', array('Only playlists you own or collaborate on can be browsed (Spotify Web API restriction)', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/warning.png', 'no', null, '');
+        } else {
+            $w->result(null, 'help', 'Exception occurred', array('' . $e->getMessage(), 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/warning.png', 'no', null, '');
+        }
         echo $w->tojson();
         exit;
     }
@@ -1862,8 +1869,7 @@ function secondDelimiterFeaturedPlaylist($w, $query, $db, $update_in_progress) {
             $items = $playlists->items;
             foreach ($items as $playlist) {
                 $w->result(null, '', getenv('emoji_playlist') . escapeQuery($playlist->name), 'by ' . $playlist
-                    ->owner->id . ' '.getenv('emoji_separator').' ' . $playlist
-                    ->tracks->total . ' tracks', getPlaylistArtwork($w, $playlist->uri, false, false, $use_artworks), 'no', null, 'Online Playlist▹' . $playlist->uri . '∙' . base64_encode($playlist->name) . '▹');
+                    ->owner->id . ' '.getenv('emoji_separator').' ' . getPlaylistItemsTotal($playlist) . ' tracks', getPlaylistArtwork($w, $playlist->uri, false, false, $use_artworks), 'no', null, 'Online Playlist▹' . $playlist->uri . '∙' . base64_encode($playlist->name) . '▹');
             }
         }
         catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
@@ -2432,8 +2438,7 @@ function secondDelimiterFollowUnfollow($w, $query, $db, $update_in_progress) {
             $artist_name = $words[1];
 
             try {
-                $api = getSpotifyWebAPI($w);
-                $isArtistFollowed = $api->currentUserFollows('artist', $tmp_uri[2]);
+                $isArtistFollowed = libraryContains($w, array('spotify:artist:' . $tmp_uri[2]));
 
                 $artist_artwork_path = getArtistArtwork($w, $artist_uri, $artist_name, false, false, false, $use_artworks);
                 if (!$isArtistFollowed[0]) {
@@ -2456,8 +2461,7 @@ function secondDelimiterFollowUnfollow($w, $query, $db, $update_in_progress) {
             $show_name = $words[1];
 
             try {
-                $api = getSpotifyWebAPI($w);
-                $isShowFollowed = $api->myShowsContains($show_uri);
+                $isShowFollowed = libraryContains($w, array(toSpotifyUri($show_uri, 'show')));
 
                 $show_artwork_path = getShowArtwork($w, $show_uri, false, false, false, $use_artworks);
                 if (!$isShowFollowed[0]) {
@@ -2540,12 +2544,11 @@ function secondDelimiterFollowOrUnfollow($w, $query, $db, $update_in_progress) {
         $artist_name = $words[1];
 
         try {
-            $api = getSpotifyWebAPI($w);
             if ($follow) {
-                $ret = $api->followArtistsOrUsers('artist', $tmp_uri[2]);
+                $ret = saveToLibrary($w, array('spotify:artist:' . $tmp_uri[2]));
             }
             else {
-                $ret = $api->unfollowArtistsOrUsers('artist', $tmp_uri[2]);
+                $ret = removeFromLibrary($w, array('spotify:artist:' . $tmp_uri[2]));
             }
 
             if ($ret) {
@@ -2732,7 +2735,8 @@ function secondDelimiterPreview($w, $query, $db, $update_in_progress) {
             $track_artwork_path = getTrackOrAlbumArtwork($w, $track_uri, false, false, false, $use_artworks);
             $popularity = '';
             if ($is_display_rating) {
-                $popularity = floatToStars($track->popularity / 100);
+                // popularity was removed from the track object in February 2026
+                $popularity = isset($track->popularity) ? floatToStars($track->popularity / 100) : '';
             }
             $subtitle = '⌥ (play album) ⌘ (play artist) ctrl (lookup online)';
             $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
