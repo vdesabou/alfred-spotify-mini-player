@@ -368,8 +368,8 @@ function firstDelimiterAlbums($w, $query, $db, $update_in_progress) {
     $output_application = getSetting($w,'output_application');
     $fuzzy_search = getSetting($w,'fuzzy_search');
 
-    // New Releases menu
-    $w->result(null, '', 'New Releases', array('Browse new album releases', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/new_releases.png', 'no', null, 'New Releases▹');
+    // New Releases menu: GET /browse/new-releases was removed in February 2026 (see #633)
+    // $w->result(null, '', 'New Releases', array('Browse new album releases', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/new_releases.png', 'no', null, 'New Releases▹');
 
     // Search albums
     $album = $words[1];
@@ -734,8 +734,7 @@ function firstDelimiterSearchOnline($w, $query, $db, $update_in_progress) {
                     foreach ($results as $playlist) {
                         $noresult = false;
                         $w->result(null, '', getenv('emoji_playlist') . escapeQuery($playlist->name), 'by ' . $playlist
-                            ->owner->id . ' '.getenv('emoji_separator').' ' . $playlist
-                            ->tracks->total . ' tracks', getPlaylistArtwork($w, $playlist->uri, false, false, $use_artworks), 'no', null, 'Online Playlist▹' . $playlist->uri . '∙' . base64_encode($playlist->name) . '▹');
+                            ->owner->id . ' '.getenv('emoji_separator').' ' . getPlaylistItemsTotal($playlist) . ' tracks', getPlaylistArtwork($w, $playlist->uri, false, false, $use_artworks), 'no', null, 'Online Playlist▹' . $playlist->uri . '∙' . base64_encode($playlist->name) . '▹');
                     }
                 }
             }
@@ -1029,7 +1028,7 @@ function firstDelimiterCurrentTrack($w, $query, $db, $update_in_progress) {
                 try {
                     $api = getSpotifyWebAPI($w);
 
-                    $playback_info = $api->getMyCurrentPlaybackInfo(array('market' => $country_code, 'additional_types' => 'track,episode',));
+                    $playback_info = $api->getMyCurrentPlaybackInfo(array('market' => getMarket($country_code), 'additional_types' => 'track,episode',));
 
                     $currently_playing_type = $playback_info->currently_playing_type;
 
@@ -1038,8 +1037,8 @@ function firstDelimiterCurrentTrack($w, $query, $db, $update_in_progress) {
                     }
 
                     $is_playing = $playback_info->is_playing;
-                    $popularity = $playback_info
-                        ->item->popularity;
+                    // popularity was removed from the track object in February 2026
+                    $popularity = isset($playback_info->item->popularity) ? $playback_info->item->popularity : '';
                     $progress_ms = $playback_info->progress_ms;
 
                     // device
@@ -1997,6 +1996,8 @@ function firstDelimiterSettings($w, $query, $db, $update_in_progress) {
         /* playlist_name */, '', /* playlist_artwork_path */
         )), 'Enable Now Playing notifications', array('Display notifications for current playing track', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/enable_now_playing.png', 'yes', null, '');
     }
+
+    addArtworkResumeResult($w, $update_in_progress);
 
     if ($use_artworks == true) {
         $w->result(null, serialize(array(''
