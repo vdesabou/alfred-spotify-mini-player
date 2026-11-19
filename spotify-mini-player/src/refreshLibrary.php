@@ -9,6 +9,12 @@ require './vendor/autoload.php';
  * @param mixed $w
  */
 function refreshLibrary($w, $silent = false) {
+    if (!isSpotifyAuthenticated($w)) {
+        logMsg($w, 'Error(refreshLibrary): ' . notAuthenticatedMessage());
+        displayNotificationWithArtwork($w, notAuthenticatedMessage(), './images/warning.png', 'Error!');
+
+        return false;
+    }
     if (!file_exists($w->data() . '/library.db')) {
         if(!$silent)
             displayNotificationWithArtwork($w, 'Refresh library called while library does not exist', './images/warning.png');
@@ -229,7 +235,7 @@ function refreshLibrary($w, $silent = false) {
                 }
 
                 resetOAuthSettings($w);
-                displayNotificationWithArtwork($w, 'Refresh token revoked, please authenticate again', './images/warning.png', 'Error!');
+                displayNotificationWithArtwork($w, 'Spotify revoked the login: run "Authenticate to Spotify" in spot_mini (Redirect URI of your Spotify app must be ' . spotifyRedirectUri() . ')', './images/warning.png', 'Error!');
 
                 return false;
             }
@@ -293,7 +299,7 @@ function refreshLibrary($w, $silent = false) {
         foreach ($episodes_list as $ep) {
             try {
                 $episode = $api->getEpisode($ep, array(
-                    'market' => $country_code,
+                    'market' => getMarket($country_code),
                 ));
                 $ignorePodcasts = false;
                 break;
@@ -325,7 +331,7 @@ function refreshLibrary($w, $silent = false) {
 
         while ($retry) {
             try {
-                $userMySavedAlbums = $api->getMySavedAlbums(array('limit' => $limitGetMySavedAlbums, 'offset' => $offsetGetMySavedAlbums, 'market' => $country_code,));
+                $userMySavedAlbums = $api->getMySavedAlbums(array('limit' => $limitGetMySavedAlbums, 'offset' => $offsetGetMySavedAlbums, 'market' => getMarket($country_code),));
                 if($debug) {
                     logMsg($w,"DEBUG: getMySavedAlbums (offset ".$offsetGetMySavedAlbums.")");
                 }
@@ -367,6 +373,9 @@ function refreshLibrary($w, $silent = false) {
         if(isset($userMySavedAlbums->items)) {
             foreach ($userMySavedAlbums->items as $item) {
                 $album = $item->album;
+                if ($use_artworks) {
+                    rememberArtworkObject($w, $album);
+                }
                 if ($album->name != '') {
                     $savedMySavedAlbums[] = $album;
                 }
@@ -437,6 +446,9 @@ function refreshLibrary($w, $silent = false) {
         foreach ($userFollowedArtists
             ->artists->items as $artist) {
             $savedMyFollowedArtists[] = $artist;
+            if ($use_artworks) {
+                rememberArtworkObject($w, $artist);
+            }
         }
         if (isset($userFollowedArtists->cursors) && isset($userFollowedArtists
             ->cursors
@@ -463,7 +475,7 @@ function refreshLibrary($w, $silent = false) {
 
             while ($retry) {
                 try {
-                    $userMySavedShows = $api->getMySavedShows(array('limit' => $limitGetMySavedShows, 'offset' => $offsetGetMySavedShows, 'market' => $country_code,));
+                    $userMySavedShows = $api->getMySavedShows(array('limit' => $limitGetMySavedShows, 'offset' => $offsetGetMySavedShows, 'market' => getMarket($country_code),));
                     if ($debug) {
                         logMsg($w, "DEBUG: getMySavedShows (offset " . $offsetGetMySavedShows . ")");
                     }
@@ -502,6 +514,9 @@ function refreshLibrary($w, $silent = false) {
                 if (isset($show->show->uri) && $show->show->uri != '') {
                     if (!checkIfShowDuplicate($savedMySavedShows, $show)) {
                         $savedMySavedShows[] = $show;
+                        if ($use_artworks) {
+                            rememberArtworkObject($w, $show);
+                        }
                     }
                 }
             }
@@ -511,6 +526,9 @@ function refreshLibrary($w, $silent = false) {
     }
 
     $savedListPlaylist = array();
+    // set when a page of the playlist listing could not be fetched: playlists of that page
+    // are then unknown, so they must not be treated as deleted
+    $playlistListingIncomplete = false;
     $offsetGetUserPlaylists = 0;
     $limitGetUserPlaylists = 50;
     do {
@@ -519,19 +537,21 @@ function refreshLibrary($w, $silent = false) {
 
         while ($retry) {
             try {
-                $userPlaylists = $api->getUserPlaylists(urlencode($userid), array('limit' => $limitGetUserPlaylists, 'offset' => $offsetGetUserPlaylists,));
+                // GET /users/{id}/playlists was removed in February 2026, use GET /me/playlists
+                $userPlaylists = $api->getMyPlaylists(array('limit' => $limitGetUserPlaylists, 'offset' => $offsetGetUserPlaylists,));
                 if($debug) {
-                    logMsg($w,"DEBUG: getUserPlaylists (offset ".$offsetGetUserPlaylists.")");
+                    logMsg($w,"DEBUG: getMyPlaylists (offset ".$offsetGetUserPlaylists.")");
                 }
                 $w->write('InitCreateOrRefreshLibrary▹' . 0 . '▹' . 0 . '▹' . $initial_time . '▹' . getenv('emoji_playlist') . 'playlists', 'update_library_in_progress');
                 $retry = false;
             }
             catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
-                logMsg($w,'Error(getUserPlaylists): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
+                logMsg($w,'Error(getMyPlaylists): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
 
                 if ($e->getCode() == 404 || $e->getCode() == 403) {
-                    logMsg($w, 'Error(getUserPlaylists): skipping getUserPlaylists due to error ' . $e->getCode());
+                    logMsg($w, 'Error(getMyPlaylists): skipping getMyPlaylists due to error ' . $e->getCode());
                     // skip
+                    $playlistListingIncomplete = true;
                     break;
                 }
                 else if (strpos(strtolower($e->getMessage()), 'ssl') !== false) {
@@ -543,21 +563,27 @@ function refreshLibrary($w, $silent = false) {
                 else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                     // retry
                     if ($nb_retry > 3) {
-                        logMsg($w, 'Error(getUserPlaylists): skipping getUserPlaylists due to error ' . $e->getCode());
+                        logMsg($w, 'Error(getMyPlaylists): skipping getMyPlaylists due to error ' . $e->getCode());
                         // skip
+                        $playlistListingIncomplete = true;
                         break;
                     }
                     ++$nb_retry;
                     sleep(5);
                 }
                 else {
-                    logMsg($w, 'Error(getUserPlaylists): skipping getUserPlaylists due to error ' . $e->getCode());
+                    logMsg($w, 'Error(getMyPlaylists): skipping getMyPlaylists due to error ' . $e->getCode());
                     // skip
+                    $playlistListingIncomplete = true;
                     break;
                 }
             }
         }
 
+        if ($playlistListingIncomplete) {
+            // do not reuse the previous page
+            break;
+        }
         foreach ($userPlaylists->items as $playlist) {
             if ($playlist->name != '') {
                 $savedListPlaylist[] = $playlist;
@@ -577,7 +603,11 @@ function refreshLibrary($w, $silent = false) {
 
     $skip_playlist = false;
     foreach ($savedListPlaylist as $playlist) {
-        $tracks = $playlist->tracks;
+        if ($use_artworks) {
+            rememberArtworkObject($w, $playlist);
+        }
+        // February 2026: playlist "tracks" field renamed to "items"
+        $tracks = (object) array('total' => getPlaylistItemsTotal($playlist));
         $owner = $playlist->owner;
 
         ++$nb_playlist;
@@ -619,23 +649,26 @@ function refreshLibrary($w, $silent = false) {
             $duration_playlist = 0;
             $offsetGetUserPlaylistTracks = 0;
             $limitGetUserPlaylistTracks = 100;
+            $items_forbidden = false;
+            // tracks are inserted page by page: roll them back if a later page fails
+            $db->exec('SAVEPOINT refresh_playlist');
             do {
                 $retry = true;
                 $nb_retry = 0;
                 while ($retry) {
                     try {
-                        $userPlaylistTracks = $api->getPlaylistTracks($playlist->id, array('fields' => array('total', 'items(added_at)', 'items(is_local)', 'items.track(is_playable,duration_ms,uri,popularity,name,linked_from)', 'items.track.album(album_type,images,uri,name)', 'items.track.artists(name,uri)',), 'limit' => $limitGetUserPlaylistTracks, 'offset' => $offsetGetUserPlaylistTracks, 'market' => $country_code,));
+                        $userPlaylistTracks = $api->getPlaylistItems($playlist->id, array('fields' => getPlaylistItemsFields(), 'limit' => $limitGetUserPlaylistTracks, 'offset' => $offsetGetUserPlaylistTracks, 'market' => getMarket($country_code),));
                         if($debug) {
-                            logMsg($w,"DEBUG: getPlaylistTracks for playlist uri ".$playlist->id." (offset ".$offsetGetUserPlaylistTracks.")");
+                            logMsg($w,"DEBUG: getPlaylistItems for playlist uri ".$playlist->id." (offset ".$offsetGetUserPlaylistTracks.")");
                         }
                         $retry = false;
                     }
                     catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
-                        logMsg($w,'Error(getPlaylistTracks): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
+                        logMsg($w,'Error(getPlaylistItems): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
 
                         if ($e->getCode() == 404 || $e->getCode() == 500) {
                             // skip
-                            logMsg($w,'Error(getPlaylistTracks): skipping playlist '.$playlist->id.' due to error '.$e->getCode());
+                            logMsg($w,'Error(getPlaylistItems): skipping playlist '.$playlist->id.' due to error '.$e->getCode());
                             $skip_playlist = true;
                             break;
                         }
@@ -649,29 +682,40 @@ function refreshLibrary($w, $silent = false) {
                             // retry
                             if ($nb_retry > 3) {
                                 // skip
-                                logMsg($w,'Error(getPlaylistTracks): skipping playlist '.$playlist->id.' due to error '.$e->getCode());
+                                logMsg($w,'Error(getPlaylistItems): skipping playlist '.$playlist->id.' due to error '.$e->getCode());
                                 $skip_playlist = true;
                                 break;
                             }
                             ++$nb_retry;
                             sleep(5);
                         }
+                        else if ($e->getCode() == 403 && $offsetGetUserPlaylistTracks == 0) {
+                            // February 2026: items are only returned for playlists the user owns or collaborates on
+                            logMsg($w, 'Info(getPlaylistItems): tracks of playlist ' . $playlist->id . ' are not available (not owned by or collaborative for the user)');
+                            $items_forbidden = true;
+                            break;
+                        }
                         else {
-                            logMsg($w, 'Error(getPlaylistTracks): skipping playlist ' . $playlist->id . ' due to error ' . $e->getCode());
+                            logMsg($w, 'Error(getPlaylistItems): skipping playlist ' . $playlist->id . ' due to error ' . $e->getCode());
                             // skip
+                            $skip_playlist = true;
                             break;
                         }
                     }
                 }
-                if($skip_playlist) {
+
+                if($skip_playlist || $items_forbidden) {
                     break;
                 }
 
                 foreach ($userPlaylistTracks->items as $item) {
-                    if (!isset($item->track)) {
+                    $track = getPlaylistItemEntry($item);
+                    if ($use_artworks) {
+                        rememberArtworkObject($w, $track);
+                    }
+                    if ($track === null) {
                         continue;
                     }
-                    $track = $item->track;
                     $artists = $track->artists;
                     $artist = $artists[0];
                     $album = $track->album;
@@ -763,7 +807,7 @@ function refreshLibrary($w, $silent = false) {
 
                     try {
                         $stmtTrack->bindValue(':yourmusic', 0);
-                        $stmtTrack->bindValue(':popularity', $track->popularity);
+                        $stmtTrack->bindValue(':popularity', isset($track->popularity) ? $track->popularity : 0); // popularity removed in February 2026
                         $stmtTrack->bindValue(':uri', $track->uri);
                         $stmtTrack->bindValue(':album_uri', $album->uri);
                         $stmtTrack->bindValue(':artist_uri', $artist->uri);
@@ -804,8 +848,12 @@ function refreshLibrary($w, $silent = false) {
 
             if($skip_playlist) {
                 $skip_playlist = false;
-                break;
+                // remove the tracks already inserted, the playlist will be added on next refresh
+                $db->exec('ROLLBACK TO refresh_playlist');
+                $db->exec('RELEASE refresh_playlist');
+                continue;
             }
+            $db->exec('RELEASE refresh_playlist');
 
             try {
                 $playlist_snapshot_id = '';
@@ -942,6 +990,11 @@ function refreshLibrary($w, $silent = false) {
                 // force refresh of playlist artwork
                 getPlaylistArtwork($w, $playlist->uri, true, true, $use_artworks);
 
+                // the cached tracks are deleted before fetching the new ones:
+                // restore them if the fetch fails
+                $items_forbidden = false;
+                $db->exec('SAVEPOINT refresh_playlist');
+
                 try {
                     if ($name_changed) {
                         $updatePlaylistsName = 'update playlists set name=:name where uri=:uri';
@@ -974,18 +1027,18 @@ function refreshLibrary($w, $silent = false) {
                     $nb_retry = 0;
                     while ($retry) {
                         try {
-                            $userPlaylistTracks = $api->getPlaylistTracks($playlist->id, array('fields' => array('total', 'items(added_at)', 'items(is_local)', 'items.track(is_playable,duration_ms,uri,popularity,name,linked_from)', 'items.track.album(album_type,images,uri,name)', 'items.track.artists(name,uri)',), 'limit' => $limitGetUserPlaylistTracks, 'offset' => $offsetGetUserPlaylistTracks, 'market' => $country_code,));
+                            $userPlaylistTracks = $api->getPlaylistItems($playlist->id, array('fields' => getPlaylistItemsFields(), 'limit' => $limitGetUserPlaylistTracks, 'offset' => $offsetGetUserPlaylistTracks, 'market' => getMarket($country_code),));
                             if($debug) {
-                                logMsg($w,"DEBUG: getPlaylistTracks for playlist uri ".$playlist->id." (offset ".$offsetGetUserPlaylistTracks.")");
+                                logMsg($w,"DEBUG: getPlaylistItems for playlist uri ".$playlist->id." (offset ".$offsetGetUserPlaylistTracks.")");
                             }
                             $retry = false;
                         }
                         catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
-                            logMsg($w,'Error(getPlaylistTracks): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
+                            logMsg($w,'Error(getPlaylistItems): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
 
                             if ($e->getCode() == 404 || $e->getCode() == 500) {
                                 // skip
-                                logMsg($w,'Error(getPlaylistTracks): skipping playlist '.$playlist->id.' due to error '.$e->getCode());
+                                logMsg($w,'Error(getPlaylistItems): skipping playlist '.$playlist->id.' due to error '.$e->getCode());
                                 $skip_playlist = true;
                                 break;
                             }
@@ -999,30 +1052,40 @@ function refreshLibrary($w, $silent = false) {
                                 // retry
                                 if ($nb_retry > 3) {
                                     // skip
-                                    logMsg($w,'Error(getPlaylistTracks): skipping playlist '.$playlist->id.' due to error '.$e->getCode());
+                                    logMsg($w,'Error(getPlaylistItems): skipping playlist '.$playlist->id.' due to error '.$e->getCode());
                                     $skip_playlist = true;
                                     break;
                                 }
                                 ++$nb_retry;
                                 sleep(5);
                             }
+                            else if ($e->getCode() == 403 && $offsetGetUserPlaylistTracks == 0) {
+                                // February 2026: items are only returned for playlists the user owns or collaborates on
+                                logMsg($w, 'Info(getPlaylistItems): tracks of playlist ' . $playlist->id . ' are not available (not owned by or collaborative for the user)');
+                                $items_forbidden = true;
+                                break;
+                            }
                             else {
-                                logMsg($w, 'Error(getPlaylistTracks): skipping playlist ' . $playlist->id . ' due to error ' . $e->getCode());
+                                logMsg($w, 'Error(getPlaylistItems): skipping playlist ' . $playlist->id . ' due to error ' . $e->getCode());
                                 // skip
+                                $skip_playlist = true;
                                 break;
                             }
                         }
                     }
 
-                    if($skip_playlist) {
+                    if($skip_playlist || $items_forbidden) {
                         break;
                     }
 
                     foreach ($userPlaylistTracks->items as $item) {
-                        if (!isset($item->track)) {
+                        $track = getPlaylistItemEntry($item);
+                        if ($use_artworks) {
+                            rememberArtworkObject($w, $track);
+                        }
+                        if ($track === null) {
                             continue;
                         }
-                        $track = $item->track;
                         $artists = $track->artists;
                         $artist = $artists[0];
                         $album = $track->album;
@@ -1115,7 +1178,7 @@ function refreshLibrary($w, $silent = false) {
                         $duration_playlist += $track->duration_ms;
                         try {
                             $stmtTrack->bindValue(':yourmusic', 0);
-                            $stmtTrack->bindValue(':popularity', $track->popularity);
+                            $stmtTrack->bindValue(':popularity', isset($track->popularity) ? $track->popularity : 0); // popularity removed in February 2026
                             $stmtTrack->bindValue(':uri', $track->uri);
                             $stmtTrack->bindValue(':album_uri', $album->uri);
                             $stmtTrack->bindValue(':artist_uri', $artist->uri);
@@ -1154,10 +1217,39 @@ function refreshLibrary($w, $silent = false) {
                 }
                 while ($offsetGetUserPlaylistTracks < $userPlaylistTracks->total);
 
-                if($skip_playlist) {
+                if($skip_playlist || $items_forbidden) {
                     $skip_playlist = false;
-                    break;
+                    // keep the tracks already in the library
+                    $db->exec('ROLLBACK TO refresh_playlist');
+                    $db->exec('RELEASE refresh_playlist');
+                    try {
+                        if ($items_forbidden) {
+                            // tracks are no longer available through the Web API for this playlist (not owned/collaborative):
+                            // store the new snapshot_id so that it is not requested again until the playlist changes
+                            $stmtUpdatePlaylistsMetadata->bindValue(':name', escapeQuery($playlist->name));
+                            $stmtUpdatePlaylistsMetadata->bindValue(':uri', $playlist->uri);
+                            $stmtUpdatePlaylistsMetadata->bindValue(':public', $playlist->public);
+                            $stmtUpdatePlaylistsMetadata->bindValue(':snapshot_id', $playlist_snapshot_id);
+                            $stmtUpdatePlaylistsMetadata->execute();
+                        } else {
+                            // transient error: keep the stored snapshot_id so that the tracks are fetched again on next refresh
+                            $stmtUpdatePlaylistsMetadataOnly->bindValue(':name', escapeQuery($playlist->name));
+                            $stmtUpdatePlaylistsMetadataOnly->bindValue(':uri', $playlist->uri);
+                            $stmtUpdatePlaylistsMetadataOnly->bindValue(':public', $playlist->public);
+                            $stmtUpdatePlaylistsMetadataOnly->execute();
+                        }
+                    }
+                    catch(PDOException $e) {
+                        logMsg($w,'Error(refreshLibrary): (exception ' . jTraceEx($e) . ')');
+                        handleDbIssuePdoEcho($db, $w);
+                        $dbartworks = null;
+                        $db = null;
+
+                        return;
+                    }
+                    continue;
                 }
+                $db->exec('RELEASE refresh_playlist');
                 try {
                     $stmtUpdatePlaylistsNbTracks->bindValue(':nb_tracks', $userPlaylistTracks->total);
                     $stmtUpdatePlaylistsNbTracks->bindValue(':nb_playable_tracks', $nb_track_playlist);
@@ -1185,7 +1277,7 @@ function refreshLibrary($w, $silent = false) {
         updateCounters($w, $db);
     }
 
-    if(!empty($savedListPlaylist)) {
+    if(!empty($savedListPlaylist) && !$playlistListingIncomplete) {
         try {
             // check for deleted playlists
             $getPlaylists = 'select * from playlists';
@@ -1270,7 +1362,7 @@ function refreshLibrary($w, $silent = false) {
                 while ($retry) {
                     try {
                         $tmp = explode(':', $album->uri);
-                        $albumTracks = $api->getAlbumTracks($tmp[2], array('limit' => $limitGetMySavedAlbumTracks, 'offset' => $offsetGetMySavedAlbumTracks, 'market' => $country_code,));
+                        $albumTracks = $api->getAlbumTracks($tmp[2], array('limit' => $limitGetMySavedAlbumTracks, 'offset' => $offsetGetMySavedAlbumTracks, 'market' => getMarket($country_code),));
                         if($debug) {
                             logMsg($w,"DEBUG: getAlbumTracks for album uri ".$album->uri." (offset ".$offsetGetMySavedAlbumTracks.")");
                         }
@@ -1411,7 +1503,7 @@ function refreshLibrary($w, $silent = false) {
             $nb_retry = 0;
             while ($retry) {
                 try {
-                    $userMySavedTracks = $api->getMySavedTracks(array('limit' => $limitGetMySavedTracks, 'offset' => $offsetGetMySavedTracks, 'market' => $country_code,));
+                    $userMySavedTracks = $api->getMySavedTracks(array('limit' => $limitGetMySavedTracks, 'offset' => $offsetGetMySavedTracks, 'market' => getMarket($country_code),));
                     if($debug) {
                         logMsg($w,"DEBUG: getMySavedTracks (offset ".$offsetGetMySavedTracks.")");
                     }
@@ -1451,6 +1543,9 @@ function refreshLibrary($w, $silent = false) {
 
             foreach ($userMySavedTracks->items as $track) {
                 $savedMySavedTracks[] = $track->track;
+                if ($use_artworks) {
+                    rememberArtworkObject($w, $track->track);
+                }
             }
 
             $offsetGetMySavedTracks += $limitGetMySavedTracks;
@@ -1710,7 +1805,7 @@ function refreshLibrary($w, $silent = false) {
                                     $limitGetMySavedEpisodes = 50;
                                 }
                             }
-                            $userMySavedEpisodes = $api->getShowEpisodes($show->uri, array('limit' => $limitGetMySavedEpisodes, 'offset' => $offsetGetMySavedEpisodes, 'market' => $country_code,));
+                            $userMySavedEpisodes = $api->getShowEpisodes($show->uri, array('limit' => $limitGetMySavedEpisodes, 'offset' => $offsetGetMySavedEpisodes, 'market' => getMarket($country_code),));
                             if ($max_number_of_episode_per_show == 0) {
                                 $total_limit_episodes = $userMySavedEpisodes->total;
                             }
@@ -1889,7 +1984,7 @@ function refreshLibrary($w, $silent = false) {
                                         $limitGetMySavedEpisodes = 50;
                                     }
                                 }
-                                $userMySavedEpisodes = $api->getShowEpisodes($show->uri, array('limit' => $limitGetMySavedEpisodes, 'offset' => $offsetGetMySavedEpisodes, 'market' => $country_code,));
+                                $userMySavedEpisodes = $api->getShowEpisodes($show->uri, array('limit' => $limitGetMySavedEpisodes, 'offset' => $offsetGetMySavedEpisodes, 'market' => getMarket($country_code),));
                                 if ($max_number_of_episode_per_show == 0) {
                                     $total_limit_episodes = $userMySavedEpisodes->total;
                                 }
@@ -2344,6 +2439,8 @@ function refreshLibrary($w, $silent = false) {
     rename($w->data() . '/library_new.db', $w->data() . '/library.db');
 
     if ($use_artworks) {
+        // write the image URLs remembered during the refresh before the downloader reads them
+        flushArtworkUrls($w);
         // Download artworks in background
         if(!$silent) {
             exec('./src/download_artworks.ksh false >> "' . $w->cache() . '/action.log" 2>&1 & ');
