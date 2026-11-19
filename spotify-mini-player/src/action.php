@@ -1948,6 +1948,11 @@ function main($query, $type, $add_to_option)
             playAlfredPlaylist($w);
 
             return;
+        } elseif ($other_action == 'resume_artwork_downloads') {
+            if ($use_artworks && !file_exists($w->data() . '/update_library_in_progress')) {
+                exec('./src/download_artworks.ksh true >> ' . escapeshellarg($w->cache() . '/action.log') . ' 2>&1 &');
+            }
+            return;
         } elseif ($other_action == 'guided_setup') {
 
             exec("osascript -e 'tell application id \"".getAlfredName()."\" to run trigger \"guided_setup\" in workflow \"com.vdesabou.spotify.mini.player\" with argument \"\"'");
