@@ -2,7 +2,7 @@
 layout: article
 permalink: /known-issues/
 title: "Known Issues"
-modified: 2021-10-25
+modified: 2026-11-19
 excerpt: "List of Known Issues."
 image:
   feature:
@@ -18,6 +18,10 @@ noindex: false
 This is the list of current known issues:
 
 ## Authentication issues
+
+* **`redirect_uri: Not matching configuration`** in the browser when you authenticate: your Spotify app still has the old Redirect URI `http://localhost:15298/callback.php`, which Spotify no longer accepts (see [#640](https://github.com/vdesabou/alfred-spotify-mini-player/issues/640)). Open the [Spotify developer dashboard](https://developer.spotify.com/dashboard), select your app, then **Settings** ▹ **Edit**, add `http://127.0.0.1:15298/callback.php` to **Redirect URIs**, click **Save**, and run **Authenticate to Spotify** again.
+
+* Since February 2026, Spotify requires the account that owns the Spotify app to have **Spotify Premium**.
 
 * Make sure to **disable** *Mac OS http proxy settings for scripts* option in Alfred advanced preferences during time of authentication.
 
