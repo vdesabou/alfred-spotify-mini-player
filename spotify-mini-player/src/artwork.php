@@ -1,5 +1,7 @@
 <?php
 
+require_once './src/spotifyLocalArtwork.php';
+
 function artworkUri($type, $uri)
 {
     $parts = explode(':', $uri);
@@ -251,12 +253,33 @@ function downloadArtworkUrls($w, $jobs, $onDownload = null)
     return $results;
 }
 
-function processArtworkQueue($w, $api, $seed = true)
+function artworkDownloaderApi($w)
 {
+    $api = clone getSpotifyWebAPI($w);
+    $api->setOptions(array('auto_retry' => false));
+    $api->getRequest()->setOptions(array('curl_options' => array(CURLOPT_CONNECTTIMEOUT => 5, CURLOPT_TIMEOUT => 20)));
+    return $api;
+}
+
+function processArtworkQueue($w, $api, $seed = true, $localCacheDirectories = null)
+{
+    $imported = importSpotifyLocalArtwork($w, $localCacheDirectories);
+    if ($imported > 0) {
+        logMsg($w, 'Reused ' . $imported . ' artwork files from Spotify Desktop cache');
+    }
     $db = artworkUrlDatabase($w);
     $backoff = artworkBackoff($w);
     $canRequest = ($backoff['retry_at'] ?? 0) <= time();
-    if ($seed && $canRequest && is_file($w->data() . '/library.db')) {
+    $missingUrls = false;
+    foreach (array('track', 'album', 'artist', 'show', 'episode') as $type) {
+        if ($db->query('SELECT 1 FROM ' . $type . 's AS a LEFT JOIN artwork_urls AS u ON u.uri=a.' . $type .
+            '_uri WHERE a.already_fetched=0 AND u.uri IS NULL LIMIT 1')->fetchColumn() !== false) {
+            $missingUrls = true;
+            break;
+        }
+    }
+    if ($seed && $canRequest && $missingUrls && is_file($w->data() . '/library.db')) {
+        $api = $api ?? artworkDownloaderApi($w);
         try {
             seedArtworkUrls($w, $api);
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
@@ -286,6 +309,7 @@ function processArtworkQueue($w, $api, $seed = true)
             }
             $url = cachedArtworkUrl($db, $uri);
             if ($url === false && $canRequest) {
+                $api = $api ?? artworkDownloaderApi($w);
                 try {
                     $url = fetchQueuedArtworkUrl($w, $api, $type, $uri);
                 } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
@@ -357,12 +381,9 @@ function downloadQueuedArtworks($w, $silent)
         $completed += (int) $db->query('SELECT COUNT(*) FROM ' . $table . ' WHERE already_fetched=1')->fetchColumn();
     }
     writeArtworkProgress($w, $completed, $total, 'Preparing artwork image URLs');
-    $api = clone getSpotifyWebAPI($w);
-    $api->setOptions(array('auto_retry' => false));
-    $api->getRequest()->setOptions(array('curl_options' => array(CURLOPT_CONNECTTIMEOUT => 5, CURLOPT_TIMEOUT => 20)));
     try {
         do {
-            $result = processArtworkQueue($w, $api);
+            $result = processArtworkQueue($w, null);
             $waiting = $result['retry_at'] > time();
             $label = $waiting ? 'Artwork downloads paused by Spotify' : 'Download Artworks';
             $w->write($label . '▹' . $result['completed'] . '▹' . $result['total'] . '▹' . $started . '▹' . $result['retry_at'], 'download_artworks_in_progress');

@@ -131,7 +131,7 @@ try {
     checkArtwork(count($arguments) === 22 && $arguments[7] === 'resume_artwork_downloads', 'Wire the resume action through the normal workflow arguments');
     checkArtwork(artworkUri('playlist', 'spotify:user:test:playlist:abc') === 'spotify:playlist:abc', 'Normalize legacy playlist URIs');
     checkArtwork(getArtworkURL($w, 'track', 'first') === $url, 'UI reads cached image URLs without calling Spotify');
-    $result = processArtworkQueue($w, $api, false);
+    $result = processArtworkQueue($w, $api, false, array());
     checkArtwork($result['completed'] === 3, 'Complete all three queue rows');
     unlink($temporary . '/data/download_artworks_in_progress');
     checkArtwork(artworkResumeRow($w) === null, 'Hide resume when every queued image is complete');
@@ -141,23 +141,23 @@ try {
     $db->exec("INSERT INTO tracks VALUES ('spotify:track:quota',0)");
     $db->exec("INSERT INTO albums VALUES ('spotify:album:available',0)");
     rememberArtworkObject($w, (object) array('uri' => 'spotify:album:available', 'images' => array((object) array('url' => $url . '-other'))));
-    $result = processArtworkQueue($w, $api, false);
+    $result = processArtworkQueue($w, $api, false, array());
     checkArtwork($api->calls === 1, 'Stop metadata requests after the first 429');
     checkArtwork($result['completed'] === 4 && $result['retry_at'] > time(), 'Download known images during a Spotify cooldown');
     checkArtwork($db->query("SELECT already_fetched FROM tracks WHERE track_uri='spotify:track:quota'")->fetchColumn() == 0, 'A rate-limited row remains pending');
     unlink($temporary . '/data/download_artworks_in_progress');
     checkArtwork(artworkResumeRow($w) !== null, 'Keep resume available after stopping a rate-limited download');
-    processArtworkQueue($w, $api, false);
+    processArtworkQueue($w, $api, false, array());
     checkArtwork($api->calls === 1, 'Respect the persisted retry deadline on another run');
     file_put_contents($temporary . '/data/artwork_retry_after.json', '{"retry_at":0}');
     $api->limited = false;
-    $result = processArtworkQueue($w, $api, false);
+    $result = processArtworkQueue($w, $api, false, array());
     checkArtwork($result['completed'] === 5, 'Resume the pending row after cooldown');
     checkArtwork(count(file($temporary . '/requests.log')) === 2, 'Reuse downloaded covers across separate runs');
 
     $db->exec("INSERT INTO albums VALUES ('spotify:album:bad',0)");
     rememberArtworkObject($w, (object) array('uri' => 'spotify:album:bad', 'images' => array((object) array('url' => 'http://' . $address . '/bad'))));
-    processArtworkQueue($w, $api, false);
+    processArtworkQueue($w, $api, false, array());
     checkArtwork($db->query("SELECT already_fetched FROM albums WHERE album_uri='spotify:album:bad'")->fetchColumn() == 0, 'An HTTP failure remains pending');
     checkArtwork(!file_exists(artworkTarget($w, 'album', array('album_uri' => 'spotify:album:bad'))), 'Failed transfers do not leave a fake completed image');
 
