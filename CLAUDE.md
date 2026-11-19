@@ -11,7 +11,7 @@ An Alfred (macOS) workflow written in PHP that controls Spotify, backed by a loc
 
 ## Development setup
 
-There is no build step and no test suite. The workflow runs directly from the working copy: `~/Documents/Alfred.alfredpreferences/workflows/spotify-mini-player` is a **symlink** to `spotify-mini-player/`, so edits to `src/*.php` take effect on the next Alfred invocation. Reinstalling from a release replaces the symlink with a real directory — re-create the symlink after doing that.
+There is no build step. The workflow runs directly from the working copy: `~/Documents/Alfred.alfredpreferences/workflows/spotify-mini-player` is a **symlink** to `spotify-mini-player/`, so edits to `src/*.php` take effect on the next Alfred invocation. Reinstalling from a release replaces the symlink with a real directory — re-create the symlink after doing that.
 
 ```bash
 # Dependencies (vendor/ is committed; only needed when changing composer.json)
@@ -19,6 +19,11 @@ cd spotify-mini-player && php composer.phar install
 
 # Syntax-check a file after editing
 php -l src/functions.php
+
+# Artwork downloader tests (fake API, local image server, temp dirs; they chdir into spotify-mini-player/ themselves).
+# tests/ lives outside spotify-mini-player/ so that it is not shipped in the release zip.
+php -d disable_functions=exec ../tests/artwork.php
+php -d disable_functions=exec ../tests/spotifyLocalArtwork.php
 
 # Run a script filter the way Alfred does (must be cwd = spotify-mini-player/,
 # and the alfred_workflow_data / alfred_workflow_cache env vars must be set)
