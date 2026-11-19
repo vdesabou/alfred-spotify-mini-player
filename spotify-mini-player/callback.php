@@ -42,7 +42,8 @@ while ($retry) {
                     exec("kill -9 $(ps -efx | grep \"php -S 127.0.0.1:15298\"  | grep -v grep | awk '{print $2}')");
                 }
 
-                $ret = updateSetting($w, 'country_code', $user->country);
+                // GET /me no longer returns country since February 2026, getMarket() falls back to from_token
+                $ret = updateSetting($w, 'country_code', isset($user->country) ? $user->country : '');
                 if ($ret == false) {
                     $retry = false;
                     $message = "There was an error when updating settings";
