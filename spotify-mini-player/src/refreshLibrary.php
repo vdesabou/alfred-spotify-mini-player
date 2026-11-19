@@ -367,6 +367,9 @@ function refreshLibrary($w, $silent = false) {
         if(isset($userMySavedAlbums->items)) {
             foreach ($userMySavedAlbums->items as $item) {
                 $album = $item->album;
+                if ($use_artworks) {
+                    rememberArtworkObject($w, $album);
+                }
                 if ($album->name != '') {
                     $savedMySavedAlbums[] = $album;
                 }
@@ -437,6 +440,9 @@ function refreshLibrary($w, $silent = false) {
         foreach ($userFollowedArtists
             ->artists->items as $artist) {
             $savedMyFollowedArtists[] = $artist;
+            if ($use_artworks) {
+                rememberArtworkObject($w, $artist);
+            }
         }
         if (isset($userFollowedArtists->cursors) && isset($userFollowedArtists
             ->cursors
@@ -502,6 +508,9 @@ function refreshLibrary($w, $silent = false) {
                 if (isset($show->show->uri) && $show->show->uri != '') {
                     if (!checkIfShowDuplicate($savedMySavedShows, $show)) {
                         $savedMySavedShows[] = $show;
+                        if ($use_artworks) {
+                            rememberArtworkObject($w, $show);
+                        }
                     }
                 }
             }
@@ -590,6 +599,9 @@ function refreshLibrary($w, $silent = false) {
 
     $skip_playlist = false;
     foreach ($savedListPlaylist as $playlist) {
+        if ($use_artworks) {
+            rememberArtworkObject($w, $playlist);
+        }
         $tracks = $playlist->items ?? $playlist->tracks;
         $owner = $playlist->owner;
 
@@ -689,6 +701,9 @@ function refreshLibrary($w, $silent = false) {
 
                 foreach ($userPlaylistTracks->items as $item) {
                     $track = $item->item ?? $item->track ?? null;
+                    if ($use_artworks) {
+                        rememberArtworkObject($w, $track);
+                    }
                     if (!isset($track->album, $track->artists[0])) {
                         continue;
                     }
@@ -1049,6 +1064,9 @@ function refreshLibrary($w, $silent = false) {
 
                     foreach ($userPlaylistTracks->items as $item) {
                         $track = $item->item ?? $item->track ?? null;
+                        if ($use_artworks) {
+                            rememberArtworkObject($w, $track);
+                        }
                         if (!isset($track->album, $track->artists[0])) {
                             continue;
                         }
@@ -1480,6 +1498,9 @@ function refreshLibrary($w, $silent = false) {
 
             foreach ($userMySavedTracks->items as $track) {
                 $savedMySavedTracks[] = $track->track;
+                if ($use_artworks) {
+                    rememberArtworkObject($w, $track->track);
+                }
             }
 
             $offsetGetMySavedTracks += $limitGetMySavedTracks;

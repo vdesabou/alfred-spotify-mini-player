@@ -44,7 +44,13 @@ function main($argv) {
             $in_progress_data = $w->read('download_artworks_in_progress');
             $download_artworks_in_progress_words = explode('▹', $in_progress_data);
             $elapsed_time = time() - $download_artworks_in_progress_words[3];
-            if ($download_artworks_in_progress_words[2] != 0) {
+            $retryAt = (int) ($download_artworks_in_progress_words[4] ?? 0);
+            if ($retryAt > time()) {
+                $w->result(null, '', 'Artwork downloads paused by Spotify',
+                    $download_artworks_in_progress_words[1] . '/' . $download_artworks_in_progress_words[2] .
+                    ' processed; retrying Spotify in ' . beautifyTime($retryAt - time(), true),
+                    './images/artworks.png', 'no', null, '');
+            } elseif ($download_artworks_in_progress_words[2] != 0) {
                 $w->result(null, $w->data().'/download_artworks_in_progress', $download_artworks_in_progress_words[0].' in progress since '.beautifyTime($elapsed_time, true).' : '.floatToSquares(intval($download_artworks_in_progress_words[1]) / intval($download_artworks_in_progress_words[2])),array(
                             $download_artworks_in_progress_words[1].'/'.$download_artworks_in_progress_words[2].' artworks processed so far (empty artworks can be seen until full download is complete)',
                             'alt' => '',

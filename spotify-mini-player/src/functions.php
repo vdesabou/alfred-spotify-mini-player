@@ -1,6 +1,7 @@
 <?php
 
 require_once './src/workflows.php';
+require_once './src/artwork.php';
 
 function openSqliteDatabase($dbfile)
 {
@@ -6016,231 +6017,7 @@ function displayLyricsForCurrentTrack($w)
  */
 function downloadArtworks($w, $silent = false)
 {
-
-
-
-
-    $userid = getSetting($w, 'userid');
-    $use_artworks = getSetting($w, 'use_artworks');
-
-    if (!$use_artworks) {
-        return;
-    }
-    if (!$w->internet()) {
-        if (!$silent)
-            displayNotificationWithArtwork($w, 'Download Artworks,
-    No internet connection', './images/warning.png');
-
-        return;
-    }
-
-    touch($w->data() . '/download_artworks_in_progress');
-    $w->write('Download Artworks▹' . 0 . '▹' . 0 . '▹' . time(), 'download_artworks_in_progress');
-    $in_progress_data = $w->read('download_artworks_in_progress');
-    $words = explode('▹', $in_progress_data);
-
-    putenv('LANG=fr_FR.UTF-8');
-
-    ini_set('memory_limit', '512M');
-
-    // Get list of artworks to download from DB
-
-    $nb_artworks_total = 0;
-    $nb_artworks = 0;
-
-    $dbfile = $w->data() . '/fetch_artworks.db';
-    if (file_exists($dbfile)) {
-        try {
-            $dbartworks = openSqliteDatabase($dbfile);
-            $dbartworks->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-            $getCount = 'select count(artist_name) from artists where already_fetched=0';
-            $stmt = $dbartworks->prepare($getCount);
-            $stmt->execute();
-            $count = $stmt->fetch();
-            $nb_artworks_total += intval($count[0]);
-
-            $getCount = 'select count(track_uri) from tracks where already_fetched=0';
-            $stmt = $dbartworks->prepare($getCount);
-            $stmt->execute();
-            $count = $stmt->fetch();
-            $nb_artworks_total += intval($count[0]);
-
-            $getCount = 'select count(album_uri) from albums where already_fetched=0';
-            $stmt = $dbartworks->prepare($getCount);
-            $stmt->execute();
-            $count = $stmt->fetch();
-            $nb_artworks_total += intval($count[0]);
-
-            $getCount = 'select count(show_uri) from shows where already_fetched=0';
-            $stmt = $dbartworks->prepare($getCount);
-            $stmt->execute();
-            $count = $stmt->fetch();
-            $nb_artworks_total += intval($count[0]);
-
-            $getCount = 'select count(episode_uri) from episodes where already_fetched=0';
-            $stmt = $dbartworks->prepare($getCount);
-            $stmt->execute();
-            $count = $stmt->fetch();
-            $nb_artworks_total += intval($count[0]);
-
-            if ($nb_artworks_total != 0) {
-                if (!$silent)
-                    displayNotificationWithArtwork($w, 'Start downloading ' . $nb_artworks_total . ' artworks', './images/artworks.png', 'Artworks');
-
-                // artists
-                $getArtists = 'select artist_uri,artist_name from artists where already_fetched=0';
-                $stmtGetArtists = $dbartworks->prepare($getArtists);
-
-                $updateArtist = 'update artists set already_fetched=1 where artist_uri=:artist_uri';
-                $stmtUpdateArtist = $dbartworks->prepare($updateArtist);
-
-                // tracks
-                $getTracks = 'select track_uri from tracks where already_fetched=0';
-                $stmtGetTracks = $dbartworks->prepare($getTracks);
-
-                $updateTrack = 'update tracks set already_fetched=1 where track_uri=:track_uri';
-                $stmtUpdateTrack = $dbartworks->prepare($updateTrack);
-
-                // albums
-                $getAlbums = 'select album_uri from albums where already_fetched=0';
-                $stmtGetAlbums = $dbartworks->prepare($getAlbums);
-
-                $updateAlbum = 'update albums set already_fetched=1 where album_uri=:album_uri';
-                $stmtUpdateAlbum = $dbartworks->prepare($updateAlbum);
-
-                // shows
-                $getShows = 'select show_uri from shows where already_fetched=0';
-                $stmtGetShows = $dbartworks->prepare($getShows);
-
-                $updateShow = 'update shows set already_fetched=1 where show_uri=:show_uri';
-                $stmtUpdateShow = $dbartworks->prepare($updateShow);
-
-                // episodes
-                $getEpisodes = 'select episode_uri from episodes where already_fetched=0';
-                $stmtGetEpisodes = $dbartworks->prepare($getEpisodes);
-
-                $updateEpisode = 'update episodes set already_fetched=1 where episode_uri=:episode_uri';
-                $stmtUpdateEpisode = $dbartworks->prepare($updateEpisode);
-
-                ////
-                // Artists
-
-                $stmtGetArtists->execute();
-                $resultsGetArtists = $stmtGetArtists->fetchAll();
-
-                foreach ($resultsGetArtists as $artist) {
-                    getArtistArtwork($w, $artist[0], $artist[1], true, false, true, $use_artworks);
-
-                    $stmtUpdateArtist->bindValue(':artist_uri', $artist[0]);
-                    $stmtUpdateArtist->execute();
-
-                    ++$nb_artworks;
-                    if ($nb_artworks % 10 === 0) {
-                        $w->write('Download Artworks▹' . $nb_artworks . '▹' . $nb_artworks_total . '▹' . $words[3], 'download_artworks_in_progress');
-                    }
-                }
-
-                ////
-                // Tracks
-
-                $stmtGetTracks->execute();
-                $resultsGetTracks = $stmtGetTracks->fetchAll();
-
-                foreach ($resultsGetTracks as $track) {
-
-                    getTrackOrAlbumArtwork($w, $track[0], true, false, true, $use_artworks);
-
-                    $stmtUpdateTrack->bindValue(':track_uri', $track[0]);
-                    $stmtUpdateTrack->execute();
-
-                    ++$nb_artworks;
-                    if ($nb_artworks % 10 === 0) {
-                        $w->write('Download Artworks▹' . $nb_artworks . '▹' . $nb_artworks_total . '▹' . $words[3], 'download_artworks_in_progress');
-                    }
-                }
-
-                ////
-                // Albums
-
-                $stmtGetAlbums->execute();
-                $resultsGetAlbum = $stmtGetAlbums->fetchAll();
-
-                foreach ($resultsGetAlbum as $album) {
-                    getTrackOrAlbumArtwork($w, $album[0], true, false, true, $use_artworks);
-
-                    $stmtUpdateAlbum->bindValue(':album_uri', $album[0]);
-                    $stmtUpdateAlbum->execute();
-
-                    ++$nb_artworks;
-                    if ($nb_artworks % 5 === 0) {
-                        $w->write('Download Artworks▹' . $nb_artworks . '▹' . $nb_artworks_total . '▹' . $words[3], 'download_artworks_in_progress');
-                    }
-                }
-
-                ////
-                // Shows
-
-                $stmtGetShows->execute();
-                $resultsGetShows = $stmtGetShows->fetchAll();
-
-                foreach ($resultsGetShows as $show) {
-                    getShowArtwork($w, $show[0], true, false, true, $use_artworks);
-
-                    $stmtUpdateShow->bindValue(':show_uri', $show[0]);
-                    $stmtUpdateShow->execute();
-
-                    ++$nb_artworks;
-                    if ($nb_artworks % 5 === 0) {
-                        $w->write('Download Artworks▹' . $nb_artworks . '▹' . $nb_artworks_total . '▹' . $words[3], 'download_artworks_in_progress');
-                    }
-                }
-
-                ////
-                // Episodes
-
-                $stmtGetEpisodes->execute();
-                $resultsGetEpisodes = $stmtGetEpisodes->fetchAll();
-
-                foreach ($resultsGetEpisodes as $episode) {
-                    getEpisodeArtwork($w, $episode[0], true, false, true, $use_artworks);
-
-                    $stmtUpdateEpisode->bindValue(':episode_uri', $episode[0]);
-                    $stmtUpdateEpisode->execute();
-
-                    ++$nb_artworks;
-                    if ($nb_artworks % 5 === 0) {
-                        $w->write('Download Artworks▹' . $nb_artworks . '▹' . $nb_artworks_total . '▹' . $words[3], 'download_artworks_in_progress');
-                    }
-                }
-            }
-        } catch (PDOException $e) {
-            handleDbIssuePdoEcho($dbartworks, $w);
-            $dbartworks = null;
-
-            return false;
-        }
-    }
-    deleteTheFile($w, $w->data() . '/download_artworks_in_progress');
-    if ($nb_artworks_total != 0) {
-        $elapsed_time = time() - $words[3];
-        if (!$silent)
-            displayNotificationWithArtwork($w, 'All artworks have been downloaded (' . $nb_artworks_total . ' artworks) - took ' . beautifyTime($elapsed_time, true), './images/artworks.png', 'Artworks');
-    }
-
-    // Get size of artwork directory
-    if (file_exists($w->data() . '/artwork')) {
-        exec("/usr/bin/du -sh '" . $w->data() . "/artwork'", $retArr, $retVal);
-        if ($retVal == 0) {
-            $size = $retArr[0];
-            $size = substr($size, 0, strpos($size, "\t"));
-            updateSetting($w, 'artwork_folder_size', rtrim(ltrim($size)));
-        }
-    } else {
-        updateSetting($w, 'artwork_folder_size', '0');
-    }
-
-    return true;
+    return downloadQueuedArtworks($w, $silent);
 }
 
 /**
@@ -6895,6 +6672,12 @@ function getArtistArtwork($w, $artist_uri, $artist_name, $fetchIfNotPresent = fa
  */
 function getArtworkURL($w, $type, $id, $highRes = false)
 {
+    if (!$highRes) {
+        $cached = cachedArtworkUrl(artworkUrlDatabase($w), 'spotify:' . $type . ':' . $id);
+        if ($cached !== false) {
+            return $cached;
+        }
+    }
     $url = '';
 
     if (startswith($id, 'fake')) {
@@ -7044,6 +6827,10 @@ function getArtworkURL($w, $type, $id, $highRes = false)
  */
 function getPlaylistArtworkURL($w, $playlist_uri)
 {
+    $cached = cachedArtworkUrl(artworkUrlDatabase($w), artworkUri('playlist', $playlist_uri));
+    if ($cached !== false) {
+        return $cached;
+    }
     $url = '';
 
     $retry = true;
@@ -7117,6 +6904,10 @@ function getPlaylistArtworkURL($w, $playlist_uri)
  */
 function getShowArtworkURL($w, $show_uri)
 {
+    $cached = cachedArtworkUrl(artworkUrlDatabase($w), artworkUri('show', $show_uri));
+    if ($cached !== false) {
+        return $cached;
+    }
     $url = '';
     if (startswith($show_uri, 'fake')) {
         return $url;
@@ -7188,6 +6979,10 @@ function getShowArtworkURL($w, $show_uri)
  */
 function getEpisodeArtworkURL($w, $episode_uri)
 {
+    $cached = cachedArtworkUrl(artworkUrlDatabase($w), artworkUri('episode', $episode_uri));
+    if ($cached !== false) {
+        return $cached;
+    }
 
 
 
@@ -7267,6 +7062,10 @@ function getEpisodeArtworkURL($w, $episode_uri)
  */
 function getArtistArtworkURL($w, $artist_id)
 {
+    $cached = cachedArtworkUrl(artworkUrlDatabase($w), 'spotify:artist:' . $artist_id);
+    if ($cached !== false) {
+        return $cached;
+    }
     $url = '';
     if (startswith($artist_id, 'fake')) {
         return $url;

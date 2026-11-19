@@ -1998,6 +1998,8 @@ function firstDelimiterSettings($w, $query, $db, $update_in_progress) {
         )), 'Enable Now Playing notifications', array('Display notifications for current playing track', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/enable_now_playing.png', 'yes', null, '');
     }
 
+    addArtworkResumeResult($w, $update_in_progress);
+
     if ($use_artworks == true) {
         $w->result(null, serialize(array(''
         /*track_uri*/, ''
