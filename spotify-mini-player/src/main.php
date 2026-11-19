@@ -44,7 +44,13 @@ function main($argv) {
             $in_progress_data = $w->read('download_artworks_in_progress');
             $download_artworks_in_progress_words = explode('▹', $in_progress_data);
             $elapsed_time = time() - $download_artworks_in_progress_words[3];
-            if ($download_artworks_in_progress_words[2] != 0) {
+            $retryAt = isset($download_artworks_in_progress_words[4]) ? (int) $download_artworks_in_progress_words[4] : 0;
+            if ($retryAt > time()) {
+                $w->result(null, '', 'Artwork downloads paused by Spotify',
+                    $download_artworks_in_progress_words[1] . '/' . $download_artworks_in_progress_words[2] .
+                    ' processed; retrying Spotify in ' . beautifyTime($retryAt - time(), true),
+                    './images/artworks.png', 'no', null, '');
+            } elseif ($download_artworks_in_progress_words[2] != 0) {
                 $w->result(null, $w->data().'/download_artworks_in_progress', $download_artworks_in_progress_words[0].' in progress since '.beautifyTime($elapsed_time, true).' : '.floatToSquares(intval($download_artworks_in_progress_words[1]) / intval($download_artworks_in_progress_words[2])),array(
                             $download_artworks_in_progress_words[1].'/'.$download_artworks_in_progress_words[2].' artworks processed so far (empty artworks can be seen until full download is complete)',
                             'alt' => '',
@@ -235,12 +241,20 @@ function main($argv) {
             array_push($history, substr($query, 0, strrpos($query, '▹')).'▹');
             $w->write(array_unique($history), 'history.json');
 
+            // Sections backed by Spotify Web API endpoints that no longer exist
+            // (November 2024 and February 2026 changes, see issue #633)
+            $removed_kinds = array('Featured Playlist', 'New Releases', 'Browse');
+            $first_word = explode('▹', $query)[0];
+
             ////////////
 
             // FIRST DELIMITER
 
             ////////////
-            if (substr_count($query, '▹') == 1) {
+            if (in_array($first_word, $removed_kinds)) {
+                $w->result(null, 'help', $first_word . ' is no longer available', array('Spotify removed the Web API endpoints used by this feature', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/warning.png', 'no', null, '');
+            }
+            elseif (substr_count($query, '▹') == 1) {
                 $words = explode('▹', $query);
                 $kind = $words[0];
                 if ($kind == 'Playlist') {
