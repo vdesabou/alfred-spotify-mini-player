@@ -24,12 +24,41 @@ jobs:
         with:
           query: "milestone:${{ github.event.milestone.title }}"
           token: ${{ secrets.GITHUB_TOKEN }}
+      # GitHub can take a few seconds to list the issues closed by the previous step:
+      # without this wait, the release notes generator may see no closed issue and
+      # produce empty release notes (v-13.11, v-14.3, v-14.4)
+      - name: Wait for closed issues to be visible
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          repo="${{ github.repository }}"
+          number="${{ github.event.milestone.number }}"
+          sleep 10
+          for i in $(seq 1 30); do
+            open=$(gh api "repos/$repo/issues?milestone=$number&state=open&per_page=100" --jq 'length')
+            closed=$(gh api "repos/$repo/issues?milestone=$number&state=closed&per_page=100" --jq 'length')
+            if [ "$open" -eq 0 ] && [ "$closed" -gt 0 ]; then
+              echo "$closed closed issue(s) visible in milestone ${{ github.event.milestone.title }}"
+              exit 0
+            fi
+            echo "waiting: $open open, $closed closed issue(s) visible"
+            sleep 2
+          done
+          echo "::warning::closed issues of milestone ${{ github.event.milestone.title }} are still not visible"
       - name: Create Release Notes
         uses: docker://decathlon/release-notes-generator-action:2.0.1
         id: Changelog
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OUTPUT_FOLDER: temp_release_notes
+      # do not bump the version, publish a release or open a Gallery issue with empty notes
+      - name: Check release notes are not empty
+        run: |
+          if ! grep -q '[^[:space:]]' ./temp_release_notes/release_file.md 2>/dev/null; then
+            echo "::error::release notes are empty: make sure milestone ${{ github.event.milestone.title }} has issues labelled bug or enhancement, then re-run this job"
+            exit 1
+          fi
+          cat ./temp_release_notes/release_file.md
       - name: Read temp_release_notes/release_file.md
         id: read_release_file
         uses: juliangruber/read-file-action@v1
