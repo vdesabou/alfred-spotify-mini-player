@@ -1,6 +1,7 @@
 <?php
 
 require_once './src/workflows.php';
+require_once './src/artwork.php';
 
 function openSqliteDatabase($dbfile)
 {
@@ -116,12 +117,8 @@ function isTrackInYourMusic($w, $track_uri, $db)
             return true;
         }
     } else {
-        $tracks = [
-            $track_uri,
-        ];
         try {
-            $api = getSpotifyWebAPI($w);
-            $response = $api->myTracksContains($tracks);
+            $response = libraryContains($w, array(toSpotifyUri($track_uri, 'track')));
             return $response[0];
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
             return false;
@@ -314,7 +311,7 @@ function createAndPlayLikedSongsPlaylist($w)
                 $userMySavedTracks = $api->getMySavedTracks(array(
                     'limit' => $limitGetMySavedTracks,
                     'offset' => $offsetGetMySavedTracks,
-                    'market' => $country_code,
+                    'market' => getMarket($country_code),
                 ));
                 $retry = false;
             } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
@@ -357,7 +354,7 @@ function createAndPlayLikedSongsPlaylist($w)
     if (count($savedMySavedTracks) > 0) {
         try {
             $api = getSpotifyWebAPI($w);
-            $json = $api->createPlaylist(array(
+            $json = $api->createPlaylist('', array(
                 'name' => 'Liked Songs',
                 'public' => false,
             ));
@@ -745,12 +742,12 @@ function isUserPremiumSubscriber($w)
     }
 
     if (isset($me->product)) {
-        if ($me->product == 'premium') {
-            return true;
-        }
+        return $me->product == 'premium';
     }
 
-    return false;
+    // Since February 2026, GET /me no longer returns "product", and Development Mode
+    // apps can only be used with a Spotify Premium account: a successful call means Premium.
+    return isset($me->id);
 }
 
 function isRefreshTokenRevoked($e)
@@ -781,7 +778,7 @@ function getShowFromEpisode($w, $episode_uri)
     try {
         $api = getSpotifyWebAPI($w);
         $episode = $api->getEpisode($episode_uri, array(
-            'market' => $country_code,
+            'market' => getMarket($country_code),
         ));
         return $episode->show->uri;
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
@@ -880,7 +877,7 @@ function getEpisodeName($w, $episode_uri)
     try {
         $api = getSpotifyWebAPI($w);
         $episode = $api->getEpisode($episode_uri, array(
-            'market' => $country_code,
+            'market' => getMarket($country_code),
         ));
         return $episode->name;
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
@@ -914,7 +911,7 @@ function getEpisode($w, $episode_uri)
     try {
         $api = getSpotifyWebAPI($w);
         $episode = $api->getEpisode($episode_uri, array(
-            'market' => $country_code,
+            'market' => getMarket($country_code),
         ));
         return $episode;
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
@@ -1040,7 +1037,7 @@ function isRepeatStateSpotifyConnectActive($w)
             $api = getSpotifyWebAPI($w);
 
             $playback_info = $api->getMyCurrentPlaybackInfo(array(
-                'market' => $country_code,
+                'market' => getMarket($country_code),
                 'additional_types' => 'track,episode',
             ));
             $retry = false;
@@ -1525,7 +1522,7 @@ function playpauseSpotifyConnect($w, $device_id, $country_code)
             $api = getSpotifyWebAPI($w);
 
             $playback_info = $api->getMyCurrentPlaybackInfo(array(
-                'market' => $country_code,
+                'market' => getMarket($country_code),
                 'additional_types' => 'track,episode',
             ));
 
@@ -1591,7 +1588,7 @@ function playSpotifyConnect($w, $device_id, $country_code)
             $api = getSpotifyWebAPI($w);
 
             $playback_info = $api->getMyCurrentPlaybackInfo(array(
-                'market' => $country_code,
+                'market' => getMarket($country_code),
                 'additional_types' => 'track,episode',
             ));
 
@@ -1997,7 +1994,7 @@ function isShuffleActive($print_output)
                 $api = getSpotifyWebAPI($w);
 
                 $playback_info = $api->getMyCurrentPlaybackInfo(array(
-                    'market' => $country_code,
+                    'market' => getMarket($country_code),
                     'additional_types' => 'track,episode',
                 ));
 
@@ -2047,7 +2044,12 @@ function getUserArtworkURL($w, $user_id)
     $url = '';
     try {
         $api = getSpotifyWebAPI($w);
-        $user = $api->getUser(urlencode($user_id));
+        // GET /users/{id} was removed in February 2026: only the current user's profile is available
+        $me = $api->me();
+        if (!isset($me->id) || $me->id != $user_id) {
+            return $url;
+        }
+        $user = $me;
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
         return $url;
     }
@@ -2243,6 +2245,202 @@ function listUsers($w)
         )), 'Switch user to ' . $user . '', 'Type enter to validate', getUserArtwork($w, $user), 'yes', null, '');
     }
 }
+
+/**
+ * toSpotifyUri function.
+ * Normalize a Spotify ID or URI to the canonical "spotify:<type>:<id>" form
+ * expected by the /me/library endpoints (February 2026 Web API).
+ * Legacy playlist URIs "spotify:user:<user>:playlist:<id>" are converted too.
+ *
+ * @param string $id_or_uri
+ * @param string $type track, album, artist, show, episode, playlist, user...
+ */
+function toSpotifyUri($id_or_uri, $type)
+{
+    $tmp = explode(':', $id_or_uri);
+    if (count($tmp) == 1) {
+        return 'spotify:' . $type . ':' . $id_or_uri;
+    }
+    // spotify:user:<user>:playlist:<id>
+    if (isset($tmp[4])) {
+        return 'spotify:' . $tmp[3] . ':' . $tmp[4];
+    }
+
+    return $id_or_uri;
+}
+
+/**
+ * getPlaylistItemEntry function.
+ * February 2026 Web API renamed the playlist item "track" field to "item".
+ * Returns the track/episode object of a playlist item, or null.
+ *
+ * @param object $item element of GET /playlists/{id}/items "items"
+ */
+function getPlaylistItemEntry($item)
+{
+    if (isset($item->item)) {
+        return $item->item;
+    }
+    if (isset($item->track)) {
+        return $item->track;
+    }
+
+    return null;
+}
+
+/**
+ * getPlaylistItemsFields function.
+ * "fields" filter for GET /playlists/{id}/items. The playlist item object field was renamed
+ * from "track" to "item" in February 2026: request both, read with getPlaylistItemEntry().
+ */
+function getPlaylistItemsFields()
+{
+    $entry = '(is_playable,duration_ms,uri,name,type,linked_from,album(album_type,images,uri,name),artists(name,uri))';
+
+    return array('total', 'items(added_at,is_local,item' . $entry . ',track' . $entry . ')');
+}
+
+/**
+ * getPlaylistItemsTotal function.
+ * February 2026 Web API renamed the playlist object "tracks" field to "items".
+ * Returns the number of items of a playlist object (simplified or full), 0 if unknown.
+ *
+ * @param object $playlist
+ */
+function getPlaylistItemsTotal($playlist)
+{
+    if (isset($playlist->items) && isset($playlist->items->total)) {
+        return $playlist->items->total;
+    }
+    if (isset($playlist->tracks) && isset($playlist->tracks->total)) {
+        return $playlist->tracks->total;
+    }
+
+    return 0;
+}
+
+/**
+ * getMarket function.
+ * GET /me no longer returns "country" (February 2026 Web API), so country_code can be empty
+ * for users who authenticated after that change. "from_token" lets Spotify use the user's market.
+ *
+ * @param string $country_code
+ */
+function getMarket($country_code)
+{
+    if ($country_code == null || $country_code == '' || $country_code == 'from_token') {
+        return 'from_token';
+    }
+
+    return $country_code;
+}
+
+/**
+ * saveToLibrary function.
+ * PUT /me/library (replaces /me/tracks, /me/albums, /me/shows, /me/episodes, /me/following and /playlists/{id}/followers).
+ * Throws SpotifyWebAPIException like the underlying API calls.
+ *
+ * @param mixed $w
+ * @param array|string $uris Spotify URIs
+ */
+function saveToLibrary($w, $uris)
+{
+    $api = getSpotifyWebAPI($w);
+    $ret = true;
+    foreach (array_chunk((array) $uris, 40) as $chunk) {
+        $ret = $api->addMyLibrary($chunk) && $ret;
+    }
+
+    return $ret;
+}
+
+/**
+ * removeFromLibrary function.
+ * DELETE /me/library (replaces the per-type delete/unfollow endpoints).
+ * Throws SpotifyWebAPIException like the underlying API calls.
+ *
+ * @param mixed $w
+ * @param array|string $uris Spotify URIs
+ */
+function removeFromLibrary($w, $uris)
+{
+    $api = getSpotifyWebAPI($w);
+    $ret = true;
+    foreach (array_chunk((array) $uris, 40) as $chunk) {
+        $ret = $api->deleteMyLibrary($chunk) && $ret;
+    }
+
+    return $ret;
+}
+
+/**
+ * libraryContains function.
+ * GET /me/library/contains (replaces the per-type contains endpoints).
+ * Returns an array of booleans in the same order as $uris.
+ * Throws SpotifyWebAPIException like the underlying API calls.
+ *
+ * @param mixed $w
+ * @param array|string $uris Spotify URIs
+ */
+function libraryContains($w, $uris)
+{
+    $api = getSpotifyWebAPI($w);
+    $result = array();
+    foreach (array_chunk((array) $uris, 40) as $chunk) {
+        $result = array_merge($result, (array) $api->myLibraryContains($chunk));
+    }
+
+    return $result;
+}
+
+/**
+ * spotifyRedirectUri function.
+ * Redirect URI used by the OAuth flow. It must be registered in the user's Spotify app
+ * (developer dashboard > app > Settings > Redirect URIs). Apps created before April 2025
+ * were set up with http://localhost:15298/callback.php, which Spotify no longer accepts (#640).
+ */
+function spotifyRedirectUri()
+{
+    return 'http://127.0.0.1:15298/callback.php';
+}
+
+/**
+ * isSpotifyAuthenticated function.
+ * False when no OAuth token is stored (never authenticated, or tokens reset after
+ * "Refresh token revoked"): no Web API call can succeed until the user authenticates again.
+ *
+ * @param mixed $w
+ */
+function isSpotifyAuthenticated($w)
+{
+    return getSetting($w, 'oauth_access_token') != '' || getSetting($w, 'oauth_refresh_token') != '';
+}
+
+/**
+ * notAuthenticatedMessage function.
+ */
+function notAuthenticatedMessage()
+{
+    return 'Not authenticated to Spotify: run "Authenticate to Spotify" in spot_mini. Your Spotify app must have the Redirect URI ' . spotifyRedirectUri();
+}
+
+/**
+ * spotifySessionHolder function.
+ * Keeps the Session created by getSpotifyWebAPI() so that other API clients
+ * (e.g. the artwork downloader) can share its tokens.
+ *
+ * @param SpotifyWebAPI\Session|null $session
+ */
+function spotifySessionHolder($session = null)
+{
+    static $held = null;
+    if ($session !== null) {
+        $held = $session;
+    }
+
+    return $held;
+}
+
 /**
  * getSpotifyWebAPI function.
  *
@@ -2258,6 +2456,11 @@ function getSpotifyWebAPI($w)
     $oauth_client_secret = getSetting($w, 'oauth_client_secret');
     $oauth_access_token = getSetting($w, 'oauth_access_token');
     $oauth_refresh_token = getSetting($w, 'oauth_refresh_token');
+
+    if ($oauth_access_token == '' && $oauth_refresh_token == '') {
+        // do not call Spotify with an empty refresh token ("400 refresh_token must be supplied")
+        throw new SpotifyWebAPI\SpotifyWebAPIException(notAuthenticatedMessage(), 401);
+    }
 
     // create a new api object
     $session = new SpotifyWebAPI\Session($oauth_client_id, $oauth_client_secret);
@@ -2275,6 +2478,7 @@ function getSpotifyWebAPI($w)
     ];
     $api = new SpotifyWebAPI\SpotifyWebAPI($options, $session);
     $api->setSession($session);
+    spotifySessionHolder($session);
 
     $oauth_access_token = $session->getAccessToken();
     // Set new token to settings
@@ -2685,7 +2889,11 @@ function createDebugFile($w)
     $output = $output . "\n";
     $output = $output . 'Spotify desktop version:' . exec("osascript -e 'tell application \"Spotify\" to version'");
     $output = $output . "\n";
-    if (isUserPremiumSubscriber($w)) {
+    if (!isSpotifyAuthenticated($w)) {
+        // without a token, the subscription cannot be checked
+        $output = $output . 'UNKNOWN (not authenticated)';
+        $output = $output . "\n";
+    } elseif (isUserPremiumSubscriber($w)) {
         $output = $output . 'PREMIUM';
         $output = $output . "\n";
     } else {
@@ -2793,7 +3001,7 @@ function getCurrentTrackInfoWithSpotifyConnect($w)
             $api = getSpotifyWebAPI($w);
 
             $current_track_info = $api->getMyCurrentTrack(array(
-                'market' => $country_code,
+                'market' => getMarket($country_code),
                 'additional_types' => 'track,episode',
             ));
 
@@ -2926,8 +3134,8 @@ function followThePlaylist($w, $playlist_uri)
         $playlist_id = $tmp[2];
     }
     try {
-        $api = getSpotifyWebAPI($w);
-        $ret = $api->followPlaylist($playlist_id, array('public' => $public));
+        // PUT /playlists/{id}/followers was removed in February 2026, the public flag is no longer supported
+        $ret = saveToLibrary($w, array('spotify:playlist:' . $playlist_id));
         if ($ret == true) {
             // refresh library
             if (getenv('automatically_refresh_library') == 1) {
@@ -2952,13 +3160,12 @@ function unfollowThePlaylist($w, $playlist_uri)
 {
     try {
         $tmp = explode(':', $playlist_uri);
-        $api = getSpotifyWebAPI($w);
         if (isset($tmp[4])) {
             $playlist_id = $tmp[4];
         } else {
             $playlist_id = $tmp[2];
         }
-        $ret = $api->unfollowPlaylist($playlist_id);
+        $ret = removeFromLibrary($w, array('spotify:playlist:' . $playlist_id));
         if ($ret == true) {
             // refresh library
             if (getenv('automatically_refresh_library') == 1) {
@@ -2982,8 +3189,7 @@ function unfollowThePlaylist($w, $playlist_uri)
 function followTheShow($w, $show_uri)
 {
     try {
-        $api = getSpotifyWebAPI($w);
-        $ret = $api->addMyShows($show_uri);
+        $ret = saveToLibrary($w, array(toSpotifyUri($show_uri, 'show')));
         if ($ret == true) {
             // refresh library
             if (getenv('automatically_refresh_library') == 1) {
@@ -3007,8 +3213,7 @@ function followTheShow($w, $show_uri)
 function unfollowTheShow($w, $show_uri)
 {
     try {
-        $api = getSpotifyWebAPI($w);
-        $ret = $api->deleteMyShows($show_uri);
+        $ret = removeFromLibrary($w, array(toSpotifyUri($show_uri, 'show')));
         if ($ret == true) {
             // refresh library
             if (getenv('automatically_refresh_library') == 1) {
@@ -3121,7 +3326,7 @@ function addArtistToPlayQueue($w, $artist_uri, $artist_name, $country_code)
     $country_code = getSetting($w, 'country_code');
 
     if ($output_application != 'MOPIDY') {
-        $tracks = getTheArtistFullTracks($w, $artist_uri, $country_code);
+        $tracks = getTheArtistFullTracks($w, $artist_uri, $country_code, $artist_name);
         if ($tracks == false) {
             displayNotificationWithArtwork($w, 'Cannot get tracks for artist ' . $artist_name, './images/warning.png', 'Error!');
 
@@ -3303,42 +3508,31 @@ function searchWebApi($w, $country_code, $query, $type, $limit = 50, $actionMode
     $results = array();
 
     try {
-        if ($limit != 50) {
-            $limitSearch = $limit;
-        } else {
-            $limitSearch = 50;
-        }
+        // February 2026: search "limit" maximum is 10, page with "offset" to get more results
+        $pageSize = 10;
+        $offsetSearch = 0;
         $api = getSpotifyWebAPI($w);
-        $searchResults = $api->search($query, $type, array(
-            'market' => $country_code,
-            'limit' => $limitSearch,
-        ));
+        do {
+            $limitSearch = min($pageSize, $limit - $offsetSearch);
+            $searchResults = $api->search($query, $type, array(
+                'market' => getMarket($country_code),
+                'limit' => $limitSearch,
+                'offset' => $offsetSearch,
+            ));
 
-        if ($type == 'artist') {
-            foreach ($searchResults->artists->items as $item) {
-                $results[] = $item;
+            $key = $type . 's';
+            if (!isset($searchResults->$key) || !isset($searchResults->$key->items)) {
+                break;
             }
-        } elseif ($type == 'track') {
-            foreach ($searchResults->tracks->items as $item) {
-                $results[] = $item;
+            $page = $searchResults->$key;
+            foreach ($page->items as $item) {
+                // playlist search can return null entries
+                if ($item !== null) {
+                    $results[] = $item;
+                }
             }
-        } elseif ($type == 'album') {
-            foreach ($searchResults->albums->items as $item) {
-                $results[] = $item;
-            }
-        } elseif ($type == 'show') {
-            foreach ($searchResults->shows->items as $item) {
-                $results[] = $item;
-            }
-        } elseif ($type == 'episode') {
-            foreach ($searchResults->episodes->items as $item) {
-                $results[] = $item;
-            }
-        } elseif ($type == 'playlist') {
-            foreach ($searchResults->playlists->items as $item) {
-                $results[] = $item;
-            }
-        }
+            $offsetSearch += $limitSearch;
+        } while (count($page->items) == $limitSearch && $offsetSearch < $limit && isset($page->next) && $page->next != null);
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
         if ($actionMode == true) {
             logMsg($w, 'Error(search): (exception ' . jTraceEx($e) . ')');
@@ -3501,13 +3695,11 @@ function followCurrentArtist($w)
             return;
         }
         try {
-            $api = getSpotifyWebAPI($w);
-
-            $isArtistFollowed = $api->currentUserFollows('artist', $artist_uri);
+            $isArtistFollowed = libraryContains($w, array(toSpotifyUri($artist_uri, 'artist')));
 
 
             if (!$isArtistFollowed[0]) {
-                $ret = $api->followArtistsOrUsers('artist', $artist_uri);
+                $ret = saveToLibrary($w, array(toSpotifyUri($artist_uri, 'artist')));
 
                 if ($ret) {
                     $artist_artwork_path = getArtistArtwork($w, $artist_uri, $results[1], false, false, false, $use_artworks);
@@ -3559,14 +3751,12 @@ function unfollowCurrentArtist($w)
             return;
         }
         try {
-            $api = getSpotifyWebAPI($w);
-
-            $isArtistFollowed = $api->currentUserFollows('artist', $artist_uri);
+            $isArtistFollowed = libraryContains($w, array(toSpotifyUri($artist_uri, 'artist')));
 
             if (!$isArtistFollowed[0]) {
                 displayNotificationWithArtwork($w, 'You are not following artist ' . $results[1], './images/warning.png', 'Error!');
             } else {
-                $ret = $api->unfollowArtistsOrUsers('artist', $artist_uri);
+                $ret = removeFromLibrary($w, array(toSpotifyUri($artist_uri, 'artist')));
 
                 if ($ret) {
                     $artist_artwork_path = getArtistArtwork($w, $artist_uri, $results[1], false, false, false, $use_artworks);
@@ -4037,10 +4227,10 @@ function addAlbumToYourMusic($w, $album_uri)
 {
     try {
         // refresh api
-        $api = getSpotifyWebAPI($w);
-        $response = $api->myAlbumsContains($album_uri);
+        $album_uri = toSpotifyUri($album_uri, 'album');
+        $response = libraryContains($w, array($album_uri));
         if ($response[0] == false) {
-            $api->addMyAlbums($album_uri);
+            saveToLibrary($w, array($album_uri));
         } else {
             return 0;
         }
@@ -4073,15 +4263,16 @@ function addTracksToYourMusic($w, $tracks, $allow_duplicate = true)
     $tracks_contain = array();
     if (!$allow_duplicate) {
         try {
-            $api = getSpotifyWebAPI($w);
-            // Note: max 50 Ids
+            // Note: max 40 URIs for /me/library/contains
             $offset = 0;
             do {
-                $output = array_slice($tracks, $offset, 50);
-                $offset += 50;
+                $output = array_slice($tracks, $offset, 40);
+                $offset += 40;
 
                 if (count($output)) {
-                    $tracks_contain = $api->myTracksContains($output);
+                    $tracks_contain = libraryContains($w, array_map(function ($t) {
+                        return toSpotifyUri($t, 'track');
+                    }, $output));
                     for ($i = 0; $i < count($output); ++$i) {
                         if (!$tracks_contain[$i]) {
                             $tracks_with_no_dup[] = $output[$i];
@@ -4101,16 +4292,9 @@ function addTracksToYourMusic($w, $tracks, $allow_duplicate = true)
 
     if (count($tracks) != 0) {
         try {
-            $api = getSpotifyWebAPI($w);
-            $offset = 0;
-            do {
-                $output = array_slice($tracks, $offset, 50);
-                $offset += 50;
-
-                if (count($output)) {
-                    $api->addMyTracks($output);
-                }
-            } while (count($output) > 0);
+            saveToLibrary($w, array_map(function ($t) {
+                return toSpotifyUri($t, 'track');
+            }, array_values($tracks)));
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
             logMsg($w, 'Error(addTracksToYourMusic): (exception ' . jTraceEx($e) . ')');
             handleSpotifyWebAPIException($w, $e);
@@ -4169,12 +4353,16 @@ function addTracksToPlaylist($w, $tracks, $playlist_uri, $playlist_name, $allow_
                 $offset += 100;
 
                 if (count($output)) {
+                    // POST /playlists/{id}/items expects URIs (IDs are not converted by the library)
+                    $output = array_map(function ($t) {
+                        return toSpotifyUri($t, 'track');
+                    }, $output);
                     if (getenv('append_to_playlist_when_adding_tracks') == 0) {
-                        $api->addPlaylistTracks($playlist_id, $output, array(
+                        $api->addPlaylistItems($playlist_id, $output, array(
                             'position' => 0,
                         ));
                     } else {
-                        $api->addPlaylistTracks($playlist_id, $output);
+                        $api->addPlaylistItems($playlist_id, $output);
                     }
                     ++$i;
                 }
@@ -4272,8 +4460,7 @@ function removeTrackFromYourMusic($w, $track_uri, $refreshLibrary = true)
     $output_application = getSetting($w, 'output_application');
 
     try {
-        $api = getSpotifyWebAPI($w);
-        $api->deleteMyTracks($track_uri);
+        removeFromLibrary($w, array(toSpotifyUri($track_uri, 'track')));
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
         logMsg($w, 'Error(removeTrackFromYourMusic): (exception ' . jTraceEx($e) . ')');
         handleSpotifyWebAPIException($w, $e);
@@ -4542,7 +4729,8 @@ function clearPlaylist($w, $playlist_uri, $playlist_name)
         }
         $emptytracks = array();
         $api = getSpotifyWebAPI($w);
-        $api->replacePlaylistTracks($playlist_id, $emptytracks);
+        // PUT /playlists/{id}/items with an empty uris list clears the playlist
+        $api->updatePlaylistItems($playlist_id, array('uris' => $emptytracks));
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
         logMsg($w, 'Error(clearPlaylist): playlist uri ' . $playlist_uri . ' (exception ' . jTraceEx($e) . ')');
         handleSpotifyWebAPIException($w, $e);
@@ -4578,7 +4766,7 @@ function createTheUserPlaylist($w, $playlist_name)
     }
     try {
         $api = getSpotifyWebAPI($w);
-        $json = $api->createPlaylist(array(
+        $json = $api->createPlaylist('', array(
             'name' => $playlist_name,
             'public' => $public,
         ));
@@ -4658,7 +4846,7 @@ function createRadioArtistPlaylist($w, $artist_name, $artist_uri)
         $tmp = explode(':', $artist_uri);
         $recommendations = $api->getRecommendations(array(
             'seed_artists' => array($tmp[2]),
-            'market' => $country_code,
+            'market' => getMarket($country_code),
             'limit' => $radio_number_tracks,
         ));
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
@@ -4675,7 +4863,7 @@ function createRadioArtistPlaylist($w, $artist_name, $artist_uri)
     if (count($newplaylisttracks) > 0) {
         try {
             $api = getSpotifyWebAPI($w);
-            $json = $api->createPlaylist(array(
+            $json = $api->createPlaylist('', array(
                 'name' => 'Artist radio for ' . escapeQuery($artist_name),
                 'public' => $public,
             ));
@@ -4777,7 +4965,7 @@ function createSimilarPlaylist($w, $playlist_name, $playlist_uri)
         $api = getSpotifyWebAPI($w);
         $recommendations = $api->getRecommendations(array(
             'seed_tracks' => $random_tracks_uri,
-            'market' => $country_code,
+            'market' => getMarket($country_code),
             'limit' => $radio_number_tracks,
         ));
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
@@ -4794,7 +4982,7 @@ function createSimilarPlaylist($w, $playlist_name, $playlist_uri)
     if (count($newplaylisttracks) > 0) {
         try {
             $api = getSpotifyWebAPI($w);
-            $json = $api->createPlaylist(array(
+            $json = $api->createPlaylist('', array(
                 'name' => escapeQuery($playlist_name) . ' (2)',
                 'public' => $public,
             ));
@@ -4889,7 +5077,7 @@ function createCompleteCollectionArtistPlaylist($w, $artist_name, $artist_uri)
     if (count($newplaylisttracks) > 0) {
         try {
             $api = getSpotifyWebAPI($w);
-            $json = $api->createPlaylist(array(
+            $json = $api->createPlaylist('', array(
                 'name' => 'CC for ' . escapeQuery($artist_name),
                 'public' => $public,
             ));
@@ -5016,7 +5204,7 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name)
         $api = getSpotifyWebAPI($w);
         $recommendations = $api->getRecommendations(array(
             'seed_tracks' => array($tmp[2]),
-            'market' => $country_code,
+            'market' => getMarket($country_code),
             'limit' => $radio_number_tracks,
         ));
     } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
@@ -5033,7 +5221,7 @@ function createRadioSongPlaylist($w, $track_name, $track_uri, $artist_name)
     if (count($newplaylisttracks) > 0) {
         try {
             $api = getSpotifyWebAPI($w);
-            $json = $api->createPlaylist(array(
+            $json = $api->createPlaylist('', array(
                 'name' => 'Song radio for ' . escapeQuery($track_name) . ' by ' . escapeQuery($artist_name),
                 'public' => $public,
             ));
@@ -5117,22 +5305,21 @@ function getThePlaylistTracks($w, $playlist_uri)
         $offsetGetUserPlaylistTracks = 0;
         $limitGetUserPlaylistTracks = 100;
         do {
-            $userPlaylistTracks = $api->getPlaylistTracks($playlist_id, array(
+            $userPlaylistTracks = $api->getPlaylistItems($playlist_id, array(
                 'fields' => array(
                     'total',
-                    'items.track(id,is_playable,linked_from)',
-                    'items(is_local)',
+                    'items(is_local,item(id,is_playable,linked_from),track(id,is_playable,linked_from))',
                 ),
                 'limit' => $limitGetUserPlaylistTracks,
                 'offset' => $offsetGetUserPlaylistTracks,
-                'market' => $country_code,
+                'market' => getMarket($country_code),
             ));
 
             foreach ($userPlaylistTracks->items as $item) {
-                if (!isset($item->track)) {
+                $track = getPlaylistItemEntry($item);
+                if ($track === null) {
                     continue;
                 }
-                $track = $item->track;
                 if (isset($track->is_playable) && $track->is_playable) {
                     if (isset($track->linked_from) && isset($track->linked_from->id)) {
                         $track->id = $track->linked_from->id;
@@ -5202,7 +5389,7 @@ function getTheAlbumTracks($w, $album_uri)
  */
 function getTheArtistAlbums($w, $artist_uri, $country_code, $actionMode = false, $all_type = true)
 {
-    $album_ids = array();
+    $simplified_albums = array();
 
     try {
         $api = getSpotifyWebAPI($w);
@@ -5225,13 +5412,13 @@ function getTheArtistAlbums($w, $artist_uri, $country_code, $actionMode = false,
         do {
             $userArtistAlbums = $api->getArtistAlbums($tmp[2], array(
                 'album_type' => $album_type,
-                'market' => $country_code,
+                'market' => getMarket($country_code),
                 'limit' => $limitGetArtistAlbums,
                 'offset' => $offsetGetArtistAlbums,
             ));
 
             foreach ($userArtistAlbums->items as $album) {
-                $album_ids[] = $album->id;
+                $simplified_albums[] = $album;
             }
 
             $offsetGetArtistAlbums += $limitGetArtistAlbums;
@@ -5250,28 +5437,9 @@ function getTheArtistAlbums($w, $artist_uri, $country_code, $actionMode = false,
         }
     }
 
-    $albums = array();
-
-    try {
-        // Note: max 20 Ids
-        $offset = 0;
-        do {
-            $output = array_slice($album_ids, $offset, 20);
-            $offset += 20;
-
-            if (count($output)) {
-                $resultGetAlbums = $api->getAlbums($output);
-                foreach ($resultGetAlbums->albums as $album) {
-                    $albums[] = $album;
-                }
-            }
-        } while (count($output) > 0);
-    } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        $w2 = new Workflows('com.vdesabou.spotify.mini.player');
-        $w2->result(null, '', 'Error: Spotify WEB API getAlbums returned error ' . $e->getMessage(), 'Try again or report to author', './images/warning.png', 'no', null, '');
-        echo $w2->toxml();
-        exit;
-    }
+    // GET /albums (several albums) was removed in February 2026: use the simplified album objects
+    // returned by GET /artists/{id}/albums (they include total_tracks, release_date, album_type, images)
+    $albums = $simplified_albums;
 
     return $albums;
 }
@@ -5298,7 +5466,7 @@ function getTheShowEpisodes($w, $show_uri, $country_code, $actionMode = false)
 
         do {
             $userShowEpisodes = $api->getShowEpisodes($tmp[2], array(
-                'market' => $country_code,
+                'market' => getMarket($country_code),
                 'limit' => $limitGetShowEpisodes,
                 'offset' => $offsetGetShowEpisodes,
             ));
@@ -5343,7 +5511,7 @@ function getNumberOfEpisodesForShow($w, $show_uri, $country_code)
 
             $api = getSpotifyWebAPI($w);
             $userShowEpisodes = $api->getShowEpisodes($tmp[2], array(
-                'market' => $country_code,
+                'market' => getMarket($country_code),
                 'limit' => 1,
             ));
             $retry = false;
@@ -5406,7 +5574,7 @@ function getTheAlbumFullTracks($w, $album_uri, $actionMode = false)
             $albumTracks = $api->getAlbumTracks($tmp[2], array(
                 'limit' => $limitGetAlbumTracks,
                 'offset' => $offsetGetAlbumTracks,
-                'market' => $country_code,
+                'market' => getMarket($country_code),
             ));
 
             foreach ($albumTracks->items as $track) {
@@ -5452,24 +5620,18 @@ function getThePlaylistFullTracks($w, $playlist_uri)
         $offsetGetUserPlaylistTracks = 0;
         $limitGetUserPlaylistTracks = 100;
         do {
-            $userPlaylistTracks = $api->getPlaylistTracks($playlist_id, array(
-                'fields' => array(
-                    'total',
-                    'items(added_at)',
-                    'items(is_local)',
-                    'items.track(is_playable,duration_ms,uri,popularity,name,linked_from)',
-                    'items.track.album(album_type,images,uri,name)',
-                    'items.track.artists(name,uri)',
-                ),
+            $userPlaylistTracks = $api->getPlaylistItems($playlist_id, array(
+                'fields' => getPlaylistItemsFields(),
                 'limit' => $limitGetUserPlaylistTracks,
                 'offset' => $offsetGetUserPlaylistTracks,
             ));
 
             foreach ($userPlaylistTracks->items as $item) {
-                if (!isset($item->track)) {
+                $track = getPlaylistItemEntry($item);
+                if ($track === null) {
                     continue;
                 }
-                $tracks[] = $item->track;
+                $tracks[] = $track;
             }
 
             $offsetGetUserPlaylistTracks += $limitGetUserPlaylistTracks;
@@ -5491,24 +5653,39 @@ function getThePlaylistFullTracks($w, $playlist_uri)
  * @param mixed $artist_uri
  * @param mixed $country_code
  */
-function getTheArtistFullTracks($w, $artist_uri, $country_code)
+function getTheArtistFullTracks($w, $artist_uri, $country_code, $artist_name = '')
 {
-    $tracks = array();
-    try {
-        $api = getSpotifyWebAPI($w);
-        $tmp = explode(':', $artist_uri);
-        $artistTopTracks = $api->getArtistTopTracks($tmp[2], array(
-            'country' => $country_code,
-        ));
+    // GET /artists/{id}/top-tracks was removed in February 2026 without replacement:
+    // approximate the top tracks with a track search on the artist name (results are ranked by popularity)
+    if ($artist_name == '') {
+        try {
+            $api = getSpotifyWebAPI($w);
+            $artist = $api->getArtist($artist_uri);
+            $artist_name = $artist->name;
+        } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
+            logMsg($w, 'Error(getTheArtistFullTracks): artist uri ' . $artist_uri . ' (exception ' . jTraceEx($e) . ')');
+            handleSpotifyWebAPIException($w, $e);
 
-        foreach ($artistTopTracks->tracks as $track) {
-            $tracks[] = $track;
+            return false;
         }
-    } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
-        logMsg($w, 'Error(getTheArtistFullTracks): artist uri ' . $artist_uri . ' (exception ' . jTraceEx($e) . ')');
-        handleSpotifyWebAPIException($w, $e);
+    }
 
+    $results = searchWebApi($w, $country_code, 'artist:"' . str_replace('"', '', $artist_name) . '"', 'track', 30);
+    if ($results === false) {
         return false;
+    }
+
+    $tracks = array();
+    foreach ($results as $track) {
+        foreach ($track->artists as $artist) {
+            if ($artist->uri == $artist_uri) {
+                $tracks[] = $track;
+                break;
+            }
+        }
+        if (count($tracks) >= 10) {
+            break;
+        }
     }
 
     return $tracks;
@@ -6016,231 +6193,7 @@ function displayLyricsForCurrentTrack($w)
  */
 function downloadArtworks($w, $silent = false)
 {
-
-
-
-
-    $userid = getSetting($w, 'userid');
-    $use_artworks = getSetting($w, 'use_artworks');
-
-    if (!$use_artworks) {
-        return;
-    }
-    if (!$w->internet()) {
-        if (!$silent)
-            displayNotificationWithArtwork($w, 'Download Artworks,
-    No internet connection', './images/warning.png');
-
-        return;
-    }
-
-    touch($w->data() . '/download_artworks_in_progress');
-    $w->write('Download Artworks▹' . 0 . '▹' . 0 . '▹' . time(), 'download_artworks_in_progress');
-    $in_progress_data = $w->read('download_artworks_in_progress');
-    $words = explode('▹', $in_progress_data);
-
-    putenv('LANG=fr_FR.UTF-8');
-
-    ini_set('memory_limit', '512M');
-
-    // Get list of artworks to download from DB
-
-    $nb_artworks_total = 0;
-    $nb_artworks = 0;
-
-    $dbfile = $w->data() . '/fetch_artworks.db';
-    if (file_exists($dbfile)) {
-        try {
-            $dbartworks = openSqliteDatabase($dbfile);
-            $dbartworks->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-            $getCount = 'select count(artist_name) from artists where already_fetched=0';
-            $stmt = $dbartworks->prepare($getCount);
-            $stmt->execute();
-            $count = $stmt->fetch();
-            $nb_artworks_total += intval($count[0]);
-
-            $getCount = 'select count(track_uri) from tracks where already_fetched=0';
-            $stmt = $dbartworks->prepare($getCount);
-            $stmt->execute();
-            $count = $stmt->fetch();
-            $nb_artworks_total += intval($count[0]);
-
-            $getCount = 'select count(album_uri) from albums where already_fetched=0';
-            $stmt = $dbartworks->prepare($getCount);
-            $stmt->execute();
-            $count = $stmt->fetch();
-            $nb_artworks_total += intval($count[0]);
-
-            $getCount = 'select count(show_uri) from shows where already_fetched=0';
-            $stmt = $dbartworks->prepare($getCount);
-            $stmt->execute();
-            $count = $stmt->fetch();
-            $nb_artworks_total += intval($count[0]);
-
-            $getCount = 'select count(episode_uri) from episodes where already_fetched=0';
-            $stmt = $dbartworks->prepare($getCount);
-            $stmt->execute();
-            $count = $stmt->fetch();
-            $nb_artworks_total += intval($count[0]);
-
-            if ($nb_artworks_total != 0) {
-                if (!$silent)
-                    displayNotificationWithArtwork($w, 'Start downloading ' . $nb_artworks_total . ' artworks', './images/artworks.png', 'Artworks');
-
-                // artists
-                $getArtists = 'select artist_uri,artist_name from artists where already_fetched=0';
-                $stmtGetArtists = $dbartworks->prepare($getArtists);
-
-                $updateArtist = 'update artists set already_fetched=1 where artist_uri=:artist_uri';
-                $stmtUpdateArtist = $dbartworks->prepare($updateArtist);
-
-                // tracks
-                $getTracks = 'select track_uri from tracks where already_fetched=0';
-                $stmtGetTracks = $dbartworks->prepare($getTracks);
-
-                $updateTrack = 'update tracks set already_fetched=1 where track_uri=:track_uri';
-                $stmtUpdateTrack = $dbartworks->prepare($updateTrack);
-
-                // albums
-                $getAlbums = 'select album_uri from albums where already_fetched=0';
-                $stmtGetAlbums = $dbartworks->prepare($getAlbums);
-
-                $updateAlbum = 'update albums set already_fetched=1 where album_uri=:album_uri';
-                $stmtUpdateAlbum = $dbartworks->prepare($updateAlbum);
-
-                // shows
-                $getShows = 'select show_uri from shows where already_fetched=0';
-                $stmtGetShows = $dbartworks->prepare($getShows);
-
-                $updateShow = 'update shows set already_fetched=1 where show_uri=:show_uri';
-                $stmtUpdateShow = $dbartworks->prepare($updateShow);
-
-                // episodes
-                $getEpisodes = 'select episode_uri from episodes where already_fetched=0';
-                $stmtGetEpisodes = $dbartworks->prepare($getEpisodes);
-
-                $updateEpisode = 'update episodes set already_fetched=1 where episode_uri=:episode_uri';
-                $stmtUpdateEpisode = $dbartworks->prepare($updateEpisode);
-
-                ////
-                // Artists
-
-                $stmtGetArtists->execute();
-                $resultsGetArtists = $stmtGetArtists->fetchAll();
-
-                foreach ($resultsGetArtists as $artist) {
-                    getArtistArtwork($w, $artist[0], $artist[1], true, false, true, $use_artworks);
-
-                    $stmtUpdateArtist->bindValue(':artist_uri', $artist[0]);
-                    $stmtUpdateArtist->execute();
-
-                    ++$nb_artworks;
-                    if ($nb_artworks % 10 === 0) {
-                        $w->write('Download Artworks▹' . $nb_artworks . '▹' . $nb_artworks_total . '▹' . $words[3], 'download_artworks_in_progress');
-                    }
-                }
-
-                ////
-                // Tracks
-
-                $stmtGetTracks->execute();
-                $resultsGetTracks = $stmtGetTracks->fetchAll();
-
-                foreach ($resultsGetTracks as $track) {
-
-                    getTrackOrAlbumArtwork($w, $track[0], true, false, true, $use_artworks);
-
-                    $stmtUpdateTrack->bindValue(':track_uri', $track[0]);
-                    $stmtUpdateTrack->execute();
-
-                    ++$nb_artworks;
-                    if ($nb_artworks % 10 === 0) {
-                        $w->write('Download Artworks▹' . $nb_artworks . '▹' . $nb_artworks_total . '▹' . $words[3], 'download_artworks_in_progress');
-                    }
-                }
-
-                ////
-                // Albums
-
-                $stmtGetAlbums->execute();
-                $resultsGetAlbum = $stmtGetAlbums->fetchAll();
-
-                foreach ($resultsGetAlbum as $album) {
-                    getTrackOrAlbumArtwork($w, $album[0], true, false, true, $use_artworks);
-
-                    $stmtUpdateAlbum->bindValue(':album_uri', $album[0]);
-                    $stmtUpdateAlbum->execute();
-
-                    ++$nb_artworks;
-                    if ($nb_artworks % 5 === 0) {
-                        $w->write('Download Artworks▹' . $nb_artworks . '▹' . $nb_artworks_total . '▹' . $words[3], 'download_artworks_in_progress');
-                    }
-                }
-
-                ////
-                // Shows
-
-                $stmtGetShows->execute();
-                $resultsGetShows = $stmtGetShows->fetchAll();
-
-                foreach ($resultsGetShows as $show) {
-                    getShowArtwork($w, $show[0], true, false, true, $use_artworks);
-
-                    $stmtUpdateShow->bindValue(':show_uri', $show[0]);
-                    $stmtUpdateShow->execute();
-
-                    ++$nb_artworks;
-                    if ($nb_artworks % 5 === 0) {
-                        $w->write('Download Artworks▹' . $nb_artworks . '▹' . $nb_artworks_total . '▹' . $words[3], 'download_artworks_in_progress');
-                    }
-                }
-
-                ////
-                // Episodes
-
-                $stmtGetEpisodes->execute();
-                $resultsGetEpisodes = $stmtGetEpisodes->fetchAll();
-
-                foreach ($resultsGetEpisodes as $episode) {
-                    getEpisodeArtwork($w, $episode[0], true, false, true, $use_artworks);
-
-                    $stmtUpdateEpisode->bindValue(':episode_uri', $episode[0]);
-                    $stmtUpdateEpisode->execute();
-
-                    ++$nb_artworks;
-                    if ($nb_artworks % 5 === 0) {
-                        $w->write('Download Artworks▹' . $nb_artworks . '▹' . $nb_artworks_total . '▹' . $words[3], 'download_artworks_in_progress');
-                    }
-                }
-            }
-        } catch (PDOException $e) {
-            handleDbIssuePdoEcho($dbartworks, $w);
-            $dbartworks = null;
-
-            return false;
-        }
-    }
-    deleteTheFile($w, $w->data() . '/download_artworks_in_progress');
-    if ($nb_artworks_total != 0) {
-        $elapsed_time = time() - $words[3];
-        if (!$silent)
-            displayNotificationWithArtwork($w, 'All artworks have been downloaded (' . $nb_artworks_total . ' artworks) - took ' . beautifyTime($elapsed_time, true), './images/artworks.png', 'Artworks');
-    }
-
-    // Get size of artwork directory
-    if (file_exists($w->data() . '/artwork')) {
-        exec("/usr/bin/du -sh '" . $w->data() . "/artwork'", $retArr, $retVal);
-        if ($retVal == 0) {
-            $size = $retArr[0];
-            $size = substr($size, 0, strpos($size, "\t"));
-            updateSetting($w, 'artwork_folder_size', rtrim(ltrim($size)));
-        }
-    } else {
-        updateSetting($w, 'artwork_folder_size', '0');
-    }
-
-    return true;
+    return downloadQueuedArtworks($w, $silent);
 }
 
 /**
@@ -6895,6 +6848,15 @@ function getArtistArtwork($w, $artist_uri, $artist_name, $fetchIfNotPresent = fa
  */
 function getArtworkURL($w, $type, $id, $highRes = false)
 {
+    if (!$highRes) {
+        $cached = lookupCachedArtworkUrl($w, 'spotify:' . $type . ':' . $id);
+        if ($cached !== false) {
+            return $cached;
+        }
+    }
+    if (!isSpotifyAuthenticated($w)) {
+        return '';
+    }
     $url = '';
 
     if (startswith($id, 'fake')) {
@@ -7044,6 +7006,13 @@ function getArtworkURL($w, $type, $id, $highRes = false)
  */
 function getPlaylistArtworkURL($w, $playlist_uri)
 {
+    $cached = lookupCachedArtworkUrl($w, artworkUri('playlist', $playlist_uri));
+    if ($cached !== false) {
+        return $cached;
+    }
+    if (!isSpotifyAuthenticated($w)) {
+        return '';
+    }
     $url = '';
 
     $retry = true;
@@ -7117,6 +7086,13 @@ function getPlaylistArtworkURL($w, $playlist_uri)
  */
 function getShowArtworkURL($w, $show_uri)
 {
+    $cached = lookupCachedArtworkUrl($w, artworkUri('show', $show_uri));
+    if ($cached !== false) {
+        return $cached;
+    }
+    if (!isSpotifyAuthenticated($w)) {
+        return '';
+    }
     $url = '';
     if (startswith($show_uri, 'fake')) {
         return $url;
@@ -7188,6 +7164,13 @@ function getShowArtworkURL($w, $show_uri)
  */
 function getEpisodeArtworkURL($w, $episode_uri)
 {
+    $cached = lookupCachedArtworkUrl($w, artworkUri('episode', $episode_uri));
+    if ($cached !== false) {
+        return $cached;
+    }
+    if (!isSpotifyAuthenticated($w)) {
+        return '';
+    }
 
 
 
@@ -7204,7 +7187,7 @@ function getEpisodeArtworkURL($w, $episode_uri)
         try {
             $api = getSpotifyWebAPI($w);
             $episode = $api->getEpisode($episode_uri, array(
-                'market' => $country_code,
+                'market' => getMarket($country_code),
             ));
             $retry = false;
         } catch (SpotifyWebAPI\SpotifyWebAPIException $e) {
@@ -7267,6 +7250,13 @@ function getEpisodeArtworkURL($w, $episode_uri)
  */
 function getArtistArtworkURL($w, $artist_id)
 {
+    $cached = lookupCachedArtworkUrl($w, 'spotify:artist:' . $artist_id);
+    if ($cached !== false) {
+        return $cached;
+    }
+    if (!isSpotifyAuthenticated($w)) {
+        return '';
+    }
     $url = '';
     if (startswith($artist_id, 'fake')) {
         return $url;
