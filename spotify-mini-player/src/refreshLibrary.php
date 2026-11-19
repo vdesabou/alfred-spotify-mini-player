@@ -514,23 +514,24 @@ function refreshLibrary($w, $silent = false) {
     $offsetGetUserPlaylists = 0;
     $limitGetUserPlaylists = 50;
     do {
+        $userPlaylists = null;
         $retry = true;
         $nb_retry = 0;
 
         while ($retry) {
             try {
-                $userPlaylists = $api->getUserPlaylists(urlencode($userid), array('limit' => $limitGetUserPlaylists, 'offset' => $offsetGetUserPlaylists,));
+                $userPlaylists = $api->getMyPlaylists(array('limit' => $limitGetUserPlaylists, 'offset' => $offsetGetUserPlaylists,));
                 if($debug) {
-                    logMsg($w,"DEBUG: getUserPlaylists (offset ".$offsetGetUserPlaylists.")");
+                    logMsg($w,"DEBUG: getMyPlaylists (offset ".$offsetGetUserPlaylists.")");
                 }
                 $w->write('InitCreateOrRefreshLibrary▹' . 0 . '▹' . 0 . '▹' . $initial_time . '▹' . getenv('emoji_playlist') . 'playlists', 'update_library_in_progress');
                 $retry = false;
             }
             catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
-                logMsg($w,'Error(getUserPlaylists): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
+                logMsg($w,'Error(getMyPlaylists): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
 
                 if ($e->getCode() == 404 || $e->getCode() == 403) {
-                    logMsg($w, 'Error(getUserPlaylists): skipping getUserPlaylists due to error ' . $e->getCode());
+                    logMsg($w, 'Error(getMyPlaylists): skipping getMyPlaylists due to error ' . $e->getCode());
                     // skip
                     break;
                 }
@@ -543,7 +544,7 @@ function refreshLibrary($w, $silent = false) {
                 else if ($e->getCode() == 500 || $e->getCode() == 502 || $e->getCode() == 503 || $e->getCode() == 202 || $e->getCode() == 400 || $e->getCode() == 504) {
                     // retry
                     if ($nb_retry > 3) {
-                        logMsg($w, 'Error(getUserPlaylists): skipping getUserPlaylists due to error ' . $e->getCode());
+                        logMsg($w, 'Error(getMyPlaylists): skipping getMyPlaylists due to error ' . $e->getCode());
                         // skip
                         break;
                     }
@@ -551,11 +552,23 @@ function refreshLibrary($w, $silent = false) {
                     sleep(5);
                 }
                 else {
-                    logMsg($w, 'Error(getUserPlaylists): skipping getUserPlaylists due to error ' . $e->getCode());
+                    logMsg($w, 'Error(getMyPlaylists): skipping getMyPlaylists due to error ' . $e->getCode());
                     // skip
                     break;
                 }
             }
+        }
+
+        if ($userPlaylists === null) {
+            // A failed request is not an empty library. Keep the previous database.
+            $db = null;
+            deleteTheFile($w, $w->data() . '/library_new.db');
+            rename($w->data() . '/library_old.db', $w->data() . '/library.db');
+            deleteTheFile($w, $w->data() . '/update_library_in_progress');
+            if (!$silent) {
+                displayNotificationWithArtwork($w, 'Could not retrieve playlists; your previous library has been kept', './images/warning.png', 'Refresh Library');
+            }
+            return false;
         }
 
         foreach ($userPlaylists->items as $playlist) {
@@ -577,7 +590,7 @@ function refreshLibrary($w, $silent = false) {
 
     $skip_playlist = false;
     foreach ($savedListPlaylist as $playlist) {
-        $tracks = $playlist->tracks;
+        $tracks = $playlist->items ?? $playlist->tracks;
         $owner = $playlist->owner;
 
         ++$nb_playlist;
@@ -620,11 +633,12 @@ function refreshLibrary($w, $silent = false) {
             $offsetGetUserPlaylistTracks = 0;
             $limitGetUserPlaylistTracks = 100;
             do {
+                $userPlaylistTracks = (object) array('items' => array(), 'total' => 0);
                 $retry = true;
                 $nb_retry = 0;
                 while ($retry) {
                     try {
-                        $userPlaylistTracks = $api->getPlaylistTracks($playlist->id, array('fields' => array('total', 'items(added_at)', 'items(is_local)', 'items.track(is_playable,duration_ms,uri,popularity,name,linked_from)', 'items.track.album(album_type,images,uri,name)', 'items.track.artists(name,uri)',), 'limit' => $limitGetUserPlaylistTracks, 'offset' => $offsetGetUserPlaylistTracks, 'market' => $country_code,));
+                        $userPlaylistTracks = $api->getPlaylistItems($playlist->id, array('fields' => array('total', 'items(added_at,is_local,item,track)'), 'limit' => $limitGetUserPlaylistTracks, 'offset' => $offsetGetUserPlaylistTracks, 'market' => $country_code,));
                         if($debug) {
                             logMsg($w,"DEBUG: getPlaylistTracks for playlist uri ".$playlist->id." (offset ".$offsetGetUserPlaylistTracks.")");
                         }
@@ -633,6 +647,11 @@ function refreshLibrary($w, $silent = false) {
                     catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
                         logMsg($w,'Error(getPlaylistTracks): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
 
+                        if ($e->getCode() == 403) {
+                            // Development Mode can list followed playlists without access to their items.
+                            // Keep their metadata and continue with the next playlist.
+                            break;
+                        }
                         if ($e->getCode() == 404 || $e->getCode() == 500) {
                             // skip
                             logMsg($w,'Error(getPlaylistTracks): skipping playlist '.$playlist->id.' due to error '.$e->getCode());
@@ -659,6 +678,7 @@ function refreshLibrary($w, $silent = false) {
                         else {
                             logMsg($w, 'Error(getPlaylistTracks): skipping playlist ' . $playlist->id . ' due to error ' . $e->getCode());
                             // skip
+                            $skip_playlist = true;
                             break;
                         }
                     }
@@ -668,10 +688,10 @@ function refreshLibrary($w, $silent = false) {
                 }
 
                 foreach ($userPlaylistTracks->items as $item) {
-                    if (!isset($item->track)) {
+                    $track = $item->item ?? $item->track ?? null;
+                    if (!isset($track->album, $track->artists[0])) {
                         continue;
                     }
-                    $track = $item->track;
                     $artists = $track->artists;
                     $artist = $artists[0];
                     $album = $track->album;
@@ -763,7 +783,7 @@ function refreshLibrary($w, $silent = false) {
 
                     try {
                         $stmtTrack->bindValue(':yourmusic', 0);
-                        $stmtTrack->bindValue(':popularity', $track->popularity);
+                        $stmtTrack->bindValue(':popularity', $track->popularity ?? 0);
                         $stmtTrack->bindValue(':uri', $track->uri);
                         $stmtTrack->bindValue(':album_uri', $album->uri);
                         $stmtTrack->bindValue(':artist_uri', $artist->uri);
@@ -804,7 +824,7 @@ function refreshLibrary($w, $silent = false) {
 
             if($skip_playlist) {
                 $skip_playlist = false;
-                break;
+                continue;
             }
 
             try {
@@ -856,7 +876,7 @@ function refreshLibrary($w, $silent = false) {
             $selfUpdatedPlaylistUpdated = false;
 
             if (!$skip_tracks_refresh) {
-                $owner = getPlaylistOwner($w, $playlists[0]);
+                $owner = $playlist->owner->id;
             } else {
                 $owner = '';
             }
@@ -951,9 +971,6 @@ function refreshLibrary($w, $silent = false) {
                         $stmtUpdatePlaylistsName->bindValue(':uri', $playlist->uri);
                         $stmtUpdatePlaylistsName->execute();
                     }
-
-                    $stmtDeleteFromTracks->bindValue(':playlist_uri', $playlist->uri);
-                    $stmtDeleteFromTracks->execute();
                 }
                 catch(PDOException $e) {
                     logMsg($w,'Error(refreshLibrary): (exception ' . jTraceEx($e) . ')');
@@ -970,11 +987,12 @@ function refreshLibrary($w, $silent = false) {
                 $limitGetUserPlaylistTracks = 100;
                 $owner = $playlist->owner;
                 do {
+                    $userPlaylistTracks = (object) array('items' => array(), 'total' => 0);
                     $retry = true;
                     $nb_retry = 0;
                     while ($retry) {
                         try {
-                            $userPlaylistTracks = $api->getPlaylistTracks($playlist->id, array('fields' => array('total', 'items(added_at)', 'items(is_local)', 'items.track(is_playable,duration_ms,uri,popularity,name,linked_from)', 'items.track.album(album_type,images,uri,name)', 'items.track.artists(name,uri)',), 'limit' => $limitGetUserPlaylistTracks, 'offset' => $offsetGetUserPlaylistTracks, 'market' => $country_code,));
+                            $userPlaylistTracks = $api->getPlaylistItems($playlist->id, array('fields' => array('total', 'items(added_at,is_local,item,track)'), 'limit' => $limitGetUserPlaylistTracks, 'offset' => $offsetGetUserPlaylistTracks, 'market' => $country_code,));
                             if($debug) {
                                 logMsg($w,"DEBUG: getPlaylistTracks for playlist uri ".$playlist->id." (offset ".$offsetGetUserPlaylistTracks.")");
                             }
@@ -983,6 +1001,11 @@ function refreshLibrary($w, $silent = false) {
                         catch(SpotifyWebAPI\SpotifyWebAPIException $e) {
                             logMsg($w,'Error(getPlaylistTracks): retry ' . $nb_retry . ' (exception ' . jTraceEx($e) . ')');
 
+                            if ($e->getCode() == 403) {
+                                // Preserve cached tracks when Spotify no longer grants access.
+                                $skip_playlist = true;
+                                break;
+                            }
                             if ($e->getCode() == 404 || $e->getCode() == 500) {
                                 // skip
                                 logMsg($w,'Error(getPlaylistTracks): skipping playlist '.$playlist->id.' due to error '.$e->getCode());
@@ -1009,6 +1032,7 @@ function refreshLibrary($w, $silent = false) {
                             else {
                                 logMsg($w, 'Error(getPlaylistTracks): skipping playlist ' . $playlist->id . ' due to error ' . $e->getCode());
                                 // skip
+                                $skip_playlist = true;
                                 break;
                             }
                         }
@@ -1018,11 +1042,16 @@ function refreshLibrary($w, $silent = false) {
                         break;
                     }
 
+                    if ($offsetGetUserPlaylistTracks == 0) {
+                        $stmtDeleteFromTracks->bindValue(':playlist_uri', $playlist->uri);
+                        $stmtDeleteFromTracks->execute();
+                    }
+
                     foreach ($userPlaylistTracks->items as $item) {
-                        if (!isset($item->track)) {
+                        $track = $item->item ?? $item->track ?? null;
+                        if (!isset($track->album, $track->artists[0])) {
                             continue;
                         }
-                        $track = $item->track;
                         $artists = $track->artists;
                         $artist = $artists[0];
                         $album = $track->album;
@@ -1115,7 +1144,7 @@ function refreshLibrary($w, $silent = false) {
                         $duration_playlist += $track->duration_ms;
                         try {
                             $stmtTrack->bindValue(':yourmusic', 0);
-                            $stmtTrack->bindValue(':popularity', $track->popularity);
+                            $stmtTrack->bindValue(':popularity', $track->popularity ?? 0);
                             $stmtTrack->bindValue(':uri', $track->uri);
                             $stmtTrack->bindValue(':album_uri', $album->uri);
                             $stmtTrack->bindValue(':artist_uri', $artist->uri);
@@ -1156,7 +1185,7 @@ function refreshLibrary($w, $silent = false) {
 
                 if($skip_playlist) {
                     $skip_playlist = false;
-                    break;
+                    continue;
                 }
                 try {
                     $stmtUpdatePlaylistsNbTracks->bindValue(':nb_tracks', $userPlaylistTracks->total);
@@ -2052,8 +2081,6 @@ function refreshLibrary($w, $silent = false) {
             updateCounters($w, $db);
         }
     }
-
-    $w->write($update_type.'▹' . $nb_playlist . '▹' . $nb_playlist_total . '▹' . $initial_time . '▹' . getenv('emoji_show') . 'show ' . escapeQuery($show->name), 'update_library_in_progress');
 
     if (! $ignorePodcasts) {
         if (!empty($savedMySavedShows)) {
