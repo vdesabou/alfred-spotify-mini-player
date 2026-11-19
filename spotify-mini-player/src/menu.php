@@ -55,7 +55,7 @@ function oAuthChecks($w, $query, $update_in_progress) {
         /* artist_artwork_path */, ''
         /* album_artwork_path */, ''
         /* playlist_name */, '', /* playlist_artwork_path */
-        )), 'Authenticate to Spotify', array('This will start the authentication process', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/settings.png', 'yes', null, '');
+        )), 'Authenticate to Spotify', array('Your Spotify app must have the Redirect URI ' . spotifyRedirectUri() . ' (developer dashboard ▹ app ▹ Settings)', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/settings.png', 'yes', null, '');
         $w->result(null, serialize(array(''
         /*track_uri*/, ''
         /* album_uri */, ''
@@ -782,9 +782,10 @@ function searchCategoriesFastAccess($w, $query, $db, $update_in_progress) {
     if (strpos(strtolower('search online'), strtolower($query)) !== false) {
         $w->result(null, '', 'Search online', array(getenv('emoji_online').' You can search playlists, artists, albums, shows, episodes or tracks online, i.e not in your librar', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/online.png', 'no', null, 'Search Online▹');
     }
-    if (strpos(strtolower('new releases'), strtolower($query)) !== false) {
-        $w->result(null, '', 'New Releases', array('Browse new album releases', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/new_releases.png', 'no', null, 'New Releases▹');
-    }
+    // New Releases: GET /browse/new-releases was removed in February 2026 (see #633)
+    // if (strpos(strtolower('new releases'), strtolower($query)) !== false) {
+    //     $w->result(null, '', 'New Releases', array('Browse new album releases', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/new_releases.png', 'no', null, 'New Releases▹');
+    // }
     if (strpos(strtolower('artists'), strtolower($query)) !== false) {
         $w->result(null, '', 'Artists', array('Browse by artist', 'alt' => '', 'cmd' => '', 'shift' => '', 'fn' => '', 'ctrl' => '',), './images/artists.png', 'no', null, 'Artist▹');
     }
