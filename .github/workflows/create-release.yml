@@ -24,6 +24,25 @@ jobs:
         with:
           query: "milestone:${{ github.event.milestone.title }}"
           token: ${{ secrets.GITHUB_TOKEN }}
+      # The issue list lags a few seconds behind the close above: querying it right away
+      # returns no closed issues and empty release notes (v-14.5 run, 3 s after the close).
+      - name: Wait for closed issues to be visible
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          repo="${{ github.repository }}"
+          number="${{ github.event.milestone.number }}"
+          for i in $(seq 1 30); do
+            open=$(gh api "repos/$repo/issues?milestone=$number&state=open&per_page=100" --jq 'length')
+            closed=$(gh api "repos/$repo/issues?milestone=$number&state=closed&per_page=100" --jq 'length')
+            if [ "$open" -eq 0 ] && [ "$closed" -gt 0 ]; then
+              echo "$closed closed issue(s) visible"
+              sleep 5
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "::warning::closed issues of milestone $number are still not visible, release notes may be empty"
       # Maintained fork: fixes HTTP 422 when the milestone's issues are paginated
       # (this repo now has 660+ issues), which produced empty release notes
       # (v-13.11, v-14.3, v-14.4). MILESTONE_NUMBER comes from the milestone event.
