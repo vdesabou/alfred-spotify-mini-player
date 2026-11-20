@@ -860,7 +860,7 @@ function firstDelimiterCurrentTrack($w, $query, $db, $update_in_progress) {
         $subtitle = "$subtitle fn (add track to ...) ⇧ (add album to ...)";
         if (countCharacters($input) < 2) {
             $popularity = '';
-            if ($is_display_rating) {
+            if ($is_display_rating && isset($results[6]) && is_numeric($results[6])) {
                 $popularity = floatToStars($results[6] / 100);
             }
             if ($results[3] == 'playing') {
