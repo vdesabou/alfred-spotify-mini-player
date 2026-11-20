@@ -425,7 +425,7 @@ function getCurrentTrackinfo($w, $output_application)
     } else if ($output_application == 'APPLESCRIPT') {
         // get info on current song
         exec('./src/track_info.ksh 2>&1', $retArr, $retVal);
-        if ($retVal != 0) {
+        if ($retVal != 0 || empty($retArr)) {
             logMsg($w, "Error(getCurrentTrackinfo): AppleScript execution failed!");
             return;
         }
@@ -6115,7 +6115,7 @@ function displayNotificationForCurrentTrack($w)
             $album_artwork_path = getTrackOrAlbumArtwork($w, $results[4], true, false, false, $use_artworks);
             if (isset($results[0]) && $results[0] != '') {
                 $popularity = '';
-                if ($is_display_rating) {
+                if ($is_display_rating && isset($results[6]) && is_numeric($results[6])) {
                     $popularity = floatToStars($results[6] / 100);
                 }
                 $liked = 'emoji_not_liked';
