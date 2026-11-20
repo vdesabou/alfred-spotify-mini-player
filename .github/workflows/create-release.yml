@@ -103,34 +103,56 @@ jobs:
           asset_path: ./spotifyminiplayer.alfredworkflow
           asset_name: spotifyminiplayer.alfredworkflow
           asset_content_type: application/zip
+      # Gallery reviewers want the Changelog field in a ```changelog block (the issue form
+      # renders it that way) and written for users, not as bug reports (gallery-edits #587, #588).
+      # Write the user-facing changelog in the milestone description, one change per line;
+      # without one, fall back to the issue titles, with "Fix:" added to bug fixes.
       - name: Create Gallery update issue
         env:
           GH_TOKEN: ${{ secrets.GH_GALLERY_TOKEN }}
+          MILESTONE_DESCRIPTION: ${{ github.event.milestone.description }}
+          MILESTONE_TITLE: ${{ github.event.milestone.title }}
         run: |
-          gallery_changelog=$(sed -E \
-            -e '/^[[:space:]]*[-*][[:space:]]/!d' \
-            -e 's/^[[:space:]]*-[[:space:]]/* /' \
-            -e 's/[[:space:]]+\[[^]]+\]\([^)]*\)//g' \
-            -e 's/[[:space:]]+\(#[0-9]+\)//g' \
-            -e 's/[[:space:]]+following[[:space:]]+#[0-9]+//g' \
-            -e 's/[[:space:]]+#([0-9]+)//g' \
-            ./temp_release_notes/release_file.md | \
-            perl -CSD -pe 's/[\p{So}\p{Emoji_Modifier}\x{FE0F}\x{200D}]//g' | \
-            sed -E 's/^\* +/* /')
-          cat > gallery-issue.md <<EOF
-          ### Gallery URL
-          https://alfred.app/workflows/vdesabou/spotify-mini-player/
-
-          ### New Version
-          ${{ github.event.milestone.title }}
-
-          ### Changelog
-          ${gallery_changelog}
-
-          ### Notes
-          Automated update from release workflow.
-          Release: https://github.com/vdesabou/alfred-spotify-mini-player/releases/tag/v-${{ github.event.milestone.title }}
-          EOF
+          strip_noise() {
+            sed -E \
+              -e 's/[[:space:]]+\[[^]]+\]\([^)]*\)//g' \
+              -e 's/[[:space:]]+\(#[0-9]+\)//g' \
+              -e 's/[[:space:]]+following[[:space:]]+#[0-9]+//g' \
+              -e 's/[[:space:]]+#([0-9]+)//g' | \
+              perl -CSD -pe 's/[\p{So}\p{Emoji_Modifier}\x{FE0F}\x{200D}]//g; s/^\s+|\s+$//g; $_ .= "\n"'
+          }
+          if printf '%s' "$MILESTONE_DESCRIPTION" | grep -q '[^[:space:]]'; then
+            gallery_changelog=$(printf '%s\n' "$MILESTONE_DESCRIPTION" | tr -d '\r' | \
+              sed -E -e '/^[[:space:]]*$/d' -e 's/^[[:space:]]*[-*][[:space:]]+//' | \
+              strip_noise | sed -E '/^$/d; s/^/* /')
+          else
+            echo "::warning::milestone $MILESTONE_TITLE has no description: the Gallery changelog uses the issue titles"
+            gallery_changelog=$(awk '
+                /^#/ { fix = (tolower($0) ~ /bug|fix/) ; next }
+                /^[[:space:]]*[-*][[:space:]]/ {
+                  sub(/^[[:space:]]*[-*][[:space:]]+/, "")
+                  print (fix ? "Fix: " : "") $0
+                }' ./temp_release_notes/release_file.md | \
+              strip_noise | sed -E '/^$/d; s/^/* /')
+          fi
+          fence='```'
+          {
+            echo '### Gallery URL'
+            echo 'https://alfred.app/workflows/vdesabou/spotify-mini-player/'
+            echo
+            echo '### New Version'
+            echo "$MILESTONE_TITLE"
+            echo
+            echo '### Changelog'
+            echo
+            echo "${fence}changelog"
+            echo "$gallery_changelog"
+            echo "$fence"
+            echo
+            echo '### Notes'
+            echo "Release: https://github.com/vdesabou/alfred-spotify-mini-player/releases/tag/v-$MILESTONE_TITLE"
+          } > gallery-issue.md
+          cat gallery-issue.md
 
           gh issue create \
             --repo alfredapp/gallery-edits \
