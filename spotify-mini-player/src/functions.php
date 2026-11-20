@@ -2907,10 +2907,7 @@ function createDebugFile($w)
     $array = getenv();
     foreach ($array as $key => $value) {
         if (startswith($key, '__')) {
-            if ($key == '__oauth_client_secret') {
-                continue;
-            }
-            if ($key == '__oauth_access_token') {
+            if (in_array($key, array('__oauth_client_secret', '__oauth_access_token', '__oauth_refresh_token'))) {
                 continue;
             }
             $output = $output . $key . '=' . $value . "\n";
